@@ -2,6 +2,7 @@
 title: Chat - Indicators in context
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Indicators in context
@@ -19,6 +20,7 @@ import type { ChatAdapter, ChatRealtimeEvent } from '@mui/x-chat/headless';
 import {
   Chat,
   Conversation,
+  Composer,
   Indicators,
   Message,
   MessageGroup,
@@ -33,20 +35,11 @@ import {
   demoUsers,
 } from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
-  DemoDateDividerLabel,
-  DemoDateDividerRoot,
-  DemoMessageAuthor,
-  DemoMessageAvatar,
-  DemoMessageContent,
-  DemoMessageGroup,
-  DemoMessageListRoot,
-  DemoMessageMeta,
-  DemoMessageRoot,
-  DemoThreadHeader,
+  demoLocaleText,
+  demoMessageListSlotProps,
+  demoSlotProps,
+  DemoScrollToBottomOverlay,
   DemoToolbarButton,
-  DemoTypingIndicator,
-  DemoUnreadMarkerLabel,
-  DemoUnreadMarkerRoot,
 } from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 function createRealtimeController() {
@@ -136,13 +129,11 @@ export default function IndicatorsInContext() {
       defaultActiveConversationId="indicators"
       messages={messages}
       onMessagesChange={setMessages}
+      localeText={demoLocaleText}
       slotProps={{
         root: {
           style: {
             background: '#ffffff',
-            border: '1px solid #d7dee7',
-            borderRadius: 24,
-            padding: 16,
             display: 'grid',
             gap: 14,
           },
@@ -153,30 +144,37 @@ export default function IndicatorsInContext() {
         slotProps={{
           root: {
             style: {
-              minHeight: 640,
+              height: 640,
               display: 'grid',
-              gridTemplateRows: 'auto minmax(0, 1fr)',
+              gridTemplateRows: 'auto minmax(0, 1fr) auto',
               gap: 14,
             },
           },
         }}
       >
-        <Conversation.Header slots={{ root: DemoThreadHeader }}>
+        <Conversation.Header
+          slotProps={{
+            root: demoSlotProps.conversationHeader,
+          }}
+        >
           <div style={{ display: 'grid', gap: 6, minWidth: 0 }}>
             <div>
-              <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
-              <Conversation.Subtitle
-                style={{
-                  color: '#5c6b7c',
-                  fontSize: 13,
-                  marginTop: 4,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              />
+              <Conversation.Title style={demoSlotProps.conversationTitle} />
+              <Conversation.Subtitle style={demoSlotProps.conversationSubtitle} />
             </div>
-            <Indicators.TypingIndicator slots={{ root: DemoTypingIndicator }} />
+            <Indicators.TypingIndicator
+              slotProps={{
+                root: {
+                  style: {
+                    background: '#fafafa',
+                    color: '#2e7d32',
+                    padding: '4px 10px',
+                    fontSize: 12,
+                    fontWeight: 600,
+                  },
+                },
+              }}
+            />
           </div>
           <Conversation.HeaderActions
             style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}
@@ -208,9 +206,9 @@ export default function IndicatorsInContext() {
               <Indicators.UnreadMarker
                 index={index}
                 messageId={id}
-                slots={{
-                  label: DemoUnreadMarkerLabel,
-                  root: DemoUnreadMarkerRoot,
+                slotProps={{
+                  root: demoSlotProps.unreadMarkerRoot,
+                  label: demoSlotProps.unreadMarkerLabel,
                 }}
               />
               <MessageList.DateDivider
@@ -222,35 +220,78 @@ export default function IndicatorsInContext() {
                 }
                 index={index}
                 messageId={id}
-                slots={{ label: DemoDateDividerLabel, root: DemoDateDividerRoot }}
+                slotProps={{
+                  root: demoSlotProps.dateDividerRoot,
+                  label: demoSlotProps.dateDividerLabel,
+                }}
               />
               <MessageGroup
                 index={index}
                 messageId={id}
-                slots={{ authorName: DemoMessageAuthor, root: DemoMessageGroup }}
+                slotProps={{
+                  root: demoSlotProps.messageGroupRoot,
+                  authorName: demoSlotProps.messageGroupAuthorName,
+                }}
               >
-                <Message.Root messageId={id} slots={{ root: DemoMessageRoot }}>
-                  <Message.Avatar slots={{ root: DemoMessageAvatar }} />
-                  <Message.Content slots={{ root: DemoMessageContent }} />
-                  <Message.Meta slots={{ root: DemoMessageMeta }} />
+                <Message.Root
+                  messageId={id}
+                  slotProps={{
+                    root: demoSlotProps.messageRoot,
+                  }}
+                >
+                  <Message.Avatar
+                    slotProps={{
+                      avatar: demoSlotProps.messageAvatar,
+                      image: demoSlotProps.messageAvatarImage,
+                    }}
+                  />
+                  <Message.Content
+                    slotProps={{
+                      bubble: demoSlotProps.messageBubble,
+                    }}
+                  />
+                  <Message.Meta
+                    slotProps={{
+                      meta: demoSlotProps.messageMeta,
+                    }}
+                  />
                 </Message.Root>
               </MessageGroup>
             </React.Fragment>
           )}
+          overlay={<DemoScrollToBottomOverlay />}
           slotProps={{
-            root: {
-              style: {
-                height: 520,
-                paddingRight: 8,
-              },
-            },
+            ...demoMessageListSlotProps,
           }}
-          slots={{ root: DemoMessageListRoot }}
         />
+        <Composer.Root
+          slotProps={{
+            root: demoSlotProps.composerRoot,
+          }}
+        >
+          <Composer.TextArea
+            aria-label="Message"
+            placeholder="Type a message"
+            slotProps={{
+              input: demoSlotProps.composerTextArea,
+            }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Composer.SendButton
+              data-variant="primary"
+              slotProps={{
+                sendButton: demoSlotProps.composerSendButton,
+              }}
+            >
+              Send
+            </Composer.SendButton>
+          </div>
+        </Composer.Root>
       </Conversation.Root>
     </Chat.Root>
   );
 }
+
 ```
 
 ## What it shows

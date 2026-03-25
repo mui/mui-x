@@ -2,6 +2,7 @@
 title: Chat - Selector-driven thread
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Selector-driven thread

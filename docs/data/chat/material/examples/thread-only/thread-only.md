@@ -2,6 +2,7 @@
 title: Chat - Thread-only
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Thread-only

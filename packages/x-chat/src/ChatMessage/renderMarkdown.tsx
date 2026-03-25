@@ -93,10 +93,7 @@ function parseInline(text: string): React.ReactNode {
 
 function isStructuralLine(line: string): boolean {
   return (
-    /^```/.test(line) ||
-    /^#{1,6}\s/.test(line) ||
-    /^[-*+]\s/.test(line) ||
-    /^\d+\.\s/.test(line)
+    /^```/.test(line) || /^#{1,6}\s/.test(line) || /^[-*+]\s/.test(line) || /^\d+\.\s/.test(line)
   );
 }
 
@@ -141,9 +138,7 @@ function parseBlocks(text: string): React.ReactNode[] {
     if (/^[-*+]\s/.test(line)) {
       const items: React.ReactNode[] = [];
       while (i < lines.length && /^[-*+]\s/.test(lines[i])) {
-        items.push(
-          <li key={key}>{parseInline(lines[i].replace(/^[-*+]\s+/, ''))}</li>,
-        );
+        items.push(<li key={key}>{parseInline(lines[i].replace(/^[-*+]\s+/, ''))}</li>);
         key += 1;
         i += 1;
       }
@@ -155,9 +150,7 @@ function parseBlocks(text: string): React.ReactNode[] {
     if (/^\d+\.\s/.test(line)) {
       const items: React.ReactNode[] = [];
       while (i < lines.length && /^\d+\.\s/.test(lines[i])) {
-        items.push(
-          <li key={key}>{parseInline(lines[i].replace(/^\d+\.\s+/, ''))}</li>,
-        );
+        items.push(<li key={key}>{parseInline(lines[i].replace(/^\d+\.\s+/, ''))}</li>);
         key += 1;
         i += 1;
       }

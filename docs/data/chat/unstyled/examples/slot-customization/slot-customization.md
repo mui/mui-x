@@ -2,6 +2,7 @@
 title: Chat - Slot customization
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Slot customization

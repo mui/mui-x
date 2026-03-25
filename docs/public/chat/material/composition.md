@@ -28,11 +28,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { Chat } from '@mui/x-chat/unstyled';
-import {
-  ChatConversations,
-  ChatConversation,
-  ChatComposer,
-} from '@mui/x-chat';
+import { ChatConversations, ChatConversation, ChatComposer } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/shared/demoUtils';
 import {
   inboxConversations,
@@ -118,15 +114,15 @@ export default function ThreadOnlyComposition() {
 
 ## Component relationships
 
-| Styled component        | Unstyled equivalent                      | Headless dependency                |
-| :---------------------- | :--------------------------------------- | :--------------------------------- |
-| `ChatConversations`     | `ConversationList.Root`                  | `useConversations`, `useChatStore` |
-| `ChatConversation`      | `Conversation.Root` + `MessageList.Root` | `useMessageIds`, `useMessage`      |
-| `ChatComposer` | `Composer.Root`                 | `useChatComposer`                  |
+| Styled component    | Unstyled equivalent                      | Headless dependency                |
+| :------------------ | :--------------------------------------- | :--------------------------------- |
+| `ChatConversations` | `ConversationList.Root`                  | `useConversations`, `useChatStore` |
+| `ChatConversation`  | `Conversation.Root` + `MessageList.Root` | `useMessageIds`, `useMessage`      |
+| `ChatComposer`      | `Composer.Root`                          | `useChatComposer`                  |
 
 Each styled component adds Material UI surface treatment (elevation, padding, typography, icon buttons) while preserving the slot and owner-state model from the unstyled layer.
 
-## Adjacent pages
+## See also
 
 - See [ChatBox](/x/react-chat/material/chat-box/) for the one-liner API.
 - See [Unstyled composition](/x/react-chat/unstyled/composition/) for the structural primitive model.

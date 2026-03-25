@@ -58,9 +58,13 @@ export default function Confirmation() {
       async sendMessage() {
         const messageId = nanoid();
         return createChunkStream(
-          createTextResponseChunks(messageId, 'Got it — what else can I help with?', {
-            author: demoUsers.agent,
-          }),
+          createTextResponseChunks(
+            messageId,
+            'Got it — what else can I help with?',
+            {
+              author: demoUsers.agent,
+            },
+          ),
           { delayMs: 60 },
         );
       },
@@ -75,7 +79,12 @@ export default function Confirmation() {
         defaultActiveConversationId={CONVERSATION_ID}
         defaultConversations={[minimalConversation]}
         defaultMessages={INITIAL_MESSAGES}
-        sx={{ flex: 1, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}
+        sx={{
+          flex: 1,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+        }}
       />
       {status === 'pending' && (
         <ChatConfirmation

@@ -94,7 +94,7 @@ Some keys are functions that receive runtime values:
 - `typingIndicatorLabel(users)` — returns typing indicator text
 - `scrollToBottomWithCountLabel(count)` — returns scroll button text with unseen count
 
-## Adjacent pages
+## See also
 
 - See [Theming](/x/react-chat/material/theming/) for visual customization.
 - See [Headless overview](/x/react-chat/headless/) for the runtime localization contract.

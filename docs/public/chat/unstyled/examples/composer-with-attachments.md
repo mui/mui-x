@@ -2,6 +2,7 @@
 title: Chat - Composer with attachments
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Composer with attachments
@@ -23,33 +24,45 @@ import {
   MessageList,
 } from '@mui/x-chat/unstyled';
 import { useChatComposer } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
+import type { ChatAdapter } from '@mui/x-chat/headless';
+import {
+  createTextResponseChunks,
+  createChunkStream,
+} from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
 } from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
+  demoLocaleText,
+  demoSlotProps,
+  palette,
   AttachmentPreviewList,
-  DemoComposerButton,
-  DemoComposerHelperText,
-  DemoComposerInput,
-  DemoComposerRoot,
-  DemoComposerToolbar,
-  DemoMessageAuthor,
-  DemoMessageAvatar,
-  DemoMessageContent,
-  DemoMessageGroup,
-  DemoMessageMeta,
-  DemoMessageRoot,
-  DemoThreadHeader,
   DemoToolbarButton,
 } from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
-const adapter = createEchoAdapter({
-  agent: demoUsers.agent,
-  respond: (text, { attachments }) =>
-    `Draft received: "${text}". The composer stayed inside the unstyled layer while the runtime tracked ${attachments} attachment${attachments === 1 ? '' : 's'}.`,
-});
+const agent = demoUsers.agent;
+
+const adapter: ChatAdapter = {
+  async sendMessage({ attachments, message }) {
+    const textOnly = message.parts
+      .filter(
+        (part): part is Extract<typeof part, { type: 'text' }> =>
+          part.type === 'text',
+      )
+      .map((part) => part.text)
+      .join('\n');
+    const attachmentCount = attachments?.length ?? 0;
+    const responseText = `Draft received: "${textOnly}". The composer stayed inside the unstyled layer while the runtime tracked ${attachmentCount} attachment${attachmentCount === 1 ? '' : 's'}.`;
+
+    return createChunkStream(
+      createTextResponseChunks(`assistant-${message.id}`, responseText, {
+        author: agent,
+      }),
+      { delayMs: 170 },
+    );
+  },
+};
 
 function ComposerDemoBody() {
   const composer = useChatComposer();
@@ -67,7 +80,7 @@ function ComposerDemoBody() {
       slotProps={{
         root: {
           style: {
-            minHeight: 560,
+            height: 560,
             display: 'grid',
             gridTemplateRows: 'auto minmax(0, 1fr) auto',
             gap: 14,
@@ -75,19 +88,14 @@ function ComposerDemoBody() {
         },
       }}
     >
-      <Conversation.Header slots={{ root: DemoThreadHeader }}>
+      <Conversation.Header
+        slotProps={{
+          root: demoSlotProps.conversationHeader,
+        }}
+      >
         <div style={{ minWidth: 0 }}>
-          <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
-          <Conversation.Subtitle
-            style={{
-              color: '#5c6b7c',
-              fontSize: 13,
-              marginTop: 4,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          />
+          <Conversation.Title style={demoSlotProps.conversationTitle} />
+          <Conversation.Subtitle style={demoSlotProps.conversationSubtitle} />
         </div>
       </Conversation.Header>
       <MessageList.Root
@@ -97,27 +105,122 @@ function ComposerDemoBody() {
             index={index}
             key={id}
             messageId={id}
-            slots={{ authorName: DemoMessageAuthor, root: DemoMessageGroup }}
+            slotProps={{
+              root: demoSlotProps.messageGroupRoot,
+              authorName: demoSlotProps.messageGroupAuthorName,
+            }}
           >
-            <Message.Root messageId={id} slots={{ root: DemoMessageRoot }}>
-              <Message.Avatar slots={{ root: DemoMessageAvatar }} />
-              <Message.Content slots={{ root: DemoMessageContent }} />
-              <Message.Meta slots={{ root: DemoMessageMeta }} />
+            <Message.Root
+              messageId={id}
+              slotProps={{
+                root: demoSlotProps.messageRoot,
+              }}
+            >
+              <Message.Avatar
+                slotProps={{
+                  avatar: demoSlotProps.messageAvatar,
+                  image: demoSlotProps.messageAvatarImage,
+                }}
+              />
+              <Message.Content
+                slotProps={{
+                  content: { style: { display: 'contents' } },
+                  bubble: demoSlotProps.messageBubble,
+                }}
+                partProps={{
+                  file: {
+                    slotProps: {
+                      link: (ownerState: { role: string }) => ({
+                        style: {
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          padding: '4px 10px',
+                          background:
+                            ownerState.role === 'user'
+                              ? 'rgba(255,255,255,0.12)'
+                              : palette.surfaceAlt,
+                          border: `1px solid ${
+                            ownerState.role === 'user'
+                              ? 'rgba(255,255,255,0.2)'
+                              : palette.border
+                          }`,
+                          color:
+                            ownerState.role === 'user' ? '#ffffff' : palette.text,
+                          textDecoration: 'none',
+                          fontSize: 13,
+                          fontWeight: 500,
+                        },
+                      }),
+                      preview: {
+                        style: {
+                          maxWidth: 180,
+                          maxHeight: 120,
+                          objectFit: 'cover' as const,
+                        },
+                      },
+                      filename: {
+                        style: {
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap' as const,
+                        },
+                      },
+                    },
+                  },
+                }}
+              />
+              <Message.Meta
+                slotProps={{
+                  meta: demoSlotProps.messageMeta,
+                }}
+              />
             </Message.Root>
           </MessageGroup>
         )}
-        style={{ minHeight: 0 }}
       />
-      <Composer.Root slots={{ root: DemoComposerRoot }}>
+      <Composer.Root
+        slotProps={{
+          root: demoSlotProps.composerRoot,
+        }}
+      >
         <AttachmentPreviewList />
         <Composer.TextArea
           aria-label="Draft"
           placeholder="Write the update and attach any supporting files"
-          slots={{ root: DemoComposerInput }}
+          slotProps={{
+            input: demoSlotProps.composerTextArea,
+          }}
         />
-        <Composer.Toolbar slots={{ root: DemoComposerToolbar }}>
+        <Composer.Toolbar
+          slotProps={{
+            toolbar: {
+              style: {
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                justifyContent: 'space-between',
+              },
+            },
+          }}
+        >
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <Composer.AttachButton slots={{ root: DemoComposerButton }}>
+            <Composer.AttachButton
+              slotProps={{
+                attachButton: {
+                  style: {
+                    border: '1px solid #111111',
+                    background: '#111111',
+                    color: '#ffffff',
+                    padding: '8px 20px',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    fontFamily: 'inherit',
+                  },
+                },
+              }}
+            >
               Attach file
             </Composer.AttachButton>
             <DemoToolbarButton
@@ -135,12 +238,23 @@ function ComposerDemoBody() {
           </div>
           <Composer.SendButton
             data-variant="primary"
-            slots={{ root: DemoComposerButton }}
+            slotProps={{
+              sendButton: demoSlotProps.composerSendButton,
+            }}
           >
             Send message
           </Composer.SendButton>
         </Composer.Toolbar>
-        <Composer.HelperText slots={{ root: DemoComposerHelperText }}>
+        <Composer.HelperText
+          slotProps={{
+            helperText: {
+              style: {
+                color: '#666666',
+                fontSize: 12,
+              },
+            },
+          }}
+        >
           Press Enter to send. Shift+Enter keeps a new line, and the file trigger
           stays connected to the hidden input.
         </Composer.HelperText>
@@ -162,6 +276,7 @@ export default function ComposerWithAttachments() {
         },
       ]}
       defaultActiveConversationId="composer"
+      localeText={demoLocaleText}
       defaultMessages={[
         createTextMessage({
           id: 'composer-a1',
@@ -176,9 +291,6 @@ export default function ComposerWithAttachments() {
         root: {
           style: {
             background: '#ffffff',
-            border: '1px solid #d7dee7',
-            borderRadius: 24,
-            padding: 16,
           },
         },
       }}
@@ -187,6 +299,7 @@ export default function ComposerWithAttachments() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## What it shows

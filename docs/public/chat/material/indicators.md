@@ -123,6 +123,6 @@ export default function SkeletonStates() {
 }
 ```
 
-## Adjacent pages
+## See also
 
 - See [Unstyled indicators](/x/react-chat/unstyled/indicators/) for the structural primitive model.

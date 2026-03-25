@@ -2,6 +2,7 @@
 title: Chat - Composer with attachments
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Composer with attachments

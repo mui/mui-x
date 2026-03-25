@@ -2,9 +2,10 @@
 productId: x-chat
 title: Chat - Headless adapters
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
-# Headless adapters
+# Chat - Headless adapters
 
 <p class="description">Write a <code>ChatAdapter</code> to connect the headless runtime to any backend — HTTP, SSE, WebSocket, or AI SDK.</p>
 
@@ -330,7 +331,7 @@ When an adapter method throws, the runtime:
 
 You do not need to catch errors inside the adapter unless you want to transform them.
 
-## Adjacent pages
+## See also
 
 - [Streaming](/x/react-chat/headless/streaming/) for the full stream chunk protocol.
 - [Realtime](/x/react-chat/headless/realtime/) for the event types used by `subscribe()`.

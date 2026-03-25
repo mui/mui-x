@@ -4,7 +4,4 @@ export {
   chatConfirmationClasses,
   getChatConfirmationUtilityClass,
 } from './chatConfirmationClasses';
-export type {
-  ChatConfirmationClasses,
-  ChatConfirmationClassKey,
-} from './chatConfirmationClasses';
+export type { ChatConfirmationClasses, ChatConfirmationClassKey } from './chatConfirmationClasses';

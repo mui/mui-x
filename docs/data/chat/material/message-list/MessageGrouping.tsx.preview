@@ -1,0 +1,15 @@
+<ChatBox
+  adapter={adapter}
+  defaultActiveConversationId={conversation.id}
+  defaultConversations={[conversation]}
+  defaultMessages={messages}
+  slotProps={{
+    messageGroup: { groupingWindowMs: 60000 },
+  }}
+  sx={{
+    height: 400,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

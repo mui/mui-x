@@ -312,7 +312,7 @@ Every styled chat component accepts the `sx` prop for one-off style overrides:
 <ChatBox sx={{ minHeight: 640, borderRadius: 2 }} />
 ```
 
-## Adjacent pages
+## See also
 
 - See [Slots](/x/react-chat/material/slots/) for component-level customization through slot replacement.
 - See [Localization](/x/react-chat/material/localization/) for locale text customization.

@@ -2,6 +2,7 @@
 title: Chat - Intercom-style widget
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Intercom-style widget

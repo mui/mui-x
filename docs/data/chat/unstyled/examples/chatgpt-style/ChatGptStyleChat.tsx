@@ -1259,9 +1259,7 @@ export default function ChatGptStyleChat() {
                   >
                     <MicNoneRoundedIcon style={{ fontSize: 20 }} />
                   </button>
-                  <Composer.SendButton
-                    slots={{ sendButton: GptSendButton }}
-                  />
+                  <Composer.SendButton slots={{ sendButton: GptSendButton }} />
                 </div>
               </div>
             </Composer.Root>

@@ -2,6 +2,7 @@
 title: Chat - Message parts
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Message parts
@@ -371,6 +372,7 @@ export default function MessagePartsHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

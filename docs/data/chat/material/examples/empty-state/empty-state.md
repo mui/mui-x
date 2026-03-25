@@ -2,6 +2,7 @@
 title: Chat - Empty state
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Empty state
@@ -10,7 +11,7 @@ packageName: '@mui/x-chat'
 
 This example shows the empty state of a ChatBox - an active conversation with zero messages, revealing how the component looks before any interaction.
 
-{{"demo": "EmptyState.js"}}
+{{"demo": "EmptyState.js", "bg": "inline"}}
 
 ## What it shows
 

@@ -870,76 +870,100 @@ const pages: MuiPage[] = [
         subheader: 'Examples',
         children: [
           {
-            pathname: '/x/react-chat/material/examples/basic-ai-chat',
-            title: 'Basic AI chat',
+            pathname: '/x/react-chat/examples/getting-started',
+            title: 'Getting started',
+            children: [
+              {
+                pathname: '/x/react-chat/material/examples/basic-ai-chat',
+                title: 'Basic AI chat',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/thread-only',
+                title: 'Thread-only copilot',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/multi-conversation',
+                title: 'Multi-conversation',
+              },
+            ],
           },
           {
-            pathname: '/x/react-chat/material/examples/thread-only',
-            title: 'Thread-only copilot',
+            pathname: '/x/react-chat/examples/agentic',
+            title: 'Agentic',
+            children: [
+              {
+                pathname: '/x/react-chat/material/examples/agentic-code',
+                title: 'Agentic code assistant',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/plan-task',
+                title: 'Plan & task',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/code-block',
+                title: 'Code block',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/confirmation',
+                title: 'Confirmation',
+              },
+            ],
           },
           {
-            pathname: '/x/react-chat/material/examples/multi-conversation',
-            title: 'Multi-conversation',
+            pathname: '/x/react-chat/examples/customization',
+            title: 'Customization',
+            children: [
+              {
+                pathname: '/x/react-chat/material/examples/custom-theme',
+                title: 'Custom theme',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/slot-overrides',
+                title: 'Slot overrides',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/model-selector',
+                title: 'Model selector',
+              },
+            ],
           },
           {
-            pathname: '/x/react-chat/material/examples/agentic-code',
-            title: 'Agentic code assistant',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/plan-task',
-            title: 'Plan & task',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/code-block',
-            title: 'Code block',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/confirmation',
-            title: 'Confirmation',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/custom-theme',
-            title: 'Custom theme',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/slot-overrides',
-            title: 'Slot overrides',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/model-selector',
-            title: 'Model selector',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/empty-state',
-            title: 'Empty state',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/error-state',
-            title: 'Error state',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/slow-streaming',
-            title: 'Slow streaming',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/long-messages',
-            title: 'Long messages',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/many-messages',
-            title: 'Many messages',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/no-conversation-history',
-            title: 'No conversation history',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/message-feed',
-            title: 'Message feed',
-          },
-          {
-            pathname: '/x/react-chat/material/examples/split-layout',
-            title: 'Split layout',
+            pathname: '/x/react-chat/examples/edge-cases',
+            title: 'Edge cases',
+            children: [
+              {
+                pathname: '/x/react-chat/material/examples/empty-state',
+                title: 'Empty state',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/error-state',
+                title: 'Error state',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/slow-streaming',
+                title: 'Slow streaming',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/long-messages',
+                title: 'Long messages',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/many-messages',
+                title: 'Many messages',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/no-conversation-history',
+                title: 'No conversation history',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/message-feed',
+                title: 'Message feed',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/split-layout',
+                title: 'Split layout',
+              },
+            ],
           },
         ],
       },

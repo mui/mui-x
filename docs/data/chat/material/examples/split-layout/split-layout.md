@@ -2,13 +2,14 @@
 title: Split layout
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Split layout
 
 <p class="description">Place <code>ChatMessageList</code> and <code>ChatComposer</code> in separate DOM zones. Only <code>ChatRoot</code> is needed to connect them.</p>
 
-{{"demo": "SplitLayout.js"}}
+{{"demo": "SplitLayout.js", "bg": "inline"}}
 
 ## How it works
 
@@ -20,13 +21,10 @@ or share a parent component. Place them wherever your layout requires:
 
 ```tsx
 <ChatRoot adapter={adapter}>
-
   {/* Could be in main content, a drawer, or a modal */}
-  <MessagePane />   {/* calls useMessageIds() */}
-
+  <MessagePane /> {/* calls useMessageIds() */}
   {/* Could be in a toolbar, sidebar, or page footer */}
-  <InputPane />     {/* ChatComposer uses useChatComposer() */}
-
+  <InputPane /> {/* ChatComposer uses useChatComposer() */}
 </ChatRoot>
 ```
 

@@ -2,9 +2,10 @@
 productId: x-chat
 title: Chat - Headless hooks
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
-# Headless hooks
+# Chat - Headless hooks
 
 <p class="description">Read chat state and trigger runtime actions through hooks scoped to exactly the data your component needs.</p>
 
@@ -295,7 +296,7 @@ function CustomPart({ part, message, index }) {
 | Custom selector or store subscription     | `useChatStore()` + `chatSelectors`            |
 | Registered part renderer lookup           | `useChatPartRenderer(partType)`               |
 
-## Adjacent pages
+## See also
 
 - [Selectors](/x/react-chat/headless/selectors/) for the full selector API and advanced store subscriptions.
 - [State and store](/x/react-chat/headless/state/) for `ChatProvider` props and the controlled/uncontrolled model.

@@ -2,6 +2,7 @@
 title: Chat - ChatGPT-style layout
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # ChatGPT-style layout

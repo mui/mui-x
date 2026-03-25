@@ -2,6 +2,7 @@
 title: Chat - Streaming lifecycle
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Streaming lifecycle
@@ -386,6 +387,7 @@ function StreamingLifecycleWithLogs() {
     </Paper>
   );
 }
+
 ```
 
 ## Key takeaways

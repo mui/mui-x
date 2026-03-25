@@ -2,6 +2,7 @@
 title: Chat - Slot overrides
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Slot overrides

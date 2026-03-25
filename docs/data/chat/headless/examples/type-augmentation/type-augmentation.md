@@ -2,6 +2,7 @@
 title: Chat - Type augmentation
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Type augmentation

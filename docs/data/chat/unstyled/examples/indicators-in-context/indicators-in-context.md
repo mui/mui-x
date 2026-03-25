@@ -2,6 +2,7 @@
 title: Chat - Indicators in context
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Indicators in context

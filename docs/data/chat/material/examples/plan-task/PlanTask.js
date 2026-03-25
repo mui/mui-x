@@ -31,7 +31,10 @@ function getRunningStatus(i, index) {
 // Simulates executing steps one-by-one with a delay, updating statuses live.
 function simulateSteps(steps, onUpdate) {
   // Reset all to pending first
-  let current = steps.map((step) => ({ ...step, status: 'pending' }));
+  let current = steps.map((step) => ({
+    ...step,
+    status: 'pending',
+  }));
   onUpdate([...current]);
 
   steps.forEach((_, index) => {

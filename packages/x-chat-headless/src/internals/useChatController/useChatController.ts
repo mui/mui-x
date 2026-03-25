@@ -12,11 +12,7 @@ import type {
 } from '../../types';
 import type { ChatError } from '../../types/chat-error';
 import type { UseChatSendMessageInput } from '../../types/chat-callbacks';
-import {
-  getMessages,
-  createRuntimeError,
-  getErrorMessage,
-} from './useChatControllerHelpers';
+import { getMessages, createRuntimeError, getErrorMessage } from './useChatControllerHelpers';
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
 import { createSendMessageActions } from './sendMessageActions';

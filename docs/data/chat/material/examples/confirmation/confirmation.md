@@ -2,6 +2,7 @@
 title: Chat - Confirmation
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Confirmation
@@ -52,23 +53,30 @@ const [pendingConfirmation, setPendingConfirmation] = React.useState(false);
 const setConfirmRef = React.useRef(setPendingConfirmation);
 setConfirmRef.current = setPendingConfirmation;
 
-const adapter = React.useMemo(() => ({
-  async sendMessage({ message }) {
-    // … stream agent response …
-    // Signal that a confirmation is needed:
-    setConfirmRef.current(true);
-    return responseStream;
-  },
-}), []);
+const adapter = React.useMemo(
+  () => ({
+    async sendMessage({ message }) {
+      // … stream agent response …
+      // Signal that a confirmation is needed:
+      setConfirmRef.current(true);
+      return responseStream;
+    },
+  }),
+  [],
+);
 
 // In your JSX:
-{pendingConfirmation && (
-  <ChatConfirmation
-    message="Proceed with this action?"
-    onConfirm={() => { setPendingConfirmation(false); /* … */ }}
-    onCancel={() => setPendingConfirmation(false)}
-  />
-)}
+{
+  pendingConfirmation && (
+    <ChatConfirmation
+      message="Proceed with this action?"
+      onConfirm={() => {
+        setPendingConfirmation(false); /* … */
+      }}
+      onCancel={() => setPendingConfirmation(false)}
+    />
+  );
+}
 ```
 
 ## Relationship to tool-call approval

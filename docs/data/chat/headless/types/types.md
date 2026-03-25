@@ -2,9 +2,10 @@
 productId: x-chat
 title: Chat - Type augmentation
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
-# Type augmentation
+# Chat - Type augmentation
 
 <p class="description">Extend the type system with app-specific metadata, typed tools, data parts, and custom message parts via module augmentation.</p>
 
@@ -194,7 +195,7 @@ declare module '@mui/x-chat/headless/types' {
 
 You can split augmentations across multiple files. TypeScript merges all declarations for the same module. Just make sure each file is included in your `tsconfig`.
 
-## Adjacent pages
+## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for `useChatPartRenderer()` and typed hook return values.
 - [State and store](/x/react-chat/headless/state/) for `partRenderers` registration on `ChatProvider`.

@@ -6,14 +6,8 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 
 const useThemeProps = createUseThemeProps('MuiChatComposer');
 import { SxProps, Theme } from '@mui/system';
-import {
-  ComposerSendButton,
-  type ComposerSendButtonProps,
-} from '@mui/x-chat-unstyled';
-import {
-  useChatComposerUtilityClasses,
-  type ChatComposerClasses,
-} from './chatComposerClasses';
+import { ComposerSendButton, type ComposerSendButtonProps } from '@mui/x-chat-unstyled';
+import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
 export interface ChatComposerSendButtonProps extends ComposerSendButtonProps {
   className?: string;
@@ -65,34 +59,33 @@ const ChatComposerSendButtonStyled = styled('button', {
   },
 }));
 
-const ChatComposerSendButton = React.forwardRef<
-  HTMLButtonElement,
-  ChatComposerSendButtonProps
->(function ChatComposerSendButton(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
-  const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
-  const classes = useChatComposerUtilityClasses(classesProp);
+const ChatComposerSendButton = React.forwardRef<HTMLButtonElement, ChatComposerSendButtonProps>(
+  function ChatComposerSendButton(inProps, ref) {
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
+    const classes = useChatComposerUtilityClasses(classesProp);
 
-  return (
-    <ComposerSendButton
-      ref={ref}
-      {...other}
-      slots={{
-        sendButton: slots?.sendButton ?? ChatComposerSendButtonStyled,
-        ...slots,
-      }}
-      slotProps={{
-        ...slotProps,
-        sendButton: {
-          className: clsx(classes.sendButton, className),
-          sx,
-          ...slotProps?.sendButton,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any,
-      }}
-    />
-  );
-});
+    return (
+      <ComposerSendButton
+        ref={ref}
+        {...other}
+        slots={{
+          sendButton: slots?.sendButton ?? ChatComposerSendButtonStyled,
+          ...slots,
+        }}
+        slotProps={{
+          ...slotProps,
+          sendButton: {
+            className: clsx(classes.sendButton, className),
+            sx,
+            ...slotProps?.sendButton,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any,
+        }}
+      />
+    );
+  },
+);
 
 ChatComposerSendButton.propTypes = {
   // ----------------------------- Warning --------------------------------

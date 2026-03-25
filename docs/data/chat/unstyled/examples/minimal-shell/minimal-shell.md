@@ -2,6 +2,7 @@
 title: Chat - Minimal unstyled shell
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Minimal unstyled shell

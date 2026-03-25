@@ -2,7 +2,11 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils/types';
-import { type ChatRootProps, type MessageListRootAutoScrollConfig, type ChatSuggestion } from '@mui/x-chat-unstyled';
+import {
+  type ChatRootProps,
+  type MessageListRootAutoScrollConfig,
+  type ChatSuggestion,
+} from '@mui/x-chat-unstyled';
 import type { ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
 import type { ChatConversationHeaderProps } from '../ChatConversation/ChatConversationHeader';
 import type { ChatConversationTitleProps } from '../ChatConversation/ChatConversationTitle';

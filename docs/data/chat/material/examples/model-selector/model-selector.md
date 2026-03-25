@@ -2,6 +2,7 @@
 title: Chat - Model selector
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Model selector
@@ -63,7 +64,11 @@ export default function App() {
     () =>
       function ModelSelector() {
         return (
-          <Select value={model} onChange={(e) => setModel(e.target.value)} size="small">
+          <Select
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+            size="small"
+          >
             <MenuItem value="gpt-4o">GPT-4o</MenuItem>
             <MenuItem value="claude-3-5-sonnet">Claude 3.5 Sonnet</MenuItem>
           </Select>

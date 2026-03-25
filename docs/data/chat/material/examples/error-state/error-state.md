@@ -2,6 +2,7 @@
 title: Chat - Error state
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Error state
@@ -10,7 +11,7 @@ packageName: '@mui/x-chat'
 
 This example uses a failing adapter that always throws an error, demonstrating how errors propagate through `onError`.
 
-{{"demo": "ErrorState.js"}}
+{{"demo": "ErrorState.js", "bg": "inline"}}
 
 ## What it shows
 

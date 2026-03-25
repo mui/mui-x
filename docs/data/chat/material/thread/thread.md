@@ -2,10 +2,11 @@
 productId: x-chat
 title: Chat - Thread
 packageName: '@mui/x-chat'
+components: ChatConversation, ChatConversationHeader, ChatConversationTitle, ChatConversationSubtitle, ChatConversationHeaderActions, ChatMessageList, ChatMessageGroup, ChatMessage, ChatMessageAvatar, ChatMessageContent, ChatMessageMeta, ChatMessageActions, ChatComposer, ChatComposerTextArea, ChatComposerToolbar, ChatComposerAttachButton, ChatComposerSendButton
 githubLabel: 'scope: chat'
 ---
 
-# Thread
+# Chat - Thread
 
 <p class="description">Compose the active conversation surface from themed thread components, override individual slots, and recompose the layout using context hooks.</p>
 
@@ -13,7 +14,7 @@ The thread pane is the single-conversation view in a chat interface. It combines
 
 ## Component tree
 
-```
+```text
 ChatConversation                    ← thread shell, derives active conversation
   ChatConversationHeader            ← header bar (border-bottom, min-height 56px)
     ChatConversationTitle           ← conversation name, typography.body1 bold
@@ -51,13 +52,13 @@ import {
 
 ### Components and their ownerState
 
-| Component | Root element | Key ownerState fields |
-| :--- | :--- | :--- |
-| `ChatConversation` | `div` | `conversationId`, `conversation`, `hasConversation` |
-| `ChatConversationHeader` | `header` | same as above (inherited) |
-| `ChatConversationTitle` | `div` | same as above |
-| `ChatConversationSubtitle` | `div` | same as above |
-| `ChatConversationHeaderActions` | `div` | same as above |
+| Component                       | Root element | Key ownerState fields                               |
+| :------------------------------ | :----------- | :-------------------------------------------------- |
+| `ChatConversation`              | `div`        | `conversationId`, `conversation`, `hasConversation` |
+| `ChatConversationHeader`        | `header`     | same as above (inherited)                           |
+| `ChatConversationTitle`         | `div`        | same as above                                       |
+| `ChatConversationSubtitle`      | `div`        | same as above                                       |
+| `ChatConversationHeaderActions` | `div`        | same as above                                       |
 
 The `hasConversation` flag is particularly useful for hiding action buttons or showing a placeholder when no conversation is active.
 
@@ -76,12 +77,7 @@ const GradientHeader = styled('header')(({ theme }) => ({
 }));
 
 function CustomHeader(props) {
-  return (
-    <ChatConversationHeader
-      {...props}
-      slots={{ header: GradientHeader }}
-    />
-  );
+  return <ChatConversationHeader {...props} slots={{ header: GradientHeader }} />;
 }
 ```
 
@@ -98,15 +94,16 @@ The `ownerState` prop received by slot components carries the full conversation 
 ```tsx
 import { ChatConversationTitle } from '@mui/x-chat';
 
-const LiveTitle = React.forwardRef(function LiveTitle({ ownerState, ...props }, ref) {
+const LiveTitle = React.forwardRef(function LiveTitle(
+  { ownerState, ...props },
+  ref,
+) {
   const memberCount = ownerState?.conversation?.metadata?.memberCount;
   return (
     <div ref={ref} {...props}>
       {ownerState?.conversation?.title ?? 'No conversation selected'}
       {memberCount != null && (
-        <span style={{ fontWeight: 400, marginLeft: 8 }}>
-          {memberCount} members
-        </span>
+        <span style={{ fontWeight: 400, marginLeft: 8 }}>{memberCount} members</span>
       )}
     </div>
   );
@@ -127,11 +124,11 @@ import { ChatMessageList, ChatMessageGroup } from '@mui/x-chat';
 
 ### Slots and ownerState
 
-| Slot key | Default element | ownerState fields |
-| :--- | :--- | :--- |
-| `messageList` | `div` | `messageCount`, `isAtBottom` |
-| `messageListScroller` | `div` | same |
-| `messageListContent` | `div` | same |
+| Slot key              | Default element | ownerState fields            |
+| :-------------------- | :-------------- | :--------------------------- |
+| `messageList`         | `div`           | `messageCount`, `isAtBottom` |
+| `messageListScroller` | `div`           | same                         |
+| `messageListContent`  | `div`           | same                         |
 
 The `isAtBottom` flag is useful for toggling a scroll-to-bottom affordance. `messageCount` lets you show an empty-state illustration when the list has no messages.
 
@@ -141,9 +138,7 @@ Use `slotProps` when you only need to pass additional styling without swapping t
 
 ```tsx
 <ChatMessageList
-  renderItem={({ id, index }) => (
-    <ChatMessageGroup index={index} messageId={id} />
-  )}
+  renderItem={({ id, index }) => <ChatMessageGroup index={index} messageId={id} />}
   slotProps={{
     messageListContent: {
       sx: { gap: 1, paddingBlock: 2 },
@@ -169,23 +164,23 @@ import {
 
 ### `ChatMessageGroup` ownerState
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `isFirst` | `boolean` | First message in a consecutive group |
-| `isLast` | `boolean` | Last message in a consecutive group |
-| `authorRole` | `'user' \| 'assistant'` | Role of the group author |
-| `authorId` | `string \| undefined` | Identity of the group author |
+| Field        | Type                    | Description                          |
+| :----------- | :---------------------- | :----------------------------------- |
+| `isFirst`    | `boolean`               | First message in a consecutive group |
+| `isLast`     | `boolean`               | Last message in a consecutive group  |
+| `authorRole` | `'user' \| 'assistant'` | Role of the group author             |
+| `authorId`   | `string \| undefined`   | Identity of the group author         |
 
 ### `ChatMessage` ownerState
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `role` | `'user' \| 'assistant'` | Author role, drives bubble alignment |
-| `status` | `string` | Delivery/streaming status |
-| `streaming` | `boolean` | Whether the message is still streaming |
-| `error` | `boolean` | Whether the message ended in an error state |
-| `isGrouped` | `boolean` | Whether this row is part of a group |
-| `showAvatar` | `boolean` | Controls the phantom-column width calculation |
+| Field        | Type                    | Description                                   |
+| :----------- | :---------------------- | :-------------------------------------------- |
+| `role`       | `'user' \| 'assistant'` | Author role, drives bubble alignment          |
+| `status`     | `string`                | Delivery/streaming status                     |
+| `streaming`  | `boolean`               | Whether the message is still streaming        |
+| `error`      | `boolean`               | Whether the message ended in an error state   |
+| `isGrouped`  | `boolean`               | Whether this row is part of a group           |
+| `showAvatar` | `boolean`               | Controls the phantom-column width calculation |
 
 ### Overriding the message bubble
 
@@ -216,15 +211,17 @@ const PaperBubble = React.forwardRef(function PaperBubble(
   );
 });
 
-const CustomMessageContent = React.forwardRef(function CustomMessageContent(props, ref) {
-  return (
-    <ChatMessageContent
-      ref={ref}
-      {...props}
-      slots={{ ...props.slots, bubble: PaperBubble }}
-    />
-  );
-});
+const CustomMessageContent = React.forwardRef(
+  function CustomMessageContent(props, ref) {
+    return (
+      <ChatMessageContent
+        ref={ref}
+        {...props}
+        slots={{ ...props.slots, bubble: PaperBubble }}
+      />
+    );
+  },
+);
 
 <ChatBox slots={{ messageContent: CustomMessageContent }} />;
 ```
@@ -265,13 +262,13 @@ import {
 
 Every composer component shares the same ownerState shape:
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `isSubmitting` | `boolean` | Form submission in progress |
-| `hasValue` | `boolean` | Textarea has non-empty value |
-| `isStreaming` | `boolean` | An assistant response is streaming |
-| `attachmentCount` | `number` | Number of staged attachments |
-| `disabled` | `boolean` | Input is disabled |
+| Field             | Type      | Description                        |
+| :---------------- | :-------- | :--------------------------------- |
+| `isSubmitting`    | `boolean` | Form submission in progress        |
+| `hasValue`        | `boolean` | Textarea has non-empty value       |
+| `isStreaming`     | `boolean` | An assistant response is streaming |
+| `attachmentCount` | `number`  | Number of staged attachments       |
+| `disabled`        | `boolean` | Input is disabled                  |
 
 `ChatComposerHelperText` also receives an `error` boolean.
 
@@ -308,7 +305,11 @@ const AdaptiveSendButton = React.forwardRef(function AdaptiveSendButton(
   ref,
 ) {
   return (
-    <IconButton ref={ref} {...props} aria-label={ownerState?.isStreaming ? 'Stop' : 'Send'}>
+    <IconButton
+      ref={ref}
+      {...props}
+      aria-label={ownerState?.isStreaming ? 'Stop' : 'Send'}
+    >
       {ownerState?.isStreaming ? <StopIcon /> : <SendIcon />}
     </IconButton>
   );
@@ -350,7 +351,12 @@ const BubbleWithStatus = React.forwardRef(function BubbleWithStatus(
 });
 
 function CustomMessageContent(props) {
-  return <ChatMessageContent {...props} slots={{ ...props.slots, bubble: BubbleWithStatus }} />;
+  return (
+    <ChatMessageContent
+      {...props}
+      slots={{ ...props.slots, bubble: BubbleWithStatus }}
+    />
+  );
 }
 ```
 
@@ -422,7 +428,7 @@ function CustomThread() {
 
 Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire it to your adapter.
 
-## What to read next
+## See also
 
 - [Conversation list](/x/react-chat/material/conversation-list/) for the companion sidebar component.
 - [Customization](/x/react-chat/material/customization/) for the complete slot and slotProps reference.

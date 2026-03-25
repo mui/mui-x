@@ -2,13 +2,14 @@
 title: Message feed
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Message feed
 
 <p class="description">Render only <code>ChatMessageList</code> — no input. Send messages programmatically via <code>useChat</code> for read-only embeds and transcript views.</p>
 
-{{"demo": "MessageFeed.js"}}
+{{"demo": "MessageFeed.js", "bg": "inline"}}
 
 ## When to use this pattern
 

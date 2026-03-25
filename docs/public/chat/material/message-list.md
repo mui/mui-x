@@ -1,0 +1,449 @@
+---
+productId: x-chat
+title: Chat - Message list
+packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
+---
+
+# Chat - Message list
+
+Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators.
+
+The message list is the scrollable region that renders conversation history.
+`ChatMessageList` wraps the `@mui/x-chat/unstyled` `MessageListRoot` primitive with Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
+
+## Import
+
+```tsx
+import { ChatMessageList } from '@mui/x-chat';
+```
+
+:::info
+When using `ChatBox`, the message list is already included as a built-in part of the composition.
+You only need to import `ChatMessageList` directly when building a custom layout.
+:::
+
+## Component tree
+
+Inside `ChatBox`, the message list renders a subtree of themed components:
+
+```text
+ChatMessageList                     ← scrollable container
+  MessageListDateDivider            ← date separator between message groups
+  ChatMessageGroup                  ← groups consecutive same-author messages
+    ChatMessage                     ← individual message row
+      ChatMessageAvatar             ← author avatar
+      ChatMessageContent            ← message bubble with part renderers
+      ChatMessageMeta               ← timestamp, delivery status
+      ChatMessageActions            ← hover action buttons
+```
+
+## Auto-scrolling
+
+The message list automatically scrolls to the bottom when:
+
+- The user sends a new message (always active).
+- New messages arrive from the assistant while the user is near the bottom.
+- Streaming content grows (token-by-token updates).
+
+The auto-scroll behavior is gated by a **buffer** — if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
+
+### Configuration
+
+Control auto-scrolling through the `features` prop on `ChatBox`.
+The first example below uses a custom 300 px buffer threshold; the second disables auto-scroll entirely.
+When auto-scroll is disabled, the user can still scroll to the bottom manually using the scroll-to-bottom affordance button.
+
+```tsx
+'use client';
+import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { ChatBox } from '@mui/x-chat';
+import { createEchoAdapter } from '../examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+
+const adapter = createEchoAdapter();
+
+export default function AutoScrollConfig() {
+  return (
+    <Stack spacing={3}>
+      <div>
+        <Typography variant="subtitle2" gutterBottom>
+          Custom buffer (300 px)
+        </Typography>
+        <ChatBox
+          adapter={adapter}
+          defaultActiveConversationId={minimalConversation.id}
+          defaultConversations={[minimalConversation]}
+          defaultMessages={minimalMessages}
+          features={{ autoScroll: { buffer: 300 } }}
+          sx={{
+            height: 400,
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 1,
+          }}
+        />
+      </div>
+      <div>
+        <Typography variant="subtitle2" gutterBottom>
+          Auto-scroll disabled
+        </Typography>
+        <ChatBox
+          adapter={adapter}
+          defaultActiveConversationId={minimalConversation.id}
+          defaultConversations={[minimalConversation]}
+          defaultMessages={minimalMessages}
+          features={{ autoScroll: false }}
+          sx={{
+            height: 400,
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 1,
+          }}
+        />
+      </div>
+    </Stack>
+  );
+}
+
+```
+
+### Scroll-to-bottom affordance
+
+A floating button appears when the user scrolls away from the bottom.
+Clicking it smoothly scrolls back to the latest message:
+
+```tsx
+{
+  /* Enabled by default; disable with: */
+}
+<ChatBox adapter={adapter} features={{ scrollToBottom: false }} />;
+```
+
+## History loading
+
+When the user scrolls to the top of the message list, older messages are loaded automatically via the adapter's `listMessages` method.
+The message list preserves the current scroll position during prepend so the user doesn't lose their place.
+
+## Date dividers
+
+When consecutive messages span different calendar dates, a date divider is rendered automatically between them.
+The divider shows a localized date string and is styled as a centered label with horizontal rules.
+
+Customize the date format through `slotProps`. The demo below uses a short month + day format:
+
+```tsx
+'use client';
+import * as React from 'react';
+import { nanoid } from 'nanoid';
+import { ChatBox } from '@mui/x-chat';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import { createEchoAdapter } from '../examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from '../examples/shared/demoData';
+
+const adapter = createEchoAdapter();
+
+const CONV_ID = nanoid();
+
+const conversation: ChatConversation = {
+  id: CONV_ID,
+  title: 'Date divider demo',
+  subtitle: 'Custom date formatting',
+  participants: [demoUsers.you, demoUsers.agent],
+  readState: 'read',
+  unreadCount: 0,
+  lastMessageAt: '2026-03-16T10:00:00.000Z',
+};
+
+const messages: ChatMessage[] = [
+  createTextMessage({
+    id: nanoid(),
+    conversationId: CONV_ID,
+    role: 'assistant',
+    author: demoUsers.agent,
+    createdAt: '2026-03-14T15:00:00.000Z',
+    text: 'Here is a message from two days ago.',
+  }),
+  createTextMessage({
+    id: nanoid(),
+    conversationId: CONV_ID,
+    role: 'user',
+    author: demoUsers.you,
+    createdAt: '2026-03-15T09:30:00.000Z',
+    text: 'And this one is from yesterday.',
+  }),
+  createTextMessage({
+    id: nanoid(),
+    conversationId: CONV_ID,
+    role: 'assistant',
+    author: demoUsers.agent,
+    createdAt: '2026-03-16T10:00:00.000Z',
+    text: 'This message is from today. Notice the short date format in the dividers above.',
+  }),
+];
+
+export default function DateDividerFormat() {
+  return (
+    <ChatBox
+      adapter={adapter}
+      defaultActiveConversationId={conversation.id}
+      defaultConversations={[conversation]}
+      defaultMessages={messages}
+      slotProps={{
+        dateDivider: {
+          formatDate: (date: Date) =>
+            date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        },
+      }}
+      sx={{
+        height: 400,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
+```
+
+## Message groups
+
+Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
+Within a group only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
+
+The grouping window defaults to 5 minutes (300,000 ms). Customize it through `slotProps`.
+The demo below sets the window to 1 minute (60,000 ms) — notice how messages more than 1 minute apart start a new group with a fresh avatar:
+
+```tsx
+'use client';
+import * as React from 'react';
+import { nanoid } from 'nanoid';
+import { ChatBox } from '@mui/x-chat';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import { createEchoAdapter } from '../examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from '../examples/shared/demoData';
+
+const adapter = createEchoAdapter();
+
+const CONV_ID = nanoid();
+
+const conversation: ChatConversation = {
+  id: CONV_ID,
+  title: 'Message grouping demo',
+  subtitle: 'Custom grouping window',
+  participants: [demoUsers.you, demoUsers.agent],
+  readState: 'read',
+  unreadCount: 0,
+  lastMessageAt: '2026-03-15T10:05:00.000Z',
+};
+
+// Messages from the same author spaced 30 seconds apart — well within a
+// 1-minute grouping window but outside a very short one.
+const messages: ChatMessage[] = [
+  createTextMessage({
+    id: nanoid(),
+    conversationId: CONV_ID,
+    role: 'user',
+    author: demoUsers.you,
+    createdAt: '2026-03-15T10:00:00.000Z',
+    text: 'First message from the user.',
+  }),
+  createTextMessage({
+    id: nanoid(),
+    conversationId: CONV_ID,
+    role: 'user',
+    author: demoUsers.you,
+    createdAt: '2026-03-15T10:00:30.000Z',
+    text: 'Second message, sent 30 seconds later. Same group because the window is 1 minute.',
+  }),
+  createTextMessage({
+    id: nanoid(),
+    conversationId: CONV_ID,
+    role: 'user',
+    author: demoUsers.you,
+    createdAt: '2026-03-15T10:02:00.000Z',
+    text: 'Third message, sent 2 minutes after the first. This starts a new group.',
+  }),
+  createTextMessage({
+    id: nanoid(),
+    conversationId: CONV_ID,
+    role: 'assistant',
+    author: demoUsers.agent,
+    createdAt: '2026-03-15T10:05:00.000Z',
+    text: 'With groupingWindowMs set to 60 000 (1 minute), consecutive messages from the same author are grouped only when they are less than 1 minute apart. The avatar appears only on the first message in each group.',
+  }),
+];
+
+export default function MessageGrouping() {
+  return (
+    <ChatBox
+      adapter={adapter}
+      defaultActiveConversationId={conversation.id}
+      defaultConversations={[conversation]}
+      defaultMessages={messages}
+      slotProps={{
+        messageGroup: { groupingWindowMs: 60000 },
+      }}
+      sx={{
+        height: 400,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
+```
+
+## Loading and streaming states
+
+While the assistant is generating a response, streaming tokens are rendered incrementally inside a `ChatMessageContent` bubble.
+The message list auto-scrolls to follow new content as long as the user is near the bottom.
+
+## Standalone usage
+
+When building a custom layout outside of `ChatBox`, use `ChatMessageList` directly inside a `ChatRoot` provider.
+The demo below renders only the message list with a placeholder for a custom composer:
+
+```tsx
+'use client';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import {
+  ChatMessageList,
+  ChatMessage,
+  ChatMessageAvatar,
+  ChatMessageContent,
+  ChatMessageGroup,
+  ChatMessageMeta,
+  ChatConversation,
+} from '@mui/x-chat';
+import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
+import { createEchoAdapter } from '../examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+
+const adapter = createEchoAdapter();
+
+function CustomLayout() {
+  const messageIds = useMessageIds();
+
+  const renderItem = React.useCallback(
+    ({ id }: { id: string }) => (
+      <ChatMessageGroup key={id} messageId={id}>
+        <ChatMessage messageId={id}>
+          <ChatMessageAvatar />
+          <ChatMessageContent />
+          <ChatMessageMeta />
+        </ChatMessage>
+      </ChatMessageGroup>
+    ),
+    [],
+  );
+
+  return (
+    <ChatConversation>
+      <ChatMessageList renderItem={renderItem} items={messageIds} />
+      <Box sx={{ p: 1, borderTop: '1px solid', borderColor: 'divider' }}>
+        <Button variant="outlined" size="small" disabled>
+          Custom composer placeholder
+        </Button>
+      </Box>
+    </ChatConversation>
+  );
+}
+
+export default function StandaloneMessageList() {
+  return (
+    <ChatProvider
+      adapter={adapter}
+      defaultActiveConversationId={minimalConversation.id}
+      defaultConversations={[minimalConversation]}
+      defaultMessages={minimalMessages}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: 400,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+          overflow: 'hidden',
+        }}
+      >
+        <CustomLayout />
+      </Box>
+    </ChatProvider>
+  );
+}
+
+```
+
+## Imperative scrolling
+
+The `ChatMessageList` exposes a ref handle for imperative scroll control:
+
+```tsx
+import { ChatMessageList } from '@mui/x-chat';
+import type { MessageListRootHandle } from '@mui/x-chat/unstyled';
+
+const listRef = React.useRef<MessageListRootHandle>(null);
+
+// Scroll to bottom programmatically
+listRef.current?.scrollToBottom({ behavior: 'smooth' });
+
+<ChatMessageList ref={listRef} />;
+```
+
+## MessageListContext
+
+Child components inside the message list can access scroll state via context:
+
+```tsx
+import { useMessageListContext } from '@mui/x-chat/unstyled';
+
+function CustomScrollIndicator() {
+  const { isAtBottom, unseenMessageCount, scrollToBottom } = useMessageListContext();
+
+  if (isAtBottom) return null;
+  return (
+    <button onClick={() => scrollToBottom({ behavior: 'smooth' })}>
+      {unseenMessageCount} new messages
+    </button>
+  );
+}
+```
+
+| Property             | Type                 | Description                                  |
+| :------------------- | :------------------- | :------------------------------------------- |
+| `isAtBottom`         | `boolean`            | Whether the scroll position is at the bottom |
+| `unseenMessageCount` | `number`             | Messages added since the user scrolled away  |
+| `scrollToBottom`     | `(options?) => void` | Scroll to the latest message                 |
+
+## Accessibility
+
+The message list includes built-in ARIA attributes:
+
+- The scroller element has `role="log"` and `aria-live="polite"` for screen reader announcements
+- Date dividers use `role="separator"`
+- The `aria-label` is derived from the locale text system
+
+## Slots
+
+The following slots are available for customization through `ChatBox`:
+
+| Slot             | Component            | Description               |
+| :--------------- | :------------------- | :------------------------ |
+| `messageList`    | `ChatMessageList`    | The scrollable container  |
+| `messageRoot`    | `ChatMessage`        | Individual message row    |
+| `messageAvatar`  | `ChatMessageAvatar`  | Author avatar             |
+| `messageContent` | `ChatMessageContent` | Message bubble            |
+| `messageMeta`    | `ChatMessageMeta`    | Timestamp and status      |
+| `messageActions` | `ChatMessageActions` | Hover action menu         |
+| `messageGroup`   | `ChatMessageGroup`   | Same-author message group |
+| `dateDivider`    | `ChatDateDivider`    | Date separator            |

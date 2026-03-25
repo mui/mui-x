@@ -6,11 +6,7 @@ export { ComposerToolbar } from './ComposerToolbar';
 export { ComposerHelperText } from './ComposerHelperText';
 export { ComposerLabel } from './ComposerLabel';
 
-export type {
-  ComposerRootProps,
-  ComposerRootSlotProps,
-  ComposerRootSlots,
-} from './ComposerRoot';
+export type { ComposerRootProps, ComposerRootSlotProps, ComposerRootSlots } from './ComposerRoot';
 export type {
   ComposerTextAreaProps,
   ComposerTextAreaSlotProps,

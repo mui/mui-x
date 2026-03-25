@@ -14,8 +14,10 @@ export interface SuggestionItemSlotProps {
   root?: SlotComponentProps<'button', {}, SuggestionItemOwnerState>;
 }
 
-export interface SuggestionItemProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'value'> {
+export interface SuggestionItemProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'children' | 'value'
+> {
   slots?: Partial<SuggestionItemSlots>;
   slotProps?: SuggestionItemSlotProps;
   /** The value to pre-fill into the composer when the suggestion is clicked. */

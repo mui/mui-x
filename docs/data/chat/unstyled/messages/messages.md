@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat - Unstyled messages
 packageName: '@mui/x-chat/unstyled'
 components: MessageRoot, MessageAvatar, MessageAuthorLabel, MessageContent, MessageMeta, MessageActions, MessageGroup, MessageListDateDivider
+githubLabel: 'scope: chat'
 ---
 
-# Unstyled messages
+# Chat - Unstyled messages
 
 <p class="description">Compose thread rows from message grouping primitives, message subparts, and default message-part renderers.</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 {{"demo": "../examples/grouped-message-timeline/GroupedMessageTimeline.js"}}
 
@@ -125,7 +128,7 @@ Rebuild more of the message surface when:
 - message actions need a different placement model
 - grouped and ungrouped messages need distinct markup
 
-## Adjacent pages
+## See also
 
 - Continue with [Message list](/x/react-chat/unstyled/message-list/) for ordering, date boundaries, and thread scrolling behavior.
 - Continue with [Customization](/x/react-chat/unstyled/customization/) for slot replacement patterns on message rows and subparts.

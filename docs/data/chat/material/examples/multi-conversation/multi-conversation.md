@@ -2,6 +2,7 @@
 title: Chat - Multi-conversation
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Multi-conversation

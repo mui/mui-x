@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat - Unstyled composition
 packageName: '@mui/x-chat/unstyled'
 components: ChatRoot, ChatLayout
+githubLabel: 'scope: chat'
 ---
 
-# Unstyled composition
+# Chat - Unstyled composition
 
 <p class="description">Compose a complete chat UI from the unstyled namespaces while keeping styling decisions in your own code.</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 {{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js"}}
 

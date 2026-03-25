@@ -7,10 +7,7 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 const useThemeProps = createUseThemeProps('MuiChatComposer');
 import { SxProps, Theme } from '@mui/system';
 import { ComposerToolbar, type ComposerToolbarProps } from '@mui/x-chat-unstyled';
-import {
-  useChatComposerUtilityClasses,
-  type ChatComposerClasses,
-} from './chatComposerClasses';
+import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
 export interface ChatComposerToolbarProps extends ComposerToolbarProps {
   className?: string;
@@ -29,33 +26,32 @@ const ChatComposerToolbarStyled = styled('div', {
   gap: theme.spacing(0.5),
 }));
 
-const ChatComposerToolbar = React.forwardRef<
-  HTMLDivElement,
-  ChatComposerToolbarProps
->(function ChatComposerToolbar(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
-  const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
-  const classes = useChatComposerUtilityClasses(classesProp);
+const ChatComposerToolbar = React.forwardRef<HTMLDivElement, ChatComposerToolbarProps>(
+  function ChatComposerToolbar(inProps, ref) {
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
+    const classes = useChatComposerUtilityClasses(classesProp);
 
-  return (
-    <ComposerToolbar
-      ref={ref}
-      {...other}
-      slots={{
-        toolbar: slots?.toolbar ?? ChatComposerToolbarStyled,
-        ...slots,
-      }}
-      slotProps={{
-        ...slotProps,
-        toolbar: {
-          className: clsx(classes.toolbar, className),
-          sx,
-          ...(slotProps?.toolbar as object),
-        } as any,
-      }}
-    />
-  );
-});
+    return (
+      <ComposerToolbar
+        ref={ref}
+        {...other}
+        slots={{
+          toolbar: slots?.toolbar ?? ChatComposerToolbarStyled,
+          ...slots,
+        }}
+        slotProps={{
+          ...slotProps,
+          toolbar: {
+            className: clsx(classes.toolbar, className),
+            sx,
+            ...(slotProps?.toolbar as object),
+          } as any,
+        }}
+      />
+    );
+  },
+);
 
 ChatComposerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------

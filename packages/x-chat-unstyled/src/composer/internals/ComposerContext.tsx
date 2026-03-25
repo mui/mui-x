@@ -38,9 +38,7 @@ export function ComposerContextProvider(props: {
 }) {
   const { children, value } = props;
 
-  return (
-    <ComposerContext.Provider value={value}>{children}</ComposerContext.Provider>
-  );
+  return <ComposerContext.Provider value={value}>{children}</ComposerContext.Provider>;
 }
 
 export function useComposerContext() {

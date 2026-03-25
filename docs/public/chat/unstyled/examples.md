@@ -2,6 +2,7 @@
 title: Chat - Unstyled examples
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Unstyled examples
@@ -50,11 +51,6 @@ These recipes map well to common product surfaces such as:
 
 - [Composer with attachments](/x/react-chat/unstyled/examples/composer-with-attachments/) for the full draft toolbar pattern
 - [Slot customization](/x/react-chat/unstyled/examples/slot-customization/) for owner-state-driven slot replacement across multiple primitive groups
-
-## Real-world style replicas
-
-- [Intercom-style widget](/x/react-chat/unstyled/examples/intercom-style/) — compact support widget with bubble messages and branded header
-- [ChatGPT-style layout](/x/react-chat/unstyled/examples/chatgpt-style/) — full two-pane dark layout with sidebar and flat messages
 
 ## Recommended progression
 

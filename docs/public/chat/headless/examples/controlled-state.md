@@ -2,6 +2,7 @@
 title: Chat - Controlled state
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Controlled state
@@ -342,6 +343,7 @@ export default function ControlledStateHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

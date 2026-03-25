@@ -7,10 +7,7 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 const useThemeProps = createUseThemeProps('MuiChatComposer');
 import { SxProps, Theme } from '@mui/system';
 import { ComposerRoot, type ComposerRootProps } from '@mui/x-chat-unstyled';
-import {
-  useChatComposerUtilityClasses,
-  type ChatComposerClasses,
-} from './chatComposerClasses';
+import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
 export interface ChatComposerProps extends ComposerRootProps {
   className?: string;

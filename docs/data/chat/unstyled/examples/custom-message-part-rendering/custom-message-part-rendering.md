@@ -2,6 +2,7 @@
 title: Chat - Custom message part rendering
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Custom message part rendering

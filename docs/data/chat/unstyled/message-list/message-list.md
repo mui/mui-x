@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat - Unstyled message list
 packageName: '@mui/x-chat/unstyled'
 components: MessageListRoot
+githubLabel: 'scope: chat'
 ---
 
-# Unstyled message list
+# Chat - Unstyled message list
 
 <p class="description">Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking.</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 ## Primitive set
 
@@ -93,7 +96,7 @@ That makes it safe to keep in the row pipeline for every message without extra f
 - Render `MessageList.DateDivider` and `Indicators.UnreadMarker` alongside each row in `renderItem`.
 - Keep grouping and row composition inside the message-list render path so ordering and affordances stay aligned.
 
-## Adjacent pages
+## See also
 
 - Continue with [Messages](/x/react-chat/unstyled/messages/) for the row-level primitives that usually appear inside `renderItem`.
 - Continue with [Indicators](/x/react-chat/unstyled/indicators/) for unread and scroll affordances powered by the list.

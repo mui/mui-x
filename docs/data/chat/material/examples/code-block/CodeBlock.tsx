@@ -5,7 +5,11 @@ import Typography from '@mui/material/Typography';
 import { ChatBox, ChatCodeBlock } from '@mui/x-chat';
 import { nanoid } from 'nanoid';
 import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
-import { demoUsers, minimalConversation, createTextMessage } from '../shared/demoData';
+import {
+  demoUsers,
+  minimalConversation,
+  createTextMessage,
+} from '../shared/demoData';
 
 const CONVERSATION_ID = minimalConversation.id;
 
@@ -91,7 +95,9 @@ export default function CodeBlock() {
       async sendMessage() {
         const messageId = nanoid();
         return createChunkStream(
-          createTextResponseChunks(messageId, ASSISTANT_REPLY, { author: demoUsers.agent }),
+          createTextResponseChunks(messageId, ASSISTANT_REPLY, {
+            author: demoUsers.agent,
+          }),
           { delayMs: 40 },
         );
       },
@@ -106,7 +112,12 @@ export default function CodeBlock() {
         defaultActiveConversationId={CONVERSATION_ID}
         defaultConversations={[minimalConversation]}
         defaultMessages={INITIAL_MESSAGES}
-        sx={{ height: 480, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}
+        sx={{
+          height: 480,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+        }}
       />
       <div>
         <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>

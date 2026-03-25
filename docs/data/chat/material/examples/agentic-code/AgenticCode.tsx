@@ -9,11 +9,19 @@ import type {
   ChatMessageChunk,
   ChatMessagePart,
 } from '@mui/x-chat/headless';
-import { createChunkStream, splitText, syncConversationPreview } from '../shared/demoUtils';
+import {
+  createChunkStream,
+  splitText,
+  syncConversationPreview,
+} from '../shared/demoUtils';
 
 // --- Avatar helper ------------------------------------------------------------
 
-function createAvatarDataUrl(label: string, background: string, foreground = '#ffffff') {
+function createAvatarDataUrl(
+  label: string,
+  background: string,
+  foreground = '#ffffff',
+) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="${background}"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="${foreground}">${label}</text></svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
@@ -123,10 +131,14 @@ const initialThreads: Record<string, ChatMessage[]> = {
       { type: 'step-start' },
       {
         type: 'reasoning',
-        text: "I need to locate the failing test files and trace which imports changed during the refactor. The error is most likely a path issue — components were probably moved to a subdirectory.",
+        text: 'I need to locate the failing test files and trace which imports changed during the refactor. The error is most likely a path issue — components were probably moved to a subdirectory.',
         state: 'done',
       },
-      { type: 'text', text: "I'll start by locating all test files in the project.", state: 'done' },
+      {
+        type: 'text',
+        text: "I'll start by locating all test files in the project.",
+        state: 'done',
+      },
       {
         type: 'dynamic-tool',
         toolInvocation: {
@@ -134,7 +146,9 @@ const initialThreads: Record<string, ChatMessage[]> = {
           toolName: 'glob',
           state: 'output-available',
           input: { pattern: 'src/**/*.test.ts' },
-          output: { files: ['src/Button.test.ts', 'src/Input.test.ts', 'src/Form.test.ts'] },
+          output: {
+            files: ['src/Button.test.ts', 'src/Input.test.ts', 'src/Form.test.ts'],
+          },
         },
       },
       {
@@ -205,7 +219,11 @@ const initialThreads: Record<string, ChatMessage[]> = {
         text: "I should read the existing Header component before adding anything, so I can see how it's structured and where to place the toggle.",
         state: 'done',
       },
-      { type: 'text', text: "Let me read the Header component first.", state: 'done' },
+      {
+        type: 'text',
+        text: 'Let me read the Header component first.',
+        state: 'done',
+      },
       {
         type: 'dynamic-tool',
         toolInvocation: {
@@ -245,7 +263,10 @@ const initialThreads: Record<string, ChatMessage[]> = {
           toolName: 'bash',
           state: 'output-available',
           input: { command: 'pnpm build' },
-          output: { stdout: 'Build successful. 3 modules compiled in 1.2s.', exit_code: 0 },
+          output: {
+            stdout: 'Build successful. 3 modules compiled in 1.2s.',
+            exit_code: 0,
+          },
         },
       },
       {
@@ -318,7 +339,13 @@ function pushTool(
   for (const delta of splitText(JSON.stringify(input))) {
     chunks.push({ type: 'tool-input-delta', toolCallId, inputTextDelta: delta });
   }
-  chunks.push({ type: 'tool-input-available', toolCallId, toolName, input, dynamic: true });
+  chunks.push({
+    type: 'tool-input-available',
+    toolCallId,
+    toolName,
+    input,
+    dynamic: true,
+  });
   chunks.push({ type: 'tool-output-available', toolCallId, output });
 }
 
@@ -333,20 +360,36 @@ function createAgenticChunks(messageId: string): ChatMessageChunk[] {
     "Let me explore the repository to understand the codebase. I'll locate the relevant files, read them, apply the fix, and verify with tests.",
   );
 
-  pushText(chunks, `${messageId}-t1`, "I'll start by finding the relevant source files.");
+  pushText(
+    chunks,
+    `${messageId}-t1`,
+    "I'll start by finding the relevant source files.",
+  );
 
   chunks.push({ type: 'start-step' });
 
-  pushTool(chunks, `${messageId}-glob`, 'glob', { pattern: 'src/**/*.ts' }, {
-    files: ['src/api.ts', 'src/utils.ts', 'src/types.ts'],
-  });
+  pushTool(
+    chunks,
+    `${messageId}-glob`,
+    'glob',
+    { pattern: 'src/**/*.ts' },
+    {
+      files: ['src/api.ts', 'src/utils.ts', 'src/types.ts'],
+    },
+  );
 
   pushText(chunks, `${messageId}-t2`, 'Found the files. Reading the main module…');
 
-  pushTool(chunks, `${messageId}-read`, 'read_file', { path: 'src/api.ts' }, {
-    content:
-      'import axios from "axios";\nconst BASE = "http://localhost";\nexport async function fetchUser(id: string) {\n  return axios.get(`${BASE}/users/${id}`);\n}',
-  });
+  pushTool(
+    chunks,
+    `${messageId}-read`,
+    'read_file',
+    { path: 'src/api.ts' },
+    {
+      content:
+        'import axios from "axios";\nconst BASE = "http://localhost";\nexport async function fetchUser(id: string) {\n  return axios.get(`${BASE}/users/${id}`);\n}',
+    },
+  );
 
   pushText(chunks, `${messageId}-t3`, 'I can see the issue. Applying the fix now…');
 
@@ -362,12 +405,22 @@ function createAgenticChunks(messageId: string): ChatMessageChunk[] {
     { patched: true },
   );
 
-  pushTool(chunks, `${messageId}-bash`, 'bash', { command: 'pnpm test --run' }, {
-    stdout: '✓ All tests passed (12 tests)',
-    exit_code: 0,
-  });
+  pushTool(
+    chunks,
+    `${messageId}-bash`,
+    'bash',
+    { command: 'pnpm test --run' },
+    {
+      stdout: '✓ All tests passed (12 tests)',
+      exit_code: 0,
+    },
+  );
 
-  pushText(chunks, `${messageId}-t4`, 'All done. The fix is applied and tests are passing.');
+  pushText(
+    chunks,
+    `${messageId}-t4`,
+    'All done. The fix is applied and tests are passing.',
+  );
 
   chunks.push({ type: 'finish', messageId, finishReason: 'stop' });
 
@@ -376,7 +429,9 @@ function createAgenticChunks(messageId: string): ChatMessageChunk[] {
 
 // --- Component ---------------------------------------------------------------
 
-type SetThreads = React.Dispatch<React.SetStateAction<Record<string, ChatMessage[]>>>;
+type SetThreads = React.Dispatch<
+  React.SetStateAction<Record<string, ChatMessage[]>>
+>;
 
 export default function AgenticCode() {
   const setThreadsRef = React.useRef<SetThreads | null>(null);
@@ -405,13 +460,19 @@ export default function AgenticCode() {
                       ? {
                           ...part.toolInvocation,
                           state: 'output-available' as const,
-                          output: { done: true, message: 'Artifacts deleted successfully.' },
+                          output: {
+                            done: true,
+                            message: 'Artifacts deleted successfully.',
+                          },
                           approval: { approved: true },
                         }
                       : {
                           ...part.toolInvocation,
                           state: 'output-denied' as const,
-                          approval: { approved: false, reason: 'User denied the operation.' },
+                          approval: {
+                            approved: false,
+                            reason: 'User denied the operation.',
+                          },
                         },
                   };
                 }
@@ -432,7 +493,10 @@ export default function AgenticCode() {
   );
   const [threads, setThreads] = React.useState<Record<string, ChatMessage[]>>(() =>
     Object.fromEntries(
-      Object.entries(initialThreads).map(([id, msgs]) => [id, msgs.map((m) => ({ ...m }))]),
+      Object.entries(initialThreads).map(([id, msgs]) => [
+        id,
+        msgs.map((m) => ({ ...m })),
+      ]),
     ),
   );
 
@@ -454,7 +518,9 @@ export default function AgenticCode() {
       }}
       onMessagesChange={(nextMessages) => {
         setThreads((prev) => ({ ...prev, [activeId]: nextMessages }));
-        setConversations((prev) => syncConversationPreview(prev, activeId, nextMessages));
+        setConversations((prev) =>
+          syncConversationPreview(prev, activeId, nextMessages),
+        );
       }}
       sx={{
         height: 620,

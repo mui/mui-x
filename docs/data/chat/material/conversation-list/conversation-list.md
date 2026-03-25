@@ -2,10 +2,11 @@
 productId: x-chat
 title: Chat - Conversation list
 packageName: '@mui/x-chat'
+components: ChatConversationList
 githubLabel: 'scope: chat'
 ---
 
-# Conversation list
+# Chat - Conversation list
 
 <p class="description">Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components.</p>
 
@@ -15,7 +16,7 @@ The conversation list is the sidebar that shows all available conversations and 
 
 `ChatConversationList` renders one row per conversation. The default row structure is:
 
-```
+```text
 ChatConversationList              ← scrolling listbox (role="listbox")
   [per conversation]
   item                            ← row container (role="option")
@@ -31,20 +32,20 @@ All visual slots are owned by a single `ChatConversationList` instance. You do n
 
 ## Slot reference
 
-| Slot key | Default component | Purpose |
-| :--- | :--- | :--- |
-| `root` | styled `div` | The outer list container |
-| `scroller` | styled `div` | Fixed-width scrolling column with `border-right` |
-| `viewport` | styled `div` | Scrollable overflow container |
-| `scrollbar` | no-op `div` | Custom scrollbar track (replaced by native overflow) |
-| `scrollbarThumb` | no-op `div` | Custom scrollbar thumb |
-| `item` | styled `div` | Individual row, receives selection/focus styles |
-| `itemAvatar` | `ConversationListItemAvatar` wrapper | Circular avatar element |
-| `itemContent` | `ConversationListItemContent` wrapper | Title + preview column |
-| `title` | `ConversationListTitle` wrapper | Conversation name text |
-| `preview` | `ConversationListPreview` wrapper | Preview line text |
-| `timestamp` | `ConversationListTimestamp` wrapper | Timestamp text |
-| `unreadBadge` | `ConversationListUnreadBadge` wrapper | Unread count pill |
+| Slot key         | Default component                     | Purpose                                              |
+| :--------------- | :------------------------------------ | :--------------------------------------------------- |
+| `root`           | styled `div`                          | The outer list container                             |
+| `scroller`       | styled `div`                          | Fixed-width scrolling column with `border-right`     |
+| `viewport`       | styled `div`                          | Scrollable overflow container                        |
+| `scrollbar`      | no-op `div`                           | Custom scrollbar track (replaced by native overflow) |
+| `scrollbarThumb` | no-op `div`                           | Custom scrollbar thumb                               |
+| `item`           | styled `div`                          | Individual row, receives selection/focus styles      |
+| `itemAvatar`     | `ConversationListItemAvatar` wrapper  | Circular avatar element                              |
+| `itemContent`    | `ConversationListItemContent` wrapper | Title + preview column                               |
+| `title`          | `ConversationListTitle` wrapper       | Conversation name text                               |
+| `preview`        | `ConversationListPreview` wrapper     | Preview line text                                    |
+| `timestamp`      | `ConversationListTimestamp` wrapper   | Timestamp text                                       |
+| `unreadBadge`    | `ConversationListUnreadBadge` wrapper | Unread count pill                                    |
 
 Because the Material UI layer fills all slot defaults at instantiation, overriding a single slot only affects that region without disturbing the others.
 
@@ -54,12 +55,12 @@ The item and all its sub-slots receive an `ownerState` prop that carries the cur
 
 ### Item ownerState
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `selected` | `boolean` | This conversation is the active thread |
-| `unread` | `boolean` | The conversation has unread messages |
-| `focused` | `boolean` | This row currently has keyboard focus |
-| `conversation` | `ChatConversation` | The full conversation data object |
+| Field          | Type               | Description                            |
+| :------------- | :----------------- | :------------------------------------- |
+| `selected`     | `boolean`          | This conversation is the active thread |
+| `unread`       | `boolean`          | The conversation has unread messages   |
+| `focused`      | `boolean`          | This row currently has keyboard focus  |
+| `conversation` | `ChatConversation` | The full conversation data object      |
 
 The `selected` flag drives the row background (`palette.action.selected`). The `unread` flag drives bold title typography. The `focused` flag drives the `focus-visible` outline for keyboard accessibility.
 
@@ -67,9 +68,9 @@ Because the full `conversation` object is included, custom slot components can d
 
 ### Root ownerState
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `conversationCount` | `number` | Total number of conversations |
+| Field                  | Type                  | Description                        |
+| :--------------------- | :-------------------- | :--------------------------------- |
+| `conversationCount`    | `number`              | Total number of conversations      |
 | `activeConversationId` | `string \| undefined` | Currently selected conversation ID |
 
 ## Overriding the avatar
@@ -190,7 +191,11 @@ const CompactRow = React.forwardRef(function CompactRow(
         cursor: 'pointer',
         bgcolor: selected ? 'action.selected' : 'transparent',
         '&:hover': { bgcolor: selected ? 'action.selected' : 'action.hover' },
-        '&:focus-visible': { outline: '2px solid', outlineColor: 'primary.main', outlineOffset: -2 },
+        '&:focus-visible': {
+          outline: '2px solid',
+          outlineColor: 'primary.main',
+          outlineOffset: -2,
+        },
         borderRadius: 1,
         mx: 0.5,
       }}
@@ -321,7 +326,11 @@ const FullCustomRow = React.forwardRef(function FullCustomRow(
         py: 1,
         cursor: 'pointer',
         bgcolor: selected ? 'action.selected' : 'transparent',
-        '&:focus-visible': { outline: '2px solid', outlineColor: 'primary.main', outlineOffset: -2 },
+        '&:focus-visible': {
+          outline: '2px solid',
+          outlineColor: 'primary.main',
+          outlineOffset: -2,
+        },
         '&:hover': {
           bgcolor: selected ? 'action.selected' : 'action.hover',
         },
@@ -339,7 +348,13 @@ const FullCustomRow = React.forwardRef(function FullCustomRow(
       </Badge>
 
       <Box sx={{ flex: 1, minWidth: 0 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+          }}
+        >
           <Typography
             variant="body2"
             fontWeight={unread ? 'fontWeightBold' : 'fontWeightMedium'}
@@ -386,12 +401,10 @@ Custom `item` slot components must forward all `...props` to the DOM element the
 Pass `aria-label` to the root through `slotProps`:
 
 ```tsx
-<ChatConversationList
-  slotProps={{ root: { 'aria-label': 'Conversations' } }}
-/>
+<ChatConversationList slotProps={{ root: { 'aria-label': 'Conversations' } }} />
 ```
 
-## What to read next
+## See also
 
 - [Thread](/x/react-chat/material/thread/) for the conversation thread surface and its composition model.
 - [Customization](/x/react-chat/material/customization/) for the full slot and slotProps reference.

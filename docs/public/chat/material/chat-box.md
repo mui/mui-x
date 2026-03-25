@@ -185,7 +185,7 @@ When the adapter implements `listConversations` and `listMessages`, `ChatBox` bo
 
 See the [Overview](/x/react-chat/) for a custom adapter example.
 
-## Adjacent pages
+## See also
 
 - See [Composition](/x/react-chat/material/composition/) to build from modular styled components instead of the one-liner.
 - See [Slots](/x/react-chat/material/slots/) for the complete ChatBox slot reference.

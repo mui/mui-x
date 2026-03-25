@@ -2,6 +2,7 @@
 title: Chat - Two-pane inbox
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Two-pane inbox

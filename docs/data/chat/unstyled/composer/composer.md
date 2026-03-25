@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat - Unstyled composer
 packageName: '@mui/x-chat/unstyled'
 components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachButton, ComposerToolbar, ComposerHelperText
+githubLabel: 'scope: chat'
 ---
 
-# Unstyled composer
+# Chat - Unstyled composer
 
 <p class="description">Assemble the draft surface from structural primitives that already handle submission, IME-safe Enter, attachments, helper text, and disabled states.</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 {{"demo": "../examples/composer-with-attachments/ComposerWithAttachments.js"}}
 
@@ -82,11 +85,7 @@ That means East Asian IME flows stay intact without requiring extra app-level bo
 ### Input example
 
 ```tsx
-<Composer.TextArea
-  aria-label="Message"
-  minRows={1}
-  placeholder="Reply in thread"
-/>
+<Composer.TextArea aria-label="Message" minRows={1} placeholder="Reply in thread" />
 ```
 
 If you replace the root slot, preserve the textarea-like behavior unless you are intentionally building a different draft surface.
@@ -164,7 +163,7 @@ Use these values for styling patterns such as:
 - emphasizing the attach trigger when attachments are present
 - dimming the toolbar while a stream is active
 
-## Adjacent pages
+## See also
 
 - Continue with [Indicators](/x/react-chat/unstyled/indicators/) to add typing, unread, and scroll affordances around the composer.
 - Continue with [Customization](/x/react-chat/unstyled/customization/) for slot and owner-state patterns across the full unstyled surface.

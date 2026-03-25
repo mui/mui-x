@@ -2,6 +2,7 @@
 title: Chat - Code Block
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Code block
@@ -26,7 +27,7 @@ import { ChatCodeBlock } from '@mui/x-chat';
 
 <ChatCodeBlock language="typescript">
   {`const greet = (name: string) => \`Hello, \${name}!\`;`}
-</ChatCodeBlock>
+</ChatCodeBlock>;
 ```
 
 ## Custom labels
@@ -34,9 +35,7 @@ import { ChatCodeBlock } from '@mui/x-chat';
 Set `language` to any string — it is displayed as-is in the header:
 
 ```jsx
-<ChatCodeBlock language="bash">
-  {`pnpm add @mui/x-chat`}
-</ChatCodeBlock>
+<ChatCodeBlock language="bash">{`pnpm add @mui/x-chat`}</ChatCodeBlock>
 ```
 
 ## Syntax highlighting
@@ -69,4 +68,4 @@ function ShikiBlock({ code, language }) {
 
 When using `ChatBox`, any code fence in a markdown assistant message is automatically rendered as a `ChatCodeBlock`. This requires no additional configuration — the `renderMarkdown` function used internally by `ChatMessageContent` emits `ChatCodeBlock` for every code fence it encounters.
 
-To customise the rendering further, override `partProps.text.renderText` on `ChatMessageContent`.
+To customize the rendering further, override `partProps.text.renderText` on `ChatMessageContent`.

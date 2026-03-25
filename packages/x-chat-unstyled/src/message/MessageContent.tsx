@@ -82,10 +82,7 @@ function DefaultPartFallback(props: { part: ChatMessagePart }) {
   return <div data-part-type={part.type} />;
 }
 
-function TextPart(props: {
-  text: string;
-  renderText: (text: string) => React.ReactNode;
-}) {
+function TextPart(props: { text: string; renderText: (text: string) => React.ReactNode }) {
   const { text, renderText } = props;
   const rendered = React.useMemo(() => renderText(text), [text, renderText]);
   return <>{rendered}</>;

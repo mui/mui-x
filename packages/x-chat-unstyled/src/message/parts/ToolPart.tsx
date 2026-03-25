@@ -173,7 +173,13 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
       state: part.toolInvocation.state,
       toolName: part.toolInvocation.toolName,
     }),
-    [message.id, message.role, part.toolInvocation.state, part.toolInvocation.toolName, pendingApproval],
+    [
+      message.id,
+      message.role,
+      part.toolInvocation.state,
+      part.toolInvocation.toolName,
+      pendingApproval,
+    ],
   );
   const Root = resolvedSlots?.root ?? 'div';
   const Header = resolvedSlots?.header ?? 'div';

@@ -2,6 +2,7 @@
 title: Chat - Grouped message timeline
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Grouped message timeline

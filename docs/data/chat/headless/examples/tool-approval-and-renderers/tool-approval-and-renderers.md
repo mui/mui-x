@@ -2,6 +2,7 @@
 title: Chat - Tool approval and renderers
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Tool approval and renderers

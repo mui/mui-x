@@ -2,6 +2,7 @@
 title: Chat - Conversation history
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Conversation history

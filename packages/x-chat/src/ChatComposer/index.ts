@@ -15,7 +15,4 @@ export {
   getChatComposerUtilityClass,
   useChatComposerUtilityClasses,
 } from './chatComposerClasses';
-export type {
-  ChatComposerClasses,
-  ChatComposerClassKey,
-} from './chatComposerClasses';
+export type { ChatComposerClasses, ChatComposerClassKey } from './chatComposerClasses';

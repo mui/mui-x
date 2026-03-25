@@ -7,10 +7,7 @@ import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { SuggestionsContext } from './internals/SuggestionsContext';
 import { SuggestionItem } from './SuggestionItem';
-import {
-  type ChatSuggestion,
-  type SuggestionsRootOwnerState,
-} from './suggestions.types';
+import { type ChatSuggestion, type SuggestionsRootOwnerState } from './suggestions.types';
 
 function normalizeSuggestion(item: ChatSuggestion | string): ChatSuggestion {
   return typeof item === 'string' ? { value: item } : item;
@@ -26,8 +23,10 @@ export interface SuggestionsRootSlotProps {
   item?: SlotComponentProps<'button', {}, {}>;
 }
 
-export interface SuggestionsRootProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface SuggestionsRootProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   slots?: Partial<SuggestionsRootSlots>;
   slotProps?: SuggestionsRootSlotProps;
   /**
@@ -51,14 +50,7 @@ export const SuggestionsRoot = React.forwardRef(function SuggestionsRoot(
   props: SuggestionsRootProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    slots,
-    slotProps,
-    suggestions,
-    autoSubmit = false,
-    children,
-    ...other
-  } = props;
+  const { slots, slotProps, suggestions, autoSubmit = false, children, ...other } = props;
   const messageIds = useMessageIds();
   const { setValue, submit } = useChatComposer();
   const localeText = useChatLocaleText();
@@ -69,9 +61,7 @@ export const SuggestionsRoot = React.forwardRef(function SuggestionsRoot(
     [suggestions],
   );
 
-  const suggestionCount = children
-    ? React.Children.count(children)
-    : normalized.length;
+  const suggestionCount = children ? React.Children.count(children) : normalized.length;
 
   const ownerState = React.useMemo<SuggestionsRootOwnerState>(
     () => ({
@@ -93,10 +83,7 @@ export const SuggestionsRoot = React.forwardRef(function SuggestionsRoot(
     [autoSubmit, setValue, submit],
   );
 
-  const contextValue = React.useMemo(
-    () => ({ onSelect }),
-    [onSelect],
-  );
+  const contextValue = React.useMemo(() => ({ onSelect }), [onSelect]);
 
   const Root = slots?.root ?? 'div';
   const rootProps = useSlotProps({

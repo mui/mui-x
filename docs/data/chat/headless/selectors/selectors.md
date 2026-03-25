@@ -2,9 +2,10 @@
 productId: x-chat
 title: Chat - Headless selectors
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
-# Headless selectors
+# Chat - Headless selectors
 
 <p class="description">Subscribe to exactly the store slices you need with memoized selectors for efficient, granular rendering.</p>
 
@@ -95,7 +96,7 @@ This design has three benefits:
 
 This is why the `useMessageIds()` + `useMessage(id)` pattern performs well for large threads — the ID list stays stable while individual rows subscribe to their own message record.
 
-## Adjacent pages
+## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for the hook API that wraps these selectors.
 - [State and store](/x/react-chat/headless/state/) for the internal state shape and controlled/uncontrolled models.

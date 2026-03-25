@@ -7,8 +7,7 @@ export interface ChatScrollToBottomAffordanceClasses {
   root: string;
 }
 
-export type ChatScrollToBottomAffordanceClassKey =
-  keyof ChatScrollToBottomAffordanceClasses;
+export type ChatScrollToBottomAffordanceClassKey = keyof ChatScrollToBottomAffordanceClasses;
 
 export function getChatScrollToBottomAffordanceUtilityClass(slot: string): string {
   return generateUtilityClass('MuiChatScrollToBottomAffordance', slot);

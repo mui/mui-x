@@ -7,10 +7,7 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 const useThemeProps = createUseThemeProps('MuiChatComposer');
 import { SxProps, Theme } from '@mui/system';
 import { ComposerLabel, type ComposerLabelProps } from '@mui/x-chat-unstyled';
-import {
-  useChatComposerUtilityClasses,
-  type ChatComposerClasses,
-} from './chatComposerClasses';
+import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
 export interface ChatComposerLabelProps extends ComposerLabelProps {
   className?: string;
@@ -31,34 +28,33 @@ const ChatComposerLabelStyled = styled('label', {
   paddingInline: theme.spacing(0.5),
 }));
 
-const ChatComposerLabel = React.forwardRef<
-  HTMLLabelElement,
-  ChatComposerLabelProps
->(function ChatComposerLabel(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
-  const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
-  const classes = useChatComposerUtilityClasses(classesProp);
+const ChatComposerLabel = React.forwardRef<HTMLLabelElement, ChatComposerLabelProps>(
+  function ChatComposerLabel(inProps, ref) {
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
+    const classes = useChatComposerUtilityClasses(classesProp);
 
-  return (
-    <ComposerLabel
-      ref={ref}
-      {...other}
-      slots={{
-        label: slots?.label ?? ChatComposerLabelStyled,
-        ...slots,
-      }}
-      slotProps={{
-        ...slotProps,
-        label: {
-          className: clsx(classes.label, className),
-          sx,
-          ...slotProps?.label,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any,
-      }}
-    />
-  );
-});
+    return (
+      <ComposerLabel
+        ref={ref}
+        {...other}
+        slots={{
+          label: slots?.label ?? ChatComposerLabelStyled,
+          ...slots,
+        }}
+        slotProps={{
+          ...slotProps,
+          label: {
+            className: clsx(classes.label, className),
+            sx,
+            ...slotProps?.label,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any,
+        }}
+      />
+    );
+  },
+);
 
 ChatComposerLabel.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -2,6 +2,7 @@
 title: Chat - Material UI examples
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Material UI examples

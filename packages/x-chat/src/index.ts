@@ -1,10 +1,7 @@
 // ─── Top-level ChatBox (one-liner) ───────────────────────────────────────────
 export { ChatBox } from './ChatBox/ChatBox';
 export type { ChatBoxProps, ChatBoxSlots, ChatBoxSlotProps } from './ChatBox/ChatBox.types';
-export {
-  chatBoxClasses,
-  getChatBoxUtilityClass,
-} from './ChatBox/chatBoxClasses';
+export { chatBoxClasses, getChatBoxUtilityClass } from './ChatBox/chatBoxClasses';
 export type { ChatBoxClasses, ChatBoxClassKey } from './ChatBox/chatBoxClasses';
 
 // ─── ChatCodeBlock ────────────────────────────────────────────────────────────
@@ -69,10 +66,7 @@ export {
   chatComposerClasses,
   getChatComposerUtilityClass,
 } from './ChatComposer/chatComposerClasses';
-export type {
-  ChatComposerClasses,
-  ChatComposerClassKey,
-} from './ChatComposer/chatComposerClasses';
+export type { ChatComposerClasses, ChatComposerClassKey } from './ChatComposer/chatComposerClasses';
 
 // ─── ChatConversationList ─────────────────────────────────────────────────────
 export { ChatConversationList } from './ChatConversationList/ChatConversationList';
@@ -103,10 +97,7 @@ export { ChatMessageGroup } from './ChatMessage/ChatMessageGroup';
 export type { ChatMessageGroupProps } from './ChatMessage/ChatMessageGroup';
 export { ChatDateDivider } from './ChatMessage/ChatDateDivider';
 export type { ChatDateDividerProps } from './ChatMessage/ChatDateDivider';
-export {
-  chatMessageClasses,
-  getChatMessageUtilityClass,
-} from './ChatMessage/chatMessageClasses';
+export { chatMessageClasses, getChatMessageUtilityClass } from './ChatMessage/chatMessageClasses';
 export type { ChatMessageClasses, ChatMessageClassKey } from './ChatMessage/chatMessageClasses';
 
 // ─── ChatMessageList ──────────────────────────────────────────────────────────
@@ -124,10 +115,7 @@ export type {
 // ─── ChatPlan ─────────────────────────────────────────────────────────────────
 export { ChatPlan } from './ChatPlan/ChatPlan';
 export type { ChatPlanProps, PlanStep } from './ChatPlan/ChatPlan';
-export {
-  chatPlanClasses,
-  getChatPlanUtilityClass,
-} from './ChatPlan/chatPlanClasses';
+export { chatPlanClasses, getChatPlanUtilityClass } from './ChatPlan/chatPlanClasses';
 export type { ChatPlanClasses, ChatPlanClassKey } from './ChatPlan/chatPlanClasses';
 
 // ─── ChatSuggestions ─────────────────────────────────────────────────────────
@@ -175,10 +163,7 @@ export type {
 // ─── ChatTask ─────────────────────────────────────────────────────────────────
 export { ChatTask } from './ChatTask/ChatTask';
 export type { ChatTaskProps, ChatTaskStatus } from './ChatTask/ChatTask';
-export {
-  chatTaskClasses,
-  getChatTaskUtilityClass,
-} from './ChatTask/chatTaskClasses';
+export { chatTaskClasses, getChatTaskUtilityClass } from './ChatTask/chatTaskClasses';
 export type { ChatTaskClasses, ChatTaskClassKey } from './ChatTask/chatTaskClasses';
 
 // ─── ChatMessageSkeleton ──────────────────────────────────────────────────────

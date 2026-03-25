@@ -2,70 +2,176 @@
 productId: x-chat
 title: Chat React components
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # MUI X Chat
 
-A layered chat package family spanning headless runtime, unstyled primitives, and Material UI components.
+<p class="description">Get a fully styled, theme-aware chat interface with a single component using <code>@mui/x-chat</code>.</p>
 
-This section is organized around the layered `x-chat` package family.
-It has one product entry point, then splits implementation details by layer:
+`@mui/x-chat` is the Material UI styling layer for the chat package family.
+It wraps `@mui/x-chat/unstyled` structural primitives with `styled()` components that inherit your active Material UI theme.
 
-- [Headless](/x/react-chat/headless/): runtime, adapters, store, hooks, selectors, and renderer contracts.
-- [Unstyled](/x/react-chat/unstyled/): structural primitives, slots, and accessibility-oriented DOM wiring.
-- [Material UI](/x/react-chat/): the styled layer for `@mui/x-chat`, including the `ChatBox` one-liner API.
+## Installation
+
+<codeblock storageKey="package-manager">
+
+```bash npm
+npm install @mui/x-chat
+```
+
+```bash pnpm
+pnpm add @mui/x-chat
+```
+
+```bash yarn
+yarn add @mui/x-chat
+```
+
+</codeblock>
+
+### Peer dependencies
+
+`@mui/x-chat` requires Material UI and Emotion:
+
+<codeblock storageKey="package-manager">
+
+```bash npm
+npm install @mui/material @emotion/react @emotion/styled
+```
+
+```bash pnpm
+pnpm add @mui/material @emotion/react @emotion/styled
+```
+
+```bash yarn
+yarn add @mui/material @emotion/react @emotion/styled
+```
+
+</codeblock>
+
+<!-- #react-peer-version -->
+
+React 17, 18, and 19 are supported:
+
+```json
+"peerDependencies": {
+  "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+}
+```
+
+## Basic usage
+
+Import `ChatBox` and wire it to an adapter.
+The adapter implements `sendMessage` and returns a streaming response:
+
+```tsx
+import { ChatBox } from '@mui/x-chat';
+
+const adapter = {
+  async sendMessage({ message, signal }) {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message }),
+      signal,
+    });
+    return res.body; // ReadableStream<ChatMessageChunk>
+  },
+};
+
+export default function App() {
+  return (
+    <ChatBox
+      adapter={adapter}
+      defaultConversations={[{ id: 'main', title: 'Assistant' }]}
+      defaultActiveConversationId="main"
+      sx={{ height: 500 }}
+    />
+  );
+}
+```
+
+See [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for a fully runnable example with a local echo adapter.
+
+`ChatBox` renders a full chat surface — conversation list, thread header, message log, and composer — in a single component.
+All visual styles are derived from your active Material UI theme.
+
+## Theme integration
+
+`ChatBox` reads `palette`, `typography`, `shape`, and `spacing` from the closest `ThemeProvider`.
+No additional configuration is needed.
+
+- User message bubbles use `palette.primary.main` as the background color
+- Assistant bubbles use `palette.grey[100]` in light mode and `palette.grey[800]` in dark mode
+- `typography.body2` governs message text
+- `shape.borderRadius` controls bubble rounding
+- `palette.divider` is used for borders and separators
+
+Wrapping `ChatBox` in a `ThemeProvider` with custom values is enough to retheme the entire surface.
+See [Custom theme](/x/react-chat/material/examples/custom-theme/) for a working example.
+
+## TypeScript theme augmentation
+
+To get autocomplete for style overrides in `createTheme`, import the augmentation side-effect:
+
+```tsx
+import type {} from '@mui/x-chat/themeAugmentation';
+
+const theme = createTheme({
+  components: {
+    MuiChatBox: {
+      styleOverrides: {
+        root: {
+          // your overrides
+        },
+      },
+    },
+  },
+});
+```
 
 ## Package model
 
-The package family currently follows this dependency direction:
+The package family follows this dependency direction:
 
 ```text
 @mui/x-chat
   -> @mui/x-chat/unstyled
-    -> @mui/x-chat/headless
+       -> @mui/x-chat/headless
 ```
 
-That split should be reflected directly in the docs:
+Each layer builds on the one below it:
 
-- **Headless** explains state ownership, streaming, rendering contracts, and backend integration.
-- **Unstyled** explains composition, slots, layout primitives, and list/composer structure.
-- **Material UI** explains the higher-level styled API without duplicating lower-layer behavior docs.
+- **Material UI** adds visual styles via Material UI `styled()` on top of the unstyled primitives.
+- **Unstyled** adds structural DOM wiring, slots, and accessibility on top of the headless runtime.
+- **Headless** owns state, streaming, adapters, and hooks with no DOM output.
 
-## Documentation map
+### Choosing a layer
 
-### Product entry
+| If you want…                                                                   | Use                    |
+| :----------------------------------------------------------------------------- | :--------------------- |
+| A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`          |
+| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat/unstyled` |
+| Complete control over DOM structure with only React state and hooks            | `@mui/x-chat/headless` |
 
-- **Overview**: positioning, package layering, feature boundaries, and links into each layer.
-- **Choosing a layer**: when to start with headless, when to use unstyled, and when the Material layer is the right fit.
+### Package boundary
 
-### Headless section
+`@mui/x-chat` re-exports `@mui/x-chat/headless` and `@mui/x-chat/unstyled` through dedicated entry points:
 
-- **Runtime overview**: `ChatProvider`, public state, controlled and uncontrolled flows.
-- **Adapters and streaming**: `sendMessage`, chunk processing, errors, and realtime hooks.
-- **Hooks and selectors**: `useChat`, `useConversation`, `useMessage`, `useMessageIds`, `chatSelectors`.
-- **Composer state**: draft value, attachments, IME-safe submission, and progress state.
-- **Part renderers and tool calls**: renderer registration, `useChatPartRenderer`, and `useChatOnToolCall`.
+```tsx
+// Headless hooks and types
+import { useChat, useChatComposer } from '@mui/x-chat/headless';
 
-### Unstyled section
+// Unstyled structural primitives
+import { Chat, MessageList } from '@mui/x-chat/unstyled';
+```
 
-- **Composition overview**: how `Chat`, `ConversationList`, `Thread`, `MessageList`, `Message`, and `Composer` fit together.
-- **Layout and panes**: `Chat.Root` and `Chat.Layout`.
-- **Conversation list**: root, item, avatar, text, and meta primitives.
-- **Thread and messages**: thread header, message list, date dividers, message groups, and message parts.
-- **Composer structure**: root, input, toolbar, attach button, helper text, and send button.
-- **Slots and customization**: when to use structural components versus lower-level slot overrides.
+This means you can mix the styled layer with lower-level primitives in the same application.
 
-### Material UI section
+## See also
 
-- **Styled overview**: relationship to the lower layers and target developer experience.
-- **`ChatBox` one-liner API**: the default entry point for common use cases.
-- **Modular Material components**: conversations pane, thread, message surface, composer, and indicators.
-- **Theming and customization**: slots, `sx`, theme overrides, density, and color schemes.
-
-## Current status
-
-The docs split above is intentionally ahead of the final implementation.
-
-- `@mui/x-chat/headless` already has a concrete runtime surface.
-- `@mui/x-chat/unstyled` now has concrete structural primitives and bridge exports.
-- `@mui/x-chat` now exposes the styled layer, with `ChatBox` as the highest-level entry point and modular components for deeper customization.
+- [Customization](/x/react-chat/material/customization/) for theme overrides, sx, slots, and CSS class names
+- [Examples](/x/react-chat/material/examples/) for end-to-end patterns
+- [Headless](/x/react-chat/headless/) for adapters, hooks, and runtime contracts
+- [Unstyled](/x/react-chat/unstyled/) for structural composition primitives

@@ -277,7 +277,7 @@ Common owner state values:
 - `selected` — whether a conversation is active
 - `unread` — whether a conversation has unread messages
 
-## Adjacent pages
+## See also
 
 - See [Unstyled customization](/x/react-chat/unstyled/customization/) for the structural slot model.
 - See [Theming](/x/react-chat/material/theming/) for theme-level visual customization.

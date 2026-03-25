@@ -2,6 +2,7 @@
 title: Chat - No conversation history
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # No conversation history
@@ -30,7 +31,7 @@ const adapter: ChatAdapter = {
 };
 
 // No `conversations` or `defaultConversations` prop — state stays empty
-<ChatBox adapter={adapter} />
+<ChatBox adapter={adapter} />;
 ```
 
 ## When this is the right choice
@@ -59,7 +60,9 @@ To show the conversation list, provide at least one of the two sources:
 
 ```tsx
 const adapter: ChatAdapter = {
-  async sendMessage({ message }) { /* ... */ },
+  async sendMessage({ message }) {
+    /* ... */
+  },
   async listConversations() {
     const data = await fetch('/api/conversations').then((r) => r.json());
     return { conversations: data };

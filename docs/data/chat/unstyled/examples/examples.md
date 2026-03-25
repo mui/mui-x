@@ -2,6 +2,7 @@
 title: Chat - Unstyled examples
 productId: x-chat
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Unstyled examples

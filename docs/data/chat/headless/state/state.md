@@ -2,9 +2,10 @@
 productId: x-chat
 title: Chat - State and store
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
-# State and store
+# Chat - State and store
 
 <p class="description">Configure the runtime via <code>ChatProvider</code> props, choose controlled or uncontrolled state, and explore the normalized store.</p>
 
@@ -198,7 +199,7 @@ interface ChatStoreConstructor<Cursor = string> {
 
 Use this when you need to override internal normalization, add computed state, or integrate with an external store.
 
-## Adjacent pages
+## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for the full hook API reference.
 - [Selectors](/x/react-chat/headless/selectors/) for store selectors and advanced subscriptions.

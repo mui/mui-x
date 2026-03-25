@@ -2,6 +2,7 @@
 title: Chat - Slow streaming
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Slow streaming
@@ -10,7 +11,7 @@ packageName: '@mui/x-chat'
 
 This example uses a slow adapter (500ms per chunk) to make the streaming behavior clearly visible.
 
-{{"demo": "SlowStreaming.js"}}
+{{"demo": "SlowStreaming.js", "bg": "inline"}}
 
 ## What it shows
 

@@ -2,6 +2,7 @@
 title: Chat - Plan & task
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Plan & task
@@ -46,13 +47,13 @@ Use `ChatTask` children directly when you need custom rendering or conditional l
 
 ## Status reference
 
-| Status | Icon | Typical use |
-|---|---|---|
-| `pending` | Outlined circle | Step not yet started |
-| `running` | Spinner | Step currently executing |
-| `done` | Filled checkmark | Step completed successfully |
-| `error` | Error circle | Step failed |
-| `skipped` | Minus circle | Step intentionally bypassed |
+| Status    | Icon             | Typical use                 |
+| :-------- | :--------------- | :-------------------------- |
+| `pending` | Outlined circle  | Step not yet started        |
+| `running` | Spinner          | Step currently executing    |
+| `done`    | Filled checkmark | Step completed successfully |
+| `error`   | Error circle     | Step failed                 |
+| `skipped` | Minus circle     | Step intentionally bypassed |
 
 ## Connecting to the adapter
 
@@ -67,14 +68,17 @@ const [steps, setSteps] = React.useState<PlanStep[]>(INITIAL_STEPS);
 const setStepsRef = React.useRef(setSteps);
 setStepsRef.current = setSteps;
 
-const adapter = React.useMemo(() => ({
-  async sendMessage({ message }) {
-    // … stream response from your backend …
-    // Then update step statuses as they come in:
-    setStepsRef.current(updatedSteps);
-    return responseStream;
-  },
-}), []); // empty deps — adapter captures the stable ref, not setSteps directly
+const adapter = React.useMemo(
+  () => ({
+    async sendMessage({ message }) {
+      // … stream response from your backend …
+      // Then update step statuses as they come in:
+      setStepsRef.current(updatedSteps);
+      return responseStream;
+    },
+  }),
+  [],
+); // empty deps — adapter captures the stable ref, not setSteps directly
 ```
 
 ## Adding detail text

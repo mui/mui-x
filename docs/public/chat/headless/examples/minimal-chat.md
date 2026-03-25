@@ -2,6 +2,7 @@
 title: Chat - Minimal headless chat
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Minimal headless chat
@@ -246,6 +247,7 @@ export default function MinimalHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

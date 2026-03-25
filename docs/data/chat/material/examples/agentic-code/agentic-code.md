@@ -2,13 +2,14 @@
 title: Agentic code assistant
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Agentic code assistant
 
 <p class="description">Streaming tool calls (Bash, Read, Edit, Write, Glob), reasoning, step boundaries, and an interactive approval flow — driven entirely by the adapter API.</p>
 
-{{"demo": "AgenticCode.js"}}
+{{"demo": "AgenticCode.js", "bg": "inline"}}
 
 ## How it works
 
@@ -83,7 +84,7 @@ clear where one planning cycle ends and the next begins.
 ## Tool slot overrides
 
 Both `slots` and `slotProps` on the built-in `ToolPart` renderer are fully
-customisable. Pass them through `slotProps.messageContent.partProps['dynamic-tool']`
+customizable. Pass them through `slotProps.messageContent.partProps['dynamic-tool']`
 on `ChatBox`.
 
 ### Icon styles
@@ -92,19 +93,19 @@ Five variations of the `icon` slot — from the default first-letter monogram to
 emoji, coloured circles, terminal squares, and Unicode symbols. Each icon
 receives `ownerState.toolName` so a single component can branch on the tool type.
 
-{{"demo": "ToolStylingA.js"}}
+{{"demo": "ToolStylingA.js", "bg": "inline"}}
 
 ### Block themes
 
 Five color themes, all built on `toolSlotProps` — per-tool overrides that style
 the header, icon, title, state chip, and root border without touching the global
-slots. This keeps collapse/expand and all other built-in behaviours intact while
+slots. This keeps collapse/expand and all other built-in behaviors intact while
 giving each tool its own distinct accent: **Colorful** (gradient + circular icon),
 **Pastel** (light fills), **Vivid** (solid saturated header, white text),
 **Outlined** (transparent fill, colored border), and **Dark** (dark background
 with glowing accents).
 
-{{"demo": "ToolStylingB.js"}}
+{{"demo": "ToolStylingB.js", "bg": "inline"}}
 
 ### Custom renderer
 
@@ -113,7 +114,7 @@ Replace the tool block entirely by providing a custom `root` slot component via
 from the slot system — no default markup, no expand/collapse. Here each call
 renders as a single-line process trace: tool name, a dotted rule, and a state badge.
 
-{{"demo": "ToolStylingC.js"}}
+{{"demo": "ToolStylingC.js", "bg": "inline"}}
 
 ## Related
 

@@ -2,9 +2,10 @@
 productId: x-chat
 title: Chat - Headless streaming
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
-# Headless streaming
+# Chat - Headless streaming
 
 <p class="description">Understand the stream chunk protocol that turns adapter responses into normalized message state, including text, reasoning, tool, source, file, and data chunks.</p>
 
@@ -212,7 +213,7 @@ async function fromSSE(
 }
 ```
 
-## Adjacent pages
+## See also
 
 - [Adapters](/x/react-chat/headless/adapters/) for the adapter interface that produces streams.
 - [State and store](/x/react-chat/headless/state/) for `streamFlushInterval` and error model.

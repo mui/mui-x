@@ -309,7 +309,9 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
 
   const autoScrollEnabled = autoScroll !== false;
   const autoScrollBuffer = autoScrollEnabled
-    ? (typeof autoScroll === 'object' ? (autoScroll.buffer ?? DEFAULT_AUTO_SCROLL_BUFFER) : DEFAULT_AUTO_SCROLL_BUFFER)
+    ? typeof autoScroll === 'object'
+      ? (autoScroll.buffer ?? DEFAULT_AUTO_SCROLL_BUFFER)
+      : DEFAULT_AUTO_SCROLL_BUFFER
     : estimatedItemSize; // fall back to estimatedItemSize so isAtBottom tracking still works
 
   const behavior = useMessageListBehavior({

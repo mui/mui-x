@@ -2,6 +2,7 @@
 title: Chat - Basic AI chat
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Basic AI chat

@@ -233,7 +233,7 @@ export default function CustomPartRenderer() {
 `ChatDateDivider` renders a centered date label between messages from different days.
 It is automatically inserted by `ChatConversation` when dates change in the message list.
 
-## Adjacent pages
+## See also
 
 - See [Unstyled messages](/x/react-chat/unstyled/messages/) for the structural primitive model.
 - See [Headless message parts](/x/react-chat/headless/examples/message-parts/) for the part type reference.

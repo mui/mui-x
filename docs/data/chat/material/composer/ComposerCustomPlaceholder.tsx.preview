@@ -1,0 +1,15 @@
+<ChatBox
+  adapter={adapter}
+  defaultActiveConversationId={minimalConversation.id}
+  defaultConversations={[minimalConversation]}
+  defaultMessages={minimalMessages}
+  slotProps={{
+    composerInput: { placeholder: 'Ask me anything...' },
+  }}
+  sx={{
+    height: 400,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

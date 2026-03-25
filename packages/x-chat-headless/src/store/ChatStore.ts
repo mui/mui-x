@@ -1,5 +1,10 @@
 import { Store } from '@mui/x-internals/store';
-import type { ChatConversation, ChatDraftAttachment, ChatMessage, ChatUser } from '../types/chat-entities';
+import type {
+  ChatConversation,
+  ChatDraftAttachment,
+  ChatMessage,
+  ChatUser,
+} from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type { ChatInternalState } from '../types/chat-state';
 

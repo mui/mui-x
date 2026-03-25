@@ -2,6 +2,7 @@
 title: Chat - Headless examples
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Headless examples

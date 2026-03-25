@@ -25,10 +25,15 @@ export function getChatComposerUtilityClass(slot: string): string {
   return generateUtilityClass('MuiChatComposer', slot);
 }
 
-export const chatComposerClasses: ChatComposerClasses = generateUtilityClasses(
-  'MuiChatComposer',
-  ['root', 'label', 'textArea', 'sendButton', 'attachButton', 'toolbar', 'helperText'],
-);
+export const chatComposerClasses: ChatComposerClasses = generateUtilityClasses('MuiChatComposer', [
+  'root',
+  'label',
+  'textArea',
+  'sendButton',
+  'attachButton',
+  'toolbar',
+  'helperText',
+]);
 
 const slots: Record<ChatComposerClassKey, string[]> = {
   root: ['root'],
@@ -42,5 +47,4 @@ const slots: Record<ChatComposerClassKey, string[]> = {
 
 export const useChatComposerUtilityClasses = (
   classes: Partial<ChatComposerClasses> | undefined,
-): ChatComposerClasses =>
-  composeClasses(slots, getChatComposerUtilityClass, classes);
+): ChatComposerClasses => composeClasses(slots, getChatComposerUtilityClass, classes);

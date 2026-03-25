@@ -125,8 +125,7 @@ function DefaultComposer({
 }) {
   const showAttachButton = features?.attachButton !== false;
   const showHelperText = features?.helperText !== false;
-  const ComposerRootComponent = (slots?.composerRoot ??
-    ChatComposer) as typeof ChatComposer;
+  const ComposerRootComponent = (slots?.composerRoot ?? ChatComposer) as typeof ChatComposer;
   const ComposerInputComponent = (slots?.composerInput ??
     ChatComposerTextArea) as typeof ChatComposerTextArea;
   const ComposerToolbarComponent = (slots?.composerToolbar ??
@@ -141,7 +140,10 @@ function DefaultComposer({
 
   return (
     <ComposerRootComponent {...(slotProps?.composerRoot ?? {})}>
-      <ComposerInputComponent placeholder={localeText.composerInputPlaceholder} {...(slotProps?.composerInput ?? {})} />
+      <ComposerInputComponent
+        placeholder={localeText.composerInputPlaceholder}
+        {...(slotProps?.composerInput ?? {})}
+      />
       {showHelperText && <ComposerHelperTextComponent {...(slotProps?.composerHelperText ?? {})} />}
       <ComposerToolbarComponent {...(slotProps?.composerToolbar ?? {})}>
         {showAttachButton && (
@@ -189,8 +191,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const ConversationListComponent = (slots?.conversationList ??
     ChatConversationList) as typeof ChatConversationList;
   const MessageListComponent = (slots?.messageList ?? ChatMessageList) as typeof ChatMessageList;
-  const SuggestionsComponent = (slots?.suggestions ??
-    ChatSuggestions) as typeof ChatSuggestions;
+  const SuggestionsComponent = (slots?.suggestions ?? ChatSuggestions) as typeof ChatSuggestions;
 
   // Use refs so renderItem is stable and doesn't cause the virtualized list
   // to re-render every time a new object reference is passed for slots/slotProps.

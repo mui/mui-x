@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat - Unstyled thread
 packageName: '@mui/x-chat/unstyled'
 components: ConversationRoot, ConversationHeader, ConversationTitle, ConversationSubtitle, ConversationHeaderActions
+githubLabel: 'scope: chat'
 ---
 
-# Unstyled thread
+# Chat - Unstyled thread
 
 <p class="description">Build the active conversation surface from thread primitives that derive their state from the selected conversation.</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 {{"demo": "../examples/two-pane-inbox/TwoPaneInbox.js"}}
 
@@ -121,7 +124,7 @@ It is intentionally light on policy so the app can decide which actions belong t
 - Keep header composition inside `Conversation.Root` so title, subtitle, and actions stay in sync with the active conversation.
 - Pair `Conversation.Root` with `MessageList.Root` and `Composer.Root` for the canonical thread surface.
 
-## Adjacent pages
+## See also
 
 - Continue with [Message list](/x/react-chat/unstyled/message-list/) for the scrolling and history behavior inside the thread.
 - Continue with [Indicators](/x/react-chat/unstyled/indicators/) for thread-level affordances such as typing feedback.

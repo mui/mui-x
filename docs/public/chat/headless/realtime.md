@@ -2,9 +2,10 @@
 productId: x-chat
 title: Chat - Headless realtime
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
-# Headless realtime
+# Chat - Headless realtime
 
 <p class="description">Push typing, presence, read state, and collection changes into the runtime through the adapter's <code>subscribe()</code> method.</p>
 
@@ -129,7 +130,7 @@ Here are the full shapes:
 { type: 'read', conversationId: string, messageId?: string, userId?: string }
 ```
 
-## Adjacent pages
+## See also
 
 - [Adapters](/x/react-chat/headless/adapters/) for the full adapter interface including `subscribe()`.
 - [Hooks](/x/react-chat/headless/hooks/) for `useChatStatus()` and the typing/presence consumption pattern.

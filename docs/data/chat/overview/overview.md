@@ -150,7 +150,7 @@ Each layer builds on the one below it:
 ### Choosing a layer
 
 | If you want…                                                                   | Use                    |
-| ------------------------------------------------------------------------------ | ---------------------- |
+| :----------------------------------------------------------------------------- | :--------------------- |
 | A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`          |
 | Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat/unstyled` |
 | Complete control over DOM structure with only React state and hooks            | `@mui/x-chat/headless` |
@@ -169,7 +169,7 @@ import { Chat, MessageList } from '@mui/x-chat/unstyled';
 
 This means you can mix the styled layer with lower-level primitives in the same application.
 
-## What to read next
+## See also
 
 - [Customization](/x/react-chat/material/customization/) for theme overrides, sx, slots, and CSS class names
 - [Examples](/x/react-chat/material/examples/) for end-to-end patterns

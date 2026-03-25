@@ -2,6 +2,7 @@
 title: Chat - Composer
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Composer

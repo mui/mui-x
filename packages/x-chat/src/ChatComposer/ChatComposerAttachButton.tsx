@@ -6,14 +6,8 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 
 const useThemeProps = createUseThemeProps('MuiChatComposer');
 import { SxProps, Theme } from '@mui/system';
-import {
-  ComposerAttachButton,
-  type ComposerAttachButtonProps,
-} from '@mui/x-chat-unstyled';
-import {
-  useChatComposerUtilityClasses,
-  type ChatComposerClasses,
-} from './chatComposerClasses';
+import { ComposerAttachButton, type ComposerAttachButtonProps } from '@mui/x-chat-unstyled';
+import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
 export interface ChatComposerAttachButtonProps extends ComposerAttachButtonProps {
   className?: string;
@@ -64,33 +58,32 @@ const ChatComposerAttachButtonStyled = styled('button', {
   },
 }));
 
-const ChatComposerAttachButton = React.forwardRef<
-  HTMLButtonElement,
-  ChatComposerAttachButtonProps
->(function ChatComposerAttachButton(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
-  const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
-  const classes = useChatComposerUtilityClasses(classesProp);
+const ChatComposerAttachButton = React.forwardRef<HTMLButtonElement, ChatComposerAttachButtonProps>(
+  function ChatComposerAttachButton(inProps, ref) {
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
+    const classes = useChatComposerUtilityClasses(classesProp);
 
-  return (
-    <ComposerAttachButton
-      ref={ref}
-      {...other}
-      slots={{
-        attachButton: slots?.attachButton ?? ChatComposerAttachButtonStyled,
-        ...slots,
-      }}
-      slotProps={{
-        ...slotProps,
-        attachButton: {
-          className: clsx(classes.attachButton, className),
-          sx,
-          ...(slotProps?.attachButton as object),
-        } as any,
-      }}
-    />
-  );
-});
+    return (
+      <ComposerAttachButton
+        ref={ref}
+        {...other}
+        slots={{
+          attachButton: slots?.attachButton ?? ChatComposerAttachButtonStyled,
+          ...slots,
+        }}
+        slotProps={{
+          ...slotProps,
+          attachButton: {
+            className: clsx(classes.attachButton, className),
+            sx,
+            ...(slotProps?.attachButton as object),
+          } as any,
+        }}
+      />
+    );
+  },
+);
 
 ChatComposerAttachButton.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -11,10 +11,7 @@ import {
   type ComposerHelperTextProps,
   type ComposerHelperTextOwnerState,
 } from '@mui/x-chat-unstyled';
-import {
-  useChatComposerUtilityClasses,
-  type ChatComposerClasses,
-} from './chatComposerClasses';
+import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
 export interface ChatComposerHelperTextProps extends ComposerHelperTextProps {
   className?: string;
@@ -40,34 +37,33 @@ const ChatComposerHelperTextStyled = styled('p', {
   paddingInline: theme.spacing(0.5),
 }));
 
-const ChatComposerHelperText = React.forwardRef<
-  HTMLParagraphElement,
-  ChatComposerHelperTextProps
->(function ChatComposerHelperText(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
-  const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
-  const classes = useChatComposerUtilityClasses(classesProp);
+const ChatComposerHelperText = React.forwardRef<HTMLParagraphElement, ChatComposerHelperTextProps>(
+  function ChatComposerHelperText(inProps, ref) {
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
+    const classes = useChatComposerUtilityClasses(classesProp);
 
-  return (
-    <ComposerHelperText
-      ref={ref}
-      {...other}
-      slots={{
-        helperText: slots?.helperText ?? ChatComposerHelperTextStyled,
-        ...slots,
-      }}
-      slotProps={{
-        ...slotProps,
-        helperText: {
-          className: clsx(classes.helperText, className),
-          sx,
-          ...slotProps?.helperText,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any,
-      }}
-    />
-  );
-});
+    return (
+      <ComposerHelperText
+        ref={ref}
+        {...other}
+        slots={{
+          helperText: slots?.helperText ?? ChatComposerHelperTextStyled,
+          ...slots,
+        }}
+        slotProps={{
+          ...slotProps,
+          helperText: {
+            className: clsx(classes.helperText, className),
+            sx,
+            ...slotProps?.helperText,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any,
+        }}
+      />
+    );
+  },
+);
 
 ChatComposerHelperText.propTypes = {
   // ----------------------------- Warning --------------------------------

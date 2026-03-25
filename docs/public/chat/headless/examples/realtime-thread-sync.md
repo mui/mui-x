@@ -2,6 +2,7 @@
 title: Chat - Realtime thread sync
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Realtime thread sync
@@ -426,6 +427,7 @@ export default function RealtimeThreadSyncHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

@@ -2,9 +2,10 @@
 productId: x-chat
 title: Chat - Unstyled layout
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
-# Unstyled layout
+# Chat - Unstyled layout
 
 <p class="description">Use <code>Chat.Root</code> and <code>Chat.Layout</code> to define the main chat shell and split the interface into conversation and thread panes.</p>
 

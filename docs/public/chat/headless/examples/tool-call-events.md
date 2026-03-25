@@ -2,6 +2,7 @@
 title: Chat - Tool call events
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Tool call events
@@ -301,6 +302,7 @@ export default function ToolCallEventsHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

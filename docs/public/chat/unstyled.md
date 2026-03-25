@@ -2,13 +2,14 @@
 productId: x-chat
 title: Chat - Unstyled
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
 # Chat - Unstyled
 
 Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.
 
-`@mui/x-chat/unstyled` sits between the headless runtime and the future Material layer.
+`@mui/x-chat/unstyled` builds on the headless runtime.
 It combines `@mui/x-chat/headless` state with structural components such as lists, threads, messages, composers, and indicators.
 
 ## When to use the unstyled layer
@@ -21,7 +22,6 @@ Use the unstyled layer when you want:
 - full control over visual design and styling
 
 Use the headless layer when you want to own all DOM structure yourself.
-Use the Material layer when you want a styled, MUI-native surface.
 
 ## Package surface
 
@@ -128,7 +128,7 @@ You can also import individual components such as `ChatRoot`, `MessageListRoot`,
 Use namespaced imports when you want the API to read like a component family.
 Use direct imports when a codebase prefers local, explicit symbols or when only one or two primitives are needed in a file.
 
-## What to read next
+## See also
 
 - Start with [Composition](/x/react-chat/unstyled/composition/) for the canonical shell.
 - Continue with [Layout](/x/react-chat/unstyled/layout/) and [Conversation list](/x/react-chat/unstyled/conversation-list/) for the main application skeleton.
@@ -137,4 +137,3 @@ Use direct imports when a codebase prefers local, explicit symbols or when only 
 ## Package boundary
 
 - Runtime contracts, adapters, store semantics, and headless hooks belong in [Headless](/x/react-chat/headless/).
-- Styled defaults, theming, and high-level product surfaces belong in [Material UI](/x/react-chat/).

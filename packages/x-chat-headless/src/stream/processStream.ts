@@ -77,7 +77,6 @@ function isDynamicToolChunk(
   return 'dynamic' in chunk && chunk.dynamic === true;
 }
 
-
 export async function processStream<Cursor = string>(
   store: ChatStore<Cursor>,
   stream: ReadableStream<ChatMessageChunk | ChatStreamEnvelope>,
@@ -110,7 +109,12 @@ export async function processStream<Cursor = string>(
 
     if (options.onFinish) {
       await options.onFinish({
-        message: getFinishMessage(storeUnknown, targetMessageId, options.conversationId, result.status),
+        message: getFinishMessage(
+          storeUnknown,
+          targetMessageId,
+          options.conversationId,
+          result.status,
+        ),
         messages: store.state.messageIds.map((id) => store.state.messagesById[id]).filter(Boolean),
         isAbort: result.isAbort,
         isDisconnect: result.isDisconnect,
@@ -129,7 +133,12 @@ export async function processStream<Cursor = string>(
       throw failStream('Stream processing requires a target assistant message id.');
     }
 
-    const message = getOrCreateMessage(storeUnknown, targetMessageId, options.conversationId, startAuthor);
+    const message = getOrCreateMessage(
+      storeUnknown,
+      targetMessageId,
+      options.conversationId,
+      startAuthor,
+    );
 
     if (!didStartMessage) {
       didStartMessage = true;

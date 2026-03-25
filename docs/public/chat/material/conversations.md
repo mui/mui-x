@@ -186,7 +186,7 @@ Replace individual conversation item parts through slots:
 - `timestamp` — the relative time display
 - `unreadBadge` — the unread count indicator
 
-## Adjacent pages
+## See also
 
 - See [Unstyled conversation list](/x/react-chat/unstyled/conversation-list/) for the structural primitive model.
 - See [Slots](/x/react-chat/material/slots/) for the complete slot reference.

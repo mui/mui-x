@@ -412,9 +412,7 @@ describe('ComposerRoot', () => {
     const view = render(
       <ChatRoot adapter={createAdapter()}>
         <ComposerRoot>
-          <ComposerHelperText data-testid="helper-text">
-            Hint text
-          </ComposerHelperText>
+          <ComposerHelperText data-testid="helper-text">Hint text</ComposerHelperText>
         </ComposerRoot>
       </ChatRoot>,
     );
@@ -480,15 +478,9 @@ describe('ComposerRoot', () => {
           >
             Attach
           </ComposerAttachButton>
-          <ComposerSendButton slots={{ sendButton: CustomSendButton }}>
-            Send
-          </ComposerSendButton>
-          <ComposerToolbar slots={{ toolbar: CustomToolbar }}>
-            toolbar
-          </ComposerToolbar>
-          <ComposerHelperText slots={{ helperText: CustomHelperText }}>
-            helper
-          </ComposerHelperText>
+          <ComposerSendButton slots={{ sendButton: CustomSendButton }}>Send</ComposerSendButton>
+          <ComposerToolbar slots={{ toolbar: CustomToolbar }}>toolbar</ComposerToolbar>
+          <ComposerHelperText slots={{ helperText: CustomHelperText }}>helper</ComposerHelperText>
         </ComposerRoot>
       </ChatRoot>,
     );

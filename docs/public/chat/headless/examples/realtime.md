@@ -2,6 +2,7 @@
 title: Chat - Realtime
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Realtime
@@ -370,6 +371,7 @@ export default function RealtimeHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

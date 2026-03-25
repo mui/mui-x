@@ -2,9 +2,10 @@
 productId: x-chat
 title: Chat - Unstyled customization
 packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
 ---
 
-# Unstyled customization
+# Chat - Unstyled customization
 
 <p class="description">Customize the unstyled primitives through slots, <code>slotProps</code>, and owner state while keeping the built-in structure and behavior.</p>
 
@@ -121,7 +122,7 @@ The important boundary is:
 - unstyled owns structure, semantics, and interaction behavior
 - your app owns visual design
 
-## Adjacent pages
+## See also
 
 - Continue with [Conversation list](/x/react-chat/unstyled/conversation-list/) to see owner state on row-level slots.
 - Continue with [Messages](/x/react-chat/unstyled/messages/) for selective message-part replacement.

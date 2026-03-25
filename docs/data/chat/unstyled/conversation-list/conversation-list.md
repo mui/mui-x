@@ -2,12 +2,15 @@
 productId: x-chat
 title: Chat - Unstyled conversation list
 packageName: '@mui/x-chat/unstyled'
-components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListItemContent, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
+components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
+githubLabel: 'scope: chat'
 ---
 
-# Unstyled conversation list
+# Chat - Unstyled conversation list
 
 <p class="description">Render and navigate the conversation rail with structural list primitives, built-in selection behavior, and roving focus.</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 {{"demo": "../examples/two-pane-inbox/TwoPaneInbox.js"}}
 

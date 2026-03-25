@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat - Unstyled composition
 packageName: '@mui/x-chat/unstyled'
 components: ChatRoot, ChatLayout
+githubLabel: 'scope: chat'
 ---
 
-# Unstyled composition
+# Chat - Unstyled composition
 
 Compose a complete chat UI from the unstyled namespaces while keeping styling decisions in your own code.
+
+
 
 ```tsx
 import * as React from 'react';
@@ -26,22 +29,8 @@ import {
   minimalMessages,
 } from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
-  DemoComposerButton,
-  DemoComposerInput,
-  DemoComposerRoot,
-  DemoConversationItem,
-  DemoConversationItemAvatar,
-  DemoConversationPreview,
-  DemoConversationTimestamp,
-  DemoConversationTitle,
-  DemoConversationUnreadBadge,
-  DemoMessageAuthor,
-  DemoMessageAvatar,
-  DemoMessageContent,
-  DemoMessageGroup,
-  DemoMessageMeta,
-  DemoMessageRoot,
-  DemoThreadHeader,
+  demoLocaleText,
+  demoSlotProps,
   demoSurfaceStyles,
 } from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
@@ -54,6 +43,7 @@ export default function MinimalUnstyledShell() {
       defaultActiveConversationId={minimalConversation.id}
       defaultConversations={[minimalConversation]}
       defaultMessages={minimalMessages}
+      localeText={demoLocaleText}
       slotProps={{ root: { style: demoSurfaceStyles.chatRoot } }}
     >
       <Chat.Layout
@@ -71,32 +61,28 @@ export default function MinimalUnstyledShell() {
       >
         <ConversationList.Root
           aria-label="Starter threads"
-          slotProps={{ root: { style: demoSurfaceStyles.conversationList } }}
-          slots={{
-            item: DemoConversationItem,
-            itemAvatar: DemoConversationItemAvatar,
-            preview: DemoConversationPreview,
-            timestamp: DemoConversationTimestamp,
-            title: DemoConversationTitle,
-            unreadBadge: DemoConversationUnreadBadge,
+          slotProps={{
+            root: { style: demoSurfaceStyles.conversationList },
+            item: demoSlotProps.conversationListItem,
+            itemAvatar: demoSlotProps.conversationListItemAvatar,
+            itemContent: demoSlotProps.conversationListItemContent,
+            title: demoSlotProps.conversationListTitle,
+            preview: demoSlotProps.conversationListPreview,
+            timestamp: demoSlotProps.conversationListTimestamp,
+            unreadBadge: demoSlotProps.conversationListUnreadBadge,
           }}
         />
         <Conversation.Root
           slotProps={{ root: { style: demoSurfaceStyles.threadRoot } }}
         >
-          <Conversation.Header slots={{ root: DemoThreadHeader }}>
+          <Conversation.Header
+            slotProps={{
+              root: demoSlotProps.conversationHeader,
+            }}
+          >
             <div style={{ minWidth: 0 }}>
-              <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
-              <Conversation.Subtitle
-                style={{
-                  color: '#5c6b7c',
-                  fontSize: 13,
-                  marginTop: 4,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              />
+              <Conversation.Title style={demoSlotProps.conversationTitle} />
+              <Conversation.Subtitle style={demoSlotProps.conversationSubtitle} />
             </div>
           </Conversation.Header>
           <MessageList.Root
@@ -106,28 +92,55 @@ export default function MinimalUnstyledShell() {
                 index={index}
                 key={id}
                 messageId={id}
-                slotProps={{ authorName: { style: { marginLeft: 42 } } }}
-                slots={{ authorName: DemoMessageAuthor, root: DemoMessageGroup }}
+                slotProps={{
+                  root: demoSlotProps.messageGroupRoot,
+                  authorName: demoSlotProps.messageGroupAuthorName,
+                }}
               >
-                <Message.Root messageId={id} slots={{ root: DemoMessageRoot }}>
-                  <Message.Avatar slots={{ root: DemoMessageAvatar }} />
-                  <Message.Content slots={{ root: DemoMessageContent }} />
-                  <Message.Meta slots={{ root: DemoMessageMeta }} />
+                <Message.Root
+                  messageId={id}
+                  slotProps={{
+                    root: demoSlotProps.messageRoot,
+                  }}
+                >
+                  <Message.Avatar
+                    slotProps={{
+                      avatar: demoSlotProps.messageAvatar,
+                      image: demoSlotProps.messageAvatarImage,
+                    }}
+                  />
+                  <Message.Content
+                    slotProps={{
+                      bubble: demoSlotProps.messageBubble,
+                    }}
+                  />
+                  <Message.Meta
+                    slotProps={{
+                      meta: demoSlotProps.messageMeta,
+                    }}
+                  />
                 </Message.Root>
               </MessageGroup>
             )}
-            style={{ minHeight: 0 }}
           />
-          <Composer.Root slots={{ root: DemoComposerRoot }}>
+          <Composer.Root
+            slotProps={{
+              root: demoSlotProps.composerRoot,
+            }}
+          >
             <Composer.TextArea
               aria-label="Message"
               placeholder="Ask the starter thread a question"
-              slots={{ root: DemoComposerInput }}
+              slotProps={{
+                input: demoSlotProps.composerTextArea,
+              }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Composer.SendButton
                 data-variant="primary"
-                slots={{ root: DemoComposerButton }}
+                slotProps={{
+                  sendButton: demoSlotProps.composerSendButton,
+                }}
               >
                 Send
               </Composer.SendButton>
@@ -138,6 +151,7 @@ export default function MinimalUnstyledShell() {
     </Chat.Root>
   );
 }
+
 ```
 
 The canonical unstyled shell combines a provider-backed root, a pane layout, a conversation rail, a thread view, a message list, and a composer.

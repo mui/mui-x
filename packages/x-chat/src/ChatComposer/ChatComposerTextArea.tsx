@@ -7,14 +7,8 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 
 const useThemeProps = createUseThemeProps('MuiChatComposer');
 import { SxProps, Theme } from '@mui/system';
-import {
-  ComposerTextArea,
-  type ComposerTextAreaProps,
-} from '@mui/x-chat-unstyled';
-import {
-  useChatComposerUtilityClasses,
-  type ChatComposerClasses,
-} from './chatComposerClasses';
+import { ComposerTextArea, type ComposerTextAreaProps } from '@mui/x-chat-unstyled';
+import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
 export interface ChatComposerTextAreaProps extends ComposerTextAreaProps {
   className?: string;
@@ -66,34 +60,33 @@ const ChatComposerTextAreaStyled = styled('textarea', {
   },
 }));
 
-const ChatComposerTextArea = React.forwardRef<
-  HTMLTextAreaElement,
-  ChatComposerTextAreaProps
->(function ChatComposerTextArea(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
-  const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
-  const classes = useChatComposerUtilityClasses(classesProp);
+const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerTextAreaProps>(
+  function ChatComposerTextArea(inProps, ref) {
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
+    const classes = useChatComposerUtilityClasses(classesProp);
 
-  return (
-    <ComposerTextArea
-      ref={ref}
-      {...other}
-      slots={{
-        input: slots?.input ?? ChatComposerTextAreaStyled,
-        ...slots,
-      }}
-      slotProps={{
-        ...slotProps,
-        input: {
-          className: clsx(classes.textArea, className),
-          sx,
-          ...slotProps?.input,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any,
-      }}
-    />
-  );
-});
+    return (
+      <ComposerTextArea
+        ref={ref}
+        {...other}
+        slots={{
+          input: slots?.input ?? ChatComposerTextAreaStyled,
+          ...slots,
+        }}
+        slotProps={{
+          ...slotProps,
+          input: {
+            className: clsx(classes.textArea, className),
+            sx,
+            ...slotProps?.input,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any,
+        }}
+      />
+    );
+  },
+);
 
 ChatComposerTextArea.propTypes = {
   // ----------------------------- Warning --------------------------------

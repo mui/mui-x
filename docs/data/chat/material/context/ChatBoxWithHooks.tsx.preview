@@ -1,0 +1,16 @@
+<ChatBox
+  adapter={adapter}
+  defaultActiveConversationId={minimalConversation.id}
+  defaultConversations={[minimalConversation]}
+  defaultMessages={minimalMessages}
+  sx={{
+    height: 500,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+>
+  <Box sx={{ display: 'flex', justifyContent: 'center', py: 1 }}>
+    <StreamingBadge />
+  </Box>
+</ChatBox>

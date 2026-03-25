@@ -9,11 +9,19 @@ import type {
   ChatMessageChunk,
   ChatMessagePart,
 } from '@mui/x-chat/headless';
-import { createChunkStream, splitText, syncConversationPreview } from '../shared/demoUtils';
+import {
+  createChunkStream,
+  splitText,
+  syncConversationPreview,
+} from '../shared/demoUtils';
 
 // ── Avatar helper ─────────────────────────────────────────────────────────────
 
-function createAvatarDataUrl(label: string, background: string, foreground = '#ffffff') {
+function createAvatarDataUrl(
+  label: string,
+  background: string,
+  foreground = '#ffffff',
+) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="${background}"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="${foreground}">${label}</text></svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
@@ -60,7 +68,15 @@ function makeAssistantMessage(
   parts: ChatMessagePart[],
   status: ChatMessage['status'] = 'sent',
 ): ChatMessage {
-  return { id, conversationId, role: 'assistant', status, createdAt, author: agentUser, parts };
+  return {
+    id,
+    conversationId,
+    role: 'assistant',
+    status,
+    createdAt,
+    author: agentUser,
+    parts,
+  };
 }
 
 // ── Conversation IDs ──────────────────────────────────────────────────────────
@@ -115,10 +131,14 @@ const initialThreads: Record<string, ChatMessage[]> = {
       { type: 'step-start' },
       {
         type: 'reasoning',
-        text: "I need to locate the failing test files and trace which imports changed during the refactor. The error is most likely a path issue — components were probably moved to a subdirectory.",
+        text: 'I need to locate the failing test files and trace which imports changed during the refactor. The error is most likely a path issue — components were probably moved to a subdirectory.',
         state: 'done',
       },
-      { type: 'text', text: "I'll start by locating all test files in the project.", state: 'done' },
+      {
+        type: 'text',
+        text: "I'll start by locating all test files in the project.",
+        state: 'done',
+      },
       {
         type: 'dynamic-tool',
         toolInvocation: {
@@ -126,7 +146,9 @@ const initialThreads: Record<string, ChatMessage[]> = {
           toolName: 'glob',
           state: 'output-available',
           input: { pattern: 'src/**/*.test.ts' },
-          output: { files: ['src/Button.test.ts', 'src/Input.test.ts', 'src/Form.test.ts'] },
+          output: {
+            files: ['src/Button.test.ts', 'src/Input.test.ts', 'src/Form.test.ts'],
+          },
         },
       },
       {
@@ -197,7 +219,11 @@ const initialThreads: Record<string, ChatMessage[]> = {
         text: "I should read the existing Header component before adding anything, so I can see how it's structured and where to place the toggle.",
         state: 'done',
       },
-      { type: 'text', text: 'Let me read the Header component first.', state: 'done' },
+      {
+        type: 'text',
+        text: 'Let me read the Header component first.',
+        state: 'done',
+      },
       {
         type: 'dynamic-tool',
         toolInvocation: {
@@ -237,7 +263,10 @@ const initialThreads: Record<string, ChatMessage[]> = {
           toolName: 'bash',
           state: 'output-available',
           input: { command: 'pnpm build' },
-          output: { stdout: 'Build successful. 3 modules compiled in 1.2s.', exit_code: 0 },
+          output: {
+            stdout: 'Build successful. 3 modules compiled in 1.2s.',
+            exit_code: 0,
+          },
         },
       },
       {
@@ -310,7 +339,13 @@ function pushTool(
   for (const delta of splitText(JSON.stringify(input))) {
     chunks.push({ type: 'tool-input-delta', toolCallId, inputTextDelta: delta });
   }
-  chunks.push({ type: 'tool-input-available', toolCallId, toolName, input, dynamic: true });
+  chunks.push({
+    type: 'tool-input-available',
+    toolCallId,
+    toolName,
+    input,
+    dynamic: true,
+  });
   chunks.push({ type: 'tool-output-available', toolCallId, output });
 }
 
@@ -322,16 +357,32 @@ function createAgenticChunks(messageId: string): ChatMessageChunk[] {
     `${messageId}-r`,
     "Let me explore the repository to understand the codebase. I'll locate the relevant files, read them, apply the fix, and verify with tests.",
   );
-  pushText(chunks, `${messageId}-t1`, "I'll start by finding the relevant source files.");
+  pushText(
+    chunks,
+    `${messageId}-t1`,
+    "I'll start by finding the relevant source files.",
+  );
   chunks.push({ type: 'start-step' });
-  pushTool(chunks, `${messageId}-glob`, 'glob', { pattern: 'src/**/*.ts' }, {
-    files: ['src/api.ts', 'src/utils.ts', 'src/types.ts'],
-  });
+  pushTool(
+    chunks,
+    `${messageId}-glob`,
+    'glob',
+    { pattern: 'src/**/*.ts' },
+    {
+      files: ['src/api.ts', 'src/utils.ts', 'src/types.ts'],
+    },
+  );
   pushText(chunks, `${messageId}-t2`, 'Found the files. Reading the main module…');
-  pushTool(chunks, `${messageId}-read`, 'read_file', { path: 'src/api.ts' }, {
-    content:
-      'import axios from "axios";\nconst BASE = "http://localhost";\nexport async function fetchUser(id: string) {\n  return axios.get(`${BASE}/users/${id}`);\n}',
-  });
+  pushTool(
+    chunks,
+    `${messageId}-read`,
+    'read_file',
+    { path: 'src/api.ts' },
+    {
+      content:
+        'import axios from "axios";\nconst BASE = "http://localhost";\nexport async function fetchUser(id: string) {\n  return axios.get(`${BASE}/users/${id}`);\n}',
+    },
+  );
   pushText(chunks, `${messageId}-t3`, 'I can see the issue. Applying the fix now…');
   pushTool(
     chunks,
@@ -344,18 +395,30 @@ function createAgenticChunks(messageId: string): ChatMessageChunk[] {
     },
     { patched: true },
   );
-  pushTool(chunks, `${messageId}-bash`, 'bash', { command: 'pnpm test --run' }, {
-    stdout: '✓ All tests passed (12 tests)',
-    exit_code: 0,
-  });
-  pushText(chunks, `${messageId}-t4`, 'All done. The fix is applied and tests are passing.');
+  pushTool(
+    chunks,
+    `${messageId}-bash`,
+    'bash',
+    { command: 'pnpm test --run' },
+    {
+      stdout: '✓ All tests passed (12 tests)',
+      exit_code: 0,
+    },
+  );
+  pushText(
+    chunks,
+    `${messageId}-t4`,
+    'All done. The fix is applied and tests are passing.',
+  );
   chunks.push({ type: 'finish', messageId, finishReason: 'stop' });
   return chunks;
 }
 
 // ── Icon slot component ───────────────────────────────────────────────────────
 
-type IconProps = { ownerState?: { toolName?: string } } & React.HTMLAttributes<HTMLSpanElement>;
+type IconProps = {
+  ownerState?: { toolName?: string };
+} & React.HTMLAttributes<HTMLSpanElement>;
 
 const TOOL_COLORS: Record<string, string> = {
   glob: '#5c6bc0',
@@ -402,11 +465,15 @@ const RingIcon = React.forwardRef<HTMLSpanElement, IconProps>(function RingIcon(
 
 const KNOWN_TOOLS = ['glob', 'read_file', 'edit_file', 'write_file', 'bash'];
 
-const ringToolSlots = Object.fromEntries(KNOWN_TOOLS.map((name) => [name, { icon: RingIcon }]));
+const ringToolSlots = Object.fromEntries(
+  KNOWN_TOOLS.map((name) => [name, { icon: RingIcon }]),
+);
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-type SetThreads = React.Dispatch<React.SetStateAction<Record<string, ChatMessage[]>>>;
+type SetThreads = React.Dispatch<
+  React.SetStateAction<Record<string, ChatMessage[]>>
+>;
 
 export default function ToolStylingA() {
   const setThreadsRef = React.useRef<SetThreads | null>(null);
@@ -423,20 +490,29 @@ export default function ToolStylingA() {
             next[convId] = prev[convId].map((msg) => ({
               ...msg,
               parts: msg.parts.map((part) => {
-                if (part.type === 'dynamic-tool' && part.toolInvocation.toolCallId === id) {
+                if (
+                  part.type === 'dynamic-tool' &&
+                  part.toolInvocation.toolCallId === id
+                ) {
                   return {
                     ...part,
                     toolInvocation: approved
                       ? {
                           ...part.toolInvocation,
                           state: 'output-available' as const,
-                          output: { done: true, message: 'Artifacts deleted successfully.' },
+                          output: {
+                            done: true,
+                            message: 'Artifacts deleted successfully.',
+                          },
                           approval: { approved: true },
                         }
                       : {
                           ...part.toolInvocation,
                           state: 'output-denied' as const,
-                          approval: { approved: false, reason: 'User denied the operation.' },
+                          approval: {
+                            approved: false,
+                            reason: 'User denied the operation.',
+                          },
                         },
                   };
                 }
@@ -457,7 +533,10 @@ export default function ToolStylingA() {
   );
   const [threads, setThreads] = React.useState<Record<string, ChatMessage[]>>(() =>
     Object.fromEntries(
-      Object.entries(initialThreads).map(([id, msgs]) => [id, msgs.map((m) => ({ ...m }))]),
+      Object.entries(initialThreads).map(([id, msgs]) => [
+        id,
+        msgs.map((m) => ({ ...m })),
+      ]),
     ),
   );
 
@@ -478,7 +557,9 @@ export default function ToolStylingA() {
       }}
       onMessagesChange={(nextMessages) => {
         setThreads((prev) => ({ ...prev, [activeId]: nextMessages }));
-        setConversations((prev) => syncConversationPreview(prev, activeId, nextMessages));
+        setConversations((prev) =>
+          syncConversationPreview(prev, activeId, nextMessages),
+        );
       }}
       slotProps={{
         messageContent: {

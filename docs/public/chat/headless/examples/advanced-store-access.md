@@ -2,6 +2,7 @@
 title: Chat - Advanced store access
 productId: x-chat
 packageName: '@mui/x-chat/headless'
+githubLabel: 'scope: chat'
 ---
 
 # Advanced store access
@@ -323,6 +324,7 @@ export default function AdvancedStoreAccessHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

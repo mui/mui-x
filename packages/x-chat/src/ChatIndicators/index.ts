@@ -27,7 +27,4 @@ export {
   getChatUnreadMarkerUtilityClass,
   useChatUnreadMarkerUtilityClasses,
 } from './chatUnreadMarkerClasses';
-export type {
-  ChatUnreadMarkerClasses,
-  ChatUnreadMarkerClassKey,
-} from './chatUnreadMarkerClasses';
+export type { ChatUnreadMarkerClasses, ChatUnreadMarkerClassKey } from './chatUnreadMarkerClasses';

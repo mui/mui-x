@@ -2,6 +2,7 @@
 title: Chat - Custom theme
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Custom theme
@@ -23,7 +24,7 @@ This recipe shows how a single `createTheme` call changes bubble colors, border 
 ## How theme tokens map to chat elements
 
 | Theme token                       | Chat element                             |
-| --------------------------------- | ---------------------------------------- |
+| :-------------------------------- | :--------------------------------------- |
 | `palette.primary.main`            | User message bubble background           |
 | `palette.primary.contrastText`    | User message bubble text                 |
 | `palette.grey[100]` / `grey[800]` | Assistant bubble background (light/dark) |

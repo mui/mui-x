@@ -2,6 +2,7 @@
 title: Chat - Long messages
 productId: x-chat
 packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
 ---
 
 # Long messages
@@ -10,7 +11,7 @@ packageName: '@mui/x-chat'
 
 This example tests how the ChatBox handles various edge cases in message content.
 
-{{"demo": "LongMessages.js"}}
+{{"demo": "LongMessages.js", "bg": "inline"}}
 
 ## What it shows
 

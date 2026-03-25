@@ -31,7 +31,9 @@ const adapter: ChatAdapter = {
       .map((p) => (p.type === 'text' ? p.text : ''))
       .filter(Boolean)
       .join('');
-    return createChunkStream(createTextResponseChunks(nanoid(), `You said: "${text}".`));
+    return createChunkStream(
+      createTextResponseChunks(nanoid(), `You said: "${text}".`),
+    );
   },
 };
 

@@ -34,7 +34,10 @@ function simulateSteps(
   onUpdate: (updated: PlanStep[]) => void,
 ): void {
   // Reset all to pending first
-  let current: PlanStep[] = steps.map((step) => ({ ...step, status: 'pending' as const }));
+  let current: PlanStep[] = steps.map((step) => ({
+    ...step,
+    status: 'pending' as const,
+  }));
   onUpdate([...current]);
 
   steps.forEach((_, index) => {
@@ -48,13 +51,16 @@ function simulateSteps(
     }, STEP_DELAY_MS * index);
 
     // Mark step as done
-    setTimeout(() => {
-      current = current.map((step, i) => ({
-        ...step,
-        status: (i <= index ? 'done' : 'pending') as PlanStep['status'],
-      }));
-      onUpdate([...current]);
-    }, STEP_DELAY_MS * index + STEP_DELAY_MS * 0.8);
+    setTimeout(
+      () => {
+        current = current.map((step, i) => ({
+          ...step,
+          status: (i <= index ? 'done' : 'pending') as PlanStep['status'],
+        }));
+        onUpdate([...current]);
+      },
+      STEP_DELAY_MS * index + STEP_DELAY_MS * 0.8,
+    );
   });
 }
 
@@ -79,7 +85,9 @@ export default function PlanTask() {
         }, 400);
 
         return createChunkStream(
-          createTextResponseChunks(messageId, responseText, { author: demoUsers.agent }),
+          createTextResponseChunks(messageId, responseText, {
+            author: demoUsers.agent,
+          }),
           { delayMs: 60 },
         );
       },
@@ -90,7 +98,12 @@ export default function PlanTask() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, height: 640 }}>
       <Paper variant="outlined" sx={{ p: 2 }}>
-        <Typography variant="overline" color="text.secondary" display="block" gutterBottom>
+        <Typography
+          variant="overline"
+          color="text.secondary"
+          display="block"
+          gutterBottom
+        >
           Agent task plan
         </Typography>
         <ChatPlan steps={steps} />
@@ -100,7 +113,12 @@ export default function PlanTask() {
         defaultActiveConversationId={minimalConversation.id}
         defaultConversations={[minimalConversation]}
         defaultMessages={minimalMessages}
-        sx={{ flex: 1, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}
+        sx={{
+          flex: 1,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+        }}
       />
     </Box>
   );
