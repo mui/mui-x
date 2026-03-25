@@ -40,12 +40,6 @@ Some charts have animations when rendering or when data updates.
 For users with vestibular motion disorders those animations can be problematic.
 By default animations are toggled based on the [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion) media feature.
 
-<!--
-## Screen reader compatibility
-
-Date and Time Pickers use ARIA roles and robust focus management across the interactive elements to convey the necessary information to users, being optimized for use with assistive technologies.
--->
-
 ## Keyboard support
 
 :::warning
@@ -81,6 +75,15 @@ When focused, the chart highlights a value item that can be modified with arrow 
 | --------------------------------------------------------------------: | :---------------------------- |
 | <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series |
 |    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series     |
+
+## Screen reader compatibility
+
+Charts use a proxy strategy to support screen reader when user navigate with keyboard navigation.
+
+The description of the focused element is localized.
+You can customize it by using [localization key](/x/react-charts/localization/#localize-text).
+The `[type]Description` localization keys are functions for a given series type, for example, `pieDescription` for pie charts.
+These functions receives values related to the focused item, and should return the description to display.
 
 ### Composition
 
