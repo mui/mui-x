@@ -165,12 +165,12 @@ For line series (without area), it finds the series whose curve is closest to th
 
 This uses the same curve interpolation as the rendered line (for example, `monotoneX`, `catmullRom`), so the hit detection matches the visual shape.
 
-{{"demo": "LinePointerInteraction.js"}}
-
 :::warning
 This feature is experimental.
 Its API and behavior may change in future releases.
 :::
+
+{{"demo": "LinePointerInteraction.js"}}
 
 ## Styling
 
