@@ -76,7 +76,7 @@ function JoyField(props: JoyTextFieldProps) {
 
 interface JoyMultiInputDateRangeFieldProps
   extends
-    Omit<DateRangePickerFieldProps, 'unstableFieldRef' | 'clearable' | 'onClear'>,
+    Omit<DateRangePickerFieldProps, 'fieldRef' | 'clearable' | 'onClear'>,
     MultiInputFieldRefs {
   slotProps: {
     textField: any;

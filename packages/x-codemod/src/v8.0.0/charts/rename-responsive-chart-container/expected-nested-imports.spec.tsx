@@ -1,4 +1,5 @@
 /* eslint-disable no-restricted-imports */
+// @ts-nocheck
 import * as React from 'react';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';

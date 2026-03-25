@@ -130,6 +130,22 @@ export const TEST_KEY_PRO_ANNUAL_Q1_2026_V3 =
 export const TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3 =
   '450d9fc1b28e709fcb73969bd10e1c30Tz0xMjMsRT0zMjUzNTEyNjAwMDAwMCxTPXByZW1pdW0sTE09YW5udWFsLFBWPVExLTIwMjYsUT0xMCxBVD1zaW5nbGUsVD10cnVlLEtWPTM=';
 
+// --- Keys for v9 plan version check tests (perpetual + Q1-2026) ---
+
+/**
+ * Pro perpetual, Q1-2026, expiry = releaseDate + 1 day (not expired).
+ * orderId: #123, keyVersion: 2
+ */
+export const TEST_KEY_PRO_PERPETUAL_Q1_2026 =
+  '5f78509380f3ea3b3c91d7af3f5496eaTz0xMjMsRT0xNTE0NzYxMjAwMDAwLFM9cHJvLExNPXBlcnBldHVhbCxQVj1RMS0yMDI2LFQ9dHJ1ZSxLVj0y';
+
+/**
+ * Pro perpetual, Q1-2026, expiry = releaseDate - 1 day (expired before release).
+ * orderId: #123, keyVersion: 2
+ */
+export const TEST_KEY_PRO_PERPETUAL_Q1_2026_EXPIRED =
+  '191d8aaf174e38bcbf367e07fa39e423Tz0xMjMsRT0xNTE0NTg4NDAwMDAwLFM9cHJvLExNPXBlcnBldHVhbCxQVj1RMS0yMDI2LFQ9dHJ1ZSxLVj0y';
+
 // --- Invalid / edge-case keys ---
 
 /**

@@ -101,7 +101,6 @@ export default function LineOverview() {
 
       <ChartsDataProviderPro
         height={300}
-        experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
         dataset={usaUnemploymentAndGdp}
         series={[
           {

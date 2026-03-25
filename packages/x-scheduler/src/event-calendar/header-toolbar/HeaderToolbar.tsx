@@ -9,7 +9,7 @@ import MenuOpen from '@mui/icons-material/MenuOpen';
 import Menu from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   eventCalendarPreferenceSelectors,
@@ -77,7 +77,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { classes, localeText } = useEventCalendarStyledContext();
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
 
   // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
@@ -94,12 +94,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       {...props}
       className={clsx(props.className, classes.headerToolbar)}
     >
-      <HeaderToolbarLeftElement
-        ref={forwardedRef}
-        role="navigation"
-        {...props}
-        className={classes.headerToolbarLeftElement}
-      >
+      <HeaderToolbarLeftElement className={classes.headerToolbarLeftElement}>
         <IconButton
           className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
@@ -113,7 +108,12 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           {adapter.format(visibleDate, 'monthFullLetter')}{' '}
           {adapter.format(visibleDate, 'yearPadded')}
         </HeaderToolbarLabel>
-        <HeaderToolbarDateNavigator className={classes.headerToolbarDateNavigator}>
+      </HeaderToolbarLeftElement>
+      <HeaderToolbarActions className={classes.headerToolbarActions}>
+        <HeaderToolbarDateNavigator
+          role="navigation"
+          className={classes.headerToolbarDateNavigator}
+        >
           <IconButton
             className={classes.headerToolbarPreviousButton}
             onClick={store.goToPreviousVisibleDate}
@@ -129,14 +129,11 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             <ChevronRight />
           </IconButton>
         </HeaderToolbarDateNavigator>
-      </HeaderToolbarLeftElement>
-      <HeaderToolbarActions className={classes.headerToolbarActions}>
-        <PreferencesMenu />
-
         <Button onClick={store.goToToday}>{localeText.today}</Button>
         {showViewSwitcher && (
           <ViewSwitcher views={views} view={view} onViewChange={store.setView} />
         )}
+        <PreferencesMenu />
       </HeaderToolbarActions>
     </HeaderToolbarRoot>
   );

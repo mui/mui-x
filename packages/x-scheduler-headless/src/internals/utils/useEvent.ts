@@ -1,19 +1,20 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { SchedulerProcessedDate } from '../../models';
+import { SchedulerEventId, SchedulerProcessedDate } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context/useSchedulerStoreContext';
-import { schedulerOccurrenceSelectors } from '../../scheduler-selectors';
+import { schedulerOccurrenceSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 
 export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue {
-  const { start, end } = parameters;
+  const { start, end, eventId } = parameters;
 
   const store = useSchedulerStoreContext();
 
   const started = useStore(store, schedulerOccurrenceSelectors.isStarted, start);
   const ended = useStore(store, schedulerOccurrenceSelectors.isEnded, end);
+  const editing = useStore(store, schedulerOtherSelectors.isEditedEvent, eventId);
 
-  const state = React.useMemo(() => ({ started, ended }), [started, ended]);
+  const state = React.useMemo(() => ({ started, ended, editing }), [started, ended, editing]);
 
   return { state };
 }
@@ -28,6 +29,10 @@ export namespace useEvent {
      * The time at which the event ends.
      */
     end: SchedulerProcessedDate;
+    /**
+     * The unique identifier of the event.
+     */
+    eventId?: SchedulerEventId;
   }
 
   export interface ReturnValue {
@@ -43,5 +48,9 @@ export namespace useEvent {
      * Whether the event end date and time is in the past.
      */
     ended: boolean;
+    /**
+     * Whether the event is currently being edited.
+     */
+    editing: boolean;
   }
 }

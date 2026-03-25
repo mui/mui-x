@@ -4,21 +4,20 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
-import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { getSymbol } from '../internals/getSymbol';
 import {
-  markElementClasses,
+  lineClasses,
   type MarkElementOwnerState,
-  useUtilityClasses as useDeprecatedUtilityClasses,
-} from './markElementClasses';
-import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+  useUtilityClasses as useLineUtilityClasses,
+} from './lineClasses';
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
   slot: 'Root',
 })<{ ownerState: MarkElementOwnerState }>(({ theme }) => ({
   fill: (theme.vars || theme).palette.background.paper,
-  [`&.${markElementClasses.animate}`]: {
+  [`&.${lineClasses.markAnimate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionProperty: 'transform, transform-origin, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
@@ -95,26 +94,26 @@ function MarkElement(props: MarkElementProps) {
     skipAnimation,
   };
   const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
-  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   return (
     <MarkElementPath
       {...other}
+      {...interactionProps}
       style={{
         ...style,
         transform: `translate(${x}px, ${y}px)`,
         transformOrigin: `${x}px ${y}px`,
       }}
       ownerState={ownerState}
-      className={`${classes.mark} ${deprecatedClasses.root}`}
+      className={classes.mark}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       pointerEvents={hidden ? 'none' : undefined}
-      {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
       data-series-id={seriesId}
+      data-series={seriesId}
       data-index={dataIndex}
       opacity={hidden ? 0 : 1}
       strokeWidth={2}

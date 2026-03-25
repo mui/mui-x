@@ -28,21 +28,29 @@ import {
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
+  selectorChartCartesianAxesGap,
 } from './useChartCartesianAxisLayout.selectors';
-import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
-import { getDefaultTickNumber, getTickNumber } from '../../../ticks';
+import {
+  selectorChartXAxisAutoSizes,
+  selectorChartYAxisAutoSizes,
+} from './useChartAxisAutoSize.selectors';
+import { getDefaultTickNumber } from '../../../ticks';
 import { getNormalizedAxisScale, getRange } from './getAxisScale';
 import { isOrdinalScale } from '../../../scaleGuards';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtrema } from './getAxisExtrema';
 import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
-import { calculateFinalDomain, calculateInitialDomainAndTickNumber } from './domain';
+import { calculateFinalDomain, computeAxisDomainsMap } from './domain';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { Flatbush } from '../../../Flatbush';
 import {
   selectorChartSeriesConfig,
   type ChartSeriesConfig,
 } from '../../corePlugins/useChartSeriesConfig';
+import {
+  selectorChartXAxisExtrema,
+  selectorChartYAxisExtrema,
+} from './useChartAxisExtrema.selectors';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -106,62 +114,19 @@ export const selectorDefaultYAxisTickNumber = createSelector(
   },
 );
 
-type DomainDefinition = {
-  domain: ReadonlyArray<string | NumberValue>;
-  tickNumber?: number;
-};
-
 export const selectorChartXAxisWithDomains = createSelectorMemoized(
   selectorChartRawXAxis,
   selectorChartSeriesProcessed,
-  selectorChartSeriesConfig,
-  selectorPreferStrictDomainInLineCharts,
   selectorDefaultXAxisTickNumber,
-  function selectorChartXAxisWithDomains(
-    axes,
-    formattedSeries,
-    seriesConfig,
-    preferStrictDomainInLineCharts,
-    defaultTickNumber,
-  ) {
-    const axisDirection = 'x';
-    const domains: Record<AxisId, DomainDefinition> = {};
-
-    axes?.forEach((eachAxis, axisIndex) => {
-      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
-
-      if (isBandScaleConfig(axis) || isPointScaleConfig(axis)) {
-        domains[axis.id] = { domain: axis.data! };
-
-        if (axis.ordinalTimeTicks !== undefined) {
-          domains[axis.id].tickNumber = getTickNumber(
-            axis,
-            [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
-            defaultTickNumber,
-          );
-        }
-        return;
-      }
-
-      const axisExtrema = getAxisExtrema(
-        axis,
-        axisDirection,
-        seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
-        axisIndex,
-        formattedSeries,
-      );
-
-      domains[axis.id] = calculateInitialDomainAndTickNumber(
-        axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
-        'x',
-        axisIndex,
-        formattedSeries,
-        axisExtrema,
-        defaultTickNumber,
-        preferStrictDomainInLineCharts,
-      );
-    });
-
+  selectorChartXAxisExtrema,
+  function selectorChartXAxisWithDomains(axes, formattedSeries, defaultTickNumber, extremaMap) {
+    const domains = computeAxisDomainsMap(
+      axes,
+      formattedSeries,
+      defaultTickNumber,
+      extremaMap,
+      'x',
+    );
     return { axes, domains };
   },
 );
@@ -169,54 +134,16 @@ export const selectorChartXAxisWithDomains = createSelectorMemoized(
 export const selectorChartYAxisWithDomains = createSelectorMemoized(
   selectorChartRawYAxis,
   selectorChartSeriesProcessed,
-  selectorChartSeriesConfig,
-  selectorPreferStrictDomainInLineCharts,
   selectorDefaultYAxisTickNumber,
-  function selectorChartYAxisWithDomains(
-    axes,
-    formattedSeries,
-    seriesConfig,
-    preferStrictDomainInLineCharts,
-    defaultTickNumber,
-  ) {
-    const axisDirection = 'y';
-    const domains: Record<AxisId, DomainDefinition> = {};
-
-    axes?.forEach((eachAxis, axisIndex) => {
-      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
-
-      if (isBandScaleConfig(axis) || isPointScaleConfig(axis)) {
-        domains[axis.id] = { domain: axis.data! };
-
-        if (axis.ordinalTimeTicks !== undefined) {
-          domains[axis.id].tickNumber = getTickNumber(
-            axis,
-            [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
-            defaultTickNumber,
-          );
-        }
-        return;
-      }
-
-      const axisExtrema = getAxisExtrema(
-        axis,
-        axisDirection,
-        seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
-        axisIndex,
-        formattedSeries,
-      );
-
-      domains[axis.id] = calculateInitialDomainAndTickNumber(
-        axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
-        'y',
-        axisIndex,
-        formattedSeries,
-        axisExtrema,
-        defaultTickNumber,
-        preferStrictDomainInLineCharts,
-      );
-    });
-
+  selectorChartYAxisExtrema,
+  function selectorChartYAxisWithDomains(axes, formattedSeries, defaultTickNumber, extremaMap) {
+    const domains = computeAxisDomainsMap(
+      axes,
+      formattedSeries,
+      defaultTickNumber,
+      extremaMap,
+      'y',
+    );
     return { axes, domains };
   },
 );
@@ -292,7 +219,6 @@ export const selectorChartFilteredXDomains = createSelectorMemoized(
   selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
   selectorChartZoomAxisFilters,
-  selectorPreferStrictDomainInLineCharts,
   selectorChartXAxisWithDomains,
 
   function selectorChartFilteredXDomains(
@@ -301,7 +227,6 @@ export const selectorChartFilteredXDomains = createSelectorMemoized(
     zoomMap,
     zoomOptions,
     getFilters,
-    preferStrictDomainInLineCharts,
     { axes, domains },
   ) {
     const filteredDomains: Record<AxisId, ReadonlyArray<string | NumberValue>> = {};
@@ -340,7 +265,6 @@ export const selectorChartFilteredXDomains = createSelectorMemoized(
         formattedSeries,
         axisExtrema,
         rawTickNumber,
-        preferStrictDomainInLineCharts,
       );
     });
 
@@ -354,7 +278,6 @@ export const selectorChartFilteredYDomains = createSelectorMemoized(
   selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
   selectorChartZoomAxisFilters,
-  selectorPreferStrictDomainInLineCharts,
   selectorChartYAxisWithDomains,
   function selectorChartFilteredYDomains(
     formattedSeries,
@@ -362,7 +285,6 @@ export const selectorChartFilteredYDomains = createSelectorMemoized(
     zoomMap,
     zoomOptions,
     getFilters,
-    preferStrictDomainInLineCharts,
     { axes, domains },
   ) {
     const filteredDomains: Record<AxisId, ReadonlyArray<string | NumberValue>> = {};
@@ -401,7 +323,6 @@ export const selectorChartFilteredYDomains = createSelectorMemoized(
         formattedSeries,
         axisExtrema,
         rawTickNumber,
-        preferStrictDomainInLineCharts,
       );
     });
 
@@ -510,6 +431,8 @@ export const selectorChartXAxis = createSelectorMemoized(
   selectorChartZoomMap,
   selectorChartXAxisWithDomains,
   selectorChartXScales,
+  selectorChartXAxisAutoSizes,
+  selectorChartCartesianAxesGap,
 
   function selectorChartXAxis(
     drawingArea,
@@ -518,6 +441,8 @@ export const selectorChartXAxis = createSelectorMemoized(
     zoomMap,
     { axes, domains },
     scales,
+    autoSizes,
+    axesGap,
   ) {
     return computeAxisValue({
       scales,
@@ -528,6 +453,8 @@ export const selectorChartXAxis = createSelectorMemoized(
       axisDirection: 'x',
       zoomMap,
       domains,
+      autoSizes,
+      axesGap,
     });
   },
 );
@@ -539,6 +466,8 @@ export const selectorChartYAxis = createSelectorMemoized(
   selectorChartZoomMap,
   selectorChartYAxisWithDomains,
   selectorChartYScales,
+  selectorChartYAxisAutoSizes,
+  selectorChartCartesianAxesGap,
 
   function selectorChartYAxis(
     drawingArea,
@@ -547,6 +476,8 @@ export const selectorChartYAxis = createSelectorMemoized(
     zoomMap,
     { axes, domains },
     scales,
+    autoSizes,
+    axesGap,
   ) {
     return computeAxisValue({
       scales,
@@ -557,6 +488,8 @@ export const selectorChartYAxis = createSelectorMemoized(
       axisDirection: 'y',
       zoomMap,
       domains,
+      autoSizes,
+      axesGap,
     });
   },
 );

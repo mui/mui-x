@@ -237,4 +237,9 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * @default GridRow
    */
   row: React.JSXElementConstructor<GridSlotProps['row']>;
+  /**
+   * Component rendered for each row selection checkbox.
+   * @default GridRowCheckbox
+   */
+  rowCheckbox: React.JSXElementConstructor<GridSlotProps['rowCheckbox']>;
 }

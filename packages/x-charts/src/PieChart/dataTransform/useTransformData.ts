@@ -5,7 +5,7 @@ import {
   type DefaultizedPieSeriesType,
   type DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
 import { getModifiedArcProperties } from './getModifiedArcProperties';
 
@@ -35,7 +35,7 @@ export function useTransformData(
 ) {
   const { id: seriesId, data, faded, highlighted } = series;
 
-  const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightStateGetter();
   const isItemFocused = useIsItemFocusedGetter();
 
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
@@ -46,8 +46,9 @@ export function useTransformData(
           seriesId,
           dataIndex: itemIndex,
         };
-        const isHighlighted = isItemHighlighted(identifier);
-        const isFaded = !isHighlighted && isItemFaded(identifier);
+        const highlightState = getHighlightState(identifier);
+        const isHighlighted = highlightState === 'highlighted';
+        const isFaded = highlightState === 'faded';
         const isFocused = isItemFocused(identifier);
 
         // TODO v9: Replace the second argument with the result of useSeriesLayout
@@ -79,7 +80,7 @@ export function useTransformData(
           ...arcSizes,
         };
       }),
-    [data, seriesId, isItemHighlighted, isItemFaded, isItemFocused, series, faded, highlighted],
+    [data, seriesId, getHighlightState, isItemFocused, series, faded, highlighted],
   );
 
   return dataWithHighlight;

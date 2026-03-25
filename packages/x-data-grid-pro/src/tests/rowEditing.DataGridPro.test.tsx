@@ -630,8 +630,8 @@ describe('<DataGridPro /> - Row editing', () => {
           currencyPair: testValue,
         });
         expect(processRowUpdate.lastCall.args[1]).to.deep.equal(testRow);
-        // all rows are there after `processRowUpdate` returns deleted row data
-        expect(apiRef.current?.getRowsCount()).to.equal(allRows.length);
+        // only remaining rows are there after `processRowUpdate` returns deleted row data
+        expect(apiRef.current?.getRowsCount()).to.equal(otherRows.length);
       });
 
       it('should stay in edit mode if processRowUpdate throws an error', async () => {

@@ -6,24 +6,6 @@
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
-  "classDescriptions": {
-    "faded": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "faded",
-      "deprecationInfo": "Use <code>[data-faded]</code> selector instead."
-    },
-    "highlighted": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "highlighted",
-      "deprecationInfo": "Use <code>[data-highlighted]</code> selector instead."
-    },
-    "root": { "description": "Styles applied to the root element." },
-    "series": {
-      "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${lineElementClasses.series}-${seriesId}</code>.",
-      "nodeName": "the root element for a specified series"
-    }
-  },
+  "classDescriptions": {},
   "slotDescriptions": { "line": "The component that renders the line." }
 }
