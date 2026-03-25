@@ -56,8 +56,8 @@ const PickerDayRoot = styled(ButtonBase, {
     const { ownerState } = props;
     return [
       styles.root,
-      !ownerState.disableMargin && styles.dayWithoutMargin,
       !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
+      ownerState.disableMargin && styles.dayWithoutMargin,
       ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
       ownerState.isDayFillerCell && styles.fillerCell,
     ];
