@@ -109,21 +109,9 @@
   ],
   "classes": [
     {
-      "key": "day",
-      "className": "MuiDateRangePickerDay-day",
-      "description": "Styles applied to the day element.",
-      "isGlobal": false
-    },
-    {
       "key": "dayOutsideMonth",
       "className": "MuiDateRangePickerDay-dayOutsideMonth",
       "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`.",
-      "isGlobal": false
-    },
-    {
-      "key": "dayOutsideRangeInterval",
-      "className": "MuiDateRangePickerDay-dayOutsideRangeInterval",
-      "description": "",
       "isGlobal": false
     },
     {
@@ -175,12 +163,6 @@
       "isGlobal": false
     },
     {
-      "key": "notSelectedDate",
-      "className": "MuiDateRangePickerDay-notSelectedDate",
-      "description": "",
-      "isGlobal": false
-    },
-    {
       "key": "previewed",
       "className": "MuiDateRangePickerDay-previewed",
       "description": "",
@@ -195,18 +177,6 @@
     {
       "key": "previewStart",
       "className": "MuiDateRangePickerDay-previewStart",
-      "description": "",
-      "isGlobal": false
-    },
-    {
-      "key": "rangeIntervalDayHighlightEnd",
-      "className": "MuiDateRangePickerDay-rangeIntervalDayHighlightEnd",
-      "description": "",
-      "isGlobal": false
-    },
-    {
-      "key": "rangeIntervalDayHighlightStart",
-      "className": "MuiDateRangePickerDay-rangeIntervalDayHighlightStart",
       "description": "",
       "isGlobal": false
     },

@@ -28,12 +28,6 @@ export interface DateRangePickerDayClasses {
   endOfMonth: string;
   previewed: string;
   draggable: string;
-  /** Styles applied to the day element. */
-  day: string;
-  rangeIntervalDayHighlightStart: string;
-  rangeIntervalDayHighlightEnd: string;
-  notSelectedDate: string;
-  dayOutsideRangeInterval: string;
 }
 
 export type DateRangePickerDayClassKey = keyof DateRangePickerDayClasses;
@@ -64,10 +58,5 @@ export const dateRangePickerDayClasses = generateUtilityClasses<DateRangePickerD
     'previewed',
     'selected',
     'draggable',
-    'day',
-    'rangeIntervalDayHighlightStart',
-    'rangeIntervalDayHighlightEnd',
-    'notSelectedDate',
-    'dayOutsideRangeInterval',
   ],
 );

@@ -389,14 +389,13 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
         styleOverrides: {
           root: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
-            [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightStart}`]: {
+            [`&.${dateRangePickerDayClasses.selectionStart}`]: {
               borderRadius: theme.shape.borderRadius,
             },
-            [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightEnd}`]: {
+            [`&.${dateRangePickerDayClasses.selectionEnd}`]: {
               borderRadius: theme.shape.borderRadius,
             },
           }),
-          dayOutsideRangeInterval: { transform: 'none' },
         },
       },
     },

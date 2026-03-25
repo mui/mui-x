@@ -123,13 +123,11 @@
     }
   },
   "classDescriptions": {
-    "day": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the day element" },
     "dayOutsideMonth": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "<code>outsideCurrentMonth=true</code> and <code>showDaysOutsideCurrentMonth=true</code>"
     },
-    "dayOutsideRangeInterval": { "description": "" },
     "dayWithoutMargin": {
       "description": "Styles applied the root element when <code>disableMargin=true</code>"
     },
@@ -148,12 +146,9 @@
     },
     "insidePreviewing": { "description": "" },
     "insideSelection": { "description": "" },
-    "notSelectedDate": { "description": "" },
     "previewed": { "description": "" },
     "previewEnd": { "description": "" },
     "previewStart": { "description": "" },
-    "rangeIntervalDayHighlightEnd": { "description": "" },
-    "rangeIntervalDayHighlightStart": { "description": "" },
     "root": { "description": "Styles applied to the root element." },
     "selected": {
       "description": "State class applied to {{nodeName}} if {{conditions}}.",

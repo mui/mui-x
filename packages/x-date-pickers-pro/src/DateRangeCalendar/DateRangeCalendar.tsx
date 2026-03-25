@@ -90,24 +90,12 @@ const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
 const InnerDayCalendarForRange = styled(DayCalendar, {
   slot: 'internal',
-})(({ theme }) => ({
+})(() => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
-    [`& .${dayClasses.root}, & .${dayClasses.day}`]: {
+    [`& .${dayClasses.root}`]: {
       cursor: 'grabbing',
-    },
-    [`& .${dayClasses.root}:not(.${dayClasses.rangeIntervalDayHighlightStart}):not(.${dayClasses.rangeIntervalDayHighlightEnd}) .${dayClasses.day}:not(.${dayClasses.notSelectedDate})`]:
-      {
-        // we can't override `PickerDay` background color here, because it's styles take precedence
-        opacity: 0.6,
-      },
-  },
-  [`&:not(.${dateRangeCalendarClasses.dayDragging}) .${dayClasses.dayOutsideRangeInterval}`]: {
-    '@media (pointer: fine)': {
-      '&:hover': {
-        border: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
-      },
     },
   },
 }));
