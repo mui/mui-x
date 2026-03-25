@@ -1251,8 +1251,8 @@ importers:
         specifier: 'catalog:'
         version: 2.1.1
       lru-cache:
-        specifier: ^11.2.2
-        version: 11.2.5
+        specifier: ^11.2.7
+        version: 11.2.7
     devDependencies:
       '@mui/icons-material':
         specifier: 'catalog:'
@@ -4474,6 +4474,7 @@ packages:
   '@lerna/create@9.0.4':
     resolution: {integrity: sha512-WxedGD98G8/a6HztCXNWquaM0x17oSvfvuqDsLxNNX1qXGyrzmMUmd1mQikF/47uy80X6qyWdaRtaAHlwkvEUA==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    deprecated: This package is an implementation detail of Lerna and is no longer published separately.
 
   '@mdn/browser-compat-data@5.7.6':
     resolution: {integrity: sha512-7xdrMX0Wk7grrTZQwAoy1GkvPMFoizStUoL+VmtUkAxegbCCec+3FKwOM6yc/uGU5+BEczQHXAlWiqvM8JeENg==}
@@ -9746,8 +9747,8 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
-  lru-cache@11.2.5:
-    resolution: {integrity: sha512-vFrFJkWtJvJnD5hg+hJvVE8Lh/TcMzKnTgCWmtBipwI5yLX/iX+5UB2tfuyODF5E7k9xEzMdYgGqaSb1c0c5Yw==}
+  lru-cache@11.2.7:
+    resolution: {integrity: sha512-aY/R+aEsRelme17KGQa/1ZSIpLpNYYrhcrepKTZgE+W3WM16YMCaPwOHLHsmopZHELU0Ojin1lPVxKR0MihncA==}
     engines: {node: 20 || >=22}
 
   lru-cache@5.1.1:
@@ -12863,7 +12864,7 @@ snapshots:
       '@csstools/css-color-parser': 3.1.0(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
-      lru-cache: 11.2.5
+      lru-cache: 11.2.7
 
   '@asamuzakjp/dom-selector@6.7.6':
     dependencies:
@@ -12871,7 +12872,7 @@ snapshots:
       bidi-js: 1.0.3
       css-tree: 3.1.0
       is-potential-custom-element-name: 1.0.1
-      lru-cache: 11.2.5
+      lru-cache: 11.2.7
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
@@ -16028,7 +16029,7 @@ snapshots:
       agent-base: 7.1.4
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
-      lru-cache: 11.2.5
+      lru-cache: 11.2.7
       socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
       - supports-color
@@ -16051,7 +16052,7 @@ snapshots:
       common-ancestor-path: 1.0.1
       hosted-git-info: 9.0.0
       json-stringify-nice: 1.1.4
-      lru-cache: 11.2.5
+      lru-cache: 11.2.7
       minimatch: 10.2.2
       nopt: 8.1.0
       npm-install-checks: 7.1.2
@@ -16090,7 +16091,7 @@ snapshots:
     dependencies:
       '@npmcli/promise-spawn': 9.0.1
       ini: 6.0.0
-      lru-cache: 11.2.5
+      lru-cache: 11.2.7
       npm-pick-manifest: 11.0.3
       proc-log: 6.1.0
       promise-retry: 2.0.1
@@ -18434,7 +18435,7 @@ snapshots:
       '@npmcli/fs': 4.0.0
       fs-minipass: 3.0.3
       glob: 11.0.3
-      lru-cache: 11.2.5
+      lru-cache: 11.2.7
       minipass: 7.1.3
       minipass-collect: 2.0.1
       minipass-flush: 1.0.5
@@ -18891,7 +18892,7 @@ snapshots:
       '@asamuzakjp/css-color': 4.1.1
       '@csstools/css-syntax-patches-for-csstree': 1.0.25
       css-tree: 3.1.0
-      lru-cache: 11.2.5
+      lru-cache: 11.2.7
 
   csstype@3.1.3: {}
 
@@ -20368,7 +20369,7 @@ snapshots:
 
   hosted-git-info@9.0.0:
     dependencies:
-      lru-cache: 11.2.5
+      lru-cache: 11.2.7
 
   html-encoding-sniffer@4.0.0:
     dependencies:
@@ -21311,7 +21312,7 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
-  lru-cache@11.2.5: {}
+  lru-cache@11.2.7: {}
 
   lru-cache@5.1.1:
     dependencies:
@@ -22661,7 +22662,7 @@ snapshots:
 
   path-scurry@2.0.2:
     dependencies:
-      lru-cache: 11.2.5
+      lru-cache: 11.2.7
       minipass: 7.1.3
 
   path-to-regexp@3.3.0: {}
