@@ -129,6 +129,22 @@ This makes the behavior more consistent with the single date picker (`PickerDay`
 
 This change might affect your custom CSS if you were targeting the `.Mui-selected` state of `DateRangePickerDay` and expected it to only be present for complete ranges.
 
+### `DateRangePickerDay` margins
+
+In v8, `DateRangePickerDay` internally hardcoded `disableMargin={true}` on the `PickersDay` component.
+In v9, `DateRangePickerDay` is a standalone component and its `disableMargin` prop now defaults to `false`.
+
+This means that by default, range picker days will now have horizontal margins.
+If you want to restore the previous behavior (no margins), you can pass `disableMargin: true` to the `day` slot:
+
+```tsx
+<DateRangePicker
+  slotProps={{
+    day: { disableMargin: true },
+  }}
+/>
+```
+
 ### Renamed `PickersDay`
 
 The `PickersDay` component has been renamed to `PickerDay` to be consistent with the other components.
@@ -171,6 +187,9 @@ Several keys have been removed from the `DateRangePickerDayClasses` interface.
 - `rangeIntervalDayPreview`, `rangeIntervalDayPreviewStart`, and `rangeIntervalDayPreviewEnd` have been removed. You can now use `previewStart` and `previewEnd` instead.
 - `dayInsideRangeInterval` has been removed. You can now use `insideSelection` instead.
 - `rangeIntervalPreview` has been removed. You can now use `insidePreviewing` instead.
+- `outsideCurrentMonth` has been renamed to `dayOutsideMonth`.
+- `hiddenDayFiller` and `hiddenDaySpacingFiller` have been renamed to `fillerCell`.
+- `firstVisibleCell` and `lastVisibleCell` have been removed with no replacement.
 
 If you have custom `styleOverrides` for these classes, you need to update them to use the new class names.
 
@@ -201,9 +220,23 @@ const theme = createTheme({
 });
 ```
 
+### `PickerDay` classes
+
+The `PickerDay` classes have also been updated:
+
+- `dayWithMargin` has been removed and replaced by `dayWithoutMargin`. Note that the logic is inverted: `dayWithoutMargin` is applied when the day does **not** have a margin.
+
 ## Codemods
 
 The following codemods can be used to automatically apply these changes to your codebase:
+
+### `rename-picker-classes`
+
+Renames `PickerDay` and `DateRangePickerDay` class keys.
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-classes <path>
+```
 
 ### `rename-field-ref`
 
