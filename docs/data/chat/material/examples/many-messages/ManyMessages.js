@@ -1,13 +1,12 @@
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../shared/demoUtils';
+import { createEchoAdapter, randomId } from '../shared/demoUtils';
 import { createTextMessage, demoUsers } from '../shared/demoData';
 
 const adapter = createEchoAdapter();
 
-const MANY_CONV_ID = nanoid();
+const MANY_CONV_ID = randomId();
 
 const conversation = {
   id: MANY_CONV_ID,
@@ -29,7 +28,7 @@ function generateMessages(count) {
 
     messages.push(
       createTextMessage({
-        id: nanoid(),
+        id: randomId(),
         conversationId: MANY_CONV_ID,
         role: isUser ? 'user' : 'assistant',
         author: isUser ? demoUsers.you : demoUsers.agent,

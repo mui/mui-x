@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -16,10 +15,14 @@ import {
 import { useChat, useMessageIds } from '@mui/x-chat/headless';
 
 import { ChatRoot } from '@mui/x-chat/unstyled';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
+import {
+  createChunkStream,
+  createTextResponseChunks,
+  randomId,
+} from '../shared/demoUtils';
 import { createTextMessage, demoUsers } from '../shared/demoData';
 
-const CONVERSATION_ID = nanoid();
+const CONVERSATION_ID = randomId();
 
 const adapter = {
   async sendMessage({ message }) {
@@ -28,14 +31,14 @@ const adapter = {
       .filter(Boolean)
       .join('');
     return createChunkStream(
-      createTextResponseChunks(nanoid(), `Responding to: "${text}"`),
+      createTextResponseChunks(randomId(), `Responding to: "${text}"`),
     );
   },
 };
 
 const defaultMessages = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -43,7 +46,7 @@ const defaultMessages = [
     text: 'This is a read-only message feed — no ChatComposer is rendered anywhere on the page.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -51,7 +54,7 @@ const defaultMessages = [
     text: 'So how do new messages appear if there is no input?',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,

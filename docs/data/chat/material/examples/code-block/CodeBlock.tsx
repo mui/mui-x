@@ -3,8 +3,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ChatBox, ChatCodeBlock } from '@mui/x-chat';
-import { nanoid } from 'nanoid';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
+import { createChunkStream, createTextResponseChunks, randomId } from '../shared/demoUtils';
 import {
   demoUsers,
   minimalConversation,
@@ -32,7 +31,7 @@ It works by iterating over each item — if the item is itself a list it recurse
 
 const INITIAL_MESSAGES = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'user',
     text: 'Write me a Python function to flatten a nested list.',
@@ -40,7 +39,7 @@ const INITIAL_MESSAGES = [
     author: demoUsers.you,
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     text: ASSISTANT_REPLY,
@@ -93,7 +92,7 @@ export default function CodeBlock() {
   const adapter = React.useMemo(
     () => ({
       async sendMessage() {
-        const messageId = nanoid();
+        const messageId = randomId();
         return createChunkStream(
           createTextResponseChunks(messageId, ASSISTANT_REPLY, {
             author: demoUsers.agent,

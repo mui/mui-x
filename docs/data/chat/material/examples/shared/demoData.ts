@@ -1,5 +1,5 @@
-import { nanoid } from 'nanoid';
 import type { ChatConversation, ChatMessage, ChatUser } from '@mui/x-chat/headless';
+import { randomId } from './demoUtils';
 
 function createAvatarDataUrl(label: string, background: string, foreground = '#ffffff') {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="${background}"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="${foreground}">${label}</text></svg>`;
@@ -81,10 +81,10 @@ export function createTextMessage(params: {
 // guaranteed unique across different demos / page reloads.
 // ---------------------------------------------------------------------------
 
-const starterConvId = nanoid();
-const componentQConvId = nanoid();
-const themeHelpConvId = nanoid();
-const slotHelpConvId = nanoid();
+const starterConvId = randomId();
+const componentQConvId = randomId();
+const themeHelpConvId = randomId();
+const slotHelpConvId = randomId();
 
 export const minimalConversation: ChatConversation = {
   id: starterConvId,
@@ -98,7 +98,7 @@ export const minimalConversation: ChatConversation = {
 
 export const minimalMessages: ChatMessage[] = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: starterConvId,
     role: 'assistant',
     author: demoUsers.agent,
@@ -106,7 +106,7 @@ export const minimalMessages: ChatMessage[] = [
     text: 'Hello! I am styled using your active Material UI theme. Try sending a message.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: starterConvId,
     role: 'user',
     author: demoUsers.you,
@@ -148,7 +148,7 @@ export const inboxConversations: ChatConversation[] = [
 export const inboxThreads: Record<string, ChatMessage[]> = {
   [componentQConvId]: [
     createTextMessage({
-      id: nanoid(),
+      id: randomId(),
       conversationId: componentQConvId,
       role: 'user',
       author: demoUsers.alice,
@@ -156,7 +156,7 @@ export const inboxThreads: Record<string, ChatMessage[]> = {
       text: 'Which component should I use for the message input area?',
     }),
     createTextMessage({
-      id: nanoid(),
+      id: randomId(),
       conversationId: componentQConvId,
       role: 'assistant',
       author: demoUsers.agent,
@@ -164,7 +164,7 @@ export const inboxThreads: Record<string, ChatMessage[]> = {
       text: 'The composer is handled by the ChatBox automatically. You can override it with slots.composerRoot.',
     }),
     createTextMessage({
-      id: nanoid(),
+      id: randomId(),
       conversationId: componentQConvId,
       role: 'user',
       author: demoUsers.alice,
@@ -174,7 +174,7 @@ export const inboxThreads: Record<string, ChatMessage[]> = {
   ],
   [themeHelpConvId]: [
     createTextMessage({
-      id: nanoid(),
+      id: randomId(),
       conversationId: themeHelpConvId,
       role: 'user',
       author: demoUsers.marco,
@@ -182,7 +182,7 @@ export const inboxThreads: Record<string, ChatMessage[]> = {
       text: 'How do I change the user message bubble color from primary to something custom?',
     }),
     createTextMessage({
-      id: nanoid(),
+      id: randomId(),
       conversationId: themeHelpConvId,
       role: 'assistant',
       author: demoUsers.agent,
@@ -192,7 +192,7 @@ export const inboxThreads: Record<string, ChatMessage[]> = {
   ],
   [slotHelpConvId]: [
     createTextMessage({
-      id: nanoid(),
+      id: randomId(),
       conversationId: slotHelpConvId,
       role: 'assistant',
       author: demoUsers.priya,
@@ -200,7 +200,7 @@ export const inboxThreads: Record<string, ChatMessage[]> = {
       text: 'Use slots.composerSendButton to replace the send button with any React component.',
     }),
     createTextMessage({
-      id: nanoid(),
+      id: randomId(),
       conversationId: slotHelpConvId,
       role: 'user',
       author: demoUsers.you,

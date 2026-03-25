@@ -1,4 +1,17 @@
-import { nanoid } from 'nanoid';
+let counter = 0;
+
+/**
+ * Generate a random identifier suitable for demo data (messages, conversations, etc.).
+ * Uses `crypto.randomUUID` when available; falls back to a timestamp + counter combo.
+ */
+export function randomId() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+
+  counter += 1;
+  return `${Date.now().toString(36)}-${counter.toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
+}
 
 export function splitText(text, size = 18) {
   const chunks = [];
@@ -94,7 +107,7 @@ export function createEchoAdapter(options = {}) {
 
       return createChunkStream(
         createTextResponseChunks(
-          nanoid(),
+          randomId(),
           responseText,
           agent ? { author: agent } : undefined,
         ),

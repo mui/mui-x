@@ -1,14 +1,13 @@
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
+import { createEchoAdapter, randomId } from '../examples/shared/demoUtils';
 import { createTextMessage, demoUsers } from '../examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = nanoid();
+const CONV_ID = randomId();
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -24,7 +23,7 @@ const conversation: ChatConversation = {
 // 1-minute grouping window but outside a very short one.
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -32,7 +31,7 @@ const messages: ChatMessage[] = [
     text: 'First message from the user.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -40,7 +39,7 @@ const messages: ChatMessage[] = [
     text: 'Second message, sent 30 seconds later. Same group because the window is 1 minute.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -48,7 +47,7 @@ const messages: ChatMessage[] = [
     text: 'Third message, sent 2 minutes after the first. This starts a new group.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,

@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
 import type {
   ChatAdapter,
@@ -12,6 +11,7 @@ import type {
 import type { ToolPartSlotProps } from '@mui/x-chat/unstyled';
 import {
   createChunkStream,
+  randomId,
   splitText,
   syncConversationPreview,
 } from '../shared/demoUtils';
@@ -82,9 +82,9 @@ function makeAssistantMessage(
 
 // ── Conversation IDs ──────────────────────────────────────────────────────────
 
-const fixTestsId = nanoid();
-const addFeatureId = nanoid();
-const dangerousCmdId = nanoid();
+const fixTestsId = randomId();
+const addFeatureId = randomId();
+const dangerousCmdId = randomId();
 
 // ── Pre-populated conversations ───────────────────────────────────────────────
 
@@ -123,12 +123,12 @@ const initialConversations: ChatConversation[] = [
 const initialThreads: Record<string, ChatMessage[]> = {
   [fixTestsId]: [
     makeUserMessage(
-      nanoid(),
+      randomId(),
       fixTestsId,
       'The unit tests are failing after the recent refactor. Can you fix them?',
       '2026-03-21T09:20:00.000Z',
     ),
-    makeAssistantMessage(nanoid(), fixTestsId, '2026-03-21T09:21:00.000Z', [
+    makeAssistantMessage(randomId(), fixTestsId, '2026-03-21T09:21:00.000Z', [
       { type: 'step-start' },
       {
         type: 'reasoning',
@@ -143,7 +143,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: nanoid(),
+          toolCallId: randomId(),
           toolName: 'glob',
           state: 'output-available',
           input: { pattern: 'src/**/*.test.ts' },
@@ -160,7 +160,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: nanoid(),
+          toolCallId: randomId(),
           toolName: 'read_file',
           state: 'output-available',
           input: { path: 'src/Button.test.ts' },
@@ -173,7 +173,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: nanoid(),
+          toolCallId: randomId(),
           toolName: 'edit_file',
           state: 'output-available',
           input: {
@@ -187,7 +187,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: nanoid(),
+          toolCallId: randomId(),
           toolName: 'bash',
           state: 'output-available',
           input: { command: 'pnpm test --run' },
@@ -208,12 +208,12 @@ const initialThreads: Record<string, ChatMessage[]> = {
 
   [addFeatureId]: [
     makeUserMessage(
-      nanoid(),
+      randomId(),
       addFeatureId,
       'Add a dark mode toggle button to the header',
       '2026-03-21T08:00:00.000Z',
     ),
-    makeAssistantMessage(nanoid(), addFeatureId, '2026-03-21T08:01:00.000Z', [
+    makeAssistantMessage(randomId(), addFeatureId, '2026-03-21T08:01:00.000Z', [
       { type: 'step-start' },
       {
         type: 'reasoning',
@@ -228,7 +228,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: nanoid(),
+          toolCallId: randomId(),
           toolName: 'read_file',
           state: 'output-available',
           input: { path: 'src/components/Header.tsx' },
@@ -246,7 +246,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: nanoid(),
+          toolCallId: randomId(),
           toolName: 'write_file',
           state: 'output-available',
           input: {
@@ -260,7 +260,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: nanoid(),
+          toolCallId: randomId(),
           toolName: 'bash',
           state: 'output-available',
           input: { command: 'pnpm build' },
@@ -280,13 +280,13 @@ const initialThreads: Record<string, ChatMessage[]> = {
 
   [dangerousCmdId]: [
     makeUserMessage(
-      nanoid(),
+      randomId(),
       dangerousCmdId,
       'Clean up all build artifacts and reset to a clean state',
       '2026-03-21T10:00:00.000Z',
     ),
     makeAssistantMessage(
-      nanoid(),
+      randomId(),
       dangerousCmdId,
       '2026-03-21T10:01:00.000Z',
       [
@@ -299,7 +299,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
         {
           type: 'dynamic-tool',
           toolInvocation: {
-            toolCallId: nanoid(),
+            toolCallId: randomId(),
             toolName: 'bash',
             state: 'approval-requested',
             input: { command: 'rm -rf ./dist ./coverage && git clean -fd' },
@@ -526,7 +526,7 @@ export default function ToolStylingB() {
   const adapter = React.useMemo<ChatAdapter>(
     () => ({
       async sendMessage() {
-        return createChunkStream(createAgenticChunks(nanoid()), { delayMs: 120 });
+        return createChunkStream(createAgenticChunks(randomId()), { delayMs: 120 });
       },
       async addToolApprovalResponse({ id, approved }) {
         setThreadsRef.current?.((prev) => {

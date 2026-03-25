@@ -19,11 +19,10 @@ import {
 import { useMessageIds } from '@mui/x-chat/headless';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatRoot } from '@mui/x-chat/unstyled';
-import { nanoid } from 'nanoid';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
+import { createChunkStream, createTextResponseChunks, randomId } from '../shared/demoUtils';
 import { createTextMessage, demoUsers } from '../shared/demoData';
 
-const CONVERSATION_ID = nanoid();
+const CONVERSATION_ID = randomId();
 
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {
@@ -32,14 +31,14 @@ const adapter: ChatAdapter = {
       .filter(Boolean)
       .join('');
     return createChunkStream(
-      createTextResponseChunks(nanoid(), `You said: "${text}".`),
+      createTextResponseChunks(randomId(), `You said: "${text}".`),
     );
   },
 };
 
 const defaultMessages = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -47,7 +46,7 @@ const defaultMessages = [
     text: 'The message list (left) and the composer (right) are siblings in the DOM — neither is nested inside the other.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -55,7 +54,7 @@ const defaultMessages = [
     text: 'What connects them?',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,

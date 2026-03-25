@@ -3,9 +3,12 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { nanoid } from 'nanoid';
 import { ChatBox, ChatPlan } from '@mui/x-chat';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
+import {
+  createChunkStream,
+  createTextResponseChunks,
+  randomId,
+} from '../shared/demoUtils';
 import { demoUsers, minimalConversation, minimalMessages } from '../shared/demoData';
 
 const INITIAL_STEPS = [
@@ -72,7 +75,7 @@ export default function PlanTask() {
   const adapter = React.useMemo(
     () => ({
       async sendMessage() {
-        const messageId = nanoid();
+        const messageId = randomId();
         const responseText =
           'Executing the plan — watch the steps above update as I work through each one.';
 

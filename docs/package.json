@@ -75,7 +75,6 @@
     "moment-jalaali": "catalog:",
     "moment-timezone": "catalog:",
     "motion": "catalog:",
-    "nanoid": "^3.3.11",
     "next": "^15.5.12",
     "nprogress": "^0.2.0",
     "postcss": "^8.5.6",

@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid';
 import type {
   ChatAdapter,
   ChatConversation,
@@ -7,6 +6,21 @@ import type {
   ChatStreamEnvelope,
   ChatUser,
 } from '@mui/x-chat/headless';
+
+let counter = 0;
+
+/**
+ * Generate a random identifier suitable for demo data (messages, conversations, etc.).
+ * Uses `crypto.randomUUID` when available; falls back to a timestamp + counter combo.
+ */
+export function randomId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+
+  counter += 1;
+  return `${Date.now().toString(36)}-${counter.toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
+}
 
 export function splitText(text: string, size = 18) {
   const chunks: string[] = [];
@@ -113,7 +127,7 @@ export function createEchoAdapter(
       const responseText = respond(textOnly || getMessageText(message));
 
       return createChunkStream(
-        createTextResponseChunks(nanoid(), responseText, agent ? { author: agent } : undefined),
+        createTextResponseChunks(randomId(), responseText, agent ? { author: agent } : undefined),
         { delayMs },
       );
     },

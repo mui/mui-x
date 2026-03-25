@@ -17,11 +17,10 @@ import {
 import { useMessageIds } from '@mui/x-chat/headless';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatRoot } from '@mui/x-chat/unstyled';
-import { nanoid } from 'nanoid';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
+import { createChunkStream, createTextResponseChunks, randomId } from '../shared/demoUtils';
 import { createTextMessage, demoUsers } from '../shared/demoData';
 
-const CONVERSATION_ID = nanoid();
+const CONVERSATION_ID = randomId();
 
 // Adapter has only `sendMessage` — no `listConversations` or `listMessages`.
 // ChatBox cannot fetch conversation history, and no `conversations` prop is passed,
@@ -33,14 +32,14 @@ const adapter: ChatAdapter = {
       .filter(Boolean)
       .join('');
     return createChunkStream(
-      createTextResponseChunks(nanoid(), `You said: "${text}".`),
+      createTextResponseChunks(randomId(), `You said: "${text}".`),
     );
   },
 };
 
 const defaultMessages = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -48,7 +47,7 @@ const defaultMessages = [
     text: 'Hello! This thread is composed directly from individual components — no ChatBox, no header, no sidebar.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -56,7 +55,7 @@ const defaultMessages = [
     text: 'Got it. So I can pick exactly which parts to include?',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,

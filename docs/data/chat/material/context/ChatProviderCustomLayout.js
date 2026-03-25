@@ -15,17 +15,16 @@ import {
   ChatMessageList,
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
-import { nanoid } from 'nanoid';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
+import { createEchoAdapter, randomId } from '../examples/shared/demoUtils';
 import { createTextMessage, demoUsers } from '../examples/shared/demoData';
 
-const CONVERSATION_ID = nanoid();
+const CONVERSATION_ID = randomId();
 
 const adapter = createEchoAdapter();
 
 const defaultMessages = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -33,7 +32,7 @@ const defaultMessages = [
     text: 'This layout is built with ChatProvider directly. The message list and composer are composed manually.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -41,7 +40,7 @@ const defaultMessages = [
     text: 'So I get full control over what is rendered?',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,

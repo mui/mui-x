@@ -2,9 +2,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { nanoid } from 'nanoid';
 import { ChatBox, ChatConfirmation } from '@mui/x-chat';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
+import { createChunkStream, createTextResponseChunks, randomId } from '../shared/demoUtils';
 import {
   demoUsers,
   minimalConversation,
@@ -15,7 +14,7 @@ const CONVERSATION_ID = minimalConversation.id;
 
 const INITIAL_MESSAGES = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'user',
     text: 'Delete all temporary files in the project.',
@@ -23,7 +22,7 @@ const INITIAL_MESSAGES = [
     author: demoUsers.you,
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     text: 'I found 47 temporary files totalling 2.3 GB. Please confirm before I proceed — this action cannot be undone.',
@@ -56,7 +55,7 @@ export default function Confirmation() {
   const adapter = React.useMemo(
     () => ({
       async sendMessage() {
-        const messageId = nanoid();
+        const messageId = randomId();
         return createChunkStream(
           createTextResponseChunks(
             messageId,

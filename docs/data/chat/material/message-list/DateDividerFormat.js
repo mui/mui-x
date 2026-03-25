@@ -1,14 +1,13 @@
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
 
-import { createEchoAdapter } from '../examples/shared/demoUtils';
+import { createEchoAdapter, randomId } from '../examples/shared/demoUtils';
 import { createTextMessage, demoUsers } from '../examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = nanoid();
+const CONV_ID = randomId();
 
 const conversation = {
   id: CONV_ID,
@@ -22,7 +21,7 @@ const conversation = {
 
 const messages = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -30,7 +29,7 @@ const messages = [
     text: 'Here is a message from two days ago.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -38,7 +37,7 @@ const messages = [
     text: 'And this one is from yesterday.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,

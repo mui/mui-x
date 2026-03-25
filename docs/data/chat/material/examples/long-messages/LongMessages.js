@@ -1,11 +1,10 @@
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../shared/demoUtils';
+import { createEchoAdapter, randomId } from '../shared/demoUtils';
 import { createTextMessage, demoUsers } from '../shared/demoData';
 
-const LONG_CONV_ID = nanoid();
+const LONG_CONV_ID = randomId();
 
 const adapter = createEchoAdapter({
   respond: () =>
@@ -44,42 +43,42 @@ const longConversation = {
 
 const longMessages = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'user',
     createdAt: '2026-03-15T09:55:00.000Z',
     text: 'This is a short message.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'assistant',
     createdAt: '2026-03-15T09:56:00.000Z',
     text: 'Short reply.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'user',
     createdAt: '2026-03-15T09:57:00.000Z',
     text: 'Now here is a very long message to test how the ChatBox handles text wrapping. This message contains multiple sentences to verify that the bubble grows vertically without causing horizontal overflow. The width should be constrained to the maximum bubble width while the text wraps naturally. Additional text to ensure the message is sufficiently long for testing purposes. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'assistant',
     createdAt: '2026-03-15T09:58:00.000Z',
     text: 'A single word: Acknowledged.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'user',
     createdAt: '2026-03-15T09:59:00.000Z',
     text: 'Superlongwordwithoutanyspacestotestwordbreakbehaviorinthebubblelayoutwhencontentcannotwrapnaturally',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'assistant',
     createdAt: '2026-03-15T10:00:00.000Z',
