@@ -395,7 +395,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     autoFocus = false,
     className,
     classes: classesProp,
-    hidden,
     isAnimating,
     onClick,
     onDaySelect,
