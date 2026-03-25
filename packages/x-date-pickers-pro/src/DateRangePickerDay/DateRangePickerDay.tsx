@@ -513,7 +513,10 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
       ref={handleRef}
       centerRipple
       // compat with DateRangePickerDay for tests
-      data-testid="DateRangePickerDay"
+      data-testid={
+        (other as any)['data-testid'] ??
+        (isHighlighting ? 'DateRangeHighlight' : 'DateRangePickerDay')
+      }
       disabled={disabled}
       tabIndex={selected ? 0 : -1}
       onKeyDown={(event) => onKeyDown(event, day)}
@@ -527,12 +530,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
       ownerState={ownerState}
       className={clsx(classes.root, className)}
     >
-      {isHighlighting && (
-        <span
-          data-testid="DateRangeHighlight"
-          style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
-        />
-      )}
       {children ?? adapter.format(day, 'dayOfMonth')}
     </DateRangePickerDayRoot>
   );

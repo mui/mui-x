@@ -116,6 +116,9 @@ These highlights are now rendered using `::before` and `::after` pseudo-elements
 This change might affect your custom styles if you were targeting the nested elements.
 For example, in `DateRangePickerDay`, the `day` class has been removed as there is no longer a separate element for the day content.
 
+Additionally, the `data-testid="DateRangeHighlight"` attribute that was previously on the nested `<span>` in `DateRangePickerDay` has been moved to the root element.
+When a day is highlighted, its `data-testid` will be `DateRangeHighlight` instead of `DateRangePickerDay`.
+
 ### `DateRangePickerDay` selection behavior
 
 The `isDaySelected` condition in `DateRangePickerDay` has been updated to also include individually selected days, not just days within a valid range.
