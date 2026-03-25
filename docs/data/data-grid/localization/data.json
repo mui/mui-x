@@ -275,7 +275,7 @@
     "languageTag": "sv-SE",
     "importName": "svSE",
     "localeName": "Swedish",
-    "missingKeysCount": 93,
+    "missingKeysCount": 0,
     "totalKeysCount": 223,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/svSE.ts"
   },
