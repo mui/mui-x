@@ -93,6 +93,7 @@ export const useGridCellSelection = (
   const fillMoveHandlerRef = React.useRef<((event: MouseEvent) => void) | null>(null);
   const fillUpHandlerRef = React.useRef<(() => void) | null>(null);
   const fillRowIdMap = React.useRef<Map<string, GridRowId>>(new Map());
+  const skipNextCellClick = React.useRef(false);
 
   const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
@@ -409,6 +410,13 @@ export const useGridCellSelection = (
     [GridEventLookup['cellClick']['params'], GridEventLookup['cellClick']['event']],
     void
   >((params, event) => {
+    // After a fill handle mousedown+mouseup (click without drag), skip the
+    // subsequent cell click so it doesn't replace the multi-cell selection.
+    if (skipNextCellClick.current) {
+      skipNextCellClick.current = false;
+      return;
+    }
+
     const { id, field } = params;
 
     if (!hasClickedValidCellForRangeSelection(params)) {
@@ -733,6 +741,11 @@ export const useGridCellSelection = (
 
     clearFillPreviewClasses();
 
+    // If actual dragging occurred, the click guard is not needed — reset it
+    // so the next click on a cell works normally.
+    if (isFillDragging.current) {
+      skipNextCellClick.current = false;
+    }
     isFillDragging.current = false;
     fillTargetRowIds.current = [];
     fillFields.current = [];
@@ -789,7 +802,9 @@ export const useGridCellSelection = (
       event.stopPropagation();
       (event as any).defaultMuiPrevented = true;
 
-      isFillDragging.current = true;
+      // Skip the cell click that fires after this mousedown+mouseup so it
+      // doesn't replace the multi-cell selection with a single cell.
+      skipNextCellClick.current = true;
 
       // Store selected cells as source
       const selectedCells = apiRef.current.getSelectedCellsAsArray();
@@ -838,8 +853,11 @@ export const useGridCellSelection = (
       fillDocRef.current = doc;
 
       const handleFillMouseMove = (moveEvent: MouseEvent) => {
+        // Activate dragging on the first mousemove (not on mousedown) so that a
+        // click-without-drag never sets isFillDragging — which would cause
+        // addClassesToCells to hide the fill handle indicator.
         if (!isFillDragging.current) {
-          return;
+          isFillDragging.current = true;
         }
 
         // Throttle via rAF to avoid layout thrashing
@@ -1058,13 +1076,13 @@ export const useGridCellSelection = (
       return;
     }
 
-    event.preventDefault();
-    (event as any).defaultMuiPrevented = true;
-
     const selectedCells = apiRef.current.getSelectedCellsAsArray();
     if (selectedCells.length === 0) {
       return;
     }
+
+    event.preventDefault();
+    (event as any).defaultMuiPrevented = true;
 
     // Group selected cells by field (column)
     const cellsByField = new Map<string, { id: GridRowId; field: string }[]>();
@@ -1228,13 +1246,13 @@ export const useGridCellSelection = (
       return;
     }
 
-    event.preventDefault();
-    (event as any).defaultMuiPrevented = true;
-
     const selectedCells = apiRef.current.getSelectedCellsAsArray();
     if (selectedCells.length === 0) {
       return;
     }
+
+    event.preventDefault();
+    (event as any).defaultMuiPrevented = true;
 
     const visibleColumns = apiRef.current.getVisibleColumns();
     const columnFieldToIndex = new Map(visibleColumns.map((col, i) => [col.field, i]));

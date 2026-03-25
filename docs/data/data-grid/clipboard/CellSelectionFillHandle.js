@@ -1,6 +1,13 @@
 import * as React from 'react';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 
+const numberPastedValueParser = (value, _, column) => {
+  if (column.type === 'number' && Number.isNaN(Number(value))) {
+    return undefined;
+  }
+  return value;
+};
+
 const columns = [
   { field: 'product', headerName: 'Product', width: 150, editable: true },
   {
@@ -13,6 +20,7 @@ const columns = [
     field: 'q1',
     headerName: 'Q1',
     type: 'number',
+    pastedValueParser: numberPastedValueParser,
     width: 100,
     editable: true,
   },
@@ -20,6 +28,7 @@ const columns = [
     field: 'q2',
     headerName: 'Q2',
     type: 'number',
+    pastedValueParser: numberPastedValueParser,
     width: 100,
     editable: true,
   },
@@ -27,6 +36,7 @@ const columns = [
     field: 'q3',
     headerName: 'Q3',
     type: 'number',
+    pastedValueParser: numberPastedValueParser,
     width: 100,
     editable: true,
   },
@@ -34,6 +44,7 @@ const columns = [
     field: 'q4',
     headerName: 'Q4',
     type: 'number',
+    pastedValueParser: numberPastedValueParser,
     width: 100,
     editable: true,
   },
