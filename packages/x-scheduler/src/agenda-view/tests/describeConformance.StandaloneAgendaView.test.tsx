@@ -31,6 +31,7 @@ describe('<StandaloneAgendaView /> - Describe Conformance', () => {
         'themeVariants',
         'rootClass',
         'themeDefaultProps',
+        'themeStyleOverrides',
         'reactTestRenderer',
       ],
     }),

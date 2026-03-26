@@ -31,6 +31,7 @@ describe('<StandaloneWeekView /> - Describe Conformance', () => {
         'themeVariants',
         'rootClass',
         'themeDefaultProps',
+        'themeStyleOverrides',
         'reactTestRenderer',
       ],
     }),
