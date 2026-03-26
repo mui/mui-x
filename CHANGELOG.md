@@ -50,6 +50,7 @@ Same changes as in `@mui/x-date-pickers@9.0.0-beta.0`.
 #### `@mui/x-charts@9.0.0-beta.0`
 
 - [charts] Add `className` prop to Pro chart plot components (#21793) @JCQuintas
+- [charts] Add experimental position-based pointer interaction for line series (#21809) @JCQuintas
 - [charts] Add l10n to the bar accessibility (#21815) @alexfauquette
 - [charts] Add localization for the basic charts (#21822) @alexfauquette
 - [charts] Add voiceover component (#21344) @alexfauquette
@@ -88,6 +89,8 @@ Internal changes.
 - [docs] Document how to customize voiceover announcement (#21833) @alexfauquette
 - [docs] Update telemetry guide to reflect pseudonymous data collection and license compliance (#21812) @aemartos
 - [docs] Revise the Sparkline doc (#21614) @mapache-salvaje
+- [docs] Revise the Gauge doc (#21673) @mapache-salvaje
+- [docs] Revise the Heatmap doc (#21676) @mapache-salvaje
 
 ### Core
 
