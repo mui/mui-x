@@ -37,21 +37,31 @@ interface UseDragRangeResponse extends UseDragRangeEvents {
 }
 
 const resolveDateFromTarget = (
-  target: EventTarget,
+  target: EventTarget | null,
   adapter: MuiPickersAdapter,
   timezone: PickersTimezone,
 ) => {
-  const timestampString = (target as HTMLElement).dataset.timestamp;
+  if (!target || !(target instanceof HTMLElement)) {
+    return null;
+  }
+
+  const element = target.dataset.timestamp
+    ? target
+    : target.closest<HTMLElement>('[data-timestamp]');
+  const timestampString = element?.dataset.timestamp;
   if (!timestampString) {
     return null;
   }
-  const timestamp = +timestampString;
-  return adapter.date(new Date(timestamp).toISOString(), timezone);
+
+  const timestamp = Number(timestampString);
+  return adapter.date(timestamp as any, timezone);
 };
 
 const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
-  const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
-  return timestampString === event.dataTransfer.getData('draggingDate');
+  const element = (event.target as HTMLElement).dataset.timestamp
+    ? (event.target as HTMLElement)
+    : (event.target as HTMLElement).closest<HTMLElement>('[data-timestamp]');
+  return element?.dataset.timestamp === event.dataTransfer.getData('draggingDate');
 };
 
 const resolveButtonElement = (element: Element | null): HTMLButtonElement | null => {
@@ -132,11 +142,14 @@ const useDragRangeEvents = ({
     setRangeDragDay(newDate);
     event.dataTransfer.effectAllowed = 'move';
     setIsDragging(true);
-    const buttonDataset = (event.target as HTMLButtonElement).dataset;
-    if (buttonDataset.timestamp) {
+    const element = event.currentTarget.dataset.timestamp
+      ? event.currentTarget
+      : event.currentTarget.closest<HTMLElement>('[data-timestamp]');
+    const buttonDataset = element?.dataset;
+    if (buttonDataset?.timestamp) {
       event.dataTransfer.setData('draggingDate', buttonDataset.timestamp);
     }
-    if (buttonDataset.position) {
+    if (buttonDataset?.position) {
       onDatePositionChange(buttonDataset.position as RangePosition);
     }
   });
@@ -186,9 +199,11 @@ const useDragRangeEvents = ({
     // on mobile we should only initialize dragging state after move is detected
     setIsDragging(true);
 
-    const button = event.target as HTMLButtonElement;
-    const buttonDataset = button.dataset;
-    if (buttonDataset.position) {
+    const element = event.currentTarget.dataset.position
+      ? event.currentTarget
+      : event.currentTarget.closest<HTMLElement>('[data-position]');
+    const buttonDataset = element?.dataset;
+    if (buttonDataset?.position) {
       onDatePositionChange(buttonDataset.position as RangePosition);
     }
   });
