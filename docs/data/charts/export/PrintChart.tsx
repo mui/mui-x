@@ -61,14 +61,19 @@ export default function PrintChart() {
     setChartType(event.target.value as ChartType);
 
   return (
-    <Stack width="100%" sx={{ display: 'block' }}>
+    <Stack
+      sx={{
+        width: "100%",
+        display: 'block'
+      }}>
       <Stack
-        width="100%"
         direction="row"
-        gap={2}
-        justifyContent="center"
-        sx={{ mb: 1 }}
-      >
+        sx={{
+          width: "100%",
+          gap: 2,
+          justifyContent: "center",
+          mb: 1
+        }}>
         <FormControl sx={{ minWidth: 200 }}>
           <InputLabel id="chart-type-label">Chart Type</InputLabel>
           <Select

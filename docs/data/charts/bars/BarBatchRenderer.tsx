@@ -19,7 +19,9 @@ export default function BarBatchRenderer() {
   );
 
   return (
-    <Stack width="100%">
+    <Stack sx={{
+      width: "100%"
+    }}>
       <FormControl fullWidth>
         <FormLabel id="bar-chart-renderer-label">Rendering Strategy</FormLabel>
         <RadioGroup
@@ -42,7 +44,6 @@ export default function BarBatchRenderer() {
           />
         </RadioGroup>
       </FormControl>
-
       <BarChartPro
         xAxis={[
           {

@@ -106,9 +106,10 @@ export default function SankeyOverview() {
       <Typography
         variant="subtitle1"
         align="center"
-        color="text.secondary"
-        sx={{ mb: 2 }}
-      >
+        sx={{
+          color: "text.secondary",
+          mb: 2
+        }}>
         Flow from Revenue to Net Income (in Billions USD)
       </Typography>
       <Box sx={{ width: '100%', height: 600 }}>

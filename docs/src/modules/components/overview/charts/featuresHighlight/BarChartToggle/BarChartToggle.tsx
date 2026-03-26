@@ -14,7 +14,9 @@ export default function BarChartToggle() {
   return (
     <Stack spacing={1} sx={sxColors}>
       <Typography variant="subtitle2">Advanced data visualization</Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" sx={{
+        color: "text.secondary"
+      }}>
         Compare and analyze data across categories by layering data series.
       </Typography>
       <AdvancedFeaturesToggle

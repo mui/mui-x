@@ -32,7 +32,13 @@ export default function AdvancedFeatures() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={6} py={8} alignItems="center">
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        spacing={6}
+        sx={{
+          py: 8,
+          alignItems: "center"
+        }}>
         <Stack
           spacing={2}
           sx={{
@@ -43,7 +49,9 @@ export default function AdvancedFeatures() {
           <SectionHeadline
             overline="Advanced features"
             title={
-              <Typography variant="h2" fontSize="1.625rem">
+              <Typography variant="h2" sx={{
+                fontSize: "1.625rem"
+              }}>
                 {advancedFeatures[activeItem].title}
               </Typography>
             }
@@ -61,13 +69,12 @@ export default function AdvancedFeatures() {
           ))}
         </Stack>
         <Stack
-          justifyContent="center"
-          alignItems="center"
           sx={{
+            justifyContent: "center",
+            alignItems: "center",
             width: { xs: '100%' },
-            maxWidth: { xs: '500px', md: '100%' },
-          }}
-        >
+            maxWidth: { xs: '500px', md: '100%' }
+          }}>
           {activeItem === 0 && <LabelEditingDemo />}
           {activeItem === 1 && <DragAndDropDemo />}
           {activeItem === 2 && <LazyLoadingDemo />}

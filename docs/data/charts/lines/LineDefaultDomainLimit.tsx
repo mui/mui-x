@@ -9,7 +9,9 @@ export default function LineDefaultDomainLimit() {
   const [niceDomainLimit, setNiceDomainLimit] = React.useState(false);
 
   return (
-    <Stack alignItems="center">
+    <Stack sx={{
+      alignItems: "center"
+    }}>
       <FormControlLabel
         checked={niceDomainLimit}
         control={
@@ -18,7 +20,6 @@ export default function LineDefaultDomainLimit() {
         label="Nice domain limit"
         labelPlacement="end"
       />
-
       <div style={{ width: '100%', maxWidth: 450 }}>
         <LineChart
           dataset={dataset.slice(2, dataset.length)}

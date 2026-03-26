@@ -93,9 +93,10 @@ function ElectricityTooltipContent() {
     <Paper sx={{ p: 1.5 }} elevation={4}>
       <Typography
         variant="subtitle2"
-        justifyContent={'space-between'}
-        display="flex"
-      >
+        sx={{
+          justifyContent: 'space-between',
+          display: "flex"
+        }}>
         {item.label} {flags[item.identifier.seriesId as keyof typeof flags]}
       </Typography>
       <Typography variant="body2">

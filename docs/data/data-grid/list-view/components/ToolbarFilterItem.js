@@ -112,7 +112,6 @@ export function ToolbarFilterItem(props) {
           <GridFilterListIcon fontSize="small" />
         </Badge>
       </ToolbarButton>
-
       <Drawer
         anchor={listView ? 'bottom' : 'right'}
         open={open}
@@ -120,7 +119,9 @@ export function ToolbarFilterItem(props) {
         onClose={() => setOpen(false)}
       >
         <DrawerHeader>
-          <Typography fontWeight={500}>Filters</Typography>
+          <Typography sx={{
+            fontWeight: 500
+          }}>Filters</Typography>
         </DrawerHeader>
 
         <List

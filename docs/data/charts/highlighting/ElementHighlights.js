@@ -170,10 +170,11 @@ export default function ElementHighlights() {
       <Stack
         direction={{ xs: 'row', xl: 'column' }}
         spacing={3}
-        justifyContent="center"
-        flexWrap="wrap"
         useFlexGap
-      >
+        sx={{
+          justifyContent: "center",
+          flexWrap: "wrap"
+        }}>
         <TextField
           select
           label="highlight"

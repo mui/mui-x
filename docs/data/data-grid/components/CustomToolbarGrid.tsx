@@ -12,7 +12,12 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
-      <Typography fontWeight="medium" sx={{ flex: 1, mx: 0.5 }}>
+      <Typography
+        sx={{
+          fontWeight: "medium",
+          flex: 1,
+          mx: 0.5
+        }}>
         Custom Toolbar
       </Typography>
       <GridToolbarColumnsButton />

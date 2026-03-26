@@ -54,9 +54,12 @@ function EmployeeHeader() {
   const apiRef = useGridApiContext();
   const filteredRowCount = useGridSelector(apiRef, gridFilteredRowCountSelector);
   return (
-    <Typography fontWeight="medium" fontSize="0.875rem">
-      Employees ({filteredRowCount})
-    </Typography>
+    <Typography
+      sx={{
+        fontWeight: "medium",
+        fontSize: "0.875rem"
+      }}>Employees ({filteredRowCount})
+          </Typography>
   );
 }
 

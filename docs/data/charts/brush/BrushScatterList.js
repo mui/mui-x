@@ -97,7 +97,9 @@ function SelectedPointsList() {
   if (selectedData.length === 0) {
     return (
       <Box sx={{ mt: 3 }}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{
+          color: "text.secondary"
+        }}>
           No points selected. Drag on the chart to select data points.
         </Typography>
       </Box>

@@ -71,9 +71,10 @@ export default function ThemesConfig({
 }: ThemesConfigProps) {
   return (
     <Stack
-      justifyContent="flex-start"
       spacing={2}
-      sx={(theme) => ({
+      sx={[{
+        justifyContent: "flex-start"
+      }, (theme) => ({
         minWidth: '300px',
         borderRadius: {
           xs: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
@@ -81,10 +82,14 @@ export default function ThemesConfig({
         },
         padding: 2,
         overflow: 'auto',
-      })}
-    >
+      })]}>
       <Stack spacing={1.5}>
-        <Typography fontSize="0.8rem" gutterBottom color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: "0.8rem",
+            color: "hsl(220, 25%, 45%)"
+          }}>
           Color
         </Typography>
         <ConfigToggleButtons
@@ -97,7 +102,12 @@ export default function ThemesConfig({
         />
       </Stack>
       <Stack spacing={1.5}>
-        <Typography fontSize="0.8rem" gutterBottom color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: "0.8rem",
+            color: "hsl(220, 25%, 45%)"
+          }}>
           Border radius
         </Typography>
         <ConfigToggleButtons
@@ -120,7 +130,12 @@ export default function ThemesConfig({
         />
       </Stack>
       <Stack spacing={1.5}>
-        <Typography fontSize="0.8rem" gutterBottom color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: "0.8rem",
+            color: "hsl(220, 25%, 45%)"
+          }}>
           Density
         </Typography>
         <ConfigToggleButtons
@@ -143,7 +158,12 @@ export default function ThemesConfig({
         />
       </Stack>
       <Stack spacing={1.5}>
-        <Typography gutterBottom fontSize="0.8rem" color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: "0.8rem",
+            color: "hsl(220, 25%, 45%)"
+          }}>
           Layout
         </Typography>
 
@@ -163,7 +183,12 @@ export default function ThemesConfig({
         />
       </Stack>
       <Stack spacing={1.5}>
-        <Typography gutterBottom fontSize="0.8rem" color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: "0.8rem",
+            color: "hsl(220, 25%, 45%)"
+          }}>
           Behavior
         </Typography>
 
@@ -182,9 +207,13 @@ export default function ThemesConfig({
           slotProps={{ typography: { fontSize: '0.8rem' } }}
         />
       </Stack>
-
       <Stack spacing={1.5}>
-        <Typography gutterBottom fontSize="0.8rem" color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: "0.8rem",
+            color: "hsl(220, 25%, 45%)"
+          }}>
           Selection behavior
         </Typography>
 

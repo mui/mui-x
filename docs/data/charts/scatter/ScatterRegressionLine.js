@@ -17,8 +17,12 @@ const dollarFormatter = new Intl.NumberFormat('en-US', {
 
 export default function ScatterRegressionLine() {
   return (
-    <Stack width="100%">
-      <Typography variant="h6" component="span" textAlign="center">
+    <Stack sx={{
+      width: "100%"
+    }}>
+      <Typography variant="h6" component="span" sx={{
+        textAlign: "center"
+      }}>
         Relation between Weight and Price of Diamonds
       </Typography>
       <ScatterChart
@@ -44,7 +48,6 @@ export default function ScatterRegressionLine() {
       >
         <RegressionLine seriesId="diamonds" />
       </ScatterChart>
-
       <Typography variant="caption">Source: OpenML</Typography>
     </Stack>
   );

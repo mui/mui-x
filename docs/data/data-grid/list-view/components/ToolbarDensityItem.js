@@ -56,7 +56,6 @@ export function ToolbarDensityItem(props) {
       <ToolbarButton onClick={() => setOpen(true)}>
         <Icon fontSize="small" />
       </ToolbarButton>
-
       <Drawer
         anchor={listView ? 'bottom' : 'right'}
         open={open}
@@ -64,7 +63,9 @@ export function ToolbarDensityItem(props) {
         onClose={() => setOpen(false)}
       >
         <DrawerHeader>
-          <Typography fontWeight={500}>Density</Typography>
+          <Typography sx={{
+            fontWeight: 500
+          }}>Density</Typography>
         </DrawerHeader>
 
         <List>

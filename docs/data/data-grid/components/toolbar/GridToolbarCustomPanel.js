@@ -61,7 +61,6 @@ function CustomToolbar() {
           <AddIcon fontSize="small" />
         </ToolbarButton>
       </Tooltip>
-
       <Popper
         open={newPanelOpen}
         anchorEl={newPanelTriggerRef.current}
@@ -80,7 +79,9 @@ function CustomToolbar() {
             }}
             elevation={8}
           >
-            <Typography fontWeight="bold">Add new commodity</Typography>
+            <Typography sx={{
+              fontWeight: "bold"
+            }}>Add new commodity</Typography>
             <form onSubmit={handleSubmit}>
               <Stack spacing={2}>
                 <TextField
@@ -115,13 +116,11 @@ function CustomToolbar() {
           </Paper>
         </ClickAwayListener>
       </Popper>
-
       <Tooltip title="Columns">
         <ColumnsPanelTrigger render={<ToolbarButton />}>
           <ViewColumnIcon fontSize="small" />
         </ColumnsPanelTrigger>
       </Tooltip>
-
       <Tooltip title="Filters">
         <FilterPanelTrigger
           render={(props, state) => (

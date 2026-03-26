@@ -82,9 +82,12 @@ export default function DragAndDropDemo() {
     <DemoWrapper link="/x/react-tree-view/rich-tree-view/editing/">
       <Stack
         spacing={1}
-        sx={{ width: '100%', padding: 2, minHeight: '600px' }}
-        justifyContent="space-between"
-      >
+        sx={{
+          justifyContent: "space-between",
+          width: '100%',
+          padding: 2,
+          minHeight: '600px'
+        }}>
         <Box
           sx={{
             height: 352,

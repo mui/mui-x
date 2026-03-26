@@ -319,15 +319,16 @@ function FlashOnChange({ children, changeId, align = 'left', fontWeight }) {
   return (
     <Typography
       variant="body2"
-      display="flex"
-      alignItems="center"
-      justifyContent={align === 'right' ? 'flex-end' : 'flex-start'}
-      height="100%"
-      paddingRight="10px"
-      paddingLeft="10px"
-      width="100%"
-      fontWeight={fontWeight}
-      sx={(theme) => ({
+      sx={[{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
+        height: "100%",
+        paddingRight: "10px",
+        paddingLeft: "10px",
+        width: "100%",
+        fontWeight: fontWeight
+      }, (theme) => ({
         position: 'relative',
         width: 'calc(100% + 20px)',
         left: '-10px',
@@ -335,8 +336,7 @@ function FlashOnChange({ children, changeId, align = 'left', fontWeight }) {
         backgroundColor: flash
           ? alpha(theme.palette.warning.main, 0.22)
           : 'transparent',
-      })}
-    >
+      })]}>
       {children}
     </Typography>
   );

@@ -21,7 +21,12 @@ export default function SparklineLineWidth() {
   const [clipAreaOffset, setClipAreaOffset] = React.useState(1);
 
   return (
-    <Stack sx={{ width: '100%' }} direction="column" gap={1}>
+    <Stack
+      direction="column"
+      sx={{
+        gap: 1,
+        width: '100%'
+      }}>
       <Stack direction="row">
         <FormControlLabel
           checked={disableClipping}
@@ -68,7 +73,6 @@ export default function SparklineLineWidth() {
           labelPlacement="top"
         />
       </Stack>
-
       <Box sx={{ flexGrow: 1 }}>
         <SparkLineChart
           {...settings}

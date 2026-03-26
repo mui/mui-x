@@ -39,10 +39,11 @@ function DetailPanelContent({ row }: { row: Customer }) {
       <Paper sx={{ flex: 1, mx: 'auto', width: '90%', p: 1 }}>
         <Stack
           component="form"
-          justifyContent="space-between"
           onSubmit={handleSubmit(onSubmit)}
-          sx={{ height: 1 }}
-        >
+          sx={{
+            justifyContent: "space-between",
+            height: 1
+          }}>
           <Typography variant="h6">{`Edit Order #${row.id}`}</Typography>
           <Controller
             control={control}

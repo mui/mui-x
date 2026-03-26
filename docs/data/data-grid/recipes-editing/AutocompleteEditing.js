@@ -73,10 +73,12 @@ function AutocompleteEditCell(props) {
           {...params}
           error={error}
           slotProps={{
+            ...params.slotProps,
+
             input: {
-              ...params.InputProps,
+              ...params.slotProps.input,
               autoFocus: true,
-            },
+            }
           }}
         />
       )}

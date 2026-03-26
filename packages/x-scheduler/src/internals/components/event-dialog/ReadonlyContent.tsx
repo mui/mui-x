@@ -222,8 +222,10 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             <Typography
               className={classes.eventDialogRecurrenceLabel}
               variant="body2"
-              color="text.secondary"
               component="em"
+              sx={{
+                color: "text.secondary"
+              }}
             >
               {recurrenceLabel}
             </Typography>

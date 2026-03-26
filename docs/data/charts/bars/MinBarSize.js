@@ -18,7 +18,12 @@ export default function MinBarSize() {
   };
 
   return (
-    <Stack spacing={2} justifyContent={'center'} alignItems={'center'}>
+    <Stack
+      spacing={2}
+      sx={{
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
       <Typography id="min-bar-size-slider" gutterBottom>
         minBarSize: {minBarSize}px
       </Typography>

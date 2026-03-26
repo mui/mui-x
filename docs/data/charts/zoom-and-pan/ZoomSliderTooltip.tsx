@@ -26,7 +26,9 @@ export default function ZoomSliderTooltip() {
     React.useState<ZoomSliderShowTooltip>('hover');
 
   return (
-    <Stack width="100%">
+    <Stack sx={{
+      width: "100%"
+    }}>
       <FormControl sx={{ width: 150, mb: 2, alignSelf: 'center' }}>
         <InputLabel id="show-tooltip-label">Show Tooltip</InputLabel>
         <Select
@@ -43,7 +45,6 @@ export default function ZoomSliderTooltip() {
           <MenuItem value="never">Never</MenuItem>
         </Select>
       </FormControl>
-
       <BarChartPro
         height={300}
         series={[

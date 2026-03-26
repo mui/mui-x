@@ -647,17 +647,16 @@ export default function PickersPlayground() {
           <Typography
             id="usage-props"
             component="h3"
-            fontWeight="600"
             sx={{
+              fontWeight: "600",
               scrollMarginTop: 160,
               fontFamily: 'General Sans',
               p: 3,
               pl: { xs: 2, md: 3 },
               display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
+              alignItems: 'center'
+            }}>
             Playground
           </Typography>
           <Divider sx={{ opacity: 0.6 }} />

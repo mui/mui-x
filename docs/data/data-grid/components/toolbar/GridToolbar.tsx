@@ -65,16 +65,19 @@ function CustomToolbar() {
 
   return (
     <Toolbar>
-      <Typography fontWeight="medium" sx={{ flex: 1, mx: 0.5 }}>
+      <Typography
+        sx={{
+          fontWeight: "medium",
+          flex: 1,
+          mx: 0.5
+        }}>
         Toolbar
       </Typography>
-
       <Tooltip title="Columns">
         <ColumnsPanelTrigger render={<ToolbarButton />}>
           <ViewColumnIcon fontSize="small" />
         </ColumnsPanelTrigger>
       </Tooltip>
-
       <Tooltip title="Filters">
         <FilterPanelTrigger
           render={(props, state) => (
@@ -86,9 +89,7 @@ function CustomToolbar() {
           )}
         />
       </Tooltip>
-
       <Divider orientation="vertical" variant="middle" flexItem sx={{ mx: 0.5 }} />
-
       <Tooltip title="Export">
         <ToolbarButton
           ref={exportMenuTriggerRef}
@@ -101,7 +102,6 @@ function CustomToolbar() {
           <FileDownloadIcon fontSize="small" />
         </ToolbarButton>
       </Tooltip>
-
       <Menu
         id="export-menu"
         anchorEl={exportMenuTriggerRef.current}
@@ -126,7 +126,6 @@ function CustomToolbar() {
           Download as Excel
         </ExportExcel> */}
       </Menu>
-
       <StyledQuickFilter>
         <QuickFilterTrigger
           render={(triggerProps, state) => (

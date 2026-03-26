@@ -71,32 +71,29 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
 
   return (
     <Stack
-      sx={[
-        {
-          borderBottom: `1px solid var(--DataGrid-rowBorderColor)`,
-        },
-        hasFocus
-          ? {
-              outline: 'solid #1976d2 1px',
-              outlineOffset: -2,
-            }
-          : {
-              outline: '',
-              outlineOffset: 0,
-            },
-      ]}
       tabIndex={tabIndex}
       ref={cellRef}
       data-field={colDef.field}
-      width={width}
-      height={height}
-      justifyContent="center"
-      alignItems="center"
       role="columnheader"
       aria-colindex={colIndex + 1}
       aria-label={colDef.headerName ?? colDef.field}
       {...mouseEventsHandlers}
-    >
+      sx={[{
+        width: width,
+        height: height,
+        justifyContent: "center",
+        alignItems: "center"
+      }, {
+        borderBottom: `1px solid var(--DataGrid-rowBorderColor)`,
+      }, hasFocus
+        ? {
+            outline: 'solid #1976d2 1px',
+            outlineOffset: -2,
+          }
+        : {
+            outline: '',
+            outlineOffset: 0,
+          }, mouseEventsHandlers.sx]}>
       <Button
         centerRipple={false}
         onClick={() => apiRef.current.showFilterPanel(colDef.field)}

@@ -180,7 +180,11 @@ export default function ZoomSliderPreview() {
   };
 
   return (
-    <Stack width="100%" gap={2}>
+    <Stack
+      sx={{
+        width: "100%",
+        gap: 2
+      }}>
       <ToggleButtonGroup
         value={chartType}
         exclusive

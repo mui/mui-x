@@ -37,7 +37,9 @@ function Thumbnail() {
       })}
     >
       <VisibilityOffIcon />
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" sx={{
+        color: "text.secondary"
+      }}>
         No preview available
       </Typography>
     </Box>
@@ -76,8 +78,11 @@ function DrawerContent(
           Save
         </Button>
       </DrawerHeader>
-
-      <Stack p={2} gap={2}>
+      <Stack
+        sx={{
+          p: 2,
+          gap: 2
+        }}>
         <Thumbnail />
 
         <TextField
@@ -91,29 +96,45 @@ function DrawerContent(
 
         <Divider />
 
-        <Stack gap={0.5}>
-          <Typography variant="body2" color="text.secondary">
+        <Stack sx={{
+          gap: 0.5
+        }}>
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Type
           </Typography>
           <Typography variant="body2">{params.row.type}</Typography>
         </Stack>
 
-        <Stack gap={0.5}>
-          <Typography variant="body2" color="text.secondary">
+        <Stack sx={{
+          gap: 0.5
+        }}>
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Size
           </Typography>
           <Typography variant="body2">{formatSize(params.row.size)}</Typography>
         </Stack>
 
-        <Stack gap={0.5}>
-          <Typography variant="body2" color="text.secondary">
+        <Stack sx={{
+          gap: 0.5
+        }}>
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Created
           </Typography>
           <Typography variant="body2">{formatDate(params.row.createdAt)}</Typography>
         </Stack>
 
-        <Stack gap={0.5}>
-          <Typography variant="body2" color="text.secondary">
+        <Stack sx={{
+          gap: 0.5
+        }}>
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Modified
           </Typography>
           <Typography variant="body2">{formatDate(params.row.updatedAt)}</Typography>
@@ -121,11 +142,18 @@ function DrawerContent(
 
         <Divider />
 
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{
+          color: "text.secondary"
+        }}>
           Owner
         </Typography>
 
-        <Stack direction="row" gap={1.5} alignItems="center">
+        <Stack
+          direction="row"
+          sx={{
+            gap: 1.5,
+            alignItems: "center"
+          }}>
           <Avatar
             {...avatarProps}
             sx={{ width: 24, height: 24, fontSize: 12, ...avatarProps.sx }}

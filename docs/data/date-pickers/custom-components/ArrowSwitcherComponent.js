@@ -28,7 +28,12 @@ export default function ArrowSwitcherComponent() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2} sx={{ width: '100%' }} alignItems="center">
+      <Stack
+        spacing={2}
+        sx={{
+          alignItems: "center",
+          width: '100%'
+        }}>
         <ToggleButtonGroup
           fullWidth
           color="primary"

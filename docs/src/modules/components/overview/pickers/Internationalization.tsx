@@ -60,12 +60,16 @@ function TimezonesDemo() {
       <DemoWrapper link="/x/react-date-pickers/timezone/">
         <Stack
           spacing={2}
-          flexGrow={1}
-          justifyContent="center"
-          sx={{ maxWidth: '320px', width: '100%' }}
-          py={2}
-        >
-          <Typography fontWeight="semiBold">
+          sx={{
+            flexGrow: 1,
+            justifyContent: "center",
+            py: 2,
+            maxWidth: '320px',
+            width: '100%'
+          }}>
+          <Typography sx={{
+            fontWeight: "semiBold"
+          }}>
             {selectedTimezone ? `Selected timezone: ${selectedTimezone}` : 'Select timezone'}
           </Typography>
 
@@ -159,10 +163,12 @@ function LanguagesDemo() {
         <ThemeProvider theme={theme}>
           <Stack
             spacing={2}
-            flexGrow={1}
-            sx={{ maxWidth: '320px', justifyContent: 'center' }}
-            py={2}
-          >
+            sx={{
+              flexGrow: 1,
+              py: 2,
+              maxWidth: '320px',
+              justifyContent: 'center'
+            }}>
             <DatePicker
               defaultValue={dayjs('2024-02-17')}
               slotProps={{ textField: { fullWidth: true } }}
@@ -218,11 +224,13 @@ function ValidationDemo() {
         <ThemeProvider theme={theme}>
           <Stack
             spacing={2}
-            justifyContent="center"
-            flexGrow={1}
-            sx={{ width: '100%', maxWidth: '400px' }}
-            py={2}
-          >
+            sx={{
+              justifyContent: "center",
+              flexGrow: 1,
+              py: 2,
+              width: '100%',
+              maxWidth: '400px'
+            }}>
             <DateTimeField
               defaultValue={dayjs('')}
               onError={(newError) => setFieldError(newError)}
@@ -262,7 +270,13 @@ export default function Internationalization() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={6} py={8} alignItems="center">
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        spacing={6}
+        sx={{
+          py: 8,
+          alignItems: "center"
+        }}>
         <Stack
           spacing={2}
           sx={{
@@ -273,7 +287,9 @@ export default function Internationalization() {
           <SectionHeadline
             overline="Internationalization"
             title={
-              <Typography variant="h2" fontSize="1.625rem">
+              <Typography variant="h2" sx={{
+                fontSize: "1.625rem"
+              }}>
                 {internationalizationFeatures[activeItem].title}
               </Typography>
             }
@@ -290,14 +306,13 @@ export default function Internationalization() {
           ))}
         </Stack>
         <Stack
-          justifyContent="center"
-          alignItems="center"
           sx={{
+            justifyContent: "center",
+            alignItems: "center",
             width: { xs: '100%' },
             maxWidth: { xs: '500px', md: '100%' },
-            minHeight: { xs: 0, md: '526px' },
-          }}
-        >
+            minHeight: { xs: 0, md: '526px' }
+          }}>
           {activeItem === 0 && <TimezonesDemo />}
           {activeItem === 1 && <LanguagesDemo />}
           {activeItem === 2 && <ValidationDemo />}

@@ -40,57 +40,78 @@ export default function FeaturesHighlight() {
         })}
       >
         {/* Outer container */}
-        <Stack direction={{ xs: 'column', xl: 'row' }} alignItems="center" height="100%">
+        <Stack
+          direction={{ xs: 'column', xl: 'row' }}
+          sx={{
+            alignItems: "center",
+            height: "100%"
+          }}>
           <Stack
             direction={{ xs: 'column', md: 'row' }}
-            flexBasis={{ xs: '100%', xl: '66.6%' }}
-            sx={(theme) => ({
+            sx={[{
+              flexBasis: { xs: '100%', xl: '66.6%' }
+            }, (theme) => ({
               height: '100%',
               borderRight: { xs: 'none', xl: `1px solid ${theme.palette.divider}` },
               borderBottom: { xl: 'none', xs: `1px solid ${theme.palette.divider}` },
-            })}
-          >
+            })]}>
             {/* first column */}
             <Stack
-              flexBasis={{ xs: '100%', md: '50%' }}
-              minWidth={0}
-              sx={(theme) => ({
+              sx={[{
+                flexBasis: { xs: '100%', md: '50%' },
+                minWidth: 0
+              }, (theme) => ({
                 borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
                 borderBottom: { md: 'none', xs: `1px solid ${theme.palette.divider}` },
-              })}
-            >
+              })]}>
               <Stack
                 spacing={1}
-                p={2}
-                flexBasis={{ xs: '50%', md: '70%' }}
-                sx={(theme) => ({
+                sx={[{
+                  p: 2,
+                  flexBasis: { xs: '50%', md: '70%' }
+                }, (theme) => ({
                   borderBottom: `1px solid ${theme.palette.divider}`,
-                })}
-              >
+                })]}>
                 <EveryDataType />
               </Stack>
-              <Stack spacing={1} p={2} flexBasis={{ xs: '50%', md: '30%' }} justifyContent="center">
+              <Stack
+                spacing={1}
+                sx={{
+                  p: 2,
+                  flexBasis: { xs: '50%', md: '30%' },
+                  justifyContent: "center"
+                }}>
                 <ColorPaletteSequence />
               </Stack>
             </Stack>
 
             {/* second column */}
-            <Stack flexBasis={{ xs: '100%', md: '50%' }} minWidth={0}>
+            <Stack
+              sx={{
+                flexBasis: { xs: '100%', md: '50%' },
+                minWidth: 0
+              }}>
               <Box
-                p={2}
-                flexBasis="30%"
-                sx={(theme) => ({
+                sx={[{
+                  p: 2,
+                  flexBasis: "30%"
+                }, (theme) => ({
                   borderBottom: `1px solid ${theme.palette.divider}`,
-                })}
-              >
+                })]}>
                 <Typography variant="subtitle2">Data labeling</Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Deliver insights with precision using clear labels, interactive tooltips, and
                   informative legends.
                 </Typography>
                 <Legends />
               </Box>
-              <Box p={2} flexBasis={{ xs: '65%', md: '50%', xl: '65%' }}>
+              <Box
+                sx={{
+                  p: 2,
+                  flexBasis: { xs: '65%', md: '50%', xl: '65%' }
+                }}>
                 <ZoomAndPan />
               </Box>
             </Stack>
@@ -98,26 +119,29 @@ export default function FeaturesHighlight() {
 
           {/* third column */}
           <Stack
-            flexBasis={{ xs: '100%', md: '33.3%' }}
-            height="100%"
-            width="100%"
             direction={{ xs: 'column', md: 'row', xl: 'column' }}
-          >
+            sx={{
+              flexBasis: { xs: '100%', md: '33.3%' },
+              height: "100%",
+              width: "100%"
+            }}>
             <Stack
               spacing={1}
-              p={2}
-              flexBasis={{ xs: '50%', xl: '35%' }}
-              sx={(theme) => ({
+              sx={[{
+                p: 2,
+                flexBasis: { xs: '50%', xl: '35%' }
+              }, (theme) => ({
                 borderBottom: {
                   xs: `1px solid ${theme.palette.divider}`,
                   md: 'none',
                   xl: `1px solid ${theme.palette.divider}`,
                 },
                 borderRight: { xl: 'none', xs: 'none', md: `1px solid ${theme.palette.divider}` },
-              })}
-            >
+              })]}>
               <Typography variant="subtitle2">Composition</Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Build complex charts by composing individual building blocks.
               </Typography>
               <HighlightedCode
@@ -132,7 +156,11 @@ export default function FeaturesHighlight() {
 </ChartsDataProvider>`}
               />
             </Stack>
-            <Box flexBasis={{ xs: '50%', xl: '65%' }} p={2}>
+            <Box
+              sx={{
+                flexBasis: { xs: '50%', xl: '65%' },
+                p: 2
+              }}>
               <BarChartToggle />
             </Box>
           </Stack>

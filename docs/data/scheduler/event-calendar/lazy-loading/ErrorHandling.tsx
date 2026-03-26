@@ -27,7 +27,9 @@ export default function ErrorHandling() {
   );
 
   return (
-    <Stack spacing={2} width="100%">
+    <Stack spacing={2} sx={{
+      width: "100%"
+    }}>
       <FormControlLabel
         control={
           <Switch

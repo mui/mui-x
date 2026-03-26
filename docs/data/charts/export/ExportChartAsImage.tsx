@@ -21,7 +21,12 @@ function ExportParamsSelector({
   const quality = Math.max(0, Math.min(1, Number.parseFloat(rawQuality)));
 
   return (
-    <Stack justifyContent="space-between" gap={2} sx={{ width: '100%' }}>
+    <Stack
+      sx={{
+        justifyContent: "space-between",
+        gap: 2,
+        width: '100%'
+      }}>
       <FormControl fullWidth>
         <FormLabel id="image-format-radio-buttons-group-label">
           Image Format
@@ -77,7 +82,11 @@ export default function ExportChartAsImage() {
   const apiRef = useChartProApiRef<'line'>();
 
   return (
-    <Stack width="100%" gap={2}>
+    <Stack
+      sx={{
+        width: "100%",
+        gap: 2
+      }}>
       <LineChartPro
         apiRef={apiRef}
         xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}

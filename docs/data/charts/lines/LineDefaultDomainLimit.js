@@ -9,7 +9,9 @@ export default function LineDefaultDomainLimit() {
   const [niceDomainLimit, setNiceDomainLimit] = React.useState(false);
 
   return (
-    <Stack alignItems="center">
+    <Stack sx={{
+      alignItems: "center"
+    }}>
       <FormControlLabel
         checked={niceDomainLimit}
         control={

@@ -45,7 +45,6 @@ export default function RadarClick() {
           onAxisClick={(event, d) => setAxisData(d)}
         />
       </Box>
-
       <Stack
         direction="column"
         sx={{ width: { xs: '100%', md: '40%' } }}
@@ -54,7 +53,9 @@ export default function RadarClick() {
         <Stack
           spacing={1}
           direction={{ xs: 'row', md: 'column' }}
-          alignItems={{ xs: 'center', md: 'start' }}
+          sx={{
+            alignItems: { xs: 'center', md: 'start' }
+          }}
         >
           <Typography>Item click listener</Typography>
           <ToggleButtonGroup

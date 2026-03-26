@@ -70,7 +70,13 @@ export default function FilteredRowCount() {
 
   return (
     <div style={{ overflow: 'hidden' }}>
-      <Stack direction="row" gap={1} mb={1} flexWrap="wrap">
+      <Stack
+        direction="row"
+        sx={{
+          gap: 1,
+          mb: 1,
+          flexWrap: "wrap"
+        }}>
         {predefinedFilters.map(({ label, filterModel }, index) => {
           const count = predefinedFiltersRowCount[index];
           return (

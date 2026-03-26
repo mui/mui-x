@@ -27,10 +27,10 @@ export default function ZoomAndPan() {
   return (
     <Stack
       spacing={1}
-      sx={sxColors}
       direction={{ xs: 'column-reverse', xl: 'column' }}
-      height="100%"
-    >
+      sx={[{
+        height: "100%"
+      }, ...(Array.isArray(sxColors) ? sxColors : [sxColors])]}>
       <Box
         sx={{
           flexGrow: 1,
@@ -87,7 +87,9 @@ export default function ZoomAndPan() {
         <Typography variant="subtitle2" sx={{ pt: 2 }}>
           Zoom and pan
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{
+          color: "text.secondary"
+        }}>
           Explore data with greater detail by zooming in and panning across the chart.
         </Typography>
       </div>

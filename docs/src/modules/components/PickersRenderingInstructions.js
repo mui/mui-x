@@ -42,7 +42,11 @@ export default function PickersRenderingInstructions() {
   ].join('\n');
 
   return (
-    <Stack sx={{ width: '100%' }} px={{ xs: 3, sm: 0 }}>
+    <Stack
+      sx={{
+        px: { xs: 3, sm: 0 },
+        width: '100%'
+      }}>
       <Stack direction="row" spacing={2}>
         <ToggleOptions
           value={licenceType}

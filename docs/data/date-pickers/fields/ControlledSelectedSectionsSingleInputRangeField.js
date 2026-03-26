@@ -28,8 +28,12 @@ export default function ControlledSelectedSectionsSingleInputRangeField() {
   };
 
   const renderDateHeader = (position) => (
-    <Stack spacing={2} alignItems="center">
-      <Typography textTransform="capitalize">{position}</Typography>
+    <Stack spacing={2} sx={{
+      alignItems: "center"
+    }}>
+      <Typography sx={{
+        textTransform: "capitalize"
+      }}>{position}</Typography>
       <Stack direction="row" spacing={1}>
         {['month', 'day', 'year'].map((sectionName) => (
           <Button

@@ -16,7 +16,9 @@ export default function VisibilityOnChange() {
   const visibleCount = series.length - hiddenItems.length;
 
   return (
-    <Stack direction="column" spacing={2} width={'100%'}>
+    <Stack direction="column" spacing={2} sx={{
+      width: '100%'
+    }}>
       <LineChart
         series={series}
         height={300}
@@ -28,7 +30,9 @@ export default function VisibilityOnChange() {
         initialHiddenItems={[{ type: 'line', seriesId: 'series-a' }]}
         onHiddenItemsChange={(newHiddenItems) => setHiddenItems(newHiddenItems)}
       />
-      <Typography variant="body2" textAlign="center">
+      <Typography variant="body2" sx={{
+        textAlign: "center"
+      }}>
         Visible series: {visibleCount} / {series.length}
       </Typography>
     </Stack>

@@ -62,7 +62,9 @@ function CustomCalendarHeader(props) {
 
 export default function UsePickerAdapter() {
   return (
-    <Stack spacing={2} direction="row" flexWrap="wrap">
+    <Stack spacing={2} direction="row" sx={{
+      flexWrap: "wrap"
+    }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DateCalendar']}>
           <DemoItem label="AdapterDayjs" alignItems="center">

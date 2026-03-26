@@ -112,7 +112,12 @@ export default function ServerInteraction() {
           label="debounced field"
           defaultValue={dayjs('2022-04-17')}
         />
-        <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
+        <Stack
+          direction="row"
+          sx={{
+            justifyContent: "space-between",
+            p: 2
+          }}>
           <DisplayEvents logs={logsFromOnChange} title="onChange" />
           <Divider />
           <DisplayEvents logs={logsFromOnAccept} title="onAccept" />

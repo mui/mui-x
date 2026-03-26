@@ -36,8 +36,12 @@ export default function BarOECDHouseholdSavings() {
   >('userSpaceOnUse');
 
   return (
-    <Stack width="100%">
-      <Typography variant="h6" textAlign="center">
+    <Stack sx={{
+      width: "100%"
+    }}>
+      <Typography variant="h6" sx={{
+        textAlign: "center"
+      }}>
         Household Savings in OECD Countries (2016)
       </Typography>
       <FormControl fullWidth>
