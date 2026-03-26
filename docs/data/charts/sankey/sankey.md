@@ -6,25 +6,27 @@ components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent, Sankey
 
 # Charts - Sankey [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Show flows between nodes as connected links with proportional widths.</p>
+<p class="description">Use Sankey charts to show how values flow between nodes, with link width proportional to magnitude.</p>
 
 ## Overview
 
 A Sankey chart is a flow diagram that shows how values move between nodes.
-Links connect source nodes to target nodes, and link width represents the flow magnitude.
+Links connect sources to targets, and link width encodes flow size.
+
+The demo below shows flow from revenue to net income in billions USD.
 
 {{"demo": "SankeyOverview.js"}}
 
 ## Basics
 
-The Sankey chart expects a data structure with `nodes` and `links`.
+Provide a data structure with `nodes` and `links`:
 
 - `nodes`: optional array for customizing individual nodes (labels, colors)
 - `links`: required array of connections, each with `source`, `target`, and `value`
 
 ### Automatic nodes
 
-If a node appears in `links` but not in `nodes`, it is created automatically with its ID as the label.
+If a node appears in `links` but not in `nodes`, the chart creates it automatically and uses its ID as the label.
 
 {{"demo": "SankeyBasicDataStructure.js"}}
 
@@ -59,10 +61,10 @@ This works for individual link colors and for the default in `linkOptions`.
 ### Node alignment
 
 Node alignment controls how nodes are positioned.
-The layout groups nodes into columns based on the graph structure.
-Source nodes are always left of their targets.
-Some nodes have fixed positions (from the graph topology).
-Others can be placed in different columns depending on alignment.
+The layout groups nodes into columns from the graph structure.
+Source nodes always sit to the left of their targets.
+Some nodes have fixed positions from the topology.
+Others can sit in different columns depending on alignment.
 
 In the demo below:
 
@@ -74,9 +76,9 @@ In the demo below:
 
 ### Curve correction
 
-The `curveCorrection` prop adjusts how links look by changing the x-coordinate of curve control points.
-The result depends on the graph layout and chart height.
-Higher values make links thicker, and lower values make them thinner.
+The `curveCorrection` prop adjusts link curves by shifting the x-coordinate of control points.
+The effect depends on the graph layout and chart height.
+Higher values make links look thicker; lower values make them look thinner.
 The default is `10`.
 
 {{"demo": "SankeyCurveCorrection.js"}}
@@ -85,7 +87,7 @@ The default is `10`.
 
 Use the `valueFormatter` prop to customize how values appear in tooltips and labels.
 The formatter receives the numeric value and a context object.
-The context has `location` (`'tooltip'` or `'label'`), `type` (`'node'` or `'link'`), and for nodes `nodeId`, for links `sourceId` and `targetId`.
+The context includes `location` (`'tooltip'` or `'label'`), `type` (`'node'` or `'link'`), and for nodes `nodeId`, for links `sourceId` and `targetId`.
 
 The demo below adds units to values and shows "total" when the pointer is over a node.
 
@@ -94,7 +96,7 @@ The demo below adds units to values and shows "total" when the pointer is over a
 ## Sorting
 
 Nodes render in the order of the `nodes` array.
-If `nodes` is not provided, they render in the order they appear in `links`.
+If you omit `nodes`, they render in the order they first appear in `links`.
 Use the sorting options to change the order.
 
 ### Node sorting
@@ -128,18 +130,18 @@ More iterations usually improve the layout but take longer.
 
 ## Interaction
 
-### Click event
+### Click events
 
 Use the `onNodeClick` and `onLinkClick` props to handle clicks on nodes and links.
 Each callback receives the mouse event and an identifier object (`SankeyNodeIdentifierWithData` or `SankeyLinkIdentifierWithData`) with details about the clicked item.
-Use `SankeyItemIdentifierWithData` when handling both in one callback.
+Use `SankeyItemIdentifierWithData` when you handle both in one callback.
 
 {{"demo": "SankeyClick.js"}}
 
 ### Highlighting
 
 You can highlight nodes and links by hovering or programmatically.
-When an item is highlighted, others can be faded to improve focus.
+When an item is highlighted, you can fade others to improve focus.
 
 {{"demo": "SankeyHighlighting.js"}}
 
@@ -172,9 +174,9 @@ Use `linkOptions.highlight` and `linkOptions.fade`:
 ### Controlled highlighting
 
 Use the `highlightedItem` and `onHighlightChange` props to control highlighting from outside.
-This helps when you want to highlight specific items programmatically or sync with other UI.
+Use this pattern when you want to highlight specific items programmatically or keep the chart in sync with other UI.
 
-The `highlightedItem` prop accepts a `SankeyNodeIdentifier` or `SankeyLinkIdentifier`:
+The `highlightedItem` prop accepts a `SankeyNodeIdentifier` or `SankeyLinkIdentifier`.
 
 For nodes:
 
@@ -199,32 +201,33 @@ For links:
 }
 ```
 
-The `onHighlightChange` callback runs when the highlighted item changes (from user interaction or programmatic control).
+The `onHighlightChange` callback runs when the highlighted item changes (from user interaction or programmatic updates).
 
 {{"demo": "SankeyControlledHighlight.js"}}
 
 ## Tooltip
 
-The Sankey chart has an item tooltip that you can customize as described in the [Tooltip](/x/react-charts/tooltip/) documentation.
-The Sankey tooltip differs only in its default content.
+The default Sankey tooltip is item-based.
+You can customize it with slots.
+See [Tooltip](/x/react-charts/tooltip/) for details.
 
-Import the default tooltip or its content:
+The Sankey package exports the default tooltip and its content if you want to reuse or extend them:
 
 ```js
-import { SankeyTooltip, SankeyTooltipContent } from '@mui/x-charts/SankeyChart';
+import { SankeyTooltip, SankeyTooltipContent } from '@mui/x-charts-pro/SankeyChart';
 ```
 
 ## Composition
 
-Use `SankeyDataProvider` to supply the `series` prop when composing a custom chart.
+Use `SankeyDataProvider` to provide the `series` prop for composition.
 
-In addition to the shared components available for [composition](/x/react-charts/composition/), you can use:
+In addition to the shared chart components available for [composition](/x/react-charts/composition/), you can use:
 
 - For items: `SankeyNodePlot`, `SankeyLinkPlot`
 - For labels: `SankeyNodeLabelPlot`, `SankeyLinkLabelPlot`
-- For keyboard: `FocusedSankeyNode`, `FocusedSankeyLink`
+- For keyboard focus: `FocusedSankeyNode`, `FocusedSankeyLink`
 
-The following code shows how the Sankey chart is built:
+Here's how the Sankey chart is composed:
 
 ```jsx
 <SankeyDataProvider series={series as SankeySeriesType[]} {...chartDataProviderProProps}>
