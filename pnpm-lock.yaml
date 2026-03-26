@@ -270,8 +270,8 @@ importers:
         specifier: 'catalog:'
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#v7.x
-        version: https://codeload.github.com/mui/material-ui/tar.gz/79f9ffb67fa0e1a4b622526b4e0f5bc3a2826957(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
+        specifier: github:mui/material-ui#99ced9515669e1d1ce044e8d0c399930c8f803f6
+        version: https://codeload.github.com/mui/material-ui/tar.gz/99ced9515669e1d1ce044e8d0c399930c8f803f6(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.7(@types/react@19.2.7)(react@19.2.3)
@@ -4316,8 +4316,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/79f9ffb67fa0e1a4b622526b4e0f5bc3a2826957':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/79f9ffb67fa0e1a4b622526b4e0f5bc3a2826957}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/99ced9515669e1d1ce044e8d0c399930c8f803f6':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/99ced9515669e1d1ce044e8d0c399930c8f803f6}
     version: 7.3.9
     engines: {node: '>=22.18.0', pnpm: 10.28.2}
 
@@ -14756,7 +14756,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
       '@types/react': 19.2.7
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/79f9ffb67fa0e1a4b622526b4e0f5bc3a2826957(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/99ced9515669e1d1ce044e8d0c399930c8f803f6(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)':
     dependencies:
       '@netlify/functions': 5.1.2
       '@slack/bolt': 4.6.0(@types/express@5.0.3)
