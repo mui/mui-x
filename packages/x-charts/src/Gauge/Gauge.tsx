@@ -73,10 +73,6 @@ Gauge.propTypes = {
    */
   endAngle: PropTypes.number,
   /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.object,
-  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
