@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
@@ -14,9 +15,10 @@ const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaView<
   TEvent extends object,
   TResource extends object,
 >(
-  props: StandaloneAgendaViewProps<TEvent, TResource>,
+  inProps: StandaloneAgendaViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
   const { parameters, forwardedProps } = useExtractEventCalendarParameters<
     TEvent,
     TResource,
