@@ -14,6 +14,8 @@ const StandaloneEventRoot = styled(HeadlessStandaloneEvent, {
 
 const StandaloneEvent = React.forwardRef<HTMLDivElement, StandaloneEventProps>(
   function StandaloneEvent(inProps, forwardedRef) {
+    // Use the same theme name to share theme customizations with base EventCalendar
+    // eslint-disable-next-line mui/material-ui-name-matches-component-name
     const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
     const styledContext = React.useContext(EventCalendarStyledContext);
     return (

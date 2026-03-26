@@ -18,6 +18,8 @@ const StandaloneMonthView = React.forwardRef(function StandaloneMonthView<
   inProps: StandaloneMonthViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  // Use the same theme name to share theme customizations with base EventCalendar
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
   const { parameters, forwardedProps } = useExtractEventCalendarParameters<
     TEvent,
