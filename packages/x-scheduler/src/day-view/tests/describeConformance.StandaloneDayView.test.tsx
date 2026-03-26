@@ -25,7 +25,14 @@ describe('<StandaloneDayView /> - Describe Conformance', () => {
       render,
       muiName: 'MuiEventCalendar',
       refInstanceof: window.HTMLDivElement,
-      skip: ['componentProp', 'componentsProp', 'themeVariants', 'rootClass', 'themeDefaultProps', 'reactTestRenderer'],
+      skip: [
+        'componentProp',
+        'componentsProp',
+        'themeVariants',
+        'rootClass',
+        'themeDefaultProps',
+        'reactTestRenderer',
+      ],
     }),
   );
 });
