@@ -24,6 +24,16 @@ export interface OHLCSeriesType
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
+  /**
+   * The keys used to retrieve data from the dataset.
+   * When provided, all of `open`, `high`, `low`, and `close` must be specified.
+   */
+  datasetKeys?: {
+    open: string;
+    high: string;
+    low: string;
+    close: string;
+  };
 }
 
 /**

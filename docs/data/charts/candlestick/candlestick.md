@@ -42,6 +42,12 @@ You can specify the time period with the `xAxis` prop. This axis must have a ban
 
 {{"demo": "BasicCandlestick.js"}}
 
+### Using a dataset
+
+You can use the `dataset` prop to provide OHLC data and `datasetKeys` on the series to map dataset fields to the open, high, low, and close values.
+
+{{"demo": "DatasetCandlestick.js"}}
+
 ## Customization
 
 Similarly to other chart types, you can customize the appearance and behavior of the candlestick chart.
