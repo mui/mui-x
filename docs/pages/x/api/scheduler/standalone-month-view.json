@@ -1,0 +1,127 @@
+{
+  "props": {
+    "areEventsDraggable": { "type": { "name": "bool" }, "default": "true" },
+    "areEventsResizable": {
+      "type": {
+        "name": "union",
+        "description": "'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;bool"
+      },
+      "default": "true"
+    },
+    "canDragEventsFromTheOutside": { "type": { "name": "bool" }, "default": "false" },
+    "canDropEventsToTheOutside": { "type": { "name": "bool" }, "default": "false" },
+    "dataSource": {
+      "type": { "name": "shape", "description": "{ getEvents: func, updateEvents: func }" }
+    },
+    "dateLocale": {
+      "type": {
+        "name": "shape",
+        "description": "{ code: string, formatDistance: func, formatLong: { date: func, dateTime: func, time: func }, formatRelative: func, localize: { day: func, dayPeriod: func, era: func, month: func, ordinalNumber: func, preprocessor?: func, quarter: func }, match: { day: func, dayPeriod: func, era: func, month: func, ordinalNumber: func, quarter: func }, options?: { firstWeekContainsDate?: 1<br>&#124;&nbsp;4, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 } }"
+      },
+      "default": "enUS (English)"
+    },
+    "defaultPreferences": {
+      "type": {
+        "name": "shape",
+        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool }"
+      },
+      "default": "{ showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }"
+    },
+    "defaultView": {
+      "type": {
+        "name": "enum",
+        "description": "'agenda'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'week'"
+      },
+      "default": "\"week\""
+    },
+    "defaultVisibleDate": {
+      "type": { "name": "instanceOf", "description": "Date" },
+      "default": "today"
+    },
+    "defaultVisibleResources": {
+      "type": { "name": "object" },
+      "default": "{} - all resources are visible"
+    },
+    "displayTimezone": { "type": { "name": "string" }, "default": "\"default\"" },
+    "eventColor": {
+      "type": {
+        "name": "enum",
+        "description": "'amber'<br>&#124;&nbsp;'blue'<br>&#124;&nbsp;'green'<br>&#124;&nbsp;'grey'<br>&#124;&nbsp;'indigo'<br>&#124;&nbsp;'lime'<br>&#124;&nbsp;'orange'<br>&#124;&nbsp;'pink'<br>&#124;&nbsp;'purple'<br>&#124;&nbsp;'red'<br>&#124;&nbsp;'teal'"
+      },
+      "default": "\"teal\""
+    },
+    "eventModelStructure": {
+      "type": {
+        "name": "shape",
+        "description": "{ allDay?: { getter: func, setter?: func }, className?: { getter: func, setter?: func }, color?: { getter: func, setter?: func }, description?: { getter: func, setter?: func }, draggable?: { getter: func, setter?: func }, end?: { getter: func, setter?: func }, exDates?: { getter: func, setter?: func }, extractedFromId?: { getter: func, setter?: func }, id?: { getter: func, setter?: func }, readOnly?: { getter: func, setter?: func }, resizable?: { getter: func, setter?: func }, resource?: { getter: func, setter?: func }, rrule?: { getter: func, setter?: func }, start?: { getter: func, setter?: func }, timezone?: { getter: func, setter?: func }, title?: { getter: func, setter?: func } }"
+      }
+    },
+    "events": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "default": "[]"
+    },
+    "onEventsChange": { "type": { "name": "func" } },
+    "onPreferencesChange": { "type": { "name": "func" } },
+    "onViewChange": { "type": { "name": "func" } },
+    "onVisibleDateChange": { "type": { "name": "func" } },
+    "onVisibleResourcesChange": { "type": { "name": "func" } },
+    "preferences": {
+      "type": {
+        "name": "shape",
+        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool }"
+      }
+    },
+    "preferencesMenuConfig": {
+      "type": {
+        "name": "union",
+        "description": "false<br>&#124;&nbsp;{ toggleAmpm?: bool, toggleEmptyDaysInAgenda?: bool, toggleWeekendVisibility?: bool, toggleWeekNumberVisibility?: bool }"
+      },
+      "default": "{ toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }"
+    },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
+    "resourceModelStructure": {
+      "type": {
+        "name": "shape",
+        "description": "{ areEventsDraggable?: { getter: func }, areEventsReadOnly?: { getter: func }, areEventsResizable?: { getter: func }, children?: { getter: func }, eventColor?: { getter: func }, id?: { getter: func }, title?: { getter: func } }"
+      }
+    },
+    "resources": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "showCurrentTimeIndicator": { "type": { "name": "bool" }, "default": "true" },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'agenda'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'week'"
+      }
+    },
+    "views": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'agenda'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'week'&gt;"
+      },
+      "default": "[\"week\", \"day\", \"month\", \"agenda\"]"
+    },
+    "visibleDate": { "type": { "name": "instanceOf", "description": "Date" } },
+    "visibleResources": { "type": { "name": "object" } }
+  },
+  "name": "StandaloneMonthView",
+  "imports": [
+    "import { StandaloneMonthView } from '@mui/x-scheduler/month-view';",
+    "import { StandaloneMonthView } from '@mui/x-scheduler';"
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiStandaloneMonthView",
+  "forwardsRefTo": "HTMLDivElement",
+  "filename": "/packages/x-scheduler/src/month-view/StandaloneMonthView.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li>\n<li><a href=\"/x/react-scheduler/\">MUI X Scheduler</a></li></ul>",
+  "cssComponent": false
+}

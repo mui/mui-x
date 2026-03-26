@@ -54,6 +54,8 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
     productId = 'x-date-pickers';
   } else if (canonicalAs.startsWith('/x/api/charts/')) {
     productId = 'x-charts';
+  } else if (canonicalAs.startsWith('/x/api/scheduler/')) {
+    productId = 'x-scheduler';
   }
 
   return React.useMemo(() => {

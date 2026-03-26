@@ -1,0 +1,29 @@
+{
+  "props": {
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
+    "nativeButton": { "type": { "name": "bool" }, "default": "false" },
+    "onEventDrop": { "type": { "name": "func" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    }
+  },
+  "name": "StandaloneEvent",
+  "imports": [
+    "import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';",
+    "import { StandaloneEvent } from '@mui/x-scheduler';"
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiStandaloneEvent",
+  "forwardsRefTo": "HTMLDivElement",
+  "filename": "/packages/x-scheduler/src/standalone-event/StandaloneEvent.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-scheduler/\">MUI X Scheduler</a></li></ul>",
+  "cssComponent": false
+}

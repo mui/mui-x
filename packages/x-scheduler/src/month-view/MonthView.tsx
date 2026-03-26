@@ -9,21 +9,16 @@ import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import {
-  useExtractEventCalendarParameters,
-  EventCalendarState as State,
-} from '@mui/x-scheduler-headless/use-event-calendar';
+import { EventCalendarState as State } from '@mui/x-scheduler-headless/use-event-calendar';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import clsx from 'clsx';
-import { MonthViewProps, StandaloneMonthViewProps } from './MonthView.types';
-import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
+import { MonthViewProps } from './MonthView.types';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
-import { EventDialogProvider } from '../internals/components/event-dialog';
 
 const FIXED_CELL_WIDTH = 28;
 
@@ -226,34 +221,3 @@ export const MonthView = React.memo(
     );
   }),
 );
-
-/**
- * A Month View that can be used outside of the Event Calendar.
- */
-export const StandaloneMonthView = React.forwardRef(function StandaloneMonthView<
-  TEvent extends object,
-  TResource extends object,
->(
-  props: StandaloneMonthViewProps<TEvent, TResource>,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
-    TEvent,
-    TResource,
-    typeof props
-  >(props);
-
-  return (
-    <EventCalendarProvider {...parameters}>
-      <EventDialogProvider>
-        <MonthView ref={forwardedRef} {...forwardedProps} />
-      </EventDialogProvider>
-    </EventCalendarProvider>
-  );
-}) as StandaloneMonthViewComponent;
-
-type StandaloneMonthViewComponent = <TEvent extends object, TResource extends object>(
-  props: StandaloneMonthViewProps<TEvent, TResource> & {
-    ref?: React.ForwardedRef<HTMLDivElement>;
-  },
-) => React.JSX.Element;
