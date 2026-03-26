@@ -1,15 +1,15 @@
-import * as React from 'react';
 import { createTheme } from '@mui/material/styles';
-import { DateRangePickerDay, dateRangePickerDayClasses } from '@mui/x-date-pickers-pro/DateRangePickerDay';
+import {
+  DateRangePickerDay,
+  dateRangePickerDayClasses,
+} from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { PickerDay, pickerDayClasses } from '@mui/x-date-pickers/PickerDay';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 
 const theme = createTheme({
   components: {
     MuiDateRangePickerDay: {
       styleOverrides: {
-        dayOutsideMonth: { color: 'red' },
-        fillerCell: { backgroundColor: 'blue' },
+        dayOutsideMonth: { opacity: 0.6 },
         fillerCell: { opacity: 0 },
         selectionStart: { borderRadius: '50%' },
         selectionEnd: { borderRadius: '50%' },
@@ -17,34 +17,26 @@ const theme = createTheme({
         previewEnd: { border: '1px solid black' },
         insideSelection: { color: 'white' },
         insidePreviewing: { opacity: 0.5 },
-        selectionStart: { backgroundColor: 'green' },
       },
     },
     MuiPickerDay: {
       styleOverrides: {
-        dayWithoutMargin: { margin: 2 },
-      },
-    },
-    MuiPickersDay: {
-      styleOverrides: {
-        dayWithoutMargin: { margin: 2 },
+        dayWithoutMargin: { margin: 0 },
       },
     },
   },
 });
 
 const sx = {
-  [`& .${dateRangePickerDayClasses.dayOutsideMonth}`]: { color: 'red' },
-  [`& .${dateRangePickerDayClasses.fillerCell}`]: { backgroundColor: 'blue' },
-  [`& .${pickerDayClasses.dayWithoutMargin}`]: { margin: 2 },
-  [`& .MuiDateRangePickerDay-dayOutsideMonth`]: { color: 'red' },
-  [`& .MuiPickerDay-dayWithoutMargin`]: { margin: 2 },
-  [`& .MuiPickersDay-dayWithoutMargin`]: { margin: 2 },
-  '& .MuiDateRangePickerDay-selectionStart': { borderRadius: 0 },
-  [`& .${'MuiPickerDay'}-dayWithoutMargin`]: { margin: 0 },
-  [`& .${pickerDayClasses.dayWithoutMargin}`]: { margin: 1 },
+  [`& .${dateRangePickerDayClasses.dayOutsideMonth}`]: { opacity: 0.6 },
+  [`& .${dateRangePickerDayClasses.fillerCell}`]: { opacity: 0 },
+  [`& .${pickerDayClasses.dayWithoutMargin}`]: { margin: 0 },
+  [`& .MuiDateRangePickerDay-dayOutsideMonth`]: { opacity: 0.6 },
+  [`& .MuiPickerDay-dayWithoutMargin`]: { margin: 0 },
+  ['& .MuiDateRangePickerDay-selectionStart']: { borderRadius: 0 },
 };
 
+const prefix = 'CustomPrefix-';
 const cls = `${dateRangePickerDayClasses.dayOutsideMonth}`;
 const template = `${prefix}MuiDateRangePickerDay-dayOutsideMonth`;
 const complexTemplate = `MuiDateRangePickerDay-${dateRangePickerDayClasses.dayOutsideMonth}`;
