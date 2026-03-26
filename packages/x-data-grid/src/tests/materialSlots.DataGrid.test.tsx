@@ -90,7 +90,7 @@ describe('<DataGrid /> - Material Slots', () => {
             baseTextField: {
               slotProps: { htmlInput: { 'data-testid': 'from-slotProps' } as any },
               material: {
-                inputProps: { 'data-testid': 'from-material' },
+                slotProps: { htmlInput: { 'data-testid': 'from-material' } },
               } as any,
             },
           }}

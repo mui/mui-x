@@ -422,21 +422,15 @@ function BaseTextField(props: P['baseTextField']) {
   const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
   const computedVariant = (other as any).variant ?? textFieldDefaults.variant ?? 'outlined';
   const computedSize = (other as any).size ?? textFieldDefaults.size;
-  // Extract deprecated props from material to redirect them to slotProps
-  const { inputProps: materialInputProps, InputProps: materialInputComponentProps, ...materialRest } =
-    (material ?? {}) as any;
   return (
     <MUITextField
       variant={computedVariant as any}
       size={computedSize as any}
       {...other}
-      {...materialRest}
+      {...material}
       slotProps={{
-        htmlInput: { ...materialInputProps, ...slotProps?.htmlInput },
-        input: {
-          ...materialInputComponentProps,
-          ...transformInputProps(slotProps?.input as any),
-        },
+        htmlInput: slotProps?.htmlInput,
+        input: transformInputProps(slotProps?.input as any),
         inputLabel: { shrink: true, ...(slotProps as any)?.inputLabel },
       }}
     />
