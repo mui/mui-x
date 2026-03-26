@@ -91,23 +91,15 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   };
 
   root.find(j.StringLiteral).forEach((strPath) => {
-    Object.keys(classRenames).forEach((oldClass) => {
-      if (strPath.node.value.includes(oldClass)) {
-        strPath.node.value = replaceClasses(strPath.node.value);
-      }
-    });
+    strPath.node.value = replaceClasses(strPath.node.value);
   });
 
   root.find(j.TemplateLiteral).forEach((templatePath) => {
     templatePath.node.quasis.forEach((quasi) => {
-      Object.keys(classRenames).forEach((oldClass) => {
-        if (quasi.value.raw.includes(oldClass)) {
-          quasi.value.raw = replaceClasses(quasi.value.raw);
-        }
-        if (quasi.value.cooked && quasi.value.cooked.includes(oldClass)) {
-          quasi.value.cooked = replaceClasses(quasi.value.cooked);
-        }
-      });
+      quasi.value.raw = replaceClasses(quasi.value.raw);
+      if (quasi.value.cooked) {
+        quasi.value.cooked = replaceClasses(quasi.value.cooked);
+      }
     });
   });
 

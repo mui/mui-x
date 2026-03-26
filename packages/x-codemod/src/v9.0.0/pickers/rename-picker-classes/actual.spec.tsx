@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { DateRangePickerDay, dateRangePickerDayClasses } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { PickerDay, pickerDayClasses } from '@mui/x-date-pickers/PickerDay';
+import { pickersDayClasses } from '@mui/x-date-pickers';
 
 const theme = createTheme({
   components: {
@@ -9,14 +10,23 @@ const theme = createTheme({
         outsideCurrentMonth: { color: 'red' },
         hiddenDayFiller: { backgroundColor: 'blue' },
         rangeIntervalDayHighlightStart: { borderRadius: '50%' },
+        rangeIntervalDayHighlightEnd: { borderRadius: '50%' },
+        rangeIntervalDayPreviewStart: { opacity: 0.5 },
+        rangeIntervalDayPreviewEnd: { opacity: 0.5 },
+        dayInsideRangeInterval: { backgroundColor: 'gray' },
+        rangeIntervalPreview: { border: '1px dashed blue' },
+        rangeIntervalDayHighlight: { color: 'white' },
+        rangeIntervalDayPreview: { color: 'blue' },
       },
     },
     MuiPickerDay: {
       styleOverrides: {
+        outsideCurrentMonth: { color: 'red' },
       },
     },
     MuiPickersDay: {
       styleOverrides: {
+        outsideCurrentMonth: { color: 'red' },
       },
     },
   },
@@ -27,6 +37,16 @@ const sx = {
   [`& .${dateRangePickerDayClasses.hiddenDayFiller}`]: { backgroundColor: 'blue' },
   [`& .MuiDateRangePickerDay-outsideCurrentMonth`]: { color: 'red' },
   ['& .MuiDateRangePickerDay-rangeIntervalDayHighlightStart']: { borderRadius: 0 },
+  ['& .MuiDateRangePickerDay-rangeIntervalDayHighlightEnd']: { borderRadius: 0 },
+  ['& .MuiDateRangePickerDay-dayInsideRangeInterval']: { backgroundColor: 'transparent' },
+};
+
+const pickerDaySx = {
+  [`& .${pickerDayClasses.outsideCurrentMonth}`]: { color: 'red' },
+};
+
+const pickersDaySx = {
+  [`& .${pickersDayClasses.outsideCurrentMonth}`]: { color: 'red' },
 };
 
 const prefix = 'CustomPrefix-';
