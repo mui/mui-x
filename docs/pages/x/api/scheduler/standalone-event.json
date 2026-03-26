@@ -24,6 +24,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler/src/standalone-event/StandaloneEvent.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/\">MUI X Scheduler</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/drag-interactions/\">Event Calendar - Drag Interaction</a></li></ul>",
   "cssComponent": false
 }
