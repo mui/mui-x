@@ -47,7 +47,7 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
   const showPreview = zoomOptions.slider.preview;
 
   const sliderRef = React.useRef<SVGGElement>(null);
-  const layerContainerRef = useChartsLayerContainerRef()
+  const layerContainerRef = useChartsLayerContainerRef();
   const isDraggingRef = React.useRef(false);
 
   // Prevent scrolling on touch devices when interacting with the zoom slider.
