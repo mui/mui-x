@@ -31,7 +31,7 @@ export const cleanFieldResponse = <
 }: TFieldResponse): ExportedPickerFieldUIProps & {
   openPickerAriaLabel: string;
   textFieldProps:
-    | (TextFieldProps & { inputProps?: unknown; InputProps: unknown })
+    | (TextFieldProps & { inputProps?: Record<string, any>; InputProps: Record<string, any> })
     | PickersTextFieldProps;
 } => {
   if (enableAccessibleFieldDOMStructure) {
@@ -354,12 +354,13 @@ export function PickerFieldUI<
       : textFieldProps.inputProps;
 
   if (materialMajor >= 9 && TextField === MuiTextField) {
-    delete textFieldProps.inputProps;
-    delete textFieldProps.InputProps;
     if (!(textFieldProps as TextFieldProps).slotProps) {
       (textFieldProps as TextFieldProps).slotProps = {};
     }
     (textFieldProps as Required<TextFieldProps>).slotProps.input = resolvedTextFieldInputProps;
+    (textFieldProps as Required<TextFieldProps>).slotProps.htmlInput = textFieldProps.inputProps;
+    delete textFieldProps.inputProps;
+    delete textFieldProps.InputProps;
     return <TextField {...textFieldProps} />;
   }
 
