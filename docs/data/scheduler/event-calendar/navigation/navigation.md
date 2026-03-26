@@ -3,7 +3,7 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
-components: EventCalendar
+components: EventCalendar, EventCalendarPremium
 ---
 
 # Event Calendar - Navigation
