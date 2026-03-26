@@ -5,6 +5,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.28.1
+
+<!-- generated comparing v8.28.0..v8.x -->
+
+_Mar 26, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible.
+
+The following team members contributed to this release:
+@arminmeh, @cherniavskii
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.28.1`
+
+- [DataGrid] Prevent repeated `hasScrollbar` state updates (#21847) @arminmeh
+
+#### `@mui/x-data-grid-pro@8.28.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.28.1`, plus:
+
+- [DataGridPro] `fetchRows()` API's default `start` and `end` params based on scroll position with lazy loading (#21811) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.28.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.28.1`.
+
+### Core
+
+- [internal] Remove headless data grid packages (#21848) @cherniavskii
+
 ## 8.28.0
 
 _Mar 19, 2026_
