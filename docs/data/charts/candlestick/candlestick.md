@@ -52,7 +52,8 @@ The example below shows how to define the formatting of values in both axes.
 
 ### Color
 
-The `colors` prop accepts an array where the first value is used for bullish candles (close ≥ open) and the second for bearish candles (close < open).
+Use the `upColor` and `downColor` properties on the series to customize the candle body colors.
+The `upColor` is used when the close price is greater than or equal to the open price, and `downColor` when it is less.
 
 {{"demo": "ColorCandlestick.js"}}
 

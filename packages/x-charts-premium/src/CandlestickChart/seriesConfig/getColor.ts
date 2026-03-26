@@ -34,6 +34,9 @@ const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
     };
   }
 
+  const upColor = series.upColor ?? candlestickPaletteLight[0];
+  const downColor = series.downColor ?? candlestickPaletteLight[1];
+
   return (dataIndex?: number) => {
     if (dataIndex === undefined) {
       return series.color;
@@ -46,7 +49,7 @@ const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
     }
 
     const [open, , , close] = value;
-    return close >= open ? candlestickPaletteLight[0] : candlestickPaletteLight[1];
+    return close >= open ? upColor : downColor;
   };
 };
 
