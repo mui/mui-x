@@ -91,8 +91,8 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
         onPopperExited?.();
       }}
       {...slotProps?.dialog}
+      PaperComponent={slots?.mobilePaper}
       slots={{
-        paper: slots?.mobilePaper,
         transition: slots?.mobileTransition ?? Fade,
         ...slotProps?.dialog?.slots,
       }}
