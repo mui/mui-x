@@ -40,7 +40,7 @@ import {
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { dateToEventString } from '../date-utils';
-import { TimeoutManager } from '../TimeoutManager';
+import { TimeoutManager } from '@base-ui/utils/TimeoutManager';
 import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
 import { applyDataTimezoneToEventUpdate } from '../recurring-events/applyDataTimezoneToEventUpdate';
 

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { RequestQueue } from '@base-ui/utils/RequestQueue';
 import type { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -31,7 +32,7 @@ import {
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { NestedDataManager, RequestStatus, getGroupKeys } from './utils';
+import { getGroupKeys } from './utils';
 import type {
   GridDataSourceApiBasePro,
   GridDataSourceApiPro,
@@ -52,20 +53,26 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   options: GridDataSourceBaseOptions = {},
 ) => {
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
-  const nestedDataManager = useLazyRef<NestedDataManager, void>(
-    () => new NestedDataManager(apiRef),
+  const requestQueue = useLazyRef<RequestQueue<GridRowId>, void>(
+    () =>
+      new RequestQueue({
+        fetchFn: (id) => {
+          apiRef.current.fetchRowChildren(id);
+          return Promise.resolve();
+        },
+      }),
   ).current;
   const scheduledGroups = React.useRef<number>(0);
 
   const clearDataSourceState = React.useCallback(() => {
-    nestedDataManager.clear();
+    requestQueue.clear();
     scheduledGroups.current = 0;
     const dataSourceState = apiRef.current.state.dataSource;
     if (dataSourceState !== INITIAL_STATE) {
       apiRef.current.resetDataSourceState();
     }
     return null;
-  }, [apiRef, nestedDataManager]);
+  }, [apiRef, requestQueue]);
 
   const handleEditRow = React.useCallback(
     (params: GridUpdateRowParams, updatedRow: GridRowModel) => {
@@ -88,7 +95,20 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     cacheChunkManager,
     cache,
   } = useGridDataSourceBase(apiRef, props, {
-    fetchRowChildren: nestedDataManager.queue,
+    fetchRowChildren: (ids: GridRowId[]) => {
+      const loadingIds = Object.fromEntries(ids.map((id) => [id, true]));
+      apiRef.current.setState((state) => ({
+        ...state,
+        dataSource: {
+          ...state.dataSource,
+          loading: {
+            ...state.dataSource.loading,
+            ...loadingIds,
+          },
+        },
+      }));
+      return requestQueue.queue(ids);
+    },
     clearDataSourceState,
     handleEditRow,
     ...options,
@@ -155,18 +175,21 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         {},
       ) as Partial<GridGetRowsParamsPro & { groupFields: string[] }>;
       if (!props.treeData && (pipedParams.groupFields?.length ?? 0) === 0) {
-        nestedDataManager.clearPendingRequest(id);
+        apiRef.current.dataSource.setChildrenLoading(id, false);
+        requestQueue.clearPendingRequest(id);
         return;
       }
       const getRows = props.dataSource?.getRows;
       if (!getRows) {
-        nestedDataManager.clearPendingRequest(id);
+        apiRef.current.dataSource.setChildrenLoading(id, false);
+        requestQueue.clearPendingRequest(id);
         return;
       }
 
       const rowNode = apiRef.current.getRowNode<GridDataSourceGroupNode>(id);
       if (!rowNode) {
-        nestedDataManager.clearPendingRequest(id);
+        apiRef.current.dataSource.setChildrenLoading(id, false);
+        requestQueue.clearPendingRequest(id);
         return;
       }
 
@@ -184,7 +207,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
 
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
-        nestedDataManager.setRequestSettled(id);
+        requestQueue.setRequestSettled(id);
         replaceGroupRows(id, rowNode.path, rows);
         if (cachedData.rowCount !== undefined) {
           apiRef.current.setRowCount(cachedData.rowCount);
@@ -203,14 +226,15 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         const getRowsResponse = await getRows(fetchParams);
         if (!apiRef.current.getRowNode(id)) {
           // The row has been removed from the grid
-          nestedDataManager.clearPendingRequest(id);
+          apiRef.current.dataSource.setChildrenLoading(id, false);
+          requestQueue.clearPendingRequest(id);
           return;
         }
-        if (nestedDataManager.getRequestStatus(id) === RequestStatus.UNKNOWN) {
+        if (requestQueue.getRequestStatus(id) === 'unknown') {
           apiRef.current.dataSource.setChildrenLoading(id, false);
           return;
         }
-        nestedDataManager.setRequestSettled(id);
+        requestQueue.setRequestSettled(id);
 
         const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
         cacheResponses.forEach((response, key) => {
@@ -245,11 +269,11 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         }
       } finally {
         apiRef.current.dataSource.setChildrenLoading(id, false);
-        nestedDataManager.setRequestSettled(id);
+        requestQueue.setRequestSettled(id);
       }
     },
     [
-      nestedDataManager,
+      requestQueue,
       cacheChunkManager,
       cache,
       onDataSourceErrorProp,
@@ -422,10 +446,21 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       scheduledGroups.current < groupsToAutoFetch.length
     ) {
       const groupsToSchedule = groupsToAutoFetch.slice(scheduledGroups.current);
-      nestedDataManager.queue(groupsToSchedule);
+      const loadingIds = Object.fromEntries(groupsToSchedule.map((id) => [id, true]));
+      apiRef.current.setState((state) => ({
+        ...state,
+        dataSource: {
+          ...state.dataSource,
+          loading: {
+            ...state.dataSource.loading,
+            ...loadingIds,
+          },
+        },
+      }));
+      requestQueue.queue(groupsToSchedule);
       scheduledGroups.current = groupsToAutoFetch.length;
     }
-  }, [apiRef, nestedDataManager, groupsToAutoFetch]);
+  }, [apiRef, requestQueue, groupsToAutoFetch]);
 
   return {
     api: { public: dataSourceApi, private: dataSourcePrivateApi },

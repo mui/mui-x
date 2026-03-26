@@ -6,8 +6,9 @@ import {
   buildEventsState,
   SchedulerEventParameters,
 } from '@mui/x-scheduler-headless/internals';
+import { RequestQueue } from '@base-ui/utils/RequestQueue';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
-import { SchedulerDataManager } from '../utils/queue';
+import { type DateRange, getDateRangeKey } from '../utils/queue';
 
 export class SchedulerLazyLoadingPlugin<
   TEvent extends object,
@@ -16,7 +17,7 @@ export class SchedulerLazyLoadingPlugin<
 > {
   private store: SchedulerStore<TEvent, any, State, Parameters>;
 
-  private dataManager: SchedulerDataManager | null = null;
+  private requestQueue: RequestQueue<DateRange> | null = null;
   private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
 
   constructor(store: SchedulerStore<TEvent, any, State, Parameters>) {
@@ -24,10 +25,14 @@ export class SchedulerLazyLoadingPlugin<
 
     if (this.store.parameters.dataSource) {
       this.cache = new SchedulerDataSourceCacheDefault<TEvent>({ ttl: 300_000 });
-      this.dataManager = new SchedulerDataManager(
-        this.store.state.adapter,
-        this.loadEventsFromDataSource,
-      );
+      this.requestQueue = new RequestQueue<DateRange>({
+        fetchFn: (range) => this.loadEventsFromDataSource(range),
+        maxConcurrentRequests: 3,
+        getKeyId: (range) => getDateRangeKey(this.store.state.adapter, range),
+        debounceMs: 150,
+        lifo: true,
+        maxQueuedRequests: 3,
+      });
 
       // Subscribe to events updated event to sync cache
       this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated);
@@ -41,7 +46,7 @@ export class SchedulerLazyLoadingPlugin<
     },
     immediate = false,
   ) => {
-    if (this.dataManager) {
+    if (this.requestQueue) {
       const { adapter } = this.store.state;
 
       // Set loading state immediately (before the debounce delay)
@@ -57,9 +62,9 @@ export class SchedulerLazyLoadingPlugin<
       }
 
       if (immediate) {
-        await this.dataManager.queueImmediate([range]);
+        await this.requestQueue.queueImmediate([range]);
       } else {
-        await this.dataManager.queue([range]);
+        await this.requestQueue.queue([range]);
       }
     }
   };
@@ -74,7 +79,7 @@ export class SchedulerLazyLoadingPlugin<
     const { dataSource } = this.store.parameters;
     const { adapter, displayTimezone } = this.store.state;
 
-    if (!dataSource || !this.cache || !this.dataManager) {
+    if (!dataSource || !this.cache || !this.requestQueue) {
       return;
     }
     if (
@@ -96,7 +101,7 @@ export class SchedulerLazyLoadingPlugin<
         isLoading: false,
       });
 
-      await this.dataManager.setRequestSettled(range);
+      await this.requestQueue.setRequestSettled(range);
 
       return;
     }
@@ -119,14 +124,14 @@ export class SchedulerLazyLoadingPlugin<
         errors: [],
       });
       // Mark request as settled
-      await this.dataManager.setRequestSettled(range);
+      await this.requestQueue.setRequestSettled(range);
     } catch (error) {
       this.store.set('errors', [error]);
-      await this.dataManager.setRequestSettled(range);
+      await this.requestQueue.setRequestSettled(range);
     } finally {
       // Unset loading state
       this.store.set('isLoading', false);
-      await this.dataManager.setRequestSettled(range);
+      await this.requestQueue.setRequestSettled(range);
     }
   };
 
