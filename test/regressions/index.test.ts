@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { type Browser, chromium, Page } from '@playwright/test';
+import { type Browser, chromium, type Locator, Page } from '@playwright/test';
 import { major } from '@mui/material/version';
 import fs from 'node:fs/promises';
 
@@ -95,6 +95,11 @@ async function main() {
           if (/^\/docs-charts-tooltip\/Interaction/.test(route.url)) {
             // Ignore tooltip interaction demo screenshot.
             // There is a dedicated test for it in this file, and this is why we don't exclude it with the glob pattern in test/regressions/testsBySuite.ts
+            return;
+          }
+
+          if (/LineChartPointerInteraction/.test(route.url)) {
+            // Ignore pointer interaction screenshot — dedicated tests handle mouse positioning.
             return;
           }
 
@@ -202,6 +207,64 @@ async function main() {
       // Need to screenshot the body because the tooltip is outside of the testcase div
       const body = await page.waitForSelector(`body`);
       await body.screenshot({ path: axisScreenshotPath, type: 'png' });
+    });
+
+    // Pointer interaction: margin=0, 500x400, yAxis 0-10, xAxis linear 0-10 (step=50px)
+    // pixelY = (10 - value) / 10 * 400
+    // At x=5 (px=250): Series C(area)=9→py=40, Series A=5→py=200, Series B=3→py=280
+    // Area fill: 40→400. LINE_PROXIMITY_THRESHOLD = 15px
+
+    it('should highlight line series when pointer is within the proximity threshold', async () => {
+      const route = '/test-regressions-charts/LineChartPointerInteraction';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}LineHighlight.png`);
+
+      await navigateToTest(route);
+
+      const testcase = await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      await sleep(10);
+
+      const svg = page.locator('svg').first();
+      const box = await svg.boundingBox();
+      if (!box) {
+        throw new Error('Could not find SVG bounding box');
+      }
+
+      // (250, 195): 5px from Series A at py=200 → within threshold → line highlighted
+      await page.mouse.move(box.x + 250, box.y + 195);
+      await sleep(100);
+
+      await addPointerMarker(page, svg, 250, 195);
+      await testcase.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
+    it('should highlight area series when pointer is inside fill but outside line threshold', async () => {
+      const route = '/test-regressions-charts/LineChartPointerInteraction';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}AreaHighlight.png`);
+
+      await navigateToTest(route);
+
+      const testcase = await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      await sleep(10);
+
+      const svg = page.locator('svg').first();
+      const box = await svg.boundingBox();
+      if (!box) {
+        throw new Error('Could not find SVG bounding box');
+      }
+
+      // (250, 340): 60px from nearest line (Series B at py=280) → outside threshold
+      // inside area fill (40→400) → area highlighted
+      await page.mouse.move(box.x + 250, box.y + 340);
+      await sleep(100);
+
+      await addPointerMarker(page, svg, 250, 340);
+      await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
     it('should export a chart as PNG', async () => {
@@ -390,6 +453,22 @@ function screenshotPrintDialogPreview(
       }
     });
   });
+}
+
+/** Adds a magenta circle at the given SVG coordinates to visualize pointer position in screenshots. */
+async function addPointerMarker(page: Page, svg: Locator, x: number, y: number) {
+  await svg.evaluate(
+    (el, { cx, cy }) => {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', String(cx));
+      circle.setAttribute('cy', String(cy));
+      circle.setAttribute('r', '2');
+      circle.setAttribute('fill', 'magenta');
+      circle.setAttribute('pointer-events', 'none');
+      el.appendChild(circle);
+    },
+    { cx: x, cy: y },
+  );
 }
 
 type NewPageOptions = Parameters<Browser['newPage']>[0];
