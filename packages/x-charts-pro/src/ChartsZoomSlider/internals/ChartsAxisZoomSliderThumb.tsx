@@ -32,6 +32,17 @@ const Rect = styled('rect', {
   },
 }));
 
+/**
+ * Invisible touch target that is only active on coarse pointer devices (touch).
+ * On fine pointer devices (mouse), it disables pointer events so it doesn't
+ * interfere with precise interactions on small zoom ranges.
+ */
+const TouchTarget = styled('rect')({
+  '@media (pointer: fine)': {
+    pointerEvents: 'none',
+  },
+});
+
 export interface ChartsZoomSliderThumbOwnerState {
   onMove: (event: PointerEvent) => void;
   orientation: 'horizontal' | 'vertical';
@@ -42,10 +53,6 @@ export interface ChartsZoomSliderThumbProps
   extends Omit<React.ComponentProps<'rect'>, 'orientation'>, ChartsZoomSliderThumbOwnerState {
   onInteractionStart?: () => void;
   onInteractionEnd?: () => void;
-}
-
-function preventDefault(event: Event) {
-  event.preventDefault();
 }
 
 /**
@@ -80,60 +87,50 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
   const groupRef = React.useRef<SVGGElement>(null);
   const thumbRef = React.useRef<SVGRectElement>(null);
   const ref = useForkRef(thumbRef, forwardedRef);
+  const isDraggingRef = React.useRef(false);
 
   const onMoveEvent = useEventCallback(onMove);
 
-  React.useEffect(() => {
-    const group = groupRef.current;
+  const throttledMove = React.useMemo(
+    () => rafThrottle((event: PointerEvent) => onMoveEvent(event)),
+    [onMoveEvent],
+  );
 
-    if (!group) {
-      return () => {};
+  React.useEffect(() => () => throttledMove.clear(), [throttledMove]);
+
+  const handlePointerDown = useEventCallback((event: React.PointerEvent<SVGGElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      // setPointerCapture can fail if the pointer is no longer active,
+      // e.g., during touch→mouse compatibility events.
+      return;
     }
+    isDraggingRef.current = true;
+    onInteractionStart?.();
+  });
 
-    // Prevent scrolling on touch devices when dragging the thumb
-    group.addEventListener('touchmove', preventDefault, { passive: false });
+  const handlePointerMove = useEventCallback((event: React.PointerEvent<SVGGElement>) => {
+    if (!isDraggingRef.current) {
+      return;
+    }
+    throttledMove(event.nativeEvent);
+  });
 
-    const onPointerMove = rafThrottle((event: PointerEvent) => {
-      onMoveEvent(event);
-    });
-
-    const onPointerEnd = (event: PointerEvent) => {
-      group.removeEventListener('pointermove', onPointerMove);
-      group.removeEventListener('pointerup', onPointerEnd);
-      group.removeEventListener('pointercancel', onPointerEnd);
-      group.releasePointerCapture(event.pointerId);
-      onInteractionEnd?.();
-    };
-
-    const onPointerDown = (event: PointerEvent) => {
-      // Prevent text selection when dragging the thumb
-      event.preventDefault();
-      event.stopPropagation();
-      try {
-        group.setPointerCapture(event.pointerId);
-      } catch {
-        // setPointerCapture can fail if the pointer is no longer active,
-        // e.g., during touch→mouse compatibility events.
-        return;
-      }
-      onInteractionStart?.();
-
-      group.addEventListener('pointermove', onPointerMove);
-      group.addEventListener('pointercancel', onPointerEnd);
-      group.addEventListener('pointerup', onPointerEnd);
-    };
-
-    group.addEventListener('pointerdown', onPointerDown);
-
-    return () => {
-      group.removeEventListener('pointerdown', onPointerDown);
-      group.removeEventListener('pointermove', onPointerMove);
-      group.removeEventListener('pointercancel', onPointerEnd);
-      group.removeEventListener('pointerup', onPointerEnd);
-      group.removeEventListener('touchmove', preventDefault);
-      onPointerMove.clear();
-    };
-  }, [onMoveEvent, orientation, onInteractionStart, onInteractionEnd]);
+  const handlePointerEnd = useEventCallback((event: React.PointerEvent<SVGGElement>) => {
+    if (!isDraggingRef.current) {
+      return;
+    }
+    try {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    } catch {
+      // Ignore if pointer is no longer active
+    }
+    isDraggingRef.current = false;
+    onInteractionEnd?.();
+  });
 
   const numX = Number(x) || 0;
   const numY = Number(y) || 0;
@@ -146,19 +143,14 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
   const touchX = numX - (touchWidth - numWidth) / 2;
   const touchY = numY - (touchHeight - numHeight) / 2;
 
-  // These are used as a fallback for when the React synthetic event reaches
-  // the root before stopPropagation in the imperative handler blocks it.
-  // On real devices, one of these two mechanisms will fire.
-  const handlePointerDown = React.useCallback(() => {
-    onInteractionStart?.();
-  }, [onInteractionStart]);
-
-  const handlePointerUp = React.useCallback(() => {
-    onInteractionEnd?.();
-  }, [onInteractionEnd]);
-
   return (
-    <g ref={groupRef} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}>
+    <g
+      ref={groupRef}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerEnd}
+      onPointerCancel={handlePointerEnd}
+    >
       <Rect
         ref={ref}
         className={clsx(classes.root, className)}
@@ -173,7 +165,7 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
         {...other}
       />
       {/* Invisible touch target rendered on top for easier interaction on touch devices */}
-      <rect
+      <TouchTarget
         x={touchX}
         y={touchY}
         width={touchWidth}

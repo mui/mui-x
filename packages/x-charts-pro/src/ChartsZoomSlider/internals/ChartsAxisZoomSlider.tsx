@@ -10,7 +10,7 @@ import {
   ZOOM_SLIDER_PREVIEW_SIZE,
   type ZoomSliderShowTooltip,
 } from '@mui/x-charts/internals';
-import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { useChartsLayerContainerRef, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { ChartsAxisZoomSliderPreview } from './ChartsAxisZoomSliderPreview';
 import {
   ZOOM_SLIDER_ACTIVE_TRACK_SIZE,
@@ -47,29 +47,34 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
   const showPreview = zoomOptions.slider.preview;
 
   const sliderRef = React.useRef<SVGGElement>(null);
+  const layerContainerRef = useChartsLayerContainerRef()
+  const isDraggingRef = React.useRef(false);
 
-  // CSS `touch-action: none` does not work on SVG elements.
-  // Prevent scrolling on touch devices by calling preventDefault on touch events.
+  // Prevent scrolling on touch devices when interacting with the zoom slider.
+  // Listeners are attached to the parent `<svg>` element because calling
+  // `preventDefault` on SVG child elements does not reliably block scrolling —
+  // the browser's compositor decides based on the `<svg>` HTML element.
   React.useEffect(() => {
     const slider = sliderRef.current;
-    if (!slider) {
+    const layerContainer = layerContainerRef.current;
+    if (!slider || !layerContainer) {
       return undefined;
     }
 
     function preventTouchDefault(event: TouchEvent) {
-      event.preventDefault();
+      if (slider && slider.contains(event.target as Node)) {
+        event.preventDefault();
+      }
     }
 
-    slider.addEventListener('touchstart', preventTouchDefault, { passive: false });
-    slider.addEventListener('touchmove', preventTouchDefault, { passive: false });
+    layerContainer.addEventListener('touchstart', preventTouchDefault, { passive: false });
+    layerContainer.addEventListener('touchmove', preventTouchDefault, { passive: false });
 
     return () => {
-      slider.removeEventListener('touchstart', preventTouchDefault);
-      slider.removeEventListener('touchmove', preventTouchDefault);
+      layerContainer.removeEventListener('touchstart', preventTouchDefault);
+      layerContainer.removeEventListener('touchmove', preventTouchDefault);
     };
-  }, []);
-
-  const isDraggingRef = React.useRef(false);
+  }, [layerContainerRef]);
 
   const tooltipOn = React.useCallback(() => {
     setShowTooltip(true);

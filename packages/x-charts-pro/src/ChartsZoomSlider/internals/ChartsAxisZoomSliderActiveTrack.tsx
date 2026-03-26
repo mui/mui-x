@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
   type AxisId,
@@ -12,7 +13,6 @@ import {
   useStore,
   type ZoomData,
 } from '@mui/x-charts/internals';
-import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import { shouldForwardProp } from '@mui/system';
@@ -40,6 +40,17 @@ const OPPOSITE_PLACEMENT = {
   left: 'right',
   right: 'left',
 } as const;
+
+/**
+ * Invisible touch target that is only active on coarse pointer devices (touch).
+ * On fine pointer devices (mouse), it disables pointer events so it doesn't
+ * interfere with precise interactions on small zoom ranges.
+ */
+const TouchTarget = styled('rect')({
+  '@media (pointer: fine)': {
+    pointerEvents: 'none',
+  },
+});
 
 const ZoomSliderActiveTrackRect = styled('rect', {
   slot: 'internal',
@@ -341,7 +352,7 @@ export function ChartsAxisZoomSliderActiveTrack({
           className={classes.active}
         />
         {/* Invisible touch target rendered on top for easier interaction on touch devices */}
-        <rect
+        <TouchTarget
           ref={touchTargetRef}
           x={touchX}
           y={touchY}
