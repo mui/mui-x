@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { type Browser, chromium, type Locator, Page } from '@playwright/test';
+import { type Browser, chromium, Page } from '@playwright/test';
 import { major } from '@mui/material/version';
 import fs from 'node:fs/promises';
 
@@ -209,11 +209,6 @@ async function main() {
       await body.screenshot({ path: axisScreenshotPath, type: 'png' });
     });
 
-    // Pointer interaction: margin=0, 500x400, yAxis 0-10, xAxis linear 0-10 (step=50px)
-    // pixelY = (10 - value) / 10 * 400
-    // At x=5 (px=250): Series C(area)=9→py=40, Series A=5→py=200, Series B=3→py=280
-    // Area fill: 40→400. LINE_PROXIMITY_THRESHOLD = 15px
-
     it('should highlight line series when pointer is within the proximity threshold', async () => {
       const route = '/test-regressions-charts/LineChartPointerInteraction';
       const screenshotPath = path.resolve(screenshotDir, `.${route}LineHighlight.png`);
@@ -226,17 +221,20 @@ async function main() {
 
       await sleep(10);
 
-      const svg = page.locator('svg').first();
-      const box = await svg.boundingBox();
-      if (!box) {
-        throw new Error('Could not find SVG bounding box');
-      }
+      await enablePointerDot(page);
 
-      // (250, 195): 5px from Series A at py=200 → within threshold → line highlighted
-      await page.mouse.move(box.x + 250, box.y + 195);
-      await sleep(100);
+      // At index 5: Series C (area)=9, Series A=5, Series B=3. yAxis 0-10.
+      // Both tests position the pointer relative to Series A's line.
+      // LINE_PROXIMITY_THRESHOLD = 15px.
+      const drawingArea = await getDrawingArea(page);
+      const pointerX = drawingArea.left + drawingArea.width / 2;
+      const seriesAY = drawingArea.top + (drawingArea.height * (10 - 5)) / 10;
+      // 13px below Series A → inside area fill, within threshold → line highlighted
+      const pointerY = seriesAY + 13;
 
-      await addPointerMarker(page, svg, 250, 195);
+      await page.mouse.move(pointerX, pointerY);
+      await sleep(300);
+
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
@@ -245,6 +243,7 @@ async function main() {
       const screenshotPath = path.resolve(screenshotDir, `.${route}AreaHighlight.png`);
 
       await navigateToTest(route);
+      await page.reload(); // Ensure a fresh state since we reuse the same page.
 
       const testcase = await page.waitForSelector(
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
@@ -252,18 +251,17 @@ async function main() {
 
       await sleep(10);
 
-      const svg = page.locator('svg').first();
-      const box = await svg.boundingBox();
-      if (!box) {
-        throw new Error('Could not find SVG bounding box');
-      }
+      await enablePointerDot(page);
 
-      // (250, 340): 60px from nearest line (Series B at py=280) → outside threshold
-      // inside area fill (40→400) → area highlighted
-      await page.mouse.move(box.x + 250, box.y + 340);
-      await sleep(100);
+      // Same reference point, but 17px below Series A → outside threshold → area highlighted
+      const drawingArea = await getDrawingArea(page);
+      const pointerX = drawingArea.left + drawingArea.width / 2;
+      const seriesAY = drawingArea.top + (drawingArea.height * (10 - 5)) / 10;
+      const pointerY = seriesAY + 17;
 
-      await addPointerMarker(page, svg, 250, 340);
+      await page.mouse.move(pointerX, pointerY);
+      await sleep(300);
+
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
@@ -455,20 +453,56 @@ function screenshotPrintDialogPreview(
   });
 }
 
-/** Adds a magenta circle at the given SVG coordinates to visualize pointer position in screenshots. */
-async function addPointerMarker(page: Page, svg: Locator, x: number, y: number) {
-  await svg.evaluate(
-    (el, { cx, cy }) => {
-      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      circle.setAttribute('cx', String(cx));
-      circle.setAttribute('cy', String(cy));
-      circle.setAttribute('r', '2');
-      circle.setAttribute('fill', 'magenta');
-      circle.setAttribute('pointer-events', 'none');
-      el.appendChild(circle);
-    },
-    { cx: x, cy: y },
-  );
+/** Adds a red dot on the body that follows the mouse cursor. */
+async function enablePointerDot(page: Page) {
+  await page.evaluate(() => {
+    const dot = document.createElement('div');
+    Object.assign(dot.style, {
+      position: 'fixed',
+      width: '4px',
+      height: '4px',
+      borderRadius: '50%',
+      background: 'red',
+      pointerEvents: 'none',
+      zIndex: '999999',
+      transform: 'translate(-50%, -50%)',
+    });
+    document.body.appendChild(dot);
+
+    document.addEventListener('pointermove', (event) => {
+      dot.style.left = `${event.clientX}px`;
+      dot.style.top = `${event.clientY}px`;
+    });
+  });
+}
+
+/**
+ * Returns the chart drawing area in viewport coordinates by reading
+ * the MuiLineElement path's bounding box and the container position.
+ * Falls back to the SVG clipPath rect if available.
+ */
+async function getDrawingArea(page: Page) {
+  return page.evaluate(() => {
+    const svg = document.querySelector('svg')!;
+    const svgRect = svg.getBoundingClientRect();
+
+    // The clipPath rect defines the drawing area within the SVG.
+    const clipRect = svg.querySelector('clipPath rect');
+    if (clipRect) {
+      const x = Number(clipRect.getAttribute('x'));
+      const y = Number(clipRect.getAttribute('y'));
+      const width = Number(clipRect.getAttribute('width'));
+      const height = Number(clipRect.getAttribute('height'));
+      return {
+        left: svgRect.left + x,
+        top: svgRect.top + y,
+        width,
+        height,
+      };
+    }
+
+    return { left: svgRect.left, top: svgRect.top, width: svgRect.width, height: svgRect.height };
+  });
 }
 
 type NewPageOptions = Parameters<Browser['newPage']>[0];

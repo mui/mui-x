@@ -6,8 +6,8 @@ export default function LinePointerInteraction() {
       height={400}
       width={500}
       margin={0}
-      xAxis={[{ data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }]}
-      yAxis={[{ min: 0, max: 10 }]}
+      xAxis={[{ data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], height: 0 }]}
+      yAxis={[{ min: 0, max: 10, width: 0 }]}
       series={[
         {
           data: [5, 8, 3, 7, 2, 9, 4, 6, 1, 5, 3],
@@ -26,6 +26,8 @@ export default function LinePointerInteraction() {
           highlightScope: { highlight: 'series', fade: 'global' },
         },
       ]}
+      hideLegend
+      slotProps={{ tooltip: { trigger: 'none' } }}
       experimentalFeatures={{ enablePositionBasedPointerInteraction: true }}
     />
   );
