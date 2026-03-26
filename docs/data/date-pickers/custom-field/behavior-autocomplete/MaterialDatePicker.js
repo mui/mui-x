@@ -64,7 +64,6 @@ function AutocompleteField(props) {
             name={name}
             slotProps={{
               ...params.slotProps,
-
               input: {
                 ...params.slotProps.input,
                 endAdornment: React.cloneElement(endAdornment, {
