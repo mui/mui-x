@@ -58,7 +58,7 @@ const resolveDateFromTarget = (
     return null;
   }
   const timestamp = +timestampString;
-  return adapter.date(new Date(timestamp).toISOString(), timezone);
+  return adapter.date(new Date(timestamp), timezone);
 };
 
 const resolveDateFromTargets = (
