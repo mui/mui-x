@@ -57,10 +57,6 @@ The `upColor` is used when the close price is greater than or equal to the open 
 
 {{"demo": "ColorCandlestick.js"}}
 
-For more advanced use cases, the `colorGetter` property allows you to compute a color for each candle based on its OHLC value and data index.
-
-{{"demo": "ColorGetterCandlestick.js"}}
-
 ## Composition
 
 Similar to other chart types, candlestick charts can be composed using multiple components to create more complex visualizations.
