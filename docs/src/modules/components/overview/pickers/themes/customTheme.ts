@@ -314,7 +314,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
             minWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
             '&.MuiDayCalendar-slideTransition': {
               minWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
-              minHeight: theme.mixins.density.height * 7 + theme.mixins.density.spacing * 6,
+              minHeight: theme.mixins.density.height * 7,
             },
           }),
         },
@@ -404,30 +404,38 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
 
             '::before, ::after': {
               borderRadius: theme.shape.borderRadius,
+              border: 'none',
               left: 0,
               right: 0,
             },
 
-            [`&.${dateRangePickerDayClasses.insidePreviewing}`]: {
+            [`&.${dateRangePickerDayClasses.previewed}:not(.${dateRangePickerDayClasses.selectionStart})`]: {
               '::after': {
                 border: 'none',
               },
+              borderRadius: theme.shape.borderRadius,
+              borderColor: 'transparent',
               backgroundColor: theme.palette.grey[100],
               ...theme.applyStyles('dark', {
                 backgroundColor: theme.palette.grey[700],
               }),
             },
 
-            [`&.${dateRangePickerDayClasses.previewStart}::after`]: {
-              border: 'none',
-            },w
-
-            [`&.${dateRangePickerDayClasses.previewEnd}::after`]: {
-              border: 'none',
+            [`&.${dateRangePickerDayClasses.previewStart}:hover, &.${dateRangePickerDayClasses.previewEnd}:hover`]: {
+              outline: '1px solid #FFF',
+              outlineOffset: '-1px',
             },
 
+            [`&.${dateRangePickerDayClasses.selectionStart}::before, &.${dateRangePickerDayClasses.selectionEnd}::before`]:
+              {
+                backgroundColor: 'transparent',
+              },
+
             [`&.${dateRangePickerDayClasses.insideSelection}::before`]: {
-              backgroundColor: theme.palette.primary.main,
+              backgroundColor: alpha(theme.palette.primary.light, 0.4),
+              ...theme.applyStyles('dark', {
+                backgroundColor: alpha(theme.palette.primary.main, 0.3),
+              }),
             },
           }),
         },
