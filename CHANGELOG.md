@@ -4,13 +4,13 @@
 
 <!-- generated comparing v9.0.0-alpha.4..master -->
 
-_Mar 25, 2026_
+_Mar 26, 2026_
 
-We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔊 New Charts voiceover component for improved screen reader support
 - ⌨️ Charts keyboard navigation improvements: axis tooltip now shows when navigating with the keyboard
-- 📊 Charts axes now automatically resize to fit their content
+- 📊 Charts axes now can be set to automatically resize to fit their content
 - 📝 New `rowCheckbox` slot in Data Grid for easier checkbox column customization
 - ⚡️ `fetchRows()` API in Data Grid Pro now defaults `start` and `end` based on scroll position with lazy loading
 - 🐞 Bugfixes and internal improvements
@@ -86,7 +86,7 @@ Internal changes.
 ### Docs
 
 - [docs] Document how to customize voiceover announcement (#21833) @alexfauquette
-- [docs] update telemetry guide to reflect pseudonymous data collection and license compliance (#21812) @aemartos
+- [docs] Update telemetry guide to reflect pseudonymous data collection and license compliance (#21812) @aemartos
 - [docs] Revise the Sparkline doc (#21614) @mapache-salvaje
 
 ### Core
@@ -98,7 +98,7 @@ Internal changes.
 
 ### Miscellaneous
 
-- Add @romgrk to CODEOWNERS for x-virtualizer and x-internals (#21819) @Copilot
+- Add @romgrk to CODEOWNERS for `x-virtualizer` and `x-internals` (#21819) @Copilot
 - [x-license] add 2022 plan version (#21814) @aemartos
 
 ## 9.0.0-alpha.4
