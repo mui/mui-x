@@ -4148,6 +4148,8 @@ Special thanks go out to the community members for their valuable contributions:
 The following are all team members who have contributed to this release:
 @alexfauquette, @bernardobelchior, @JCQuintas, @KenanYusuf, @LukasTy, @michelengelen, @arminmeh.
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### `@mui/x-data-grid@8.5.1`
@@ -4243,6 +4245,8 @@ Special thanks go out to the community members for their valuable contributions:
 @xBlizZer, @sai6855, @alisasanib.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -4350,6 +4354,8 @@ Special thanks go out to the community members for their valuable contributions:
 Following are all team members who have contributed to this release:
 @alexfauquette, @bernardobelchior, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @rita-codes.
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### `@mui/x-data-grid@8.4.0`
@@ -4454,6 +4460,8 @@ Special thanks go out to the community members for their valuable contributions:
 @100pearlcent, @htollefsen, @JanPretzel, @sai6855.
 Following are all team members who have contributed to this release:
 @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @MBilalShafi, @oliviertassinari, @prakhargupta1.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -4647,6 +4655,8 @@ Special thanks go out to the community members for their valuable contributions:
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @hasdfa, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @romgrk.
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### `@mui/x-data-grid@8.2.0`
@@ -4759,6 +4769,8 @@ Special thanks go out to the community members for their valuable contributions:
 @lhilgert9, @ArturAghakaryan, @sai6855.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @joserodolfofreitas, @KenanYusuf, @LukasTy, @mapache-salvaje, @oliviertassinari, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -5049,6 +5061,8 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 Team members who have contributed to this release: @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk, @alexfauquette.
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### Breaking changes
@@ -5186,6 +5200,8 @@ Special thanks go out to the community members for their valuable contributions:
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @flaviendelangle, @hasdfa, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @mnajdova, @romgrk.
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### `@mui/x-data-grid@8.0.0-beta.2`
@@ -5277,6 +5293,8 @@ Special thanks go out to the community members for their valuable contributions:
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @flaviendelangle, @JCQuintas, @KenanYusuf.
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### `@mui/x-data-grid@8.0.0-beta.1`
@@ -5363,6 +5381,8 @@ Special thanks go out to the community members for their valuable contributions:
 @Blake-McCullough, @hlavacz, @k-rajat19, @layerok, @nusr, @owais635, @yelahj.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @DiegoAndai, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Alpha release highlights
 
@@ -5537,6 +5557,8 @@ Special thanks go out to the community member for their valuable contributions:
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @michelengelen, @noraleonte, @oliviertassinari.
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### Breaking changes
@@ -5662,6 +5684,8 @@ Special thanks go out to the community members for their contributions:
 @denpiligrim, @lhilgert9, @noherczeg, @officialkidmax, @pcorpet.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @michelengelen, @MBilalShafi, @oliviertassinari, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -6115,6 +6139,8 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @Janpot, @KenanYusuf, @LukasTy, @MBilalShafi, @noraleonte, @romgrk.
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### Breaking changes
@@ -6218,6 +6244,8 @@ Special thanks go out to the community contributors who have helped make this re
 @k-rajat19, @lauri865, @mateuseap.
 Following are all team members who have contributed to this release:
 @alexfauquette, @flaviendelangle, @JCQuintas, @KenanYusuf, @MBilalShafi, @romgrk, @arminmeh.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -6454,6 +6482,8 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @arminmeh, @romgrk, @samuelsycamore, @alexfauquette, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @michelengelen.
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### Breaking changes
@@ -6565,6 +6595,8 @@ Special thanks go out to the community contributors who have helped make this re
 @derek-0000, @josteinjhauge, @k-rajat19, @nusr, @tomashauser.
 Following are all team members who have contributed to this release:
 @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @arminmeh, @romgrk, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -6687,6 +6719,8 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @romgrk.
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### Breaking changes
@@ -6762,6 +6796,8 @@ Special thanks go out to the community contributors who have helped make this re
 @good-jinu, @k-rajat19.
 Following are all team members who have contributed to this release:
 @alexfauquette, @cherniavskii, @flaviendelangle, @KenanYusuf, @LukasTy, @MBilalShafi, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -6862,6 +6898,8 @@ Special thanks go out to the community contributors who have helped make this re
 @k-rajat19, @nusr, @rares985, @zivl.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -6988,6 +7026,8 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @arminmeh, @cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @noraleonte.
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### Breaking changes
@@ -7092,6 +7132,8 @@ Special thanks go out to the community contributors who have helped make this re
 @dloeda, @headironc, @jedesroches, @k-rajat19, @lauri865, @mathzdev, @nphmuller, @zinoroman.
 Following are all team members who have contributed to this release:
 @arminmeh, @alexfauquette, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -7219,6 +7261,8 @@ Special thanks go out to the community contributors who have helped make this re
 @CarlosLopezLg, @headironc, @hendrikpeilke, @k-rajat19, @lhilgert9, @viktormelin.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @oliviertassinari, @KenanYusuf, @arminmeh.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -7359,6 +7403,8 @@ We'd like to offer a big thanks to the 22 contributors who made this release pos
   @belkocik, @GeorgiosDrivas, @k-rajat19, @kalyan90, @DungTiger, @fxnoob, @GuillaumeMeheut
   Following are all team members who have contributed to this release:
   @alexfauquette, @arminmeh, @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @oliviertassinari, @romgrk, @samuelsycamore, @joserodolfofreitas.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
