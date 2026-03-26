@@ -61,7 +61,8 @@
     "@base-ui/utils": "^0.2.3",
     "@mui/x-internals": "workspace:*",
     "@mui/x-scheduler-headless": "workspace:*",
-    "clsx": "catalog:"
+    "clsx": "catalog:",
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",

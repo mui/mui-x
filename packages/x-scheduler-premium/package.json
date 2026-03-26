@@ -55,7 +55,8 @@
     "@mui/x-scheduler-headless-premium": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "clsx": "catalog:"
+    "clsx": "catalog:",
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
