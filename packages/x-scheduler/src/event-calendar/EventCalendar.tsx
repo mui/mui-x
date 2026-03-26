@@ -121,37 +121,7 @@ EventCalendar.propTypes = {
    * Import a locale from `date-fns/locale` and pass it to this prop.
    * @default enUS (English)
    */
-  dateLocale: PropTypes.shape({
-    code: PropTypes.string.isRequired,
-    formatDistance: PropTypes.func.isRequired,
-    formatLong: PropTypes.shape({
-      date: PropTypes.func.isRequired,
-      dateTime: PropTypes.func.isRequired,
-      time: PropTypes.func.isRequired,
-    }).isRequired,
-    formatRelative: PropTypes.func.isRequired,
-    localize: PropTypes.shape({
-      day: PropTypes.func.isRequired,
-      dayPeriod: PropTypes.func.isRequired,
-      era: PropTypes.func.isRequired,
-      month: PropTypes.func.isRequired,
-      ordinalNumber: PropTypes.func.isRequired,
-      preprocessor: PropTypes.func,
-      quarter: PropTypes.func.isRequired,
-    }).isRequired,
-    match: PropTypes.shape({
-      day: PropTypes.func.isRequired,
-      dayPeriod: PropTypes.func.isRequired,
-      era: PropTypes.func.isRequired,
-      month: PropTypes.func.isRequired,
-      ordinalNumber: PropTypes.func.isRequired,
-      quarter: PropTypes.func.isRequired,
-    }).isRequired,
-    options: PropTypes.shape({
-      firstWeekContainsDate: PropTypes.oneOf([1, 4]),
-      weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
-    }),
-  }),
+  dateLocale: PropTypes.object,
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
@@ -227,72 +197,7 @@ EventCalendar.propTypes = {
    * It defines how to read and write the properties of the event model.
    * If not provided, the event model is assumed to match the `CalendarEvent` interface.
    */
-  eventModelStructure: PropTypes.shape({
-    allDay: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    className: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    color: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    description: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    draggable: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    end: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    exDates: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    extractedFromId: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    id: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    readOnly: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    resizable: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    resource: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    rrule: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    start: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    timezone: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-    title: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-      setter: PropTypes.func,
-    }),
-  }),
+  eventModelStructure: PropTypes.object,
   /**
    * The events currently available in the calendar.
    * @default []
@@ -359,29 +264,7 @@ EventCalendar.propTypes = {
    * It defines how to read and write the properties of the resource model.
    * If not provided, the resource model is assumed to match the `CalendarResource` interface.
    */
-  resourceModelStructure: PropTypes.shape({
-    areEventsDraggable: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-    }),
-    areEventsReadOnly: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-    }),
-    areEventsResizable: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-    }),
-    children: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-    }),
-    eventColor: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-    }),
-    id: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-    }),
-    title: PropTypes.shape({
-      getter: PropTypes.func.isRequired,
-    }),
-  }),
+  resourceModelStructure: PropTypes.object,
   /**
    * The resources the events can be assigned to.
    */
