@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 <!-- generated comparing v8.28.0..v8.x -->
 
-_Mar 25, 2026_
+_Mar 26, 2026_
 
 We'd like to extend a big thank you to the 2 contributors who made this release possible.
 
