@@ -355,6 +355,7 @@ export function PickerFieldUI<
 
   if (materialMajor >= 9 && TextField === MuiTextField) {
     delete textFieldProps.inputProps;
+    delete textFieldProps.InputProps;
     if (!(textFieldProps as TextFieldProps).slotProps) {
       (textFieldProps as TextFieldProps).slotProps = {};
     }
