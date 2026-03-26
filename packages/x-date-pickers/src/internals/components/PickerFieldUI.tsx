@@ -46,7 +46,9 @@ export const cleanFieldResponse = <
       ...other
     } = fieldResponse;
     const mergedInputProps =
-      materialMajor >= 6 ? mergeSlotProps(other?.slotProps?.input, InputProps) : noop;
+      materialMajor >= 6 && other?.slotProps?.input
+        ? mergeSlotProps(other?.slotProps?.input, InputProps)
+        : noop;
 
     return {
       clearable,
@@ -56,7 +58,7 @@ export const cleanFieldResponse = <
       openPickerAriaLabel,
       textFieldProps: {
         ...other,
-        ...(materialMajor >= 6
+        ...(materialMajor >= 6 && other?.slotProps?.input
           ? {
               slotProps: {
                 ...other?.slotProps,
@@ -90,9 +92,13 @@ export const cleanFieldResponse = <
   } = fieldResponse;
 
   const mergedInputProps =
-    materialMajor >= 6 ? mergeSlotProps(other?.slotProps?.input, InputProps) : noop;
+    materialMajor >= 6 && other?.slotProps?.input
+      ? mergeSlotProps(other?.slotProps?.input, InputProps)
+      : noop;
   const mergedHtmlInputProps =
-    materialMajor >= 6 ? mergeSlotProps(other?.slotProps?.htmlInput, inputProps) : noop;
+    materialMajor >= 6 && other?.slotProps?.htmlInput
+      ? mergeSlotProps(other?.slotProps?.htmlInput, inputProps)
+      : noop;
   return {
     clearable,
     onClear,
@@ -101,7 +107,7 @@ export const cleanFieldResponse = <
     openPickerAriaLabel,
     textFieldProps: {
       ...other,
-      ...(materialMajor >= 6
+      ...(materialMajor >= 6 && (other?.slotProps?.input || other?.slotProps?.htmlInput)
         ? {
             slotProps: {
               ...other?.slotProps,
