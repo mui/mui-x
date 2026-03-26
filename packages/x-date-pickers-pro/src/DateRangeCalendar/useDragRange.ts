@@ -36,12 +36,24 @@ interface UseDragRangeResponse extends UseDragRangeEvents {
   draggingDatePosition: RangePosition | null;
 }
 
+const resolveElementWithTimestamp = (target: EventTarget | null): HTMLElement | null => {
+  if (!(target instanceof Element)) {
+    return null;
+  }
+
+  if (target instanceof HTMLElement && target.dataset.timestamp) {
+    return target;
+  }
+
+  return target.closest<HTMLElement>('[data-timestamp]');
+};
+
 const resolveDateFromTarget = (
   target: EventTarget,
   adapter: MuiPickersAdapter,
   timezone: PickersTimezone,
 ) => {
-  const timestampString = (target as HTMLElement).dataset.timestamp;
+  const timestampString = resolveElementWithTimestamp(target)?.dataset.timestamp;
   if (!timestampString) {
     return null;
   }
@@ -49,8 +61,46 @@ const resolveDateFromTarget = (
   return adapter.date(new Date(timestamp).toISOString(), timezone);
 };
 
+const resolveDateFromTargets = (
+  targets: Array<EventTarget | null | undefined>,
+  adapter: MuiPickersAdapter,
+  timezone: PickersTimezone,
+) => {
+  for (const target of targets) {
+    if (!target) {
+      continue;
+    }
+
+    const date = resolveDateFromTarget(target, adapter, timezone);
+    if (date) {
+      return date;
+    }
+  }
+
+  return null;
+};
+
+const resolveDateFromDragEvent = (
+  event: React.DragEvent<HTMLButtonElement>,
+  adapter: MuiPickersAdapter,
+  timezone: PickersTimezone,
+) =>
+  resolveDateFromTargets(
+    [
+      event.currentTarget,
+      event.target,
+      typeof document.elementFromPoint === 'function'
+        ? document.elementFromPoint(event.clientX, event.clientY)
+        : null,
+    ],
+    adapter,
+    timezone,
+  );
+
 const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
-  const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
+  const timestampString =
+    resolveElementWithTimestamp(event.currentTarget)?.dataset.timestamp ??
+    resolveElementWithTimestamp(event.target)?.dataset.timestamp;
   return timestampString === event.dataTransfer.getData('draggingDate');
 };
 
@@ -80,10 +130,13 @@ const resolveElementFromTouch = (
     // `elementFromPoint` could have resolved preview div or wrapping div
     // might need to recursively find the nested button
     const buttonElement = resolveButtonElement(element);
-    if (ignoreTouchTarget && buttonElement === event.changedTouches[0].target) {
+    const dayElement = resolveElementWithTimestamp(buttonElement);
+    const touchTarget = resolveElementWithTimestamp(event.changedTouches[0].target as EventTarget);
+
+    if (ignoreTouchTarget && dayElement === touchTarget) {
       return null;
     }
-    return buttonElement;
+    return dayElement;
   }
   return null;
 };
@@ -120,7 +173,7 @@ const useDragRangeEvents = ({
   };
 
   const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    const newDate = resolveDateFromTarget(event.target, adapter, timezone);
+    const newDate = resolveDateFromDragEvent(event, adapter, timezone);
     if (!isElementDraggable(newDate)) {
       return;
     }
@@ -132,7 +185,7 @@ const useDragRangeEvents = ({
     setRangeDragDay(newDate);
     event.dataTransfer.effectAllowed = 'move';
     setIsDragging(true);
-    const buttonDataset = (event.target as HTMLButtonElement).dataset;
+    const buttonDataset = event.currentTarget.dataset;
     if (buttonDataset.timestamp) {
       event.dataTransfer.setData('draggingDate', buttonDataset.timestamp);
     }
@@ -163,7 +216,7 @@ const useDragRangeEvents = ({
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
-    setRangeDragDay(resolveDateFromTarget(event.target, adapter, timezone));
+    setRangeDragDay(resolveDateFromDragEvent(event, adapter, timezone));
   });
 
   const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
@@ -178,7 +231,8 @@ const useDragRangeEvents = ({
     }
 
     // this prevents initiating drag when user starts touchmove outside and then moves over a draggable element
-    const targetsAreIdentical = target === event.changedTouches[0].target;
+    const touchTarget = resolveElementWithTimestamp(event.changedTouches[0].target as EventTarget);
+    const targetsAreIdentical = target === touchTarget;
     if (!targetsAreIdentical || !isElementDraggable(newDate)) {
       return;
     }
@@ -186,8 +240,7 @@ const useDragRangeEvents = ({
     // on mobile we should only initialize dragging state after move is detected
     setIsDragging(true);
 
-    const button = event.target as HTMLButtonElement;
-    const buttonDataset = button.dataset;
+    const buttonDataset = target.dataset;
     if (buttonDataset.position) {
       onDatePositionChange(buttonDataset.position as RangePosition);
     }
@@ -258,7 +311,7 @@ const useDragRangeEvents = ({
     if (isSameAsDraggingDate(event)) {
       return;
     }
-    const newDate = resolveDateFromTarget(event.target, adapter, timezone);
+    const newDate = resolveDateFromDragEvent(event, adapter, timezone);
     if (newDate) {
       onDrop(newDate);
     }

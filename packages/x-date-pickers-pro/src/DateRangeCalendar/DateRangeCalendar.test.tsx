@@ -249,6 +249,39 @@ describe('<DateRangeCalendar />', () => {
         expect(document.activeElement).toHaveAccessibleName('2');
       });
 
+      it('should emit "onChange" when drag events target a nested day element', () => {
+        const onChange = spy();
+        const initialValue: [any, any] = [
+          adapterToUse.date('2018-01-10'),
+          adapterToUse.date('2018-01-31'),
+        ];
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={initialValue}
+            slots={{
+              day: (props) => (
+                <DateRangePickerDay {...props}>
+                  <span data-testid={`nested-day-content-${adapterToUse.getDate(props.day)}`}>
+                    {props.children}
+                  </span>
+                </DateRangePickerDay>
+              ),
+            }}
+          />,
+        );
+
+        const startDayContent = screen.getByTestId('nested-day-content-31');
+        const dragToDayContent = screen.getByTestId('nested-day-content-30');
+        const dropDayContent = screen.getByTestId('nested-day-content-29');
+
+        executeDateDrag(startDayContent, dragToDayContent, dropDayContent);
+
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+      });
+
       it.skipIf(!document.elementFromPoint)(
         'should emit "onChange" when touch dragging end date',
         () => {
