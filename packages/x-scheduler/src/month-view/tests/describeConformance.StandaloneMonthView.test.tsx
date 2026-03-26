@@ -32,7 +32,6 @@ describe('<StandaloneMonthView /> - Describe Conformance', () => {
         'rootClass',
         'themeDefaultProps',
         'themeStyleOverrides',
-        'reactTestRenderer',
       ],
     }),
   );

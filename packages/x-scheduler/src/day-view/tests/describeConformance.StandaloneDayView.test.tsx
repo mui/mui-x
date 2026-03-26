@@ -32,7 +32,6 @@ describe('<StandaloneDayView /> - Describe Conformance', () => {
         'rootClass',
         'themeDefaultProps',
         'themeStyleOverrides',
-        'reactTestRenderer',
       ],
     }),
   );

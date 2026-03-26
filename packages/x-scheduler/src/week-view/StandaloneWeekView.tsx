@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { StandaloneWeekViewProps } from './WeekView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
@@ -15,12 +14,9 @@ const StandaloneWeekView = React.forwardRef(function StandaloneWeekView<
   TEvent extends object,
   TResource extends object,
 >(
-  inProps: StandaloneWeekViewProps<TEvent, TResource>,
+  props: StandaloneWeekViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  // Use the same theme name to share theme customizations with base EventCalendar
-  // eslint-disable-next-line mui/material-ui-name-matches-component-name
-  const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
   const { parameters, forwardedProps } = useExtractEventCalendarParameters<
     TEvent,
     TResource,

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { StandaloneEvent as HeadlessStandaloneEvent } from '@mui/x-scheduler-headless/standalone-event';
 import { StandaloneEventProps } from './StandaloneEvent.types';
 import { EventDragPreview } from '../internals/components/event-drag-preview';
@@ -13,10 +13,7 @@ const StandaloneEventRoot = styled(HeadlessStandaloneEvent, {
 })({});
 
 const StandaloneEvent = React.forwardRef<HTMLDivElement, StandaloneEventProps>(
-  function StandaloneEvent(inProps, forwardedRef) {
-    // Use the same theme name to share theme customizations with base EventCalendar
-    // eslint-disable-next-line mui/material-ui-name-matches-component-name
-    const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
+  function StandaloneEvent(props, forwardedRef) {
     const styledContext = React.useContext(EventCalendarStyledContext);
     return (
       <StandaloneEventRoot

@@ -19,8 +19,8 @@ describe('<StandaloneEvent /> - Describe Conformance', () => {
       'componentsProp',
       'themeVariants',
       'rootClass',
+      'themeDefaultProps',
       'themeStyleOverrides',
-      'reactTestRenderer',
     ],
   }));
 });
