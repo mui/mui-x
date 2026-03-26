@@ -30,7 +30,9 @@ export const cleanFieldResponse = <
   ...fieldResponse
 }: TFieldResponse): ExportedPickerFieldUIProps & {
   openPickerAriaLabel: string;
-  textFieldProps: Record<string, any>;
+  textFieldProps:
+    | (TextFieldProps & { inputProps?: unknown; InputProps: unknown })
+    | PickersTextFieldProps;
 } => {
   if (enableAccessibleFieldDOMStructure) {
     const {
@@ -248,7 +250,7 @@ export function PickerFieldUI<
   const additionalTextFieldInputProps: PickersTextFieldProps['InputProps'] = {};
   const textFieldInputProps = resolveComponentProps(
     ((materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input) ??
-      (textFieldProps as any).InputProps) as PickersTextFieldProps['InputProps'] | undefined,
+      textFieldProps.InputProps) as PickersTextFieldProps['InputProps'] | undefined,
     ownerState,
   );
 
@@ -337,13 +339,22 @@ export function PickerFieldUI<
         };
 
   // We need to resolve the `inputProps` since we are messing with those props in this component.
-  (textFieldProps as any).inputProps =
+  textFieldProps.inputProps =
     materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.htmlInput
       ? resolveComponentProps(
           (textFieldProps as TextFieldProps).slotProps!.htmlInput as any,
           ownerState,
         )
-      : (textFieldProps as any).inputProps;
+      : textFieldProps.inputProps;
+
+  if (materialMajor >= 9 && TextField === MuiTextField) {
+    delete textFieldProps.inputProps;
+    if (!(textFieldProps as TextFieldProps).slotProps) {
+      (textFieldProps as TextFieldProps).slotProps = {};
+    }
+    (textFieldProps as Required<TextFieldProps>).slotProps.input = resolvedTextFieldInputProps;
+    return <TextField {...textFieldProps} />;
+  }
 
   // Remove the `input` slotProps to avoid them overriding the manually resolved `InputProps`.
   // Relevant on `materialMajor >= 6` since `slotProps` would take precedence.
@@ -353,9 +364,7 @@ export function PickerFieldUI<
     delete (textFieldProps as TextFieldProps)?.slotProps;
   }
 
-  return (
-    <TextField {...textFieldProps} {...({ InputProps: resolvedTextFieldInputProps } as any)} />
-  );
+  return <TextField {...textFieldProps} InputProps={resolvedTextFieldInputProps} />;
 }
 
 export interface ExportedPickerFieldUIProps {
