@@ -260,7 +260,7 @@ jobs:
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
-          name: prepare danger on PRs
+          name: Prepare danger on PRs
           command: pnpm danger ci
           environment:
             DANGER_COMMAND: prepareBundleSizeReport

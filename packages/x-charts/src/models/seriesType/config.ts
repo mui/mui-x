@@ -107,6 +107,7 @@ export interface ChartsSeriesConfig {
     highlightScope: CommonHighlightScope;
     descriptionGetterParams: {
       identifier: ScatterItemIdentifier;
+      xAxis: ComputedXAxis;
       yAxis: ComputedYAxis;
       series: DefaultizedScatterSeriesType;
     };

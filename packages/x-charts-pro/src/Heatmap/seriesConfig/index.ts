@@ -10,6 +10,7 @@ import keyboardFocusHandler from './keyboardFocusHandler';
 import { createIsFaded, createIsHighlighted } from './highlight';
 import identifierSerializer from './identifierSerializer';
 import identifierCleaner from './identifierCleaner';
+import descriptionGetter from './descriptionGetter';
 
 cartesianSeriesTypes.addType('heatmap');
 
@@ -26,6 +27,7 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   identifierCleaner,
   getItemAtPosition,
   keyboardFocusHandler,
+  descriptionGetter,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
 };
