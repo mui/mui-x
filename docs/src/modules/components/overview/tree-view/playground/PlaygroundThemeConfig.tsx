@@ -172,14 +172,14 @@ export default function ThemesConfig({
           labelPlacement="start"
           label="Add children outline"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
         <FormControlLabel
           control={<Switch checked={showFolderIcon} onChange={handleToggleFolderIcon} />}
           labelPlacement="start"
           label="Mark folders with icon"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
       </Stack>
       <Stack spacing={1.5}>
@@ -197,14 +197,14 @@ export default function ThemesConfig({
           labelPlacement="start"
           label="Show disable button"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
         <FormControlLabel
           control={<Switch checked={showSecondaryLabel} onChange={handleToggleSecondaryLabel} />}
           labelPlacement="start"
           label="Add secondary label"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
       </Stack>
       <Stack spacing={1.5}>
@@ -224,14 +224,14 @@ export default function ThemesConfig({
           labelPlacement="start"
           label="Checkbox selection"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
         <FormControlLabel
           control={<Switch checked={isMultiSelectEnabled} onChange={handleToggleMultiSelect} />}
           labelPlacement="start"
           label="Multiple selection"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
         <FormControlLabel
           control={
@@ -249,7 +249,7 @@ export default function ThemesConfig({
           labelPlacement="start"
           label="Auto select parents"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
         <FormControlLabel
           control={
@@ -267,7 +267,7 @@ export default function ThemesConfig({
           labelPlacement="start"
           label="Auto select descendants"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
       </Stack>
     </Stack>
