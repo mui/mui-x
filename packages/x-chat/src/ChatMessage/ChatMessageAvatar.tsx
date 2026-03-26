@@ -25,7 +25,6 @@ const ChatMessageAvatarStyled = styled('div', {
   overflow: 'hidden',
   flexShrink: 0,
   alignSelf: 'flex-start',
-  marginTop: theme.spacing(0.5),
   backgroundColor: (theme.vars || theme).palette.grey[300],
   display: 'flex',
   alignItems: 'center',
