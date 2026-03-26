@@ -8,7 +8,7 @@ import {
   type SchedulerLocalization,
 } from '../utils/getSchedulerLocalization';
 
-const frFRDialog: Partial<EventDialogLocaleText> = {
+const bgBGDialog: Partial<EventDialogLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // dateTimeSectionLabel: 'Date & time',
@@ -69,30 +69,27 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   // loading: 'Loading...',
 };
 
-const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const bgBGCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
   // ResourcesLegend
   // hideEventsLabel: resourceName => `Hide events for ${resourceName}`,
   // resourcesLabel: 'Resources',
   // resourcesLegendSectionLabel: 'Resource legend',
   // showEventsLabel: resourceName => `Show events for ${resourceName}`,
-
   // ViewSwitcher
-  agenda: 'Agenda',
-  day: 'Jour',
-  month: 'Mois',
-  other: 'Autre',
-  today: "Aujourd'hui",
-  week: 'Semaine',
+  // agenda: 'Agenda',
+  // day: 'Day',
+  // month: 'Month',
+  // other: 'Other',
+  // today: 'Today',
+  // week: 'Week',
   // time: 'Time',
   // days: 'Days',
   // months: 'Months',
   // weeks: 'Weeks',
   // years: 'Years',
-
   // DateNavigator
   // closeSidePanel: 'Close side panel',
   // openSidePanel: 'Open side panel',
-
   // Preferences menu
   // amPm12h: '12-hour (1:00PM)',
   // hour24h: '24-hour (13:00)',
@@ -102,10 +99,8 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // showWeekNumber: 'Show week number',
   // timeFormat: 'Time format',
   // viewSpecificOptions: view => `${view} view options`,
-
   // WeekView
-  allDay: 'Toute la journée',
-
+  // allDay: 'All day',
   // MonthView
   // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
   // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
@@ -113,26 +108,23 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
   // weekAbbreviation: 'W',
   // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
-
   // EventItem
   // eventItemMultiDayLabel: endDate => `Ends ${endDate}`,
-
   // MiniCalendar
   // miniCalendarLabel: 'Calendar',
   // miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
   // miniCalendarGoToNextMonth: 'Show next month in calendar',
-
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const frFRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const bgBGTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
   // Timeline title sub grid
-  timelineResourceTitleHeader: 'Titre de la ressource',
+  // timelineResourceTitleHeader: 'Resource title',
 };
 
-export const frFR: SchedulerLocalization = getSchedulerLocalization({
-  dialog: frFRDialog,
-  calendar: frFRCalendar,
-  timeline: frFRTimeline,
+export const bgBG: SchedulerLocalization = getSchedulerLocalization({
+  dialog: bgBGDialog,
+  calendar: bgBGCalendar,
+  timeline: bgBGTimeline,
 });
