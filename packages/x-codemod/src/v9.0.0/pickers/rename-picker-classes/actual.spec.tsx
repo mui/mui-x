@@ -24,11 +24,6 @@ const theme = createTheme({
         outsideCurrentMonth: { color: 'red' },
       },
     },
-    MuiPickersDay: {
-      styleOverrides: {
-        outsideCurrentMonth: { color: 'red' },
-      },
-    },
   },
 });
 

@@ -49,7 +49,10 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   // Rename properties in styleOverrides
   const componentsToHandle = ['MuiDateRangePickerDay', 'MuiPickerDay', 'MuiPickersDay'];
   root.find(j.ObjectProperty).forEach((objPropPath) => {
-    const keyName = objPropPath.node.key.type === 'Identifier' ? objPropPath.node.key.name : objPropPath.node.key.value;
+    const keyName =
+      objPropPath.node.key.type === 'Identifier'
+        ? objPropPath.node.key.name
+        : (objPropPath.node.key as any).value;
     if (
       componentsToHandle.includes(keyName) &&
       objPropPath.node.value.type === 'ObjectExpression'
@@ -57,14 +60,15 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       j(objPropPath.node.value)
         .find(j.ObjectProperty)
         .filter((p) => {
-          const k = p.node.key.type === 'Identifier' ? p.node.key.name : p.node.key.value;
+          const k = p.node.key.type === 'Identifier' ? p.node.key.name : (p.node.key as any).value;
           return k === 'styleOverrides';
         })
         .forEach((styleOverridesPath) => {
           if (styleOverridesPath.node.value.type === 'ObjectExpression') {
             styleOverridesPath.node.value.properties.forEach((prop) => {
               if (prop.type === 'ObjectProperty') {
-                const propKey = prop.key.type === 'Identifier' ? prop.key.name : prop.key.value;
+                const propKey =
+                  prop.key.type === 'Identifier' ? prop.key.name : (prop.key as any).value;
                 if (classRenames[propKey]) {
                   if (prop.key.type === 'Identifier') {
                     prop.key.name = classRenames[propKey];

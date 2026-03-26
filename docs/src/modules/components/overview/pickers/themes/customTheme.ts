@@ -409,22 +409,24 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
               right: 0,
             },
 
-            [`&.${dateRangePickerDayClasses.previewed}:not(.${dateRangePickerDayClasses.selectionStart})`]: {
-              '::after': {
-                border: 'none',
+            [`&.${dateRangePickerDayClasses.previewed}:not(.${dateRangePickerDayClasses.selectionStart})`]:
+              {
+                '::after': {
+                  border: 'none',
+                },
+                borderRadius: theme.shape.borderRadius,
+                borderColor: 'transparent',
+                backgroundColor: theme.palette.grey[100],
+                ...theme.applyStyles('dark', {
+                  backgroundColor: theme.palette.grey[700],
+                }),
               },
-              borderRadius: theme.shape.borderRadius,
-              borderColor: 'transparent',
-              backgroundColor: theme.palette.grey[100],
-              ...theme.applyStyles('dark', {
-                backgroundColor: theme.palette.grey[700],
-              }),
-            },
 
-            [`&.${dateRangePickerDayClasses.previewStart}:hover, &.${dateRangePickerDayClasses.previewEnd}:hover`]: {
-              outline: '1px solid #FFF',
-              outlineOffset: '-1px',
-            },
+            [`&.${dateRangePickerDayClasses.previewStart}:hover, &.${dateRangePickerDayClasses.previewEnd}:hover`]:
+              {
+                outline: '1px solid #FFF',
+                outlineOffset: '-1px',
+              },
 
             [`&.${dateRangePickerDayClasses.selectionStart}::before, &.${dateRangePickerDayClasses.selectionEnd}::before`]:
               {

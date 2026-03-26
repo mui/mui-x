@@ -70,17 +70,27 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       .replace(/MuiDateRangePickerDay2\b/g, 'MuiDateRangePickerDay');
 
   root.find(j.StringLiteral).forEach((keyPath) => {
-    if (keyPath.value.value.includes('MuiPickerDay2') || keyPath.value.value.includes('MuiDateRangePickerDay2')) {
+    if (
+      keyPath.value.value.includes('MuiPickerDay2') ||
+      keyPath.value.value.includes('MuiDateRangePickerDay2')
+    ) {
       j(keyPath).replaceWith(j.stringLiteral(replaceClass(keyPath.value.value)));
     }
   });
 
   root.find(j.TemplateLiteral).forEach((keyPath) => {
     keyPath.value.quasis.forEach((quasi) => {
-      if (quasi.value.raw.includes('MuiPickerDay2') || quasi.value.raw.includes('MuiDateRangePickerDay2')) {
+      if (
+        quasi.value.raw.includes('MuiPickerDay2') ||
+        quasi.value.raw.includes('MuiDateRangePickerDay2')
+      ) {
         quasi.value.raw = replaceClass(quasi.value.raw);
       }
-      if (quasi.value.cooked && (quasi.value.cooked.includes('MuiPickerDay2') || quasi.value.cooked.includes('MuiDateRangePickerDay2'))) {
+      if (
+        quasi.value.cooked &&
+        (quasi.value.cooked.includes('MuiPickerDay2') ||
+          quasi.value.cooked.includes('MuiDateRangePickerDay2'))
+      ) {
         quasi.value.cooked = replaceClass(quasi.value.cooked);
       }
     });

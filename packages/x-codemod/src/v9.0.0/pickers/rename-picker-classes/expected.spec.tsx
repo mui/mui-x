@@ -14,16 +14,13 @@ const theme = createTheme({
         previewEnd: { opacity: 0.5 },
         insideSelection: { backgroundColor: 'gray' },
         insidePreviewing: { border: '1px dashed blue' },
+        // @ts-expect-error both `rangeIntervalDayHighlightStart` and `rangeIntervalDayHighlight` renamed to `selectionStart`
         selectionStart: { color: 'white' },
+        // @ts-expect-error both `rangeIntervalDayPreviewStart` and `rangeIntervalDayPreview` renamed to `previewStart`
         previewStart: { color: 'blue' },
       },
     },
     MuiPickerDay: {
-      styleOverrides: {
-        dayOutsideMonth: { color: 'red' },
-      },
-    },
-    MuiPickersDay: {
       styleOverrides: {
         dayOutsideMonth: { color: 'red' },
       },
