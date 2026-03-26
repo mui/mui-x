@@ -59,9 +59,11 @@ export default function ZoomHeatmap() {
   const theme = useTheme();
 
   return (
-    <Stack sx={{
-      width: "100%"
-    }}>
+    <Stack
+      sx={{
+        width: '100%',
+      }}
+    >
       <Typography variant="h6" align="center">
         Daily Commit Count to MUI X Repo (2024)
       </Typography>

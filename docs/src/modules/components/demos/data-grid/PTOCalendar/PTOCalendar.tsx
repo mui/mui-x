@@ -56,10 +56,12 @@ function EmployeeHeader() {
   return (
     <Typography
       sx={{
-        fontWeight: "medium",
-        fontSize: "0.875rem"
-      }}>Employees ({filteredRowCount})
-          </Typography>
+        fontWeight: 'medium',
+        fontSize: '0.875rem',
+      }}
+    >
+      Employees ({filteredRowCount})
+    </Typography>
   );
 }
 

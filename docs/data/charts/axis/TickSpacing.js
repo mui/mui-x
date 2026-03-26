@@ -18,17 +18,19 @@ export default function TickSpacing() {
       direction="column"
       sx={{
         gap: 4,
-        width: "100%"
-      }}>
+        width: '100%',
+      }}
+    >
       <Stack
         direction="column"
         spacing={1}
         sx={{
           flex: 1,
-          width: "100%",
+          width: '100%',
           maxWidth: 400,
-          alignSelf: "center"
-        }}>
+          alignSelf: 'center',
+        }}
+      >
         <Typography gutterBottom id="tickSpacing">
           Tick Spacing
         </Typography>

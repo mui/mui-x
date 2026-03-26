@@ -46,9 +46,12 @@ export default function ControlledHighlight() {
       sx={{ width: '100%' }}
     >
       <Box sx={{ flexGrow: 1 }}>
-        <Stack spacing={2} sx={{
-          alignItems: 'center'
-        }}>
+        <Stack
+          spacing={2}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <ToggleButtonGroup
             value={highlightedItem?.seriesId ?? null}
             exclusive
@@ -97,9 +100,10 @@ export default function ControlledHighlight() {
         spacing={3}
         useFlexGap
         sx={{
-          justifyContent: "center",
-          flexWrap: "wrap"
-        }}>
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
         <TextField
           select
           label="highlighted"

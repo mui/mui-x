@@ -45,8 +45,9 @@ export default function PickersRenderingInstructions() {
     <Stack
       sx={{
         px: { xs: 3, sm: 0 },
-        width: '100%'
-      }}>
+        width: '100%',
+      }}
+    >
       <Stack direction="row" spacing={2}>
         <ToggleOptions
           value={licenceType}

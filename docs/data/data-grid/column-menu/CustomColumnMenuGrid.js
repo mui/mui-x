@@ -28,8 +28,9 @@ function CustomColumnMenu(props) {
       <Stack
         sx={{
           px: 0.5,
-          py: 0.5
-        }}>
+          py: 0.5,
+        }}
+      >
         <GridColumnMenuSortItem {...itemProps} />
         {/* Only provide filtering on desk */}
         {itemProps.colDef.field === 'desk' ? (
@@ -40,8 +41,9 @@ function CustomColumnMenu(props) {
       <Stack
         sx={{
           px: 0.5,
-          py: 0.5
-        }}>
+          py: 0.5,
+        }}
+      >
         <GridColumnMenuColumnsItem {...itemProps} />
         <MenuCloseComponent {...itemProps} />
       </Stack>

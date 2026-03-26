@@ -28,14 +28,15 @@ export default function ColorScale() {
         direction="row"
         sx={{
           gap: 1,
-          flexWrap: "wrap",
+          flexWrap: 'wrap',
           width: '100%',
 
           '&>div': {
             display: 'flex',
             flexDirection: 'column',
-          }
-        }}>
+          },
+        }}
+      >
         <div>
           <Typography variant="caption">x-axis colorMap</Typography>
           <ToggleButtonGroup

@@ -418,8 +418,11 @@ function BaseTextField(props: P['baseTextField']) {
   const computedVariant = (other as any).variant ?? textFieldDefaults.variant ?? 'outlined';
   const computedSize = (other as any).size ?? textFieldDefaults.size;
   // Extract deprecated props from material to redirect them to slotProps
-  const { inputProps: materialInputProps, InputProps: materialInputComponentProps, ...materialRest } =
-    (material ?? {}) as any;
+  const {
+    inputProps: materialInputProps,
+    InputProps: materialInputComponentProps,
+    ...materialRest
+  } = (material ?? {}) as any;
   return (
     <MUITextField
       variant={computedVariant as any}

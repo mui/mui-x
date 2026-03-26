@@ -54,9 +54,11 @@ const settings = {
 
 export default function ExportChartToolbar() {
   return (
-    <Stack sx={{
-      width: "100%"
-    }}>
+    <Stack
+      sx={{
+        width: '100%',
+      }}
+    >
       <Typography sx={{ alignSelf: 'center', my: 1 }}>
         Inflation rate in France, Germany and the UK, 1960-2024
       </Typography>

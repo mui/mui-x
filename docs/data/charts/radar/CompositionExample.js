@@ -16,10 +16,11 @@ export default function CompositionExample() {
       <Stack
         direction="column"
         sx={{
-          alignItems: "center",
+          alignItems: 'center',
           gap: 1,
-          width: '100%'
-        }}>
+          width: '100%',
+        }}
+      >
         <ChartsLegend />
         <ChartsSurface>
           <RadarGrid divisions={5} />

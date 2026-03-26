@@ -93,9 +93,11 @@ function CustomTooltip() {
 
 export default function ScatterOverview() {
   return (
-    <Stack sx={{
-      width: "100%"
-    }}>
+    <Stack
+      sx={{
+        width: '100%',
+      }}
+    >
       <Typography align="center">Processor density (in transistor/mm²)</Typography>
       <ScatterChart
         height={300}

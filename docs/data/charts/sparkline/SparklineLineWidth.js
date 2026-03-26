@@ -25,8 +25,9 @@ export default function SparklineLineWidth() {
       direction="column"
       sx={{
         gap: 1,
-        width: '100%'
-      }}>
+        width: '100%',
+      }}
+    >
       <Stack direction="row">
         <FormControlLabel
           checked={disableClipping}

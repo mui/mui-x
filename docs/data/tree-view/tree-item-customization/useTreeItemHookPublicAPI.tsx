@@ -25,9 +25,10 @@ function CustomLabel({
       spacing={4}
       className={className}
       sx={{
-        justifyContent: "space-between",
-        flexGrow: 1
-      }}>
+        justifyContent: 'space-between',
+        flexGrow: 1,
+      }}
+    >
       <Typography>{children}</Typography>
       {!!selectFirstChildren && (
         <Button

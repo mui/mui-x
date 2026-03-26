@@ -110,9 +110,11 @@ export default function ReferenceOverview() {
   const clipPathId = React.useId();
   return (
     <Box sx={{ width: '100%' }}>
-      <Typography sx={{
-        textAlign: "center"
-      }}>
+      <Typography
+        sx={{
+          textAlign: 'center',
+        }}
+      >
         US unemployment rate comparison with GDP per capita
       </Typography>
       <ChartsDataProviderPro
@@ -212,10 +214,11 @@ export default function ReferenceOverview() {
         variant="caption"
         component="p"
         sx={{
-          color: "text.secondary",
-          textAlign: "left",
-          pt: 1
-        }}>
+          color: 'text.secondary',
+          textAlign: 'left',
+          pt: 1,
+        }}
+      >
         Source: FRED
       </Typography>
     </Box>

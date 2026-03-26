@@ -18,10 +18,11 @@ function ExportParamsSelector({ apiRef }) {
   return (
     <Stack
       sx={{
-        justifyContent: "space-between",
+        justifyContent: 'space-between',
         gap: 2,
-        width: '100%'
-      }}>
+        width: '100%',
+      }}
+    >
       <FormControl fullWidth>
         <FormLabel id="image-format-radio-buttons-group-label">
           Image Format
@@ -77,9 +78,10 @@ export default function ExportChartAsImage() {
   return (
     <Stack
       sx={{
-        width: "100%",
-        gap: 2
-      }}>
+        width: '100%',
+        gap: 2,
+      }}
+    >
       <LineChartPro
         apiRef={apiRef}
         xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}

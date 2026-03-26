@@ -72,9 +72,10 @@ export default function DownloadDemo() {
       <Stack
         direction="row"
         sx={{
-          justifyContent: "space-between",
-          width: "100%"
-        }}>
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
         <Select
           size="small"
           sx={{ width: 200 }}

@@ -35,9 +35,10 @@ function DarkModeWrapper(props) {
     <ThemeProvider theme={newTheme}>
       <Stack
         sx={{
-          width: "100%",
-          alignItems: "center"
-        }}>
+          width: '100%',
+          alignItems: 'center',
+        }}
+      >
         <Button
           onClick={() =>
             setColorMode((prev) => (prev === 'light' ? 'dark' : 'light'))

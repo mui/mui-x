@@ -50,12 +50,16 @@ export function DrawerHeader(props: DrawerHeaderProps) {
       <Stack
         direction="row"
         {...other}
-        sx={[{
-          px: 2,
-          py: 2,
-          gap: 3,
-          alignItems: 'center'
-        }, ...(Array.isArray(other.sx) ? other.sx : [other.sx])]}>
+        sx={[
+          {
+            px: 2,
+            py: 2,
+            gap: 3,
+            alignItems: 'center',
+          },
+          ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
+        ]}
+      >
         {children}
       </Stack>
     </Paper>

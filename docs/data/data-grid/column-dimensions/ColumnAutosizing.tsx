@@ -81,10 +81,11 @@ export default function ColumnAutosizing() {
         direction="row"
         useFlexGap
         sx={{
-          alignItems: "center",
-          flexWrap: "wrap",
-          mb: 1
-        }}>
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          mb: 1,
+        }}
+      >
         <Button
           variant="outlined"
           onClick={() => apiRef.current?.autosizeColumns(autosizeOptions)}

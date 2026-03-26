@@ -27,12 +27,13 @@ export const argsEqual = (prev: any, curr: any) => {
   return fn(prev, curr);
 };
 
-const createRefs = () => (({
-  state: null,
-  equals: null,
-  selector: null,
-  args: undefined
-}) as any);
+const createRefs = () =>
+  ({
+    state: null,
+    equals: null,
+    selector: null,
+    args: undefined,
+  }) as any;
 
 const EMPTY = [] as unknown[];
 

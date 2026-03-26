@@ -31,32 +31,42 @@ export default function CommunityOrPro({
           alignItems: { md: 'flex-end', xs: 'space-between' },
           justifyContent: { md: 'space-between', xs: 'flex-end' },
           flexGrow: 1,
-          maxWidth: { xs: '500px', md: '100%' }
-        }}>
+          maxWidth: { xs: '500px', md: '100%' },
+        }}
+      >
         <Stack
           spacing={1}
           sx={{
             flexBasis: { xs: '100%', md: '65%' },
-            marginBottom: { xs: '16px', md: 0 }
-          }}>
-          <Typography variant="body2" color="primary" sx={{
-            fontWeight: "semiBold"
-          }}>
+            marginBottom: { xs: '16px', md: 0 },
+          }}
+        >
+          <Typography
+            variant="body2"
+            color="primary"
+            sx={{
+              fontWeight: 'semiBold',
+            }}
+          >
             {caption}
           </Typography>
           <Typography
             variant="h4"
             component="h2"
             sx={{
-              fontWeight: "semiBold",
-              color: "text.primary",
-              fontSize: "1.625rem"
-            }}>
+              fontWeight: 'semiBold',
+              color: 'text.primary',
+              fontSize: '1.625rem',
+            }}
+          >
             {title}
           </Typography>
-          <Typography variant="body1" sx={{
-            color: "text.secondary"
-          }}>
+          <Typography
+            variant="body1"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             {description}
           </Typography>
         </Stack>

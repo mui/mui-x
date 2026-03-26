@@ -35,9 +35,10 @@ export default function ArrowSwitcherComponentProps() {
       <Stack
         spacing={2}
         sx={{
-          alignItems: "center",
-          width: '100%'
-        }}>
+          alignItems: 'center',
+          width: '100%',
+        }}
+      >
         <ToggleButtonGroup
           fullWidth
           color="primary"

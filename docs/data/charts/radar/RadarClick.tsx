@@ -54,7 +54,7 @@ export default function RadarClick() {
           spacing={1}
           direction={{ xs: 'row', md: 'column' }}
           sx={{
-            alignItems: { xs: 'center', md: 'start' }
+            alignItems: { xs: 'center', md: 'start' },
           }}
         >
           <Typography>Item click listener</Typography>

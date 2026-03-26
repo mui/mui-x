@@ -27,12 +27,19 @@ export default function ControlledSelectedSectionsMultiInputRangeField() {
   };
 
   const renderDateHeader = (position: RangePosition) => (
-    <Stack spacing={2} sx={{
-      alignItems: "center"
-    }}>
-      <Typography sx={{
-        textTransform: "capitalize"
-      }}>{position}</Typography>
+    <Stack
+      spacing={2}
+      sx={{
+        alignItems: 'center',
+      }}
+    >
+      <Typography
+        sx={{
+          textTransform: 'capitalize',
+        }}
+      >
+        {position}
+      </Typography>
       <Stack direction="row" spacing={1}>
         {(['month', 'day', 'year'] as const).map((sectionName) => (
           <Button
@@ -50,9 +57,12 @@ export default function ControlledSelectedSectionsMultiInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2}>
-        <Stack spacing={2} sx={{
-          justifyContent: "space-between"
-        }}>
+        <Stack
+          spacing={2}
+          sx={{
+            justifyContent: 'space-between',
+          }}
+        >
           {renderDateHeader('start')}
           {renderDateHeader('end')}
         </Stack>

@@ -105,9 +105,10 @@ export default function ServerInteraction() {
         <Stack
           direction="row"
           sx={{
-            justifyContent: "space-between",
-            p: 2
-          }}>
+            justifyContent: 'space-between',
+            p: 2,
+          }}
+        >
           <DisplayEvents logs={logsFromOnChange} title="onChange" />
           <Divider />
           <DisplayEvents logs={logsFromOnAccept} title="onAccept" />

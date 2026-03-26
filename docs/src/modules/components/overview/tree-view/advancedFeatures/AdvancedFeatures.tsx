@@ -37,8 +37,9 @@ export default function AdvancedFeatures() {
         spacing={6}
         sx={{
           py: 8,
-          alignItems: "center"
-        }}>
+          alignItems: 'center',
+        }}
+      >
         <Stack
           spacing={2}
           sx={{
@@ -49,9 +50,12 @@ export default function AdvancedFeatures() {
           <SectionHeadline
             overline="Advanced features"
             title={
-              <Typography variant="h2" sx={{
-                fontSize: "1.625rem"
-              }}>
+              <Typography
+                variant="h2"
+                sx={{
+                  fontSize: '1.625rem',
+                }}
+              >
                 {advancedFeatures[activeItem].title}
               </Typography>
             }
@@ -70,11 +74,12 @@ export default function AdvancedFeatures() {
         </Stack>
         <Stack
           sx={{
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: 'center',
+            alignItems: 'center',
             width: { xs: '100%' },
-            maxWidth: { xs: '500px', md: '100%' }
-          }}>
+            maxWidth: { xs: '500px', md: '100%' },
+          }}
+        >
           {activeItem === 0 && <LabelEditingDemo />}
           {activeItem === 1 && <DragAndDropDemo />}
           {activeItem === 2 && <LazyLoadingDemo />}

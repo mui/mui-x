@@ -31,10 +31,10 @@ It looks like you forgot to pass a \`dateAdapter\` to your LocalizationProvider.
 
   return React.useMemo(
     () =>
-      (({
+      ({
         ...localization,
-        localeText
-      }) as UseLocalizationContextReturnValue),
+        localeText,
+      }) as UseLocalizationContextReturnValue,
     [localization, localeText],
   );
 };

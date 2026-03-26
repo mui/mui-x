@@ -7,12 +7,17 @@ import { temperatureBerlinPorto } from '../dataset/temperatureBerlinPorto';
 
 export default function BasicRangeBar() {
   return (
-    <Stack spacing={2} sx={{
-      width: "100%"
-    }}>
-      <Typography sx={{
-        textAlign: "center"
-      }}>
+    <Stack
+      spacing={2}
+      sx={{
+        width: '100%',
+      }}
+    >
+      <Typography
+        sx={{
+          textAlign: 'center',
+        }}
+      >
         Average monthly temperature ranges in °C for Porto and Berlin in 1991-2020
       </Typography>
       <BarChartPremium

@@ -129,9 +129,10 @@ export default function MuiColorTemplate() {
           <Stack
             direction={{ xs: 'column', md: 'row' }}
             sx={{
-              alignItems: "center",
-              justifyContent: "space-evenly"
-            }}>
+              alignItems: 'center',
+              justifyContent: 'space-evenly',
+            }}
+          >
             <div>
               <Button
                 sx={{ ml: 1 }}
@@ -158,10 +159,11 @@ export default function MuiColorTemplate() {
                   <Stack
                     direction="row"
                     sx={{
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      width: '100%'
-                    }}>
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                    }}
+                  >
                     <Typography sx={{ mr: 2 }}>{name}</Typography>
                     <div style={{ width: 200, height: 20 }}>
                       {colors(colorMode).map((c) => (
@@ -186,10 +188,11 @@ export default function MuiColorTemplate() {
                   <Stack
                     direction="row"
                     sx={{
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      width: '100%'
-                    }}>
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                    }}
+                  >
                     <Typography sx={{ mr: 2 }}>{name}</Typography>
                     <div style={{ width: 200, height: 20 }}>
                       {colors(colorMode).map((c) => (

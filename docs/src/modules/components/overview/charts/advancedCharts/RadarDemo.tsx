@@ -12,9 +12,11 @@ const series = [
 
 function Radar() {
   return (
-    <Stack sx={{
-      height: "100%"
-    }}>
+    <Stack
+      sx={{
+        height: '100%',
+      }}
+    >
       <Typography align="center">Pokémon base stats</Typography>
       <RadarChart
         series={series}

@@ -46,8 +46,9 @@ function MyCustomLegend() {
       direction="column"
       sx={{
         justifySelf: 'start',
-        marginLeft: 9
-      }}>
+        marginLeft: 9,
+      }}
+    >
       {items.map((item) => {
         const { label, color, seriesId, markType } = item;
         return (

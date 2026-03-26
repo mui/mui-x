@@ -267,9 +267,12 @@ function CustomFilterPanel(props) {
                   <ListItemText
                     primary={preset.name}
                     secondary={
-                      <Typography variant="caption" sx={{
-                        color: "text.secondary"
-                      }}>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: 'text.secondary',
+                        }}
+                      >
                         {preset.filterModel.items.length} filter
                         {preset.filterModel.items.length > 1 ? 's' : ''}
                       </Typography>

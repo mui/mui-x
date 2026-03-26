@@ -124,7 +124,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar(
         id={titleId}
         className={classes.title}
         sx={{
-          color: "text.secondary"
+          color: 'text.secondary',
         }}
       >
         {toolbarTitle}

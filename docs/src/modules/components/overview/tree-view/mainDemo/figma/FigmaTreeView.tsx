@@ -125,18 +125,22 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           <Stack
             direction="row"
             spacing={1}
-            sx={[{
-              alignItems: "center",
-              flexGrow: 1,
-              justifyContent: "flex-start"
-            }, item.itemType === 'component'
-              ? (theme) => ({
-                  color: 'primary.dark',
-                  ...theme.applyStyles('dark', {
-                    color: 'primary.light',
-                  }),
-                })
-              : {}]}>
+            sx={[
+              {
+                alignItems: 'center',
+                flexGrow: 1,
+                justifyContent: 'flex-start',
+              },
+              item.itemType === 'component'
+                ? (theme) => ({
+                    color: 'primary.dark',
+                    ...theme.applyStyles('dark', {
+                      color: 'primary.light',
+                    }),
+                  })
+                : {},
+            ]}
+          >
             <TreeItemIconContainer
               {...getIconContainerProps({ sx: { '& svg': { fontSize: 13 } } })}
             >
@@ -152,9 +156,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
               })}
             />
           </Stack>
-          <Stack direction="row" spacing={1} sx={{
-            alignItems: "center"
-          }}>
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              alignItems: 'center',
+            }}
+          >
             <Tooltip title={status.disabled ? 'Unlock' : 'Lock'} arrow>
               <IconButton
                 size="small"

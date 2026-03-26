@@ -448,9 +448,10 @@ const columns = [
           <Typography
             variant="body2"
             sx={{
-              fontWeight: "medium",
-              fontFamily: "IBM Plex Sans"
-            }}>
+              fontWeight: 'medium',
+              fontFamily: 'IBM Plex Sans',
+            }}
+          >
             <Link
               href={`/x/react-data-grid${params.row.detailPage}`}
               target="_blank"

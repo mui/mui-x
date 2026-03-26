@@ -50,8 +50,9 @@ export default function BandHighlight() {
         spacing={2}
         sx={{
           justifyContent: { xs: 'space-around', md: 'flex-start' },
-          m: 2
-        }}>
+          m: 2,
+        }}
+      >
         <FormControl>
           <FormLabel id="x-highlight-label">x highlight</FormLabel>
           <RadioGroup

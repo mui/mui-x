@@ -45,10 +45,11 @@ export default function PieChartDemo() {
       <Typography
         variant="body2"
         sx={{
-          color: "text.secondary",
+          color: 'text.secondary',
           fontWeight: 500,
-          px: 1
-        }}>
+          px: 1,
+        }}
+      >
         @mui/material downloads on{' '}
         {dateEntry.date.toLocaleString('en-US', {
           month: 'short',

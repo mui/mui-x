@@ -101,9 +101,11 @@ const chartSetting = {
 
 function Bar() {
   return (
-    <Stack sx={{
-      height: "100%"
-    }}>
+    <Stack
+      sx={{
+        height: '100%',
+      }}
+    >
       <Typography align="center">Avg. annual rainfall in Seoul (in mm)</Typography>
       <BarChart
         dataset={dataset}

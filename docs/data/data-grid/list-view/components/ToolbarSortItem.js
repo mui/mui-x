@@ -45,9 +45,13 @@ export function ToolbarSortItem(props) {
         onClose={() => setOpen(false)}
       >
         <DrawerHeader>
-          <Typography sx={{
-            fontWeight: 500
-          }}>Sort by</Typography>
+          <Typography
+            sx={{
+              fontWeight: 500,
+            }}
+          >
+            Sort by
+          </Typography>
         </DrawerHeader>
 
         <List>

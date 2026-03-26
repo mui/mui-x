@@ -95,8 +95,9 @@ function ElectricityTooltipContent() {
         variant="subtitle2"
         sx={{
           justifyContent: 'space-between',
-          display: "flex"
-        }}>
+          display: 'flex',
+        }}
+      >
         {item.label} {flags[item.identifier.seriesId as keyof typeof flags]}
       </Typography>
       <Typography variant="body2">

@@ -104,9 +104,11 @@ const yData = dataset.flatMap(({ month }) => month);
 
 export default function ColorConfig() {
   return (
-    <Stack sx={{
-      width: "100%"
-    }}>
+    <Stack
+      sx={{
+        width: '100%',
+      }}
+    >
       <Heatmap
         height={400}
         xAxis={[{ data: xData }]}

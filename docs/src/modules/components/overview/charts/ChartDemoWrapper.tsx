@@ -24,8 +24,9 @@ export default function ChartDemoWrapper(
           justifyContent: code ? 'space-between' : 'space-around',
           width: '100%',
           padding: 2,
-          minHeight: { md: 500 }
-        }}>
+          minHeight: { md: 500 },
+        }}
+      >
         <Box
           sx={{
             height: code ? 300 : 400,

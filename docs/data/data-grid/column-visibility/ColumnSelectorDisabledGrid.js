@@ -38,9 +38,10 @@ export default function ColumnSelectorDisabledGrid() {
   return (
     <Stack
       sx={{
-        height: "450px",
-        width: "100%"
-      }}>
+        height: '450px',
+        width: '100%',
+      }}
+    >
       <FormControl sx={{ width: '200px', pb: 1 }}>
         <InputLabel id="demo-simple-select-label">User Type</InputLabel>
         <Select

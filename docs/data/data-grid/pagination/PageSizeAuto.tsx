@@ -17,9 +17,13 @@ export default function PageSizeAuto() {
   const [height, setHeight] = React.useState(400);
 
   return (
-    <Stack style={{ width: '100%' }} spacing={2} sx={{
-      alignItems: "flex-start"
-    }}>
+    <Stack
+      style={{ width: '100%' }}
+      spacing={2}
+      sx={{
+        alignItems: 'flex-start',
+      }}
+    >
       <FormControl fullWidth>
         <InputLabel htmlFor="height-of-container" id="height-of-container-label">
           Height of the container

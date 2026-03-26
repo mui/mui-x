@@ -22,8 +22,9 @@ export default function MinBarSize(): React.JSX.Element {
       spacing={2}
       sx={{
         justifyContent: 'center',
-        alignItems: 'center'
-      }}>
+        alignItems: 'center',
+      }}
+    >
       <Typography id="min-bar-size-slider" gutterBottom>
         minBarSize: {minBarSize}px
       </Typography>

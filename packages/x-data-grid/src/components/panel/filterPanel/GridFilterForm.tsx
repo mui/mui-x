@@ -360,14 +360,14 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
             filterValue = filterValue.filter((val) => {
               return (
                 // Only keep values that are in the new value options
-                (getValueFromValueOptions(
+                getValueFromValueOptions(
                   val,
                   valueOptions,
                   colDef?.getOptionValue as Exclude<
                     GridSingleSelectColDef['getOptionValue'],
                     undefined
                   >,
-                ) !== undefined)
+                ) !== undefined
               );
             });
           } else if (

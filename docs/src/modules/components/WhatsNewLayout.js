@@ -520,9 +520,10 @@ function BlogCard({ entry }) {
             variant="body2"
             gutterBottom
             sx={{
-              color: "text.tertiary",
-              display: { xs: 'auto', sm: 'none' }
-            }}>
+              color: 'text.tertiary',
+              display: { xs: 'auto', sm: 'none' },
+            }}
+          >
             {entry.date.toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'short',
@@ -532,15 +533,20 @@ function BlogCard({ entry }) {
           <Typography
             component="div"
             sx={{
-              color: "text.primary",
-              fontWeight: "bold",
-              mb: 0.2
-            }}>
+              color: 'text.primary',
+              fontWeight: 'bold',
+              mb: 0.2,
+            }}
+          >
             {entry.title}
           </Typography>
-          <Typography component="div" variant="body2" sx={{
-            color: "text.secondary"
-          }}>
+          <Typography
+            component="div"
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             {entry.description}
           </Typography>
         </div>
@@ -627,7 +633,7 @@ export default function WhatsNewLayout() {
             <TimelineOppositeContent
               variant="body2"
               sx={{
-                color: "text.tertiary",
+                color: 'text.tertiary',
                 display: { xs: 'none', sm: 'flex' },
                 flex: 'none',
                 px: 0,
@@ -635,8 +641,9 @@ export default function WhatsNewLayout() {
                 pr: 3,
                 width: 120,
                 textAlign: 'left',
-                fontWeight: 'medium'
-              }}>
+                fontWeight: 'medium',
+              }}
+            >
               {entry.date.toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'short',

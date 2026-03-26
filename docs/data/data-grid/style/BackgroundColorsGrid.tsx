@@ -70,9 +70,13 @@ export default function BackgroundColorsGrid() {
   const theme = React.useMemo(() => getTheme(mode), [mode]);
 
   return (
-    <Stack direction="column" style={{ width: '100%', height: 400 }} sx={{
-      gap: 1
-    }}>
+    <Stack
+      direction="column"
+      style={{ width: '100%', height: 400 }}
+      sx={{
+        gap: 1,
+      }}
+    >
       <ToggleButtonGroup
         size="small"
         color="primary"

@@ -85,7 +85,7 @@ function AutocompleteEditCell(props: GridRenderEditCellParams) {
             input: {
               ...params.slotProps.input,
               autoFocus: true,
-            }
+            },
           }}
         />
       )}

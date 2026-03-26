@@ -59,11 +59,12 @@ export default function RowGroupingCustomGroupingColDefCallback() {
       <Stack
         direction="row"
         sx={{
-          alignItems: "flex-start",
+          alignItems: 'flex-start',
           columnGap: 1,
           width: '100%',
-          mb: 1
-        }}>
+          mb: 1,
+        }}
+      >
         <Chip
           label="Group by company"
           onClick={() => setRowGroupingModel(['company'])}

@@ -12,8 +12,9 @@ export default function TreeViewCommunityOrPro() {
         spacing={{ xs: 1, md: 2 }}
         sx={{
           py: 8,
-          alignItems: "center"
-        }}>
+          alignItems: 'center',
+        }}
+      >
         <CommunityOrPro
           caption={'Community and Pro'}
           title={'Two packages for every need'}

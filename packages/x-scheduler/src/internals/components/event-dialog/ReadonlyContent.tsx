@@ -224,7 +224,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
               variant="body2"
               component="em"
               sx={{
-                color: "text.secondary"
+                color: 'text.secondary',
               }}
             >
               {recurrenceLabel}

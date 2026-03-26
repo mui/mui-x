@@ -70,9 +70,13 @@ export function ToolbarDensityItem(props: ToolbarDensityItemProps) {
         onClose={() => setOpen(false)}
       >
         <DrawerHeader>
-          <Typography sx={{
-            fontWeight: 500
-          }}>Density</Typography>
+          <Typography
+            sx={{
+              fontWeight: 500,
+            }}
+          >
+            Density
+          </Typography>
         </DrawerHeader>
 
         <List>

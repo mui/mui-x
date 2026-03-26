@@ -8,10 +8,11 @@ export default function RadarTooltip() {
     <Stack
       direction="row"
       sx={{
-        flexWrap: "wrap",
-        justifyContent: "space-around",
-        width: '100%'
-      }}>
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        width: '100%',
+      }}
+    >
       <Box sx={{ maxWidth: 300 }}>
         <Typography sx={{ textAlign: 'center' }}>Axis</Typography>
         <RadarChart

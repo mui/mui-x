@@ -85,15 +85,18 @@ const formatAsDollar = (value: number) =>
 
 export default function CandlestickOverview() {
   return (
-    <Stack sx={{
-      width: "100%"
-    }}>
+    <Stack
+      sx={{
+        width: '100%',
+      }}
+    >
       <Typography
         variant="h6"
         sx={{
-          textAlign: "center",
-          mb: 1
-        }}>
+          textAlign: 'center',
+          mb: 1,
+        }}
+      >
         Interactive Brokers Stock Price - 2025
       </Typography>
       <Chart />
@@ -361,24 +364,32 @@ function CandlestickTooltip() {
     >
       <Stack
         direction="column"
-        sx={[{
-          gap: 0.5
-        }, (theme) => ({
-          ...theme.typography.caption,
-          pointerEvents: 'none',
-          marginLeft: theme.spacing(1),
-          marginTop: theme.spacing(1),
-        })]}>
+        sx={[
+          {
+            gap: 0.5,
+          },
+          (theme) => ({
+            ...theme.typography.caption,
+            pointerEvents: 'none',
+            marginLeft: theme.spacing(1),
+            marginTop: theme.spacing(1),
+          }),
+        ]}
+      >
         <Stack
           direction="row"
-          sx={[{
-            gap: 1
-          }, (theme) => ({
-            width: 'min-content',
-            paddingX: theme.spacing(1),
-            paddingY: theme.spacing(0.5),
-            background: theme.palette.background.paper,
-          })]}>
+          sx={[
+            {
+              gap: 1,
+            },
+            (theme) => ({
+              width: 'min-content',
+              paddingX: theme.spacing(1),
+              paddingY: theme.spacing(0.5),
+              background: theme.palette.background.paper,
+            }),
+          ]}
+        >
           <span>O:{formatTooltipDollarValue(ohlcItem.value![0])}</span>
           <span>H:{formatTooltipDollarValue(ohlcItem.value![1])}</span>
           <span>L:{formatTooltipDollarValue(ohlcItem.value![2])}</span>

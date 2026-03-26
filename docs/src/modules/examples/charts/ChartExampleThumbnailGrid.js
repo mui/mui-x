@@ -32,8 +32,9 @@ export function ChartThumbnailCard({ title, ChartComponent, link, aspectRatio = 
           variant="body1"
           sx={{
             fontFamily: 'IBM Plex Sans',
-            color: "text.primary"
-          }}>
+            color: 'text.primary',
+          }}
+        >
           {title}
         </Typography>
         {link && (

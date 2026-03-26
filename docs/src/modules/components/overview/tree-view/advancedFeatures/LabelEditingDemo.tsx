@@ -50,11 +50,12 @@ export default function LabelEditingDemo() {
       <Stack
         spacing={1}
         sx={{
-          justifyContent: "space-between",
+          justifyContent: 'space-between',
           width: '100%',
           padding: 2,
-          minHeight: '600px'
-        }}>
+          minHeight: '600px',
+        }}
+      >
         <Box
           sx={{
             minHeight: 352,

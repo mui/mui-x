@@ -231,10 +231,11 @@ export default function ChartDemoPropsForm<
           id="usage-props"
           component="h3"
           sx={{
-            fontWeight: "bold",
+            fontWeight: 'bold',
             scrollMarginTop: 160,
-            fontFamily: 'General Sans'
-          }}>
+            fontFamily: 'General Sans',
+          }}
+        >
           Playground
         </Typography>
         <IconButton
@@ -445,9 +446,10 @@ export default function ChartDemoPropsForm<
                 <Typography
                   variant="body2"
                   sx={{
-                    fontWeight: "bold",
-                    pt: i !== 0 ? 2 : 0
-                  }}>
+                    fontWeight: 'bold',
+                    pt: i !== 0 ? 2 : 0,
+                  }}
+                >
                   {title}
                 </Typography>
                 <Divider sx={{ opacity: 0.5 }} />

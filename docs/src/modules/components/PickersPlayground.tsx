@@ -641,22 +641,26 @@ export default function PickersPlayground() {
             </DemoContainer>
           )}
         </ComponentSection>
-        <Divider orientation="vertical" sx={{ opacity: 0.6, display: { xs: 'none', md: 'flex' } }} />
+        <Divider
+          orientation="vertical"
+          sx={{ opacity: 0.6, display: { xs: 'none', md: 'flex' } }}
+        />
         <Divider sx={{ opacity: 0.6, display: { xs: 'auto', md: 'none' } }} />
         <PropControlsSection>
           <Typography
             id="usage-props"
             component="h3"
             sx={{
-              fontWeight: "600",
+              fontWeight: '600',
               scrollMarginTop: 160,
               fontFamily: 'General Sans',
               p: 3,
               pl: { xs: 2, md: 3 },
               display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
+              alignItems: 'center',
+            }}
+          >
             Playground
           </Typography>
           <Divider sx={{ opacity: 0.6 }} />

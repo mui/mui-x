@@ -81,9 +81,13 @@ function SchedulerContent({ dataset }) {
 
   return (
     <Stack spacing={1}>
-      <Stack direction="row" spacing={1} sx={{
-        alignItems: "center"
-      }}>
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          alignItems: 'center',
+        }}
+      >
         <IconButton onClick={(event) => apiRef.current?.goToPreviousVisibleDate(event)}>
           <ChevronLeftIcon />
         </IconButton>

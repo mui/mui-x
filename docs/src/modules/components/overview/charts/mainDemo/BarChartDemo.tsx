@@ -26,10 +26,11 @@ export default function BarChartDemo() {
       <Typography
         variant="body2"
         sx={{
-          color: "text.secondary",
+          color: 'text.secondary',
           fontWeight: 500,
-          px: 1
-        }}>
+          px: 1,
+        }}
+      >
         Issues opened daily
       </Typography>
       <BarChart

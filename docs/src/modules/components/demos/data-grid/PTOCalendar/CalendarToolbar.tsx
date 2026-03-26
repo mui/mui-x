@@ -30,20 +30,22 @@ function CalendarToolbar() {
       <Stack
         direction="row"
         sx={{
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
           gap: 2,
           borderBottom: '1px solid',
           borderBottomColor: 'divider',
           px: 2,
-          py: 1.5
-        }}>
+          py: 1.5,
+        }}
+      >
         <Typography
           sx={{
-            fontSize: "1.2rem",
-            fontWeight: "bold"
-          }}>
+            fontSize: '1.2rem',
+            fontWeight: 'bold',
+          }}
+        >
           Time Off Calendar
         </Typography>
         <CalendarDensity />
@@ -51,15 +53,16 @@ function CalendarToolbar() {
       <Stack
         direction="row"
         sx={{
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
           gap: 1,
           borderBottom: '1px solid',
           borderBottomColor: 'divider',
           px: 2,
-          py: 1.5
-        }}>
+          py: 1.5,
+        }}
+      >
         <CalendarFilters
           activeFilters={activeFilters}
           showPresentToday={showPresentToday}

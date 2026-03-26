@@ -56,9 +56,11 @@ export default function ExportChartToolbarCustomization() {
   };
 
   return (
-    <Stack sx={{
-      width: "100%"
-    }}>
+    <Stack
+      sx={{
+        width: '100%',
+      }}
+    >
       <Typography sx={{ alignSelf: 'center', my: 1 }}>
         Population vs GDP Per Capita (USD), 2019
       </Typography>
@@ -99,9 +101,10 @@ export default function ExportChartToolbarCustomization() {
       <Typography
         variant="caption"
         sx={{
-          textAlign: "end",
-          marginBottom: 2
-        }}>
+          textAlign: 'end',
+          marginBottom: 2,
+        }}
+      >
         Source: World Bank
       </Typography>
       <Stack direction={{ xs: 'column', md: 'row-reverse' }} spacing={2}>

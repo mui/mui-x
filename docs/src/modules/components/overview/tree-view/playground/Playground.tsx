@@ -106,34 +106,38 @@ export default function MainDemo() {
         spacing={4}
         sx={{
           py: 8,
-          alignItems: "center"
-        }}>
+          alignItems: 'center',
+        }}
+      >
         <Stack spacing={1} sx={{ width: '100%', maxWidth: { xs: '500px', md: '100%' } }}>
           <Typography
             variant="body2"
             color="primary"
             sx={{
-              fontWeight: "semiBold",
-              textAlign: "center"
-            }}>
+              fontWeight: 'semiBold',
+              textAlign: 'center',
+            }}
+          >
             Customization
           </Typography>
           <Typography
             variant="h4"
             component="h2"
             sx={{
-              fontWeight: "semiBold",
-              color: "text.primary",
-              textAlign: "center"
-            }}>
+              fontWeight: 'semiBold',
+              color: 'text.primary',
+              textAlign: 'center',
+            }}
+          >
             Superior developer experience for customization
           </Typography>
           <Typography
             variant="body1"
             sx={{
-              color: "text.secondary",
-              textAlign: "center"
-            }}>
+              color: 'text.secondary',
+              textAlign: 'center',
+            }}
+          >
             Intuitive APIs, a modern customization approach, and detailed documentation make it
             effortless to tailor the component to your specific use case.
           </Typography>

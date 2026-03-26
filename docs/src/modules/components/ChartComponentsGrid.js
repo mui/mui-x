@@ -80,9 +80,13 @@ export default function ChartComponentsGrid() {
         <ListItem key={component.title}>
           <ListItemText
             primary={
-              <Stack direction="row" spacing={1} sx={{
-                alignItems: "center"
-              }}>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{
+                  alignItems: 'center',
+                }}
+              >
                 <CircleIcon sx={{ fontSize: 10 }} />
                 <Link
                   href={component.href}
@@ -90,8 +94,9 @@ export default function ChartComponentsGrid() {
                   sx={{
                     pl: 0.5,
                     fontWeight: 500,
-                    fontSize: 16
-                  }}>
+                    fontSize: 16,
+                  }}
+                >
                   {component.title}
                 </Link>
                 {component.pro && <span className="plan-pro" />}

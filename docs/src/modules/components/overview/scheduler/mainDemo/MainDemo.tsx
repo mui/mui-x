@@ -62,11 +62,12 @@ export default function MainDemo() {
       <Stack
         direction="row"
         sx={{
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: 1
-        }}>
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 1,
+        }}
+      >
         <ViewToggleGroup selected={selectedView} onToggleChange={setSelectedView} />
         <Select
           value={selectedTheme}

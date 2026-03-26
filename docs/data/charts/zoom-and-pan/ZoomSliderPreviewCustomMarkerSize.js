@@ -51,16 +51,18 @@ export default function ZoomSliderPreviewCustomMarkerSize() {
     <Stack
       direction="row"
       sx={{
-        width: "100%",
+        width: '100%',
         gap: 2,
-        justifyContent: "center",
-        flexWrap: { xs: 'wrap-reverse', sm: 'nowrap' }
-      }}>
+        justifyContent: 'center',
+        flexWrap: { xs: 'wrap-reverse', sm: 'nowrap' },
+      }}
+    >
       <Stack
         sx={{
-          width: "100%",
-          gap: 2
-        }}>
+          width: '100%',
+          gap: 2,
+        }}
+      >
         <Typography variant="h6" sx={{ alignSelf: 'center' }}>
           Births per woman vs GDP per capita (USD, 2023)
         </Typography>
@@ -78,11 +80,12 @@ export default function ZoomSliderPreviewCustomMarkerSize() {
       </Stack>
       <Stack
         sx={{
-          minWidth: "120px",
-          justifyContent: "center",
-          alignItems: "center",
-          alignSelf: "center"
-        }}>
+          minWidth: '120px',
+          justifyContent: 'center',
+          alignItems: 'center',
+          alignSelf: 'center',
+        }}
+      >
         <Typography id="marker-size-slider" gutterBottom>
           Marker Size: {markerSize}
         </Typography>

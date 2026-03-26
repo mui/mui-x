@@ -100,24 +100,29 @@ function FlashOnChange({ children, changeId, align = 'left', fontWeight, sx }) {
   return (
     <Typography
       variant="body2"
-      sx={[{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
-        height: "100%",
-        paddingRight: "10px",
-        paddingLeft: "10px",
-        width: "100%",
-        fontWeight: fontWeight
-      }, (theme) => ({
-        position: 'relative',
-        width: 'calc(100% + 20px)',
-        left: '-10px',
-        transition: 'background-color 500ms ease',
-        backgroundColor: flash
-          ? alpha(theme.palette.warning.main, 0.22)
-          : 'transparent',
-      }), ...(Array.isArray(sx) ? sx : [sx])]}>
+      sx={[
+        {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
+          height: '100%',
+          paddingRight: '10px',
+          paddingLeft: '10px',
+          width: '100%',
+          fontWeight: fontWeight,
+        },
+        (theme) => ({
+          position: 'relative',
+          width: 'calc(100% + 20px)',
+          left: '-10px',
+          transition: 'background-color 500ms ease',
+          backgroundColor: flash
+            ? alpha(theme.palette.warning.main, 0.22)
+            : 'transparent',
+        }),
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+    >
       {children}
     </Typography>
   );
@@ -219,9 +224,10 @@ function ServerSideLazyLoadingRevalidation() {
         direction="row"
         spacing={1}
         sx={{
-          alignItems: "center",
-          justifyContent: "space-between"
-        }}>
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
         <FormControlLabel
           control={
             <Switch

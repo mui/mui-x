@@ -37,34 +37,38 @@ export default function TreeViewFeaturesHighlight() {
         spacing={4}
         sx={{
           py: 8,
-          alignItems: "center"
-        }}>
+          alignItems: 'center',
+        }}
+      >
         <Stack spacing={1} sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
           <Typography
             variant="body2"
             color="primary"
             sx={{
-              fontWeight: "semiBold",
-              textAlign: "center"
-            }}>
+              fontWeight: 'semiBold',
+              textAlign: 'center',
+            }}
+          >
             Using the MUI X Tree View
           </Typography>
           <Typography
             variant="h4"
             component="h2"
             sx={{
-              fontWeight: "semiBold",
-              color: "text.primary",
-              textAlign: "center"
-            }}>
+              fontWeight: 'semiBold',
+              color: 'text.primary',
+              textAlign: 'center',
+            }}
+          >
             Create stunning tree structures
           </Typography>
           <Typography
             variant="body1"
             sx={{
-              color: "text.secondary",
-              textAlign: "center"
-            }}>
+              color: 'text.secondary',
+              textAlign: 'center',
+            }}
+          >
             A highly performant, customizable React component with best-in-class developer
             experience.
           </Typography>

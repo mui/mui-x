@@ -24,9 +24,12 @@ export default function ColorPaletteSequence() {
         />
       ))}
       <Typography variant="subtitle2">Customization and styling</Typography>
-      <Typography variant="body2" sx={{
-        color: "text.secondary"
-      }}>
+      <Typography
+        variant="body2"
+        sx={{
+          color: 'text.secondary',
+        }}
+      >
         Fine-grained control over appearance to match your brand and style.
       </Typography>
     </Box>

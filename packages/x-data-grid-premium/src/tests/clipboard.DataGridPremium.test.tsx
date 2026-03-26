@@ -34,11 +34,11 @@ describe('<DataGridPremium /> - Clipboard', () => {
         ...basicData,
         columns: basicData.columns.map(
           (column) =>
-            (({
+            ({
               ...column,
               type: 'string',
-              editable: true
-            }) as GridColDef),
+              editable: true,
+            }) as GridColDef,
         ),
       };
     }, [rowLength, colLength]);

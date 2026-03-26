@@ -52,26 +52,29 @@ export default function LegendLabelPositions() {
         direction="column"
         spacing={2}
         sx={{
-          width: "100%",
-          height: "100%",
-          gap: 4
-        }}>
+          width: '100%',
+          height: '100%',
+          gap: 4,
+        }}
+      >
         <Stack
           direction="column"
           sx={{
-            width: "100%",
-            height: "100%",
-            gap: 2
-          }}>
+            width: '100%',
+            height: '100%',
+            gap: 2,
+          }}
+        >
           <Typography variant="h4">Continuous</Typography>
           <Typography variant="h5">Horizontal</Typography>
           <Stack
             direction="row"
             sx={{
-              flexWrap: "wrap",
+              flexWrap: 'wrap',
               gap: 2,
-              '&>div': { flex: 1 }
-            }}>
+              '&>div': { flex: 1 },
+            }}
+          >
             <div>
               <Typography>start</Typography>
               <ContinuousColorLegend
@@ -102,7 +105,7 @@ export default function LegendLabelPositions() {
           <Stack
             direction="row"
             sx={{
-              flexWrap: "wrap",
+              flexWrap: 'wrap',
               height: 150,
               gap: 2,
 
@@ -113,8 +116,9 @@ export default function LegendLabelPositions() {
                 flexDirection: 'column',
               },
 
-              '& .MuiContinuousColorLegend-root': { flex: 1 }
-            }}>
+              '& .MuiContinuousColorLegend-root': { flex: 1 },
+            }}
+          >
             <div>
               <Typography>start</Typography>
               <ContinuousColorLegend
@@ -144,19 +148,21 @@ export default function LegendLabelPositions() {
         <Stack
           direction="column"
           sx={{
-            width: "100%",
-            height: "100%",
-            gap: 2
-          }}>
+            width: '100%',
+            height: '100%',
+            gap: 2,
+          }}
+        >
           <Typography variant="h4">Piecewise</Typography>
           <Typography variant="h5">Horizontal</Typography>
           <Stack
             direction="row"
             sx={{
-              flexWrap: "wrap",
+              flexWrap: 'wrap',
               gap: 2,
-              '&>div': { flex: 1 }
-            }}>
+              '&>div': { flex: 1 },
+            }}
+          >
             <div>
               <Typography>start</Typography>
               <PiecewiseColorLegend
@@ -206,7 +212,7 @@ export default function LegendLabelPositions() {
           <Stack
             direction="row"
             sx={{
-              flexWrap: "wrap",
+              flexWrap: 'wrap',
               gap: 2,
 
               '&>div': {
@@ -214,8 +220,9 @@ export default function LegendLabelPositions() {
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-              }
-            }}>
+              },
+            }}
+          >
             <div>
               <Typography>start</Typography>
               <PiecewiseColorLegend

@@ -30,9 +30,12 @@ function Thumbnail() {
       })}
     >
       <VisibilityOffIcon />
-      <Typography variant="body2" sx={{
-        color: "text.secondary"
-      }}>
+      <Typography
+        variant="body2"
+        sx={{
+          color: 'text.secondary',
+        }}
+      >
         No preview available
       </Typography>
     </Box>
@@ -69,8 +72,9 @@ function DrawerContent(props) {
       <Stack
         sx={{
           p: 2,
-          gap: 2
-        }}>
+          gap: 2,
+        }}
+      >
         <Thumbnail />
         <TextField
           label="Description"
@@ -81,54 +85,77 @@ function DrawerContent(props) {
           multiline
         />
         <Divider />
-        <Stack sx={{
-          gap: 0.5
-        }}>
-          <Typography variant="body2" sx={{
-            color: "text.secondary"
-          }}>
+        <Stack
+          sx={{
+            gap: 0.5,
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             Type
           </Typography>
           <Typography variant="body2">{params.row.type}</Typography>
         </Stack>
 
-        <Stack sx={{
-          gap: 0.5
-        }}>
-          <Typography variant="body2" sx={{
-            color: "text.secondary"
-          }}>
+        <Stack
+          sx={{
+            gap: 0.5,
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             Size
           </Typography>
           <Typography variant="body2">{formatSize(params.row.size)}</Typography>
         </Stack>
 
-        <Stack sx={{
-          gap: 0.5
-        }}>
-          <Typography variant="body2" sx={{
-            color: "text.secondary"
-          }}>
+        <Stack
+          sx={{
+            gap: 0.5,
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             Created
           </Typography>
           <Typography variant="body2">{formatDate(params.row.createdAt)}</Typography>
         </Stack>
 
-        <Stack sx={{
-          gap: 0.5
-        }}>
-          <Typography variant="body2" sx={{
-            color: "text.secondary"
-          }}>
+        <Stack
+          sx={{
+            gap: 0.5,
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             Modified
           </Typography>
           <Typography variant="body2">{formatDate(params.row.updatedAt)}</Typography>
         </Stack>
 
         <Divider />
-        <Typography variant="body2" sx={{
-          color: "text.secondary"
-        }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
           Owner
         </Typography>
 
@@ -136,8 +163,9 @@ function DrawerContent(props) {
           direction="row"
           sx={{
             gap: 1.5,
-            alignItems: "center"
-          }}>
+            alignItems: 'center',
+          }}
+        >
           <Avatar
             {...avatarProps}
             sx={{ width: 24, height: 24, fontSize: 12, ...avatarProps.sx }}

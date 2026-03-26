@@ -14,10 +14,11 @@ function CustomToolbar() {
     <GridToolbarContainer>
       <Typography
         sx={{
-          fontWeight: "medium",
+          fontWeight: 'medium',
           flex: 1,
-          mx: 0.5
-        }}>
+          mx: 0.5,
+        }}
+      >
         Custom Toolbar
       </Typography>
       <GridToolbarColumnsButton />

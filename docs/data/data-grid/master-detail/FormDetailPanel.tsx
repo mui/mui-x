@@ -41,9 +41,10 @@ function DetailPanelContent({ row }: { row: Customer }) {
           component="form"
           onSubmit={handleSubmit(onSubmit)}
           sx={{
-            justifyContent: "space-between",
-            height: 1
-          }}>
+            justifyContent: 'space-between',
+            height: 1,
+          }}
+        >
           <Typography variant="h6">{`Edit Order #${row.id}`}</Typography>
           <Controller
             control={control}

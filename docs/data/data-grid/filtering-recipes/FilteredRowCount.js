@@ -75,8 +75,9 @@ export default function FilteredRowCount() {
         sx={{
           gap: 1,
           mb: 1,
-          flexWrap: "wrap"
-        }}>
+          flexWrap: 'wrap',
+        }}
+      >
         {predefinedFilters.map(({ label, filterModel }, index) => {
           const count = predefinedFiltersRowCount[index];
           return (

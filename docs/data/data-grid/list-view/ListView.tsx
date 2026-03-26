@@ -50,14 +50,20 @@ function ListViewCell(params: GridRenderCellParams) {
     >
       <Avatar sx={{ width: 32, height: 32, backgroundColor: params.row.avatar }} />
       <Stack sx={{ flexGrow: 1 }}>
-        <Typography variant="body2" sx={{
-          fontWeight: 500
-        }}>
+        <Typography
+          variant="body2"
+          sx={{
+            fontWeight: 500,
+          }}
+        >
           {params.row.name}
         </Typography>
-        <Typography variant="body2" sx={{
-          color: "text.secondary"
-        }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
           {params.row.position}
         </Typography>
       </Stack>

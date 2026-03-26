@@ -23,10 +23,14 @@ export default function EveryDataType() {
       spacing={3}
       onPointerEnter={() => setActive(true)}
       onPointerLeave={() => setActive(false)}
-      sx={[{
-        flexGrow: 1,
-        justifyContent: "space-between"
-      }, ...(Array.isArray(sxColors) ? sxColors : [sxColors])]}>
+      sx={[
+        {
+          flexGrow: 1,
+          justifyContent: 'space-between',
+        },
+        ...(Array.isArray(sxColors) ? sxColors : [sxColors]),
+      ]}
+    >
       <Stack>
         <Box
           sx={{
@@ -45,9 +49,12 @@ export default function EveryDataType() {
       </Stack>
       <Stack>
         <Typography variant="subtitle2">A chart for every data type</Typography>
-        <Typography variant="body2" sx={{
-          color: "text.secondary"
-        }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
           Effectively visualize your data from a wide variety of charts—bar, line, pie, scatter, and
           more.
         </Typography>

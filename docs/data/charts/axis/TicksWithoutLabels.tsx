@@ -49,16 +49,22 @@ export default function TicksWithoutLabels() {
     <Stack
       direction={{ md: 'row' }}
       sx={{
-        width: "100%",
-        alignItems: "center",
-        rowGap: 2
-      }}>
-      <Stack sx={{
-        width: "100%"
-      }}>
-        <Typography variant="h6" sx={{
-          textAlign: "center"
-        }}>
+        width: '100%',
+        alignItems: 'center',
+        rowGap: 2,
+      }}
+    >
+      <Stack
+        sx={{
+          width: '100%',
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            textAlign: 'center',
+          }}
+        >
           Worldwide Earthquake Count and Magnitude, 2020-2024
         </Typography>
         <ScatterChart

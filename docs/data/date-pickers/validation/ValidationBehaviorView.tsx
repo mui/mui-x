@@ -17,9 +17,10 @@ export default function ValidationBehaviorView() {
         columns={{ xs: 1, lg: 2 }}
         spacing={4}
         sx={{
-          alignItems: "center",
-          justifyContent: "center"
-        }}>
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Grid>
           <DateCalendar defaultValue={today} disableFuture />
         </Grid>

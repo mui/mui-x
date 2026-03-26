@@ -10,12 +10,16 @@ import votesTurnout from '../dataset/votes.json';
 
 export default function ShinyBarChartHorizontal() {
   return (
-    <Box sx={{
-      width: "100%"
-    }}>
-      <Typography sx={{
-        marginBottom: 2
-      }}>
+    <Box
+      sx={{
+        width: '100%',
+      }}
+    >
+      <Typography
+        sx={{
+          marginBottom: 2,
+        }}
+      >
         European countries with lowest & highest voter turnout
       </Typography>
       <BarChart

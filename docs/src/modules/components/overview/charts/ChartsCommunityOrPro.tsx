@@ -12,10 +12,11 @@ export default function ChartsCommunityOrPro() {
         spacing={{ xs: 1, md: 2 }}
         sx={{
           py: 8,
-          alignItems: "center",
+          alignItems: 'center',
           maxWidth: 1200,
-          mx: "auto"
-        }}>
+          mx: 'auto',
+        }}
+      >
         <CommunityOrPro
           caption={'Community, Pro and Premium'}
           title={'Three packages for every growing need'}

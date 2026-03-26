@@ -53,15 +53,19 @@ export default function DateLibraries() {
         spacing={{ xs: 2, md: 6 }}
         sx={{
           py: 8,
-          alignItems: "center"
-        }}>
+          alignItems: 'center',
+        }}
+      >
         <Stack spacing={2} sx={{ minWidth: '300px', maxWidth: { xs: '500px', md: '400px' } }}>
           <SectionHeadline
             overline="Date libraries"
             title={
-              <Typography variant="h2" sx={{
-                fontSize: "1.625rem"
-              }}>
+              <Typography
+                variant="h2"
+                sx={{
+                  fontSize: '1.625rem',
+                }}
+              >
                 Use your favorite date library
               </Typography>
             }
@@ -71,11 +75,16 @@ export default function DateLibraries() {
         <Stack
           sx={{
             alignItems: { xs: 'flex-start', sm: 'center', md: 'flex-start' },
-            width: { xs: '100%' }
-          }}>
-          <Stack direction="row" spacing={2} sx={{
-            flexGrow: 1
-          }}>
+            width: { xs: '100%' },
+          }}
+        >
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              flexGrow: 1,
+            }}
+          >
             <ToggleButtonGroup
               value={selectedLibrary}
               onChange={handleLibrarySwitch}

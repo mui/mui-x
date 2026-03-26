@@ -140,18 +140,22 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             <Box
               component={LabelIcon}
               sx={{
-                color: "inherit",
-                mr: 1
-              }} />
+                color: 'inherit',
+                mr: 1,
+              }}
+            />
             <Typography
               {...getLabelProps({
                 variant: 'body2',
                 sx: { display: 'flex', fontWeight: 'inherit', flexGrow: 1 },
               })}
             />
-            <Typography variant="caption" sx={{
-              color: "inherit"
-            }}>
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'inherit',
+              }}
+            >
               {labelInfo}
             </Typography>
           </Box>

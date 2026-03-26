@@ -46,9 +46,13 @@ export function ToolbarColumnsItem(props) {
         onClose={() => setOpen(false)}
       >
         <DrawerHeader>
-          <Typography sx={{
-            fontWeight: 500
-          }}>Fields</Typography>
+          <Typography
+            sx={{
+              fontWeight: 500,
+            }}
+          >
+            Fields
+          </Typography>
         </DrawerHeader>
 
         <List>

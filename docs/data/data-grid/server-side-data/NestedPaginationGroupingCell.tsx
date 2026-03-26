@@ -126,11 +126,12 @@ export default function NestedPaginationGroupingCell(
   return (
     <Stack
       sx={{
-        alignItems: "center",
-        width: "100%",
-        flexDirection: "row",
-        marginLeft: marginFactor * 2
-      }}>
+        alignItems: 'center',
+        width: '100%',
+        flexDirection: 'row',
+        marginLeft: marginFactor * 2,
+      }}
+    >
       <GroupingIcon
         id={id}
         field={field}

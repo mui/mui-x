@@ -34,9 +34,10 @@ function Export() {
     <Stack
       spacing={3}
       sx={{
-        height: "100%",
-        alignItems: "center"
-      }}>
+        height: '100%',
+        alignItems: 'center',
+      }}
+    >
       <div style={{ flexGrow: 1, minHeight: 0, width: '100%' }}>
         <Typography align="center">Google vs Meta stock price</Typography>
         <LineChartPro

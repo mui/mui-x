@@ -28,8 +28,9 @@ export default function ScrollableLegend() {
     <Stack
       sx={{
         height: 200,
-        width: 200
-      }}>
+        width: 200,
+      }}
+    >
       <PieChart
         series={series}
         sx={{

@@ -66,18 +66,20 @@ function CustomToolbar() {
     <Stack
       direction="row"
       sx={{
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "space-between",
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         gap: 1,
-        flexWrap: "wrap"
-      }}>
+        flexWrap: 'wrap',
+      }}
+    >
       <Typography
         variant="h6"
         sx={{
-          justifyContent: "center",
-          textAlign: { xs: 'center', sm: 'left' }
-        }}>
+          justifyContent: 'center',
+          textAlign: { xs: 'center', sm: 'left' },
+        }}
+      >
         Chart with Custom Toolbar
       </Typography>
       <Stack>

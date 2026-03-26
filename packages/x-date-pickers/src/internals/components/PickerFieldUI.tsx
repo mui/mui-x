@@ -44,9 +44,7 @@ export const cleanFieldResponse = <
       ...other
     } = fieldResponse;
     const mergedInputProps =
-      materialMajor >= 6
-        ? mergeSlotProps(other?.slotProps?.input, InputProps)
-        : noop;
+      materialMajor >= 6 ? mergeSlotProps(other?.slotProps?.input, InputProps) : noop;
 
     return {
       clearable,
@@ -90,13 +88,9 @@ export const cleanFieldResponse = <
   } = fieldResponse;
 
   const mergedInputProps =
-    materialMajor >= 6
-      ? mergeSlotProps(other?.slotProps?.input, InputProps)
-      : noop;
+    materialMajor >= 6 ? mergeSlotProps(other?.slotProps?.input, InputProps) : noop;
   const mergedHtmlInputProps =
-    materialMajor >= 6
-      ? mergeSlotProps(other?.slotProps?.htmlInput, inputProps)
-      : noop;
+    materialMajor >= 6 ? mergeSlotProps(other?.slotProps?.htmlInput, inputProps) : noop;
   return {
     clearable,
     onClear,
@@ -359,7 +353,9 @@ export function PickerFieldUI<
     delete (textFieldProps as TextFieldProps)?.slotProps;
   }
 
-  return <TextField {...textFieldProps} {...{ InputProps: resolvedTextFieldInputProps } as any} />;
+  return (
+    <TextField {...textFieldProps} {...({ InputProps: resolvedTextFieldInputProps } as any)} />
+  );
 }
 
 export interface ExportedPickerFieldUIProps {

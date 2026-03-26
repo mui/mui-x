@@ -25,15 +25,17 @@ export function CalendarFilters({
     <Stack
       direction="row"
       sx={{
-        alignItems: "center",
-        gap: 2
-      }}>
+        alignItems: 'center',
+        gap: 2,
+      }}
+    >
       <Stack
         direction="row"
         sx={{
-          alignItems: "center",
-          gap: 1
-        }}>
+          alignItems: 'center',
+          gap: 1,
+        }}
+      >
         {FILTER_OPTIONS.map((filter) => {
           const isActive = activeFilters.includes(filter);
           return (

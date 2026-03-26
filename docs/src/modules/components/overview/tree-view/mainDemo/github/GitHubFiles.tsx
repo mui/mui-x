@@ -56,12 +56,17 @@ function CodeAccordion({ type, title, expanded, onChange, code, language }: Code
             direction="row"
             spacing={1}
             sx={{
-              alignItems: "center",
-              overflow: 'hidden'
-            }}>
-            <Stack direction="row" spacing={0.025} sx={{
-              alignItems: "center"
-            }}>
+              alignItems: 'center',
+              overflow: 'hidden',
+            }}
+          >
+            <Stack
+              direction="row"
+              spacing={0.025}
+              sx={{
+                alignItems: 'center',
+              }}
+            >
               <SquareRoundedIcon
                 sx={{ fontSize: '16px' }}
                 color={type === 'deleted' ? 'error' : 'success'}
@@ -84,9 +89,10 @@ function CodeAccordion({ type, title, expanded, onChange, code, language }: Code
               variant="body2"
               noWrap
               sx={{
-                fontFamily: "monospace",
-                color: "text.secondary"
-              }}>
+                fontFamily: 'monospace',
+                color: 'text.secondary',
+              }}
+            >
               {title}
             </Typography>
           </Stack>
@@ -123,15 +129,20 @@ export default function GitHubFiles({
         overflowY: 'auto',
         height: '100%',
         width: '100%',
-        display: { xs: 'none', md: 'flex' }
-      }}>
+        display: { xs: 'none', md: 'flex' },
+      }}
+    >
       {leafItemGroups.map((group, index) => (
         <Stack key={index} spacing={1}>
           <Typography
             variant="caption"
-            sx={[{
-              fontWeight: 400
-            }, (theme) => ({ color: theme.palette.grey[700] })]}>
+            sx={[
+              {
+                fontWeight: 400,
+              },
+              (theme) => ({ color: theme.palette.grey[700] }),
+            ]}
+          >
             {group.parentPath}
           </Typography>
           {group.leafItems.map((item) => (

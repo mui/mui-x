@@ -31,9 +31,11 @@ export default function RenderErrorUnderField() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{
-        width: 300
-      }}>
+      <Box
+        sx={{
+          width: 300,
+        }}
+      >
         <DatePicker
           defaultValue={dayjs('2022-07-17')}
           onError={(newError) => setError(newError)}

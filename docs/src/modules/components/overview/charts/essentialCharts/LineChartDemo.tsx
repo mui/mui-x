@@ -89,9 +89,11 @@ const chartSetting = {
 
 function Line() {
   return (
-    <Stack sx={{
-      height: "100%"
-    }}>
+    <Stack
+      sx={{
+        height: '100%',
+      }}
+    >
       <Typography align="center">Inflation rates</Typography>
       <LineChart
         dataset={inflationData}

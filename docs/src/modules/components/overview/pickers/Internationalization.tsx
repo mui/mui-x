@@ -62,14 +62,17 @@ function TimezonesDemo() {
           spacing={2}
           sx={{
             flexGrow: 1,
-            justifyContent: "center",
+            justifyContent: 'center',
             py: 2,
             maxWidth: '320px',
-            width: '100%'
-          }}>
-          <Typography sx={{
-            fontWeight: "semiBold"
-          }}>
+            width: '100%',
+          }}
+        >
+          <Typography
+            sx={{
+              fontWeight: 'semiBold',
+            }}
+          >
             {selectedTimezone ? `Selected timezone: ${selectedTimezone}` : 'Select timezone'}
           </Typography>
 
@@ -167,8 +170,9 @@ function LanguagesDemo() {
               flexGrow: 1,
               py: 2,
               maxWidth: '320px',
-              justifyContent: 'center'
-            }}>
+              justifyContent: 'center',
+            }}
+          >
             <DatePicker
               defaultValue={dayjs('2024-02-17')}
               slotProps={{ textField: { fullWidth: true } }}
@@ -225,12 +229,13 @@ function ValidationDemo() {
           <Stack
             spacing={2}
             sx={{
-              justifyContent: "center",
+              justifyContent: 'center',
               flexGrow: 1,
               py: 2,
               width: '100%',
-              maxWidth: '400px'
-            }}>
+              maxWidth: '400px',
+            }}
+          >
             <DateTimeField
               defaultValue={dayjs('')}
               onError={(newError) => setFieldError(newError)}
@@ -275,8 +280,9 @@ export default function Internationalization() {
         spacing={6}
         sx={{
           py: 8,
-          alignItems: "center"
-        }}>
+          alignItems: 'center',
+        }}
+      >
         <Stack
           spacing={2}
           sx={{
@@ -287,9 +293,12 @@ export default function Internationalization() {
           <SectionHeadline
             overline="Internationalization"
             title={
-              <Typography variant="h2" sx={{
-                fontSize: "1.625rem"
-              }}>
+              <Typography
+                variant="h2"
+                sx={{
+                  fontSize: '1.625rem',
+                }}
+              >
                 {internationalizationFeatures[activeItem].title}
               </Typography>
             }
@@ -307,12 +316,13 @@ export default function Internationalization() {
         </Stack>
         <Stack
           sx={{
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: 'center',
+            alignItems: 'center',
             width: { xs: '100%' },
             maxWidth: { xs: '500px', md: '100%' },
-            minHeight: { xs: 0, md: '526px' }
-          }}>
+            minHeight: { xs: 0, md: '526px' },
+          }}
+        >
           {activeItem === 0 && <TimezonesDemo />}
           {activeItem === 1 && <LanguagesDemo />}
           {activeItem === 2 && <ValidationDemo />}

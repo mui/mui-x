@@ -172,9 +172,10 @@ export default function ElementHighlights() {
         spacing={3}
         useFlexGap
         sx={{
-          justifyContent: "center",
-          flexWrap: "wrap"
-        }}>
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
         <TextField
           select
           label="highlight"
