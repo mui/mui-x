@@ -151,7 +151,7 @@
   "dependencies": {},
   "pnpm": {
     "overrides": {
-      "@base-ui/utils": "https://pkg.pr.new/mui/base-ui/@base-ui/utils@f1e96dc"
+      "@base-ui/utils": "https://pkg.pr.new/mui/base-ui/@base-ui/utils@0a56f30"
     }
   }
 }

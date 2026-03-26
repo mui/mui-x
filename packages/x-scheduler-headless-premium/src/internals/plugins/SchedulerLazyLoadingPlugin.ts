@@ -6,7 +6,7 @@ import {
   buildEventsState,
   SchedulerEventParameters,
 } from '@mui/x-scheduler-headless/internals';
-import { RequestQueue } from '@base-ui/utils/RequestQueue';
+import { DebouncedRequestQueue } from '@base-ui/utils/DebouncedRequestQueue';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { type DateRange, getDateRangeKey } from '../utils/queue';
 
@@ -17,7 +17,7 @@ export class SchedulerLazyLoadingPlugin<
 > {
   private store: SchedulerStore<TEvent, any, State, Parameters>;
 
-  private requestQueue: RequestQueue<DateRange> | null = null;
+  private requestQueue: DebouncedRequestQueue<DateRange> | null = null;
   private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
 
   constructor(store: SchedulerStore<TEvent, any, State, Parameters>) {
@@ -25,12 +25,11 @@ export class SchedulerLazyLoadingPlugin<
 
     if (this.store.parameters.dataSource) {
       this.cache = new SchedulerDataSourceCacheDefault<TEvent>({ ttl: 300_000 });
-      this.requestQueue = new RequestQueue<DateRange>({
+      this.requestQueue = new DebouncedRequestQueue<DateRange>({
         fetchFn: (range) => this.loadEventsFromDataSource(range),
         maxConcurrentRequests: 3,
         getKeyId: (range) => getDateRangeKey(this.store.state.adapter, range),
         debounceMs: 150,
-        lifo: true,
         maxQueuedRequests: 3,
       });
 
