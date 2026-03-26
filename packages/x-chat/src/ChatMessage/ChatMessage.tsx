@@ -32,7 +32,7 @@ const ChatMessageStyled = styled('div', {
     // Phantom column: reserve the same width as the avatar on the opposite side so
     // assistant and user bubbles always share the same horizontal content lane.
     paddingInlineEnd: `calc(${theme.spacing(2)} + var(--MuiChatMessage-avatarSize))`,
-    paddingBlock: ownerState?.isGrouped ? theme.spacing(0.25) : theme.spacing(0.75),
+    paddingBlock: ownerState?.isGrouped ? 0 : theme.spacing(0.25),
     fontFamily: theme.typography.fontFamily,
     // Collapse the phantom column when this row has no avatar (e.g. no avatarUrl set).
     ...(!ownerState?.showAvatar && {
