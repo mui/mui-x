@@ -42,7 +42,7 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
 
   const MultiInputRangeFieldRoot = styled(
     React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
-      <Stack ref={ref} spacing={2} direction="row" alignItems="baseline" {...props} />
+      <Stack ref={ref} spacing={2} direction="row" sx={{ alignItems: 'baseline' }} {...props} />
     )),
     {
       name,

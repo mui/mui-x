@@ -107,7 +107,7 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
   }, [updatePosition, resetDrag]);
 
   return <EventDialogPaper {...other} ref={nodeRef} className={className} />;
-} as any as DialogProps['PaperComponent'];
+} as any as React.JSXElementConstructor<PaperProps>;
 
 const EventDialog = createModal<SchedulerRenderableEventOccurrence>({
   contextName: 'EventDialogContext',
@@ -138,10 +138,12 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       ref={forwardedRef}
       open={open}
       onClose={onClose}
-      PaperComponent={PaperComponent}
       aria-labelledby="event-dialog-title"
       aria-modal="false"
       className={classes.eventDialog}
+      slots={{
+        paper: PaperComponent,
+      }}
       slotProps={{
         paper: { className: classes.eventDialogPaper, anchorRef, dragHandlerRef } as PaperProps,
       }}

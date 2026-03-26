@@ -222,8 +222,12 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
       return undefined;
     }
     return {
-      backIconButtonProps: { disabled: true },
-      nextIconButtonProps: { disabled: true },
+      slotProps: {
+        actions: {
+          previousButton: { disabled: true },
+          nextButton: { disabled: true },
+        },
+      },
     };
   }, [disabled]);
 
@@ -261,7 +265,7 @@ const BaseBadge = forwardRef<any, P['baseBadge']>(function BaseBadge(props, ref)
 });
 
 const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(props, ref) {
-  const { autoFocus, label, fullWidth, slotProps, className, material, ...other } = props;
+  const { autoFocus, label, fullWidth, slotProps, className, material, inputRef, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
@@ -278,13 +282,20 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
     }
   }, [autoFocus]);
 
+  const checkboxSlotProps = React.useMemo(
+    () => ({
+      input: { ...slotProps?.htmlInput, ...(inputRef ? { ref: inputRef } : {}) },
+    }),
+    [slotProps?.htmlInput, inputRef],
+  );
+
   if (!label) {
     return (
       <Checkbox
         {...other}
         {...material}
         className={clsx(className, material?.className)}
-        slotProps={{ input: slotProps?.htmlInput }}
+        slotProps={checkboxSlotProps}
         ref={handleRef}
         touchRippleRef={rippleRef}
       />
@@ -298,7 +309,7 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
         <Checkbox
           {...other}
           {...material}
-          slotProps={{ input: slotProps?.htmlInput }}
+          slotProps={checkboxSlotProps}
           ref={handleRef}
           touchRippleRef={rippleRef}
         />
@@ -406,15 +417,21 @@ function BaseTextField(props: P['baseTextField']) {
   const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
   const computedVariant = (other as any).variant ?? textFieldDefaults.variant ?? 'outlined';
   const computedSize = (other as any).size ?? textFieldDefaults.size;
+  // Extract deprecated props from material to redirect them to slotProps
+  const { inputProps: materialInputProps, InputProps: materialInputComponentProps, ...materialRest } =
+    (material ?? {}) as any;
   return (
     <MUITextField
       variant={computedVariant as any}
       size={computedSize as any}
       {...other}
-      {...material}
+      {...materialRest}
       slotProps={{
-        htmlInput: slotProps?.htmlInput,
-        input: transformInputProps(slotProps?.input as any),
+        htmlInput: { ...materialInputProps, ...slotProps?.htmlInput },
+        input: {
+          ...materialInputComponentProps,
+          ...transformInputProps(slotProps?.input as any),
+        },
         inputLabel: { shrink: true, ...(slotProps as any)?.inputLabel },
       }}
     />
@@ -464,7 +481,7 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
         })
       }
       renderInput={(params) => {
-        const { inputProps: htmlInputProps, InputProps, InputLabelProps, ...inputRest } = params;
+        const { slotProps: autocompleteSlotProps, ...inputRest } = params;
         const { slotProps: textFieldSlotProps, ...textFieldRest } = slotProps?.textField ?? {};
         const { slotProps: baseTextFieldSlotProps, ...baseTextFieldRest } =
           rootProps.slotProps?.baseTextField ?? {};
@@ -477,18 +494,18 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
             {...baseTextFieldRest}
             slotProps={{
               htmlInput: {
-                ...htmlInputProps,
+                ...autocompleteSlotProps.htmlInput,
                 ...textFieldSlotProps?.htmlInput,
                 ...baseTextFieldSlotProps?.htmlInput,
               },
               input: {
-                ...transformInputProps(InputProps as any, false),
+                ...transformInputProps(autocompleteSlotProps.input as any, false),
                 ...textFieldSlotProps?.input,
                 ...baseTextFieldSlotProps?.input,
               },
               inputLabel: {
                 shrink: true,
-                ...InputLabelProps,
+                ...autocompleteSlotProps.inputLabel,
                 ...textFieldSlotProps?.inputLabel,
                 ...baseTextFieldSlotProps?.inputLabel,
               },
