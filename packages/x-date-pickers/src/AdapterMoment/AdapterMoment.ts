@@ -81,11 +81,11 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime24h: 'L HH:mm',
 };
 
-const MISSING_TIMEZONE_PLUGIN = [
-  'Missing timezone plugin',
-  'To be able to use timezones, you have to pass the default export from `moment-timezone` to the `dateLibInstance` prop of `LocalizationProvider`',
-  'Find more information on https://mui.com/x/react-date-pickers/timezone/#moment-and-timezone',
-].join('\n');
+function throwMissingTimezonePluginError() {
+  throw new Error(`MUI X: Missing timezone plugin.
+To be able to use timezones, you have to pass the default export from \`moment-timezone\` to the \`dateLibInstance\` prop of \`LocalizationProvider\`.
+Find more information on https://mui.com/x/react-date-pickers/timezone/#moment-and-timezone`);
+}
 
 declare module '@mui/x-date-pickers/models' {
   interface PickerValidDateLookup {
@@ -175,7 +175,7 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
   private createTZDate = (value: string | undefined, timezone: PickersTimezone): Moment => {
     /* v8 ignore next 3 */
     if (!this.hasTimezonePlugin()) {
-      throw new Error(MISSING_TIMEZONE_PLUGIN);
+      throwMissingTimezonePluginError();
     }
 
     const parsedValue =
@@ -236,7 +236,7 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
     if (!this.hasTimezonePlugin()) {
       /* v8 ignore next 3 */
       if (timezone !== 'default') {
-        throw new Error(MISSING_TIMEZONE_PLUGIN);
+        throwMissingTimezonePluginError();
       }
 
       return value;

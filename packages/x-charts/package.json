@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0-alpha.4",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
   "license": "MIT",
@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --ignore 'src/**/*.bench.ts'",
+    "build": "code-infra build --flat --ignore 'src/**/*.bench.ts'",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
     "bench:jsdom": "pnpm vitest bench -c ./vitest.config.jsdom.mts",
     "bench:browser": "pnpm vitest bench -c ./vitest.config.browser.mts"
@@ -80,5 +80,8 @@
     ".": "./src/index.ts",
     "./*": "./src/*/index.ts",
     "./moduleAugmentation/*": "./src/moduleAugmentation/*.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

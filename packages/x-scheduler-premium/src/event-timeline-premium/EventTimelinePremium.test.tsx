@@ -1,28 +1,37 @@
 import { screen } from '@mui/internal-test-utils';
-import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import {
+  EventTimelinePremium,
+  eventTimelinePremiumClasses,
+} from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  ResourceBuilder,
 } from 'test/utils/scheduler';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-headless/models';
+import {
+  SchedulerEvent,
+  SchedulerResource,
+  TemporalSupportedObject,
+} from '@mui/x-scheduler-headless/models';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
+import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
-const baseResources: SchedulerResource[] = [
-  { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },
-  { id: 'resource-2', title: 'Design', eventColor: 'teal' },
-];
+const engineering = ResourceBuilder.new().build();
+const design = ResourceBuilder.new().build();
 
-const event1 = EventBuilder.new().singleDay('2025-07-03T09:00:00Z').resource('resource-1').build();
+const baseResources: SchedulerResource[] = [engineering, design];
+
+const event1 = EventBuilder.new().singleDay('2025-07-03T09:00:00Z').resource(engineering).build();
 const event2 = EventBuilder.new()
   .span('2025-07-03T11:00:00Z', '2025-07-06T12:00:00Z')
-  .resource('resource-2')
+  .resource(design)
   .build();
 const event3 = EventBuilder.new()
   .span('2025-07-04T13:00:00Z', '2025-08-04T14:30:00Z')
-  .resource('resource-1')
+  .resource(engineering)
   .build();
 
 const baseEvents = [event1, event2, event3];
@@ -37,14 +46,21 @@ describe('<EventTimelinePremium />', () => {
     events?: SchedulerEvent[];
     view?: EventTimelinePremiumView;
     views?: EventTimelinePremiumView[];
+    visibleDate?: TemporalSupportedObject;
+    showCurrentTimeIndicator?: boolean;
+    resourceColumnLabel?: string;
+    localeText?: Partial<EventTimelineLocaleText>;
   }) {
     return render(
       <EventTimelinePremium
         resources={options?.resources ?? baseResources}
         events={options?.events ?? baseEvents}
-        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        visibleDate={options?.visibleDate ?? DEFAULT_TESTING_VISIBLE_DATE}
         view={options?.view ?? 'days'}
         views={options?.views ?? ['time', 'days', 'weeks', 'months', 'years']}
+        showCurrentTimeIndicator={options?.showCurrentTimeIndicator}
+        resourceColumnLabel={options?.resourceColumnLabel}
+        localeText={options?.localeText}
       />,
     );
   }
@@ -167,7 +183,7 @@ describe('<EventTimelinePremium />', () => {
       const nextMonthEvent = EventBuilder.new()
         .title('Next month')
         .span('2025-08-04T13:00:00Z', '2025-09-04T14:30:00Z')
-        .resource('resource-1')
+        .resource(engineering)
         .build();
       const extendedEvents: SchedulerEvent[] = [...baseEvents, nextMonthEvent];
 
@@ -195,11 +211,11 @@ describe('<EventTimelinePremium />', () => {
     it('should render events correctly in the year view', () => {
       const thisYearEvent = EventBuilder.new()
         .span('2025-08-03T13:00:00Z', '2025-09-04T14:30:00Z')
-        .resource('resource-1')
+        .resource(engineering)
         .build();
       const nextYearEvent = EventBuilder.new()
         .span('2026-08-03T13:00:00Z', '2026-09-04T14:30:00Z')
-        .resource('resource-1')
+        .resource(engineering)
         .build();
 
       renderTimeline({ events: [thisYearEvent, nextYearEvent], view: 'years' });
@@ -221,6 +237,69 @@ describe('<EventTimelinePremium />', () => {
 
       expect(eventPosition2).to.be.greaterThanOrEqual(200); // 2026
       expect(eventPosition2).to.be.lessThanOrEqual(400); // 2026
+    });
+  });
+
+  describe('current time indicator', () => {
+    it('should render the indicator when today is in view', () => {
+      renderTimeline();
+
+      const indicators = document.querySelectorAll(
+        `.${eventTimelinePremiumClasses.currentTimeIndicator}`,
+      );
+      expect(indicators.length).to.be.greaterThan(0);
+    });
+
+    it('should not render the indicator when today is not in view', () => {
+      const visibleDate = adapter.date('2030-01-01T00:00:00Z', 'default');
+      renderTimeline({ visibleDate });
+
+      const indicators = document.querySelectorAll(
+        `.${eventTimelinePremiumClasses.currentTimeIndicator}`,
+      );
+      expect(indicators.length).to.equal(0);
+    });
+
+    it('should not render the indicator when showCurrentTimeIndicator is false', () => {
+      renderTimeline({ showCurrentTimeIndicator: false });
+
+      const indicators = document.querySelectorAll(
+        `.${eventTimelinePremiumClasses.currentTimeIndicator}`,
+      );
+      expect(indicators.length).to.equal(0);
+    });
+  });
+
+  describe('resourceColumnLabel', () => {
+    it('should display "Resource title" by default', () => {
+      renderTimeline();
+
+      expect(screen.getByText('Resource title')).not.to.equal(null);
+    });
+
+    it('should display resourceColumnLabel value when provided', () => {
+      renderTimeline({ resourceColumnLabel: 'Team' });
+
+      expect(screen.getByText('Team')).not.to.equal(null);
+      expect(screen.queryByText('Resource title')).to.equal(null);
+    });
+
+    it('should take priority over localeText.timelineResourceTitleHeader', () => {
+      renderTimeline({
+        resourceColumnLabel: 'My Label',
+        localeText: { timelineResourceTitleHeader: 'Locale Label' },
+      });
+
+      expect(screen.getByText('My Label')).not.to.equal(null);
+      expect(screen.queryByText('Locale Label')).to.equal(null);
+    });
+
+    it('should fall back to localeText.timelineResourceTitleHeader when not set', () => {
+      renderTimeline({
+        localeText: { timelineResourceTitleHeader: 'Custom Locale' },
+      });
+
+      expect(screen.getByText('Custom Locale')).not.to.equal(null);
     });
   });
 

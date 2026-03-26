@@ -90,58 +90,58 @@ describe('recurring-events/rRuleString', () => {
 
     it('should throw when the input is empty', () => {
       expect(() => parseRRule(adapter, '', 'default')).to.throw(
-        'MUI: RRULE must include a FREQ property.',
+        'MUI X Scheduler: RRULE must include a FREQ property. The frequency (DAILY, WEEKLY, MONTHLY, or YEARLY) is required for recurrence rules. Add a FREQ property to the RRULE string.',
       );
     });
 
     it('should throw when the key or the value are empty', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;=2', 'default')).to.throw(
-        'MUI: Invalid RRULE part: "=2"',
+        'MUI X Scheduler: Invalid RRULE part "=2". Each RRULE part must be in the format "KEY=VALUE". Check the recurrence rule string format.',
       );
       expect(() => parseRRule(adapter, 'FREQ=DAILY;INTERVAL=', 'default')).to.throw(
-        'MUI: Invalid RRULE part: "INTERVAL="',
+        'MUI X Scheduler: Invalid RRULE part "INTERVAL=". Each RRULE part must be in the format "KEY=VALUE". Check the recurrence rule string format.',
       );
     });
 
     it('should throw when UNTIL is invalid', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;UNTIL=not-a-date', 'default')).to.throw(
-        'MUI: Invalid UNTIL date: "NOT-A-DATE"',
+        'MUI X Scheduler: Invalid UNTIL date "NOT-A-DATE". The UNTIL value must be a valid date in ISO format. Provide a valid date string.',
       );
     });
 
     it('should throw when FREQ is missing', () => {
       expect(() => parseRRule(adapter, 'INTERVAL=2', 'default')).to.throw(
-        'MUI: RRULE must include a FREQ property.',
+        'MUI X Scheduler: RRULE must include a FREQ property. The frequency (DAILY, WEEKLY, MONTHLY, or YEARLY) is required for recurrence rules. Add a FREQ property to the RRULE string.',
       );
     });
 
     it('should throw when the RRULE contains unsupported properties', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;FOO=bar', 'default')).to.throw(
-        'MUI: Unsupported RRULE property: "FOO"',
+        'MUI X Scheduler: Unsupported RRULE property "FOO". Supported properties are: FREQ, INTERVAL, BYDAY, BYMONTHDAY, BYMONTH, UNTIL, COUNT. Remove or replace the unsupported property.',
       );
     });
 
     it('should throw for invalid INTERVAL value', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;INTERVAL=zero', 'default')).to.throw(
-        'MUI: Invalid INTERVAL value: "ZERO"',
+        'MUI X Scheduler: Invalid INTERVAL value "ZERO". INTERVAL must be a positive integer (1 or greater). Provide a valid interval value.',
       );
     });
 
     it('should throw for invalid BYMONTHDAY values', () => {
       expect(() => parseRRule(adapter, 'FREQ=MONTHLY;BYMONTHDAY=0,50', 'default')).to.throw(
-        'MUI: Invalid BYMONTHDAY values: "0,50"',
+        'MUI X Scheduler: Invalid BYMONTHDAY values "0,50". BYMONTHDAY values must be integers between 1 and 31. Provide valid day of month values.',
       );
     });
 
     it('should throw for invalid BYMONTH values', () => {
       expect(() => parseRRule(adapter, 'FREQ=YEARLY;BYMONTH=0,13', 'default')).to.throw(
-        'MUI: Invalid BYMONTH values: "0,13"',
+        'MUI X Scheduler: Invalid BYMONTH values "0,13". BYMONTH values must be integers between 1 and 12. Provide valid month values.',
       );
     });
 
     it('should throw for invalid COUNT value', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;COUNT=-2', 'default')).to.throw(
-        'MUI: Invalid COUNT value: "-2"',
+        'MUI X Scheduler: Invalid COUNT value "-2". COUNT must be a positive integer (1 or greater). Provide a valid count value.',
       );
     });
 

@@ -19,6 +19,9 @@
     },
     "autosizeOptions": { "description": "The options for autosize when user-initiated." },
     "cellModesModel": { "description": "Controls the modes of the cells." },
+    "checkboxColDef": {
+      "description": "Definition of the column rendered when the <code>checkboxSelection</code> prop is enabled."
+    },
     "checkboxSelection": {
       "description": "If <code>true</code>, the Data Grid will display an extra column with checkboxes for selecting rows."
     },
@@ -1800,6 +1803,7 @@
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "redoIcon": "Icon displayed on the redo button in the toolbar.",
     "row": "Component rendered for each row.",
+    "rowCheckbox": "Component rendered for each row selection checkbox.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",

@@ -1,23 +1,29 @@
 ---
 title: React Heatmap chart
 productId: x-charts
-components: Heatmap, HeatmapPlot, HeatmapTooltip, HeatmapTooltipContent, FocusedHeatmapCell, HeatmapPremium
+components: Heatmap, HeatmapPlot, HeatmapTooltip, HeatmapTooltipContent, HeatmapCell, FocusedHeatmapCell, HeatmapPremium
 ---
 
 # Charts - Heatmap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Heatmap charts visually represents data with color variations to highlight patterns and trends across two dimensions.</p>
+<p class="description">Use heatmap charts to show intensity as a grid of colored cells across two dimensions.</p>
 
 ## Overview
 
-Heatmaps are ideal for visualizing intensity variations across two categorical or continuous dimensions. They highlight areas of high and low concentration in a dataset, making it easy to detect trends, clusters, or anomalies at a glance. Each cell in a heatmap represents the intersection of two variables, with color encoding used to convey the magnitude of a numerical value.
+A heatmap shows how a numeric value varies across two dimensions as a grid of colored cells.
+Each cell is the intersection of an x and y category or tick, and color encodes the value.
+
+Use heatmaps to spot areas of higher or lower intensity, clusters, or anomalies.
+
+The demo below shows bicycle counts in Paris by day and hour.
+
 {{"demo": "HeatmapDemo.js", "disableAd": true, "defaultCodeOpen": false}}
 
 ## Basics
 
-Heatmap charts series must contain a `data` property containing an array of 3-tuples.
-The first two numbers in each tuple correspond to the x and y indexes of the cell, respectively.
-The third number is the value for the given cell.
+A heatmap series must include a `data` property with an array of 3-tuples.
+Each tuple is `[xIndex, yIndex, value]`.
+The first two numbers are the cell's x and y indices, and the third is the cell value.
 
 ```jsx
 <Heatmap
@@ -32,92 +38,94 @@ The third number is the value for the given cell.
 />
 ```
 
-You can specify x and y ticks with the `xAxis` and `yAxis` props.
+Use the `xAxis` and `yAxis` props to set x and y ticks.
 
 {{"demo": "BasicHeatmap.js"}}
 
 ## Color mapping
 
-To customize the color mapping, use the `zAxis` configuration.
-You can either use the piecewise or continuous [color mapping](https://mui.com/x/react-charts/styling/#value-based-colors).
+Use the `zAxis` configuration to customize how values map to color.
+You can use piecewise or continuous scales.
+See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for details.
 
 {{"demo": "ColorConfig.js"}}
 
 ## Highlight
 
-You can choose to highlight the hovered element by setting `highlightScope.highlight` to `'item'`.
-To fade the other item, set `highlightScope.fade` to `'global'`.
+Set `highlightScope.highlight` to `'item'` to highlight the hovered cell.
+Set `highlightScope.fade` to `'global'` to fade the other cells.
 
 {{"demo": "HighlightHeatmap.js"}}
 
-By default highlighted/faded effect is obtained by applying the CSS property `filter: saturate(...)` to cells.
-To modify this styling, use the `heatmapClasses.highlighted` and `heatmapClasses.faded` CSS classes to override the applied style.
+By default, the highlight and fade use the CSS `filter: saturate(...)` property.
+You can override the effect with the `heatmapClasses.highlighted` and `heatmapClasses.faded` classes.
 
-In the following demo, we replace the highlight saturation by a border radius and reduce the saturation of the faded cells.
+The demo below uses border radius on the highlighted cell and reduced saturation for faded cells.
 
 {{"demo": "HighlightClasses.js"}}
 
-## Click event
+## Click events
 
-Use `onItemClick` to know which cell is clicked by user.
+Use `onItemClick` to handle cell clicks.
 
-The first argument is the click event.
-The second one is the item identifier.
-It contains the properties `xIndex` and `yIndex` that are the indexes of the clicked cell along the x- and y-axes respectively.
-
-If this cell has associated data, the `dataIndex` property indicates the position of the cell's data within the series' `data` array.
+The handler receives the click event as the first argument and an item object as the second.
+The item includes `xIndex` and `yIndex` (cell position on the x- and y-axes) and, when the cell has data, `dataIndex` (index in the series `data` array).
 
 {{"demo": "HeatmapCellClick.js"}}
 
-## Common features
+## Shared features
 
-The heatmap shares several features with other charts.
-This section only explains the details that are specific to the heatmap.
-If you'd like to learn more about the shared features, you can visit their dedicated pages.
+Heatmap charts use the same axis, tooltip, and legend patterns as other charts.
+This section notes heatmap-specific details.
+See the linked pages for full options.
 
 ### Axes
 
-The Heatmap axes can be customized like any other chart axis.
-The available options are available in the [axis customization page](/x/react-charts/axis/#axis-customization).
+You can configure heatmap axes like other chart axes.
+See [Axis—Customization](/x/react-charts/axis/#axis-customization) for details.
 
 ### Tooltip
 
-The Heatmap has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
+The default heatmap tooltip is item-based.
+You can customize it with slots.
+See [Tooltip](/x/react-charts/tooltip/) for details.
 
-The only difference of the Heatmap Tooltip is its default content.
-You can import the default tooltip, or only its content as follows:
+The heatmap package exports the default tooltip and its content if you want to reuse or extend them:
 
 ```js
-import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',
+import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap';
 ```
 
 ### Legend
 
-The Heatmap comes with a legend which is by default the [ContinuousColorLegend](/x/react-charts/legend/#color-legend).
+The heatmap includes a [`ContinuousColorLegend`](/x/react-charts/legend/#color-legend) by default.
 
-To display it set `hideLegend` to `false`.
-You can modify it with `slots.legend` and `slotProps.legend`.
+Set `hideLegend` to `true` to hide the legend.
+Customize it with `slots.legend` and `slotProps.legend`.
 
 {{"demo": "HeatmapLegend.js"}}
 
-## Custom item
+## Custom cells
+
+Use the `cell` slot to replace the default cell shape or add labels.
 
 {{"demo": "CustomItem.js"}}
 
-## WebGL Renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪
+## WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪
 
 :::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
+This feature is in preview.
+It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
 :::
 
-Heatmaps can contain a large number of cells.
-To improve performance when rendering many cells, you can use the WebGL renderer by setting the `renderer` prop to `'webgl'`.
+Heatmaps can have many cells, which can slow down rendering.
+Set the `renderer` prop to `'webgl'` for better performance with large datasets.
 
-The WebGL renderer has some limitations compared to the SVG renderer:
+The WebGL renderer has some limitations:
 
-- The `cell` slot is not supported;
-- The heatmap cell cannot be customized using CSS;
+- The `cell` slot is not supported
+- You cannot style cells with CSS
 
-The following example showcases a heatmap with approximately 8800 cells rendered using WebGL.
+The demo below shows roughly 8,800 cells rendered with WebGL.
 
 {{"demo": "WebGLHeatmap.js"}}

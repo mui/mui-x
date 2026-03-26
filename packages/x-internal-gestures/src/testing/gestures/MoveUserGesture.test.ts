@@ -29,7 +29,7 @@ describe('MoveUserGesture', () => {
   it('should throw an error if no target is provided', async () => {
     // @ts-expect-error, testing a missing target
     const moveGesture = () => move(pointerManager, {});
-    await expect(moveGesture).rejects.toThrow('Target element is required for move gesture');
+    await expect(moveGesture).rejects.toThrow('MUI X: Target element is required for move gesture');
   });
 
   it('should perform a basic move gesture with default options', async () => {

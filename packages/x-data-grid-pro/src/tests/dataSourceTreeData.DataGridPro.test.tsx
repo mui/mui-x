@@ -486,6 +486,76 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
   });
 
+  // https://github.com/mui/mui-x/issues/21269
+  // https://github.com/mui/mui-x/issues/20974
+  it('should update root row order after params change when children are expanded', async () => {
+    function TestComponent(props: { sortModel?: DataGridProProps['sortModel'] }) {
+      apiRef = useGridApiRef();
+      const { sortModel } = props;
+      const dataSource: GridDataSource = React.useMemo(() => {
+        const rootRows = [
+          { id: 'A', name: 'A', descendantCount: 1 },
+          { id: 'B', name: 'B', descendantCount: 0 },
+        ];
+        const childRows = [{ id: 'A-1', name: 'A1', descendantCount: 0 }];
+
+        return {
+          getRows: async (params: GridGetRowsParams) => {
+            if (params.groupKeys!.length === 0) {
+              const shouldReverse =
+                params.sortModel[0]?.field === 'name' && params.sortModel[0]?.sort === 'desc';
+              const rows = shouldReverse ? rootRows.toReversed() : rootRows;
+              return { rows, rowCount: rows.length };
+            }
+
+            if (params.groupKeys![0] === 'A') {
+              return { rows: childRows, rowCount: childRows.length };
+            }
+
+            return { rows: [], rowCount: 0 };
+          },
+          getGroupKey: (row) => row.name,
+          getChildrenCount: (row) => row.descendantCount,
+        };
+      }, []);
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }]}
+            dataSource={dataSource}
+            sortModel={sortModel}
+            treeData
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    const { user, setProps } = render(<TestComponent />);
+
+    await waitFor(() => {
+      const rootChildren = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+        .children;
+      expect(rootChildren).to.deep.equal(['A', 'B']);
+    });
+
+    await user.click(within(getCell(0, 0)).getByRole('button'));
+
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.tree['A-1']).not.to.equal(undefined);
+    });
+
+    setProps({ sortModel: [{ field: 'name', sort: 'desc' }] });
+
+    await waitFor(() => {
+      const rootChildren = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+        .children;
+      expect(rootChildren).to.deep.equal(['B', 'A']);
+    });
+  });
+
   it('should fetch nested data when calling API method `dataSource.fetchRows`', async () => {
     render(<TestDataSource />);
 
@@ -601,5 +671,34 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
         }
       },
     );
+  });
+
+  // https://github.com/mui/mui-x/issues/21357
+  it('should work with `getRowId` prop', async () => {
+    let counter = 0;
+    const { user } = render(
+      <TestDataSource
+        getRowId={(row) => row.customId}
+        transformGetRowsResponse={(rows) =>
+          rows.map((row) => {
+            counter += 1;
+            return { ...row, customId: `custom-${counter}` };
+          })
+        }
+      />,
+    );
+
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+    // Expand the first row
+    const cell = getCell(0, 0);
+    await user.click(within(cell).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+    });
+
+    // Collapse the first row
+    await user.click(within(cell).getByRole('button'));
   });
 });

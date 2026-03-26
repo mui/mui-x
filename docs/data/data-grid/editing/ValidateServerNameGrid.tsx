@@ -42,8 +42,9 @@ function validateName(username: string): Promise<boolean> {
         const exists = existingUsers.includes(username.toLowerCase());
         resolve(exists ? `${username} is already taken.` : null);
       },
+      // eslint-disable-next-line no-restricted-properties -- simulates network latency
       Math.random() * 500 + 100,
-    ); // simulate network latency
+    );
   });
 }
 

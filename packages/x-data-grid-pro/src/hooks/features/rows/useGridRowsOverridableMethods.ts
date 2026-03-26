@@ -38,22 +38,38 @@ export const useGridRowsOverridableMethods = (
       const targetNode = gridRowNodeSelector(apiRef, targetRowId);
 
       if (!sourceNode) {
-        throw new Error(`MUI X: No row with id #${sourceRowId} found.`);
+        throw new Error(
+          `MUI X Data Grid: No row with id "${sourceRowId}" found. ` +
+            'The source row for reordering does not exist in the grid. ' +
+            'Verify the row id is correct and the row exists.',
+        );
       }
 
       if (!targetNode) {
-        throw new Error(`MUI X: No row with id #${targetRowId} found.`);
+        throw new Error(
+          `MUI X Data Grid: No row with id "${targetRowId}" found. ` +
+            'The target row for reordering does not exist in the grid. ' +
+            'Verify the row id is correct and the row exists.',
+        );
       }
 
       if (sourceNode.type === 'footer') {
-        throw new Error(`MUI X: The row reordering do not support reordering of footer rows.`);
+        throw new Error(
+          'MUI X Data Grid: Row reordering does not support reordering of footer rows. ' +
+            'Footer rows are special rows that cannot be moved. ' +
+            'Only data rows can be reordered.',
+        );
       }
 
       // Get the target index from the targetRowId using the lookup selector
       const targetIndexUnadjusted = sortedFilteredRowIndexLookup[targetRowId];
 
       if (targetIndexUnadjusted === undefined) {
-        throw new Error(`MUI X: Target row with id #${targetRowId} not found in current view.`);
+        throw new Error(
+          `MUI X Data Grid: Target row with id "${targetRowId}" not found in current view. ` +
+            'The target row may be filtered out or not visible. ' +
+            'Ensure the target row is visible in the current grid view.',
+        );
       }
 
       const targetIndex = position === 'below' ? targetIndexUnadjusted + 1 : targetIndexUnadjusted;
@@ -78,7 +94,9 @@ export const useGridRowsOverridableMethods = (
 
   const setRowIndex = React.useCallback<GridRowProApi['setRowIndex']>(async () => {
     throw new Error(
-      `MUI X: \`setRowIndex()\` is not supported for tree data. Use \`setRowPosition()\` instead.`,
+      'MUI X Data Grid: setRowIndex() is not supported for tree data. ' +
+        'Tree data uses hierarchical positioning which requires setRowPosition(). ' +
+        'Use setRowPosition() instead to reorder rows in tree data mode.',
     );
   }, []);
 

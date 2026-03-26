@@ -17,6 +17,6 @@ describe('License: base64', () => {
   });
 
   it('should fail if using none ASCII string', () => {
-    expect(() => base64Encode('✓ à la mode')).to.throw(/ASCII only support/);
+    expect(() => base64Encode('✓ à la mode')).to.throw(/Only ASCII characters are supported/);
   });
 });

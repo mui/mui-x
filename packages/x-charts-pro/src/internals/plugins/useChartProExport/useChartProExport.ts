@@ -22,7 +22,7 @@ function waitForAnimationFrame() {
 }
 
 export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ instance }) => {
-  const { chartRootRef, svgRef } = instance;
+  const { chartRootRef, chartsLayerContainerRef } = instance;
   const exportAsPrint = async (options?: ChartPrintExportOptions) => {
     const chartRoot = chartRootRef.current;
 
@@ -42,7 +42,7 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ ins
 
   const exportAsImage = async (options?: ChartImageExportOptions) => {
     const chartRoot = chartRootRef.current;
-    const svg = svgRef.current;
+    const svg = chartsLayerContainerRef.current;
 
     if (chartRoot && svg) {
       const enableAnimation = instance.disableAnimation();

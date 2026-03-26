@@ -52,7 +52,7 @@ Place the component that uses them in one of these positions:
 
 1. A slot of a chart component
 2. A child of a chart component
-3. A child of the `ChartDataProvider` component
+3. A child of the `ChartsDataProvider` component
 
 For example, if you create a `CustomLegend` component that calls `useLegend()`, you can render it as follows:
 
@@ -69,12 +69,12 @@ For example, if you create a `CustomLegend` component that calls `useLegend()`, 
 </LineChart>
 
 // ✅ Correct usage when composing a custom chart
-<ChartDataProvider series={[...]}>
+<ChartsDataProvider series={[...]}>
   <ChartsSurface>
     <LinePlot />
   </ChartsSurface>
   <CustomLegend /> {/* useLegend() works here */}
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 ```jsx

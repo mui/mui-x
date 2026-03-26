@@ -5,7 +5,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { BarPlot } from '@mui/x-charts/BarChart';
@@ -59,8 +59,7 @@ export default function ExpandingStep() {
           ))}
         </TextField>
       </Stack>
-
-      <ChartContainer
+      <ChartsContainer
         xAxis={[{ scaleType: 'band', data: weekDay }]}
         series={[
           {
@@ -96,7 +95,7 @@ export default function ExpandingStep() {
         <MarkPlot />
         <ChartsXAxis />
         <ChartsYAxis />
-      </ChartContainer>
+      </ChartsContainer>
     </Stack>
   );
 }

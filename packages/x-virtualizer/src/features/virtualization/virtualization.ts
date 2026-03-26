@@ -1104,7 +1104,7 @@ function bufferForDirection(
       };
     default:
       // eslint unable to figure out enum exhaustiveness
-      throw new Error('unreachable');
+      throw /* minify-error-disabled */ new Error('unreachable');
   }
 }
 
@@ -1178,15 +1178,15 @@ function getFirstNonSpannedColumnToRender({
 /** Placeholder API functions for colspan & rowspan to re-implement */
 function createSpanningAPI(): AbstractAPI {
   const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
+    throw new Error('MUI X: Unimplemented: colspan feature is required');
   };
 
   const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
+    throw new Error('MUI X: Unimplemented: colspan feature is required');
   };
 
   const getHiddenCellsOrigin: AbstractAPI['getHiddenCellsOrigin'] = () => {
-    throw new Error('Unimplemented: rowspan feature is required');
+    throw new Error('MUI X: Unimplemented: rowspan feature is required');
   };
 
   return { getCellColSpanInfo, calculateColSpan, getHiddenCellsOrigin };

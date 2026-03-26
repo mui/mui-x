@@ -20,6 +20,28 @@ const reselectCreateSelector = createSelectorCreator({
 
 type SelectorWithArgs = ReturnType<typeof reselectCreateSelector> & { selectorArgs: any[3] };
 
+/**
+ * Creates a selector function that can be used to derive values from the store's state.
+ *
+ * The combiner function can have up to three additional parameters, but it **cannot have optional or default parameters**.
+ *
+ * This function accepts up to six functions and combines them into a single selector function.
+ * The resulting selector will take the state from the combined selectors and any additional parameters required by the combiner.
+ *
+ * The return type of the resulting selector is determined by the return type of the combiner function.
+ *
+ * @example
+ * const selector = createSelector(
+ *  (state) => state.disabled
+ * );
+ *
+ * @example
+ * const selector = createSelector(
+ *   (state) => state.disabled,
+ *   (state) => state.open,
+ *   (disabled, open) => ({ disabled, open })
+ * );
+ */
 /* eslint-disable id-denylist */
 export const createSelector = ((
   a: Function,
@@ -33,7 +55,11 @@ export const createSelector = ((
   ...other: any[]
 ) => {
   if (other.length > 0) {
-    throw new Error('Unsupported number of selectors');
+    throw new Error(
+      'MUI X: Unsupported number of selectors. ' +
+        'The createSelector function supports up to 8 input selectors. ' +
+        'Consider combining selectors or restructuring your selector logic.',
+    );
   }
 
   let selector: any;
@@ -96,7 +122,11 @@ export const createSelector = ((
   } else if (a) {
     selector = a;
   } else {
-    throw new Error('Missing arguments');
+    throw new Error(
+      'MUI X: Missing arguments for createSelector. ' +
+        'At least one selector function is required. ' +
+        'Provide one or more selector functions as arguments.',
+    );
   }
 
   return selector;
@@ -117,7 +147,11 @@ export const createSelectorMemoizedWithOptions =
     const argsLength = Math.max(combiner.length - nSelectors, 0);
 
     if (argsLength > 3) {
-      throw new Error('Unsupported number of arguments');
+      throw new Error(
+        'MUI X: Unsupported number of arguments for selector combiner. ' +
+          'The combiner function supports up to 3 additional arguments beyond the selector outputs. ' +
+          'Consider restructuring your selector to use fewer arguments.',
+      );
     }
 
     // prettier-ignore
@@ -165,7 +199,11 @@ export const createSelectorMemoizedWithOptions =
           break;
         }
         default:
-          throw new Error('Unsupported number of arguments');
+          throw new Error(
+            'MUI X: Unsupported number of arguments for selector. ' +
+              'The memoized selector supports up to 3 additional arguments. ' +
+              'Consider restructuring your selector to use fewer arguments.',
+          );
       }
       if (options) {
         reselectArgs = [...reselectArgs, options];
@@ -192,11 +230,38 @@ export const createSelectorMemoizedWithOptions =
       case 2: return fn(state, a1, a2);
       case 3: return fn(state, a1, a2, a3);
       default:
-        throw new Error('unreachable');
+        throw /* minify-error-disabled */ new Error('unreachable');
     }
   };
 
     return selector as any;
   };
 
+/**
+ * Creates a memoized selector function that can be used to derive values from the store's state.
+ * This is useful for selectors that produce non-primitive values, such as objects or arrays, where memoization can help prevent unnecessary re-renders in React components.
+ *
+ * The memoization is implemented in a way that only the most recent selector result is cached.
+ * This is suitable for cases where the selector is called with the same state and arguments repeatedly,
+ * but may not be ideal for selectors that are called with a wide variety of states and arguments.
+ *
+ * The combiner function can have up to three additional parameters, but it **cannot have optional or default parameters**.
+ *
+ * This function accepts up to six functions and combines them into a single selector function.
+ * The resulting selector will take the state from the combined selectors and any additional parameters required by the combiner.
+ *
+ * The return type of the resulting selector is determined by the return type of the combiner function.
+ *
+ * @example
+ * const selector = createSelectorMemoized(
+ *  (state) => state.disabled
+ * );
+ *
+ * @example
+ * const selector = createSelectorMemoized(
+ *   (state) => state.disabled,
+ *   (state) => state.open,
+ *   (disabled, open) => ({ disabled, open })
+ * );
+ */
 export const createSelectorMemoized = createSelectorMemoizedWithOptions();

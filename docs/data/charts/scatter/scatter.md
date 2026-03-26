@@ -41,11 +41,11 @@ Since scatter elements can be small, interactions do not require hovering exactl
 When the pointer is in the drawing area, the closest scatter element will be used for interactions (tooltip or highlights).
 To do so, the chart computes [Voronoi cells](https://en.wikipedia.org/wiki/Voronoi_diagram) which map the pointer position to the closest element.
 
-You can define a maximal radius with the `voronoiMaxRadius` prop.
+You can define a maximum radius with the `hitAreaRadius` prop.
 If the distance with the pointer is larger than this radius, no item will be selected.
-Alternatively, set the `voronoiMaxRadius` prop to `item` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
+Alternatively, set the `hitAreaRadius` prop to `item` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
 
-{{"demo": "VoronoiInteraction.js"}}
+{{"demo": "ClosestPointInteraction.js"}}
 
 ## Click event
 
@@ -61,7 +61,7 @@ const onItemClick = (
 
 {{"demo": "ScatterClick.js"}}
 
-If `voronoiMaxRadius` is `item`, users need to click precisely on the scatter element, and the mouse event will come from this element.
+If `hitAreaRadius` is `item`, users need to click precisely on the scatter element, and the mouse event will come from this element.
 
 Otherwise, the click behavior will be the same as defined in the [interaction section](#interaction) and the mouse event will come from the svg component.
 
@@ -145,7 +145,7 @@ For circles, the `markerSize` is the radius of the point in pixels.
 
 You can customize the plotting of the data in a scatter chart by providing custom components as `children` of the `ScatterChart` component.
 
-A scatter chart's series can be accessed through the `useScatterSeries` hook.
+A scatter chart's series can be accessed through the `useScatterSeries()` hook.
 This hook returns the order of the series and information about the series themselves, including their data points, color, etc.
 
 See [Custom components](/x/react-charts/components/) to learn how to further customize your charts.
@@ -162,12 +162,11 @@ However, this comes with the following limitations:
 - CSS styling of single `circle` elements is no longer possible;
 - Overriding the `marker` slot is not supported;
 - Transparent highlight style: for performance reasons, the highlighted state creates a highlighted circle on top of the original marker. Applying transparency to the highlighted circle can cause the original circle to be partially visible;
-- `disableHover` for scatter series does not work.
 
 On top of that, there's also some differences in behavior:
 
 - The rendering order might be different, which might cause overlapping circles to render at different depths when compared to the default rendering;
-- When `disableVoronoi` is true, `onItemClick` does not work as it requires that plugin to work.
+- When `disableHitArea` is true, `onItemClick` does not work as it requires that plugin to work.
 
 The example below uses the `renderer` prop to improve performance when rendering a dataset with 16,000 data points.
 
@@ -175,14 +174,14 @@ The example below uses the `renderer` prop to improve performance when rendering
 
 ## Composition
 
-Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+Use the `<ChartsDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
 In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<ScatterPlot />` component that renders the scatter marks.
 
 Here's how the Scatter Chart is composed:
 
 ```jsx
-<ChartDataProvider>
+<ChartsDataProvider>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -198,7 +197,7 @@ Here's how the Scatter Chart is composed:
     </ChartsSurface>
     <ChartsTooltip trigger="item" />
   </ChartsWrapper>
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 :::info

@@ -22,11 +22,9 @@ export const useJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, cont
   const parentContext = React.useContext(TreeViewChildrenItemContext);
   if (parentContext == null) {
     throw new Error(
-      [
-        'MUI X: Could not find the Tree View Children Item context.',
-        'It looks like you rendered your component outside of a SimpleTreeView parent component.',
-        'This can also happen if you are bundling multiple versions of the Tree View.',
-      ].join('\n'),
+      `MUI X: Could not find the Tree View Children Item context.
+It looks like you rendered your component outside of a SimpleTreeView parent component.
+This can also happen if you are bundling multiple versions of the Tree View.`,
     );
   }
   const { registerChild, unregisterChild, parentId } = parentContext;

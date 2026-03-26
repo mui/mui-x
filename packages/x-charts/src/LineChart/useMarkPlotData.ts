@@ -11,7 +11,7 @@ import {
 import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
 import { type AxisId } from '../models/axis';
 import getColor from './seriesConfig/getColor';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 export interface MarkPlotDataPoint {
@@ -38,7 +38,7 @@ export function useMarkPlotData(
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
   const chartId = useChartId();
-  const { instance } = useChartContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const { instance } = useChartsContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
 
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
@@ -82,7 +82,9 @@ export function useMarkPlotData(
                 xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisId}"`
-              } should have data property to be able to display a line plot.`,
+              } should have a data property to be able to display a line plot. ` +
+                'The x-axis data defines the positions for each point in the line. ' +
+                'Provide a data array to the x-axis configuration.',
             );
           }
         }

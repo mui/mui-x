@@ -1,5 +1,7 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization } from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('hr-HR');
 
 const hrHRGrid: Partial<GridLocaleText> = {
   // Root
@@ -217,10 +219,13 @@ const hrHRGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Redova po stranici:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} od ${count !== -1 ? count : `više nego ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} od ${count !== -1 ? formatNumber(count) : `više nego ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `oko ${estimated}` : `više nego ${to}`;
-    return `${from}–${to} od ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `oko ${formatNumber(estimated)}`
+        : `više nego ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} od ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

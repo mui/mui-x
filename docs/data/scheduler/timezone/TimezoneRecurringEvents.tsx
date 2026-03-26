@@ -18,8 +18,6 @@ export default function TimezoneRecurringEvents() {
         onEventsChange={setEvents}
         defaultPreferences={{ isSidePanelOpen: false }}
         displayTimezone="Europe/Paris"
-        areEventsDraggable
-        areEventsResizable
       />
     </div>
   );

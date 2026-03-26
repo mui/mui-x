@@ -22,6 +22,7 @@
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
+    "checkboxColDef": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
@@ -629,6 +630,12 @@
       "description": "Component rendered for each row.",
       "default": "GridRow",
       "class": "MuiDataGrid-row"
+    },
+    {
+      "name": "rowCheckbox",
+      "description": "Component rendered for each row selection checkbox.",
+      "default": "GridRowCheckbox",
+      "class": null
     },
     {
       "name": "baseAutocomplete",

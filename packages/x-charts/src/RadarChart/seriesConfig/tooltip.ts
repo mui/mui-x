@@ -25,13 +25,18 @@ const tooltipGetter: TooltipGetter<'radar'> = (params) => {
     label,
     markType: series.labelMarkType,
     values: series.data
-      .filter((_, index) => identifier.dataIndex == null || identifier.dataIndex === index)
-      .map((value, dataIndex) => ({
-        value,
-        formattedValue: series.valueFormatter(value, { dataIndex }),
-        markType: series.labelMarkType,
-        label: formatter(rotationAxis?.data?.[dataIndex]),
-      })),
+      .map((value, dataIndex) => {
+        if (identifier.dataIndex != null && identifier.dataIndex !== dataIndex) {
+          return null;
+        }
+        return {
+          value,
+          formattedValue: series.valueFormatter(value, { dataIndex }),
+          markType: series.labelMarkType,
+          label: formatter(rotationAxis?.data?.[dataIndex]),
+        };
+      })
+      .filter((v) => v !== null),
   };
 };
 

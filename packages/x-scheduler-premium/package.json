@@ -39,7 +39,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -55,6 +55,7 @@
     "@mui/x-scheduler-headless": "workspace:*",
     "@mui/x-scheduler-headless-premium": "workspace:*",
     "@mui/x-internals": "workspace:*",
+    "@mui/x-license": "workspace:*",
     "clsx": "catalog:"
   },
   "peerDependencies": {
@@ -79,11 +80,15 @@
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
+    "date-fns": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

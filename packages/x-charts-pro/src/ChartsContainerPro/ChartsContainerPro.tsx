@@ -5,22 +5,22 @@ import { ChartsSurface, type ChartsSurfaceProps } from '@mui/x-charts/ChartsSurf
 import { type ChartAnyPluginSignature, type ChartSeriesType } from '@mui/x-charts/internals';
 import { useChartsContainerProProps } from './useChartsContainerProProps';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { ChartDataProviderPro, type ChartDataProviderProProps } from '../ChartDataProviderPro';
+import { ChartsDataProviderPro, type ChartsDataProviderProProps } from '../ChartsDataProviderPro';
 
 export interface ChartsContainerProSlots {}
 
 export interface ChartsContainerProSlotProps {}
 
 export type ChartsContainerProProps<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartDataProviderProProps<TSeries, TSignatures> & ChartsSurfaceProps;
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+> = ChartsDataProviderProProps<SeriesType, TSignatures> & ChartsSurfaceProps;
 
 type ChartsContainerProComponent = <
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(
-  props: ChartsContainerProProps<TSeries, TSignatures> & {
+  props: ChartsContainerProProps<SeriesType, TSignatures> & {
     ref?: React.ForwardedRef<SVGSVGElement>;
   },
 ) => React.JSX.Element;
@@ -28,7 +28,7 @@ type ChartsContainerProComponent = <
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *
- * This is a combination of both the `ChartDataProviderPro` and `ChartsSurface` components.
+ * This is a combination of both the `ChartsDataProviderPro` and `ChartsSurface` components.
  *
  * Demos:
  *
@@ -50,20 +50,20 @@ type ChartsContainerProComponent = <
  * ```
  */
 const ChartsContainerPro = React.forwardRef(function ChartsContainerProInner<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsContainerProProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
-  const { chartDataProviderProProps, children, chartsSurfaceProps } = useChartsContainerProProps<
-    TSeries,
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+>(props: ChartsContainerProProps<SeriesType, TSignatures>, ref: React.Ref<HTMLDivElement>) {
+  const { chartsDataProviderProProps, children, chartsSurfaceProps } = useChartsContainerProProps<
+    SeriesType,
     TSignatures
   >(props);
 
   return (
-    <ChartDataProviderPro<TSeries, TSignatures> {...chartDataProviderProProps}>
+    <ChartsDataProviderPro<SeriesType, TSignatures> {...chartsDataProviderProProps}>
       <ChartsSurface {...chartsSurfaceProps} ref={ref}>
         {children}
       </ChartsSurface>
-    </ChartDataProviderPro>
+    </ChartsDataProviderPro>
   );
 }) as unknown as ChartsContainerProComponent;
 

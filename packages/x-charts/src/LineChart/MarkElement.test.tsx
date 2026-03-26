@@ -2,22 +2,89 @@ import { createRenderer, screen } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import * as React from 'react';
 import { isJSDOM } from 'test/utils/skipIf';
-import { ChartDataProvider } from '../ChartDataProvider';
+import { ChartsDataProvider } from '../ChartsDataProvider';
 import { MarkElement } from './MarkElement';
 import { CircleMarkElement } from './CircleMarkElement';
+import { lineClasses } from './lineClasses';
 
 function TestWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       series={[{ type: 'line', data: [1, 2, 3], id: 's1' }]}
       width={100}
       height={100}
       xAxis={[{ scaleType: 'point', data: ['A', 'B', 'C'] }]}
     >
       <svg>{children}</svg>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 }
+
+describe.for([
+  ['MarkElement', MarkElement],
+  ['CircleMarkElement', CircleMarkElement],
+])('%s data attributes', ([_, MarkElementComponent]) => {
+  const { render } = createRenderer();
+
+  it('should have data-series attribute', () => {
+    render(
+      <TestWrapper>
+        <MarkElementComponent
+          seriesId="s1"
+          dataIndex={0}
+          x={10}
+          y={10}
+          color="red"
+          shape="circle"
+          data-testid="mark"
+        />
+      </TestWrapper>,
+    );
+
+    const mark = screen.getByTestId('mark');
+    expect(mark.getAttribute('data-series')).to.equal('s1');
+  });
+
+  it('should have data-index attribute', () => {
+    render(
+      <TestWrapper>
+        <MarkElementComponent
+          seriesId="s1"
+          dataIndex={2}
+          x={10}
+          y={10}
+          color="red"
+          shape="circle"
+          data-testid="mark"
+        />
+      </TestWrapper>,
+    );
+
+    const mark = screen.getByTestId('mark');
+    expect(mark.getAttribute('data-index')).to.equal('2');
+  });
+
+  it('should apply custom classes passed via the classes prop', () => {
+    render(
+      <TestWrapper>
+        <MarkElementComponent
+          seriesId="s1"
+          dataIndex={0}
+          x={10}
+          y={10}
+          color="red"
+          shape="circle"
+          classes={{ mark: 'my-custom-mark' }}
+          data-testid="mark"
+        />
+      </TestWrapper>,
+    );
+
+    const mark = screen.getByTestId('mark');
+    expect(mark.classList.contains('my-custom-mark')).to.equal(true);
+    expect(mark.classList.contains(lineClasses.mark)).to.equal(true);
+  });
+});
 
 describe.for([
   ['MarkElement', MarkElement],

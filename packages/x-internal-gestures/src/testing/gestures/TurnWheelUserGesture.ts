@@ -25,7 +25,7 @@ export const turnWheel = async (
   } = options;
 
   if (!target) {
-    throw new Error('Target element is required for turnWheel gesture');
+    throw new Error('MUI X: Target element is required for turnWheel gesture');
   }
 
   const parsedPointer = pointerManager.parseMousePointer(pointer, target);

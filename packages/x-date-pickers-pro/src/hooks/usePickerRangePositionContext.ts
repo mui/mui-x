@@ -13,9 +13,7 @@ export function usePickerRangePositionContext() {
   const value = React.useContext(PickerRangePositionContext);
   if (value == null) {
     throw new Error(
-      [
-        'MUI X: The `usePickerRangePositionContext` can only be called in components that are used inside a picker component',
-      ].join('\n'),
+      `MUI X: The \`usePickerRangePositionContext\` can only be called in components that are used inside a picker component`,
     );
   }
 

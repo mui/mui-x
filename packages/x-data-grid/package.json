@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0-alpha.4",
   "author": "MUI Team",
   "description": "The Community plan edition of the MUI X Data Grid components.",
   "license": "MIT",
@@ -34,7 +34,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -84,6 +84,11 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./material": "./src/material/index.tsx",
+    "./internals/demo": "./src/internals/demo/index.ts",
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

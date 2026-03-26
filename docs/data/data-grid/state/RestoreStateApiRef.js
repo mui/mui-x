@@ -26,6 +26,7 @@ import DialogActions from '@mui/material/DialogActions';
 const demoReducer = (state, action) => {
   switch (action.type) {
     case 'createView': {
+      // eslint-disable-next-line no-restricted-properties -- used for unique ID generation
       const id = Math.random().toString();
 
       return {

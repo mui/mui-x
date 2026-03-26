@@ -30,7 +30,7 @@ describe('TurnWheelUserGesture', () => {
     // @ts-expect-error, testing a missing target
     const turnWheelGesture = () => turnWheel(pointerManager, {});
     await expect(turnWheelGesture).rejects.toThrow(
-      'Target element is required for turnWheel gesture',
+      'MUI X: Target element is required for turnWheel gesture',
     );
   });
 

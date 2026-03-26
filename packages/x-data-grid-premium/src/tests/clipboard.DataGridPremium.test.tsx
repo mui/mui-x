@@ -11,7 +11,6 @@ import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-util
 import { type SinonSpy, spy, stub, type SinonStub } from 'sinon';
 import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
@@ -193,8 +192,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
   });
 
-  // These test are flaky in JSDOM
-  describe.skipIf(isJSDOM)('paste', () => {
+  describe('paste', () => {
     function paste(cell: HTMLElement, pasteText: string) {
       const pasteEvent = new Event('paste');
 

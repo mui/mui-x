@@ -9,9 +9,7 @@ export const usePickerTextFieldOwnerState = () => {
   const value = React.useContext(PickerTextFieldOwnerStateContext);
   if (value == null) {
     throw new Error(
-      [
-        'MUI X: The `usePickerTextFieldOwnerState` can only be called in components that are used inside a PickerTextField component',
-      ].join('\n'),
+      `MUI X: The \`usePickerTextFieldOwnerState\` can only be called in components that are used inside a PickerTextField component`,
     );
   }
 

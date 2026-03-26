@@ -90,7 +90,7 @@ In the following demo, the user cannot sort the _rating_ column from the UI.
 
 ### Sorting non-sortable columns programmatically
 
-The columns with `colDef.sortable` set to `false` are not sortable from the grid UI but could still be sorted programmatically. To add a sort rule to such a column, you could initialize the `sortModel`, use the `sortModel` prop, or use the API methods `sortColumn` or `setSortModel`.
+The columns with `colDef.sortable` set to `false` are not sortable from the grid UI but could still be sorted programmatically. To add a sort rule to such a column, you could initialize the `sortModel`, use the `sortModel` prop, or use the API methods `sortColumn()` or `setSortModel()`.
 
 In the following demo, the `firstName` column is not sortable by the default grid UI, but it is sorted programmatically by a custom built UI.
 
@@ -127,9 +127,9 @@ The sorting is based on `isAdmin` and then on `name`, if necessary. It re-uses t
 
 The Data Grid considers the `sortComparator` function symmetric, automatically reversing the return value for descending sorting by multiplying it by `-1`.
 
-While this is sufficient for most use cases, it is possible to define an asymmetric comparator using the `getSortComparator` function – it receives the sorting direction as an argument and returns a comparator function.
+While this is sufficient for most use cases, it is possible to define an asymmetric comparator using the `getSortComparator()` function – it receives the sorting direction as an argument and returns a comparator function.
 
-In the demo below, the `getSortComparator` function is used in the "Quantity" column to keep the `null` values at the bottom when sorting is applied (regardless of the sorting direction):
+In the demo below, the `getSortComparator()` function is used in the "Quantity" column to keep the `null` values at the bottom when sorting is applied (regardless of the sorting direction):
 
 {{"demo": "GetSortComparator.js", "bg": "inline", "defaultCodeOpen": false}}
 

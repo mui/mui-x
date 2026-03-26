@@ -65,6 +65,7 @@ function CustomDataPoints() {
 export default function UseScale() {
   return (
     <LineChart
+      height={300}
       dataset={data}
       xAxis={[
         {

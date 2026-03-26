@@ -77,8 +77,8 @@ The two Data Grids below illustrate how the user experience is impacted by impro
 
 {{"demo": "FocusManagement.js", "bg": "inline", "defaultCodeOpen": false}}
 
-If you customize cell rendering with the [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells) method, you become responsible for removing focusable elements from the page tab sequence.
-Use the `tabIndex` prop passed to the `renderCell` params to determine if the rendered cell has focus and, as a result, whether the inner elements should be removed from the tab sequence:
+If you customize cell rendering with the [`renderCell()`](/x/react-data-grid/column-definition/#rendering-cells) method, you become responsible for removing focusable elements from the page tab sequence.
+Use the `tabIndex` prop passed to the `renderCell()` params to determine if the rendered cell has focus and, as a result, whether the inner elements should be removed from the tab sequence:
 
 ```jsx
 renderCell: (params) => (

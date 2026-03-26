@@ -30,17 +30,13 @@ export type {
   ChartsContainerSlots,
   ChartsContainerSlotProps,
 } from './ChartsContainer';
-export { ChartContainer } from './ChartContainer';
-export type {
-  ChartContainerProps,
-  ChartContainerSlots,
-  ChartContainerSlotProps,
-} from './ChartContainer';
-export * from './ChartDataProvider';
+export * from './ChartsDataProvider';
 export * from './Toolbar';
 export * from './ChartsWrapper';
 export * from './ChartsBrushOverlay';
 export * from './utils';
+export * from './ChartsLayerContainer';
+export * from './ChartsSvgLayer';
 
 // Locales should be imported from `@mui/x-charts/locales`
 // export * from './locales';

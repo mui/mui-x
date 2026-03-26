@@ -2,6 +2,7 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import composeClasses from '@mui/utils/composeClasses';
+import capitalize from '@mui/utils/capitalize';
 import { useRtl } from '@mui/system/RtlProvider';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import type { GridAlignment } from '../../models/colDef/gridColDef';
@@ -63,9 +64,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'columnHeader',
-      headerAlign === 'left' && 'columnHeader--alignLeft',
-      headerAlign === 'center' && 'columnHeader--alignCenter',
-      headerAlign === 'right' && 'columnHeader--alignRight',
+      headerAlign && `columnHeader--align${capitalize(headerAlign)}`,
       isDragging && 'columnHeader--moving',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',

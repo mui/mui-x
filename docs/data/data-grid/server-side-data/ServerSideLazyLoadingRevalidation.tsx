@@ -13,6 +13,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import { alpha, type SxProps, type Theme } from '@mui/material/styles';
+import { Chance } from 'chance';
+
+const chance = new Chance(42);
 
 const STOCKS = [
   { symbol: 'AAPL', name: 'Apple Inc.' },
@@ -75,12 +78,12 @@ function fakeStockServer(params: GridGetRowsParams) {
   for (let i = start; i <= end && i < ROW_COUNT; i += 1) {
     const stock = STOCKS[i % STOCKS.length];
     const base = basePrices[stock.symbol];
-    // Random fluctuation ±2% on each call
-    const fluctuation = 1 + (Math.random() - 0.5) * 0.04;
+    // Deterministic fluctuation ±2% on each call
+    const fluctuation = 1 + chance.floating({ min: -0.5, max: 0.5 }) * 0.04;
     const price = Math.round(base * fluctuation * 100) / 100;
     const change = Math.round((price - base) * 100) / 100;
     const changePercent = Math.round((change / base) * 10000) / 100;
-    const volume = Math.floor(1_000_000 + Math.random() * 50_000_000);
+    const volume = Math.floor(chance.floating({ min: 1_000_000, max: 51_000_000 }));
 
     rows.push({
       id: i,

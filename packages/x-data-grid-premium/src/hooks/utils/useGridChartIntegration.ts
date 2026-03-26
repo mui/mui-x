@@ -7,11 +7,9 @@ export const useGridChartsIntegrationContext = (ignoreError = false) => {
   const context = React.useContext(GridChartsIntegrationContext);
   if (!context && !ignoreError) {
     throw new Error(
-      [
-        'MUI X: Could not find the Data Grid charts integration context.',
-        'It looks like you rendered your component outside of a DataGrid, DataGridPro or DataGridPremium parent component.',
-        'This can also happen if you are bundling multiple versions of the Data Grid.',
-      ].join('\n'),
+      `MUI X: Could not find the Data Grid charts integration context.
+It looks like you rendered your component outside of a DataGrid, DataGridPro or DataGridPremium parent component.
+This can also happen if you are bundling multiple versions of the Data Grid.`,
     );
   }
 

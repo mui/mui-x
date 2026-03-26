@@ -34,35 +34,44 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiChartsSurface'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsSurface'];
   };
-  MuiChartDataProvider?: {
-    defaultProps?: ComponentsProps['MuiChartDataProvider'];
+  MuiChartsDataProvider?: {
+    defaultProps?: ComponentsProps['MuiChartsDataProvider'];
   };
   MuiBarChart?: {
     defaultProps?: ComponentsProps['MuiBarChart'];
   };
-  MuiBarElement?: {
-    styleOverrides?: ComponentsOverrides<Theme>['MuiBarElement'];
-  };
-  MuiBarLabel?: {
-    defaultProps?: ComponentsProps['MuiBarLabel'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiBarLabel'];
+  MuiBarPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiBarPlot'];
   };
   MuiLineChart?: {
     defaultProps?: ComponentsProps['MuiLineChart'];
   };
-  MuiAreaElement?: {
-    styleOverrides?: ComponentsOverrides<Theme>['MuiAreaElement'];
+  MuiAreaPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiAreaPlot'];
   };
-  MuiLineElement?: {
-    styleOverrides?: ComponentsOverrides<Theme>['MuiLineElement'];
+  MuiLinePlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiLinePlot'];
   };
-  MuiMarkElement?: {
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMarkElement'];
+  MuiMarkPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMarkPlot'];
+  };
+  MuiPieArcPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPieArcPlot'];
+  };
+  MuiPieArcLabelPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPieArcLabelPlot'];
   };
   MuiScatterChart?: {
     defaultProps?: ComponentsProps['MuiScatterChart'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiScatterChart'];
   };
-  MuiScatter?: {};
+  /** @deprecated Use `MuiScatterChart` instead. */
+  MuiScatter?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiScatterChart'];
+  };
+  MuiRadarChart?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiRadarChart'];
+  };
   MuiGauge?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiGauge'];
   };

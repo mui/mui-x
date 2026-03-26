@@ -23,7 +23,9 @@ export const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridCo
 
     if (!groupId) {
       throw new Error(
-        'MUI X: An element of the columnGroupingModel does not have either `field` or `groupId`.',
+        'MUI X Data Grid: An element of the columnGroupingModel is missing both `field` and `groupId`. ' +
+          'Each column group must have a groupId to identify it. ' +
+          'Add a groupId to the column group definition.',
       );
     }
 
@@ -36,7 +38,9 @@ export const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridCo
 
     if (subTreeLookup[groupId] !== undefined || groupLookup[groupId] !== undefined) {
       throw new Error(
-        `MUI X: The groupId ${groupId} is used multiple times in the columnGroupingModel.`,
+        `MUI X Data Grid: The groupId "${groupId}" is used multiple times in the columnGroupingModel. ` +
+          'Each groupId must be unique within the column grouping model. ' +
+          'Use unique groupId values for each column group.',
       );
     }
 
@@ -56,12 +60,9 @@ const recurrentUnwrapGroupingColumnModel = (
   if (isLeaf(columnGroupNode)) {
     if (unwrappedGroupingModelToComplete[columnGroupNode.field] !== undefined) {
       throw new Error(
-        [
-          `MUI X: columnGroupingModel contains duplicated field`,
-          `column field ${columnGroupNode.field} occurs two times in the grouping model:`,
-          `- ${unwrappedGroupingModelToComplete[columnGroupNode.field].join(' > ')}`,
-          `- ${parents.join(' > ')}`,
-        ].join('\n'),
+        `MUI X Data Grid: The field "${columnGroupNode.field}" appears multiple times in the columnGroupingModel. ` +
+          `It is found in both: "${unwrappedGroupingModelToComplete[columnGroupNode.field].join(' > ')}" and "${parents.join(' > ')}". ` +
+          'Each field should only appear once in the grouping model.',
       );
     }
     unwrappedGroupingModelToComplete[columnGroupNode.field] = parents;

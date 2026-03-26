@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0-alpha.4",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Date and Time Picker components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
+    "build": "code-infra build --flat",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -110,5 +110,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

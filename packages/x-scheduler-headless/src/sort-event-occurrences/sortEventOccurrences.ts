@@ -7,14 +7,9 @@ import { SchedulerEventOccurrence } from '../models';
 export function sortEventOccurrences(
   occurrences: readonly SchedulerEventOccurrence[],
 ): SchedulerEventOccurrence[] {
-  return occurrences
-    .map((occurrence) => {
-      return {
-        occurrence,
-        start: occurrence.displayTimezone.start.timestamp,
-        end: occurrence.displayTimezone.end.timestamp,
-      };
-    })
-    .sort((a, b) => a.start - b.start || b.end - a.end)
-    .map((item) => item.occurrence);
+  return occurrences.toSorted(
+    (a, b) =>
+      a.displayTimezone.start.timestamp - b.displayTimezone.start.timestamp ||
+      b.displayTimezone.end.timestamp - a.displayTimezone.end.timestamp,
+  );
 }

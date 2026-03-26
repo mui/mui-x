@@ -21,41 +21,12 @@
     "import { SankeyPlot } from '@mui/x-charts-pro/SankeyChart';",
     "import { SankeyPlot } from '@mui/x-charts-pro';"
   ],
-  "classes": [
-    {
-      "key": "linkLabels",
-      "className": "MuiSankeyPlot-linkLabels",
-      "description": "Styles applied to the link label container.",
-      "isGlobal": false
-    },
-    {
-      "key": "links",
-      "className": "MuiSankeyPlot-links",
-      "description": "Styles applied to the links container.",
-      "isGlobal": false
-    },
-    {
-      "key": "nodeLabels",
-      "className": "MuiSankeyPlot-nodeLabels",
-      "description": "Styles applied to the node label container.",
-      "isGlobal": false
-    },
-    {
-      "key": "nodes",
-      "className": "MuiSankeyPlot-nodes",
-      "description": "Styles applied to the nodes container.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiSankeyPlot-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiSankeyPlot",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a>🧪</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }

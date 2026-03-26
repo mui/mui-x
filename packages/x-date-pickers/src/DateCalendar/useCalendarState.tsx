@@ -74,7 +74,7 @@ const createCalendarStateReducer =
         };
 
       default:
-        throw new Error('missing support');
+        throw /* minify-error-disabled */ new Error('missing support');
     }
   };
 

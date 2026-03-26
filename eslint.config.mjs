@@ -341,6 +341,14 @@ export default defineConfig(
       'react/prop-types': 'off',
       'no-alert': 'off',
       'no-console': 'off',
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'Math',
+          property: 'random',
+          message: 'Use the `chance` package with a fixed seed instead for deterministic data.',
+        },
+      ],
     },
   },
 

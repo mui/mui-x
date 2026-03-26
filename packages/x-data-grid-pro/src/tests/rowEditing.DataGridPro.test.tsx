@@ -80,7 +80,7 @@ describe('<DataGridPro /> - Row editing', () => {
         render(<TestCase />);
         act(() => apiRef.current?.startRowEditMode({ id: 0 }));
         expect(() => act(() => apiRef.current?.startRowEditMode({ id: 0 }))).to.throw(
-          'MUI X: The row with id=0 is not in view mode.',
+          'MUI X Data Grid: The row with id=0 is not in view mode. The operation requires the row to be in a specific editing mode. Ensure the row is in view mode before performing this operation.',
         );
       });
 
@@ -456,7 +456,7 @@ describe('<DataGridPro /> - Row editing', () => {
       it('should reject when the cell is not in edit mode', async () => {
         render(<TestCase />);
         expect(() => apiRef.current?.stopRowEditMode({ id: 0 })).to.throw(
-          'MUI X: The row with id=0 is not in edit mode.',
+          'MUI X Data Grid: The row with id=0 is not in edit mode. The operation requires the row to be in a specific editing mode. Ensure the row is in edit mode before performing this operation.',
         );
       });
 
@@ -630,8 +630,8 @@ describe('<DataGridPro /> - Row editing', () => {
           currencyPair: testValue,
         });
         expect(processRowUpdate.lastCall.args[1]).to.deep.equal(testRow);
-        // all rows are there after `processRowUpdate` returns deleted row data
-        expect(apiRef.current?.getRowsCount()).to.equal(allRows.length);
+        // only remaining rows are there after `processRowUpdate` returns deleted row data
+        expect(apiRef.current?.getRowsCount()).to.equal(otherRows.length);
       });
 
       it('should stay in edit mode if processRowUpdate throws an error', async () => {

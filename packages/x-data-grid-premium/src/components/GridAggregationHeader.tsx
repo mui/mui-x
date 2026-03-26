@@ -1,4 +1,5 @@
 import composeClasses from '@mui/utils/composeClasses';
+import capitalize from '@mui/utils/capitalize';
 import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
@@ -25,9 +26,8 @@ const GridAggregationHeaderRoot = styled('div', {
     const { ownerState } = props;
     return [
       styles.aggregationColumnHeader,
-      ownerState.colDef.headerAlign === 'left' && styles['aggregationColumnHeader--alignLeft'],
-      ownerState.colDef.headerAlign === 'center' && styles['aggregationColumnHeader--alignCenter'],
-      ownerState.colDef.headerAlign === 'right' && styles['aggregationColumnHeader--alignRight'],
+      ownerState.colDef.headerAlign &&
+        styles[`aggregationColumnHeader--align${capitalize(ownerState.colDef.headerAlign)}`],
     ];
   },
 })<{ ownerState: OwnerState }>({
@@ -57,9 +57,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'aggregationColumnHeader',
-      colDef.headerAlign === 'left' && 'aggregationColumnHeader--alignLeft',
-      colDef.headerAlign === 'center' && 'aggregationColumnHeader--alignCenter',
-      colDef.headerAlign === 'right' && 'aggregationColumnHeader--alignRight',
+      colDef.headerAlign && `aggregationColumnHeader--align${capitalize(colDef.headerAlign)}`,
     ],
     aggregationLabel: ['aggregationColumnHeaderLabel'],
   };

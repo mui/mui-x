@@ -55,7 +55,7 @@ Shortcuts on range pickers require `getValue` property to return an array with t
 
 ### Use validation to get the value
 
-The `getValue` methods receive a `isValid` helper function.
+The `getValue()` methods receive a `isValid()` helper function.
 You can use it to test if a value is valid or not based on the [validation props](/x/react-date-pickers/validation/).
 
 In the following demonstration, it is used to get the next available week and weekend.

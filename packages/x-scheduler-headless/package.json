@@ -29,6 +29,7 @@
     "./sort-event-occurrences": "./src/sort-event-occurrences/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
     "./use-adapter": "./src/use-adapter/index.ts",
+    "./use-adapter-context": "./src/use-adapter-context/index.ts",
     "./use-event-calendar": "./src/use-event-calendar/index.ts",
     "./use-event-calendar-store-context": "./src/use-event-calendar-store-context/index.ts",
     "./use-event-calendar-view": "./src/use-event-calendar-view/index.ts",
@@ -57,7 +58,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -76,7 +77,8 @@
     "@floating-ui/utils": "^0.2.10",
     "@mui/x-internals": "workspace:*",
     "prop-types": "catalog:",
-    "tabbable": "^6.3.0"
+    "tabbable": "^6.3.0",
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
@@ -94,5 +96,8 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

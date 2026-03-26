@@ -65,7 +65,7 @@ const RECURRING_EVENTS: SchedulerEvent[] = [
     start: '2025-01-06T09:00:00',
     end: '2025-01-06T09:30:00',
     resource: 'work',
-    rrule: { freq: 'WEEKLY', byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR',
   },
   {
     id: 'rec-1on1',
@@ -73,7 +73,7 @@ const RECURRING_EVENTS: SchedulerEvent[] = [
     start: '2025-01-08T10:00:00',
     end: '2025-01-08T10:45:00',
     resource: 'work',
-    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['WE'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=WE',
   },
   {
     id: 'rec-morning-run',
@@ -81,7 +81,7 @@ const RECURRING_EVENTS: SchedulerEvent[] = [
     start: '2025-01-06T07:00:00',
     end: '2025-01-06T07:45:00',
     resource: 'workout',
-    rrule: { freq: 'WEEKLY', byDay: ['MO', 'WE', 'FR'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=MO,WE,FR',
   },
   {
     id: 'rec-book-club',
@@ -89,7 +89,7 @@ const RECURRING_EVENTS: SchedulerEvent[] = [
     start: '2025-01-04T15:00:00',
     end: '2025-01-04T17:00:00',
     resource: 'personal',
-    rrule: { freq: 'MONTHLY', byDay: ['1SA'], count: 12 },
+    rrule: 'FREQ=MONTHLY;BYDAY=1SA;COUNT=12',
   },
   {
     id: 'rec-birthday',
@@ -99,7 +99,7 @@ const RECURRING_EVENTS: SchedulerEvent[] = [
     resource: 'birthdays',
     allDay: true,
     readOnly: true,
-    rrule: { freq: 'YEARLY' },
+    rrule: 'FREQ=YEARLY',
   },
 ];
 

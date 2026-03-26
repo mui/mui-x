@@ -11,23 +11,19 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
-You can use the `rrule` property on your event model to define its repeating pattern:
+You can use the `rrule` property on your event model to define its repeating pattern using the [RFC 5545 RRULE](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10) string format:
 
 ```ts
 const event = {
   // ...other properties
-  rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
+  rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TH',
 };
 ```
 
 :::success
-The `rrule` property also accepts a string value in [RFC 5545 RRULE](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10) format.
-Internally, string-based rules are automatically parsed into the same object structure shown above,
-so both forms are fully equivalent:
+The `rrule` property also accepts an object value.
+Internally, both forms are automatically parsed into the same structure,
+so they are fully equivalent:
 
 ```ts
 // These two definitions are identical:
@@ -47,118 +43,103 @@ The `EventCalendarPremium` and the `EventTimelinePremium` expand recurring event
 
 ## Frequency and interval
 
-The repeating pattern of an event is defined using an object which expects the following properties:
+The RRULE string is composed of semicolon-separated `KEY=VALUE` pairs.
+The two fundamental properties are:
 
-```ts
-export interface SchedulerProcessedEventRecurrenceRule {
-  /**
-   * Base frequency of the rule.
-   * Corresponds to the FREQ property of the string-based RRULE.
-   */
-  freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
-  /**
-   * Positive integer representing at which intervals the recurrence rule repeats.
-   * For example, within a DAILY rule, a value of "8" means every eight days.
-   * Corresponds to the INTERVAL property of the string-based RRULE.
-   * @default 1
-   */
-  interval?: number;
-  // ... other properties like `byDay` or `byMonthDay` that depends on the frequency
-  // see the example below or the full SchedulerProcessedEventRecurrenceRule definition for more details
-}
-```
+- **`FREQ`** — the base frequency of the rule: `DAILY`, `WEEKLY`, `MONTHLY`, or `YEARLY`.
+- **`INTERVAL`** _(optional, defaults to `1`)_ — at which intervals the recurrence repeats. For example, within a `DAILY` rule, a value of `8` means every eight days.
 
 ### Daily frequency
 
-No extra field is required:
+No extra property is required:
 
-```tsx
+```ts
 // Every day
-rrule={{ freq: 'DAILY' }}
+rrule: 'FREQ=DAILY';
 
 // Every two days
-rrule={{ freq: 'DAILY', interval: 2 }}
+rrule: 'FREQ=DAILY;INTERVAL=2';
 ```
 
 ### Weekly frequency
 
-Use the `byDay` property with plain weekday codes (no ordinal) to define the day(s) of the week on which the event should be applied:
+Use the `BYDAY` property with plain weekday codes (no ordinal) to define the day(s) of the week on which the event should be applied:
 
-```tsx
+```ts
 // Every week on Monday
-rrule={{ freq: 'WEEKLY' }}
+rrule: 'FREQ=WEEKLY;BYDAY=MO';
 
 // Every two weeks on Monday, Wednesday and Friday
-rrule={{ freq: 'WEEKLY', interval: 2, byDay: ['MO', 'WE', 'FR'] }}
+rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE,FR';
 ```
 
 ### Monthly frequency
 
-Use either the `byMonthDay` or the `byDay` property (both can't be defined together):
+Use either the `BYMONTHDAY` or the `BYDAY` property (both can't be defined together):
 
-- Use the `byMonthDay` property with a single day number to define the day of the month on which the event should be applied:
+- Use the `BYMONTHDAY` property with a single day number to define the day of the month on which the event should be applied:
 
-  ```tsx
+  ```ts
   // Every month on the 15th
-  rrule: { freq: 'MONTHLY', byMonthDay: [15] }
+  rrule: 'FREQ=MONTHLY;BYMONTHDAY=15';
 
   // Every two months on the 15th
-  rrule: { freq: 'MONTHLY', interval: 2, byMonthDay: [15] }
+  rrule: 'FREQ=MONTHLY;INTERVAL=2;BYMONTHDAY=15';
   ```
 
   :::success
   If a month doesn't contain that day (for example day 30 for February), that month won't contain an occurrence of the event.
   :::
 
-- Use the `byDay` property with a single ordinal entry (`2TU` represents 2nd Tuesday, `-1FR` represents last Friday, etc):
+- Use the `BYDAY` property with a single ordinal entry (`2TU` represents 2nd Tuesday, `-1FR` represents last Friday, etc):
 
-  ```tsx
+  ```ts
   // Second Tuesday of every month
-  rrule: { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] }
+  rrule: 'FREQ=MONTHLY;BYDAY=2TU';
 
   // Last Friday of every month
-  rrule: { freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] }
+  rrule: 'FREQ=MONTHLY;BYDAY=-1FR';
 
-  // First Monday of every two month
-  rrule: { freq: 'MONTHLY', interval: 2, byDay: ['1MO'] }
-
+  // First Monday of every two months
+  rrule: 'FREQ=MONTHLY;INTERVAL=2;BYDAY=1MO';
   ```
 
 ### Yearly frequency
 
-No extra field is required:
+No extra property is required:
 
-```tsx
-  // Every year on the event's start date (same month and day)
-  rrule: { freq: 'YEARLY', interval: 1 }
+```ts
+// Every year on the event's start date (same month and day)
+rrule: 'FREQ=YEARLY';
 
-  // Every two years on the event's start date (same month and day)
-  rrule: { freq: 'YEARLY', interval: 2 }
+// Every two years on the event's start date (same month and day)
+rrule: 'FREQ=YEARLY;INTERVAL=2';
 ```
 
 :::success
-Advanced selectors (`byMonth`, `byMonthDay`, `byDay`) are not supported yet for the yearly frequency.
+Advanced selectors (`BYMONTH`, `BYMONTHDAY`, `BYDAY`) are not supported yet for the yearly frequency.
 :::
 
 ## End boundary
 
-By default, the event keeps occurrence without ever ending.
-Use either the `count` or the `until` property if you want to put an end boundary to your event (both can't be defined together):
+By default, the event keeps recurring without ever ending.
+Use either the `COUNT` or the `UNTIL` property if you want to put an end boundary to your event (both can't be defined together):
 
-- Use the `count` property if you want your event to stop after a given amount of occurrences:
+- Use the `COUNT` property if you want your event to stop after a given amount of occurrences:
 
-  ```tsx
+  ```ts
   // Stop after 5 occurrences
-  rrule: { freq: 'DAILY', count: 5 }
+  rrule: 'FREQ=DAILY;COUNT=5';
   ```
 
-- Use the `until` property if you want your event to stop at a given date:
+- Use the `UNTIL` property if you want your event to stop at a given date.
+  The date must be in UTC and formatted as `YYYYMMDDTHHmmssZ` (no dashes or colons):
 
-  ```tsx
-  // Until a date (inclusive)
-  rrule: { freq: 'WEEKLY', byDay: ['TU'], until: DateTime.fromISO('2025-12-31T23:59:59Z') }
+  ```ts
+  // Until December 31, 2025 at 23:59:59 UTC (inclusive)
+  rrule: 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20251231T235959Z';
   ```
 
   :::success
-  The `until` property is inclusive. This mean that if it matches the date of an event occurrence, this occurrence will be included.
+  The `UNTIL` property is inclusive. This means that if it matches the date of an event occurrence, this occurrence will be included.
   :::

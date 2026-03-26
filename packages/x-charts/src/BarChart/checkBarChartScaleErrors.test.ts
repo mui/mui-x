@@ -38,7 +38,9 @@ describe('checkBarChartScaleErrors', () => {
             [yKey]: { scaleType: 'linear' },
           },
         );
-      }).throws('MUI X Charts: The first `xAxis` should have data property.');
+      }).throws(
+        'MUI X Charts: The first `xAxis` should have a data property. The axis needs data to define the categories for the bar chart. Provide a data array to the axis configuration.',
+      );
     });
 
     it('should throw an error when the x-axis data property is smaller than the series data.', () => {
@@ -130,7 +132,9 @@ describe('checkBarChartScaleErrors', () => {
             [yKey]: { scaleType: 'band' },
           },
         );
-      }).throws('MUI X Charts: The first `yAxis` should have data property.');
+      }).throws(
+        'MUI X Charts: The first `yAxis` should have a data property. The axis needs data to define the categories for the bar chart. Provide a data array to the axis configuration.',
+      );
     });
 
     it('should throw an error when the x-axis is not a continuous scale', () => {

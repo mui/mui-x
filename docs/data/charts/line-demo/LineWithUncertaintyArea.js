@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { AnimatedLine, LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
@@ -127,7 +127,7 @@ export default function LineWithUncertaintyArea() {
 
   return (
     <Box sx={{ width: '100%', height: 200 }}>
-      <ChartContainer
+      <ChartsContainer
         series={[
           {
             type: 'line',
@@ -162,7 +162,7 @@ export default function LineWithUncertaintyArea() {
         </g>
         <ChartsTooltip />
         <ChartsClipPath id={clipPathId} />
-      </ChartContainer>
+      </ChartsContainer>
     </Box>
   );
 }

@@ -1,4 +1,4 @@
-import { type RadarGridClasses } from './radarGridClasses';
+import { type RadarClasses } from '../radarClasses';
 
 export interface RadarGridProps {
   /**
@@ -18,13 +18,10 @@ export interface RadarGridProps {
    * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'
    */
   stripeColor?: ((index: number) => string) | null;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<RadarGridClasses>;
 }
 
-export interface RadarGridRenderProps extends Pick<RadarGridProps, 'classes'> {
+export interface RadarGridRenderProps {
+  classes?: Partial<RadarClasses>;
   center: {
     x: number;
     y: number;
@@ -35,10 +32,9 @@ export interface RadarGridRenderProps extends Pick<RadarGridProps, 'classes'> {
   strokeColor: string;
 }
 
-export interface RadarGridStripeRenderProps extends Pick<
-  RadarGridProps,
-  'stripeColor' | 'classes'
-> {
+export interface RadarGridStripeRenderProps {
+  stripeColor?: RadarGridProps['stripeColor'];
+  classes?: Partial<RadarClasses>;
   center: {
     x: number;
     y: number;
