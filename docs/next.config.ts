@@ -69,6 +69,7 @@ export default withDocsInfra({
   env: {
     // docs-infra
     LIB_VERSION: pkg.version,
+    SEARCH_INDEX: `material-ui-v${pkg.version.charAt(0)}`,
     SOURCE_CODE_REPO,
     SOURCE_GITHUB_BRANCH,
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
