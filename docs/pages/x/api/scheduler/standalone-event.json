@@ -19,7 +19,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiStandaloneEvent",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler/src/standalone-event/StandaloneEvent.tsx",
