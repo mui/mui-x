@@ -21,6 +21,7 @@ module.exports = withDocsInfra({
   env: {
     ENABLE_AD: process.env.ENABLE_AD,
     LIB_VERSION: pkg.version,
+    SEARCH_INDEX: `material-ui-v${pkg.version.charAt(0)}`,
     DATA_GRID_VERSION: dataGridPkg.version,
     DATE_PICKERS_VERSION: datePickersPkg.version,
     FEEDBACK_URL: process.env.FEEDBACK_URL,
