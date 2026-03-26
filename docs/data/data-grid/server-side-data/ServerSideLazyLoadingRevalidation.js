@@ -109,7 +109,7 @@ function FlashOnChange({ children, changeId, align = 'left', fontWeight, sx }) {
           paddingRight: '10px',
           paddingLeft: '10px',
           width: '100%',
-          fontWeight: fontWeight,
+          fontWeight,
         },
         (theme) => ({
           position: 'relative',

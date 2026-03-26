@@ -73,8 +73,8 @@ function CustomHeaderFilter(props) {
       {...mouseEventsHandlers}
       sx={[
         {
-          width: width,
-          height: height,
+          width,
+          height,
           justifyContent: 'center',
           alignItems: 'center',
         },
