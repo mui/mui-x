@@ -391,7 +391,7 @@ export default function PickersPlayground() {
           },
         }),
         day: {
-          disableMargin: disableDayMargin,
+          sx: disableDayMargin ? { mx: 0 } : undefined,
         },
       },
       displayWeekNumber,

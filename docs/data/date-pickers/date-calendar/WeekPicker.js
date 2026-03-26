@@ -57,8 +57,7 @@ function Day(props) {
     <CustomPickerDay
       {...other}
       day={day}
-      sx={{ px: 2.5 }}
-      disableMargin
+      sx={{ px: 2.5, mx: 0 }}
       selected={false}
       isSelected={isInSameWeek(day, selectedDay)}
       isHovered={isInSameWeek(day, hoveredDay)}

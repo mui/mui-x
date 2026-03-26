@@ -8,7 +8,6 @@ export interface PickerDayOwnerState {
   isDayOutsideMonth: boolean;
   isDayStartOfWeek: boolean;
   isDayEndOfWeek: boolean;
-  disableMargin: boolean;
   disableHighlightToday: boolean;
   showDaysOutsideCurrentMonth: boolean;
 }

@@ -59,11 +59,6 @@ export interface PickerDayProps
    */
   isLastVisibleCell: boolean;
   /**
-   * If `true`, the margin between days is disabled.
-   * @default false
-   */
-  disableMargin?: boolean;
-  /**
    * If `true`, the day is being animated.
    * @default false
    */

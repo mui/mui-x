@@ -6,8 +6,6 @@ export interface DateRangePickerDayClasses {
   root: string;
   /** Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`. */
   dayOutsideMonth: string;
-  /** Styles applied the root element when `disableMargin=true` */
-  dayWithoutMargin: string;
   /** Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`. */
   fillerCell: string;
   /** Styles applied to the root element if `disableHighlightToday=false` and `today=true`. */
@@ -41,7 +39,6 @@ export const dateRangePickerDayClasses = generateUtilityClasses<DateRangePickerD
   [
     'root',
     'dayOutsideMonth',
-    'dayWithoutMargin',
     'today',
     'disabled',
     'fillerCell',

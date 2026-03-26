@@ -23,7 +23,7 @@ describe('<PickerDay />', () => {
       render,
       muiName: 'MuiPickerDay',
       refInstanceof: window.HTMLButtonElement,
-      testVariantProps: { variant: 'disableMargin' },
+      testVariantProps: { selected: true },
       skip: ['componentProp', 'componentsProp'],
     }),
   );

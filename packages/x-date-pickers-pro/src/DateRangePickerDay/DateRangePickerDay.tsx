@@ -26,7 +26,6 @@ const useUtilityClasses = (
   const {
     isDaySelected,
     disableHighlightToday,
-    disableMargin,
     isDayCurrent,
     isDayDisabled,
     isDayOutsideMonth,
@@ -51,7 +50,6 @@ const useUtilityClasses = (
       isDayDisabled && 'disabled',
       !disableHighlightToday && isDayCurrent && !isDaySelected && !isDayFillerCell && 'today',
       isDayOutsideMonth && 'dayOutsideMonth',
-      disableMargin && 'dayWithoutMargin',
       isDayFillerCell && 'fillerCell',
       isDaySelected && 'selected',
       isDayPreviewStart && 'previewStart',
@@ -124,7 +122,6 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       styles.root,
       !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
       ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
-      ownerState.disableMargin && styles.dayWithoutMargin,
       ownerState.isDayFillerCell && styles.fillerCell,
       ownerState.isDaySelected && !ownerState.isDayInsideSelection && styles.selected,
       ownerState.isDayPreviewStart && styles.previewStart,
@@ -200,13 +197,6 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       props: { isDayOutsideMonth: true },
       style: {
         color: (theme.vars || theme).palette.text.secondary,
-      },
-    },
-    {
-      props: { disableMargin: true },
-      style: {
-        marginLeft: 0,
-        marginRight: 0,
       },
     },
     {
@@ -416,7 +406,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     today,
     outsideCurrentMonth,
     disableHighlightToday,
-    disableMargin,
     showDaysOutsideCurrentMonth,
     isEndOfHighlighting,
     isEndOfPreviewing,
@@ -436,7 +425,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     disabled,
     today,
     outsideCurrentMonth,
-    disableMargin,
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
   });
@@ -580,11 +568,6 @@ DateRangePickerDayRaw.propTypes = {
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
-  /**
-   * If `true`, the margin between days is disabled.
-   * @default false
-   */
-  disableMargin: PropTypes.bool,
   /**
    * If `true`, the ripple effect is disabled.
    *

@@ -11,7 +11,6 @@ export function usePickerDayOwnerState(parameters: UsePickerDayOwnerStateParamet
     today,
     outsideCurrentMonth,
     day,
-    disableMargin,
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
   } = parameters;
@@ -28,7 +27,6 @@ export function usePickerDayOwnerState(parameters: UsePickerDayOwnerStateParamet
       isDayOutsideMonth: outsideCurrentMonth ?? false,
       isDayStartOfWeek: adapter.isSameDay(day, adapter.startOfWeek(day)),
       isDayEndOfWeek: adapter.isSameDay(day, adapter.endOfWeek(day)),
-      disableMargin: disableMargin ?? false,
       disableHighlightToday: disableHighlightToday ?? false,
       showDaysOutsideCurrentMonth: showDaysOutsideCurrentMonth ?? false,
     }),
@@ -40,7 +38,6 @@ export function usePickerDayOwnerState(parameters: UsePickerDayOwnerStateParamet
       disabled,
       today,
       outsideCurrentMonth,
-      disableMargin,
       disableHighlightToday,
       showDaysOutsideCurrentMonth,
     ],
@@ -53,7 +50,6 @@ interface UsePickerDayOwnerStateParameters {
   selected: boolean | undefined;
   today: boolean | undefined;
   outsideCurrentMonth: boolean | undefined;
-  disableMargin: boolean | undefined;
   disableHighlightToday: boolean | undefined;
   showDaysOutsideCurrentMonth: boolean | undefined;
 }

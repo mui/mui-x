@@ -15,7 +15,6 @@ const classRenames = {
   rangeIntervalPreview: 'insidePreviewing',
   rangeIntervalDayHighlight: 'selectionStart',
   rangeIntervalDayPreview: 'previewStart',
-  dayWithMargin: 'dayWithoutMargin',
 };
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {

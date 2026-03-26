@@ -126,18 +126,18 @@ This makes the behavior more consistent with the single date picker (`PickerDay`
 
 This change might affect your custom CSS if you were targeting the `.Mui-selected` state of `DateRangePickerDay` and expected it to only be present for complete ranges.
 
-### `DateRangePickerDay` margins
+### `disableMargin` prop removal
 
+The `disableMargin` prop has been removed from `PickerDay` and `DateRangePickerDay` components.
 In v8, `DateRangePickerDay` internally hardcoded `disableMargin={true}` on the `PickersDay` component.
-In v9, `DateRangePickerDay` is a standalone component and its `disableMargin` prop now defaults to `false`.
 
-This means that by default, range picker days will now have horizontal margins.
-If you want to restore the previous behavior (no margins), you can pass `disableMargin: true` to the `day` slot:
+In v9, by default, both components will now have horizontal margins.
+If you want to remove the margins, you can use the `sx` prop:
 
 ```tsx
-<DateRangePicker
+<DatePicker
   slotProps={{
-    day: { disableMargin: true },
+    day: { sx: { mx: 0 } },
   }}
 />
 ```
@@ -219,9 +219,11 @@ const theme = createTheme({
 
 ### `PickerDay` classes
 
-The `PickerDay` classes have also been updated:
+Several keys have been removed from the `PickerDayClasses` interface:
 
-- `dayWithMargin` has been removed and replaced by `dayWithoutMargin`. Note that the logic is inverted: `dayWithoutMargin` is applied when the day does **not** have a margin.
+- `dayWithMargin` and `dayWithoutMargin` have been removed.
+- `hiddenDayFiller` and `hiddenDaySpacingFiller` have been renamed to `fillerCell`.
+- `outsideCurrentMonth` has been renamed to `dayOutsideMonth`.
 
 ### `data-testid` changes
 

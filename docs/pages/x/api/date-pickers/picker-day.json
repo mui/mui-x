@@ -19,7 +19,6 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
-    "disableMargin": { "type": { "name": "bool" }, "default": "false" },
     "disableRipple": { "type": { "name": "bool" }, "default": "false" },
     "disableTouchRipple": { "type": { "name": "bool" }, "default": "false" },
     "focusRipple": { "type": { "name": "bool" }, "default": "false" },
@@ -106,12 +105,6 @@
       "key": "dayOutsideMonth",
       "className": "MuiPickerDay-dayOutsideMonth",
       "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`.",
-      "isGlobal": false
-    },
-    {
-      "key": "dayWithoutMargin",
-      "className": "MuiPickerDay-dayWithoutMargin",
-      "description": "Styles applied the root element when `disableMargin=true`",
       "isGlobal": false
     },
     {

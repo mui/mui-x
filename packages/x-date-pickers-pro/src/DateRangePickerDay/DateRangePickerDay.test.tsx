@@ -48,9 +48,6 @@ describe('<DateRangePickerDay />', () => {
               endOfMonth: {
                 opacity: '0.2',
               },
-              dayWithoutMargin: {
-                opacity: '0.3',
-              },
               previewed: {
                 opacity: '0.4',
               },
@@ -101,28 +98,6 @@ describe('<DateRangePickerDay />', () => {
 
       // 2018-01-31 is end of month
       expect(container2.firstChild).to.have.style('opacity', '0.2');
-
-      const { container: container3 } = render(
-        <ThemeProvider theme={theme}>
-          <DateRangePickerDay
-            day={adapterToUse.date('2018-01-15')}
-            onDaySelect={() => {}}
-            outsideCurrentMonth={false}
-            isHighlighting={false}
-            isPreviewing={false}
-            isStartOfPreviewing={false}
-            isEndOfPreviewing={false}
-            isStartOfHighlighting={false}
-            isEndOfHighlighting={false}
-            isFirstVisibleCell={false}
-            isLastVisibleCell={false}
-            disableMargin
-          />
-        </ThemeProvider>,
-      );
-
-      // 2018-01-15 is NOT start/end of month, but has disableMargin
-      expect(container3.firstChild).to.have.style('opacity', '0.3');
 
       const { container: container4 } = render(
         <ThemeProvider theme={theme}>

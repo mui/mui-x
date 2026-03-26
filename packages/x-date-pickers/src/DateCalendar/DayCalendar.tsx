@@ -273,7 +273,6 @@ function WrappedDay({
     disabled: isDisabled,
     today: isToday,
     outsideCurrentMonth: isOutsideCurrentMonth,
-    disableMargin: undefined, // This prop can only be defined using slotProps.day so the ownerState for useSlotProps cannot have its value.
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
   });

@@ -57,7 +57,6 @@ const PickerDayRoot = styled(ButtonBase, {
     return [
       styles.root,
       !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
-      ownerState.disableMargin && styles.dayWithoutMargin,
       ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
       ownerState.isDayFillerCell && styles.fillerCell,
     ];
@@ -130,13 +129,6 @@ const PickerDayRoot = styled(ButtonBase, {
       },
     },
     {
-      props: { disableMargin: true },
-      style: {
-        marginLeft: 0,
-        marginRight: 0,
-      },
-    },
-    {
       props: {
         isDayCurrent: true,
         isDaySelected: false,
@@ -187,7 +179,6 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
     disabled,
     today,
     outsideCurrentMonth,
-    disableMargin,
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
     isVisuallySelected,
@@ -201,7 +192,6 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
     disabled,
     today,
     outsideCurrentMonth,
-    disableMargin,
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
   });
@@ -328,11 +318,6 @@ PickerDayRaw.propTypes = {
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
-  /**
-   * If `true`, the margin between days is disabled.
-   * @default false
-   */
-  disableMargin: PropTypes.bool,
   /**
    * If `true`, the ripple effect is disabled.
    *
