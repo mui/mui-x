@@ -65,15 +65,28 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         })
         .forEach((styleOverridesPath) => {
           if (styleOverridesPath.node.value.type === 'ObjectExpression') {
+            const seenProperties = new Map<string, string>();
             styleOverridesPath.node.value.properties.forEach((prop) => {
               if (prop.type === 'ObjectProperty') {
                 const propKey =
                   prop.key.type === 'Identifier' ? prop.key.name : (prop.key as any).value;
-                if (classRenames[propKey]) {
+                const newKey = classRenames[propKey];
+                if (newKey) {
+                  if (seenProperties.has(newKey)) {
+                    const firstOldKey = seenProperties.get(newKey);
+                    prop.comments = [
+                      j.commentLine(
+                        ` @ts-expect-error both \`${firstOldKey}\` and \`${propKey}\` renamed to \`${newKey}\``,
+                        true,
+                      ),
+                    ];
+                  }
+                  seenProperties.set(newKey, propKey);
+
                   if (prop.key.type === 'Identifier') {
-                    prop.key.name = classRenames[propKey];
+                    prop.key.name = newKey;
                   } else if (prop.key.type === 'StringLiteral') {
-                    prop.key.value = classRenames[propKey];
+                    prop.key.value = newKey;
                   }
                 }
               }
