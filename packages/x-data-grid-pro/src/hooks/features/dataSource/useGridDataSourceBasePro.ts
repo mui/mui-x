@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { RequestQueue } from '@base-ui/utils/RequestQueue';
 import type { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -32,7 +31,7 @@ import {
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { getGroupKeys } from './utils';
+import { GridRequestQueue, getGroupKeys } from './utils';
 import type {
   GridDataSourceApiBasePro,
   GridDataSourceApiPro,
@@ -53,14 +52,8 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   options: GridDataSourceBaseOptions = {},
 ) => {
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
-  const requestQueue = useLazyRef<RequestQueue<GridRowId>, void>(
-    () =>
-      new RequestQueue({
-        fetchFn: (id) => {
-          apiRef.current.fetchRowChildren(id);
-          return Promise.resolve();
-        },
-      }),
+  const requestQueue = useLazyRef<GridRequestQueue, void>(
+    () => new GridRequestQueue(apiRef),
   ).current;
   const scheduledGroups = React.useRef<number>(0);
 
@@ -95,20 +88,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     cacheChunkManager,
     cache,
   } = useGridDataSourceBase(apiRef, props, {
-    fetchRowChildren: (ids: GridRowId[]) => {
-      const loadingIds = Object.fromEntries(ids.map((id) => [id, true]));
-      apiRef.current.setState((state) => ({
-        ...state,
-        dataSource: {
-          ...state.dataSource,
-          loading: {
-            ...state.dataSource.loading,
-            ...loadingIds,
-          },
-        },
-      }));
-      return requestQueue.queue(ids);
-    },
+    fetchRowChildren: requestQueue.queue,
     clearDataSourceState,
     handleEditRow,
     ...options,
@@ -175,20 +155,17 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         {},
       ) as Partial<GridGetRowsParamsPro & { groupFields: string[] }>;
       if (!props.treeData && (pipedParams.groupFields?.length ?? 0) === 0) {
-        apiRef.current.dataSource.setChildrenLoading(id, false);
         requestQueue.clearPendingRequest(id);
         return;
       }
       const getRows = props.dataSource?.getRows;
       if (!getRows) {
-        apiRef.current.dataSource.setChildrenLoading(id, false);
         requestQueue.clearPendingRequest(id);
         return;
       }
 
       const rowNode = apiRef.current.getRowNode<GridDataSourceGroupNode>(id);
       if (!rowNode) {
-        apiRef.current.dataSource.setChildrenLoading(id, false);
         requestQueue.clearPendingRequest(id);
         return;
       }
@@ -226,7 +203,6 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         const getRowsResponse = await getRows(fetchParams);
         if (!apiRef.current.getRowNode(id)) {
           // The row has been removed from the grid
-          apiRef.current.dataSource.setChildrenLoading(id, false);
           requestQueue.clearPendingRequest(id);
           return;
         }
@@ -446,17 +422,6 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       scheduledGroups.current < groupsToAutoFetch.length
     ) {
       const groupsToSchedule = groupsToAutoFetch.slice(scheduledGroups.current);
-      const loadingIds = Object.fromEntries(groupsToSchedule.map((id) => [id, true]));
-      apiRef.current.setState((state) => ({
-        ...state,
-        dataSource: {
-          ...state.dataSource,
-          loading: {
-            ...state.dataSource.loading,
-            ...loadingIds,
-          },
-        },
-      }));
       requestQueue.queue(groupsToSchedule);
       scheduledGroups.current = groupsToAutoFetch.length;
     }
