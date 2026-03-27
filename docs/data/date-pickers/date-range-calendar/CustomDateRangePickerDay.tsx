@@ -11,6 +11,11 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 
 const DateRangePickerDay = styled(MuiDateRangePickerDay)(({ theme }) => ({
+  '--PickerDay-horizontalMargin': 0,
+  // Ensures the day increases width, accounting for the padding, matching the width of the week number cell
+  boxSizing: 'content-box',
+  paddingLeft: '2px',
+  paddingRight: '2px',
   variants: [
     {
       props: ({ isHighlighting, outsideCurrentMonth }) =>
@@ -48,7 +53,6 @@ export default function CustomDateRangePickerDay() {
         <DateRangeCalendar
           defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
           slots={{ day: DateRangePickerDay }}
-          slotProps={{ day: { sx: { px: 2.5, mx: 0 } } }}
         />
       </DemoContainer>
     </LocalizationProvider>
