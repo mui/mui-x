@@ -208,6 +208,27 @@ You can pass a custom component to replace the month button, as shown below:
 
 {{"demo": "MonthButtonComponent.js"}}
 
+## Day
+
+The `day` slot is available on any component that renders a calendar to select a date or a range of dates.
+It lets you customize the appearance and behavior of each individual day cell.
+
+### Component structure change
+
+The `PickerDay` and `DateRangePickerDay` components have been simplified to use a single `ButtonBase` element.
+Previously, they used multiple nested elements to render the selection and preview highlights.
+These highlights are now rendered using `::before` and `::after` pseudo-elements on the root element.
+
+This change brings several benefits:
+
+- **Simpler DOM structure**: Fewer nested elements mean a cleaner DOM and potentially better performance.
+- **Improved consistency**: Both components now follow the same implementation pattern.
+
+However, this might affect your custom styles if you were targeting the nested elements.
+For example, in `DateRangePickerDay`, the `day` class has been removed because there is no longer a separate element for the day content.
+
+For more details on how to adapt your custom styles, check the [Day slot migration guide](/x/migration/migration-pickers-v8/#day-slot).
+
 ## Arrow switcher
 
 The following slots let you customize how to render the buttons and icons for an arrow switcher: the component used
