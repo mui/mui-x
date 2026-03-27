@@ -31,7 +31,7 @@ export const cleanFieldResponse = <
 }: TFieldResponse): ExportedPickerFieldUIProps & {
   openPickerAriaLabel: string;
   textFieldProps:
-    | (TextFieldProps & { inputProps?: Record<string, any>; InputProps: Record<string, any> })
+    | (TextFieldProps & { inputProps?: Record<string, any>; InputProps?: Record<string, any> })
     | PickersTextFieldProps;
 } => {
   if (enableAccessibleFieldDOMStructure) {
