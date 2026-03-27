@@ -225,7 +225,7 @@
       }
     },
     "showDaysOutsideCurrentMonth": {
-      "description": "If <code>true</code>, days outside the current month are shown."
+      "description": "If <code>true</code>, days outside the current month are rendered:<br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
     },
     "skipDisabled": {
       "description": "If <code>true</code>, disabled digital clock items will not be rendered."

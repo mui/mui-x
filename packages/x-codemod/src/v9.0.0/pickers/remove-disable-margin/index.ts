@@ -35,13 +35,10 @@ function mergeMxIntoSxObject(j: any, sxExpr: any): boolean {
   }
   // Avoid adding mx: 0 if it's already there
   const alreadyHasMx = sxExpr.properties.some(
-    (p: any) =>
-      p.type === 'ObjectProperty' && (p.key?.name === 'mx' || p.key?.value === 'mx'),
+    (p: any) => p.type === 'ObjectProperty' && (p.key?.name === 'mx' || p.key?.value === 'mx'),
   );
   if (!alreadyHasMx) {
-    sxExpr.properties.push(
-      j.objectProperty(j.identifier('mx'), j.numericLiteral(0)),
-    );
+    sxExpr.properties.push(j.objectProperty(j.identifier('mx'), j.numericLiteral(0)));
   }
   return true;
 }
@@ -84,9 +81,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
             j.jsxAttribute(
               j.jsxIdentifier('sx'),
               j.jsxExpressionContainer(
-                j.objectExpression([
-                  j.objectProperty(j.identifier('mx'), j.numericLiteral(0)),
-                ]),
+                j.objectExpression([j.objectProperty(j.identifier('mx'), j.numericLiteral(0))]),
               ),
             ),
           );
@@ -133,8 +128,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       }
 
       const dmProp = dayObj.properties[dmIndex];
-      const enabled =
-        dmProp.value.type === 'BooleanLiteral' ? dmProp.value.value : true;
+      const enabled = dmProp.value.type === 'BooleanLiteral' ? dmProp.value.value : true;
       dayObj.properties.splice(dmIndex, 1);
 
       if (enabled) {
@@ -146,9 +140,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
           dayObj.properties.push(
             j.objectProperty(
               j.identifier('sx'),
-              j.objectExpression([
-                j.objectProperty(j.identifier('mx'), j.numericLiteral(0)),
-              ]),
+              j.objectExpression([j.objectProperty(j.identifier('mx'), j.numericLiteral(0))]),
             ),
           );
         } else {

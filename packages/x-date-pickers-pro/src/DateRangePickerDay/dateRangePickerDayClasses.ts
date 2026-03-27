@@ -34,6 +34,10 @@ export interface DateRangePickerDayClasses {
   startOfMonth: string;
   /** Styles applied to the root element if `isDayEndOfMonth=true`. */
   endOfMonth: string;
+  /** Styles applied to the root element if `isDayFirstVisibleCell=true`. */
+  firstVisibleCell: string;
+  /** Styles applied to the root element if `isDayLastVisibleCell=true`. */
+  lastVisibleCell: string;
   /** Styles applied to the root element if `isDayPreviewed=true`. */
   previewed: string;
   /** Styles applied to the root element if `isDayDraggable=true`. */
@@ -64,6 +68,8 @@ export const dateRangePickerDayClasses = generateUtilityClasses<DateRangePickerD
     'endOfWeek',
     'startOfMonth',
     'endOfMonth',
+    'firstVisibleCell',
+    'lastVisibleCell',
     'previewed',
     'selected',
     'draggable',

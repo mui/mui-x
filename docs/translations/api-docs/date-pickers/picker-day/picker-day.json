@@ -87,7 +87,7 @@
     },
     "selected": { "description": "If <code>true</code>, renders as selected." },
     "showDaysOutsideCurrentMonth": {
-      "description": "If <code>true</code>, days outside the current month are shown."
+      "description": "If <code>true</code>, days outside the current month are rendered:<br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
@@ -113,6 +113,16 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "<code>outsideCurrentMonth=true</code> and <code>showDaysOutsideCurrentMonth=false</code>"
+    },
+    "firstVisibleCell": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayFirstVisibleCell=true</code>"
+    },
+    "lastVisibleCell": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayLastVisibleCell=true</code>"
     },
     "root": { "description": "Styles applied to the root element." },
     "selected": {

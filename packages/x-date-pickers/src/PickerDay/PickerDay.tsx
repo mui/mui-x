@@ -30,6 +30,8 @@ const useUtilityClasses = (
     isDayDisabled,
     isDayOutsideMonth,
     isDayFillerCell,
+    isDayFirstVisibleCell,
+    isDayLastVisibleCell,
   } = ownerState;
 
   const slots = {
@@ -40,6 +42,8 @@ const useUtilityClasses = (
       !disableHighlightToday && isDayCurrent && !isDaySelected && !isDayFillerCell && 'today',
       isDayOutsideMonth && 'dayOutsideMonth',
       isDayFillerCell && 'fillerCell',
+      isDayFirstVisibleCell && 'firstVisibleCell',
+      isDayLastVisibleCell && 'lastVisibleCell',
     ],
   };
 
@@ -59,6 +63,8 @@ const PickerDayRoot = styled(ButtonBase, {
       !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
       ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
       ownerState.isDayFillerCell && styles.fillerCell,
+      ownerState.isDayFirstVisibleCell && styles.firstVisibleCell,
+      ownerState.isDayLastVisibleCell && styles.lastVisibleCell,
     ];
   },
 })<{ ownerState: PickerDayOwnerState }>(({ theme }) => ({
@@ -201,6 +207,8 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
     ...pickerDayOwnerState,
     // Properties specific to the MUI implementation (some might be removed in the next major)
     isDayFillerCell: isDayFillerCellProp ?? (outsideCurrentMonth && !showDaysOutsideCurrentMonth),
+    isDayFirstVisibleCell: isFirstVisibleCell,
+    isDayLastVisibleCell: isLastVisibleCell,
   };
 
   const classes = useUtilityClasses(ownerState, classesProp);
@@ -228,7 +236,7 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
 
   const handleClick = (event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => {
     event.defaultMuiPrevented = true;
-    if (!disabled) {
+    if (!disabled && onDaySelect) {
       onDaySelect(day);
     }
 
@@ -392,7 +400,7 @@ PickerDayRaw.propTypes = {
    * Callback fired when the day is selected.
    * @param {PickerValidDate} day The day to select.
    */
-  onDaySelect: PropTypes.func.isRequired,
+  onDaySelect: PropTypes.func,
   /**
    * Callback fired when the component is focused.
    * @param {React.FocusEvent<HTMLButtonElement>} event The event object.
@@ -429,14 +437,20 @@ PickerDayRaw.propTypes = {
    * If `true`, the day is outside the current month.
    * @default false
    */
-  outsideCurrentMonth: PropTypes.bool.isRequired,
+  outsideCurrentMonth: PropTypes.bool,
   /**
    * If `true`, renders as selected.
    * @default false
    */
   selected: PropTypes.bool,
   /**
-   * If `true`, days outside the current month are shown.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,

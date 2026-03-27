@@ -186,7 +186,7 @@ Several keys have been removed from the `DateRangePickerDayClasses` interface.
 - `rangeIntervalPreview` has been removed. You can now use `insidePreviewing` instead.
 - `outsideCurrentMonth` has been renamed to `dayOutsideMonth`.
 - `hiddenDayFiller` and `hiddenDaySpacingFiller` have been renamed to `fillerCell`.
-- `firstVisibleCell` and `lastVisibleCell` have been removed with no replacement.
+- `firstVisibleCell` and `lastVisibleCell` are now utility classes available on both `PickerDay` and `DateRangePickerDay` root elements.
 
 If you have custom `styleOverrides` for these classes, you need to update them to use the new class names.
 

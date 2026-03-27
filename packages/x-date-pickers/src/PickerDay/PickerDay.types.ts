@@ -53,7 +53,7 @@ export interface PickerDayProps
    * If `true`, the day is outside the current month.
    * @default false
    */
-  outsideCurrentMonth: boolean;
+  outsideCurrentMonth?: boolean;
   /**
    * If `true`, the day is the first visible cell of the month.
    * @default false
@@ -73,7 +73,7 @@ export interface PickerDayProps
    * Callback fired when the day is selected.
    * @param {PickerValidDate} day The day to select.
    */
-  onDaySelect: (day: PickerValidDate) => void;
+  onDaySelect?: (day: PickerValidDate) => void;
   /**
    * Callback fired when a key is pressed.
    * @param {React.KeyboardEvent<HTMLButtonElement>} event The event object.
@@ -134,6 +134,14 @@ export interface PickerDayOwnerState extends PickerDayOwnerStateBase {
    * Whether the day is a filler day (its content is hidden).
    */
   isDayFillerCell?: boolean;
+  /**
+   * Whether the day is the first visible cell of the month it's being rendered in.
+   */
+  isDayFirstVisibleCell?: boolean;
+  /**
+   * Whether the day is the last visible cell of the month it's being rendered in.
+   */
+  isDayLastVisibleCell?: boolean;
 }
 
 export type { PickerDayOwnerStateBase };

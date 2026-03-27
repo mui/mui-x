@@ -1,18 +1,6 @@
 {
   "props": {
     "day": { "type": { "name": "object" }, "required": true },
-    "isEndOfHighlighting": { "type": { "name": "bool" }, "required": true },
-    "isEndOfPreviewing": { "type": { "name": "bool" }, "required": true },
-    "isHighlighting": { "type": { "name": "bool" }, "required": true },
-    "isPreviewing": { "type": { "name": "bool" }, "required": true },
-    "isStartOfHighlighting": { "type": { "name": "bool" }, "required": true },
-    "isStartOfPreviewing": { "type": { "name": "bool" }, "required": true },
-    "onDaySelect": {
-      "type": { "name": "func" },
-      "required": true,
-      "signature": { "type": "function(day: PickerValidDate) => void", "describedArgs": ["day"] }
-    },
-    "outsideCurrentMonth": { "type": { "name": "bool" }, "default": "false", "required": true },
     "action": {
       "type": {
         "name": "union",
@@ -30,8 +18,14 @@
     "focusVisibleClassName": { "type": { "name": "string" } },
     "isAnimating": { "type": { "name": "bool" }, "default": "false" },
     "isDayFillerCell": { "type": { "name": "bool" }, "default": "false" },
+    "isEndOfHighlighting": { "type": { "name": "bool" } },
+    "isEndOfPreviewing": { "type": { "name": "bool" } },
     "isFirstVisibleCell": { "type": { "name": "bool" }, "default": "false" },
+    "isHighlighting": { "type": { "name": "bool" } },
     "isLastVisibleCell": { "type": { "name": "bool" }, "default": "false" },
+    "isPreviewing": { "type": { "name": "bool" } },
+    "isStartOfHighlighting": { "type": { "name": "bool" } },
+    "isStartOfPreviewing": { "type": { "name": "bool" } },
     "isVisuallySelected": { "type": { "name": "bool" } },
     "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
     "onBlur": {
@@ -49,6 +43,10 @@
         "type": "function(event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => void",
         "describedArgs": ["event"]
       }
+    },
+    "onDaySelect": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(day: PickerValidDate) => void", "describedArgs": ["day"] }
     },
     "onFocus": {
       "type": { "name": "func" },
@@ -83,6 +81,7 @@
         "describedArgs": ["event", "day"]
       }
     },
+    "outsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "selected": { "type": { "name": "bool" }, "default": "false" },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "sx": {
@@ -110,67 +109,79 @@
     {
       "key": "dayOutsideMonth",
       "className": "MuiDateRangePickerDay-dayOutsideMonth",
-      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`.",
+      "description": "Styles applied to the root element if `isDayOutsideMonth=true` and `showDaysOutsideCurrentMonth=true`.",
       "isGlobal": false
     },
     {
       "key": "disabled",
       "className": "Mui-disabled",
-      "description": "State class applied to the root element if `disabled=true`.",
+      "description": "State class applied to the root element if `isDayDisabled=true`.",
       "isGlobal": true
     },
     {
       "key": "draggable",
       "className": "MuiDateRangePickerDay-draggable",
-      "description": "",
+      "description": "Styles applied to the root element if `isDayDraggable=true`.",
       "isGlobal": false
     },
     {
       "key": "endOfMonth",
       "className": "MuiDateRangePickerDay-endOfMonth",
-      "description": "",
+      "description": "Styles applied to the root element if `isDayEndOfMonth=true`.",
       "isGlobal": false
     },
     {
       "key": "endOfWeek",
       "className": "MuiDateRangePickerDay-endOfWeek",
-      "description": "",
+      "description": "Styles applied to the root element if `isDayEndOfWeek=true`.",
       "isGlobal": false
     },
     {
       "key": "fillerCell",
       "className": "MuiDateRangePickerDay-fillerCell",
-      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`.",
+      "description": "Styles applied to the root element if `isDayOutsideMonth=true` and `showDaysOutsideCurrentMonth=false`.",
+      "isGlobal": false
+    },
+    {
+      "key": "firstVisibleCell",
+      "className": "MuiDateRangePickerDay-firstVisibleCell",
+      "description": "Styles applied to the root element if `isDayFirstVisibleCell=true`.",
       "isGlobal": false
     },
     {
       "key": "insidePreviewing",
       "className": "MuiDateRangePickerDay-insidePreviewing",
-      "description": "",
+      "description": "Styles applied to the root element if `isDayInsidePreview=true`.",
       "isGlobal": false
     },
     {
       "key": "insideSelection",
       "className": "MuiDateRangePickerDay-insideSelection",
-      "description": "",
+      "description": "Styles applied to the root element if `isDayInsideSelection=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "lastVisibleCell",
+      "className": "MuiDateRangePickerDay-lastVisibleCell",
+      "description": "Styles applied to the root element if `isDayLastVisibleCell=true`.",
       "isGlobal": false
     },
     {
       "key": "previewed",
       "className": "MuiDateRangePickerDay-previewed",
-      "description": "",
+      "description": "Styles applied to the root element if `isDayPreviewed=true`.",
       "isGlobal": false
     },
     {
       "key": "previewEnd",
       "className": "MuiDateRangePickerDay-previewEnd",
-      "description": "",
+      "description": "Styles applied to the root element if `isDayPreviewEnd=true`.",
       "isGlobal": false
     },
     {
       "key": "previewStart",
       "className": "MuiDateRangePickerDay-previewStart",
-      "description": "",
+      "description": "Styles applied to the root element if `isDayPreviewStart=true`.",
       "isGlobal": false
     },
     {
@@ -182,37 +193,37 @@
     {
       "key": "selected",
       "className": "Mui-selected",
-      "description": "State class applied to the root element if `selected=true`.",
+      "description": "State class applied to the root element if `isDaySelected=true`.",
       "isGlobal": true
     },
     {
       "key": "selectionEnd",
       "className": "MuiDateRangePickerDay-selectionEnd",
-      "description": "",
+      "description": "Styles applied to the root element if `isDaySelectionEnd=true`.",
       "isGlobal": false
     },
     {
       "key": "selectionStart",
       "className": "MuiDateRangePickerDay-selectionStart",
-      "description": "",
+      "description": "Styles applied to the root element if `isDaySelectionStart=true`.",
       "isGlobal": false
     },
     {
       "key": "startOfMonth",
       "className": "MuiDateRangePickerDay-startOfMonth",
-      "description": "",
+      "description": "Styles applied to the root element if `isDayStartOfMonth=true`.",
       "isGlobal": false
     },
     {
       "key": "startOfWeek",
       "className": "MuiDateRangePickerDay-startOfWeek",
-      "description": "",
+      "description": "Styles applied to the root element if `isDayStartOfWeek=true`.",
       "isGlobal": false
     },
     {
       "key": "today",
       "className": "MuiDateRangePickerDay-today",
-      "description": "Styles applied to the root element if `disableHighlightToday=false` and `today=true`.",
+      "description": "Styles applied to the root element if `disableHighlightToday=false` and `isDayCurrent=true`.",
       "isGlobal": false
     }
   ],

@@ -92,8 +92,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
                   return false;
                 }
                 const nameNode = openingElement.get().value.name;
-                const componentName =
-                  nameNode.type === 'JSXIdentifier' ? nameNode.name : null;
+                const componentName = nameNode.type === 'JSXIdentifier' ? nameNode.name : null;
                 return componentName !== null && pickerNames.includes(componentName);
               });
 
@@ -102,7 +101,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
             const hasNonPickerRefs =
               root.find(j.Identifier, { name: varName }).filter((idPath) => {
                 // find(j.Identifier) also matches JSXIdentifier (attribute names) — skip them
-                if (idPath.node.type === 'JSXIdentifier') {
+                if (idPath.node.type !== 'Identifier') {
                   return false;
                 }
                 // Exclude the declaration binding (the `id` in `const varName = ...`)
@@ -117,8 +116,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
                   const openingElement = j(closestAttr.get()).closest(j.JSXOpeningElement);
                   if (openingElement.length > 0) {
                     const nameNode = openingElement.get().value.name;
-                    const componentName =
-                      nameNode.type === 'JSXIdentifier' ? nameNode.name : null;
+                    const componentName = nameNode.type === 'JSXIdentifier' ? nameNode.name : null;
                     if (componentName && pickerNames.includes(componentName)) {
                       return false;
                     }

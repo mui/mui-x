@@ -108,7 +108,7 @@
     },
     "selected": { "description": "If <code>true</code>, renders as selected." },
     "showDaysOutsideCurrentMonth": {
-      "description": "If <code>true</code>, days outside the current month are shown."
+      "description": "If <code>true</code>, days outside the current month are rendered:<br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
@@ -123,40 +123,98 @@
     "dayOutsideMonth": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>outsideCurrentMonth=true</code> and <code>showDaysOutsideCurrentMonth=true</code>"
+      "conditions": "<code>isDayOutsideMonth=true</code> and <code>showDaysOutsideCurrentMonth=true</code>"
     },
     "disabled": {
       "description": "State class applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>disabled=true</code>"
+      "conditions": "<code>isDayDisabled=true</code>"
     },
-    "draggable": { "description": "" },
-    "endOfMonth": { "description": "" },
-    "endOfWeek": { "description": "" },
+    "draggable": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayDraggable=true</code>"
+    },
+    "endOfMonth": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayEndOfMonth=true</code>"
+    },
+    "endOfWeek": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayEndOfWeek=true</code>"
+    },
     "fillerCell": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>outsideCurrentMonth=true</code> and <code>showDaysOutsideCurrentMonth=false</code>"
+      "conditions": "<code>isDayOutsideMonth=true</code> and <code>showDaysOutsideCurrentMonth=false</code>"
     },
-    "insidePreviewing": { "description": "" },
-    "insideSelection": { "description": "" },
-    "previewed": { "description": "" },
-    "previewEnd": { "description": "" },
-    "previewStart": { "description": "" },
+    "firstVisibleCell": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayFirstVisibleCell=true</code>"
+    },
+    "insidePreviewing": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayInsidePreview=true</code>"
+    },
+    "insideSelection": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayInsideSelection=true</code>"
+    },
+    "lastVisibleCell": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayLastVisibleCell=true</code>"
+    },
+    "previewed": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayPreviewed=true</code>"
+    },
+    "previewEnd": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayPreviewEnd=true</code>"
+    },
+    "previewStart": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayPreviewStart=true</code>"
+    },
     "root": { "description": "Styles applied to the root element." },
     "selected": {
       "description": "State class applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>selected=true</code>"
+      "conditions": "<code>isDaySelected=true</code>"
     },
-    "selectionEnd": { "description": "" },
-    "selectionStart": { "description": "" },
-    "startOfMonth": { "description": "" },
-    "startOfWeek": { "description": "" },
+    "selectionEnd": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDaySelectionEnd=true</code>"
+    },
+    "selectionStart": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDaySelectionStart=true</code>"
+    },
+    "startOfMonth": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayStartOfMonth=true</code>"
+    },
+    "startOfWeek": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayStartOfWeek=true</code>"
+    },
     "today": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>disableHighlightToday=false</code> and <code>today=true</code>"
+      "conditions": "<code>disableHighlightToday=false</code> and <code>isDayCurrent=true</code>"
     }
   }
 }

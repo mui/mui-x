@@ -41,6 +41,8 @@ const useUtilityClasses = (
     isDayEndOfWeek,
     isDayStartOfMonth,
     isDayEndOfMonth,
+    isDayFirstVisibleCell,
+    isDayLastVisibleCell,
     isDayDraggable,
   } = ownerState;
 
@@ -63,6 +65,8 @@ const useUtilityClasses = (
       isDayPreviewed && 'previewed',
       isDayStartOfMonth && 'startOfMonth',
       isDayEndOfMonth && 'endOfMonth',
+      isDayFirstVisibleCell && 'firstVisibleCell',
+      isDayLastVisibleCell && 'lastVisibleCell',
       isDayDraggable && 'draggable',
     ],
   };
@@ -136,6 +140,8 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       ownerState.isDayEndOfWeek && styles.endOfWeek,
       ownerState.isDayStartOfMonth && styles.startOfMonth,
       ownerState.isDayEndOfMonth && styles.endOfMonth,
+      ownerState.isDayFirstVisibleCell && styles.firstVisibleCell,
+      ownerState.isDayLastVisibleCell && styles.lastVisibleCell,
     ];
   },
 })<{ ownerState: DateRangePickerDayOwnerState }>(({ theme }) => ({
@@ -474,7 +480,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
 
   const handleClick = (event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => {
     event.defaultMuiPrevented = true;
-    if (!disabled) {
+    if (!disabled && onDaySelect) {
       onDaySelect(day);
     }
 
@@ -613,11 +619,11 @@ DateRangePickerDayRaw.propTypes = {
   /**
    * Set to `true` if the `day` is the end of a highlighted date range.
    */
-  isEndOfHighlighting: PropTypes.bool.isRequired,
+  isEndOfHighlighting: PropTypes.bool,
   /**
    * Set to `true` if the `day` is the end of a previewing date range.
    */
-  isEndOfPreviewing: PropTypes.bool.isRequired,
+  isEndOfPreviewing: PropTypes.bool,
   /**
    * If `true`, the day is the first visible cell of the month.
    * @default false
@@ -626,7 +632,7 @@ DateRangePickerDayRaw.propTypes = {
   /**
    * Set to `true` if the `day` is in a highlighted date range.
    */
-  isHighlighting: PropTypes.bool.isRequired,
+  isHighlighting: PropTypes.bool,
   /**
    * If `true`, the day is the last visible cell of the month.
    * @default false
@@ -635,15 +641,15 @@ DateRangePickerDayRaw.propTypes = {
   /**
    * Set to `true` if the `day` is in a preview date range.
    */
-  isPreviewing: PropTypes.bool.isRequired,
+  isPreviewing: PropTypes.bool,
   /**
    * Set to `true` if the `day` is the start of a highlighted date range.
    */
-  isStartOfHighlighting: PropTypes.bool.isRequired,
+  isStartOfHighlighting: PropTypes.bool,
   /**
    * Set to `true` if the `day` is the start of a previewing date range.
    */
-  isStartOfPreviewing: PropTypes.bool.isRequired,
+  isStartOfPreviewing: PropTypes.bool,
   /**
    * Indicates if the day should be visually selected.
    */
@@ -670,7 +676,7 @@ DateRangePickerDayRaw.propTypes = {
    * Callback fired when the day is selected.
    * @param {PickerValidDate} day The day to select.
    */
-  onDaySelect: PropTypes.func.isRequired,
+  onDaySelect: PropTypes.func,
   /**
    * Callback fired when the component is focused.
    * @param {React.FocusEvent<HTMLButtonElement>} event The event object.
@@ -707,14 +713,20 @@ DateRangePickerDayRaw.propTypes = {
    * If `true`, the day is outside the current month.
    * @default false
    */
-  outsideCurrentMonth: PropTypes.bool.isRequired,
+  outsideCurrentMonth: PropTypes.bool,
   /**
    * If `true`, renders as selected.
    * @default false
    */
   selected: PropTypes.bool,
   /**
-   * If `true`, days outside the current month are shown.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
