@@ -65,32 +65,38 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         })
         .forEach((styleOverridesPath) => {
           if (styleOverridesPath.node.value.type === 'ObjectExpression') {
-            const seenProperties = new Map<string, string>();
-            styleOverridesPath.node.value.properties.forEach((prop) => {
+            const seenProperties = new Map<string, any>();
+            const indicesToRemove = new Set<number>();
+            styleOverridesPath.node.value.properties.forEach((prop, index) => {
               if (prop.type === 'ObjectProperty') {
                 const propKey =
                   prop.key.type === 'Identifier' ? prop.key.name : (prop.key as any).value;
                 const newKey = classRenames[propKey];
                 if (newKey) {
                   if (seenProperties.has(newKey)) {
-                    const firstOldKey = seenProperties.get(newKey);
-                    prop.comments = [
-                      j.commentLine(
-                        ` @ts-expect-error both \`${firstOldKey}\` and \`${propKey}\` renamed to \`${newKey}\``,
-                        true,
-                      ),
-                    ];
-                  }
-                  seenProperties.set(newKey, propKey);
-
-                  if (prop.key.type === 'Identifier') {
-                    prop.key.name = newKey;
-                  } else if (prop.key.type === 'StringLiteral') {
-                    prop.key.value = newKey;
+                    const firstProp = seenProperties.get(newKey);
+                    if (
+                      firstProp.value.type === 'ObjectExpression' &&
+                      prop.value.type === 'ObjectExpression'
+                    ) {
+                      firstProp.value.properties.push(...prop.value.properties);
+                    }
+                    indicesToRemove.add(index);
+                  } else {
+                    if (prop.key.type === 'Identifier') {
+                      prop.key.name = newKey;
+                    } else if (prop.key.type === 'StringLiteral') {
+                      prop.key.value = newKey;
+                    }
+                    seenProperties.set(newKey, prop);
                   }
                 }
               }
             });
+            styleOverridesPath.node.value.properties =
+              styleOverridesPath.node.value.properties.filter(
+                (_, index) => !indicesToRemove.has(index),
+              );
           }
         });
     }
