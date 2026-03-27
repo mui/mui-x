@@ -11,7 +11,13 @@ export interface ExportedPickerDayProps {
    */
   disableHighlightToday?: boolean;
   /**
-   * If `true`, days outside the current month are shown.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth?: boolean;
