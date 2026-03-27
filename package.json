@@ -88,7 +88,7 @@
     "@types/babel__core": "7.20.5",
     "@types/babel__traverse": "7.28.0",
     "@types/chai-dom": "1.11.3",
-    "@types/node": "22.19.3",
+    "@types/node": "24.12.0",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/requestidlecallback": "0.3.7",
@@ -146,6 +146,6 @@
   "packageManager": "pnpm@10.30.1",
   "engines": {
     "pnpm": "10.30.1",
-    "node": ">=22.18"
+    "node": ">=24.13"
   }
 }
