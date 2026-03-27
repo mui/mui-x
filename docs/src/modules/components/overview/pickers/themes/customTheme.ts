@@ -388,6 +388,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
       MuiDateRangePickerDay: {
         styleOverrides: {
           root: ({ theme }) => ({
+            '--PickerDay-horizontalMargin': 0,
             borderRadius: theme.shape.borderRadius,
             fontSize: '0.8rem',
             fontWeight: 500,
