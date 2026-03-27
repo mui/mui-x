@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
+import * as semver from 'semver';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 // const withTM from 'next-transpile-modules')(['@mui/monorepo'];
@@ -69,6 +70,7 @@ export default withDocsInfra({
   env: {
     // docs-infra
     LIB_VERSION: pkg.version,
+    SEARCH_INDEX: `material-ui-v${semver.major(pkg.version)}`,
     SOURCE_CODE_REPO,
     SOURCE_GITHUB_BRANCH,
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
