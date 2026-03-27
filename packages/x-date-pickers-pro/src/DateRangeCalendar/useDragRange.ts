@@ -36,6 +36,23 @@ interface UseDragRangeResponse extends UseDragRangeEvents {
   draggingDatePosition: RangePosition | null;
 }
 
+/**
+ * Finds the closest ancestor element (or the element itself) that has the specified data attribute.
+ * This is needed because drag/touch events can target child elements (e.g., text spans)
+ * inside the button, which don't have the data attributes directly.
+ */
+const getClosestElementWithDataAttribute = (
+  element: HTMLElement | null,
+  dataAttribute: string,
+): HTMLElement | null => {
+  if (!element) {
+    return null;
+  }
+  return element.dataset[dataAttribute] != null
+    ? element
+    : element.closest<HTMLElement>(`[data-${dataAttribute}]`);
+};
+
 const resolveDateFromTarget = (
   target: EventTarget | null,
   adapter: MuiPickersAdapter,
@@ -45,22 +62,21 @@ const resolveDateFromTarget = (
     return null;
   }
 
-  const element = target.dataset.timestamp
-    ? target
-    : target.closest<HTMLElement>('[data-timestamp]');
+  const element = getClosestElementWithDataAttribute(target, 'timestamp');
   const timestampString = element?.dataset.timestamp;
   if (!timestampString) {
     return null;
   }
 
   const timestamp = Number(timestampString);
-  return adapter.date(timestamp as any, timezone);
+  return adapter.date(new Date(timestamp).toISOString(), timezone);
 };
 
 const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
-  const element = (event.target as HTMLElement).dataset.timestamp
-    ? (event.target as HTMLElement)
-    : (event.target as HTMLElement).closest<HTMLElement>('[data-timestamp]');
+  if (!(event.target instanceof HTMLElement)) {
+    return false;
+  }
+  const element = getClosestElementWithDataAttribute(event.target, 'timestamp');
   return element?.dataset.timestamp === event.dataTransfer.getData('draggingDate');
 };
 
@@ -142,9 +158,9 @@ const useDragRangeEvents = ({
     setRangeDragDay(newDate);
     event.dataTransfer.effectAllowed = 'move';
     setIsDragging(true);
-    const element = event.currentTarget.dataset.timestamp
-      ? event.currentTarget
-      : event.currentTarget.closest<HTMLElement>('[data-timestamp]');
+    // Use currentTarget (the element the handler is attached to) rather than target
+    // because we need the button's dataset, not a potential child element's dataset.
+    const element = getClosestElementWithDataAttribute(event.currentTarget, 'timestamp');
     const buttonDataset = element?.dataset;
     if (buttonDataset?.timestamp) {
       event.dataTransfer.setData('draggingDate', buttonDataset.timestamp);
@@ -199,9 +215,9 @@ const useDragRangeEvents = ({
     // on mobile we should only initialize dragging state after move is detected
     setIsDragging(true);
 
-    const element = event.currentTarget.dataset.position
-      ? event.currentTarget
-      : event.currentTarget.closest<HTMLElement>('[data-position]');
+    // Use currentTarget (the element the handler is attached to) rather than target
+    // because we need the button's dataset, not a potential child element's dataset.
+    const element = getClosestElementWithDataAttribute(event.currentTarget, 'position');
     const buttonDataset = element?.dataset;
     if (buttonDataset?.position) {
       onDatePositionChange(buttonDataset.position as RangePosition);

@@ -3,6 +3,7 @@ import { spy } from 'sinon';
 import {
   screen,
   fireEvent,
+  createEvent,
   within,
   fireTouchChangedEvent,
   waitFor,
@@ -435,6 +436,48 @@ describe('<DateRangeCalendar />', () => {
           ).to.have.lengthOf(10);
         },
       );
+
+      it('should handle drag events targeting child elements inside the day button', () => {
+        // This test validates the fix for when drag events target child elements (e.g., text spans)
+        // inside the day button, rather than the button itself. The fix uses .closest() to find
+        // the ancestor with the data-timestamp attribute.
+        const onChange = spy();
+        const initialValue: [any, any] = [
+          adapterToUse.date('2018-01-10'),
+          adapterToUse.date('2018-01-31'),
+        ];
+        render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
+
+        const startDayButton = screen.getByRole('gridcell', { name: '31', selected: true });
+        const endDayButton = screen.getByRole('gridcell', { name: '29' });
+
+        // Get a child element inside the button (ButtonBase renders internal elements like TouchRipple)
+        // If no child element exists, the button itself is used (to prevent test from breaking)
+        const startDayChild = startDayButton.firstElementChild ?? startDayButton;
+        const endDayChild = endDayButton.firstElementChild ?? endDayButton;
+
+        // Execute drag using child elements as targets
+        // This simulates a user clicking on the day number text or ripple effect
+        const createDragEventOnChild = (
+          type: 'dragStart' | 'dragEnter' | 'dragOver' | 'drop' | 'dragEnd' | 'dragLeave',
+          target: Element,
+        ) => {
+          const createdEvent = createEvent[type](target);
+          Object.defineProperty(createdEvent, 'dataTransfer', { value: dataTransfer });
+          return createdEvent;
+        };
+
+        fireEvent(startDayChild, createDragEventOnChild('dragStart', startDayChild));
+        fireEvent(startDayChild, createDragEventOnChild('dragLeave', startDayChild));
+        fireEvent(endDayChild, createDragEventOnChild('dragEnter', endDayChild));
+        fireEvent(endDayChild, createDragEventOnChild('dragOver', endDayChild));
+        fireEvent(endDayChild, createDragEventOnChild('drop', endDayChild));
+        fireEvent(endDayChild, createDragEventOnChild('dragEnd', endDayChild));
+
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+      });
     });
   });
 
