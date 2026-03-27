@@ -4,7 +4,7 @@
 
 <!-- generated comparing v9.0.0-alpha.4..master -->
 
-_Mar 26, 2026_
+_Mar 27, 2026_
 
 We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
 
@@ -87,6 +87,8 @@ Internal changes.
 ### Docs
 
 - [docs] Document how to customize voiceover announcement (#21833) @alexfauquette
+- [docs] Remove Discord mention from docs (#21855) @mapache-salvaje
+- [docs] Remove stabilized experimental feature from demo (#21869) @JCQuintas
 - [docs] Update telemetry guide to reflect pseudonymous data collection and license compliance (#21812) @aemartos
 - [docs] Revise the Sparkline doc (#21614) @mapache-salvaje
 - [docs] Revise the Gauge doc (#21673) @mapache-salvaje
