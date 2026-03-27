@@ -442,7 +442,9 @@ function extractTranslationsByObject(
       }
 
       // Determine which object this variable belongs to
-      const objectIndex = objectNames.findIndex((suffix) => node.id.name.endsWith(suffix));
+      const objectIndex = objectNames.findIndex((suffix) =>
+        (node.id as babelTypes.Identifier).name.endsWith(suffix),
+      );
       if (objectIndex === -1) {
         visitorPath.skip();
         return;
@@ -510,7 +512,9 @@ function extractMultiObjectTranslations(
         return;
       }
 
-      const objectIndex = objectNames.findIndex((suffix) => node.id.name.endsWith(suffix));
+      const objectIndex = objectNames.findIndex((suffix) =>
+        (node.id as babelTypes.Identifier).name.endsWith(suffix),
+      );
       if (objectIndex === -1) {
         visitorPath.skip();
         return;
@@ -597,7 +601,9 @@ function syncMultiObjectLocaleFile(
         return;
       }
 
-      const objectIndex = objectNames.findIndex((suffix) => node.id.name.endsWith(suffix));
+      const objectIndex = objectNames.findIndex((suffix) =>
+        (node.id as babelTypes.Identifier).name.endsWith(suffix),
+      );
       if (objectIndex === -1) {
         return;
       }
