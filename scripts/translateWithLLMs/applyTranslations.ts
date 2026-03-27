@@ -30,7 +30,7 @@ interface FileUpdateTarget {
 
 /**
  * Build a mapping from translation key to the English variable name that contains it.
- * For multi-object packages (e.g., scheduler), this maps each key to its source variable
+ * For multi-object packages (e.g., Scheduler), this maps each key to its source variable
  * (e.g., 'colorPickerLabel' → 'enUSDialog', 'agenda' → 'enUSCalendar').
  */
 function buildKeyToVariableMap(sourceText: string, variableNames: string[]): Map<string, string> {
@@ -363,7 +363,7 @@ export function applyTranslations(
       alreadyPresentCount += skipped;
       uncommentedCount += uncommented;
 
-      if (inserted > 0) {
+      if (inserted > 0 || uncommented > 0) {
         fileModified = true;
       }
     }
