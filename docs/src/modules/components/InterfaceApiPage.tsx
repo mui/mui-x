@@ -11,13 +11,16 @@ import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { MarkdownElement } from '@mui/docs/MarkdownElement';
 import { SectionTitle, SectionTitleProps } from '@mui/docs/SectionTitle';
 import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
-import PropertiesSection from 'docs/src/modules/components/ApiPage/sections/PropertiesSection';
-import { PropertyDefinition } from 'docs/src/modules/components/ApiPage/definitions/properties';
-import { LayoutStorageKeys } from 'docs/src/modules/components/ApiPage';
+// eslint-disable-next-line no-restricted-imports
+import { PropertiesSection } from '@mui/docs/ApiPage/sections/PropertiesSection';
+// eslint-disable-next-line no-restricted-imports
+import { PropertyDefinition } from '@mui/docs/ApiPage/definitions';
+import { LayoutStorageKeys } from '@mui/docs/ApiPage';
+// eslint-disable-next-line no-restricted-imports
 import {
   DEFAULT_API_LAYOUT_STORAGE_KEYS,
-  ApiDisplayOptions,
-} from 'docs/src/modules/components/ApiPage/sections/ToggleDisplayOption';
+  ApiDisplayLayout,
+} from '@mui/docs/ApiPage/sections/ToggleDisplayOption';
 import {
   InterfaceApiTranslation,
   InterfaceApiContent,
@@ -56,7 +59,7 @@ interface ApiPageProps {
     };
   };
   pageContent: InterfaceApiContent;
-  defaultLayout?: ApiDisplayOptions;
+  defaultLayout?: ApiDisplayLayout;
   /**
    * The localStorage key used to save the user layout for each section.
    * It's useful to dave different preferences on different pages.
