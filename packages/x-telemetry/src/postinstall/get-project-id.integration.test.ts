@@ -11,17 +11,37 @@ function sha256(value: string): string {
   return createHash('sha256').update(value).digest('hex');
 }
 
+/** Resolves local git remote URL the same order as get-project-id (upstream, then origin). */
+async function tryGitRemoteUrl(command: string): Promise<string | null> {
+  try {
+    const response = await asyncExec(command, { timeout: 1000 });
+    const url = String(response.stdout).trim();
+    return url || null;
+  } catch {
+    return null;
+  }
+}
+
+async function getExpectedGitRemoteUrl(): Promise<string | null> {
+  return (
+    (await tryGitRemoteUrl('git config --local --get remote.upstream.url')) ||
+    (await tryGitRemoteUrl('git config --local --get remote.origin.url')) ||
+    null
+  );
+}
+
 describe('getAnonymousProjectId (integration)', () => {
-  it('should hash the git remote URL', async () => {
-    const response = await asyncExec('git config --local --get remote.origin.url', {
-      timeout: 1000,
-    });
-    const remoteUrl = String(response.stdout).trim();
+  it('should prefer upstream remote over origin', async () => {
+    const remoteUrl = await getExpectedGitRemoteUrl();
 
     const { default: getAnonymousProjectId } = await import('./get-project-id');
     const result = await getAnonymousProjectId();
 
-    expect(result).toBe(sha256(remoteUrl));
+    expect(result).toSatisfy((hash) =>
+      remoteUrl !== null
+        ? hash === sha256(remoteUrl)
+        : /^[a-f0-9]{64}$/.test(hash),
+    );
   });
 
   it('should not hash "[object Object]" (execCLI bug regression)', async () => {

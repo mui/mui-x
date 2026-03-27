@@ -48,6 +48,7 @@ export function getPackageName(): string | null {
 
 async function getRawProjectId(): Promise<string> {
   return (
+    (await execCLI(`git config --local --get remote.upstream.url`)) ||
     (await execCLI(`git config --local --get remote.origin.url`)) ||
     process.env.REPOSITORY_URL ||
     (await execCLI(`git rev-parse --show-toplevel`)) ||
