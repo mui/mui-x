@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as url from 'url';
+import * as semver from 'semver';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { withDeploymentConfig } from '@mui/internal-docs-infra/withDocsInfra';
@@ -80,7 +81,7 @@ export default withDeploymentConfig({
   env: {
     // docs-infra
     LIB_VERSION: pkg.version,
-    SEARCH_INDEX: `material-ui-v${pkg.version.charAt(0)}`,
+    SEARCH_INDEX: `material-ui-v${semver.major(pkg.version)}`,
     SOURCE_CODE_REPO,
     SOURCE_GITHUB_BRANCH,
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',

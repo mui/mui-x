@@ -26,7 +26,6 @@ catalog:
   '@mui/utils': ^7.3.5
   '@mui/x-internal-exceljs-fork': 4.4.3
   '@playwright/test': ^1.57.0
-  'playwright': ^1.57.0
   '@react-spring/web': ^10.0.3
   '@types/chance': ^1.1.7
   '@types/karma': ^6.3.9
@@ -65,6 +64,7 @@ catalog:
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.0
   motion: ^12.24.12
+  playwright: ^1.57.0
   prop-types: ^15.8.1
   react: 19.2.3
   react-dom: 19.2.3
