@@ -97,7 +97,6 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
               outline: '',
               outlineOffset: 0,
             },
-        mouseEventsHandlers.sx,
       ]}
     >
       <Button

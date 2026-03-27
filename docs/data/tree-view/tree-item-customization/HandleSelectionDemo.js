@@ -16,14 +16,11 @@ function CustomLabel({ children, status, onClick, ...props }) {
     <Stack
       direction="row"
       {...props}
-      sx={[
-        {
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexGrow: 1,
-        },
-        ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-      ]}
+      sx={{
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexGrow: 1,
+      }}
     >
       <Typography>{children}</Typography>
       <IconButton onClick={onClick} aria-label="select item" size="small">

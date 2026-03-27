@@ -90,7 +90,6 @@ function CustomHeaderFilter(props) {
               outline: '',
               outlineOffset: 0,
             },
-        mouseEventsHandlers.sx,
       ]}
     >
       <Button
