@@ -478,6 +478,25 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
       });
+
+      it('should not initiate drag on non-draggable dates', () => {
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-20')]}
+          />,
+        );
+
+        // Try to drag from a non-selected (non-endpoint) date
+        const middleDay = getPickerDay('15');
+        const targetDay = getPickerDay('25');
+
+        executeDateDrag(middleDay, targetDay);
+
+        // No change should occur since middle day is not draggable
+        expect(onChange.callCount).to.equal(0);
+      });
     });
   });
 

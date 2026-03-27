@@ -80,17 +80,34 @@ const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
   return element?.dataset.timestamp === event.dataTransfer.getData('draggingDate');
 };
 
+/**
+ * Resolves a button element from a given element.
+ * Searches both upward (ancestors) and downward (children) since:
+ * - Touch events may target child elements inside the button (e.g., TouchRipple)
+ * - `elementFromPoint` may return wrapper divs containing the button
+ */
 const resolveButtonElement = (element: Element | null): HTMLButtonElement | null => {
-  if (element) {
-    if (element instanceof HTMLButtonElement && !element.disabled) {
-      return element;
-    }
-    if (element.children.length) {
-      return resolveButtonElement(element.children[0]);
-    }
+  if (!element) {
     return null;
   }
-  return element;
+
+  // Check if element itself is a valid button
+  if (element instanceof HTMLButtonElement && !element.disabled) {
+    return element;
+  }
+
+  // Search upward - element could be a child of the button (e.g., text span, TouchRipple)
+  const closestButton = element.closest('button');
+  if (closestButton instanceof HTMLButtonElement && !closestButton.disabled) {
+    return closestButton;
+  }
+
+  // Search downward - element could be a wrapper containing the button
+  if (element.children.length) {
+    return resolveButtonElement(element.children[0]);
+  }
+
+  return null;
 };
 
 const resolveElementFromTouch = (
