@@ -7,8 +7,10 @@ import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { RangePosition } from '../models';
 import { isEndOfRange, isStartOfRange } from '../internals/utils/date-utils';
 
-const isEnabledButtonElement = (value: unknown): value is HTMLButtonElement =>
-  isHTMLElement(value) && value.tagName === 'BUTTON' && !(value as HTMLButtonElement).disabled;
+const isEnabledButtonElement = (element: Element | null): element is HTMLButtonElement =>
+  isHTMLElement(element) &&
+  element.tagName === 'BUTTON' &&
+  !(element as HTMLButtonElement).disabled;
 
 interface UseDragRangeParams {
   disableDragEditing?: boolean;
