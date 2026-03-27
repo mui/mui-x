@@ -85,7 +85,10 @@ function DatasetStats() {
         >
           Net Profit
         </Typography>
-        <Typography variant="h6" color={profit >= 0 ? 'success.main' : 'error.main'}>
+        <Typography
+          variant="h6"
+          sx={{ color: profit >= 0 ? 'success.main' : 'error.main' }}
+        >
           ${profit.toLocaleString()}
         </Typography>
       </div>
