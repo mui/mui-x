@@ -267,7 +267,7 @@
     "languageTag": "es-ES",
     "importName": "esES",
     "localeName": "Spanish",
-    "missingKeysCount": 1,
+    "missingKeysCount": 2,
     "totalKeysCount": 53,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/esES.ts"
   },

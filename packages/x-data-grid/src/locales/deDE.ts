@@ -55,7 +55,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarPivot: 'Pivot',
 
   // Toolbar charts button
-  toolbarCharts: 'Diagramme',
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'KI-Assistent',
@@ -142,7 +142,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Sortiere aufsteigend',
   columnMenuSortDesc: 'Sortiere absteigend',
   columnMenuManagePivot: 'Pivot verwalten',
-  columnMenuManageCharts: 'Diagramme verwalten',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -232,7 +232,7 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggregation',
-  aggregationFunctionLabelNone: 'keine',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'Summe',
   aggregationFunctionLabelAvg: 'Mittelwert',
   aggregationFunctionLabelMin: 'Minimum',
@@ -269,28 +269,28 @@ const deDEGrid: Partial<GridLocaleText> = {
   pivotQuarterColumnHeaderName: '(Quartal)',
 
   // Charts configuration panel
-  chartsNoCharts: 'Es sind keine Diagramme verfügbar',
-  chartsChartNotSelected: 'Wählen Sie einen Diagrammtyp aus, um seine Optionen zu konfigurieren',
-  chartsTabChart: 'Diagramm',
-  chartsTabFields: 'Felder',
-  chartsTabCustomize: 'Anpassen',
-  chartsCloseButton: 'Diagrammkonfiguration schließen',
-  chartsSyncButtonLabel: 'Diagramm synchronisieren',
-  chartsSearchPlaceholder: 'Felder suchen',
-  chartsSearchLabel: 'Felder suchen',
-  chartsSearchClear: 'Suche löschen',
-  chartsNoFields: 'Keine Felder',
-  chartsFieldBlocked: 'Dieses Feld kann keinem Abschnitt hinzugefügt werden',
-  chartsCategories: 'Kategorien',
-  chartsSeries: 'Reihen',
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
   // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
   // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
-  chartsMenuMoveUp: 'Nach oben verschieben',
-  chartsMenuMoveDown: 'Nach unten verschieben',
-  chartsMenuMoveToTop: 'Ganz nach oben verschieben',
-  chartsMenuMoveToBottom: 'Ganz nach unten verschieben',
-  chartsMenuOptions: 'Feldoptionen',
-  chartsMenuRemove: 'Entfernen',
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
   // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
   // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 

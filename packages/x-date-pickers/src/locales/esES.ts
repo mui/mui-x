@@ -42,7 +42,7 @@ const esESPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Seleccionar fecha y hora',
   timePickerToolbarTitle: 'Seleccionar hora',
   dateRangePickerToolbarTitle: 'Seleccionar rango de fecha',
-  timeRangePickerToolbarTitle: 'Seleccionar rango de hora',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
