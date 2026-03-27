@@ -38,9 +38,7 @@ describe('getAnonymousProjectId (integration)', () => {
     const result = await getAnonymousProjectId();
 
     expect(result).toSatisfy((hash) =>
-      remoteUrl !== null
-        ? hash === sha256(remoteUrl)
-        : /^[a-f0-9]{64}$/.test(hash),
+      remoteUrl !== null ? hash === sha256(remoteUrl) : /^[a-f0-9]{64}$/.test(hash),
     );
   });
 
