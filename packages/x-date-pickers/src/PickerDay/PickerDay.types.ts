@@ -22,7 +22,7 @@ export interface PickerDayProps
     ExportedPickerDayProps,
     Omit<
       ButtonBaseProps,
-      'classes' | 'onFocus' | 'onBlur' | 'onKeyDown' | 'onMouseDown' | 'onClick' | 'onMouseEnter'
+      'classes' | 'onFocus' | 'onBlur' | 'onKeyDown' | 'onMouseDown' | 'onClick' | 'onMouseEnter' | 'LinkComponent'
     > {
   /**
    * The date to show.
