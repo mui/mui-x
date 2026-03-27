@@ -1,10 +1,14 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { getTarget, isHTMLElement } from '@mui/x-internals/domUtils';
 import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { RangePosition } from '../models';
 import { isEndOfRange, isStartOfRange } from '../internals/utils/date-utils';
+
+const isEnabledButtonElement = (value: unknown): value is HTMLButtonElement =>
+  isHTMLElement(value) && value.tagName === 'BUTTON' && !(value as HTMLButtonElement).disabled;
 
 interface UseDragRangeParams {
   disableDragEditing?: boolean;
@@ -58,7 +62,7 @@ const resolveDateFromTarget = (
   adapter: MuiPickersAdapter,
   timezone: PickersTimezone,
 ) => {
-  if (!target || !(target instanceof HTMLElement)) {
+  if (!isHTMLElement(target)) {
     return null;
   }
 
@@ -73,10 +77,11 @@ const resolveDateFromTarget = (
 };
 
 const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
-  if (!(event.target instanceof HTMLElement)) {
+  const target = getTarget(event.nativeEvent);
+  if (!isHTMLElement(target)) {
     return false;
   }
-  const element = getClosestElementWithDataAttribute(event.target, 'timestamp');
+  const element = getClosestElementWithDataAttribute(target, 'timestamp');
   return element?.dataset.timestamp === event.dataTransfer.getData('draggingDate');
 };
 
@@ -92,19 +97,24 @@ const resolveButtonElement = (element: Element | null): HTMLButtonElement | null
   }
 
   // Check if element itself is a valid button
-  if (element instanceof HTMLButtonElement && !element.disabled) {
+  if (isEnabledButtonElement(element)) {
     return element;
   }
 
   // Search upward - element could be a child of the button (e.g., text span, TouchRipple)
   const closestButton = element.closest('button');
-  if (closestButton instanceof HTMLButtonElement && !closestButton.disabled) {
+  if (isEnabledButtonElement(closestButton)) {
     return closestButton;
   }
 
-  // Search downward - element could be a wrapper containing the button
-  if (element.children.length) {
-    return resolveButtonElement(element.children[0]);
+  // Search downward (breadth-first) - element could be a wrapper containing the button
+  const queue: Element[] = Array.from(element.children);
+  while (queue.length > 0) {
+    const current = queue.shift()!;
+    if (isEnabledButtonElement(current)) {
+      return current;
+    }
+    queue.push(...Array.from(current.children));
   }
 
   return null;
@@ -163,7 +173,7 @@ const useDragRangeEvents = ({
   };
 
   const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    const newDate = resolveDateFromTarget(event.target, adapter, timezone);
+    const newDate = resolveDateFromTarget(getTarget(event.nativeEvent), adapter, timezone);
     if (!isElementDraggable(newDate)) {
       return;
     }
@@ -209,7 +219,7 @@ const useDragRangeEvents = ({
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
-    setRangeDragDay(resolveDateFromTarget(event.target, adapter, timezone));
+    setRangeDragDay(resolveDateFromTarget(getTarget(event.nativeEvent), adapter, timezone));
   });
 
   const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
@@ -306,7 +316,7 @@ const useDragRangeEvents = ({
     if (isSameAsDraggingDate(event)) {
       return;
     }
-    const newDate = resolveDateFromTarget(event.target, adapter, timezone);
+    const newDate = resolveDateFromTarget(getTarget(event.nativeEvent), adapter, timezone);
     if (newDate) {
       onDrop(newDate);
     }
