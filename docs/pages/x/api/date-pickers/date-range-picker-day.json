@@ -3,9 +3,7 @@
     "day": { "type": { "name": "object" }, "required": true },
     "isEndOfHighlighting": { "type": { "name": "bool" }, "required": true },
     "isEndOfPreviewing": { "type": { "name": "bool" }, "required": true },
-    "isFirstVisibleCell": { "type": { "name": "bool" }, "default": "false", "required": true },
     "isHighlighting": { "type": { "name": "bool" }, "required": true },
-    "isLastVisibleCell": { "type": { "name": "bool" }, "default": "false", "required": true },
     "isPreviewing": { "type": { "name": "bool" }, "required": true },
     "isStartOfHighlighting": { "type": { "name": "bool" }, "required": true },
     "isStartOfPreviewing": { "type": { "name": "bool" }, "required": true },
@@ -32,6 +30,8 @@
     "focusVisibleClassName": { "type": { "name": "string" } },
     "isAnimating": { "type": { "name": "bool" }, "default": "false" },
     "isDayFillerCell": { "type": { "name": "bool" }, "default": "false" },
+    "isFirstVisibleCell": { "type": { "name": "bool" }, "default": "false" },
+    "isLastVisibleCell": { "type": { "name": "bool" }, "default": "false" },
     "isVisuallySelected": { "type": { "name": "bool" } },
     "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
     "onBlur": {

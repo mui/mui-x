@@ -52,12 +52,12 @@ export interface PickerDayProps
    * If `true`, the day is the first visible cell of the month.
    * @default false
    */
-  isFirstVisibleCell: boolean;
+  isFirstVisibleCell?: boolean;
   /**
    * If `true`, the day is the last visible cell of the month.
    * @default false
    */
-  isLastVisibleCell: boolean;
+  isLastVisibleCell?: boolean;
   /**
    * If `true`, the day is being animated.
    * @default false

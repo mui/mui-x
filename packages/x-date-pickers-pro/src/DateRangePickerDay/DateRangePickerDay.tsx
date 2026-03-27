@@ -398,8 +398,8 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     onMouseDown = noop,
     onMouseEnter = noop,
     children,
-    isFirstVisibleCell,
-    isLastVisibleCell,
+    isFirstVisibleCell = false,
+    isLastVisibleCell = false,
     day,
     selected,
     disabled,
@@ -622,7 +622,7 @@ DateRangePickerDayRaw.propTypes = {
    * If `true`, the day is the first visible cell of the month.
    * @default false
    */
-  isFirstVisibleCell: PropTypes.bool.isRequired,
+  isFirstVisibleCell: PropTypes.bool,
   /**
    * Set to `true` if the `day` is in a highlighted date range.
    */
@@ -631,7 +631,7 @@ DateRangePickerDayRaw.propTypes = {
    * If `true`, the day is the last visible cell of the month.
    * @default false
    */
-  isLastVisibleCell: PropTypes.bool.isRequired,
+  isLastVisibleCell: PropTypes.bool,
   /**
    * Set to `true` if the `day` is in a preview date range.
    */

@@ -172,8 +172,8 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
     onMouseDown = noop,
     onMouseEnter = noop,
     children,
-    isFirstVisibleCell,
-    isLastVisibleCell,
+    isFirstVisibleCell = false,
+    isLastVisibleCell = false,
     day,
     selected,
     disabled,
@@ -359,12 +359,12 @@ PickerDayRaw.propTypes = {
    * If `true`, the day is the first visible cell of the month.
    * @default false
    */
-  isFirstVisibleCell: PropTypes.bool.isRequired,
+  isFirstVisibleCell: PropTypes.bool,
   /**
    * If `true`, the day is the last visible cell of the month.
    * @default false
    */
-  isLastVisibleCell: PropTypes.bool.isRequired,
+  isLastVisibleCell: PropTypes.bool,
   /**
    * Indicates if the day should be visually selected.
    */

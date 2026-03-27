@@ -1,8 +1,6 @@
 {
   "props": {
     "day": { "type": { "name": "object" }, "required": true },
-    "isFirstVisibleCell": { "type": { "name": "bool" }, "default": "false", "required": true },
-    "isLastVisibleCell": { "type": { "name": "bool" }, "default": "false", "required": true },
     "onDaySelect": {
       "type": { "name": "func" },
       "required": true,
@@ -25,6 +23,8 @@
     "focusVisibleClassName": { "type": { "name": "string" } },
     "isAnimating": { "type": { "name": "bool" }, "default": "false" },
     "isDayFillerCell": { "type": { "name": "bool" }, "default": "false" },
+    "isFirstVisibleCell": { "type": { "name": "bool" }, "default": "false" },
+    "isLastVisibleCell": { "type": { "name": "bool" }, "default": "false" },
     "isVisuallySelected": { "type": { "name": "bool" } },
     "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
     "onBlur": {
