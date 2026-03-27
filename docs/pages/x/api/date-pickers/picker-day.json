@@ -20,7 +20,6 @@
     "isFirstVisibleCell": { "type": { "name": "bool" }, "default": "false" },
     "isLastVisibleCell": { "type": { "name": "bool" }, "default": "false" },
     "isVisuallySelected": { "type": { "name": "bool" } },
-    "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
     "onBlur": {
       "type": { "name": "func" },
       "default": "() => {}",

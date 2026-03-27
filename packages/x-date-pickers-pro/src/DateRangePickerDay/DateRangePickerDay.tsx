@@ -655,11 +655,6 @@ DateRangePickerDayRaw.propTypes = {
    */
   isVisuallySelected: PropTypes.bool,
   /**
-   * The component used to render a link when the `href` prop is provided.
-   * @default 'a'
-   */
-  LinkComponent: PropTypes.elementType,
-  /**
    * Callback fired when the component is blurred.
    * @param {React.FocusEvent<HTMLButtonElement>} event The event object.
    * @param {PickerValidDate} day The day.

@@ -57,9 +57,6 @@
       "description": "Set to <code>true</code> if the <code>day</code> is the start of a previewing date range."
     },
     "isVisuallySelected": { "description": "Indicates if the day should be visually selected." },
-    "LinkComponent": {
-      "description": "The component used to render a link when the <code>href</code> prop is provided."
-    },
     "onBlur": {
       "description": "Callback fired when the component is blurred.",
       "typeDescriptions": {

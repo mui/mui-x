@@ -27,7 +27,6 @@
     "isStartOfHighlighting": { "type": { "name": "bool" } },
     "isStartOfPreviewing": { "type": { "name": "bool" } },
     "isVisuallySelected": { "type": { "name": "bool" } },
-    "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
     "onBlur": {
       "type": { "name": "func" },
       "default": "() => {}",
