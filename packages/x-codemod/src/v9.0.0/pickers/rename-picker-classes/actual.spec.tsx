@@ -49,3 +49,6 @@ const cls = `${dateRangePickerDayClasses.outsideCurrentMonth}`;
 const template = `${prefix}MuiDateRangePickerDay-outsideCurrentMonth`;
 const complexTemplate = `MuiDateRangePickerDay-${dateRangePickerDayClasses.outsideCurrentMonth}`;
 const multi = `MuiDateRangePickerDay-outsideCurrentMonth MuiDateRangePickerDay-hiddenDayFiller`;
+// Unrelated strings that happen to contain class names should not be modified
+const unrelated = 'outsideCurrentMonth is a calendar concept';
+const unrelatedTemplate = `The day is outsideCurrentMonth or dayInsideRangeInterval`;

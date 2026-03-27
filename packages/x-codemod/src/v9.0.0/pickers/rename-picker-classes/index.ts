@@ -102,13 +102,19 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     }
   });
 
-  // Rename class names in strings and template literals
+  // Rename class names in strings and template literals.
+  // Only replace within known MUI component CSS class prefixes to avoid false positives.
+  const muiClassPrefixes = componentsToHandle.map((c) => `${c}-`);
   const replaceClasses = (value: string) => {
     let newValue = value;
-    Object.keys(classRenames).forEach((oldClass) => {
-      const newClass = classRenames[oldClass];
-      const regex = new RegExp(`\\b${oldClass}\\b`, 'g');
-      newValue = newValue.replace(regex, newClass);
+    muiClassPrefixes.forEach((prefix) => {
+      Object.keys(classRenames).forEach((oldClass) => {
+        const newClass = classRenames[oldClass];
+        newValue = newValue.replace(
+          new RegExp(`${prefix}${oldClass}\\b`, 'g'),
+          `${prefix}${newClass}`,
+        );
+      });
     });
     return newValue;
   };
