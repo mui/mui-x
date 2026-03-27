@@ -573,58 +573,55 @@ function buildObjectContent(
 }
 
 /**
- * Build a complete multi-object locale file.
+ * Sync a multi-object locale file by replacing each translation object's content
+ * while preserving the file's imports, types, and export structure.
  */
-function buildMultiObjectLocaleFile(
-  localeCode: string,
+function syncMultiObjectLocaleFile(
+  localePath: string,
   objectNames: string[],
   baseTranslationsByObject: TranslationsByGroup[],
   existingTranslationsByObject: Translations[],
 ): string {
-  const lines: string[] = [];
-
-  // Imports
-  lines.push(`import type {`);
-  lines.push(`  EventDialogLocaleText,`);
-  lines.push(`  EventCalendarLocaleText,`);
-  lines.push(`  EventTimelineLocaleText,`);
-  lines.push(`} from '../models/translations';`);
-  lines.push(`import {`);
-  lines.push(`  getSchedulerLocalization,`);
-  lines.push(`  type SchedulerLocalization,`);
-  lines.push(`} from '../utils/getSchedulerLocalization';`);
-  lines.push(``);
-
-  // Type mappings for each object
-  const typeMap: Record<string, string> = {
-    Dialog: 'Partial<EventDialogLocaleText>',
-    Calendar: 'Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>>',
-    Timeline: 'Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>>',
-  };
-
-  // Generate each object
-  objectNames.forEach((suffix, index) => {
-    const varName = `${localeCode}${suffix}`;
-    const typeName = typeMap[suffix] || 'Record<string, any>';
-    const content = buildObjectContent(
-      existingTranslationsByObject[index],
-      baseTranslationsByObject[index],
-    );
-    lines.push(`const ${varName}: ${typeName} = ${content};`);
-    lines.push(``);
+  let source = fs.readFileSync(localePath, 'utf-8');
+  const ast = babel.parseSync(source, {
+    plugins: BABEL_PLUGINS,
+    configFile: false,
   });
 
-  // Export
-  const objectArgs = objectNames.map((suffix) => {
-    const paramName = suffix.charAt(0).toLowerCase() + suffix.slice(1);
-    return `${paramName}: ${localeCode}${suffix}`;
-  });
-  lines.push(`export const ${localeCode}: SchedulerLocalization = getSchedulerLocalization({`);
-  lines.push(`  ${objectArgs.join(',\n  ')},`);
-  lines.push(`});`);
-  lines.push(``);
+  const replacements: { start: number; end: number; content: string }[] = [];
 
-  return lines.join('\n');
+  traverse(ast!, {
+    VariableDeclarator(visitorPath) {
+      const { node } = visitorPath;
+      if (!babelTypes.isIdentifier(node.id) || !babelTypes.isObjectExpression(node.init)) {
+        return;
+      }
+
+      const objectIndex = objectNames.findIndex((suffix) => node.id.name.endsWith(suffix));
+      if (objectIndex === -1) {
+        return;
+      }
+
+      const content = buildObjectContent(
+        existingTranslationsByObject[objectIndex],
+        baseTranslationsByObject[objectIndex],
+      );
+
+      replacements.push({
+        start: node.init.start!,
+        end: node.init.end!,
+        content,
+      });
+    },
+  });
+
+  // Apply replacements in reverse order to preserve positions
+  replacements.sort((a, b) => b.start - a.start);
+  for (const { start, end, content } of replacements) {
+    source = source.slice(0, start) + content + source.slice(end);
+  }
+
+  return source;
 }
 
 interface HandlerArgv {
@@ -663,8 +660,8 @@ async function run(argv: ArgumentsCamelCase<HandlerArgv>) {
               allTranslations: existingTranslations,
             } = extractMultiObjectTranslations(localePath, packageInfo.objectNames!);
 
-            const codeWithNewTranslations = buildMultiObjectLocaleFile(
-              localeCode,
+            const codeWithNewTranslations = syncMultiObjectLocaleFile(
+              localePath,
               packageInfo.objectNames!,
               baseTranslationsByObject,
               existingByObject,
