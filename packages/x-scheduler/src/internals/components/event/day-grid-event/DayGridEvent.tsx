@@ -56,6 +56,10 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
 })<{ 'data-variant'?: 'filled' | 'invisible' | 'compact' | 'placeholder'; palette?: PaletteName }>(
   ({ theme }) => ({
     ...(DayGridEventBaseStyles(theme) as any),
+    '&:focus-visible': {
+      outline: '2px solid var(--event-surface-accent)',
+      outlineOffset: 1,
+    },
     '&[data-variant="filled"]': {
       backgroundColor: 'var(--event-surface-bold)',
       '&:active': {},
@@ -85,6 +89,10 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       },
       '&[data-starting-before-edge][data-ending-after-edge]': {
         clipPath: BOTH_ARROWS_CLIP,
+      },
+      '&[data-starting-before-edge]:focus-visible, &[data-ending-after-edge]:focus-visible': {
+        clipPath: 'none',
+        borderRadius: (theme.shape.borderRadius as number) * 0.75,
       },
     },
     '&[data-variant="invisible"]': {
