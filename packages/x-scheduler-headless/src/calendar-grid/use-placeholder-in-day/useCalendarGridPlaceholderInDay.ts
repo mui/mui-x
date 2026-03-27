@@ -86,13 +86,15 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     let positionIndex = 1;
-    for (const rowDay of row.days) {
-      const found = rowDay.withPosition.find(
-        (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
+    const targetDay = row.days.find((rowDay) => adapter.isSameDay(rowDay.value, day));
+    if (targetDay) {
+      const usedIndexes = new Set(
+        targetDay.withPosition
+          .filter((occ) => occ.key !== rawPlaceholder.occurrenceKey)
+          .map((occ) => occ.position.index),
       );
-      if (found) {
-        positionIndex = found.position.index;
-        break;
+      while (usedIndexes.has(positionIndex)) {
+        positionIndex += 1;
       }
     }
 
