@@ -336,6 +336,10 @@ const BaseDivider = forwardRef<any, P['baseDivider']>(function BaseDivider(props
   const { material, ...other } = props;
   return <MUIDivider {...other} {...material} ref={ref} />;
 });
+if (BaseDivider) {
+  // @ts-ignore to ensure that this component isn't tabbable
+  BaseDivider.muiSkipListHighlight = true;
+}
 
 const BaseLinearProgress = forwardRef<any, P['baseLinearProgress']>(
   function BaseLinearProgress(props, ref) {
