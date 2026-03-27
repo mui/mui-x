@@ -37,8 +37,9 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   padding: theme.spacing(0.5),
   fontSize: theme.typography.body2.fontSize,
   lineHeight: '18px',
+  borderInlineStart: `1px solid transparent`,
   '&:not(:first-of-type)': {
-    borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
+    borderInlineStartColor: (theme.vars || theme).palette.divider,
   },
   '&[data-weekend]': {
     backgroundColor: (theme.vars || theme).palette.action.hover,

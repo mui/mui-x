@@ -33,7 +33,7 @@ const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
   borderRadius: theme.shape.borderRadius * 0.75,
   minWidth: 18,
-  height: 'auto',
+  height: 18,
   cursor: 'pointer',
   position: 'relative',
   zIndex: 1,
@@ -43,7 +43,7 @@ const DayGridEventBaseStyles = (theme: any) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
-  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * 2 * ${theme.spacing(0.5)})`,
+  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * (2 * ${theme.spacing(0.5)} + 1px))`,
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
