@@ -5,6 +5,7 @@ import { PickerDay2 } from '@mui/x-date-pickers/PickerDay2';
 import { DateRangePickerDay2 } from '@mui/x-date-pickers-pro/DateRangePickerDay2';
 
 function App() {
+  const UnknownComponent = (props: any) => null;
   const slots = { day: PickerDay2 };
   // slots still needed: used on a non-picker component
   const slotsWithNonPicker = { day: PickerDay2 };
