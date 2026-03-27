@@ -89,6 +89,7 @@
     "rifm": "0.12.1",
     "rimraf": "catalog:",
     "rxjs": "^7.8.2",
+    "semver": "7.7.4",
     "styled-components": "^6.1.19",
     "stylis": "catalog:",
     "webpack-bundle-analyzer": "^5.2.0"
@@ -108,6 +109,7 @@
     "@types/nprogress": "^0.2.3",
     "@types/prop-types": "catalog:",
     "@types/react-dom": "catalog:",
+    "@types/semver": "catalog:",
     "@types/stylis": "4.2.7",
     "@types/webpack-bundle-analyzer": "4.7.0",
     "gm": "1.25.1",
