@@ -63,6 +63,7 @@ export type {
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export {
+  DAY_SIZE,
   DAY_MARGIN,
   DIALOG_WIDTH,
   VIEW_HEIGHT,
