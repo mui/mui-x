@@ -5,7 +5,7 @@
  */
 export function getTarget(event: Event) {
   if ('composedPath' in event) {
-    return event.composedPath()[0];
+    return event.composedPath()[0] ?? event.target;
   }
 
   // TS thinks `event` is of type never as it assumes all browsers support

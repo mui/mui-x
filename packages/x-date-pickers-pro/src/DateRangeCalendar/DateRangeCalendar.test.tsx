@@ -451,10 +451,13 @@ describe('<DateRangeCalendar />', () => {
         const startDayButton = screen.getByRole('gridcell', { name: '31', selected: true });
         const endDayButton = screen.getByRole('gridcell', { name: '29' });
 
-        // Get a child element inside the button (ButtonBase renders internal elements like TouchRipple)
-        // If no child element exists, the button itself is used (to prevent test from breaking)
-        const startDayChild = startDayButton.firstElementChild ?? startDayButton;
-        const endDayChild = endDayButton.firstElementChild ?? endDayButton;
+        // Create synthetic child elements inside the buttons to simulate the real browser scenario
+        // where drag events can target child elements (e.g., text spans, TouchRipple).
+        // This ensures the `.closest()` fallback path is exercised.
+        const startDayChild = document.createElement('span');
+        startDayButton.appendChild(startDayChild);
+        const endDayChild = document.createElement('span');
+        endDayButton.appendChild(endDayChild);
 
         // Execute drag using child elements as targets
         // This simulates a user clicking on the day number text or ripple effect
