@@ -55,7 +55,7 @@ const commonXAxisProps = {
 const commonProps = {
   initialZoom: [{ axisId: 'x', start: 20, end: 80 }],
   height: 400,
-} as const
+} as const;
 
 const lineXAxis = {
   scaleType: 'time',
@@ -217,9 +217,7 @@ function LineChartPreview() {
       <LineChartPro
         {...commonProps}
         {...lineSettings}
-        xAxis={[
-          { ...lineXAxis, ...commonXAxisProps },
-        ]}
+        xAxis={[{ ...lineXAxis, ...commonXAxisProps }]}
       />
       <Typography variant="caption">
         Source: Federal Reserve Bank of St. Louis. Updated: Jun 6, 2025 7:46 AM CDT.
