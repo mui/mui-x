@@ -199,7 +199,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       ) {
         previousActive.current = activeItem;
         shouldRefocusOnNextRender.current = false;
-        activeItem.focus();
+        activeItem.focus({ preventScroll: true });
       }
 
       if (isSameItemAsPrevious) {

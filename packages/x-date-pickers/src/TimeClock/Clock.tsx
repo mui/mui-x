@@ -310,7 +310,7 @@ export function Clock(inProps: ClockProps) {
   useEnhancedEffect(() => {
     if (autoFocus) {
       // The ref not being resolved would be a bug in MUI.
-      listboxRef.current!.focus();
+      listboxRef.current!.focus({ preventScroll: true });
     }
   }, [autoFocus]);
 

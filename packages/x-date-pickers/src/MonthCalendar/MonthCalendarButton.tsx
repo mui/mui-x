@@ -130,7 +130,7 @@ export const MonthCalendarButton = React.memo(function MonthCalendarButton(
   useEnhancedEffect(() => {
     if (autoFocus) {
       // `ref.current` being `null` would be a bug in MUI.
-      ref.current?.focus();
+      ref.current?.focus({ preventScroll: true });
     }
   }, [autoFocus]);
 

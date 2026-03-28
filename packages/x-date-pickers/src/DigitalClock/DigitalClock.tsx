@@ -229,7 +229,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     const offsetTop = activeItem.offsetTop;
     if ((autoFocus || !!focusedView) && activeItem !== lastActiveRef.current) {
       lastActiveRef.current = activeItem;
-      activeItem.focus();
+      activeItem.focus({ preventScroll: true });
     }
 
     // Subtracting the 4px of extra margin intended for the first visible section item

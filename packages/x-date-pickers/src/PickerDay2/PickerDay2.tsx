@@ -211,7 +211,7 @@ const PickerDay2Raw = React.forwardRef(function PickerDay2(
   useEnhancedEffect(() => {
     if (autoFocus && !disabled && !isAnimating && !outsideCurrentMonth) {
       // ref.current being null would be a bug in MUI
-      ref.current!.focus();
+      ref.current!.focus({ preventScroll: true });
     }
   }, [autoFocus, disabled, isAnimating, outsideCurrentMonth]);
 

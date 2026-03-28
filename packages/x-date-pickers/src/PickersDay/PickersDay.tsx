@@ -214,10 +214,11 @@ const PickersDayRaw = React.forwardRef(function PickersDay(
 
   // Since this is rendered when a Popper is opened we can't use passive effects.
   // Focusing in passive effects in Popper causes scroll jump.
+  // preventScroll is needed to avoid scroll jumps when Popper repositions (e.g. popperOptions reference change).
   useEnhancedEffect(() => {
     if (autoFocus && !disabled && !isAnimating && !outsideCurrentMonth) {
       // ref.current being null would be a bug in MUI
-      ref.current!.focus();
+      ref.current!.focus({ preventScroll: true });
     }
   }, [autoFocus, disabled, isAnimating, outsideCurrentMonth]);
 
