@@ -25,13 +25,13 @@ describe('ChatCodeBlock', () => {
   it('renders code content as text', () => {
     render(<ChatCodeBlock>{'console.log("hello")'}</ChatCodeBlock>);
 
-    expect(screen.getByText('console.log("hello")')).not.to.equal(null);
+    expect(screen.getByText('console.log("hello")')).not.toBe(null);
   });
 
   it('renders language label when language provided', () => {
     render(<ChatCodeBlock language="typescript">code</ChatCodeBlock>);
 
-    expect(screen.getByText('typescript')).not.to.equal(null);
+    expect(screen.getByText('typescript')).not.toBe(null);
   });
 
   it('renders empty language label when language omitted', () => {
@@ -39,14 +39,14 @@ describe('ChatCodeBlock', () => {
 
     const languageLabelSpan = document.querySelector('.MuiChatCodeBlock-languageLabel');
 
-    expect(languageLabelSpan).not.to.equal(null);
-    expect(languageLabelSpan!.textContent).to.equal('');
+    expect(languageLabelSpan).not.toBe(null);
+    expect(languageLabelSpan!.textContent).toBe('');
   });
 
   it('copy button shows "Copy" title initially', () => {
     render(<ChatCodeBlock>code</ChatCodeBlock>);
 
-    expect(screen.getByRole('button', { name: 'Copy' })).not.to.equal(null);
+    expect(screen.getByRole('button', { name: 'Copy' })).not.toBe(null);
   });
 
   it('calls highlighter when provided and renders its output', () => {
@@ -61,13 +61,13 @@ describe('ChatCodeBlock', () => {
     );
 
     expect(highlighter).toHaveBeenCalledWith('print("hi")', 'python');
-    expect(screen.getByTestId('highlighted')).not.to.equal(null);
+    expect(screen.getByTestId('highlighted')).not.toBe(null);
   });
 
   it('renders raw code when no highlighter', () => {
     render(<ChatCodeBlock>raw code here</ChatCodeBlock>);
 
-    expect(screen.getByText('raw code here')).not.to.equal(null);
+    expect(screen.getByText('raw code here')).not.toBe(null);
   });
 
   it('forwards ref to root element', () => {
@@ -75,14 +75,14 @@ describe('ChatCodeBlock', () => {
 
     render(<ChatCodeBlock ref={ref}>code</ChatCodeBlock>);
 
-    expect(ref.current).not.to.equal(null);
-    expect(ref.current).to.be.instanceOf(window.HTMLDivElement);
+    expect(ref.current).not.toBe(null);
+    expect(ref.current).toBeInstanceOf(window.HTMLDivElement);
   });
 
   it('applies className prop', () => {
     render(<ChatCodeBlock className="my-custom-class">code</ChatCodeBlock>);
 
-    expect(document.querySelector('.my-custom-class')).not.to.equal(null);
+    expect(document.querySelector('.my-custom-class')).not.toBe(null);
   });
 
   it('clicking copy calls navigator.clipboard.writeText with code content', async () => {
@@ -111,7 +111,7 @@ describe('ChatCodeBlock', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
     });
 
-    expect(screen.getByRole('button', { name: 'Copied!' })).not.to.equal(null);
+    expect(screen.getByRole('button', { name: 'Copied!' })).not.toBe(null);
   });
 
   it('timer resets state to "Copy" after 2 seconds', async () => {
@@ -127,14 +127,14 @@ describe('ChatCodeBlock', () => {
       await vi.advanceTimersByTimeAsync(0);
     });
 
-    expect(screen.getByRole('button', { name: 'Copied!' })).not.to.equal(null);
+    expect(screen.getByRole('button', { name: 'Copied!' })).not.toBe(null);
 
      
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2000);
     });
 
-    expect(screen.getByRole('button', { name: 'Copy' })).not.to.equal(null);
+    expect(screen.getByRole('button', { name: 'Copy' })).not.toBe(null);
 
     vi.useRealTimers();
   });
@@ -151,6 +151,6 @@ describe('ChatCodeBlock', () => {
     });
 
     expect(writeText).toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: 'Copy' })).not.to.equal(null);
+    expect(screen.getByRole('button', { name: 'Copy' })).not.toBe(null);
   });
 });

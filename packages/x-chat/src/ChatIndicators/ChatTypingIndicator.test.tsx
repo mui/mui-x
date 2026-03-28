@@ -27,10 +27,7 @@ describe('ChatTypingIndicator', () => {
     expect(document.querySelector('.MuiChatTypingIndicator-root')).toBe(null);
   });
 
-  it('forwards custom className via slotProps.typingIndicator when visible', () => {
-    // The typing indicator is only visible when there are typing users;
-    // the styled wrapper correctly forwards className when rendered.
-    // Full behavior is covered by the x-chat-unstyled Indicators tests.
+  it('does not crash when className is passed via slotProps.typingIndicator', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
@@ -39,6 +36,6 @@ describe('ChatTypingIndicator', () => {
         {null}
       </ChatBox>,
     );
-    // No crash when className is provided even if indicator is not visible
+    expect(document.querySelector('.MuiChatBox-root')).not.toBe(null);
   });
 });

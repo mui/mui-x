@@ -3,8 +3,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatScrollToBottomAffordance } from './ChatScrollToBottomAffordance';
-import { ChatRoot } from '@mui/x-chat-unstyled';
-import { MessageListRoot } from '@mui/x-chat-unstyled';
+import { ChatRoot, MessageListRoot } from '@mui/x-chat-unstyled';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -71,7 +70,7 @@ describe('ChatScrollToBottomAffordance', () => {
     },
   );
 
-  it('renders the down-arrow SVG icon as the default icon slot', () => {
+  it.skipIf(isJSDOM)('renders the down-arrow SVG icon as the default icon slot', () => {
     render(
       <ChatRoot adapter={createAdapter()}>
         <MessageListRoot
@@ -80,11 +79,10 @@ describe('ChatScrollToBottomAffordance', () => {
         />
       </ChatRoot>,
     );
-    // The affordance returns null when isAtBottom=true (jsdom default).
-    // In jsdom, verify it renders null cleanly without errors — the icon test is browser-only.
+    expect(document.querySelector('.MuiChatScrollToBottomAffordance-root svg')).not.toBe(null);
   });
 
-  it('forwards className to the root slot', () => {
+  it.skipIf(isJSDOM)('forwards className to the root slot', () => {
     render(
       <ChatRoot adapter={createAdapter()}>
         <MessageListRoot
@@ -93,6 +91,6 @@ describe('ChatScrollToBottomAffordance', () => {
         />
       </ChatRoot>,
     );
-    // When at bottom (jsdom), it returns null so no class is present — tested in browser mode
+    expect(document.querySelector('.custom-affordance')).not.toBe(null);
   });
 });

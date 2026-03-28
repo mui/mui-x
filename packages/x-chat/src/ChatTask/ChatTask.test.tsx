@@ -4,9 +4,9 @@ import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import { ChatTask } from './ChatTask';
 
-describe('ChatTask', () => {
-  const { render } = createRenderer();
+const { render } = createRenderer();
 
+describe('ChatTask', () => {
   it('renders pending icon by default (no status prop)', () => {
     render(<ChatTask>Task label</ChatTask>);
     // PendingIcon is an SVG with a circle element

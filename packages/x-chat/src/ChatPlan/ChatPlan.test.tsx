@@ -3,9 +3,9 @@ import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import { ChatPlan } from './ChatPlan';
 
-describe('ChatPlan', () => {
-  const { render } = createRenderer();
+const { render } = createRenderer();
 
+describe('ChatPlan', () => {
   it('renders title when provided', () => {
     render(<ChatPlan title="My Plan" steps={[]} />);
     expect(screen.getByText('My Plan')).not.toBe(null);

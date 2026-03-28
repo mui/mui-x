@@ -3,9 +3,9 @@ import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { ChatConfirmation } from './ChatConfirmation';
 
-describe('ChatConfirmation', () => {
-  const { render } = createRenderer();
+const { render } = createRenderer();
 
+describe('ChatConfirmation', () => {
   it('renders warning message text', () => {
     render(<ChatConfirmation message="Are you sure?" />);
     expect(screen.getByText('Are you sure?')).not.toBe(null);

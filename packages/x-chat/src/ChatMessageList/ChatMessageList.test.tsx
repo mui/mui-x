@@ -16,13 +16,7 @@ function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
 }
 
 describe('ChatMessageList', () => {
-  it('renders without crashing inside ChatBox', () => {
-    render(<ChatBox adapter={createAdapter()}>{null}</ChatBox>);
-    // The message list is always rendered inside ChatBox
-    expect(document.querySelector('.MuiChatMessageList-root')).not.toBe(null);
-  });
-
-  it('applies MuiChatMessageList-root class to the list root element', () => {
+  it('renders and applies MuiChatMessageList-root class inside ChatBox', () => {
     render(<ChatBox adapter={createAdapter()}>{null}</ChatBox>);
     expect(document.querySelector('.MuiChatMessageList-root')).not.toBe(null);
   });

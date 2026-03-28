@@ -4,9 +4,9 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import { ChatMessageSkeleton } from './ChatMessageSkeleton';
 
-describe('ChatMessageSkeleton', () => {
-  const { render } = createRenderer();
+const { render } = createRenderer();
 
+describe('ChatMessageSkeleton', () => {
   it('renders 3 skeleton lines by default', () => {
     render(<ChatMessageSkeleton />);
     const lines = document.querySelectorAll('.MuiChatMessageSkeleton-line');

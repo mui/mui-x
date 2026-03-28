@@ -4,9 +4,9 @@ import { describe, expect, it } from 'vitest';
 import { ChatMessageSources } from './ChatMessageSources';
 import { ChatMessageSource } from './ChatMessageSource';
 
-describe('ChatMessageSources', () => {
-  const { render } = createRenderer();
+const { render } = createRenderer();
 
+describe('ChatMessageSources', () => {
   it('renders default "Sources" label', () => {
     render(<ChatMessageSources />);
     expect(screen.getByText('Sources')).not.toBe(null);
@@ -35,8 +35,6 @@ describe('ChatMessageSources', () => {
 });
 
 describe('ChatMessageSource', () => {
-  const { render } = createRenderer();
-
   it('renders link with href', () => {
     render(<ChatMessageSource href="https://example.com" />);
     const link = screen.getByRole('link');

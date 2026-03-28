@@ -39,7 +39,6 @@ describe('ChatConversation', () => {
         {null}
       </ChatBox>,
     );
-    // The title appears in both the header and the conversation list; check at least one exists
-    expect(screen.getAllByText('My Conversation').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('My Conversation').length).toBeGreaterThanOrEqual(1);
   });
 });
