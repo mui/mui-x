@@ -37,7 +37,7 @@ const adapter: ChatAdapter = {
   },
 };
 
-const defaultMessages = [
+const initialMessages = [
   createTextMessage({
     id: randomId(),
     conversationId: CONVERSATION_ID,
@@ -116,8 +116,8 @@ export default function NoConversationHistory() {
     // display: contents collapses the root div so the Box controls layout.
     <ChatRoot
       adapter={adapter}
-      defaultActiveConversationId={CONVERSATION_ID}
-      defaultMessages={defaultMessages}
+      initialActiveConversationId={CONVERSATION_ID}
+      initialMessages={initialMessages}
       slotProps={{ root: { style: { display: 'contents' } } }}
     >
       <Box

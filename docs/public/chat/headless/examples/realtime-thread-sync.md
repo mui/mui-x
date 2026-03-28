@@ -416,12 +416,12 @@ export default function RealtimeThreadSyncHeadlessChat() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultConversations={cloneConversations(demoConversations.slice(0, 2))}
-      defaultMessages={[
+      initialConversations={cloneConversations(demoConversations.slice(0, 2))}
+      initialMessages={[
         ...cloneMessages(demoThreads.support),
         ...cloneMessages(demoThreads.product),
       ]}
-      defaultActiveConversationId="support"
+      initialActiveConversationId="support"
     >
       <RealtimeThreadSyncInner emit={emit} />
     </ChatProvider>

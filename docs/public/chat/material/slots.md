@@ -84,8 +84,8 @@ export default function SlotCustomization() {
       <Box sx={{ height: 480 }}>
         <ChatBox
           adapter={adapter}
-          defaultActiveConversationId="c1"
-          defaultConversations={[
+          initialActiveConversationId="c1"
+          initialConversations={[
             {
               id: 'c1',
               title: 'Design sync',
@@ -94,7 +94,7 @@ export default function SlotCustomization() {
             },
             { id: 'c2', title: 'Ops review', subtitle: 'All read' },
           ]}
-          defaultMessages={[
+          initialMessages={[
             {
               id: 'm1',
               role: 'assistant',
@@ -233,7 +233,7 @@ export default function OwnerStateDemo() {
       <Box sx={{ height: 400 }}>
         <ChatBox
           adapter={adapter}
-          defaultMessages={[
+          initialMessages={[
             {
               id: 'm1',
               role: 'assistant',

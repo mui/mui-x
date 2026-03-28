@@ -1,13 +1,13 @@
 ---
-title: Message feed
+title: Chat - Message feed
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Message feed
+# Chat - Message feed
 
-<p class="description">Render only <code>ChatMessageList</code> — no input. Send messages programmatically via <code>useChat</code> for read-only embeds and transcript views.</p>
+<p class="description">Render only <code>ChatMessageList</code> — no input. Send messages programmatically via <code>useChat</code> for read-only embeds and transcript views</p>
 
 {{"demo": "MessageFeed.js", "bg": "inline"}}
 
@@ -38,7 +38,11 @@ sendMessage({
 });
 ```
 
-## Related
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [No conversation history](/x/react-chat/material/examples/no-conversation-history/) — compose a thread from individual components without `ChatBox`
 - [Split layout](/x/react-chat/material/examples/split-layout/) — message list and composer in separate DOM zones

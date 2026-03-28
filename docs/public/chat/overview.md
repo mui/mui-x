@@ -84,8 +84,8 @@ export default function App() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultConversations={[{ id: 'main', title: 'Assistant' }]}
-      defaultActiveConversationId="main"
+      initialConversations={[{ id: 'main', title: 'Assistant' }]}
+      initialActiveConversationId="main"
       sx={{ height: 500 }}
     />
   );

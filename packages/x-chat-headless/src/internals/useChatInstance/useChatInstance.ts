@@ -42,30 +42,31 @@ export function useChatInstance<Cursor = string>(
     componentName: 'ChatProvider',
     propName: 'messages',
     controlled: parameters.messages,
-    defaultValue: parameters.defaultMessages ?? [],
+    defaultValue: parameters.initialMessages ?? [],
   });
   useAssertModelConsistency({
     warningPrefix: 'MUI X Chat',
     componentName: 'ChatProvider',
     propName: 'conversations',
     controlled: parameters.conversations,
-    defaultValue: parameters.defaultConversations ?? [],
+    defaultValue: parameters.initialConversations ?? [],
   });
   useAssertModelConsistency({
     warningPrefix: 'MUI X Chat',
     componentName: 'ChatProvider',
     propName: 'activeConversationId',
     controlled: parameters.activeConversationId,
-    defaultValue: parameters.defaultActiveConversationId,
+    defaultValue: parameters.initialActiveConversationId,
   });
   useAssertModelConsistency({
     warningPrefix: 'MUI X Chat',
     componentName: 'ChatProvider',
     propName: 'composerValue',
     controlled: parameters.composerValue,
-    defaultValue: parameters.defaultComposerValue ?? '',
+    defaultValue: parameters.initialComposerValue ?? '',
   });
 
+  // Resync controlled models when the parameters reference changes.
   React.useEffect(() => {
     const syncingControlledModels = new Set<ControlledModel>();
 
@@ -89,6 +90,37 @@ export function useChatInstance<Cursor = string>(
     store.updateStateFromParameters(parameters);
     syncingControlledModelsRef.current = null;
   }, [parameters, store]);
+
+  // When a controlled model was mutated internally (e.g. addMessage in controlled mode),
+  // the parent re-renders but may pass the same controlled prop references, so the
+  // effect above won't fire. Resync here to restore the parent's authoritative values.
+  React.useEffect(() => {
+    if (!store.hasDirtyControlledModels) {
+      return;
+    }
+
+    const syncingControlledModels = new Set<ControlledModel>();
+
+    if (parameters.messages !== undefined) {
+      syncingControlledModels.add('messages');
+    }
+
+    if (parameters.conversations !== undefined) {
+      syncingControlledModels.add('conversations');
+    }
+
+    if (parameters.activeConversationId !== undefined) {
+      syncingControlledModels.add('activeConversationId');
+    }
+
+    if (parameters.composerValue !== undefined) {
+      syncingControlledModels.add('composerValue');
+    }
+
+    syncingControlledModelsRef.current = syncingControlledModels;
+    store.updateStateFromParameters(parameters);
+    syncingControlledModelsRef.current = null;
+  });
 
   useStoreEffect(store, selectMessages, (_, nextMessages) => {
     if (!syncingControlledModelsRef.current?.has('messages')) {

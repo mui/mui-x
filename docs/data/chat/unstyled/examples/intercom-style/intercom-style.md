@@ -5,15 +5,11 @@ packageName: '@mui/x-chat/unstyled'
 githubLabel: 'scope: chat'
 ---
 
-# Intercom-style widget
+# Chat - Intercom-style widget
 
-<p class="description">Replicate the look and feel of an Intercom-style chat widget using unstyled slot customization.</p>
+<p class="description">Replicate the look and feel of an Intercom-style chat widget using unstyled slot customization</p>
 
-This example shows how slot replacement can transform the default chat layout into a compact support-widget appearance — rounded corners, branded header, bubble-style messages, and a "Powered by" footer.
-
-{{"demo": "IntercomStyleChat.js"}}
-
-## What it shows
+This demo shows how slot replacement can transform the default chat layout into a compact support-widget appearance — rounded corners, branded header, bubble-style messages, and a "Powered by" footer.
 
 - widget-like container with a fixed size and rounded corners
 - custom header with agent info, back, and close buttons
@@ -22,8 +18,14 @@ This example shows how slot replacement can transform the default chat layout in
 - composer with attachment icons and a round send button
 - footer branding
 
+{{"demo": "IntercomStyleChat.js"}}
+
 ## Key techniques
 
 - Every slot is a `forwardRef` component that reads `ownerState` and spreads remaining props
 - The `role` field from owner state drives alignment (user vs. assistant)
 - Brand tokens are kept in a single object and applied through inline styles
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

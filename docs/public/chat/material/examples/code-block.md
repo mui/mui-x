@@ -121,9 +121,9 @@ export default function CodeBlock() {
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <ChatBox
         adapter={adapter}
-        defaultActiveConversationId={CONVERSATION_ID}
-        defaultConversations={[minimalConversation]}
-        defaultMessages={INITIAL_MESSAGES}
+        initialActiveConversationId={CONVERSATION_ID}
+        initialConversations={[minimalConversation]}
+        initialMessages={INITIAL_MESSAGES}
         sx={{
           height: 480,
           border: '1px solid',

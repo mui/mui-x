@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled layout
 
-<p class="description">Use <code>Chat.Root</code> and <code>Chat.Layout</code> to define the main chat shell and split the interface into conversation and thread panes.</p>
+<p class="description">Use <code>Chat.Root</code> and <code>Chat.Layout</code> to define the main chat shell and split the interface into conversation and thread panes</p>
 
 {{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js"}}
 
@@ -122,3 +122,8 @@ Use a one-pane layout when:
 
 For the canonical end-to-end shell, continue with [Composition](/x/react-chat/unstyled/composition/).
 For the inbox rail itself, continue with [Conversation list](/x/react-chat/unstyled/conversation-list/).
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+- [ChatLayout](/x/api/chat/chat-layout/)

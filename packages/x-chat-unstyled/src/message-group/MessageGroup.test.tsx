@@ -113,7 +113,7 @@ describe('MessageGroup', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[
+        initialMessages={[
           createMessage('m1', {
             authorId: 'assistant-1',
             avatarUrl: 'https://example.com/avatar.png',
@@ -154,7 +154,7 @@ describe('MessageGroup', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[
+        initialMessages={[
           createMessage('m1', {
             createdAt: '2026-03-15T10:00:00.000Z',
             role: 'assistant',
@@ -181,7 +181,7 @@ describe('MessageGroup', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[
+        initialMessages={[
           createMessage('m1', {
             authorId: 'assistant-1',
             createdAt: '2026-03-15T10:00:00.000Z',

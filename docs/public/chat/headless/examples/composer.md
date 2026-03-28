@@ -384,7 +384,7 @@ function ComposerInner() {
 
 export default function ComposerHeadlessChat() {
   return (
-    <ChatProvider adapter={adapter} defaultActiveConversationId="support">
+    <ChatProvider adapter={adapter} initialActiveConversationId="support">
       <ComposerInner />
     </ChatProvider>
   );

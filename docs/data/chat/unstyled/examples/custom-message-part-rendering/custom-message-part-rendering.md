@@ -5,22 +5,20 @@ packageName: '@mui/x-chat/unstyled'
 githubLabel: 'scope: chat'
 ---
 
-# Custom message part rendering
+# Chat - Custom message part rendering
 
-<p class="description">Customize selected message parts while preserving the default unstyled message structure.</p>
+<p class="description">Customize selected message parts while preserving the default unstyled message structure</p>
 
-This recipe focuses on the common customization case where the message row layout is correct, but one or two part types need a different presentation.
+This demo focuses on the common customization case where the message row layout is correct, but one or two part types need a different presentation.
 
 That is often the most efficient customization point in AI chat products: preserve the shipped row structure and only replace the specific content shapes that need branded or domain-specific treatment.
-
-{{"demo": "CustomMessagePartRendering.js"}}
-
-## What it shows
 
 - `Message.Content`
 - `getDefaultMessagePartRenderer()`
 - selective replacement of default part renderers
 - retaining the default renderers for the remaining part types
+
+{{"demo": "CustomMessagePartRendering.js"}}
 
 ## Key primitives
 
@@ -36,7 +34,7 @@ That is often the most efficient customization point in AI chat products: preser
 
 ## When to use this pattern
 
-Use this recipe when:
+Use this pattern when:
 
 - a team likes the default message structure
 - certain message parts need brand-specific rendering
@@ -49,7 +47,11 @@ This is especially useful for reasoning disclosures, tool outputs, citations, fi
 - `getDefaultMessagePartRenderer()` is the key tool for progressive customization.
 - Overriding one part type does not require forking message rows, groups, or the entire message surface.
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - Continue with [Messages](/x/react-chat/unstyled/messages/) for the default part renderer reference.
 - Continue with [Slot customization](/x/react-chat/unstyled/examples/slot-customization/) when the customization needs to extend beyond message content and into row structure.

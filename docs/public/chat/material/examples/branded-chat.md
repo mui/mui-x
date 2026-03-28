@@ -60,8 +60,8 @@ export default function BrandedChat() {
         <Box sx={{ height: 560 }}>
           <ChatBox
             adapter={adapter}
-            defaultActiveConversationId="c1"
-            defaultConversations={[
+            initialActiveConversationId="c1"
+            initialConversations={[
               {
                 id: 'c1',
                 title: 'Brand assistant',
@@ -69,7 +69,7 @@ export default function BrandedChat() {
               },
               { id: 'c2', title: 'Support', subtitle: 'Branded experience' },
             ]}
-            defaultMessages={[
+            initialMessages={[
               {
                 id: 'm1',
                 role: 'assistant',

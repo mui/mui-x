@@ -74,9 +74,9 @@ export default function AutoScrollConfig() {
         </Typography>
         <ChatBox
           adapter={adapter}
-          defaultActiveConversationId={minimalConversation.id}
-          defaultConversations={[minimalConversation]}
-          defaultMessages={minimalMessages}
+          initialActiveConversationId={minimalConversation.id}
+          initialConversations={[minimalConversation]}
+          initialMessages={minimalMessages}
           features={{ autoScroll: { buffer: 300 } }}
           sx={{
             height: 400,
@@ -92,9 +92,9 @@ export default function AutoScrollConfig() {
         </Typography>
         <ChatBox
           adapter={adapter}
-          defaultActiveConversationId={minimalConversation.id}
-          defaultConversations={[minimalConversation]}
-          defaultMessages={minimalMessages}
+          initialActiveConversationId={minimalConversation.id}
+          initialConversations={[minimalConversation]}
+          initialMessages={minimalMessages}
           features={{ autoScroll: false }}
           sx={{
             height: 400,
@@ -188,9 +188,9 @@ export default function DateDividerFormat() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={conversation.id}
-      defaultConversations={[conversation]}
-      defaultMessages={messages}
+      initialActiveConversationId={conversation.id}
+      initialConversations={[conversation]}
+      initialMessages={messages}
       slotProps={{
         dateDivider: {
           formatDate: (date: Date) =>
@@ -281,9 +281,9 @@ export default function MessageGrouping() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={conversation.id}
-      defaultConversations={[conversation]}
-      defaultMessages={messages}
+      initialActiveConversationId={conversation.id}
+      initialConversations={[conversation]}
+      initialMessages={messages}
       slotProps={{
         messageGroup: { groupingWindowMs: 60000 },
       }}
@@ -361,9 +361,9 @@ export default function StandaloneMessageList() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
     >
       <Box
         sx={{

@@ -3,13 +3,20 @@ productId: x-chat
 title: Chat - Thread
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
+components: ConversationRoot, ConversationHeader, ConversationTitle, ConversationSubtitle, ConversationHeaderActions
 ---
 
 # Chat - Thread
 
-<p class="description">Compose the active conversation surface from themed thread components, override individual slots, and recompose the layout using context hooks.</p>
+<p class="description">Compose the active conversation surface from themed thread components, override individual slots, and recompose the layout using context hooks</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 The thread pane is the single-conversation view in a chat interface. It combines a header area, a scrollable message log, and a composer into one cohesive surface. `@mui/x-chat` ships each region as a themed component that wraps the corresponding `@mui/x-chat/unstyled` primitive with `styled()` and Material UI theme tokens.
+
+The following demo shows the thread in action:
+
+{{"demo": "../examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Component tree
 
@@ -427,9 +434,17 @@ function CustomThread() {
 
 Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire it to your adapter.
 
+## API
+
+- [ConversationRoot](/x/api/chat/conversation-root/)
+- [ConversationHeader](/x/api/chat/conversation-header/)
+- [ConversationTitle](/x/api/chat/conversation-title/)
+- [ConversationSubtitle](/x/api/chat/conversation-subtitle/)
+- [ConversationHeaderActions](/x/api/chat/conversation-header-actions/)
+
 ## See also
 
 - [Conversation list](/x/react-chat/material/conversation-list/) for the companion sidebar component.
 - [Customization](/x/react-chat/material/customization/) for the complete slot and slotProps reference.
 - [Unstyled thread](/x/react-chat/unstyled/thread/) for the primitive layer that this page builds on.
-- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for a runnable recipe using a `Paper` bubble.
+- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for a runnable demo using a `Paper` bubble.

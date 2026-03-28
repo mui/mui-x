@@ -5,30 +5,28 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Basic AI chat
+# Chat - Basic AI chat
 
-<p class="description">The smallest working <code>ChatBox</code> setup: an adapter, a conversation, and an initial message.</p>
+<p class="description">The smallest working <code>ChatBox</code> setup: an adapter, a conversation, and an initial message</p>
 
-This recipe shows the minimum required props to render a styled, interactive chat surface using `@mui/x-chat`.
+This demo shows the minimum required props to render a styled, interactive chat surface using `@mui/x-chat`.
+
+- `ChatBox` rendering a single conversation without a conversation list
+- `initialConversations` and `initialMessages` for initial state
+- `initialActiveConversationId` to open the conversation immediately
+- `sx` for sizing the container
 
 {{"demo": "BasicAiChat.js", "bg": "inline"}}
 
-## What it shows
-
-- `ChatBox` rendering a single conversation without a conversation list
-- `defaultConversations` and `defaultMessages` for initial state
-- `defaultActiveConversationId` to open the conversation immediately
-- `sx` for sizing the container
-
 ## Why start here
 
-This recipe answers: "What is the smallest working `@mui/x-chat` surface?"
+This demo answers: "What is the smallest working `@mui/x-chat` surface?"
 
 The answer is three things:
 
 1. An `adapter` that implements `sendMessage`
-2. A `defaultConversations` array with at least one conversation
-3. A `defaultActiveConversationId` that matches one of those conversations
+2. A `initialConversations` array with at least one conversation
+3. A `initialActiveConversationId` that matches one of those conversations
 
 Every other prop is optional.
 
@@ -53,10 +51,14 @@ const adapter: ChatAdapter = {
 ## Implementation notes
 
 - Keep the container height explicit so the message list and composer render correctly.
-- Omitting `defaultConversations` renders an empty surface without a thread.
-- Omitting `defaultActiveConversationId` shows the conversation list pane without an active thread.
+- Omitting `initialConversations` renders an empty surface without a thread.
+- Omitting `initialActiveConversationId` shows the conversation list pane without an active thread.
 
-## Next steps
+## API
 
-- Continue with [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) to add a conversation sidebar.
-- See [Customization](/x/react-chat/material/customization/) for theme overrides, slots, and slotProps.
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
+
+- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) to add a conversation sidebar
+- [Customization](/x/react-chat/material/customization/) for theme overrides, slots, and slotProps

@@ -1,13 +1,13 @@
 ---
-title: Agentic code assistant
+title: Chat - Agentic code assistant
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Agentic code assistant
+# Chat - Agentic code assistant
 
-<p class="description">Streaming tool calls (Bash, Read, Edit, Write, Glob), reasoning, step boundaries, and an interactive approval flow — driven entirely by the adapter API.</p>
+<p class="description">Streaming tool calls (Bash, Read, Edit, Write, Glob), reasoning, step boundaries, and an interactive approval flow — driven entirely by the adapter API</p>
 
 {{"demo": "AgenticCode.js", "bg": "inline"}}
 
@@ -116,7 +116,11 @@ renders as a single-line process trace: tool name, a dotted rule, and a state ba
 
 {{"demo": "ToolStylingC.js", "bg": "inline"}}
 
-## Related
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) — two-pane inbox layout
 - [Split layout](/x/react-chat/material/examples/split-layout/) — place message list and composer in separate DOM zones

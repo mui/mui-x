@@ -367,7 +367,7 @@ export default function IntercomStyleChat() {
     <Chat.Root
       adapter={adapter}
       conversations={[conversation]}
-      defaultActiveConversationId="intercom"
+      initialActiveConversationId="intercom"
       messages={messages}
       onMessagesChange={setMessages}
       slotProps={{

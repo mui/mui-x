@@ -50,7 +50,7 @@ const adapter: ChatAdapter = {
   },
 };
 
-const defaultMessages = [
+const initialMessages = [
   createTextMessage({
     id: nanoid(),
     conversationId: CONVERSATION_ID,
@@ -129,8 +129,8 @@ export default function NoConversationHistory() {
     // display: contents collapses the root div so the Box controls layout.
     <ChatRoot
       adapter={adapter}
-      defaultActiveConversationId={CONVERSATION_ID}
-      defaultMessages={defaultMessages}
+      initialActiveConversationId={CONVERSATION_ID}
+      initialMessages={initialMessages}
       slotProps={{ root: { style: { display: 'contents' } } }}
     >
       <Box
@@ -160,7 +160,7 @@ export default function NoConversationHistory() {
 
 There are exactly two ways to populate that array:
 
-1. **Controlled or uncontrolled state** — pass `conversations` / `defaultConversations` props to `ChatBox`.
+1. **Controlled or uncontrolled state** — pass `conversations` / `initialConversations` props to `ChatBox`.
 2. **Adapter** — implement `listConversations?()` on the adapter so `ChatBox` can fetch history from a backend.
 
 When neither is present, the array stays empty and `ChatBox` skips rendering the list panel entirely. The thread fills the full width automatically — no extra configuration needed.
@@ -173,7 +173,7 @@ const adapter: ChatAdapter = {
   },
 };
 
-// No `conversations` or `defaultConversations` prop — state stays empty
+// No `conversations` or `initialConversations` prop — state stays empty
 <ChatBox adapter={adapter} />;
 ```
 
@@ -194,8 +194,8 @@ To show the conversation list, provide at least one of the two sources:
 ```tsx
 <ChatBox
   adapter={adapter}
-  defaultConversations={[{ id: 'main', title: 'My chat' }]}
-  defaultActiveConversationId="main"
+  initialConversations={[{ id: 'main', title: 'My chat' }]}
+  initialActiveConversationId="main"
 />
 ```
 

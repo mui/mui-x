@@ -5,15 +5,11 @@ packageName: '@mui/x-chat/unstyled'
 githubLabel: 'scope: chat'
 ---
 
-# ChatGPT-style layout
+# Chat - ChatGPT-style layout
 
-<p class="description">Replicate a ChatGPT-style two-pane layout with a sidebar conversation list and a clean message area.</p>
+<p class="description">Replicate a ChatGPT-style two-pane layout with a sidebar conversation list and a clean message area</p>
 
-This example demonstrates how the same unstyled primitives can be customized to produce a full-page chat application layout similar to ChatGPT — dark theme, sidebar with conversation history, no message bubbles, and a centered composer.
-
-{{"demo": "ChatGptStyleChat.js", "bg": "inline"}}
-
-## What it shows
+This demo shows how the same unstyled primitives can be customized to produce a full-page chat application layout similar to ChatGPT — dark theme, sidebar with conversation history, no message bubbles, and a centered composer.
 
 - Two-pane layout with a fixed-width dark sidebar and a main thread area
 - Conversation list with title only, unread blue dot indicator, and a 3-dot menu on hover
@@ -21,6 +17,8 @@ This example demonstrates how the same unstyled primitives can be customized to 
 - Assistant avatar (sparkle icon), no avatar for user messages
 - No sender names or timestamps — clean, minimal message display
 - Centered content column with a maximum width and a pill-shaped composer
+
+{{"demo": "ChatGptStyleChat.js", "bg": "inline"}}
 
 ## Key techniques
 
@@ -30,3 +28,7 @@ This example demonstrates how the same unstyled primitives can be customized to 
 - `flexDirection: 'row-reverse'` on user message roots for right-aligned bubbles
 - Hover-based 3-dot menu using React state and a fixed-position dropdown
 - The composer uses `borderRadius: 24` for the pill-shaped input area
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

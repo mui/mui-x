@@ -5,19 +5,17 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Plan & task
+# Chat - Plan & task
 
-<p class="description">Display a structured execution plan with live step-by-step status using <code>ChatPlan</code> and <code>ChatTask</code>.</p>
+<p class="description">Display a structured execution plan with live step-by-step status using <code>ChatPlan</code> and <code>ChatTask</code></p>
 
 Send any message and watch the agent plan animate through each step.
-
-{{"demo": "PlanTask.js", "bg": "inline"}}
-
-## What it shows
 
 - `ChatPlan` renders an ordered list of `ChatTask` steps driven by a `steps` prop
 - `ChatTask` maps `status` to a status icon: spinner (`running`), filled checkmark (`done`), error circle (`error`), outlined circle (`pending`), minus circle (`skipped`)
 - Plan state is owned by the consumer via `React.useState` and updated from inside the adapter via a stable `useRef` callback
+
+{{"demo": "PlanTask.js", "bg": "inline"}}
 
 ## Data-driven usage
 
@@ -91,3 +89,7 @@ sub-step output or error messages:
   Run test suite
 </ChatTask>
 ```
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

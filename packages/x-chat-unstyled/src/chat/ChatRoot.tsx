@@ -42,16 +42,16 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     members,
     currentUser,
     messages,
-    defaultMessages,
+    initialMessages,
     onMessagesChange,
     conversations,
-    defaultConversations,
+    initialConversations,
     onConversationsChange,
     activeConversationId,
-    defaultActiveConversationId,
+    initialActiveConversationId,
     onActiveConversationChange,
     composerValue,
-    defaultComposerValue,
+    initialComposerValue,
     onComposerValueChange,
     onToolCall,
     onFinish,
@@ -80,16 +80,16 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       members={members}
       currentUser={currentUser}
       messages={messages}
-      defaultMessages={defaultMessages}
+      initialMessages={initialMessages}
       onMessagesChange={onMessagesChange}
       conversations={conversations}
-      defaultConversations={defaultConversations}
+      initialConversations={initialConversations}
       onConversationsChange={onConversationsChange}
       activeConversationId={activeConversationId}
-      defaultActiveConversationId={defaultActiveConversationId}
+      initialActiveConversationId={initialActiveConversationId}
       onActiveConversationChange={onActiveConversationChange}
       composerValue={composerValue}
-      defaultComposerValue={defaultComposerValue}
+      initialComposerValue={initialComposerValue}
       onComposerValueChange={onComposerValueChange}
       onToolCall={onToolCall}
       onFinish={onFinish}

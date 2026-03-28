@@ -75,7 +75,7 @@ export default function CustomMessageActions() {
       <Box sx={{ height: 480 }}>
         <ChatBox
           adapter={adapter}
-          defaultMessages={[
+          initialMessages={[
             {
               id: 'm1',
               role: 'user',

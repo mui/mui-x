@@ -61,9 +61,9 @@ export default function TailwindChatDemo({ window }) {
       <TailwindDemoContainer documentBody={documentBody}>
         <Chat.Root
           adapter={adapter}
-          defaultActiveConversationId={minimalConversation.id}
-          defaultConversations={[minimalConversation]}
-          defaultMessages={minimalMessages}
+          initialActiveConversationId={minimalConversation.id}
+          initialConversations={[minimalConversation]}
+          initialMessages={minimalMessages}
           className="flex h-full flex-col rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm overflow-hidden"
         >
           <div className="flex items-center gap-2 border-b border-gray-200 dark:border-gray-700 px-4 py-3">

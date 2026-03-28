@@ -290,7 +290,7 @@ function ConversationHistoryInner() {
 
 export default function ConversationHistoryHeadlessChat() {
   return (
-    <ChatProvider adapter={adapter} defaultActiveConversationId="support">
+    <ChatProvider adapter={adapter} initialActiveConversationId="support">
       <ConversationHistoryInner />
     </ChatProvider>
   );

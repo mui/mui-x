@@ -5,19 +5,17 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Confirmation
+# Chat - Confirmation
 
-<p class="description">Display a prominent human-in-the-loop checkpoint before the agent takes an irreversible action using <code>ChatConfirmation</code>.</p>
+<p class="description">Display a prominent human-in-the-loop checkpoint before the agent takes an irreversible action using <code>ChatConfirmation</code></p>
 
 Click **Delete files** or **Keep files** to see the result.
-
-{{"demo": "Confirmation.js", "bg": "inline"}}
-
-## What it shows
 
 - `ChatConfirmation` renders as a prominent warning card with a message and two action buttons
 - The card is owned by the consumer via `React.useState` — show it when the agent requests confirmation, hide it after the user responds
 - Default labels are `'Confirm'` and `'Cancel'`; override them with `confirmLabel` and `cancelLabel`
+
+{{"demo": "Confirmation.js", "bg": "inline"}}
 
 ## Basic usage
 
@@ -82,3 +80,7 @@ const adapter = React.useMemo(
 ## Relationship to tool-call approval
 
 The built-in tool part `approval-requested` state handles the narrow case of approving a specific tool call — it renders inside the collapsible tool widget. `ChatConfirmation` is a broader, more prominent pattern for any "human-in-the-loop" checkpoint that doesn't require a structured tool invocation.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

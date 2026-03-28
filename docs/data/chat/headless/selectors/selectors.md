@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless selectors
 
-<p class="description">Subscribe to exactly the store slices you need with memoized selectors for efficient, granular rendering.</p>
+<p class="description">Subscribe to exactly the store slices you need with memoized selectors for efficient, granular rendering</p>
 
 `chatSelectors` is a collection of memoized selectors that read from the normalized chat store.
 They power the built-in hooks and can also be used directly with `useChatStore()` for advanced subscriptions.
@@ -15,6 +15,10 @@ They power the built-in hooks and can also be used directly with `useChatStore()
 ```tsx
 import { chatSelectors, useChatStore } from '@mui/x-chat/headless';
 ```
+
+The following demo uses selectors for efficient rendering:
+
+{{"demo": "../examples/selector-driven-thread/SelectorDrivenThread.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Selector reference
 
@@ -96,9 +100,13 @@ This design has three benefits:
 
 This is why the `useMessageIds()` + `useMessage(id)` pattern performs well for large threads — the ID list stays stable while individual rows subscribe to their own message record.
 
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
 ## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for the hook API that wraps these selectors.
 - [State and store](/x/react-chat/headless/state/) for the internal state shape and controlled/uncontrolled models.
-- [Advanced store access](/x/react-chat/headless/examples/advanced-store-access/) for a recipe using `useChatStore()` with custom selectors.
+- [Advanced store access](/x/react-chat/headless/examples/advanced-store-access/) for a demo using `useChatStore()` with custom selectors.
 - [Selector-driven thread](/x/react-chat/headless/examples/selector-driven-thread/) for the row-level subscription pattern in action.

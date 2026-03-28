@@ -8,6 +8,7 @@ import type { ComposerAttachButtonProps } from './ComposerAttachButton';
 import { ComposerAttachButton } from './ComposerAttachButton';
 import { ComposerHelperText } from './ComposerHelperText';
 import type { ComposerHelperTextProps } from './ComposerHelperText';
+import { ComposerLabel } from './ComposerLabel';
 import { ComposerTextArea } from './ComposerTextArea';
 import type { ComposerTextAreaProps } from './ComposerTextArea';
 import type { ComposerRootProps } from './ComposerRoot';
@@ -245,7 +246,7 @@ describe('ComposerRoot', () => {
     });
 
     render(
-      <ChatRoot adapter={adapter} defaultActiveConversationId="c1">
+      <ChatRoot adapter={adapter} initialActiveConversationId="c1">
         <ComposerRoot data-testid="composer-root">
           <ComposerTextArea data-testid="composer-input" />
           <ComposerSendButton />
@@ -286,7 +287,7 @@ describe('ComposerRoot', () => {
     });
 
     render(
-      <ChatRoot adapter={adapter} defaultActiveConversationId="c1">
+      <ChatRoot adapter={adapter} initialActiveConversationId="c1">
         <ComposerRoot>
           <ComposerTextArea />
         </ComposerRoot>
@@ -389,7 +390,7 @@ describe('ComposerRoot', () => {
     });
 
     render(
-      <ChatRoot adapter={adapter} defaultActiveConversationId="c1">
+      <ChatRoot adapter={adapter} initialActiveConversationId="c1">
         <ComposerRoot>
           <ComposerTextArea />
           <ComposerSendButton />
@@ -470,7 +471,7 @@ describe('ComposerRoot', () => {
     });
 
     render(
-      <ChatRoot adapter={adapter} defaultActiveConversationId="c1" defaultComposerValue="Draft">
+      <ChatRoot adapter={adapter} initialActiveConversationId="c1" initialComposerValue="Draft">
         <ComposerRoot slots={{ root: CustomRoot }}>
           <ComposerTextArea slots={{ input: CustomInput }} />
           <ComposerAttachButton
@@ -521,5 +522,185 @@ describe('ComposerRoot', () => {
       expect(screen.getByTestId('custom-send-button')).to.have.attribute('data-streaming', 'true');
       expect(screen.getByTestId('custom-toolbar')).to.have.attribute('data-submitting', 'true');
     });
+  });
+});
+
+describe('ComposerLabel', () => {
+  it('renders <label> with locale fallback text', () => {
+    render(
+      <ChatRoot adapter={createAdapter()}>
+        <ComposerRoot>
+          <ComposerLabel data-testid="composer-label" />
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    // Default locale: composerInputAriaLabel → 'Message'
+    expect(screen.getByTestId('composer-label')).to.have.text('Message');
+    expect(screen.getByTestId('composer-label').tagName).to.equal('LABEL');
+  });
+
+  it('renders custom children', () => {
+    render(
+      <ChatRoot adapter={createAdapter()}>
+        <ComposerRoot>
+          <ComposerLabel data-testid="composer-label">Ask anything</ComposerLabel>
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('composer-label')).to.have.text('Ask anything');
+  });
+
+  it('sets htmlFor', () => {
+    render(
+      <ChatRoot adapter={createAdapter()}>
+        <ComposerRoot>
+          <ComposerLabel data-testid="composer-label" htmlFor="my-textarea">
+            Label
+          </ComposerLabel>
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('composer-label')).to.have.attribute('for', 'my-textarea');
+  });
+
+  it('passes ownerState to custom slot', () => {
+    function CustomLabel(
+      props: React.LabelHTMLAttributes<HTMLLabelElement> & {
+        ownerState?: { hasValue: boolean; disabled: boolean };
+      },
+    ) {
+      const { ownerState, ...other } = props;
+
+      return (
+        <label
+          data-disabled={String(ownerState?.disabled)}
+          data-has-value={String(ownerState?.hasValue)}
+          data-testid="custom-label"
+          {...other}
+        />
+      );
+    }
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialComposerValue="Draft">
+        <ComposerRoot>
+          <ComposerLabel slots={{ label: CustomLabel }}>Label</ComposerLabel>
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('custom-label')).to.have.attribute('data-has-value', 'true');
+    expect(screen.getByTestId('custom-label')).to.have.attribute('data-disabled', 'false');
+  });
+});
+
+describe('ComposerRoot disabled', () => {
+  it('does not submit when disabled via form submit', async () => {
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => createStream()),
+    });
+
+    render(
+      <ChatRoot adapter={adapter} initialActiveConversationId="c1" initialComposerValue="Should not send">
+        <ComposerRoot data-testid="composer-form" disabled>
+          <ComposerTextArea />
+          <ComposerSendButton />
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    const form = screen.getByTestId('composer-form');
+
+    fireEvent.submit(form);
+
+    expect(adapter.sendMessage).not.toHaveBeenCalled();
+  });
+
+  it('sets data-disabled="true" on the root', () => {
+    render(
+      <ChatRoot adapter={createAdapter()}>
+        <ComposerRoot data-testid="composer-root" disabled>
+          <ComposerTextArea />
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('composer-root')).to.have.attribute('data-disabled', 'true');
+  });
+});
+
+describe('ComposerAttachButton', () => {
+  it('button disabled when composer disabled', () => {
+    render(
+      <ChatRoot adapter={createAdapter()}>
+        <ComposerRoot disabled>
+          <ComposerAttachButton>Attach</ComposerAttachButton>
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Add attachment' })).to.have.property(
+      'disabled',
+      true,
+    );
+  });
+
+  it('defaultPrevented stops file picker', () => {
+    const inputClickSpy = vi.spyOn(HTMLInputElement.prototype, 'click');
+
+    try {
+      render(
+        <ChatRoot adapter={createAdapter()}>
+          <ComposerRoot>
+            <ComposerAttachButton onClick={(event) => event.preventDefault()}>Attach</ComposerAttachButton>
+          </ComposerRoot>
+        </ChatRoot>,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Add attachment' }));
+
+      expect(inputClickSpy).not.toHaveBeenCalled();
+    } finally {
+      inputClickSpy.mockRestore();
+    }
+  });
+});
+
+describe('ComposerTextArea', () => {
+  it('textarea is disabled when composer is disabled', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialActiveConversationId="c1">
+        <ComposerRoot disabled>
+          <ComposerTextArea />
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    const input = screen.getByRole('textbox', { name: 'Message' });
+
+    expect(input).to.have.property('disabled', true);
+  });
+
+  it('uses locale text for placeholder and aria-label', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        localeText={{
+          composerInputPlaceholder: 'Custom placeholder',
+          composerInputAriaLabel: 'Custom label',
+        }}
+      >
+        <ComposerRoot>
+          <ComposerTextArea />
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    const input = screen.getByRole('textbox', { name: 'Custom label' });
+
+    expect(input).to.have.attribute('placeholder', 'Custom placeholder');
   });
 });

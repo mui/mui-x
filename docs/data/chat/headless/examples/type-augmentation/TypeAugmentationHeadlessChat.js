@@ -393,9 +393,9 @@ export default function TypeAugmentationHeadlessChat() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultConversations={conversations}
-      defaultMessages={initialMessages}
-      defaultActiveConversationId="triage"
+      initialConversations={conversations}
+      initialMessages={initialMessages}
+      initialActiveConversationId="triage"
       partRenderers={partRenderers}
     >
       <TypeAugmentationInner />

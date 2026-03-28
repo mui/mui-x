@@ -259,9 +259,9 @@ export default function ComposerWithAttachments() {
           participants: [demoUsers.you, demoUsers.agent],
         },
       ]}
-      defaultActiveConversationId="composer"
+      initialActiveConversationId="composer"
       localeText={demoLocaleText}
-      defaultMessages={[
+      initialMessages={[
         createTextMessage({
           id: 'composer-a1',
           conversationId: 'composer',

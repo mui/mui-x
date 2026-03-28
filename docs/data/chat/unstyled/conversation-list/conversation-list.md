@@ -8,7 +8,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled conversation list
 
-<p class="description">Render and navigate the conversation rail with structural list primitives, built-in selection behavior, and roving focus.</p>
+<p class="description">Render and navigate the conversation rail with structural list primitives, built-in selection behavior, and roving focus</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
@@ -126,3 +126,13 @@ Rebuild the conversation rail from headless selectors only when the built-in key
 
 For the broader page shell, continue with [Layout](/x/react-chat/unstyled/layout/).
 For end-to-end inbox patterns, continue with [Two-pane inbox](/x/react-chat/unstyled/examples/two-pane-inbox/).
+
+## API
+
+- [ConversationListRoot](/x/api/chat/conversation-list-root/)
+- [ConversationListItem](/x/api/chat/conversation-list-item/)
+- [ConversationListItemAvatar](/x/api/chat/conversation-list-item-avatar/)
+- [ConversationListTitle](/x/api/chat/conversation-list-title/)
+- [ConversationListPreview](/x/api/chat/conversation-list-preview/)
+- [ConversationListTimestamp](/x/api/chat/conversation-list-timestamp/)
+- [ConversationListUnreadBadge](/x/api/chat/conversation-list-unread-badge/)

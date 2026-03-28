@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Controlled state
+# Chat - Controlled state
 
-<p class="description">Drive the public chat models from React state while the runtime keeps normalized internals.</p>
+<p class="description">Drive the public chat models from React state while the runtime keeps normalized internals</p>
 
-## What this example shows
-
-This recipe demonstrates the controlled state model — the major public design choice of the headless package.
+This demo demonstrates the controlled state model — the major public design choice of the headless package.
 All four public state models are owned by the parent component while the runtime still streams, normalizes, and derives selectors internally.
 
 ## Key concepts
@@ -66,7 +64,11 @@ Start with `default*` props for prototyping and switch to controlled when the ne
 - You can switch from uncontrolled to controlled at any time without changing the runtime model
 - The `onMessagesChange` callback fires with the full array after every update, including streaming deltas
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [State and store](/x/react-chat/headless/state/) for the full `ChatProvider` props reference
 - [Selector-driven thread](/x/react-chat/headless/examples/selector-driven-thread/) for efficient rendering with controlled state

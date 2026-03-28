@@ -160,8 +160,8 @@ describe('ConversationListRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultActiveConversationId="c2"
-        defaultConversations={[
+        initialActiveConversationId="c2"
+        initialConversations={[
           { id: 'c1', subtitle: 'First preview', title: 'First conversation' },
           { id: 'c2', subtitle: 'Second preview', title: 'Second conversation', unreadCount: 2 },
         ]}
@@ -188,7 +188,7 @@ describe('ConversationListRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultConversations={[
+        initialConversations={[
           { id: 'c1', title: 'First conversation' },
           { id: 'c2', title: 'Second conversation' },
         ]}
@@ -209,8 +209,8 @@ describe('ConversationListRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultActiveConversationId="c2"
-        defaultConversations={[
+        initialActiveConversationId="c2"
+        initialConversations={[
           { id: 'c1', title: 'First conversation' },
           { id: 'c2', title: 'Second conversation' },
           { id: 'c3', title: 'Third conversation' },
@@ -252,7 +252,7 @@ describe('ConversationListRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultConversations={[
+        initialConversations={[
           { id: 'c1', title: 'First conversation' },
           { id: 'c2', title: 'Second conversation' },
         ]}
@@ -284,8 +284,8 @@ describe('ConversationListRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultActiveConversationId="c2"
-        defaultConversations={[
+        initialActiveConversationId="c2"
+        initialConversations={[
           { id: 'c1', title: 'First conversation' },
           { id: 'c2', readState: 'unread', title: 'Second conversation' },
         ]}
@@ -320,7 +320,7 @@ describe('ConversationListRoot', () => {
 
   it('renders an empty listbox when there are no conversations', () => {
     render(
-      <ChatRoot adapter={createAdapter()} defaultConversations={[]}>
+      <ChatRoot adapter={createAdapter()} initialConversations={[]}>
         <ConversationListRoot />
       </ChatRoot>,
     );
@@ -337,7 +337,7 @@ describe('ConversationListRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultConversations={[{ id: 'c1', title: 'First conversation' }]}
+        initialConversations={[{ id: 'c1', title: 'First conversation' }]}
       >
         <ChatLayout data-testid="layout-root">
           <div data-testid="thread-pane">thread</div>

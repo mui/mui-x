@@ -5,12 +5,12 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Material UI examples
+# Chat - Material UI examples
 
-<p class="description">Recipe-first examples for building chat interfaces with <code>@mui/x-chat</code>.</p>
+<p class="description">Demo-first examples for building chat interfaces with <code>@mui/x-chat</code></p>
 
-These recipes show common product patterns using the `ChatBox` component.
-Each example is self-contained and demonstrates one aspect of the `@mui/x-chat` API.
+These demos show common product patterns using the `ChatBox` component.
+Each demo is self-contained and demonstrates one aspect of the `@mui/x-chat` API.
 
 All examples use a local echo adapter that streams responses back.
 Replace it with your real adapter to connect to a backend.
@@ -47,3 +47,7 @@ Replace it with your real adapter to connect to a backend.
 3. Move to [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) to see the two-pane inbox pattern.
 4. Explore [Custom theme](/x/react-chat/material/examples/custom-theme/) to retheme the component from the `ThemeProvider`.
 5. Finish with [Slot overrides](/x/react-chat/material/examples/slot-overrides/) when the default structure needs modification.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

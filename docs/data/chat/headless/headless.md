@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless
 
-<p class="description">The headless layer provides the runtime, adapter contract, hooks, selectors, and stream processing for fully custom chat UIs.</p>
+<p class="description">Runtime, adapter contract, hooks, selectors, and stream processing for building fully custom chat UIs</p>
 
 `@mui/x-chat/headless` is the runtime-focused layer in the chat package family.
 It gives you chat state, streaming, adapters, selectors, and composer logic without imposing any rendered UI.
@@ -37,6 +37,10 @@ Headless does not own:
 Those concerns belong to [Unstyled](/x/react-chat/unstyled/).
 
 ## Mental model
+
+The following demo shows the headless runtime with a minimal custom UI:
+
+{{"demo": "examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
 
 The runtime is easiest to understand as a pipeline:
 
@@ -124,7 +128,7 @@ See [Type augmentation](/x/react-chat/headless/types/) for the six registry inte
 
 ## Headless examples
 
-The headless examples are organized as recipes.
+The headless examples are organized as demos.
 Move from the smallest setup to the more specialized runtime patterns:
 
 - [Headless examples overview](/x/react-chat/headless/examples/)
@@ -146,3 +150,7 @@ Move from the smallest setup to the more specialized runtime patterns:
 
 - Stay on headless when you want runtime primitives and complete control over UI.
 - Move to [Unstyled](/x/react-chat/unstyled/) when you want structure and composition primitives.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

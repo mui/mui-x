@@ -5,21 +5,19 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Multi-conversation
+# Chat - Multi-conversation
 
-<p class="description">A two-pane inbox layout with a conversation sidebar and an active thread pane.</p>
+<p class="description">A two-pane inbox layout with a conversation sidebar and an active thread pane</p>
 
-This recipe shows how to use `ChatBox` as a full inbox surface with multiple conversations.
+This demo shows how to use `ChatBox` as a full inbox surface with multiple conversations.
 The conversation sidebar is rendered automatically when more than one conversation is provided.
-
-{{"demo": "MultiConversation.js", "bg": "inline"}}
-
-## What it shows
 
 - A two-pane layout with a conversation list on the left and the active thread on the right
 - Controlled `activeConversationId` with `onActiveConversationChange` for conversation switching
 - Controlled `messages` and `onMessagesChange` for per-conversation message state
 - `conversations` with `unreadCount` and `readState` reflected in the sidebar
+
+{{"demo": "MultiConversation.js", "bg": "inline"}}
 
 ## Controlled vs. uncontrolled conversations
 
@@ -39,7 +37,7 @@ const [threads, setThreads] = React.useState({ 'thread-a': [], 'thread-b': [] })
 />;
 ```
 
-For simpler use cases with a single conversation, use `defaultActiveConversationId` and `defaultMessages` instead.
+For simpler use cases with a single conversation, use `initialActiveConversationId` and `initialMessages` instead.
 
 ## Conversation list behavior
 
@@ -52,7 +50,11 @@ If only one conversation is provided, `ChatBox` renders the thread pane directly
 - Sync conversation previews after messages change using `onMessagesChange`.
 - The `unreadCount` and `readState` on each conversation drive the sidebar badge and read indicator.
 
-## Next steps
+## API
 
-- See [Custom theme](/x/react-chat/material/examples/custom-theme/) to apply brand colors across the entire surface.
-- See [Customization](/x/react-chat/material/customization/) for `slotProps` on the conversation list and thread header.
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
+
+- [Custom theme](/x/react-chat/material/examples/custom-theme/) to apply brand colors across the entire surface
+- [Customization](/x/react-chat/material/customization/) for `slotProps` on the conversation list and thread header

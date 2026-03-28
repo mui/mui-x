@@ -17,9 +17,9 @@ export default function AutoScrollConfig() {
         </Typography>
         <ChatBox
           adapter={adapter}
-          defaultActiveConversationId={minimalConversation.id}
-          defaultConversations={[minimalConversation]}
-          defaultMessages={minimalMessages}
+          initialActiveConversationId={minimalConversation.id}
+          initialConversations={[minimalConversation]}
+          initialMessages={minimalMessages}
           features={{ autoScroll: { buffer: 300 } }}
           sx={{
             height: 400,
@@ -35,9 +35,9 @@ export default function AutoScrollConfig() {
         </Typography>
         <ChatBox
           adapter={adapter}
-          defaultActiveConversationId={minimalConversation.id}
-          defaultConversations={[minimalConversation]}
-          defaultMessages={minimalMessages}
+          initialActiveConversationId={minimalConversation.id}
+          initialConversations={[minimalConversation]}
+          initialMessages={minimalMessages}
           features={{ autoScroll: false }}
           sx={{
             height: 400,

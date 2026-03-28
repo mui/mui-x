@@ -95,7 +95,7 @@ export default function AiAssistant() {
       <Box sx={{ height: 600 }}>
         <ChatBox
           adapter={adapter}
-          defaultMessages={[
+          initialMessages={[
             {
               id: 'seed-1',
               role: 'user',

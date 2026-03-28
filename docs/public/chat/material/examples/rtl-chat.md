@@ -33,8 +33,8 @@ export default function RtlChat() {
         <Box dir="rtl" sx={{ height: 560 }}>
           <ChatBox
             adapter={adapter}
-            defaultActiveConversationId="c1"
-            defaultConversations={[
+            initialActiveConversationId="c1"
+            initialConversations={[
               {
                 id: 'c1',
                 title: 'الدعم الفني',
@@ -43,7 +43,7 @@ export default function RtlChat() {
               },
               { id: 'c2', title: 'مراجعة التصميم', subtitle: 'ملاحظات الفريق' },
             ]}
-            defaultMessages={[
+            initialMessages={[
               {
                 id: 'm1',
                 role: 'assistant',

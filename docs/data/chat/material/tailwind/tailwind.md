@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Tailwind CSS
 
-<p class="description">Style chat components using Tailwind CSS utility classes with the unstyled primitives from <code>@mui/x-chat/unstyled</code>.</p>
+<p class="description">Style chat components using Tailwind CSS utility classes with the unstyled primitives from <code>@mui/x-chat/unstyled</code></p>
 
 The unstyled layer (`@mui/x-chat/unstyled`) ships structural chat primitives with zero built-in styles.
 Each component renders semantic HTML elements with `data-*` attributes that reflect component state, making them a natural fit for Tailwind CSS utility classes.
@@ -136,7 +136,7 @@ Use the `slots` and `slotProps` props to replace inner elements while keeping be
 />
 ```
 
-## Complete example: chat shell
+## Complete demo: chat shell
 
 The following interactive demo shows a fully functional chat styled entirely with Tailwind CSS utility classes, using the unstyled primitives from `@mui/x-chat/unstyled`:
 
@@ -151,3 +151,7 @@ The following interactive demo shows a fully functional chat styled entirely wit
 | Tailwind CSS project                          | Use `@mui/x-chat/unstyled` + Tailwind classes  |
 | Custom design system / CSS Modules            | Use `@mui/x-chat/unstyled`                     |
 | Headless state only, fully custom rendering   | Use `@mui/x-chat/headless` hooks               |
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

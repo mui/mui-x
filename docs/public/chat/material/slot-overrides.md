@@ -61,9 +61,9 @@ export default function SlotBasicReplacement() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       slots={{ messageAvatar: CustomAvatar }}
       sx={{
         height: 500,
@@ -94,9 +94,9 @@ export default function SlotPropsCustomization() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       slotProps={{
         composerInput: {
           placeholder: 'Ask me anything...',
@@ -205,9 +205,9 @@ export default function FeatureFlags() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       features={{
         conversationHeader: false,
         attachButton: false,
@@ -346,9 +346,9 @@ export default function ThemeAndSlotCombination() {
     <ThemeProvider theme={theme}>
       <ChatBox
         adapter={adapter}
-        defaultActiveConversationId={minimalConversation.id}
-        defaultConversations={[minimalConversation]}
-        defaultMessages={minimalMessages}
+        initialActiveConversationId={minimalConversation.id}
+        initialConversations={[minimalConversation]}
+        initialMessages={minimalMessages}
         slots={{ messageAvatar: BotAvatar }}
         sx={{
           height: 500,

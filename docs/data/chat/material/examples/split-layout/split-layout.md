@@ -1,13 +1,13 @@
 ---
-title: Split layout
+title: Chat - Split layout
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Split layout
+# Chat - Split layout
 
-<p class="description">Place <code>ChatMessageList</code> and <code>ChatComposer</code> in separate DOM zones. Only <code>ChatRoot</code> is needed to connect them.</p>
+<p class="description">Place <code>ChatMessageList</code> and <code>ChatComposer</code> in separate DOM zones. Only <code>ChatRoot</code> is needed to connect them</p>
 
 {{"demo": "SplitLayout.js", "bg": "inline"}}
 
@@ -38,7 +38,11 @@ Use split layout when `ChatBox`'s default two-pane structure doesn't fit your pr
 - Message history is displayed in one panel while the send area is in another
 - You are embedding chat into an existing layout that already manages its own structure
 
-## Related
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [No conversation history](/x/react-chat/material/examples/no-conversation-history/) — compose a thread without `ChatBox`
 - [Message feed](/x/react-chat/material/examples/message-feed/) — display-only embed with no input

@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Advanced store access
+# Chat - Advanced store access
 
-<p class="description">Use the store escape hatch to subscribe to exactly the runtime slices you want.</p>
+<p class="description">Use the store escape hatch to subscribe to exactly the runtime slices you want</p>
 
-## What this example shows
-
-This recipe is intentionally advanced.
+This demo is intentionally advanced.
 It demonstrates how to bypass the convenience hooks and work directly with the normalized store for custom dashboards, metrics, or highly specialized derived views:
 
 - `useChatStore()` to get the underlying store instance
@@ -82,7 +80,11 @@ For standard rendering, the built-in hooks (`useChat`, `useMessageIds`, `useMess
 - Combine with `useStore()` for React subscriptions or use the store directly for imperative access
 - Prefer the built-in hooks for standard use cases — they wrap these selectors with a better developer experience
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Selectors](/x/react-chat/headless/selectors/) for the full selector reference
 - [Hooks](/x/react-chat/headless/hooks/) for the convenience hooks that wrap these selectors

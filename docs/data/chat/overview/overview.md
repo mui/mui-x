@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat React components
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
+components: ChatRoot, ChatLayout
 ---
 
 # MUI X Chat
 
-<p class="description">Get a fully styled, theme-aware chat interface with a single component using <code>@mui/x-chat</code>.</p>
+<p class="description">Get a fully styled, theme-aware chat interface with a single component using <code>@mui/x-chat</code></p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 `@mui/x-chat` is the Material UI styling layer for the chat package family.
 It wraps `@mui/x-chat/unstyled` structural primitives with `styled()` components that inherit your active Material UI theme.
@@ -84,15 +87,15 @@ export default function App() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultConversations={[{ id: 'main', title: 'Assistant' }]}
-      defaultActiveConversationId="main"
+      initialConversations={[{ id: 'main', title: 'Assistant' }]}
+      initialActiveConversationId="main"
       sx={{ height: 500 }}
     />
   );
 }
 ```
 
-See [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for a fully runnable example with a local echo adapter.
+See [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for a fully runnable demo with a local echo adapter.
 
 `ChatBox` renders a full chat surface — conversation list, thread header, message log, and composer — in a single component.
 All visual styles are derived from your active Material UI theme.
@@ -109,7 +112,7 @@ No additional configuration is needed.
 - `palette.divider` is used for borders and separators
 
 Wrapping `ChatBox` in a `ThemeProvider` with custom values is enough to retheme the entire surface.
-See [Custom theme](/x/react-chat/material/examples/custom-theme/) for a working example.
+See [Custom theme](/x/react-chat/material/examples/custom-theme/) for a working demo.
 
 ## TypeScript theme augmentation
 
@@ -168,6 +171,11 @@ import { Chat, MessageList } from '@mui/x-chat/unstyled';
 ```
 
 This means you can mix the styled layer with lower-level primitives in the same application.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+- [ChatLayout](/x/api/chat/chat-layout/)
 
 ## See also
 

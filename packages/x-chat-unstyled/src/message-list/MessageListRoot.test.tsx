@@ -233,7 +233,7 @@ describe('MessageListRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[createMessage('m1', 'assistant'), createMessage('m2', 'user')]}
+        initialMessages={[createMessage('m1', 'assistant'), createMessage('m2', 'user')]}
       >
         <MessageListRoot renderItem={({ id }) => <DefaultRenderItem id={id} />} />
       </ChatRoot>,
@@ -248,7 +248,7 @@ describe('MessageListRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[createMessage('m1', 'assistant'), createMessage('m2', 'user')]}
+        initialMessages={[createMessage('m1', 'assistant'), createMessage('m2', 'user')]}
       >
         <MessageListRoot
           items={['m2', 'm1']}
@@ -272,7 +272,7 @@ describe('MessageListRoot', () => {
     const handleRef = React.createRef<MessageListRootHandle>();
 
     render(
-      <ChatRoot adapter={createAdapter()} defaultMessages={[createMessage('m1', 'assistant')]}>
+      <ChatRoot adapter={createAdapter()} initialMessages={[createMessage('m1', 'assistant')]}>
         <MessageListRoot
           ref={handleRef}
           renderItem={({ id }) => <DefaultRenderItem id={id} />}
@@ -319,7 +319,7 @@ describe('MessageListRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[createMessage('m1', 'assistant'), createMessage('m2', 'user')]}
+        initialMessages={[createMessage('m1', 'assistant'), createMessage('m2', 'user')]}
       >
         <MessageListRoot
           overlay={<div data-testid="message-list-overlay">Overlay</div>}
@@ -360,7 +360,7 @@ describe('MessageListRoot', () => {
     });
 
     render(
-      <ChatRoot adapter={adapter} defaultActiveConversationId="c1">
+      <ChatRoot adapter={adapter} initialActiveConversationId="c1">
         <MessageListRoot
           onReachTop={onReachTop}
           renderItem={({ id }) => <DefaultRenderItem id={id} />}
@@ -516,7 +516,7 @@ describe('MessageListRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[
+        initialMessages={[
           createMessage('m1', 'assistant'),
           createMessage('m2', 'assistant'),
           createMessage('m3', 'assistant'),

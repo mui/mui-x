@@ -22,7 +22,7 @@ function createAdapter(): ChatAdapter {
 describe('ChatRoot', () => {
   it('provides headless chat context to descendants', () => {
     const wrapper = ({ children }: React.PropsWithChildren) => (
-      <ChatRoot adapter={createAdapter()} defaultMessages={[{ id: 'm1', role: 'user', parts: [] }]}>
+      <ChatRoot adapter={createAdapter()} initialMessages={[{ id: 'm1', role: 'user', parts: [] }]}>
         {children}
       </ChatRoot>
     );

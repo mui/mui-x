@@ -357,7 +357,7 @@ export default function ToolApprovalAndRenderersHeadlessChat() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultActiveConversationId="tools"
+      initialActiveConversationId="tools"
       partRenderers={partRenderers}
     >
       <ToolAndRendererInner />

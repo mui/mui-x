@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless adapters
 
-<p class="description">Write a <code>ChatAdapter</code> to connect the headless runtime to any backend — HTTP, SSE, WebSocket, or AI SDK.</p>
+<p class="description">Write a <code>ChatAdapter</code> to connect the headless runtime to any backend — HTTP, SSE, WebSocket, or AI SDK</p>
 
 The `ChatAdapter` interface is the transport boundary between the headless runtime and your backend.
 Only one method is required: `sendMessage()`.
@@ -16,6 +16,10 @@ Everything else is optional and incrementally adopted.
 ```tsx
 import type { ChatAdapter } from '@mui/x-chat/headless';
 ```
+
+The following demo shows a minimal adapter in action:
+
+{{"demo": "../examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Minimal adapter
 
@@ -329,7 +333,13 @@ When an adapter method throws, the runtime:
 2. Surfaces the error through `useChat().error`, `useChatStatus().error`, and the `onError` callback.
 3. Sets `recoverable` based on the error type — stream disconnects are typically recoverable, while send failures may be retryable.
 
-You do not need to catch errors inside the adapter unless you want to transform them.
+:::info
+You do not need to catch errors inside adapter methods — the runtime handles them for you. When an adapter method throws, the runtime records a `ChatError`, surfaces it through the UI and callbacks, and marks it recoverable or retryable when applicable.
+:::
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
 
 ## See also
 

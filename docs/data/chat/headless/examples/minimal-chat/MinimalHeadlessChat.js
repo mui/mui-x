@@ -178,7 +178,7 @@ function MinimalChatInner() {
 
 export default function MinimalHeadlessChat() {
   return (
-    <ChatProvider adapter={adapter} defaultActiveConversationId="support">
+    <ChatProvider adapter={adapter} initialActiveConversationId="support">
       <MinimalChatInner />
     </ChatProvider>
   );

@@ -40,9 +40,9 @@ export default function ConversationsBasic() {
       <Box sx={{ height: 480 }}>
         <ChatBox
           adapter={adapter}
-          defaultActiveConversationId="triage"
-          defaultConversations={inboxConversations}
-          defaultMessages={inboxThreads.triage}
+          initialActiveConversationId="triage"
+          initialConversations={inboxConversations}
+          initialMessages={inboxThreads.triage}
         />
       </Box>
     </Paper>
@@ -76,9 +76,9 @@ export default function ConversationsDense() {
       <Box sx={{ height: 480 }}>
         <ChatBox
           adapter={adapter}
-          defaultActiveConversationId="design"
-          defaultConversations={inboxConversations}
-          defaultMessages={inboxThreads.design}
+          initialActiveConversationId="design"
+          initialConversations={inboxConversations}
+          initialMessages={inboxThreads.design}
           slotProps={{
             conversations: { dense: true },
           }}

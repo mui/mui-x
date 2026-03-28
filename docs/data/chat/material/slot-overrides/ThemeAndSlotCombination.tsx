@@ -55,9 +55,9 @@ export default function ThemeAndSlotCombination() {
     <ThemeProvider theme={theme}>
       <ChatBox
         adapter={adapter}
-        defaultActiveConversationId={minimalConversation.id}
-        defaultConversations={[minimalConversation]}
-        defaultMessages={minimalMessages}
+        initialActiveConversationId={minimalConversation.id}
+        initialConversations={[minimalConversation]}
+        initialMessages={minimalMessages}
         slots={{ messageAvatar: BotAvatar }}
         sx={{
           height: 500,

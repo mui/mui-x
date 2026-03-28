@@ -18,9 +18,9 @@ export default function ComposerControlled() {
       </Typography>
       <ChatBox
         adapter={adapter}
-        defaultActiveConversationId={minimalConversation.id}
-        defaultConversations={[minimalConversation]}
-        defaultMessages={minimalMessages}
+        initialActiveConversationId={minimalConversation.id}
+        initialConversations={[minimalConversation]}
+        initialMessages={minimalMessages}
         composerValue={value}
         onComposerValueChange={setValue}
         sx={{

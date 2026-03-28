@@ -38,9 +38,9 @@ export default function EmptyState() {
     <ChatBox
       adapter={adapter}
       members={demoMembers}
-      defaultActiveConversationId={emptyConversation.id}
-      defaultConversations={[emptyConversation]}
-      defaultMessages={[]}
+      initialActiveConversationId={emptyConversation.id}
+      initialConversations={[emptyConversation]}
+      initialMessages={[]}
       sx={{
         height: 500,
         border: '1px solid',

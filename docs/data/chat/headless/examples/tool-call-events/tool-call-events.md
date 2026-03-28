@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Tool call events
+# Chat - Tool call events
 
-<p class="description">Observe tool invocation state changes with <code>onToolCall</code> and drive side effects outside the message list.</p>
+<p class="description">Observe tool invocation state changes with <code>onToolCall</code> and drive side effects outside the message list</p>
 
-## What this example shows
-
-This recipe focuses on the `onToolCall` callback and how to use it for side effects that live outside the message store:
+This demo focuses on the `onToolCall` callback and how to use it for side effects that live outside the message store:
 
 - observing tool input and output state changes
 - building a local audit log from tool invocations
@@ -69,9 +67,13 @@ The `toolCall` object includes `toolCallId`, `toolName`, `state`, `input`, `outp
 - `onToolCall` fires on every tool state change — not just when output is available
 - Use it for side effects outside the store: logging, analytics, external API calls
 - Tool invocation state progresses through a well-defined lifecycle from input to output
-- For approval flows, see the [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) recipe
+- For approval flows, see the [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) demo
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Streaming](/x/react-chat/headless/streaming/) for the tool chunk protocol reference
 - [Type augmentation](/x/react-chat/headless/types/) for typing tool input and output

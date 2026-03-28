@@ -10,9 +10,9 @@ export default function FeatureFlags() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       features={{
         conversationHeader: false,
         attachButton: false,

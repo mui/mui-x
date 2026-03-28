@@ -22,7 +22,7 @@ const CONVERSATION_ID = randomId();
 
 const adapter = createEchoAdapter();
 
-const defaultMessages = [
+const initialMessages = [
   createTextMessage({
     id: randomId(),
     conversationId: CONVERSATION_ID,
@@ -98,8 +98,8 @@ export default function ChatProviderCustomLayout() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultActiveConversationId={CONVERSATION_ID}
-      defaultMessages={defaultMessages}
+      initialActiveConversationId={CONVERSATION_ID}
+      initialMessages={initialMessages}
     >
       <Box
         sx={{

@@ -7,10 +7,14 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless realtime
 
-<p class="description">Push typing, presence, read state, and collection changes into the runtime through the adapter's <code>subscribe()</code> method.</p>
+<p class="description">Push typing, presence, read state, and collection changes into the runtime through the adapter's <code>subscribe()</code> method</p>
 
 The adapter's `subscribe()` method enables push-based updates from the backend.
 The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
+
+The following demo shows realtime events in action:
+
+{{"demo": "../examples/realtime/RealtimeHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Subscription lifecycle
 
@@ -130,9 +134,13 @@ Here are the full shapes:
 { type: 'read', conversationId: string, messageId?: string, userId?: string }
 ```
 
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
 ## See also
 
 - [Adapters](/x/react-chat/headless/adapters/) for the full adapter interface including `subscribe()`.
 - [Hooks](/x/react-chat/headless/hooks/) for `useChatStatus()` and the typing/presence consumption pattern.
-- [Realtime](/x/react-chat/headless/examples/realtime/) for a recipe covering subscriptions, typing, and presence.
+- [Realtime](/x/react-chat/headless/examples/realtime/) for a demo covering subscriptions, typing, and presence.
 - [Realtime thread sync](/x/react-chat/headless/examples/realtime-thread-sync/) for add, update, and remove events.

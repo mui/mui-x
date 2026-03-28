@@ -131,8 +131,8 @@ export default function CustomMessagePartRendering() {
           participants: [demoUsers.you, demoUsers.agent],
         },
       ]}
-      defaultActiveConversationId="parts"
-      defaultMessages={partRenderingMessages}
+      initialActiveConversationId="parts"
+      initialMessages={partRenderingMessages}
       localeText={demoLocaleText}
       partRenderers={partRenderers}
       slotProps={{

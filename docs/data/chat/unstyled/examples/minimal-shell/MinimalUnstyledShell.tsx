@@ -25,9 +25,9 @@ export default function MinimalUnstyledShell() {
   return (
     <Chat.Root
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       localeText={demoLocaleText}
       slotProps={{ root: { style: demoSurfaceStyles.chatRoot } }}
     >

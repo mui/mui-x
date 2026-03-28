@@ -403,8 +403,8 @@ export default function App() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultActiveConversationId="main"
-      defaultConversations={[{ id: 'main', title: 'Assistant' }]}
+      initialActiveConversationId="main"
+      initialConversations={[{ id: 'main', title: 'Assistant' }]}
     >
       <MyCustomChatLayout />
     </ChatProvider>

@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Hooks
 
-<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat/headless</code>.</p>
+<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat/headless</code></p>
 
 `ChatBox` covers most use cases out of the box, but sometimes you need to reach into chat state from components that live outside `ChatBox` — a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
 
@@ -56,6 +56,10 @@ export default function App() {
 ```
 
 If you are building a custom layout without `ChatBox`, wrap your tree in `<ChatProvider>` and use hooks freely anywhere inside.
+
+The following demo shows hooks reading chat state from within a `ChatBox` child:
+
+{{"demo": "../context/ChatBoxWithHooks.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## State hooks
 
@@ -385,8 +389,11 @@ function MessageCounter() {
 ```
 
 `useChatStore()` gives you access to all selectors in `chatSelectors` and the full store mutation API.
+
+:::warning
 Use it sparingly — the dedicated hooks above are simpler, better typed, and remain stable across minor versions.
 Direct store access is considered advanced API and is more likely to require changes during upgrades.
+:::
 
 ## Choosing the right hook
 
@@ -401,10 +408,14 @@ Direct store access is considered advanced API and is more likely to require cha
 | Custom part renderer lookup                              | `useChatPartRenderer(partType)`              |
 | Custom selector or store subscription                    | `useChatStore()` + `chatSelectors`           |
 
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
 ## See also
 
 - [Adapter](/x/react-chat/material/adapter/) for the interface that the actions in these hooks call into.
 - [Customization](/x/react-chat/material/customization/) for slot and `slotProps` overrides on `ChatBox`.
 - [Selectors](/x/react-chat/headless/selectors/) for the full `chatSelectors` map used with `useChatStore()`.
 - [State and store](/x/react-chat/headless/state/) for `ChatProvider` props and the controlled/uncontrolled model.
-- [Composer example](/x/react-chat/headless/examples/composer/) for `useChatComposer()` with attachments in action.
+- [Composer demo](/x/react-chat/headless/examples/composer/) for `useChatComposer()` with attachments in action.

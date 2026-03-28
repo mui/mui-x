@@ -8,7 +8,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled message list
 
-<p class="description">Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking.</p>
+<p class="description">Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
@@ -95,6 +95,12 @@ That makes it safe to keep in the row pipeline for every message without extra f
 - Use `MessageList.Root` as the single source of truth for thread scrolling behavior.
 - Render `MessageList.DateDivider` and `Indicators.UnreadMarker` alongside each row in `renderItem`.
 - Keep grouping and row composition inside the message-list render path so ordering and affordances stay aligned.
+
+## API
+
+- [MessageListRoot](/x/api/chat/message-list-root/)
+- [MessageListDateDivider](/x/api/chat/message-list-date-divider/)
+- [ScrollToBottomAffordance](/x/api/chat/scroll-to-bottom-affordance/)
 
 ## See also
 

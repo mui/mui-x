@@ -521,7 +521,7 @@ describe('useChat', () => {
     });
     const { Wrapper } = createProviderWrapper({
       adapter,
-      defaultActiveConversationId: 'c1',
+      initialActiveConversationId: 'c1',
     });
     const { result, unmount } = renderHook(() => useChat(), { wrapper: Wrapper });
 
@@ -681,7 +681,7 @@ describe('useChat', () => {
     });
     const { Wrapper } = createProviderWrapper({
       adapter,
-      defaultActiveConversationId: 'c1',
+      initialActiveConversationId: 'c1',
     });
     const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
 
@@ -721,7 +721,7 @@ describe('useChat', () => {
     });
     const { Wrapper } = createProviderWrapper({
       adapter,
-      defaultActiveConversationId: 'c1',
+      initialActiveConversationId: 'c1',
     });
     const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
 
@@ -830,7 +830,7 @@ describe('useChat', () => {
           hasMore: false,
         })),
       }),
-      defaultActiveConversationId: 'c1',
+      initialActiveConversationId: 'c1',
     });
     const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
 
@@ -1190,6 +1190,303 @@ describe('useChat', () => {
     expect(onError).toHaveBeenCalledWith(result.current.error);
   });
 
+  it('sets HISTORY_ERROR when loadMoreHistory fails', async () => {
+    const onError = vi.fn();
+    const adapter = createAdapter({
+      listMessages: vi.fn(async ({ cursor }) => {
+        if (cursor == null) {
+          return {
+            messages: [
+              {
+                id: 'm1',
+                conversationId: 'c1',
+                role: 'assistant' as const,
+                status: 'sent' as const,
+                parts: [{ type: 'text' as const, text: 'First' }],
+              },
+            ],
+            cursor: 'cursor-1',
+            hasMore: true,
+          };
+        }
+
+        throw new Error('History fetch failed');
+      }),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      initialActiveConversationId: 'c1',
+      onError,
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(result.current.messages).toHaveLength(1);
+      expect(result.current.hasMoreHistory).toBe(true);
+    });
+
+    await act(async () => {
+      await result.current.loadMoreHistory();
+    });
+
+    expect(result.current.error).toEqual(
+      expect.objectContaining({
+        code: 'HISTORY_ERROR',
+        message: 'History fetch failed',
+      }),
+    );
+    expect(onError).toHaveBeenCalled();
+  });
+
+  it('setActiveConversation with undefined clears messages', async () => {
+    const adapter = createAdapter({
+      listMessages: vi.fn(async () => ({
+        messages: [
+          {
+            id: 'm1',
+            conversationId: 'c1',
+            role: 'assistant' as const,
+            status: 'sent' as const,
+            parts: [{ type: 'text' as const, text: 'Thread' }],
+          },
+        ],
+        cursor: undefined,
+        hasMore: false,
+      })),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      initialActiveConversationId: 'c1',
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(result.current.messages).toHaveLength(1);
+    });
+
+    await act(async () => {
+      await result.current.setActiveConversation(undefined);
+    });
+
+    expect(result.current.activeConversationId).toBeUndefined();
+    expect(result.current.messages).toEqual([]);
+  });
+
+  it('addToolApprovalResponse does a silent no-op when no matching message is found', async () => {
+    const addToolApprovalResponse = vi.fn(async () => {});
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter({
+        addToolApprovalResponse,
+      }),
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await act(async () => {
+      await result.current.addToolApprovalResponse({
+        id: 'nonexistent-tool',
+        approved: true,
+        reason: 'Approved',
+      });
+    });
+
+    expect(addToolApprovalResponse).toHaveBeenCalledWith({
+      id: 'nonexistent-tool',
+      approved: true,
+      reason: 'Approved',
+    });
+    expect(result.current.error).toBeNull();
+  });
+
+  it('addToolApprovalResponse sets SEND_ERROR when adapter rejects', async () => {
+    const onError = vi.fn();
+    const approvalMessage: ChatMessage = {
+      id: 'assistant-1',
+      conversationId: 'c1',
+      role: 'assistant',
+      status: 'sent',
+      parts: [
+        {
+          type: 'tool',
+          toolInvocation: {
+            toolCallId: 'tool-1',
+            toolName: 'search',
+            state: 'approval-requested',
+            input: { query: 'weather' },
+          },
+        },
+      ],
+    };
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter({
+        addToolApprovalResponse: vi.fn(async () => {
+          throw new Error('Adapter error');
+        }),
+        listMessages: vi.fn(async () => ({
+          messages: [approvalMessage],
+          cursor: undefined,
+          hasMore: false,
+        })),
+      }),
+      initialActiveConversationId: 'c1',
+      onError,
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(result.current.messages).toHaveLength(1);
+    });
+
+    await act(async () => {
+      await result.current.addToolApprovalResponse({
+        id: 'tool-1',
+        approved: true,
+        reason: 'Approved',
+      });
+    });
+
+    expect(result.current.error).toEqual(
+      expect.objectContaining({
+        code: 'SEND_ERROR',
+        message: 'Adapter error',
+      }),
+    );
+    expect(onError).toHaveBeenCalled();
+  });
+
+  it('retry is a no-op for a non-existent messageId', async () => {
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () =>
+        createStream([
+          { type: 'start', messageId: 'a1' },
+          { type: 'finish', messageId: 'a1' },
+        ]),
+      ),
+    });
+    const { Wrapper } = createProviderWrapper({ adapter });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await act(async () => {
+      await result.current.sendMessage({
+        id: 'u1',
+        conversationId: 'c1',
+        parts: [{ type: 'text', text: 'Hello' }],
+      });
+    });
+
+    const messagesBefore = result.current.messages.map((m) => m.id);
+    const callCountBefore = (adapter.sendMessage as ReturnType<typeof vi.fn>).mock.calls.length;
+
+    await act(async () => {
+      await result.current.retry('nonexistent');
+    });
+
+    expect(result.current.messages.map((m) => m.id)).toEqual(messagesBefore);
+    expect((adapter.sendMessage as ReturnType<typeof vi.fn>).mock.calls.length).toBe(
+      callCountBefore,
+    );
+  });
+
+  it('listConversations rejection sets HISTORY_ERROR on mount', async () => {
+    const onError = vi.fn();
+    const adapter = createAdapter({
+      listConversations: vi.fn(async () => {
+        throw new Error('Conversation load failed');
+      }),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      onError,
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(result.current.error).toEqual(
+        expect.objectContaining({
+          code: 'HISTORY_ERROR',
+          message: 'Conversation load failed',
+        }),
+      );
+    });
+
+    expect(onError).toHaveBeenCalled();
+  });
+
+  it('subscribe rejection sets REALTIME_ERROR', async () => {
+    const onError = vi.fn();
+    const adapter = createAdapter({
+      subscribe: vi.fn(async () => {
+        throw new Error('Subscribe failed');
+      }),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      onError,
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(result.current.error).toEqual(
+        expect.objectContaining({
+          code: 'REALTIME_ERROR',
+          message: 'Subscribe failed',
+        }),
+      );
+    });
+
+    expect(onError).toHaveBeenCalled();
+  });
+
+  it('setError(null) clears the error', async () => {
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => {
+        throw new Error('Send failed');
+      }),
+    });
+    const { Wrapper } = createProviderWrapper({ adapter });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await act(async () => {
+      await result.current.sendMessage({
+        conversationId: 'c1',
+        parts: [{ type: 'text', text: 'Hello' }],
+      });
+    });
+
+    expect(result.current.error).not.toBeNull();
+
+    act(() => {
+      result.current.setError(null);
+    });
+
+    expect(result.current.error).toBeNull();
+  });
+
+  it('setError with a ChatError sets the error and calls onError', async () => {
+    const onError = vi.fn();
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter(),
+      onError,
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    act(() => {
+      result.current.setError({
+        code: 'STREAM_ERROR',
+        message: 'Custom error',
+        source: 'stream',
+        recoverable: true,
+      });
+    });
+
+    expect(result.current.error).toEqual({
+      code: 'STREAM_ERROR',
+      message: 'Custom error',
+      source: 'stream',
+      recoverable: true,
+    });
+    expect(onError).toHaveBeenCalledWith(result.current.error);
+  });
+
   it('typing realtime events update useChatStatus.typingUserIds for the active conversation', async () => {
     let onEvent: ((event: any) => void) | undefined;
     const adapter = createAdapter({
@@ -1201,7 +1498,7 @@ describe('useChat', () => {
     });
     const { Wrapper } = createProviderWrapper({
       adapter,
-      defaultActiveConversationId: 'c1',
+      initialActiveConversationId: 'c1',
     });
     const { result } = renderHook(() => ({ chat: useChat(), status: useChatStatus() }), {
       wrapper: Wrapper,

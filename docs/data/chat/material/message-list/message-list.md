@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat - Message list
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
+components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 ---
 
 # Chat - Message list
 
-<p class="description">Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators.</p>
+<p class="description">Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 The message list is the scrollable region that renders conversation history.
 `ChatMessageList` wraps the `@mui/x-chat/unstyled` `MessageListRoot` primitive with Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
@@ -51,7 +54,7 @@ The auto-scroll behavior is gated by a **buffer** — if the user has scrolled m
 ### Configuration
 
 Control auto-scrolling through the `features` prop on `ChatBox`.
-The first example below uses a custom 300 px buffer threshold; the second disables auto-scroll entirely.
+The first demo below uses a custom 300 px buffer threshold; the second disables auto-scroll entirely.
 When auto-scroll is disabled, the user can still scroll to the bottom manually using the scroll-to-bottom affordance button.
 
 {{"demo": "AutoScrollConfig.js", "defaultCodeOpen": false, "bg": "inline"}}
@@ -167,3 +170,9 @@ The following slots are available for customization through `ChatBox`:
 | `messageActions` | `ChatMessageActions` | Hover action menu         |
 | `messageGroup`   | `ChatMessageGroup`   | Same-author message group |
 | `dateDivider`    | `ChatDateDivider`    | Date separator            |
+
+## API
+
+- [MessageListRoot](/x/api/chat/message-list-root/)
+- [MessageListDateDivider](/x/api/chat/message-list-date-divider/)
+- [ScrollToBottomAffordance](/x/api/chat/scroll-to-bottom-affordance/)

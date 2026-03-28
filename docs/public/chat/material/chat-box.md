@@ -36,9 +36,9 @@ export default function ChatBoxBasic() {
       <Box sx={{ height: 560 }}>
         <ChatBox
           adapter={adapter}
-          defaultActiveConversationId="triage"
-          defaultConversations={inboxConversations}
-          defaultMessages={inboxThreads.triage}
+          initialActiveConversationId="triage"
+          initialConversations={inboxConversations}
+          initialMessages={inboxThreads.triage}
         />
       </Box>
     </Paper>
@@ -48,7 +48,7 @@ export default function ChatBoxBasic() {
 
 ## Thread-only layout
 
-When no conversation source exists (`conversations`, `defaultConversations`, or `adapter.listConversations`), `ChatBox` renders a single-pane thread layout without the conversations sidebar.
+When no conversation source exists (`conversations`, `initialConversations`, or `adapter.listConversations`), `ChatBox` renders a single-pane thread layout without the conversations sidebar.
 
 ```tsx
 import * as React from 'react';
@@ -69,7 +69,7 @@ export default function ChatBoxThreadOnly() {
       <Box sx={{ height: 480 }}>
         <ChatBox
           adapter={adapter}
-          defaultMessages={[
+          initialMessages={[
             {
               id: 'm1',
               role: 'assistant',
@@ -166,15 +166,15 @@ export default function ChatBoxControlled() {
 
 ## Default props
 
-For prototyping, use `defaultMessages` and `defaultConversations` to seed the UI without wiring up state handlers.
+For prototyping, use `initialMessages` and `initialConversations` to seed the UI without wiring up state handlers.
 The component manages internal state until you lift it.
 
 ```tsx
 <ChatBox
   adapter={adapter}
-  defaultActiveConversationId="c1"
-  defaultConversations={conversations}
-  defaultMessages={messages}
+  initialActiveConversationId="c1"
+  initialConversations={conversations}
+  initialMessages={messages}
 />
 ```
 

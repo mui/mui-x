@@ -209,7 +209,7 @@ describe('useChatComposer', () => {
     try {
       const { Wrapper } = createProviderWrapper({
         adapter,
-        defaultActiveConversationId: 'c1',
+        initialActiveConversationId: 'c1',
       });
       const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
 
@@ -256,7 +256,7 @@ describe('useChatComposer', () => {
     try {
       const { Wrapper } = createProviderWrapper({
         adapter,
-        defaultActiveConversationId: 'c1',
+        initialActiveConversationId: 'c1',
       });
       const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
 
@@ -285,7 +285,7 @@ describe('useChatComposer', () => {
     });
     const { Wrapper } = createProviderWrapper({
       adapter,
-      defaultActiveConversationId: 'c1',
+      initialActiveConversationId: 'c1',
     });
     const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
     const attachmentFile = new File(['hello'], 'hello.txt', { type: 'text/plain' });
@@ -330,7 +330,7 @@ describe('useChatComposer', () => {
     });
     const { Wrapper } = createProviderWrapper({
       adapter,
-      defaultActiveConversationId: 'c1',
+      initialActiveConversationId: 'c1',
     });
     const { result } = renderHook(
       () => ({
@@ -370,7 +370,7 @@ describe('useChatComposer', () => {
     });
     const { Wrapper } = createProviderWrapper({
       adapter,
-      defaultActiveConversationId: 'c1',
+      initialActiveConversationId: 'c1',
     });
     const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
 
@@ -393,7 +393,7 @@ describe('useChatComposer', () => {
     try {
       const { Wrapper } = createProviderWrapper({
         adapter,
-        defaultActiveConversationId: 'c1',
+        initialActiveConversationId: 'c1',
       });
       const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
 
@@ -415,6 +415,107 @@ describe('useChatComposer', () => {
         expect(result.current.value).toBe('');
         expect(result.current.attachments).toEqual([]);
       });
+    } finally {
+      objectUrls.restore();
+    }
+  });
+
+  it('sets mediaType to application/octet-stream for files with empty type', async () => {
+    const objectUrls = mockObjectUrlApis();
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async ({ message }) => {
+        const filePart = message.parts.find(
+          (part: any) => part.type === 'file',
+        );
+        expect(filePart).toEqual(
+          expect.objectContaining({
+            type: 'file',
+            mediaType: 'application/octet-stream',
+            filename: 'data.bin',
+          }),
+        );
+
+        return createStream();
+      }),
+    });
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+      });
+      const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+      act(() => {
+        // File with empty type
+        result.current.addAttachment(new File(['binary'], 'data.bin', { type: '' }));
+      });
+
+      await act(async () => {
+        await result.current.submit();
+      });
+
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+    } finally {
+      objectUrls.restore();
+    }
+  });
+
+  it('uses file.type as mediaType for non-image files', async () => {
+    const objectUrls = mockObjectUrlApis();
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async ({ message }) => {
+        const filePart = message.parts.find(
+          (part: any) => part.type === 'file',
+        );
+        expect(filePart).toEqual(
+          expect.objectContaining({
+            type: 'file',
+            mediaType: 'application/pdf',
+            filename: 'doc.pdf',
+          }),
+        );
+
+        return createStream();
+      }),
+    });
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+      });
+      const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.addAttachment(new File(['pdf-content'], 'doc.pdf', { type: 'application/pdf' }));
+      });
+
+      await act(async () => {
+        await result.current.submit();
+      });
+
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+    } finally {
+      objectUrls.restore();
+    }
+  });
+
+  it('does not create previewUrl for non-image attachments', () => {
+    const objectUrls = mockObjectUrlApis();
+
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter: createAdapter(),
+      });
+      const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.addAttachment(
+          new File(['pdf-content'], 'doc.pdf', { type: 'application/pdf' }),
+        );
+      });
+
+      expect(objectUrls.createObjectURL).not.toHaveBeenCalled();
+      expect(result.current.attachments[0].previewUrl).toBeUndefined();
     } finally {
       objectUrls.restore();
     }

@@ -5,16 +5,14 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Type augmentation
+# Chat - Type augmentation
 
-<p class="description">Use TypeScript module augmentation to add app-specific metadata, typed tools, typed <code>data-*</code> parts, and custom message parts to the headless runtime.</p>
-
-## What this example shows
+<p class="description">Use TypeScript module augmentation to add app-specific metadata, typed tools, typed <code>data-*</code> parts, and custom message parts to the headless runtime</p>
 
 Headless chat does not use provider props for type overrides.
 Instead, extend `@mui/x-chat/headless/types` with [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
 
-This recipe keeps the example intentionally small while showing how one augmentation affects the whole stack:
+This demo keeps the setup intentionally small while showing how one augmentation affects the whole stack:
 
 - user, conversation, and message metadata
 - one typed tool definition
@@ -99,7 +97,11 @@ For the runtime-specific approval flow, see [Tool approval and renderers](/x/rea
 - Six registry interfaces cover metadata, tools, data parts, and custom message parts
 - Custom renderers pair naturally with custom part types through `partRenderers` and `useChatPartRenderer()`
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Type augmentation](/x/react-chat/headless/types/) for the full reference covering all six registry interfaces and gotchas
 - [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) for the approval flow pattern

@@ -72,7 +72,7 @@ export default function MessageAnatomy() {
       sx={{ border: 1, borderColor: 'divider', overflow: 'hidden' }}
     >
       <Box sx={{ height: 480 }}>
-        <ChatBox adapter={adapter} defaultMessages={messages} />
+        <ChatBox adapter={adapter} initialMessages={messages} />
       </Box>
     </Paper>
   );
@@ -104,7 +104,7 @@ export default function MarkdownMessages() {
       sx={{ border: 1, borderColor: 'divider', overflow: 'hidden' }}
     >
       <Box sx={{ height: 560 }}>
-        <ChatBox adapter={adapter} defaultMessages={markdownMessages} />
+        <ChatBox adapter={adapter} initialMessages={markdownMessages} />
       </Box>
     </Paper>
   );
@@ -138,7 +138,7 @@ export default function AiPartRenderers() {
       sx={{ border: 1, borderColor: 'divider', overflow: 'hidden' }}
     >
       <Box sx={{ height: 560 }}>
-        <ChatBox adapter={adapter} defaultMessages={aiPartMessages} />
+        <ChatBox adapter={adapter} initialMessages={aiPartMessages} />
       </Box>
     </Paper>
   );
@@ -192,7 +192,7 @@ export default function CustomPartRenderer() {
       <Box sx={{ height: 400 }}>
         <ChatBox
           adapter={adapter}
-          defaultMessages={[
+          initialMessages={[
             {
               id: 'm1',
               role: 'assistant',

@@ -3,11 +3,18 @@ productId: x-chat
 title: Chat - Material UI customization
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
+components: ChatRoot
 ---
 
 # Chat - Customization
 
-<p class="description">Override styles, replace sub-components, and pass props to any chat element using the Material UI customization system.</p>
+<p class="description">Override styles, replace sub-components, and pass props to any chat element using the Material UI customization system</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
+
+The following demo shows a custom-themed chat surface:
+
+{{"demo": "../examples/custom-theme/CustomTheme.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## sx prop
 
@@ -146,7 +153,7 @@ This is useful for setting `aria-label` attributes, `sx` overrides, or other com
 
 Replace any sub-component entirely using the `slots` prop.
 The replacement component must accept the same props as the default.
-See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for a runnable example using a `Paper`-based bubble.
+See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for a runnable demo using a `Paper`-based bubble.
 
 A common pattern is to wrap the default component and override one of its inner slots:
 
@@ -197,7 +204,11 @@ const CustomMessageContent = React.forwardRef(
 | `unreadMarker`              | `ChatUnreadMarker`              | Unread message marker        |
 | `scrollToBottom`            | `ChatScrollToBottomAffordance`  | Scroll to bottom affordance  |
 
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
 ## See also
 
-- [Examples](/x/react-chat/material/examples/) for end-to-end customization recipes
+- [Examples](/x/react-chat/material/examples/) for end-to-end customization demos
 - [Unstyled customization](/x/react-chat/unstyled/customization/) for slot and owner-state patterns in the primitive layer

@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Message parts
+# Chat - Message parts
 
-<p class="description">Render reasoning, sources, files, step markers, and data parts with your own plain React markup.</p>
+<p class="description">Render reasoning, sources, files, step markers, and data parts with your own plain React markup</p>
 
-## What this example shows
-
-This recipe demonstrates how to render the various message part types that the streaming protocol produces.
+This demo demonstrates how to render the various message part types that the streaming protocol produces.
 Every assistant message has a `parts` array where each entry is a typed object.
 Headless does not render these parts for you — you branch on `part.type` and render whatever you want.
 
@@ -90,7 +88,11 @@ Use this to show a typing indicator or pulsing cursor while content is arriving.
 - Use `part.state` on text and reasoning parts to show streaming indicators
 - For app-specific part types, register renderers via `partRenderers` or use `useChatPartRenderer()`
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Streaming](/x/react-chat/headless/streaming/) for how chunks produce each part type
 - [Type augmentation](/x/react-chat/headless/types/) for registering custom part types

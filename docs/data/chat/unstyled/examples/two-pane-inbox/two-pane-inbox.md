@@ -5,23 +5,21 @@ packageName: '@mui/x-chat/unstyled'
 githubLabel: 'scope: chat'
 ---
 
-# Two-pane inbox
+# Chat - Two-pane inbox
 
-<p class="description">Build the default desktop chat application layout with a conversation rail and active thread pane.</p>
+<p class="description">Build the default desktop chat application layout with a conversation rail and active thread pane</p>
 
-This recipe takes the minimal shell and turns it into the most common product layout: a persistent conversation rail on the left and an active thread on the right.
+This demo takes the minimal shell and turns it into the most common product layout: a persistent conversation rail on the left and an active thread on the right.
 
 For most teams, this is the first production-ready composition pattern rather than the minimal shell.
-
-{{"demo": "TwoPaneInbox.js"}}
-
-## What it shows
 
 - `Chat.Layout` pane composition
 - `ConversationList.Root` selection behavior
 - `Conversation.Header`, `Conversation.Title`, and `Conversation.Subtitle`
 - `MessageList.Root`
 - `Composer.Root`
+
+{{"demo": "TwoPaneInbox.js"}}
 
 ## Key primitives
 
@@ -44,7 +42,7 @@ It is especially applicable when users need to switch threads frequently without
 
 - Use the default pane order so this page teaches the intended mental model before custom layouts.
 - Show a real thread header rather than jumping straight from the list to the message log.
-- Keep this recipe focused on structural composition, not styling experiments.
+- Keep this demo focused on structural composition, not styling experiments.
 - Include enough preview metadata in the conversation list that the value of a persistent rail is obvious.
 
 ## What to pay attention to
@@ -52,6 +50,10 @@ It is especially applicable when users need to switch threads frequently without
 - `ConversationList.Root` and `Conversation.Root` already coordinate through active conversation state, so the page-level layout code can stay small.
 - `Chat.Layout` should stay the structural owner of the two-pane arrangement even when the visual layout is heavily customized.
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - Continue with [Conversation list](/x/react-chat/unstyled/conversation-list/) for list semantics and keyboard behavior.

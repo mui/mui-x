@@ -99,7 +99,7 @@ describe('MessageListDateDivider', () => {
     const { rerender } = render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[
+        initialMessages={[
           createMessage('m1', '2026-03-15T09:00:00.000Z'),
           createMessage('m2', '2026-03-15T10:00:00.000Z'),
           createMessage('m3', '2026-03-16T08:00:00.000Z'),
@@ -114,7 +114,7 @@ describe('MessageListDateDivider', () => {
     rerender(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[
+        initialMessages={[
           createMessage('m1', '2026-03-15T09:00:00.000Z'),
           createMessage('m2', '2026-03-15T10:00:00.000Z'),
           createMessage('m3', '2026-03-16T08:00:00.000Z'),
@@ -129,7 +129,7 @@ describe('MessageListDateDivider', () => {
     rerender(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[
+        initialMessages={[
           createMessage('m1', '2026-03-15T09:00:00.000Z'),
           createMessage('m2', '2026-03-15T10:00:00.000Z'),
           createMessage('m3', '2026-03-16T08:00:00.000Z'),
@@ -147,7 +147,7 @@ describe('MessageListDateDivider', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[
+        initialMessages={[
           createMessage('m1', '2026-03-15T09:00:00.000Z'),
           createMessage('m2', '2026-03-16T08:00:00.000Z'),
         ]}
@@ -177,7 +177,7 @@ describe('MessageListDateDivider', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[
+        initialMessages={[
           createMessage('m1', '2026-03-15T09:00:00.000Z'),
           createMessage('m2', '2026-03-16T08:00:00.000Z'),
         ]}

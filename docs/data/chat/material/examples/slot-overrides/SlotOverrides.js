@@ -67,9 +67,9 @@ export default function SlotOverrides() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       slots={{ messageContent: CustomMessageContent }}
       sx={{
         height: 500,

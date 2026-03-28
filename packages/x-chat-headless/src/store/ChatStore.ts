@@ -15,16 +15,20 @@ export interface ChatStoreParameters<Cursor = string> {
   /** The local user sending messages. If omitted, derived from `members` by finding the entry with `role === 'user'`. */
   currentUser?: ChatUser;
   messages?: ChatMessage[];
-  defaultMessages?: ChatMessage[];
+  /** The initial messages when uncontrolled. Ignored after initialization and when `messages` is provided. */
+  initialMessages?: ChatMessage[];
   onMessagesChange?: (messages: ChatMessage[]) => void;
   conversations?: ChatConversation[];
-  defaultConversations?: ChatConversation[];
+  /** The initial conversations when uncontrolled. Ignored after initialization and when `conversations` is provided. */
+  initialConversations?: ChatConversation[];
   onConversationsChange?: (conversations: ChatConversation[]) => void;
   activeConversationId?: string;
-  defaultActiveConversationId?: string;
+  /** The initial active conversation ID when uncontrolled. Ignored after initialization and when `activeConversationId` is provided. */
+  initialActiveConversationId?: string;
   onActiveConversationChange?: (conversationId: string | undefined) => void;
   composerValue?: string;
-  defaultComposerValue?: string;
+  /** The initial composer value when uncontrolled. Ignored after initialization and when `composerValue` is provided. */
+  initialComposerValue?: string;
   onComposerValueChange?: (value: string) => void;
 }
 
@@ -98,10 +102,10 @@ function stableIds(prevIds: string[], nextIds: string[]): string[] {
 
 function deriveStateFromParameters<Cursor = string>(parameters: ChatStoreParameters<Cursor>) {
   const { ids: messageIds, byId: messagesById } = normalizeById(
-    applyModelInitialValue(parameters.messages, parameters.defaultMessages, []),
+    applyModelInitialValue(parameters.messages, parameters.initialMessages, []),
   );
   const { ids: conversationIds, byId: conversationsById } = normalizeById(
-    applyModelInitialValue(parameters.conversations, parameters.defaultConversations, []),
+    applyModelInitialValue(parameters.conversations, parameters.initialConversations, []),
   );
 
   return {
@@ -109,14 +113,14 @@ function deriveStateFromParameters<Cursor = string>(parameters: ChatStoreParamet
     conversationsById,
     activeConversationId: applyModelInitialValue(
       parameters.activeConversationId,
-      parameters.defaultActiveConversationId,
+      parameters.initialActiveConversationId,
       undefined,
     ),
     messageIds,
     messagesById,
     composerValue: applyModelInitialValue(
       parameters.composerValue,
-      parameters.defaultComposerValue,
+      parameters.initialComposerValue,
       '',
     ),
   };
@@ -158,6 +162,11 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
   }
 
   private dirtyControlledModels = new Set<ControlledModel>();
+
+  /** Whether any controlled model has been internally mutated since the last parameter sync. */
+  get hasDirtyControlledModels(): boolean {
+    return this.dirtyControlledModels.size > 0;
+  }
 
   public constructor(parameters: ChatStoreParameters<Cursor> = {}) {
     const {

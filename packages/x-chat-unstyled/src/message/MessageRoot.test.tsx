@@ -3,8 +3,10 @@ import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
 import { ChatRoot } from '../chat/ChatRoot';
+import { ChatVariantProvider } from '../chat/internals/ChatVariantContext';
 import type { MessageActionsProps } from './MessageActions';
 import { MessageActions } from './MessageActions';
+import { MessageAuthorLabel } from './MessageAuthorLabel';
 import type { MessageAvatarProps } from './MessageAvatar';
 import { MessageAvatar } from './MessageAvatar';
 import type { MessageContentProps } from './MessageContent';
@@ -13,6 +15,7 @@ import type { MessageMetaProps } from './MessageMeta';
 import { MessageMeta } from './MessageMeta';
 import type { MessageRootProps } from './MessageRoot';
 import { MessageRoot } from './MessageRoot';
+import { createToolPartRenderer } from './parts/ToolPart';
 
 const { render } = createRenderer();
 
@@ -301,7 +304,7 @@ describe('MessageRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[fullMessage]}
+        initialMessages={[fullMessage]}
         localeText={{
           messageTimestampLabel: (dateTime) => dateTime,
         }}
@@ -331,7 +334,7 @@ describe('MessageRoot', () => {
     expect(screen.getByText('Document excerpt')).not.to.equal(null);
     expect(screen.getByTestId('message-content').textContent).to.contain('Prague');
     expect(screen.getByText('2026-03-14T10:00:00.000Z')).not.to.equal(null);
-    expect(screen.getByText('Streaming')).not.to.equal(null);
+    expect(screen.getByRole('progressbar', { name: 'Streaming' })).not.to.equal(null);
     expect(screen.getByText('Edited')).not.to.equal(null);
     expect(screen.getByRole('button', { name: 'Reply' })).not.to.equal(null);
     expect(screen.queryByRole('separator')).not.to.equal(null);
@@ -345,7 +348,7 @@ describe('MessageRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[minimalMessage]}
+        initialMessages={[minimalMessage]}
         onToolCall={onToolCall}
         partRenderers={{
           text: ({ part, onToolCall: currentOnToolCall }) => {
@@ -369,7 +372,7 @@ describe('MessageRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultMessages={[fullMessage]}
+        initialMessages={[fullMessage]}
         localeText={{
           messageReasoningLabel: 'Denken',
           messageEditedLabel: 'Bearbeitet',
@@ -390,13 +393,13 @@ describe('MessageRoot', () => {
     expect(screen.getByText('Abgeschlossen')).not.to.equal(null);
     expect(screen.getByText('Verweigert')).not.to.equal(null);
     expect(screen.getByText('14.03.2026 10:00')).not.to.equal(null);
-    expect(screen.getByText('Laeuft')).not.to.equal(null);
+    expect(screen.getByRole('progressbar', { name: 'Laeuft' })).not.to.equal(null);
     expect(screen.getByText('Bearbeitet')).not.to.equal(null);
   });
 
   it('supports replacing all compound root slots and passes ownerState through them', () => {
     render(
-      <ChatRoot adapter={createAdapter()} defaultMessages={[fullMessage]}>
+      <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
         <MessageRoot messageId="m1" slots={{ root: CustomRoot }}>
           <MessageAvatar data-testid="avatar-slot" slots={{ avatar: CustomAvatar }} />
           <MessageContent
@@ -431,7 +434,9 @@ describe('MessageRoot', () => {
       'data-status',
       'streaming',
     );
-    expect(screen.getByTestId('custom-message-status')).to.have.attribute('data-streaming', 'true');
+    // When streaming, the Status slot is not rendered — a streaming progress bar takes its place
+    expect(screen.queryByTestId('custom-message-status')).to.equal(null);
+    expect(screen.getByRole('progressbar', { name: 'Streaming' })).not.to.equal(null);
     expect(screen.getByTestId('custom-message-edited')).to.have.attribute('data-extra', 'edited');
     expect(screen.getByTestId('actions-slot')).to.have.attribute('data-message-id', 'm1');
     expect(screen.getByRole('button', { name: 'Reply' })).not.to.equal(null);
@@ -439,7 +444,7 @@ describe('MessageRoot', () => {
 
   it('passes the error ownerState flags for failed messages', () => {
     render(
-      <ChatRoot adapter={createAdapter()} defaultMessages={[errorMessage]}>
+      <ChatRoot adapter={createAdapter()} initialMessages={[errorMessage]}>
         <MessageRoot messageId="m3" slots={{ root: CustomRoot }}>
           <MessageMeta slots={{ meta: CustomMeta }} />
         </MessageRoot>
@@ -455,7 +460,7 @@ describe('MessageRoot', () => {
 
   it('hides the avatar for grouped follow-up messages', () => {
     render(
-      <ChatRoot adapter={createAdapter()} defaultMessages={[fullMessage]}>
+      <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
         <MessageRoot isGrouped messageId="m1">
           <MessageAvatar />
         </MessageRoot>
@@ -467,7 +472,7 @@ describe('MessageRoot', () => {
 
   it('tolerates missing messages and empty meta without crashing', () => {
     render(
-      <ChatRoot adapter={createAdapter()} defaultMessages={[minimalMessage]}>
+      <ChatRoot adapter={createAdapter()} initialMessages={[minimalMessage]}>
         <MessageRoot data-testid="missing-message-root" messageId="missing">
           <MessageAvatar />
           <MessageContent />
@@ -480,5 +485,510 @@ describe('MessageRoot', () => {
     expect(screen.getByTestId('missing-message-root')).not.to.equal(null);
     expect(screen.queryByRole('img')).to.equal(null);
     expect(screen.getByTestId('missing-message-root').textContent).to.equal('');
+  });
+});
+
+describe('ToolPart', () => {
+  const toolMessage: ChatMessage = {
+    id: 't1',
+    role: 'assistant',
+    parts: [
+      {
+        type: 'tool',
+        toolInvocation: {
+          toolCallId: 'tc1',
+          toolName: 'search',
+          title: 'Custom Search Title',
+          state: 'output-available',
+          input: { query: 'weather' },
+          output: { result: 'sunny' },
+        },
+      },
+    ],
+  };
+
+  it('renders tool title from toolInvocation.title, falls back to toolName', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[toolMessage]}>
+        <MessageRoot messageId="t1">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByText('Custom Search Title')).not.to.equal(null);
+  });
+
+  it('falls back to toolName when no title is provided', () => {
+    const noTitleMessage: ChatMessage = {
+      id: 't2',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'tool',
+          toolInvocation: {
+            toolCallId: 'tc2',
+            toolName: 'calculate',
+            state: 'output-available',
+            input: { expr: '1+1' },
+            output: { result: 2 },
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[noTitleMessage]}>
+        <MessageRoot messageId="t2">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByText('calculate')).not.to.equal(null);
+  });
+
+  it('renders state label via localeText.toolStateLabel', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[toolMessage]}>
+        <MessageRoot messageId="t1">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    // Default locale: 'output-available' → 'Completed'
+    expect(screen.getByText('Completed')).not.to.equal(null);
+  });
+
+  it('shows input section when input-available with input defined', () => {
+    const inputAvailableMessage: ChatMessage = {
+      id: 't3',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'tool',
+          toolInvocation: {
+            toolCallId: 'tc3',
+            toolName: 'search',
+            state: 'input-available',
+            input: { query: 'hello' },
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[inputAvailableMessage]}>
+        <MessageRoot messageId="t3">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    // Default locale: messageToolInputLabel → 'Input'
+    expect(screen.getByText('Input')).not.to.equal(null);
+  });
+
+  it('shows output section when output-available with output defined', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[toolMessage]}>
+        <MessageRoot messageId="t1">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    // Default locale: messageToolOutputLabel → 'Output'
+    expect(screen.getByText('Output')).not.to.equal(null);
+  });
+
+  it('collapses input payload into <details> when exceeding 320 chars', () => {
+    const longInputMessage: ChatMessage = {
+      id: 't4',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'tool',
+          toolInvocation: {
+            toolCallId: 'tc4',
+            toolName: 'search',
+            state: 'input-available',
+            input: { query: 'a'.repeat(350) },
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[longInputMessage]}>
+        <MessageRoot messageId="t4">
+          <MessageContent data-testid="content" />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    // Long content should be in a <details> collapse
+    const details = screen.getByTestId('content').querySelector('details');
+
+    expect(details).not.to.equal(null);
+  });
+
+  it('shows inline content (no <details>) for short payloads', () => {
+    const shortInputMessage: ChatMessage = {
+      id: 't5',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'tool',
+          toolInvocation: {
+            toolCallId: 'tc5',
+            toolName: 'search',
+            state: 'input-available',
+            input: { q: 'hi' },
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[shortInputMessage]}>
+        <MessageRoot messageId="t5">
+          <MessageContent data-testid="content" />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    // Short content should use <strong> label, not <details>
+    const strong = screen.getByTestId('content').querySelector('strong');
+
+    expect(strong).not.to.equal(null);
+    expect(strong!.textContent).to.equal('Input');
+  });
+
+  it('shows error text when output-error with errorText', () => {
+    const errorToolMessage: ChatMessage = {
+      id: 't6',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'tool',
+          toolInvocation: {
+            toolCallId: 'tc6',
+            toolName: 'search',
+            state: 'output-error',
+            errorText: 'Something went wrong',
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[errorToolMessage]}>
+        <MessageRoot messageId="t6">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByText('Something went wrong')).not.to.equal(null);
+  });
+
+  it('shows denial reason when output-denied with approval.reason', () => {
+    const deniedMessage: ChatMessage = {
+      id: 't7',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'dynamic-tool',
+          toolInvocation: {
+            toolCallId: 'tc7',
+            toolName: 'search',
+            state: 'output-denied',
+            approval: { approved: false, reason: 'User denied access' },
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[deniedMessage]}>
+        <MessageRoot messageId="t7">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByText('User denied access')).not.to.equal(null);
+  });
+
+  it('shows approve/deny buttons when approval-requested', () => {
+    const approvalMessage: ChatMessage = {
+      id: 't8',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'dynamic-tool',
+          toolInvocation: {
+            toolCallId: 'tc8',
+            toolName: 'dangerous-tool',
+            state: 'approval-requested',
+            input: { action: 'delete-all' },
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[approvalMessage]}>
+        <MessageRoot messageId="t8">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    // Default locale: messageToolApproveButtonLabel → 'Approve', messageToolDenyButtonLabel → 'Deny'
+    expect(screen.getByRole('button', { name: 'Approve' })).not.to.equal(null);
+    expect(screen.getByRole('button', { name: 'Deny' })).not.to.equal(null);
+  });
+
+  it('approve/deny buttons are initially enabled', () => {
+    const approvalMessage: ChatMessage = {
+      id: 't9',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'dynamic-tool',
+          toolInvocation: {
+            toolCallId: 'tc9',
+            toolName: 'risky-tool',
+            state: 'approval-requested',
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[approvalMessage]}>
+        <MessageRoot messageId="t9">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    const approveButton = screen.getByRole('button', { name: 'Approve' });
+    const denyButton = screen.getByRole('button', { name: 'Deny' });
+
+    expect(approveButton).to.have.property('disabled', false);
+    expect(denyButton).to.have.property('disabled', false);
+  });
+
+  it('createToolPartRenderer produces a valid renderer function', () => {
+    // eslint-disable-next-line testing-library/render-result-naming-convention -- not a render result
+    const partFactory = createToolPartRenderer({ className: 'custom-tool' });
+
+    expect(typeof partFactory).to.equal('function');
+  });
+});
+
+describe('MessageAuthorLabel', () => {
+  it('renders displayName in compact variant when not grouped', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
+        <ChatVariantProvider variant="compact">
+          <MessageRoot messageId="m1">
+            <MessageAuthorLabel data-testid="author-label" />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('author-label')).to.have.text('Assistant');
+  });
+
+  it('falls back to author id when no displayName', () => {
+    const messageWithId: ChatMessage = {
+      id: 'm-id',
+      role: 'assistant',
+      parts: [{ type: 'text', text: 'Hi' }],
+      author: { id: 'bot-123' },
+    };
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[messageWithId]}>
+        <ChatVariantProvider variant="compact">
+          <MessageRoot messageId="m-id">
+            <MessageAuthorLabel data-testid="author-label" />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('author-label')).to.have.text('bot-123');
+  });
+
+  it('falls back to role when no author info', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[minimalMessage]}>
+        <ChatVariantProvider variant="compact">
+          <MessageRoot messageId="m2">
+            <MessageAuthorLabel data-testid="author-label" />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('author-label')).to.have.text('user');
+  });
+
+  it('returns null when variant is default', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
+        <MessageRoot messageId="m1">
+          <MessageAuthorLabel data-testid="author-label" />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.queryByTestId('author-label')).to.equal(null);
+  });
+
+  it('returns null when isGrouped', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
+        <ChatVariantProvider variant="compact">
+          <MessageRoot isGrouped messageId="m1">
+            <MessageAuthorLabel data-testid="author-label" />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.queryByTestId('author-label')).to.equal(null);
+  });
+});
+
+describe('MessageActions', () => {
+  it('renders children within div', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
+        <MessageRoot messageId="m1">
+          <MessageActions data-testid="actions">
+            <button type="button">Reply</button>
+            <button type="button">Copy</button>
+          </MessageActions>
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('actions')).not.to.equal(null);
+    expect(screen.getByRole('button', { name: 'Reply' })).not.to.equal(null);
+    expect(screen.getByRole('button', { name: 'Copy' })).not.to.equal(null);
+  });
+
+  it('forwards ref', () => {
+    const ref = React.createRef<HTMLDivElement>();
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
+        <MessageRoot messageId="m1">
+          <MessageActions ref={ref} />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(ref.current).to.be.instanceOf(window.HTMLDivElement);
+  });
+});
+
+describe('MessageMeta', () => {
+  it('returns null when no timestamp/status/editedAt and not streaming', () => {
+    const bareMessage: ChatMessage = {
+      id: 'm-bare',
+      role: 'assistant',
+      parts: [{ type: 'text', text: 'Hi' }],
+    };
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[bareMessage]}>
+        <MessageRoot messageId="m-bare">
+          <MessageMeta data-testid="meta" />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.queryByTestId('meta')).to.equal(null);
+  });
+
+  it('shows timestamp after hydration', () => {
+    const timedMessage: ChatMessage = {
+      id: 'm-ts',
+      role: 'assistant',
+      createdAt: '2026-03-14T10:00:00.000Z',
+      parts: [{ type: 'text', text: 'Hi' }],
+    };
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[timedMessage]}
+        localeText={{ messageTimestampLabel: (dt) => dt }}
+      >
+        <MessageRoot messageId="m-ts">
+          <MessageMeta data-testid="meta" />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByText('2026-03-14T10:00:00.000Z')).not.to.equal(null);
+  });
+
+  it('shows status label when not streaming', () => {
+    const sentMessage: ChatMessage = {
+      id: 'm-sent',
+      role: 'user',
+      status: 'sent',
+      parts: [{ type: 'text', text: 'Sent' }],
+    };
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[sentMessage]}
+        localeText={{ messageStatusLabel: () => 'Delivered' }}
+      >
+        <MessageRoot messageId="m-sent">
+          <MessageMeta data-testid="meta" />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByText('Delivered')).not.to.equal(null);
+  });
+
+  it('shows streaming progress bar with aria-label', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
+        <MessageRoot messageId="m1">
+          <MessageMeta />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    // fullMessage has status: 'streaming'
+    expect(screen.getByRole('progressbar', { name: 'Streaming' })).not.to.equal(null);
+  });
+
+  it('shows edited label when editedAt is set', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
+        <MessageRoot messageId="m1">
+          <MessageMeta />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    // fullMessage has editedAt set
+    expect(screen.getByText('Edited')).not.to.equal(null);
   });
 });

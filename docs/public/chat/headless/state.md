@@ -28,10 +28,10 @@ Use `default*` props to let the runtime own the value, or pass the value directl
 
 | Model               | Controlled prop        | Default prop                  | Change callback              |
 | :------------------ | :--------------------- | :---------------------------- | :--------------------------- |
-| Messages            | `messages`             | `defaultMessages`             | `onMessagesChange`           |
-| Conversations       | `conversations`        | `defaultConversations`        | `onConversationsChange`      |
-| Active conversation | `activeConversationId` | `defaultActiveConversationId` | `onActiveConversationChange` |
-| Composer value      | `composerValue`        | `defaultComposerValue`        | `onComposerValueChange`      |
+| Messages            | `messages`             | `initialMessages`             | `onMessagesChange`           |
+| Conversations       | `conversations`        | `initialConversations`        | `onConversationsChange`      |
+| Active conversation | `activeConversationId` | `initialActiveConversationId` | `onActiveConversationChange` |
+| Composer value      | `composerValue`        | `initialComposerValue`        | `onComposerValueChange`      |
 
 ### Callbacks
 
@@ -59,8 +59,8 @@ When prototyping or when the runtime can own the data, use `default*` props:
 ```tsx
 <ChatProvider
   adapter={adapter}
-  defaultActiveConversationId="support"
-  defaultMessages={initialMessages}
+  initialActiveConversationId="support"
+  initialMessages={initialMessages}
 >
   <MyChat />
 </ChatProvider>

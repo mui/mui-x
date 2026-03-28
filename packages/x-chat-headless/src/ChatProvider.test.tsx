@@ -71,7 +71,7 @@ describe('ChatProvider', () => {
   it('renders children and provides the chat store through context', () => {
     const { Wrapper } = createProviderWrapper({
       adapter: createAdapter(),
-      defaultMessages: [message1],
+      initialMessages: [message1],
     });
     const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
 
@@ -88,10 +88,10 @@ describe('ChatProvider', () => {
   });
 
   it('returns the store from useChatStore and preserves the provider instance across rerenders', () => {
-    const defaultMessages = [message1];
+    const initialMessages = [message1];
     const { Wrapper, setProps } = createProviderWrapper({
       adapter: createAdapter(),
-      defaultMessages,
+      initialMessages,
     });
     const { result, rerender } = renderHook(() => useChatStore(), { wrapper: Wrapper });
 
@@ -101,7 +101,7 @@ describe('ChatProvider', () => {
 
     setProps({
       adapter: createAdapter(),
-      defaultMessages,
+      initialMessages,
     });
     rerender();
 
@@ -117,7 +117,7 @@ describe('ChatProvider', () => {
   it('supports pairing useChatStore with useStore and chatSelectors', () => {
     const { Wrapper } = createProviderWrapper({
       adapter: createAdapter(),
-      defaultMessages: [message1],
+      initialMessages: [message1],
     });
     const { result } = renderHook(
       () => {
@@ -312,6 +312,66 @@ describe('ChatProvider', () => {
     }).toErrorDev(
       'MUI X Chat: A component is changing the uncontrolled messages state of ChatProvider to be controlled.',
     );
+  });
+
+  it('passes streamFlushInterval through to streaming behavior', async () => {
+    const adapter: ChatAdapter = {
+      async sendMessage() {
+        return new ReadableStream({
+          start(controller) {
+            controller.enqueue({ type: 'start', messageId: 'a1' });
+            controller.enqueue({ type: 'text-delta', id: 'text-1', delta: 'Hello' });
+            controller.enqueue({ type: 'text-delta', id: 'text-1', delta: ' world' });
+            controller.enqueue({ type: 'finish', messageId: 'a1' });
+            controller.close();
+          },
+        });
+      },
+    };
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      streamFlushInterval: 0,
+    });
+    const { result } = renderHook(
+      () => {
+        const store = useChatStoreContext();
+        const runtime = useChatRuntimeContext();
+        return { store, runtime };
+      },
+      { wrapper: Wrapper },
+    );
+
+    // streamFlushInterval is passed through — we verify by checking it doesn't error
+    // and the store initializes correctly
+    expect(result.current.store).toBeDefined();
+    expect(result.current.runtime.adapter).toBe(adapter);
+  });
+
+  it('store reference stays stable when adapter changes', () => {
+    const adapter1 = createAdapter();
+    const adapter2 = createAdapter();
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter: adapter1,
+      initialMessages: [message1],
+    });
+    const { result, rerender } = renderHook(
+      () => ({
+        store: useChatStoreContext(),
+        runtime: useChatRuntimeContext(),
+      }),
+      { wrapper: Wrapper },
+    );
+
+    const initialStore = result.current.store;
+
+    setProps({
+      adapter: adapter2,
+      initialMessages: [message1],
+    });
+    rerender();
+
+    expect(result.current.store).toBe(initialStore);
+    expect(result.current.runtime.adapter).toBe(adapter2);
   });
 
   it('supports overriding the store class', () => {

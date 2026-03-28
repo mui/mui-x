@@ -367,7 +367,7 @@ function MessagePartsInner() {
 
 export default function MessagePartsHeadlessChat() {
   return (
-    <ChatProvider adapter={adapter} defaultActiveConversationId="research">
+    <ChatProvider adapter={adapter} initialActiveConversationId="research">
       <MessagePartsInner />
     </ChatProvider>
   );

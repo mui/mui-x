@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Tool approval and renderers
+# Chat - Tool approval and renderers
 
-<p class="description">Combine AI-native runtime features by approving a tool call and rendering a custom message part through the registry.</p>
+<p class="description">Combine AI-native runtime features by approving a tool call and rendering a custom message part through the registry</p>
 
-## What this example shows
-
-This recipe covers the main extension points for tool-assisted AI interactions:
+This demo covers the main extension points for tool-assisted AI interactions:
 
 - the tool approval lifecycle from `approval-requested` to response
 - `addToolApprovalResponse()` for approving or denying tool calls
@@ -91,7 +89,11 @@ For a dedicated walkthrough of TypeScript module augmentation, see [Type augment
 - `partRenderers` decouples rendering from the message loop — register once, look up anywhere
 - Custom part types registered through module augmentation integrate seamlessly with the renderer registry
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Type augmentation](/x/react-chat/headless/types/) for registering custom types
 - [Streaming](/x/react-chat/headless/streaming/) for the tool chunk protocol

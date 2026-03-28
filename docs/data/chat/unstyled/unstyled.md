@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled
 
-<p class="description">Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.</p>
+<p class="description">Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design</p>
 
 `@mui/x-chat/unstyled` builds on the headless runtime.
 It combines `@mui/x-chat/headless` state with structural components such as lists, threads, messages, composers, and indicators.
@@ -104,7 +104,7 @@ This gives you a complete structural shell while keeping the visual treatment in
 - [Composer](/x/react-chat/unstyled/composer/) for form submission, autosizing, attachments, and IME-safe input
 - [Indicators](/x/react-chat/unstyled/indicators/) for typing, unread, and scroll affordances
 - [Customization](/x/react-chat/unstyled/customization/) for slots, owner state, and styling strategy
-- [Examples](/x/react-chat/unstyled/examples/) for end-to-end composition recipes
+- [Examples](/x/react-chat/unstyled/examples/) for end-to-end composition demos
 
 ## Namespaces and direct imports
 
@@ -127,6 +127,11 @@ You can also import individual components such as `ChatRoot`, `MessageListRoot`,
 
 Use namespaced imports when you want the API to read like a component family.
 Use direct imports when a codebase prefers local, explicit symbols or when only one or two primitives are needed in a file.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+- [ChatLayout](/x/api/chat/chat-layout/)
 
 ## See also
 

@@ -51,7 +51,7 @@ function useRenderCount<Value>(value: Value) {
 describe('selector hooks', () => {
   it('useMessageIds returns store-ordered ids and keeps a stable reference when only a message body changes', () => {
     const store = new ChatStore({
-      defaultMessages: [userMessage, assistantMessage],
+      initialMessages: [userMessage, assistantMessage],
     });
     const wrapper = createStoreWrapper(store);
     const { result } = renderHook(() => useRenderCount(useMessageIds()), { wrapper });
@@ -72,7 +72,7 @@ describe('selector hooks', () => {
 
   it('useMessage rerenders only for the subscribed message and returns null when missing', () => {
     const store = new ChatStore({
-      defaultMessages: [userMessage, assistantMessage],
+      initialMessages: [userMessage, assistantMessage],
     });
     const wrapper = createStoreWrapper(store);
     // eslint-disable-next-line testing-library/render-result-naming-convention
@@ -106,7 +106,7 @@ describe('selector hooks', () => {
 
   it('useConversations and useConversation subscribe to the conversation slice and normalize missing values to null', () => {
     const store = new ChatStore({
-      defaultConversations: [conversation1, conversation2],
+      initialConversations: [conversation1, conversation2],
     });
     const wrapper = createStoreWrapper(store);
     // eslint-disable-next-line testing-library/render-result-naming-convention
@@ -159,7 +159,7 @@ describe('selector hooks', () => {
 
   it('useChatStatus only rerenders for status changes and returns a stable object for unrelated updates', () => {
     const store = new ChatStore({
-      defaultMessages: [userMessage],
+      initialMessages: [userMessage],
     });
     const wrapper = createStoreWrapper(store);
     // eslint-disable-next-line testing-library/render-result-naming-convention
@@ -178,10 +178,6 @@ describe('selector hooks', () => {
       isStreaming: false,
       hasMoreHistory: false,
       error: null,
-      conversationError: null,
-      isLoadingConversations: false,
-      isLoadingMessages: false,
-      isRealtimeConnecting: false,
       typingUserIds: [],
     });
 
@@ -205,10 +201,6 @@ describe('selector hooks', () => {
       isStreaming: false,
       hasMoreHistory: true,
       error: null,
-      conversationError: null,
-      isLoadingConversations: false,
-      isLoadingMessages: false,
-      isRealtimeConnecting: false,
       typingUserIds: [],
     });
 
@@ -224,18 +216,14 @@ describe('selector hooks', () => {
       isStreaming: true,
       hasMoreHistory: true,
       error: streamError,
-      conversationError: null,
-      isLoadingConversations: false,
-      isLoadingMessages: false,
-      isRealtimeConnecting: false,
       typingUserIds: [],
     });
   });
 
   it('useChatStatus.typingUserIds reflects typing events for the active conversation and ignores message updates', () => {
     const store = new ChatStore({
-      defaultMessages: [userMessage],
-      defaultActiveConversationId: 'c1',
+      initialMessages: [userMessage],
+      initialActiveConversationId: 'c1',
     });
     const wrapper = createStoreWrapper(store);
     // eslint-disable-next-line testing-library/render-result-naming-convention

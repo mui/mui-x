@@ -89,7 +89,7 @@ export default function StreamingLifecycleHeadlessChat() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultActiveConversationId="support"
+      initialActiveConversationId="support"
       onData={(part) => {
         console.log('onData', part.type);
       }}

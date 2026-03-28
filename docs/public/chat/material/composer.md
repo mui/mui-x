@@ -67,9 +67,9 @@ export default function ComposerCustomPlaceholder() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       slotProps={{
         composerInput: { placeholder: 'Ask me anything...' },
       }}
@@ -123,9 +123,9 @@ export default function ComposerHiddenAttachButton() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       features={{ attachButton: false }}
       sx={{
         height: 400,
@@ -177,9 +177,9 @@ export default function ComposerControlled() {
       </Typography>
       <ChatBox
         adapter={adapter}
-        defaultActiveConversationId={minimalConversation.id}
-        defaultConversations={[minimalConversation]}
-        defaultMessages={minimalMessages}
+        initialActiveConversationId={minimalConversation.id}
+        initialConversations={[minimalConversation]}
+        initialMessages={minimalMessages}
         composerValue={value}
         onComposerValueChange={setValue}
         sx={{
@@ -259,9 +259,9 @@ export default function ComposerDisabled() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       slotProps={{
         composerRoot: { disabled: true },
       }}

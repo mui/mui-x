@@ -46,12 +46,12 @@ const adapter: ChatAdapter = {
 Wrap your component tree with `ChatProvider` and pass the adapter:
 
 ```tsx
-<ChatProvider adapter={adapter} defaultActiveConversationId="support">
+<ChatProvider adapter={adapter} initialActiveConversationId="support">
   <MinimalChatInner />
 </ChatProvider>
 ```
 
-`defaultActiveConversationId` sets the initial conversation without requiring controlled state.
+`initialActiveConversationId` sets the initial conversation without requiring controlled state.
 
 ### Reading state with `useChat()`
 
@@ -242,7 +242,7 @@ function MinimalChatInner() {
 
 export default function MinimalHeadlessChat() {
   return (
-    <ChatProvider adapter={adapter} defaultActiveConversationId="support">
+    <ChatProvider adapter={adapter} initialActiveConversationId="support">
       <MinimalChatInner />
     </ChatProvider>
   );

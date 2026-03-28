@@ -29,8 +29,8 @@ const conversation2: ChatConversation = {
 describe('chatSelectors', () => {
   it('returns normalized ids, lookups, and derived arrays in store order', () => {
     const store = new ChatStore({
-      defaultMessages: [userMessage, assistantMessage],
-      defaultConversations: [conversation1, conversation2],
+      initialMessages: [userMessage, assistantMessage],
+      initialConversations: [conversation1, conversation2],
     });
 
     expect(chatSelectors.messageIds(store.state)).toEqual(['m1', 'm2']);
@@ -50,8 +50,8 @@ describe('chatSelectors', () => {
 
   it('returns lookup and scalar selectors correctly', () => {
     const store = new ChatStore({
-      defaultMessages: [userMessage, assistantMessage],
-      defaultConversations: [conversation1, conversation2],
+      initialMessages: [userMessage, assistantMessage],
+      initialConversations: [conversation1, conversation2],
     });
 
     store.setActiveConversation('c2');
@@ -80,8 +80,8 @@ describe('chatSelectors', () => {
 
   it('memoizes message and conversation arrays when their inputs have not changed', () => {
     const store = new ChatStore({
-      defaultMessages: [userMessage],
-      defaultConversations: [conversation1],
+      initialMessages: [userMessage],
+      initialConversations: [conversation1],
     });
 
     const messagesBefore = chatSelectors.messages(store.state);

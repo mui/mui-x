@@ -5,9 +5,9 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# No conversation history
+# Chat - No conversation history
 
-<p class="description"><code>ChatBox</code> hides the conversation list when neither the adapter nor a prop supplies conversation data.</p>
+<p class="description"><code>ChatBox</code> hides the conversation list when neither the adapter nor a prop supplies conversation data</p>
 
 {{"demo": "NoConversationHistory.js", "bg": "inline"}}
 
@@ -17,7 +17,7 @@ githubLabel: 'scope: chat'
 
 There are exactly two ways to populate that array:
 
-1. **Controlled or uncontrolled state** — pass `conversations` / `defaultConversations` props to `ChatBox`.
+1. **Controlled or uncontrolled state** — pass `conversations` / `initialConversations` props to `ChatBox`.
 2. **Adapter** — implement `listConversations?()` on the adapter so `ChatBox` can fetch history from a backend.
 
 When neither is present, the array stays empty and `ChatBox` skips rendering the list panel entirely. The thread fills the full width automatically — no extra configuration needed.
@@ -30,7 +30,7 @@ const adapter: ChatAdapter = {
   },
 };
 
-// No `conversations` or `defaultConversations` prop — state stays empty
+// No `conversations` or `initialConversations` prop — state stays empty
 <ChatBox adapter={adapter} />;
 ```
 
@@ -51,8 +51,8 @@ To show the conversation list, provide at least one of the two sources:
 ```tsx
 <ChatBox
   adapter={adapter}
-  defaultConversations={[{ id: 'main', title: 'My chat' }]}
-  defaultActiveConversationId="main"
+  initialConversations={[{ id: 'main', title: 'My chat' }]}
+  initialActiveConversationId="main"
 />
 ```
 
@@ -70,7 +70,11 @@ const adapter: ChatAdapter = {
 };
 ```
 
-## Next steps
+## API
 
-- See [Thread-only](/x/react-chat/material/examples/thread-only/) for a layout-focused view of the single-pane pattern.
-- See [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for the full two-pane inbox with a conversation sidebar.
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
+
+- [Thread-only](/x/react-chat/material/examples/thread-only/) for a layout-focused view of the single-pane pattern
+- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for the full two-pane inbox with a conversation sidebar

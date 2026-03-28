@@ -5,18 +5,16 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Code block
+# Chat - Code block
 
-<p class="description">Display code with a language label and copy-to-clipboard button using the <code>ChatCodeBlock</code> component.</p>
-
-{{"demo": "CodeBlock.js", "bg": "inline"}}
-
-## What it shows
+<p class="description">Display code with a language label and copy-to-clipboard button using the <code>ChatCodeBlock</code> component</p>
 
 - **Automatic rendering** — `ChatBox` renders code fences from markdown as `ChatCodeBlock` automatically. No extra config needed.
 - **Language label** — the language specified in the code fence (e.g. ` ```python `) appears in the header bar.
 - **Copy button** — clicking copies the raw code string to the clipboard and shows a check mark for 2 seconds.
 - **Custom highlighter** — the standalone section below the chat shows the `highlighter` prop with a minimal Python keyword coloriser (no library required).
+
+{{"demo": "CodeBlock.js", "bg": "inline"}}
 
 ## Basic usage
 
@@ -69,3 +67,7 @@ function ShikiBlock({ code, language }) {
 When using `ChatBox`, any code fence in a markdown assistant message is automatically rendered as a `ChatCodeBlock`. This requires no additional configuration — the `renderMarkdown` function used internally by `ChatMessageContent` emits `ChatCodeBlock` for every code fence it encounters.
 
 To customize the rendering further, override `partProps.text.renderText` on `ChatMessageContent`.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

@@ -177,7 +177,7 @@ export default function ToolCallEventsHeadlessChat() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultActiveConversationId="ops"
+      initialActiveConversationId="ops"
       onToolCall={handleToolCall}
     >
       <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>

@@ -36,8 +36,8 @@ export default function GroupedMessageTimeline() {
           participants: [demoUsers.you, demoUsers.alice, demoUsers.agent],
         },
       ]}
-      defaultActiveConversationId="timeline"
-      defaultMessages={groupedTimelineMessages}
+      initialActiveConversationId="timeline"
+      initialMessages={groupedTimelineMessages}
       localeText={demoLocaleText}
       slotProps={{
         root: {

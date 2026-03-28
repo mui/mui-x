@@ -49,9 +49,9 @@ export default function StandaloneMessageList() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
     >
       <Box
         sx={{

@@ -126,7 +126,7 @@ export default function IndicatorsInContext() {
     <Chat.Root
       adapter={controller.adapter}
       conversations={[conversation]}
-      defaultActiveConversationId="indicators"
+      initialActiveConversationId="indicators"
       messages={messages}
       onMessagesChange={setMessages}
       localeText={demoLocaleText}

@@ -7,11 +7,15 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless streaming
 
-<p class="description">Understand the stream chunk protocol that turns adapter responses into normalized message state, including text, reasoning, tool, source, file, and data chunks.</p>
+<p class="description">Understand the stream chunk protocol that turns adapter responses into normalized message state, including text, reasoning, tool, source, file, and data chunks</p>
 
 The adapter's `sendMessage()` method returns a `ReadableStream<ChatMessageChunk | ChatStreamEnvelope>`.
 The runtime reads this stream, processes each chunk, and updates the normalized store.
 Your UI components see the updates through hooks and selectors.
+
+The following demo visualizes the streaming lifecycle:
+
+{{"demo": "../examples/streaming-lifecycle/StreamingLifecycleHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Chunk categories
 
@@ -126,8 +130,9 @@ Envelopes are useful for SSE-based transports where chunks might arrive out of o
 Rapid text and reasoning deltas are batched before being applied to the store.
 The `streamFlushInterval` prop on `ChatProvider` controls the batching window (default: 16ms).
 
-Lower values mean faster visual updates but more store mutations.
-Higher values reduce mutation frequency at the cost of perceived latency.
+:::info
+Lower values mean faster visual updates but more store mutations. Higher values reduce mutation frequency at the cost of perceived latency.
+:::
 
 ```tsx
 <ChatProvider adapter={adapter} streamFlushInterval={32}>
@@ -212,6 +217,10 @@ async function fromSSE(
   });
 }
 ```
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
 
 ## See also
 

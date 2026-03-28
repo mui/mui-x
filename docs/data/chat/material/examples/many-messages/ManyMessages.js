@@ -49,9 +49,9 @@ export default function ManyMessages() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={conversation.id}
-      defaultConversations={[conversation]}
-      defaultMessages={manyMessages}
+      initialActiveConversationId={conversation.id}
+      initialConversations={[conversation]}
+      initialMessages={manyMessages}
       sx={{
         height: 500,
         border: '1px solid',

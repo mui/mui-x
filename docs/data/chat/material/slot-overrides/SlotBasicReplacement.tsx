@@ -42,9 +42,9 @@ export default function SlotBasicReplacement() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       slots={{ messageAvatar: CustomAvatar }}
       sx={{
         height: 500,

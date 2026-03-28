@@ -50,9 +50,9 @@ export default function DateDividerFormat() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={conversation.id}
-      defaultConversations={[conversation]}
-      defaultMessages={messages}
+      initialActiveConversationId={conversation.id}
+      initialConversations={[conversation]}
+      initialMessages={messages}
       slotProps={{
         dateDivider: {
           formatDate: (date) =>

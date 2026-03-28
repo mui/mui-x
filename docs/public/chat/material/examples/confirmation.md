@@ -90,9 +90,9 @@ export default function Confirmation() {
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, height: 560 }}>
       <ChatBox
         adapter={adapter}
-        defaultActiveConversationId={CONVERSATION_ID}
-        defaultConversations={[minimalConversation]}
-        defaultMessages={INITIAL_MESSAGES}
+        initialActiveConversationId={CONVERSATION_ID}
+        initialConversations={[minimalConversation]}
+        initialMessages={INITIAL_MESSAGES}
         sx={{
           flex: 1,
           border: '1px solid',

@@ -33,9 +33,9 @@ export default function SlowStreaming() {
   return (
     <ChatBox
       adapter={slowAdapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       sx={{
         height: 500,
         border: '1px solid',

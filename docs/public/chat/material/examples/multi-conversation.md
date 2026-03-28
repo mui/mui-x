@@ -97,7 +97,7 @@ const [threads, setThreads] = React.useState({ 'thread-a': [], 'thread-b': [] })
 />;
 ```
 
-For simpler use cases with a single conversation, use `defaultActiveConversationId` and `defaultMessages` instead.
+For simpler use cases with a single conversation, use `initialActiveConversationId` and `initialMessages` instead.
 
 ## Conversation list behavior
 

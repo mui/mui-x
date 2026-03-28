@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless hooks
 
-<p class="description">Read chat state and trigger runtime actions through hooks scoped to exactly the data your component needs.</p>
+<p class="description">Read chat state and trigger runtime actions through hooks scoped to exactly the data your component needs</p>
 
 The headless package exposes nine public hooks.
 Each one subscribes to a specific slice of the normalized chat store, so your components only re-render when their own data changes.
@@ -27,6 +27,10 @@ import {
 ```
 
 All hooks must be called inside a `<ChatProvider>`.
+
+The following demo shows hooks in action inside a minimal headless chat:
+
+{{"demo": "../examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## `useChat()`
 
@@ -256,8 +260,9 @@ function MessageCounter() {
 }
 ```
 
-Use this hook sparingly.
-For most use cases, the dedicated hooks above provide a better developer experience.
+:::warning
+`useChatStore()` gives you access to all selectors and the full store mutation API. Use it sparingly — the dedicated hooks above are simpler, better typed, and remain stable across minor versions. Direct store access is considered advanced API and is more likely to require changes during upgrades.
+:::
 
 ## `useChatPartRenderer(partType)`
 
@@ -296,10 +301,14 @@ function CustomPart({ part, message, index }) {
 | Custom selector or store subscription     | `useChatStore()` + `chatSelectors`            |
 | Registered part renderer lookup           | `useChatPartRenderer(partType)`               |
 
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
 ## See also
 
 - [Selectors](/x/react-chat/headless/selectors/) for the full selector API and advanced store subscriptions.
 - [State and store](/x/react-chat/headless/state/) for `ChatProvider` props and the controlled/uncontrolled model.
-- [Minimal headless chat](/x/react-chat/headless/examples/minimal-chat/) for the smallest working example.
+- [Minimal headless chat](/x/react-chat/headless/examples/minimal-chat/) for the smallest working demo.
 - [Selector-driven thread](/x/react-chat/headless/examples/selector-driven-thread/) for the `useMessageIds()` + `useMessage(id)` pattern in action.
 - [Composer](/x/react-chat/headless/examples/composer/) for `useChatComposer()` with attachments.

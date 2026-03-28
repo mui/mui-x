@@ -46,16 +46,16 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     members,
     currentUser,
     messages,
-    defaultMessages,
+    initialMessages,
     onMessagesChange,
     conversations,
-    defaultConversations,
+    initialConversations,
     onConversationsChange,
     activeConversationId,
-    defaultActiveConversationId,
+    initialActiveConversationId,
     onActiveConversationChange,
     composerValue,
-    defaultComposerValue,
+    initialComposerValue,
     onComposerValueChange,
     onToolCall,
     onFinish,
@@ -86,16 +86,16 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
       members={members}
       currentUser={currentUser}
       messages={messages}
-      defaultMessages={defaultMessages}
+      initialMessages={initialMessages}
       onMessagesChange={onMessagesChange}
       conversations={conversations}
-      defaultConversations={defaultConversations}
+      initialConversations={initialConversations}
       onConversationsChange={onConversationsChange}
       activeConversationId={activeConversationId}
-      defaultActiveConversationId={defaultActiveConversationId}
+      initialActiveConversationId={initialActiveConversationId}
       onActiveConversationChange={onActiveConversationChange}
       composerValue={composerValue}
-      defaultComposerValue={defaultComposerValue}
+      initialComposerValue={initialComposerValue}
       onComposerValueChange={onComposerValueChange}
       onToolCall={onToolCall}
       onFinish={onFinish}
@@ -180,9 +180,25 @@ ChatBox.propTypes = {
     metadata: PropTypes.object,
     role: PropTypes.oneOf(['assistant', 'system', 'user']),
   }),
-  defaultActiveConversationId: PropTypes.string,
-  defaultComposerValue: PropTypes.string,
-  defaultConversations: PropTypes.arrayOf(
+  /**
+   * Feature flags to enable or disable built-in ChatBox behaviours.
+   */
+  features: PropTypes.shape({
+    attachButton: PropTypes.bool,
+    autoScroll: PropTypes.oneOfType([
+      PropTypes.shape({
+        buffer: PropTypes.number,
+      }),
+      PropTypes.bool,
+    ]),
+    conversationHeader: PropTypes.bool,
+    helperText: PropTypes.bool,
+    scrollToBottom: PropTypes.bool,
+    suggestions: PropTypes.bool,
+  }),
+  initialActiveConversationId: PropTypes.string,
+  initialComposerValue: PropTypes.string,
+  initialConversations: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       lastMessageAt: PropTypes.string,
@@ -203,7 +219,7 @@ ChatBox.propTypes = {
       unreadCount: PropTypes.number,
     }),
   ),
-  defaultMessages: PropTypes.arrayOf(
+  initialMessages: PropTypes.arrayOf(
     PropTypes.shape({
       author: PropTypes.shape({
         avatarUrl: PropTypes.string,
@@ -312,22 +328,6 @@ ChatBox.propTypes = {
       updatedAt: PropTypes.string,
     }),
   ),
-  /**
-   * Feature flags to enable or disable built-in ChatBox behaviours.
-   */
-  features: PropTypes.shape({
-    attachButton: PropTypes.bool,
-    autoScroll: PropTypes.oneOfType([
-      PropTypes.shape({
-        buffer: PropTypes.number,
-      }),
-      PropTypes.bool,
-    ]),
-    conversationHeader: PropTypes.bool,
-    helperText: PropTypes.bool,
-    scrollToBottom: PropTypes.bool,
-    suggestions: PropTypes.bool,
-  }),
   localeText: PropTypes.object,
   /**
    * All participants in the chat. The current (local) user is derived as the first member with `role === 'user'`, unless `currentUser` is provided explicitly.

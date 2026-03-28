@@ -124,9 +124,9 @@ export default function PlanTask() {
       </Paper>
       <ChatBox
         adapter={adapter}
-        defaultActiveConversationId={minimalConversation.id}
-        defaultConversations={[minimalConversation]}
-        defaultMessages={minimalMessages}
+        initialActiveConversationId={minimalConversation.id}
+        initialConversations={[minimalConversation]}
+        initialMessages={minimalMessages}
         sx={{
           flex: 1,
           border: '1px solid',

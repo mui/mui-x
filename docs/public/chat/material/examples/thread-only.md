@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 A single-pane chat surface with no conversation sidebar — ideal for embedded copilots and focused AI assistants.
 
-When no `conversations` or `defaultConversations` are provided, `ChatBox` automatically hides the left panel and renders the thread full-width.
+When no `conversations` or `initialConversations` are provided, `ChatBox` automatically hides the left panel and renders the thread full-width.
 
 ```tsx
 'use client';
@@ -60,7 +60,7 @@ Use the two-pane layout ([Multi-conversation](/x/react-chat/material/examples/mu
 
 ## How it works
 
-`ChatBox` checks whether any `conversations` (or `defaultConversations`) are present.
+`ChatBox` checks whether any `conversations` (or `initialConversations`) are present.
 If none are provided, the conversation list component is not rendered, and `ChatLayout` collapses the left pane automatically — the thread fills the full width.
 
 To restore the sidebar at any time, pass at least one conversation:
@@ -68,8 +68,8 @@ To restore the sidebar at any time, pass at least one conversation:
 ```tsx
 <ChatBox
   adapter={adapter}
-  defaultConversations={[{ id: 'main', title: 'Support' }]}
-  defaultActiveConversationId="main"
+  initialConversations={[{ id: 'main', title: 'Support' }]}
+  initialActiveConversationId="main"
 />
 ```
 

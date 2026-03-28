@@ -7,11 +7,15 @@ githubLabel: 'scope: chat'
 
 # Chat - Adapter
 
-<p class="description">Connect <code>ChatBox</code> to any backend by implementing the <code>ChatAdapter</code> interface and passing it to the <code>adapter</code> prop.</p>
+<p class="description">Connect <code>ChatBox</code> to any backend by implementing the <code>ChatAdapter</code> interface and passing it to the <code>adapter</code> prop</p>
 
 `ChatBox` renders a fully styled chat surface, but it knows nothing about your backend on its own.
 The adapter is the single object that bridges them.
 It receives user messages, communicates with your server, and returns a streaming response that the runtime turns into live UI updates.
+
+The following demo shows an adapter connected to a local echo backend:
+
+{{"demo": "../examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false}}
 
 You author the adapter once and pass it directly to `ChatBox`:
 
@@ -369,7 +373,10 @@ The cursor type flows automatically through `ChatBox`, the store, hooks, and all
 
 ## Error handling
 
+:::info
 You do not need to catch errors inside adapter methods — the runtime handles them for you.
+:::
+
 When an adapter method throws, the runtime:
 
 1. Records a `ChatError` with the appropriate `source` field (`'send'`, `'stream'`, `'history'`, or `'adapter'`).
@@ -403,8 +410,8 @@ export default function App() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultActiveConversationId="main"
-      defaultConversations={[{ id: 'main', title: 'Assistant' }]}
+      initialActiveConversationId="main"
+      initialConversations={[{ id: 'main', title: 'Assistant' }]}
     >
       <MyCustomChatLayout />
     </ChatProvider>
@@ -414,10 +421,14 @@ export default function App() {
 
 Everything else — hooks, selectors, streaming — works the same way regardless of whether you use `ChatBox` or build your own layout.
 
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
 ## See also
 
 - [Streaming](/x/react-chat/headless/streaming/) for the full stream chunk protocol reference.
 - [Realtime](/x/react-chat/headless/realtime/) for the event types used by `subscribe()`.
 - [Hooks](/x/react-chat/material/hooks/) to see which runtime actions trigger adapter methods.
-- [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for a minimal end-to-end example.
+- [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for a minimal end-to-end demo.
 - [Conversation history](/x/react-chat/headless/examples/conversation-history/) for adapter-driven history loading.

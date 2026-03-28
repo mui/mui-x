@@ -8,7 +8,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled messages
 
-<p class="description">Compose thread rows from message grouping primitives, message subparts, and default message-part renderers.</p>
+<p class="description">Compose thread rows from message grouping primitives, message subparts, and default message-part renderers</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
@@ -128,8 +128,19 @@ Rebuild more of the message surface when:
 - message actions need a different placement model
 - grouped and ungrouped messages need distinct markup
 
+## API
+
+- [MessageRoot](/x/api/chat/message-root/)
+- [MessageGroup](/x/api/chat/message-group/)
+- [MessageContent](/x/api/chat/message-content/)
+- [MessageAvatar](/x/api/chat/message-avatar/)
+- [MessageMeta](/x/api/chat/message-meta/)
+- [MessageAuthorLabel](/x/api/chat/message-author-label/)
+- [MessageActions](/x/api/chat/message-actions/)
+- [MessageListDateDivider](/x/api/chat/message-list-date-divider/)
+
 ## See also
 
 - Continue with [Message list](/x/react-chat/unstyled/message-list/) for ordering, date boundaries, and thread scrolling behavior.
 - Continue with [Customization](/x/react-chat/unstyled/customization/) for slot replacement patterns on message rows and subparts.
-- Continue with [Custom message part rendering](/x/react-chat/unstyled/examples/custom-message-part-rendering/) for the recipe version of selective renderer replacement.
+- Continue with [Custom message part rendering](/x/react-chat/unstyled/examples/custom-message-part-rendering/) for the demo version of selective renderer replacement.

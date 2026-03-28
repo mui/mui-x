@@ -202,17 +202,17 @@ describe('useChatInstance', () => {
 
   it('warns and ignores default model updates after initialization', () => {
     const { result, rerender } = renderHook(
-      ({ defaultMessages }: { defaultMessages: ChatMessage[] }) =>
-        useChatInstance({ defaultMessages }),
+      ({ initialMessages }: { initialMessages: ChatMessage[] }) =>
+        useChatInstance({ initialMessages }),
       {
         initialProps: {
-          defaultMessages: [message1],
+          initialMessages: [message1],
         },
       },
     );
 
     expect(() => {
-      rerender({ defaultMessages: [message2] });
+      rerender({ initialMessages: [message2] });
       expect(result.current.state.messageIds).toEqual(['m1']);
     }).toErrorDev(
       'MUI X Chat: A component is changing the default messages state of an uncontrolled ChatProvider after being initialized.',

@@ -7,10 +7,14 @@ githubLabel: 'scope: chat'
 
 # Chat - Type augmentation
 
-<p class="description">Extend the type system with app-specific metadata, typed tools, data parts, and custom message parts via module augmentation.</p>
+<p class="description">Extend the type system with app-specific metadata, typed tools, data parts, and custom message parts via module augmentation</p>
 
 The headless package uses [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) instead of generic props for type-safe customization.
 This means you declare your app-specific types once, and they flow through the entire stack — messages, stream chunks, selectors, hooks, and renderers.
+
+The following demo shows type augmentation in practice:
+
+{{"demo": "../examples/type-augmentation/TypeAugmentationHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## The six registry interfaces
 
@@ -195,10 +199,14 @@ declare module '@mui/x-chat/headless/types' {
 
 You can split augmentations across multiple files. TypeScript merges all declarations for the same module. Just make sure each file is included in your `tsconfig`.
 
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
 ## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for `useChatPartRenderer()` and typed hook return values.
 - [State and store](/x/react-chat/headless/state/) for `partRenderers` registration on `ChatProvider`.
 - [Streaming](/x/react-chat/headless/streaming/) for how typed chunks flow through the stream.
-- [Type augmentation](/x/react-chat/headless/examples/type-augmentation/) for a runnable recipe combining all registry interfaces.
+- [Type augmentation](/x/react-chat/headless/examples/type-augmentation/) for a runnable demo combining all registry interfaces.
 - [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) for custom part rendering with the registry.

@@ -5,18 +5,14 @@ packageName: '@mui/x-chat/unstyled'
 githubLabel: 'scope: chat'
 ---
 
-# Grouped message timeline
+# Chat - Grouped message timeline
 
-<p class="description">Use <code>MessageGroup</code> to build an author-grouped message timeline with custom row presentation.</p>
+<p class="description">Use <code>MessageGroup</code> to build an author-grouped message timeline with custom row presentation</p>
 
-This recipe focuses on message presentation rather than the overall application shell.
+This demo focuses on message presentation rather than the overall application shell.
 It shows how to render a thread that visually groups messages by author and time window without manual grouping logic in the page layer.
 
 That makes it a good fit for products where readability and density matter more than showing every message as an isolated card.
-
-{{"demo": "GroupedMessageTimeline.js"}}
-
-## What it shows
 
 - `MessageGroup`
 - `groupingWindowMs`
@@ -24,6 +20,8 @@ That makes it a good fit for products where readability and density matter more 
 - `Message.Content`
 - `Message.Meta`
 - grouped versus ungrouped owner state
+
+{{"demo": "GroupedMessageTimeline.js"}}
 
 ## Key primitives
 
@@ -40,7 +38,7 @@ That makes it a good fit for products where readability and density matter more 
 
 ## When to use this pattern
 
-Use this recipe when:
+Use this pattern when:
 
 - a chat surface needs compact message grouping
 - avatar repetition should be reduced
@@ -53,7 +51,11 @@ This is especially useful in support timelines, collaboration surfaces, and assi
 - `MessageGroup` keeps neighbor comparison logic out of the page layer.
 - `groupingWindowMs` is a presentation decision, so it belongs near the message row composition rather than in the data model.
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - Continue with [Messages](/x/react-chat/unstyled/messages/) for the message primitive reference.
 - Continue with [Custom message part rendering](/x/react-chat/unstyled/examples/custom-message-part-rendering/) when the row structure is correct but certain part types need a custom presentation.

@@ -31,7 +31,7 @@ export default function LocaleTextDemo() {
       <Box sx={{ height: 400 }}>
         <ChatBox
           adapter={adapter}
-          defaultMessages={[
+          initialMessages={[
             {
               id: 'm1',
               role: 'assistant',

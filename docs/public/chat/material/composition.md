@@ -45,9 +45,9 @@ export default function ModularComposition() {
     >
       <Chat.Root
         adapter={adapter}
-        defaultActiveConversationId="triage"
-        defaultConversations={inboxConversations}
-        defaultMessages={inboxThreads.triage}
+        initialActiveConversationId="triage"
+        initialConversations={inboxConversations}
+        initialMessages={inboxThreads.triage}
       >
         <Box sx={{ display: 'flex', height: 560 }}>
           <Box sx={{ width: 280, borderRight: 1, borderColor: 'divider' }}>
@@ -87,7 +87,7 @@ export default function ThreadOnlyComposition() {
     >
       <Chat.Root
         adapter={adapter}
-        defaultMessages={[
+        initialMessages={[
           {
             id: 'm1',
             role: 'assistant',

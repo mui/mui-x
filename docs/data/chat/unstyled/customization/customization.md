@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled customization
 
-<p class="description">Customize the unstyled primitives through slots, <code>slotProps</code>, and owner state while keeping the built-in structure and behavior.</p>
+<p class="description">Customize the unstyled primitives through slots, <code>slotProps</code>, and owner state while keeping the built-in structure and behavior</p>
 
 {{"demo": "../examples/slot-customization/SlotCustomization.js"}}
 
@@ -94,6 +94,10 @@ This pattern is the main bridge between the unstyled package and a product-speci
 
 ## Replace slots or rebuild from headless
 
+:::info
+If you need a ready-made visual design, use the [Material layer](/x/react-chat/material/). If you want full control over the DOM, use the [Headless layer](/x/react-chat/headless/). The unstyled layer sits between the two: it gives you structural primitives with built-in semantics and interaction behavior while leaving visual decisions to your code.
+:::
+
 Use slot replacement when:
 
 - the shipped behavior is correct
@@ -122,8 +126,12 @@ The important boundary is:
 - unstyled owns structure, semantics, and interaction behavior
 - your app owns visual design
 
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
 ## See also
 
 - Continue with [Conversation list](/x/react-chat/unstyled/conversation-list/) to see owner state on row-level slots.
 - Continue with [Messages](/x/react-chat/unstyled/messages/) for selective message-part replacement.
-- Continue with [Slot customization](/x/react-chat/unstyled/examples/slot-customization/) for a full recipe that replaces multiple slots in one surface.
+- Continue with [Slot customization](/x/react-chat/unstyled/examples/slot-customization/) for a full demo that replaces multiple slots in one surface.

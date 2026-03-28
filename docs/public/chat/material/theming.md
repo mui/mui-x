@@ -95,7 +95,7 @@ export default function ThemeOverrides() {
         <Box sx={{ height: 480 }}>
           <ChatBox
             adapter={adapter}
-            defaultMessages={[
+            initialMessages={[
               {
                 id: 'm1',
                 role: 'assistant',
@@ -183,7 +183,7 @@ export default function DarkMode() {
         <Box sx={{ height: 480 }}>
           <ChatBox
             adapter={adapter}
-            defaultMessages={[
+            initialMessages={[
               {
                 id: 'm1',
                 role: 'assistant',
@@ -253,7 +253,7 @@ export default function RtlSupport() {
         <Box dir="rtl" sx={{ height: 480 }}>
           <ChatBox
             adapter={adapter}
-            defaultMessages={[
+            initialMessages={[
               {
                 id: 'm1',
                 role: 'assistant',

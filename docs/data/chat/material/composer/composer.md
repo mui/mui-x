@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat - Composer
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
+components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachButton, ComposerToolbar, ComposerHelperText
 ---
 
 # Chat - Composer
 
-<p class="description">The text input area where users draft and send messages, with support for attachments, toolbar actions, and helper text.</p>
+<p class="description">The text input area where users draft and send messages, with support for attachments, toolbar actions, and helper text</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 The composer is the input region at the bottom of the chat surface.
 `ChatComposer` wraps the `@mui/x-chat/unstyled` `ComposerRoot` primitive with Material UI styling — border, padding, and theme tokens are applied automatically.
@@ -98,7 +101,7 @@ Use it for legal disclaimers, character counts, or contextual hints.
 ## Controlled composer value
 
 The composer value can be controlled externally through `ChatProvider` (or the `ChatBox` props that forward to it).
-The example below mirrors the current composer value above the chat surface:
+The demo below mirrors the current composer value above the chat surface:
 
 {{"demo": "ComposerControlled.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -178,3 +181,12 @@ The following slots are available for customization through `ChatBox`:
 | `composerAttachButton` | `ChatComposerAttachButton` | File attach trigger           |
 | `composerToolbar`      | `ChatComposerToolbar`      | Button row below the textarea |
 | `composerHelperText`   | `ChatComposerHelperText`   | Disclaimer or hint text       |
+
+## API
+
+- [ComposerRoot](/x/api/chat/composer-root/)
+- [ComposerTextArea](/x/api/chat/composer-text-area/)
+- [ComposerSendButton](/x/api/chat/composer-send-button/)
+- [ComposerAttachButton](/x/api/chat/composer-attach-button/)
+- [ComposerToolbar](/x/api/chat/composer-toolbar/)
+- [ComposerHelperText](/x/api/chat/composer-helper-text/)

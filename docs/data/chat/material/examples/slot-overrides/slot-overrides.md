@@ -5,21 +5,19 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Slot overrides
+# Chat - Slot overrides
 
-<p class="description">Replace individual sub-components inside <code>ChatBox</code> using the <code>slots</code> prop.</p>
+<p class="description">Replace individual sub-components inside <code>ChatBox</code> using the <code>slots</code> prop</p>
 
 The `slots` prop lets you swap any internal component in `ChatBox` with your own implementation.
-This recipe replaces the message bubble with a `Paper`-based component that uses MUI elevation and border styles.
-
-{{"demo": "SlotOverrides.js", "bg": "inline"}}
-
-## What it shows
+This demo replaces the message bubble with a `Paper`-based component that uses MUI elevation and border styles.
 
 - `slots.messageContent` accepting a custom component that wraps the default `ChatMessageContent`
 - The inner `bubble` slot of `ChatMessageContent` replaced with a MUI `Paper` component
 - `ownerState.role` used to differentiate user and assistant bubble styling
 - `sx` on `Paper` using theme tokens (`primary.main`, `background.paper`, `divider`) for consistent colors
+
+{{"demo": "SlotOverrides.js", "bg": "inline"}}
 
 ## The wrapping pattern
 
@@ -69,7 +67,11 @@ Forward `ownerState` destructuring to avoid passing it to DOM elements that don'
 - Spread `...props` after destructuring `ownerState` to forward all remaining props correctly.
 - Use the `slots` prop on `ChatBox` rather than on individual sub-components when wiring from the top level.
 
-## Next steps
+## API
 
-- See [Customization](/x/react-chat/material/customization/) for the full table of available slot keys and their default components.
-- See [Custom theme](/x/react-chat/material/examples/custom-theme/) for rethemeing without replacing components.
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
+
+- [Customization](/x/react-chat/material/customization/) for the full table of available slot keys and their default components
+- [Custom theme](/x/react-chat/material/examples/custom-theme/) for rethemeing without replacing components

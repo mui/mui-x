@@ -52,9 +52,9 @@ export default function ChatBoxWithHooks() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       sx={{
         height: 500,
         border: '1px solid',
@@ -101,7 +101,7 @@ const CONVERSATION_ID = nanoid();
 
 const adapter = createEchoAdapter();
 
-const defaultMessages = [
+const initialMessages = [
   createTextMessage({
     id: nanoid(),
     conversationId: CONVERSATION_ID,
@@ -177,8 +177,8 @@ export default function ChatProviderCustomLayout() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultActiveConversationId={CONVERSATION_ID}
-      defaultMessages={defaultMessages}
+      initialActiveConversationId={CONVERSATION_ID}
+      initialMessages={initialMessages}
     >
       <Box
         sx={{
@@ -211,7 +211,7 @@ In controlled mode, you own the state and the provider synchronizes it.
 
 ```tsx
 {/* Uncontrolled — internal store owns the messages */}
-<ChatProvider adapter={adapter} defaultMessages={initialMessages}>
+<ChatProvider adapter={adapter} initialMessages={initialMessages}>
 
 {/* Controlled — you own the messages array */}
 <ChatProvider
@@ -227,8 +227,8 @@ In controlled mode, you own the state and the provider synchronizes it.
 {/* Uncontrolled */}
 <ChatProvider
   adapter={adapter}
-  defaultConversations={conversations}
-  defaultActiveConversationId="conv-1"
+  initialConversations={conversations}
+  initialActiveConversationId="conv-1"
 >
 
 {/* Controlled */}
@@ -245,7 +245,7 @@ In controlled mode, you own the state and the provider synchronizes it.
 
 ```tsx
 {/* Uncontrolled */}
-<ChatProvider adapter={adapter} defaultComposerValue="Hello">
+<ChatProvider adapter={adapter} initialComposerValue="Hello">
 
 {/* Controlled */}
 <ChatProvider
@@ -265,7 +265,7 @@ For example, control the active conversation while letting messages be managed i
   adapter={adapter}
   activeConversationId={activeId}
   onActiveConversationChange={setActiveId}
-  defaultMessages={[]}
+  initialMessages={[]}
 >
 ```
 
@@ -358,16 +358,16 @@ export default function MultipleInstances() {
 | :---------------------------- | :------------------------ | :------------------------------------------------------ |
 | `adapter`                     | `ChatAdapter`             | **Required.** The backend adapter                       |
 | `messages`                    | `ChatMessage[]`           | Controlled messages                                     |
-| `defaultMessages`             | `ChatMessage[]`           | Initial messages (uncontrolled)                         |
+| `initialMessages`             | `ChatMessage[]`           | Initial messages (uncontrolled)                         |
 | `onMessagesChange`            | `(messages) => void`      | Called when messages change                             |
 | `conversations`               | `ChatConversation[]`      | Controlled conversations                                |
-| `defaultConversations`        | `ChatConversation[]`      | Initial conversations (uncontrolled)                    |
+| `initialConversations`        | `ChatConversation[]`      | Initial conversations (uncontrolled)                    |
 | `onConversationsChange`       | `(conversations) => void` | Called when conversations change                        |
 | `activeConversationId`        | `string`                  | Controlled active conversation                          |
-| `defaultActiveConversationId` | `string`                  | Initial active conversation (uncontrolled)              |
+| `initialActiveConversationId` | `string`                  | Initial active conversation (uncontrolled)              |
 | `onActiveConversationChange`  | `(id) => void`            | Called when active conversation changes                 |
 | `composerValue`               | `string`                  | Controlled composer text                                |
-| `defaultComposerValue`        | `string`                  | Initial composer text (uncontrolled)                    |
+| `initialComposerValue`        | `string`                  | Initial composer text (uncontrolled)                    |
 | `onComposerValueChange`       | `(value) => void`         | Called when composer value changes                      |
 | `members`                     | `ChatUser[]`              | Participant metadata (avatars, names, roles)            |
 | `currentUser`                 | `ChatUser`                | The current user object                                 |

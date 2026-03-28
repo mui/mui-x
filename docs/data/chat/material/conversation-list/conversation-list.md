@@ -3,13 +3,20 @@ productId: x-chat
 title: Chat - Conversation list
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
+components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
 ---
 
 # Chat - Conversation list
 
-<p class="description">Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components.</p>
+<p class="description">Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
 
 The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component that wraps the unstyled `ConversationListRoot` primitive with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
+
+The following demo shows a multi-conversation layout with the conversation list in action:
+
+{{"demo": "../examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Component anatomy
 
@@ -403,9 +410,19 @@ Pass `aria-label` to the root through `slotProps`:
 <ChatConversationList slotProps={{ root: { 'aria-label': 'Conversations' } }} />
 ```
 
+## API
+
+- [ConversationListRoot](/x/api/chat/conversation-list-root/)
+- [ConversationListItem](/x/api/chat/conversation-list-item/)
+- [ConversationListItemAvatar](/x/api/chat/conversation-list-item-avatar/)
+- [ConversationListTitle](/x/api/chat/conversation-list-title/)
+- [ConversationListPreview](/x/api/chat/conversation-list-preview/)
+- [ConversationListTimestamp](/x/api/chat/conversation-list-timestamp/)
+- [ConversationListUnreadBadge](/x/api/chat/conversation-list-unread-badge/)
+
 ## See also
 
 - [Thread](/x/react-chat/material/thread/) for the conversation thread surface and its composition model.
 - [Customization](/x/react-chat/material/customization/) for the full slot and slotProps reference.
-- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for a two-pane inbox recipe using controlled state.
+- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for a two-pane inbox demo using controlled state.
 - [Unstyled conversation list](/x/react-chat/unstyled/conversation-list/) for the primitive layer underneath.

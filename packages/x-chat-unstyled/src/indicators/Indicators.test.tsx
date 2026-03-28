@@ -186,14 +186,14 @@ describe('Indicators', () => {
     render(
       <ChatRoot
         adapter={adapter}
-        defaultActiveConversationId="c1"
-        defaultConversations={[
+        initialActiveConversationId="c1"
+        initialConversations={[
           {
             id: 'c1',
             participants: [{ id: 'u1', displayName: 'Alice' }],
           },
         ]}
-        defaultMessages={[
+        initialMessages={[
           {
             ...createMessage('m1', 'assistant'),
             author: { id: 'u2', displayName: 'Bob' },
@@ -239,8 +239,8 @@ describe('Indicators', () => {
     render(
       <ChatRoot
         adapter={adapter}
-        defaultActiveConversationId="c1"
-        defaultConversations={[{ id: 'c1' }]}
+        initialActiveConversationId="c1"
+        initialConversations={[{ id: 'c1' }]}
       >
         <TypingIndicator slots={{ root: TypingRoot }} />
       </ChatRoot>,
@@ -269,8 +269,8 @@ describe('Indicators', () => {
     render(
       <ChatRoot
         adapter={adapter}
-        defaultActiveConversationId="c1"
-        defaultConversations={[
+        initialActiveConversationId="c1"
+        initialConversations={[
           {
             id: 'c1',
             participants: [{ id: 'u1', displayName: 'Alice' }],
@@ -302,15 +302,15 @@ describe('Indicators', () => {
     render(
       <ChatRoot
         adapter={adapter}
-        defaultActiveConversationId="c1"
-        defaultConversations={[
+        initialActiveConversationId="c1"
+        initialConversations={[
           {
             id: 'c1',
             participants: [{ id: 'u1', displayName: 'Alice' }],
             unreadCount: 1,
           },
         ]}
-        defaultMessages={[createMessage('m1', 'assistant')]}
+        initialMessages={[createMessage('m1', 'assistant')]}
         localeText={{
           typingIndicatorLabel: (users) =>
             `${users.map((user) => user.displayName ?? user.id).join(', ')} schreibt`,
@@ -329,10 +329,10 @@ describe('Indicators', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('Alice is typing')).to.have.attribute('aria-live', 'polite');
+      expect(screen.getByText('Alice schreibt')).to.have.attribute('aria-live', 'polite');
     });
 
-    expect(screen.getByText('New messages')).not.to.equal(null);
+    expect(screen.getByText('Neue Nachrichten')).not.to.equal(null);
 
     const scrollToBottom = vi.fn();
     const { rerender } = render(
@@ -351,8 +351,8 @@ describe('Indicators', () => {
       </MessageListContextProvider>,
     );
 
-    expect(screen.getByRole('button', { name: 'Scroll to bottom, 2 new messages' })).to.have.text(
-      'Scroll to bottom2',
+    expect(screen.getByRole('button', { name: 'Nach unten, 2 neu' })).to.have.text(
+      'Nach unten2',
     );
 
     rerender(
@@ -371,8 +371,8 @@ describe('Indicators', () => {
       </MessageListContextProvider>,
     );
 
-    expect(screen.getByRole('button', { name: 'Scroll to bottom' })).to.have.text(
-      'Scroll to bottom',
+    expect(screen.getByRole('button', { name: 'Nach unten' })).to.have.text(
+      'Nach unten',
     );
   });
 
@@ -380,9 +380,9 @@ describe('Indicators', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultActiveConversationId="c1"
-        defaultConversations={[{ id: 'c1', unreadCount: 2 }]}
-        defaultMessages={[
+        initialActiveConversationId="c1"
+        initialConversations={[{ id: 'c1', unreadCount: 2 }]}
+        initialMessages={[
           createMessage('m1', 'assistant'),
           createMessage('m2', 'assistant'),
           createMessage('m3', 'assistant'),
@@ -410,9 +410,9 @@ describe('Indicators', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultActiveConversationId="c1"
-        defaultConversations={[{ id: 'c1', readState: 'unread' }]}
-        defaultMessages={[createMessage('m1', 'assistant'), createMessage('m2', 'assistant')]}
+        initialActiveConversationId="c1"
+        initialConversations={[{ id: 'c1', readState: 'unread' }]}
+        initialMessages={[createMessage('m1', 'assistant'), createMessage('m2', 'assistant')]}
       >
         {['m1', 'm2'].map((id, index, items) => (
           <UnreadMarker

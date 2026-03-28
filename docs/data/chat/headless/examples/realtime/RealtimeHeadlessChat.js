@@ -270,8 +270,8 @@ export default function RealtimeHeadlessChat() {
   return (
     <ChatProvider
       adapter={adapter}
-      defaultConversations={cloneConversations(demoConversations.slice(0, 2))}
-      defaultActiveConversationId="support"
+      initialConversations={cloneConversations(demoConversations.slice(0, 2))}
+      initialActiveConversationId="support"
     >
       <RealtimeInner emit={emit} />
     </ChatProvider>

@@ -81,9 +81,9 @@ export default function DarkModeChat() {
         <Box sx={{ height: 600 }}>
           <ChatBox
             adapter={adapter}
-            defaultActiveConversationId="triage"
-            defaultConversations={inboxConversations}
-            defaultMessages={inboxThreads.triage}
+            initialActiveConversationId="triage"
+            initialConversations={inboxConversations}
+            initialMessages={inboxThreads.triage}
           />
         </Box>
       </Paper>

@@ -38,8 +38,8 @@ function createAttachment(overrides: Partial<ChatDraftAttachment> = {}): ChatDra
 describe('ChatStore', () => {
   it('normalizes default messages and conversations during construction', () => {
     const store = new ChatStore({
-      defaultMessages: [message1, message2],
-      defaultConversations: [conversation1, conversation2],
+      initialMessages: [message1, message2],
+      initialConversations: [conversation1, conversation2],
     });
 
     expect(store.state.messageIds).toEqual(['m1', 'm2']);
@@ -65,13 +65,13 @@ describe('ChatStore', () => {
   it('uses controlled values instead of defaults during construction', () => {
     const store = new ChatStore({
       messages: [message2],
-      defaultMessages: [message1],
+      initialMessages: [message1],
       conversations: [conversation2],
-      defaultConversations: [conversation1],
+      initialConversations: [conversation1],
       activeConversationId: 'c2',
-      defaultActiveConversationId: 'c1',
+      initialActiveConversationId: 'c1',
       composerValue: 'Controlled draft',
-      defaultComposerValue: 'Default draft',
+      initialComposerValue: 'Initial draft',
     });
 
     expect(store.state.messageIds).toEqual(['m2']);
@@ -82,7 +82,7 @@ describe('ChatStore', () => {
 
   it('addMessage appends new ids and updates duplicate ids without reordering', () => {
     const store = new ChatStore({
-      defaultMessages: [message1],
+      initialMessages: [message1],
     });
 
     store.addMessage(message2);
@@ -101,7 +101,7 @@ describe('ChatStore', () => {
 
   it('updateMessage shallow-merges existing messages and ignores missing ids', () => {
     const store = new ChatStore({
-      defaultMessages: [message1],
+      initialMessages: [message1],
     });
 
     store.updateMessage('m1', {
@@ -128,7 +128,7 @@ describe('ChatStore', () => {
 
   it('removeMessage deletes from ids and lookup', () => {
     const store = new ChatStore({
-      defaultMessages: [message1, message2],
+      initialMessages: [message1, message2],
     });
 
     store.removeMessage('m1');
@@ -141,7 +141,7 @@ describe('ChatStore', () => {
 
   it('prependMessages inserts unique ids at the front and refreshes duplicate message models', () => {
     const store = new ChatStore({
-      defaultMessages: [message2],
+      initialMessages: [message2],
     });
 
     store.prependMessages([
@@ -162,7 +162,7 @@ describe('ChatStore', () => {
 
   it('setMessages replaces the normalized message state', () => {
     const store = new ChatStore({
-      defaultMessages: [message1],
+      initialMessages: [message1],
     });
 
     store.setMessages([message2]);
@@ -194,8 +194,8 @@ describe('ChatStore', () => {
 
   it('setConversations replaces normalized conversation state only', () => {
     const store = new ChatStore({
-      defaultMessages: [message1],
-      defaultConversations: [conversation1],
+      initialMessages: [message1],
+      initialConversations: [conversation1],
     });
 
     store.setConversations([conversation2]);
@@ -231,7 +231,7 @@ describe('ChatStore', () => {
 
   it('addConversation, updateConversation, and removeConversation keep normalized ordering consistent', () => {
     const store = new ChatStore({
-      defaultConversations: [conversation1],
+      initialConversations: [conversation1],
     });
 
     store.addConversation(conversation2);
@@ -303,7 +303,7 @@ describe('ChatStore', () => {
 
   it('setComposerAttachments, addComposerAttachment, removeComposerAttachment, and clearComposer update draft state', () => {
     const store = new ChatStore({
-      defaultComposerValue: 'Draft message',
+      initialComposerValue: 'Draft message',
     });
     const attachment1 = createAttachment();
     const attachment2 = createAttachment({
@@ -332,8 +332,8 @@ describe('ChatStore', () => {
 
   it('ignores empty or missing-id transitions that should be no-ops', () => {
     const store = new ChatStore({
-      defaultMessages: [message1],
-      defaultConversations: [conversation1],
+      initialMessages: [message1],
+      initialConversations: [conversation1],
     });
 
     const initialState = store.state;
@@ -377,17 +377,17 @@ describe('ChatStore', () => {
 
   it('updateStateFromParameters ignores default model changes after initialization', () => {
     const store = new ChatStore({
-      defaultMessages: [message1],
-      defaultConversations: [conversation1],
-      defaultActiveConversationId: 'c1',
-      defaultComposerValue: 'Draft one',
+      initialMessages: [message1],
+      initialConversations: [conversation1],
+      initialActiveConversationId: 'c1',
+      initialComposerValue: 'Draft one',
     });
 
     store.updateStateFromParameters({
-      defaultMessages: [message2],
-      defaultConversations: [conversation2],
-      defaultActiveConversationId: 'c2',
-      defaultComposerValue: 'Draft two',
+      initialMessages: [message2],
+      initialConversations: [conversation2],
+      initialActiveConversationId: 'c2',
+      initialComposerValue: 'Draft two',
     });
 
     expect(store.state.messageIds).toEqual(['m1']);
@@ -398,7 +398,7 @@ describe('ChatStore', () => {
 
   it('registerStoreEffect fires only when the selected slice changes', () => {
     const store = new ChatStore({
-      defaultMessages: [message1],
+      initialMessages: [message1],
     });
     const changes: string[] = [];
 
@@ -418,10 +418,168 @@ describe('ChatStore', () => {
     expect(changes).toEqual(['->Draft one', 'Draft one->Draft two']);
   });
 
+  it('hasDirtyControlledModels is true after internal mutation and false after resync', () => {
+    const store = new ChatStore({
+      messages: [message1],
+    });
+
+    expect(store.hasDirtyControlledModels).toBe(false);
+
+    store.addMessage(message2);
+
+    expect(store.hasDirtyControlledModels).toBe(true);
+
+    store.updateStateFromParameters({
+      messages: [message1, message2],
+    });
+
+    expect(store.hasDirtyControlledModels).toBe(false);
+  });
+
+  it('currentUser fallback: members → participants → message authors', () => {
+    // From explicit currentUser
+    const explicitUser = { id: 'u1', displayName: 'Alice', role: 'user' as const };
+    const storeExplicit = new ChatStore({ currentUser: explicitUser });
+    expect(storeExplicit.currentUser).toBe(explicitUser);
+
+    // From members list
+    const members = [
+      { id: 'u1', displayName: 'Alice', role: 'user' as const },
+      { id: 'a1', displayName: 'Bot', role: 'assistant' as const },
+    ];
+    const storeMembers = new ChatStore({ members });
+    expect(storeMembers.currentUser).toEqual(members[0]);
+
+    // From conversation participants
+    const storeParticipants = new ChatStore({
+      initialConversations: [
+        {
+          id: 'c1',
+          title: 'General',
+          participants: [{ id: 'p1', displayName: 'Participant', role: 'user' as const }],
+        },
+      ],
+      initialActiveConversationId: 'c1',
+    });
+    expect(storeParticipants.currentUser).toEqual({
+      id: 'p1',
+      displayName: 'Participant',
+      role: 'user',
+    });
+
+    // From message authors
+    const storeAuthors = new ChatStore({
+      initialMessages: [
+        {
+          id: 'm1',
+          role: 'user',
+          parts: [{ type: 'text', text: 'Hello' }],
+          author: { id: 'author-1', displayName: 'Author', role: 'user' as const },
+        },
+      ],
+    });
+    expect(storeAuthors.currentUser).toEqual({
+      id: 'author-1',
+      displayName: 'Author',
+      role: 'user',
+    });
+  });
+
+  it('assistantUser fallback: members → participants → message authors', () => {
+    // From members
+    const members = [
+      { id: 'u1', displayName: 'Alice', role: 'user' as const },
+      { id: 'bot-1', displayName: 'Bot', role: 'assistant' as const },
+    ];
+    const storeMembers = new ChatStore({ members });
+    expect(storeMembers.assistantUser).toEqual(members[1]);
+
+    // From participants
+    const storeParticipants = new ChatStore({
+      initialConversations: [
+        {
+          id: 'c1',
+          title: 'General',
+          participants: [{ id: 'bot-1', displayName: 'Bot', role: 'assistant' as const }],
+        },
+      ],
+      initialActiveConversationId: 'c1',
+    });
+    expect(storeParticipants.assistantUser).toEqual({
+      id: 'bot-1',
+      displayName: 'Bot',
+      role: 'assistant',
+    });
+
+    // From message authors
+    const storeAuthors = new ChatStore({
+      initialMessages: [
+        {
+          id: 'm1',
+          role: 'assistant',
+          status: 'sent',
+          parts: [{ type: 'text', text: 'Hi' }],
+          author: { id: 'bot-1', displayName: 'Bot', role: 'assistant' as const },
+        },
+      ],
+    });
+    expect(storeAuthors.assistantUser).toEqual({
+      id: 'bot-1',
+      displayName: 'Bot',
+      role: 'assistant',
+    });
+  });
+
+  it('resetMessages clears activeStreamAbortController', () => {
+    const store = new ChatStore({
+      initialMessages: [message1],
+    });
+
+    store.setActiveStreamAbortController(new AbortController());
+    expect(store.state.activeStreamAbortController).toBeInstanceOf(AbortController);
+
+    store.resetMessages();
+
+    expect(store.state.activeStreamAbortController).toBeNull();
+  });
+
+  it('setTypingUser is idempotent when called with the same value', () => {
+    const store = new ChatStore();
+
+    store.setTypingUser('c1', 'u1', true);
+    const stateAfterFirst = store.state;
+
+    store.setTypingUser('c1', 'u1', true);
+
+    expect(store.state).toBe(stateAfterFirst);
+  });
+
+  it('removeConversation is a no-op for a missing id', () => {
+    const store = new ChatStore({
+      initialConversations: [conversation1],
+    });
+    const initialState = store.state;
+
+    store.removeConversation('missing');
+
+    expect(store.state).toBe(initialState);
+  });
+
+  it('updateConversation is a no-op for a missing id', () => {
+    const store = new ChatStore({
+      initialConversations: [conversation1],
+    });
+    const initialState = store.state;
+
+    store.updateConversation('missing', { title: 'Updated' });
+
+    expect(store.state).toBe(initialState);
+  });
+
   it('resetMessages clears message and history state without affecting conversations or composer state', () => {
     const store = new ChatStore({
-      defaultMessages: [message1, message2],
-      defaultConversations: [conversation1],
+      initialMessages: [message1, message2],
+      initialConversations: [conversation1],
     });
 
     store.setState({

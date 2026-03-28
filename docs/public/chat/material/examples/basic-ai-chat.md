@@ -24,9 +24,9 @@ export default function BasicAiChat() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={minimalConversation.id}
-      defaultConversations={[minimalConversation]}
-      defaultMessages={minimalMessages}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
       sx={{
         height: 500,
         border: '1px solid',
@@ -42,8 +42,8 @@ export default function BasicAiChat() {
 ## What it shows
 
 - `ChatBox` rendering a single conversation without a conversation list
-- `defaultConversations` and `defaultMessages` for initial state
-- `defaultActiveConversationId` to open the conversation immediately
+- `initialConversations` and `initialMessages` for initial state
+- `initialActiveConversationId` to open the conversation immediately
 - `sx` for sizing the container
 
 ## Why start here
@@ -53,8 +53,8 @@ This recipe answers: "What is the smallest working `@mui/x-chat` surface?"
 The answer is three things:
 
 1. An `adapter` that implements `sendMessage`
-2. A `defaultConversations` array with at least one conversation
-3. A `defaultActiveConversationId` that matches one of those conversations
+2. A `initialConversations` array with at least one conversation
+3. A `initialActiveConversationId` that matches one of those conversations
 
 Every other prop is optional.
 
@@ -79,8 +79,8 @@ const adapter: ChatAdapter = {
 ## Implementation notes
 
 - Keep the container height explicit so the message list and composer render correctly.
-- Omitting `defaultConversations` renders an empty surface without a thread.
-- Omitting `defaultActiveConversationId` shows the conversation list pane without an active thread.
+- Omitting `initialConversations` renders an empty surface without a thread.
+- Omitting `initialActiveConversationId` shows the conversation list pane without an active thread.
 
 ## Next steps
 

@@ -26,9 +26,9 @@ export default function ErrorState() {
       <ChatBox
         adapter={failingAdapter}
         members={demoMembers}
-        defaultActiveConversationId={minimalConversation.id}
-        defaultConversations={[minimalConversation]}
-        defaultMessages={minimalMessages}
+        initialActiveConversationId={minimalConversation.id}
+        initialConversations={[minimalConversation]}
+        initialMessages={minimalMessages}
         onError={(error) => {
           setErrorMessage(
             error instanceof Error ? error.message : 'An unknown error occurred',

@@ -106,9 +106,9 @@ export default function LongMessages() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={longConversation.id}
-      defaultConversations={[longConversation]}
-      defaultMessages={longMessages}
+      initialActiveConversationId={longConversation.id}
+      initialConversations={[longConversation]}
+      initialMessages={longMessages}
       sx={{
         height: 500,
         border: '1px solid',

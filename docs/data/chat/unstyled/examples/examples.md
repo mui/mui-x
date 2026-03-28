@@ -5,19 +5,19 @@ packageName: '@mui/x-chat/unstyled'
 githubLabel: 'scope: chat'
 ---
 
-# Unstyled examples
+# Chat - Unstyled examples
 
-<p class="description">Recipe-first examples for building chat interfaces with <code>@mui/x-chat/unstyled</code> structural primitives.</p>
+<p class="description">Demo-first patterns for building chat interfaces with <code>@mui/x-chat/unstyled</code> structural primitives</p>
 
-These recipes focus on end-to-end composition patterns rather than isolated component references.
-Each recipe stays inside the unstyled layer: the runtime comes from `@mui/x-chat/headless`, but the learning surface is the structural component model exposed by `@mui/x-chat/unstyled`.
+These demos focus on end-to-end composition patterns rather than isolated component references.
+Each demo stays inside the unstyled layer: the runtime comes from `@mui/x-chat/headless`, but the learning surface is the structural component model exposed by `@mui/x-chat/unstyled`.
 
 The section is meant to answer real product questions, not just API questions.
 Each page shows where a pattern fits in an actual chat surface and why a team would choose it over a simpler or lower-level approach.
 
 ## How to use this section
 
-Use these recipes when you want to answer practical composition questions such as:
+Use these demos when you want to answer practical composition questions such as:
 
 - what the smallest complete unstyled shell looks like
 - how the default split-pane inbox is assembled
@@ -28,7 +28,7 @@ Start with the smallest shell, then move deeper into the areas you need to custo
 
 ## Real-world applicability
 
-These recipes map well to common product surfaces such as:
+These demos map well to common product surfaces such as:
 
 - support and operations inboxes
 - embedded copilots inside dashboards and admin tools
@@ -61,3 +61,7 @@ These recipes map well to common product surfaces such as:
    - [Composer with attachments](/x/react-chat/unstyled/examples/composer-with-attachments/) for draft interactions
    - [Indicators in context](/x/react-chat/unstyled/examples/indicators-in-context/) for unread and typing affordances
 4. Finish with [Custom message part rendering](/x/react-chat/unstyled/examples/custom-message-part-rendering/) and [Slot customization](/x/react-chat/unstyled/examples/slot-customization/) when the default structure is no longer enough.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

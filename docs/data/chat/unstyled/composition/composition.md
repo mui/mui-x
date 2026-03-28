@@ -8,7 +8,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled composition
 
-<p class="description">Compose a complete chat UI from the unstyled namespaces while keeping styling decisions in your own code.</p>
+<p class="description">Compose a complete chat UI from the unstyled namespaces while keeping styling decisions in your own code</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
@@ -158,3 +158,8 @@ When a thread needs unread markers, date dividers, indicators, or custom message
 For runtime behavior, continue with [Headless](/x/react-chat/headless/).
 For styling and theming patterns, continue with [Customization](/x/react-chat/unstyled/customization/).
 For concrete patterns, continue with [Examples](/x/react-chat/unstyled/examples/).
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+- [ChatLayout](/x/api/chat/chat-layout/)

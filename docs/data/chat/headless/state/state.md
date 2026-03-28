@@ -7,10 +7,14 @@ githubLabel: 'scope: chat'
 
 # Chat - State and store
 
-<p class="description">Configure the runtime via <code>ChatProvider</code> props, choose controlled or uncontrolled state, and explore the normalized store.</p>
+<p class="description">Configure the runtime via <code>ChatProvider</code> props, choose controlled or uncontrolled state, and explore the normalized store</p>
 
 `ChatProvider` is the single entry point for the headless runtime.
 It creates the chat store, wires the adapter, and makes hooks and selectors available to every descendant component.
+
+The following demo shows controlled state in action:
+
+{{"demo": "../examples/controlled-state/ControlledStateHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## `ChatProvider` props
 
@@ -26,12 +30,16 @@ It creates the chat store, wires the adapter, and makes hooks and selectors avai
 Each public state model supports both controlled and uncontrolled modes.
 Use `default*` props to let the runtime own the value, or pass the value directly to control it from React state.
 
+:::info
+Start with `initial*` (uncontrolled) props during prototyping, then switch to controlled props when you need to sync with external state. You can switch modes at any time without changing the runtime model.
+:::
+
 | Model               | Controlled prop        | Default prop                  | Change callback              |
 | :------------------ | :--------------------- | :---------------------------- | :--------------------------- |
-| Messages            | `messages`             | `defaultMessages`             | `onMessagesChange`           |
-| Conversations       | `conversations`        | `defaultConversations`        | `onConversationsChange`      |
-| Active conversation | `activeConversationId` | `defaultActiveConversationId` | `onActiveConversationChange` |
-| Composer value      | `composerValue`        | `defaultComposerValue`        | `onComposerValueChange`      |
+| Messages            | `messages`             | `initialMessages`             | `onMessagesChange`           |
+| Conversations       | `conversations`        | `initialConversations`        | `onConversationsChange`      |
+| Active conversation | `activeConversationId` | `initialActiveConversationId` | `onActiveConversationChange` |
+| Composer value      | `composerValue`        | `initialComposerValue`        | `onComposerValueChange`      |
 
 ### Callbacks
 
@@ -59,8 +67,8 @@ When prototyping or when the runtime can own the data, use `default*` props:
 ```tsx
 <ChatProvider
   adapter={adapter}
-  defaultActiveConversationId="support"
-  defaultMessages={initialMessages}
+  initialActiveConversationId="support"
+  initialMessages={initialMessages}
 >
   <MyChat />
 </ChatProvider>
@@ -198,6 +206,10 @@ interface ChatStoreConstructor<Cursor = string> {
 ```
 
 Use this when you need to override internal normalization, add computed state, or integrate with an external store.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
 
 ## See also
 

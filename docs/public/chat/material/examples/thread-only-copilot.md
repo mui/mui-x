@@ -55,7 +55,7 @@ export default function ThreadOnlyCopilot() {
       <Box sx={{ height: 480 }}>
         <ChatBox
           adapter={adapter}
-          defaultMessages={[
+          initialMessages={[
             {
               id: 'seed-1',
               role: 'user',

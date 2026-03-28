@@ -162,8 +162,8 @@ describe('ConversationRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultActiveConversationId="c1"
-        defaultConversations={[
+        initialActiveConversationId="c1"
+        initialConversations={[
           { id: 'c1', subtitle: 'Alpha subtitle', title: 'Alpha conversation' },
           { id: 'c2', subtitle: 'Beta subtitle', title: 'Beta conversation' },
         ]}
@@ -193,8 +193,8 @@ describe('ConversationRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultActiveConversationId="c2"
-        defaultConversations={[
+        initialActiveConversationId="c2"
+        initialConversations={[
           { id: 'c1', title: 'Alpha conversation' },
           { id: 'c2', subtitle: 'Beta subtitle', title: 'Beta conversation' },
         ]}
@@ -242,8 +242,8 @@ describe('ConversationRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultActiveConversationId="c1"
-        defaultConversations={[
+        initialActiveConversationId="c1"
+        initialConversations={[
           { id: 'c1', subtitle: 'Alpha subtitle', title: 'Alpha conversation' },
         ]}
       >
@@ -267,8 +267,8 @@ describe('ConversationRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultActiveConversationId="c1"
-        defaultConversations={[{ id: 'c1', title: 'Alpha conversation' }]}
+        initialActiveConversationId="c1"
+        initialConversations={[{ id: 'c1', title: 'Alpha conversation' }]}
       >
         <ConversationRoot>
           <ConversationSubtitle data-testid="thread-subtitle" />
@@ -283,8 +283,8 @@ describe('ConversationRoot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        defaultActiveConversationId="c1"
-        defaultConversations={[{ id: 'c1', title: 'Alpha conversation' }]}
+        initialActiveConversationId="c1"
+        initialConversations={[{ id: 'c1', title: 'Alpha conversation' }]}
       >
         <ChatLayout data-testid="layout-root">
           <ConversationRoot data-testid="thread-root">

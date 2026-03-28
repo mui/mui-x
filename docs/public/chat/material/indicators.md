@@ -67,7 +67,7 @@ export default function IndicatorsDemo() {
       sx={{ border: 1, borderColor: 'divider', overflow: 'hidden' }}
     >
       <Box sx={{ height: 480 }}>
-        <ChatBox adapter={adapter} defaultMessages={messages} />
+        <ChatBox adapter={adapter} initialMessages={messages} />
       </Box>
     </Paper>
   );

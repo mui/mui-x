@@ -5,24 +5,22 @@ packageName: '@mui/x-chat/unstyled'
 githubLabel: 'scope: chat'
 ---
 
-# Indicators in context
+# Chat - Indicators in context
 
-<p class="description">Place typing, unread, and scroll indicators into a real thread layout instead of documenting them in isolation.</p>
+<p class="description">Place typing, unread, and scroll indicators into a real thread layout instead of documenting them in isolation</p>
 
-This recipe shows that indicators are structural affordances, not floating utilities.
+This demo shows that indicators are structural affordances, not floating utilities.
 Their value is clearest when they are rendered exactly where the thread layout expects them.
 
 That is why this page keeps them inside a realistic thread rather than presenting them as isolated widgets.
-
-{{"demo": "IndicatorsInContext.js"}}
-
-## What it shows
 
 - `Indicators.TypingIndicator`
 - `Indicators.UnreadMarker`
 - `Indicators.ScrollToBottomAffordance`
 - thread header placement
 - message-list row placement
+
+{{"demo": "IndicatorsInContext.js"}}
 
 ## Key primitives
 
@@ -39,7 +37,7 @@ That is why this page keeps them inside a realistic thread rather than presentin
 
 ## When to use this pattern
 
-Use this recipe when:
+Use this pattern when:
 
 - the thread needs a visible unread boundary
 - typing activity should be surfaced inline
@@ -53,6 +51,10 @@ This pattern is common in shared support queues, collaborative assistant surface
 - `UnreadMarker` belongs in the row pipeline because it marks a message boundary, not a global thread status.
 - `ScrollToBottomAffordance` depends on message-list state, so it is easiest to reason about when it stays inside a message-list-aware container.
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - Continue with [Indicators](/x/react-chat/unstyled/indicators/) for the reference page.

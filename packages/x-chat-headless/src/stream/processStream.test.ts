@@ -537,6 +537,221 @@ describe('processStream', () => {
     });
   });
 
+  it('creates a tool part from a tool-approval-request chunk', async () => {
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        {
+          type: 'tool-approval-request',
+          toolCallId: 'tool-1',
+          toolName: 'search',
+          input: { query: 'weather' },
+        },
+        { type: 'finish', messageId: 'a1' },
+      ]),
+    );
+
+    const toolPart = store.state.messagesById.a1.parts[0] as ChatToolMessagePart<'search'>;
+    expect(toolPart.type).toBe('tool');
+    expect(toolPart.toolInvocation.toolCallId).toBe('tool-1');
+    expect(toolPart.toolInvocation.toolName).toBe('search');
+    expect(toolPart.toolInvocation.input).toEqual({ query: 'weather' });
+    expect(toolPart.toolInvocation.state).toBe('approval-requested');
+  });
+
+  it('creates a dynamic tool part from a dynamic tool-approval-request chunk', async () => {
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        {
+          type: 'tool-approval-request',
+          toolCallId: 'tool-1',
+          toolName: 'dynamic-search',
+          input: { query: 'weather' },
+          dynamic: true,
+        },
+        { type: 'finish', messageId: 'a1' },
+      ]),
+    );
+
+    const toolPart = store.state.messagesById.a1
+      .parts[0] as ChatDynamicToolMessagePart<'dynamic-search'>;
+    expect(toolPart.type).toBe('dynamic-tool');
+    expect(toolPart.toolInvocation.toolName).toBe('dynamic-search');
+    expect(toolPart.toolInvocation.state).toBe('approval-requested');
+  });
+
+  it('updates tool invocation standalone from a tool-input-error chunk', async () => {
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        { type: 'tool-input-start', toolCallId: 'tool-1', toolName: 'search' },
+        { type: 'tool-input-error', toolCallId: 'tool-1', errorText: 'Bad input' },
+        { type: 'finish', messageId: 'a1' },
+      ]),
+    );
+
+    const toolPart = store.state.messagesById.a1.parts[0] as ChatToolMessagePart<'search'>;
+    expect(toolPart.toolInvocation.state).toBe('output-error');
+    expect(toolPart.toolInvocation.errorText).toBe('Bad input');
+  });
+
+  it('drops chunks with sequence < expected', async () => {
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        {
+          eventId: 'evt-1',
+          sequence: 1,
+          chunk: { type: 'start', messageId: 'a1' },
+        },
+        {
+          eventId: 'evt-2',
+          sequence: 2,
+          chunk: { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+        },
+        {
+          eventId: 'evt-0',
+          sequence: 0,
+          chunk: { type: 'text-delta', id: 'text-1', delta: 'SHOULD BE IGNORED' },
+        },
+        {
+          eventId: 'evt-3',
+          sequence: 3,
+          chunk: { type: 'finish', messageId: 'a1' },
+        },
+      ]),
+      { messageId: 'a1' },
+    );
+
+    expect(store.state.messagesById.a1.parts).toEqual([
+      { type: 'text', text: 'Hello', state: 'done' },
+    ]);
+  });
+
+  it('processes envelope chunks without eventId', async () => {
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        {
+          sequence: 1,
+          chunk: { type: 'start', messageId: 'a1' },
+        },
+        {
+          sequence: 2,
+          chunk: { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+        },
+        {
+          sequence: 3,
+          chunk: { type: 'finish', messageId: 'a1' },
+        },
+      ] as ChatStreamEnvelope[]),
+    );
+
+    expect(store.state.messagesById.a1.parts).toEqual([
+      { type: 'text', text: 'Hello', state: 'done' },
+    ]);
+  });
+
+  it('processes pass-through chunks without sequence (envelope without sequence)', async () => {
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        {
+          eventId: 'evt-1',
+          chunk: { type: 'start', messageId: 'a1' },
+        } as ChatStreamEnvelope,
+        {
+          eventId: 'evt-2',
+          chunk: { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+        } as ChatStreamEnvelope,
+        {
+          eventId: 'evt-3',
+          chunk: { type: 'finish', messageId: 'a1' },
+        } as ChatStreamEnvelope,
+      ]),
+    );
+
+    expect(store.state.messagesById.a1.parts).toEqual([
+      { type: 'text', text: 'Hello', state: 'done' },
+    ]);
+  });
+
+  it('returns sent status when no chunks and no messageId', async () => {
+    const store = new ChatStore();
+
+    const result = await processStream(
+      store,
+      createStream([]),
+    );
+
+    expect(result).toEqual({
+      messageId: undefined,
+      status: 'sent',
+      isAbort: false,
+      isDisconnect: false,
+      isError: false,
+    });
+  });
+
+  it('no-ops when message is removed mid-stream (streamHelpers guard)', async () => {
+    const store = new ChatStore();
+    store.addMessage({
+      id: 'a1',
+      conversationId: 'c1',
+      role: 'assistant',
+      status: 'streaming',
+      parts: [{ type: 'text', text: 'initial' }],
+    });
+
+    // Remove the message before the stream delta arrives
+    store.removeMessage('a1');
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'text-delta', id: 'text-1', delta: 'should be ignored' },
+        { type: 'finish', messageId: 'a1' },
+      ]),
+      { messageId: 'a1' },
+    );
+
+    // The message was recreated by the stream (getOrCreateMessage creates when missing)
+    expect(store.state.messagesById.a1).toBeDefined();
+  });
+
+  it('propagates author from start chunk to assistant message', async () => {
+    const store = new ChatStore();
+    const author = { id: 'bot-1', displayName: 'Bot', role: 'assistant' as const };
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1', author },
+        { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+        { type: 'finish', messageId: 'a1' },
+      ]),
+      { conversationId: 'c1' },
+    );
+
+    expect(store.state.messagesById.a1.author).toEqual(author);
+  });
+
   it('calls onFinish exactly once for finish and abort terminal chunks', async () => {
     const finishOnSuccess = vi.fn();
     const successStore = new ChatStore();

@@ -60,9 +60,9 @@ export default function MessageGrouping() {
   return (
     <ChatBox
       adapter={adapter}
-      defaultActiveConversationId={conversation.id}
-      defaultConversations={[conversation]}
-      defaultMessages={messages}
+      initialActiveConversationId={conversation.id}
+      initialConversations={[conversation]}
+      initialMessages={messages}
       slotProps={{
         messageGroup: { groupingWindowMs: 60000 },
       }}
