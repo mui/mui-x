@@ -6,7 +6,7 @@ import { type MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_PIE_CHART_MARGIN } from '../internals/constants';
 import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
 import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
-import { type ChartContainerProps } from '../ChartContainer';
+import { type ChartsContainerProps } from '../ChartsContainer';
 import { type PieSeriesType } from '../models/seriesType';
 import { ChartsTooltip } from '../ChartsTooltip';
 import {
@@ -23,8 +23,8 @@ import {
   type ChartsOverlaySlots,
 } from '../ChartsOverlay';
 import { ChartsSurface } from '../ChartsSurface';
-import { ChartDataProvider } from '../ChartDataProvider';
-import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
+import { ChartsDataProvider } from '../ChartsDataProvider';
+import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { PIE_CHART_PLUGINS, type PieChartPluginSignatures } from './PieChart.plugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
@@ -51,10 +51,7 @@ export interface PieChartSlotProps
 export type PieSeries = MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>;
 export interface PieChartProps
   extends
-    Omit<
-      ChartContainerProps<'pie', PieChartPluginSignatures>,
-      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
-    >,
+    Omit<ChartsContainerProps<'pie', PieChartPluginSignatures>, 'series' | 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
   /**
@@ -124,7 +121,7 @@ const PieChart = React.forwardRef(function PieChart(
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_PIE_CHART_MARGIN);
 
-  const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
+  const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps<
     'pie',
     PieChartPluginSignatures
   >({
@@ -144,7 +141,7 @@ const PieChart = React.forwardRef(function PieChart(
   const Toolbar = slots?.toolbar;
 
   return (
-    <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
+    <ChartsDataProvider<'pie', PieChartPluginSignatures> {...chartsDataProviderProps}>
       <ChartsWrapper
         legendPosition={slotProps?.legend?.position}
         legendDirection={slotProps?.legend?.direction ?? 'vertical'}
@@ -169,7 +166,7 @@ const PieChart = React.forwardRef(function PieChart(
         </ChartsSurface>
         {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 });
 
@@ -192,8 +189,19 @@ PieChart.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -333,7 +341,7 @@ PieChart.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -367,6 +375,10 @@ PieChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The tooltip item.

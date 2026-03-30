@@ -1,9 +1,10 @@
-import {
-  DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS,
-  DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS_FR,
-} from '@mui/x-scheduler-headless/use-adapter';
+import { fr } from 'date-fns/locale/fr';
+import { UnstableTemporalAdapterDateFns } from '@mui/x-scheduler-headless/base-ui-copy/temporal-adapter-date-fns';
+import type { DateLocale } from '@mui/x-scheduler-headless/use-adapter';
 
 // TODO: Replace with Base UI adapter when available.
-export const adapter = DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS;
+export const adapter = new UnstableTemporalAdapterDateFns();
 
-export const adapterFr = DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS_FR;
+export const adapterFr = new UnstableTemporalAdapterDateFns({ locale: fr });
+
+export const dateLocaleFr: DateLocale = fr;

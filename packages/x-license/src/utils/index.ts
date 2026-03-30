@@ -5,4 +5,4 @@ export type { AppType } from './licenseAppType';
 export type { PlanScope } from './licensePlan';
 export type { LicenseModel } from './licenseModel';
 export type { KeyVersion, LicenseDetails, NullableLicenseDetails } from './licenseDetails';
-export type { MuiCommercialPackageName } from './commercialPackages';
+export type { MuiCommercialPackageName, CommercialPackageInfo } from './commercialPackages';

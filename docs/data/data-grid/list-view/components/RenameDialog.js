@@ -27,9 +27,11 @@ export function RenameDialog(props) {
       onClose={onClose}
       aria-labelledby="rename-dialog-title"
       container={container}
-      PaperProps={{
-        component: 'form',
-        onSubmit: handleSave,
+      slotProps={{
+        paper: {
+          component: 'form',
+          onSubmit: handleSave,
+        },
       }}
     >
       {params && (

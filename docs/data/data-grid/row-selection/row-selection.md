@@ -112,6 +112,32 @@ The default implementation of these properties includes the logic for selecting 
 Overriding them without providing the same functionality will break the row selection.
 :::
 
+If you only need to customize the row selection checkbox itself, you can use the `rowCheckbox` slot.
+This is useful when you want to wrap the checkbox with a tooltip or change its look for specific rows.
+The slot receives the `rowId` as a prop, which can be used to access row values using the `apiRef` (via the `useGridApiContext` hook) if needed.
+
+```tsx
+function CustomRowCheckbox(props: GridRowCheckboxProps) {
+  const apiRef = useGridApiContext();
+  const row = apiRef.current.getRow(props.rowId);
+
+  return (
+    <Tooltip title={`Select row ${row.name}`}>
+      <span>
+        <GridRowCheckbox {...props} />
+      </span>
+    </Tooltip>
+  );
+}
+
+<DataGrid
+  checkboxSelection
+  slots={{
+    rowCheckbox: CustomRowCheckbox,
+  }}
+/>;
+```
+
 ### Visible rows selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 By default, when you click the "Select All" checkbox, all rows in the Data Grid are selected.

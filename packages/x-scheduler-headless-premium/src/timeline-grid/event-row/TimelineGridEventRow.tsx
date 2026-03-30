@@ -4,7 +4,7 @@ import { useStore } from '@base-ui/utils/store';
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCreation } from '@mui/x-scheduler-headless/internals';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-headless/constants';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
@@ -38,7 +38,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   } = componentProps;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks

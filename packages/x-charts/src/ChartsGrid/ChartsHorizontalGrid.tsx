@@ -3,7 +3,7 @@ import { useTicks } from '../hooks/useTicks';
 import { type ComputedYAxis } from '../models/axis';
 import { GridLine } from './styledComponents';
 import { type ChartsGridClasses } from './chartsGridClasses';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 
 interface ChartsGridHorizontalProps {
   axis: ComputedYAxis;
@@ -16,7 +16,7 @@ interface ChartsGridHorizontalProps {
  * @ignore - internal component.
  */
 export function ChartsGridHorizontal(props: ChartsGridHorizontalProps) {
-  const { instance } = useChartContext();
+  const { instance } = useChartsContext();
   const { axis, start, end, classes } = props;
 
   const { scale, tickNumber, tickInterval, tickSpacing } = axis;

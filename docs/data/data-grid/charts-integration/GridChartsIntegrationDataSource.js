@@ -154,9 +154,6 @@ export default function GridChartsIntegrationDataSource() {
             initialState={initialStateUpdated}
             aggregationFunctions={aggregationFunctions}
             pivotingColDef={pivotingColDef}
-            experimentalFeatures={{
-              charts: true,
-            }}
           />
         </div>
         <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />

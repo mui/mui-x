@@ -28,7 +28,7 @@ pnpm generate:exports # when editing code in `packages/x-charts*`
 
 ## Testing
 
-### Run unit tests in JSDOM
+### Run unit tests in jsdom
 
 ```bash
 # Filter by project name (glob patterns supported)
@@ -117,6 +117,10 @@ The minifier works with both `Error` and `TypeError` constructors.
 Run `pnpm extract-error-codes` to update `docs/public/static/error-codes.json`.
 
 **Important:** If the update created a new error code, but the new and original message have the same number of arguments and semantics haven't changed, update the original error in `error-codes.json` instead of creating a new code.
+
+## Dependencies
+
+- Examples (`examples/`) are standalone projects — never use `catalog:` for their dependencies. Always use explicit version ranges.
 
 ## Other scripts
 

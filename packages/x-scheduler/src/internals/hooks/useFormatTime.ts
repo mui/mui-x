@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { formatHourAndMinutes } from '../utils/date-utils';
 
 export function useFormatTime() {
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks

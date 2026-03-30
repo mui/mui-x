@@ -98,6 +98,11 @@ async function main() {
             return;
           }
 
+          if (/LineChartPointerInteraction/.test(route.url)) {
+            // Ignore pointer interaction screenshot — dedicated tests handle mouse positioning.
+            return;
+          }
+
           await navigateToTest(route.url);
 
           // Move cursor offscreen to not trigger unwanted hover effects.
@@ -204,6 +209,62 @@ async function main() {
       await body.screenshot({ path: axisScreenshotPath, type: 'png' });
     });
 
+    it('should highlight line series when pointer is within the proximity threshold', async () => {
+      const route = '/test-regressions-charts/LineChartPointerInteraction';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}LineHighlight.png`);
+
+      await navigateToTest(route);
+
+      const testcase = await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      await sleep(10);
+
+      await enablePointerDot(page);
+
+      // At index 5: Series C (area)=9, Series A=5, Series B=3. yAxis 0-10.
+      // Both tests position the pointer relative to Series A's line.
+      // LINE_PROXIMITY_THRESHOLD = 15px.
+      const drawingArea = await getDrawingArea(page);
+      const pointerX = drawingArea.left + drawingArea.width / 2;
+      const seriesAY = drawingArea.top + (drawingArea.height * (10 - 5)) / 10;
+      // 13px below Series A → inside area fill, within threshold → line highlighted
+      const pointerY = seriesAY + 13;
+
+      await page.mouse.move(pointerX, pointerY);
+      await sleep(300);
+
+      await testcase.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
+    it('should highlight area series when pointer is inside fill but outside line threshold', async () => {
+      const route = '/test-regressions-charts/LineChartPointerInteraction';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}AreaHighlight.png`);
+
+      await navigateToTest(route);
+      await page.reload(); // Ensure a fresh state since we reuse the same page.
+
+      const testcase = await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      await sleep(10);
+
+      await enablePointerDot(page);
+
+      // Same reference point, but 17px below Series A → outside threshold → area highlighted
+      const drawingArea = await getDrawingArea(page);
+      const pointerX = drawingArea.left + drawingArea.width / 2;
+      const seriesAY = drawingArea.top + (drawingArea.height * (10 - 5)) / 10;
+      const pointerY = seriesAY + 17;
+
+      await page.mouse.move(pointerX, pointerY);
+      await sleep(300);
+
+      await testcase.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
     it('should export a chart as PNG', async () => {
       const route = '/docs-charts-export/ExportChartAsImage';
       const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
@@ -308,6 +369,40 @@ async function main() {
         });
       });
     });
+
+    it('should export a chart as PNG when page is zoomed out', async () => {
+      const route = '/docs-charts-export/ExportChartAsImage';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomedOutPNG.png`);
+
+      page = await newTestPage(browser, { deviceScaleFactor: 0.8 });
+      await navigateToTest(route);
+
+      const downloadPromise = page.waitForEvent('download');
+      await page.getByRole('button', { name: 'Export Image' }).click();
+
+      const download = await downloadPromise;
+
+      await download.saveAs(screenshotPath);
+
+      await page.close();
+    });
+
+    it('should export a chart as PNG when page is zoomed in', async () => {
+      const route = '/docs-charts-export/ExportChartAsImage';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomedInPNG.png`);
+
+      page = await newTestPage(browser, { deviceScaleFactor: 1.25 });
+      await navigateToTest(route);
+
+      const downloadPromise = page.waitForEvent('download');
+      await page.getByRole('button', { name: 'Export Image' }).click();
+
+      const download = await downloadPromise;
+
+      await download.saveAs(screenshotPath);
+
+      await page.close();
+    });
   });
 }
 
@@ -358,10 +453,64 @@ function screenshotPrintDialogPreview(
   });
 }
 
-async function newTestPage(browser: Browser): Promise<Page> {
+/** Adds a red dot on the body that follows the mouse cursor. */
+async function enablePointerDot(page: Page) {
+  await page.evaluate(() => {
+    const dot = document.createElement('div');
+    Object.assign(dot.style, {
+      position: 'fixed',
+      width: '4px',
+      height: '4px',
+      borderRadius: '50%',
+      background: 'red',
+      pointerEvents: 'none',
+      zIndex: '999999',
+      transform: 'translate(-50%, -50%)',
+    });
+    document.body.appendChild(dot);
+
+    document.addEventListener('pointermove', (event) => {
+      dot.style.left = `${event.clientX}px`;
+      dot.style.top = `${event.clientY}px`;
+    });
+  });
+}
+
+/**
+ * Returns the chart drawing area in viewport coordinates by reading
+ * the MuiLineElement path's bounding box and the container position.
+ * Falls back to the SVG clipPath rect if available.
+ */
+async function getDrawingArea(page: Page) {
+  return page.evaluate(() => {
+    const svg = document.querySelector('svg')!;
+    const svgRect = svg.getBoundingClientRect();
+
+    // The clipPath rect defines the drawing area within the SVG.
+    const clipRect = svg.querySelector('clipPath rect');
+    if (clipRect) {
+      const x = Number(clipRect.getAttribute('x'));
+      const y = Number(clipRect.getAttribute('y'));
+      const width = Number(clipRect.getAttribute('width'));
+      const height = Number(clipRect.getAttribute('height'));
+      return {
+        left: svgRect.left + x,
+        top: svgRect.top + y,
+        width,
+        height,
+      };
+    }
+
+    return { left: svgRect.left, top: svgRect.top, width: svgRect.width, height: svgRect.height };
+  });
+}
+
+type NewPageOptions = Parameters<Browser['newPage']>[0];
+
+async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}): Promise<Page> {
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
-  const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
+  const page = await browser.newPage({ viewport: { width: 1000, height: 700 }, ...newPageOptions });
 
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos

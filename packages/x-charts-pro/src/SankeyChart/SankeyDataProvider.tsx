@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import type { ChartContainerProProps } from '../ChartContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import type { SankeySeriesType } from './sankey.types';
 import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { sankeySeriesConfig } from './seriesConfig';
 
 const seriesConfig = { sankey: sankeySeriesConfig };
 
 export interface SankeyDataProviderProps extends Omit<
-  ChartContainerProProps<'sankey', SankeyChartPluginSignatures>,
+  ChartsContainerProProps<'sankey', SankeyChartPluginSignatures>,
   'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
 > {
   children?: React.ReactNode;
@@ -27,7 +27,7 @@ export interface SankeyDataProviderProps extends Omit<
  */
 function SankeyDataProvider(props: SankeyDataProviderProps) {
   return (
-    <ChartDataProviderPro<'sankey', SankeyChartPluginSignatures>
+    <ChartsDataProviderPro<'sankey', SankeyChartPluginSignatures>
       {...props}
       seriesConfig={seriesConfig}
       plugins={SANKEY_CHART_PLUGINS}
