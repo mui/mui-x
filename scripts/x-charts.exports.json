@@ -116,6 +116,8 @@
   { "name": "ChartsLabelMarkProps", "kind": "Interface" },
   { "name": "ChartsLabelProps", "kind": "Interface" },
   { "name": "ChartsLayerContainer", "kind": "Variable" },
+  { "name": "chartsLayerContainerClasses", "kind": "Variable" },
+  { "name": "ChartsLayerContainerClasses", "kind": "Interface" },
   { "name": "ChartsLayerContainerProps", "kind": "Interface" },
   { "name": "ChartsLegend", "kind": "Variable" },
   { "name": "ChartsLegendClasses", "kind": "Interface" },
