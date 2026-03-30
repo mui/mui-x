@@ -82,7 +82,7 @@
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.11",
-    "@mui/monorepo": "https://github.com/mui/material-ui.git#da6ff7172a4acad5dad3bc0b030f3b4614f99088",
+    "@mui/monorepo": "https://github.com/mui/material-ui.git#f7926ac750f55b8f1618a6a63b61c3a5d98672de",
     "@mui/utils": "^5.11.11",
     "@octokit/plugin-retry": "^3.0.9",
     "@octokit/rest": "^18.12.0",
