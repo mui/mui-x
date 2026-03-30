@@ -314,7 +314,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
             minWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
             '&.MuiDayCalendar-slideTransition': {
               minWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
-              minHeight: theme.mixins.density.height * 7,
+              minHeight: theme.mixins.density.height * 6 + theme.mixins.density.spacing * 6,
             },
           }),
         },
