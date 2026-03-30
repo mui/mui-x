@@ -55,26 +55,17 @@ describe('getPackageName', () => {
   });
 });
 
-describe('getAnonymousProjectId', () => {
-  it('should return a valid SHA-256 hex string', async () => {
-    const { default: getAnonymousProjectId } = await import('./get-project-id');
-    const result = await getAnonymousProjectId();
-
-    expect(result).toMatch(/^[a-f0-9]{64}$/);
-  });
-});
-
-describe('getAnonymousRepoId', () => {
+describe('getAnonymousRepoHash', () => {
   it('should return a valid SHA-256 hex string or null', async () => {
-    const { getAnonymousRepoId } = await import('./get-project-id');
-    const result = await getAnonymousRepoId();
+    const { getAnonymousRepoHash } = await import('./get-project-id');
+    const result = await getAnonymousRepoHash();
 
     // null when git is not available, SHA-256 hex string otherwise
     expect(result === null || /^[a-f0-9]{64}$/.test(result)).toBe(true);
   });
 });
 
-describe('getAnonymousPackageName', () => {
+describe('getAnonymousPackageNameHash', () => {
   beforeEach(() => {
     readFileSyncSpy.mockReset();
   });
@@ -82,8 +73,8 @@ describe('getAnonymousPackageName', () => {
   it('should return a SHA-256 hex string when package.json has a name', async () => {
     readFileSyncSpy.mockReturnValueOnce(JSON.stringify({ name: 'my-app' }));
 
-    const { getAnonymousPackageName } = await import('./get-project-id');
-    const result = await getAnonymousPackageName();
+    const { getAnonymousPackageNameHash } = await import('./get-project-id');
+    const result = await getAnonymousPackageNameHash();
 
     expect(result).toMatch(/^[a-f0-9]{64}$/);
   });
@@ -93,17 +84,17 @@ describe('getAnonymousPackageName', () => {
       throw new Error('ENOENT');
     });
 
-    const { getAnonymousPackageName } = await import('./get-project-id');
-    const result = await getAnonymousPackageName();
+    const { getAnonymousPackageNameHash } = await import('./get-project-id');
+    const result = await getAnonymousPackageNameHash();
 
     expect(result).toBeNull();
   });
 });
 
-describe('getAnonymousRootPathId', () => {
+describe('getAnonymousRootPathHash', () => {
   it('should return a valid SHA-256 hex string', async () => {
-    const { getAnonymousRootPathId } = await import('./get-project-id');
-    const result = await getAnonymousRootPathId();
+    const { getAnonymousRootPathHash } = await import('./get-project-id');
+    const result = await getAnonymousRootPathHash();
 
     // Always resolves (git root or cwd)
     expect(result).toMatch(/^[a-f0-9]{64}$/);

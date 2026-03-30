@@ -42,11 +42,11 @@ export function getPackageName(): string | null {
 // Q: Why does MUI send multiple project identifiers?
 // A:
 // MUI's telemetry always anonymizes these values. We send three separate
-// signals (repoId, packageName, rootPathId) plus a computed projectId
+// signals (repoHash, postinstallPackageNameHash, rootPathHash) plus a computed projectId
 // so we can handle monorepos (same repo, different apps) and micro-frontends
 // (different repos, same app) correctly on the backend.
 
-// repoId: identifies the repository (git remote URL)
+// Raw repo identifier: git remote URL (hashed later into repoHash)
 async function getRawRepoId(): Promise<string | null> {
   return (
     (await execCLI(`git config --local --get remote.upstream.url`)) ||
@@ -56,36 +56,27 @@ async function getRawRepoId(): Promise<string | null> {
   );
 }
 
-// packageName: identifies the application (nearest package.json name)
+// Raw package name: nearest package.json name (hashed later into postinstallPackageNameHash)
 function getRawPackageName(): string | null {
   return getPackageName();
 }
 
-// rootPathId: last-resort identifier (git root or cwd, unique per developer)
+// Raw root path: git root or cwd (hashed later into rootPathHash, unique per developer)
 async function getRawRootPathId(): Promise<string> {
   return (await execCLI(`git rev-parse --show-toplevel`)) || process.cwd();
 }
 
-export async function getAnonymousRepoId(): Promise<string | null> {
+export async function getAnonymousRepoHash(): Promise<string | null> {
   const raw = await getRawRepoId();
   return raw ? sha256(raw) : null;
 }
 
-export async function getAnonymousPackageName(): Promise<string | null> {
+export async function getAnonymousPackageNameHash(): Promise<string | null> {
   const raw = getRawPackageName();
   return raw ? sha256(raw) : null;
 }
 
-export async function getAnonymousRootPathId(): Promise<string> {
+export async function getAnonymousRootPathHash(): Promise<string> {
   const raw = await getRawRootPathId();
   return sha256(raw);
-}
-
-// projectId: best available identifier, picks the strongest signal
-export default async function getAnonymousProjectId(): Promise<string> {
-  return (
-    (await getAnonymousRepoId()) ||
-    (await getAnonymousPackageName()) ||
-    (await getAnonymousRootPathId())
-  );
 }

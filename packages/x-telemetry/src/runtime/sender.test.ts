@@ -6,7 +6,7 @@ import { getTelemetryEnvConfig } from './config';
 
 vi.mock('../context', () => ({
   default: {
-    config: { isInitialized: true, runtimeProjectIdResolved: true },
+    config: { isInitialized: true, runtimePackageNameHashResolved: true },
     traits: {
       machineId: 'test-machine-id',
       projectId: 'test-project-id',

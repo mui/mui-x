@@ -144,9 +144,9 @@ async function getTelemetryContext(): Promise<TelemetryContextType> {
   // Always resolve runtimePackageNameHash (individual app name in monorepos)
   if (
     !telemetryContext.traits.runtimePackageNameHash &&
-    !telemetryContext.config.runtimeProjectIdResolved
+    !telemetryContext.config.runtimePackageNameHashResolved
   ) {
-    telemetryContext.config.runtimeProjectIdResolved = true;
+    telemetryContext.config.runtimePackageNameHashResolved = true;
     const runtimePackageName = await getRuntimePackageName();
     if (runtimePackageName) {
       telemetryContext.traits.runtimePackageNameHash = runtimePackageName;

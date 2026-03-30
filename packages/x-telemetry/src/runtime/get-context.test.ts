@@ -5,7 +5,7 @@ import telemetryContext from '../context';
 
 vi.mock('../context', () => ({
   default: {
-    config: { isInitialized: true, runtimeProjectIdResolved: false },
+    config: { isInitialized: true, runtimePackageNameHashResolved: false },
     traits: {
       machineId: 'test-machine-id',
       projectId: null,
@@ -110,7 +110,7 @@ describe.runIf(isJSDOM)('getTelemetryContext runtimePackageNameHash', () => {
     telemetryContext.traits.runtimePackageNameHash = null;
     telemetryContext.traits.postinstallPackageNameHash = null;
     telemetryContext.traits.rootPathHash = null;
-    telemetryContext.config.runtimeProjectIdResolved = false;
+    telemetryContext.config.runtimePackageNameHashResolved = false;
   });
 
   afterEach(() => {
