@@ -10,6 +10,6 @@ describe('<DateCalendar /> - Describe Conformance', () => {
     render,
     muiName: 'MuiDateCalendar',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'themeVariants'],
   }));
 });

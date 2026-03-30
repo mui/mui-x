@@ -18,7 +18,6 @@ describe('<MobileDateTimeRangePicker /> - Describe Conformance', () => {
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
-      'componentsProp',
       'themeDefaultProps',
       'themeStyleOverrides',
       'themeVariants',
