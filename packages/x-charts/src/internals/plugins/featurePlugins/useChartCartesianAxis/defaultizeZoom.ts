@@ -56,6 +56,7 @@ export const defaultizeZoom = (
           ? DEFAULT_ZOOM_SLIDER_PREVIEW_SIZE
           : DEFAULT_ZOOM_SLIDER_SIZE,
       ...zoom.slider,
+      preview: zoom.slider?.preview ?? defaultZoomOptions.slider.preview,
     },
   };
 };

@@ -44,7 +44,9 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
   const [showTooltip, setShowTooltip] = React.useState(false);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
-  const showPreview = zoomOptions.slider.preview;
+  const previewOption = zoomOptions.slider.preview;
+  const showPreview = !!previewOption;
+  const previewSeriesIds = typeof previewOption === 'object' ? previewOption.seriesIds : undefined;
 
   if (!zoomData) {
     return null;
@@ -100,6 +102,7 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
       axisId={axisId}
       axisDirection={axisDirection}
       reverse={reverse}
+      seriesIds={previewSeriesIds}
       x={0}
       y={0}
       height={axisDirection === 'x' ? ZOOM_SLIDER_PREVIEW_SIZE : drawingArea.height}
