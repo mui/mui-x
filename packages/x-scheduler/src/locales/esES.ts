@@ -18,7 +18,6 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   closeButtonLabel: 'Cerrar',
   deleteEvent: 'Eliminar evento',
   descriptionLabel: 'Descripción',
-  editDisabledNotice: 'La edición no está disponible actualmente para eventos recurrentes',
   endDateLabel: 'Fecha de fin',
   endTimeLabel: 'Hora de fin',
   eventTitleAriaLabel: 'Título del evento',

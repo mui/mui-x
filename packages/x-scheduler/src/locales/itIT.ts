@@ -18,7 +18,6 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   // closeButtonLabel: 'Close',
   // deleteEvent: 'Delete event',
   // descriptionLabel: 'Description',
-  // editDisabledNotice: 'Editing is currently unavailable for recurrent events',
   // endDateLabel: 'End date',
   // endTimeLabel: 'End time',
   // eventTitleAriaLabel: 'Event title',
