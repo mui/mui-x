@@ -106,7 +106,7 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
           '&::before': {
             borderBottom: `1px solid ${
               theme.vars
-                ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`
+                ? theme.alpha(theme.vars.palette.common.onBackground, theme.vars.opacity.inputUnderline)
                 : bottomLineColor
             }`,
             left: 0,

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
@@ -45,9 +45,7 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
     color: (theme.vars || theme).palette.text.primary,
   },
   '&[data-current]': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.05)`
-      : alpha(theme.palette.primary.light, 0.05),
+    backgroundColor: theme.alpha((theme.vars || theme).palette.primary.light, 0.05),
   },
   [`&[data-current] .${eventCalendarClasses.monthViewCellNumber}`]: {
     backgroundColor: (theme.vars || theme).palette.primary.main,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { alpha, darken, lighten, type Theme } from '@mui/material/styles';
+import { type Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { hash } from '@mui/x-internals/hash';
 import { vars, type GridCSSVariablesInterface } from '../constants/cssVariables';
@@ -27,17 +27,16 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
       : paperColor);
   const backgroundHeader = dataGridPalette?.headerBg ?? backgroundBase;
   const backgroundPinned = dataGridPalette?.pinnedBg ?? backgroundBase;
-  const backgroundBackdrop = t.vars
-    ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
-    : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
+  const backgroundBackdrop = t.alpha(
+    (t.vars || t).palette.background.default,
+    (t.vars || t).palette.action.disabledOpacity
+  );
   const backgroundOverlay =
     t.palette.mode === 'dark'
       ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 90%, #fff)`, paperColor)
       : paperColor;
 
-  const selectedColor = t.vars
-    ? `rgb(${t.vars.palette.primary.mainChannel})`
-    : t.palette.primary.main;
+  const selectedColor = (t.vars || t).palette.primary.main;
 
   const radius = getRadius(t);
 
@@ -115,9 +114,9 @@ function getBorderColor(theme: Theme) {
     return theme.vars.palette.TableCell.border;
   }
   if (theme.palette.mode === 'light') {
-    return lighten(alpha(theme.palette.divider, 1), 0.88);
+    return theme.lighten(theme.alpha(theme.palette.divider, 1), 0.88);
   }
-  return darken(alpha(theme.palette.divider, 1), 0.68);
+  return theme.darken(theme.alpha(theme.palette.divider, 1), 0.68);
 }
 
 function setOpacity(color: string, opacity: number) {
