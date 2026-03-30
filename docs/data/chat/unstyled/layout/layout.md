@@ -1,0 +1,129 @@
+---
+productId: x-chat
+title: Chat - Unstyled layout
+packageName: '@mui/x-chat/unstyled'
+githubLabel: 'scope: chat'
+---
+
+# Chat - Unstyled layout
+
+<p class="description">Use <code>Chat.Root</code> and <code>Chat.Layout</code> to define the main chat shell and split the interface into conversation and thread panes</p>
+
+{{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js"}}
+
+## `Chat.Root`
+
+`Chat.Root` wraps `ChatProvider` and exposes a root slot for the outer container.
+It accepts the same runtime props as the headless provider, then renders your chat surface inside a structural root element.
+
+Use `Chat.Root` when you want:
+
+- provider setup colocated with the UI shell
+- controlled or uncontrolled chat models at the app boundary
+- slot replacement for the top-level wrapper
+
+Because `Chat.Root` forwards the headless provider props, it can own:
+
+- `adapter`
+- controlled or uncontrolled `messages`
+- controlled or uncontrolled `conversations`
+- active conversation selection
+- composer value control
+- runtime callbacks such as `onToolCall`, `onFinish`, `onData`, and `onError`
+
+That keeps runtime setup close to the structural entry point without moving structural guidance into the headless docs.
+
+## `Chat.Layout`
+
+`Chat.Layout` is the pane manager for the unstyled layer.
+It renders a root plus separate pane slots for conversations and the active thread.
+
+It supports:
+
+- two-pane layouts with both conversation and thread children
+- single-pane layouts where only one side is rendered
+- pane detection based on primitive markers
+- reversed child order without losing pane placement
+- pane slot replacement through `slots` and `slotProps`
+
+The default layout is intentionally small.
+Its job is to place panes and expose owner state, not to decide visual density, breakpoints, or design tokens.
+
+## Pane detection
+
+The layout recognizes marked pane components such as `ConversationList.Root` and `Conversation.Root`.
+That means you can write:
+
+```tsx
+<Chat.Layout>
+  <Conversation.Root />
+  <ConversationList.Root />
+</Chat.Layout>
+```
+
+and still get the conversation pane rendered before the thread pane in the final layout structure.
+
+If only one unmarked child is present, `Chat.Layout` treats it as the thread pane by default.
+
+This makes single-thread layouts straightforward:
+
+```tsx
+<Chat.Layout>
+  <Conversation.Root>{/* thread-only view */}</Conversation.Root>
+</Chat.Layout>
+```
+
+## Slot model
+
+The layout exposes:
+
+- `root`
+- `conversationsPane`
+- `threadPane`
+
+This is useful when you need semantic wrappers such as `aside` and `main`, or when a layout system expects custom container elements.
+
+For example:
+
+```tsx
+<Chat.Layout
+  slots={{
+    conversationsPane: 'aside',
+    threadPane: 'main',
+  }}
+  slotProps={{
+    conversationsPane: { 'aria-label': 'Conversations' },
+    threadPane: { 'aria-label': 'Active thread' },
+  }}
+>
+  <ConversationList.Root />
+  <Conversation.Root />
+</Chat.Layout>
+```
+
+## One-pane and two-pane guidance
+
+Use a two-pane layout when:
+
+- conversation switching happens inside the same page
+- the product behaves like an inbox or agent workspace
+
+Use a one-pane layout when:
+
+- the conversation is already chosen by routing
+- the page is dedicated to a single thread
+- the conversation list lives somewhere else in the application shell
+
+## Recommended patterns
+
+- Use `Chat.Layout` for desktop split-pane surfaces.
+- Render just `Conversation.Root` inside `Chat.Layout` for focused thread pages.
+- Replace the pane slots when the surrounding page already defines grid or landmark semantics.
+
+For the canonical end-to-end shell, continue with [Composition](/x/react-chat/unstyled/composition/).
+For the inbox rail itself, continue with [Conversation list](/x/react-chat/unstyled/conversation-list/).
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+- [ChatLayout](/x/api/chat/chat-layout/)

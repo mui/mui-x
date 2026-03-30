@@ -1,0 +1,12 @@
+<ChatBox
+  adapter={adapter}
+  defaultActiveConversationId={longConversation.id}
+  defaultConversations={[longConversation]}
+  defaultMessages={longMessages}
+  sx={{
+    height: 500,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

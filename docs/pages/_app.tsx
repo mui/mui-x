@@ -153,9 +153,24 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
       };
     }
 
+    // Sidebar groups whose pathname is listed here will render expanded on first load,
+    // while still being collapsible by the user.
+    const ALWAYS_EXPANDED_SIDEBAR_ITEMS = ['/x/react-chat/examples/getting-started'];
+
+    const patchedActivePageParents = ALWAYS_EXPANDED_SIDEBAR_ITEMS.every((p) =>
+      activePageParents.some((parent) => parent.pathname === p),
+    )
+      ? activePageParents
+      : [
+          ...activePageParents,
+          ...ALWAYS_EXPANDED_SIDEBAR_ITEMS.filter(
+            (p) => !activePageParents.some((parent) => parent.pathname === p),
+          ).map((pathname) => ({ pathname })),
+        ];
+
     return {
       activePage,
-      activePageParents,
+      activePageParents: patchedActivePageParents,
       productIdentifier,
       productId,
       productCategoryId,

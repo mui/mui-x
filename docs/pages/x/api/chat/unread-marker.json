@@ -1,0 +1,18 @@
+{
+  "props": {},
+  "name": "UnreadMarker",
+  "imports": [
+    "import { UnreadMarker } from '@mui/x-chat-unstyled/indicators';",
+    "import { UnreadMarker } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [
+    { "name": "root", "description": "", "class": null },
+    { "name": "label", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiUnreadMarker",
+  "filename": "/packages/x-chat-unstyled/src/indicators/UnreadMarker.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/indicators/\">Unstyled indicators</a></li></ul>",
+  "cssComponent": false
+}

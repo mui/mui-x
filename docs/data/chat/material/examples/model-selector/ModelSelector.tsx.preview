@@ -1,0 +1,13 @@
+<ChatBox
+  adapter={adapter}
+  defaultActiveConversationId={minimalConversation.id}
+  defaultConversations={[minimalConversation]}
+  defaultMessages={minimalMessages}
+  slots={{ conversationHeaderActions: ModelSelectControl }}
+  sx={{
+    height: 500,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

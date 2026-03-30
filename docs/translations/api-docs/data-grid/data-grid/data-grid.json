@@ -41,11 +41,9 @@
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
-    "columns": {
-      "description": "Set of columns of type <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>[]."
-    },
+    "columns": { "description": "Set of columns of type [[GridColDef]][]." },
     "columnVisibilityModel": {
-      "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
+      "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in [[GridColDef]]."
     },
     "dataSource": { "description": "The data source object." },
     "dataSourceCache": { "description": "Data source cache object." },
@@ -102,7 +100,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+          "description": "With all properties from [[GridCellParams]]."
         },
         "string": { "name": "string", "description": "The CSS class to apply to the cell." }
       }
@@ -112,7 +110,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>."
+          "description": "With all properties from [[GridRowParams]]."
         },
         "React.JSX.Element": {
           "name": "React.JSX.Element",
@@ -125,7 +123,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridRowHeightParams."
+          "description": "With all properties from [[GridRowHeightParams]]."
         },
         "number | null": {
           "name": "number | null",
@@ -138,7 +136,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-row-class-name-params/'>GridRowClassNameParams</a>."
+          "description": "With all properties from [[GridRowClassNameParams]]."
         },
         "string": { "name": "string", "description": "The CSS class to apply to the row." }
       }
@@ -148,7 +146,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridRowHeightParams."
+          "description": "With all properties from [[GridRowHeightParams]]."
         },
         "GridRowHeightReturnValue": {
           "name": "GridRowHeightReturnValue",
@@ -157,14 +155,14 @@
       }
     },
     "getRowId": {
-      "description": "Return the id of a given GridRowModel. Ensure the reference of this prop is stable to avoid performance implications. It could be done by either defining the prop outside of the component or by memoizing it."
+      "description": "Return the id of a given [[GridRowModel]]. Ensure the reference of this prop is stable to avoid performance implications. It could be done by either defining the prop outside of the component or by memoizing it."
     },
     "getRowSpacing": {
       "description": "Function that allows to specify the spacing between rows.",
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-row-spacing-params/'>GridRowSpacingParams</a>."
+          "description": "With all properties from [[GridRowSpacingParams]]."
         },
         "GridRowSpacing": { "name": "GridRowSpacing", "description": "The row spacing values." }
       }
@@ -190,7 +188,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+          "description": "With all properties from [[GridCellParams]]."
         },
         "boolean": {
           "name": "boolean",
@@ -203,7 +201,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>."
+          "description": "With all properties from [[GridRowParams]]."
         },
         "boolean": {
           "name": "boolean",
@@ -222,7 +220,7 @@
       "description": "Set the locale text of the Data Grid. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-data-grid/src/constants/localeTextConstants.ts\">the source</a> in the GitHub repository."
     },
     "logger": {
-      "description": "Pass a custom logger in the components that implements the Logger interface."
+      "description": "Pass a custom logger in the components that implements the [[Logger]] interface."
     },
     "logLevel": { "description": "Allows to pass the logging level or false to turn off logging." },
     "nonce": {
@@ -233,7 +231,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+          "description": "With all properties from [[GridCellParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -244,7 +242,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+          "description": "With all properties from [[GridCellParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -255,7 +253,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+          "description": "With all properties from [[GridCellParams]]."
         },
         "event": { "name": "event", "description": "The event that caused this prop to be called." }
       }
@@ -265,7 +263,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+          "description": "With all properties from [[GridCellParams]]."
         },
         "event": { "name": "event", "description": "The event that caused this prop to be called." }
       }
@@ -275,7 +273,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+          "description": "With all properties from [[GridCellParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -302,7 +300,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridColumnHeaderParams."
+          "description": "With all properties from [[GridColumnHeaderParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -313,7 +311,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridColumnHeaderParams."
+          "description": "With all properties from [[GridColumnHeaderParams]]."
         },
         "event": { "name": "event", "description": "The event object." }
       }
@@ -323,7 +321,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridColumnHeaderParams."
+          "description": "With all properties from [[GridColumnHeaderParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -334,7 +332,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridColumnHeaderParams."
+          "description": "With all properties from [[GridColumnHeaderParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -345,7 +343,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridColumnHeaderParams."
+          "description": "With all properties from [[GridColumnHeaderParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -356,7 +354,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridColumnHeaderParams."
+          "description": "With all properties from [[GridColumnHeaderParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -367,7 +365,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridColumnHeaderParams."
+          "description": "With all properties from [[GridColumnHeaderParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -378,7 +376,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridColumnOrderChangeParams."
+          "description": "With all properties from [[GridColumnOrderChangeParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -389,7 +387,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridColumnResizeParams."
+          "description": "With all properties from [[GridColumnResizeParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -407,7 +405,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridColumnResizeParams."
+          "description": "With all properties from [[GridColumnResizeParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -428,7 +426,7 @@
       "typeDescriptions": {
         "model": {
           "name": "model",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-filter-model/'>GridFilterModel</a>."
+          "description": "With all properties from [[GridFilterModel]]."
         },
         "details": { "name": "details", "description": "Additional details for this callback." }
       }
@@ -438,7 +436,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridMenuParams."
+          "description": "With all properties from [[GridMenuParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -449,7 +447,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridMenuParams."
+          "description": "With all properties from [[GridMenuParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -473,7 +471,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridPreferencePanelParams."
+          "description": "With all properties from [[GridPreferencePanelParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -484,7 +482,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridPreferencePanelParams."
+          "description": "With all properties from [[GridPreferencePanelParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -499,7 +497,7 @@
       "typeDescriptions": {
         "containerSize": {
           "name": "containerSize",
-          "description": "With all properties from ElementSize."
+          "description": "With all properties from [[ElementSize]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -510,7 +508,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>."
+          "description": "With all properties from [[GridRowParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -523,7 +521,7 @@
     "onRowDoubleClick": {
       "description": "Callback fired when a double click event comes from a row container element.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "With all properties from RowParams." },
+        "params": { "name": "params", "description": "With all properties from [[RowParams]]." },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
       }
@@ -533,7 +531,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>."
+          "description": "With all properties from [[GridRowParams]]."
         },
         "event": { "name": "event", "description": "The event that caused this prop to be called." }
       }
@@ -543,7 +541,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>."
+          "description": "With all properties from [[GridRowParams]]."
         },
         "event": { "name": "event", "description": "The event that caused this prop to be called." }
       }
@@ -563,7 +561,7 @@
       "typeDescriptions": {
         "rowSelectionModel": {
           "name": "rowSelectionModel",
-          "description": "With all the row ids GridSelectionModel."
+          "description": "With all the row ids [[GridSelectionModel]]."
         },
         "details": { "name": "details", "description": "Additional details for this callback." }
       }
@@ -571,7 +569,7 @@
     "onSortModelChange": {
       "description": "Callback fired when the sort model changes before a column is sorted.",
       "typeDescriptions": {
-        "model": { "name": "model", "description": "With all properties from GridSortModel." },
+        "model": { "name": "model", "description": "With all properties from [[GridSortModel]]." },
         "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
@@ -583,7 +581,7 @@
       "description": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side."
     },
     "paginationModel": {
-      "description": "The pagination model of type GridPaginationModel which refers to current <code>page</code> and <code>pageSize</code>."
+      "description": "The pagination model of type [[GridPaginationModel]] which refers to current <code>page</code> and <code>pageSize</code>."
     },
     "processRowUpdate": {
       "description": "Callback called before updating a row with new values in the row and cell editing.",
@@ -604,7 +602,7 @@
     },
     "rowHeight": { "description": "Sets the height in pixel of a row in the Data Grid." },
     "rowModesModel": { "description": "Controls the modes of the rows." },
-    "rows": { "description": "Set of rows of type GridRowsProp." },
+    "rows": { "description": "Set of rows of type [[GridRowsProp]]." },
     "rowSelection": { "description": "If <code>false</code>, the row selection mode is disabled." },
     "rowSelectionModel": { "description": "Sets the row selection model of the Data Grid." },
     "rowSpacingType": {

@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ConversationListTimestamp",
+  "imports": [
+    "import { ConversationListTimestamp } from '@mui/x-chat-unstyled/conversation-list';",
+    "import { ConversationListTimestamp } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationListTimestamp",
+  "filename": "/packages/x-chat-unstyled/src/conversation-list/ConversationListTimestamp.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/conversation-list/\">Unstyled conversation list</a></li></ul>",
+  "cssComponent": false
+}

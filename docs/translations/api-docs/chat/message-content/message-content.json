@@ -1,0 +1,10 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "partProps": {
+      "description": "Props forwarded to the built-in unstyled part renderer components. Use this to pass <code>slots</code> and <code>slotProps</code> to individual part type renderers."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "bubble": "", "content": "" }
+}

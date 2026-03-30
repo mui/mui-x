@@ -551,6 +551,7 @@ function findProjectPagesSection(projectKey: string): MuiPage | null {
     'date-pickers': '/x/react-date-pickers-group',
     charts: '/x/react-charts-group',
     'tree-view': '/x/react-tree-view-group',
+    chat: '/x/react-chat-group',
   };
 
   const targetPathname = projectPathMap[projectKey];
@@ -658,6 +659,7 @@ function getProjectDisplayNameFromKey(projectKey: string): string {
       pages.find((page) => page.pathname.startsWith('/x/react-tree-view'))?.title || 'Tree View',
     scheduler:
       pages.find((page) => page.pathname.startsWith('/x/react-scheduler'))?.title || 'Scheduler',
+    chat: pages.find((page) => page.pathname.startsWith('/x/react-chat'))?.title || 'Chat',
   };
   return nameMap[projectKey] || projectKey;
 }
@@ -929,6 +931,9 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
         }
         if (project.name.includes('scheduler')) {
           return 'scheduler';
+        }
+        if (project.name.includes('chat')) {
+          return 'chat';
         }
       }
       return 'unknown';

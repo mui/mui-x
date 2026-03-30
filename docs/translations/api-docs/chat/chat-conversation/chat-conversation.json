@@ -1,0 +1,25 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "variant": {
+      "description": "The visual style variant of the message list. - <code>&#39;default&#39;</code>: Bubble-style layout with colored backgrounds and role-based alignment. - <code>&#39;compact&#39;</code>: ChatGPT-style layout with no bubbles, left-aligned messages, and inline author name."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "actions": "",
+    "emptyState": "",
+    "errorState": "",
+    "header": "",
+    "historyError": "",
+    "historyLoading": "",
+    "loadingState": "",
+    "messageList": "",
+    "messageListContent": "",
+    "messageListOverlay": "",
+    "messageListScroller": "",
+    "root": "",
+    "subtitle": "",
+    "title": ""
+  }
+}

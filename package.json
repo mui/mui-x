@@ -147,5 +147,26 @@
   "engines": {
     "pnpm": "10.30.1",
     "node": ">=22.18"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@mui/internal-markdown@3.0.3": "patches/@mui__internal-markdown@3.0.3.patch"
+    },
+    "packageExtensions": {
+      "@mui/monorepo": {
+        "dependencies": {
+          "stylis": "4.2.0"
+        }
+      }
+    },
+    "onlyBuiltDependencies": [
+      "@mui/x-telemetry",
+      "@swc/core",
+      "@vvago/vale",
+      "esbuild",
+      "nx",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }

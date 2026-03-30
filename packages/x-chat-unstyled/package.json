@@ -1,0 +1,60 @@
+{
+  "name": "@mui/x-chat-unstyled",
+  "version": "9.0.0-alpha.3",
+  "author": "MUI Team",
+  "description": "The community edition of the unstyled MUI X Chat components.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com/x/react-chat/",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "mui",
+    "mui-x",
+    "chat",
+    "ai",
+    "assistant",
+    "unstyled"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "code-infra build",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git",
+    "directory": "packages/x-chat-unstyled"
+  },
+  "dependencies": {
+    "@babel/runtime": "catalog:",
+    "@base-ui/react": "^1.0.0",
+    "@mui/utils": "catalog:",
+    "@mui/x-chat-headless": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@mui/internal-test-utils": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./internals": "./src/internals/index.ts",
+    "./*": "./src/*/index.ts"
+  }
+}

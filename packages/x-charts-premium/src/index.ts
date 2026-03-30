@@ -40,11 +40,14 @@ export * from '@mui/x-charts-pro/ChartZoomSlider';
 export * from '@mui/x-charts-pro/ChartsToolbarPro';
 
 // Premium utilities
+// eslint-disable-next-line import/export -- cross-package re-export
 export * from './colorPalettes';
+// eslint-disable-next-line import/export -- cross-package re-export
 export * from './constants';
 export * from './hooks';
 export * from './context';
 export * from './models';
+// eslint-disable-next-line import/export -- cross-package re-export
 export * from './plugins';
 // Locales should be imported from `@mui/x-charts-premium/locales`
 // export * from './locales';

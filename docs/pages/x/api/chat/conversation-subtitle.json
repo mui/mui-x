@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ConversationSubtitle",
+  "imports": [
+    "import { ConversationSubtitle } from '@mui/x-chat-unstyled/conversation';",
+    "import { ConversationSubtitle } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "subtitle", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationSubtitle",
+  "filename": "/packages/x-chat-unstyled/src/conversation/ConversationSubtitle.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/thread/\">Unstyled thread</a></li></ul>",
+  "cssComponent": false
+}

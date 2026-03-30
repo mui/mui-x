@@ -1,0 +1,21 @@
+{
+  "props": {},
+  "name": "MessageListDateDivider",
+  "imports": [
+    "import { MessageListDateDivider } from '@mui/x-chat-unstyled/message-list';",
+    "import { MessageListDateDivider } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [
+    { "name": "divider", "description": "", "class": null },
+    { "name": "line", "description": "", "class": null },
+    { "name": "label", "description": "", "class": null }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiMessageListDateDivider",
+  "filename": "/packages/x-chat-unstyled/src/message-list/MessageListDateDivider.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/messages/\">Unstyled messages</a></li></ul>",
+  "cssComponent": false
+}

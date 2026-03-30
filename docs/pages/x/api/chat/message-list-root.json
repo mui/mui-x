@@ -1,0 +1,24 @@
+{
+  "props": {},
+  "name": "MessageListRoot",
+  "imports": [
+    "import { MessageListRoot } from '@mui/x-chat-unstyled/message-list';",
+    "import { MessageListRoot } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [
+    { "name": "messageList", "description": "", "class": null },
+    { "name": "messageListScroller", "description": "", "class": null },
+    { "name": "messageListContent", "description": "", "class": null },
+    { "name": "messageListOverlay", "description": "", "class": null },
+    { "name": "messageListScrollbar", "description": "", "class": null },
+    { "name": "messageListScrollbarThumb", "description": "", "class": null }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiMessageListRoot",
+  "filename": "/packages/x-chat-unstyled/src/message-list/MessageListRoot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/message-list/\">Unstyled message list</a></li></ul>",
+  "cssComponent": false
+}

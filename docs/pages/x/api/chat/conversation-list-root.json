@@ -1,0 +1,30 @@
+{
+  "props": {},
+  "name": "ConversationListRoot",
+  "imports": [
+    "import { ConversationListRoot } from '@mui/x-chat-unstyled/conversation-list';",
+    "import { ConversationListRoot } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [
+    { "name": "root", "description": "", "class": null },
+    { "name": "scroller", "description": "", "class": null },
+    { "name": "viewport", "description": "", "class": null },
+    { "name": "scrollbar", "description": "", "class": null },
+    { "name": "scrollbarThumb", "description": "", "class": null },
+    { "name": "item", "description": "", "class": null },
+    { "name": "itemAvatar", "description": "", "class": null },
+    { "name": "itemContent", "description": "", "class": null },
+    { "name": "title", "description": "", "class": null },
+    { "name": "preview", "description": "", "class": null },
+    { "name": "timestamp", "description": "", "class": null },
+    { "name": "unreadBadge", "description": "", "class": null }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiConversationListRoot",
+  "filename": "/packages/x-chat-unstyled/src/conversation-list/ConversationListRoot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/conversation-list/\">Unstyled conversation list</a></li></ul>",
+  "cssComponent": false
+}

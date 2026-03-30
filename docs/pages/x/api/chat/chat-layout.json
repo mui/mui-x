@@ -1,0 +1,21 @@
+{
+  "props": {},
+  "name": "ChatLayout",
+  "imports": [
+    "import { ChatLayout } from '@mui/x-chat-unstyled/chat';",
+    "import { ChatLayout } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [
+    { "name": "root", "description": "", "class": null },
+    { "name": "conversationsPane", "description": "", "class": null },
+    { "name": "threadPane", "description": "", "class": null }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatLayout",
+  "filename": "/packages/x-chat-unstyled/src/chat/ChatLayout.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/composition/\">Unstyled composition</a></li></ul>",
+  "cssComponent": false
+}

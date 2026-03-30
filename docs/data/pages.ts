@@ -1,5 +1,6 @@
 import type { MuiPage } from '@mui/docs/MuiPage';
 import chartsComponentApi from './chartsApiPages';
+import chatComponentApi from './chatApiPages';
 import dataGridComponentApi from './dataGridApiPages';
 import pickersComponentApi from './datePickersApiPages';
 import treeViewComponentApi from './treeViewApiPages';
@@ -822,6 +823,172 @@ const pages: MuiPage[] = [
     ],
   },
   ...schedulerPages,
+  {
+    pathname: '/x/react-chat-group',
+    title: 'Chatbox',
+    unstable: true,
+    children: [
+      { pathname: '/x/react-chat', title: 'Overview' },
+      {
+        pathname: '/x/react-chat/components',
+        subheader: 'Components',
+        children: [
+          { pathname: '/x/react-chat/material/thread', title: 'Overview' },
+          {
+            pathname: '/x/react-chat/material/conversation-list',
+            title: 'Conversation list',
+          },
+          { pathname: '/x/react-chat/material/message-list', title: 'Message list' },
+          { pathname: '/x/react-chat/material/composer', title: 'Composer' },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/integration',
+        subheader: 'Integration',
+        children: [
+          { pathname: '/x/react-chat/material/adapter', title: 'Adapter' },
+          { pathname: '/x/react-chat/material/context', title: 'Context' },
+          { pathname: '/x/react-chat/material/hooks', title: 'Hooks' },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/customization',
+        subheader: 'Customization',
+        children: [
+          {
+            pathname: '/x/react-chat/material/customization',
+            title: 'Styling & slots',
+          },
+          { pathname: '/x/react-chat/material/tailwind', title: 'Tailwind CSS' },
+          {
+            pathname: '/x/react-chat/material/slot-overrides',
+            title: 'Slot overrides',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/examples',
+        subheader: 'Examples',
+        children: [
+          {
+            pathname: '/x/react-chat/examples/getting-started',
+            title: 'Getting started',
+            children: [
+              {
+                pathname: '/x/react-chat/material/examples/basic-ai-chat',
+                title: 'Basic AI chat',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/thread-only',
+                title: 'Thread-only copilot',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/multi-conversation',
+                title: 'Multi-conversation',
+              },
+            ],
+          },
+          {
+            pathname: '/x/react-chat/examples/agentic',
+            title: 'Agentic',
+            children: [
+              {
+                pathname: '/x/react-chat/material/examples/agentic-code',
+                title: 'Agentic code assistant',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/plan-task',
+                title: 'Plan & task',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/code-block',
+                title: 'Code block',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/confirmation',
+                title: 'Confirmation',
+              },
+            ],
+          },
+          {
+            pathname: '/x/react-chat/examples/customization',
+            title: 'Customization',
+            children: [
+              {
+                pathname: '/x/react-chat/material/examples/custom-theme',
+                title: 'Custom theme',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/slot-overrides',
+                title: 'Slot overrides',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/model-selector',
+                title: 'Model selector',
+              },
+            ],
+          },
+          {
+            pathname: '/x/react-chat/examples/edge-cases',
+            title: 'Edge cases',
+            children: [
+              {
+                pathname: '/x/react-chat/material/examples/empty-state',
+                title: 'Empty state',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/error-state',
+                title: 'Error state',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/slow-streaming',
+                title: 'Slow streaming',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/long-messages',
+                title: 'Long messages',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/many-messages',
+                title: 'Many messages',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/no-conversation-history',
+                title: 'No conversation history',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/message-feed',
+                title: 'Message feed',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/split-layout',
+                title: 'Split layout',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/advanced',
+        subheader: 'Advanced',
+        children: [
+          { pathname: '/x/react-chat/headless', title: 'Headless layer' },
+          { pathname: '/x/react-chat/unstyled', title: 'Unstyled layer' },
+        ],
+      },
+      {
+        pathname: '/x/api/chat-resources',
+        subheader: 'Resources',
+        children: [
+          {
+            pathname: '/x/api/chat-group',
+            title: 'API reference',
+            children: [...chatComponentApi],
+          },
+        ],
+      },
+    ],
+  },
   {
     pathname: '/x/migration-group',
     title: 'Migration',
