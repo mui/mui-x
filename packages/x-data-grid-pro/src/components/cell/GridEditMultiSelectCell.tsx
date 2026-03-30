@@ -26,6 +26,8 @@ import {
   gridRowHeightSelector,
 } from '@mui/x-data-grid/internals';
 import type { AutocompleteProps } from '@mui/x-data-grid/internals';
+import { autocompleteClasses } from '@mui/material/Autocomplete';
+import { inputBaseClasses } from '@mui/material/InputBase';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 
 type OwnerState = DataGridProProcessedProps;
@@ -95,18 +97,18 @@ const GridEditMultiSelectCellAutocomplete = styled(
     slot: 'EditMultiSelectCellAutocomplete',
   },
 )(({ theme }) => ({
-  '& .MuiInputBase-root.MuiInputBase-sizeSmall': {
+  [`& .${inputBaseClasses.root}.${inputBaseClasses.sizeSmall}`]: {
     minHeight: 52,
-    '& .MuiInputBase-input': {
+    [`& .${inputBaseClasses.input}`]: {
       paddingBlock: 3.5,
     },
   },
-  '& + .MuiAutocomplete-popper': {
-    '& .MuiAutocomplete-listbox': {
+  [`& + .${autocompleteClasses.popper}`]: {
+    [`& .${autocompleteClasses.listbox}`]: {
       boxSizing: 'border-box',
       maxHeight: 52 * 4,
     },
-    '& .MuiAutocomplete-option': {
+    [`& .${autocompleteClasses.option}`]: {
       ...theme.typography.body2,
     },
   },
