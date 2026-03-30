@@ -79,7 +79,9 @@ describe('<PreferencesMenu />', () => {
     await openPreferencesMenu(user);
 
     expect(screen.queryByRole('menuitemcheckbox', { name: /show weekends/i })).to.equal(null);
-    expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).not.to.equal(
+      null,
+    );
   });
 
   it('should hide showWeekNumber option when toggleWeekNumberVisibility is false', async () => {
@@ -119,7 +121,9 @@ describe('<PreferencesMenu />', () => {
     await openPreferencesMenu(user);
 
     expect(screen.queryByRole('menuitemcheckbox', { name: /show weekends/i })).not.to.equal(null);
-    expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).not.to.equal(
+      null,
+    );
     expect(screen.queryByRole('menuitem', { name: /time format/i })).to.equal(null);
   });
 
