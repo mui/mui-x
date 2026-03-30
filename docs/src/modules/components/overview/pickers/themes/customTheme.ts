@@ -314,7 +314,8 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
             minWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
             '&.MuiDayCalendar-slideTransition': {
               minWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
-              minHeight: theme.mixins.density.height * 6 + theme.mixins.density.spacing * 6,
+              // week container always has a 4px margin
+              minHeight: theme.mixins.density.height * 6 + 4 * 6,
             },
           }),
         },
@@ -322,7 +323,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
       MuiDayCalendar: {
         styleOverrides: {
           monthContainer: ({ theme }) => ({
-            height: theme.mixins.density.height * 6 + theme.mixins.density.spacing * 6,
+            height: theme.mixins.density.height * 6 + 4 * 6,
           }),
           root: ({ theme }) => ({
             width: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
