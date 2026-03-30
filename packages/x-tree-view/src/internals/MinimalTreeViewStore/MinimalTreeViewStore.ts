@@ -13,7 +13,7 @@ import {
   createTreeViewDefaultId,
   deriveStateFromParameters,
 } from './MinimalTreeViewStore.utils';
-import { TimeoutManager } from './TimeoutManager';
+import { TimeoutManager } from '@base-ui/utils/TimeoutManager';
 import { TreeViewKeyboardNavigationPlugin } from '../plugins/keyboardNavigation';
 import { TreeViewFocusPlugin } from '../plugins/focus/TreeViewFocusPlugin';
 import { TreeViewItemsPlugin } from '../plugins/items/TreeViewItemsPlugin';

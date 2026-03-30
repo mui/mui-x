@@ -6,7 +6,7 @@ export * from './useEventResizeHandler';
 export * from './useElementPositionInCollection';
 export * from './useEvent';
 export * from './useDraggableEvent';
-export * from './TimeoutManager';
+export { TimeoutManager } from '@base-ui/utils/TimeoutManager';
 export * from './date-utils';
 export * from './useInitializeApiRef';
 export * from './useEventCreation';

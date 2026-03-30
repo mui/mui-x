@@ -9,8 +9,8 @@ import {
 } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { DataSourceCache, DataSourceCacheDefault } from '@mui/x-tree-view/utils';
+import { RequestQueue } from '@base-ui/utils/RequestQueue';
 import { RichTreeViewProStore } from '../../RichTreeViewProStore/RichTreeViewProStore';
-import { NestedDataManager } from './utils';
 import { DataSource } from './types';
 
 export const TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE = {
@@ -21,7 +21,9 @@ export const TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE = {
 export class TreeViewLazyLoadingPlugin {
   private store: RichTreeViewProStore<any, any>;
 
-  private nestedDataManager = new NestedDataManager(this);
+  private requestQueue = new RequestQueue<TreeViewItemId>({
+    fetchFn: (id) => this.fetchItemChildren({ itemId: id }),
+  });
 
   private cache: DataSourceCache;
 
@@ -160,7 +162,7 @@ export class TreeViewLazyLoadingPlugin {
    * @param {TreeViewItemId[]} parentIds The ids of the items to fetch the children of.
    * @returns {Promise<void>} The promise resolved when the items are fetched.
    */
-  public fetchItems = (parentIds: TreeViewItemId[]) => this.nestedDataManager.queue(parentIds);
+  public fetchItems = (parentIds: TreeViewItemId[]) => this.requestQueue.queue(parentIds);
 
   /**
    * Method used for updating an item's children.
@@ -194,7 +196,7 @@ export class TreeViewLazyLoadingPlugin {
     const { getChildrenCount, getTreeItems } = this.store.parameters.dataSource;
     // clear the request if the item is not in the tree
     if (itemId != null && !itemsSelectors.itemMeta(this.store.state, itemId)) {
-      this.nestedDataManager.clearPendingRequest(itemId);
+      this.requestQueue.clearPendingRequest(itemId);
       return;
     }
 
@@ -210,7 +212,7 @@ export class TreeViewLazyLoadingPlugin {
       const cachedData = this.cache.get(cacheKey);
       if (cachedData !== undefined && cachedData !== -1) {
         if (itemId != null) {
-          this.nestedDataManager.setRequestSettled(itemId);
+          this.requestQueue.setRequestSettled(itemId);
         }
         this.store.items.setItemChildren({ items: cachedData, parentId: itemId, getChildrenCount });
         this.setItemLoading(itemId, false);
@@ -236,7 +238,7 @@ export class TreeViewLazyLoadingPlugin {
         response = await getTreeItems();
       } else {
         response = await getTreeItems(itemId);
-        this.nestedDataManager.setRequestSettled(itemId);
+        this.requestQueue.setRequestSettled(itemId);
       }
       // save the response in the cache
       this.cache.set(cacheKey, response);
@@ -253,7 +255,7 @@ export class TreeViewLazyLoadingPlugin {
       // set the item loading status to false
       this.setItemLoading(itemId, false);
       if (itemId != null) {
-        this.nestedDataManager.setRequestSettled(itemId);
+        this.requestQueue.setRequestSettled(itemId);
       }
     }
   };

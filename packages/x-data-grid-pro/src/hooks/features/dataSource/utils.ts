@@ -6,117 +6,53 @@ import {
   type GridRowId,
   type GridRowTreeConfig,
 } from '@mui/x-data-grid';
+import { RequestQueue, type RequestStatus } from '@base-ui/utils/RequestQueue';
 import type { GridPrivateApiPro } from '../../../models';
 
-const MAX_CONCURRENT_REQUESTS = Infinity;
-
-export enum RequestStatus {
-  QUEUED,
-  PENDING,
-  SETTLED,
-  UNKNOWN,
-}
-
 /**
- * Fetches row children from the server with option to limit the number of concurrent requests
- * Determines the status of a request based on the enum `RequestStatus`
- * Uses `GridRowId` to uniquely identify a request
+ * Thin wrapper around `RequestQueue` that ties request lifecycle to
+ * the Data Grid's loading-state bookkeeping.
  */
-export class NestedDataManager {
-  private pendingRequests: Set<GridRowId> = new Set();
-
-  private queuedRequests: Set<GridRowId> = new Set();
-
-  private settledRequests: Set<GridRowId> = new Set();
+export class GridRequestQueue {
+  private requestQueue: RequestQueue<GridRowId>;
 
   private api: GridPrivateApiPro;
 
-  private maxConcurrentRequests: number;
-
-  constructor(
-    privateApiRef: RefObject<GridPrivateApiPro>,
-    maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
-  ) {
-    this.api = privateApiRef.current;
-    this.maxConcurrentRequests = maxConcurrentRequests;
+  constructor(apiRef: RefObject<GridPrivateApiPro>) {
+    this.api = apiRef.current;
+    this.requestQueue = new RequestQueue<GridRowId>({
+      fetchFn: (id) => {
+        this.api.fetchRowChildren(id);
+        return Promise.resolve();
+      },
+    });
   }
 
-  private processQueue = async () => {
-    if (this.queuedRequests.size === 0 || this.pendingRequests.size >= this.maxConcurrentRequests) {
-      return;
-    }
-    const loopLength = Math.min(
-      this.maxConcurrentRequests - this.pendingRequests.size,
-      this.queuedRequests.size,
-    );
-    if (loopLength === 0) {
-      return;
-    }
-    const fetchQueue = Array.from(this.queuedRequests);
-
-    for (let i = 0; i < loopLength; i += 1) {
-      const id = fetchQueue[i];
-      this.queuedRequests.delete(id);
-      this.pendingRequests.add(id);
-      this.api.fetchRowChildren(id);
-    }
-  };
-
-  public queue = async (ids: GridRowId[], options: { showChildrenLoading?: boolean } = {}) => {
-    const { showChildrenLoading = true } = options;
-    const loadingIds: Record<GridRowId, boolean> = {};
-    ids.forEach((id) => {
-      this.queuedRequests.add(id);
-      if (showChildrenLoading) {
-        loadingIds[id] = true;
-      }
-    });
-    if (showChildrenLoading) {
-      this.api.setState((state) => ({
-        ...state,
-        dataSource: {
-          ...state.dataSource,
-          loading: {
-            ...state.dataSource.loading,
-            ...loadingIds,
-          },
+  public queue = (ids: GridRowId[]) => {
+    const loadingIds = Object.fromEntries(ids.map((id) => [id, true]));
+    this.api.setState((state) => ({
+      ...state,
+      dataSource: {
+        ...state.dataSource,
+        loading: {
+          ...state.dataSource.loading,
+          ...loadingIds,
         },
-      }));
-    }
-    this.processQueue();
+      },
+    }));
+    return this.requestQueue.queue(ids);
   };
 
-  public setRequestSettled = (id: GridRowId) => {
-    this.pendingRequests.delete(id);
-    this.settledRequests.add(id);
-    this.processQueue();
-  };
+  public setRequestSettled = (id: GridRowId) => this.requestQueue.setRequestSettled(id);
 
-  public clear = () => {
-    this.queuedRequests.clear();
-    Array.from(this.pendingRequests).forEach((id) => this.clearPendingRequest(id));
-  };
+  public clear = () => this.requestQueue.clear();
 
   public clearPendingRequest = (id: GridRowId) => {
     this.api.dataSource.setChildrenLoading(id, false);
-    this.pendingRequests.delete(id);
-    this.processQueue();
+    return this.requestQueue.clearPendingRequest(id);
   };
 
-  public getRequestStatus = (id: GridRowId) => {
-    if (this.pendingRequests.has(id)) {
-      return RequestStatus.PENDING;
-    }
-    if (this.queuedRequests.has(id)) {
-      return RequestStatus.QUEUED;
-    }
-    if (this.settledRequests.has(id)) {
-      return RequestStatus.SETTLED;
-    }
-    return RequestStatus.UNKNOWN;
-  };
-
-  public getActiveRequestsCount = () => this.pendingRequests.size + this.queuedRequests.size;
+  public getRequestStatus = (id: GridRowId): RequestStatus => this.requestQueue.getRequestStatus(id);
 }
 
 export const getGroupKeys = (tree: GridRowTreeConfig, rowId: GridRowId) => {
