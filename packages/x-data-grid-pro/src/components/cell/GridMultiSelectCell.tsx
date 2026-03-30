@@ -101,7 +101,8 @@ const GridMultiSelectCellOverflow = styled(NotRendered<GridSlotProps['baseChip']
   slot: 'MultiSelectCellChip',
 })<{ ownerState: OwnerState }>();
 
-export interface GridMultiSelectCellProps extends GridRenderCellParams {
+export interface GridMultiSelectCellProps<V extends ValueOptions = ValueOptions>
+  extends GridRenderCellParams {
   /**
    * Props passed to internal components.
    */
@@ -116,7 +117,7 @@ export interface GridMultiSelectCellProps extends GridRenderCellParams {
      */
     chip?:
       | Partial<GridSlotProps['baseChip']>
-      | ((value: any, index: number) => Partial<GridSlotProps['baseChip']>);
+      | ((value: V, index: number) => Partial<GridSlotProps['baseChip']>);
     /**
      * Props passed to the overflow chip element.
      */
@@ -132,7 +133,9 @@ export interface GridMultiSelectCellProps extends GridRenderCellParams {
   };
 }
 
-function GridMultiSelectCell(props: GridMultiSelectCellProps) {
+function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
+  props: GridMultiSelectCellProps<V>,
+) {
   const { id, value, colDef, hasFocus, row, slotProps } = props;
   const popupId = `${id}-${colDef.field}-multiselect-popup`;
   const rootProps = useGridRootProps();

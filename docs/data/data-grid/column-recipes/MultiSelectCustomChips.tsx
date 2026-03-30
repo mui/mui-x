@@ -6,11 +6,10 @@ import Chip, { ChipProps } from '@mui/material/Chip';
 import {
   DataGridPro,
   GridColDef,
-  GridEditMultiSelectCell,
-  GridEditMultiSelectCellProps,
   GridMultiSelectCell,
-  GridMultiSelectCellProps,
+  GridEditMultiSelectCell,
 } from '@mui/x-data-grid-pro';
+import { AutocompleteProps } from '@mui/x-data-grid/internals';
 
 type ChipColor = NonNullable<ChipProps['color']>;
 
@@ -114,11 +113,9 @@ const getDepartmentChipProps = (value: string) => {
   };
 };
 
-const renderDepartmentOption = (
-  props: React.HTMLAttributes<HTMLLIElement>,
-  option: string,
-  { selected }: { selected: boolean },
-) => {
+const renderDepartmentOption: NonNullable<
+  AutocompleteProps<string>['renderOption']
+> = (props, option, { selected }) => {
   const colors = departmentColors[option] ?? { bg: '#f0f0f0', color: '#555' };
   return (
     <li {...props}>
@@ -146,16 +143,10 @@ const columns: GridColDef[] = [
     editable: true,
     valueOptions: tagOptions,
     renderCell: (params) => (
-      <GridMultiSelectCell
-        {...(params as GridMultiSelectCellProps)}
-        slotProps={{ chip: getTagChipProps }}
-      />
+      <GridMultiSelectCell {...params} slotProps={{ chip: getTagChipProps }} />
     ),
     renderEditCell: (params) => (
-      <GridEditMultiSelectCell
-        {...(params as GridEditMultiSelectCellProps)}
-        slotProps={{ chip: getTagChipProps }}
-      />
+      <GridEditMultiSelectCell {...params} slotProps={{ chip: getTagChipProps }} />
     ),
   },
   {
@@ -166,14 +157,11 @@ const columns: GridColDef[] = [
     editable: true,
     valueOptions: userOptions,
     renderCell: (params) => (
-      <GridMultiSelectCell
-        {...(params as GridMultiSelectCellProps)}
-        slotProps={{ chip: getAssigneeChipProps }}
-      />
+      <GridMultiSelectCell {...params} slotProps={{ chip: getAssigneeChipProps }} />
     ),
     renderEditCell: (params) => (
       <GridEditMultiSelectCell
-        {...(params as GridEditMultiSelectCellProps)}
+        {...params}
         slotProps={{ chip: getAssigneeChipProps }}
       />
     ),
@@ -187,16 +175,16 @@ const columns: GridColDef[] = [
     valueOptions: departmentOptions,
     renderCell: (params) => (
       <GridMultiSelectCell
-        {...(params as GridMultiSelectCellProps)}
+        {...params}
         slotProps={{ chip: getDepartmentChipProps }}
       />
     ),
     renderEditCell: (params) => (
       <GridEditMultiSelectCell
-        {...(params as GridEditMultiSelectCellProps)}
+        {...params}
         slotProps={{
           chip: getDepartmentChipProps,
-          autocomplete: { renderOption: renderDepartmentOption } as any,
+          autocomplete: { renderOption: renderDepartmentOption },
         }}
       />
     ),

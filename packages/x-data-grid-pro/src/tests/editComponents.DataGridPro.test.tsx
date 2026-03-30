@@ -11,9 +11,7 @@ import {
   renderEditSingleSelectCell,
   renderEditMultiSelectCell,
   GridMultiSelectCell,
-  type GridMultiSelectCellProps,
   GridEditMultiSelectCell,
-  type GridEditMultiSelectCellProps,
 } from '@mui/x-data-grid-pro';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, spyApi, sleep } from 'test/utils/helperFn';
@@ -939,10 +937,7 @@ describe('<DataGridPro /> - Edit components', () => {
             type: 'multiSelect',
             valueOptions,
             renderCell: (params) => (
-              <GridMultiSelectCell
-                {...(params as GridMultiSelectCellProps)}
-                slotProps={{ chip: chipFn }}
-              />
+              <GridMultiSelectCell {...params} slotProps={{ chip: chipFn }} />
             ),
           },
         ];
@@ -970,10 +965,7 @@ describe('<DataGridPro /> - Edit components', () => {
               { value: 3, label: 'Three' },
             ],
             renderCell: (params) => (
-              <GridMultiSelectCell
-                {...(params as GridMultiSelectCellProps)}
-                slotProps={{ chip: chipFn }}
-              />
+              <GridMultiSelectCell {...params} slotProps={{ chip: chipFn }} />
             ),
           },
         ];
@@ -1001,10 +993,7 @@ describe('<DataGridPro /> - Edit components', () => {
               { value: 2, label: 'Two' },
             ],
             renderEditCell: (params) => (
-              <GridEditMultiSelectCell
-                {...(params as GridEditMultiSelectCellProps)}
-                slotProps={{ chip: chipFn }}
-              />
+              <GridEditMultiSelectCell {...params} slotProps={{ chip: chipFn }} />
             ),
           },
         ];

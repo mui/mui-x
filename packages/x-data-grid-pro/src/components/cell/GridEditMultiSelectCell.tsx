@@ -120,7 +120,8 @@ const GridEditMultiSelectCellAutocompletePopper = styled('div', {
     prop !== 'ownerState' && prop !== 'anchorEl' && prop !== 'open' && prop !== 'disablePortal',
 })({});
 
-export interface GridEditMultiSelectCellProps extends GridRenderEditCellParams {
+export interface GridEditMultiSelectCellProps<V extends ValueOptions = ValueOptions>
+  extends GridRenderEditCellParams {
   /**
    * Callback called when the value is changed by the user.
    * @param {React.SyntheticEvent} event The event source of the callback.
@@ -146,7 +147,7 @@ export interface GridEditMultiSelectCellProps extends GridRenderEditCellParams {
      */
     chip?:
       | Partial<GridSlotProps['baseChip']>
-      | ((value: any, index: number) => Partial<GridSlotProps['baseChip']>);
+      | ((value: V, index: number) => Partial<GridSlotProps['baseChip']>);
     /**
      * Props passed to the popper element.
      */
@@ -158,12 +159,14 @@ export interface GridEditMultiSelectCellProps extends GridRenderEditCellParams {
     /**
      * Props passed to the autocomplete element.
      */
-    autocomplete?: Partial<AutocompleteProps<ValueOptions, true, false, false>> &
+    autocomplete?: Partial<AutocompleteProps<V, true, false, false>> &
       Partial<BaseAutocompletePropsOverrides>;
   };
 }
 
-function GridEditMultiSelectCell(props: GridEditMultiSelectCellProps) {
+function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
+  props: GridEditMultiSelectCellProps<V>,
+) {
   const rootProps = useGridRootProps();
   const { id, value: valueProp, field, row, colDef, cellMode, hasFocus, slotProps } = props;
 
@@ -256,7 +259,7 @@ function GridEditMultiSelectCell(props: GridEditMultiSelectCellProps) {
           style={{ '--_width': `${colDef.computedWidth}px` } as React.CSSProperties}
         >
           <GridEditMultiSelectAutocomplete
-            {...props}
+            {...(props as GridEditMultiSelectCellProps)}
             valueOptions={valueOptions}
             selectedOptions={selectedOptions}
             getOptionValue={getOptionValue}

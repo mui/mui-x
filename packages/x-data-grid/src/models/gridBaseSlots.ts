@@ -87,6 +87,17 @@ export type AutocompleteProps<
   disableCloseOnSelect?: boolean;
   /** If true, the popup opens when the input is focused. */
   openOnFocus?: boolean;
+  renderOption?: (
+    props: React.HTMLAttributes<HTMLLIElement> & {
+      key: any;
+    },
+    option: Value,
+    state: {
+      inputValue: string;
+      index: number;
+      selected: boolean;
+    },
+  ) => React.ReactNode;
 
   /* New props */
 
