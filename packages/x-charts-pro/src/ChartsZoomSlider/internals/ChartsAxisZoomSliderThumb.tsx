@@ -37,7 +37,7 @@ export interface ChartsZoomSliderThumbOwnerState {
   placement: 'start' | 'end';
 }
 
-export interface ChartsZoomSliderThumbProps
+interface ChartsZoomSliderThumbProps
   extends Omit<React.ComponentProps<'rect'>, 'orientation'>, ChartsZoomSliderThumbOwnerState {}
 
 function preventDefault(event: Event) {

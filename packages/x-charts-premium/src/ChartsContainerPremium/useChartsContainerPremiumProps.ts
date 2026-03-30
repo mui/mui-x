@@ -9,7 +9,7 @@ import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/
 import type { ChartsContainerPremiumProps } from './ChartsContainerPremium';
 import type { ChartsDataProviderPremiumProps } from '../ChartsDataProviderPremium';
 
-export type UseChartsContainerPremiumPropsReturnValue<
+type UseChartsContainerPremiumPropsReturnValue<
   SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
 > = Pick<

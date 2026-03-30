@@ -6,7 +6,7 @@ import { useSankeyNodeHighlightState } from './sankeyHighlightHooks';
 import type { SeriesId } from '../models';
 import { useUtilityClasses } from './sankeyClasses';
 
-export interface SankeyNodeLabelProps {
+interface SankeyNodeLabelProps {
   /**
    * The node data
    */

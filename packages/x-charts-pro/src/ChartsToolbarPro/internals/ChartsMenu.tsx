@@ -10,7 +10,7 @@ import {
   type Placement,
 } from '../../internals/slots/chartBaseSlotProps';
 
-export interface ChartsMenuProps extends Pick<ChartBasePopperProps, 'className' | 'onExited'> {
+interface ChartsMenuProps extends Pick<ChartBasePopperProps, 'className' | 'onExited'> {
   open: boolean;
   target: HTMLElement | null;
   onClose: (event?: Event) => void;

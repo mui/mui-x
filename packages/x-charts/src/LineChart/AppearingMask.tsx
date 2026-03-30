@@ -13,7 +13,7 @@ interface AppearingMaskProps {
   children: React.ReactNode;
 }
 
-export interface AppearingMaskClasses {
+interface AppearingMaskClasses {
   /** Styles applied if the element should be animated. */
   animate: string;
 }

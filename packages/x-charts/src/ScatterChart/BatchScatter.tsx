@@ -18,7 +18,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { appendAtKey } from '../internals/appendAtKey';
 
-export interface BatchScatterProps {
+interface BatchScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
@@ -83,7 +83,7 @@ function useCreatePaths(
   return paths;
 }
 
-export interface BatchScatterPathsProps {
+interface BatchScatterPathsProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;

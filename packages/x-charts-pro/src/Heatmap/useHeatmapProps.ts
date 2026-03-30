@@ -18,7 +18,7 @@ import { type ChartsDataProviderProProps } from '../ChartsDataProviderPro';
 import { type HeatmapSeriesType } from '../models/seriesType';
 import { type HeatmapPlotProps } from './HeatmapPlot';
 
-export type UseHeatmapProps = HeatmapProps;
+type UseHeatmapProps = HeatmapProps;
 
 const seriesConfig = { heatmap: heatmapSeriesConfig };
 

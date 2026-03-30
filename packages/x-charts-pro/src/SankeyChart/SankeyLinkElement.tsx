@@ -7,7 +7,7 @@ import type { SankeyLayoutLink, SankeyLinkIdentifierWithData } from './sankey.ty
 import { useSankeyLinkHighlightState } from './sankeyHighlightHooks';
 import { useUtilityClasses } from './sankeyClasses';
 
-export interface SankeyLinkElementProps {
+interface SankeyLinkElementProps {
   /**
    * The series ID to which the link belongs
    */

@@ -12,7 +12,7 @@ import {
   useUtilityClasses as useLineUtilityClasses,
 } from './lineClasses';
 
-export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
+type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
     /**
      * If `true`, the marker is hidden.
