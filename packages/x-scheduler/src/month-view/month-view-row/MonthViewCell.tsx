@@ -183,7 +183,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   );
   const isToday = useStore(store, schedulerNowSelectors.isCurrentDay, day.value);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
+  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row, maxEvents);
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
