@@ -34,31 +34,21 @@ const chartSettings = {
 
 export default function CandlestickValueFormatter() {
   return (
+    // prettier-ignore
     <CandlestickChart
       {...chartSettings}
       series={[
-        {
-          data,
-          valueFormatter: (value, { field }) => {
-            if (value === null) {
-              return '';
-            }
-            if (field === 'open') {
-              return `⇒ ${dollarFormatter.format(value)}`;
-            }
-            if (field === 'close') {
-              return `⇍ ${dollarFormatter.format(value)}`;
-            }
-            if (field === 'high') {
-              return `⇗ ${dollarFormatter.format(value)}`;
-            }
-            if (field === 'low') {
-              return `⇙ ${dollarFormatter.format(value)}`;
-            }
-            return dollarFormatter.format(value);
-          },
-        },
-      ]}
-    />
+      {
+        data,
+        valueFormatter: (value, { field }) => {
+          if (value === null) {return '';}
+          if (field === 'open') {return `⇒ ${dollarFormatter.format(value)}`;}
+          if (field === 'close') {return `⇍ ${dollarFormatter.format(value)}`;}
+          if (field === 'high') {return `⇗ ${dollarFormatter.format(value)}`;}
+          if (field === 'low') {return `⇙ ${dollarFormatter.format(value)}`;}
+          return dollarFormatter.format(value);
+        }
+      }]
+      } />
   );
 }

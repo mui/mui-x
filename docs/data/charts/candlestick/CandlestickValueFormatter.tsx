@@ -37,6 +37,7 @@ const chartSettings = {
 
 export default function CandlestickValueFormatter() {
   return (
+    // prettier-ignore
     <CandlestickChart
       {...chartSettings}
       series={[
