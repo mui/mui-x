@@ -52,7 +52,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyPresetLabel: (date) => `Se repite anualmente el ${date}`,
   noResourceAriaLabel: 'Sin recurso específico',
   resourceLabel: 'Recurso',
-  saveChanges: 'Guardar cambios',
+  saveChanges: 'Guardar',
   startDateAfterEndDateError: 'La fecha/hora de inicio debe ser anterior a la fecha/hora de fin.',
   startDateLabel: 'Fecha de inicio',
   startTimeLabel: 'Hora de inicio',
@@ -62,7 +62,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   cancel: 'Cancelar',
   confirm: 'Confirmar',
   onlyThis: 'Solo este evento',
-  radioGroupAriaLabel: 'Ámbito de edición de eventos recurrentes',
+  radioGroupAriaLabel: 'Alcance de edición de eventos recurrentes',
   thisAndFollowing: 'Este y los siguientes eventos',
   title: 'Aplicar este cambio a:',
 };
