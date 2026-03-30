@@ -352,8 +352,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
             fontSize: '0.8rem',
             fontWeight: 500,
             border: 'none',
-            width: theme.mixins.density.width,
-            height: theme.mixins.density.height,
+            '--PickerDay-size': `${theme.mixins.density.width}px`,
 
             '&:hover': {
               border: 'none',
@@ -390,12 +389,11 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
         styleOverrides: {
           root: ({ theme }) => ({
             '--PickerDay-horizontalMargin': 0,
+            '--PickerDay-size': `${theme.mixins.density.width}px`,
             borderRadius: theme.shape.borderRadius,
             fontSize: '0.8rem',
             fontWeight: 500,
             border: 'none',
-            width: theme.mixins.density.width,
-            height: theme.mixins.density.height,
 
             '&:hover': {
               border: 'none',
