@@ -166,7 +166,10 @@ function Chart() {
           ],
           valueFormatter: (value: Date) =>
             value.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          zoom: { filterMode: 'discard' },
+          zoom: {
+            filterMode: 'discard',
+            slider: { enabled: true, preview: true },
+          },
         },
       ]}
       yAxis={[

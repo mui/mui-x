@@ -34,6 +34,8 @@ import {
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
+import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
+import { seriesPreviewPlotMap } from '@mui/x-charts-pro/internals';
 import {
   ChartsLegend,
   type ChartsLegendSlotProps,
@@ -47,6 +49,9 @@ import { CandlestickPlot, type CandlestickPlotProps } from './CandlestickPlot';
 import { useCandlestickChartProps } from './useCandlestickChartProps';
 import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useChartsContainerPremiumProps';
 import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
+import { CandlestickPreviewPlot } from '../ChartsZoomSlider/internals/previews/CandlestickPreviewPlot';
+
+seriesPreviewPlotMap.set('ohlc', CandlestickPreviewPlot);
 
 export interface CandlestickChartSlots
   extends
@@ -172,6 +177,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
               <ChartsAxisHighlight {...axisHighlightProps} />
             </g>
             <ChartsAxis {...chartsAxisProps} />
+            <ChartsZoomSlider />
             <ChartsClipPath {...clipPathProps} />
             {children}
           </ChartsSvgLayer>
