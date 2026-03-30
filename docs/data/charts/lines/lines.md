@@ -23,10 +23,11 @@ Each line usually represents one series, so you can compare multiple variables o
 Line chart series must contain a `data` property with an array of numbers.
 That array holds the y-values.
 
-Specify x-values by setting the `data` property in the `xAxis` prop.
+To set x-values, pass `data` on the `xAxis` configuration.
 The axis can use any `scaleType`, and its `data` should have the same length as the series.
 
-By default, those y-values are paired with integers starting from 0 (0, 1, 2, 3, …).
+When you omit the `xAxis` prop entirely, `LineChart` supplies a default x-axis with `scaleType='point'`.
+Its `data` is `[0, 1, 2, …]` with length matching the longest series, so each y-value pairs with its index in the series `data` array.
 
 {{"demo": "BasicLineChart.js"}}
 
@@ -184,18 +185,9 @@ Ordinal color config is not yet supported for line charts.
 ### Interpolation
 
 Use the `curve` property to choose how the line is drawn between points.
-It accepts one of:
+It accepts these string values: `'linear'`, `'catmullRom'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`, `'bumpX'`, and `'bumpY'`.
 
-- `'catmullRom'`
-- `'linear'`
-- `'monotoneX'`
-- `'monotoneY'`
-- `'natural'`
-- `'step'`
-- `'stepBefore'`
-- `'stepAfter'`
-- `'bumpX'`
-- `'bumpY'`
+Use the select in the demo below to compare how each value renders on the same data.
 
 You can set `curve` per series, so different series can use different interpolations.
 
