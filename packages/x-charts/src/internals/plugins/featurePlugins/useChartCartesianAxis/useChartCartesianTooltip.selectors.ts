@@ -9,6 +9,11 @@ import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
 } from '../useChartInteraction';
+import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
+import {
+  selectorChartsKeyboardXAxisIndex,
+  selectorChartsKeyboardYAxisIndex,
+} from '../useChartKeyboardNavigation/useChartKeyboardNavigation.selectors';
 import { getAxisIndex } from './getAxisValue';
 import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import type { ChartState } from '../../models/chart';
@@ -29,6 +34,20 @@ const selectorChartControlledCartesianAxisTooltip = (
 
 const EMPTY_ARRAY: AxisItemIdentifier[] = [];
 
+function getKeyboardAxisTooltip(
+  keyboardIndex: AxisItemIdentifier | undefined,
+  axes: ComputeResult<ChartsAxisProps>,
+): AxisItemIdentifier[] {
+  if (keyboardIndex === undefined) {
+    return EMPTY_ARRAY;
+  }
+  const axis = axes.axis[keyboardIndex.axisId];
+  if (!axis?.triggerTooltip) {
+    return EMPTY_ARRAY;
+  }
+  return [keyboardIndex];
+}
+
 /**
  * Get x-axis ids and corresponding data index that should be display in the tooltip.
  */
@@ -43,7 +62,9 @@ export const selectorChartsInteractionTooltipXAxes = createSelectorMemoizedWithO
   selectorChartControlledCartesianAxisTooltip,
   selectorChartsInteractionPointerX,
   selectorChartXAxis,
-  (controlledValues, value, axes) => {
+  selectorChartsLastInteraction,
+  selectorChartsKeyboardXAxisIndex,
+  (controlledValues, value, axes, lastInteraction, keyboardIndex) => {
     if (controlledValues !== undefined) {
       if (controlledValues.length === 0) {
         return EMPTY_ARRAY;
@@ -52,6 +73,10 @@ export const selectorChartsInteractionTooltipXAxes = createSelectorMemoizedWithO
 
       const filteredArray = controlledValues.filter(({ axisId }) => ids.has(axisId));
       return filteredArray.length === controlledValues.length ? controlledValues : filteredArray;
+    }
+
+    if (lastInteraction === 'keyboard') {
+      return getKeyboardAxisTooltip(keyboardIndex, axes);
     }
 
     if (value === null) {
@@ -84,7 +109,9 @@ export const selectorChartsInteractionTooltipYAxes = createSelectorMemoizedWithO
   selectorChartControlledCartesianAxisTooltip,
   selectorChartsInteractionPointerY,
   selectorChartYAxis,
-  (controlledValues, value, axes) => {
+  selectorChartsLastInteraction,
+  selectorChartsKeyboardYAxisIndex,
+  (controlledValues, value, axes, lastInteraction, keyboardIndex) => {
     if (controlledValues !== undefined) {
       if (controlledValues.length === 0) {
         return EMPTY_ARRAY;
@@ -93,6 +120,10 @@ export const selectorChartsInteractionTooltipYAxes = createSelectorMemoizedWithO
 
       const filteredArray = controlledValues.filter(({ axisId }) => ids.has(axisId));
       return filteredArray.length === controlledValues.length ? controlledValues : filteredArray;
+    }
+
+    if (lastInteraction === 'keyboard') {
+      return getKeyboardAxisTooltip(keyboardIndex, axes);
     }
 
     if (value === null) {
@@ -152,7 +183,7 @@ export const selectorChartsTooltipAxisPosition = createSelectorMemoized(
     xAxes: ComputeResult<ChartsXAxisProps>,
     yAxes: ComputeResult<ChartsYAxisProps>,
     drawingArea: ChartDrawingArea,
-    placement?: 'top' | 'bottom' | 'left' | 'right',
+    placement: 'top' | 'bottom' | 'left' | 'right' | undefined,
   ) {
     if (xAxesIdentifiers.length === 0 && yAxesIdentifiers.length === 0) {
       return null;

@@ -1,44 +1,15 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { AnimatedLine, type AnimatedLineProps } from './AnimatedLine';
 import { type SeriesId } from '../models/seriesType/common';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
-import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
-
-/**
- * @deprecated Use `LineClasses` from `./lineClasses` instead.
- */
-export interface LineElementClasses {
-  /** Styles applied to the root element. */
-  root: string;
-  /**
-   * Styles applied to the root element when highlighted.
-   * @deprecated Use `[data-highlighted]` selector instead.
-   */
-  highlighted: string;
-  /**
-   * Styles applied to the root element when faded.
-   * @deprecated Use `[data-faded]` selector instead.
-   */
-  faded: string;
-  /**
-   * Styles applied to the root element for a specified series.
-   * Needs to be suffixed with the series ID: `.${lineElementClasses.series}-${seriesId}`.
-   */
-  series: string;
-}
-
-/**
- * @deprecated Use `LineClassKey` from `./lineClasses` instead.
- */
-export type LineElementClassKey = keyof LineElementClasses;
+import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
+import { useStore } from '../internals/store/useStore';
+import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 export interface LineElementOwnerState {
   seriesId: SeriesId;
@@ -46,39 +17,10 @@ export interface LineElementOwnerState {
   gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
-  classes?: Partial<LineElementClasses>;
+  classes?: Partial<LineClasses>;
   /** If `true`, the line is hidden. */
   hidden?: boolean;
 }
-
-/**
- * @deprecated Use `getLineUtilityClass` from `./lineClasses` instead.
- */
-export function getLineElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiLineElement', slot);
-}
-
-/**
- * @deprecated Use `lineClasses` from `./lineClasses` instead.
- */
-export const lineElementClasses: LineElementClasses = generateUtilityClasses('MuiLineElement', [
-  'root',
-  'highlighted',
-  'faded',
-  'series',
-]);
-
-/**
- * @deprecated Use `useUtilityClasses` from `./lineClasses` instead.
- */
-const useDeprecatedUtilityClasses = (ownerState: LineElementOwnerState) => {
-  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
-  const slots = {
-    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
-  };
-
-  return composeClasses(slots, getLineElementUtilityClass, classes);
-};
 
 export interface LineElementSlots {
   /**
@@ -135,9 +77,13 @@ function LineElement(props: LineElementProps) {
     ...other
   } = props;
 
+  const store = useStore();
+  const enablePositionBasedPointerInteraction = store.use(
+    selectorChartExperimentalFeaturesState,
+  )?.enablePositionBasedPointerInteraction;
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
-
   const interactionProps = useInteractionItemProps(identifier);
+
   const highlightState = useItemHighlightState(identifier);
   const isHighlighted = highlightState === 'highlighted';
   const isFaded = highlightState === 'faded';
@@ -152,21 +98,21 @@ function LineElement(props: LineElementProps) {
     hidden,
   };
   const classes = useLineUtilityClasses();
-  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Line = slots?.line ?? AnimatedLine;
   const lineProps = useSlotProps({
     elementType: Line,
     externalSlotProps: slotProps?.line,
     additionalProps: {
-      ...interactionProps,
+      ...(enablePositionBasedPointerInteraction ? {} : interactionProps),
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
       'data-series-id': seriesId,
+      'data-series': seriesId,
     },
-    className: `${classes.line} ${deprecatedClasses.root}`,
+    className: classes.line,
     ownerState,
   });
 

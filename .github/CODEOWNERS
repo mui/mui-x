@@ -1,3 +1,5 @@
-packages/x-charts* @JCQuintas @alexfauquette @bernardobelchior
-docs/data/charts @JCQuintas @alexfauquette @bernardobelchior
+packages/x-charts* @JCQuintas @alexfauquette
+docs/data/charts @JCQuintas @alexfauquette
+packages/x-virtualizer @romgrk
+packages/x-internals @romgrk
 CHANGELOG.md @mui/explore @mui/charts @mui/grid @mui/infra

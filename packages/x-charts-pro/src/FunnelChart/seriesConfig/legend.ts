@@ -11,13 +11,10 @@ const legendGetter: LegendGetter<'funnel'> = (params) => {
         return;
       }
 
-      const id = item.id ?? dataIndex;
-
       acc.push({
         type: 'funnel',
         markType: item.labelMarkType ?? series[seriesId].labelMarkType,
         seriesId,
-        itemId: id,
         dataIndex,
         color: item.color,
         label: formattedLabel,

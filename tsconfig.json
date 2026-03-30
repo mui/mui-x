@@ -21,8 +21,6 @@
       "@mui/x-data-grid-pro/*": ["./packages/x-data-grid-pro/src/*"],
       "@mui/x-data-grid-premium": ["./packages/x-data-grid-premium/src"],
       "@mui/x-data-grid-premium/*": ["./packages/x-data-grid-premium/src/*"],
-      "@mui/x-data-grid-headless": ["./packages/x-data-grid-headless/src"],
-      "@mui/x-data-grid-headless/*": ["./packages/x-data-grid-headless/src/*"],
       "@mui/x-date-pickers": ["./packages/x-date-pickers/src"],
       "@mui/x-date-pickers/*": ["./packages/x-date-pickers/src/*"],
       "@mui/x-date-pickers-pro": ["./packages/x-date-pickers-pro/src"],
@@ -68,6 +66,9 @@
         "./node_modules/@mui/monorepo/packages-internal/scripts/generate-llms-txt/src/*"
       ],
       "test/*": ["./test/*"],
+      "docs/src/modules/utils/mapApiPageTranslations": [
+        "./docs/src/modules/utils/mapApiPageTranslations.js"
+      ],
       "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
       "docsx/*": ["./docs/*"]
     },

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type SeriesItemIdentifierWithData } from '../../models/seriesType';
-import { useChartContext } from '../../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 import { type UseChartHighlightSignature } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import { type UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartTooltipSignature } from '../../internals/plugins/featurePlugins/useChartTooltip';
@@ -11,7 +11,7 @@ export const useInteractionAllItemProps = (
   skip?: boolean,
 ) => {
   const { instance } =
-    useChartContext<
+    useChartsContext<
       [UseChartInteractionSignature, UseChartHighlightSignature<'radar'>, UseChartTooltipSignature]
     >();
 
