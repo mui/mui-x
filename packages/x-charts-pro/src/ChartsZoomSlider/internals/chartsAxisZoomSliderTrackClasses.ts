@@ -25,7 +25,7 @@ export const chartsAxisZoomSliderTrackClasses: ChartsAxisZoomSliderTrackClasses 
   return acc;
 }, {} as ChartsAxisZoomSliderTrackClasses);
 
-export function getAxisZoomSliderTrackUtilityClass(slot: string) {
+function getAxisZoomSliderTrackUtilityClass(slot: string) {
   // We use the `ClassNameGenerator` because the original `generateUtilityClass` function
   // has a special case for the `active` slot.
   return `${ClassNameGenerator.generate('MuiChartAxisZoomSliderTrack')}-${slot}`;

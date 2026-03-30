@@ -18,7 +18,7 @@ export interface ScatterClasses {
 
 export type ScatterClassKey = keyof ScatterClasses;
 
-export function getScatterUtilityClass(slot: string) {
+function getScatterUtilityClass(slot: string) {
   return generateUtilityClass('MuiScatterChart', slot);
 }
 
@@ -29,7 +29,7 @@ export const scatterClasses: ScatterClasses = generateUtilityClasses('MuiScatter
   'focusedMark',
 ]);
 
-export interface UseUtilityClassesOptions {
+interface UseUtilityClassesOptions {
   classes?: Partial<ScatterClasses>;
 }
 

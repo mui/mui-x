@@ -32,7 +32,7 @@ export interface MarkElementOwnerState {
   skipAnimation?: boolean;
 }
 
-export function getLineUtilityClass(slot: string) {
+function getLineUtilityClass(slot: string) {
   return generateUtilityClass('MuiLineChart', slot);
 }
 
@@ -47,7 +47,7 @@ export const lineClasses: LineClasses = generateUtilityClasses('MuiLineChart', [
   'markPlot',
 ]);
 
-export interface UseUtilityClassesOptions {
+interface UseUtilityClassesOptions {
   skipAnimation?: boolean;
   classes?: Partial<LineClasses>;
 }
