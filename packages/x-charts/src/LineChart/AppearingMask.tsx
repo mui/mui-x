@@ -18,10 +18,9 @@ interface AppearingMaskClasses {
   animate: string;
 }
 
-export const appearingMaskClasses: AppearingMaskClasses = generateUtilityClasses(
-  'MuiAppearingMask',
-  ['animate'],
-);
+const appearingMaskClasses: AppearingMaskClasses = generateUtilityClasses('MuiAppearingMask', [
+  'animate',
+]);
 
 const AnimatedRect = styled('rect', {
   slot: 'internal',

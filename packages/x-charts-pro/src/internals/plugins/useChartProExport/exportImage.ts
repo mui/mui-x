@@ -4,7 +4,7 @@ import { applyStyles, copyCanvasesContent, createExportIframe } from './common';
 import { type ChartImageExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
-export const getDrawDocument = async () => {
+const getDrawDocument = async () => {
   try {
     const module = await import('rasterizehtml');
 

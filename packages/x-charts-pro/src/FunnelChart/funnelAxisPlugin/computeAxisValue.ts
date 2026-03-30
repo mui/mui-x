@@ -34,7 +34,7 @@ import {
   type ScaleName,
 } from '@mui/x-charts/models';
 
-export const xRangeGetter = (
+const xRangeGetter = (
   drawingArea: ChartDrawingArea,
   reverse?: boolean,
   removedSpace: number = 0,
@@ -46,7 +46,7 @@ export const xRangeGetter = (
   return reverse ? [range[1], range[0]] : [range[0], range[1]];
 };
 
-export const yRangeGetter = (
+const yRangeGetter = (
   drawingArea: ChartDrawingArea,
   reverse?: boolean,
   removedSpace: number = 0,
@@ -69,7 +69,7 @@ function getRange(
     : yRangeGetter(drawingArea, axis.reverse, removedSpace);
 }
 
-export type ComputeResult<T extends ChartsAxisProps> = {
+type ComputeResult<T extends ChartsAxisProps> = {
   axis: ComputedAxisConfig<T>;
   axisIds: string[];
 };

@@ -100,7 +100,7 @@ interface GaugeConfig {
   valueMax?: number;
 }
 
-export const GaugeContext = React.createContext<
+const GaugeContext = React.createContext<
   Required<GaugeConfig> &
     ProcessedCircularConfig & {
       /**

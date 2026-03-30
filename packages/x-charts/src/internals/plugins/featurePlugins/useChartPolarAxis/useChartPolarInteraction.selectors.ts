@@ -56,7 +56,7 @@ export const selectorChartsInteractionRotationAxisIndex = createSelector(
     rotation === null ? null : indexGetter(rotation, rotationAxis, id ?? rotationAxis.axisIds[0]),
 );
 
-export const selectorChartsInteractionRotationAxisIndexes = createSelector(
+const selectorChartsInteractionRotationAxisIndexes = createSelector(
   selectorChartsInteractionRotationAngle,
   selectorChartRotationAxis,
   optionalGetAxisIds,

@@ -12,8 +12,7 @@ import {
 import { computeAxisValue } from './computeAxisValue';
 import { type UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
 
-export const selectorFunnel = (state: ChartState<[], [UseChartFunnelAxisSignature]>) =>
-  state.funnel;
+const selectorFunnel = (state: ChartState<[], [UseChartFunnelAxisSignature]>) => state.funnel;
 
 export const selectorFunnelGap = createSelector(selectorFunnel, (funnel) => funnel?.gap ?? 0);
 
