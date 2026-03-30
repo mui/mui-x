@@ -106,7 +106,7 @@ function getSessionId(): string {
   return `sestp_${generateId(32)}`;
 }
 
-async function getRuntimeProjectId(): Promise<string | null> {
+async function getRuntimePackageName(): Promise<string | null> {
   // npm/pnpm scripts automatically set npm_package_name
   if (typeof process !== 'undefined' && process.env?.npm_package_name) {
     return hashString(process.env.npm_package_name);
@@ -143,7 +143,11 @@ async function getTelemetryContext(): Promise<TelemetryContextType> {
 
   if (!telemetryContext.traits.projectId && !telemetryContext.config.runtimeProjectIdResolved) {
     telemetryContext.config.runtimeProjectIdResolved = true;
-    telemetryContext.traits.projectId = await getRuntimeProjectId();
+    const runtimePackageName = await getRuntimePackageName();
+    if (runtimePackageName) {
+      telemetryContext.traits.packageNameHash = runtimePackageName;
+      telemetryContext.traits.projectId = runtimePackageName;
+    }
   }
 
   if (!telemetryContext.traits.fingerprint) {
@@ -153,5 +157,5 @@ async function getTelemetryContext(): Promise<TelemetryContextType> {
   return telemetryContext;
 }
 
-export { TelemetryContextType, getRuntimeProjectId };
+export { TelemetryContextType, getRuntimePackageName };
 export default getTelemetryContext;
