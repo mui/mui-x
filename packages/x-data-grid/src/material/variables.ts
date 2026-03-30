@@ -29,7 +29,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
   const backgroundPinned = dataGridPalette?.pinnedBg ?? backgroundBase;
   const backgroundBackdrop = t.alpha(
     (t.vars || t).palette.background.default,
-    (t.vars || t).palette.action.disabledOpacity
+    (t.vars || t).palette.action.disabledOpacity,
   );
   const backgroundOverlay =
     t.palette.mode === 'dark'

@@ -72,13 +72,13 @@ const DefaultMonthButton = styled('button', {
   '&:focus': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,
-      (theme.vars || theme).palette.action.hoverOpacity
+      (theme.vars || theme).palette.action.hoverOpacity,
     ),
   },
   '&:hover': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,
-      (theme.vars || theme).palette.action.hoverOpacity
+      (theme.vars || theme).palette.action.hoverOpacity,
     ),
   },
   '&:disabled': {

@@ -70,13 +70,13 @@ const DefaultYearButton = styled('button', {
   '&:focus': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,
-      (theme.vars || theme).palette.action.focusOpacity
+      (theme.vars || theme).palette.action.focusOpacity,
     ),
   },
   '&:hover': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,
-      (theme.vars || theme).palette.action.hoverOpacity
+      (theme.vars || theme).palette.action.hoverOpacity,
     ),
   },
   '&:disabled': {

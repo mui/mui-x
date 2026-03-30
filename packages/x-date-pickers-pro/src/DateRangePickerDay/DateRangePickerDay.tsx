@@ -131,7 +131,7 @@ const DateRangePickerDayRoot = styled('div', {
         color: (theme.vars || theme).palette.primary.contrastText,
         backgroundColor: theme.alpha(
           (theme.vars || theme).palette.primary.main,
-          (theme.vars || theme).palette.action.focusOpacity
+          (theme.vars || theme).palette.action.focusOpacity,
         ),
         '&:first-of-type': startBorderStyle,
         '&:last-of-type': endBorderStyle,

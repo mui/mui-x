@@ -79,14 +79,14 @@ const PickerDay2Root = styled(ButtonBase, {
     '&:hover': {
       backgroundColor: theme.alpha(
         (theme.vars || theme).palette.primary.main,
-        (theme.vars || theme).palette.action.hoverOpacity
+        (theme.vars || theme).palette.action.hoverOpacity,
       ),
     },
   },
   '&:focus': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.primary.main,
-      (theme.vars || theme).palette.action.focusOpacity
+      (theme.vars || theme).palette.action.focusOpacity,
     ),
   },
   marginLeft: 'var(--PickerDay-horizontalMargin)',

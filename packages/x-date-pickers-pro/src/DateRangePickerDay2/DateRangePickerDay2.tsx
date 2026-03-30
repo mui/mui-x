@@ -76,7 +76,7 @@ const highlightStyles = (theme: Theme) => ({
   height: '100%',
   backgroundColor: theme.alpha(
     (theme.vars || theme).palette.primary.main,
-    (theme.vars || theme).palette.action.focusOpacity
+    (theme.vars || theme).palette.action.focusOpacity,
   ),
   boxSizing: 'border-box',
   left: 'calc(var(--PickerDay-horizontalMargin) * (-1))',
@@ -153,14 +153,14 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
     '&:hover': {
       backgroundColor: theme.alpha(
         (theme.vars || theme).palette.primary.main,
-        (theme.vars || theme).palette.action.hoverOpacity
+        (theme.vars || theme).palette.action.hoverOpacity,
       ),
     },
   },
   '&:focus': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.primary.main,
-      (theme.vars || theme).palette.action.focusOpacity
+      (theme.vars || theme).palette.action.focusOpacity,
     ),
   },
   zIndex: 1,
