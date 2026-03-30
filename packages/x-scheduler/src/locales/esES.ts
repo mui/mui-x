@@ -63,7 +63,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   confirm: 'Confirmar',
   onlyThis: 'Solo este evento',
   radioGroupAriaLabel: 'Alcance de edición de eventos recurrentes',
-  thisAndFollowing: 'Este y los siguientes eventos',
+  thisAndFollowing: 'Este y los eventos siguientes',
   title: 'Aplicar este cambio a:',
 };
 
