@@ -141,13 +141,23 @@ async function getTelemetryContext(): Promise<TelemetryContextType> {
     telemetryContext.config.isInitialized = true;
   }
 
-  if (!telemetryContext.traits.projectId && !telemetryContext.config.runtimeProjectIdResolved) {
+  // Always resolve runtimePackageNameHash (individual app name in monorepos)
+  if (
+    !telemetryContext.traits.runtimePackageNameHash &&
+    !telemetryContext.config.runtimeProjectIdResolved
+  ) {
     telemetryContext.config.runtimeProjectIdResolved = true;
     const runtimePackageName = await getRuntimePackageName();
     if (runtimePackageName) {
-      telemetryContext.traits.packageNameHash = runtimePackageName;
-      telemetryContext.traits.projectId = runtimePackageName;
+      telemetryContext.traits.runtimePackageNameHash = runtimePackageName;
     }
+    // Recompute projectId: repoHash || runtimePackageNameHash || postinstallPackageNameHash || rootPathHash
+    telemetryContext.traits.projectId =
+      telemetryContext.traits.repoHash ||
+      telemetryContext.traits.runtimePackageNameHash ||
+      telemetryContext.traits.postinstallPackageNameHash ||
+      telemetryContext.traits.rootPathHash ||
+      telemetryContext.traits.projectId;
   }
 
   if (!telemetryContext.traits.fingerprint) {

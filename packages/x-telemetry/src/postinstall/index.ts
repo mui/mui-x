@@ -32,15 +32,21 @@ const dirname =
     distDir: process.cwd(),
   });
 
-  const [environmentInfo, projectId, repoHash, packageNameHash, rootPathHash, machineId] =
-    await Promise.all([
-      getEnvironmentInfo(),
-      getAnonymousProjectId(),
-      getAnonymousRepoId(),
-      getAnonymousPackageName(),
-      getAnonymousRootPathId(),
-      getAnonymousMachineId(),
-    ]);
+  const [
+    environmentInfo,
+    projectId,
+    repoHash,
+    postinstallPackageNameHash,
+    rootPathHash,
+    machineId,
+  ] = await Promise.all([
+    getEnvironmentInfo(),
+    getAnonymousProjectId(),
+    getAnonymousRepoId(),
+    getAnonymousPackageName(),
+    getAnonymousRootPathId(),
+    getAnonymousMachineId(),
+  ]);
 
   const contextData: TelemetryContextType = {
     config: {
@@ -50,7 +56,7 @@ const dirname =
       ...environmentInfo,
       machineId,
       repoHash,
-      packageNameHash,
+      postinstallPackageNameHash,
       rootPathHash,
       projectId,
       sessionId: randomBytes(32).toString('hex'),

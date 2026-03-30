@@ -99,13 +99,17 @@ describe.runIf(isJSDOM)('getRuntimePackageName', () => {
   });
 });
 
-describe.runIf(isJSDOM)('getTelemetryContext projectId fallback', () => {
+describe.runIf(isJSDOM)('getTelemetryContext runtimePackageNameHash', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     fetchSpy = vi.fn();
     vi.stubGlobal('fetch', fetchSpy);
     telemetryContext.traits.projectId = null;
+    telemetryContext.traits.repoHash = null;
+    telemetryContext.traits.runtimePackageNameHash = null;
+    telemetryContext.traits.postinstallPackageNameHash = null;
+    telemetryContext.traits.rootPathHash = null;
     telemetryContext.config.runtimeProjectIdResolved = false;
   });
 
@@ -121,30 +125,45 @@ describe.runIf(isJSDOM)('getTelemetryContext projectId fallback', () => {
     const { default: getTelemetryContext } = await import('./get-context');
 
     const ctx1 = await getTelemetryContext();
-    expect(ctx1.traits.projectId).toBeNull();
+    expect(ctx1.traits.runtimePackageNameHash).toBeNull();
 
     const ctx2 = await getTelemetryContext();
-    expect(ctx2.traits.projectId).toBeNull();
+    expect(ctx2.traits.runtimePackageNameHash).toBeNull();
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should not override existing projectId', async () => {
+  it('should always resolve runtimePackageNameHash even when projectId is set', async () => {
     telemetryContext.traits.projectId = 'existing-hash';
-    vi.stubEnv('npm_package_name', 'should-not-use');
+    telemetryContext.traits.repoHash = 'existing-hash';
+    vi.stubEnv('npm_package_name', 'my-app');
 
     const { default: getTelemetryContext } = await import('./get-context');
     const ctx = await getTelemetryContext();
 
+    expect(ctx.traits.runtimePackageNameHash).toBe(nodeHash('my-app'));
+    // projectId stays as repoHash since it takes priority
     expect(ctx.traits.projectId).toBe('existing-hash');
   });
 
-  it('should set projectId from runtime fallback when postinstall did not set it', async () => {
+  it('should set projectId from runtimePackageNameHash when no repoHash', async () => {
     vi.stubEnv('npm_package_name', 'fallback-app');
 
     const { default: getTelemetryContext } = await import('./get-context');
     const ctx = await getTelemetryContext();
 
+    expect(ctx.traits.runtimePackageNameHash).toBe(nodeHash('fallback-app'));
     expect(ctx.traits.projectId).toBe(nodeHash('fallback-app'));
+  });
+
+  it('should prefer repoHash over runtimePackageNameHash for projectId', async () => {
+    telemetryContext.traits.repoHash = 'repo-hash-value';
+    vi.stubEnv('npm_package_name', 'my-app');
+
+    const { default: getTelemetryContext } = await import('./get-context');
+    const ctx = await getTelemetryContext();
+
+    expect(ctx.traits.runtimePackageNameHash).toBe(nodeHash('my-app'));
+    expect(ctx.traits.projectId).toBe('repo-hash-value');
   });
 });
