@@ -65,8 +65,6 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   // radioGroupAriaLabel: 'Editing recurring events scope',
   // thisAndFollowing: 'This and following events',
   // title: 'Apply this change to:',
-  // General
-  // loading: 'Loading...',
 };
 
 const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {

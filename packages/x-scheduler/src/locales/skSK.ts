@@ -65,8 +65,6 @@ const skSKDialog: Partial<EventDialogLocaleText> = {
   // radioGroupAriaLabel: 'Editing recurring events scope',
   // thisAndFollowing: 'This and following events',
   // title: 'Apply this change to:',
-  // General
-  // loading: 'Loading...',
 };
 
 const skSKCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {

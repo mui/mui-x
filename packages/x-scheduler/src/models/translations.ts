@@ -58,9 +58,6 @@ export interface EventDialogLocaleText {
   radioGroupAriaLabel: string;
   thisAndFollowing: string;
   title: string;
-
-  // General
-  loading: string;
 }
 
 export interface EventCalendarLocaleText extends EventDialogLocaleText {

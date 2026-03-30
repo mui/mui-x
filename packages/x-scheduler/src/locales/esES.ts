@@ -66,9 +66,6 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   radioGroupAriaLabel: 'Ámbito de edición de eventos recurrentes',
   thisAndFollowing: 'Este y los siguientes eventos',
   title: 'Aplicar este cambio a:',
-
-  // General
-  loading: 'Cargando...',
 };
 
 const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
