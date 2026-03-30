@@ -26,7 +26,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   labelInvalidResource: 'Recurso no válido',
   recurrenceLabel: 'Recurrencia',
   recurrenceNoRepeat: 'No repetir',
-  recurrenceCustomRepeat: 'Regla de repetición personalizada',
+  recurrenceCustomRepeat: 'Recurrencia personalizada',
   recurrenceDailyPresetLabel: 'Se repite diariamente',
   recurrenceDailyFrequencyLabel: 'días',
   recurrenceEndsLabel: 'Finaliza',
