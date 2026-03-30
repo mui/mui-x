@@ -78,9 +78,8 @@ describe('<PreferencesMenu />', () => {
 
     await openPreferencesMenu(user);
 
-    // MUI MenuItem uses role="menuitem" (not menuitemcheckbox)
-    expect(screen.queryByRole('menuitem', { name: /show weekends/i })).to.equal(null);
-    expect(screen.queryByRole('menuitem', { name: /show week number/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show weekends/i })).to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).not.to.equal(null);
   });
 
   it('should hide showWeekNumber option when toggleWeekNumberVisibility is false', async () => {
@@ -99,9 +98,8 @@ describe('<PreferencesMenu />', () => {
 
     await openPreferencesMenu(user);
 
-    // MUI MenuItem uses role="menuitem" (not menuitemcheckbox)
-    expect(screen.queryByRole('menuitem', { name: /show weekends/i })).not.to.equal(null);
-    expect(screen.queryByRole('menuitem', { name: /show week number/i })).to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show weekends/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).to.equal(null);
   });
 
   it('should hide ampm option when toggleAmpm is false', async () => {
@@ -120,9 +118,8 @@ describe('<PreferencesMenu />', () => {
 
     await openPreferencesMenu(user);
 
-    // MUI MenuItem uses role="menuitem" (not menuitemcheckbox)
-    expect(screen.queryByRole('menuitem', { name: /show weekends/i })).not.to.equal(null);
-    expect(screen.queryByRole('menuitem', { name: /show week number/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show weekends/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).not.to.equal(null);
     expect(screen.queryByRole('menuitem', { name: /time format/i })).to.equal(null);
   });
 
@@ -139,8 +136,7 @@ describe('<PreferencesMenu />', () => {
 
     await openPreferencesMenu(user);
 
-    // MUI MenuItem uses role="menuitem" (not menuitemcheckbox)
-    expect(screen.queryByRole('menuitem', { name: /show empty days/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show empty days/i })).not.to.equal(null);
   });
 
   it('should NOT show "Show empty days" in non-Agenda views even when enabled in config', async () => {
@@ -156,8 +152,7 @@ describe('<PreferencesMenu />', () => {
 
     await openPreferencesMenu(user);
 
-    // MUI MenuItem uses role="menuitem" (not menuitemcheckbox)
-    expect(screen.queryByRole('menuitem', { name: /show empty days/i })).to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show empty days/i })).to.equal(null);
   });
 
   it('should NOT show "Show empty days" in Agenda view when the config disables it', async () => {
@@ -178,7 +173,6 @@ describe('<PreferencesMenu />', () => {
 
     await openPreferencesMenu(user);
 
-    // MUI MenuItem uses role="menuitem" (not menuitemcheckbox)
-    expect(screen.queryByRole('menuitem', { name: /show empty days/i })).to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show empty days/i })).to.equal(null);
   });
 });
