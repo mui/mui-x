@@ -14,7 +14,6 @@ describe('<StaticDateRangePicker />', () => {
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
-      'componentsProp',
       'themeDefaultProps',
       'themeStyleOverrides',
       'themeVariants',

@@ -24,7 +24,7 @@ describe('<PickerDay />', () => {
       muiName: 'MuiPickerDay',
       refInstanceof: window.HTMLButtonElement,
       testVariantProps: { variant: 'variant' },
-      skip: ['componentProp', 'componentsProp'],
+      skip: ['componentProp'],
     }),
   );
 

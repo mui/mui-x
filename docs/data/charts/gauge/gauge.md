@@ -9,56 +9,59 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/meter/
 
 # Charts - Gauge
 
-<p class="description">Gauge let the user evaluate metrics.</p>
+<p class="description">Use gauge charts to show a numeric value within a defined range as an arc or meter.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-## Basics
+## Overview
 
-The Gauge displays a numeric value that varies within a defined range.
+A gauge shows a numeric value within a defined range, often as an arc or needle against a scale.
+Use it for metrics like progress, capacity, or levels (for example, battery, storage, or completion).
+
+The demo below shows basic gauge configurations.
 
 {{"demo": "BasicGauges.js"}}
 
-## Value range
+## Basics
 
-The Gauge's value is provided through the `value` props, which accept a value range between 0 and 100.
-To modify it, use the `valueMin` and `valueMax` props.
+Pass the current value with the `value` prop.
+By default, the scale runs from 0 through 100.
+Use `valueMin` and `valueMax` to set a different range.
 
 {{"demo": "GaugeValueRange.js"}}
 
-## Arcs configuration
+## Arc configuration
 
-Modify the arc shape with the following props:
+Use these props to change the arc shape:
 
-- `startAngle` and `endAngle`: The angle range provided in degrees
-- `innerRadius` and `outerRadius`: The arc's radii. It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
-- `cornerRadius`: It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
+- `startAngle` and `endAngle`: angle range in degrees
+- `innerRadius` and `outerRadius`: arc radii, as a pixel value or a percentage string (such as `'50%'`)
+- `cornerRadius`: corner rounding, as a pixel value or percentage string
 
-{{"demo": "ArcPlayground.js", "bg": "playground", "hideToolbar": true }}
+{{"demo": "ArcPlayground.js", "bg": "playground", "hideToolbar": true}}
 
 :::success
-Notice that the arc position is computed to let the Gauge take as much space as possible in the drawing area.
+The arc is positioned to use as much of the drawing area as possible.
 
-Use the `cx` and/or `cy` props to fix the coordinate of the arc center.
+Use the `cx` and `cy` props to fix the arc center.
 :::
 
 ## Text configuration
 
-By default, the Gauge displays the value in the center of the arc.
-To modify it, use the `text` prop.
+The gauge shows the value in the center of the arc by default.
+Use the `text` prop to customize the center text.
+Pass a string or a formatter function.
+The formatter receives an object with `value`, `valueMin`, and `valueMax`.
 
-This prop can be a string, or a formatter.
-In the second case, the formatter argument contains the `value`, `valueMin` and `valueMax`.
-
-To modify the text's layout, use the `gaugeClasses.valueText` class name.
+Use the `gaugeClasses.valueText` class to change the text layout.
 
 {{"demo": "TextPlayground.js", "bg": "playground", "hideToolbar": true}}
 
 ## Arc design
 
-To customize the Gauge styles, use the `gaugeClasses` export to pull class names from different parts of the component, such as `valueText`, `valueArc`, and `referenceArc`.
+Use the `gaugeClasses` export for class names that target different parts of the gauge, such as `valueText`, `valueArc`, and `referenceArc`.
 
-For a full reference list, visit the [API page](/x/api/charts/gauge/#classes).
+See [Gauge—Classes](/x/api/charts/gauge/#classes) for the full list.
 
 {{"demo": "ArcDesign.js"}}
 
@@ -66,7 +69,7 @@ For a full reference list, visit the [API page](/x/api/charts/gauge/#classes).
 
 ### Using the default Gauge
 
-To insert more elements into the Gauge, the first option would be to add them as children, which means they will be stacked on top of the default rendering.
+Add elements as children of `Gauge` to render them on top of the default arc and text.
 
 ```tsx
 import { Gauge } from '@mui/x-charts/Gauge';
@@ -78,11 +81,11 @@ import { Gauge } from '@mui/x-charts/Gauge';
 
 ### Using the Gauge container
 
-The second option is to make use of the following elements that are available within the Gauge module:
+Use `GaugeContainer` and the following components when you need more control over the layout:
 
-- Gauge Reference Arc
-- Gauge Value Arc
-- Gauge Value Text
+- `GaugeReferenceArc`: the reference arc
+- `GaugeValueArc`: the value arc
+- `GaugeValueText`: the text in the center
 
 ```tsx
 import {
@@ -99,33 +102,33 @@ import {
 </GaugeContainer>;
 ```
 
-### Creating your components
+### Creating custom components
 
-To create your own components, use the `useGaugeState()` hook which provides all you need about the gauge configuration:
+Use the `useGaugeState()` hook to build custom gauge components.
+It returns:
 
-- information about the value: `value`, `valueMin`, `valueMax`
-- information to plot the arc: `startAngle`, `endAngle`, `outerRadius`, `innerRadius`, `cornerRadius`, `cx`, and `cy`
-- computed values:
-  - `maxRadius`: the maximal radius that can fit the drawing area
-  - `valueAngle`: the angle associated with the current value
+- Value info: `value`, `valueMin`, `valueMax`
+- Arc geometry: `startAngle`, `endAngle`, `outerRadius`, `innerRadius`, `cornerRadius`, `cx`, `cy`
+- Computed: `maxRadius` (largest radius that fits the drawing area) and `valueAngle` (angle for the current value)
 
 {{"demo": "CompositionExample.js"}}
 
 ## Accessibility
 
-The MUI X Gauge is compliant with the [Meter ARIA pattern](https://www.w3.org/WAI/ARIA/apg/patterns/meter/), which includes the addition of the `meter` role to the parent container and correct usage of the `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes.
+The gauge follows the [Meter ARIA pattern](https://www.w3.org/WAI/ARIA/apg/patterns/meter/).
+The container has the `meter` role, and `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` match the value range.
 
 ### Label
 
-If a visible label is available, reference it by adding `aria-labelledby` attribute.
-Otherwise, the label can be manually provided by `aria-label`.
+If the gauge has a visible label, set `aria-labelledby` to point to it.
+Otherwise, provide a label with `aria-label`.
 
 ### Presentation
 
 Assistive technologies often present the value as a percentage.
-This can be modified by providing `aria-valuetext` attribute.
+You can override this by setting the `aria-valuetext` attribute.
 
-For example, a battery level indicator is better with an hour-long duration.
+For example, a battery level indicator is clearer when it announces a duration (such as hours remaining) instead of only a percentage.
 
 ```jsx
 <h3 id="battery_level_label">
@@ -141,15 +144,15 @@ For example, a battery level indicator is better with an hour-long duration.
 
 ## Composition
 
-Use the `<GaugeContainer />` to provide all the parameters as props: `value`, `valueMin`, `valueMax`, `startAngle`, `endAngle`, etc.
+Use `GaugeContainer` to supply the gauge parameters: `value`, `valueMin`, `valueMax`, `startAngle`, `endAngle`, and so on.
 
-In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
+In addition to the shared chart components available for [composition](/x/react-charts/composition/), you can use:
 
-- `<GaugeReferenceArc />` renders the reference arc.
-- `<GaugeValueArc />` renders the value arc.
-- `<GaugeValueText />` renders the text at the center.
+- `GaugeReferenceArc`: the reference arc
+- `GaugeValueArc`: the value arc
+- `GaugeValueText`: the text in the center
 
-Here's how the Gauge is composed:
+Here's how the gauge is composed:
 
 ```jsx
 <GaugeContainer>
