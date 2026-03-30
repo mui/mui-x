@@ -63,7 +63,7 @@ function decodeLicenseVersion1(license: string): NullableLicenseDetails {
     planVersion: 'initial',
     expiryTimestamp,
     expiryDate: expiryTimestamp ? new Date(expiryTimestamp) : null,
-    orderId,
+    orderId: orderId != null ? String(orderId) : null,
     appType: 'multi',
     quantity: null,
     isTestKey: license.includes('T=true'),
@@ -101,10 +101,7 @@ export function parseLicenseTokens(license: string, licenseInfo: NullableLicense
       }
 
       if (key === 'O') {
-        const orderNum = parseInt(value, 10);
-        if (orderNum && !Number.isNaN(orderNum)) {
-          licenseInfo.orderId = orderNum;
-        }
+        licenseInfo.orderId = value;
       }
 
       if (key === 'Q') {
