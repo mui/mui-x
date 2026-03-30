@@ -246,6 +246,7 @@ export function FormContent(props: FormContentProps) {
             name="title"
             defaultValue={occurrence.title}
             required
+            autoFocus
             slotProps={{
               input: {
                 readOnly: isPropertyReadOnly('title'),
