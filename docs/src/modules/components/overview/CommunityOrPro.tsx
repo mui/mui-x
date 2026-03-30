@@ -11,7 +11,7 @@ type CommunityOrProProps = {
   caption: string;
   description: string;
   communityDescription: string;
-  proDescription: string;
+  proDescription?: string;
   premiumDescription?: string;
 };
 
@@ -30,9 +30,13 @@ export default function CommunityOrPro({
         alignItems={{ md: 'flex-end', xs: 'space-between' }}
         justifyContent={{ md: 'space-between', xs: 'flex-end' }}
         flexGrow={1}
-        sx={{ maxWidth: { xs: '500px', md: '100%' } }}
+        sx={{ maxWidth: { xs: '500px', md: '100%' }, width: '100%' }}
       >
-        <Stack flexBasis={{ xs: '100%', md: '65%' }} sx={{ marginBottom: { xs: '16px', md: 0 } }}>
+        <Stack
+          flexBasis={{ xs: '100%', md: '65%' }}
+          sx={{ marginBottom: { xs: '16px', md: 0 } }}
+          spacing={1}
+        >
           <Typography variant="body2" color="primary" fontWeight="semiBold">
             {caption}
           </Typography>
@@ -73,15 +77,17 @@ export default function CommunityOrPro({
             link="https://mui.com/pricing/"
           />
         </Box>
-        <Box sx={{ flexBasis: '50%' }}>
-          <InfoCard
-            title="Pro"
-            icon={<img src="/static/x/pro.svg" width={16} height={16} alt="" />}
-            description={[proDescription]}
-            backgroundColor="subtle"
-            link="https://mui.com/pricing/"
-          />
-        </Box>
+        {proDescription && (
+          <Box sx={{ flexBasis: '50%' }}>
+            <InfoCard
+              title="Pro"
+              icon={<img src="/static/x/pro.svg" width={16} height={16} alt="" />}
+              description={[proDescription]}
+              backgroundColor="subtle"
+              link="https://mui.com/pricing/"
+            />
+          </Box>
+        )}
         {premiumDescription && (
           <Box sx={{ flexBasis: '50%' }}>
             <InfoCard

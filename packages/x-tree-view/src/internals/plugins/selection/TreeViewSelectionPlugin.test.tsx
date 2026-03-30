@@ -879,6 +879,19 @@ describeTreeView<TreeViewAnyStore>(
           fireEvent.click(view.getItemCheckboxInput('1.1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.2']);
         });
+
+        it('should select all the children when selecting a collapsed parent and then expanding', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+            selectionPropagation: { descendants: true },
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1'));
+          fireEvent.click(view.getItemContent('1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1', '1.2']);
+        });
       });
 
       describe('multi selection with selectionPropagation.parents = true', () => {

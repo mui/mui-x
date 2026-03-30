@@ -1,27 +1,27 @@
 import * as React from 'react';
-import { clsx } from 'clsx';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesMarksProps } from './RadarSeriesPlot.types';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
-import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
+import { useUtilityClasses, type RadarClasses } from '../radarClasses';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { type SeriesId } from '../../models/seriesType/common';
-import { type HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import type { HighlightItemIdentifierWithType } from '../../models';
+import type { HighlightState } from '../../hooks/useItemHighlightState';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
-  classes: RadarSeriesPlotClasses;
-  isFaded: (item: HighlightItemData | null) => boolean;
-  isHighlighted: (item: HighlightItemData | null) => boolean;
+  classes: RadarClasses;
+  getHighlightState: (item: HighlightItemIdentifierWithType<'radar'> | null) => HighlightState;
   point: { x: number; y: number };
   fillArea?: boolean;
   color: string;
 }
 
-export function getCircleProps(params: GetCirclePropsParams): React.SVGProps<SVGCircleElement> {
-  const { isHighlighted, isFaded, seriesId, classes, point, fillArea, color } = params;
-  const isItemHighlighted = isHighlighted({ seriesId });
-  const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
+export function getCircleProps(params: GetCirclePropsParams) {
+  const { getHighlightState, seriesId, classes, point, fillArea, color } = params;
+  const highlightState = getHighlightState({ type: 'radar', seriesId });
+  const isItemHighlighted = highlightState === 'highlighted';
+  const isItemFaded = highlightState === 'faded';
 
   return {
     cx: point.x,
@@ -30,19 +30,18 @@ export function getCircleProps(params: GetCirclePropsParams): React.SVGProps<SVG
     fill: color,
     stroke: color,
     opacity: fillArea && isItemFaded ? 0.5 : 1,
-    className: clsx(
-      classes.mark,
-      (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),
-    ),
+    className: classes.seriesMark,
+    'data-highlighted': isItemHighlighted || undefined,
+    'data-faded': isItemFaded || undefined,
   };
 }
 
 function RadarSeriesMarks(props: RadarSeriesMarksProps) {
-  const { seriesId, onItemClick, ...other } = props;
+  const { seriesId, onItemClick, classes: inClasses, ...other } = props;
   const seriesCoordinates = useRadarSeriesData(props.seriesId);
 
-  const classes = useUtilityClasses(props.classes);
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const classes = useUtilityClasses(inClasses);
+  const getHighlightState = useItemHighlightStateGetter();
 
   return (
     <React.Fragment>
@@ -61,8 +60,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                   point,
                   color: point.color,
                   fillArea,
-                  isFaded,
-                  isHighlighted,
+                  getHighlightState,
                   classes,
                 })}
                 pointerEvents={onItemClick ? undefined : 'none'}

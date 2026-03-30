@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 ## Event creation
 
 Use the `eventCreation` prop to customize how newly created events are defined:
@@ -46,6 +42,27 @@ Set `eventCreation.interaction` to `"click"` to open the creation form when clic
 ```
 
 {{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Event dialog
+
+Clicking an event or creating a new one opens the event dialog.
+
+The dialog has two tabs:
+
+- **General**: title, start/end date and time, all-day toggle, resource and color selectors, and description.
+- **Recurrence**: frequency, interval, days of the week, and end condition. Only available with the Premium package (`@mui/x-scheduler-premium`).
+
+Click on any event in the demo below to open the dialog. From there you can edit the event details or delete it.
+
+{{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+This demo uses `EventCalendarPremium` to showcase the Recurrence tab. All other dialog features (editing title, dates, resources, colors, description, and deleting events) are available in the standard `EventCalendar` component.
+:::
+
+:::info
+Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode.
+:::
 
 ## Read-only
 

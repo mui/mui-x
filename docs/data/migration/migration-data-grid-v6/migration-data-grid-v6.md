@@ -382,7 +382,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 - The print export will now only print the selected rows if there are any.
   If there are no selected rows, it will print all rows. This makes the print export consistent with the other exports.
-  You can [customize the rows to export by using the `getRowsToExport` function](/x/react-data-grid/export/#customizing-the-rows-to-export).
+  You can [customize the rows to export by using the `getRowsToExport()` function](/x/react-data-grid/export/#customizing-the-rows-to-export).
 
 ### Selection
 
@@ -433,10 +433,10 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### Filtering
 
-- The `getApplyFilterFnV7` in `GridFilterOperator` has been renamed to `getApplyFilterFn`.
-  If you use `getApplyFilterFnV7` directly - rename it to `getApplyFilterFn`.
+- The `getApplyFilterFnV7` in `GridFilterOperator` has been renamed to `getApplyFilterFn()`.
+  If you use `getApplyFilterFnV7` directly - rename it to `getApplyFilterFn()`.
 
-- The signature of the function returned by `getApplyFilterFn` has changed for performance reasons:
+- The signature of the function returned by `getApplyFilterFn()` has changed for performance reasons:
 
 ```diff
  const getApplyFilterFn: GetApplyFilterFn<any, unknown> = (filterItem) => {
@@ -453,10 +453,10 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
  }
 ```
 
-- The `getApplyQuickFilterFnV7` in `GridColDef` was renamed to `getApplyQuickFilterFn`.
-  If you use `getApplyQuickFilterFnV7` directly - rename it to `getApplyQuickFilterFn`.
+- The `getApplyQuickFilterFnV7` in `GridColDef` was renamed to `getApplyQuickFilterFn()`.
+  If you use `getApplyQuickFilterFnV7` directly - rename it to `getApplyQuickFilterFn()`.
 
-- The signature of the function returned by `getApplyQuickFilterFn` has changed for performance reasons:
+- The signature of the function returned by `getApplyQuickFilterFn()` has changed for performance reasons:
 
 ```diff
  const getGridStringQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {

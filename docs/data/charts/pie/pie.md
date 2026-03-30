@@ -6,45 +6,44 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot,
 
 # Charts - Pie
 
-<p class="description">Pie charts express portions of a whole, using arcs or angles within a circle.</p>
+<p class="description">Use pie charts to show parts of a whole as arcs or angles in a circle for quick comparison of proportions.</p>
 
 ## Overview
 
-Pie charts are ideal for showing proportions of a whole.
-They excel at visualizing how categories contribute to a total, making relative shares easy to compare at a glance.
-Here are the basic requirements to create a pie chart:
+A pie chart shows proportions of a whole so you can compare how much each category contributes to the total.
+You need:
 
-- One categorical dimension (each category represented as a slice)
-- One numerical metric representing the value or size of each slice (converted into percentage of the whole)
+- One categorical dimension (each category is a slice)
+- One numeric value per category (values are converted to a share of the whole)
 
-The pie chart below compares survival rates of passengers in different classes on the Titanic:
+The demo below compares survival rates of passengers by class on the Titanic.
 
 {{"demo": "TitanicPie.js"}}
 
 ## Basics
 
-Pie charts series must contain a `data` property containing an array of objects.
-Each object corresponds to a slice of the pie.
-It must contain a property `value` and can have other optional properties like `label`.
+Pie chart series must contain a `data` property with an array of objects.
+Each object is one slice and must have a `value` property.
+You can add optional properties such as `label`.
 
-If you plan to update/reorder those data, you should add an `id` property which is used for `key` props.
+Add an `id` property to each item if you will update or reorder the data, since it is used for React `key` props.
 
 {{"demo": "BasicPie.js"}}
 
 ## Donut chart
 
-A donut chart (or doughnut chart) is essentially a pie chart with a hollow center.
+A donut chart (or doughnut chart) is a pie chart with a hollow center.
 
-You can transform any pie chart into a donut chart by setting the `innerRadius` property to a value greater than 0.
+Set the `innerRadius` property to a value greater than 0 to turn any pie chart into a donut.
 
 {{"demo": "DonutChart.js"}}
 
 ## Colors
 
-The pie colors can be customized in two ways.
+You can customize pie colors in two ways:
 
-1. You can provide a [color palette](/x/react-charts/styling/#built-in-color-palettes). Each arc of the pie will be colored according to this palette.
-2. You can provide a `color` property in `data` objects which overrides the palette.
+1. Pass a [color palette](/x/react-charts/styling/#built-in-color-palettes). Each arc uses a color from the palette.
+2. Set a `color` property on each item in `data` to override the palette for that slice.
 
 ```jsx
 <PieChart
@@ -64,58 +63,55 @@ The pie colors can be customized in two ways.
 
 ## Sizing
 
-Pie series shape is described by multiple properties:
+Pie series shape is controlled by these properties:
 
-- `innerRadius` The radius between the center and the beginning of the arc. The default is set to 0.
-- `outerRadius` The radius between the center and the end of the arc. The default is the largest value available in the drawing area.
-- `arcLabelRadius` The radius between the center and the arc label.
-- `paddingAngle` The angle (in degrees) between two arcs.
-- `cornerRadius` Similar to the CSS `border-radius`.
-- `startAngle`/`endAngle` The angle range of the pie chart. Values are given in degrees.
-- `cx`/`cy` The center of the pie charts. By default the middle of the drawing area.
+- `innerRadius`: distance from the center to the inner edge of the arc. Default is 0.
+- `outerRadius`: distance from the center to the outer edge of the arc. Default is the largest value that fits in the drawing area.
+- `arcLabelRadius`: distance from the center to the arc labels.
+- `paddingAngle`: angle in degrees between adjacent arcs.
+- `cornerRadius`: rounds the arc corners, similar to CSS `border-radius`.
+- `startAngle` / `endAngle`: angle range of the pie in degrees.
+- `cx` / `cy`: center of the pie. Default is the center of the drawing area.
 
 {{"demo": "PieShape.js", "hideToolbar": true, "bg": "playground"}}
 
-The following properties accept percentage string (for example `'50%'`).
+The following accept percentage strings (for example `'50%'`):
 
-- `innerRadius`/`outerRadius`/`arcLabelRadius` with `'100%'` equivalent to maximal radius fitting in the drawing area.
-- `cx`, `cy` with `'100%'` equivalent to the drawing area width/height.
+- `innerRadius`, `outerRadius`, and `arcLabelRadius`: `'100%'` means the full radius that fits in the drawing area.
+- `cx` and `cy`: `'100%'` means the width or height of the drawing area.
 
 ## Labels
 
-You can display labels on the arcs.
-To do so, the series should get `arcLabel` property.
-It can either get a function that gets the object associated with the arc and returns the label.
-Or you can pass one of the following values:
+Set the `arcLabel` property on the series to show labels on the arcs.
+Pass a function that receives the arc's data object and returns the label string, or use one of these values:
 
-- `'value'` display the raw value of the arc.
-- `'formattedValue'` display the returned value of `valueFormatter` for the arc.
-- `'label'` display the `label` property of the arc if provided.
+- `'value'`: the arc's raw value
+- `'formattedValue'`: the result of `valueFormatter()` for the arc
+- `'label'`: the arc's `label` property, if present
 
-To avoid displaying labels on small arcs, you can provide `arcLabelMinAngle` property.
-Arcs with angles smaller than the value (in deg) will not have labels.
+Set `arcLabelMinAngle` so that arcs with an angle smaller than that value (in degrees) do not show a label.
 
 {{"demo": "PieArcLabel.js"}}
 
 ## Highlight
 
-Pie series can get `highlightScope` property to manage element highlighting.
-Its behavior is described in the [dedicated page](/x/react-charts/highlighting/#highlighting-series).
+Add the `highlightScope` property to a pie series to control highlighting.
+See [Highlighting](/x/react-charts/highlighting/#highlighting-series) for details.
 
-When elements are highlighted or faded they can be customized with dedicated CSS classes: `.MuiPieArc-faded` and `.MuiPieArc-highlighted`.
+Use the `[data-faded=true]` and `[data-highlighted=true]` CSS selectors to style arcs when they are faded or highlighted.
 
-CSS is well suited to modify the `color`, `stroke-width`, or `opacity`.
-However, to modify the size of a pie arc, you must use the `highlighted` and `faded` properties, with which you can override any of the properties `innerRadius`, `outerRadius`, and `cornerRadius` when an arc is highlighted or faded.
+CSS works well for changing `color`, `stroke-width`, or `opacity`.
+To change the size of an arc when highlighted or faded, use the `highlighted` and `faded` properties to override `innerRadius`, `outerRadius`, or `cornerRadius`.
 
-If you do not want to provide absolute values, you can use `additionalRadius` which will be added to the `outerRadius`.
-This value can be negative to reduce arc size.
+Use `additionalRadius` to add to `outerRadius` instead of setting an absolute value.
+A negative value shrinks the arc.
 
 {{"demo": "PieActiveArc.js"}}
 
 ## Click event
 
-Pie Chart provides an `onItemClick` handler for handling clicks on specific pie arcs.
-It has the following signature.
+The pie chart provides an `onItemClick` handler for clicks on a specific arc.
+It uses this signature:
 
 ```js
 const onItemClick = (
@@ -128,9 +124,9 @@ const onItemClick = (
 
 ## CSS
 
-You can customize the different elements rendered by a pie chart using CSS.
+You can customize the pie chart elements using CSS selectors.
 
-In the example below, the outer series is selected using the `data-series` attribute to reduce its opacity.
+The demo below uses the `data-series` attribute to select the outer series and reduce its opacity.
 
 {{"demo": "PieCSSStyling.js"}}
 
@@ -138,7 +134,7 @@ In the example below, the outer series is selected using the `data-series` attri
 
 Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-When `skipAnimation` is enabled, the chart renders without any animations.
+When you set `skipAnimation` to `true`, the chart renders without animations.
 
 ```jsx
 // For a single component chart
@@ -154,14 +150,14 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 
 ## Composition
 
-Use the `<ChartDataProvider />` to provide the `series` prop for composition.
+Use `ChartsDataProvider` to provide the `series` prop for composition.
 
-In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<PiePlot />` component that renders the pie slices and their labels.
+In addition to the shared chart components available for [composition](/x/react-charts/composition/), you can use `PiePlot` to draw the pie slices and their labels.
 
-Here's how the Pie Chart is composed:
+Here's how the pie chart is composed:
 
 ```jsx
-<ChartDataProvider plugins={PIE_CHART_PLUGINS}>
+<ChartsDataProvider plugins={PIE_CHART_PLUGINS}>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -171,12 +167,12 @@ Here's how the Pie Chart is composed:
     </ChartsSurface>
     <ChartsTooltip trigger="item" />
   </ChartsWrapper>
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 :::info
-The `<ChartDataProvider />` accepts a [`plugins`](/x/react-charts/plugins/) prop.
-This is done to remove cartesian-axis features which are useless for a pie chart, and interfere with the pie position.
+`ChartsDataProvider` accepts a [`plugins`](/x/react-charts/plugins/) prop.
+For pie charts, pass plugins that remove cartesian-axis behavior so it does not affect the pie position.
 
-For pro users, use the `PIE_CHART_PRO_PLUGINS` instead to activate the export feature.
+Pro users can use `PIE_CHART_PRO_PLUGINS` to enable export.
 :::

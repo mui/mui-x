@@ -24,12 +24,7 @@
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
     "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
-    "shape": {
-      "type": {
-        "description": "'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye'"
-      },
-      "default": "'circle'"
-    },
+    "shape": { "type": { "description": "MarkShape" } },
     "showMark": { "type": { "description": "boolean | ((params: ShowMarkParams) =&gt; boolean)" } },
     "stack": { "type": { "description": "string" } },
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },

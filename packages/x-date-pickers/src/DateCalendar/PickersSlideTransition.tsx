@@ -51,24 +51,26 @@ const useUtilityClasses = (
   return composeClasses(slots, getPickersSlideTransitionUtilityClass, classes);
 };
 
+const elementOverrides = [
+  'slideEnter-left',
+  'slideEnter-right',
+  'slideEnterActive',
+  'slideExit',
+  'slideExitActiveLeft-left',
+  'slideExitActiveLeft-right',
+] as const;
+
 const PickersSlideTransitionRoot = styled(TransitionGroup, {
   name: 'MuiPickersSlideTransition',
   slot: 'Root',
-  overridesResolver: (_, styles) => [
-    styles.root,
-    { [`.${pickersSlideTransitionClasses['slideEnter-left']}`]: styles['slideEnter-left'] },
-    { [`.${pickersSlideTransitionClasses['slideEnter-right']}`]: styles['slideEnter-right'] },
-    { [`.${pickersSlideTransitionClasses.slideEnterActive}`]: styles.slideEnterActive },
-    { [`.${pickersSlideTransitionClasses.slideExit}`]: styles.slideExit },
-    {
-      [`.${pickersSlideTransitionClasses['slideExitActiveLeft-left']}`]:
-        styles['slideExitActiveLeft-left'],
-    },
-    {
-      [`.${pickersSlideTransitionClasses['slideExitActiveLeft-right']}`]:
-        styles['slideExitActiveLeft-right'],
-    },
-  ],
+  overridesResolver: (_, styles) =>
+    elementOverrides.reduce(
+      (acc, key) => {
+        acc.push({ [`.${pickersSlideTransitionClasses[key]}`]: styles[key] });
+        return acc;
+      },
+      [styles.root],
+    ),
 })<TransitionGroupProps & { ownerState?: PickerSlideTransitionOwnerState }>(({ theme }) => {
   const slideTransition = theme.transitions.create('transform', {
     duration: theme.transitions.duration.complex,

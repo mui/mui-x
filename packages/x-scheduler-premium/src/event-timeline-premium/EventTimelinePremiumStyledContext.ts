@@ -6,6 +6,7 @@ import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses'
 export interface EventTimelinePremiumStyledContextValue {
   classes: EventTimelinePremiumClasses;
   localeText: EventTimelineLocaleText;
+  resourceColumnLabel?: string;
 }
 
 export const EventTimelinePremiumStyledContext =

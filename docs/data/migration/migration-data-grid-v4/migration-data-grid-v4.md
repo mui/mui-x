@@ -422,7 +422,7 @@ To use the v5 version of MUI X, you first need to update to the new package nam
   +const isColumnBoolean = col.type === 'boolean';
   ```
 
-- The hook `useGridSlotComponentProps` was removed.
+- The hook `useGridSlotComponentProps()` was removed.
   You can use the following hooks to access the same data.
 
   ```diff

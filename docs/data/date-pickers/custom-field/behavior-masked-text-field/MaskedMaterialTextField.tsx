@@ -145,18 +145,20 @@ function MaskedDateField(props: DatePickerFieldProps) {
       ref={pickerContext.rootRef}
       {...rifmProps}
       {...forwardedProps}
-      InputProps={{
-        ref: pickerContext.triggerRef,
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton
-              onClick={() => pickerContext.setOpen((prev) => !prev)}
-              edge="end"
-            >
-              <CalendarIcon />
-            </IconButton>
-          </InputAdornment>
-        ),
+      slotProps={{
+        input: {
+          ref: pickerContext.triggerRef,
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={() => pickerContext.setOpen((prev) => !prev)}
+                edge="end"
+              >
+                <CalendarIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        },
       }}
     />
   );

@@ -260,9 +260,10 @@ export interface MinimalTreeViewParameters<
   onItemFocus?: (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => void;
   /**
    * Sets the height in pixel of an item.
-   * If not provided, no height restriction is applied to the tree item content element.
+   * Set to `null` to explicitly remove any item height restriction when items have different heights.
+   * @default null
    */
-  itemHeight?: number;
+  itemHeight?: number | null;
 }
 
 /**

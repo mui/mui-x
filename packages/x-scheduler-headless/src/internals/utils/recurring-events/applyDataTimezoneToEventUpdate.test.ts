@@ -1,5 +1,5 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
-import { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
+import { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
 import { applyDataTimezoneToEventUpdate } from './applyDataTimezoneToEventUpdate';
 
 describe('applyDataTimezoneToEventUpdate', () => {
@@ -28,9 +28,9 @@ describe('applyDataTimezoneToEventUpdate', () => {
       changes,
     });
 
-    expect(adapter.getTimezone((result.rrule as RecurringEventRecurrenceRule).until!)).to.equal(
-      'America/New_York',
-    );
+    expect(
+      adapter.getTimezone((result.rrule as SchedulerProcessedEventRecurrenceRule).until!),
+    ).to.equal('America/New_York');
   });
 
   it('projects multiple BYDAY from display timezone back to data timezone using DTSTART as anchor', () => {
@@ -58,6 +58,9 @@ describe('applyDataTimezoneToEventUpdate', () => {
       changes,
     });
 
-    expect((result.rrule as RecurringEventRecurrenceRule)!.byDay).to.deep.equal(['TU', 'WE']);
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule)!.byDay).to.deep.equal([
+      'TU',
+      'WE',
+    ]);
   });
 });

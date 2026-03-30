@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -131,7 +131,7 @@ export default function BrushScatterList() {
         Drag to select points on the scatter chart. Selected points will be displayed
         below.
       </Typography>
-      <ChartDataProvider
+      <ChartsDataProvider
         series={[
           {
             type: 'scatter',
@@ -149,7 +149,7 @@ export default function BrushScatterList() {
           <ChartContent />
         </ChartsSurface>
         <SelectedPointsList />
-      </ChartDataProvider>
+      </ChartsDataProvider>
     </Box>
   );
 }

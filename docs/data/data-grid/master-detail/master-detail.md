@@ -161,7 +161,7 @@ As with any other cell renderer, the `value` prop is also available, and it corr
 
 ## Customizing the detail panel column header
 
-To render a custom header for the detail panel column, use the [`renderHeader`](/x/react-data-grid/column-header/#custom-header-renderer) property in the column definition.
+To render a custom header for the detail panel column, use the [`renderHeader()`](/x/react-data-grid/column-header/#custom-header-renderer) property in the column definition.
 This property receives a `GridRenderHeaderParams` object that contains `colDef` (the column definition) and `field`.
 The snippet below shows how to do this:
 

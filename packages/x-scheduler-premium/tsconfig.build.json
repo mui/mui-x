@@ -7,7 +7,7 @@
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "outDir": "build/esm",
+    "outDir": "build",
     "rootDir": "./src",
     "types": ["../../mui-env.d.ts"]
   },
@@ -15,6 +15,7 @@
     { "path": "../x-scheduler/tsconfig.build.json" },
     { "path": "../x-scheduler-headless/tsconfig.build.json" },
     { "path": "../x-scheduler-headless-premium/tsconfig.build.json" },
+    { "path": "../x-license/tsconfig.build.json" },
     { "path": "../x-internals/tsconfig.build.json" }
   ],
   "include": ["src/**/*.ts*"],

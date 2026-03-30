@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -8,7 +8,7 @@ import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 export default function AxisWithComposition() {
   return (
     <Box sx={{ width: '100%', maxWidth: 600 }}>
-      <ChartContainer
+      <ChartsContainer
         xAxis={[
           {
             scaleType: 'band',
@@ -53,7 +53,7 @@ export default function AxisWithComposition() {
         />
         <ChartsYAxis axisId="quantities" label="# units sold" />
         <ChartsYAxis axisId="money" label="revenue" />
-      </ChartContainer>
+      </ChartsContainer>
     </Box>
   );
 }

@@ -2,6 +2,7 @@
   "componentDescription": "Renders a Sankey diagram plot.",
   "propDescriptions": {
     "classes": { "description": "Classes applied to the various elements." },
+    "className": { "description": "A CSS class name applied to the root element." },
     "onLinkClick": {
       "description": "Callback fired when a sankey item is clicked.",
       "typeDescriptions": {
@@ -17,23 +18,5 @@
       }
     }
   },
-  "classDescriptions": {
-    "linkLabels": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the link label container"
-    },
-    "links": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the links container"
-    },
-    "nodeLabels": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the node label container"
-    },
-    "nodes": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the nodes container"
-    },
-    "root": { "description": "Styles applied to the root element." }
-  }
+  "classDescriptions": {}
 }

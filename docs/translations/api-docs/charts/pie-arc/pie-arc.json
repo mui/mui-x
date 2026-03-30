@@ -7,24 +7,27 @@
     }
   },
   "classDescriptions": {
-    "faded": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "faded"
+    "animate": { "description": "Styles applied when animation is not skipped." },
+    "arc": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual pie arc element"
+    },
+    "arcLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual pie arc label element"
     },
     "focusIndicator": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the focus indicator element"
-    },
-    "highlighted": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "highlighted"
+      "nodeName": "the focused pie arc element"
     },
     "root": { "description": "Styles applied to the root element." },
     "series": {
-      "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${pieArcClasses.series}-${seriesId}</code>.",
-      "nodeName": "the root element for a specified series"
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the <code>g</code> element that contains all pie arcs of a series"
+    },
+    "seriesLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the <code>g</code> element that contains all pie arc labels of a series"
     }
   }
 }

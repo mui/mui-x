@@ -26,6 +26,6 @@ We can use that to hide the separator.
 
 ## Styling Cells without impacting aggregation cells [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-Aggregation cells do not receive a special class, so styling cells without impacting them needs a small workaround in the `getClassName` function.
+Aggregation cells do not receive a special class, so styling cells without impacting them needs a small workaround in the `getClassName()` function.
 
 {{"demo": "StylingAllCellsButAggregation.js", "bg": "inline", "defaultCodeOpen": false}}

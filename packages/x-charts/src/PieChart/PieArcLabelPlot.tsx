@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import {
   type ComputedPieRadius,
   type DefaultizedPieSeriesType,
@@ -88,6 +89,11 @@ export interface PieArcLabelPlotProps
   skipAnimation?: boolean;
 }
 
+const PieArcLabelPlotRoot = styled('g', {
+  name: 'MuiPieArcLabelPlot',
+  slot: 'Root',
+})();
+
 function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   const {
     arcLabel,
@@ -126,15 +132,13 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   const ArcLabel = slots?.pieArcLabel ?? PieArcLabel;
 
   return (
-    <g {...other}>
+    <PieArcLabelPlotRoot {...other}>
       {transformedData.map((item) => (
         <ArcLabel
           key={item.id ?? item.dataIndex}
           startAngle={item.startAngle}
           endAngle={item.endAngle}
           paddingAngle={item.paddingAngle}
-          innerRadius={item.innerRadius}
-          outerRadius={item.outerRadius}
           arcLabelRadius={item.arcLabelRadius}
           cornerRadius={item.cornerRadius}
           hidden={item.hidden}
@@ -147,7 +151,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
           {...slotProps?.pieArcLabel}
         />
       ))}
-    </g>
+    </PieArcLabelPlotRoot>
   );
 }
 

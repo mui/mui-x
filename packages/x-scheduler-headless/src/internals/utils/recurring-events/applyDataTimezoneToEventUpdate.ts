@@ -1,6 +1,6 @@
 import { Adapter } from '../../../use-adapter';
 import {
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
@@ -51,9 +51,9 @@ export function applyDataTimezoneToEventUpdate({
 
 export function projectRRuleFromDisplayToData(
   adapter: Adapter,
-  displayRRule: RecurringEventRecurrenceRule,
+  displayRRule: SchedulerProcessedEventRecurrenceRule,
   originalEvent: SchedulerProcessedEvent,
-): RecurringEventRecurrenceRule {
+): SchedulerProcessedEventRecurrenceRule {
   // Only WEEKLY BYDAY values are projected back from display to data timezone.
   // MONTHLY ordinals are intentionally preserved as-is, since projecting them
   // would result in unstable or misleading rules.

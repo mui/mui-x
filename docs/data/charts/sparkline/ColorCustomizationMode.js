@@ -33,7 +33,7 @@ function DarkModeWrapper(props) {
   const newTheme = createTheme({ palette: { mode: colorMode } });
   return (
     <ThemeProvider theme={newTheme}>
-      <Stack>
+      <Stack width="100%" alignItems="center">
         <Button
           onClick={() =>
             setColorMode((prev) => (prev === 'light' ? 'dark' : 'light'))

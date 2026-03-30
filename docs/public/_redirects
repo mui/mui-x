@@ -76,4 +76,7 @@
 /x/api/charts/chart-container/ /x/api/charts/charts-container/ 301
 /x/api/charts/chart-container-pro/ /x/api/charts/charts-container-pro/ 301
 /x/api/charts/chart-container-premium/ /x/api/charts/charts-container-premium/ 301
+/x/api/charts/chart-data-provider/ /x/api/charts/charts-data-provider/ 301
+/x/api/charts/chart-data-provider-pro/ /x/api/charts/charts-data-provider-pro/ 301
+/x/api/charts/chart-data-provider-premium/ /x/api/charts/charts-data-provider-premium/ 301
 # Proxies

@@ -4,7 +4,7 @@ import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import {
@@ -13,7 +13,7 @@ import {
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
@@ -29,7 +29,7 @@ const SectionHeaderTitle = styled(Typography, {
   slot: 'SectionHeaderTitle',
 })(({ theme }) => ({
   textTransform: 'uppercase',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
 }));
 
 const DateTimeFieldsContainer = styled('div', {
@@ -55,6 +55,17 @@ const DateTimeFieldsRow = styled('div', {
   },
 }));
 
+const AllDayFormControlLabel = styled(FormControlLabel, {
+  name: 'MuiEventDialog',
+  slot: 'AllDayFormControlLabel',
+})({
+  width: '100%',
+  justifyContent: 'space-between',
+  [`&.${formControlLabelClasses.root}`]: {
+    marginLeft: 0,
+  },
+});
+
 interface GeneralTabProps {
   occurrence: SchedulerRenderableEventOccurrence;
   errors: Record<string, string | string[]>;
@@ -68,7 +79,7 @@ export function GeneralTab(props: GeneralTabProps) {
   const { occurrence, errors, setErrors, controlled, setControlled, value } = props;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 
@@ -207,7 +218,7 @@ export function GeneralTab(props: GeneralTabProps) {
               />
             )}
           </DateTimeFieldsRow>
-          <FormControlLabel
+          <AllDayFormControlLabel
             control={
               <Switch
                 id="enable-all-day-switch"
@@ -218,7 +229,6 @@ export function GeneralTab(props: GeneralTabProps) {
             }
             label={localeText.allDayLabel}
             labelPlacement="start"
-            sx={{ width: '100%', justifyContent: 'space-between', ml: 0 }}
           />
         </DateTimeFieldsContainer>
         <Divider />

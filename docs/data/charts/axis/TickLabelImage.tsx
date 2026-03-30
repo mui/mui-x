@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
@@ -52,7 +52,7 @@ function CustomTick(props: ChartsTextProps) {
 export default function TickLabelImage() {
   return (
     <Box sx={{ width: '100%', maxWidth: 600 }}>
-      <ChartContainer
+      <ChartsContainer
         xAxis={[
           {
             scaleType: 'band',
@@ -73,7 +73,7 @@ export default function TickLabelImage() {
         <BarPlot />
         <ChartsXAxis axisId="companies" slots={{ axisTickLabel: CustomTick }} />
         <ChartsYAxis axisId="revenue" label="FY 2024 revenue in USD Billions" />
-      </ChartContainer>
+      </ChartsContainer>
     </Box>
   );
 }

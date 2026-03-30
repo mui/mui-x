@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import { PieArc, type PieArcProps } from './PieArc';
 import {
   type ComputedPieRadius,
@@ -62,6 +63,11 @@ export interface PieArcPlotProps
   skipAnimation?: boolean;
 }
 
+const PieArcPlotRoot = styled('g', {
+  name: 'MuiPieArcPlot',
+  slot: 'Root',
+})();
+
 function PieArcPlot(props: PieArcPlotProps) {
   const {
     slots,
@@ -97,7 +103,7 @@ function PieArcPlot(props: PieArcPlotProps) {
   const Arc = slots?.pieArc ?? PieArc;
 
   return (
-    <g {...other}>
+    <PieArcPlotRoot {...other}>
       {transformedData.map((item, index) => (
         <Arc
           key={item.dataIndex}
@@ -123,7 +129,7 @@ function PieArcPlot(props: PieArcPlotProps) {
           {...slotProps?.pieArc}
         />
       ))}
-    </g>
+    </PieArcPlotRoot>
   );
 }
 

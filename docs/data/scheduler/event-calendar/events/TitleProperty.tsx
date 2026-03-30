@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  RecurringEventRecurrenceRule,
-  SchedulerEventModelStructure,
-} from '@mui/x-scheduler/models';
+import { SchedulerEventModelStructure } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { defaultVisibleDate } from '../../datasets/personal-agenda';
 
@@ -11,7 +8,7 @@ interface CustomEvent {
   start: string;
   end: string;
   name: string;
-  rrule: RecurringEventRecurrenceRule;
+  rrule: string;
 }
 
 const initialEvents: CustomEvent[] = [
@@ -20,14 +17,14 @@ const initialEvents: CustomEvent[] = [
     start: '2025-07-02T09:00:00',
     end: '2025-07-02T09:30:00',
     name: 'Daily Standup',
-    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR',
   },
   {
     id: 'work-retro',
     start: '2025-07-01T16:00:00',
     end: '2025-07-01T17:00:00',
     name: 'Team Retrospective',
-    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TU',
   },
 ];
 

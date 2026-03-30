@@ -2,10 +2,10 @@ import * as React from 'react';
 import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
-import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
+import { useDrawingArea, useChartsLayerContainerRef } from '@mui/x-charts/hooks';
 
 function usePointer() {
-  const svgRef = useSvgRef();
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [pointer, setPointer] = React.useState({
@@ -15,7 +15,7 @@ function usePointer() {
   });
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     if (element === null) {
       return () => {};
     }
@@ -44,7 +44,7 @@ function usePointer() {
       element.removeEventListener('pointerenter', handleEnter);
       element.removeEventListener('pointerup', handleOut);
     };
-  }, [svgRef]);
+  }, [chartsLayerContainerRef]);
 
   return pointer;
 }
@@ -55,11 +55,11 @@ export function ItemTooltipFixedY({ children }) {
 
   const popperRef = React.useRef(null);
   const positionRef = React.useRef({ x: 0, y: 0 });
-  const svgRef = useSvgRef(); // Get the ref of the <svg/> component.
+  const chartsLayerContainerRef = useChartsLayerContainerRef(); // Get the ref of the <svg/> component.
   const drawingArea = useDrawingArea(); // Get the dimensions of the chart inside the <svg/>.
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     if (element === null) {
       return () => {};
     }
@@ -67,7 +67,9 @@ export function ItemTooltipFixedY({ children }) {
     const handleMove = (event) => {
       positionRef.current = {
         x: event.clientX,
-        y: (svgRef.current?.getBoundingClientRect().top ?? 0) + drawingArea.top,
+        y:
+          (chartsLayerContainerRef.current?.getBoundingClientRect().top ?? 0) +
+          drawingArea.top,
       };
       popperRef.current?.update();
     };
@@ -77,7 +79,7 @@ export function ItemTooltipFixedY({ children }) {
     return () => {
       element.removeEventListener('pointermove', handleMove);
     };
-  }, [svgRef, drawingArea.top]);
+  }, [chartsLayerContainerRef, drawingArea.top]);
 
   if (!tooltipData || !isActive) {
     // No data to display

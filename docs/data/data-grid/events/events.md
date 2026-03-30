@@ -67,7 +67,7 @@ The following demo shows how to subscribe to the `rowClick` event using `apiRef.
 
 :::warning
 The `apiRef.current.subscribeEvent` method returns a cleaning callback that unsubscribes the given handler when called.
-For instance, when used inside a `useEffect` hook, you should always return the cleaning callback.
+For instance, when used inside a `useEffect()` hook, you should always return the cleaning callback.
 Otherwise, you will have multiple registrations of the same event handler.
 :::
 

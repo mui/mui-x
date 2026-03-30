@@ -8,6 +8,8 @@ import { findPages } from './src/modules/utils/find';
 import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
+// eslint-disable-next-line import/extensions
+import generateReleaseInfo from '../scripts/generateReleaseInfo.mjs';
 
 declare global {
   interface MUIEnv {
@@ -36,7 +38,6 @@ const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
 const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
 const MONOREPO_ALIASES = {
   '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
-  '@mui/internal-markdown': path.resolve(MONOREPO_PATH, './packages/markdown'),
 };
 
 function loadPkg(pkgPath: string): { version: string } {
@@ -73,7 +74,6 @@ export default withDeploymentConfig({
     // TODO, those shouldn't be needed in the first place
     '@mui/monorepo', // Migrate everything to @mui/docs until the @mui/monorepo dependency becomes obsolete
     '@mui/docs', // needed to fix slashes in the generated links (https://github.com/mui/mui-x/pull/13713#issuecomment-2205591461, )
-    '@mui/x-license', // build with LICENSE_DISABLE_CHECK
   ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
@@ -119,7 +119,9 @@ export default withDeploymentConfig({
           ...config.resolve.alias,
           ...MONOREPO_ALIASES,
           '@mui/x-license': path.resolve(currentDirectory, '../packages/x-license/src'),
-          // TODO: get rid of this, replace with @mui/docs
+          'docs/src/modules/utils/mapApiPageTranslations': path.resolve(
+            'src/modules/utils/mapApiPageTranslations.js',
+          ),
           docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
@@ -160,8 +162,21 @@ export default withDeploymentConfig({
             test: /\.(ts|tsx)$/,
             loader: 'string-replace-loader',
             options: {
-              search: 'LICENSE_DISABLE_CHECK',
-              replace: 'true',
+              multiple: [
+                {
+                  search: '__RELEASE_INFO__',
+                  replace: generateReleaseInfo(),
+                },
+                {
+                  search: '__ALLOW_TEST_LICENSES__',
+                  replace: 'false',
+                },
+                {
+                  search: String.raw`\(process\.env\s*(as any\s*)?\)\.MUI_VERSION`,
+                  replace: JSON.stringify(pkg.version),
+                  flags: 'g',
+                },
+              ],
             },
           },
         ]),

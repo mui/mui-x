@@ -18,6 +18,7 @@ export default function ReadOnly() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         readOnly
+        defaultView="months"
       />
     </div>
   );

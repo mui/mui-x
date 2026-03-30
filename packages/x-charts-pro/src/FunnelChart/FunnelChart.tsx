@@ -16,10 +16,10 @@ import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { FunnelPlot, type FunnelPlotProps } from './FunnelPlot';
 import { type FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
-import { type ChartContainerProProps } from '../ChartContainerPro';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
 import { funnelSeriesConfig } from './seriesConfig';
-import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
+import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { type FunnelChartSlotExtension } from './funnelSlots.types';
 import { type CategoryAxis } from './categoryAxis.types';
 import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './FunnelChart.plugins';
@@ -29,7 +29,7 @@ export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
   extends
     Omit<
-      ChartContainerProProps<'funnel', FunnelChartPluginSignatures>,
+      ChartsContainerProProps<'funnel', FunnelChartPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'zAxis'
@@ -42,7 +42,6 @@ export interface FunnelChartProps
       | 'radiusAxis'
       | 'slots'
       | 'slotProps'
-      | 'experimentalFeatures'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -82,7 +81,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
   const themedProps = useThemeProps({ props, name: 'MuiFunnelChart' });
 
   const {
-    chartContainerProps,
+    chartsContainerProps,
     funnelPlotProps,
     overlayProps,
     legendProps,
@@ -91,14 +90,14 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     axisHighlightProps,
     children,
   } = useFunnelChartProps(themedProps);
-  const { chartDataProviderProProps, chartsSurfaceProps } =
-    useChartContainerProProps(chartContainerProps);
+  const { chartsDataProviderProProps, chartsSurfaceProps } =
+    useChartsContainerProProps(chartsContainerProps);
 
   const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProviderPro<'funnel', FunnelChartPluginSignatures>
-      {...chartDataProviderProProps}
+    <ChartsDataProviderPro<'funnel', FunnelChartPluginSignatures>
+      {...chartsDataProviderProProps}
       gap={themedProps.gap}
       seriesConfig={seriesConfig}
       plugins={FUNNEL_CHART_PLUGINS}
@@ -115,7 +114,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
         </ChartsSurface>
         {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </ChartsDataProviderPro>
   );
 });
 
@@ -153,7 +152,7 @@ FunnelChart.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band']),
-      size: PropTypes.number,
+      size: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
     }),
@@ -164,7 +163,7 @@ FunnelChart.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
       scaleType: PropTypes.oneOf(['log']),
-      size: PropTypes.number,
+      size: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
     }),
@@ -175,7 +174,7 @@ FunnelChart.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
       scaleType: PropTypes.oneOf(['symlog']),
-      size: PropTypes.number,
+      size: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
     }),
@@ -186,7 +185,7 @@ FunnelChart.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
       scaleType: PropTypes.oneOf(['pow']),
-      size: PropTypes.number,
+      size: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
     }),
@@ -197,7 +196,7 @@ FunnelChart.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
       scaleType: PropTypes.oneOf(['sqrt']),
-      size: PropTypes.number,
+      size: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
     }),
@@ -208,7 +207,7 @@ FunnelChart.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
       scaleType: PropTypes.oneOf(['time']),
-      size: PropTypes.number,
+      size: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
     }),
@@ -219,7 +218,7 @@ FunnelChart.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
       scaleType: PropTypes.oneOf(['utc']),
-      size: PropTypes.number,
+      size: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
     }),
@@ -230,7 +229,7 @@ FunnelChart.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
       scaleType: PropTypes.oneOf(['linear']),
-      size: PropTypes.number,
+      size: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
     }),
@@ -241,6 +240,10 @@ FunnelChart.propTypes = {
    * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -248,7 +251,14 @@ FunnelChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * The gap, in pixels, between funnel sections.
    * @default 0
@@ -279,11 +289,18 @@ FunnelChart.propTypes = {
    * ```
    */
   hiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['funnel']),
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['funnel']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['funnel']).isRequired,
+      }),
+    ]).isRequired,
   ),
   /**
    * If `true`, the legend is not rendered.
@@ -294,10 +311,17 @@ FunnelChart.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['funnel']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -325,11 +349,18 @@ FunnelChart.propTypes = {
    * ```
    */
   initialHiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['funnel']),
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['funnel']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['funnel']).isRequired,
+      }),
+    ]).isRequired,
   ),
   /**
    * If `true`, a loading overlay is displayed.
@@ -364,13 +395,13 @@ FunnelChart.propTypes = {
   onAxisClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -382,7 +413,7 @@ FunnelChart.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -411,16 +442,26 @@ FunnelChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.shape({
-    dataIndex: PropTypes.number.isRequired,
-    seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['funnel']),
-  }),
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['funnel']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

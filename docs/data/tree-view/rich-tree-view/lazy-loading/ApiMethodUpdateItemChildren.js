@@ -98,7 +98,7 @@ export default function ApiMethodUpdateItemChildren() {
   };
 
   return (
-    <Box sx={{ width: '300px' }}>
+    <div style={{ width: 300, height: 240 }}>
       <RichTreeViewPro
         items={[]}
         dataSource={{
@@ -107,6 +107,6 @@ export default function ApiMethodUpdateItemChildren() {
         }}
         slots={{ item: CustomTreeItem }}
       />
-    </Box>
+    </div>
   );
 }

@@ -22,6 +22,11 @@ import {
   defaultVisibleDate as calendarPaletteDate,
   resources as calendarPaletteResources,
 } from '../../../../data/scheduler/datasets/calendar-palette-demo';
+import {
+  initialEvents as timezoneInstantEvents,
+  defaultVisibleDate as timezoneInstantDate,
+  resources as timezoneInstantResources,
+} from '../../../../data/scheduler/datasets/timezone-instant-based-events';
 
 const datasets = [
   {
@@ -48,6 +53,13 @@ const datasets = [
     defaultVisibleDate: calendarPaletteDate,
     resources: calendarPaletteResources,
   },
+  {
+    label: 'Timezone (Instant-Based)',
+    initialEvents: timezoneInstantEvents,
+    defaultVisibleDate: timezoneInstantDate,
+    resources: timezoneInstantResources,
+    displayTimezone: 'Europe/Paris',
+  },
 ];
 
 function SchedulerContent({ dataset }) {
@@ -61,6 +73,7 @@ function SchedulerContent({ dataset }) {
       onEventsChange={setEvents}
       areEventsDraggable
       areEventsResizable
+      displayTimezone={dataset.displayTimezone}
     />
   );
 }

@@ -24,6 +24,7 @@ export default function ControlledHighlight() {
   const handleHighLightedSeries = (event, newHighLightedSeries) => {
     if (newHighLightedSeries !== null) {
       setHighLightedItem((prev) => ({
+        dataIndex: 0,
         ...prev,
         seriesId: newHighLightedSeries,
       }));

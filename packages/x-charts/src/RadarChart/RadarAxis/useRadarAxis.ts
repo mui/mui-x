@@ -1,7 +1,7 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { useRadiusAxes } from '../../hooks/useAxis';
 import { useRotationScale } from '../../hooks/useScale';
-import { useChartContext } from '../../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 import {
   selectorChartPolarCenter,
   type UseChartPolarAxisSignature,
@@ -35,7 +35,7 @@ export interface UseRadarAxisParams {
 export function useRadarAxis(params: UseRadarAxisParams) {
   const { metric, angle, divisions = 1 } = params;
 
-  const { instance, store } = useChartContext<[UseChartPolarAxisSignature]>();
+  const { instance, store } = useChartsContext<[UseChartPolarAxisSignature]>();
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis } = useRadiusAxes();
 

@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 The default locale of MUI X is English (United States).
 To use other locales, follow the instructions below.
 
@@ -92,6 +88,45 @@ import { frFR } from '@mui/x-scheduler/locales';
 ```
 
 {{"demo": "LocaleTextCalendar.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Date locale
+
+The `localeText` prop only translates the UI labels (button text, menu items, etc.).
+To also translate **formatted dates** (day names, month names, and week start day), pass a `date-fns` locale object.
+
+Use the `createDateLocaleTheme` helper to set the date locale globally via the theme, alongside `localeText` translations:
+
+```jsx
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { fr } from 'date-fns/locale/fr';
+import { frFR, createDateLocaleTheme } from '@mui/x-scheduler/locales';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+
+const theme = createTheme(
+  {
+    palette: {
+      primary: { main: '#1976d2' },
+    },
+  },
+  frFR,
+  createDateLocaleTheme(fr),
+);
+
+<ThemeProvider theme={theme}>
+  <EventCalendar />
+</ThemeProvider>;
+```
+
+You can also pass the `dateLocale` prop directly to the component to override the theme value or avoid using a theme:
+
+```jsx
+import { fr } from 'date-fns/locale/fr';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+
+<EventCalendar dateLocale={fr} />;
+```
+
+{{"demo": "DateLocaleCalendar.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Supported locales
 

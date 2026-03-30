@@ -22,7 +22,7 @@ export class TreeViewItemsReorderingPlugin {
   public getDroppingTargetValidActions = (itemId: string) => {
     const currentReorder = itemsReorderingSelectors.currentReorder(this.store.state);
     if (!currentReorder) {
-      throw new Error('There is no ongoing reordering.');
+      throw new Error('MUI X: There is no ongoing reordering.');
     }
 
     if (itemId === currentReorder.draggedItemId) {

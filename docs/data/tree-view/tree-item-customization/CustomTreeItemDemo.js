@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-
 import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemContent,
@@ -122,6 +121,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
             {...getContentProps({
               'data-name': 'TreeItemContent',
             })}
+            status={status}
           >
             <CustomTreeItemIconContainer
               {...getIconContainerProps({

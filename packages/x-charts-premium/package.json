@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-premium",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0-beta.0",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Charts components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
+    "build": "code-infra build --flat",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -79,5 +79,8 @@
     ".": "./src/index.ts",
     "./*": "./src/*/index.ts",
     "./moduleAugmentation/*": "./src/moduleAugmentation/*.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

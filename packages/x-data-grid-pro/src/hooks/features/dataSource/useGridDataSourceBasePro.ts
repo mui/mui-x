@@ -15,6 +15,7 @@ import {
   type GridUpdateRowParams,
   type GridRowId,
   GRID_ROOT_GROUP_ID,
+  gridRowsLookupSelector,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -117,6 +118,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   const replaceGroupRows = React.useCallback(
     (groupId: GridRowId, groupPath: string[], rows: GridGetRowsResponsePro['rows']) => {
       const tree = gridRowTreeSelector(apiRef);
+      const rowsLookup = gridRowsLookupSelector(apiRef);
       const fetchedRowIds = new Set(rows.map((row) => gridRowIdSelector(apiRef, row)));
       const currentGroupRows = getTreeNodeDescendants(tree, groupId, false, true);
       const rowsToDelete: GridRowModelUpdate[] = [];
@@ -132,10 +134,10 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
           if (fetchedRowIds.has(descendantId)) {
             continue;
           }
-          rowsToDelete.push({ id: descendantId, _action: 'delete' });
+          rowsToDelete.push({ ...rowsLookup[descendantId], _action: 'delete' });
         }
 
-        rowsToDelete.push({ id: rowId, _action: 'delete' });
+        rowsToDelete.push({ ...rowsLookup[rowId], _action: 'delete' });
       });
 
       if (rowsToDelete.length > 0) {
@@ -318,12 +320,13 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
 
   const removeChildrenRows = React.useCallback<GridDataSourcePrivateApiPro['removeChildrenRows']>(
     (parentId) => {
+      const rowsLookup = gridRowsLookupSelector(apiRef);
       const rowNode = gridRowNodeSelector(apiRef, parentId);
       if (!rowNode || rowNode.type !== 'group' || rowNode.children.length === 0) {
         return;
       }
 
-      const removedRows: { id: GridRowId; _action: 'delete' }[] = [];
+      const removedRows: GridRowModelUpdate[] = [];
       const traverse = (nodeId: GridRowId) => {
         const node = gridRowNodeSelector(apiRef, nodeId);
         if (!node) {
@@ -333,7 +336,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         if (node.type === 'group' && node.children.length > 0) {
           node.children.forEach(traverse);
         }
-        removedRows.push({ id: nodeId, _action: 'delete' });
+        removedRows.push({ ...rowsLookup[nodeId], _action: 'delete' });
       };
 
       rowNode.children.forEach(traverse);
@@ -364,6 +367,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         apiRef.current.setRows(response.rows);
       } else {
         const tree = gridRowTreeSelector(apiRef);
+        const rowsLookup = gridRowsLookupSelector(apiRef);
         // Remove existing outdated rows before setting the new ones
         // Create a set of the current root rows
         const parentRowsToDelete = new Set(
@@ -373,15 +377,15 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         response.rows.forEach((row) => {
           parentRowsToDelete.delete(gridRowIdSelector(apiRef, row));
         });
-        const rowsToDelete: { id: GridRowId; _action: 'delete' }[] = [];
+        const rowsToDelete: GridRowModelUpdate[] = [];
         if (parentRowsToDelete.size > 0) {
           parentRowsToDelete.forEach((parentRowId) => {
             const descendants = getTreeNodeDescendants(tree, parentRowId, false, false);
             for (let i = descendants.length - 1; i >= 0; i -= 1) {
               // delete deepest descendants first
-              rowsToDelete.push({ id: descendants[i], _action: 'delete' });
+              rowsToDelete.push({ ...rowsLookup[descendants[i]], _action: 'delete' });
             }
-            rowsToDelete.push({ id: parentRowId, _action: 'delete' });
+            rowsToDelete.push({ ...rowsLookup[parentRowId], _action: 'delete' });
           });
         }
         apiRef.current.updateRows(response.rows.concat(rowsToDelete));
