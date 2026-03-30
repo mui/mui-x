@@ -35,6 +35,9 @@ const PreferencesMenuListItemIcon = styled(ListItemIcon, {
   slot: 'PreferencesMenuListItemIcon',
 })({
   justifyContent: 'flex-end',
+  '&[data-checked="false"]': {
+    visibility: 'hidden',
+  },
 });
 
 const PreferencesMenuListSubheader = styled(ListSubheader, {
@@ -182,11 +185,12 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
             <ListItemText className={classes.preferencesMenuListItemText}>
               {option.label}
             </ListItemText>
-            {preferences[option.preferenceKey] && (
-              <PreferencesMenuListItemIcon className={classes.preferencesMenuListItemIcon}>
-                <CheckIcon fontSize="small" />
-              </PreferencesMenuListItemIcon>
-            )}
+            <PreferencesMenuListItemIcon
+              className={classes.preferencesMenuListItemIcon}
+              data-checked={!!preferences[option.preferenceKey]}
+            >
+              <CheckIcon fontSize="small" />
+            </PreferencesMenuListItemIcon>
           </MenuItem>
         ))}
         {showTimeFormatSubmenu && visibleOptions.length > 0 && (
@@ -207,11 +211,12 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
             <ListItemText className={classes.preferencesMenuListItemText}>
               {localeText.amPm12h}
             </ListItemText>
-            {preferences.ampm && (
-              <PreferencesMenuListItemIcon className={classes.preferencesMenuListItemIcon}>
-                <CheckIcon fontSize="small" />
-              </PreferencesMenuListItemIcon>
-            )}
+            <PreferencesMenuListItemIcon
+              className={classes.preferencesMenuListItemIcon}
+              data-checked={!!preferences.ampm}
+            >
+              <CheckIcon fontSize="small" />
+            </PreferencesMenuListItemIcon>
           </MenuItem>
         )}
         {showTimeFormatSubmenu && (
@@ -224,11 +229,12 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
             <ListItemText className={classes.preferencesMenuListItemText}>
               {localeText.hour24h}
             </ListItemText>
-            {!preferences.ampm && (
-              <PreferencesMenuListItemIcon className={classes.preferencesMenuListItemIcon}>
-                <CheckIcon fontSize="small" />
-              </PreferencesMenuListItemIcon>
-            )}
+            <PreferencesMenuListItemIcon
+              className={classes.preferencesMenuListItemIcon}
+              data-checked={!preferences.ampm}
+            >
+              <CheckIcon fontSize="small" />
+            </PreferencesMenuListItemIcon>
           </MenuItem>
         )}
         {showSpecificOptions && (visibleOptions.length > 0 || showTimeFormatSubmenu) && (
