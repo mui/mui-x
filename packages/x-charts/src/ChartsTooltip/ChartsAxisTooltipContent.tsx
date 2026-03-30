@@ -130,7 +130,7 @@ function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesTyp
         {item.formattedLabel || null}
       </ChartsTooltipCell>
       <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-        {item.formattedValue}
+        {typeof item.formattedValue === 'string' ? item.formattedValue : null}
       </ChartsTooltipCell>
     </ChartsTooltipRow>
   );

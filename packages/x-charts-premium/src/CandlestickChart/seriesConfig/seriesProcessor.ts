@@ -1,9 +1,9 @@
 import { type SeriesId } from '@mui/x-charts/models';
 import { type SeriesProcessor } from '@mui/x-charts/internals';
-import { type DefaultizedOHLCSeriesType, type OHLCValueType } from '../../models';
+import { type DefaultizedOHLCSeriesType } from '../../models';
 
-const candlestickValueFormatter = (v: OHLCValueType | null) =>
-  v == null ? '' : `[${v[0]}, ${v[1]}, ${v[2]}, ${v[3]}]`;
+const candlestickValueFormatter: DefaultizedOHLCSeriesType['valueFormatter'] = (v) =>
+  v == null ? '' : v.toLocaleString();
 
 const seriesProcessor: SeriesProcessor<'ohlc'> = (params) => {
   const { seriesOrder, series } = params;

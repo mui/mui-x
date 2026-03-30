@@ -60,8 +60,12 @@ export interface UseAxesTooltipParams {
 export interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> {
   seriesId: SeriesId;
   color: string;
-  value: ChartsSeriesConfig[T]['valueType'];
-  formattedValue: string;
+  value: T extends 'ohlc'
+    ? { open: number; high: number; low: number; close: number } | null
+    : ChartsSeriesConfig[T]['valueType'];
+  formattedValue: T extends 'ohlc'
+    ? { open: string | null; high: string | null; low: string | null; close: string | null }
+    : string;
   formattedLabel: string | null;
   markType: ChartsLabelMarkProps['type'];
   markShape: ChartsLabelMarkProps['markShape'];
@@ -185,11 +189,28 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
               zAxisId ? zAxis[zAxisId] : undefined,
             )(dataIndex) ?? '';
 
-          const value = seriesToAdd.data[dataIndex] ?? null;
-          const formattedValue = (seriesToAdd.valueFormatter as any)(value, {
-            dataIndex,
-          });
+          const rawValue = seriesToAdd.data[dataIndex] ?? null;
           const formattedLabel = getLabel(seriesToAdd.label, 'tooltip') ?? null;
+
+          let value: any;
+          let formattedValue: any;
+
+          if (seriesType === 'ohlc' && Array.isArray(rawValue)) {
+            const [open, high, low, close] = rawValue as [number, number, number, number];
+            const formatter = seriesToAdd.valueFormatter as any;
+            value = { open, high, low, close };
+            formattedValue = {
+              open: formatter(open, { dataIndex, field: 'open' }),
+              high: formatter(high, { dataIndex, field: 'high' }),
+              low: formatter(low, { dataIndex, field: 'low' }),
+              close: formatter(close, { dataIndex, field: 'close' }),
+            };
+          } else {
+            value = rawValue;
+            formattedValue = (seriesToAdd.valueFormatter as any)(rawValue, {
+              dataIndex,
+            });
+          }
 
           tooltipAxes[tooltipItemIndex].seriesItems.push({
             seriesId,
