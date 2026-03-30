@@ -24,6 +24,7 @@ import { useDrawingArea, useXScale } from '@mui/x-charts-premium/hooks';
 import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
 import { ChartsLayerContainer } from '@mui/x-charts-premium/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts-premium/ChartsSvgLayer';
+import { ChartsZoomSlider } from '@mui/x-charts-premium/ChartsZoomSlider';
 import {
   ChartsToolbarImageExportTrigger,
   ChartsToolbarPrintExportTrigger,
@@ -85,18 +86,6 @@ const formatAsDollar = (value) =>
   });
 
 export default function CandlestickOverview() {
-  return (
-    <Stack width="100%">
-      <Typography variant="h6" textAlign="center" mb={1}>
-        Interactive Brokers Stock Price - 2025
-      </Typography>
-      <Chart />
-      <Typography variant="caption">Source: Yahoo Finance</Typography>
-    </Stack>
-  );
-}
-
-function Chart() {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
   const theme = useTheme();
@@ -124,100 +113,110 @@ function Chart() {
   };
 
   return (
-    <ChartsDataProviderPremium
-      series={[
-        {
-          id: 'ohlc',
-          type: 'ohlc',
-          data: ohlcData,
-          label: 'IBKR',
-        },
-        ...(movingAverageData !== null
-          ? [
-              {
-                id: 'moving-average',
-                type: 'line',
-                data: movingAverageData,
-                label: `${movingAverageWindow}-day Moving Average`,
-                color: '#42a5f5',
-              },
-            ]
-          : []),
-        {
-          id: 'volume',
-          type: 'bar',
-          data: volumeData,
-          label: 'Volume',
-          colorGetter: volumeBarColorGetter,
-          yAxisId: 'volume',
-        },
-      ]}
-      xAxis={[
-        {
-          data: xData,
-          scaleType: 'band',
-          ordinalTimeTicks: [
-            'years',
-            'quarterly',
-            'months',
-            'biweekly',
-            'weeks',
-            'days',
-          ],
-          valueFormatter: (value) =>
-            value.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          zoom: { filterMode: 'discard' },
-        },
-      ]}
-      yAxis={[
-        {
-          id: 'price',
-          valueFormatter: formatAsDollar,
-          width: 32,
-          position: 'right',
-        },
-        {
-          id: 'volume',
-          // Ensures that volume bars only take up to 20% of the chart height
-          domainLimit: (min, max) => ({ min: 0, max: max.valueOf() * 5 }),
-        },
-      ]}
-      height={400}
-      margin={{ top: 8, bottom: 0, left: 8, right: 0 }}
-    >
-      <ChartsWrapper>
-        <CandlestickToolbar
-          movingAverageWindow={movingAverageWindow}
-          onMovingAverageWindowChange={setMovingAverageWindow}
-          visibleAnnotations={visibleAnnotations}
-          onVisibleAnnotationsChange={setVisibleAnnotations}
-        />
-        <ChartsLayerContainer>
-          <ChartsSvgLayer>
-            <ChartsGrid horizontal vertical />
-          </ChartsSvgLayer>
-          <ChartsWebGLLayer>
-            <CandlestickPlot />
-          </ChartsWebGLLayer>
-          <ChartsSvgLayer>
-            <g clipPath={`url(#${clipPathId})`}>
-              <BarPlot renderer="svg-batch" />
-              <LinePlot />
-              <CandlestickAnnotations
-                showDividends={visibleAnnotations.includes('dividends')}
-                showSplits={visibleAnnotations.includes('splits')}
-              />
-              <ChartsAxisHighlight x="line" y="line" />
-            </g>
-            <ChartsClipPath id={clipPathId} />
-            <ChartsXAxis />
-            <ChartsYAxis axisId="price" />
-            <ChartsYAxis axisId="volume" />
-            <CandlestickTooltip />
-          </ChartsSvgLayer>
-        </ChartsLayerContainer>
-      </ChartsWrapper>
-    </ChartsDataProviderPremium>
+    <Stack width="100%">
+      <Typography variant="h6" textAlign="center" mb={1}>
+        Interactive Brokers Stock Price - 2025
+      </Typography>
+      <ChartsDataProviderPremium
+        series={[
+          {
+            id: 'ohlc',
+            type: 'ohlc',
+            data: ohlcData,
+            label: 'IBKR',
+          },
+          ...(movingAverageData !== null
+            ? [
+                {
+                  id: 'moving-average',
+                  type: 'line',
+                  data: movingAverageData,
+                  label: `${movingAverageWindow}-day Moving Average`,
+                  color: '#42a5f5',
+                },
+              ]
+            : []),
+          {
+            id: 'volume',
+            type: 'bar',
+            data: volumeData,
+            label: 'Volume',
+            colorGetter: volumeBarColorGetter,
+            yAxisId: 'volume',
+          },
+        ]}
+        xAxis={[
+          {
+            data: xData,
+            scaleType: 'band',
+            ordinalTimeTicks: [
+              'years',
+              'quarterly',
+              'months',
+              'biweekly',
+              'weeks',
+              'days',
+            ],
+            valueFormatter: (value) =>
+              value.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            zoom: {
+              filterMode: 'discard',
+              slider: { enabled: true, preview: true },
+            },
+          },
+        ]}
+        yAxis={[
+          {
+            id: 'price',
+            valueFormatter: formatAsDollar,
+            width: 32,
+            position: 'right',
+          },
+          {
+            id: 'volume',
+            // Ensures that volume bars only take up to 20% of the chart height
+            domainLimit: (min, max) => ({ min: 0, max: max.valueOf() * 5 }),
+          },
+        ]}
+        height={400}
+        margin={{ top: 8, bottom: 0, left: 8, right: 0 }}
+      >
+        <ChartsWrapper>
+          <CandlestickToolbar
+            movingAverageWindow={movingAverageWindow}
+            onMovingAverageWindowChange={setMovingAverageWindow}
+            visibleAnnotations={visibleAnnotations}
+            onVisibleAnnotationsChange={setVisibleAnnotations}
+          />
+          <ChartsLayerContainer>
+            <ChartsSvgLayer>
+              <ChartsGrid horizontal vertical />
+            </ChartsSvgLayer>
+            <ChartsWebGLLayer>
+              <CandlestickPlot />
+            </ChartsWebGLLayer>
+            <ChartsSvgLayer>
+              <g clipPath={`url(#${clipPathId})`}>
+                <BarPlot renderer="svg-batch" />
+                <LinePlot />
+                <CandlestickAnnotations
+                  showDividends={visibleAnnotations.includes('dividends')}
+                  showSplits={visibleAnnotations.includes('splits')}
+                />
+                <ChartsAxisHighlight x="line" y="line" />
+              </g>
+              <ChartsClipPath id={clipPathId} />
+              <ChartsZoomSlider />
+              <ChartsXAxis />
+              <ChartsYAxis axisId="price" />
+              <ChartsYAxis axisId="volume" />
+              <CandlestickTooltip />
+            </ChartsSvgLayer>
+          </ChartsLayerContainer>
+        </ChartsWrapper>
+      </ChartsDataProviderPremium>
+      <Typography variant="caption">Source: Yahoo Finance</Typography>
+    </Stack>
   );
 }
 
