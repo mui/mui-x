@@ -52,8 +52,8 @@
     "core-js": "^2.6.12",
     "cross-env": "^7.0.3",
     "date-fns": "^2.30.0",
-    "date-fns-v3": "https://registry.npmjs.org/date-fns/-/date-fns-3.2.0.tgz",
     "date-fns-jalali": "^2.21.3-1",
+    "date-fns-v3": "https://registry.npmjs.org/date-fns/-/date-fns-3.2.0.tgz",
     "dayjs": "^1.11.10",
     "doctrine": "^3.0.0",
     "exceljs": "^4.3.0",
@@ -86,6 +86,7 @@
     "react-simple-code-editor": "^0.13.1",
     "recast": "^0.23.4",
     "rimraf": "^5.0.1",
+    "semver": "^7.7.4",
     "styled-components": "^6.1.0",
     "stylis-plugin-rtl": "^2.1.1",
     "webpack-bundle-analyzer": "^4.9.1"
