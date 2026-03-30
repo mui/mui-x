@@ -1,4 +1,5 @@
 const path = require('path');
+const semver = require('semver');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // const withTM = require('next-transpile-modules')(['@mui/monorepo']);
 const withDocsInfra = require('@mui/monorepo/docs/nextConfigDocsInfra');
@@ -21,6 +22,7 @@ module.exports = withDocsInfra({
   env: {
     ENABLE_AD: process.env.ENABLE_AD,
     LIB_VERSION: pkg.version,
+    SEARCH_INDEX: `material-ui-v${semver.major(pkg.version)}`,
     DATA_GRID_VERSION: dataGridPkg.version,
     DATE_PICKERS_VERSION: datePickersPkg.version,
     FEEDBACK_URL: process.env.FEEDBACK_URL,
