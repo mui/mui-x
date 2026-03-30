@@ -26,12 +26,10 @@ export interface OHLCSeriesType
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
    * The color of the candle body when the close price is greater than or equal to the open price.
-   * @default Candlestick palette up color
    */
   upColor?: string;
   /**
    * The color of the candle body when the close price is less than the open price.
-   * @default Candlestick palette down color
    */
   downColor?: string;
 }
@@ -48,5 +46,5 @@ export type OHLCItemIdentifier = {
 
 export interface DefaultizedOHLCSeriesType extends DefaultizedProps<
   OHLCSeriesType,
-  CommonDefaultizedProps | 'color'
+  CommonDefaultizedProps | 'color' | 'upColor' | 'downColor'
 > {}
