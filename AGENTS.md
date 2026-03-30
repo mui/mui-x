@@ -28,7 +28,7 @@ pnpm generate:exports # when editing code in `packages/x-charts*`
 
 ## Testing
 
-### Run unit tests in JSDOM
+### Run unit tests in jsdom
 
 ```bash
 # Filter by project name (glob patterns supported)
