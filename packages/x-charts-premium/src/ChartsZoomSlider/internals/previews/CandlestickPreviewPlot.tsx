@@ -8,8 +8,10 @@ import {
 } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
-import { type PreviewPlotProps } from '@mui/x-charts-pro/internals';
+import { seriesPreviewPlotMap, type PreviewPlotProps } from '@mui/x-charts-pro/internals';
 import { useOHLCSeriesContext } from '../../../hooks/useOHLCSeries';
+
+seriesPreviewPlotMap.set('ohlc', CandlestickPreviewPlot);
 
 export function CandlestickPreviewPlot(props: PreviewPlotProps) {
   const { axisId } = props;

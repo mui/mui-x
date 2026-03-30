@@ -24,6 +24,7 @@ import { useDrawingArea, useXScale } from '@mui/x-charts-premium/hooks';
 import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
 import { ChartsLayerContainer } from '@mui/x-charts-premium/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts-premium/ChartsSvgLayer';
+import { ChartsZoomSlider } from '@mui/x-charts-premium/ChartsZoomSlider';
 import {
   ChartsToolbarImageExportTrigger,
   ChartsToolbarPrintExportTrigger,
@@ -213,6 +214,7 @@ function Chart() {
               <ChartsAxisHighlight x="line" y="line" />
             </g>
             <ChartsClipPath id={clipPathId} />
+            <ChartsZoomSlider />
             <ChartsXAxis />
             <ChartsYAxis axisId="price" />
             <ChartsYAxis axisId="volume" />
