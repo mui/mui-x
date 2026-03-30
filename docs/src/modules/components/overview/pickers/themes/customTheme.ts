@@ -425,7 +425,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
 
             [`&.${dateRangePickerDayClasses.previewStart}:hover, &.${dateRangePickerDayClasses.previewEnd}:hover`]:
               {
-                outline: '1px solid #FFF',
+                outline: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
                 outlineOffset: '-1px',
               },
 
