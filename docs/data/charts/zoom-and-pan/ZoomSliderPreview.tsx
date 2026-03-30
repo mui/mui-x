@@ -47,6 +47,16 @@ const gdpPerCapitaFormatter = new Intl.NumberFormat('en-US', {
 });
 const populationFormatter = new Intl.NumberFormat('en-US', { notation: 'compact' });
 
+const commonXAxisProps = {
+  id: 'x',
+  zoom: { filterMode: 'discard', slider: { enabled: true, preview: true } },
+} as const;
+
+const commonProps = {
+  initialZoom: [{ axisId: 'x', start: 20, end: 80 }],
+  height: 400,
+} as const;
+
 const lineXAxis = {
   scaleType: 'time',
   id: 'x',
@@ -70,7 +80,6 @@ const lineSettings = {
       valueFormatter: (v: number | null) => percentageFormatter.format(v!),
     },
   ],
-  height: 400,
 } satisfies Partial<LineChartProProps>;
 
 const areaXAxis = {
@@ -99,7 +108,6 @@ const areaSettings = {
     stack: 'population',
     valueFormatter: (v: number | null) => populationFormatter.format(v!),
   })),
-  height: 400,
 } satisfies Partial<LineChartProProps>;
 
 const scatterXAxis = {
@@ -122,7 +130,6 @@ const scatterSettings = {
     valueFormatter: (value: ScatterValueType | null) =>
       `${countryData[value!.id as keyof typeof countryData].country} - Birth rate: ${value!.y} - GDP per capita: ${gdpPerCapitaFormatter.format(value!.x)}`,
   })),
-  height: 400,
 } satisfies Partial<ScatterChartProProps>;
 
 const sortedShareOfRenewables = shareOfRenewables.toSorted(
@@ -140,7 +147,6 @@ const barSettings = {
       valueFormatter: (v: number | null) => percentageFormatter.format(v!),
     },
   ],
-  height: 400,
 } satisfies Partial<BarChartProProps>;
 
 const rangeBarXAxis = {
@@ -168,7 +174,6 @@ const rangeBarSettings = {
       data: temperatureBerlinPorto.berlin,
     },
   ],
-  height: 300,
 } satisfies BarChartPremiumProps;
 
 export default function ZoomSliderPreview() {
@@ -211,10 +216,9 @@ function LineChartPreview() {
         Unemployment Rate in United States (1948-2025)
       </Typography>
       <LineChartPro
+        {...commonProps}
         {...lineSettings}
-        xAxis={[
-          { ...lineXAxis, zoom: { slider: { enabled: true, preview: true } } },
-        ]}
+        xAxis={[{ ...lineXAxis, ...commonXAxisProps }]}
       />
       <Typography variant="caption">
         Source: Federal Reserve Bank of St. Louis. Updated: Jun 6, 2025 7:46 AM CDT.
@@ -230,10 +234,9 @@ function AreaChartPreview() {
         Population by Age Group in 2050 (Projected)
       </Typography>
       <LineChartPro
+        {...commonProps}
         {...areaSettings}
-        xAxis={[
-          { ...areaXAxis, zoom: { slider: { enabled: true, preview: true } } },
-        ]}
+        xAxis={[{ ...areaXAxis, ...commonXAxisProps }]}
       />
       <Typography variant="caption">
         Source: World Population Prospects: The 2024 Revision, United Nations.
@@ -249,8 +252,9 @@ function BarChartPreview() {
         Share of Primary Energy Consumption from Renewables (2023)
       </Typography>
       <BarChartPro
+        {...commonProps}
         {...barSettings}
-        xAxis={[{ ...barXAxis, zoom: { slider: { enabled: true, preview: true } } }]}
+        xAxis={[{ ...barXAxis, ...commonXAxisProps }]}
       />
       <Typography variant="caption">
         Source: Our World in Data. Updated: 2023.
@@ -266,10 +270,9 @@ function RangeBarChartPreview() {
         Average monthly temperature ranges in °C for Porto and Berlin in 1991-2020
       </Typography>
       <BarChartPremium
+        {...commonProps}
         {...rangeBarSettings}
-        xAxis={[
-          { ...rangeBarXAxis, zoom: { slider: { enabled: true, preview: true } } },
-        ]}
+        xAxis={[{ ...rangeBarXAxis, ...commonXAxisProps }]}
       />
       <Typography variant="caption">
         Source: IPMA (Porto), climate-data.org (Berlin)
@@ -285,10 +288,9 @@ function ScatterChartPreview() {
         Births per woman vs GDP per capita (USD, 2023)
       </Typography>
       <ScatterChartPro
+        {...commonProps}
         {...scatterSettings}
-        xAxis={[
-          { ...scatterXAxis, zoom: { slider: { enabled: true, preview: true } } },
-        ]}
+        xAxis={[{ ...scatterXAxis, ...commonXAxisProps }]}
       />
       <Typography variant="caption">
         GDP per capita is expressed in international dollars at 2021 prices. <br />
