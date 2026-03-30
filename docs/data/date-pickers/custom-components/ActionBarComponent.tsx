@@ -140,8 +140,10 @@ function CustomActionBar(props: PickersActionBarProps) {
         anchorEl={anchorEl}
         open={open}
         onClose={() => setAnchorEl(null)}
-        MenuListProps={{
-          'aria-labelledby': `picker-actions-${id}`,
+        slotProps={{
+          list: {
+            'aria-labelledby': `picker-actions-${id}`,
+          },
         }}
       >
         {menuItems}

@@ -118,8 +118,8 @@ export interface EventCalendarClasses extends EventDialogClasses {
   dayTimeGrid: string;
   /** Styles applied to the day time grid header element. */
   dayTimeGridHeader: string;
-  /** Styles applied to the day time grid header row element. */
-  dayTimeGridHeaderRow: string;
+  /** Styles applied to day time grid header cell elements. */
+  dayTimeGridHeaderCell: string;
   /** Styles applied to the day time grid all day events grid element. */
   dayTimeGridAllDayEventsGrid: string;
   /** Styles applied to the day time grid all day events row element. */
@@ -328,7 +328,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'dayTimeGridContainer',
     'dayTimeGrid',
     'dayTimeGridHeader',
-    'dayTimeGridHeaderRow',
+    'dayTimeGridHeaderCell',
     'dayTimeGridAllDayEventsGrid',
     'dayTimeGridAllDayEventsRow',
     'dayTimeGridAllDayEventsCell',
@@ -460,7 +460,7 @@ const slots = {
   dayTimeGridContainer: ['dayTimeGridContainer'],
   dayTimeGrid: ['dayTimeGrid'],
   dayTimeGridHeader: ['dayTimeGridHeader'],
-  dayTimeGridHeaderRow: ['dayTimeGridHeaderRow'],
+  dayTimeGridHeaderCell: ['dayTimeGridHeaderCell'],
   dayTimeGridAllDayEventsGrid: ['dayTimeGridAllDayEventsGrid'],
   dayTimeGridAllDayEventsRow: ['dayTimeGridAllDayEventsRow'],
   dayTimeGridAllDayEventsCell: ['dayTimeGridAllDayEventsCell'],

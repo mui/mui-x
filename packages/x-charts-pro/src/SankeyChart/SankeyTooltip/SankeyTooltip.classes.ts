@@ -1,5 +1,5 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { getChartsTooltipUtilityClass } from '@mui/x-charts/ChartsTooltip';
+import { getChartsTooltipUtilityClass } from '@mui/x-charts/internals';
 import type { SankeyTooltipProps } from './SankeyTooltip.types';
 
 export const useUtilityClasses = (props: Pick<SankeyTooltipProps, 'classes'>) => {

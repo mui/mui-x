@@ -3,16 +3,16 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { useTreeItemModel } from '@mui/x-tree-view/hooks';
 
 type TreeItemWithLabel = {
   id: string;
   label: string;
   secondaryLabel?: string;
+  children?: TreeItemWithLabel[];
 };
 
-export const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemWithLabel>[] = [
+export const MUI_X_PRODUCTS: TreeItemWithLabel[] = [
   {
     id: 'grid',
     label: 'Data Grid',

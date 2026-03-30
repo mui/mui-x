@@ -9,7 +9,13 @@
  * List of demos to ignore when transpiling
  * Example: "app-bar/BottomAppBar.tsx"
  */
-const ignoreList = ['/pages.ts', 'styling.ts', 'styling.tsx', 'types.ts'];
+const ignoreList = [
+  '/pages.ts',
+  'styling.ts',
+  'styling.tsx',
+  'types.ts',
+  'CandlestickOverview.tsx',
+];
 
 const fs = require('fs');
 const path = require('path');

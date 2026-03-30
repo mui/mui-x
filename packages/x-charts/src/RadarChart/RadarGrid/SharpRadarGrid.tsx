@@ -19,7 +19,7 @@ export function SharpRadarGrid(props: RadarGridRenderProps) {
           strokeWidth={1}
           strokeOpacity={0.3}
           fill="none"
-          className={classes?.radial}
+          className={classes?.gridRadial}
         />
       ))}
       {divisionRatio.map((ratio) => (
@@ -35,7 +35,7 @@ export function SharpRadarGrid(props: RadarGridRenderProps) {
           strokeWidth={1}
           strokeOpacity={0.3}
           fill="none"
-          className={classes?.divider}
+          className={classes?.gridDivider}
         />
       ))}
     </React.Fragment>

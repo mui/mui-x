@@ -53,7 +53,7 @@ export function useExtractRichTreeViewProParameters<
     isItemReorderable,
     canMoveItemToNewPosition,
     onItemPositionChange,
-    virtualization,
+    disableVirtualization,
 
     // Forwarded props
     ...forwardedProps
@@ -100,7 +100,7 @@ export function useExtractRichTreeViewProParameters<
       isItemReorderable,
       canMoveItemToNewPosition,
       onItemPositionChange,
-      virtualization,
+      disableVirtualization,
     }),
     [
       // Shared parameters
@@ -142,7 +142,7 @@ export function useExtractRichTreeViewProParameters<
       isItemReorderable,
       canMoveItemToNewPosition,
       onItemPositionChange,
-      virtualization,
+      disableVirtualization,
     ],
   );
 

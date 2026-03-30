@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
+import Checkbox, { checkboxClasses } from '@mui/material/Checkbox';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
@@ -13,7 +14,6 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import {
   RecurringEventFrequency,
@@ -23,7 +23,7 @@ import {
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import {
   schedulerEventSelectors,
   schedulerRecurringEventSelectors,
@@ -41,13 +41,13 @@ const SectionHeaderTitle = styled(Typography, {
   color: (theme.vars || theme).palette.text.secondary,
 }));
 
-const RecurrenceSelectorContainer = styled(Paper, {
+const RecurrenceSelectorContainer = styled('div', {
   name: 'MuiEventDialog',
   slot: 'RecurrenceSelectorContainer',
 })(({ theme }) => ({
   display: 'inline-flex',
-  border: `1px solid ${(theme.vars || theme).palette.divider}`,
-  flexWrap: 'wrap',
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
   width: 'fit-content',
   maxWidth: '100%',
 }));
@@ -79,6 +79,15 @@ const EndsRadioGroup = styled(RadioGroup, {
   gap: 8,
 });
 
+const RepeatSectionFieldset = styled('fieldset', {
+  name: 'MuiEventDialog',
+  slot: 'RepeatSectionFieldset',
+})({
+  border: 0,
+  margin: 0,
+  padding: 0,
+});
+
 const RepeatSectionContent = styled('div', {
   name: 'MuiEventDialog',
   slot: 'RepeatSectionContent',
@@ -103,6 +112,7 @@ const RecurrenceSelectorToggleGroup = styled(ToggleButtonGroup, {
 })(({ theme }) => ({
   [`& .${toggleButtonGroupClasses.grouped}`]: {
     margin: theme.spacing(0.5),
+    padding: theme.spacing(0.75),
     border: 0,
     borderRadius: theme.shape.borderRadius,
     minWidth: 0,
@@ -118,6 +128,22 @@ const RecurrenceSelectorToggleGroup = styled(ToggleButtonGroup, {
   [`& .${toggleButtonGroupClasses.middleButton}, & .${toggleButtonGroupClasses.lastButton}`]: {
     marginLeft: -1,
     borderLeft: '1px solid transparent',
+  },
+}));
+
+const WeekDaySelectorCheckbox = styled(Checkbox, {
+  name: 'MuiEventDialog',
+  slot: 'WeekDaySelectorCheckbox',
+})(({ theme }) => ({
+  ...theme.typography.button,
+  fontSize: theme.typography.pxToRem(13),
+  padding: theme.spacing(0.75),
+  margin: theme.spacing(0.5),
+  borderRadius: theme.shape.borderRadius,
+  color: theme.palette.action.active,
+  [`&.${checkboxClasses.checked}`]: {
+    color: theme.palette.text.primary,
+    backgroundColor: theme.palette.action.selected,
   },
 }));
 
@@ -146,7 +172,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const { occurrence, controlled, setControlled, value: tabValue } = props;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 
@@ -203,24 +229,16 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       return;
     }
     setControlled((prev) => {
-      // When switching to MONTHLY, initialize byMonthDay with the current day of month
-      if (
-        newFrequency === 'MONTHLY' &&
-        !prev.rruleDraft.byDay?.length &&
-        !prev.rruleDraft.byMonthDay?.length
-      ) {
-        return {
-          ...prev,
-          rruleDraft: {
-            ...prev.rruleDraft,
-            freq: newFrequency,
-            byMonthDay: [monthlyRef.dayOfMonth],
-          },
-        };
-      }
+      // When switching frequency, clear byDay/byMonthDay to avoid stale values
+      // from a different frequency leaking (e.g. monthly ordinal "2TU" into weekly)
       return {
         ...prev,
-        rruleDraft: { ...prev.rruleDraft, freq: newFrequency },
+        rruleDraft: {
+          ...prev.rruleDraft,
+          freq: newFrequency,
+          byDay: [],
+          byMonthDay: newFrequency === 'MONTHLY' ? [monthlyRef.dayOfMonth] : [],
+        },
       };
     });
   };
@@ -276,13 +294,12 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     }));
   };
 
-  const handleChangeWeeklyDays = (next: RecurringEventWeekDayCode[]) => {
+  const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
+    const byDay = controlled.rruleDraft.byDay ?? [];
+    const next = byDay.includes(dayCode) ? byDay.filter((d) => d !== dayCode) : [...byDay, dayCode];
     setControlled((prev) => ({
       ...prev,
-      rruleDraft: {
-        ...prev.rruleDraft,
-        byDay: next,
-      },
+      rruleDraft: { ...prev.rruleDraft, byDay: next },
     }));
   };
 
@@ -428,7 +445,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           </Select>
         </FormControl>
 
-        <FormControl component="fieldset" aria-label={localeText.recurrenceRepeatLabel}>
+        <RepeatSectionFieldset
+          aria-label={localeText.recurrenceRepeatLabel}
+          className={classes.eventDialogRepeatSectionFieldset}
+        >
           <SectionHeaderTitle variant="subtitle2" className={classes.eventDialogSectionHeaderTitle}>
             {localeText.recurrenceRepeatLabel}
           </SectionHeaderTitle>
@@ -470,23 +490,22 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                   {localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
                 </RepeatSectionLabel>
                 <RecurrenceSelectorContainer
-                  elevation={0}
                   className={classes.eventDialogRecurrenceSelectorContainer}
+                  role="group"
+                  aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
                 >
-                  <RecurrenceSelectorToggleGroup
-                    className={classes.eventDialogRecurrenceSelectorToggleGroup}
-                    size="small"
-                    value={controlled.rruleDraft.byDay}
-                    onChange={(_, newValue) => handleChangeWeeklyDays(newValue)}
-                    disabled={customDisabled}
-                    aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
-                  >
-                    {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
-                      <ToggleButton key={dayValue} aria-label={ariaLabel} value={dayValue}>
-                        {label}
-                      </ToggleButton>
-                    ))}
-                  </RecurrenceSelectorToggleGroup>
+                  {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
+                    <WeekDaySelectorCheckbox
+                      key={dayValue}
+                      className={classes.eventDialogWeekDaySelectorCheckbox}
+                      icon={<span>{label}</span>}
+                      checkedIcon={<span>{label}</span>}
+                      checked={controlled.rruleDraft.byDay?.includes(dayValue) ?? false}
+                      disabled={customDisabled}
+                      onChange={() => handleChangeWeeklyDays(dayValue)}
+                      slotProps={{ input: { 'aria-label': ariaLabel } }}
+                    />
+                  ))}
                 </RecurrenceSelectorContainer>
               </InlineRow>
             )}
@@ -497,7 +516,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                   {localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
                 </RepeatSectionLabel>
                 <RecurrenceSelectorContainer
-                  elevation={0}
                   className={classes.eventDialogRecurrenceSelectorContainer}
                 >
                   <RecurrenceSelectorToggleGroup
@@ -523,7 +541,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               </InlineRow>
             )}
           </RepeatSectionContent>
-        </FormControl>
+        </RepeatSectionFieldset>
 
         <FormControl component="fieldset" aria-label={localeText.recurrenceEndsLabel}>
           <SectionHeaderTitle variant="subtitle2" className={classes.eventDialogSectionHeaderTitle}>

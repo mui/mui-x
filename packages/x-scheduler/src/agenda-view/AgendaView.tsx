@@ -4,7 +4,7 @@ import { useStore } from '@base-ui/utils/store';
 import { styled, alpha } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { sortEventOccurrences } from '@mui/x-scheduler-headless/sort-event-occurrences';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
@@ -152,7 +152,7 @@ export const AgendaView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     // Context hooks
-    const adapter = useAdapter();
+    const adapter = useAdapterContext();
     const { classes } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 

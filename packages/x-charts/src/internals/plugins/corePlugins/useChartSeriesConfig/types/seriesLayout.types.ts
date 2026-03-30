@@ -3,12 +3,12 @@ import { type ChartDrawingArea } from '../../../../../hooks/useDrawingArea';
 import type { SeriesId } from '../../../../../models/seriesType/common';
 import { type SeriesProcessorResult } from './seriesProcessor.types';
 
-export type SeriesLayoutGetterResult<TSeriesType extends ChartSeriesType> = Record<
+export type SeriesLayoutGetterResult<SeriesType extends ChartSeriesType> = Record<
   SeriesId,
-  ChartSeriesLayout<TSeriesType>
+  ChartSeriesLayout<SeriesType>
 >;
 
-export type SeriesLayoutGetter<TSeriesType extends ChartSeriesType> = (
-  params: SeriesProcessorResult<TSeriesType>,
+export type SeriesLayoutGetter<SeriesType extends ChartSeriesType> = (
+  params: SeriesProcessorResult<SeriesType>,
   drawingArea: Readonly<ChartDrawingArea>,
-) => SeriesLayoutGetterResult<TSeriesType>;
+) => SeriesLayoutGetterResult<SeriesType>;

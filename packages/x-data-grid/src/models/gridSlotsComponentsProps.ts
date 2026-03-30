@@ -18,6 +18,7 @@ import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 import type { GridBottomContainerProps } from '../components/virtualization/GridBottomContainer';
+import type { GridRowId } from './gridRows';
 import type {
   AutocompleteProps,
   BadgeProps,
@@ -75,6 +76,7 @@ export interface BaseSkeletonPropsOverrides {}
 export interface BaseIconPropsOverrides {}
 export interface BaseToggleButtonPropsOverrides {}
 
+export interface RowCheckboxPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -147,6 +149,7 @@ interface ElementSlotProps {
   panel: GridPanelProps & PanelPropsOverrides;
   pinnedRows: GridPinnedRowsProps & PinnedRowsPropsOverrides;
   row: GridRowProps & RowPropsOverrides;
+  rowCheckbox: GridRowCheckboxProps;
   skeletonCell: GridSkeletonCellProps & SkeletonCellPropsOverrides;
   toolbar: GridToolbarProps & ToolbarPropsOverrides;
   /**
@@ -160,6 +163,13 @@ interface ElementSlotProps {
 }
 
 export type GridSlotProps = BaseSlotProps & ElementSlotProps;
+
+export interface GridRowCheckboxProps extends CheckboxProps, RowCheckboxPropsOverrides {
+  /**
+   * The grid row id.
+   */
+  rowId: GridRowId;
+}
 
 /**
  * Overridable components props dynamically passed to the component at rendering.

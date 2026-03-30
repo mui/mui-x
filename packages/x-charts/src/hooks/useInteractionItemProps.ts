@@ -1,8 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { type SeriesItemIdentifierWithData } from '../models';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { ChartSeriesType } from '../models/seriesType/config';
@@ -20,15 +19,14 @@ function onPointerDown(event: React.PointerEvent) {
 }
 
 export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
-  data: SeriesItemIdentifierWithData<SeriesType>,
-  skip?: boolean,
+  data: SeriesItemIdentifierWithType<SeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
   onPointerDown?: (event: React.PointerEvent) => void;
 } => {
   const { instance } =
-    useChartContext<
+    useChartsContext<
       [
         UseChartInteractionSignature,
         UseChartHighlightSignature<SeriesType>,
@@ -59,15 +57,12 @@ export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
   }, [onPointerLeave]);
 
   return React.useMemo(
-    () =>
-      skip
-        ? {}
-        : {
-            onPointerEnter,
-            onPointerLeave,
-            onPointerDown,
-          },
-    [skip, onPointerEnter, onPointerLeave],
+    () => ({
+      onPointerEnter,
+      onPointerLeave,
+      onPointerDown,
+    }),
+    [onPointerEnter, onPointerLeave],
   );
 };
 

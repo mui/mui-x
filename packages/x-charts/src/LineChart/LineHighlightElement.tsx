@@ -3,46 +3,16 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import reactMajor from '@mui/x-internals/reactMajor';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
-import composeClasses from '@mui/utils/composeClasses';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SeriesId } from '../models/seriesType/common';
 import { getSymbol } from '../internals/getSymbol';
-
-export interface LineHighlightElementClasses {
-  /** Styles applied to the root element. */
-  root: string;
-}
-
-export type HighlightElementClassKey = keyof LineHighlightElementClasses;
+import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 interface LineHighlightElementCommonProps {
   seriesId: SeriesId;
   color: string;
   x: number;
   y: number;
-  classes?: Partial<LineHighlightElementClasses>;
 }
-
-export function getHighlightElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiHighlightElement', slot);
-}
-
-export const lineHighlightElementClasses: LineHighlightElementClasses = generateUtilityClasses(
-  'MuiHighlightElement',
-  ['root'],
-);
-
-const useUtilityClasses = (
-  ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'seriesId'>,
-) => {
-  const { classes, seriesId } = ownerState;
-  const slots = {
-    root: ['root', `series-${seriesId}`],
-  };
-
-  return composeClasses(slots, getHighlightElementUtilityClass, classes);
-};
 
 export type LineHighlightElementProps =
   | (LineHighlightElementCommonProps & { shape: 'circle' } & Omit<
@@ -64,9 +34,9 @@ export type LineHighlightElementProps =
  * - [LineHighlightElement API](https://mui.com/x/api/charts/line-highlight-element/)
  */
 function LineHighlightElement(props: LineHighlightElementProps) {
-  const { x, y, seriesId, classes: innerClasses, color, shape, ...other } = props;
+  const { x, y, seriesId, color, shape, ...other } = props;
 
-  const classes = useUtilityClasses(props);
+  const classes = useLineUtilityClasses();
 
   const Element = shape === 'circle' ? 'circle' : 'path';
 
@@ -84,7 +54,7 @@ function LineHighlightElement(props: LineHighlightElementProps) {
   return (
     <Element
       pointerEvents="none"
-      className={classes.root}
+      className={classes.highlight}
       transform={`translate(${x} ${y})`}
       fill={color}
       {...transformOrigin}

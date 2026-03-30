@@ -29,11 +29,11 @@ export const selectorVisibilityMap = createSelector(
   (visibilityManager) => visibilityManager?.visibilityMap ?? EMPTY_VISIBILITY_MAP,
 );
 
-const selectorIsItemVisibleFn = <T extends ChartSeriesType>(
+const selectorIsItemVisibleFn = <SeriesType extends ChartSeriesType>(
   visibilityMap: VisibilityMap,
-  seriesConfig: ChartSeriesConfig<T>,
+  seriesConfig: ChartSeriesConfig<SeriesType>,
 ) => {
-  return (identifier: VisibilityIdentifierWithType<T>) => {
+  return (identifier: VisibilityIdentifierWithType<SeriesType>) => {
     const uniqueId = serializeIdentifier(seriesConfig, identifier);
     return !visibilityMap.has(uniqueId);
   };

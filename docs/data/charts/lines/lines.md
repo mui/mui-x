@@ -70,28 +70,9 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 
 ### Axis domain
 
-By default, axes round their limits to match human-readable values.
-For example, if your data ranges from 2 to 195, the axis displays values from 0 to 200.
+By default, the x-axis domain limit for line charts is set to `'strict'`, meaning the axis range matches the data range exactly.
+For other chart types, axes round their limits to match human-readable values (for example, data ranging from 2 to 195 displays values from 0 to 200).
 This behavior can be modified by the [axis property `domainLimit`](/x/react-charts/axis/#relative-axis-subdomain).
-
-:::info
-The current default behavior can lead to empty space on left/right of the line chart.
-To fix that issue, future major version will default the x-axis domain limit to `'strict'`.
-
-To test this behavior, add the `experimentalFeatures` prop to your chart with `preferStrictDomainInLineCharts: true` value.
-You can also enable it globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props)
-
-```js
-components: {
-  MuiChartsDataProvider: {
-    defaultProps: {
-       experimentalFeatures: { preferStrictDomainInLineCharts: true }
-    },
-  },
-}
-```
-
-:::
 
 {{"demo": "LineDefaultDomainLimit.js"}}
 
@@ -172,6 +153,24 @@ Notice that the `onAxisClick` will handle both bar and line series if you mix th
   <AreaPlot onItemClick={onAreaClick} />
 </ChartsContainer>
 ```
+
+### Pointer interaction 🧪
+
+By default, line and area series are highlighted when the pointer hovers directly over the SVG element (the line stroke or area fill).
+This can make it difficult to interact with thin lines.
+
+Enabling `experimentalFeatures.enablePositionBasedPointerInteraction` switches to a pointer-position-based detection that determines the closest series to the cursor.
+For area series, it detects whether the pointer is inside the filled area.
+For line series (without area), it finds the series whose curve is closest to the pointer's vertical position.
+
+This uses the same curve interpolation as the rendered line (for example, `monotoneX`, `catmullRom`), so the hit detection matches the visual shape.
+
+:::warning
+This feature is experimental.
+Its API and behavior may change in future releases.
+:::
+
+{{"demo": "LinePointerInteraction.js"}}
 
 ## Styling
 
@@ -276,6 +275,10 @@ The definition of `myGradient` is passed as a children of the chart component.
 ```
 
 {{"demo": "CSSCustomization.js"}}
+
+The next example shows how to apply a dashed stroke to the chart line, legend mark, and tooltip mark for each series using the `[data-series]` attribute selector.
+
+{{"demo": "StyledLineChart.js"}}
 
 ## Animation
 

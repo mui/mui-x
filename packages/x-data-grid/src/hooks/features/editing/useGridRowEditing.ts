@@ -541,12 +541,16 @@ export const useGridRowEditing = (
         delete prevRowValuesLookup.current[id];
       };
 
-      if (ignoreModifications) {
+      if (ignoreModifications && apiRef.current.getRow(id)) {
         finishRowEditMode();
         return;
       }
 
       const editingState = gridEditRowsStateSelector(apiRef);
+      if (!editingState[id]) {
+        finishRowEditMode();
+        return;
+      }
       const row = prevRowValuesLookup.current[id];
 
       const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
@@ -615,7 +619,9 @@ export const useGridRowEditing = (
         try {
           Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
-              apiRef.current.updateRows([finalRowUpdate]);
+              if (apiRef.current.getRow(id)) {
+                apiRef.current.updateRows([finalRowUpdate]);
+              }
               finishRowEditMode();
             })
             .catch(handleError);
@@ -623,7 +629,9 @@ export const useGridRowEditing = (
           handleError(errorThrown);
         }
       } else {
-        apiRef.current.updateRows([rowUpdate]);
+        if (apiRef.current.getRow(id)) {
+          apiRef.current.updateRows([rowUpdate]);
+        }
         finishRowEditMode();
       }
     },
@@ -817,5 +825,12 @@ export const useGridRowEditing = (
         updateStateToStopRowEditMode({ id: originalId, ...params });
       }
     });
-  }, [apiRef, rowModesModel, updateStateToStartRowEditMode, updateStateToStopRowEditMode]);
+  }, [
+    apiRef,
+    rowModesModel,
+    updateOrDeleteRowState,
+    updateStateToStartRowEditMode,
+    updateStateToStopRowEditMode,
+    updateRowInRowModesModel,
+  ]);
 };

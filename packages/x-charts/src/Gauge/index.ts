@@ -3,5 +3,6 @@ export * from './GaugeContainer';
 export * from './GaugeValueText';
 export * from './GaugeValueArc';
 export * from './GaugeReferenceArc';
-export * from './gaugeClasses';
+export { gaugeClasses } from './gaugeClasses';
+export type { GaugeClasses, GaugeClassKey } from './gaugeClasses';
 export { useGaugeState } from './GaugeProvider';
