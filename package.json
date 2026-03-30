@@ -86,7 +86,7 @@
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
     "@mui/icons-material": "^5.15.7",
     "@mui/material": "^5.15.7",
-    "@mui/monorepo": "github:mui/material-ui#v5.15.7",
+    "@mui/monorepo": "github:mui/material-ui#c0875ee0aa6d64f8a774f40a9c39ef259e855d4a",
     "@mui/utils": "^5.15.7",
     "@next/eslint-plugin-next": "^14.0.4",
     "@octokit/plugin-retry": "^6.0.1",
@@ -195,5 +195,6 @@
   "resolutions": {
     "**/react-is": "^18.2.0",
     "**/@types/node": "^18.19.3"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
