@@ -9,9 +9,9 @@ import {
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type AxisId } from '../models/axis';
-import { utcFormatter } from '../ChartsTooltip/utils';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import type { ChartsAxisHighlightValuePosition } from './ChartsAxisHighlightValue';
+import type { ChartsAxisHighlightValueItemProps } from './ChartsAxisHighlightValueItem';
 
 type ComputedAxis = {
   scaleType: string;
@@ -33,14 +33,11 @@ function getAxisValueFormatter(
   }
 
   return (v: number | Date | string) =>
-    axis.scaleType === 'utc' ? utcFormatter(v) : `${v instanceof Date ? v.toLocaleString() : v}`;
+    `${v}`;
 }
 
-export interface AxisHighlightValueItem {
+export interface AxisHighlightValueItem extends ChartsAxisHighlightValueItemProps {
   key: string;
-  x: number;
-  y: number;
-  formattedValue: string;
 }
 
 export interface UseAxisHighlightValueParams {
@@ -56,7 +53,7 @@ export function useAxisHighlightValue(
 ): AxisHighlightValueItem[] {
   const { axisDirection, axisId, labelPosition = 'end', value, valueFormatter } = params;
 
-  const { top, left, width, height } = useDrawingArea();
+  const { top, left, width, height, right, bottom } = useDrawingArea();
 
   const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
 
@@ -110,6 +107,10 @@ export function useAxisHighlightValue(
           x: position,
           y: top,
           formattedValue,
+          position: 'top',
+          minCoord: left,
+          maxCoord: left + width,
+          space: top,
         });
       }
       if (labelPosition === 'end' || labelPosition === 'both') {
@@ -118,6 +119,10 @@ export function useAxisHighlightValue(
           x: position,
           y: top + height,
           formattedValue,
+          position: 'bottom',
+          minCoord: left,
+          maxCoord: left + width,
+          space: bottom,
         });
       }
     } else {
@@ -127,6 +132,10 @@ export function useAxisHighlightValue(
           x: left,
           y: position,
           formattedValue,
+          position: 'left',
+          minCoord: top,
+          maxCoord: top + height,
+          space: left,
         });
       }
       if (labelPosition === 'end' || labelPosition === 'both') {
@@ -135,6 +144,10 @@ export function useAxisHighlightValue(
           x: left + width,
           y: position,
           formattedValue,
+          position: 'right',
+          minCoord: top,
+          maxCoord: top + height,
+          space: right,
         });
       }
     }

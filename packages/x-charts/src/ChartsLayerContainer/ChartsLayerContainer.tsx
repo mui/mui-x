@@ -31,7 +31,6 @@ const ChartsLayerContainerDiv = styled('div', {
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  overflow: 'hidden',
   touchAction: 'pan-y',
   userSelect: 'none',
   gridArea: 'chart',

@@ -1,10 +1,10 @@
 'use client';
 import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
 import { type AxisId } from '../models/axis';
 import { useChartsLayerContainerRef } from '../hooks/useChartsLayerContainerRef';
 import { useAxisHighlightValue } from './useAxisHighlightValue';
+import { ChartsAxisHighlightValueItem } from './ChartsAxisHighlightValueItem';
 
 export type ChartsAxisHighlightValuePosition = 'start' | 'end' | 'both' | 'none';
 
@@ -41,29 +41,6 @@ export interface ChartsAxisHighlightValueProps {
   valueFormatter?: (value: number | Date | string) => string;
 }
 
-const ChartsAxisHighlightValueText = styled('text', {
-  name: 'MuiChartsAxisHighlightValue',
-  slot: 'Root',
-})(({ theme }) => ({
-  ...theme.typography.caption,
-  fill: (theme.vars || theme).palette.text.primary,
-  pointerEvents: 'none',
-}));
-
-function getTextProps(axisDirection: 'x' | 'y', key: string) {
-  const isStart = key.endsWith('-start');
-  if (axisDirection === 'x') {
-    return {
-      textAnchor: 'middle' as const,
-      dominantBaseline: isStart ? ('auto' as const) : ('hanging' as const),
-    };
-  }
-  return {
-    textAnchor: isStart ? ('end' as const) : ('start' as const),
-    dominantBaseline: 'central' as const,
-  };
-}
-
 /**
  * A component that displays the axis value at the edge of the drawing area,
  * aligned with the current axis highlight position.
@@ -94,16 +71,7 @@ function ChartsAxisHighlightValue(props: ChartsAxisHighlightValueProps) {
     return null;
   }
 
-  const content = items.map((item) => (
-    <ChartsAxisHighlightValueText
-      key={item.key}
-      x={item.x}
-      y={item.y}
-      {...getTextProps(axisDirection, item.key)}
-    >
-      {item.formattedValue}
-    </ChartsAxisHighlightValueText>
-  ));
+  const content = items.map((itemProps) => <ChartsAxisHighlightValueItem {...itemProps} />);
 
   if (!chartsLayerContainerRef.current) {
     return content;
