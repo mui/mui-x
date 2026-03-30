@@ -14,6 +14,6 @@ describe('<DayCalendarSkeleton />', () => {
     render,
     muiName: 'MuiDayCalendarSkeleton',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'refForwarding', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'refForwarding', 'themeVariants'],
   }));
 });
