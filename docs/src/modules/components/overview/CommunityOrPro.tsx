@@ -30,7 +30,7 @@ export default function CommunityOrPro({
         alignItems={{ md: 'flex-end', xs: 'space-between' }}
         justifyContent={{ md: 'space-between', xs: 'flex-end' }}
         flexGrow={1}
-        sx={{ maxWidth: { xs: '500px', md: '100%' } }}
+        sx={{ maxWidth: { xs: '500px', md: '100%' }, width: '100%' }}
       >
         <Stack
           flexBasis={{ xs: '100%', md: '65%' }}
