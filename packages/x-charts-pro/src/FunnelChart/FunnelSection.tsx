@@ -14,7 +14,7 @@ export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>,
   variant?: 'filled' | 'outlined';
 }
 
-export const FunnelSectionPath = styled('path', {
+const FunnelSectionPath = styled('path', {
   name: 'MuiFunnelChart',
   slot: 'Section',
 })(() => ({
