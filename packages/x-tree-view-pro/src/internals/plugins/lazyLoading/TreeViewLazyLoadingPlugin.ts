@@ -27,15 +27,29 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
 
   private isInsideOnItemsLazyLoaded = false;
 
+  private initStarted = false;
+
   constructor(store: RichTreeViewProStore<R, any>) {
     this.store = store;
     this.cache = store.parameters.dataSourceCache ?? new DataSourceCacheDefault<R>({});
 
     if (store.parameters.dataSource != null) {
-      this.init();
       store.subscribeEvent('beforeItemToggleExpansion', this.handleBeforeItemToggleExpansion);
     }
   }
+
+  /**
+   * Initialize lazy loading.
+   * Called from the store's disposeEffect (inside a useEffect) to avoid side effects during render.
+   * Uses a flag to ensure initialization only happens once (handles React 18 StrictMode double-firing effects).
+   */
+  public initEffect = () => {
+    if (this.store.parameters.dataSource == null || this.initStarted) {
+      return;
+    }
+    this.initStarted = true;
+    this.init();
+  };
 
   private init = () => {
     const store = this.store;
