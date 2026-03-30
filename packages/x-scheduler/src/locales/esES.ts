@@ -57,6 +57,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   startDateAfterEndDateError: 'La fecha/hora de inicio debe ser anterior a la fecha/hora de fin.',
   startDateLabel: 'Fecha de inicio',
   startTimeLabel: 'Hora de inicio',
+
   // ScopeDialog
   all: 'Todos los eventos de la serie',
   cancel: 'Cancelar',
@@ -65,6 +66,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   radioGroupAriaLabel: 'Ámbito de edición de eventos recurrentes',
   thisAndFollowing: 'Este y los siguientes eventos',
   title: 'Aplicar este cambio a:',
+
   // General
   loading: 'Cargando...',
 };
@@ -75,6 +77,7 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   resourcesLabel: 'Recursos',
   resourcesLegendSectionLabel: 'Leyenda de recursos',
   showEventsLabel: (resourceName) => `Mostrar eventos de ${resourceName}`,
+
   // ViewSwitcher
   agenda: 'Agenda',
   day: 'Día',
@@ -87,9 +90,11 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   months: 'Meses',
   weeks: 'Semanas',
   years: 'Años',
+
   // DateNavigator
   closeSidePanel: 'Cerrar panel lateral',
   openSidePanel: 'Abrir panel lateral',
+
   // Preferences menu
   amPm12h: '12 horas (1:00PM)',
   hour24h: '24 horas (13:00)',
@@ -99,8 +104,10 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Mostrar número de semana',
   timeFormat: 'Formato de hora',
   viewSpecificOptions: (view) => `Opciones de la vista ${view}`,
+
   // WeekView
   allDay: 'Todo el día',
+
   // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} más..`,
   nextTimeSpan: (timeSpan) => `Siguiente ${timeSpan}`,
@@ -108,12 +115,15 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Finaliza ${endDate}`,
+
   // MiniCalendar
   miniCalendarLabel: 'Calendario',
   miniCalendarGoToPreviousMonth: 'Mostrar el mes anterior en el calendario',
   miniCalendarGoToNextMonth: 'Mostrar el mes siguiente en el calendario',
+
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Nombre del recurso',
 };
