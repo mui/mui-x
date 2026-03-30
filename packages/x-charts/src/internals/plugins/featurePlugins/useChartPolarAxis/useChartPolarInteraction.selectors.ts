@@ -82,26 +82,6 @@ export const selectorChartsInteractionRotationAxisValue = createSelector(
   },
 );
 
-export const selectorChartsInteractionRotationAxisValues = createSelector(
-  selectorChartRotationAxis,
-  selectorChartsInteractionRotationAxisIndexes,
-  optionalGetAxisIds,
-  (rotationAxis, rotationIndexes, ids) => {
-    ids = ids ?? rotationAxis.axisIds;
-    if (rotationIndexes === null) {
-      return null;
-    }
-
-    return ids.map((id, axisIndex) => {
-      const rotationIndex = rotationIndexes[axisIndex];
-      if (rotationIndex === -1) {
-        return null;
-      }
-      return rotationAxis.axis[id].data?.[rotationIndex];
-    });
-  },
-);
-
 /**
  * Get rotation-axis ids and corresponding data index that should be display in the tooltip.
  */
@@ -126,14 +106,6 @@ export const selectorChartsInteractionTooltipRotationAxes = createSelectorMemoiz
     )
     .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
 });
-
-/**
- * Get radius-axis ids and corresponding data index that should be displayed in the tooltip.
- */
-export const selectorChartsInteractionTooltipRadiusAxes = () => {
-  // TODO implement this selector and add it to the `selectorChartsInteractionPolarAxisTooltip`
-  return [];
-};
 
 /**
  * Return `true` if the axis tooltip has something to display.
