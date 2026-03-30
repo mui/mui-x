@@ -470,6 +470,11 @@ DateRangePickerDayRaw.propTypes = {
    * Indicates if the day should be visually selected.
    */
   isVisuallySelected: PropTypes.bool,
+  /**
+   * Whether the custom component is expected to render a native `<button>` element
+   * when passing a React component to the `component` or `slots` prop.
+   */
+  nativeButton: PropTypes.bool,
   onDaySelect: PropTypes.func.isRequired,
   /**
    * Callback fired when the component is focused with a keyboard.

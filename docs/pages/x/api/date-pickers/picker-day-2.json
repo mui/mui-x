@@ -20,6 +20,7 @@
     "focusRipple": { "type": { "name": "bool" }, "default": "false" },
     "focusVisibleClassName": { "type": { "name": "string" } },
     "isVisuallySelected": { "type": { "name": "bool" } },
+    "nativeButton": { "type": { "name": "bool" } },
     "onFocusVisible": { "type": { "name": "func" } },
     "selected": { "type": { "name": "bool" }, "default": "false" },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },

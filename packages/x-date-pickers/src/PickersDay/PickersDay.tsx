@@ -363,6 +363,11 @@ PickersDayRaw.propTypes = {
    * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
    */
   isLastVisibleCell: PropTypes.bool.isRequired,
+  /**
+   * Whether the custom component is expected to render a native `<button>` element
+   * when passing a React component to the `component` or `slots` prop.
+   */
+  nativeButton: PropTypes.bool,
   onBlur: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
   onFocus: PropTypes.func,

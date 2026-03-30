@@ -34,6 +34,9 @@
     "isLastVisibleCell": {
       "description": "If <code>true</code>, day is the last visible cell of the month. Either the last day of the month or the last day of the week depending on <code>showDaysOutsideCurrentMonth</code>."
     },
+    "nativeButton": {
+      "description": "Whether the custom component is expected to render a native <code>&lt;button&gt;</code> element when passing a React component to the <code>component</code> or <code>slots</code> prop."
+    },
     "onFocusVisible": {
       "description": "Callback fired when the component is focused with a keyboard. We trigger a <code>onFocus</code> callback too."
     },

@@ -19,6 +19,7 @@
     "disableTouchRipple": { "type": { "name": "bool" }, "default": "false" },
     "focusRipple": { "type": { "name": "bool" }, "default": "false" },
     "focusVisibleClassName": { "type": { "name": "string" } },
+    "nativeButton": { "type": { "name": "bool" } },
     "onFocusVisible": { "type": { "name": "func" } },
     "selected": { "type": { "name": "bool" }, "default": "false" },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
