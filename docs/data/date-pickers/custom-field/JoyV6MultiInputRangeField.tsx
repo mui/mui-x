@@ -111,9 +111,8 @@ function JoyMultiInputDateRangeField(props: JoyMultiInputDateRangeFieldProps) {
     rootProps: {
       ref: pickerContext.rootRef,
       spacing: 2,
-      overflow: 'auto',
       direction: 'row' as const,
-      alignItems: 'center',
+      sx: { overflow: 'auto', alignItems: 'center' },
       ...otherForwardedProps,
     },
     startTextFieldProps,
