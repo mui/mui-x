@@ -37,7 +37,7 @@ export interface LicenseDetails {
   /**
    * The order id associated with the license.
    */
-  orderId: number;
+  orderId: string;
   /**
    * The plan scope (e.g., 'pro' or 'premium').
    * Only available in key version 2+.
