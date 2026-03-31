@@ -100,6 +100,7 @@ const GridEditMultiSelectCellAutocomplete = styled(
 )(({ theme }) => ({
   [`& .${inputBaseClasses.root}.${inputBaseClasses.sizeSmall}`]: {
     minHeight: 'var(--_rowHeight, 52px)',
+    paddingBlock: 4,
     [`& .${inputBaseClasses.input}`]: {
       paddingBlock: 3.5,
     },
@@ -121,8 +122,9 @@ const GridEditMultiSelectCellAutocompletePopper = styled('div', {
     prop !== 'ownerState' && prop !== 'anchorEl' && prop !== 'open' && prop !== 'disablePortal',
 })({});
 
-export interface GridEditMultiSelectCellProps<V extends ValueOptions = ValueOptions>
-  extends GridRenderEditCellParams {
+export interface GridEditMultiSelectCellProps<
+  V extends ValueOptions = ValueOptions,
+> extends GridRenderEditCellParams {
   /**
    * Callback called when the value is changed by the user.
    * @param {React.SyntheticEvent} event The event source of the callback.
@@ -257,7 +259,12 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
         <GridEditMultiSelectCellPopperContent
           {...slotProps?.popperContent}
           className={clsx(classes.popperContent, slotProps?.popperContent?.className)}
-          style={{ '--_width': `${colDef.computedWidth}px`, '--_rowHeight': `${rowHeight}px` } as React.CSSProperties}
+          style={
+            {
+              '--_width': `${colDef.computedWidth}px`,
+              '--_rowHeight': `${rowHeight}px`,
+            } as React.CSSProperties
+          }
         >
           <GridEditMultiSelectAutocomplete
             {...(props as GridEditMultiSelectCellProps)}
