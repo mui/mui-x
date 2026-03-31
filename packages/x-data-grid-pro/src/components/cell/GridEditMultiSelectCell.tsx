@@ -17,6 +17,7 @@ import {
   useGridRootProps,
   useGridApiContext,
   useGridSelector,
+  GridCellEditStopReasons,
 } from '@mui/x-data-grid';
 import {
   NotRendered,
@@ -305,13 +306,19 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
 
   const handleClose = React.useCallback(
     (_event: React.SyntheticEvent, reason: string) => {
-      apiRef.current.stopCellEditMode({
-        id,
-        field,
-        ignoreModifications: reason === 'escape',
+      if (rootProps.editMode === 'row') {
+        return;
+      }
+      const params = apiRef.current.getCellParams(id, field);
+      apiRef.current.publishEvent('cellEditStop', {
+        ...params,
+        reason:
+          reason === 'escape'
+            ? GridCellEditStopReasons.escapeKeyDown
+            : GridCellEditStopReasons.cellFocusOut,
       });
     },
-    [apiRef, field, id],
+    [apiRef, field, id, rootProps.editMode],
   );
 
   const isOptionEqualToValue = React.useCallback(
@@ -329,7 +336,11 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
             event.stopPropagation();
           } else {
             // Bare Enter: exit edit mode, ignore this selection change
-            apiRef.current.stopCellEditMode({ id, field });
+            const params = apiRef.current.getCellParams(id, field);
+            apiRef.current.publishEvent('cellEditStop', {
+              ...params,
+              reason: GridCellEditStopReasons.enterKeyDown,
+            });
             return;
           }
         }
