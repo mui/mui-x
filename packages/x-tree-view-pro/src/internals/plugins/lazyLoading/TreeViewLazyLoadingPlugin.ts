@@ -209,23 +209,25 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
    * @param {boolean} [parameters.forceRefresh] Whether to force a refresh of the children when the cache already contains some data.
    * @returns {Promise<void>} The promise resolved when the items are fetched.
    */
+  private getItemId = (item: R): TreeViewItemId =>
+    this.store.parameters.getItemId
+      ? this.store.parameters.getItemId(item)
+      : (item as unknown as { id: string }).id;
+
+  private getInlineChildren = (item: R): R[] =>
+    (this.store.parameters.getItemChildren
+      ? this.store.parameters.getItemChildren(item)
+      : item.children) ?? [];
+
   private processNestedItemChildren = (items: R[]) => {
     const { getChildrenCount } = this.store.parameters.dataSource!;
-    const getItemId = (item: R): TreeViewItemId =>
-      this.store.parameters.getItemId
-        ? this.store.parameters.getItemId(item)
-        : (item as unknown as { id: string }).id;
-    const getInlineChildren = (item: R): R[] =>
-      (this.store.parameters.getItemChildren
-        ? this.store.parameters.getItemChildren(item)
-        : item.children) ?? [];
 
     for (const item of items) {
-      const children = getInlineChildren(item);
+      const children = this.getInlineChildren(item);
       if (children.length === 0) {
         continue;
       }
-      const itemId = getItemId(item);
+      const itemId = this.getItemId(item);
       this.cache.set(itemId, children);
       this.store.items.setItemChildren({ items: children, parentId: itemId, getChildrenCount });
       this.processNestedItemChildren(children);
