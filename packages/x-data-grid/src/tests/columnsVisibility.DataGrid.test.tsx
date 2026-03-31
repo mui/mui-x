@@ -52,7 +52,7 @@ describe('<DataGrid /> - Columns visibility', () => {
       const { user } = render(<TestDataGrid showToolbar />);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-      await user.click(screen.getByRole('button', { name: 'Column' }));
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
       await user.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
     });
@@ -64,7 +64,7 @@ describe('<DataGrid /> - Columns visibility', () => {
       );
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-      await user.click(screen.getByRole('button', { name: 'Column' }));
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
       await user.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
@@ -84,7 +84,7 @@ describe('<DataGrid /> - Columns visibility', () => {
       );
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
-      fireEvent.click(screen.getByRole('button', { name: 'Column' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Columns' }));
       fireEvent.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
@@ -113,7 +113,7 @@ describe('<DataGrid /> - Columns visibility', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
-      await user.click(screen.getByRole('button', { name: 'Column' }));
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
       const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
 
       // Hide all
@@ -144,7 +144,7 @@ describe('<DataGrid /> - Columns visibility', () => {
         />,
       );
 
-      await user.click(screen.getByRole('button', { name: 'Column' }));
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
       const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
       // Hide all
       await user.click(showHideAllCheckbox);
@@ -220,7 +220,7 @@ describe('<DataGrid /> - Columns visibility', () => {
       );
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
-      await user.click(screen.getByRole('button', { name: 'Column' }));
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
       await user.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
@@ -238,7 +238,7 @@ describe('<DataGrid /> - Columns visibility', () => {
       />,
     );
 
-    await user.click(screen.getByRole('button', { name: 'Column' }));
+    await user.click(screen.getByRole('button', { name: 'Columns' }));
 
     expect(screen.getByRole('checkbox', { name: columns[0].field })).toHaveFocus();
   });
@@ -246,7 +246,7 @@ describe('<DataGrid /> - Columns visibility', () => {
   it('should hide `Show/Hide all` in columns management when `disableShowHideToggle` is `true`', async () => {
     const { setProps, user } = render(<TestDataGrid showToolbar />);
 
-    await user.click(screen.getByRole('button', { name: 'Column' }));
+    await user.click(screen.getByRole('button', { name: 'Columns' }));
     // check if `Show/Hide all` checkbox is present initially
     expect(screen.getByRole('checkbox', { name: 'Show/Hide All' })).not.to.equal(null);
     setProps({
@@ -264,7 +264,7 @@ describe('<DataGrid /> - Columns visibility', () => {
   it('should hide `Reset` in columns panel when `disableResetButton` is `true`', async () => {
     const { setProps, user } = render(<TestDataGrid showToolbar />);
 
-    await user.click(screen.getByRole('button', { name: 'Column' }));
+    await user.click(screen.getByRole('button', { name: 'Columns' }));
     // check if Reset button is present initially
     expect(screen.getByRole('button', { name: 'Reset' })).not.to.equal(null);
     setProps({
@@ -282,7 +282,7 @@ describe('<DataGrid /> - Columns visibility', () => {
     const { user } = render(<TestDataGrid showToolbar />);
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-    await user.click(screen.getByRole('button', { name: 'Column' }));
+    await user.click(screen.getByRole('button', { name: 'Columns' }));
     const resetButton = screen.getByRole('button', { name: 'Reset' });
     expect(resetButton).to.have.attribute('disabled');
 
@@ -310,7 +310,7 @@ describe('<DataGrid /> - Columns visibility', () => {
     );
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
-    await user.click(screen.getByRole('button', { name: 'Column' }));
+    await user.click(screen.getByRole('button', { name: 'Columns' }));
     const resetButton = screen.getByRole('button', { name: 'Reset' });
     expect(resetButton).to.have.attribute('disabled');
 
@@ -320,10 +320,10 @@ describe('<DataGrid /> - Columns visibility', () => {
     expect(resetButton).not.to.have.attribute('disabled');
 
     // Close columns management
-    await user.click(screen.getByRole('button', { name: 'Column' }));
+    await user.click(screen.getByRole('button', { name: 'Columns' }));
 
     // Reopen columns management
-    await user.click(screen.getByRole('button', { name: 'Column' }));
+    await user.click(screen.getByRole('button', { name: 'Columns' }));
 
     const resetButton1 = screen.getByRole('button', { name: 'Reset' });
     expect(resetButton1).not.to.have.attribute('disabled');
@@ -348,7 +348,7 @@ describe('<DataGrid /> - Columns visibility', () => {
     const { user } = render(<ControlledTest />);
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
-    await user.click(screen.getByRole('button', { name: 'Column' }));
+    await user.click(screen.getByRole('button', { name: 'Columns' }));
     const resetButton = screen.getByRole('button', { name: 'Reset' });
     expect(resetButton).to.have.attribute('disabled');
 
@@ -358,10 +358,10 @@ describe('<DataGrid /> - Columns visibility', () => {
     expect(resetButton).not.to.have.attribute('disabled');
 
     // Close columns management
-    await user.click(screen.getByRole('button', { name: 'Column' }));
+    await user.click(screen.getByRole('button', { name: 'Columns' }));
 
     // Reopen columns management
-    await user.click(screen.getByRole('button', { name: 'Column' }));
+    await user.click(screen.getByRole('button', { name: 'Columns' }));
 
     const resetButton1 = screen.getByRole('button', { name: 'Reset' });
     expect(resetButton1).not.to.have.attribute('disabled');
@@ -385,7 +385,7 @@ describe('<DataGrid /> - Columns visibility', () => {
     );
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
-    await user.click(screen.getByRole('button', { name: 'Column' }));
+    await user.click(screen.getByRole('button', { name: 'Columns' }));
     const resetButton = screen.getByRole('button', { name: 'Reset' });
     expect(resetButton).to.have.attribute('disabled');
 
@@ -419,7 +419,7 @@ describe('<DataGrid /> - Columns visibility', () => {
         />,
       );
 
-      fireEvent.click(screen.getByRole('button', { name: 'Column' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Columns' }));
       expect(screen.queryByRole('checkbox', { name: 'id' })).not.to.equal(null);
       expect(screen.queryByRole('checkbox', { name: 'idBis' })).to.equal(null);
     });
@@ -438,7 +438,7 @@ describe('<DataGrid /> - Columns visibility', () => {
         />,
       );
 
-      await user.click(screen.getByRole('button', { name: 'Column' }));
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
       const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
       await user.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
@@ -478,7 +478,7 @@ describe('<DataGrid /> - Columns visibility', () => {
       }
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'firstName', 'lastName', 'age']);
-      const button = screen.getByRole('button', { name: 'Column' });
+      const button = screen.getByRole('button', { name: 'Columns' });
       await user.click(button);
 
       const input = screen.getByPlaceholderText('Search');
