@@ -56,11 +56,6 @@ async function getRawRepoId(): Promise<string | null> {
   );
 }
 
-// Raw package name: nearest package.json name (hashed later into postinstallPackageNameHash)
-function getRawPackageName(): string | null {
-  return getPackageName();
-}
-
 // Raw root path: git root or cwd (hashed later into rootPathHash, unique per developer)
 async function getRawRootPathId(): Promise<string> {
   return (await execCLI(`git rev-parse --show-toplevel`)) || process.cwd();
@@ -72,7 +67,7 @@ export async function getAnonymousRepoHash(): Promise<string | null> {
 }
 
 export async function getAnonymousPackageNameHash(): Promise<string | null> {
-  const raw = getRawPackageName();
+  const raw = getPackageName();
   return raw ? sha256(raw) : null;
 }
 

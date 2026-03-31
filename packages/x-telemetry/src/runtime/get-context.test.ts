@@ -21,7 +21,7 @@ function nodeHash(input: string): string {
   return createHash('sha256').update(input).digest('hex');
 }
 
-describe.runIf(isJSDOM)('getRuntimePackageName', () => {
+describe.runIf(isJSDOM)('getRuntimePackageHash', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
@@ -37,8 +37,8 @@ describe.runIf(isJSDOM)('getRuntimePackageName', () => {
   it('should return hashed npm_package_name when set', async () => {
     vi.stubEnv('npm_package_name', 'test-app');
 
-    const { getRuntimePackageName } = await import('./get-context');
-    const result = await getRuntimePackageName();
+    const { getRuntimePackageHash } = await import('./get-context');
+    const result = await getRuntimePackageHash();
 
     expect(result).toBe(nodeHash('test-app'));
   });
@@ -53,8 +53,8 @@ describe.runIf(isJSDOM)('getRuntimePackageName', () => {
       }),
     );
 
-    const { getRuntimePackageName } = await import('./get-context');
-    const result = await getRuntimePackageName();
+    const { getRuntimePackageHash } = await import('./get-context');
+    const result = await getRuntimePackageHash();
 
     expect(result).toBe(nodeHash('fetched-app'));
     expect(fetchSpy).toHaveBeenCalledWith('/package.json');
@@ -65,8 +65,8 @@ describe.runIf(isJSDOM)('getRuntimePackageName', () => {
 
     fetchSpy.mockRejectedValueOnce(new Error('Network error'));
 
-    const { getRuntimePackageName } = await import('./get-context');
-    const result = await getRuntimePackageName();
+    const { getRuntimePackageHash } = await import('./get-context');
+    const result = await getRuntimePackageHash();
 
     expect(result).toBeNull();
   });
@@ -76,8 +76,8 @@ describe.runIf(isJSDOM)('getRuntimePackageName', () => {
 
     fetchSpy.mockResolvedValueOnce(new Response('Not Found', { status: 404 }));
 
-    const { getRuntimePackageName } = await import('./get-context');
-    const result = await getRuntimePackageName();
+    const { getRuntimePackageHash } = await import('./get-context');
+    const result = await getRuntimePackageHash();
 
     expect(result).toBeNull();
   });
@@ -92,8 +92,8 @@ describe.runIf(isJSDOM)('getRuntimePackageName', () => {
       }),
     );
 
-    const { getRuntimePackageName } = await import('./get-context');
-    const result = await getRuntimePackageName();
+    const { getRuntimePackageHash } = await import('./get-context');
+    const result = await getRuntimePackageHash();
 
     expect(result).toBeNull();
   });
@@ -118,7 +118,7 @@ describe.runIf(isJSDOM)('getTelemetryContext runtimePackageNameHash', () => {
     vi.unstubAllGlobals();
   });
 
-  it('should not repeatedly call getRuntimePackageName when it returns null', async () => {
+  it('should not repeatedly call getRuntimePackageHash when it returns null', async () => {
     vi.stubEnv('npm_package_name', '');
     fetchSpy.mockResolvedValue(new Response('Not Found', { status: 404 }));
 

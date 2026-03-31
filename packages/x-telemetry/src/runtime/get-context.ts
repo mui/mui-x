@@ -106,7 +106,7 @@ function getSessionId(): string {
   return `sestp_${generateId(32)}`;
 }
 
-async function getRuntimePackageName(): Promise<string | null> {
+async function getRuntimePackageHash(): Promise<string | null> {
   // npm/pnpm scripts automatically set npm_package_name
   if (typeof process !== 'undefined' && process.env?.npm_package_name) {
     return hashString(process.env.npm_package_name);
@@ -147,17 +147,17 @@ async function getTelemetryContext(): Promise<TelemetryContextType> {
     !telemetryContext.config.runtimePackageNameHashResolved
   ) {
     telemetryContext.config.runtimePackageNameHashResolved = true;
-    const runtimePackageName = await getRuntimePackageName();
-    if (runtimePackageName) {
-      telemetryContext.traits.runtimePackageNameHash = runtimePackageName;
+    const runtimePackageHash = await getRuntimePackageHash();
+    if (runtimePackageHash) {
+      telemetryContext.traits.runtimePackageNameHash = runtimePackageHash;
+      // Recompute projectId: repoHash || runtimePackageNameHash || postinstallPackageNameHash || rootPathHash
+      telemetryContext.traits.projectId =
+        telemetryContext.traits.repoHash ||
+        runtimePackageHash ||
+        telemetryContext.traits.postinstallPackageNameHash ||
+        telemetryContext.traits.rootPathHash ||
+        telemetryContext.traits.projectId;
     }
-    // Recompute projectId: repoHash || runtimePackageNameHash || postinstallPackageNameHash || rootPathHash
-    telemetryContext.traits.projectId =
-      telemetryContext.traits.repoHash ||
-      telemetryContext.traits.runtimePackageNameHash ||
-      telemetryContext.traits.postinstallPackageNameHash ||
-      telemetryContext.traits.rootPathHash ||
-      telemetryContext.traits.projectId;
   }
 
   if (!telemetryContext.traits.fingerprint) {
@@ -167,5 +167,5 @@ async function getTelemetryContext(): Promise<TelemetryContextType> {
   return telemetryContext;
 }
 
-export { TelemetryContextType, getRuntimePackageName };
+export { TelemetryContextType, getRuntimePackageHash };
 export default getTelemetryContext;
