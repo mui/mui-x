@@ -21,12 +21,13 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
 
-const dynamicShouldDisableDate = (date, position: RangePosition) => {
+const dynamicShouldDisableDate = (date: PickerValidDate, position: RangePosition) => {
   if (position === 'end') {
     return adapterToUse.getDate(date) % 3 === 0;
   }
@@ -442,7 +443,7 @@ describe('<DateRangeCalendar />', () => {
         // inside the day button, rather than the button itself. The fix uses .closest() to find
         // the ancestor with the data-timestamp attribute.
         const onChange = spy();
-        const initialValue: [any, any] = [
+        const initialValue: [PickerValidDate, PickerValidDate] = [
           adapterToUse.date('2018-01-10'),
           adapterToUse.date('2018-01-31'),
         ];

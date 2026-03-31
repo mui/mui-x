@@ -46,6 +46,11 @@ interface UseDragRangeResponse extends UseDragRangeEvents {
  * Finds the closest ancestor element (or the element itself) that has the specified data attribute.
  * This is needed because drag/touch events can target child elements (e.g., text spans)
  * inside the button, which don't have the data attributes directly.
+ *
+ * @param element The element to start searching from.
+ * @param dataAttribute The data attribute name — must be a single lowercase word
+ *   (e.g., 'timestamp', 'position') because `dataset[attr]` uses camelCase
+ *   while `.closest()` uses kebab-case, and these only align for single-word names.
  */
 const getClosestElementWithDataAttribute = (
   element: HTMLElement | null,
@@ -109,14 +114,21 @@ const resolveButtonElement = (element: Element | null): HTMLButtonElement | null
     return closestButton;
   }
 
-  // Search downward (breadth-first) - element could be a wrapper containing the button
-  const queue: Element[] = Array.from(element.children);
+  // Search downward (breadth-first, max 3 levels) - element could be a wrapper containing the button.
+  // Day cells have shallow DOM, so a small depth limit keeps this efficient.
+  const queue: Array<{ el: Element; depth: number }> = Array.from(element.children).map((el) => ({
+    el,
+    depth: 1,
+  }));
+  const maxDepth = 3;
   while (queue.length > 0) {
-    const current = queue.shift()!;
+    const { el: current, depth } = queue.shift()!;
     if (isEnabledButtonElement(current)) {
       return current;
     }
-    queue.push(...Array.from(current.children));
+    if (depth < maxDepth) {
+      queue.push(...Array.from(current.children).map((el) => ({ el, depth: depth + 1 })));
+    }
   }
 
   return null;

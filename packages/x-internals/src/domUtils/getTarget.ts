@@ -8,7 +8,7 @@ export function getTarget(event: Event) {
     return event.composedPath()[0] ?? event.target;
   }
 
-  // TS thinks `event` is of type never as it assumes all browsers support
-  // `composedPath()`, but browsers without shadow DOM don't.
+  // Fallback for environments where `composedPath` is not available.
+  // TS narrows `event` to `never` here because it assumes `composedPath` always exists.
   return (event as Event).target;
 }

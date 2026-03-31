@@ -10,9 +10,15 @@ export function isHTMLElement(value: unknown): value is HTMLElement {
   if (value instanceof HTMLElement) {
     return true;
   }
-  // Cross-realm: must be an element node (nodeType 1) from another window
-  return (
-    (value as Node).nodeType === 1 &&
-    value instanceof (ownerWindow(value as Node) as Window & typeof globalThis).HTMLElement
-  );
+  // Cross-realm: must be an element node (nodeType 1) from another window.
+  // The try/catch guards against detached/destroyed windows where accessing
+  // `.HTMLElement` on the owner window may throw.
+  try {
+    return (
+      (value as Node).nodeType === 1 &&
+      value instanceof (ownerWindow(value as Node) as Window & typeof globalThis).HTMLElement
+    );
+  } catch {
+    return false;
+  }
 }
