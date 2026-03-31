@@ -51,7 +51,8 @@ declare module '@mui/x-charts/internals' {
     };
     ohlc: {
       seriesInput: DefaultizedProps<OHLCSeriesType, 'id'> &
-        MakeRequired<SeriesColor<OHLCValueType | null>, 'color'>;
+        MakeRequired<SeriesColor<OHLCValueType | null>, 'color'> &
+        Pick<DefaultizedOHLCSeriesType, 'upColor' | 'downColor'>;
       series: DefaultizedOHLCSeriesType;
       seriesLayout: {};
       seriesProp: OHLCSeriesType;
