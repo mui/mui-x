@@ -123,7 +123,7 @@ export interface FieldRef<TValue extends PickerValidValue> {
   setSelectedSections: (selectedSections: FieldSelectedSections) => void;
   /**
    * Focuses the field.
-   * @param {FieldSelectedSections | FieldSectionType} newSelectedSection The section to select once focused.
+   * @param {number | FieldSectionType} newSelectedSection The section to select once focused.
    */
   focusField: (newSelectedSection?: number | FieldSectionType) => void;
   /**

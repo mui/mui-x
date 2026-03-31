@@ -9,7 +9,7 @@ import { UseFieldParameters, UseFieldProps, UseFieldReturnValue } from './useFie
 import { useSplitFieldProps } from '../../../hooks';
 import { FieldSectionType, InferFieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
-import { getSectionVisibleValue, isAndroid } from './useField.utils';
+import { getSectionVisibleValue, isAndroid, validateFocusedSection } from './useField.utils';
 import { PickerValidValue } from '../../models';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldRootHandleKeyDown } from './useFieldRootHandleKeyDown';
@@ -195,7 +195,17 @@ export const useFieldV6TextField = <
         input.value.length &&
         Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length
       ) {
-        setSelectedSections('all');
+        const validatedFocusedSection = validateFocusedSection(
+          internalPropsWithDefaults.initialFocusedSection,
+          state.sections,
+        );
+        setSelectedSections(validatedFocusedSection ?? 'all');
+      } else if (input.selectionStart === 0 && input.selectionEnd === 0) {
+        const validatedFocusedSection = validateFocusedSection(
+          internalPropsWithDefaults.initialFocusedSection,
+          state.sections,
+        );
+        setSelectedSections(validatedFocusedSection ?? sectionOrder.startIndex ?? 0);
       } else {
         syncSelectionFromDOM();
       }
@@ -399,9 +409,13 @@ export const useFieldV6TextField = <
   );
 
   React.useEffect(() => {
-    // Select all the sections when focused on mount (`autoFocus = true` on the input)
+    // Select the initial focused section (or all) when focused on mount (`autoFocus = true` on the input)
     if (inputRef.current && inputRef.current === getActiveElement(inputRef.current)) {
-      setSelectedSections('all');
+      const validatedFocusedSection = validateFocusedSection(
+        internalPropsWithDefaults.initialFocusedSection,
+        state.sections,
+      );
+      setSelectedSections(validatedFocusedSection ?? 'all');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

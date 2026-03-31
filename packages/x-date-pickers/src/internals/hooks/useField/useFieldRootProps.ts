@@ -7,6 +7,7 @@ import { UseFieldStateReturnValue } from './useFieldState';
 import { getActiveElement } from '../../utils/utils';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
+import { validateFocusedSection } from './useField.utils';
 
 /**
  * Generate the props to pass to the root element of the field.
@@ -80,12 +81,20 @@ export function useFieldRootProps(
       });
     } else if (!focused) {
       setFocused(true);
-      setSelectedSections(sectionOrder.startIndex);
+      const validatedFocusedSection = validateFocusedSection(
+        internalPropsWithDefaults.initialFocusedSection,
+        state.sections,
+      );
+      setSelectedSections(validatedFocusedSection ?? sectionOrder.startIndex);
     } else {
       const hasClickedOnASection = domGetters.getRoot().contains(event.target as Node);
 
       if (!hasClickedOnASection) {
-        setSelectedSections(sectionOrder.startIndex);
+        const validatedFocusedSection = validateFocusedSection(
+          internalPropsWithDefaults.initialFocusedSection,
+          state.sections,
+        );
+        setSelectedSections(validatedFocusedSection ?? sectionOrder.startIndex);
       }
     }
   });
@@ -145,7 +154,11 @@ export function useFieldRootProps(
 
     const isFocusInsideASection = domGetters.getSectionIndexFromDOMElement(activeElement) != null;
     if (!isFocusInsideASection) {
-      setSelectedSections(sectionOrder.startIndex);
+      const validatedFocusedSection = validateFocusedSection(
+        internalPropsWithDefaults.initialFocusedSection,
+        state.sections,
+      );
+      setSelectedSections(validatedFocusedSection ?? sectionOrder.startIndex);
     }
   });
 

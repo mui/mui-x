@@ -3,7 +3,7 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { parseSelectedSections } from './useField.utils';
+import { parseSelectedSections, validateFocusedSection } from './useField.utils';
 import {
   UseFieldDOMGetters,
   UseFieldParameters,
@@ -102,7 +102,7 @@ export const useFieldV7TextField = <
   const openPickerAriaLabel = useOpenPickerButtonAriaLabel(value);
   const [focused, setFocused] = React.useState(false);
 
-  function focusField(newSelectedSections: number | FieldSectionType = 0) {
+  function focusField(newSelectedSection: number | FieldSectionType = 0) {
     if (
       disabled ||
       !sectionListRef.current ||
@@ -113,12 +113,12 @@ export const useFieldV7TextField = <
     }
 
     const newParsedSelectedSections = parseSelectedSections(
-      newSelectedSections,
+      newSelectedSection,
       state.sections,
     ) as number;
 
     setFocused(true);
-    sectionListRef.current.getSectionContent(newParsedSelectedSections).focus();
+    sectionListRef.current.getSectionContent(newParsedSelectedSections)?.focus();
   }
 
   const rootProps = useFieldRootProps({
@@ -226,7 +226,20 @@ Learn more about the field accessible DOM structure on the MUI documentation: ht
     }
 
     if (autoFocus && !disabled && sectionListRef.current) {
-      sectionListRef.current.getSectionContent(sectionOrder.startIndex).focus();
+      const validatedFocusedSection = validateFocusedSection(
+        internalPropsWithDefaults.initialFocusedSection,
+        state.sections,
+      );
+      const newParsedSelectedSections = parseSelectedSections(
+        validatedFocusedSection ?? sectionOrder.startIndex,
+        state.sections,
+      );
+
+      if (newParsedSelectedSections === 'all') {
+        sectionListRef.current.getRoot()?.focus();
+      } else if (typeof newParsedSelectedSections === 'number') {
+        sectionListRef.current.getSectionContent(newParsedSelectedSections)?.focus();
+      }
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -236,12 +249,9 @@ Learn more about the field accessible DOM structure on the MUI documentation: ht
     }
 
     if (parsedSelectedSections === 'all') {
-      sectionListRef.current.getRoot().focus();
+      sectionListRef.current.getRoot()?.focus();
     } else if (typeof parsedSelectedSections === 'number') {
-      const domElement = sectionListRef.current.getSectionContent(parsedSelectedSections);
-      if (domElement) {
-        domElement.focus();
-      }
+      sectionListRef.current.getSectionContent(parsedSelectedSections)?.focus();
     }
   }, [parsedSelectedSections, focused]);
 
