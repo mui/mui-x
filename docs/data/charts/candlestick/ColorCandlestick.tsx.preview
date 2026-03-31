@@ -1,0 +1,12 @@
+<CandlestickChart
+  xAxis={[{ data: xData, zoom: { minSpan: 1, filterMode: 'discard' } }]}
+  series={[
+    {
+      data,
+      upColor: '#7B2FBE',
+      downColor: (mode: 'light' | 'dark') =>
+        mode === 'dark' ? '#f7be85' : '#F28C28',
+    },
+  ]}
+  height={400}
+/>
