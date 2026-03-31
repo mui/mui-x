@@ -55,6 +55,8 @@ The example below shows how to define the formatting of values in both axes.
 Use the `upColor` and `downColor` properties on the series to customize the candle body colors.
 The `upColor` is used when the close price is greater than or equal to the open price, and `downColor` when it is less.
 
+Those properties accept callback with type `(mode: 'light' | 'dark') => string`.
+
 {{"demo": "ColorCandlestick.js"}}
 
 ## Composition
