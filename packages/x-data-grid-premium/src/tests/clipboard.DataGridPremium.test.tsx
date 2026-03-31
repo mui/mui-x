@@ -10,6 +10,7 @@ import {
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { type SinonSpy, spy, stub, type SinonStub } from 'sinon';
 import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
+import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -1259,5 +1260,59 @@ describe('<DataGridPremium /> - Clipboard', () => {
       // Should not be empty
       expect(getCell(2, 1)).to.have.text('GBPEUR');
     });
+
+    // https://github.com/mui/mui-x/issues/21891
+    it.skipIf(isJSDOM)(
+      'should not intercept paste shortcuts from portaled elements inside a cell',
+      async () => {
+        function PortalCell() {
+          return (
+            <Portal>
+              <input type="text" name="portal-input" />
+            </Portal>
+          );
+        }
+
+        const columns: GridColDef[] = [
+          { field: 'id', renderCell: () => <PortalCell />, editable: true },
+          { field: 'name', editable: true },
+        ];
+        const rows = [
+          { id: 1, name: 'Alice' },
+          { id: 2, name: 'Bob' },
+        ];
+
+        const { user } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={columns}
+              rows={rows}
+              cellSelection
+              disableRowSelectionOnClick
+            />
+          </div>,
+        );
+
+        const portalInput = document.querySelector(
+          'input[name="portal-input"]',
+        ) as HTMLInputElement;
+
+        // First click on a cell to establish grid focus, then focus the portal input
+        const cell = getCell(0, 0);
+        await user.click(cell);
+        await act(() => portalInput.focus());
+        expect(portalInput).toHaveFocus();
+
+        // Simulate Ctrl+V on the portal input — the grid should ignore this.
+        // fireEvent is used because isPasteShortcut() requires keyCode (deprecated),
+        // which user.keyboard does not set.
+        fireEvent.keyDown(portalInput, { key: 'v', keyCode: 86, ctrlKey: true });
+
+        // Without the fix, getTextFromClipboard() creates a hidden <input> inside the grid
+        // root element and steals focus from the portal input.
+        // With the fix, the portal input retains focus.
+        expect(portalInput).toHaveFocus();
+      },
+    );
   });
 });
