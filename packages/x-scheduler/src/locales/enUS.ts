@@ -18,7 +18,6 @@ const enUSDialog: EventDialogLocaleText = {
   closeButtonLabel: 'Close',
   deleteEvent: 'Delete event',
   descriptionLabel: 'Description',
-  editDisabledNotice: 'Editing is currently unavailable for recurrent events',
   endDateLabel: 'End date',
   endTimeLabel: 'End time',
   eventTitleAriaLabel: 'Event title',
@@ -66,9 +65,6 @@ const enUSDialog: EventDialogLocaleText = {
   radioGroupAriaLabel: 'Editing recurring events scope',
   thisAndFollowing: 'This and following events',
   title: 'Apply this change to:',
-
-  // General
-  loading: 'Loading...',
 };
 
 const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> = {
