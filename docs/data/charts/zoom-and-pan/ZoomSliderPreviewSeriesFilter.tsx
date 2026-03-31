@@ -50,7 +50,7 @@ export default function ZoomSliderPreviewSeriesFilter() {
           zoom: {
             slider: {
               enabled: true,
-              preview: { seriesIds: ['average']  },
+              preview: { seriesIds: ['average'] },
             },
           },
         },
