@@ -32,8 +32,7 @@ function getAxisValueFormatter(
       axis.valueFormatter!(v as any, { location: 'tooltip', scale: axis.scale });
   }
 
-  return (v: number | Date | string) =>
-    `${v}`;
+  return (v: number | Date | string) => `${v}`;
 }
 
 export interface AxisHighlightValueItem extends ChartsAxisHighlightValueItemProps {
