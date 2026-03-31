@@ -37,7 +37,7 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   recurrenceEveryLabel: 'La fiecare',
   recurrenceRepeatLabel: 'Repetă',
   recurrenceTabLabel: 'Recurență',
-  recurrenceMainSelectCustomLabel: 'Selectați regula de recurență',
+  recurrenceMainSelectCustomLabel: 'Recurență',
   recurrenceWeeklyFrequencyLabel: 'săptămâni',
   recurrenceWeeklyPresetLabel: (weekday) => `Se repetă săptămânal în ${weekday}`,
   recurrenceMonthlyFrequencyLabel: 'luni',
@@ -50,19 +50,19 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   recurrenceWeeklyMonthlySpecificInputsLabel: 'În',
   recurrenceYearlyFrequencyLabel: 'ani',
   recurrenceYearlyPresetLabel: (date) => `Se repetă anual pe ${date}`,
-  noResourceAriaLabel: 'Fără resursă specifică',
+  noResourceAriaLabel: 'Fără resursă',
   resourceLabel: 'Resursă',
-  saveChanges: 'Salvează modificările',
+  saveChanges: 'Salvează',
   startDateAfterEndDateError: 'Data/ora de început trebuie să fie înainte de data/ora de sfârșit.',
   startDateLabel: 'Data de început',
   startTimeLabel: 'Ora de început',
 
   // ScopeDialog
-  all: 'Toate evenimentele din serie',
+  all: 'Toate evenimentele',
   cancel: 'Anulează',
   confirm: 'Confirmă',
   onlyThis: 'Doar acest eveniment',
-  radioGroupAriaLabel: 'Scopul editării evenimentelor recurente',
+  radioGroupAriaLabel: 'Aria de aplicare a modificării evenimentelor recurente',
   thisAndFollowing: 'Acest eveniment și următoarele',
   title: 'Aplică această modificare la:',
 };
@@ -93,7 +93,7 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // Preferences menu
   amPm12h: '12 ore (1:00PM)',
-  hour24h: '24 ore (13:00)',
+  hour24h: '24 de ore (13:00)',
   preferencesMenu: 'Setări',
   showWeekends: 'Afișează weekendurile',
   showEmptyDaysInAgenda: 'Afișează zilele goale',
