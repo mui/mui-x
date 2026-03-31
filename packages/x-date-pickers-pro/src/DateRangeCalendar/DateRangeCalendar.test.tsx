@@ -42,7 +42,7 @@ describe('<DateRangeCalendar />', () => {
     render,
     muiName: 'MuiDateRangeCalendar',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'themeVariants'],
   }));
 
   describe('Selection', () => {

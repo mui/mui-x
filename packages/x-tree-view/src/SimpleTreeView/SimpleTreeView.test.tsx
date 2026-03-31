@@ -13,7 +13,7 @@ describe('<SimpleTreeView />', () => {
     render,
     refInstanceof: window.HTMLUListElement,
     muiName: 'MuiSimpleTreeView',
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'themeVariants'],
   }));
 
   it('should pass the id prop to the root element', () => {

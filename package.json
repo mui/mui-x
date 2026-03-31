@@ -1,5 +1,5 @@
 {
-  "version": "9.0.0-alpha.4",
+  "version": "9.0.0-beta.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -79,7 +79,7 @@
     "@mui/internal-netlify-cache": "0.0.3-canary.1",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
-    "@mui/monorepo": "github:mui/material-ui#644d9c43cfda6e78baf1f605943bde9cc7707976",
+    "@mui/monorepo": "github:mui/material-ui#ec3a25b839161415876cc204dad13698cbe68c46",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "15.5.12",
     "@octokit/plugin-retry": "8.0.3",

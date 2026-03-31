@@ -106,7 +106,7 @@ function getSessionId(): string {
   return `sestp_${generateId(32)}`;
 }
 
-async function getRuntimeProjectId(): Promise<string | null> {
+async function getRuntimePackageHash(): Promise<string | null> {
   // npm/pnpm scripts automatically set npm_package_name
   if (typeof process !== 'undefined' && process.env?.npm_package_name) {
     return hashString(process.env.npm_package_name);
@@ -141,9 +141,23 @@ async function getTelemetryContext(): Promise<TelemetryContextType> {
     telemetryContext.config.isInitialized = true;
   }
 
-  if (!telemetryContext.traits.projectId && !telemetryContext.config.runtimeProjectIdResolved) {
-    telemetryContext.config.runtimeProjectIdResolved = true;
-    telemetryContext.traits.projectId = await getRuntimeProjectId();
+  // Always resolve runtimePackageNameHash (individual app name in monorepos)
+  if (
+    !telemetryContext.traits.runtimePackageNameHash &&
+    !telemetryContext.config.runtimePackageNameHashResolved
+  ) {
+    telemetryContext.config.runtimePackageNameHashResolved = true;
+    const runtimePackageHash = await getRuntimePackageHash();
+    telemetryContext.traits.runtimePackageNameHash = runtimePackageHash;
+    if (runtimePackageHash) {
+      // Recompute projectId: repoHash || runtimePackageNameHash || postinstallPackageNameHash || rootPathHash
+      telemetryContext.traits.projectId =
+        telemetryContext.traits.repoHash ||
+        runtimePackageHash ||
+        telemetryContext.traits.postinstallPackageNameHash ||
+        telemetryContext.traits.rootPathHash ||
+        telemetryContext.traits.projectId;
+    }
   }
 
   if (!telemetryContext.traits.fingerprint) {
@@ -153,5 +167,5 @@ async function getTelemetryContext(): Promise<TelemetryContextType> {
   return telemetryContext;
 }
 
-export { TelemetryContextType, getRuntimeProjectId };
+export { TelemetryContextType, getRuntimePackageHash };
 export default getTelemetryContext;
