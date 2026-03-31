@@ -132,7 +132,7 @@ export function useLinePlotData(
           .defined((d) => connectNulls || !d.nullData || !!d.isExtension)
           .y((d) => {
             if (hidden) {
-              return yScale(yScale.domain()[0] as number)!;
+              return yScale(d.y[0])!;
             }
 
             return yScale(d.y[1])!;
