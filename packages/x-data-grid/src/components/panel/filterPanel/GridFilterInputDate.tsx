@@ -36,6 +36,8 @@ function convertFilterItemValueToInputValue(
   return dateCopy.toISOString().substring(0, 10);
 }
 
+const LOADING_ICON_DELAY_MS = 500;
+
 function GridFilterInputDate(props: GridFilterInputDateProps) {
   const {
     item,
@@ -53,12 +55,16 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   } = props;
   const rootSlotProps = slotProps?.root.slotProps;
   const filterTimeout = useTimeout();
+  const loadingIconTimeout = useTimeout();
   const [filterValueState, setFilterValueState] = React.useState(() =>
     convertFilterItemValueToInputValue(item.value, type),
   );
-  const [applying, setIsApplying] = React.useState(false);
+  const [showLoadingIcon, setShowLoadingIcon] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
+
+  const itemRef = React.useRef(item);
+  itemRef.current = item;
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -66,14 +72,18 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       const value = event.target.value;
       setFilterValueState(value);
 
-      setIsApplying(true);
+      setShowLoadingIcon(false);
+      loadingIconTimeout.start(LOADING_ICON_DELAY_MS, () => {
+        setShowLoadingIcon(true);
+      });
       filterTimeout.start(rootProps.filterDebounceMs, () => {
         const date = new Date(value);
-        applyValue({ ...item, value: Number.isNaN(date.getTime()) ? undefined : date });
-        setIsApplying(false);
+        applyValue({ ...itemRef.current, value: Number.isNaN(date.getTime()) ? undefined : date });
+        setShowLoadingIcon(false);
+        loadingIconTimeout.clear();
       });
     },
-    [applyValue, item, rootProps.filterDebounceMs, filterTimeout],
+    [applyValue, rootProps.filterDebounceMs, filterTimeout, loadingIconTimeout],
   );
 
   React.useEffect(() => {
@@ -96,7 +106,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         slotProps={{
           ...rootSlotProps,
           input: {
-            endAdornment: applying ? (
+            endAdornment: showLoadingIcon ? (
               <rootProps.slots.loadIcon fontSize="small" color="action" />
             ) : null,
             ...rootSlotProps?.input,
