@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
@@ -57,9 +57,7 @@ const DayHeaderCell = styled('header', {
   padding: theme.spacing(2),
   gap: theme.spacing(0.5),
   '&[data-current]': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.05)`
-      : alpha(theme.palette.primary.light, 0.05),
+    backgroundColor: theme.alpha((theme.vars || theme).palette.primary.light, 0.05),
     color: (theme.vars || theme).palette.primary.main,
   },
 }));

@@ -1,3 +1,4 @@
+import type { ChartsColor } from '@mui/x-charts/colorPalettes';
 import {
   type CommonSeriesType,
   type CartesianSeriesType,
@@ -43,6 +44,16 @@ export interface OHLCSeriesType
     value: number | null,
     context: { dataIndex: number; field: OHLCField },
   ) => string | null;
+  /**
+   * The color of the candle body when the close price is greater than or equal to the open price.
+   * @default (mode) =>  mode === 'dark' ? '#66bb6a' : '#2e7d32'
+   */
+  upColor?: ChartsColor;
+  /**
+   * The color of the candle body when the close price is less than the open price.
+   * @default (mode) =>  mode === 'dark' ? '#f44336' : '#d32f2f'
+   */
+  downColor?: ChartsColor;
 }
 
 /**
@@ -68,4 +79,13 @@ export type OHLCItemIdentifier = {
 export interface DefaultizedOHLCSeriesType extends DefaultizedProps<
   OHLCSeriesType,
   CommonDefaultizedProps | 'color'
-> {}
+> {
+  /**
+   * The color of the candle body when the close price is greater than or equal to the open price.
+   */
+  upColor: string;
+  /**
+   * The color of the candle body when the close price is less than the open price.
+   */
+  downColor: string;
+}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Box from '@mui/joy/Box';
+import Box from '@mui/material/Box';
 import { BrandingProvider } from '@mui/docs/branding';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import DemoPropsForm, { DataType, PropsFromData } from './DemoPropsForm';
@@ -54,7 +54,7 @@ export default function ChartsUsageDemo<
         flexDirection: { xs: 'column', md: 'row' },
         '& .markdown-body pre': {
           margin: 0,
-          borderRadius: 'md',
+          borderRadius: 2,
         },
       }}
     >

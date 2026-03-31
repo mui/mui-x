@@ -55,11 +55,48 @@ describe('getPackageName', () => {
   });
 });
 
-describe('getAnonymousProjectId', () => {
-  it('should return a valid SHA-256 hex string', async () => {
-    const { default: getAnonymousProjectId } = await import('./get-project-id');
-    const result = await getAnonymousProjectId();
+describe('getAnonymousRepoHash', () => {
+  it('should return a valid SHA-256 hex string or null', async () => {
+    const { getAnonymousRepoHash } = await import('./get-project-id');
+    const result = await getAnonymousRepoHash();
 
+    // null when git is not available, SHA-256 hex string otherwise
+    expect(result === null || /^[a-f0-9]{64}$/.test(result)).toBe(true);
+  });
+});
+
+describe('getAnonymousPackageNameHash', () => {
+  beforeEach(() => {
+    readFileSyncSpy.mockReset();
+  });
+
+  it('should return a SHA-256 hex string when package.json has a name', async () => {
+    readFileSyncSpy.mockReturnValueOnce(JSON.stringify({ name: 'my-app' }));
+
+    const { getAnonymousPackageNameHash } = await import('./get-project-id');
+    const result = await getAnonymousPackageNameHash();
+
+    expect(result).toMatch(/^[a-f0-9]{64}$/);
+  });
+
+  it('should return null when no package.json name is found', async () => {
+    readFileSyncSpy.mockImplementation(() => {
+      throw new Error('ENOENT');
+    });
+
+    const { getAnonymousPackageNameHash } = await import('./get-project-id');
+    const result = await getAnonymousPackageNameHash();
+
+    expect(result).toBeNull();
+  });
+});
+
+describe('getAnonymousRootPathHash', () => {
+  it('should return a valid SHA-256 hex string', async () => {
+    const { getAnonymousRootPathHash } = await import('./get-project-id');
+    const result = await getAnonymousRootPathHash();
+
+    // Always resolves (git root or cwd)
     expect(result).toMatch(/^[a-f0-9]{64}$/);
   });
 });
