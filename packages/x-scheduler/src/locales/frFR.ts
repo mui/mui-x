@@ -37,7 +37,7 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   recurrenceEveryLabel: 'Chaque',
   recurrenceRepeatLabel: 'Répéter',
   recurrenceTabLabel: 'Récurrence',
-  recurrenceMainSelectCustomLabel: 'Sélectionnez votre récurrence',
+  recurrenceMainSelectCustomLabel: 'Récurrence',
   recurrenceWeeklyFrequencyLabel: 'semaines',
   recurrenceWeeklyPresetLabel: (weekday) => `Se répète chaque semaine le ${weekday}`,
   recurrenceMonthlyFrequencyLabel: 'mois',
