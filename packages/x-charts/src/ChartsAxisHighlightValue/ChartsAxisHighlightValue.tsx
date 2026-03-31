@@ -1,6 +1,7 @@
 'use client';
 import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { type SxProps } from '@mui/material/styles';
 import { type AxisId } from '../models/axis';
 import { useChartsLayerContainerRef } from '../hooks/useChartsLayerContainerRef';
 import { useAxisHighlightValue } from './useAxisHighlightValue';
@@ -39,6 +40,7 @@ export interface ChartsAxisHighlightValueProps {
    * @returns {string} The formatted string.
    */
   valueFormatter?: (value: number | Date | string) => string;
+  sx?: SxProps;
 }
 
 /**
@@ -56,7 +58,7 @@ export interface ChartsAxisHighlightValueProps {
  * - [ChartsAxisHighlightValue API](https://mui.com/x/api/charts/charts-axis-highlight-value/)
  */
 function ChartsAxisHighlightValue(props: ChartsAxisHighlightValueProps) {
-  const { axisDirection, axisId, labelPosition, value, valueFormatter } = props;
+  const { axisDirection, axisId, labelPosition, value, valueFormatter, sx } = props;
   const chartsLayerContainerRef = useChartsLayerContainerRef();
 
   const items = useAxisHighlightValue({
@@ -71,7 +73,7 @@ function ChartsAxisHighlightValue(props: ChartsAxisHighlightValueProps) {
     return null;
   }
 
-  const content = items.map((itemProps) => <ChartsAxisHighlightValueItem {...itemProps} />);
+  const content = items.map((itemProps) => <ChartsAxisHighlightValueItem {...itemProps} sx={sx} />);
 
   if (!chartsLayerContainerRef.current) {
     return content;

@@ -27,6 +27,21 @@ axisHighlight={{
 
 {{"demo": "BandHighlight.js" }}
 
+### Highlight axis value
+
+Use the `ChartsAxisHighlightValue` to highlight an axis value.
+
+By default, it follows highlighted axis.
+But you can also render it for a specific value by providing `value` prop.
+
+This component accept the following props:
+
+- `axisDirection`: `'x' | 'y'`, the direction of the highlighted axis.
+- `axisId`: the id of the axis highlighted. By default the first axis.
+- `labelPosition`: `'start' | 'end' | 'both' | 'none'` the position of the label.
+
+{{"demo": "AxisValueHighlight.js" }}
+
 ## Highlighting series
 
 When hovering over elements, a tooltip is shown by default.

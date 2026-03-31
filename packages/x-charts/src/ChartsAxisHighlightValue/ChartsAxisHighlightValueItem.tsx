@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, type SxProps } from '@mui/material/styles';
 import {
   chartsAxisHighlightValueClasses,
   useUtilityClasses,
@@ -38,10 +38,11 @@ export interface ChartsAxisHighlightValueItemProps {
   minCoord: number;
   maxCoord: number;
   space: number;
+  sx?: SxProps;
 }
 
 function ChartsAxisHighlightValueItem(props: ChartsAxisHighlightValueItemProps) {
-  const { x, y, position, formattedValue, minCoord, maxCoord, space } = props;
+  const { x, y, position, formattedValue, minCoord, maxCoord, space, sx } = props;
 
   const classes = useUtilityClasses({ position });
 
@@ -59,6 +60,7 @@ function ChartsAxisHighlightValueItem(props: ChartsAxisHighlightValueItemProps) 
           '--space': `${space}px`,
         } as React.CSSProperties
       }
+      sx={sx}
     >
       {formattedValue}
     </ChartsAxisHighlightValueText>
