@@ -1,13 +1,13 @@
 'use client';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
+import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
 import { SankeyNodeLabel } from './SankeyNodeLabel';
 
 export interface SankeyNodeLabelPlotProps {
   /**
    * Classes applied to the various elements.
    */
-  classes?: Partial<SankeyPlotClasses>;
+  classes?: Partial<SankeyClasses>;
 }
 
 function SankeyNodeLabelPlot(props: SankeyNodeLabelPlotProps) {
@@ -20,7 +20,7 @@ function SankeyNodeLabelPlot(props: SankeyNodeLabelPlotProps) {
 
   if (!sankeySeries) {
     throw new Error(
-      `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartDataProviderPro.`,
+      `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartsDataProviderPro.`,
     );
   }
 

@@ -6,34 +6,29 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { dataset } from '../dataset/gdpPerCapitaEvolution';
 
 export default function LineDefaultDomainLimit() {
-  const [preferStrictDomainInLineCharts, setPreferStrictDomainInLineCharts] =
-    React.useState(false);
+  const [niceDomainLimit, setNiceDomainLimit] = React.useState(false);
 
   return (
     <Stack alignItems="center">
       <FormControlLabel
-        checked={preferStrictDomainInLineCharts}
+        checked={niceDomainLimit}
         control={
-          <Checkbox
-            onChange={(event) =>
-              setPreferStrictDomainInLineCharts(event.target.checked)
-            }
-          />
+          <Checkbox onChange={(event) => setNiceDomainLimit(event.target.checked)} />
         }
-        label="Strict domain limit"
+        label="Nice domain limit"
         labelPlacement="end"
       />
 
       <div style={{ width: '100%', maxWidth: 450 }}>
         <LineChart
           dataset={dataset.slice(2, dataset.length)}
-          experimentalFeatures={{ preferStrictDomainInLineCharts }}
           xAxis={[
             {
               id: 'Years',
               dataKey: 'date',
               scaleType: 'time',
               valueFormatter: (date) => date.getFullYear().toString(),
+              domainLimit: niceDomainLimit ? 'nice' : undefined,
             },
           ]}
           yAxis={[{ width: 70 }]}

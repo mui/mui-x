@@ -1,0 +1,11 @@
+<CandlestickChart
+  {...chartSettings}
+  xAxis={[
+    {
+      data: xData,
+      valueFormatter: (date: Date) => dateFormatter.format(date),
+      zoom: { minSpan: 1, filterMode: 'discard' },
+    },
+  ]}
+  yAxis={[{ valueFormatter: (value: number) => dollarFormatter.format(value) }]}
+/>

@@ -10,12 +10,12 @@ export default function LabelsAboveBars() {
   return (
     <ChartsContainer
       xAxis={[{ scaleType: 'band', data: ['A', 'B', 'C'] }]}
-      series={[{ type: 'bar', id: 'base', data: [5, 17, 11] }]}
+      series={[{ type: 'bar', id: 'base', data: [5, 17, 11], barLabel: 'value' }]}
       height={400}
       yAxis={[{ width: 30 }]}
       margin={{ left: 0, right: 10 }}
     >
-      <BarPlot barLabel="value" slots={{ barLabel: BarLabel }} />
+      <BarPlot slots={{ barLabel: BarLabel }} />
       <ChartsXAxis />
       <ChartsYAxis />
     </ChartsContainer>

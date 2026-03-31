@@ -39,11 +39,11 @@ You can also include optional `id` and `z` keys.
 Scatter points can be small, so the chart does not require the pointer to be exactly over a point.
 When the pointer is in the drawing area, the closest point is used for the tooltip and highlights.
 
-Use the `voronoiMaxRadius` prop with a number to limit how far the pointer can be from a point for selection.
-If the pointer is farther than that from any point, no item is selected.
-Use `voronoiMaxRadius` with `"item"` to trigger interactions only when the pointer is directly over a point, instead of using Voronoi cells.
+You can define a maximum radius with the `hitAreaRadius` prop.
+If the distance with the pointer is larger than this radius, no item will be selected.
+Alternatively, set the `hitAreaRadius` prop to `item` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
 
-{{"demo": "VoronoiInteraction.js"}}
+{{"demo": "ClosestPointInteraction.js"}}
 
 ## Click event
 
@@ -59,7 +59,7 @@ const onItemClick = (
 
 {{"demo": "ScatterClick.js"}}
 
-When `voronoiMaxRadius` is `"item"`, the user must click directly on the point, and the mouse event comes from that element.
+If `hitAreaRadius` is `item`, users need to click precisely on the scatter element, and the mouse event will come from this element.
 
 Otherwise, click behavior matches the [interaction section](#interaction), and the mouse event comes from the SVG container.
 
@@ -158,15 +158,14 @@ By default, points are drawn with SVG `circle` elements, which may be slow for l
 Set the `renderer` prop to `"svg-batch"` to draw circles in a more efficient way.
 This has some trade-offs:
 
-- You cannot style individual circles with CSS
-- The `marker` slot cannot be overridden
-- Transparent highlight: the highlighted state draws a circle on top of the original. Transparency on the highlight can make the original circle show through
-- The `disableHover` series property has no effect
+- CSS styling of single `circle` elements is no longer possible;
+- Overriding the `marker` slot is not supported;
+- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted circle on top of the original marker. Applying transparency to the highlighted circle can cause the original circle to be partially visible;
 
 Behavior also differs in a few ways:
 
-- Rendering order may change, so overlapping circles can appear at different depths than with the default renderer
-- When `disableVoronoi` is `true`, `onItemClick` does not run, because it depends on the Voronoi logic
+- The rendering order might be different, which might cause overlapping circles to render at different depths when compared to the default rendering;
+- When `disableHitArea` is true, `onItemClick` does not work as it requires that plugin to work.
 
 The example below uses the `renderer` prop to render 16,000 points with better performance.
 

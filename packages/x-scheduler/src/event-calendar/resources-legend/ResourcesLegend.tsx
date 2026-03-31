@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox, { checkboxClasses } from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
 import { useStore } from '@base-ui/utils/store';
@@ -42,9 +42,9 @@ const ResourcesLegendItemRoot = styled(FormControlLabel, {
   marginLeft: 0,
   marginRight: 0,
   paddingLeft: `calc(var(--resource-depth) * ${theme.spacing(2)})`,
-  '& .MuiCheckbox-root': {
+  [`& .${checkboxClasses.root}`]: {
     color: 'var(--event-main)',
-    '&.Mui-checked': {
+    [`&.${checkboxClasses.checked}`]: {
       color: 'var(--event-main)',
     },
   },

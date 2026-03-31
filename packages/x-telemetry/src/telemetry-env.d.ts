@@ -2,6 +2,7 @@ export {};
 
 declare global {
   interface MUIEnv {
+    npm_package_name?: string;
     MUI_VERSION?: string;
     MUI_X_TELEMETRY_DISABLED?: string;
     NEXT_PUBLIC_MUI_X_TELEMETRY_DISABLED?: string;

@@ -12,13 +12,9 @@ export default function TooltipStyle() {
   return (
     <LineChart
       {...params}
-      slotProps={{
-        tooltip: {
-          sx: {
-            [`&.${chartsTooltipClasses.root} .${chartsTooltipClasses.valueCell}`]: {
-              color: 'red',
-            },
-          },
+      sx={{
+        [`& .${chartsTooltipClasses.root} .${chartsTooltipClasses.valueCell}`]: {
+          color: 'red',
         },
       }}
     />
