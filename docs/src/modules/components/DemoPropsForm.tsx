@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
 import FormControl from '@mui/material/FormControl';
-import FormLabel, { formLabelClasses } from '@mui/material/FormLabel';
+import FormLabel from '@mui/material/FormLabel';
 import IconButton from '@mui/material/IconButton';
 import Input, { inputClasses } from '@mui/material/Input';
 import MenuItem from '@mui/material/MenuItem';
@@ -255,9 +255,6 @@ export default function ChartDemoPropsForm<
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
-          [`& .${formLabelClasses.root}`]: {
-            fontWeight: 'lg',
-          },
           '&& > *': {
             px: 3,
           },
@@ -509,15 +506,15 @@ export default function ChartDemoPropsForm<
                       sx={{
                         gridRow: '2 / -2',
                         gridColumn: '2 / -2',
-                        fontSize: 'sm',
+                        fontSize: '0.875rem',
                         border: '1px solid',
                         borderColor: 'divider',
-                        borderRadius: 'sm',
+                        borderRadius: 1.5,
                         alignSelf: 'stretch',
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        fontWeight: 'md',
+                        fontWeight: 400,
                         color: 'text.secondary',
                       }}
                     >
@@ -551,7 +548,7 @@ export default function ChartDemoPropsForm<
                             position: 'relative',
                             height: '14px',
                             width: 32,
-                            borderRadius: 'xs',
+                            borderRadius: 1,
                             mx: 0.5,
                           },
                           placement.match(/^(top|bottom)$/) && {
@@ -599,7 +596,7 @@ function ControlledColorRadio(props: any) {
       sx={{
         width: 28,
         height: 28,
-        borderRadius: 'sm',
+        borderRadius: 1.5,
         textTransform: 'capitalize',
         position: 'relative',
         bgcolor: value,
