@@ -63,7 +63,7 @@ const ptBRDialog: Partial<EventDialogLocaleText> = {
   confirm: 'Confirmar',
   onlyThis: 'Apenas este evento',
   radioGroupAriaLabel: 'Escopo de edição de eventos recorrentes',
-  thisAndFollowing: 'Este e os eventos seguintes',
+  thisAndFollowing: 'Este evento e seguintes',
   title: 'Aplicar esta alteração a:',
 };
 
@@ -105,7 +105,7 @@ const ptBRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   allDay: 'O dia todo',
 
   // MonthView
-  hiddenEvents: (hiddenEventsCount) => `Mais ${hiddenEventsCount}..`,
+  hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} mais…`,
   nextTimeSpan: (timeSpan) => `Próximo(a) ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
   resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
