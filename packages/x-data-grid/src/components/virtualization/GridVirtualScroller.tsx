@@ -125,7 +125,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
         <TopContainer>
           {!rootProps.listView && <GridHeaders />}
-          <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
+          <rootProps.slots.pinnedRows position="top" />
         </TopContainer>
 
         {overlayType && (
@@ -140,13 +140,13 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         <Content {...getContentProps()}>
           <RenderZone role="rowgroup" {...getPositionerProps()}>
             {rows}
-            {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
+            {<rootProps.slots.detailPanels />}
           </RenderZone>
         </Content>
 
         {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
         <rootProps.slots.bottomContainer>
-          <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
+          <rootProps.slots.pinnedRows position="bottom" />
         </rootProps.slots.bottomContainer>
       </Scroller>
       {hasScrollX && (

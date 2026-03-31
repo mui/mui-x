@@ -1,0 +1,49 @@
+// Non printable keys have a name, for example "ArrowRight", see the whole list:
+// https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
+// So event.key.length === 1 is often enough.
+//
+// However, we also need to ignore shortcuts, for example: select all:
+// - Windows: Ctrl+A, event.ctrlKey is true
+// - macOS: ⌘ Command+A, event.metaKey is true
+export function isPrintableKey(event) {
+    return event.key.length === 1 && !event.ctrlKey && !event.metaKey;
+}
+export const isNavigationKey = (key) => key.indexOf('Arrow') === 0 ||
+    key.indexOf('Page') === 0 ||
+    key === ' ' ||
+    key === 'Home' ||
+    key === 'End';
+export const isKeyboardEvent = (event) => !!event.key;
+export const isHideMenuKey = (key) => key === 'Tab' || key === 'Escape';
+// In theory, on macOS, ctrl + v doesn't trigger a paste, so the function should return false.
+// However, maybe it's overkill to fix, so let's be lazy.
+export function isPasteShortcut(event) {
+    return ((event.ctrlKey || event.metaKey) &&
+        // We can't use event.code === 'KeyV' as event.code assumes a QWERTY keyboard layout,
+        // for example, it would be another letter on a Dvorak physical keyboard.
+        // We can't use event.key === 'v' as event.key is not stable with key modifiers and keyboard layouts,
+        // for example, it would be ה on a Hebrew keyboard layout.
+        // https://github.com/w3c/uievents/issues/377 could be a long-term solution
+        String.fromCharCode(event.keyCode) === 'V' &&
+        !event.shiftKey &&
+        !event.altKey);
+}
+// Checks if the keyboard event corresponds to the copy shortcut (CTRL+C or CMD+C) across different localization keyboards.
+export function isCopyShortcut(event) {
+    return ((event.ctrlKey || event.metaKey) &&
+        String.fromCharCode(event.keyCode) === 'C' &&
+        !event.shiftKey &&
+        !event.altKey);
+}
+export function isUndoShortcut(event) {
+    return ((event.ctrlKey || event.metaKey) &&
+        String.fromCharCode(event.keyCode) === 'Z' &&
+        !event.shiftKey &&
+        !event.altKey);
+}
+export function isRedoShortcut(event) {
+    return ((event.ctrlKey || event.metaKey) &&
+        ((String.fromCharCode(event.keyCode) === 'Z' && event.shiftKey) ||
+            (String.fromCharCode(event.keyCode) === 'Y' && !event.shiftKey)) &&
+        !event.altKey);
+}

@@ -1,0 +1,1 @@
+export { EventManager } from './EventManager';

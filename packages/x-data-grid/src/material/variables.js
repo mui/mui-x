@@ -1,0 +1,143 @@
+import * as React from 'react';
+import { alpha, darken, lighten } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
+import { hash } from '@mui/x-internals/hash';
+import { vars } from '../constants/cssVariables';
+import { colorMixIfSupported, supportsColorMix } from '../components/containers/GridRootStyles';
+export function useMaterialCSSVariables() {
+    const theme = useTheme();
+    return React.useMemo(() => {
+        const id = hash(stringifyTheme(theme));
+        const variables = transformTheme(theme);
+        return { id, variables };
+    }, [theme]);
+}
+function transformTheme(t) {
+    const borderColor = getBorderColor(t);
+    const dataGridPalette = (t.vars || t).palette.DataGrid;
+    const paperColor = (t.vars || t).palette.background.paper;
+    const backgroundBase = dataGridPalette?.bg ??
+        (t.palette.mode === 'dark'
+            ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 95%, #fff)`, paperColor)
+            : paperColor);
+    const backgroundHeader = dataGridPalette?.headerBg ?? backgroundBase;
+    const backgroundPinned = dataGridPalette?.pinnedBg ?? backgroundBase;
+    const backgroundBackdrop = t.vars
+        ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
+        : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
+    const backgroundOverlay = t.palette.mode === 'dark'
+        ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 90%, #fff)`, paperColor)
+        : paperColor;
+    const selectedColor = t.vars
+        ? `rgb(${t.vars.palette.primary.mainChannel})`
+        : t.palette.primary.main;
+    const radius = getRadius(t);
+    const fontBody = t.vars?.font?.body2 ?? formatFont(t.typography.body2);
+    const fontSmall = t.vars?.font?.caption ?? formatFont(t.typography.caption);
+    const fontLarge = t.vars?.font?.body1 ?? formatFont(t.typography.body1);
+    const k = vars.keys;
+    return {
+        [k.spacingUnit]: t.vars ? (t.vars.spacing ?? t.spacing(1)) : t.spacing(1),
+        [k.colors.border.base]: borderColor,
+        [k.colors.background.base]: backgroundBase,
+        [k.colors.background.overlay]: backgroundOverlay,
+        [k.colors.background.backdrop]: backgroundBackdrop,
+        [k.colors.foreground.base]: (t.vars || t).palette.text.primary,
+        [k.colors.foreground.muted]: (t.vars || t).palette.text.secondary,
+        [k.colors.foreground.accent]: (t.vars || t).palette.primary.dark,
+        [k.colors.foreground.disabled]: (t.vars || t).palette.text.disabled,
+        [k.colors.foreground.error]: (t.vars || t).palette.error.dark,
+        [k.colors.interactive.hover]: supportsColorMix
+            ? (t.vars || t).palette.action.hover
+            : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 800 : 100],
+        [k.colors.interactive.hoverOpacity]: (t.vars || t).palette.action.hoverOpacity,
+        [k.colors.interactive.focus]: removeOpacity((t.vars || t).palette.primary.main),
+        [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,
+        [k.colors.interactive.disabled]: removeOpacity((t.vars || t).palette.action.disabled),
+        [k.colors.interactive.disabledOpacity]: (t.vars || t).palette.action.disabledOpacity,
+        [k.colors.interactive.selected]: supportsColorMix
+            ? selectedColor
+            : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 700 : 200],
+        [k.colors.interactive.selectedOpacity]: (t.vars || t).palette.action.selectedOpacity,
+        [k.header.background.base]: backgroundHeader,
+        [k.cell.background.pinned]: backgroundPinned,
+        [k.radius.base]: radius,
+        [k.typography.fontFamily.base]: t.typography.fontFamily,
+        [k.typography.fontWeight.light]: t.typography.fontWeightLight,
+        [k.typography.fontWeight.regular]: t.typography.fontWeightRegular,
+        [k.typography.fontWeight.medium]: t.typography.fontWeightMedium,
+        [k.typography.fontWeight.bold]: t.typography.fontWeightBold,
+        [k.typography.font.body]: fontBody,
+        [k.typography.font.small]: fontSmall,
+        [k.typography.font.large]: fontLarge,
+        [k.transitions.easing.easeIn]: t.transitions.easing.easeIn,
+        [k.transitions.easing.easeOut]: t.transitions.easing.easeOut,
+        [k.transitions.easing.easeInOut]: t.transitions.easing.easeInOut,
+        [k.transitions.duration.short]: `${t.transitions.duration.shorter}ms`,
+        [k.transitions.duration.base]: `${t.transitions.duration.short}ms`,
+        [k.transitions.duration.long]: `${t.transitions.duration.standard}ms`,
+        [k.shadows.base]: (t.vars || t).shadows[2],
+        [k.shadows.overlay]: (t.vars || t).shadows[8],
+        [k.zIndex.panel]: (t.vars || t).zIndex.modal,
+        [k.zIndex.menu]: (t.vars || t).zIndex.modal,
+    };
+}
+function getRadius(theme) {
+    if (theme.vars) {
+        return theme.vars.shape.borderRadius;
+    }
+    return typeof theme.shape.borderRadius === 'number'
+        ? `${theme.shape.borderRadius}px`
+        : theme.shape.borderRadius;
+}
+function getBorderColor(theme) {
+    if (theme.vars) {
+        return theme.vars.palette.TableCell.border;
+    }
+    if (theme.palette.mode === 'light') {
+        return lighten(alpha(theme.palette.divider, 1), 0.88);
+    }
+    return darken(alpha(theme.palette.divider, 1), 0.68);
+}
+function setOpacity(color, opacity) {
+    return `rgba(from ${color} r g b / ${opacity})`;
+}
+function removeOpacity(color) {
+    return setOpacity(color, 1);
+}
+function formatFont(font) {
+    // Accounts for disabled typography variants
+    // See: https://github.com/mui/mui-x/issues/17812
+    if (!font) {
+        return undefined;
+    }
+    const fontSize = typeof font.fontSize === 'number' ? `${font.fontSize}px` : font.fontSize;
+    return `${font.fontWeight} ${fontSize} / ${font.lineHeight} ${font.fontFamily}`;
+}
+/**
+ * A version of JSON.stringify for theme objects.
+ * Fixes: https://github.com/mui/mui-x/issues/17521
+ * Source: https://www.30secondsofcode.org/js/s/stringify-circular-json/
+ */
+function stringifyTheme(input) {
+    const seen = new WeakSet();
+    return JSON.stringify(input, (_, v) => {
+        // https://github.com/mui/mui-x/issues/17855
+        if ((typeof window !== 'undefined' && v === window) ||
+            (typeof document !== 'undefined' && v === document)) {
+            return v.toString();
+        }
+        if (v !== null && typeof v === 'object') {
+            // Do not attempt to serialize React elements due to performance concerns.
+            // Fixes https://github.com/mui/mui-x/issues/19414
+            if (React.isValidElement(v)) {
+                return null;
+            }
+            if (seen.has(v)) {
+                return null;
+            }
+            seen.add(v);
+        }
+        return v;
+    });
+}

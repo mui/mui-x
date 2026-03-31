@@ -1,0 +1,101 @@
+'use client';
+import * as React from 'react';
+import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
+import { useGridRegisterPipeProcessor, } from '@mui/x-data-grid-pro/internals';
+import { getAvailableAggregationFunctions, addFooterRows, getAggregationRules, mergeStateWithAggregationModel, } from './gridAggregationUtils';
+import { wrapColumnWithAggregationValue, unwrapColumnFromAggregation, } from './wrapColumnWithAggregation';
+import { gridAggregationModelSelector } from './gridAggregationSelectors';
+export const useGridAggregationPreProcessors = (apiRef, props) => {
+    // apiRef.current.caches.aggregation.rulesOnLastColumnHydration is not used because by the time
+    // that the pre-processor is called it will already have been updated with the current rules.
+    const rulesOnLastColumnHydration = React.useRef({});
+    const updateAggregatedColumns = React.useCallback((columnsState) => {
+        const aggregationRules = props.disableAggregation
+            ? {}
+            : getAggregationRules(columnsState.lookup, gridAggregationModelSelector(apiRef), props.aggregationFunctions, !!props.dataSource);
+        columnsState.orderedFields.forEach((field) => {
+            const shouldHaveAggregationValue = !!aggregationRules[field];
+            const haveAggregationColumnValue = !!rulesOnLastColumnHydration.current[field];
+            let column = columnsState.lookup[field];
+            if (haveAggregationColumnValue) {
+                column = unwrapColumnFromAggregation(column);
+            }
+            if (shouldHaveAggregationValue) {
+                column = wrapColumnWithAggregationValue(column, aggregationRules[field], apiRef);
+            }
+            columnsState.lookup[field] = column;
+        });
+        rulesOnLastColumnHydration.current = aggregationRules;
+        apiRef.current.caches.aggregation.rulesOnLastColumnHydration = aggregationRules;
+        return columnsState;
+    }, [apiRef, props.aggregationFunctions, props.disableAggregation, props.dataSource]);
+    const addGroupFooterRows = React.useCallback((value) => {
+        const aggregationRules = props.disableAggregation
+            ? {}
+            : getAggregationRules(gridColumnLookupSelector(apiRef), gridAggregationModelSelector(apiRef), props.aggregationFunctions, !!props.dataSource);
+        const hasAggregationRule = Object.keys(aggregationRules).length > 0;
+        // If we did not have any aggregation footer before, and we still don't have any,
+        // Then we can skip this step
+        if (Object.keys(apiRef.current.caches.aggregation.rulesOnLastRowHydration).length === 0 &&
+            !hasAggregationRule) {
+            return value;
+        }
+        apiRef.current.caches.aggregation.rulesOnLastRowHydration = aggregationRules;
+        return addFooterRows({
+            apiRef,
+            groupingParams: value,
+            getAggregationPosition: props.getAggregationPosition,
+            hasAggregationRule,
+        });
+    }, [
+        apiRef,
+        props.disableAggregation,
+        props.getAggregationPosition,
+        props.aggregationFunctions,
+        props.dataSource,
+    ]);
+    const addColumnMenuButtons = React.useCallback((columnMenuItems, colDef) => {
+        if (props.disableAggregation || !colDef.aggregable) {
+            return columnMenuItems;
+        }
+        const availableAggregationFunctions = getAvailableAggregationFunctions({
+            aggregationFunctions: props.aggregationFunctions,
+            colDef,
+            isDataSource: !!props.dataSource,
+        });
+        if (availableAggregationFunctions.length === 0) {
+            return columnMenuItems;
+        }
+        return [...columnMenuItems, 'columnMenuAggregationItem'];
+    }, [props.aggregationFunctions, props.disableAggregation, props.dataSource]);
+    const stateExportPreProcessing = React.useCallback((prevState) => {
+        if (props.disableAggregation) {
+            return prevState;
+        }
+        const aggregationModelToExport = gridAggregationModelSelector(apiRef);
+        if (Object.values(aggregationModelToExport).length === 0) {
+            return prevState;
+        }
+        return {
+            ...prevState,
+            aggregation: {
+                model: aggregationModelToExport,
+            },
+        };
+    }, [apiRef, props.disableAggregation]);
+    const stateRestorePreProcessing = React.useCallback((params, context) => {
+        if (props.disableAggregation) {
+            return params;
+        }
+        const aggregationModel = context.stateToRestore.aggregation?.model;
+        if (aggregationModel != null) {
+            apiRef.current.setState(mergeStateWithAggregationModel(aggregationModel));
+        }
+        return params;
+    }, [apiRef, props.disableAggregation]);
+    useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateAggregatedColumns);
+    useGridRegisterPipeProcessor(apiRef, 'hydrateRows', addGroupFooterRows);
+    useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+    useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+    useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+};

@@ -1,0 +1,164 @@
+'use client';
+import * as React from 'react';
+import { gridColumnLookupSelector, gridRowTreeSelector, useFirstRender, } from '@mui/x-data-grid-pro';
+import { useGridRegisterPipeProcessor, useGridRegisterStrategyProcessor, sortRowTree, createRowTree, updateRowTree, getVisibleRowsLookup, RowGroupingStrategy, } from '@mui/x-data-grid-pro/internals';
+import { gridRowGroupingModelSelector, gridRowGroupingSanitizedModelSelector, } from './gridRowGroupingSelector';
+import { createGroupingColDefForAllGroupingCriteria, createGroupingColDefForOneGroupingCriteria, } from './createGroupingColDef';
+import { filterRowTreeFromGroupingColumns, getColDefOverrides, isGroupingColumn, setStrategyAvailability, getCellGroupingCriteria, getGroupingRules, } from './gridRowGroupingUtils';
+export const useGridRowGroupingPreProcessors = (apiRef, props) => {
+    const getGroupingColDefs = React.useCallback((columnsState) => {
+        if (props.disableRowGrouping) {
+            return [];
+        }
+        const strategy = props.dataSource
+            ? RowGroupingStrategy.DataSource
+            : RowGroupingStrategy.Default;
+        const groupingColDefProp = props.groupingColDef;
+        // We can't use `gridGroupingRowsSanitizedModelSelector` here because the new columns are not in the state yet
+        const rowGroupingModel = gridRowGroupingModelSelector(apiRef).filter((field) => !!columnsState.lookup[field]);
+        if (rowGroupingModel.length === 0) {
+            return [];
+        }
+        switch (props.rowGroupingColumnMode) {
+            case 'single': {
+                return [
+                    createGroupingColDefForAllGroupingCriteria({
+                        apiRef,
+                        rowGroupingModel,
+                        colDefOverride: getColDefOverrides(groupingColDefProp, rowGroupingModel, strategy),
+                        columnsLookup: columnsState.lookup,
+                        strategy,
+                    }),
+                ];
+            }
+            case 'multiple': {
+                return rowGroupingModel.map((groupingCriteria) => createGroupingColDefForOneGroupingCriteria({
+                    groupingCriteria,
+                    colDefOverride: getColDefOverrides(groupingColDefProp, [groupingCriteria]),
+                    groupedByColDef: columnsState.lookup[groupingCriteria],
+                    columnsLookup: columnsState.lookup,
+                    strategy,
+                }));
+            }
+            default: {
+                return [];
+            }
+        }
+    }, [
+        apiRef,
+        props.groupingColDef,
+        props.rowGroupingColumnMode,
+        props.disableRowGrouping,
+        props.dataSource,
+    ]);
+    const updateGroupingColumn = React.useCallback((columnsState) => {
+        const groupingColDefs = getGroupingColDefs(columnsState);
+        let newColumnFields = [];
+        const newColumnsLookup = {};
+        // We only keep the non-grouping columns
+        columnsState.orderedFields.forEach((field) => {
+            if (!isGroupingColumn(field)) {
+                newColumnFields.push(field);
+                newColumnsLookup[field] = columnsState.lookup[field];
+            }
+        });
+        // We add the grouping column
+        groupingColDefs.forEach((groupingColDef) => {
+            const matchingGroupingColDef = columnsState.lookup[groupingColDef.field];
+            if (matchingGroupingColDef) {
+                groupingColDef.width = matchingGroupingColDef.width;
+                groupingColDef.flex = matchingGroupingColDef.flex;
+            }
+            newColumnsLookup[groupingColDef.field] = groupingColDef;
+        });
+        newColumnFields = [...groupingColDefs.map((colDef) => colDef.field), ...newColumnFields];
+        columnsState.orderedFields = newColumnFields;
+        columnsState.lookup = newColumnsLookup;
+        return columnsState;
+    }, [getGroupingColDefs]);
+    const createRowTreeForRowGrouping = React.useCallback((params) => {
+        const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+        const columnsLookup = gridColumnLookupSelector(apiRef);
+        const groupingRules = getGroupingRules({
+            sanitizedRowGroupingModel,
+            columnsLookup,
+        });
+        apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
+        const getRowTreeBuilderNode = (rowId) => {
+            const row = params.dataRowIdToModelLookup[rowId];
+            const parentPath = groupingRules
+                .map((groupingRule) => getCellGroupingCriteria({
+                row,
+                groupingRule,
+                colDef: columnsLookup[groupingRule.field],
+                apiRef,
+            }))
+                .filter((cell) => cell.key != null);
+            const leafGroupingCriteria = {
+                key: rowId.toString(),
+                field: null,
+            };
+            return {
+                path: [...parentPath, leafGroupingCriteria],
+                id: rowId,
+            };
+        };
+        if (params.updates.type === 'full') {
+            return createRowTree({
+                previousTree: params.previousTree,
+                nodes: params.updates.rows.map(getRowTreeBuilderNode),
+                defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
+                isGroupExpandedByDefault: props.isGroupExpandedByDefault,
+                groupingName: RowGroupingStrategy.Default,
+            });
+        }
+        return updateRowTree({
+            nodes: {
+                inserted: params.updates.actions.insert.map(getRowTreeBuilderNode),
+                modified: params.updates.actions.modify.map(getRowTreeBuilderNode),
+                removed: params.updates.actions.remove,
+            },
+            previousTree: params.previousTree,
+            previousTreeDepth: params.previousTreeDepths,
+            defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
+            isGroupExpandedByDefault: props.isGroupExpandedByDefault,
+            groupingName: RowGroupingStrategy.Default,
+        });
+    }, [apiRef, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault]);
+    const filterRows = React.useCallback((params) => {
+        const rowTree = gridRowTreeSelector(apiRef);
+        return filterRowTreeFromGroupingColumns({
+            rowTree,
+            isRowMatchingFilters: params.isRowMatchingFilters,
+            filterModel: params.filterModel,
+            filterValueGetter: params.filterValueGetter,
+            apiRef,
+        });
+    }, [apiRef]);
+    const sortRows = React.useCallback((params) => {
+        const rowTree = gridRowTreeSelector(apiRef);
+        return sortRowTree({
+            rowTree,
+            sortRowList: params.sortRowList,
+            disableChildrenSorting: false,
+            shouldRenderGroupBelowLeaves: true,
+        });
+    }, [apiRef]);
+    useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
+    useGridRegisterStrategyProcessor(apiRef, RowGroupingStrategy.Default, 'rowTreeCreation', createRowTreeForRowGrouping);
+    useGridRegisterStrategyProcessor(apiRef, RowGroupingStrategy.Default, 'filtering', filterRows);
+    useGridRegisterStrategyProcessor(apiRef, RowGroupingStrategy.Default, 'sorting', sortRows);
+    useGridRegisterStrategyProcessor(apiRef, RowGroupingStrategy.Default, 'visibleRowsLookupCreation', getVisibleRowsLookup);
+    useFirstRender(() => {
+        setStrategyAvailability(apiRef, props.disableRowGrouping, props.dataSource);
+    });
+    const isFirstRender = React.useRef(true);
+    React.useEffect(() => {
+        if (!isFirstRender.current) {
+            setStrategyAvailability(apiRef, props.disableRowGrouping, props.dataSource);
+        }
+        else {
+            isFirstRender.current = false;
+        }
+    }, [apiRef, props.disableRowGrouping, props.dataSource]);
+};

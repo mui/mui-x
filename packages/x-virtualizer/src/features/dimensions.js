@@ -1,0 +1,505 @@
+'use client';
+import * as React from 'react';
+import ownerDocument from '@mui/utils/ownerDocument';
+import useLazyRef from '@mui/utils/useLazyRef';
+import useLayoutEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
+import { throttle } from '@mui/x-internals/throttle';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { roundToDecimalPlaces } from '@mui/x-internals/math';
+import { useStore, createSelectorMemoized } from '@mui/x-internals/store';
+import { Size } from '../models';
+const EMPTY_DIMENSIONS = {
+    isReady: false,
+    root: Size.EMPTY,
+    viewportOuterSize: Size.EMPTY,
+    viewportInnerSize: Size.EMPTY,
+    contentSize: Size.EMPTY,
+    minimumSize: Size.EMPTY,
+    hasScrollX: false,
+    hasScrollY: false,
+    scrollbarSize: 0,
+    rowWidth: 0,
+    rowHeight: 0,
+    columnsTotalWidth: 0,
+    leftPinnedWidth: 0,
+    rightPinnedWidth: 0,
+    topContainerHeight: 0,
+    bottomContainerHeight: 0,
+    autoHeight: false,
+    minimalContentHeight: undefined,
+};
+const selectors = {
+    rootSize: (state) => state.rootSize,
+    dimensions: (state) => state.dimensions,
+    rowHeight: (state) => state.dimensions.rowHeight,
+    columnsTotalWidth: (state) => state.dimensions.columnsTotalWidth,
+    contentHeight: (state) => state.dimensions.contentSize.height,
+    autoHeight: (state) => state.dimensions.autoHeight,
+    minimalContentHeight: (state) => state.dimensions.minimalContentHeight,
+    rowsMeta: (state) => state.rowsMeta,
+    rowPositions: (state) => state.rowsMeta.positions,
+    columnPositions: createSelectorMemoized((_, columns) => {
+        const positions = [];
+        let currentPosition = 0;
+        for (let i = 0; i < columns.length; i += 1) {
+            positions.push(currentPosition);
+            currentPosition += columns[i].computedWidth;
+        }
+        return positions;
+    }),
+    needsHorizontalScrollbar: (state) => state.dimensions.viewportOuterSize.width > 0 &&
+        state.dimensions.columnsTotalWidth > state.dimensions.viewportOuterSize.width,
+};
+export const Dimensions = {
+    initialize: initializeState,
+    use: useDimensions,
+    selectors,
+};
+function initializeState(params) {
+    const dimensions = {
+        ...EMPTY_DIMENSIONS,
+        ...params.dimensions,
+        autoHeight: params.dimensions.autoHeight,
+        minimalContentHeight: params.dimensions.minimalContentHeight,
+    };
+    const { rowCount } = params;
+    const { rowHeight } = dimensions;
+    const rowsMeta = {
+        currentPageTotalHeight: rowCount * rowHeight,
+        positions: Array.from({ length: rowCount }, (_, i) => i * rowHeight),
+        pinnedTopRowsTotalHeight: 0,
+        pinnedBottomRowsTotalHeight: 0,
+    };
+    const rowHeights = new Map();
+    return {
+        rootSize: Size.EMPTY,
+        dimensions,
+        rowsMeta,
+        rowHeights,
+    };
+}
+function useDimensions(store, params, _api) {
+    const isFirstSizing = React.useRef(true);
+    // Vertical scrollbar oscillation detector.
+    // Counts consecutive hasScrollY flips that happen with no row-height change.
+    // After 2 flips it is certainly a layout feedback loop, so every further flip
+    // is forced to false (no scrollbar). The counter resets when row heights change.
+    // Only vertical scrollbar can oscillate because column widths are never 'auto'.
+    // https://github.com/mui/mui-x/issues/20539
+    const scrollYOscillation = React.useRef({
+        counter: 0,
+        heights: { content: 0, pinnedTop: 0, pinnedBottom: 0 },
+    });
+    const { layout, dimensions: { rowHeight, columnsTotalWidth, leftPinnedWidth, rightPinnedWidth, topPinnedHeight, bottomPinnedHeight, }, onResize, } = params;
+    const updateDimensions = React.useCallback((firstUpdate) => {
+        if (firstUpdate) {
+            isFirstSizing.current = false;
+        }
+        if (isFirstSizing.current) {
+            return;
+        }
+        const containerNode = layout.refs.container.current;
+        const rootSize = selectors.rootSize(store.state);
+        const rowsMeta = selectors.rowsMeta(store.state);
+        // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
+        // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
+        // https://github.com/mui/mui-x/issues/15721
+        const scrollbarSize = measureScrollbarSize(containerNode, params.dimensions.scrollbarSize);
+        const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
+        const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
+        const contentSize = {
+            width: columnsTotalWidth,
+            height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
+        };
+        const prevDimensions = store.state.dimensions;
+        let viewportOuterSize;
+        let viewportInnerSize;
+        let hasScrollX = false;
+        let hasScrollY = false;
+        if (params.dimensions.autoHeight) {
+            hasScrollY = false;
+            hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
+            viewportOuterSize = {
+                width: rootSize.width,
+                height: topContainerHeight + bottomContainerHeight + contentSize.height,
+            };
+            viewportInnerSize = {
+                width: Math.max(0, viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0)),
+                height: Math.max(0, viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0)),
+            };
+        }
+        else {
+            viewportOuterSize = {
+                width: rootSize.width,
+                height: rootSize.height,
+            };
+            viewportInnerSize = {
+                width: Math.max(0, viewportOuterSize.width),
+                height: Math.max(0, viewportOuterSize.height - topContainerHeight - bottomContainerHeight),
+            };
+            const content = contentSize;
+            const container = viewportInnerSize;
+            const hasScrollXIfNoYScrollBar = content.width > container.width;
+            const hasScrollYIfNoXScrollBar = content.height > container.height;
+            if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
+                hasScrollY = hasScrollYIfNoXScrollBar;
+                hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
+                // We recalculate the scroll y to consider the size of the x scrollbar.
+                if (hasScrollX) {
+                    hasScrollY = content.height + scrollbarSize > container.height;
+                }
+            }
+            // Detect vertical scrollbar oscillation.
+            // Track consecutive hasScrollY flips with no row-height change.
+            // Once confirmed (≥ 2 flips), force hasScrollY off — the scrollbar is
+            // not genuinely needed, it is a layout feedback loop caused by stale
+            // rootSize or the horizontal scrollbar's height cascading.
+            {
+                const osc = scrollYOscillation.current;
+                const heightsChanged = rowsMeta.currentPageTotalHeight !== osc.heights.content ||
+                    rowsMeta.pinnedTopRowsTotalHeight !== osc.heights.pinnedTop ||
+                    rowsMeta.pinnedBottomRowsTotalHeight !== osc.heights.pinnedBottom;
+                if (heightsChanged) {
+                    osc.counter = 0;
+                    osc.heights = {
+                        content: rowsMeta.currentPageTotalHeight,
+                        pinnedTop: rowsMeta.pinnedTopRowsTotalHeight,
+                        pinnedBottom: rowsMeta.pinnedBottomRowsTotalHeight,
+                    };
+                }
+                if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
+                    if (!heightsChanged) {
+                        osc.counter += 1;
+                    }
+                    if (osc.counter >= 2) {
+                        hasScrollY = false;
+                        // Recompute hasScrollX without the vertical scrollbar's width impact,
+                        // otherwise the cascade (hasScrollY → narrower viewport → hasScrollX)
+                        // keeps the horizontal scrollbar/filler alive and the root keeps resizing.
+                        hasScrollX = hasScrollXIfNoYScrollBar;
+                    }
+                }
+            }
+            if (hasScrollY) {
+                viewportInnerSize.width -= scrollbarSize;
+            }
+            if (hasScrollX) {
+                viewportInnerSize.height -= scrollbarSize;
+            }
+        }
+        if (params.disableHorizontalScroll) {
+            hasScrollX = false;
+        }
+        if (params.disableVerticalScroll) {
+            hasScrollY = false;
+        }
+        const rowWidth = Math.max(viewportOuterSize.width, columnsTotalWidth + (hasScrollY ? scrollbarSize : 0));
+        const minimumSize = {
+            width: columnsTotalWidth,
+            height: topContainerHeight + contentSize.height + bottomContainerHeight,
+        };
+        const newDimensions = {
+            isReady: true,
+            root: rootSize,
+            viewportOuterSize,
+            viewportInnerSize,
+            contentSize,
+            minimumSize,
+            hasScrollX,
+            hasScrollY,
+            scrollbarSize,
+            rowWidth,
+            rowHeight,
+            columnsTotalWidth,
+            leftPinnedWidth,
+            rightPinnedWidth,
+            topContainerHeight,
+            bottomContainerHeight,
+            autoHeight: params.dimensions.autoHeight,
+            minimalContentHeight: params.dimensions.minimalContentHeight,
+        };
+        if (isDeepEqual(prevDimensions, newDimensions)) {
+            return;
+        }
+        store.update({ dimensions: newDimensions });
+        onResize?.(newDimensions.root);
+    }, [
+        store,
+        layout.refs.container,
+        params.dimensions.scrollbarSize,
+        params.dimensions.autoHeight,
+        params.dimensions.minimalContentHeight,
+        params.disableHorizontalScroll,
+        params.disableVerticalScroll,
+        onResize,
+        rowHeight,
+        columnsTotalWidth,
+        leftPinnedWidth,
+        rightPinnedWidth,
+        topPinnedHeight,
+        bottomPinnedHeight,
+    ]);
+    const { resizeThrottleMs } = params;
+    const updateDimensionCallback = useEventCallback(updateDimensions);
+    const debouncedUpdateDimensions = React.useMemo(() => (resizeThrottleMs > 0 ? throttle(updateDimensionCallback, resizeThrottleMs) : undefined), [resizeThrottleMs, updateDimensionCallback]);
+    React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
+    useLayoutEffect(updateDimensions, [updateDimensions]);
+    useLayoutEffect(() => {
+        store.update({
+            dimensions: {
+                ...store.state.dimensions,
+                autoHeight: params.dimensions.autoHeight,
+                minimalContentHeight: params.dimensions.minimalContentHeight,
+            },
+        });
+    }, [store, params.dimensions.autoHeight, params.dimensions.minimalContentHeight]);
+    const rowsMeta = useRowsMeta(store, params, updateDimensions);
+    return {
+        updateDimensions,
+        debouncedUpdateDimensions,
+        rowsMeta,
+    };
+}
+function useRowsMeta(store, params, updateDimensions) {
+    const heightCache = store.state.rowHeights;
+    const { rows, getRowHeight: getRowHeightProp, getRowSpacing, getEstimatedRowHeight } = params;
+    const lastMeasuredRowIndex = React.useRef(-1);
+    const hasRowWithAutoHeight = React.useRef(false);
+    const isHeightMetaValid = React.useRef(false);
+    const pinnedRows = params.pinnedRows;
+    const rowHeight = useStore(store, selectors.rowHeight);
+    const getRowHeightEntry = useEventCallback((rowId) => {
+        let entry = heightCache.get(rowId);
+        if (entry === undefined) {
+            entry = {
+                content: store.state.dimensions.rowHeight,
+                spacingTop: 0,
+                spacingBottom: 0,
+                detail: 0,
+                autoHeight: false,
+                needsFirstMeasurement: true,
+            };
+            heightCache.set(rowId, entry);
+        }
+        return entry;
+    });
+    const { applyRowHeight } = params;
+    const processHeightEntry = React.useCallback((row) => {
+        // HACK: rowHeight trails behind the most up-to-date value just enough to
+        // mess the initial rowsMeta hydration :/
+        eslintUseValue(rowHeight);
+        const dimensions = selectors.dimensions(store.state);
+        const baseRowHeight = dimensions.rowHeight;
+        const entry = getRowHeightEntry(row.id);
+        if (!getRowHeightProp) {
+            entry.content = baseRowHeight;
+            entry.needsFirstMeasurement = false;
+        }
+        else {
+            const rowHeightFromUser = getRowHeightProp(row);
+            if (rowHeightFromUser === 'auto') {
+                if (entry.needsFirstMeasurement) {
+                    const estimatedRowHeight = getEstimatedRowHeight
+                        ? getEstimatedRowHeight(row)
+                        : baseRowHeight;
+                    // If the row was not measured yet use the estimated row height
+                    entry.content = estimatedRowHeight ?? baseRowHeight;
+                }
+                hasRowWithAutoHeight.current = true;
+                entry.autoHeight = true;
+            }
+            else {
+                // Default back to base rowHeight if getRowHeight returns null value.
+                entry.content = rowHeightFromUser ?? dimensions.rowHeight;
+                entry.needsFirstMeasurement = false;
+                entry.autoHeight = false;
+            }
+        }
+        if (getRowSpacing) {
+            const spacing = getRowSpacing(row);
+            entry.spacingTop = spacing.top ?? 0;
+            entry.spacingBottom = spacing.bottom ?? 0;
+        }
+        else {
+            entry.spacingTop = 0;
+            entry.spacingBottom = 0;
+        }
+        applyRowHeight?.(entry, row);
+        return entry;
+    }, [
+        store,
+        getRowHeightProp,
+        getRowHeightEntry,
+        getEstimatedRowHeight,
+        rowHeight,
+        getRowSpacing,
+        applyRowHeight,
+    ]);
+    const hydrateRowsMeta = React.useCallback(() => {
+        hasRowWithAutoHeight.current = false;
+        const pinnedTopRowsTotalHeight = pinnedRows?.top.reduce((acc, row) => {
+            const entry = processHeightEntry(row);
+            return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+        }, 0) ?? 0;
+        const pinnedBottomRowsTotalHeight = pinnedRows?.bottom.reduce((acc, row) => {
+            const entry = processHeightEntry(row);
+            return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+        }, 0) ?? 0;
+        const positions = [];
+        const currentPageTotalHeight = rows.reduce((acc, row) => {
+            positions.push(acc);
+            const entry = processHeightEntry(row);
+            const total = entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+            return acc + total;
+        }, 0);
+        if (!hasRowWithAutoHeight.current) {
+            // No row has height=auto, so all rows are already measured
+            lastMeasuredRowIndex.current = Infinity;
+        }
+        const didHeightsChange = pinnedTopRowsTotalHeight !== store.state.rowsMeta.pinnedTopRowsTotalHeight ||
+            pinnedBottomRowsTotalHeight !== store.state.rowsMeta.pinnedBottomRowsTotalHeight ||
+            currentPageTotalHeight !== store.state.rowsMeta.currentPageTotalHeight;
+        const rowsMeta = {
+            currentPageTotalHeight,
+            positions,
+            pinnedTopRowsTotalHeight,
+            pinnedBottomRowsTotalHeight,
+        };
+        store.set('rowsMeta', rowsMeta);
+        if (didHeightsChange) {
+            updateDimensions();
+        }
+        isHeightMetaValid.current = true;
+    }, [store, pinnedRows, rows, processHeightEntry, updateDimensions]);
+    const hydrateRowsMetaLatest = useEventCallback(hydrateRowsMeta);
+    const getRowHeight = (rowId) => {
+        return heightCache.get(rowId)?.content ?? selectors.rowHeight(store.state);
+    };
+    const storeRowHeightMeasurement = (id, height) => {
+        const entry = getRowHeightEntry(id);
+        const didChange = entry.content !== height;
+        entry.needsFirstMeasurement = false;
+        entry.content = height;
+        isHeightMetaValid.current &&= !didChange;
+    };
+    const rowHasAutoHeight = (id) => {
+        return heightCache.get(id)?.autoHeight ?? false;
+    };
+    const getLastMeasuredRowIndex = () => {
+        return lastMeasuredRowIndex.current;
+    };
+    const setLastMeasuredRowIndex = (index) => {
+        if (hasRowWithAutoHeight.current && index > lastMeasuredRowIndex.current) {
+            lastMeasuredRowIndex.current = index;
+        }
+    };
+    const resetRowHeights = () => {
+        heightCache.clear();
+        hydrateRowsMeta();
+    };
+    const resizeObserver = useLazyRef(() => typeof ResizeObserver === 'undefined'
+        ? undefined
+        : new ResizeObserver((entries) => {
+            for (let i = 0; i < entries.length; i += 1) {
+                const entry = entries[i];
+                const height = entry.borderBoxSize && entry.borderBoxSize.length > 0
+                    ? entry.borderBoxSize[0].blockSize
+                    : entry.contentRect.height;
+                const rowId = entry.target.__mui_id;
+                const focusedVirtualRowId = params.focusedVirtualCell?.()?.id;
+                if (focusedVirtualRowId === rowId && height === 0) {
+                    // Focused virtual row has 0 height.
+                    // We don't want to store it to avoid scroll jumping.
+                    // https://github.com/mui/mui-x/issues/14726
+                    return;
+                }
+                storeRowHeightMeasurement(rowId, height);
+            }
+            if (!isHeightMetaValid.current) {
+                // Avoids "ResizeObserver loop completed with undelivered notifications" error
+                requestAnimationFrame(() => {
+                    hydrateRowsMetaLatest();
+                });
+            }
+        })).current;
+    const observeRowHeight = (element, rowId) => {
+        element.__mui_id = rowId;
+        resizeObserver?.observe(element);
+        return () => resizeObserver?.unobserve(element);
+    };
+    // The effect is used to build the rows meta data - currentPageTotalHeight and positions.
+    // Because of variable row height this is needed for the virtualization
+    useLayoutEffect(() => {
+        hydrateRowsMeta();
+    }, [hydrateRowsMeta]);
+    return {
+        getRowHeight,
+        setLastMeasuredRowIndex,
+        storeRowHeightMeasurement,
+        hydrateRowsMeta,
+        observeRowHeight,
+        rowHasAutoHeight,
+        getRowHeightEntry,
+        getLastMeasuredRowIndex,
+        resetRowHeights,
+    };
+}
+export function observeRootNode(node, store, setRootSize) {
+    if (!node) {
+        return undefined;
+    }
+    const bounds = node.getBoundingClientRect();
+    const initialSize = {
+        width: roundToDecimalPlaces(bounds.width, 1),
+        height: roundToDecimalPlaces(bounds.height, 1),
+    };
+    if (store.state.rootSize === Size.EMPTY || !Size.equals(initialSize, store.state.rootSize)) {
+        setRootSize(initialSize);
+    }
+    if (typeof ResizeObserver === 'undefined') {
+        return undefined;
+    }
+    const observer = new ResizeObserver(([entry]) => {
+        if (!entry) {
+            return;
+        }
+        const rootSize = {
+            width: roundToDecimalPlaces(entry.contentRect.width, 1),
+            height: roundToDecimalPlaces(entry.contentRect.height, 1),
+        };
+        if (!Size.equals(rootSize, store.state.rootSize)) {
+            setRootSize(rootSize);
+        }
+    });
+    observer.observe(node);
+    return () => {
+        observer.disconnect();
+    };
+}
+const scrollbarSizeCache = new WeakMap();
+function measureScrollbarSize(element, scrollbarSize) {
+    if (scrollbarSize !== undefined) {
+        return scrollbarSize;
+    }
+    if (element === null) {
+        return 0;
+    }
+    const cachedSize = scrollbarSizeCache.get(element);
+    if (cachedSize !== undefined) {
+        return cachedSize;
+    }
+    const doc = ownerDocument(element);
+    const scrollDiv = doc.createElement('div');
+    scrollDiv.style.width = '99px';
+    scrollDiv.style.height = '99px';
+    scrollDiv.style.position = 'absolute';
+    scrollDiv.style.overflow = 'scroll';
+    scrollDiv.className = 'scrollDiv';
+    element.appendChild(scrollDiv);
+    const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+    element.removeChild(scrollDiv);
+    scrollbarSizeCache.set(element, size);
+    return size;
+}
+function eslintUseValue(_) { }

@@ -1,0 +1,68 @@
+'use client';
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import { vars, GridBaseColumnHeaders, } from '@mui/x-data-grid/internals';
+import { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+const Filler = styled('div', {
+    slot: 'internal',
+    shouldForwardProp: undefined,
+})({
+    flex: 1,
+    backgroundColor: vars.header.background.base,
+});
+const GridColumnHeaders = forwardRef(function GridColumnHeaders(props, ref) {
+    const { style, className, visibleColumns, sortColumnLookup, filterColumnLookup, columnHeaderTabIndexState, columnGroupHeaderTabIndexState, columnHeaderFocus, columnGroupHeaderFocus, headerGroupingMaxDepth, columnMenuState, columnVisibility, columnGroupsHeaderStructure, hasOtherElementInTabSequence, ...other } = props;
+    const { getInnerProps, getColumnHeadersRow, getColumnFiltersRow, getColumnGroupHeadersRows } = useGridColumnHeadersPro({
+        visibleColumns,
+        sortColumnLookup,
+        filterColumnLookup,
+        columnHeaderTabIndexState,
+        hasOtherElementInTabSequence,
+        columnGroupHeaderTabIndexState,
+        columnHeaderFocus,
+        columnGroupHeaderFocus,
+        headerGroupingMaxDepth,
+        columnMenuState,
+        columnVisibility,
+        columnGroupsHeaderStructure,
+    });
+    return (_jsxs(GridBaseColumnHeaders, { className: className, ...other, ...getInnerProps(), ref: ref, children: [getColumnGroupHeadersRows(), getColumnHeadersRow(), getColumnFiltersRow(), _jsx(Filler, {})] }));
+});
+GridColumnHeaders.propTypes = {
+    // ----------------------------- Warning --------------------------------
+    // | These PropTypes are generated from the TypeScript type definitions |
+    // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+    // ----------------------------------------------------------------------
+    columnGroupHeaderFocus: PropTypes.shape({
+        depth: PropTypes.number.isRequired,
+        field: PropTypes.string.isRequired,
+    }),
+    columnGroupHeaderTabIndexState: PropTypes.shape({
+        depth: PropTypes.number.isRequired,
+        field: PropTypes.string.isRequired,
+    }),
+    columnGroupsHeaderStructure: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({
+        columnFields: PropTypes.arrayOf(PropTypes.string).isRequired,
+        groupId: PropTypes.string,
+    }))).isRequired,
+    columnHeaderFocus: PropTypes.shape({
+        field: PropTypes.string.isRequired,
+    }),
+    columnHeaderTabIndexState: PropTypes.shape({
+        field: PropTypes.string.isRequired,
+    }),
+    columnMenuState: PropTypes.shape({
+        field: PropTypes.string,
+        open: PropTypes.bool.isRequired,
+    }).isRequired,
+    columnVisibility: PropTypes.object.isRequired,
+    filterColumnLookup: PropTypes.object.isRequired,
+    hasOtherElementInTabSequence: PropTypes.bool.isRequired,
+    headerGroupingMaxDepth: PropTypes.number.isRequired,
+    sortColumnLookup: PropTypes.object.isRequired,
+    visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+export { GridColumnHeaders };

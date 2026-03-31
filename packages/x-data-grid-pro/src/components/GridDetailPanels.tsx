@@ -27,10 +27,9 @@ export function GridDetailPanels(props: GridDetailPanelsProps) {
   return React.createElement(GridDetailPanelsImpl, props);
 }
 
-function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
+function GridDetailPanelsImpl(_: GridDetailPanelsProps) {
   const apiRef = useGridPrivateApiContext();
   const classes = useUtilityClasses();
-  const { setPanels } = virtualScroller;
 
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
   const detailPanelsContent = useGridSelector(
@@ -73,8 +72,8 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
     for (const rowId of expandedRowIds) {
       map.set(rowId, getDetailPanel(rowId));
     }
-    setPanels(map);
-  }, [expandedRowIds, setPanels, getDetailPanel]);
+    apiRef.current.virtualizer.api.setPanels(map);
+  }, [expandedRowIds, apiRef, getDetailPanel]);
 
   return null;
 }
