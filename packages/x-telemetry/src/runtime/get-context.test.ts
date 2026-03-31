@@ -166,4 +166,15 @@ describe.runIf(isJSDOM)('getTelemetryContext runtimePackageNameHash', () => {
     expect(ctx.traits.runtimePackageNameHash).toBe(nodeHash('my-app'));
     expect(ctx.traits.projectId).toBe('repo-hash-value');
   });
+
+  it('should prefer runtimePackageNameHash over postinstallPackageNameHash for projectId', async () => {
+    telemetryContext.traits.postinstallPackageNameHash = 'root-name-hash';
+    vi.stubEnv('npm_package_name', 'app-name');
+
+    const { default: getTelemetryContext } = await import('./get-context');
+    const ctx = await getTelemetryContext();
+
+    expect(ctx.traits.runtimePackageNameHash).toBe(nodeHash('app-name'));
+    expect(ctx.traits.projectId).toBe(nodeHash('app-name'));
+  });
 });
