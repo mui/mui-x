@@ -113,7 +113,7 @@ const ptPTCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
 
   // EventItem
-  eventItemMultiDayLabel: (endDate) => `Termina em ${endDate}`,
+  eventItemMultiDayLabel: (endDate) => `Termina a ${endDate}`,
 
   // MiniCalendar
   miniCalendarLabel: 'Calendário',
