@@ -46,7 +46,7 @@ const ZoomSliderActiveTrackRect = styled('rect', {
         }),
         rx: 4,
         ry: 4,
-        stroke: theme.palette.grey[500],
+        stroke: (theme.vars || theme).palette.grey[500],
       },
     },
   ],
