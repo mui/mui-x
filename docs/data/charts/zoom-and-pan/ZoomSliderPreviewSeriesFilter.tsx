@@ -46,10 +46,11 @@ export default function ZoomSliderPreviewSeriesFilter() {
       xAxis={[
         {
           dataKey: 'year',
+          valueFormatter: (v: number) => `${v}`,
           zoom: {
             slider: {
               enabled: true,
-              preview: { seriesIds: ['average'] },
+              preview: { seriesIds: ['average']  },
             },
           },
         },

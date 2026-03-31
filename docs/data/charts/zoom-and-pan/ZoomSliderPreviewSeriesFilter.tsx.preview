@@ -3,6 +3,7 @@
   xAxis={[
     {
       dataKey: 'year',
+      valueFormatter: (v: number) => `${v}`,
       zoom: {
         slider: {
           enabled: true,
