@@ -106,21 +106,6 @@ but the **focus** and **hover** behavior depends on styles applied via the `sx` 
 
 {{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
 
-### Using Joy UI
-
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
-
-{{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6SingleInputRangeField.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
-
-:::warning
-All the Joy UI examples use the non-accessible DOM structure.
-The new accessible DOM structure will become compatible with Joy UI in the future.
-:::
-
 ## With a custom editing experience
 
 ### Using an Autocomplete
