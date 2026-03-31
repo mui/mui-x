@@ -142,7 +142,13 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
       visibleFields: options.visibleFields,
       multiSelect: options.multiSelect,
     });
-  }, [options.dataSet, options.editable, options.maxColumns, options.visibleFields, options.multiSelect]);
+  }, [
+    options.dataSet,
+    options.editable,
+    options.maxColumns,
+    options.visibleFields,
+    options.multiSelect,
+  ]);
 
   const [data, setData] = React.useState<DemoTreeDataValue>(() => {
     return addTreeDataOptionsToDemoData(
