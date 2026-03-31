@@ -149,7 +149,7 @@ function CustomToolbar() {
               ownerState={{ expanded: state.expanded }}
               inputRef={ref}
               aria-label="Search"
-              placeholder="Search..."
+              placeholder="Search…"
               size="small"
               slotProps={{
                 input: {
