@@ -58,11 +58,16 @@ Use the `funnelSectionClasses.label` class to style labels.
 The `sectionLabel` property controls label position.
 It accepts an object with:
 
-- `position.vertical`: `'top'`, `'center'`, or `'bottom'`
-- `position.horizontal`: `'start'`, `'middle'`, or `'end'`
-- `margin`: space between label and section
-- `dominantBaseline`: vertical text alignment
-- `textAnchor`: horizontal text alignment
+- `position.vertical`: `'top'`, `'middle'`, or `'bottom'`
+- `position.horizontal`: `'start'`, `'center'`, or `'end'`
+- `offset`: space between the label and the section anchor. Pass a number for both axes, or `{ x?, y? }`.
+
+`textAnchor` and `dominantBaseline` are forwarded to the SVG `text` element.
+They behave like the SVG attributes of the same names, not like CSS properties, and the funnel chart only accepts the values below.
+See [text-anchor](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor) and [dominant-baseline](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/dominant-baseline) on MDN for what each keyword does.
+
+- `textAnchor`: `'start'`, `'middle'`, or `'end'`
+- `dominantBaseline`: `'auto'`, `'baseline'`, `'hanging'`, `'middle'`, `'central'`, `'text-after-edge'`, or `'text-before-edge'`
 
 Set `sectionLabel` to `false` to hide labels.
 You can also pass a function that receives the data object and returns the label config.
