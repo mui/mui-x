@@ -233,7 +233,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      const button = screen.getByRole('button', { name: 'Columns' });
+      const button = screen.getByRole('button', { name: 'Column' });
       await user.click(button);
 
       const column: HTMLElement = document.querySelector('[role="tooltip"] [name="id"]')!;
