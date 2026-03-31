@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license/internals';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
@@ -129,9 +129,10 @@ const DateRangePickerDayRoot = styled('div', {
       style: {
         borderRadius: 0,
         color: (theme.vars || theme).palette.primary.contrastText,
-        backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
-          : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+        backgroundColor: theme.alpha(
+          (theme.vars || theme).palette.primary.main,
+          (theme.vars || theme).palette.action.focusOpacity,
+        ),
         '&:first-of-type': startBorderStyle,
         '&:last-of-type': endBorderStyle,
       },
@@ -274,7 +275,11 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     ...other
   } = props;
 
-  useLicenseVerifier('x-date-pickers-pro', '__RELEASE_INFO__');
+  useLicenseVerifier({
+    releaseDate: '__RELEASE_INFO__',
+    version: process.env.MUI_VERSION!,
+    name: 'x-date-pickers-pro',
+  });
   const adapter = usePickerAdapter();
 
   const shouldRenderHighlight = isHighlighting && !outsideCurrentMonth;

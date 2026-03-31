@@ -6,3 +6,9 @@ export type MuiCommercialPackageName =
   | 'x-charts-pro'
   | 'x-charts-premium'
   | 'x-scheduler-premium';
+
+export interface CommercialPackageInfo {
+  releaseDate: string;
+  version: string;
+  name: MuiCommercialPackageName;
+}

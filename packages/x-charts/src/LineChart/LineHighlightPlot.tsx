@@ -8,7 +8,7 @@ import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
 import getColor from './seriesConfig/getColor';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import {
   type UseChartCartesianAxisSignature,
   selectorChartsHighlightXAxisIndex,
@@ -54,7 +54,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
-  const { instance } = useChartContext();
+  const { instance } = useChartsContext();
 
   const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const highlightedIndexes = store.use(selectorChartsHighlightXAxisIndex);
@@ -84,9 +84,10 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
               data,
               disableHighlight,
               shape = 'circle',
+              hidden,
             } = series[seriesId];
 
-            if (disableHighlight || data[highlightedIndex] == null) {
+            if (hidden || disableHighlight || data[highlightedIndex] == null) {
               return null;
             }
             if (highlightedAxisId !== xAxisId) {

@@ -111,6 +111,12 @@ When the zoom slider is enabled, preview the zoomed area by enabling the `zoom.s
 
 {{"demo": "ZoomSliderPreview.js"}}
 
+### Series filter
+
+Use `zoom.slider.preview.seriesIds` to select the series to display in the preview.
+
+{{"demo": "ZoomSliderPreviewSeriesFilter.js"}}
+
 ### Scatter marker size
 
 The size of the preview marker in scatter charts is 1px by default.

@@ -1,5 +1,11 @@
 import { screen, waitFor } from '@mui/internal-test-utils';
-import { createSchedulerRenderer, EventBuilder, withinMonthView } from 'test/utils/scheduler';
+import {
+  createSchedulerRenderer,
+  EventBuilder,
+  ResourceBuilder,
+  withinMonthView,
+  dateLocaleFr,
+} from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   changeTo24HoursFormat,
@@ -44,25 +50,25 @@ describe('EventCalendar', () => {
   });
 
   it('should allow to show / hide resources using the UI', async () => {
+    const sportResource = ResourceBuilder.new().title('Sport').build();
+    const workResource = ResourceBuilder.new().title('Work').build();
+
     const event1WithResource = EventBuilder.new()
       .title('Running')
       .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
-      .resource('1')
+      .resource(sportResource)
       .build();
 
     const event2WithResource = EventBuilder.new()
       .title('Weekly')
       .span('2025-05-27T16:00:00Z', '2025-05-27T17:00:00Z')
-      .resource('2')
+      .resource(workResource)
       .build();
 
     const { user } = render(
       <EventCalendar
         events={[event1WithResource, event2WithResource]}
-        resources={[
-          { id: '1', title: 'Sport' },
-          { id: '2', title: 'Work' },
-        ]}
+        resources={[sportResource, workResource]}
       />,
     );
 
@@ -317,6 +323,26 @@ describe('EventCalendar', () => {
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+    });
+  });
+
+  describe('dateLocale', () => {
+    it('should render day headers in French when dateLocale is set to fr', () => {
+      render(<EventCalendar events={[]} dateLocale={dateLocaleFr} />);
+
+      // In French, Monday is "lundi" and week starts on Monday by default
+      expect(screen.getByRole('columnheader', { name: /lundi 26/i })).not.to.equal(null);
+      expect(screen.getByRole('columnheader', { name: /mardi 27/i })).not.to.equal(null);
+    });
+
+    it('should render month view headers in French when dateLocale is set to fr', () => {
+      render(<EventCalendar events={[]} defaultView="month" dateLocale={dateLocaleFr} />);
+
+      const monthView = withinMonthView();
+
+      // In French, Monday is "lundi"
+      // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within month view (mini calendar also has column headers)
+      expect(monthView.getByRole('columnheader', { name: /lundi/i })).not.to.equal(null);
     });
   });
 

@@ -33,13 +33,13 @@ export const CHART_CORE_PLUGINS = [
   useChartAnimation,
 ] as const;
 
-export type ChartCorePluginSignatures<TSeriesType extends ChartSeriesType = ChartSeriesType> = [
+export type ChartCorePluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartElementRefSignature,
   UseChartIdSignature,
-  UseChartSeriesConfigSignature<TSeriesType>,
-  UseChartExperimentalFeaturesSignature,
+  UseChartSeriesConfigSignature<SeriesType>,
+  UseChartExperimentalFeaturesSignature<SeriesType>,
   UseChartDimensionsSignature,
-  UseChartSeriesSignature<TSeriesType>,
+  UseChartSeriesSignature<SeriesType>,
   UseChartAnimationSignature,
   UseChartInteractionListenerSignature,
 ];

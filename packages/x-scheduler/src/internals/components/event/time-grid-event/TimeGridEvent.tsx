@@ -60,6 +60,16 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   '&:hover': {
     backgroundColor: 'var(--event-surface-subtle-hover)',
   },
+  '&[data-editing]': {
+    backgroundColor: 'var(--event-surface-selected)',
+    color: 'var(--event-on-surface-selected)',
+    '&:hover': {
+      backgroundColor: 'var(--event-surface-selected-hover)',
+    },
+    '&::before': {
+      background: 'var(--event-surface-selected)',
+    },
+  },
   '&[role="button"]': {
     cursor: 'pointer',
   },
@@ -121,6 +131,9 @@ const TimeGridEventTitle = styled(Typography, {
     fontSize: '11px',
     lineHeight: '11px',
   },
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
   ...linesClampStyles(1),
 }));
 
@@ -132,6 +145,9 @@ const TimeGridEventTime = styled('time', {
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
   '&[data-lines-clamp]': {
     ...linesClampStyles(1),
     paddingInlineEnd: theme.spacing(1.5),
@@ -154,6 +170,9 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   bottom: 3,
   padding: theme.spacing(0.25),
   color: 'var(--event-on-surface-subtle-secondary)',
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
   '@container (max-width: 50px)': {
     display: 'none',
   },
@@ -196,7 +215,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
-
   // Selector hooks
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);

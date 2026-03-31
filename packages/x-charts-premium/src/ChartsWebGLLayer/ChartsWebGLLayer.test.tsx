@@ -1,65 +1,62 @@
 import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
-import { ChartDataProvider } from '../ChartDataProvider';
+import { isJSDOM } from 'test/utils/skipIf';
+import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { ChartsWebGLLayer, useWebGLContext } from './ChartsWebGLLayer';
 
 describe('<WebGLProvider />', () => {
   const { render } = createRenderer();
 
-  // Headless browsers may not support WebGL2
-  it.skipIf(!document.createElement('canvas').getContext('webgl2'))(
-    'should handle WebGL context restoration',
-    async () => {
-      let contextValue: WebGL2RenderingContext | null = null;
+  it.skipIf(isJSDOM)('should handle WebGL context restoration', async () => {
+    let contextValue: WebGL2RenderingContext | null = null;
 
-      function TestComponent() {
-        const context = useWebGLContext();
+    function TestComponent() {
+      const context = useWebGLContext();
 
-        React.useEffect(() => {
-          contextValue = context;
-        }, [context]);
+      React.useEffect(() => {
+        contextValue = context;
+      }, [context]);
 
-        return null;
-      }
+      return null;
+    }
 
-      render(
-        <ChartDataProvider
-          height={100}
-          width={100}
-          series={[]}
-          xAxis={[{ id: 'x', data: [1, 2, 3] }]}
-        >
-          <ChartsWrapper>
-            <ChartsWebGLLayer data-testid="webgl-canvas">
-              <TestComponent />
-            </ChartsWebGLLayer>
-          </ChartsWrapper>
-        </ChartDataProvider>,
-      );
+    render(
+      <ChartsDataProvider
+        height={100}
+        width={100}
+        series={[]}
+        xAxis={[{ id: 'x', data: [1, 2, 3] }]}
+      >
+        <ChartsWrapper>
+          <ChartsWebGLLayer data-testid="webgl-canvas">
+            <TestComponent />
+          </ChartsWebGLLayer>
+        </ChartsWrapper>
+      </ChartsDataProvider>,
+    );
 
+    expect(contextValue).to.be.instanceOf(WebGL2RenderingContext);
+
+    // Get the WEBGL_lose_context extension
+    const extension = contextValue!.getExtension('WEBGL_lose_context');
+
+    // Simulate context loss
+    extension!.loseContext();
+    expect(contextValue!.isContextLost()).to.equal(true);
+
+    // Wait for lost context to stop being provided
+    await waitFor(() => {
+      expect(contextValue).to.equal(null);
+    });
+
+    // Simulate context restoration
+    extension!.restoreContext();
+
+    // Wait for context to be restored
+    await waitFor(() => {
       expect(contextValue).to.be.instanceOf(WebGL2RenderingContext);
-
-      // Get the WEBGL_lose_context extension
-      const extension = contextValue!.getExtension('WEBGL_lose_context');
-
-      // Simulate context loss
-      extension!.loseContext();
-      expect(contextValue!.isContextLost()).to.equal(true);
-
-      // Wait for lost context to stop being provided
-      await waitFor(() => {
-        expect(contextValue).to.equal(null);
-      });
-
-      // Simulate context restoration
-      extension!.restoreContext();
-
-      // Wait for context to be restored
-      await waitFor(() => {
-        expect(contextValue).to.be.instanceOf(WebGL2RenderingContext);
-        expect(contextValue!.isContextLost()).to.equal(false);
-      });
-    },
-  );
+      expect(contextValue!.isContextLost()).to.equal(false);
+    });
+  });
 });

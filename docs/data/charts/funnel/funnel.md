@@ -162,3 +162,10 @@ By default, sections use the `band` scale (equal width).
 Set `scaleType` to `'linear'` in the `categoryAxis` configuration to scale section width by value.
 
 {{"demo": "FunnelLinearScale.js"}}
+
+### Auto-sizing axis
+
+You can set the axis `size` to `'auto'` to automatically calculate the axis dimension based on tick label measurements.
+This is useful when your tick labels have varying lengths.
+
+{{"demo": "FunnelAxisAutoSize.js"}}

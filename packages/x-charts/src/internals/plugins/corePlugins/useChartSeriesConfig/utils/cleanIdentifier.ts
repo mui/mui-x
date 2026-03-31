@@ -11,10 +11,10 @@ import type { ChartSeriesConfig } from '../types';
  * @returns {object} A cleaned identifier object with only the properties relevant to the series type.
  * @throws Will throw an error if no cleaner is found for the given series type.
  */
-export const cleanIdentifier = <T extends ChartSeriesType, U extends { type: T }>(
-  seriesConfig: ChartSeriesConfig<T>,
+export const cleanIdentifier = <SeriesType extends ChartSeriesType, U extends { type: SeriesType }>(
+  seriesConfig: ChartSeriesConfig<SeriesType>,
   identifier: U,
-): SeriesItemIdentifierWithType<T> => {
+): SeriesItemIdentifierWithType<SeriesType> => {
   const cleaner = seriesConfig[identifier.type]?.identifierCleaner;
   if (!cleaner) {
     throw new Error(

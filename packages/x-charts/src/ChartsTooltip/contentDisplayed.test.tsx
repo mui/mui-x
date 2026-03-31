@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
-import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart, type BarChartProps, barClasses } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { getCenter } from 'test/utils/charts/getCenter';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';
@@ -43,6 +44,52 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
   const wrapper = ({ children }: { children?: React.ReactNode }) => (
     <div style={{ width: 400, height: 400 }}>{children}</div>
   );
+
+  describe('axis trigger - keyboard navigation', () => {
+    it('should show tooltip when navigating with keyboard', async () => {
+      const { user } = render(
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis' } }}
+        />,
+        { wrapper },
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '4'];
+        const secondRow = ['S2', '2'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'A',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
+
+      await user.keyboard('[ArrowRight]');
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '1'];
+        const secondRow = ['S2', '1'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'B',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
+    });
+  });
 
   describe('axis trigger', () => {
     it('should show right values with vertical layout on axis', async () => {
@@ -335,11 +382,12 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         />,
         { wrapper },
       );
-      const rectangles = document.querySelectorAll<HTMLElement>('rect');
+      const bars = document.querySelectorAll<HTMLElement>(`.${barClasses.element}`);
 
       // Trigger the tooltip
       await user.pointer({
-        target: rectangles[0],
+        target: bars[0],
+        coords: getCenter(bars[0]),
       });
 
       await waitFor(() => {
@@ -349,7 +397,8 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
 
       // Trigger the tooltip
       await user.pointer({
-        target: rectangles[3],
+        target: bars[3],
+        coords: getCenter(bars[3]),
       });
 
       await waitFor(() => {
@@ -373,10 +422,11 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         { wrapper },
       );
 
-      const rectangles = document.querySelectorAll<HTMLElement>('rect');
+      const bars = document.querySelectorAll<HTMLElement>(`.${barClasses.element}`);
 
       await user.pointer({
-        target: rectangles[0],
+        target: bars[0],
+        coords: getCenter(bars[0]),
       });
 
       await waitFor(() => {
@@ -385,7 +435,8 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
       });
 
       await user.pointer({
-        target: rectangles[3],
+        target: bars[3],
+        coords: getCenter(bars[3]),
       });
 
       await waitFor(() => {
@@ -436,19 +487,16 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         />,
         { wrapper },
       );
-      const rectangles = document.querySelectorAll<HTMLElement>('rect');
+      const bars = document.querySelectorAll<HTMLElement>(`.${barClasses.element}`);
 
-      // Trigger the tooltip
+      // Trigger the tooltip for bar at dataIndex 1 (value 200)
       await user.pointer({
-        target: rectangles[1],
-        coords: {
-          x: 50,
-          y: 350,
-        },
+        target: bars[1],
+        coords: getCenter(bars[1]),
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root p');
+        const cells = document.querySelectorAll<HTMLElement>(`.${chartsTooltipClasses.root} p`);
         expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
           'sum',
           '300',
@@ -457,17 +505,14 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         ]);
       });
 
-      // Trigger the tooltip
+      // Trigger the tooltip for bar at dataIndex 3 (value 400)
       await user.pointer({
-        target: rectangles[3],
-        coords: {
-          x: 350,
-          y: 350,
-        },
+        target: bars[3],
+        coords: getCenter(bars[3]),
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root p');
+        const cells = document.querySelectorAll<HTMLElement>(`.${chartsTooltipClasses.root} p`);
         expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
           'sum',
           '1000',

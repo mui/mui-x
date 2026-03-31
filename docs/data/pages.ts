@@ -1,4 +1,4 @@
-import type { MuiPage } from 'docs/src/MuiPage';
+import type { MuiPage } from '@mui/docs/MuiPage';
 import chartsComponentApi from './chartsApiPages';
 import dataGridComponentApi from './dataGridApiPages';
 import pickersComponentApi from './datePickersApiPages';
@@ -35,6 +35,17 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
               { pathname: '/x/react-scheduler/event-calendar/editing' },
               { pathname: '/x/react-scheduler/event-calendar/views' },
               { pathname: '/x/react-scheduler/event-calendar/lazy-loading', plan: 'premium' },
+              {
+                pathname: '/x/react-scheduler/event-calendar/filtering',
+                plan: 'premium',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-scheduler/event-calendar/import-export',
+                title: 'Import & Export',
+                plan: 'premium',
+                planned: true,
+              },
               { pathname: '/x/react-scheduler/event-calendar/preferences' },
               { pathname: '/x/react-scheduler/event-calendar/localization' },
             ],
@@ -50,6 +61,23 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
               { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
               { pathname: '/x/react-scheduler/event-timeline/editing' },
               { pathname: '/x/react-scheduler/event-timeline/views' },
+              {
+                pathname: '/x/react-scheduler/event-timeline/lazy-loading',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-scheduler/event-timeline/virtualization',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-scheduler/event-timeline/filtering',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-scheduler/event-timeline/import-export',
+                title: 'Import & Export',
+                planned: true,
+              },
               { pathname: '/x/react-scheduler/event-timeline/preferences' },
               { pathname: '/x/react-scheduler/event-timeline/localization' },
             ],
@@ -274,7 +302,7 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/charts-integration',
             plan: 'premium',
-            unstable: true,
+            newFeature: true,
             title: 'Charts integration',
           },
           {
@@ -675,7 +703,7 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-charts/data-grid-integration',
                 title: 'Data Grid integration',
                 plan: 'premium',
-                unstable: true,
+                newFeature: true,
               },
               {
                 pathname: '/x/react-charts/export',
@@ -687,6 +715,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/localization' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
+              { pathname: '/x/react-charts/references' },
               { pathname: '/x/react-charts/toolbar' },
               { pathname: '/x/react-charts/tooltip' },
               {
@@ -830,10 +859,10 @@ const pages: MuiPage[] = [
         subheader: 'Upgrade to v9',
         children: [
           { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
-          // {
-          //   pathname: '/x/migration/migration-pickers-v8',
-          //   title: 'Breaking changes: Date and Time Pickers',
-          // },
+          {
+            pathname: '/x/migration/migration-pickers-v8',
+            title: 'Breaking changes: Date and Time Pickers',
+          },
           {
             pathname: '/x/migration/migration-charts-v8',
             title: 'Breaking changes: Charts',

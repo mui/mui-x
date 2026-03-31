@@ -16,7 +16,7 @@ import {
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
+import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
 
 export type SchedulerPlan = 'community' | 'premium';
 
@@ -152,6 +152,11 @@ export interface SchedulerState<TEvent extends object = any> {
    * This timezone only affects rendering, events keep their original data timezone.
    */
   displayTimezone: TemporalTimezone;
+  /**
+   * The ID of the event currently active (e.g. open in the event dialog).
+   * `null` when no event is active.
+   */
+  editedEventId: SchedulerEventId | null;
   /**
    * The event that has been copied or cut, if any.
    */
@@ -305,6 +310,13 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default "default"
    */
   displayTimezone?: TemporalTimezone;
+  /**
+   * The locale object from `date-fns` used to format dates.
+   * This affects day names, month names, week start day, and other locale-dependent formatting.
+   * Import a locale from `date-fns/locale` and pass it to this prop.
+   * @default enUS (English)
+   */
+  dateLocale?: DateLocale;
 }
 
 /**

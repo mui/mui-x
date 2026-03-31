@@ -1,11 +1,16 @@
 import { base64Decode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { PlanScope, PLAN_SCOPES, PlanVersion } from '../utils/licensePlan';
+import {
+  PlanScope,
+  PLAN_SCOPES,
+  PlanVersion,
+  isPlanVersionOlderOrEqual,
+} from '../utils/licensePlan';
 import type { AppType } from '../utils/licenseAppType';
 import { LicenseModel, LICENSE_MODELS } from '../utils/licenseModel';
 import type { NullableLicenseDetails } from '../utils/licenseDetails';
-import { MuiCommercialPackageName } from '../utils/commercialPackages';
+import { MuiCommercialPackageName, CommercialPackageInfo } from '../utils/commercialPackages';
 
 function isPlanScopeSufficient(packageName: MuiCommercialPackageName, planScope: PlanScope) {
   let acceptedScopes: PlanScope[];
@@ -27,6 +32,8 @@ const PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN: MuiCommercialPackageName[] = [
   'x-data-grid-pro',
   'x-date-pickers-pro',
 ];
+
+const MAX_V8_PLAN_VERSION: PlanVersion = 'Q3-2024';
 
 /**
  * Format: ORDER:${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=1
@@ -56,7 +63,7 @@ function decodeLicenseVersion1(license: string): NullableLicenseDetails {
     planVersion: 'initial',
     expiryTimestamp,
     expiryDate: expiryTimestamp ? new Date(expiryTimestamp) : null,
-    orderId,
+    orderId: orderId != null ? String(orderId) : null,
     appType: 'multi',
     quantity: null,
     isTestKey: license.includes('T=true'),
@@ -94,10 +101,7 @@ export function parseLicenseTokens(license: string, licenseInfo: NullableLicense
       }
 
       if (key === 'O') {
-        const orderNum = parseInt(value, 10);
-        if (orderNum && !Number.isNaN(orderNum)) {
-          licenseInfo.orderId = orderNum;
-        }
+        licenseInfo.orderId = value;
       }
 
       if (key === 'Q') {
@@ -181,15 +185,15 @@ export function decodeLicense(encodedLicense: string): NullableLicenseDetails | 
 }
 
 export function verifyLicense({
-  releaseInfo,
+  packageInfo,
   licenseKey,
-  packageName,
 }: {
-  releaseInfo: string;
+  packageInfo: CommercialPackageInfo;
   licenseKey?: string;
-  packageName: MuiCommercialPackageName;
 }): { status: LicenseStatus; meta?: any } {
-  if (!releaseInfo) {
+  const { name: packageName, releaseDate, version: packageVersion } = packageInfo;
+  const packageMajorVersion = parseInt(packageVersion ?? '', 10);
+  if (!releaseDate) {
     throw new Error(
       'MUI X: The release information is missing and license validation cannot proceed. ' +
         'This is an internal error that should not occur in normal usage. ' +
@@ -237,7 +241,7 @@ export function verifyLicense({
   }
 
   if (license.licenseModel === 'perpetual' || process.env.NODE_ENV === 'production') {
-    const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
+    const pkgTimestamp = parseInt(base64Decode(releaseDate), 10);
     if (Number.isNaN(pkgTimestamp)) {
       throw new Error(
         'MUI X: The release information is invalid and license validation cannot proceed. ' +
@@ -247,6 +251,16 @@ export function verifyLicense({
     }
 
     if (license.expiryTimestamp < pkgTimestamp) {
+      // Perpetual v8 (or older) licenses whose expiry predates this package release
+      // are not valid for v9 packages.
+      if (
+        packageMajorVersion != null &&
+        packageMajorVersion >= 9 &&
+        license.licenseModel === 'perpetual' &&
+        isPlanVersionOlderOrEqual(license.planVersion as string, MAX_V8_PLAN_VERSION)
+      ) {
+        return { status: LICENSE_STATUS.NotValidForPackage };
+      }
       return { status: LICENSE_STATUS.ExpiredVersion };
     }
   } else if (license.licenseModel === 'subscription' || license.licenseModel === 'annual') {
@@ -284,6 +298,17 @@ export function verifyLicense({
     !PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN.includes(packageName)
   ) {
     return { status: LICENSE_STATUS.NotAvailableInInitialProPlan };
+  }
+
+  // v8 licenses (Q1-2026 and older) are not valid for v9 packages.
+  // Perpetual licenses are exempt as they are already gated by the expiry date check.
+  if (
+    packageMajorVersion != null &&
+    packageMajorVersion >= 9 &&
+    license.licenseModel !== 'perpetual' &&
+    isPlanVersionOlderOrEqual(license.planVersion as string, MAX_V8_PLAN_VERSION)
+  ) {
+    return { status: LICENSE_STATUS.NotValidForPackage };
   }
 
   return { status: LICENSE_STATUS.Valid };

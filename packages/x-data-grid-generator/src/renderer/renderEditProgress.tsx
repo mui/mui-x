@@ -5,7 +5,7 @@ import { type GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-gr
 import Slider, { type SliderProps, sliderClasses } from '@mui/material/Slider';
 import Tooltip from '@mui/material/Tooltip';
 import debounce from '@mui/utils/debounce';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 const StyledSlider = styled(Slider)(({ theme }) => ({
   display: 'flex',
@@ -39,7 +39,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
     width: 5,
     borderRadius: 0,
     marginTop: 0,
-    backgroundColor: alpha('#000000', 0.2),
+    backgroundColor: theme.alpha('#000000', 0.2),
   },
 }));
 
@@ -100,7 +100,7 @@ function EditProgress(props: GridRenderEditCellParams<any, number>) {
       max={1}
       step={0.00001}
       onChange={handleChange}
-      components={{ ValueLabel: ValueLabelComponent }}
+      slots={{ valueLabel: ValueLabelComponent }}
       valueLabelDisplay="auto"
       valueLabelFormat={(newValue) => `${(newValue * 100).toLocaleString()} %`}
     />

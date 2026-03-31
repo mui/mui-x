@@ -2,11 +2,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   schedulerNowSelectors,
@@ -119,9 +120,7 @@ const MiniCalendarDayButton = styled('button', {
   color: (theme.vars || theme).palette.text.primary,
   padding: 0,
   '&:hover': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.08)`
-      : alpha(theme.palette.primary.main, 0.08),
+    backgroundColor: theme.alpha((theme.vars || theme).palette.primary.main, 0.08),
   },
   '&:focus-visible': {
     outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
@@ -133,9 +132,7 @@ const MiniCalendarDayButton = styled('button', {
   '&[data-today]:not([data-active])': {
     fontWeight: theme.typography.fontWeightBold,
     color: (theme.vars || theme).palette.primary.main,
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.15)`
-      : alpha(theme.palette.primary.main, 0.15),
+    backgroundColor: theme.alpha((theme.vars || theme).palette.primary.main, 0.15),
   },
   '&[data-active]': {
     backgroundColor: (theme.vars || theme).palette.primary.main,
@@ -156,7 +153,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
   function MiniCalendar(props, forwardedRef) {
     const { className, ...other } = props;
 
-    const adapter = useAdapter();
+    const adapter = useAdapterContext();
     const store = useEventCalendarStoreContext();
     const { classes, localeText } = useEventCalendarStyledContext();
 

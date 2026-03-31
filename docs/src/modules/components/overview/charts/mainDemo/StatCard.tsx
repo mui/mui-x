@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
-import { areaElementClasses } from '@mui/x-charts/LineChart';
+import { lineClasses } from '@mui/x-charts/LineChart';
 
 export type StatCardProps = {
   title: string;
@@ -45,7 +45,7 @@ export default function StatCard({ title, value, data }: StatCardProps) {
               showHighlight
               showTooltip
               sx={{
-                [`& .${areaElementClasses.root}`]: {
+                [`& .${lineClasses.area}`]: {
                   fill: `url(#area-gradient-${value})`,
                 },
               }}

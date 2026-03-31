@@ -114,6 +114,30 @@ export const getSoftEdgesTheme = (mode: 'light' | 'dark'): Theme => {
             '&::before': {
               width: 0,
             },
+            '&[data-editing]': {
+              backgroundColor: 'var(--event-surface-subtle)',
+              color: 'inherit',
+              outline: '2px solid var(--event-surface-accent)',
+              outlineOffset: -2,
+              '&:hover': {
+                backgroundColor: 'var(--event-surface-subtle-hover)',
+              },
+            },
+          },
+          timeGridEventTitle: {
+            '[data-editing] &': {
+              color: 'var(--event-on-surface-subtle-primary)',
+            },
+          },
+          timeGridEventTime: {
+            '[data-editing] &': {
+              color: 'var(--event-on-surface-subtle-secondary)',
+            },
+          },
+          timeGridEventRecurringIcon: {
+            '[data-editing] &': {
+              color: 'var(--event-on-surface-subtle-secondary)',
+            },
           },
           dayTimeGridTimeAxisCell: {
             '&:not(:first-of-type)::after': {
@@ -133,22 +157,44 @@ export const getSoftEdgesTheme = (mode: 'light' | 'dark'): Theme => {
               '&:hover': {
                 background: 'var(--event-surface-subtle-hover)',
               },
+              '&[data-editing]': {
+                background: 'var(--event-surface-selected)',
+                '&:hover': {
+                  background: 'var(--event-surface-selected-hover)',
+                },
+              },
             },
           },
           dayGridEventTime: {
             '[data-variant="compact"] &': {
               color: 'var(--event-on-surface-subtle-secondary)',
             },
+            '[data-variant="compact"][data-editing] &': {
+              color: 'var(--event-on-surface-selected)',
+            },
           },
           dayGridEventTitle: {
             '[data-variant="compact"] &': {
               color: 'var(--event-on-surface-subtle-primary)',
+            },
+            '[data-variant="compact"][data-editing] &': {
+              color: 'var(--event-on-surface-selected)',
+            },
+          },
+          eventColorIndicator: {
+            '[data-editing] &': {
+              backgroundColor: 'var(--event-on-surface-selected)',
             },
           },
           eventItemCard: {
             background: 'var(--event-surface-subtle)',
             '&:hover': {
               background: 'var(--event-surface-subtle-hover)',
+            },
+          },
+          resourceLegendColor: {
+            '[data-editing] &': {
+              backgroundColor: 'var(--event-on-surface-selected)',
             },
           },
           eventItemTime: {
@@ -159,6 +205,9 @@ export const getSoftEdgesTheme = (mode: 'light' | 'dark'): Theme => {
           },
           agendaViewEventsList: {
             gap: 8,
+          },
+          monthViewMoreEvents: {
+            padding: '0 4px',
           },
         },
       },

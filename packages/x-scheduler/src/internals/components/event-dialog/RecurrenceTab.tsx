@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox, { checkboxClasses } from '@mui/material/Checkbox';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
@@ -23,7 +23,7 @@ import {
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import {
   schedulerEventSelectors,
   schedulerRecurringEventSelectors,
@@ -46,7 +46,7 @@ const RecurrenceSelectorContainer = styled('div', {
   slot: 'RecurrenceSelectorContainer',
 })(({ theme }) => ({
   display: 'inline-flex',
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderRadius: theme.shape.borderRadius,
   width: 'fit-content',
   maxWidth: '100%',
@@ -140,10 +140,10 @@ const WeekDaySelectorCheckbox = styled(Checkbox, {
   padding: theme.spacing(0.75),
   margin: theme.spacing(0.5),
   borderRadius: theme.shape.borderRadius,
-  color: theme.palette.action.active,
-  '&.Mui-checked': {
-    color: theme.palette.text.primary,
-    backgroundColor: theme.palette.action.selected,
+  color: (theme.vars || theme).palette.action.active,
+  [`&.${checkboxClasses.checked}`]: {
+    color: (theme.vars || theme).palette.text.primary,
+    backgroundColor: (theme.vars || theme).palette.action.selected,
   },
 }));
 
@@ -172,7 +172,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const { occurrence, controlled, setControlled, value: tabValue } = props;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 

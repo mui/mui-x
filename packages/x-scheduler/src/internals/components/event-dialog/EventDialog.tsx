@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import Paper, { PaperProps } from '@mui/material/Paper';
-import Dialog, { DialogProps } from '@mui/material/Dialog';
+import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
+import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
@@ -27,15 +28,15 @@ const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
   slot: 'Root',
 })({
-  '& .MuiBackdrop-root': {
+  [`& .${backdropClasses.root}`]: {
     backgroundColor: 'transparent',
   },
-  '& .MuiDialog-container': {
+  [`& .${dialogClasses.container}`]: {
     width: '100%',
     justifyContent: 'unset',
     alignItems: 'unset',
   },
-  '& .MuiDialog-paper': {
+  [`& .${dialogClasses.paper}`]: {
     margin: 0,
   },
 });
@@ -176,7 +177,11 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
           {...other}
         />
       )}
+      onOpen={(occurrence) => {
+        store.setEditedEventId(occurrence.id);
+      }}
       onClose={() => {
+        store.setEditedEventId(null);
         store.setOccurrencePlaceholder(null);
       }}
     >

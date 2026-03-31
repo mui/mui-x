@@ -1,4 +1,8 @@
 export * from './ChartsReferenceLine';
-export * from './chartsReferenceLineClasses';
+export { referenceLineClasses } from './chartsReferenceLineClasses';
+export type {
+  ChartsReferenceLineClasses,
+  ChartsReferenceLineClassKey,
+} from './chartsReferenceLineClasses';
 export type { ChartsXReferenceLineProps } from './ChartsXReferenceLine';
 export type { ChartsYReferenceLineProps } from './ChartsYReferenceLine';
