@@ -10,7 +10,7 @@ components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMa
 
 ## Overview
 
-A radar chart plots multivariate data on axes that radiate from a center, so you can compare values across metrics.
+A radar chart plots data across multiple axes that radiate from a center, so you can compare values across metrics.
 Use it to compare profiles or scores across several dimensions (for example, product attributes or skills).
 
 The demo below shows a basic radar chart with one series.
@@ -90,8 +90,7 @@ Control it with `highlightedItem` and `onHighlightChange`.
 If you're composing a custom component, pass these props to `RadarDataProvider`.
 
 The demo below shows controlled highlight with several overlapping country series.
-Radar areas stack in `series` order: the last series is drawn on top and receives the pointer first in overlapping regions.
-List the series you want users to highlight easily after the others, or a series underneath may not receive pointer events.
+Place the series you want to be most interactive last in the `series` array, since later series render on top and receive pointer events first in overlapping regions.
 
 {{"demo": "DemoRadarSeriesHighlight.js"}}
 
@@ -152,7 +151,7 @@ In addition to the shared chart components available for [composition](/x/react-
   - `RadarSeriesMarks`: marks only
 - For interaction:
   - `RadarAxisHighlight`: line and marks along the highlighted axis
-  - `FocusedRadarMark`: keyboard focus indicator
+  - `FocusedRadarMark`: focus indicator for keyboard navigation
 
 :::info
 `RadarSeriesPlot` draws all series together, so the second series area is on top of the first series marks.
