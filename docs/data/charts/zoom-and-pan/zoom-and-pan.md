@@ -113,8 +113,7 @@ When the zoom slider is enabled, preview the zoomed area by enabling the `zoom.s
 
 ### Series filter
 
-When `preview` is set to an object, you can use the `seriesIds` property to control which series are displayed in the preview.
-This is useful when you have multiple series but only want to show a subset in the slider preview.
+Use `zoom.slider.preview.seriesIds` to select the series to display in the preview.
 
 {{"demo": "ZoomSliderPreviewSeriesFilter.js"}}
 
