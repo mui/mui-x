@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
-import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
+import { useStore } from '../internals/store/useStore';
+import { getSymbol } from '../internals/getSymbol';
 import {
   lineClasses,
   type MarkElementOwnerState,
@@ -84,6 +86,10 @@ function MarkElement(props: MarkElementProps) {
     ...other
   } = props;
 
+  const store = useStore();
+  const enablePositionBasedPointerInteraction = store.use(
+    selectorChartExperimentalFeaturesState,
+  )?.enablePositionBasedPointerInteraction;
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
 
   const ownerState = {
@@ -98,6 +104,7 @@ function MarkElement(props: MarkElementProps) {
   return (
     <MarkElementPath
       {...other}
+      {...(enablePositionBasedPointerInteraction ? {} : interactionProps)}
       style={{
         ...style,
         transform: `translate(${x}px, ${y}px)`,
@@ -109,7 +116,6 @@ function MarkElement(props: MarkElementProps) {
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       pointerEvents={hidden ? 'none' : undefined}
-      {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
       data-series-id={seriesId}

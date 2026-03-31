@@ -1,5 +1,11 @@
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import type { CommonHighlightScope, SeriesColor, SeriesId } from '@mui/x-charts/internals';
+import type {
+  CommonHighlightScope,
+  SeriesColor,
+  SeriesId,
+  ComputedXAxis,
+  ComputedYAxis,
+} from '@mui/x-charts/internals';
 import type {
   RangeBarValueType,
   RangeBarSeriesType,
@@ -31,6 +37,12 @@ declare module '@mui/x-charts/internals' {
       valueType: RangeBarValueType | null;
       axisType: 'cartesian';
       highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: RangeBarItemIdentifier;
+        xAxis: ComputedXAxis;
+        yAxis: ComputedYAxis;
+        series: DefaultizedRangeBarSeriesType;
+      };
       highlightIdentifier: {
         type: 'rangeBar';
         seriesId: SeriesId;
@@ -48,6 +60,12 @@ declare module '@mui/x-charts/internals' {
       valueType: OHLCValueType | null;
       axisType: 'cartesian';
       highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: OHLCItemIdentifier;
+        xAxis: ComputedXAxis;
+        yAxis: ComputedYAxis;
+        series: DefaultizedOHLCSeriesType;
+      };
       highlightIdentifier: {
         type: 'ohlc';
         seriesId: SeriesId;

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { cartesianSeriesTypes, useStore } from '@mui/x-charts/internals';
@@ -22,6 +23,10 @@ import { get2DExtrema } from './get2DExtrema';
 cartesianSeriesTypes.addType('funnel');
 
 export interface FunnelPlotProps extends FunnelPlotSlotExtension {
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
   /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -133,13 +138,13 @@ const useAggregatedData = () => {
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const { onItemClick, ...other } = props;
+  const { className, onItemClick, ...other } = props;
 
   const data = useAggregatedData();
   const classes = useUtilityClasses();
 
   return (
-    <g className={classes.root}>
+    <g className={clsx(classes.root, className)}>
       {data.map((series) => {
         if (series.length === 0) {
           return null;

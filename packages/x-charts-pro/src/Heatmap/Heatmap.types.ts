@@ -10,6 +10,10 @@ export interface HeatmapPlotSlotProps extends HeatmapItemSlotProps {}
 
 export interface HeatmapRendererPlotProps extends Pick<HeatmapItemProps, 'slots' | 'slotProps'> {
   /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
+  /**
    * The border radius of the heatmap cells in pixels.
    */
   borderRadius?: number;

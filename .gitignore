@@ -4,6 +4,7 @@
 .vscode
 .cursor
 .claude/settings.local.json
+.junie
 
 __diff_output__
 .DS_STORE
