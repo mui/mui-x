@@ -31,17 +31,6 @@ import {
 import { useUtilityClasses } from './chartsAxisZoomSliderTrackClasses';
 
 /**
- * Tooltip placement is inverted relative to the axis position so that
- * the tooltip appears away from the user's finger on touch devices.
- */
-const OPPOSITE_PLACEMENT = {
-  top: 'bottom',
-  bottom: 'top',
-  left: 'right',
-  right: 'left',
-} as const;
-
-/**
  * Invisible touch target that is only active on coarse pointer devices (touch).
  * On fine pointer devices (mouse), it disables pointer events so it doesn't
  * interfere with precise interactions on small zoom ranges.
@@ -396,14 +385,14 @@ export function ChartsAxisZoomSliderActiveTrack({
       <ChartsTooltipZoomSliderValue
         anchorEl={startThumbEl}
         open={showTooltip && tooltipStart !== ''}
-        placement={OPPOSITE_PLACEMENT[axisPosition]}
+        placement={axisPosition}
       >
         {tooltipStart}
       </ChartsTooltipZoomSliderValue>
       <ChartsTooltipZoomSliderValue
         anchorEl={endThumbEl}
         open={showTooltip && tooltipEnd !== ''}
-        placement={OPPOSITE_PLACEMENT[axisPosition]}
+        placement={axisPosition}
       >
         {tooltipEnd}
       </ChartsTooltipZoomSliderValue>
