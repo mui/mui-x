@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import { alpha, useTheme } from '@mui/material/styles';
 import { ChartsDataProviderPro } from '@mui/x-charts-pro/ChartsDataProviderPro';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
-import { LinePlot } from '@mui/x-charts-pro/LineChart';
+import { LineHighlightPlot, LinePlot } from '@mui/x-charts-pro/LineChart';
 import { ChartsXAxis } from '@mui/x-charts-pro/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts-pro/ChartsYAxis';
 import { useDrawingArea, useXScale } from '@mui/x-charts-pro/hooks';
@@ -173,6 +173,7 @@ export default function LineOverview() {
           <ChartsYAxis axisId="unemployment-axis" label="Unemployment Rate" />
           <ChartsYAxis axisId="gdp-axis" label="GDP per capita in US$" />
           <ChartsAxisHighlight x="line" />
+          <LineHighlightPlot />
           <ChartZoomSlider />
         </ChartsSurface>
         <ChartsTooltip />
