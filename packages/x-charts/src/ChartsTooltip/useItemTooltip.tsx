@@ -17,16 +17,13 @@ import {
 import { isCartesianSeries } from '../internals/isCartesian';
 import { type AxisId } from '../models/axis';
 
-export type UseItemTooltipReturnValue<SeriesType extends ChartSeriesType> =
-  SeriesType extends 'heatmap'
-    ? Omit<ItemTooltip<SeriesType>, 'value'> & { value: number | null }
-    : ItemTooltip<SeriesType>;
+export type UseItemTooltipReturnValue<SeriesType extends ChartSeriesType> = ItemTooltip<SeriesType>;
 export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;
 
 export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
   | (SeriesType extends 'radar'
       ? ItemTooltipWithMultipleValues<SeriesType>
-      : UseItemTooltipReturnValue<SeriesType>)
+      : ItemTooltip<SeriesType>)
   | null {
   const store = useStore();
   const identifier = store.use(

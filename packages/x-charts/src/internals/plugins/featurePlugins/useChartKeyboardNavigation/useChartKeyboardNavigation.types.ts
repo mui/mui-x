@@ -9,7 +9,13 @@ export interface UseChartKeyboardNavigationInstance {}
 
 export interface UseChartKeyboardNavigationState {
   keyboardNavigation: {
+    /**
+     * The item with keyboard focus. It is `null` when no item is focused.
+     */
     item: null | FocusedItemIdentifier<ChartSeriesType>;
+    /**
+     * If `false` the focus is ignored, but we keep the item in the state to be able to restore it when focus is active again.
+     */
     isFocused: boolean;
     /**
      * Indicates whether keyboard navigation is enabled or not.

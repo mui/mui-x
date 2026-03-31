@@ -5,7 +5,7 @@ import { type HeatmapPlotPremiumProps } from './HeatmapPlotPremium';
 export type UseHeatmapPremiumProps = HeatmapPremiumProps;
 
 export function useHeatmapPremiumProps(props: UseHeatmapPremiumProps) {
-  const { chartDataProviderProProps, heatmapPlotProps, ...other } = useHeatmapProps(props);
+  const { chartsDataProviderProProps, heatmapPlotProps, ...other } = useHeatmapProps(props);
 
   const heatmapPlotPremiumProps: HeatmapPlotPremiumProps = {
     ...heatmapPlotProps,
@@ -15,6 +15,6 @@ export function useHeatmapPremiumProps(props: UseHeatmapPremiumProps) {
   return {
     ...other,
     heatmapPlotPremiumProps,
-    chartDataProviderPremiumProps: chartDataProviderProProps,
+    chartsDataProviderPremiumProps: chartsDataProviderProProps,
   };
 }

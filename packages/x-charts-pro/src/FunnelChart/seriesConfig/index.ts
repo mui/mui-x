@@ -13,6 +13,7 @@ import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
+import descriptionGetter from './descriptionGetter';
 
 export const funnelSeriesConfig: ChartSeriesTypeConfig<'funnel'> = {
   seriesProcessor,
@@ -26,6 +27,7 @@ export const funnelSeriesConfig: ChartSeriesTypeConfig<'funnel'> = {
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  descriptionGetter,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
 };

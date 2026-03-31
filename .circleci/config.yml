@@ -210,6 +210,7 @@ jobs:
             git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
+    resource_class: medium+
     steps:
       - checkout
       - install-deps
@@ -223,7 +224,7 @@ jobs:
           name: Tests TypeScript definitions
           command: pnpm typescript:ci
           environment:
-            NODE_OPTIONS: --max-old-space-size=3584
+            NODE_OPTIONS: --max-old-space-size=5120
   test_e2e:
     <<: *default-job
     executor:
@@ -259,7 +260,7 @@ jobs:
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
-          name: prepare danger on PRs
+          name: Prepare danger on PRs
           command: pnpm danger ci
           environment:
             DANGER_COMMAND: prepareBundleSizeReport
