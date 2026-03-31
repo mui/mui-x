@@ -17,6 +17,7 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     data,
     onEventDrop,
