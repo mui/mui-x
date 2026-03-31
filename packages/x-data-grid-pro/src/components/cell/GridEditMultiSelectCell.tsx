@@ -99,7 +99,7 @@ const GridEditMultiSelectCellAutocomplete = styled(
   },
 )(({ theme }) => ({
   [`& .${inputBaseClasses.root}.${inputBaseClasses.sizeSmall}`]: {
-    minHeight: 52,
+    minHeight: 'var(--_rowHeight, 52px)',
     [`& .${inputBaseClasses.input}`]: {
       paddingBlock: 3.5,
     },
@@ -107,7 +107,7 @@ const GridEditMultiSelectCellAutocomplete = styled(
   [`& + .${autocompleteClasses.popper}`]: {
     [`& .${autocompleteClasses.listbox}`]: {
       boxSizing: 'border-box',
-      maxHeight: 52 * 4,
+      maxHeight: 'calc(var(--_rowHeight, 52px) * 4)',
     },
     [`& .${autocompleteClasses.option}`]: {
       ...theme.typography.body2,
@@ -257,7 +257,7 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
         <GridEditMultiSelectCellPopperContent
           {...slotProps?.popperContent}
           className={clsx(classes.popperContent, slotProps?.popperContent?.className)}
-          style={{ '--_width': `${colDef.computedWidth}px` } as React.CSSProperties}
+          style={{ '--_width': `${colDef.computedWidth}px`, '--_rowHeight': `${rowHeight}px` } as React.CSSProperties}
         >
           <GridEditMultiSelectAutocomplete
             {...(props as GridEditMultiSelectCellProps)}

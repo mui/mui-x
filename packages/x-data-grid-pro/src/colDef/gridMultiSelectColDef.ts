@@ -44,7 +44,21 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   display: 'flex',
   getOptionLabel: defaultGetOptionLabel,
   getOptionValue: defaultGetOptionValue,
-  sortComparator: (v1, v2) => (v1?.length ?? 0) - (v2?.length ?? 0),
+  sortComparator: (v1, v2) => {
+    const lengthDiff = (v1?.length ?? 0) - (v2?.length ?? 0);
+    if (lengthDiff !== 0) {
+      return lengthDiff;
+    }
+    const first1 = v1?.[0] ?? '';
+    const first2 = v2?.[0] ?? '';
+    return String(first1).localeCompare(String(first2));
+  },
+  rowSpanValueGetter: ((value: any) => {
+    if (!Array.isArray(value) || value.length === 0) {
+      return null;
+    }
+    return [...value].sort().join(',');
+  }) as any,
   renderCell: renderMultiSelectCell,
   renderEditCell: renderEditMultiSelectCell,
   valueFormatter: (value: any, row, colDef, apiRef) => {

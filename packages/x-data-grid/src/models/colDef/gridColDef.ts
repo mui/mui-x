@@ -302,7 +302,6 @@ export interface GridActionsColDef<
 > extends GridBaseColDef<R, V, F> {
   /**
    * The type of the column.
-   * @default 'actions'
    */
   type: 'actions';
   /**
@@ -339,7 +338,6 @@ export interface GridSingleSelectColDef<
 > extends GridBaseColDef<R, V, F> {
   /**
    * The type of the column.
-   * @default 'singleSelect'
    */
   type: 'singleSelect';
   /**
@@ -374,7 +372,6 @@ export interface GridMultiSelectColDef<
 > extends GridBaseColDef<R, V, F> {
   /**
    * The type of the column.
-   * @default 'multiSelect'
    */
   type: 'multiSelect';
   /**
