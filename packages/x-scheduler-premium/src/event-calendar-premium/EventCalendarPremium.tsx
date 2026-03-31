@@ -309,7 +309,7 @@ EventCalendarPremium.propTypes = {
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
   /**
    * The views available in the calendar.
-   * @default ["week", "day", "month", "agenda"]
+   * @default ["day", "week", "month", "agenda"]
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['agenda', 'day', 'month', 'week']).isRequired),
   /**
