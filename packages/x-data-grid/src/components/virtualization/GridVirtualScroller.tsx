@@ -125,7 +125,6 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const classes = useUtilityClasses(ownerState);
 
   const virtualizer = useGridVirtualizer();
-  const virtualScroller = virtualizer.api.getters;
   const layoutMode = virtualizer.store.use(Virtualization.selectors.layoutMode);
 
   const hasContentFiller = layoutMode === 'uncontrolled';
@@ -142,7 +141,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     getRows,
     getScrollAreaProps,
     getContainerVerticalProps,
-  } = virtualScroller;
+  } = virtualizer.api.getters;
 
   const rows = getRows(undefined, gridRowTreeSelector(apiRef));
 
@@ -166,7 +165,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           <Viewport {...getViewportProps()}>
             <TopContainer {...containerVerticalProps}>
               {!rootProps.listView && <GridHeaders />}
-              <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
+              <rootProps.slots.pinnedRows position="top" />
             </TopContainer>
 
             {overlayType && (
@@ -180,7 +179,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
 
             <RenderZone role="rowgroup" {...getPositionerProps()}>
               {rows}
-              {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
+              {<rootProps.slots.detailPanels />}
             </RenderZone>
 
             {hasContentFiller && <div {...getContentProps()} />}
@@ -188,7 +187,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
             {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
 
             <rootProps.slots.bottomContainer {...containerVerticalProps}>
-              <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
+              <rootProps.slots.pinnedRows position="bottom" />
             </rootProps.slots.bottomContainer>
           </Viewport>
         </Content>

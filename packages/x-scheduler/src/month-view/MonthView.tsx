@@ -101,6 +101,7 @@ const MonthViewBody = styled('div', {
   gridAutoRows: 'minmax(0, 1fr)',
   position: 'relative',
   flexGrow: 1,
+  overflow: 'hidden',
 });
 
 const CELL_PADDING = 5; // theme.spacing(0.5) * 2
