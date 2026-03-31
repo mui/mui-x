@@ -59,6 +59,27 @@ The example below shows how to define the formatting of values in both axes.
 
 {{"demo": "CustomizedCandlestick.js"}}
 
+## Custom tooltip
+
+When building a custom tooltip with the `useItemTooltip()` or `useAxesTooltip()` hooks, you need to provide `'ohlc'` as a generic type parameter.
+By default, these hooks exclude the `'ohlc'` series type, so the OHLC-specific value shape is not available unless explicitly specified.
+
+```tsx
+// Item tooltip
+const itemTooltipData = useItemTooltip<'ohlc'>();
+
+// Axis tooltip
+const axesTooltipData = useAxesTooltip<'ohlc'>();
+```
+
+This gives you properly typed `value` and `formattedValue` properties. Which are now objects containing the `open`, `high`, `low`, and `close` properties.
+
+If your chart combines OHLC with other series types, provide a union:
+
+```tsx
+const axesTooltipData = useAxesTooltip<'ohlc' | 'line' | 'bar'>();
+```
+
 ## Composition
 
 Similar to other chart types, candlestick charts can be composed using multiple components to create more complex visualizations.
