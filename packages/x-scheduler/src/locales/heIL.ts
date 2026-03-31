@@ -14,7 +14,7 @@ const heILDialog: Partial<EventDialogLocaleText> = {
   // dateTimeSectionLabel: 'Date & time',
   // resourceColorSectionLabel: 'Resource & color',
   // allDayLabel: 'All Day',
-  // closeButtonAriaLabel: 'Close modal',
+  // closeButtonAriaLabel: 'Close',
   // closeButtonLabel: 'Close',
   // deleteEvent: 'Delete event',
   // descriptionLabel: 'Description',
