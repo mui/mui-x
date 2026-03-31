@@ -13,7 +13,20 @@ export type GridFilterInputMultipleMultiSelectProps = GridFilterInputValueProps<
 };
 
 function GridFilterInputMultipleMultiSelect(props: GridFilterInputMultipleMultiSelectProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, slotProps, ...other } = props;
+  const {
+    item,
+    applyValue,
+    type,
+    apiRef,
+    focusElementRef,
+    inputRef,
+    tabIndex,
+    isFilterActive,
+    clearButton,
+    headerFilterMenu,
+    slotProps,
+    ...other
+  } = props;
 
   const id = useId();
   const rootProps = useGridRootProps();
@@ -64,25 +77,29 @@ function GridFilterInputMultipleMultiSelect(props: GridFilterInputMultipleMultiS
   >;
 
   return (
-    <BaseAutocomplete
-      multiple
-      options={resolvedValueOptions}
-      isOptionEqualToValue={isOptionEqualToValue}
-      id={id}
-      value={filteredValues}
-      onChange={handleChange}
-      getOptionLabel={getOptionLabel}
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-      slotProps={{
-        textField: {
-          type: type || 'text',
-          inputRef: focusElementRef,
-        },
-      }}
-      {...other}
-      {...slotProps?.root}
-    />
+    <React.Fragment>
+      <BaseAutocomplete
+        multiple
+        options={resolvedValueOptions}
+        isOptionEqualToValue={isOptionEqualToValue}
+        id={id}
+        value={filteredValues}
+        onChange={handleChange}
+        getOptionLabel={getOptionLabel}
+        label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+        placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+        slotProps={{
+          textField: {
+            type: type || 'text',
+            inputRef: focusElementRef ?? inputRef,
+          },
+        }}
+        {...other}
+        {...slotProps?.root}
+      />
+      {headerFilterMenu}
+      {clearButton}
+    </React.Fragment>
   );
 }
 
