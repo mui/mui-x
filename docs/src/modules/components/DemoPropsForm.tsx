@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
 import FormControl from '@mui/material/FormControl';
-import FormLabel, { formLabelClasses } from '@mui/material/FormLabel';
+import FormLabel from '@mui/material/FormLabel';
 import IconButton from '@mui/material/IconButton';
 import Input, { inputClasses } from '@mui/material/Input';
 import MenuItem from '@mui/material/MenuItem';
@@ -255,9 +255,6 @@ export default function ChartDemoPropsForm<
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
-          [`& .${formLabelClasses.root}`]: {
-            fontWeight: 600,
-          },
           '&& > *': {
             px: 3,
           },
