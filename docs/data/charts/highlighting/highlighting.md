@@ -1,7 +1,7 @@
 ---
 productId: x-charts
 title: Charts - Highlighting
-components: ChartsAxisHighlight
+components: ChartsAxisHighlight, ChartsAxisHighlightValue
 ---
 
 # Charts - Highlighting
