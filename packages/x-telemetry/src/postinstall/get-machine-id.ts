@@ -1,11 +1,7 @@
-import { createHash } from 'crypto';
 import fs from 'fs';
 import isDocker from 'is-docker';
 import os from 'os';
-
-function sha256(value: string): string {
-  return createHash('sha256').update(value).digest('hex');
-}
+import { sha256 } from './hash';
 
 // Q: Why does MUI need a machine ID?
 // A:
