@@ -10,7 +10,13 @@ export default function ColorCandlestick() {
   return (
     <CandlestickChart
       xAxis={[{ data: xData, zoom: { minSpan: 1, filterMode: 'discard' } }]}
-      series={[{ data, upColor: '#7B2FBE', downColor: '#F28C28' }]}
+      series={[
+        {
+          data,
+          upColor: '#7B2FBE',
+          downColor: (mode) => (mode === 'dark' ? '#f7be85' : '#F28C28'),
+        },
+      ]}
       height={400}
     />
   );
