@@ -7,7 +7,7 @@ import type { BaseUIComponentProps, ComponentRenderFn, HTMLProps } from './types
 import { getStateAttributesProps, StateAttributesMapping } from './getStateAttributesProps';
 import { resolveClassName } from './resolveClassName';
 import { resolveStyle } from './resolveStyle';
-import { mergeProps, mergePropsN, mergeClassNames } from '../merge-props';
+import { mergeProps, mergePropsN, mergeClassNames } from '@base-ui/react/merge-props';
 import { EMPTY_OBJECT } from './constants';
 
 type IntrinsicTagName = keyof React.JSX.IntrinsicElements;

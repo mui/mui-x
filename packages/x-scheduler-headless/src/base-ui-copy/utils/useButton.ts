@@ -5,7 +5,7 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { error } from '@base-ui/utils/error';
 import { SafeReact } from '@base-ui/utils/safeReact';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
-import { makeEventPreventable, mergeProps } from '../merge-props';
+import { makeEventPreventable, mergeProps } from '@base-ui/react/merge-props';
 import { useCompositeRootContext } from '../composite/root/CompositeRootContext';
 import { BaseUIEvent, HTMLProps } from '../utils/types';
 import { useFocusableWhenDisabled } from '../utils/useFocusableWhenDisabled';
