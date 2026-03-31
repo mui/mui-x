@@ -148,8 +148,8 @@ async function getTelemetryContext(): Promise<TelemetryContextType> {
   ) {
     telemetryContext.config.runtimePackageNameHashResolved = true;
     const runtimePackageHash = await getRuntimePackageHash();
+    telemetryContext.traits.runtimePackageNameHash = runtimePackageHash;
     if (runtimePackageHash) {
-      telemetryContext.traits.runtimePackageNameHash = runtimePackageHash;
       // Recompute projectId: repoHash || runtimePackageNameHash || postinstallPackageNameHash || rootPathHash
       telemetryContext.traits.projectId =
         telemetryContext.traits.repoHash ||

@@ -28,7 +28,7 @@ describe('<EventTimelinePremium /> - Describe Conformance', () => {
       render,
       muiName: 'MuiEventTimeline',
       refInstanceof: window.HTMLDivElement,
-      skip: ['componentProp', 'componentsProp', 'themeVariants'],
+      skip: ['componentProp', 'themeVariants'],
     }),
   );
 });
