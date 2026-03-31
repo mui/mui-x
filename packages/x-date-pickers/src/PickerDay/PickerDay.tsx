@@ -73,7 +73,6 @@ const PickerDayRoot = styled(ButtonBase, {
   ...theme.typography.caption,
   lineHeight: 1,
   display: 'flex',
-  flex: 1,
   width: 'var(--PickerDay-size)',
   height: 'var(--PickerDay-size)',
   borderRadius: 'calc(var(--PickerDay-size) / 2)',
