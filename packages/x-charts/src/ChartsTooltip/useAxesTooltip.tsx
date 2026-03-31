@@ -35,18 +35,18 @@ import {
 } from '../models/seriesType/composition';
 
 export interface UseAxesTooltipReturnValue<
-  SeriesT extends CartesianChartSeriesType | PolarChartSeriesType =
-    | CartesianChartSeriesType
+  SeriesType extends CartesianChartSeriesType | PolarChartSeriesType =
+    | Exclude<CartesianChartSeriesType, 'ohlc'>
     | PolarChartSeriesType,
   AxisValueT extends string | number | Date = string | number | Date,
 > {
-  axisDirection: SeriesT extends CartesianChartSeriesType ? 'x' | 'y' : 'rotation' | 'radius';
-  mainAxis: SeriesT extends CartesianChartSeriesType ? ComputedAxis : PolarAxisDefaultized;
+  axisDirection: SeriesType extends CartesianChartSeriesType ? 'x' | 'y' : 'rotation' | 'radius';
+  mainAxis: SeriesType extends CartesianChartSeriesType ? ComputedAxis : PolarAxisDefaultized;
   axisId: AxisId;
   axisValue: AxisValueT;
   axisFormattedValue: string;
   dataIndex: number;
-  seriesItems: SeriesItem<SeriesT>[];
+  seriesItems: SeriesItem<SeriesType>[];
 }
 
 export interface UseAxesTooltipParams {
@@ -102,7 +102,11 @@ function defaultAxisTooltipConfig(
 /**
  * Returns the axes to display in the tooltip and the series item related to them.
  */
-export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipReturnValue[] | null {
+export function useAxesTooltip<
+  SeriesType extends CartesianChartSeriesType | PolarChartSeriesType =
+    | Exclude<CartesianChartSeriesType, 'ohlc'>
+    | PolarChartSeriesType,
+>(params?: UseAxesTooltipParams): UseAxesTooltipReturnValue<SeriesType>[] | null {
   const { directions } = params ?? {};
 
   const defaultXAxis = useXAxis();
@@ -156,7 +160,7 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
     .filter((seriesType): seriesType is ComposableCartesianChartSeriesType =>
       composableCartesianSeriesTypes.has(seriesType as ComposableCartesianChartSeriesType),
     )
-    .forEach(<SeriesT extends ComposableCartesianChartSeriesType>(seriesType: SeriesT) => {
+    .forEach(<Type extends ComposableCartesianChartSeriesType>(seriesType: Type) => {
       const seriesOfType = series[seriesType];
       if (!seriesOfType) {
         return [];
@@ -230,7 +234,7 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
 
   Object.keys(series)
     .filter(isPolarSeriesType)
-    .forEach(<SeriesT extends PolarChartSeriesType>(seriesType: SeriesT) => {
+    .forEach(<Type extends PolarChartSeriesType>(seriesType: Type) => {
       const seriesOfType = series[seriesType];
       if (!seriesOfType) {
         return [];
@@ -275,5 +279,5 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
       });
     });
 
-  return tooltipAxes;
+  return tooltipAxes as UseAxesTooltipReturnValue<SeriesType>[];
 }

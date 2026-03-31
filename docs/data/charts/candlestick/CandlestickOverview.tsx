@@ -327,7 +327,9 @@ function CandlestickToolbar({
 
 function CandlestickTooltip() {
   const drawingArea = useDrawingArea();
-  const axesTooltipData = useAxesTooltip({ directions: ['x'] });
+  const axesTooltipData = useAxesTooltip<'ohlc' | 'line' | 'bar'>({
+    directions: ['x'],
+  });
 
   const tooltipData = axesTooltipData?.[0];
 
