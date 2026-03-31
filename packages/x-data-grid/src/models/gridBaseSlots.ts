@@ -311,12 +311,14 @@ export type SelectProps = CommonProps & {
   open?: boolean;
   error?: boolean;
   disabled?: boolean;
+  multiple?: boolean;
   onChange?: React.ChangeEventHandler;
   onOpen?: (event: React.SyntheticEvent) => void;
   onClose?: (
     event: React.KeyboardEvent,
     reason: 'backdropClick' | 'escapeKeyDown' | 'tabKeyDown',
   ) => void;
+  renderValue?: (value: any) => React.ReactNode;
   label?: React.ReactNode;
   labelId?: string;
   native?: boolean;

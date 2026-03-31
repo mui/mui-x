@@ -146,11 +146,13 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
     labelId,
     material,
     disabled,
+    multiple,
     slotProps,
     onChange,
     onKeyDown,
     onOpen,
     onClose,
+    renderValue,
     size,
     style,
     fullWidth,
@@ -185,7 +187,9 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
         labelId={labelId}
         label={label}
         displayEmpty
+        multiple={multiple}
         onChange={onChange as any}
+        renderValue={renderValue}
         variant={computedVariant as any}
         {...other}
         inputProps={slotProps?.htmlInput}

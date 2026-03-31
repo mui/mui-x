@@ -178,7 +178,7 @@ export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
 export type * as BaseSlots from '../models/gridBaseSlots';
-export type { TextFieldProps, AutocompleteProps } from '../models/gridBaseSlots';
+export type { TextFieldProps, AutocompleteProps, SelectProps } from '../models/gridBaseSlots';
 
 export type * from '../models/props/DataGridProps';
 export type { GridAggregationPosition, GridAggregationCellMeta } from '../models/gridAggregation';

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
-import type { GridMultiSelectColDef, ValueOptions } from '@mui/x-data-grid';
+import type { GridMultiSelectColDef } from '@mui/x-data-grid';
 import { useGridRootProps } from '@mui/x-data-grid';
 import { getValueOptions, isMultiSelectColDef } from '@mui/x-data-grid/internals';
-import type { AutocompleteProps, GridFilterInputValueProps } from '@mui/x-data-grid/internals';
+import type { SelectProps, GridFilterInputValueProps } from '@mui/x-data-grid/internals';
 
 export type GridFilterInputMultipleMultiSelectProps = GridFilterInputValueProps<
-  Omit<AutocompleteProps<ValueOptions, true, false, true>, 'options'>
+  Omit<SelectProps, 'children'>
 > & {
   type?: 'multiSelect';
 };
@@ -29,6 +29,7 @@ function GridFilterInputMultipleMultiSelect(props: GridFilterInputMultipleMultiS
   } = props;
 
   const id = useId();
+  const labelId = useId();
   const rootProps = useGridRootProps();
 
   const resolvedColumn = apiRef.current.getColumn(item.field) as GridMultiSelectColDef | undefined;
@@ -36,67 +37,76 @@ function GridFilterInputMultipleMultiSelect(props: GridFilterInputMultipleMultiS
   const getOptionValue = resolvedColumn!.getOptionValue!;
   const getOptionLabel = resolvedColumn!.getOptionLabel!;
 
-  const isOptionEqualToValue = React.useCallback(
-    (option: ValueOptions, value: ValueOptions) => getOptionValue(option) === getOptionValue(value),
-    [getOptionValue],
-  );
-
   const resolvedValueOptions = React.useMemo(() => {
     return getValueOptions(resolvedColumn!) || [];
   }, [resolvedColumn]);
 
-  const filteredValues = React.useMemo(() => {
+  const filterValues = React.useMemo(() => {
     if (!Array.isArray(item.value)) {
       return [];
     }
-
-    return item.value.reduce<ValueOptions[]>((acc, value) => {
-      const resolvedValue = resolvedValueOptions.find((v) => getOptionValue(v) === value);
-      if (resolvedValue != null) {
-        acc.push(resolvedValue);
-      }
-      return acc;
-    }, [] as ValueOptions[]);
+    return item.value.filter((val: any) =>
+      resolvedValueOptions.some((option) => getOptionValue(option) === val),
+    );
   }, [getOptionValue, item.value, resolvedValueOptions]);
 
-  const handleChange = React.useCallback<
-    NonNullable<AutocompleteProps<ValueOptions, true, false, true>['onChange']>
-  >(
-    (event, value) => {
-      applyValue({ ...item, value: value.map(getOptionValue) });
+  const handleChange = React.useCallback(
+    (event: React.ChangeEvent<{ value: unknown }>) => {
+      const value = event.target.value;
+      applyValue({ ...item, value: typeof value === 'string' ? value.split(',') : value });
     },
-    [applyValue, item, getOptionValue],
+    [applyValue, item],
   );
 
   if (!resolvedColumn || !isMultiSelectColDef(resolvedColumn)) {
     return null;
   }
 
-  const BaseAutocomplete = rootProps.slots.baseAutocomplete as React.JSXElementConstructor<
-    AutocompleteProps<ValueOptions, true, false, true>
-  >;
+  const label = slotProps?.root?.label ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
     <React.Fragment>
-      <BaseAutocomplete
-        multiple
-        options={resolvedValueOptions}
-        isOptionEqualToValue={isOptionEqualToValue}
+      <rootProps.slots.baseSelect
+        fullWidth
         id={id}
-        value={filteredValues}
-        onChange={handleChange}
-        getOptionLabel={getOptionLabel}
-        label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-        placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+        labelId={labelId}
+        label={label}
+        multiple
+        value={filterValues}
+        onChange={handleChange as any}
+        renderValue={(selected: any[]) =>
+          selected
+            .map((val) => {
+              const option = resolvedValueOptions.find((opt) => getOptionValue(opt) === val);
+              return option ? getOptionLabel(option) : val;
+            })
+            .join(', ')
+        }
         slotProps={{
-          textField: {
-            type: type || 'text',
-            inputRef: focusElementRef ?? inputRef,
+          htmlInput: {
+            tabIndex,
+            ref: focusElementRef ?? inputRef,
+            ...(slotProps?.root as any)?.slotProps?.htmlInput,
           },
         }}
+        {...rootProps.slotProps?.baseSelect}
         {...other}
         {...slotProps?.root}
-      />
+      >
+        {resolvedValueOptions.map((option) => {
+          const value = getOptionValue(option);
+          return (
+            <rootProps.slots.baseSelectOption
+              {...rootProps.slotProps?.baseSelectOption}
+              native={false}
+              key={value}
+              value={value}
+            >
+              {getOptionLabel(option)}
+            </rootProps.slots.baseSelectOption>
+          );
+        })}
+      </rootProps.slots.baseSelect>
       {headerFilterMenu}
       {clearButton}
     </React.Fragment>
