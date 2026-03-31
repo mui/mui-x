@@ -738,7 +738,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('button', { name: /save/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByText(/All events in the series/i));
+        await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Cancel/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
@@ -792,7 +792,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('button', { name: /save/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByText(/All events in the series/i));
+        await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
