@@ -33,6 +33,7 @@ export interface UseDemoDataOptions {
   maxColumns?: number;
   visibleFields?: string[];
   editable?: boolean;
+  multiSelect?: boolean;
   treeData?: AddPathToDemoDataOptions;
 }
 
@@ -93,13 +94,16 @@ export const deepFreeze = <T>(object: T): T => {
 
 export interface ColumnsOptions extends Pick<
   UseDemoDataOptions,
-  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields'
+  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'multiSelect'
 > {}
 
 export const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] => {
   let columns =
     options.dataSet === 'Commodity' ? getCommodityColumns(options.editable) : getEmployeeColumns();
 
+  if (!options.multiSelect) {
+    columns = columns.filter((col) => col.type !== 'multiSelect');
+  }
   if (options.visibleFields) {
     columns = columns.map((col) => ({ ...col, hide: !options.visibleFields?.includes(col.field) }));
   }
@@ -136,8 +140,9 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
       editable: options.editable,
       maxColumns: options.maxColumns,
       visibleFields: options.visibleFields,
+      multiSelect: options.multiSelect,
     });
-  }, [options.dataSet, options.editable, options.maxColumns, options.visibleFields]);
+  }, [options.dataSet, options.editable, options.maxColumns, options.visibleFields, options.multiSelect]);
 
   const [data, setData] = React.useState<DemoTreeDataValue>(() => {
     return addTreeDataOptionsToDemoData(

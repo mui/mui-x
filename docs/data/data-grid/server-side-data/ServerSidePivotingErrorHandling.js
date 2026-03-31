@@ -44,6 +44,7 @@ export default function ServerSidePivotingErrorHandling() {
       rowLength: 200,
       dataSet: 'Commodity',
       maxColumns: 20,
+      multiSelect: true,
     },
     { useCursorPagination: false },
     shouldRequestsFail,
