@@ -120,7 +120,7 @@ Use `zoom.slider.preview.seriesIds` to select the series to display in the previ
 ### Scatter marker size
 
 The size of the preview marker in scatter charts is 1px by default.
-Customize it by setting the `preview.markerSize` property on the series configuration object.
+Customize it by setting the `zoom.slider.preview.markerSize` property on the series configuration object.
 
 {{"demo": "ZoomSliderPreviewCustomMarkerSize.js"}}
 
