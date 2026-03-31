@@ -141,7 +141,6 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       PaperComponent={PaperComponent}
       aria-labelledby="event-dialog-title"
       aria-modal="false"
-      disableEnforceFocus
       className={classes.eventDialog}
       slotProps={{
         paper: { className: classes.eventDialogPaper, anchorRef, dragHandlerRef } as PaperProps,
