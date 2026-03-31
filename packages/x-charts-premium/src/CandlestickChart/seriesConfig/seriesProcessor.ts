@@ -26,8 +26,6 @@ const seriesProcessor: SeriesProcessor<'ohlc'> = (params) => {
       ...series[id],
       valueFormatter: series[id].valueFormatter ?? candlestickValueFormatter,
       data: series[id].data!,
-      upColor: series[id].upColor!,
-      downColor: series[id].downColor!,
     } satisfies DefaultizedOHLCSeriesType;
   }
 

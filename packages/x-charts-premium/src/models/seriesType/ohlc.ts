@@ -49,5 +49,14 @@ export type OHLCItemIdentifier = {
 
 export interface DefaultizedOHLCSeriesType extends DefaultizedProps<
   OHLCSeriesType,
-  CommonDefaultizedProps | 'color' | 'upColor' | 'downColor'
-> {}
+  CommonDefaultizedProps | 'color'
+> {
+  /**
+   * The color of the candle body when the close price is greater than or equal to the open price.
+   */
+  upColor: string;
+  /**
+   * The color of the candle body when the close price is less than the open price.
+   */
+  downColor: string;
+}
