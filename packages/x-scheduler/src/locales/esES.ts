@@ -37,7 +37,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   recurrenceEveryLabel: 'Cada',
   recurrenceRepeatLabel: 'Repetir',
   recurrenceTabLabel: 'Recurrencia',
-  recurrenceMainSelectCustomLabel: 'Selecciona tu patrón de recurrencia',
+  recurrenceMainSelectCustomLabel: 'Recurrencia',
   recurrenceWeeklyFrequencyLabel: 'semanas',
   recurrenceWeeklyPresetLabel: (weekday) => `Se repite semanalmente el ${weekday}`,
   recurrenceMonthlyFrequencyLabel: 'meses',
@@ -50,7 +50,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   recurrenceWeeklyMonthlySpecificInputsLabel: 'El',
   recurrenceYearlyFrequencyLabel: 'años',
   recurrenceYearlyPresetLabel: (date) => `Se repite anualmente el ${date}`,
-  noResourceAriaLabel: 'Sin recurso específico',
+  noResourceAriaLabel: 'Sin recurso',
   resourceLabel: 'Recurso',
   saveChanges: 'Guardar',
   startDateAfterEndDateError: 'La fecha/hora de inicio debe ser anterior a la fecha/hora de fin.',
@@ -58,7 +58,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   startTimeLabel: 'Hora de inicio',
 
   // ScopeDialog
-  all: 'Todos los eventos de la serie',
+  all: 'Todos los eventos',
   cancel: 'Cancelar',
   confirm: 'Confirmar',
   onlyThis: 'Solo este evento',
