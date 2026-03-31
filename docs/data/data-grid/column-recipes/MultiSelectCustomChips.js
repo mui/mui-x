@@ -5,8 +5,8 @@ import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import {
   DataGridPro,
-  GridEditMultiSelectCell,
   GridMultiSelectCell,
+  GridEditMultiSelectCell,
 } from '@mui/x-data-grid-pro';
 
 const tagColorMap = {

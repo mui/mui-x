@@ -101,8 +101,9 @@ const GridMultiSelectCellOverflow = styled(NotRendered<GridSlotProps['baseChip']
   slot: 'MultiSelectCellChip',
 })<{ ownerState: OwnerState }>();
 
-export interface GridMultiSelectCellProps<V extends ValueOptions = ValueOptions>
-  extends GridRenderCellParams {
+export interface GridMultiSelectCellProps<
+  V extends ValueOptions = ValueOptions,
+> extends GridRenderCellParams {
   /**
    * Props passed to internal components.
    */
