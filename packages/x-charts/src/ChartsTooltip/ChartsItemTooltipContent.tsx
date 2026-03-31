@@ -139,6 +139,10 @@ function DefaultSingleValueContent<T extends ChartSeriesType>({
 
   const classes = useUtilityClasses(propClasses);
 
+  if (formattedValue == null || typeof formattedValue !== 'string') {
+    return null;
+  }
+
   return (
     <ChartsTooltipRow
       className={classes.row}
@@ -157,7 +161,7 @@ function DefaultSingleValueContent<T extends ChartSeriesType>({
         {label}
       </ChartsTooltipCell>
       <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-        {typeof formattedValue === 'string' ? formattedValue : null}
+        {formattedValue}
       </ChartsTooltipCell>
     </ChartsTooltipRow>
   );

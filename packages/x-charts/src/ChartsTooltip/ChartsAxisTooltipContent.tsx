@@ -108,7 +108,7 @@ function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesTyp
   const classes = useUtilityClasses(props.classes);
   const { item } = props;
 
-  if (item.formattedValue == null) {
+  if (item.formattedValue == null || item.formattedValue !== 'string') {
     return null;
   }
 
@@ -130,7 +130,7 @@ function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesTyp
         {item.formattedLabel || null}
       </ChartsTooltipCell>
       <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-        {typeof item.formattedValue === 'string' ? item.formattedValue : null}
+        {item.formattedValue}
       </ChartsTooltipCell>
     </ChartsTooltipRow>
   );
