@@ -17,7 +17,7 @@ import {
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
-export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
+export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
 
 export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
