@@ -18,7 +18,7 @@ export interface ChartsLabelMarkClasses {
   fill: string;
 }
 
-export function getLabelMarkUtilityClass(slot: string) {
+function getLabelMarkUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLabelMark', slot);
 }
 

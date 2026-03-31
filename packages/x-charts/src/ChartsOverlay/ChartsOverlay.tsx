@@ -7,7 +7,7 @@ import { useSeries } from '../hooks/useSeries';
 import { type SeriesId } from '../models/seriesType/common';
 import { ChartsNoDataOverlay } from './ChartsNoDataOverlay';
 
-export function useNoData() {
+function useNoData() {
   const seriesPerType = useSeries();
 
   return Object.values(seriesPerType).every((seriesOfGivenType) => {

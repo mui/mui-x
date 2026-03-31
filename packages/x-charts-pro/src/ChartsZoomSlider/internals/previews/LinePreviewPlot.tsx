@@ -30,7 +30,7 @@ export function LinePreviewPlot({ axisId }: LinePreviewPlotProps) {
   );
 }
 
-export interface PreviewLineElementProps extends Omit<
+interface PreviewLineElementProps extends Omit<
   React.SVGProps<SVGPathElement>,
   'ref' | 'color' | 'id'
 > {

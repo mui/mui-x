@@ -16,7 +16,7 @@ export interface ChartsLabelGradientClasses {
   fill: string;
 }
 
-export function getLabelGradientUtilityClass(slot: string) {
+function getLabelGradientUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLabelGradient', slot);
 }
 

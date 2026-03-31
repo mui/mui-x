@@ -13,15 +13,14 @@ interface AppearingMaskProps {
   children: React.ReactNode;
 }
 
-export interface AppearingMaskClasses {
+interface AppearingMaskClasses {
   /** Styles applied if the element should be animated. */
   animate: string;
 }
 
-export const appearingMaskClasses: AppearingMaskClasses = generateUtilityClasses(
-  'MuiAppearingMask',
-  ['animate'],
-);
+const appearingMaskClasses: AppearingMaskClasses = generateUtilityClasses('MuiAppearingMask', [
+  'animate',
+]);
 
 const AnimatedRect = styled('rect', {
   slot: 'internal',

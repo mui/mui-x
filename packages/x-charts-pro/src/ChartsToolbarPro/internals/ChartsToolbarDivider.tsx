@@ -6,7 +6,7 @@ import { NotRendered, useChartsSlots } from '@mui/x-charts/internals';
 import { type ChartsBaseSlotsPro } from '../../internals/slots/chartsBaseSlots';
 import { type ChartBaseDividerProps } from '../../internals/slots/chartBaseSlotProps';
 
-export interface ChartsToolbarDividerProps extends ChartBaseDividerProps {}
+interface ChartsToolbarDividerProps extends ChartBaseDividerProps {}
 
 // This is workaround because api-docs-builder does not support the `NotRendered<ChartBaseDividerProps>` syntax.
 const NotRenderedDivider = NotRendered as unknown as React.ComponentType<ChartBaseDividerProps>;

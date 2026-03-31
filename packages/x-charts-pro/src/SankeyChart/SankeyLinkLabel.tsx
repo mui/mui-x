@@ -5,7 +5,7 @@ import { type SankeyLayoutLink } from './sankey.types';
 import { useSankeySeries } from '../hooks/useSankeySeries';
 import { useUtilityClasses } from './sankeyClasses';
 
-export interface SankeyLinkLabelProps {
+interface SankeyLinkLabelProps {
   /**
    * The link data
    */

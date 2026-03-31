@@ -6,7 +6,7 @@ import type { AllPluginSignatures, DefaultPluginSignatures } from '../internals/
 import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 import type { ChartPublicAPI } from '../internals/plugins/models';
 
-export type PluginsPerSeriesType = {
+type PluginsPerSeriesType = {
   line: LineChartPluginSignatures;
   scatter: ScatterChartPluginSignatures;
   bar: BarChartPluginSignatures;

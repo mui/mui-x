@@ -19,7 +19,7 @@ import {
  * Returns the default fallback height for an X axis when auto-sizing is not available.
  * This function ensures consistent fallback values between axis size calculation and rendering.
  */
-export function getDefaultXAxisHeight(axis: DefaultedXAxis): number {
+function getDefaultXAxisHeight(axis: DefaultedXAxis): number {
   return DEFAULT_AXIS_SIZE_HEIGHT + (axis.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 }
 
@@ -27,7 +27,7 @@ export function getDefaultXAxisHeight(axis: DefaultedXAxis): number {
  * Returns the default fallback width for a Y axis when auto-sizing is not available.
  * This function ensures consistent fallback values between axis size calculation and rendering.
  */
-export function getDefaultYAxisWidth(axis: DefaultedYAxis): number {
+function getDefaultYAxisWidth(axis: DefaultedYAxis): number {
   return DEFAULT_AXIS_SIZE_WIDTH + (axis.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 }
 
@@ -87,7 +87,7 @@ function selectYAxisSize(
   return axesSize + axesGap * Math.max(0, nbOfAxes - 1);
 }
 
-export const selectorChartLeftAxisSize = createSelector(
+const selectorChartLeftAxisSize = createSelector(
   selectorChartRawYAxis,
   selectorChartCartesianAxesGap,
   selectorChartYAxisAutoSizes,
@@ -96,7 +96,7 @@ export const selectorChartLeftAxisSize = createSelector(
   },
 );
 
-export const selectorChartRightAxisSize = createSelector(
+const selectorChartRightAxisSize = createSelector(
   selectorChartRawYAxis,
   selectorChartCartesianAxesGap,
   selectorChartYAxisAutoSizes,
@@ -105,7 +105,7 @@ export const selectorChartRightAxisSize = createSelector(
   },
 );
 
-export const selectorChartTopAxisSize = createSelector(
+const selectorChartTopAxisSize = createSelector(
   selectorChartRawXAxis,
   selectorChartCartesianAxesGap,
   selectorChartXAxisAutoSizes,
@@ -114,7 +114,7 @@ export const selectorChartTopAxisSize = createSelector(
   },
 );
 
-export const selectorChartBottomAxisSize = createSelector(
+const selectorChartBottomAxisSize = createSelector(
   selectorChartRawXAxis,
   selectorChartCartesianAxesGap,
   selectorChartXAxisAutoSizes,

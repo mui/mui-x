@@ -60,7 +60,8 @@
     "generate:exports": "node scripts/generateDeepExports.mjs",
     "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\"",
     "clean:node_modules": "rimraf --glob \"**/node_modules\"",
-    "clean": "pnpm -r exec rm -rf build tsconfig.build.tsbuildinfo"
+    "clean": "pnpm -r exec rm -rf build tsconfig.build.tsbuildinfo",
+    "knip": "knip"
   },
   "devDependencies": {
     "@atlaskit/pragmatic-drag-and-drop-unit-testing": "1.1.1",
@@ -117,6 +118,7 @@
     "execa": "9.6.1",
     "globby": "16.1.1",
     "jsdom": "26.1.0",
+    "knip": "^6.1.0",
     "lerna": "9.0.4",
     "markdownlint-cli2": "0.21.0",
     "moment": "catalog:",

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { type AxisId, selectorChartSeriesProcessed, useStore } from '@mui/x-charts/internals';
 import { seriesPreviewPlotMap } from './seriesPreviewPlotMap';
 
-export interface ChartsAxisZoomSliderPreviewContentProps {
+interface ChartsAxisZoomSliderPreviewContentProps {
   axisId: AxisId;
   x: number;
   y: number;

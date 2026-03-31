@@ -30,7 +30,7 @@ export interface BarElementOwnerState {
   classes?: Partial<BarClasses>;
 }
 
-export function getBarUtilityClass(slot: string) {
+function getBarUtilityClass(slot: string) {
   return generateUtilityClass('MuiBarChart', slot);
 }
 
@@ -43,7 +43,7 @@ export const barClasses: BarClasses = generateUtilityClasses('MuiBarChart', [
   'labelAnimate',
 ]);
 
-export interface UseUtilityClassesOptions {
+interface UseUtilityClassesOptions {
   skipAnimation?: boolean;
   classes?: Partial<BarClasses>;
 }

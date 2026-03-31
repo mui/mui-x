@@ -2,7 +2,7 @@ import { useHeatmapProps } from '@mui/x-charts-pro/internals';
 import { type HeatmapPremiumProps } from './HeatmapPremium';
 import { type HeatmapPlotPremiumProps } from './HeatmapPlotPremium';
 
-export type UseHeatmapPremiumProps = HeatmapPremiumProps;
+type UseHeatmapPremiumProps = HeatmapPremiumProps;
 
 export function useHeatmapPremiumProps(props: UseHeatmapPremiumProps) {
   const { chartsDataProviderProProps, heatmapPlotProps, ...other } = useHeatmapProps(props);

@@ -9,7 +9,7 @@ import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGe
 import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
 import { getModifiedArcProperties } from './getModifiedArcProperties';
 
-export interface AnimatedObject {
+interface AnimatedObject {
   innerRadius: number;
   outerRadius: number;
   arcLabelRadius: number;
@@ -19,7 +19,7 @@ export interface AnimatedObject {
   paddingAngle: number;
 }
 
-export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObject {
+interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObject {
   dataIndex: number;
   isFaded: boolean;
   isHighlighted: boolean;

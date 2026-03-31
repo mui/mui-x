@@ -628,5 +628,3 @@ export interface ChartsLocaleText {
     seriesLabel?: string;
   }) => string;
 }
-
-export type ChartsTranslationKeys = keyof ChartsLocaleText;

@@ -27,7 +27,7 @@ export const chartsAxisZoomSliderThumbClasses: ChartsAxisZoomSliderThumbClasses 
     'end',
   ]);
 
-export function getAxisZoomSliderThumbUtilityClass(slot: string) {
+function getAxisZoomSliderThumbUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartAxisZoomSliderThumb', slot);
 }
 

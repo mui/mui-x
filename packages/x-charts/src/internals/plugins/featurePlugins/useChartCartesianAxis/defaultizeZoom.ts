@@ -7,7 +7,7 @@ import { type AxisId } from '../../../../models/axis';
 import { type DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 import { type ZoomOptions } from './zoom.types';
 
-export const defaultZoomOptions = {
+const defaultZoomOptions = {
   minStart: 0,
   maxEnd: 100,
   step: 5,

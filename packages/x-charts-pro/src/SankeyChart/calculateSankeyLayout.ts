@@ -101,7 +101,7 @@ export function calculateSankeyLayout(
   };
 }
 
-export function improvedNaiveSankeyLinkPathHorizontal(
+function improvedNaiveSankeyLinkPathHorizontal(
   link: SankeyLayoutLink<true>,
   curveCorrection?: number,
 ) {

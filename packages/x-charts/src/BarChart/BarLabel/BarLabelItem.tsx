@@ -21,7 +21,7 @@ export interface BarLabelSlotProps {
   barLabel?: SlotComponentPropsFromProps<BarLabelProps, {}, BarLabelOwnerState>;
 }
 
-export type BarLabelItemProps<V extends BarValueType | null> = Omit<
+type BarLabelItemProps<V extends BarValueType | null> = Omit<
   BarLabelOwnerState,
   'isFaded' | 'isHighlighted'
 > &

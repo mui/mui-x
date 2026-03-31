@@ -31,7 +31,7 @@ export interface RadarClasses {
 
 export type RadarClassKey = keyof RadarClasses;
 
-export function getRadarUtilityClass(slot: string) {
+function getRadarUtilityClass(slot: string) {
   return generateUtilityClass('MuiRadarChart', slot);
 }
 

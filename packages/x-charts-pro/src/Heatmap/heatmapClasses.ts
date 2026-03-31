@@ -28,7 +28,7 @@ export interface HeatmapClasses {
 
 export type HeatmapClassKey = keyof HeatmapClasses;
 
-export function getHeatmapUtilityClass(slot: string) {
+function getHeatmapUtilityClass(slot: string) {
   // Those should be common to all charts
   if (['highlighted', 'faded'].includes(slot)) {
     return generateUtilityClass('Charts', slot);

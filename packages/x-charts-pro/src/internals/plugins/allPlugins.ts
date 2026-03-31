@@ -2,7 +2,6 @@
 
 import {
   type ChartSeriesType,
-  type ConvertSignaturesIntoPlugins,
   useChartCartesianAxis,
   type UseChartCartesianAxisSignature,
   useChartTooltip,
@@ -13,7 +12,6 @@ import {
   type UseChartZAxisSignature,
   useChartHighlight,
   type UseChartHighlightSignature,
-  useChartPolarAxis,
   type UseChartPolarAxisSignature,
   useChartBrush,
   type UseChartBrushSignature,
@@ -37,23 +35,6 @@ export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeries
   UseChartVisibilityManagerSignature<SeriesType>,
 ];
 
-export type AllPluginsType<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  ConvertSignaturesIntoPlugins<AllPluginSignatures<SeriesType>>;
-
-export const ALL_PLUGINS = [
-  useChartZAxis,
-  useChartBrush,
-  useChartTooltip,
-  useChartInteraction,
-  useChartCartesianAxis,
-  useChartPolarAxis,
-  useChartHighlight,
-  useChartVisibilityManager,
-  useChartProZoom,
-  useChartProExport,
-  useChartVisibilityManager,
-];
-
 export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
@@ -67,9 +48,6 @@ export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSe
   UseChartProExportSignature,
   UseChartVisibilityManagerSignature<SeriesType>,
 ];
-
-export type DefaultPluginsType<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  ConvertSignaturesIntoPlugins<DefaultPluginSignatures<SeriesType>>;
 
 export const DEFAULT_PLUGINS = [
   useChartZAxis,

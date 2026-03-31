@@ -13,7 +13,7 @@ export interface RangeBarClasses {
 
 export type RangeBarClassKey = keyof RangeBarClasses;
 
-export function getRangeBarUtilityClass(slot: string) {
+function getRangeBarUtilityClass(slot: string) {
   return generateUtilityClass('MuiRangeBar', slot);
 }
 

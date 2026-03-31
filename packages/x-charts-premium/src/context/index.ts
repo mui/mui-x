@@ -3,3 +3,4 @@ export * from '@mui/x-charts-pro/context';
 // End of re-export-block
 
 export type { ChartPremiumApi } from './ChartPremiumApi';
+export * from './useChartPremiumApiContext';

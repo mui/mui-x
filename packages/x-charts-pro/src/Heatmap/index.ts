@@ -4,7 +4,7 @@ export { HeatmapPlot, type HeatmapPlotProps } from './HeatmapPlot';
 export type { HeatmapPlotSlots, HeatmapPlotSlotProps } from './Heatmap.types';
 export * from './FocusedHeatmapCell';
 export { HeatmapCell } from './HeatmapCell';
-export type { HeatmapCellProps, HeatmapCellOwnerState } from './HeatmapCell';
+export type { HeatmapCellProps, HeatmapCellOwnerState, HeatmapItemOwnerState } from './HeatmapCell';
 export * from './HeatmapTooltip';
 export * from './Heatmap.plugins';
 export { heatmapClasses } from './heatmapClasses';

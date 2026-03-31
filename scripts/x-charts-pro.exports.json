@@ -307,6 +307,7 @@
   { "name": "HeatmapData", "kind": "Class" },
   { "name": "HeatmapItemIdentifier", "kind": "TypeAlias" },
   { "name": "HeatmapItemIdentifierWithData", "kind": "TypeAlias" },
+  { "name": "HeatmapItemOwnerState", "kind": "TypeAlias" },
   { "name": "HeatmapPlot", "kind": "Function" },
   { "name": "HeatmapPlotProps", "kind": "Interface" },
   { "name": "HeatmapPlotSlotProps", "kind": "Interface" },

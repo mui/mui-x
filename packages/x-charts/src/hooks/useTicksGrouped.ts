@@ -13,7 +13,7 @@ const offsetRatio = {
   tick: 0,
 } as const;
 
-export type GroupedTickItemType = {
+type GroupedTickItemType = {
   /**
    * This property is undefined only if it's the tick closing the last band
    */

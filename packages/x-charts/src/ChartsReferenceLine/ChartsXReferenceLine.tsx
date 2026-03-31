@@ -78,7 +78,7 @@ const getTextParams = ({
   }
 };
 
-export function getXReferenceLineClasses(classes?: Partial<ChartsReferenceLineClasses>) {
+function getXReferenceLineClasses(classes?: Partial<ChartsReferenceLineClasses>) {
   return composeClasses(
     {
       root: ['root', 'vertical'],

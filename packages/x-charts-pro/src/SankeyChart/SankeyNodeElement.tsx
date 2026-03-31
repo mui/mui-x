@@ -7,7 +7,7 @@ import type { SankeyLayoutNode, SankeyNodeIdentifierWithData } from './sankey.ty
 import { useSankeyNodeHighlightState } from './sankeyHighlightHooks';
 import { useUtilityClasses } from './sankeyClasses';
 
-export interface SankeyNodeElementProps {
+interface SankeyNodeElementProps {
   /**
    * The series ID to which the node belongs
    */

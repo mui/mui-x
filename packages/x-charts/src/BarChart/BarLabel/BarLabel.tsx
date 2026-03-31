@@ -9,7 +9,7 @@ import {
   ANIMATION_TIMING_FUNCTION,
 } from '../../internals/animation/animation';
 
-export const BarLabelComponent = styled('text', {
+const BarLabelComponent = styled('text', {
   name: 'MuiBarLabel',
   slot: 'Root',
 })(({ theme }) => ({

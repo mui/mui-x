@@ -14,14 +14,14 @@ import getColor from './seriesConfig/getColor';
 import { useChartsContext } from '../context/ChartsProvider';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
-export interface MarkPlotDataPoint {
+interface MarkPlotDataPoint {
   x: number;
   y: number;
   index: number;
   color: string;
 }
 
-export interface MarkPlotSeriesData {
+interface MarkPlotSeriesData {
   seriesId: SeriesId;
   clipId: string;
   shape: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';

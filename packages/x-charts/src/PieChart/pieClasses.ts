@@ -32,7 +32,7 @@ export interface PieArcOwnerState {
   classes?: Partial<PieClasses>;
 }
 
-export function getPieUtilityClass(slot: string) {
+function getPieUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieChart', slot);
 }
 

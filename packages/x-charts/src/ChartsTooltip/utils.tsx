@@ -1,14 +1,5 @@
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-type MousePosition = {
-  x: number;
-  y: number;
-  pointerType: 'mouse' | 'touch' | 'pen';
-  height: number;
-};
-
-export type UseMouseTrackerReturnValue = null | MousePosition;
-
 export type TriggerOptions = 'item' | 'axis' | 'none';
 
 export function utcFormatter(v: string | number | Date): string {

@@ -78,7 +78,7 @@ export interface UseChartSeriesState<SeriesType extends ChartSeriesType = ChartS
   };
 }
 
-export type IdentifierWithTypeFunction = {
+type IdentifierWithTypeFunction = {
   // Overloads for different identifier types
   <
     SeriesType extends ChartSeriesType,

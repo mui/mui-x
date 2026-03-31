@@ -28,7 +28,7 @@ export interface FunnelSectionLabelProps extends Omit<
   dataIndex: number;
 }
 
-export const FunnelSectionLabelText = styled('text', {
+const FunnelSectionLabelText = styled('text', {
   name: 'MuiFunnelChart',
   slot: 'SectionLabel',
 })(() => ({
