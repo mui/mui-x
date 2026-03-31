@@ -87,6 +87,16 @@ export type AutocompleteProps<
   disableCloseOnSelect?: boolean;
   /** If true, the popup opens when the input is focused. */
   openOnFocus?: boolean;
+  /**
+   * Render the option, use `getOptionLabel` by default.
+   * @param {React.HTMLAttributes<HTMLLIElement> & { key: any }} props The props to apply on the li element.
+   * @param {Value} option The option to render.
+   * @param {object} state The state of each option.
+   * @param {string} state.inputValue The input value.
+   * @param {number} state.index The index of the option in the list.
+   * @param {boolean} state.selected Whether the option is selected.
+   * @returns {React.ReactNode} react node to render
+   */
   renderOption?: (
     props: React.HTMLAttributes<HTMLLIElement> & {
       key: any;
