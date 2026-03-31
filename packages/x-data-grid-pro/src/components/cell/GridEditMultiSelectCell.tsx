@@ -101,14 +101,11 @@ const GridEditMultiSelectCellAutocomplete = styled(
   [`& .${inputBaseClasses.root}.${inputBaseClasses.sizeSmall}`]: {
     minHeight: 'var(--_rowHeight, 52px)',
     paddingBlock: 4,
-    [`& .${inputBaseClasses.input}`]: {
-      paddingBlock: 3.5,
-    },
   },
   [`& + .${autocompleteClasses.popper}`]: {
     [`& .${autocompleteClasses.listbox}`]: {
       boxSizing: 'border-box',
-      maxHeight: 'calc(var(--_rowHeight, 52px) * 4)',
+      maxHeight: 'calc(var(--_rowHeight, 52px) * 3.5)',
     },
     [`& .${autocompleteClasses.option}`]: {
       ...theme.typography.body2,
