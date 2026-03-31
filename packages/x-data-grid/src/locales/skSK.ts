@@ -81,7 +81,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Alebo',
-  filterPanelColumns: 'Stĺpce',
+  filterPanelColumn: 'Stĺpce',
   filterPanelInputLabel: 'Hodnota',
   filterPanelInputPlaceholder: 'Hodnota filtra',
 
