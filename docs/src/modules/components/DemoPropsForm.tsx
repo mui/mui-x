@@ -256,7 +256,7 @@ export default function ChartDemoPropsForm<
           flexDirection: 'column',
           gap: 2,
           [`& .${formLabelClasses.root}`]: {
-            fontWeight: 700,
+            fontWeight: 600,
           },
           '&& > *': {
             px: 3,
@@ -517,7 +517,7 @@ export default function ChartDemoPropsForm<
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        fontWeight: 500,
+                        fontWeight: 400,
                         color: 'text.secondary',
                       }}
                     >
