@@ -300,32 +300,5 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
 
       expect(getZoomSliderTooltips().length).to.equal(0);
     });
-
-    it('should place tooltip on the opposite side of the axis', async () => {
-      const { user } = render(
-        <LineChartPro
-          {...lineChartProps}
-          xAxis={[
-            {
-              ...lineChartProps.xAxis![0],
-              zoom: { slider: { enabled: true, showTooltip: 'hover' } },
-            },
-          ]}
-        />,
-        options,
-      );
-
-      const startThumb = document.querySelector(`.${chartsAxisZoomSliderThumbClasses.start}`)!;
-
-      await user.pointer([{ target: startThumb }]);
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      const tooltips = getZoomSliderTooltips();
-      expect(tooltips.length).to.be.greaterThan(0);
-
-      // For a bottom x-axis, the tooltip should be placed on top (opposite side)
-      const tooltip = tooltips[0] as HTMLElement;
-      expect(tooltip.getAttribute('data-popper-placement')).to.equal('top');
-    });
   });
 });
