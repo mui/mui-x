@@ -1,0 +1,8 @@
+<StaticDatePicker
+  sx={{
+    [`& .${pickerDayClasses.root}`]: {
+      '--PickerDay-horizontalMargin': '8px',
+      '--PickerDay-size': '24px',
+    },
+  }}
+/>

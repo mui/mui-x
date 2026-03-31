@@ -229,6 +229,16 @@ For example, in `DateRangePickerDay`, the `day` class has been removed because t
 
 For more details on how to adapt your custom styles, check the [Day slot migration guide](/x/migration/migration-pickers-v8/#day-slot).
 
+#### Examples
+
+Use the `--PickerDay-horizontalMargin` and `--PickerDay-size` CSS variables to easily customize the dimensions and spacing of the day slot.
+
+{{"demo": "PickerDayDemoCSSVars.js"}}
+
+Customize the look and feel by creating a custom theme with `styleOverrides`.
+
+{{"demo": "PickerDayDemoCustomTheme.js", "defaultCodeOpen": false}}
+
 ## Arrow switcher
 
 The following slots let you customize how to render the buttons and icons for an arrow switcher: the component used
