@@ -11,7 +11,7 @@ components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent, Sankey
 ## Overview
 
 A Sankey chart is a flow diagram that shows how values move between nodes.
-Links connect sources to targets, and link width encodes flow size.
+Links connect sources to targets, and link width shows how large each flow is.
 
 The demo below shows flow from revenue to net income in billions USD.
 
@@ -60,11 +60,12 @@ This works for individual link colors and for the default in `linkOptions`.
 
 ### Node alignment
 
-Node alignment controls how nodes are positioned.
-The layout groups nodes into columns from the graph structure.
-Source nodes always sit to the left of their targets.
-Some nodes have fixed positions from the topology.
-Others can sit in different columns depending on alignment.
+Node alignment controls how nodes are positioned:
+
+- The layout groups nodes into columns from the graph structure.
+- Source nodes always sit to the left of their targets.
+- Some nodes have a fixed column; moving them would add a column to the layout.
+- Others can sit in different columns depending on alignment.
 
 In the demo below:
 
@@ -149,27 +150,37 @@ Highlighting is configured separately for nodes and links.
 
 #### Node highlighting
 
-Use `nodeOptions.highlight` and `nodeOptions.fade`:
+Use `nodeOptions.highlight` and `nodeOptions.fade`.
 
-- `nodeOptions.highlight`: what to highlight when a node is selected
-  - `'nodes'`: only the selected node
-  - `'links'`: all links connected to the node
-  - `'incoming'`: only incoming links
-  - `'outgoing'`: only outgoing links
-  - `'none'`: no highlighting
-- `nodeOptions.fade`: `'global'` fades non-highlighted items, `'none'` turns fade off
+`nodeOptions.highlight` sets what to highlight when a node is selected:
+
+- `'nodes'`: only the selected node
+- `'links'`: all links connected to the node
+- `'incoming'`: only incoming links
+- `'outgoing'`: only outgoing links
+- `'none'`: no highlighting
+
+`nodeOptions.fade` sets how non-highlighted items are dimmed:
+
+- `'global'`: fade non-highlighted items
+- `'none'`: turn fading off
 
 #### Link highlighting
 
-Use `linkOptions.highlight` and `linkOptions.fade`:
+Use `linkOptions.highlight` and `linkOptions.fade`.
 
-- `linkOptions.highlight`: what to highlight when a link is selected
-  - `'links'`: only the selected link
-  - `'nodes'`: source and target nodes
-  - `'source'`: only the source node
-  - `'target'`: only the target node
-  - `'none'`: no highlighting
-- `linkOptions.fade`: `'global'` or `'none'`
+`linkOptions.highlight` sets what to highlight when a link is selected:
+
+- `'links'`: only the selected link
+- `'nodes'`: source and target nodes
+- `'source'`: only the source node
+- `'target'`: only the target node
+- `'none'`: no highlighting
+
+`linkOptions.fade` sets how non-highlighted items are dimmed:
+
+- `'global'`: fade non-highlighted items
+- `'none'`: turn fading off
 
 ### Controlled highlighting
 
