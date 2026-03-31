@@ -40,3 +40,12 @@ The `months` view displays several years with monthly granularity—ideal for lo
 The `years` view displays decades with yearly granularity—ideal for high-level overviews of multi-year initiatives.
 
 {{"demo": "YearsView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Zoom in/out 🚧
+
+:::warning
+This feature isn't available yet, but it is planned — you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21596) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
+:::
+
+With this feature, users would be able to zoom in and out of the timeline to adjust the visible time range.
