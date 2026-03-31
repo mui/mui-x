@@ -19,7 +19,6 @@ export default function CustomLocaleTextTimeline() {
         onEventsChange={setEvents}
         localeText={{
           timelineResourceTitleHeader: 'Team member',
-          loading: 'Fetching data...',
         }}
         defaultView="months"
       />

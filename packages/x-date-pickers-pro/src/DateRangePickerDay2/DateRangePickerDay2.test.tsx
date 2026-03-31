@@ -30,7 +30,7 @@ describe('<DateRangePickerDay2 />', () => {
       render,
       refInstanceof: window.HTMLButtonElement,
       // cannot test reactTestRenderer because of required context
-      skip: ['componentProp', 'componentsProp', 'themeVariants'],
+      skip: ['componentProp', 'themeVariants'],
     }),
   );
 });
