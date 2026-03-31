@@ -256,7 +256,7 @@ export default function ChartDemoPropsForm<
           flexDirection: 'column',
           gap: 2,
           [`& .${formLabelClasses.root}`]: {
-            fontWeight: 'lg',
+            fontWeight: 700,
           },
           '&& > *': {
             px: 3,
@@ -509,15 +509,15 @@ export default function ChartDemoPropsForm<
                       sx={{
                         gridRow: '2 / -2',
                         gridColumn: '2 / -2',
-                        fontSize: 'sm',
+                        fontSize: '0.875rem',
                         border: '1px solid',
                         borderColor: 'divider',
-                        borderRadius: 'sm',
+                        borderRadius: 1.5,
                         alignSelf: 'stretch',
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        fontWeight: 'md',
+                        fontWeight: 500,
                         color: 'text.secondary',
                       }}
                     >
@@ -551,7 +551,7 @@ export default function ChartDemoPropsForm<
                             position: 'relative',
                             height: '14px',
                             width: 32,
-                            borderRadius: 'xs',
+                            borderRadius: 1,
                             mx: 0.5,
                           },
                           placement.match(/^(top|bottom)$/) && {
@@ -599,7 +599,7 @@ function ControlledColorRadio(props: any) {
       sx={{
         width: 28,
         height: 28,
-        borderRadius: 'sm',
+        borderRadius: 1.5,
         textTransform: 'capitalize',
         position: 'relative',
         bgcolor: value,

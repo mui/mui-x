@@ -54,7 +54,7 @@ export default function ChartsUsageDemo<
         flexDirection: { xs: 'column', md: 'row' },
         '& .markdown-body pre': {
           margin: 0,
-          borderRadius: 'md',
+          borderRadius: 2,
         },
       }}
     >
