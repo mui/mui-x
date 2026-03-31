@@ -14,7 +14,7 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   dateTimeSectionLabel: 'Date et heure',
   resourceColorSectionLabel: 'Ressource et couleur',
   allDayLabel: 'Toute la journée',
-  closeButtonAriaLabel: 'Fermer la fenêtre modale',
+  closeButtonAriaLabel: 'Fermer',
   closeButtonLabel: 'Fermer',
   deleteEvent: "Supprimer l'événement",
   descriptionLabel: 'Description',
