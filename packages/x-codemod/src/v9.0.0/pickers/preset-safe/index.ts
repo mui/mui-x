@@ -7,6 +7,10 @@ import removeDisableMargin from '../remove-disable-margin';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
+  // Order matters: removePickerDay2 must run before renamePickerDay2
+  // because it looks for `PickerDay2` identifiers in slot objects.
+  // If renamePickerDay2 ran first, those identifiers would already be
+  // renamed to `PickerDay` and removePickerDay2 would not find them.
   [
     renameFieldRef,
     removePickerDay2,
