@@ -27,6 +27,16 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
           d3Dataset[index][id] = value;
         }
       });
+    } else if (series[id].valueGetter && dataset) {
+      // When valueGetter is used without dataKey, populate d3Dataset with the series id as key
+      dataset.forEach((entry, index) => {
+        const value = series[id].valueGetter!(entry);
+        if (d3Dataset.length <= index) {
+          d3Dataset.push({ [id]: value });
+        } else {
+          d3Dataset[index][id] = value;
+        }
+      });
     } else if (dataset === undefined) {
       throw new Error(
         `MUI X Charts: Bar series with id="${id}" has no data. ` +

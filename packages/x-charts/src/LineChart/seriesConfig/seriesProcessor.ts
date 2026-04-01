@@ -42,6 +42,16 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
           d3Dataset[dataIndex][id] = value;
         }
       });
+    } else if (series[id].valueGetter && dataset) {
+      // When valueGetter is used without dataKey, populate d3Dataset with the series id as key
+      dataset.forEach((entry, dataIndex) => {
+        const value = series[id].valueGetter!(entry);
+        if (d3Dataset.length <= dataIndex) {
+          d3Dataset.push({ [id]: value });
+        } else {
+          d3Dataset[dataIndex][id] = value;
+        }
+      });
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
       throw new Error(
         `MUI X Charts: Line series with id="${id}" has no data. ` +
