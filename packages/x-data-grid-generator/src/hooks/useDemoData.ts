@@ -162,7 +162,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
   });
 
   React.useEffect(() => {
-    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}-treeData:${(options.treeData?.maxDepth || 1) > 1 ? 'true' : 'false'}`;
+    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}-multiSelect:${options.multiSelect ? 'true' : 'false'}-treeData:${(options.treeData?.maxDepth || 1) > 1 ? 'true' : 'false'}`;
 
     // Cache to allow fast switch between the JavaScript and TypeScript version
     // of the demos.
@@ -216,6 +216,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     options.treeData?.maxDepth,
     options.treeData?.groupingField,
     options.treeData?.averageChildren,
+    options.multiSelect,
     index,
     columns,
   ]);

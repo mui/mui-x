@@ -339,7 +339,7 @@ describe('<DataGridPro /> - Sorting', () => {
   });
 
   describe('column type: multiSelect', () => {
-    it('should sort by array length by default', () => {
+    it('should sort alphabetically by joined values', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -366,7 +366,7 @@ describe('<DataGridPro /> - Sorting', () => {
       expect(getColumnValues(0)).to.deep.equal(['', 'A', 'AB', 'ABC']);
     });
 
-    it('should sort by array length descending', () => {
+    it('should sort alphabetically by joined values descending', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
