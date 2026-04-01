@@ -51,14 +51,11 @@ export function useDraggableEvent(
     showPreviewOnDragStart: false,
   });
 
-  const state = React.useMemo(
-    () => ({
-      ...eventState,
-      dragging: placeholderAction === 'internal-drag',
-      resizing: placeholderAction === 'internal-resize',
-    }),
-    [eventState, placeholderAction],
-  );
+  const state = {
+    ...eventState,
+    dragging: placeholderAction === 'internal-drag',
+    resizing: placeholderAction === 'internal-resize',
+  };
 
   React.useEffect(() => {
     if (!isDraggable || !ref.current) {
