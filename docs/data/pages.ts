@@ -704,6 +704,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/brush' },
               { pathname: '/x/react-charts/components', title: 'Custom components' },
               { pathname: '/x/react-charts/composition' },
+              { pathname: '/x/react-charts/dataset' },
               {
                 pathname: '/x/react-charts/data-grid-integration',
                 title: 'Data Grid integration',

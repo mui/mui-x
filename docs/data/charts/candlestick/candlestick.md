@@ -48,6 +48,22 @@ You can use the `dataset` prop to provide OHLC data and `datasetKeys` on the ser
 
 {{"demo": "DatasetCandlestick.js"}}
 
+### Value getter
+
+You can use `valueGetter` on the OHLC series to transform dataset items into OHLC values.
+The `valueGetter` receives the full dataset item and should return a `[open, high, low, close]` tuple or `null`.
+
+```tsx
+series={[
+  {
+    type: 'ohlc',
+    valueGetter: (item) => [item.open, item.high, item.low, item.close],
+  },
+]}
+```
+
+See the [Dataset](/x/react-charts/dataset) page to learn how to use value getters.
+
 ## Value formatting
 
 Use the series `valueFormatter` to customize how OHLC values appear in the tooltip.

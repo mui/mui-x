@@ -35,6 +35,27 @@ With an optional `id` and `z` keys if needed.
 
 {{"demo": "ScatterDataset.js"}}
 
+### Value getter
+
+You can use `valueGetter` on scatter series to transform dataset items into scatter values.
+Unlike bar or line series where `valueGetter` receives a single raw value, the scatter `valueGetter` receives the full dataset item and should return a `ScatterValueType` object with `x`, `y`, and optionally `z` and `id` properties.
+
+```tsx
+series={[
+  {
+    datasetKeys: { x: 'lng', y: 'lat' },
+    valueGetter: (item) => ({
+      x: item.lng,
+      y: item.lat,
+      z: item.population / 1_000_000,
+      id: item.city,
+    }),
+  },
+]}
+```
+
+See the [Dataset](/x/react-charts/dataset) page to learn how to use value getters.
+
 ## Interaction
 
 Since scatter elements can be small, interactions do not require hovering exactly over an element.
