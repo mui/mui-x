@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless hooks
 
-<p class="description">Read chat state and trigger runtime actions through hooks scoped to exactly the data your component needs</p>
+<p class="description">Read chat state and trigger runtime actions through hooks scoped to exactly the data your component needs.</p>
 
 The headless package exposes nine public hooks.
 Each one subscribes to a specific slice of the normalized chat store, so your components only re-render when their own data changes.
@@ -30,7 +30,7 @@ All hooks must be called inside a `<ChatProvider>`.
 
 The following demo shows hooks in action inside a minimal headless chat:
 
-{{"demo": "../examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 ## `useChat()`
 

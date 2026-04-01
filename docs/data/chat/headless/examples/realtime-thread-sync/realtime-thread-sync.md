@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Realtime thread sync
 
-<p class="description">Use realtime events to add, update, remove, and rename conversations and messages</p>
+<p class="description">Use realtime events to add, update, remove, and rename conversations and messages.</p>
 
 This demo focuses on collection synchronization through realtime events.
 Unlike the basic realtime demo (which covers typing, presence, and read state), this one demonstrates structural changes to the message and conversation lists:

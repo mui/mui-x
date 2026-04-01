@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Realtime
+# Chat - Realtime
 
 Feed typing, presence, and read-state changes through the provider-owned realtime subscription.
 
-## What this example shows
-
-This recipe demonstrates the runtime behavior behind realtime push updates:
+This demo demonstrates the runtime behavior behind realtime push updates:
 
 - the adapter's `subscribe()` method and its cleanup lifecycle
 - typing events that update `useChatStatus().typingUserIds`
@@ -109,8 +107,8 @@ import {
   cloneConversations,
   demoConversations,
   demoUsers,
-} from '../shared/demoData';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
+} from 'docsx/data/chat/headless/examples/shared/demoData';
+import { createChunkStream, createTextResponseChunks } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 function createRealtimeAdapter() {
   let onEventRef: ((event: ChatRealtimeEvent) => void) | null = null;
@@ -381,7 +379,11 @@ export default function RealtimeHeadlessChat() {
 - `useChatStatus().typingUserIds` is the primary hook for typing indicators
 - Presence and read updates surface through conversation-level selectors
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Realtime](/x/react-chat/headless/realtime/) for the full event type reference and store effects
 - [Adapters](/x/react-chat/headless/adapters/) for the `subscribe()` method reference

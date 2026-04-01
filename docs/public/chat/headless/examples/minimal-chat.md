@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Minimal headless chat
+# Chat - Minimal headless chat
 
 <p class="description">Start with the smallest working <code>ChatProvider</code> and <code>useChat()</code> setup.</p>
 
-## What this example shows
-
-This recipe keeps the UI intentionally small to demonstrate the core headless pattern:
+This demo keeps the UI intentionally small to demonstrate the core headless pattern:
 
 - `ChatProvider` owns the runtime and wraps your component tree
 - `useChat()` reads messages and streaming state in one call
@@ -72,12 +70,12 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import { demoUsers } from '../shared/demoData';
+import { demoUsers } from 'docsx/data/chat/headless/examples/shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
   getMessageText,
-} from '../shared/demoUtils';
+} from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {
@@ -256,7 +254,11 @@ export default function MinimalHeadlessChat() {
 - `useChat()` provides both state and actions in a single hook
 - No CSS, no components, no design system required — headless is pure runtime
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for the full hook API reference
 - [Adapters](/x/react-chat/headless/adapters/) for writing real adapters

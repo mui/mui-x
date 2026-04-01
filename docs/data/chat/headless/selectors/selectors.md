@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless selectors
 
-<p class="description">Subscribe to exactly the store slices you need with memoized selectors for efficient, granular rendering</p>
+<p class="description">Subscribe to exactly the store slices you need with memoized selectors for efficient, granular rendering.</p>
 
 `chatSelectors` is a collection of memoized selectors that read from the normalized chat store.
 They power the built-in hooks and can also be used directly with `useChatStore()` for advanced subscriptions.
@@ -18,7 +18,7 @@ import { chatSelectors, useChatStore } from '@mui/x-chat/headless';
 
 The following demo uses selectors for efficient rendering:
 
-{{"demo": "../examples/selector-driven-thread/SelectorDrivenThread.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../examples/selector-driven-thread/SelectorDrivenThread.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 ## Selector reference
 

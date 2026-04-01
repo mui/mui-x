@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Composer
 
-<p class="description">Build a custom draft area with attachments, preview URLs, and IME-safe submit behavior</p>
+<p class="description">Build a custom draft area with attachments, preview URLs, and IME-safe submit behavior.</p>
 
 This demo uses `useChatComposer()` directly with plain DOM controls to demonstrate the full draft lifecycle:
 

@@ -7,14 +7,14 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless realtime
 
-<p class="description">Push typing, presence, read state, and collection changes into the runtime through the adapter's <code>subscribe()</code> method</p>
+<p class="description">Push typing, presence, read state, and collection changes into the runtime through the adapter's <code>subscribe()</code> method.</p>
 
 The adapter's `subscribe()` method enables push-based updates from the backend.
 The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
 
 The following demo shows realtime events in action:
 
-{{"demo": "../examples/realtime/RealtimeHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../examples/realtime/RealtimeHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 ## Subscription lifecycle
 

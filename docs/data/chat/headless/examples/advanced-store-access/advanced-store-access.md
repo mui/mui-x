@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Advanced store access
 
-<p class="description">Use the store escape hatch to subscribe to exactly the runtime slices you want</p>
+<p class="description">Use the store escape hatch to subscribe to exactly the runtime slices you want.</p>
 
 This demo is intentionally advanced.
 It demonstrates how to bypass the convenience hooks and work directly with the normalized store for custom dashboards, metrics, or highly specialized derived views:

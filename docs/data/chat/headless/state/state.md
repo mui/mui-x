@@ -7,14 +7,14 @@ githubLabel: 'scope: chat'
 
 # Chat - State and store
 
-<p class="description">Configure the runtime via <code>ChatProvider</code> props, choose controlled or uncontrolled state, and explore the normalized store</p>
+<p class="description">Configure the runtime via <code>ChatProvider</code> props, choose controlled or uncontrolled state, and explore the normalized store.</p>
 
 `ChatProvider` is the single entry point for the headless runtime.
 It creates the chat store, wires the adapter, and makes hooks and selectors available to every descendant component.
 
 The following demo shows controlled state in action:
 
-{{"demo": "../examples/controlled-state/ControlledStateHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../examples/controlled-state/ControlledStateHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 ## `ChatProvider` props
 

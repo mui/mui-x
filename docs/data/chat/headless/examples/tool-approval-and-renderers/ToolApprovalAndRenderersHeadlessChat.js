@@ -7,8 +7,8 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { demoUsers } from '../shared/demoData';
-import { createChunkStream } from '../shared/demoUtils';
+import { demoUsers } from 'docsx/data/chat/headless/examples/shared/demoData';
+import { createChunkStream } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 function createToolAdapter() {
   let onEventRef = null;

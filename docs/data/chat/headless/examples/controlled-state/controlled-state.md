@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Controlled state
 
-<p class="description">Drive the public chat models from React state while the runtime keeps normalized internals</p>
+<p class="description">Drive the public chat models from React state while the runtime keeps normalized internals.</p>
 
 This demo demonstrates the controlled state model — the major public design choice of the headless package.
 All four public state models are owned by the parent component while the runtime still streams, normalizes, and derives selectors internally.

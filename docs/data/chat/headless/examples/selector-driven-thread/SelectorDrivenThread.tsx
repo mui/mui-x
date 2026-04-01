@@ -15,7 +15,7 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { demoUsers } from '../shared/demoData';
+import { demoUsers } from 'docsx/data/chat/headless/examples/shared/demoData';
 
 function createMessages() {
   return Array.from({ length: 14 }, (_, index) => ({

@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless adapters
 
-<p class="description">Write a <code>ChatAdapter</code> to connect the headless runtime to any backend — HTTP, SSE, WebSocket, or AI SDK</p>
+<p class="description">Write a <code>ChatAdapter</code> to connect the headless runtime to any backend — HTTP, SSE, WebSocket, or AI SDK.</p>
 
 The `ChatAdapter` interface is the transport boundary between the headless runtime and your backend.
 Only one method is required: `sendMessage()`.
@@ -19,7 +19,7 @@ import type { ChatAdapter } from '@mui/x-chat/headless';
 
 The following demo shows a minimal adapter in action:
 
-{{"demo": "../examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 ## Minimal adapter
 

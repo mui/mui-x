@@ -12,12 +12,12 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import { demoUsers } from '../shared/demoData';
+import { demoUsers } from 'docsx/data/chat/headless/examples/shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
   getMessageText,
-} from '../shared/demoUtils';
+} from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 function createStreamingAdapter(): ChatAdapter {
   return {

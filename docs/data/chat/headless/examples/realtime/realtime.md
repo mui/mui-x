@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Realtime
 
-<p class="description">Feed typing, presence, and read-state changes through the provider-owned realtime subscription</p>
+<p class="description">Feed typing, presence, and read-state changes through the provider-owned realtime subscription.</p>
 
 This demo demonstrates the runtime behavior behind realtime push updates:
 

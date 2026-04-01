@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Conversation history
+# Chat - Conversation history
 
 Use adapter-driven conversations, thread loading, and history paging without any structural UI components.
 
-## What this example shows
-
-This recipe covers the full conversation lifecycle through the adapter:
+This demo covers the full conversation lifecycle through the adapter:
 
 - loading the conversation list on mount
 - loading messages when the active conversation changes
@@ -86,12 +84,12 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { demoUsers } from '../shared/demoData';
+import { demoUsers } from 'docsx/data/chat/headless/examples/shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
   wait,
-} from '../shared/demoUtils';
+} from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 const conversations: ChatConversation[] = [
   {
@@ -388,7 +386,11 @@ export default function ConversationHistoryHeadlessChat() {
 - Switching conversations triggers automatic thread loading through the adapter
 - New messages can still be sent and streamed within a loaded thread
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Adapters](/x/react-chat/headless/adapters/) for the full adapter interface reference
 - [Controlled state](/x/react-chat/headless/examples/controlled-state/) for externally-owned conversation state

@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless streaming
 
-<p class="description">Understand the stream chunk protocol that turns adapter responses into normalized message state, including text, reasoning, tool, source, file, and data chunks</p>
+<p class="description">Understand the stream chunk protocol that turns adapter responses into normalized message state, including text, reasoning, tool, source, file, and data chunks.</p>
 
 The adapter's `sendMessage()` method returns a `ReadableStream<ChatMessageChunk | ChatStreamEnvelope>`.
 The runtime reads this stream, processes each chunk, and updates the normalized store.
@@ -15,7 +15,7 @@ Your UI components see the updates through hooks and selectors.
 
 The following demo visualizes the streaming lifecycle:
 
-{{"demo": "../examples/streaming-lifecycle/StreamingLifecycleHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../examples/streaming-lifecycle/StreamingLifecycleHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 ## Chunk categories
 

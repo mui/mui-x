@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Minimal headless chat
 
-<p class="description">Start with the smallest working <code>ChatProvider</code> and <code>useChat()</code> setup</p>
+<p class="description">Start with the smallest working <code>ChatProvider</code> and <code>useChat()</code> setup.</p>
 
 This demo keeps the UI intentionally small to demonstrate the core headless pattern:
 

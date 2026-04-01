@@ -7,14 +7,14 @@ githubLabel: 'scope: chat'
 
 # Chat - Type augmentation
 
-<p class="description">Extend the type system with app-specific metadata, typed tools, data parts, and custom message parts via module augmentation</p>
+<p class="description">Extend the type system with app-specific metadata, typed tools, data parts, and custom message parts via module augmentation.</p>
 
 The headless package uses [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) instead of generic props for type-safe customization.
 This means you declare your app-specific types once, and they flow through the entire stack — messages, stream chunks, selectors, hooks, and renderers.
 
 The following demo shows type augmentation in practice:
 
-{{"demo": "../examples/type-augmentation/TypeAugmentationHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../examples/type-augmentation/TypeAugmentationHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 ## The six registry interfaces
 

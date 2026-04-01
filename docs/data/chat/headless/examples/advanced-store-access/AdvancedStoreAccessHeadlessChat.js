@@ -19,8 +19,8 @@ import {
   demoConversations,
   demoThreads,
   demoUsers,
-} from '../shared/demoData';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
+} from 'docsx/data/chat/headless/examples/shared/demoData';
+import { createChunkStream, createTextResponseChunks } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 const adapter = {
   async sendMessage({ conversationId }) {

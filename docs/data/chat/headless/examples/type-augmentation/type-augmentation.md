@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Type augmentation
 
-<p class="description">Use TypeScript module augmentation to add app-specific metadata, typed tools, typed <code>data-*</code> parts, and custom message parts to the headless runtime</p>
+<p class="description">Use TypeScript module augmentation to add app-specific metadata, typed tools, typed <code>data-*</code> parts, and custom message parts to the headless runtime.</p>
 
 Headless chat does not use provider props for type overrides.
 Instead, extend `@mui/x-chat/headless/types` with [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).

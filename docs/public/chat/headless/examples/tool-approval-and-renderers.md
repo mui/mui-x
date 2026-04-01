@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Tool approval and renderers
+# Chat - Tool approval and renderers
 
 Combine AI-native runtime features by approving a tool call and rendering a custom message part through the registry.
 
-## What this example shows
-
-This recipe covers the main extension points for tool-assisted AI interactions:
+This demo covers the main extension points for tool-assisted AI interactions:
 
 - the tool approval lifecycle from `approval-requested` to response
 - `addToolApprovalResponse()` for approving or denying tool calls
@@ -99,8 +97,8 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { demoUsers } from '../shared/demoData';
-import { createChunkStream } from '../shared/demoUtils';
+import { demoUsers } from 'docsx/data/chat/headless/examples/shared/demoData';
+import { createChunkStream } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 declare module '@mui/x-chat/headless/types' {
   interface ChatCustomMessagePartMap {
@@ -459,7 +457,11 @@ export default function ToolApprovalAndRenderersHeadlessChat() {
 - `partRenderers` decouples rendering from the message loop — register once, look up anywhere
 - Custom part types registered through module augmentation integrate seamlessly with the renderer registry
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Type augmentation](/x/react-chat/headless/types/) for registering custom types
 - [Streaming](/x/react-chat/headless/streaming/) for the tool chunk protocol

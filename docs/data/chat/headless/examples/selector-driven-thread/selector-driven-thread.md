@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Selector-driven thread
 
-<p class="description">Render large custom threads efficiently with IDs at the list level and row-level message subscriptions</p>
+<p class="description">Render large custom threads efficiently with IDs at the list level and row-level message subscriptions.</p>
 
 This demo demonstrates the performance-focused rendering pattern for threads with many messages.
 Instead of subscribing the entire list to every message change, each row subscribes only to its own message record.

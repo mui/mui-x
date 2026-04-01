@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Streaming lifecycle
+# Chat - Streaming lifecycle
 
 Observe the full runtime lifecycle for send, stream, stop, error, retry, and callbacks.
 
-## What this example shows
-
-This recipe brings the runtime lifecycle together in one place.
+This demo brings the runtime lifecycle together in one place.
 It intentionally exposes success, failure, and long-running stream modes so you can observe every lifecycle phase:
 
 - `sendMessage()` — send a user turn and start streaming
@@ -72,12 +70,12 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import { demoUsers } from '../shared/demoData';
+import { demoUsers } from 'docsx/data/chat/headless/examples/shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
   getMessageText,
-} from '../shared/demoUtils';
+} from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 function createStreamingAdapter(): ChatAdapter {
   return {
@@ -397,7 +395,11 @@ function StreamingLifecycleWithLogs() {
 - `retry()` removes failed assistant messages and resends the original user turn
 - Callbacks (`onData`, `onFinish`, `onError`) provide lifecycle observability without modifying the store
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Streaming](/x/react-chat/headless/streaming/) for the full chunk protocol reference
 - [State and store](/x/react-chat/headless/state/) for the error model and callback signatures

@@ -5,14 +5,12 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Realtime thread sync
+# Chat - Realtime thread sync
 
 Use realtime events to add, update, remove, and rename conversations and messages.
 
-## What this example shows
-
-This recipe focuses on collection synchronization through realtime events.
-Unlike the basic realtime recipe (which covers typing, presence, and read state), this one demonstrates structural changes to the message and conversation lists:
+This demo focuses on collection synchronization through realtime events.
+Unlike the basic realtime demo (which covers typing, presence, and read state), this one demonstrates structural changes to the message and conversation lists:
 
 - `message-added` — a new message appears in the thread
 - `message-updated` — an existing message is modified
@@ -74,7 +72,7 @@ import {
   demoConversations,
   demoThreads,
   demoUsers,
-} from '../shared/demoData';
+} from 'docsx/data/chat/headless/examples/shared/demoData';
 
 function createRealtimeSyncAdapter() {
   let onEventRef: ((event: ChatRealtimeEvent) => void) | null = null;
@@ -437,7 +435,11 @@ export default function RealtimeThreadSyncHeadlessChat() {
 - Active conversation automatically resets when its conversation is removed
 - These events work alongside the streaming lifecycle — you can push messages while a stream is active
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Realtime](/x/react-chat/headless/realtime/) for the full event type reference
 - [Realtime](/x/react-chat/headless/examples/realtime/) for typing, presence, and read-state events

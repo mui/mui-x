@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Tool approval and renderers
 
-<p class="description">Combine AI-native runtime features by approving a tool call and rendering a custom message part through the registry</p>
+<p class="description">Combine AI-native runtime features by approving a tool call and rendering a custom message part through the registry.</p>
 
 This demo covers the main extension points for tool-assisted AI interactions:
 

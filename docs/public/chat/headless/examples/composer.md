@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Composer
+# Chat - Composer
 
 Build a custom draft area with attachments, preview URLs, and IME-safe submit behavior.
 
-## What this example shows
-
-This recipe uses `useChatComposer()` directly with plain DOM controls to demonstrate the full draft lifecycle:
+This demo uses `useChatComposer()` directly with plain DOM controls to demonstrate the full draft lifecycle:
 
 - draft value management
 - file attachment add and remove
@@ -108,7 +106,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
+import { createChunkStream, createTextResponseChunks } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {
@@ -399,7 +397,11 @@ export default function ComposerHeadlessChat() {
 - IME composition tracking prevents accidental submission during text input
 - `submit()` also blocks while a stream is already active, preventing double sends
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for the full `useChatComposer()` API reference
 - [Streaming lifecycle](/x/react-chat/headless/examples/streaming-lifecycle/) for what happens after submission

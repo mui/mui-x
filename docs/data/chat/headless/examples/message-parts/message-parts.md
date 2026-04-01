@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Message parts
 
-<p class="description">Render reasoning, sources, files, step markers, and data parts with your own plain React markup</p>
+<p class="description">Render reasoning, sources, files, step markers, and data parts with your own plain React markup.</p>
 
 This demo demonstrates how to render the various message part types that the streaming protocol produces.
 Every assistant message has a `parts` array where each entry is a typed object.

@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless
 
-<p class="description">Runtime, adapter contract, hooks, selectors, and stream processing for building fully custom chat UIs</p>
+<p class="description">Runtime, adapter contract, hooks, selectors, and stream processing for building fully custom chat UIs.</p>
 
 `@mui/x-chat/headless` is the runtime-focused layer in the chat package family.
 It gives you chat state, streaming, adapters, selectors, and composer logic without imposing any rendered UI.
@@ -40,7 +40,7 @@ Those concerns belong to [Unstyled](/x/react-chat/unstyled/).
 
 The following demo shows the headless runtime with a minimal custom UI:
 
-{{"demo": "examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 The runtime is easiest to understand as a pipeline:
 

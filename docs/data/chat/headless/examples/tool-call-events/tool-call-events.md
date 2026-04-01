@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Tool call events
 
-<p class="description">Observe tool invocation state changes with <code>onToolCall</code> and drive side effects outside the message list</p>
+<p class="description">Observe tool invocation state changes with <code>onToolCall</code> and drive side effects outside the message list.</p>
 
 This demo focuses on the `onToolCall` callback and how to use it for side effects that live outside the message store:
 

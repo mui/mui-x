@@ -5,13 +5,11 @@ packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Selector-driven thread
+# Chat - Selector-driven thread
 
 Render large custom threads efficiently with IDs at the list level and row-level message subscriptions.
 
-## What this example shows
-
-This recipe demonstrates the performance-focused rendering pattern for threads with many messages.
+This demo demonstrates the performance-focused rendering pattern for threads with many messages.
 Instead of subscribing the entire list to every message change, each row subscribes only to its own message record.
 
 ## Key concepts
@@ -83,7 +81,7 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { demoUsers } from '../shared/demoData';
+import { demoUsers } from 'docsx/data/chat/headless/examples/shared/demoData';
 
 function createMessages() {
   return Array.from({ length: 14 }, (_, index) => ({
@@ -282,7 +280,11 @@ export default function SelectorDrivenThread() {
 - Wrap row components in `React.memo()` for maximum efficiency
 - `useConversations()` and `useConversation(id)` follow the same pattern for conversation lists
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [Selectors](/x/react-chat/headless/selectors/) for the full selector API and custom subscriptions
 - [Hooks](/x/react-chat/headless/hooks/) for all available hooks

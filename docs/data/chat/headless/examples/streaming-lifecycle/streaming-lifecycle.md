@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Streaming lifecycle
 
-<p class="description">Observe the full runtime lifecycle for send, stream, stop, error, retry, and callbacks</p>
+<p class="description">Observe the full runtime lifecycle for send, stream, stop, error, retry, and callbacks.</p>
 
 This demo brings the runtime lifecycle together in one place.
 It intentionally exposes success, failure, and long-running stream modes so you can observe every lifecycle phase:

@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Conversation history
 
-<p class="description">Use adapter-driven conversations, thread loading, and history paging without any structural UI components</p>
+<p class="description">Use adapter-driven conversations, thread loading, and history paging without any structural UI components.</p>
 
 This demo covers the full conversation lifecycle through the adapter:
 

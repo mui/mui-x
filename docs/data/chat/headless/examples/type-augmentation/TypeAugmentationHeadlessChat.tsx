@@ -16,8 +16,8 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { demoUsers } from '../shared/demoData';
-import { createChunkStream } from '../shared/demoUtils';
+import { demoUsers } from 'docsx/data/chat/headless/examples/shared/demoData';
+import { createChunkStream } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 declare module '@mui/x-chat/headless/types' {
   interface ChatUserMetadata {
