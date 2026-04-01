@@ -38,7 +38,7 @@ export default function SankeyNodeSorting() {
         justifyContent: 'center',
       }}
     >
-      <div>
+      <div style={{ flexGrow: 1 }}>
         <Typography variant="h6" gutterBottom>
           auto (default)
         </Typography>
@@ -53,7 +53,7 @@ export default function SankeyNodeSorting() {
         />
       </div>
 
-      <div>
+      <div style={{ flexGrow: 1 }}>
         <Typography variant="h6" gutterBottom>
           fixed
         </Typography>
@@ -68,7 +68,7 @@ export default function SankeyNodeSorting() {
         />
       </div>
 
-      <div>
+      <div style={{ flexGrow: 1 }}>
         <Typography variant="h6" gutterBottom>
           Custom Function
         </Typography>
