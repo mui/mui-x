@@ -15,10 +15,20 @@ export type RangeButtonIntervalUnit =
 /**
  * Defines the value of a range button.
  *
- * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
+ * - `{ unit, step }` — A calendar interval from the end of the data.
+ *   @example { unit: 'month', step: 3 } // Last 3 months
+ *   @example { unit: 'year' } // Last year (step defaults to 1)
+ *   @example { unit: 'hour', step: 12 } // Last 12 hours
  * - `[start, end]` — An absolute date range.
+ *   @example [new Date(2024, 0, 1), new Date(2024, 6, 1)] // Jan–Jul 2024
  * - `(domainMin, domainMax, zoomedMin, zoomedMax) => { start, end }` — A function that receives the full axis domain bounds and the current zoomed-in bounds (as timestamps) and returns zoom percentages (0-100).
+ *   @example (domainMin, domainMax) => ({ start: 0, end: 50 }) // First half of data
+ *   @example (_, __, zoomedMin, zoomedMax) => {
+ *     const span = zoomedMax - zoomedMin;
+ *     return { start: 0, end: (span / (domainMax - domainMin)) * 100 };
+ *   } // Keep the same span but move to the start
  * - `null` — Resets zoom to show all data.
+ *   @example null // Show all data
  */
 export type RangeButtonValue =
   | { unit: RangeButtonIntervalUnit; step?: number }

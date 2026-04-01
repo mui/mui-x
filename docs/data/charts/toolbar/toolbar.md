@@ -34,10 +34,46 @@ Each button zooms the chart to show a specific time period calculated from the e
 
 The `value` property of each range button supports the following formats:
 
-- `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months). The `step` defaults to `1`.
-- `[startDate, endDate]` — An absolute date range.
-- `(domainMin, domainMax, zoomedMin, zoomedMax) => { start, end }` — A function that receives the full axis domain bounds and the current zoomed-in bounds (as timestamps) and returns zoom percentages (0-100).
-- `null` — Resets zoom to show all data.
+#### Calendar interval
+
+Use `{ unit, step }` to show a time period from the end of the data. The `step` defaults to `1`.
+Supported units: `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, and `'microsecond'`.
+
+```tsx
+{ label: '1M', value: { unit: 'month' } }
+{ label: '3M', value: { unit: 'month', step: 3 } }
+{ label: '1Y', value: { unit: 'year' } }
+```
+
+#### Absolute date range
+
+Use `[startDate, endDate]` to zoom to a fixed date range.
+
+```tsx
+{ label: '2024 H1', value: [new Date(2024, 0, 1), new Date(2024, 6, 1)] }
+```
+
+#### Function
+
+Use a function to compute custom zoom percentages (0–100).
+It receives the full domain bounds and the current zoomed-in bounds as timestamps.
+
+```tsx
+{ label: 'First half', value: () => ({ start: 0, end: 50 }) }
+{ label: 'Last half', value: () => ({ start: 50, end: 100 }) }
+```
+
+#### Reset
+
+Use `null` to reset zoom to show all data.
+
+```tsx
+{ label: 'All', value: null }
+```
+
+The following demo shows all value types together:
+
+{{"demo": "ChartsToolbarRangeButtonValues.js"}}
 
 ### Custom toolbar with range buttons
 
