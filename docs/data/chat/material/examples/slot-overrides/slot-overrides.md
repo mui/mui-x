@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Slot overrides
 
-<p class="description">Replace individual sub-components inside <code>ChatBox</code> using the <code>slots</code> prop</p>
+<p class="description">Replace individual sub-components inside <code>ChatBox</code> using the <code>slots</code> prop.</p>
 
 The `slots` prop lets you swap any internal component in `ChatBox` with your own implementation.
 This demo replaces the message bubble with a `Paper`-based component that uses MUI elevation and border styles.

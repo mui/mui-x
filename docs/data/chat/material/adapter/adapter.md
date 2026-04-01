@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Adapter
 
-<p class="description">Connect <code>ChatBox</code> to any backend by implementing the <code>ChatAdapter</code> interface and passing it to the <code>adapter</code> prop</p>
+<p class="description">Connect <code>ChatBox</code> to any backend by implementing the <code>ChatAdapter</code> interface and passing it to the <code>adapter</code> prop.</p>
 
 `ChatBox` renders a fully styled chat surface, but it knows nothing about your backend on its own.
 The adapter is the single object that bridges them.
@@ -15,7 +15,7 @@ It receives user messages, communicates with your server, and returns a streamin
 
 The following demo shows an adapter connected to a local echo backend:
 
-{{"demo": "../examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 You author the adapter once and pass it directly to `ChatBox`:
 

@@ -1,9 +1,9 @@
 <ChatBox
   adapter={adapter}
-  defaultActiveConversationId={minimalConversation.id}
-  defaultConversations={[minimalConversation]}
-  defaultMessages={minimalMessages}
-  features={{ attachButton: false }}
+  initialActiveConversationId={minimalConversation.id}
+  initialConversations={[minimalConversation]}
+  initialMessages={minimalMessages}
+  features={{ attachments: false }}
   sx={{
     height: 400,
     border: '1px solid',

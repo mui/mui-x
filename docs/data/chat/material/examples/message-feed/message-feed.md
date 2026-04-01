@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Message feed
 
-<p class="description">Render only <code>ChatMessageList</code> — no input. Send messages programmatically via <code>useChat</code> for read-only embeds and transcript views</p>
+<p class="description">Render only <code>ChatMessageList</code> — no input. Send messages programmatically via <code>useChat</code> for read-only embeds and transcript views.</p>
 
 {{"demo": "MessageFeed.js", "bg": "inline"}}
 

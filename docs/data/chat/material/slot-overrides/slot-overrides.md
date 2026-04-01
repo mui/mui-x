@@ -8,7 +8,7 @@ components: ChatRoot
 
 # Chat - Slot overrides
 
-<p class="description">Replace individual sub-components inside ChatBox with your own implementations using the <code>slots</code> and <code>slotProps</code> API</p>
+<p class="description">Replace individual sub-components inside ChatBox with your own implementations using the <code>slots</code> and <code>slotProps</code> API.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
@@ -124,7 +124,7 @@ When a feature flag is set to `false`, the corresponding slot is **not rendered 
 {/* The custom button does not render because the feature is disabled */}
 <ChatBox
   adapter={adapter}
-  features={{ attachButton: false }}
+  features={{ attachments: false }}
   slots={{ composerAttachButton: MyCustomButton }}  {/* ignored */}
 />
 ```

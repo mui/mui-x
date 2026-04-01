@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { minimalConversation, minimalMessages, demoUsers } from '../shared/demoData';
+import { minimalConversation, minimalMessages, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const demoMembers = [demoUsers.you, demoUsers.agent];

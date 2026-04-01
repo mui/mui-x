@@ -5,22 +5,27 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Long messages
+# Chat - Long messages
 
 Testing text wrapping, word-break behavior, and special content in message bubbles.
 
-This example tests how the ChatBox handles various edge cases in message content.
+This demo tests how the ChatBox handles various edge cases in message content.
+
+- Long text wrapping within bubble constraints
+- Word-break behavior with unbreakable strings
+- Special characters and emoji rendering
+- Mixed short and long messages
+- Code block formatting in messages
 
 ```tsx
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../shared/demoUtils';
-import { createTextMessage, demoUsers } from '../shared/demoData';
+import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
-const LONG_CONV_ID = nanoid();
+const LONG_CONV_ID = randomId();
 
 const adapter = createEchoAdapter({
   respond: () =>
@@ -59,42 +64,42 @@ const longConversation: ChatConversation = {
 
 const longMessages: ChatMessage[] = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'user',
     createdAt: '2026-03-15T09:55:00.000Z',
     text: 'This is a short message.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'assistant',
     createdAt: '2026-03-15T09:56:00.000Z',
     text: 'Short reply.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'user',
     createdAt: '2026-03-15T09:57:00.000Z',
     text: 'Now here is a very long message to test how the ChatBox handles text wrapping. This message contains multiple sentences to verify that the bubble grows vertically without causing horizontal overflow. The width should be constrained to the maximum bubble width while the text wraps naturally. Additional text to ensure the message is sufficiently long for testing purposes. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'assistant',
     createdAt: '2026-03-15T09:58:00.000Z',
     text: 'A single word: Acknowledged.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'user',
     createdAt: '2026-03-15T09:59:00.000Z',
     text: 'Superlongwordwithoutanyspacestotestwordbreakbehaviorinthebubblelayoutwhencontentcannotwrapnaturally',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: LONG_CONV_ID,
     role: 'assistant',
     createdAt: '2026-03-15T10:00:00.000Z',
@@ -121,10 +126,6 @@ export default function LongMessages() {
 
 ```
 
-## What it shows
+## API
 
-- Long text wrapping within bubble constraints
-- Word-break behavior with unbreakable strings
-- Special characters and emoji rendering
-- Mixed short and long messages
-- Code block formatting in messages
+- [ChatRoot](/x/api/chat/chat-root/)

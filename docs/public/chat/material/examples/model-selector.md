@@ -5,12 +5,16 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Model selector
+# Chat - Model selector
 
 <p class="description">Add a model picker to the conversation header using the <code>conversationHeaderActions</code> slot.</p>
 
-This recipe shows how to place a MUI `Select` inside the conversation header so users can switch between AI models.
+This demo shows how to place a MUI `Select` inside the conversation header so users can switch between AI models.
 No new component is needed — drop any MUI control into `slots.conversationHeaderActions`.
+
+- `slots.conversationHeaderActions` accepting a custom component that renders a `Select`
+- Controlled model state owned by the selector component
+- The `Select` placed inline in the header via `marginInlineStart: 'auto'` (applied automatically by `ChatConversationHeaderActions`)
 
 ```tsx
 'use client';
@@ -18,8 +22,8 @@ import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const MODELS = [
   { id: 'gpt-4o', label: 'GPT-4o' },
@@ -68,12 +72,6 @@ export default function ModelSelector() {
 }
 
 ```
-
-## What it shows
-
-- `slots.conversationHeaderActions` accepting a custom component that renders a `Select`
-- Controlled model state owned by the selector component
-- The `Select` placed inline in the header via `marginInlineStart: 'auto'` (applied automatically by `ChatConversationHeaderActions`)
 
 ## The pattern
 
@@ -147,7 +145,11 @@ export default function App() {
 - Define the slot component **outside** the render function, or stabilize it with `React.useMemo`, to avoid remounting the header on every render.
 - Use `size="small"` on `Select` to match the default header height.
 
-## Next steps
+## API
 
-- See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for replacing deeper sub-components.
-- See [Customization](/x/react-chat/material/customization/) for the full slot key reference.
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
+
+- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for replacing deeper sub-components
+- [Customization](/x/react-chat/material/customization/) for the full slot key reference

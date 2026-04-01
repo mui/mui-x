@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Model selector
 
-<p class="description">Add a model picker to the conversation header using the <code>conversationHeaderActions</code> slot</p>
+<p class="description">Add a model picker to the conversation header using the <code>conversationHeaderActions</code> slot.</p>
 
 This demo shows how to place a MUI `Select` inside the conversation header so users can switch between AI models.
 No new component is needed — drop any MUI control into `slots.conversationHeaderActions`.

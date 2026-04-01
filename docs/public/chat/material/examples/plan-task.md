@@ -5,24 +5,276 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Plan & task
+# Chat - Plan & task
 
-<p class="description">Display a structured execution plan with live step-by-step status using <code>ChatPlan</code> and <code>ChatTask</code>.</p>
+<p class="description">Show a live task list inside a tool call by providing a custom component through <code>partRenderers</code>.</p>
 
-Send any message and watch the agent plan animate through each step.
+Send any message and watch the agent plan animate through each step inside the conversation.
 
 ```tsx
 'use client';
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import { nanoid } from 'nanoid';
-import { ChatBox, ChatPlan, type PlanStep } from '@mui/x-chat';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
-import { demoUsers, minimalConversation, minimalMessages } from '../shared/demoData';
+import CircularProgress from '@mui/material/CircularProgress';
+import { ChatBox } from '@mui/x-chat';
+import type {
+  ChatAdapter,
+  ChatMessage,
+  ChatMessageChunk,
+  ChatPartRendererMap,
+} from '@mui/x-chat/headless';
+import { createChunkStream, randomId, splitText } from 'docsx/data/chat/material/examples/shared/demoUtils';
 
-const INITIAL_STEPS: PlanStep[] = [
+// --- Task types --------------------------------------------------------------
+
+type TaskStatus = 'pending' | 'running' | 'done' | 'error' | 'skipped';
+
+interface Task {
+  id: string;
+  label: string;
+  status: TaskStatus;
+}
+
+// --- Users -------------------------------------------------------------------
+
+function createAvatarDataUrl(
+  label: string,
+  background: string,
+  foreground = '#ffffff',
+) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="${background}"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="${foreground}">${label}</text></svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+const agentUser = {
+  id: 'agent',
+  displayName: 'Agent',
+  avatarUrl: createAvatarDataUrl('A', '#9c27b0'),
+  isOnline: true,
+};
+
+const youUser = {
+  id: 'you',
+  displayName: 'You',
+  avatarUrl: createAvatarDataUrl('Y', '#1976d2'),
+  isOnline: true,
+};
+
+// --- Status icon -------------------------------------------------------------
+
+function TaskStatusIcon({ status }: { status: TaskStatus }) {
+  if (status === 'running') {
+    return (
+      <CircularProgress
+        size={14}
+        thickness={4}
+        sx={{ flexShrink: 0, color: 'primary.main' }}
+      />
+    );
+  }
+
+  const icons: Record<Exclude<TaskStatus, 'running'>, React.ReactNode> = {
+    pending: (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
+      </svg>
+    ),
+    done: (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="6.5" fill="currentColor" />
+        <path
+          d="M4 7.2l2 2 4-4"
+          stroke="white"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+    error: (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="6.5" fill="currentColor" />
+        <path
+          d="M4.5 4.5l5 5M9.5 4.5l-5 5"
+          stroke="white"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      </svg>
+    ),
+    skipped: (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M4 7h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+    ),
+  };
+
+  const colors: Record<Exclude<TaskStatus, 'running'>, string> = {
+    pending: 'text.disabled',
+    done: 'success.main',
+    error: 'error.main',
+    skipped: 'text.disabled',
+  };
+
+  return (
+    <span
+      style={{ display: 'inline-flex', flexShrink: 0, color: 'inherit' }}
+      // Pass MUI color token via sx if needed — here we inline via style
+      data-status={status}
+    >
+      <span
+        style={{
+          display: 'inline-flex',
+          color:
+            status === 'done'
+              ? 'var(--mui-palette-success-main, #2e7d32)'
+              : status === 'error'
+                ? 'var(--mui-palette-error-main, #d32f2f)'
+                : 'var(--mui-palette-text-disabled, rgba(0,0,0,0.38))',
+        }}
+      >
+        {icons[status]}
+      </span>
+    </span>
+  );
+}
+
+// --- TaskList ----------------------------------------------------------------
+// Custom collapsible task list — rendered in place of the run_tasks tool call.
+
+interface TaskListProps {
+  tasks: Task[];
+}
+
+function TaskList({ tasks }: TaskListProps) {
+  const total = tasks.length;
+  const doneCount = tasks.filter(
+    (t) => t.status === 'done' || t.status === 'skipped',
+  ).length;
+  const hasError = tasks.some((t) => t.status === 'error');
+  const anyRunning = tasks.some((t) => t.status === 'running');
+  const allTerminal = tasks.every(
+    (t) => t.status === 'done' || t.status === 'error' || t.status === 'skipped',
+  );
+
+  const [open, setOpen] = React.useState(true);
+
+  React.useEffect(() => {
+    if (anyRunning) {
+      setOpen(true);
+    } else if (allTerminal) {
+      setOpen(false);
+    }
+  }, [anyRunning, allTerminal]);
+
+  const countLabel = hasError
+    ? 'error'
+    : allTerminal
+      ? 'done'
+      : `${doneCount} / ${total}`;
+
+  const countColor = hasError
+    ? 'var(--mui-palette-error-main, #d32f2f)'
+    : allTerminal
+      ? 'var(--mui-palette-success-main, #2e7d32)'
+      : 'var(--mui-palette-primary-main, #1976d2)';
+
+  return (
+    <details
+      open={open}
+      onToggle={(e) => setOpen((e.currentTarget as HTMLDetailsElement).open)}
+      style={{ margin: '4px 0' }}
+    >
+      <summary
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '6px 10px',
+          borderRadius: 4,
+          backgroundColor: 'var(--mui-palette-action-hover, rgba(0,0,0,0.04))',
+          cursor: 'pointer',
+          userSelect: 'none',
+          listStyleType: 'none',
+          fontSize: '0.75rem',
+          fontFamily: 'inherit',
+        }}
+      >
+        {/* expand/collapse icon */}
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 16,
+            height: 16,
+            borderRadius: 2,
+            backgroundColor:
+              'var(--mui-palette-action-selected, rgba(0,0,0,0.08))',
+            fontSize: '0.6rem',
+            flexShrink: 0,
+            color: 'var(--mui-palette-text-secondary, rgba(0,0,0,0.6))',
+          }}
+        >
+          {open ? '−' : '+'}
+        </span>
+
+        {/* title */}
+        <span
+          style={{
+            flex: 1,
+            fontWeight: 500,
+            color: 'var(--mui-palette-text-primary, rgba(0,0,0,0.87))',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          Tasks
+        </span>
+
+        {/* count badge */}
+        <span style={{ color: countColor, fontVariantNumeric: 'tabular-nums' }}>
+          {countLabel}
+        </span>
+      </summary>
+
+      <div style={{ display: 'flex', flexDirection: 'column', padding: '4px 0' }}>
+        {tasks.map((task) => (
+          <div
+            key={task.id}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '4px 10px',
+              fontSize: '0.8125rem',
+              fontFamily: 'inherit',
+            }}
+          >
+            <TaskStatusIcon status={task.status} />
+            <span
+              style={{
+                color:
+                  task.status === 'skipped'
+                    ? 'var(--mui-palette-text-disabled, rgba(0,0,0,0.38))'
+                    : 'var(--mui-palette-text-primary, rgba(0,0,0,0.87))',
+                textDecoration:
+                  task.status === 'skipped' ? 'line-through' : undefined,
+              }}
+            >
+              {task.label}
+            </span>
+          </div>
+        ))}
+      </div>
+    </details>
+  );
+}
+
+// --- Plan steps --------------------------------------------------------------
+
+const PLAN_STEPS: Task[] = [
   { id: '1', label: 'Analyze repository structure', status: 'pending' },
   { id: '2', label: 'Identify test gaps', status: 'pending' },
   { id: '3', label: 'Write unit tests', status: 'pending' },
@@ -32,189 +284,176 @@ const INITIAL_STEPS: PlanStep[] = [
 
 const STEP_DELAY_MS = 900;
 
-function getRunningStatus(i: number, index: number): PlanStep['status'] {
-  if (i < index) {
-    return 'done';
+// --- Chunk helpers -----------------------------------------------------------
+
+function createResponseChunks(messageId: string, toolCallId: string): ChatMessageChunk[] {
+  const chunks: ChatMessageChunk[] = [];
+  const textId = `${messageId}-text`;
+  const text =
+    "Here's my execution plan. I'll work through each step and report back.";
+
+  chunks.push({ type: 'start', messageId, author: agentUser });
+  chunks.push({ type: 'text-start', id: textId });
+  for (const delta of splitText(text)) {
+    chunks.push({ type: 'text-delta', id: textId, delta });
   }
-  if (i === index) {
-    return 'running';
-  }
-  return 'pending';
-}
+  chunks.push({ type: 'text-end', id: textId });
 
-// Simulates executing steps one-by-one with a delay, updating statuses live.
-function simulateSteps(
-  steps: PlanStep[],
-  onUpdate: (updated: PlanStep[]) => void,
-): void {
-  // Reset all to pending first
-  let current: PlanStep[] = steps.map((step) => ({
-    ...step,
-    status: 'pending' as const,
-  }));
-  onUpdate([...current]);
-
-  steps.forEach((_, index) => {
-    // Mark step as running
-    setTimeout(() => {
-      current = current.map((step, i) => ({
-        ...step,
-        status: getRunningStatus(i, index),
-      }));
-      onUpdate([...current]);
-    }, STEP_DELAY_MS * index);
-
-    // Mark step as done
-    setTimeout(
-      () => {
-        current = current.map((step, i) => ({
-          ...step,
-          status: (i <= index ? 'done' : 'pending') as PlanStep['status'],
-        }));
-        onUpdate([...current]);
-      },
-      STEP_DELAY_MS * index + STEP_DELAY_MS * 0.8,
-    );
+  // Emit the run_tasks tool call with all steps pending
+  chunks.push({
+    type: 'tool-input-start',
+    toolCallId,
+    toolName: 'run_tasks',
+    dynamic: true,
   });
+  chunks.push({
+    type: 'tool-input-available',
+    toolCallId,
+    toolName: 'run_tasks',
+    input: { tasks: PLAN_STEPS },
+    dynamic: true,
+  });
+
+  chunks.push({ type: 'finish', messageId, finishReason: 'stop' });
+  return chunks;
 }
+
+// --- Component ---------------------------------------------------------------
 
 export default function PlanTask() {
-  const [steps, setSteps] = React.useState<PlanStep[]>(INITIAL_STEPS);
+  const [messages, setMessages] = React.useState<ChatMessage[]>([]);
+  const setMessagesRef = React.useRef(setMessages);
+  setMessagesRef.current = setMessages;
 
-  // Stable ref so the adapter closure always reads the latest setter
-  // without needing to recreate the adapter on each render.
-  const setStepsRef = React.useRef(setSteps);
-  setStepsRef.current = setSteps;
+  const [tasks, setTasks] = React.useState<Task[]>(PLAN_STEPS);
 
-  const adapter = React.useMemo(
+  // Rebuild partRenderers when tasks change so the task list re-renders.
+  const partRenderers: ChatPartRendererMap = React.useMemo(
     () => ({
-      async sendMessage() {
-        const messageId = nanoid();
-        const responseText =
-          'Executing the plan — watch the steps above update as I work through each one.';
-
-        // Start step simulation after a short lead-in
-        setTimeout(() => {
-          simulateSteps(INITIAL_STEPS, (updated) => setStepsRef.current(updated));
-        }, 400);
-
-        return createChunkStream(
-          createTextResponseChunks(messageId, responseText, {
-            author: demoUsers.agent,
-          }),
-          { delayMs: 60 },
-        );
+      'dynamic-tool': ({ part }) => {
+        if (part.toolInvocation.toolName !== 'run_tasks') {
+          return null;
+        }
+        return <TaskList tasks={tasks} />;
       },
     }),
-    [],
+    [tasks],
+  );
+
+  const animateTasks = React.useCallback(() => {
+    PLAN_STEPS.forEach((_, index) => {
+      // Mark as running
+      setTimeout(() => {
+        setTasks(
+          PLAN_STEPS.map((step, i) => ({
+            ...step,
+            status: (
+              i < index ? 'done' : i === index ? 'running' : 'pending'
+            ) as TaskStatus,
+          })),
+        );
+      }, STEP_DELAY_MS * index);
+
+      // Mark as done
+      setTimeout(
+        () => {
+          setTasks(
+            PLAN_STEPS.map((step, i) => ({
+              ...step,
+              status: (i <= index ? 'done' : 'pending') as TaskStatus,
+            })),
+          );
+        },
+        STEP_DELAY_MS * index + STEP_DELAY_MS * 0.8,
+      );
+    });
+  }, []);
+
+  const adapter = React.useMemo<ChatAdapter>(
+    () => ({
+      async sendMessage() {
+        const messageId = randomId();
+        const toolCallId = randomId();
+
+        // Reset tasks and start animation after the stream settles
+        setTasks(PLAN_STEPS.map((s) => ({ ...s, status: 'pending' })));
+        const chunks = createResponseChunks(messageId, toolCallId);
+        setTimeout(animateTasks, chunks.length * 60 + 300);
+
+        return createChunkStream(chunks, { delayMs: 60 });
+      },
+    }),
+    [animateTasks],
   );
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, height: 640 }}>
-      <Paper variant="outlined" sx={{ p: 2 }}>
-        <Typography
-          variant="overline"
-          color="text.secondary"
-          display="block"
-          gutterBottom
-        >
-          Agent task plan
-        </Typography>
-        <ChatPlan steps={steps} />
-      </Paper>
-      <ChatBox
-        adapter={adapter}
-        initialActiveConversationId={minimalConversation.id}
-        initialConversations={[minimalConversation]}
-        initialMessages={minimalMessages}
-        sx={{
-          flex: 1,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-        }}
-      />
-    </Box>
+    <ChatBox
+      adapter={adapter}
+      partRenderers={partRenderers}
+      members={[youUser, agentUser]}
+      messages={messages}
+      onMessagesChange={setMessages}
+      sx={{
+        height: 560,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
   );
 }
 
 ```
 
-## What it shows
+## How it works
 
-- `ChatPlan` renders an ordered list of `ChatTask` steps driven by a `steps` prop
-- `ChatTask` maps `status` to a status icon: spinner (`running`), filled checkmark (`done`), error circle (`error`), outlined circle (`pending`), minus circle (`skipped`)
-- Plan state is owned by the consumer via `React.useState` and updated from inside the adapter via a stable `useRef` callback
+When a tool call named `run_tasks` arrives, the default JSON accordion is replaced by a
+collapsible task list. Each step animates through `pending → running → done` and the
+list collapses automatically when all steps finish.
 
-## Data-driven usage
+The whole UI is a plain React component — no dedicated package export required.
 
-Pass an array of `PlanStep` objects to render the full plan automatically:
+## Providing a custom tool renderer
+
+Supply a `partRenderers` map to `ChatBox`. Each key is a message part type; the
+`dynamic-tool` key lets you intercept any tool call and render whatever you want:
 
 ```tsx
-<ChatPlan
-  steps={[
-    { id: '1', label: 'Analyze codebase', status: 'done' },
-    { id: '2', label: 'Write unit tests', status: 'running' },
-    { id: '3', label: 'Open pull request', status: 'pending' },
-  ]}
-/>
+const partRenderers: ChatPartRendererMap = {
+  'dynamic-tool': ({ part }) => {
+    if (part.toolInvocation.toolName !== 'run_tasks') {
+      return null; // fall through to default for other tools
+    }
+    return <MyTaskList tasks={tasks} />;
+  },
+};
+
+<ChatBox adapter={adapter} partRenderers={partRenderers} /* … */ />
 ```
 
-## Composable usage
+## Animating steps from outside the renderer
 
-Use `ChatTask` children directly when you need custom rendering or conditional logic:
-
-```tsx
-<ChatPlan>
-  <ChatTask status="done">Analyze codebase</ChatTask>
-  <ChatTask status="running">Write unit tests</ChatTask>
-  <ChatTask status="pending">Open pull request</ChatTask>
-</ChatPlan>
-```
-
-## Status reference
-
-| Status    | Icon             | Typical use                 |
-| :-------- | :--------------- | :-------------------------- |
-| `pending` | Outlined circle  | Step not yet started        |
-| `running` | Spinner          | Step currently executing    |
-| `done`    | Filled checkmark | Step completed successfully |
-| `error`   | Error circle     | Step failed                 |
-| `skipped` | Minus circle     | Step intentionally bypassed |
-
-## Connecting to the adapter
-
-Hold plan state in `React.useState`. Update it from the adapter via a `useRef`-based
-callback so the adapter closure always has access to the latest setter without
-recreating the adapter on every render:
+The renderer is a plain function closed over component state, so you can drive it
+from any external source — a WebSocket, server-sent events, or a timer:
 
 ```tsx
-const [steps, setSteps] = React.useState<PlanStep[]>(INITIAL_STEPS);
+const [tasks, setTasks] = React.useState(initialTasks);
 
-// Stable ref — capture the latest setter without re-creating the adapter
-const setStepsRef = React.useRef(setSteps);
-setStepsRef.current = setSteps;
-
-const adapter = React.useMemo(
+// partRenderers rebuilds when tasks change — ChatBox picks up the new renderer
+const partRenderers = React.useMemo(
   () => ({
-    async sendMessage({ message }) {
-      // … stream response from your backend …
-      // Then update step statuses as they come in:
-      setStepsRef.current(updatedSteps);
-      return responseStream;
-    },
+    'dynamic-tool': ({ part }) =>
+      part.toolInvocation.toolName === 'run_tasks'
+        ? <MyTaskList tasks={tasks} />
+        : null,
   }),
-  [],
-); // empty deps — adapter captures the stable ref, not setSteps directly
+  [tasks],
+);
 ```
 
-## Adding detail text
+Call `setTasks` with updated statuses from your stream handler and the task list
+re-renders automatically inside the message.
 
-`ChatTask` accepts an optional `detail` prop for secondary information such as
-sub-step output or error messages:
+## API
 
-```tsx
-<ChatTask status="error" detail="Exit code 1 — test suite failed">
-  Run test suite
-</ChatTask>
-```
+- [ChatRoot](/x/api/chat/chat-root/)

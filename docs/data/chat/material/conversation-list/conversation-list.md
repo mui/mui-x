@@ -8,7 +8,7 @@ components: ConversationListRoot, ConversationListItem, ConversationListItemAvat
 
 # Chat - Conversation list
 
-<p class="description">Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components</p>
+<p class="description">Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
@@ -16,7 +16,7 @@ The conversation list is the sidebar that shows all available conversations and 
 
 The following demo shows a multi-conversation layout with the conversation list in action:
 
-{{"demo": "../examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 ## Component anatomy
 

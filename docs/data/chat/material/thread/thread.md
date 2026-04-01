@@ -8,28 +8,28 @@ components: ConversationRoot, ConversationHeader, ConversationTitle, Conversatio
 
 # Chat - Thread
 
-<p class="description">Compose the active conversation surface from themed thread components, override individual slots, and recompose the layout using context hooks</p>
+<p class="description">Compose the active conversation surface from themed thread components, override individual slots, and recompose the layout using context hooks.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-The thread pane is the single-conversation view in a chat interface. It combines a header area, a scrollable message log, and a composer into one cohesive surface. `@mui/x-chat` ships each region as a themed component that wraps the corresponding `@mui/x-chat/unstyled` primitive with `styled()` and Material UI theme tokens.
+The thread pane is the single-conversation view in a chat interface. It combines a header area, a scrollable message log, and a composer into one cohesive surface. `@mui/x-chat` ships each region as a themed component that wraps the corresponding `@mui/x-chat/unstyled` primitive with `styled()` and Material UI theme tokens. Use `@mui/x-chat/unstyled` when you want the same structural primitives without Material styling, and `@mui/x-chat/headless` when you want runtime state and hooks without any prescribed UI structure.
 
 The following demo shows the thread in action:
 
-{{"demo": "../examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
-## Component tree
+## Component anatomy
 
 ```text
-ChatConversation                    ← thread shell, derives active conversation
-  ChatConversationHeader            ← header bar (border-bottom, min-height 56px)
-    ChatConversationTitle           ← conversation name, typography.body1 bold
+ChatConversation                    ← thread shell, derives the active conversation
+  ChatConversationHeader            ← header bar with divider styling
+    ChatConversationTitle           ← conversation name
     ChatConversationSubtitle        ← secondary line (participants, presence, etc.)
     ChatConversationHeaderActions   ← action area (archive, mute, context menu)
   ChatMessageList                   ← virtualized scrollable message area
     ChatMessageGroup                ← groups consecutive same-author messages
       ChatMessage                   ← individual message row (grid layout)
-        ChatMessageAvatar           ← circular avatar, 36 px
+        ChatMessageAvatar           ← author avatar
         ChatMessageContent          ← bubble + inner part renderers
         ChatMessageMeta             ← timestamp, status indicator
         ChatMessageActions          ← hover action menu
@@ -42,9 +42,9 @@ ChatConversation                    ← thread shell, derives active conversatio
 
 All components are exported from `@mui/x-chat`.
 
-## The header area
+## Header anatomy
 
-`ChatConversationHeader` is a `<header>` element with a border-bottom divider and a 56 px minimum height. It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
+`ChatConversationHeader` is a `<header>` element with divider styling. It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
 
 ```tsx
 import {
@@ -56,17 +56,19 @@ import {
 } from '@mui/x-chat';
 ```
 
-### Components and their ownerState
+### ownerState and how state flows
 
-| Component                       | Root element | Key ownerState fields                               |
-| :------------------------------ | :----------- | :-------------------------------------------------- |
-| `ChatConversation`              | `div`        | `conversationId`, `conversation`, `hasConversation` |
-| `ChatConversationHeader`        | `header`     | same as above (inherited)                           |
-| `ChatConversationTitle`         | `div`        | same as above                                       |
-| `ChatConversationSubtitle`      | `div`        | same as above                                       |
-| `ChatConversationHeaderActions` | `div`        | same as above                                       |
+`ChatConversation` owns the conversation-level `ownerState`, and the header subcomponents inherit that same state through the slot system.
 
-The `hasConversation` flag is particularly useful for hiding action buttons or showing a placeholder when no conversation is active.
+### Conversation ownerState
+
+| Field             | Type                          | Description                                  |
+| :---------------- | :---------------------------- | :------------------------------------------- |
+| `conversationId`  | `string \| undefined`         | Currently selected conversation ID           |
+| `conversation`    | `ChatConversation \| null`    | Full active conversation object, when loaded |
+| `hasConversation` | `boolean`                     | Whether the thread currently has a selection |
+
+The `hasConversation` flag is particularly useful for hiding action buttons or showing a placeholder when no conversation is active. `ChatConversationHeader`, `ChatConversationTitle`, `ChatConversationSubtitle`, and `ChatConversationHeaderActions` all receive this same conversation-level state.
 
 ### Overriding a header slot
 
@@ -120,7 +122,7 @@ function CustomConversationTitle(props) {
 }
 ```
 
-## The message list
+## Message list anatomy
 
 `ChatMessageList` wraps `MessageListRoot` from the unstyled layer with three styled slots: a flex column outer shell, a scrolling scroller, and a padded content container.
 
@@ -128,7 +130,7 @@ function CustomConversationTitle(props) {
 import { ChatMessageList, ChatMessageGroup } from '@mui/x-chat';
 ```
 
-### Slots and ownerState
+### ownerState and how state flows
 
 | Slot key              | Default element | ownerState fields            |
 | :-------------------- | :-------------- | :--------------------------- |
@@ -249,7 +251,7 @@ When you need to insert additional content inside a message row — for example 
 
 Children passed to `ChatMessage` are rendered inside the grid layout, so they inherit the same column structure as the default slots.
 
-## The composer
+## Composer anatomy
 
 `ChatComposer` is a `<form>` element that handles text input, attachment state, and submission. Its children own specific regions of the composer.
 
@@ -264,7 +266,7 @@ import {
 } from '@mui/x-chat';
 ```
 
-### Shared ownerState
+### ownerState and how state flows
 
 Every composer component shares the same ownerState shape:
 
@@ -368,7 +370,7 @@ function CustomMessageContent(props) {
 
 The `ownerState` includes `role`, `status`, `streaming`, `error`, `isGrouped`, and `showAvatar` — the same fields listed in the `ChatMessage` ownerState table above.
 
-For conversation-level state (the active conversation title, participants, etc.), use the `ownerState` received by header slot components — see the [header area](#the-header-area) section above.
+For conversation-level state (the active conversation title, participants, etc.), use the `ownerState` received by header slot components — see the [Header anatomy](#header-anatomy) section above.
 
 ## Full recomposition example
 
@@ -432,7 +434,7 @@ function CustomThread() {
 }
 ```
 
-Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire it to your adapter.
+Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter. If you want structural primitives instead of the fully themed Material components shown on this page, move one layer down to `@mui/x-chat/unstyled`.
 
 ## API
 

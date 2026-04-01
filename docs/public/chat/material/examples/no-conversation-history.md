@@ -5,7 +5,7 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# No conversation history
+# Chat - No conversation history
 
 <p class="description"><code>ChatBox</code> hides the conversation list when neither the adapter nor a prop supplies conversation data.</p>
 
@@ -29,11 +29,10 @@ import {
 import { useMessageIds } from '@mui/x-chat/headless';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatRoot } from '@mui/x-chat/unstyled';
-import { nanoid } from 'nanoid';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
-import { createTextMessage, demoUsers } from '../shared/demoData';
+import { createChunkStream, createTextResponseChunks, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
-const CONVERSATION_ID = nanoid();
+const CONVERSATION_ID = randomId();
 
 // Adapter has only `sendMessage` — no `listConversations` or `listMessages`.
 // ChatBox cannot fetch conversation history, and no `conversations` prop is passed,
@@ -45,14 +44,14 @@ const adapter: ChatAdapter = {
       .filter(Boolean)
       .join('');
     return createChunkStream(
-      createTextResponseChunks(nanoid(), `You said: "${text}".`),
+      createTextResponseChunks(randomId(), `You said: "${text}".`),
     );
   },
 };
 
 const initialMessages = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -60,7 +59,7 @@ const initialMessages = [
     text: 'Hello! This thread is composed directly from individual components — no ChatBox, no header, no sidebar.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -68,7 +67,7 @@ const initialMessages = [
     text: 'Got it. So I can pick exactly which parts to include?',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -213,7 +212,11 @@ const adapter: ChatAdapter = {
 };
 ```
 
-## Next steps
+## API
 
-- See [Thread-only](/x/react-chat/material/examples/thread-only/) for a layout-focused view of the single-pane pattern.
-- See [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for the full two-pane inbox with a conversation sidebar.
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
+
+- [Thread-only](/x/react-chat/material/examples/thread-only/) for a layout-focused view of the single-pane pattern
+- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for the full two-pane inbox with a conversation sidebar

@@ -2,8 +2,8 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import { ChatBox, ChatMessageContent } from '@mui/x-chat';
-import { createEchoAdapter } from '../shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 /**
  * A custom message content component that wraps the default ChatMessageContent

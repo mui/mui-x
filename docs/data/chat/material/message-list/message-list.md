@@ -8,7 +8,7 @@ components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 
 # Chat - Message list
 
-<p class="description">Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators</p>
+<p class="description">Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
@@ -26,7 +26,7 @@ When using `ChatBox`, the message list is already included as a built-in part of
 You only need to import `ChatMessageList` directly when building a custom layout.
 :::
 
-## Component tree
+## Component anatomy
 
 Inside `ChatBox`, the message list renders a subtree of themed components:
 
@@ -94,6 +94,24 @@ The grouping window defaults to 5 minutes (300,000 ms). Customize it through `sl
 The demo below sets the window to 1 minute (60,000 ms) — notice how messages more than 1 minute apart start a new group with a fresh avatar:
 
 {{"demo": "MessageGrouping.js", "defaultCodeOpen": false, "bg": "inline"}}
+
+## Compact variant
+
+Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layout.
+Compact mode applies the following changes to the message list:
+
+- **No bubbles** — messages render as plain text without background colors or padding.
+- **Left-aligned** — all messages are left-aligned regardless of role (no right-aligned user messages).
+- **Group header timestamps** — the timestamp moves from below each message to the group header, displayed next to the author name.
+- **Avatars preserved** — avatars remain visible for the first message in each group.
+
+When set on `ChatBox`, the variant automatically applies to the conversation list as well.
+
+{{"demo": "CompactVariant.js", "defaultCodeOpen": false, "bg": "inline"}}
+
+```tsx
+<ChatBox variant="compact" adapter={adapter} />
+```
 
 ## Loading and streaming states
 

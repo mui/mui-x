@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Split layout
 
-<p class="description">Place <code>ChatMessageList</code> and <code>ChatComposer</code> in separate DOM zones. Only <code>ChatRoot</code> is needed to connect them</p>
+<p class="description">Place <code>ChatMessageList</code> and <code>ChatComposer</code> in separate DOM zones. Only <code>ChatRoot</code> is needed to connect them.</p>
 
 {{"demo": "SplitLayout.js", "bg": "inline"}}
 

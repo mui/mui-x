@@ -5,18 +5,24 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Slow streaming
+# Chat - Slow streaming
 
 A ChatBox with a deliberately slow streaming adapter to observe the real-time text rendering behavior.
 
-This example uses a slow adapter (500ms per chunk) to make the streaming behavior clearly visible.
+This demo uses a slow adapter (500ms per chunk) to make the streaming behavior clearly visible.
+
+- Visible incremental text rendering during streaming
+- Bubble grows as chunks arrive
+- Composer behavior during active streaming
+- Auto-scroll following the growing response
+- State transitions: idle -> streaming -> complete
 
 ```tsx
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createTextResponseChunks, createChunkStream } from '../shared/demoUtils';
-import { minimalConversation, minimalMessages, demoUsers } from '../shared/demoData';
+import { createTextResponseChunks, createChunkStream } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const slowAdapter: ChatAdapter = {
@@ -63,10 +69,6 @@ export default function SlowStreaming() {
 
 ```
 
-## What it shows
+## API
 
-- Visible incremental text rendering during streaming
-- Bubble grows as chunks arrive
-- Composer behavior during active streaming
-- Auto-scroll following the growing response
-- State transitions: idle -> streaming -> complete
+- [ChatRoot](/x/api/chat/chat-root/)

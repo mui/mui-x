@@ -36,8 +36,8 @@ import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import { ChatBox } from '@mui/x-chat';
 import { useChatStatus } from '@mui/x-chat/headless';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -93,17 +93,16 @@ import {
   ChatMessageList,
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
-import { nanoid } from 'nanoid';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from '../examples/shared/demoData';
+import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
-const CONVERSATION_ID = nanoid();
+const CONVERSATION_ID = randomId();
 
 const adapter = createEchoAdapter();
 
 const initialMessages = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -111,7 +110,7 @@ const initialMessages = [
     text: 'This layout is built with ChatProvider directly. The message list and composer are composed manually.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -119,7 +118,7 @@ const initialMessages = [
     text: 'So I get full control over what is rendered?',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -300,8 +299,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { demoUsers } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const supportAdapter = createEchoAdapter({
   agent: { ...demoUsers.agent, displayName: 'Support Bot' },
@@ -378,3 +377,7 @@ export default function MultipleInstances() {
 | `streamFlushInterval`         | `number`                  | Batching interval for streaming deltas (default: 16 ms) |
 | `storeClass`                  | `ChatStoreConstructor`    | Custom store class (default: ChatStore)                 |
 | `partRenderers`               | `ChatPartRendererMap`     | Custom message part renderers                           |
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

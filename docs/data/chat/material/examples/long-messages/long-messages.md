@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Long messages
 
-<p class="description">Testing text wrapping, word-break behavior, and special content in message bubbles</p>
+<p class="description">Testing text wrapping, word-break behavior, and special content in message bubbles.</p>
 
 This demo tests how the ChatBox handles various edge cases in message content.
 

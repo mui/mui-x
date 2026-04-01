@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Many messages
 
-<p class="description">Testing scroll behavior and performance with a large number of messages</p>
+<p class="description">Testing scroll behavior and performance with a large number of messages.</p>
 
 This demo verifies that the ChatBox handles a large number of messages correctly, with proper scrolling, auto-scroll to bottom, and the scroll-to-bottom affordance.
 

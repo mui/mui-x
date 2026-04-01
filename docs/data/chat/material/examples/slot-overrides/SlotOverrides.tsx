@@ -6,8 +6,8 @@ import {
   ChatMessageContent,
   type ChatMessageContentProps,
 } from '@mui/x-chat';
-import { createEchoAdapter } from '../shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 /**
  * A custom message content component that wraps the default ChatMessageContent

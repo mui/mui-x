@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Empty state
 
-<p class="description">A ChatBox with an active conversation but no messages yet</p>
+<p class="description">A ChatBox with an active conversation but no messages yet.</p>
 
 This demo shows the empty state of a ChatBox - an active conversation with zero messages, revealing how the component looks before any interaction.
 

@@ -19,8 +19,8 @@ import {
   createChunkStream,
   createTextResponseChunks,
   randomId,
-} from '../shared/demoUtils';
-import { createTextMessage, demoUsers } from '../shared/demoData';
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const CONVERSATION_ID = randomId();
 

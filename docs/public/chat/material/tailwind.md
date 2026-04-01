@@ -19,15 +19,15 @@ Install the unstyled package alongside Tailwind:
 <codeblock storageKey="package-manager">
 
 ```bash npm
-npm install @mui/x-chat @mui/x-chat-headless
+npm install @mui/x-chat
 ```
 
 ```bash pnpm
-pnpm add @mui/x-chat @mui/x-chat-headless
+pnpm add @mui/x-chat
 ```
 
 ```bash yarn
-yarn add @mui/x-chat @mui/x-chat-headless
+yarn add @mui/x-chat
 ```
 
 </codeblock>
@@ -136,7 +136,7 @@ Use the `slots` and `slotProps` props to replace inner elements while keeping be
 />
 ```
 
-## Complete example: chat shell
+## Complete demo: chat shell
 
 The following interactive demo shows a fully functional chat styled entirely with Tailwind CSS utility classes, using the unstyled primitives from `@mui/x-chat/unstyled`:
 
@@ -151,8 +151,8 @@ import {
   MessageList,
   Indicators,
 } from '@mui/x-chat/unstyled';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter({
   respond: (text) =>
@@ -277,3 +277,7 @@ export default function TailwindChatDemo({ window }: { window?: () => Window }) 
 | Tailwind CSS project                          | Use `@mui/x-chat/unstyled` + Tailwind classes  |
 | Custom design system / CSS Modules            | Use `@mui/x-chat/unstyled`                     |
 | Headless state only, fully custom rendering   | Use `@mui/x-chat/headless` hooks               |
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

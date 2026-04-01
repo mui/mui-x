@@ -5,9 +5,14 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Code block
+# Chat - Code block
 
 <p class="description">Display code with a language label and copy-to-clipboard button using the <code>ChatCodeBlock</code> component.</p>
+
+- **Automatic rendering** — `ChatBox` renders code fences from markdown as `ChatCodeBlock` automatically. No extra config needed.
+- **Language label** — the language specified in the code fence (e.g. ` ```python `) appears in the header bar.
+- **Copy button** — clicking copies the raw code string to the clipboard and shows a check mark for 2 seconds.
+- **Custom highlighter** — the standalone section below the chat shows the `highlighter` prop with a minimal Python keyword coloriser (no library required).
 
 ```tsx
 'use client';
@@ -15,13 +20,12 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ChatBox, ChatCodeBlock } from '@mui/x-chat';
-import { nanoid } from 'nanoid';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
+import { createChunkStream, createTextResponseChunks, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   demoUsers,
   minimalConversation,
   createTextMessage,
-} from '../shared/demoData';
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const CONVERSATION_ID = minimalConversation.id;
 
@@ -44,7 +48,7 @@ It works by iterating over each item — if the item is itself a list it recurse
 
 const INITIAL_MESSAGES = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'user',
     text: 'Write me a Python function to flatten a nested list.',
@@ -52,7 +56,7 @@ const INITIAL_MESSAGES = [
     author: demoUsers.you,
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     text: ASSISTANT_REPLY,
@@ -105,7 +109,7 @@ export default function CodeBlock() {
   const adapter = React.useMemo(
     () => ({
       async sendMessage() {
-        const messageId = nanoid();
+        const messageId = randomId();
         return createChunkStream(
           createTextResponseChunks(messageId, ASSISTANT_REPLY, {
             author: demoUsers.agent,
@@ -144,13 +148,6 @@ export default function CodeBlock() {
 }
 
 ```
-
-## What it shows
-
-- **Automatic rendering** — `ChatBox` renders code fences from markdown as `ChatCodeBlock` automatically. No extra config needed.
-- **Language label** — the language specified in the code fence (e.g. ` ```python `) appears in the header bar.
-- **Copy button** — clicking copies the raw code string to the clipboard and shows a check mark for 2 seconds.
-- **Custom highlighter** — the standalone section below the chat shows the `highlighter` prop with a minimal Python keyword coloriser (no library required).
 
 ## Basic usage
 
@@ -203,3 +200,7 @@ function ShikiBlock({ code, language }) {
 When using `ChatBox`, any code fence in a markdown assistant message is automatically rendered as a `ChatCodeBlock`. This requires no additional configuration — the `renderMarkdown` function used internally by `ChatMessageContent` emits `ChatCodeBlock` for every code fence it encounters.
 
 To customize the rendering further, override `partProps.text.renderText` on `ChatMessageContent`.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

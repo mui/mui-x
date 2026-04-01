@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - No conversation history
 
-<p class="description"><code>ChatBox</code> hides the conversation list when neither the adapter nor a prop supplies conversation data</p>
+<p class="description"><code>ChatBox</code> hides the conversation list when neither the adapter nor a prop supplies conversation data.</p>
 
 {{"demo": "NoConversationHistory.js", "bg": "inline"}}
 

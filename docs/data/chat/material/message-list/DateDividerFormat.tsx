@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter, randomId } from '../examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from '../examples/shared/demoData';
+import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 

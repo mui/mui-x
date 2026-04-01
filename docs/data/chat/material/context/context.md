@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Context
 
-<p class="description">Understand how ChatProvider manages state, controlled vs. uncontrolled patterns, and how to share chat context across your application</p>
+<p class="description">Understand how ChatProvider manages state, controlled vs. uncontrolled patterns, and how to share chat context across your application.</p>
 
 Every chat component reads its data — messages, conversations, composer state, streaming status — from a shared store provided by `ChatProvider`.
 `ChatBox` renders a `ChatProvider` internally, so in the simplest case you never interact with the provider directly.

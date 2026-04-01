@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Agentic code assistant
 
-<p class="description">Streaming tool calls (Bash, Read, Edit, Write, Glob), reasoning, step boundaries, and an interactive approval flow — driven entirely by the adapter API</p>
+<p class="description">Streaming tool calls (Bash, Read, Edit, Write, Glob), reasoning, step boundaries, and an interactive approval flow — driven entirely by the adapter API.</p>
 
 {{"demo": "AgenticCode.js", "bg": "inline"}}
 

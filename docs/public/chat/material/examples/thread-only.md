@@ -5,18 +5,22 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Thread-only
+# Chat - Thread-only
 
 A single-pane chat surface with no conversation sidebar — ideal for embedded copilots and focused AI assistants.
 
 When no `conversations` or `initialConversations` are provided, `ChatBox` automatically hides the left panel and renders the thread full-width.
 
+- Thread-only layout — no conversation list pane
+- Minimal props: just an `adapter` and a container size
+- Automatic layout adaptation based on whether conversations are present
+
 ```tsx
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../shared/demoUtils';
-import { demoUsers } from '../shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const demoMembers = [demoUsers.you, demoUsers.agent];
 
@@ -41,12 +45,6 @@ export default function ThreadOnly() {
 }
 
 ```
-
-## What it shows
-
-- Thread-only layout — no conversation list pane
-- Minimal props: just an `adapter` and a container size
-- Automatic layout adaptation based on whether conversations are present
 
 ## When to use this layout
 
@@ -73,7 +71,11 @@ To restore the sidebar at any time, pass at least one conversation:
 />
 ```
 
-## Next steps
+## API
 
-- See [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for the smallest working setup with a single conversation.
-- See [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for the full two-pane inbox layout.
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
+
+- [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for the smallest working setup with a single conversation
+- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for the full two-pane inbox layout

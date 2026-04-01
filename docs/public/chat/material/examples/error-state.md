@@ -5,17 +5,23 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Error state
+# Chat - Error state
 
 How the ChatBox behaves when the adapter throws an error during message sending.
 
-This example uses a failing adapter that always throws an error, demonstrating how errors propagate through `onError`.
+This demo uses a failing adapter that always throws an error, demonstrating how errors propagate through `onError`.
+
+- Adapter that throws an error on every `sendMessage` call
+- `onError` callback capturing the error
+- External error display below the ChatBox
+- User message still appears in the thread (optimistic update)
+- Composer is re-enabled after the error
 
 ```tsx
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { minimalConversation, minimalMessages, demoUsers } from '../shared/demoData';
+import { minimalConversation, minimalMessages, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const demoMembers = [demoUsers.you, demoUsers.agent];
@@ -76,10 +82,6 @@ export default function ErrorState() {
 
 ```
 
-## What it shows
+## API
 
-- Adapter that throws an error on every `sendMessage` call
-- `onError` callback capturing the error
-- External error display below the ChatBox
-- User message still appears in the thread (optimistic update)
-- Composer is re-enabled after the error
+- [ChatRoot](/x/api/chat/chat-root/)

@@ -13,6 +13,36 @@ githubLabel: 'scope: chat'
 The adapter is the single object that bridges them.
 It receives user messages, communicates with your server, and returns a streaming response that the runtime turns into live UI updates.
 
+The following demo shows an adapter connected to a local echo backend:
+
+```tsx
+'use client';
+import * as React from 'react';
+import { ChatBox } from '@mui/x-chat';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+
+const adapter = createEchoAdapter();
+
+export default function BasicAiChat() {
+  return (
+    <ChatBox
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
+```
+
 You author the adapter once and pass it directly to `ChatBox`:
 
 ```tsx
@@ -369,7 +399,10 @@ The cursor type flows automatically through `ChatBox`, the store, hooks, and all
 
 ## Error handling
 
+:::info
 You do not need to catch errors inside adapter methods — the runtime handles them for you.
+:::
+
 When an adapter method throws, the runtime:
 
 1. Records a `ChatError` with the appropriate `source` field (`'send'`, `'stream'`, `'history'`, or `'adapter'`).
@@ -414,10 +447,14 @@ export default function App() {
 
 Everything else — hooks, selectors, streaming — works the same way regardless of whether you use `ChatBox` or build your own layout.
 
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
 ## See also
 
 - [Streaming](/x/react-chat/headless/streaming/) for the full stream chunk protocol reference.
 - [Realtime](/x/react-chat/headless/realtime/) for the event types used by `subscribe()`.
 - [Hooks](/x/react-chat/material/hooks/) to see which runtime actions trigger adapter methods.
-- [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for a minimal end-to-end example.
+- [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for a minimal end-to-end demo.
 - [Conversation history](/x/react-chat/headless/examples/conversation-history/) for adapter-driven history loading.

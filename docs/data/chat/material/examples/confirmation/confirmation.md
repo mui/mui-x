@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Confirmation
 
-<p class="description">Display a prominent human-in-the-loop checkpoint before the agent takes an irreversible action using <code>ChatConfirmation</code></p>
+<p class="description">Display a prominent human-in-the-loop checkpoint before the agent takes an irreversible action using <code>ChatConfirmation</code>.</p>
 
 Click **Delete files** or **Keep files** to see the result.
 

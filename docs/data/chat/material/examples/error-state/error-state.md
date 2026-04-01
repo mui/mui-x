@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Error state
 
-<p class="description">How the ChatBox behaves when the adapter throws an error during message sending</p>
+<p class="description">How the ChatBox behaves when the adapter throws an error during message sending.</p>
 
 This demo uses a failing adapter that always throws an error, demonstrating how errors propagate through `onError`.
 

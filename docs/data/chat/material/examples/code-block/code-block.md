@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Code block
 
-<p class="description">Display code with a language label and copy-to-clipboard button using the <code>ChatCodeBlock</code> component</p>
+<p class="description">Display code with a language label and copy-to-clipboard button using the <code>ChatCodeBlock</code> component.</p>
 
 - **Automatic rendering** — `ChatBox` renders code fences from markdown as `ChatCodeBlock` automatically. No extra config needed.
 - **Language label** — the language specified in the code fence (e.g. ` ```python `) appears in the header bar.

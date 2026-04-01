@@ -1,18 +1,17 @@
 ---
-title: Message feed
+title: Chat - Message feed
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Message feed
+# Chat - Message feed
 
 <p class="description">Render only <code>ChatMessageList</code> — no input. Send messages programmatically via <code>useChat</code> for read-only embeds and transcript views.</p>
 
 ```tsx
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -28,10 +27,10 @@ import {
 import { useChat, useMessageIds } from '@mui/x-chat/headless';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatRoot } from '@mui/x-chat/unstyled';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
-import { createTextMessage, demoUsers } from '../shared/demoData';
+import { createChunkStream, createTextResponseChunks, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
-const CONVERSATION_ID = nanoid();
+const CONVERSATION_ID = randomId();
 
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {
@@ -40,14 +39,14 @@ const adapter: ChatAdapter = {
       .filter(Boolean)
       .join('');
     return createChunkStream(
-      createTextResponseChunks(nanoid(), `Responding to: "${text}"`),
+      createTextResponseChunks(randomId(), `Responding to: "${text}"`),
     );
   },
 };
 
 const initialMessages = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -55,7 +54,7 @@ const initialMessages = [
     text: 'This is a read-only message feed — no ChatComposer is rendered anywhere on the page.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -63,7 +62,7 @@ const initialMessages = [
     text: 'So how do new messages appear if there is no input?',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -176,7 +175,11 @@ sendMessage({
 });
 ```
 
-## Related
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [No conversation history](/x/react-chat/material/examples/no-conversation-history/) — compose a thread from individual components without `ChatBox`
 - [Split layout](/x/react-chat/material/examples/split-layout/) — message list and composer in separate DOM zones

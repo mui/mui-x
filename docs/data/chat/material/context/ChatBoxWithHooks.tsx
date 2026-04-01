@@ -4,8 +4,8 @@ import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import { ChatBox } from '@mui/x-chat';
 import { useChatStatus } from '@mui/x-chat/headless';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 

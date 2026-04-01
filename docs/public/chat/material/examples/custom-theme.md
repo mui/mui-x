@@ -5,12 +5,17 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Custom theme
+# Chat - Custom theme
 
 <p class="description">Retheme the entire chat surface by wrapping <code>ChatBox</code> in a <code>ThemeProvider</code> with custom palette and shape values.</p>
 
 `ChatBox` inherits its visual design from the active Material UI theme.
-This recipe shows how a single `createTheme` call changes bubble colors, border radius, and typography across the entire surface.
+This demo shows how a single `createTheme` call changes bubble colors, border radius, and typography across the entire surface.
+
+- `ThemeProvider` with a custom `palette.primary` (teal) applied to user message bubbles
+- Custom `shape.borderRadius` reflected in bubble and container rounding
+- Custom `typography.fontFamily` propagated to all text elements
+- No extra CSS or style overrides needed — the theme drives everything
 
 ```tsx
 'use client';
@@ -18,8 +23,8 @@ import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const tealTheme = createTheme({
   palette: {
@@ -68,13 +73,6 @@ export default function CustomTheme() {
 
 ```
 
-## What it shows
-
-- `ThemeProvider` with a custom `palette.primary` (teal) applied to user message bubbles
-- Custom `shape.borderRadius` reflected in bubble and container rounding
-- Custom `typography.fontFamily` propagated to all text elements
-- No extra CSS or style overrides needed — the theme drives everything
-
 ## How theme tokens map to chat elements
 
 | Theme token                       | Chat element                             |
@@ -94,7 +92,11 @@ export default function CustomTheme() {
 - Use `CssBaseline` inside the `ThemeProvider` if you need baseline styles applied to the chat container.
 - The `@mui/x-chat/themeAugmentation` import adds TypeScript types for `MuiChatBox` and related component overrides in `createTheme`.
 
-## Next steps
+## API
 
-- See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) to replace individual sub-components rather than styling through the theme.
-- See [Customization](/x/react-chat/material/customization/) for the full reference of style override keys.
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
+
+- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) to replace individual sub-components rather than styling through the theme
+- [Customization](/x/react-chat/material/customization/) for the full reference of style override keys

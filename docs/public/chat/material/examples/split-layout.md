@@ -1,11 +1,11 @@
 ---
-title: Split layout
+title: Chat - Split layout
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Split layout
+# Chat - Split layout
 
 <p class="description">Place <code>ChatMessageList</code> and <code>ChatComposer</code> in separate DOM zones. Only <code>ChatRoot</code> is needed to connect them.</p>
 
@@ -31,11 +31,10 @@ import {
 import { useMessageIds } from '@mui/x-chat/headless';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatRoot } from '@mui/x-chat/unstyled';
-import { nanoid } from 'nanoid';
-import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
-import { createTextMessage, demoUsers } from '../shared/demoData';
+import { createChunkStream, createTextResponseChunks, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
-const CONVERSATION_ID = nanoid();
+const CONVERSATION_ID = randomId();
 
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {
@@ -44,14 +43,14 @@ const adapter: ChatAdapter = {
       .filter(Boolean)
       .join('');
     return createChunkStream(
-      createTextResponseChunks(nanoid(), `You said: "${text}".`),
+      createTextResponseChunks(randomId(), `You said: "${text}".`),
     );
   },
 };
 
 const initialMessages = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -59,7 +58,7 @@ const initialMessages = [
     text: 'The message list (left) and the composer (right) are siblings in the DOM — neither is nested inside the other.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -67,7 +66,7 @@ const initialMessages = [
     text: 'What connects them?',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -209,7 +208,11 @@ Use split layout when `ChatBox`'s default two-pane structure doesn't fit your pr
 - Message history is displayed in one panel while the send area is in another
 - You are embedding chat into an existing layout that already manages its own structure
 
-## Related
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - [No conversation history](/x/react-chat/material/examples/no-conversation-history/) — compose a thread without `ChatBox`
 - [Message feed](/x/react-chat/material/examples/message-feed/) — display-only embed with no input

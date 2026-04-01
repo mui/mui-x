@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Multi-conversation
 
-<p class="description">A two-pane inbox layout with a conversation sidebar and an active thread pane</p>
+<p class="description">A two-pane inbox layout with a conversation sidebar and an active thread pane.</p>
 
 This demo shows how to use `ChatBox` as a full inbox surface with multiple conversations.
 The conversation sidebar is rendered automatically when more than one conversation is provided.

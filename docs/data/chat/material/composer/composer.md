@@ -8,7 +8,7 @@ components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachBu
 
 # Chat - Composer
 
-<p class="description">The text input area where users draft and send messages, with support for attachments, toolbar actions, and helper text</p>
+<p class="description">The text input area where users draft and send messages, with support for attachments, toolbar actions, and helper text.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
@@ -34,7 +34,7 @@ When using `ChatBox`, the composer is already included.
 Import these components directly only when building a custom layout.
 :::
 
-## Component tree
+## Component anatomy
 
 Inside `ChatBox`, the composer renders the following structure:
 
@@ -82,7 +82,7 @@ The send button's visual disabled state checks only text content, not attachment
 The attach button opens the browser file picker.
 Selected files are queued as draft attachments and previewed in the composer area.
 
-Set `features={{ attachButton: false }}` to hide the attach button:
+Set `features={{ attachments: false }}` to hide the attach button:
 
 {{"demo": "ComposerHiddenAttachButton.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -116,9 +116,9 @@ function ComposerInfo() {
   const composer = useChatComposer();
   return (
     <div>
-      <p>Current value: {composer.value}</p>
-      <p>Attachments: {composer.attachments.length}</p>
-      <p>Submitting: {composer.isSubmitting ? 'Yes' : 'No'}</p>
+      <p>Current value: {composer.value}.</p>
+      <p>Attachments: {composer.attachments.length}.</p>
+      <p>Submitting: {composer.isSubmitting ? 'Yes' : 'No'}.</p>
       <button onClick={() => composer.clear()}>Clear</button>
     </div>
   );

@@ -8,13 +8,13 @@ components: ChatRoot
 
 # Chat - Customization
 
-<p class="description">Override styles, replace sub-components, and pass props to any chat element using the Material UI customization system</p>
+<p class="description">Override styles, replace sub-components, and pass props to any chat element using the Material UI customization system.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
 The following demo shows a custom-themed chat surface:
 
-{{"demo": "../examples/custom-theme/CustomTheme.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../examples/custom-theme/CustomTheme.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 ## sx prop
 

@@ -5,24 +5,29 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Many messages
+# Chat - Many messages
 
 Testing scroll behavior and performance with a large number of messages.
 
-This example verifies that the ChatBox handles a large number of messages correctly, with proper scrolling, auto-scroll to bottom, and the scroll-to-bottom affordance.
+This demo verifies that the ChatBox handles a large number of messages correctly, with proper scrolling, auto-scroll to bottom, and the scroll-to-bottom affordance.
+
+- Scrollable message list with 30 messages
+- Auto-scroll to the latest message on load
+- Scroll-to-bottom affordance when scrolled up
+- Message grouping by author
+- Performance with many DOM nodes
 
 ```tsx
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../shared/demoUtils';
-import { createTextMessage, demoUsers } from '../shared/demoData';
+import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 const adapter = createEchoAdapter();
 
-const MANY_CONV_ID = nanoid();
+const MANY_CONV_ID = randomId();
 
 const conversation: ChatConversation = {
   id: MANY_CONV_ID,
@@ -44,7 +49,7 @@ function generateMessages(count: number): ChatMessage[] {
 
     messages.push(
       createTextMessage({
-        id: nanoid(),
+        id: randomId(),
         conversationId: MANY_CONV_ID,
         role: isUser ? 'user' : 'assistant',
         author: isUser ? demoUsers.you : demoUsers.agent,
@@ -80,10 +85,6 @@ export default function ManyMessages() {
 
 ```
 
-## What it shows
+## API
 
-- Scrollable message list with 30 messages
-- Auto-scroll to the latest message on load
-- Scroll-to-bottom affordance when scrolled up
-- Message grouping by author
-- Performance with many DOM nodes
+- [ChatRoot](/x/api/chat/chat-root/)

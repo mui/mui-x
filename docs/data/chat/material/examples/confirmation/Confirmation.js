@@ -7,12 +7,12 @@ import {
   createChunkStream,
   createTextResponseChunks,
   randomId,
-} from '../shared/demoUtils';
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   demoUsers,
   minimalConversation,
   createTextMessage,
-} from '../shared/demoData';
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const CONVERSATION_ID = minimalConversation.id;
 

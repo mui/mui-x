@@ -3,11 +3,72 @@ productId: x-chat
 title: Chat - Material UI customization
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
+components: ChatRoot
 ---
 
 # Chat - Customization
 
 Override styles, replace sub-components, and pass props to any chat element using the Material UI customization system.
+
+
+
+The following demo shows a custom-themed chat surface:
+
+```tsx
+'use client';
+import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ChatBox } from '@mui/x-chat';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+
+const tealTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#00796b',
+      light: '#48a999',
+      dark: '#004c40',
+      contrastText: '#ffffff',
+    },
+    secondary: {
+      main: '#ff6f00',
+    },
+  },
+  shape: {
+    borderRadius: 12,
+  },
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+  },
+});
+
+const adapter = createEchoAdapter({
+  respond: (text) =>
+    `Received: "${text}". Notice how the bubble colors, border radius, and typography all come from the custom teal theme — no extra CSS required.`,
+});
+
+export default function CustomTheme() {
+  return (
+    <ThemeProvider theme={tealTheme}>
+      <CssBaseline />
+      <ChatBox
+        adapter={adapter}
+        initialActiveConversationId={minimalConversation.id}
+        initialConversations={[minimalConversation]}
+        initialMessages={minimalMessages}
+        sx={{
+          height: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: '12px',
+        }}
+      />
+    </ThemeProvider>
+  );
+}
+
+```
 
 ## sx prop
 
@@ -146,7 +207,7 @@ This is useful for setting `aria-label` attributes, `sx` overrides, or other com
 
 Replace any sub-component entirely using the `slots` prop.
 The replacement component must accept the same props as the default.
-See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for a runnable example using a `Paper`-based bubble.
+See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for a runnable demo using a `Paper`-based bubble.
 
 A common pattern is to wrap the default component and override one of its inner slots:
 
@@ -197,7 +258,11 @@ const CustomMessageContent = React.forwardRef(
 | `unreadMarker`              | `ChatUnreadMarker`              | Unread message marker        |
 | `scrollToBottom`            | `ChatScrollToBottomAffordance`  | Scroll to bottom affordance  |
 
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
 ## See also
 
-- [Examples](/x/react-chat/material/examples/) for end-to-end customization recipes
+- [Examples](/x/react-chat/material/examples/) for end-to-end customization demos
 - [Unstyled customization](/x/react-chat/unstyled/customization/) for slot and owner-state patterns in the primitive layer

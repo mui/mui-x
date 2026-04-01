@@ -14,7 +14,7 @@ import {
   randomId,
   splitText,
   syncConversationPreview,
-} from '../shared/demoUtils';
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
 
 // ── Avatar helper ─────────────────────────────────────────────────────────────
 

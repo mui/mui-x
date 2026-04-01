@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat - Composer
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
+components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachButton, ComposerToolbar, ComposerHelperText
 ---
 
 # Chat - Composer
 
 The text input area where users draft and send messages, with support for attachments, toolbar actions, and helper text.
+
+
 
 The composer is the input region at the bottom of the chat surface.
 `ChatComposer` wraps the `@mui/x-chat/unstyled` `ComposerRoot` primitive with Material UI styling — border, padding, and theme tokens are applied automatically.
@@ -31,7 +34,7 @@ When using `ChatBox`, the composer is already included.
 Import these components directly only when building a custom layout.
 :::
 
-## Component tree
+## Component anatomy
 
 Inside `ChatBox`, the composer renders the following structure:
 
@@ -58,8 +61,8 @@ Customize the placeholder through `slotProps`:
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -100,7 +103,7 @@ The send button is automatically disabled when:
 - The composer is explicitly disabled.
 
 :::info
-The send button's visual disabled state checks only text content, not attachments. However, the underlying `submit()` function will send if either text or attachments are present.
+The send button's visual disabled state checks only text content, not attachments. However, the underlying `submit()` function sends if either text or attachments are present.
 :::
 
 ## Attach button
@@ -108,14 +111,14 @@ The send button's visual disabled state checks only text content, not attachment
 The attach button opens the browser file picker.
 Selected files are queued as draft attachments and previewed in the composer area.
 
-Set `features={{ attachButton: false }}` to hide the attach button:
+Set `features={{ attachments: false }}` to hide the attach button:
 
 ```tsx
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -126,7 +129,7 @@ export default function ComposerHiddenAttachButton() {
       initialActiveConversationId={minimalConversation.id}
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
-      features={{ attachButton: false }}
+      features={{ attachments: false }}
       sx={{
         height: 400,
         border: '1px solid',
@@ -154,7 +157,7 @@ Use it for legal disclaimers, character counts, or contextual hints.
 ## Controlled composer value
 
 The composer value can be controlled externally through `ChatProvider` (or the `ChatBox` props that forward to it).
-The example below mirrors the current composer value above the chat surface:
+The demo below mirrors the current composer value above the chat surface:
 
 ```tsx
 'use client';
@@ -162,8 +165,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -206,9 +209,9 @@ function ComposerInfo() {
   const composer = useChatComposer();
   return (
     <div>
-      <p>Current value: {composer.value}</p>
-      <p>Attachments: {composer.attachments.length}</p>
-      <p>Submitting: {composer.isSubmitting ? 'Yes' : 'No'}</p>
+      <p>Current value: {composer.value}.</p>
+      <p>Attachments: {composer.attachments.length}.</p>
+      <p>Submitting: {composer.isSubmitting ? 'Yes' : 'No'}.</p>
       <button onClick={() => composer.clear()}>Clear</button>
     </div>
   );
@@ -250,8 +253,8 @@ The owner state exposes `disabled` so custom styles can react to the state.
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -300,3 +303,12 @@ The following slots are available for customization through `ChatBox`:
 | `composerAttachButton` | `ChatComposerAttachButton` | File attach trigger           |
 | `composerToolbar`      | `ChatComposerToolbar`      | Button row below the textarea |
 | `composerHelperText`   | `ChatComposerHelperText`   | Disclaimer or hint text       |
+
+## API
+
+- [ComposerRoot](/x/api/chat/composer-root/)
+- [ComposerTextArea](/x/api/chat/composer-text-area/)
+- [ComposerSendButton](/x/api/chat/composer-send-button/)
+- [ComposerAttachButton](/x/api/chat/composer-attach-button/)
+- [ComposerToolbar](/x/api/chat/composer-toolbar/)
+- [ComposerHelperText](/x/api/chat/composer-helper-text/)

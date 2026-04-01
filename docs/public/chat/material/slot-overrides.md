@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat - Slot overrides
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
+components: ChatRoot
 ---
 
 # Chat - Slot overrides
 
 <p class="description">Replace individual sub-components inside ChatBox with your own implementations using the <code>slots</code> and <code>slotProps</code> API.</p>
+
+
 
 `ChatBox` composes many themed sub-components internally — message bubbles, the composer, the conversation list, date dividers, and more.
 The `slots` prop lets you swap any of them with your own component, while `slotProps` passes extra props to those components without replacing them.
@@ -20,12 +23,12 @@ Pass a custom component to a named slot. Your component receives the same props 
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
   demoUsers,
-} from '../examples/shared/demoData';
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -85,8 +88,8 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -196,8 +199,8 @@ For common show/hide needs, prefer the `features` prop which handles the logic c
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -210,7 +213,7 @@ export default function FeatureFlags() {
       initialMessages={minimalMessages}
       features={{
         conversationHeader: false,
-        attachButton: false,
+        attachments: false,
         helperText: false,
         suggestions: false,
       }}
@@ -243,10 +246,10 @@ The `autoScroll` feature flag controls scroll behavior rather than slot visibili
 When a feature flag is set to `false`, the corresponding slot is **not rendered at all** — even if you provide a custom component via `slots`. The feature flag takes precedence:
 
 ```tsx
-{/* The custom attach button will NOT render because the feature is disabled */}
+{/* The custom button does not render because the feature is disabled */}
 <ChatBox
   adapter={adapter}
-  features={{ attachButton: false }}
+  features={{ attachments: false }}
   slots={{ composerAttachButton: MyCustomButton }}  {/* ignored */}
 />
 ```
@@ -294,12 +297,12 @@ import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ChatBox } from '@mui/x-chat';
 import type {} from '@mui/x-chat/themeAugmentation';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
   demoUsers,
-} from '../examples/shared/demoData';
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -362,3 +365,7 @@ export default function ThemeAndSlotCombination() {
 }
 
 ```
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

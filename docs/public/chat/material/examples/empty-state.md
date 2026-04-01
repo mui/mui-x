@@ -5,26 +5,30 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Empty state
+# Chat - Empty state
 
 A ChatBox with an active conversation but no messages yet.
 
-This example shows the empty state of a ChatBox - an active conversation with zero messages, revealing how the component looks before any interaction.
+This demo shows the empty state of a ChatBox - an active conversation with zero messages, revealing how the component looks before any interaction.
+
+- Empty message list area
+- Composer is ready for input
+- Conversation header is visible
+- No visual artifacts when the message list is empty
 
 ```tsx
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../shared/demoUtils';
-import { demoUsers } from '../shared/demoData';
+import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const demoMembers = [demoUsers.you, demoUsers.agent];
 
 const adapter = createEchoAdapter();
 
 const emptyConversation = {
-  id: nanoid(),
+  id: randomId(),
   title: 'New conversation',
   subtitle: 'Start a new conversation',
   participants: [],
@@ -53,9 +57,6 @@ export default function EmptyState() {
 
 ```
 
-## What it shows
+## API
 
-- Empty message list area
-- Composer is ready for input
-- Conversation header is visible
-- No visual artifacts when the message list is empty
+- [ChatRoot](/x/api/chat/chat-root/)

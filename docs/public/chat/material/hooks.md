@@ -57,6 +57,50 @@ export default function App() {
 
 If you are building a custom layout without `ChatBox`, wrap your tree in `<ChatProvider>` and use hooks freely anywhere inside.
 
+The following demo shows hooks reading chat state from within a `ChatBox` child:
+
+```tsx
+'use client';
+import * as React from 'react';
+import Chip from '@mui/material/Chip';
+import Box from '@mui/material/Box';
+import { ChatBox } from '@mui/x-chat';
+import { useChatStatus } from '@mui/x-chat/headless';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+
+const adapter = createEchoAdapter();
+
+function StreamingBadge() {
+  const { isStreaming } = useChatStatus();
+  return isStreaming ? (
+    <Chip label="Responding..." color="info" size="small" />
+  ) : null;
+}
+
+export default function ChatBoxWithHooks() {
+  return (
+    <ChatBox
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    >
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 1 }}>
+        <StreamingBadge />
+      </Box>
+    </ChatBox>
+  );
+}
+
+```
+
 ## State hooks
 
 State hooks give you read access to the normalized chat store.
@@ -385,8 +429,11 @@ function MessageCounter() {
 ```
 
 `useChatStore()` gives you access to all selectors in `chatSelectors` and the full store mutation API.
+
+:::warning
 Use it sparingly — the dedicated hooks above are simpler, better typed, and remain stable across minor versions.
 Direct store access is considered advanced API and is more likely to require changes during upgrades.
+:::
 
 ## Choosing the right hook
 
@@ -401,10 +448,14 @@ Direct store access is considered advanced API and is more likely to require cha
 | Custom part renderer lookup                              | `useChatPartRenderer(partType)`              |
 | Custom selector or store subscription                    | `useChatStore()` + `chatSelectors`           |
 
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
 ## See also
 
 - [Adapter](/x/react-chat/material/adapter/) for the interface that the actions in these hooks call into.
 - [Customization](/x/react-chat/material/customization/) for slot and `slotProps` overrides on `ChatBox`.
 - [Selectors](/x/react-chat/headless/selectors/) for the full `chatSelectors` map used with `useChatStore()`.
 - [State and store](/x/react-chat/headless/state/) for `ChatProvider` props and the controlled/uncontrolled model.
-- [Composer example](/x/react-chat/headless/examples/composer/) for `useChatComposer()` with attachments in action.
+- [Composer demo](/x/react-chat/headless/examples/composer/) for `useChatComposer()` with attachments in action.

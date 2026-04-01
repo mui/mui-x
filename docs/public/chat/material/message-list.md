@@ -3,11 +3,14 @@ productId: x-chat
 title: Chat - Message list
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
+components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 ---
 
 # Chat - Message list
 
 Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators.
+
+
 
 The message list is the scrollable region that renders conversation history.
 `ChatMessageList` wraps the `@mui/x-chat/unstyled` `MessageListRoot` primitive with Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
@@ -23,7 +26,7 @@ When using `ChatBox`, the message list is already included as a built-in part of
 You only need to import `ChatMessageList` directly when building a custom layout.
 :::
 
-## Component tree
+## Component anatomy
 
 Inside `ChatBox`, the message list renders a subtree of themed components:
 
@@ -51,7 +54,7 @@ The auto-scroll behavior is gated by a **buffer** — if the user has scrolled m
 ### Configuration
 
 Control auto-scrolling through the `features` prop on `ChatBox`.
-The first example below uses a custom 300 px buffer threshold; the second disables auto-scroll entirely.
+The first demo below uses a custom 300 px buffer threshold; the second disables auto-scroll entirely.
 When auto-scroll is disabled, the user can still scroll to the bottom manually using the scroll-to-bottom affordance button.
 
 ```tsx
@@ -60,8 +63,8 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -137,15 +140,14 @@ Customize the date format through `slotProps`. The demo below uses a short month
 ```tsx
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from '../examples/shared/demoData';
+import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = nanoid();
+const CONV_ID = randomId();
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -159,7 +161,7 @@ const conversation: ChatConversation = {
 
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -167,7 +169,7 @@ const messages: ChatMessage[] = [
     text: 'Here is a message from two days ago.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -175,7 +177,7 @@ const messages: ChatMessage[] = [
     text: 'And this one is from yesterday.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -220,15 +222,14 @@ The demo below sets the window to 1 minute (60,000 ms) — notice how messages m
 ```tsx
 'use client';
 import * as React from 'react';
-import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from '../examples/shared/demoData';
+import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = nanoid();
+const CONV_ID = randomId();
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -244,7 +245,7 @@ const conversation: ChatConversation = {
 // 1-minute grouping window but outside a very short one.
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -252,7 +253,7 @@ const messages: ChatMessage[] = [
     text: 'First message from the user.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -260,7 +261,7 @@ const messages: ChatMessage[] = [
     text: 'Second message, sent 30 seconds later. Same group because the window is 1 minute.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -268,7 +269,7 @@ const messages: ChatMessage[] = [
     text: 'Third message, sent 2 minutes after the first. This starts a new group.',
   }),
   createTextMessage({
-    id: nanoid(),
+    id: randomId(),
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -299,6 +300,107 @@ export default function MessageGrouping() {
 
 ```
 
+## Compact variant
+
+Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layout.
+Compact mode applies the following changes to the message list:
+
+- **No bubbles** — messages render as plain text without background colors or padding.
+- **Left-aligned** — all messages are left-aligned regardless of role (no right-aligned user messages).
+- **Group header timestamps** — the timestamp moves from below each message to the group header, displayed next to the author name.
+- **Avatars preserved** — avatars remain visible for the first message in each group.
+
+When set on `ChatBox`, the variant automatically applies to the conversation list as well.
+
+```tsx
+'use client';
+import * as React from 'react';
+import { ChatBox } from '@mui/x-chat';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+
+const adapter = createEchoAdapter();
+
+const CONV_ID = randomId();
+
+const conversation: ChatConversation = {
+  id: CONV_ID,
+  title: 'Team standup',
+  subtitle: 'Daily sync',
+  participants: [demoUsers.you, demoUsers.agent],
+  readState: 'read',
+  unreadCount: 0,
+  lastMessageAt: '2026-03-15T10:05:00.000Z',
+};
+
+const messages: ChatMessage[] = [
+  createTextMessage({
+    id: randomId(),
+    conversationId: CONV_ID,
+    role: 'assistant',
+    author: demoUsers.agent,
+    createdAt: '2026-03-15T09:55:00.000Z',
+    text: 'Good morning! Here is the agenda for today.',
+  }),
+  createTextMessage({
+    id: randomId(),
+    conversationId: CONV_ID,
+    role: 'assistant',
+    author: demoUsers.agent,
+    createdAt: '2026-03-15T09:55:10.000Z',
+    text: 'We need to review the sprint progress and plan next steps.',
+  }),
+  createTextMessage({
+    id: randomId(),
+    conversationId: CONV_ID,
+    role: 'user',
+    author: demoUsers.you,
+    createdAt: '2026-03-15T10:00:00.000Z',
+    text: 'Sounds good. I finished the variant feature yesterday.',
+  }),
+  createTextMessage({
+    id: randomId(),
+    conversationId: CONV_ID,
+    role: 'user',
+    author: demoUsers.you,
+    createdAt: '2026-03-15T10:00:15.000Z',
+    text: 'The compact layout is ready for review.',
+  }),
+  createTextMessage({
+    id: randomId(),
+    conversationId: CONV_ID,
+    role: 'assistant',
+    author: demoUsers.agent,
+    createdAt: '2026-03-15T10:02:00.000Z',
+    text: 'Great work! The compact variant removes message bubbles and aligns everything to the left — perfect for dense message feeds.',
+  }),
+];
+
+export default function CompactVariant() {
+  return (
+    <ChatBox
+      variant="compact"
+      adapter={adapter}
+      initialActiveConversationId={conversation.id}
+      initialConversations={[conversation]}
+      initialMessages={messages}
+      sx={{
+        height: 460,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
+```
+
+```tsx
+<ChatBox variant="compact" adapter={adapter} />
+```
+
 ## Loading and streaming states
 
 While the assistant is generating a response, streaming tokens are rendered incrementally inside a `ChatMessageContent` bubble.
@@ -324,8 +426,8 @@ import {
   ChatConversation,
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
-import { createEchoAdapter } from '../examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../examples/shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -447,3 +549,9 @@ The following slots are available for customization through `ChatBox`:
 | `messageActions` | `ChatMessageActions` | Hover action menu         |
 | `messageGroup`   | `ChatMessageGroup`   | Same-author message group |
 | `dateDivider`    | `ChatDateDivider`    | Date separator            |
+
+## API
+
+- [MessageListRoot](/x/api/chat/message-list-root/)
+- [MessageListDateDivider](/x/api/chat/message-list-date-divider/)
+- [ScrollToBottomAffordance](/x/api/chat/scroll-to-bottom-affordance/)
