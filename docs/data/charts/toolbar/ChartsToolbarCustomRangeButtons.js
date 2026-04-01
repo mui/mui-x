@@ -17,25 +17,25 @@ function CustomToolbar() {
     <Toolbar>
       <ChartsToolbarRangeButtonTrigger
         value={{ unit: 'month' }}
-        render={<ToolbarButton size="small" />}
+        render={<ToolbarButton size="small" style={{ fontSize: '0.75rem' }} />}
       >
         1M
       </ChartsToolbarRangeButtonTrigger>
       <ChartsToolbarRangeButtonTrigger
         value={{ unit: 'month', step: 6 }}
-        render={<ToolbarButton size="small" />}
+        render={<ToolbarButton size="small" style={{ fontSize: '0.75rem' }} />}
       >
         6M
       </ChartsToolbarRangeButtonTrigger>
       <ChartsToolbarRangeButtonTrigger
         value={{ unit: 'year' }}
-        render={<ToolbarButton size="small" />}
+        render={<ToolbarButton size="small" style={{ fontSize: '0.75rem' }} />}
       >
         1Y
       </ChartsToolbarRangeButtonTrigger>
       <ChartsToolbarRangeButtonTrigger
         value={null}
-        render={<ToolbarButton size="small" />}
+        render={<ToolbarButton size="small" style={{ fontSize: '0.75rem' }} />}
       >
         All
       </ChartsToolbarRangeButtonTrigger>

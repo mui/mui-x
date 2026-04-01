@@ -92,7 +92,7 @@ function ChartsToolbarPro({
             key={`range-${rangeButton.label}`}
             value={rangeButton.value}
             axisId={rangeButtonsAxisId}
-            render={<ToolbarButton size="small" />}
+            render={<ToolbarButton size="small" style={{ fontSize: '0.75rem' }} />}
           >
             {rangeButton.label}
           </ChartsToolbarRangeButtonTrigger>,
