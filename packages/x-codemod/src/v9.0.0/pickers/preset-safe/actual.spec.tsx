@@ -60,8 +60,14 @@ const classesSx = {
 };
 
 // remove-disable-margin
+// prettier-ignore
 function DisableMarginUsage() {
-  return <PickersDay disableMargin day={new Date()} />;
+  return (
+    <PickersDay
+      disableMargin
+      day={new Date()}
+    />
+  );
 }
 
 function App() {

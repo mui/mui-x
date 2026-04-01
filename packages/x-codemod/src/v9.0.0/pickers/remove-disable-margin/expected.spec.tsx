@@ -6,6 +6,7 @@ import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 
 // Direct JSX usage — bare prop (implicit true)
+// prettier-ignore
 function DirectBare() {
   return (
     <PickerDay
@@ -41,28 +42,27 @@ function DirectFalse() {
 }
 
 // Direct JSX usage — existing sx prop (merge mx: 0 in)
+// prettier-ignore
 function DirectWithSx() {
   return (
     <PickerDay
+      day={new Date()}
       sx={{
         color: 'red',
         '--PickerDay-horizontalMargin': 0,
-      }}
-      day={new Date()}
-    />
+      }} />
   );
 }
 
 // slotProps.day — bare disableMargin in object
+// prettier-ignore
 function SlotPropsBasic() {
   return (
     <DatePicker
       slotProps={{
-        day: {
-          sx: {
-            '--PickerDay-horizontalMargin': 0,
-          },
-        },
+        day: { sx: {
+          '--PickerDay-horizontalMargin': 0,
+        } },
       }}
     />
   );
@@ -86,19 +86,24 @@ function SlotPropsWithSx() {
 
 // slotProps.day — false (just remove)
 function SlotPropsFalse() {
-  return <DateRangePicker slotProps={{ day: {} }} />;
+  return (
+    <DateRangePicker
+      slotProps={{
+        day: {},
+      }}
+    />
+  );
 }
 
 // slotProps.day — other slotProps keys unaffected
+// prettier-ignore
 function SlotPropsOtherKeys() {
   return (
     <DatePicker
       slotProps={{
-        day: {
-          sx: {
-            '--PickerDay-horizontalMargin': 0,
-          },
-        },
+        day: { sx: {
+          '--PickerDay-horizontalMargin': 0,
+        } },
         toolbar: { hidden: true },
       }}
     />
