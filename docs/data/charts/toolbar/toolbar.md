@@ -1,7 +1,7 @@
 ---
 title: Charts - Toolbar
 productId: x-charts
-components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger, ChartsToolbarPrintExportTrigger, ChartsToolbarImageExportTrigger
+components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger, ChartsToolbarRangeButtonTrigger, ChartsToolbarPrintExportTrigger, ChartsToolbarImageExportTrigger
 ---
 
 # Charts - Toolbar
@@ -19,6 +19,31 @@ For example, if the chart doesn't have zooming enabled, then the zoom buttons do
 :::
 
 {{"demo": "ChartsToolbar.js"}}
+
+## Range buttons [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+Range buttons allow users to quickly zoom to predefined time ranges from the toolbar.
+They are particularly useful for time-series charts where users need to switch between different time windows.
+
+Pass the `rangeButtons` prop to the toolbar to configure the available ranges.
+Each button zooms the chart to show a specific time period calculated from the end of the data.
+
+{{"demo": "ChartsToolbarRangeButtons.js"}}
+
+### Range button values
+
+The `value` property of each range button supports the following formats:
+
+- `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months). The `step` defaults to `1`.
+- `[startDate, endDate]` — An absolute date range.
+- `(domainMin, domainMax, zoomedMin, zoomedMax) => { start, end }` — A function that receives the full axis domain bounds and the current zoomed-in bounds (as timestamps) and returns zoom percentages (0-100).
+- `null` — Resets zoom to show all data.
+
+### Custom toolbar with range buttons
+
+You can use `ChartsToolbarRangeButtonTrigger` directly in a custom toolbar to have full control over layout and behavior.
+
+{{"demo": "ChartsToolbarCustomRangeButtons.js"}}
 
 ## Custom toolbar elements
 

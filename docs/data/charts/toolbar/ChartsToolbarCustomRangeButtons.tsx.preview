@@ -1,0 +1,7 @@
+<LineChartPro
+  xAxis={[{ scaleType: 'time', data: dates, zoom: true }]}
+  series={[{ data: values, showMark: false, label: 'Value' }]}
+  height={300}
+  showToolbar
+  slots={{ toolbar: CustomToolbar }}
+/>
