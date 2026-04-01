@@ -262,3 +262,8 @@ Use a one-pane layout when:
 
 For the canonical end-to-end shell, continue with [Composition](/x/react-chat/unstyled/composition/).
 For the inbox rail itself, continue with [Conversation list](/x/react-chat/unstyled/conversation-list/).
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+- [ChatLayout](/x/api/chat/chat-layout/)

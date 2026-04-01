@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Custom message part rendering
 
-<p class="description">Customize selected message parts while preserving the default unstyled message structure</p>
+<p class="description">Customize selected message parts while preserving the default unstyled message structure.</p>
 
 This demo focuses on the common customization case where the message row layout is correct, but one or two part types need a different presentation.
 

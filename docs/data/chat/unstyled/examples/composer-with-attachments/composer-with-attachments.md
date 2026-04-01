@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Composer with attachments
 
-<p class="description">Build the full unstyled draft surface with a textarea, hidden file input, helper text, and send action</p>
+<p class="description">Build the full unstyled draft surface with a textarea, hidden file input, helper text, and send action.</p>
 
 This demo isolates the draft area so the interaction model is easy to understand before it is embedded into a larger chat shell.
 

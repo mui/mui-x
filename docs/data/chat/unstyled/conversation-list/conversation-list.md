@@ -8,11 +8,11 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled conversation list
 
-<p class="description">Render and navigate the conversation rail with structural list primitives, built-in selection behavior, and roving focus</p>
+<p class="description">Render and navigate the conversation rail with structural list primitives, built-in selection behavior, and roving focus.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-{{"demo": "../examples/two-pane-inbox/TwoPaneInbox.js"}}
+{{"demo": "../examples/two-pane-inbox/TwoPaneInbox.js", "hideToolbar": true}}
 
 ## Primitive set
 

@@ -8,11 +8,11 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled messages
 
-<p class="description">Compose thread rows from message grouping primitives, message subparts, and default message-part renderers</p>
+<p class="description">Compose thread rows from message grouping primitives, message subparts, and default message-part renderers.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-{{"demo": "../examples/grouped-message-timeline/GroupedMessageTimeline.js"}}
+{{"demo": "../examples/grouped-message-timeline/GroupedMessageTimeline.js", "hideToolbar": true}}
 
 ## Primitive set
 

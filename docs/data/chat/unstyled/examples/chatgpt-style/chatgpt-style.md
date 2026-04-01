@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - ChatGPT-style layout
 
-<p class="description">Replicate a ChatGPT-style two-pane layout with a sidebar conversation list and a clean message area</p>
+<p class="description">Replicate a ChatGPT-style two-pane layout with a sidebar conversation list and a clean message area.</p>
 
 This demo shows how the same unstyled primitives can be customized to produce a full-page chat application layout similar to ChatGPT — dark theme, sidebar with conversation history, no message bubbles, and a centered composer.
 

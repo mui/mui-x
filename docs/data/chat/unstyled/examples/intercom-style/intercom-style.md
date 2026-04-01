@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Intercom-style widget
 
-<p class="description">Replicate the look and feel of an Intercom-style chat widget using unstyled slot customization</p>
+<p class="description">Replicate the look and feel of an Intercom-style chat widget using unstyled slot customization.</p>
 
 This demo shows how slot replacement can transform the default chat layout into a compact support-widget appearance — rounded corners, branded header, bubble-style messages, and a "Powered by" footer.
 

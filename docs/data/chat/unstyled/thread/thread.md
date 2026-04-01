@@ -8,11 +8,11 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled thread
 
-<p class="description">Build the active conversation surface from thread primitives that derive their state from the selected conversation</p>
+<p class="description">Build the active conversation surface from thread primitives that derive their state from the selected conversation.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-{{"demo": "../examples/two-pane-inbox/TwoPaneInbox.js"}}
+{{"demo": "../examples/two-pane-inbox/TwoPaneInbox.js", "hideToolbar": true}}
 
 ```tsx
 import {

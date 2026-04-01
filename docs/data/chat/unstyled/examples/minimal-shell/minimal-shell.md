@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Minimal unstyled shell
 
-<p class="description">Start with the smallest complete chat surface built from unstyled primitives</p>
+<p class="description">Start with the smallest complete chat surface built from unstyled primitives.</p>
 
 This is the entry-point demo for `@mui/x-chat/unstyled`.
 It shows the smallest surface that still feels like a real chat UI: a root, a pane layout, a conversation list, a thread container, a message log, and a composer.

@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled
 
-<p class="description">Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design</p>
+<p class="description">Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.</p>
 
 `@mui/x-chat/unstyled` builds on the headless runtime.
 It combines `@mui/x-chat/headless` state with structural components such as lists, threads, messages, composers, and indicators.

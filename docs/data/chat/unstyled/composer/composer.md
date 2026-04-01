@@ -8,11 +8,11 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled composer
 
-<p class="description">Assemble the draft surface from structural primitives that already handle submission, IME-safe Enter, attachments, helper text, and disabled states</p>
+<p class="description">Assemble the draft surface from structural primitives that already handle submission, IME-safe Enter, attachments, helper text, and disabled states.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-{{"demo": "../examples/composer-with-attachments/ComposerWithAttachments.js"}}
+{{"demo": "../examples/composer-with-attachments/ComposerWithAttachments.js", "hideToolbar": true}}
 
 ## Primitive set
 

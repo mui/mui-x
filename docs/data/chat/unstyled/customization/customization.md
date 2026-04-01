@@ -7,9 +7,9 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled customization
 
-<p class="description">Customize the unstyled primitives through slots, <code>slotProps</code>, and owner state while keeping the built-in structure and behavior</p>
+<p class="description">Customize the unstyled primitives through slots, <code>slotProps</code>, and owner state while keeping the built-in structure and behavior.</p>
 
-{{"demo": "../examples/slot-customization/SlotCustomization.js"}}
+{{"demo": "../examples/slot-customization/SlotCustomization.js", "hideToolbar": true}}
 
 ## Customization model
 

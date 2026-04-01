@@ -5,13 +5,20 @@ packageName: '@mui/x-chat/unstyled'
 githubLabel: 'scope: chat'
 ---
 
-# Composer with attachments
+# Chat - Composer with attachments
 
 Build the full unstyled draft surface with a textarea, hidden file input, helper text, and send action.
 
-This recipe isolates the draft area so the interaction model is easy to understand before it is embedded into a larger chat shell.
+This demo isolates the draft area so the interaction model is easy to understand before it is embedded into a larger chat shell.
 
 That is useful because chat composers often look simple but hide a lot of behavior: autosizing, disabled states, IME-safe submit, attachment selection, and helper text.
+
+- `Composer.Root`
+- `Composer.TextArea`
+- `Composer.AttachButton`
+- `Composer.HelperText`
+- `Composer.SendButton`
+- attachment flows and IME-safe input behavior
 
 ```tsx
 import * as React from 'react';
@@ -302,15 +309,6 @@ export default function ComposerWithAttachments() {
 
 ```
 
-## What it shows
-
-- `Composer.Root`
-- `Composer.TextArea`
-- `Composer.AttachButton`
-- `Composer.HelperText`
-- `Composer.SendButton`
-- attachment flows and IME-safe input behavior
-
 ## Key primitives
 
 - `Composer.Root` for form submission and shared composer context
@@ -327,11 +325,11 @@ export default function ComposerWithAttachments() {
 
 ## When to use this pattern
 
-Use this recipe when:
+Use this pattern when:
 
 - a product surface needs upload support
 - the send action depends on runtime state
-- the team needs a clear example of the unstyled composer contract
+- the team needs a clear demo of the unstyled composer contract
 
 This applies to support chat with screenshots, copilots that accept reference files, and internal tools where users need to attach evidence or export artifacts alongside text.
 
@@ -341,7 +339,11 @@ This applies to support chat with screenshots, copilots that accept reference fi
 - `Composer.HelperText` is the natural place for both authored guidance and runtime error fallback.
 - `Composer.TextArea` already handles the IME and Enter behavior that teams often reimplement by hand.
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - Continue with [Composer](/x/react-chat/unstyled/composer/) for the reference-level API and behaviors.
 - Continue with [Slot customization](/x/react-chat/unstyled/examples/slot-customization/) when the default composer structure is correct but the markup needs to match a custom design system.

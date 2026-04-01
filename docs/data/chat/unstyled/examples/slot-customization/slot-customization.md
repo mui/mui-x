@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Slot customization
 
-<p class="description">Replace root, row, and leaf slots across the unstyled primitives to adapt them to a custom design system</p>
+<p class="description">Replace root, row, and leaf slots across the unstyled primitives to adapt them to a custom design system.</p>
 
 This is the advanced demo for teams that want to keep the unstyled behavior model while reshaping the markup to match a product-specific design system.
 

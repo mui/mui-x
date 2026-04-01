@@ -5,14 +5,21 @@ packageName: '@mui/x-chat/unstyled'
 githubLabel: 'scope: chat'
 ---
 
-# Minimal unstyled shell
+# Chat - Minimal unstyled shell
 
 Start with the smallest complete chat surface built from unstyled primitives.
 
-This is the entry-point recipe for `@mui/x-chat/unstyled`.
+This is the entry-point demo for `@mui/x-chat/unstyled`.
 It shows the smallest surface that still feels like a real chat UI: a root, a pane layout, a conversation list, a thread container, a message log, and a composer.
 
 It is intentionally simple so the structural responsibilities are easy to see before any advanced customization is introduced.
+
+- `Chat.Root`
+- `Chat.Layout`
+- `ConversationList.Root`
+- `Conversation.Root`
+- `MessageList.Root`
+- `Composer.Root`
 
 ```tsx
 import * as React from 'react';
@@ -156,18 +163,9 @@ export default function MinimalUnstyledShell() {
 
 ```
 
-## What it shows
-
-- `Chat.Root`
-- `Chat.Layout`
-- `ConversationList.Root`
-- `Conversation.Root`
-- `MessageList.Root`
-- `Composer.Root`
-
 ## Why start here
 
-Use this recipe to understand:
+Use this demo to understand:
 
 - which primitives are structural containers
 - which parts are optional enhancements versus baseline building blocks
@@ -195,7 +193,7 @@ This pattern is a good fit for:
 
 ## Implementation notes
 
-- Keep this recipe visually simple so the structural roles are obvious.
+- Keep this demo visually simple so the structural roles are obvious.
 - Use namespaced imports to teach the component family model.
 - Avoid advanced slot replacement here. The point is to teach the default composition stack first.
 - Prefer a small but realistic data set so the shell feels genuine without distracting from the primitive boundaries.
@@ -204,9 +202,13 @@ This pattern is a good fit for:
 
 - `Chat.Root` is where headless runtime props enter the unstyled tree.
 - `Chat.Layout` is already enough to produce a recognizable application shell.
-- Most richer recipes keep the same baseline structure and only add behavior or customization on top.
+- Most richer demos keep the same baseline structure and only add behavior or customization on top.
 
-## Next steps
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+
+## See also
 
 - Continue with [Two-pane inbox](/x/react-chat/unstyled/examples/two-pane-inbox/) for the standard application layout.
 - Continue with [Composition](/x/react-chat/unstyled/composition/) for the conceptual explanation of the same shell.

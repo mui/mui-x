@@ -5,11 +5,18 @@ packageName: '@mui/x-chat/unstyled'
 githubLabel: 'scope: chat'
 ---
 
-# ChatGPT-style layout
+# Chat - ChatGPT-style layout
 
 Replicate a ChatGPT-style two-pane layout with a sidebar conversation list and a clean message area.
 
-This example demonstrates how the same unstyled primitives can be customized to produce a full-page chat application layout similar to ChatGPT — dark theme, sidebar with conversation history, no message bubbles, and a centered composer.
+This demo shows how the same unstyled primitives can be customized to produce a full-page chat application layout similar to ChatGPT — dark theme, sidebar with conversation history, no message bubbles, and a centered composer.
+
+- Two-pane layout with a fixed-width dark sidebar and a main thread area
+- Conversation list with title only, unread blue dot indicator, and a 3-dot menu on hover
+- User messages in rounded bubbles aligned to the right, assistant messages as flat text on the left
+- Assistant avatar (sparkle icon), no avatar for user messages
+- No sender names or timestamps — clean, minimal message display
+- Centered content column with a maximum width and a pill-shaped composer
 
 ```tsx
 import * as React from 'react';
@@ -1286,15 +1293,6 @@ export default function ChatGptStyleChat() {
 
 ```
 
-## What it shows
-
-- Two-pane layout with a fixed-width dark sidebar and a main thread area
-- Conversation list with title only, unread blue dot indicator, and a 3-dot menu on hover
-- User messages in rounded bubbles aligned to the right, assistant messages as flat text on the left
-- Assistant avatar (sparkle icon), no avatar for user messages
-- No sender names or timestamps — clean, minimal message display
-- Centered content column with a maximum width and a pill-shaped composer
-
 ## Key techniques
 
 - Hidden slots (preview, timestamp, unread badge) via `display: 'none'`
@@ -1303,3 +1301,7 @@ export default function ChatGptStyleChat() {
 - `flexDirection: 'row-reverse'` on user message roots for right-aligned bubbles
 - Hover-based 3-dot menu using React state and a fixed-position dropdown
 - The composer uses `borderRadius: 24` for the pill-shaped input area
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled examples
 
-<p class="description">Demo-first patterns for building chat interfaces with <code>@mui/x-chat/unstyled</code> structural primitives</p>
+<p class="description">Demo-first patterns for building chat interfaces with <code>@mui/x-chat/unstyled</code> structural primitives.</p>
 
 These demos focus on end-to-end composition patterns rather than isolated component references.
 Each demo stays inside the unstyled layer: the runtime comes from `@mui/x-chat/headless`, but the learning surface is the structural component model exposed by `@mui/x-chat/unstyled`.

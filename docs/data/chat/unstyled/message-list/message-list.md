@@ -8,7 +8,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled message list
 
-<p class="description">Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking</p>
+<p class="description">Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 

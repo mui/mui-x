@@ -298,3 +298,8 @@ When a thread needs unread markers, date dividers, indicators, or custom message
 For runtime behavior, continue with [Headless](/x/react-chat/headless/).
 For styling and theming patterns, continue with [Customization](/x/react-chat/unstyled/customization/).
 For concrete patterns, continue with [Examples](/x/react-chat/unstyled/examples/).
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+- [ChatLayout](/x/api/chat/chat-layout/)

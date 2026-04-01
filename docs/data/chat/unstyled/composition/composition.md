@@ -8,11 +8,11 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled composition
 
-<p class="description">Compose a complete chat UI from the unstyled namespaces while keeping styling decisions in your own code</p>
+<p class="description">Compose a complete chat UI from the unstyled namespaces while keeping styling decisions in your own code.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-{{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js"}}
+{{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js", "hideToolbar": true}}
 
 The canonical unstyled shell combines a provider-backed root, a pane layout, a conversation rail, a thread view, a message list, and a composer.
 

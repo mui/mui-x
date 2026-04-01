@@ -8,11 +8,11 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled indicators
 
-<p class="description">Use shared structural affordances for typing, unread boundaries, and scroll-to-bottom behavior</p>
+<p class="description">Use shared structural affordances for typing, unread boundaries, and scroll-to-bottom behavior.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-{{"demo": "../examples/indicators-in-context/IndicatorsInContext.js"}}
+{{"demo": "../examples/indicators-in-context/IndicatorsInContext.js", "hideToolbar": true}}
 
 ## Primitive set
 

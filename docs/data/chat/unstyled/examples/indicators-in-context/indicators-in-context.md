@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Indicators in context
 
-<p class="description">Place typing, unread, and scroll indicators into a real thread layout instead of documenting them in isolation</p>
+<p class="description">Place typing, unread, and scroll indicators into a real thread layout instead of documenting them in isolation.</p>
 
 This demo shows that indicators are structural affordances, not floating utilities.
 Their value is clearest when they are rendered exactly where the thread layout expects them.

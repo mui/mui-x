@@ -7,9 +7,9 @@ githubLabel: 'scope: chat'
 
 # Chat - Unstyled layout
 
-<p class="description">Use <code>Chat.Root</code> and <code>Chat.Layout</code> to define the main chat shell and split the interface into conversation and thread panes</p>
+<p class="description">Use <code>Chat.Root</code> and <code>Chat.Layout</code> to define the main chat shell and split the interface into conversation and thread panes.</p>
 
-{{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js"}}
+{{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js", "hideToolbar": true}}
 
 ## `Chat.Root`
 

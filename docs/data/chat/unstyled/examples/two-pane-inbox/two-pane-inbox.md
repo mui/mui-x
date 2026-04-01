@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Two-pane inbox
 
-<p class="description">Build the default desktop chat application layout with a conversation rail and active thread pane</p>
+<p class="description">Build the default desktop chat application layout with a conversation rail and active thread pane.</p>
 
 This demo takes the minimal shell and turns it into the most common product layout: a persistent conversation rail on the left and an active thread on the right.
 
