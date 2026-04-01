@@ -13,17 +13,18 @@ catalog:
   '@babel/preset-typescript': ^7.28.5
   '@babel/runtime': ^7.28.6
   '@babel/traverse': ^7.29.0
+  '@base-ui/utils': ^0.2.6
   '@date-fns/tz': ^1.2.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
-  '@mui/icons-material': ^7.3.7
-  '@mui/internal-test-utils': 2.0.18-canary.17
-  '@mui/material': ^7.3.7
-  '@mui/stylis-plugin-rtl': '9.0.0-alpha.3'
-  '@mui/system': ^7.3.7
-  '@mui/utils': ^7.3.7
-  '@mui/x-internal-exceljs-fork': 4.4.4
+  '@mui/icons-material': ^7.3.9
+  '@mui/internal-test-utils': 2.0.18-canary.18
+  '@mui/material': ^7.3.9
+  '@mui/stylis-plugin-rtl': '9.0.0-alpha.4'
+  '@mui/system': ^7.3.9
+  '@mui/utils': ^7.3.9
+  '@mui/x-internal-exceljs-fork': 4.4.5
   '@playwright/test': ^1.58.2
   'playwright': ^1.58.2
   '@react-spring/web': ^10.0.3
@@ -53,7 +54,7 @@ catalog:
   es-toolkit: ^1.45.1
   date-fns: ^4.1.0
   date-fns-jalali: ^4.1.0-0
-  dayjs: ^1.11.18
+  dayjs: ^1.11.20
   jscodeshift: 17.3.0
   luxon: ^3.7.2
   moment: ^2.30.1

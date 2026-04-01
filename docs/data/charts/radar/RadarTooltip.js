@@ -11,14 +11,14 @@ export default function RadarTooltip() {
       flexWrap="wrap"
       justifyContent="space-around"
     >
-      <Box sx={{ maxWidth: 300 }}>
+      <Box sx={{ maxWidth: 300, flexGrow: 1 }}>
         <Typography sx={{ textAlign: 'center' }}>Axis</Typography>
         <RadarChart
           {...radarChartsParams}
           slotProps={{ tooltip: { trigger: 'axis' } }}
         />
       </Box>
-      <Box sx={{ maxWidth: 300 }}>
+      <Box sx={{ maxWidth: 300, flexGrow: 1 }}>
         <Typography sx={{ textAlign: 'center' }}>Item</Typography>
         <RadarChart
           {...radarChartsParams}

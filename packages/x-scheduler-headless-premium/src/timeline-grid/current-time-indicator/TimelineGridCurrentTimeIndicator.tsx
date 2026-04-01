@@ -21,6 +21,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
       // Rendering props
       className,
       render,
+      style,
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;
@@ -43,22 +44,19 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
       collectionEnd: viewConfig.end,
     });
 
-    const style = React.useMemo(
-      () =>
-        ({
-          [TimelineGridCurrentTimeIndicatorCssVars.xPosition]: position,
-        }) as React.CSSProperties,
-      [position],
-    );
-
-    const props = { style };
-
     const isOutOfRange =
       adapter.isBefore(now, viewConfig.start) || adapter.isAfter(now, viewConfig.end);
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],
-      props: [props, elementProps],
+      props: [
+        elementProps,
+        {
+          style: {
+            [TimelineGridCurrentTimeIndicatorCssVars.xPosition]: position,
+          } as React.CSSProperties,
+        },
+      ],
       enabled: !isOutOfRange,
     });
   },
