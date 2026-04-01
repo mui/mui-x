@@ -24,21 +24,23 @@ function isDisableMarginEnabled(attr: any): boolean {
   return true;
 }
 
+const cssVarKey = '--PickerDay-horizontalMargin';
+
 /**
- * Merges `mx: 0` into an existing ObjectExpression used as an `sx` value.
+ * Merges `'--PickerDay-horizontalMargin': 0` into an existing ObjectExpression used as an `sx` value.
  * Only merges when the expression is a plain object literal.
  * Returns true if the merge succeeded.
  */
-function mergeMxIntoSxObject(j: any, sxExpr: any): boolean {
+function mergeCssVarIntoSxObject(j: any, sxExpr: any): boolean {
   if (sxExpr.type !== 'ObjectExpression') {
     return false;
   }
-  // Avoid adding mx: 0 if it's already there
-  const alreadyHasMx = sxExpr.properties.some(
-    (p: any) => p.type === 'ObjectProperty' && (p.key?.name === 'mx' || p.key?.value === 'mx'),
+  // Avoid adding the CSS variable if it's already there
+  const alreadyHasVar = sxExpr.properties.some(
+    (p: any) => p.type === 'ObjectProperty' && p.key?.value === cssVarKey,
   );
-  if (!alreadyHasMx) {
-    sxExpr.properties.push(j.objectProperty(j.identifier('mx'), j.numericLiteral(0)));
+  if (!alreadyHasVar) {
+    sxExpr.properties.push(j.objectProperty(j.stringLiteral(cssVarKey), j.numericLiteral(0)));
   }
   return true;
 }
@@ -81,14 +83,16 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
             j.jsxAttribute(
               j.jsxIdentifier('sx'),
               j.jsxExpressionContainer(
-                j.objectExpression([j.objectProperty(j.identifier('mx'), j.numericLiteral(0))]),
+                j.objectExpression([
+                  j.objectProperty(j.stringLiteral(cssVarKey), j.numericLiteral(0)),
+                ]),
               ),
             ),
           );
         } else {
           const sxAttr = attrs[sxIndex];
           if (sxAttr.value?.type === 'JSXExpressionContainer') {
-            mergeMxIntoSxObject(j, sxAttr.value.expression);
+            mergeCssVarIntoSxObject(j, sxAttr.value.expression);
           }
         }
       }
@@ -140,11 +144,13 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
           dayObj.properties.push(
             j.objectProperty(
               j.identifier('sx'),
-              j.objectExpression([j.objectProperty(j.identifier('mx'), j.numericLiteral(0))]),
+              j.objectExpression([
+                j.objectProperty(j.stringLiteral(cssVarKey), j.numericLiteral(0)),
+              ]),
             ),
           );
         } else {
-          mergeMxIntoSxObject(j, dayObj.properties[sxIndex].value);
+          mergeCssVarIntoSxObject(j, dayObj.properties[sxIndex].value);
         }
       }
     });
@@ -157,7 +163,7 @@ export const testConfig = () => ({
   name: 'remove-disable-margin',
   specFiles: [
     {
-      name: 'remove disableMargin prop and replace with sx={{ mx: 0 }}',
+      name: "remove disableMargin prop and replace with sx={{ '--PickerDay-horizontalMargin': 0 }}",
       actual: readFile(path.join(import.meta.dirname, 'actual.spec.tsx')),
       expected: readFile(path.join(import.meta.dirname, 'expected.spec.tsx')),
     },

@@ -65,7 +65,7 @@ function DisableMarginUsage() {
     <PickerDay
       day={new Date()}
       sx={{
-        mx: 0,
+        '--PickerDay-horizontalMargin': 0,
       }}
     />
   );

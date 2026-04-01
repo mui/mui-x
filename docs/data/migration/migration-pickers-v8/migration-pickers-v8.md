@@ -132,12 +132,12 @@ The `disableMargin` prop has been removed from `PickerDay` and `DateRangePickerD
 In v8, `DateRangePickerDay` internally hardcoded `disableMargin={true}` on the `PickersDay` component.
 
 In v9, by default, both components will now have horizontal margins.
-If you want to remove the margins, you can use the `sx` prop:
+If you want to remove the margins, you can use the `--PickerDay-horizontalMargin` CSS variable:
 
 ```tsx
 <DatePicker
   slotProps={{
-    day: { sx: { mx: 0 } },
+    day: { sx: { '--PickerDay-horizontalMargin': 0 } },
   }}
 />
 ```
