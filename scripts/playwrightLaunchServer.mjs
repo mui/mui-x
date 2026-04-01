@@ -14,6 +14,8 @@ import { chromium } from '@playwright/test';
     wsPath: process.env.WS_PATH || 'mui-browser',
     // Some grid layout tests require scrollbars to be visible
     ignoreDefaultArgs: ['--hide-scrollbars'],
+    // Force grayscale text anti-aliasing for consistent visual snapshots.
+    args: ['--disable-lcd-text'],
   });
 
   // browserServer.process().stderr.pipe(process.stderr);
