@@ -23,6 +23,7 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     start,
     end,
@@ -45,18 +46,6 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
       collectionEnd: viewConfig.end,
     });
 
-  // Rendering hooks
-  const style = React.useMemo(
-    () =>
-      ({
-        [TimelineGridEventPlaceholderCssVars.xPosition]: `${position * 100}%`,
-        [TimelineGridEventPlaceholderCssVars.width]: `${duration * 100}%`,
-      }) as React.CSSProperties,
-    [position, duration],
-  );
-
-  const props = React.useMemo(() => ({ style }), [style]);
-
   const { state: eventState } = useEvent({ start, end });
 
   const state = { ...eventState, startingBeforeEdge, endingAfterEdge };
@@ -64,7 +53,15 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
-    props: [props, elementProps],
+    props: [
+      elementProps,
+      {
+        style: {
+          [TimelineGridEventPlaceholderCssVars.xPosition]: `${position * 100}%`,
+          [TimelineGridEventPlaceholderCssVars.width]: `${duration * 100}%`,
+        } as React.CSSProperties,
+      },
+    ],
     stateAttributesMapping: overflowStateAttributesMapping,
   });
 });
