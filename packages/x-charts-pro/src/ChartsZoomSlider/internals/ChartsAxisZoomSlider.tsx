@@ -10,7 +10,7 @@ import {
   ZOOM_SLIDER_PREVIEW_SIZE,
   type ZoomSliderShowTooltip,
 } from '@mui/x-charts/internals';
-import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { useChartsLayerContainerRef, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { ChartsAxisZoomSliderPreview } from './ChartsAxisZoomSliderPreview';
 import {
   ZOOM_SLIDER_ACTIVE_TRACK_SIZE,
@@ -44,7 +44,61 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
   const [showTooltip, setShowTooltip] = React.useState(false);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
-  const showPreview = zoomOptions.slider.preview;
+  const previewOption = zoomOptions.slider.preview;
+  const showPreview = !!previewOption;
+  const previewSeriesIds = typeof previewOption === 'object' ? previewOption.seriesIds : undefined;
+
+  const sliderRef = React.useRef<SVGGElement>(null);
+  const layerContainerRef = useChartsLayerContainerRef();
+  const isDraggingRef = React.useRef(false);
+
+  // Prevent scrolling on touch devices when interacting with the zoom slider.
+  // Listeners are attached to the parent `<svg>` element because calling
+  // `preventDefault` on SVG child elements does not reliably block scrolling —
+  // the browser's compositor decides based on the `<svg>` HTML element.
+  React.useEffect(() => {
+    const slider = sliderRef.current;
+    const layerContainer = layerContainerRef.current;
+    if (!slider || !layerContainer) {
+      return undefined;
+    }
+
+    function preventTouchDefault(event: TouchEvent) {
+      if (slider && slider.contains(event.target as Node)) {
+        event.preventDefault();
+      }
+    }
+
+    layerContainer.addEventListener('touchstart', preventTouchDefault, { passive: false });
+    layerContainer.addEventListener('touchmove', preventTouchDefault, { passive: false });
+
+    return () => {
+      layerContainer.removeEventListener('touchstart', preventTouchDefault);
+      layerContainer.removeEventListener('touchmove', preventTouchDefault);
+    };
+  }, [layerContainerRef]);
+
+  const tooltipOn = React.useCallback(() => {
+    setShowTooltip(true);
+  }, []);
+
+  const tooltipOff = React.useCallback(() => {
+    // Don't hide tooltip while dragging — pointerleave fires when the pointer
+    // moves away from the element during drag, but we want to keep the tooltip visible.
+    if (!isDraggingRef.current) {
+      setShowTooltip(false);
+    }
+  }, []);
+
+  const interactionStart = React.useCallback(() => {
+    isDraggingRef.current = true;
+    setShowTooltip(true);
+  }, []);
+
+  const interactionEnd = React.useCallback(() => {
+    isDraggingRef.current = false;
+    setShowTooltip(false);
+  }, []);
 
   if (!zoomData) {
     return null;
@@ -100,6 +154,7 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
       axisId={axisId}
       axisDirection={axisDirection}
       reverse={reverse}
+      seriesIds={previewSeriesIds}
       x={0}
       y={0}
       height={axisDirection === 'x' ? ZOOM_SLIDER_PREVIEW_SIZE : drawingArea.height}
@@ -116,13 +171,13 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
       axisId={axisId}
       axisDirection={axisDirection}
       reverse={reverse}
-      onSelectStart={tooltipConditions === 'hover' ? () => setShowTooltip(true) : undefined}
-      onSelectEnd={tooltipConditions === 'hover' ? () => setShowTooltip(false) : undefined}
+      onSelectStart={tooltipConditions === 'hover' ? interactionStart : undefined}
+      onSelectEnd={tooltipConditions === 'hover' ? interactionEnd : undefined}
     />
   );
 
   return (
-    <g data-charts-zoom-slider transform={`translate(${x} ${y})`} style={{ touchAction: 'none' }}>
+    <g ref={sliderRef} data-charts-zoom-slider transform={`translate(${x} ${y})`}>
       {track}
       <ChartsAxisZoomSliderActiveTrack
         zoomData={zoomData}
@@ -135,8 +190,10 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
         }
         size={showPreview ? ZOOM_SLIDER_PREVIEW_SIZE : ZOOM_SLIDER_ACTIVE_TRACK_SIZE}
         preview={showPreview}
-        onPointerEnter={tooltipConditions === 'hover' ? () => setShowTooltip(true) : undefined}
-        onPointerLeave={tooltipConditions === 'hover' ? () => setShowTooltip(false) : undefined}
+        onPointerEnter={tooltipConditions === 'hover' ? tooltipOn : undefined}
+        onPointerLeave={tooltipConditions === 'hover' ? tooltipOff : undefined}
+        onInteractionStart={tooltipConditions === 'hover' ? interactionStart : undefined}
+        onInteractionEnd={tooltipConditions === 'hover' ? interactionEnd : undefined}
       />
     </g>
   );

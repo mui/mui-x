@@ -1,0 +1,15 @@
+<LineChartPro
+  {...chartConfig}
+  xAxis={[
+    {
+      dataKey: 'year',
+      valueFormatter: (v: number) => `${v}`,
+      zoom: {
+        slider: {
+          enabled: true,
+          preview: { seriesIds: ['average'] },
+        },
+      },
+    },
+  ]}
+/>
