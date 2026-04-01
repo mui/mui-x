@@ -13,7 +13,10 @@ import { useChartsLocalization } from '@mui/x-charts/hooks';
 import useId from '@mui/utils/useId';
 import { ChartsToolbarDivider } from './internals/ChartsToolbarDivider';
 import { ChartsMenu } from './internals/ChartsMenu';
-import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
+import {
+  selectorChartZoomIsEnabled,
+  selectorChartActiveRangeButtonKey,
+} from '../internals/plugins/useChartProZoom';
 import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
 import { ChartsToolbarRangeButtonTrigger } from './ChartsToolbarRangeButtonTrigger';
@@ -79,6 +82,7 @@ function ChartsToolbarPro({
   const exportMenuId = useId();
   const exportMenuTriggerId = useId();
   const isZoomEnabled = store.use(selectorChartZoomIsEnabled);
+  const activeRangeButtonKey = store.use(selectorChartActiveRangeButtonKey);
   const imageExportOptionList = rawImageExportOptions ?? DEFAULT_IMAGE_EXPORT_OPTIONS;
   const showExportMenu = !printOptions?.disableToolbarButton || imageExportOptionList.length > 0;
 
@@ -86,17 +90,27 @@ function ChartsToolbarPro({
 
   if (isZoomEnabled) {
     if (rangeButtons && rangeButtons.length > 0) {
-      rangeButtons.forEach((rangeButton) => {
-        children.push(
-          <ChartsToolbarRangeButtonTrigger
-            key={`range-${rangeButton.label}`}
-            value={rangeButton.value}
-            axisId={rangeButtonsAxisId}
-          >
-            {rangeButton.label}
-          </ChartsToolbarRangeButtonTrigger>,
-        );
-      });
+      const ToggleButtonGroup = slots.baseToggleButtonGroup;
+
+      children.push(
+        <ToggleButtonGroup
+          key="range-buttons"
+          value={activeRangeButtonKey}
+          exclusive
+          size="small"
+          style={{ alignSelf: 'stretch' }}
+        >
+          {rangeButtons.map((rangeButton) => (
+            <ChartsToolbarRangeButtonTrigger
+              key={rangeButton.label}
+              value={rangeButton.value}
+              axisId={rangeButtonsAxisId}
+            >
+              {rangeButton.label}
+            </ChartsToolbarRangeButtonTrigger>
+          ))}
+        </ToggleButtonGroup>,
+      );
       children.push(<ChartsToolbarDivider key="range-divider" />);
     }
 

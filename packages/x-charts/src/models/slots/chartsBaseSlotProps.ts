@@ -27,3 +27,21 @@ export type ChartBaseIconButtonProps = ChartBaseCommonProps & {
   tabIndex?: number;
   size?: 'small' | 'medium' | 'large';
 };
+
+export type ChartBaseToggleButtonProps = ChartBaseCommonProps & {
+  ref?: React.Ref<HTMLButtonElement>;
+  id?: string;
+  disabled?: boolean;
+  tabIndex?: number;
+  size?: 'small' | 'medium' | 'large';
+  selected?: boolean;
+  value: unknown;
+};
+
+export type ChartBaseToggleButtonGroupProps = ChartBaseCommonProps<HTMLDivElement> & {
+  ref?: React.Ref<HTMLDivElement>;
+  value?: unknown;
+  exclusive?: boolean;
+  size?: 'small' | 'medium' | 'large';
+  onChange?: (event: React.MouseEvent<HTMLElement>, value: unknown) => void;
+};
