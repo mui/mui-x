@@ -124,10 +124,7 @@ export function FormContent(props: FormContentProps) {
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
-  const titleInputRef = React.useRef<HTMLInputElement>(null);
-  React.useEffect(() => {
-    titleInputRef.current?.focus();
-  }, []);
+  const titleInputRef = React.useCallback((input: HTMLInputElement | null) => input?.focus(), []);
 
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
