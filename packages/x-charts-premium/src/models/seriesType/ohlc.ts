@@ -90,6 +90,7 @@ export interface DefaultizedOHLCSeriesType extends DefaultizedProps<
   OHLCSeriesType,
   CommonDefaultizedProps | 'color'
 > {
+  hidden: boolean;
   /**
    * The color of the candle body when the close price is greater than or equal to the open price.
    */
