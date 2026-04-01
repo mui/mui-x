@@ -26,6 +26,16 @@ export interface OHLCSeriesType
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
+   * The keys used to retrieve data from the dataset.
+   * When provided, all of `open`, `high`, `low`, and `close` must be specified.
+   */
+  datasetKeys?: {
+    open: string;
+    high: string;
+    low: string;
+    close: string;
+  };
+  /**
    * The color of the candle body when the close price is greater than or equal to the open price.
    * @default (mode) =>  mode === 'dark' ? '#66bb6a' : '#2e7d32'
    */
