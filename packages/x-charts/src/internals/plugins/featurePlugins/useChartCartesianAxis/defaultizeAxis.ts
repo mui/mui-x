@@ -77,7 +77,9 @@ export function defaultizeXAxis(
     // If `dataKey` is provided
     return {
       ...sharedConfig,
-      data: dataset.map((d) => d[dataKey]),
+      data: dataset.map((d) =>
+        axisConfig.valueGetter ? axisConfig.valueGetter(d[dataKey], d) : d[dataKey],
+      ),
     };
   });
 
@@ -146,7 +148,9 @@ export function defaultizeYAxis(
     // If `dataKey` is provided
     return {
       ...sharedConfig,
-      data: dataset.map((d) => d[dataKey]),
+      data: dataset.map((d) =>
+        axisConfig.valueGetter ? axisConfig.valueGetter(d[dataKey], d) : d[dataKey],
+      ),
     };
   });
 

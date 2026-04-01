@@ -104,6 +104,9 @@ Bar plots only support numeric and null values.`,
       const dataKey = series[id].dataKey;
       const data = dataKey
         ? dataset!.map((d) => {
+            if (series[id].valueGetter) {
+              return series[id].valueGetter!(d[dataKey], d);
+            }
             const value = d[dataKey];
             return typeof value === 'number' ? value : null;
           })

@@ -65,7 +65,9 @@ function getZAxisState(
       addDefaultId(
         {
           ...axisConfig,
-          data: dataset.map((d) => d[dataKey]),
+          data: dataset.map((d) =>
+            axisConfig.valueGetter ? axisConfig.valueGetter(d[dataKey], d) : d[dataKey],
+          ),
         },
         defaultizedId,
       ),

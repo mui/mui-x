@@ -23,16 +23,20 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
         );
       }
 
-      const data = !datasetKeys
-        ? (seriesData.data ?? [])
-        : (dataset?.map((d) => {
-            return {
-              x: d[datasetKeys.x] ?? null,
-              y: d[datasetKeys.y] ?? null,
-              z: datasetKeys.z && d[datasetKeys.z],
-              id: datasetKeys.id && d[datasetKeys.id],
-            } as ScatterValueType;
-          }) ?? []);
+      const data =
+        !datasetKeys && !seriesData.valueGetter
+          ? (seriesData.data ?? [])
+          : (dataset?.map((d) => {
+              if (seriesData.valueGetter) {
+                return seriesData.valueGetter(d);
+              }
+              return {
+                x: d[datasetKeys!.x] ?? null,
+                y: d[datasetKeys!.y] ?? null,
+                z: datasetKeys!.z && d[datasetKeys!.z],
+                id: datasetKeys!.id && d[datasetKeys!.id],
+              } as ScatterValueType;
+            }) ?? []);
 
       return [
         seriesId,

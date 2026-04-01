@@ -4,6 +4,7 @@ import {
   type OrdinalColorConfig,
   type PiecewiseColorConfig,
 } from './colorMapping';
+import { type DatasetElementType } from './seriesType/config';
 
 export interface ZAxisConfig<V = any> {
   id: string;
@@ -12,6 +13,13 @@ export interface ZAxisConfig<V = any> {
    * The key used to retrieve `data` from the `dataset` prop.
    */
   dataKey?: string;
+  /**
+   * A function to transform the value retrieved from the `dataset` before using it.
+   * @param {unknown} value The raw value from the dataset.
+   * @param {DatasetElementType} item The full dataset item.
+   * @returns {V} The transformed value.
+   */
+  valueGetter?: (value: unknown, item: DatasetElementType<unknown>) => V;
   /**
    * The minimal value of the scale.
    */

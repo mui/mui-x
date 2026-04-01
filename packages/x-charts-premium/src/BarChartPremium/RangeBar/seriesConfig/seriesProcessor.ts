@@ -41,33 +41,38 @@ Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
       layout: 'vertical',
       ...series[id],
       valueFormatter: series[id].valueFormatter ?? rangeBarValueFormatter,
-      data: datasetKeys
-        ? dataset!.map((data) => {
-            const start = data[datasetKeys.start];
-            const end = data[datasetKeys.end];
-
-            if (typeof start !== 'number' || typeof end !== 'number') {
-              if (process.env.NODE_ENV !== 'production') {
-                if (start !== null) {
-                  warnOnce([
-                    `MUI X Charts: Your dataset key "start" is used for plotting an range bar, but contains nonnumerical elements.`,
-                    'Range bars only support numbers.',
-                  ]);
-                }
-
-                if (end !== null) {
-                  warnOnce([
-                    `MUI X Charts: Your dataset key "end" is used for plotting an range bar, but contains nonnumerical elements.`,
-                    'Range bars only support numbers.',
-                  ]);
-                }
+      data:
+        datasetKeys || seriesData.valueGetter
+          ? dataset!.map((data) => {
+              if (seriesData.valueGetter) {
+                return seriesData.valueGetter(data);
               }
-              return null;
-            }
 
-            return [start, end];
-          })
-        : series[id].data!,
+              const start = data[datasetKeys!.start];
+              const end = data[datasetKeys!.end];
+
+              if (typeof start !== 'number' || typeof end !== 'number') {
+                if (process.env.NODE_ENV !== 'production') {
+                  if (start !== null) {
+                    warnOnce([
+                      `MUI X Charts: Your dataset key "start" is used for plotting an range bar, but contains nonnumerical elements.`,
+                      'Range bars only support numbers.',
+                    ]);
+                  }
+
+                  if (end !== null) {
+                    warnOnce([
+                      `MUI X Charts: Your dataset key "end" is used for plotting an range bar, but contains nonnumerical elements.`,
+                      'Range bars only support numbers.',
+                    ]);
+                  }
+                }
+                return null;
+              }
+
+              return [start, end];
+            })
+          : series[id].data!,
       hidden: !isItemVisible?.({ type: 'rangeBar', seriesId: id }),
     } satisfies DefaultizedRangeBarSeriesType;
   }

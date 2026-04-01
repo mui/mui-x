@@ -35,7 +35,9 @@ export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
 
     return {
       id,
-      data: dataset.map((d) => d[dataKey]),
+      data: dataset.map((d) =>
+        axisConfig.valueGetter ? axisConfig.valueGetter(d[dataKey], d) : d[dataKey],
+      ),
       ...axisConfig,
     } as PolarAxisConfig<TScale, any>;
   });
