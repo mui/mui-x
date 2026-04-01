@@ -15,10 +15,8 @@ import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePi
  */
 export const useMobilePicker = <
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseMobilePickerProps<
     TView,
-    TEnableAccessibleFieldDOMStructure,
     any,
     TExternalProps
   >,
@@ -26,7 +24,7 @@ export const useMobilePicker = <
   props,
   steps,
   ...pickerParams
-}: UseMobilePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+}: UseMobilePickerParams<TView, TExternalProps>) => {
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
 
   const getStepNavigation = createNonRangePickerStepNavigation({ steps });

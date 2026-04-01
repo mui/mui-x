@@ -14,12 +14,12 @@ import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 export interface DesktopDatePickerSlots
   extends BaseDatePickerSlots, MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'> {}
 
-export interface DesktopDatePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface DesktopDatePickerSlotProps
   extends
     BaseDatePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+    ExportedUseDesktopPickerSlotProps {}
 
-export interface DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+export interface DesktopDatePickerProps
   extends BaseDatePickerProps, DesktopOnlyPickerProps, ExportedYearCalendarProps {
   /**
    * Overridable component slots.
@@ -30,7 +30,7 @@ export interface DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure exten
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDatePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopDatePickerSlotProps;
   /**
    * Years rendered per row.
    * @default 4

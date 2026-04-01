@@ -13,9 +13,8 @@ import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeFi
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
 import { FieldType } from '../models';
 
-type DateRangeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: SingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DateRangeFieldComponent = ((
+  props: SingleInputDateTimeRangeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: FieldType };
 
 /**
@@ -28,10 +27,8 @@ type DateRangeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends bool
  *
  * - [SingleInputDateTimeRangeField API](https://mui.com/x/api/single-input-date-time-range-field/)
  */
-const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateTimeRangeField<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: SingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
+const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateTimeRangeField(
+  inProps: SingleInputDateTimeRangeFieldProps,
   inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -41,18 +38,13 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
 
   const { slots, slotProps, ...other } = themeProps;
 
-  const textFieldProps = useFieldTextFieldProps<
-    SingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>
-  >({
+  const textFieldProps = useFieldTextFieldProps<SingleInputDateTimeRangeFieldProps>({
     slotProps,
     ref: inRef,
     externalForwardedProps: other,
   });
 
-  const fieldResponse = useSingleInputDateTimeRangeField<
-    TEnableAccessibleFieldDOMStructure,
-    typeof textFieldProps
-  >(textFieldProps);
+  const fieldResponse = useSingleInputDateTimeRangeField<typeof textFieldProps>(textFieldProps);
 
   return (
     <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={other.inputRef}>
@@ -128,10 +120,6 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * The ref object used to imperatively interact with the field.
    */

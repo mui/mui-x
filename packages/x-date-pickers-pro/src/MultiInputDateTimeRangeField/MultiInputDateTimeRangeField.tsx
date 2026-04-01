@@ -12,11 +12,8 @@ import {
   MultiInputDateTimeRangeFieldClasses,
 } from './multiInputDateTimeRangeFieldClasses';
 
-export interface MultiInputDateTimeRangeFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MultiInputRangeFieldProps<
-  UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-> {
+export interface MultiInputDateTimeRangeFieldProps
+  extends MultiInputRangeFieldProps<UseDateTimeRangeManagerReturnValue> {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
   /**
    * Override or extend the styles applied to the component.
@@ -24,11 +21,8 @@ export interface MultiInputDateTimeRangeFieldProps<
   classes?: Partial<MultiInputDateTimeRangeFieldClasses>;
 }
 
-type MultiInputDateTimeRangeFieldComponent = (<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MultiInputDateTimeRangeFieldComponent = ((
+  props: MultiInputDateTimeRangeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -112,10 +106,6 @@ MultiInputDateTimeRangeField.propTypes = {
    * Add an element between each child.
    */
   divider: PropTypes.node,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * The ref object used to interact with the end field imperatively.
    */

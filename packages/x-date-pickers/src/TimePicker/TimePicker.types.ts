@@ -13,15 +13,15 @@ import { ValidateTimeProps } from '../validation/validateTime';
 
 export interface TimePickerSlots extends DesktopTimePickerSlots, MobileTimePickerSlots {}
 
-export interface TimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface TimePickerSlotProps
   extends
-    DesktopTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    MobileTimePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+    DesktopTimePickerSlotProps,
+    MobileTimePickerSlotProps {}
 
-export interface TimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+export interface TimePickerProps
   extends
-    DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>,
-    Omit<MobileTimePickerProps<TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure>, 'views'> {
+    DesktopTimePickerProps,
+    Omit<MobileTimePickerProps<TimeViewWithMeridiem>, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -37,7 +37,7 @@ export interface TimePickerProps<TEnableAccessibleFieldDOMStructure extends bool
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: TimePickerSlotProps;
 }
 
 /**

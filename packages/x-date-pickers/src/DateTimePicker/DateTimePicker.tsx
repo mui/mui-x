@@ -9,9 +9,8 @@ import { MobileDateTimePicker, MobileDateTimePickerProps } from '../MobileDateTi
 import { DateTimePickerProps } from './DateTimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
-type DateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DateTimePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DateTimePickerComponent = ((
+  props: DateTimePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -24,10 +23,8 @@ type DateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends bool
  *
  * - [DateTimePicker API](https://mui.com/x/api/date-pickers/date-time-picker/)
  */
-const DateTimePicker = React.forwardRef(function DateTimePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DateTimePicker = React.forwardRef(function DateTimePicker(
+  inProps: DateTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePicker' });
@@ -129,7 +126,6 @@ DateTimePicker.propTypes = {
   /**
    * @default true
    */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars

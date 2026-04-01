@@ -2,7 +2,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Stack, { StackProps } from '@mui/material/Stack';
-import MuiTextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
@@ -71,7 +70,6 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
     const pickerContext = useNullablePickerContext();
 
     const manager = useManager({
-      enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
       dateSeparator: props.dateSeparator,
     });
     const { internalProps: rawInternalProps, forwardedProps } = useSplitFieldProps(
@@ -141,9 +139,7 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
     const cleanEndTextFieldResponse = cleanFieldResponse(fieldResponse.endTextField);
 
     const TextField =
-      slots?.textField ??
-      pickerFieldUIContext.slots.textField ??
-      (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
+      slots?.textField ?? pickerFieldUIContext.slots.textField ?? PickersTextField;
 
     return (
       <Root {...fieldResponse.root}>

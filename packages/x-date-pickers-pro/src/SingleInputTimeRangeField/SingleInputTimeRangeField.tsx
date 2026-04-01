@@ -13,9 +13,8 @@ import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.type
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 import { FieldType } from '../models';
 
-type DateRangeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: SingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DateRangeFieldComponent = ((
+  props: SingleInputTimeRangeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: FieldType };
 
 /**
@@ -28,10 +27,8 @@ type DateRangeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends bool
  *
  * - [SingleInputTimeRangeField API](https://mui.com/x/api/single-input-time-range-field/)
  */
-const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: SingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
+const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField(
+  inProps: SingleInputTimeRangeFieldProps,
   inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -41,18 +38,13 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
 
   const { slots, slotProps, ...other } = themeProps;
 
-  const textFieldProps = useFieldTextFieldProps<
-    SingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>
-  >({
+  const textFieldProps = useFieldTextFieldProps<SingleInputTimeRangeFieldProps>({
     slotProps,
     ref: inRef,
     externalForwardedProps: other,
   });
 
-  const fieldResponse = useSingleInputTimeRangeField<
-    TEnableAccessibleFieldDOMStructure,
-    typeof textFieldProps
-  >(textFieldProps);
+  const fieldResponse = useSingleInputTimeRangeField<typeof textFieldProps>(textFieldProps);
 
   return (
     <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={other.inputRef}>
@@ -128,10 +120,6 @@ SingleInputTimeRangeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * The ref object used to imperatively interact with the field.
    */

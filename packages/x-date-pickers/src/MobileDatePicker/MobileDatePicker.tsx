@@ -14,9 +14,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type MobileDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: MobileDatePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MobileDatePickerComponent = ((
+  props: MobileDatePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -29,18 +28,17 @@ type MobileDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends bo
  *
  * - [MobileDatePicker API](https://mui.com/x/api/date-pickers/mobile-date-picker/)
  */
-const MobileDatePicker = React.forwardRef(function MobileDatePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: MobileDatePickerProps<TEnableAccessibleFieldDOMStructure>,
+const MobileDatePicker = React.forwardRef(function MobileDatePicker(
+  inProps: MobileDatePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all date pickers
-  const defaultizedProps = useDatePickerDefaultizedProps<
-    MobileDatePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileDatePicker');
+  const defaultizedProps = useDatePickerDefaultizedProps<MobileDatePickerProps>(
+    inProps,
+    'MuiMobileDatePicker',
+  );
 
   const viewRenderers: DatePickerViewRenderers<DateView> = {
     day: renderDateViewCalendar,
@@ -71,11 +69,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     },
   };
 
-  const { renderPicker } = useMobilePicker<
-    DateView,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useMobilePicker<DateView, typeof props>({
     ref,
     props,
     valueManager: singleItemValueManager,
@@ -151,7 +145,6 @@ MobileDatePicker.propTypes = {
   /**
    * @default true
    */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars

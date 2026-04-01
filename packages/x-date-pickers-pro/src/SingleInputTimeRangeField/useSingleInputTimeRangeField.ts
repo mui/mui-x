@@ -4,8 +4,7 @@ import { UseSingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.t
 import { useTimeRangeManager } from '../managers';
 
 export const useSingleInputTimeRangeField = <
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TProps extends UseSingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
+  TProps extends UseSingleInputTimeRangeFieldProps,
 >(
   props: TProps,
 ) => {

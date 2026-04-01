@@ -13,13 +13,12 @@ import {
 export interface MobileDatePickerSlots
   extends BaseDatePickerSlots, MakeOptional<UseMobilePickerSlots, 'field'> {}
 
-export interface MobileDatePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface MobileDatePickerSlotProps
   extends
     BaseDatePickerSlotProps,
-    ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+    ExportedUseMobilePickerSlotProps {}
 
-export interface MobileDatePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
-  extends BaseDatePickerProps, MobileOnlyPickerProps {
+export interface MobileDatePickerProps extends BaseDatePickerProps, MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
@@ -29,7 +28,7 @@ export interface MobileDatePickerProps<TEnableAccessibleFieldDOMStructure extend
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDatePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: MobileDatePickerSlotProps;
   /**
    * Years rendered per row.
    * @default 3

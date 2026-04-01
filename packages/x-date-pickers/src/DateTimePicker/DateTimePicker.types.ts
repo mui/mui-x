@@ -15,16 +15,16 @@ import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 export interface DateTimePickerSlots
   extends DesktopDateTimePickerSlots, MobileDateTimePickerSlots {}
 
-export interface DateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface DateTimePickerSlotProps
   extends
-    DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    MobileDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+    DesktopDateTimePickerSlotProps,
+    MobileDateTimePickerSlotProps {}
 
-export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+export interface DateTimePickerProps
   extends
-    DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
+    DesktopDateTimePickerProps,
     ExportedYearCalendarProps,
-    Omit<MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure>, 'views'> {
+    Omit<MobileDateTimePickerProps, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -40,7 +40,7 @@ export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends 
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DateTimePickerSlotProps;
   /**
    * Years rendered per row.
    * @default 4 on desktop, 3 on mobile

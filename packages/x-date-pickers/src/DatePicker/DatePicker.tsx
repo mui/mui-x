@@ -9,8 +9,8 @@ import { MobileDatePicker } from '../MobileDatePicker';
 import { DatePickerProps } from './DatePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
-type DatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DatePickerProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
+type DatePickerComponent = ((
+  props: DatePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -23,9 +23,10 @@ type DatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean 
  *
  * - [DatePicker API](https://mui.com/x/api/date-pickers/date-picker/)
  */
-const DatePicker = React.forwardRef(function DatePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(inProps: DatePickerProps<TEnableAccessibleFieldDOMStructure>, ref: React.Ref<HTMLDivElement>) {
+const DatePicker = React.forwardRef(function DatePicker(
+  inProps: DatePickerProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePicker' });
 
   const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
@@ -110,7 +111,6 @@ DatePicker.propTypes = {
   /**
    * @default true
    */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars

@@ -15,10 +15,8 @@ import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePi
  */
 export const useDesktopPicker = <
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseDesktopPickerProps<
     TView,
-    TEnableAccessibleFieldDOMStructure,
     any,
     TExternalProps
   >,
@@ -26,7 +24,7 @@ export const useDesktopPicker = <
   props,
   steps,
   ...pickerParams
-}: UseDesktopPickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+}: UseDesktopPickerParams<TView, TExternalProps>) => {
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
 
   const getStepNavigation = createNonRangePickerStepNavigation({ steps });

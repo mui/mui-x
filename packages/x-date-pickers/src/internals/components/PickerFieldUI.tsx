@@ -3,7 +3,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import MuiTextField, { TextFieldProps } from '@mui/material/TextField';
+import { TextFieldProps } from '@mui/material/TextField';
 import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { SvgIconProps } from '@mui/material/SvgIcon';
@@ -25,62 +25,15 @@ export const cleanFieldResponse = <
     UseFieldReturnValue<any, ExportedPickerFieldUIProps & { [key: string]: any }>,
     'onClear' | 'clearable'
   >,
->({
-  enableAccessibleFieldDOMStructure,
-  ...fieldResponse
-}: TFieldResponse): ExportedPickerFieldUIProps & {
+>(
+  fieldResponse: TFieldResponse,
+): ExportedPickerFieldUIProps & {
   openPickerAriaLabel: string;
   textFieldProps: TextFieldProps | PickersTextFieldProps;
 } => {
-  if (enableAccessibleFieldDOMStructure) {
-    const {
-      InputProps,
-      readOnly,
-      onClear,
-      clearable,
-      clearButtonPosition,
-      openPickerButtonPosition,
-      openPickerAriaLabel,
-      ...other
-    } = fieldResponse;
-    const mergedInputProps =
-      materialMajor >= 6 && other?.slotProps?.input
-        ? mergeSlotProps(other?.slotProps?.input, InputProps)
-        : noop;
-
-    return {
-      clearable,
-      onClear,
-      clearButtonPosition,
-      openPickerButtonPosition,
-      openPickerAriaLabel,
-      textFieldProps: {
-        ...other,
-        ...(materialMajor >= 6 && other?.slotProps?.input
-          ? {
-              slotProps: {
-                ...other?.slotProps,
-                input: (ownerState: FieldOwnerState) => ({
-                  ...resolveComponentProps(mergedInputProps, ownerState),
-                  readOnly,
-                }),
-              },
-            }
-          : {
-              InputProps: { ...(InputProps ?? {}), readOnly },
-            }),
-      },
-    };
-  }
-
   const {
-    onPaste,
-    onKeyDown,
-    inputMode,
-    readOnly,
     InputProps,
-    inputProps,
-    inputRef,
+    readOnly,
     onClear,
     clearable,
     clearButtonPosition,
@@ -88,15 +41,11 @@ export const cleanFieldResponse = <
     openPickerAriaLabel,
     ...other
   } = fieldResponse;
-
   const mergedInputProps =
     materialMajor >= 6 && other?.slotProps?.input
       ? mergeSlotProps(other?.slotProps?.input, InputProps)
       : noop;
-  const mergedHtmlInputProps =
-    materialMajor >= 6 && other?.slotProps?.htmlInput
-      ? mergeSlotProps(other?.slotProps?.htmlInput, inputProps)
-      : noop;
+
   return {
     clearable,
     onClear,
@@ -105,7 +54,7 @@ export const cleanFieldResponse = <
     openPickerAriaLabel,
     textFieldProps: {
       ...other,
-      ...(materialMajor >= 6 && (other?.slotProps?.input || other?.slotProps?.htmlInput)
+      ...(materialMajor >= 6 && other?.slotProps?.input
         ? {
             slotProps: {
               ...other?.slotProps,
@@ -113,18 +62,10 @@ export const cleanFieldResponse = <
                 ...resolveComponentProps(mergedInputProps, ownerState),
                 readOnly,
               }),
-              htmlInput: (ownerState: FieldOwnerState) => ({
-                ...resolveComponentProps(mergedHtmlInputProps, ownerState),
-                inputMode,
-                onPaste,
-                onKeyDown,
-                ref: inputRef,
-              }),
             },
           }
         : {
             InputProps: { ...(InputProps ?? {}), readOnly },
-            inputProps: { ...(inputProps ?? {}), inputMode, onPaste, onKeyDown, ref: inputRef },
           }),
     },
   };
@@ -169,9 +110,7 @@ export function PickerFieldUI<
   const clearButtonPosition = clearable ? clearButtonPositionProp : null;
   const openPickerButtonPosition = triggerStatus !== 'hidden' ? openPickerButtonPositionProp : null;
 
-  const TextField =
-    pickerFieldUIContext.slots.textField ??
-    (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
+  const TextField = pickerFieldUIContext.slots.textField ?? PickersTextField;
 
   const InputAdornment = pickerFieldUIContext.slots.inputAdornment ?? MuiInputAdornment;
   const { ownerState: startInputAdornmentOwnerState, ...startInputAdornmentProps } = useSlotProps({
@@ -354,10 +293,8 @@ export function PickerFieldUI<
   // Remove the `input` slotProps to avoid them overriding the manually resolved `InputProps`.
   // Relevant on `materialMajor >= 6` since `slotProps` would take precedence.
   delete (textFieldProps as TextFieldProps)?.slotProps?.input;
-  if (fieldResponse.enableAccessibleFieldDOMStructure) {
-    // Remove the `slotProps` on `PickersTextField` as they are not supported.
-    delete (textFieldProps as TextFieldProps)?.slotProps;
-  }
+  // Remove the `slotProps` on `PickersTextField` as they are not supported.
+  delete (textFieldProps as TextFieldProps)?.slotProps;
 
   return <TextField {...textFieldProps} InputProps={resolvedTextFieldInputProps} />;
 }
@@ -403,7 +340,7 @@ export interface PickerFieldUIProps<
 export interface PickerFieldUISlots {
   /**
    * Form control with an input to render the value.
-   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
+   * @default <PickersTextField />
    */
   textField?: React.ElementType;
   /**

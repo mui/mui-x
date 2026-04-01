@@ -30,23 +30,21 @@ export interface UseDesktopPickerSlots
   field: React.ElementType;
 }
 
-export interface ExportedUseDesktopPickerSlotProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->
+export interface ExportedUseDesktopPickerSlotProps
   extends
     PickerPopperSlotProps,
     ExportedPickersLayoutSlotProps<PickerValue>,
     PickerFieldUISlotPropsFromContext {
   field?: SlotComponentPropsFromProps<
-    PickerFieldSlotProps<PickerValue, TEnableAccessibleFieldDOMStructure>,
+    PickerFieldSlotProps<PickerValue>,
     {},
     PickerOwnerState
   >;
 }
 
-export interface UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface UseDesktopPickerSlotProps
   extends
-    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    ExportedUseDesktopPickerSlotProps,
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface DesktopOnlyPickerProps extends UsePickerNonStaticProps {
@@ -59,7 +57,6 @@ export interface DesktopOnlyPickerProps extends UsePickerNonStaticProps {
 
 export interface UseDesktopPickerProps<
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerProps<PickerValue, TView, TError, any>,
 >
@@ -75,15 +72,13 @@ export interface UseDesktopPickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: UseDesktopPickerSlotProps;
 }
 
 export interface UseDesktopPickerParams<
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseDesktopPickerProps<
     TView,
-    TEnableAccessibleFieldDOMStructure,
     any,
     TExternalProps
   >,

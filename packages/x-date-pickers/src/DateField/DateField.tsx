@@ -12,8 +12,8 @@ import {
 } from '../internals/components/PickerFieldUI';
 import { CalendarIcon } from '../icons';
 
-type DateFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DateFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
+type DateFieldComponent = ((
+  props: DateFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -26,9 +26,10 @@ type DateFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean =
  *
  * - [DateField API](https://mui.com/x/api/date-pickers/date-field/)
  */
-const DateField = React.forwardRef(function DateField<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(inProps: DateFieldProps<TEnableAccessibleFieldDOMStructure>, inRef: React.Ref<HTMLDivElement>) {
+const DateField = React.forwardRef(function DateField(
+  inProps: DateFieldProps,
+  inRef: React.Ref<HTMLDivElement>,
+) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiDateField',
@@ -36,17 +37,13 @@ const DateField = React.forwardRef(function DateField<
 
   const { slots, slotProps, ...other } = themeProps;
 
-  const textFieldProps = useFieldTextFieldProps<DateFieldProps<TEnableAccessibleFieldDOMStructure>>(
-    {
-      slotProps,
-      ref: inRef,
-      externalForwardedProps: other,
-    },
-  );
+  const textFieldProps = useFieldTextFieldProps<DateFieldProps>({
+    slotProps,
+    ref: inRef,
+    externalForwardedProps: other,
+  });
 
-  const fieldResponse = useDateField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
-    textFieldProps,
-  );
+  const fieldResponse = useDateField<typeof textFieldProps>(textFieldProps);
 
   return (
     <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={other.inputRef}>
@@ -105,10 +102,6 @@ DateField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * The ref object used to imperatively interact with the field.
    */

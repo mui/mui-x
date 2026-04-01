@@ -12,9 +12,8 @@ import {
 } from '../internals/components/PickerFieldUI';
 import { CalendarIcon } from '../icons';
 
-type DateTimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DateTimeFieldProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DateTimeFieldComponent = ((
+  props: DateTimeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -27,10 +26,8 @@ type DateTimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boole
  *
  * - [DateTimeField API](https://mui.com/x/api/date-pickers/date-time-field/)
  */
-const DateTimeField = React.forwardRef(function DateTimeField<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DateTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
+const DateTimeField = React.forwardRef(function DateTimeField(
+  inProps: DateTimeFieldProps,
   inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -40,17 +37,13 @@ const DateTimeField = React.forwardRef(function DateTimeField<
 
   const { slots, slotProps, ...other } = themeProps;
 
-  const textFieldProps = useFieldTextFieldProps<
-    DateTimeFieldProps<TEnableAccessibleFieldDOMStructure>
-  >({
+  const textFieldProps = useFieldTextFieldProps<DateTimeFieldProps>({
     slotProps,
     ref: inRef,
     externalForwardedProps: other,
   });
 
-  const fieldResponse = useDateTimeField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
-    textFieldProps,
-  );
+  const fieldResponse = useDateTimeField<typeof textFieldProps>(textFieldProps);
 
   return (
     <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={other.inputRef}>
@@ -119,10 +112,6 @@ DateTimeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * The ref object used to imperatively interact with the field.
    */

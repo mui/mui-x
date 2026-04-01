@@ -12,8 +12,8 @@ import {
 } from '../internals/components/PickerFieldUI';
 import { ClockIcon } from '../icons';
 
-type TimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: TimeFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
+type TimeFieldComponent = ((
+  props: TimeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -26,9 +26,10 @@ type TimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean =
  *
  * - [TimeField API](https://mui.com/x/api/date-pickers/time-field/)
  */
-const TimeField = React.forwardRef(function TimeField<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(inProps: TimeFieldProps<TEnableAccessibleFieldDOMStructure>, inRef: React.Ref<HTMLDivElement>) {
+const TimeField = React.forwardRef(function TimeField(
+  inProps: TimeFieldProps,
+  inRef: React.Ref<HTMLDivElement>,
+) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiTimeField',
@@ -36,17 +37,13 @@ const TimeField = React.forwardRef(function TimeField<
 
   const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
 
-  const textFieldProps = useFieldTextFieldProps<TimeFieldProps<TEnableAccessibleFieldDOMStructure>>(
-    {
-      slotProps,
-      ref: inRef,
-      externalForwardedProps: other,
-    },
-  );
+  const textFieldProps = useFieldTextFieldProps<TimeFieldProps>({
+    slotProps,
+    ref: inRef,
+    externalForwardedProps: other,
+  });
 
-  const fieldResponse = useTimeField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
-    textFieldProps,
-  );
+  const fieldResponse = useTimeField<typeof textFieldProps>(textFieldProps);
 
   return (
     <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={other.inputRef}>
@@ -115,10 +112,6 @@ TimeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * The ref object used to imperatively interact with the field.
    */
