@@ -27,6 +27,7 @@ const state = (align: 'left' | 'justify') => ({
             },
             0,
             [],
+            'light',
           ),
         },
       },
