@@ -18,9 +18,11 @@ Scatter charts are often used for statistical analysis, scientific data, and per
 
 ## Basics
 
-A scatter chart series must contain a `data` property with an array of objects.
-Each object must have `x` and `y` properties.
-Add an optional `id` when you need better optimization (for example, with animations).
+A scatter series usually defines points with a `data` property: an array of objects, each with `x` and `y` for its position.
+
+You can also use the `dataset` prop together with `datasetKeys` instead of putting coordinates on the series directly—see [Using a dataset](#using-a-dataset).
+
+Add an optional `id` on each point so it keeps a stable identity when the data changes. If you animate the series, `id` lets added or removed points transition predictably; without it, updates follow each point’s index in the array and existing markers can be repurposed in ways that look wrong.
 
 {{"demo": "BasicScatter.js"}}
 
@@ -41,7 +43,7 @@ When the pointer is in the drawing area, the closest point is used for the toolt
 
 Use the `hitAreaRadius` prop with a number to limit how far the pointer can be from a point for selection.
 If the pointer is farther than that from any point, no item is selected.
-Use `hitAreaRadius` with `"item"` to trigger interactions only when the pointer is directly over a point, instead of using Voronoi cells.
+Use `hitAreaRadius` with `"item"` to trigger interactions only when the pointer is directly over a marker, instead of selecting whichever point is closest to the pointer in the drawing area.
 
 {{"demo": "ClosestPointInteraction.js"}}
 
