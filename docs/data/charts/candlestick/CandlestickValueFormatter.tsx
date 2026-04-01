@@ -46,7 +46,7 @@ export default function CandlestickValueFormatter() {
           valueFormatter: (value, { field }) => {
             if (value === null) { return ''; }
             if (field === 'open') { return `⇒ ${dollarFormatter.format(value)}`; }
-            if (field === 'close') { return `⇍ ${dollarFormatter.format(value)}`; }
+            if (field === 'close') { return `⇐ ${dollarFormatter.format(value)}`; }
             if (field === 'high') { return `⇗ ${dollarFormatter.format(value)}`; }
             if (field === 'low') { return `⇙ ${dollarFormatter.format(value)}`; }
             return dollarFormatter.format(value);
