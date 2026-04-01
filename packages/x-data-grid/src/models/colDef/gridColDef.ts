@@ -367,7 +367,7 @@ export interface GridSingleSelectColDef<
  */
 export interface GridMultiSelectColDef<
   R extends GridValidRowModel = any,
-  V = any[],
+  V = (string | number)[],
   F = string,
 > extends GridBaseColDef<R, V, F> {
   /**

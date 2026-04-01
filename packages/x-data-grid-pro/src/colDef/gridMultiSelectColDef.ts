@@ -12,7 +12,7 @@ import { getGridMultiSelectOperators } from './gridMultiSelectOperators';
 import { renderMultiSelectCell } from '../components/cell/GridMultiSelectCell';
 import { renderEditMultiSelectCell } from '../components/cell/GridEditMultiSelectCell';
 
-const isArrayOfObjects = (options: any): options is Array<Record<string, any>> => {
+const isArrayOfObjects = (options: ValueOptions[]): options is Array<Record<string, any>> => {
   return typeof options[0] === 'object';
 };
 
@@ -45,15 +45,20 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   getOptionLabel: defaultGetOptionLabel,
   getOptionValue: defaultGetOptionValue,
   sortComparator: (v1, v2) => {
-    const lengthDiff = (v1?.length ?? 0) - (v2?.length ?? 0);
-    if (lengthDiff !== 0) {
-      return lengthDiff;
+    const empty1 = !v1 || v1.length === 0;
+    const empty2 = !v2 || v2.length === 0;
+    if (empty1 && empty2) {
+      return 0;
     }
-    const first1 = v1?.[0] ?? '';
-    const first2 = v2?.[0] ?? '';
-    return String(first1).localeCompare(String(first2));
+    if (empty1) {
+      return 1;
+    }
+    if (empty2) {
+      return -1;
+    }
+    return v1.join('').localeCompare(v2.join(''));
   },
-  rowSpanValueGetter: ((value: any) => {
+  rowSpanValueGetter: ((value: (string | number)[]) => {
     if (!Array.isArray(value) || value.length === 0) {
       return null;
     }
@@ -61,7 +66,7 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   }) as any,
   renderCell: renderMultiSelectCell,
   renderEditCell: renderEditMultiSelectCell,
-  valueFormatter: (value: any, row, colDef, apiRef) => {
+  valueFormatter: (value: (string | number)[], row, colDef, apiRef) => {
     const rowId = gridRowIdSelector(apiRef, row);
 
     if (!isMultiSelectColDef(colDef)) {
@@ -76,11 +81,11 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
     const separator = colDef.separator ?? ', ';
 
     if (!valueOptions || !isArrayOfObjects(valueOptions)) {
-      return value.map((v: any) => colDef.getOptionLabel!(v)).join(separator);
+      return value.map((v) => colDef.getOptionLabel!(v)).join(separator);
     }
 
     return value
-      .map((v: any) => {
+      .map((v) => {
         const valueOption = valueOptions.find((option) => colDef.getOptionValue!(option) === v);
         return valueOption ? colDef.getOptionLabel!(valueOption) : String(v);
       })
@@ -104,7 +109,7 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
         );
         return matchingOption ? getOptionValue(matchingOption) : null;
       })
-      .filter((v: string | number | null) => v !== null);
+      .filter((v): v is string | number => v !== null);
 
     return validValues.length > 0 ? validValues : undefined;
   },
