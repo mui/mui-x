@@ -156,6 +156,18 @@
         "describedArgs": ["event", "itemId", "isSelected"]
       }
     },
+    "onItemsLazyLoaded": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(parameters: object, parameters.items: Array<R>, parameters.parentId: TreeViewItemId | null, parameters.isCacheHit: boolean) => void",
+        "describedArgs": [
+          "parameters",
+          "parameters.items",
+          "parameters.parentId",
+          "parameters.isCacheHit"
+        ]
+      }
+    },
     "onSelectedItemsChange": {
       "type": { "name": "func" },
       "signature": {
