@@ -17,7 +17,7 @@ const ChatMessageAvatarStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Avatar',
   overridesResolver: (_, styles) => styles.avatar,
-})(({ theme }) => ({
+})<{ ownerState?: { variant?: string } }>(({ theme, ownerState }) => ({
   gridArea: 'avatar',
   width: 'var(--MuiChatMessage-avatarSize, 36px)',
   height: 'var(--MuiChatMessage-avatarSize, 36px)',
@@ -37,6 +37,12 @@ const ChatMessageAvatarStyled = styled('div', {
     height: '100%',
     objectFit: 'cover',
   },
+  // Compact: avatar spans both the authorName and content rows, centered vertically
+  // so it aligns with the combined height of the name + first line of text.
+  ...(ownerState?.variant === 'compact' && {
+    gridRow: '1 / 3',
+    alignSelf: 'center',
+  }),
 }));
 
 const ChatMessageAvatar = React.forwardRef<HTMLDivElement, ChatMessageAvatarProps>(

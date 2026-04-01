@@ -55,7 +55,6 @@ const ChatMessageListContentStyled = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   paddingBlock: theme.spacing(1),
-  paddingInline: theme.spacing(2),
   boxSizing: 'border-box',
 }));
 

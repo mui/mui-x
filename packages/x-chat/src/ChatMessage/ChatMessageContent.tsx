@@ -32,23 +32,75 @@ const ChatMessageBubbleStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Bubble',
   overridesResolver: (_, styles) => styles.bubble,
-})<{ ownerState?: { role?: string } }>(({ theme, ownerState }) => {
+})<{ ownerState?: { role?: string; variant?: string } }>(({ theme, ownerState }) => {
   const isUser = ownerState?.role === 'user';
+  const isCompact = ownerState?.variant === 'compact';
 
-  return {
-    padding: theme.spacing(1, 1.5),
-    borderRadius: theme.shape.borderRadius,
+  // Base text styles shared between default and compact modes.
+  const baseTextStyles = {
     fontSize: theme.typography.body2.fontSize,
     lineHeight: theme.typography.body2.lineHeight,
-    wordBreak: 'break-word',
-    // User messages preserve literal line-breaks; assistant messages render markdown
-    // which produces its own block elements, so normal whitespace handling is correct.
-    whiteSpace: isUser ? 'pre-wrap' : 'normal',
+    wordBreak: 'break-word' as const,
+    whiteSpace: (isUser ? 'pre-wrap' : 'normal') as React.CSSProperties['whiteSpace'],
     maxWidth: '100%',
-    boxSizing: 'border-box',
+    boxSizing: 'border-box' as const,
     '& p': {
       margin: 0,
     },
+    '& ol, & ul': {
+      margin: theme.spacing(0.5, 0),
+      paddingLeft: theme.spacing(2.5),
+    },
+    '& li + li': {
+      marginTop: theme.spacing(0.25),
+    },
+  };
+
+  if (isCompact) {
+    // Compact: plain text without bubble background, padding, or border-radius.
+    return {
+      ...baseTextStyles,
+      alignSelf: 'flex-start',
+      color: (theme.vars || theme).palette.text.primary,
+      '& pre': {
+        margin: 0,
+        borderRadius: theme.shape.borderRadius,
+        overflow: 'auto',
+        padding: theme.spacing(1),
+        fontSize: theme.typography.caption.fontSize,
+        background: (theme.vars || theme).palette.action.hover,
+      },
+      '& code': {
+        fontFamily: 'monospace',
+        fontSize: '0.875em',
+        background: (theme.vars || theme).palette.action.hover,
+        padding: '0.1em 0.3em',
+      },
+      '& pre code': {
+        background: 'none',
+        padding: 0,
+      },
+      '& .MuiChatCodeBlock-root': {
+        background: 'none',
+      },
+      '& .MuiChatCodeBlock-root pre': {
+        background: 'none',
+        padding: 0,
+        borderRadius: 0,
+      },
+      '& .MuiChatCodeBlock-root code': {
+        background: 'none',
+        padding: 0,
+      },
+    };
+  }
+
+  return {
+    ...baseTextStyles,
+    padding: theme.spacing(1, 1.5),
+    borderRadius: theme.shape.borderRadius,
+    // Shrink to fit content width; align to the side that matches the message role.
+    alignSelf: isUser ? 'flex-end' : 'flex-start',
     '& pre': {
       margin: 0,
       borderRadius: theme.shape.borderRadius,

@@ -58,17 +58,17 @@ describe('ChatBox', () => {
     });
   });
 
-  describe('feature: attachButton', () => {
+  describe('feature: attachments', () => {
     it('shows attach button by default', () => {
       render(<ChatBox adapter={createAdapter()}>{null}</ChatBox>);
       expect(screen.getByRole('button', { name: 'Add attachment' })).not.toBe(null);
     });
 
-    it('hides attach button when features.attachButton=false', () => {
+    it('hides attach button when features.attachments=false', () => {
       render(
         <ChatBox
           adapter={createAdapter()}
-          features={{ attachButton: false }}
+          features={{ attachments: false }}
         >
           {null}
         </ChatBox>,

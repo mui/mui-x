@@ -19,7 +19,7 @@ const ChatMessageGroupStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Group',
   overridesResolver: (_, styles) => styles.group,
-})(({ theme }) => ({
+})(() => ({
   '--MuiChatMessage-avatarSize': '36px',
   display: 'flex',
   flexDirection: 'column',
@@ -30,19 +30,43 @@ const ChatMessageGroupStyled = styled('div', {
 const ChatMessageGroupAuthorNameStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'GroupAuthorName',
-})<{ ownerState?: { authorRole?: string } }>(({ theme, ownerState }) => ({
+})<{ ownerState?: { authorRole?: string; variant?: string } }>(({ theme, ownerState }) => ({
   fontSize: theme.typography.caption.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
   color: (theme.vars || theme).palette.text.secondary,
   marginBottom: 0,
-  ...(ownerState?.authorRole === 'user'
+  ...(ownerState?.variant === 'compact'
     ? {
-        textAlign: 'right' as const,
-        paddingInlineEnd: `calc(var(--MuiChatMessage-avatarSize) + ${theme.spacing(2)} + ${theme.spacing(0.5)})`,
+        // Compact: author name lives inside the message grid in the "authorName" area.
+        // It shares a row with the avatar. Flex to push timestamp to the right.
+        gridArea: 'authorName',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: theme.spacing(1),
       }
     : {
-        paddingInlineStart: `calc(var(--MuiChatMessage-avatarSize) + ${theme.spacing(2)} + ${theme.spacing(0.5)})`,
+        // Default: offset by avatar width, user right-aligned
+        ...(ownerState?.authorRole === 'user'
+          ? {
+              textAlign: 'right' as const,
+              paddingInlineEnd: `calc(var(--MuiChatMessage-avatarSize) + ${theme.spacing(2)} + ${theme.spacing(0.5)})`,
+            }
+          : {
+              paddingInlineStart: `calc(var(--MuiChatMessage-avatarSize) + ${theme.spacing(2)} + ${theme.spacing(0.5)})`,
+            }),
       }),
+}));
+
+const ChatMessageGroupTimestampStyled = styled('span', {
+  name: 'MuiChatMessage',
+  slot: 'GroupTimestamp',
+})(({ theme }) => ({
+  fontSize: theme.typography.caption.fontSize,
+  fontWeight: theme.typography.fontWeightRegular,
+  color: (theme.vars || theme).palette.text.disabled,
+  whiteSpace: 'nowrap',
+  flexShrink: 0,
 }));
 
 const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>(
@@ -58,6 +82,7 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
         slots={{
           group: slots?.group ?? ChatMessageGroupStyled,
           authorName: slots?.authorName ?? ChatMessageGroupAuthorNameStyled,
+          groupTimestamp: slots?.groupTimestamp ?? ChatMessageGroupTimestampStyled,
           ...slots,
         }}
         slotProps={{

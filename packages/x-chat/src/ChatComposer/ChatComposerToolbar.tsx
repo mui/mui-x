@@ -22,7 +22,7 @@ const ChatComposerToolbarStyled = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'flex-end',
+  justifyContent: 'space-between',
   gap: theme.spacing(0.5),
 }));
 

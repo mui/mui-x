@@ -14,7 +14,9 @@ import {
   ConversationListPreview,
   ConversationListTimestamp,
   ConversationListUnreadBadge,
+  ConversationListItemActions,
   type ConversationListRootProps,
+  type ConversationListVariant,
 } from '@mui/x-chat-unstyled';
 import {
   useChatConversationListUtilityClasses,
@@ -25,6 +27,13 @@ export interface ChatConversationListProps extends ConversationListRootProps {
   className?: string;
   sx?: SxProps<Theme>;
   classes?: Partial<ChatConversationListClasses>;
+  /**
+   * The visual variant of the conversation list.
+   * - `'default'` – shows avatar, title, preview, timestamp, and unread badge.
+   * - `'compact'` – shows only a small unread indicator, the title, and an actions button.
+   * @default 'default'
+   */
+  variant?: ConversationListVariant;
 }
 
 const ChatConversationListStyled = styled('div', {
@@ -86,44 +95,65 @@ const NoopScrollbar = React.forwardRef<HTMLDivElement>(function NoopScrollbar() 
 // must also explicitly exclude 'ownerState', 'theme', 'sx', and 'as' here.
 
 const itemSlotShouldForwardProp = (prop: string) =>
-  !['conversation', 'selected', 'unread', 'focused', 'ownerState', 'theme', 'sx', 'as'].includes(
-    prop,
-  );
+  ![
+    'conversation',
+    'selected',
+    'unread',
+    'focused',
+    'variant',
+    'ownerState',
+    'theme',
+    'sx',
+    'as',
+  ].includes(prop);
 
 const ChatConversationListItemStyled = styled('div', {
   name: 'MuiChatConversationList',
   slot: 'Item',
   shouldForwardProp: itemSlotShouldForwardProp,
   overridesResolver: (_, styles) => styles.item,
-})<{ ownerState?: { selected?: boolean; unread?: boolean; focused?: boolean } }>(
-  ({ theme, ownerState }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1.5),
-    padding: theme.spacing(1, 2),
-    cursor: 'pointer',
-    outline: 'none',
-    borderRadius: 0,
-    transition: theme.transitions.create('background-color', {
-      duration: theme.transitions.duration.shortest,
-    }),
-    '@media (prefers-reduced-motion: reduce)': {
-      transition: 'none',
-    },
+})<{
+  ownerState?: {
+    selected?: boolean;
+    unread?: boolean;
+    focused?: boolean;
+    variant?: ConversationListVariant;
+  };
+}>(({ theme, ownerState }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1.5),
+  padding: theme.spacing(1, 2),
+  cursor: 'pointer',
+  outline: 'none',
+  borderRadius: 0,
+  transition: theme.transitions.create('background-color', {
+    duration: theme.transitions.duration.shortest,
+  }),
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+  },
+  backgroundColor: ownerState?.selected
+    ? (theme.vars || theme).palette.action.selected
+    : 'transparent',
+  '&:hover': {
     backgroundColor: ownerState?.selected
       ? (theme.vars || theme).palette.action.selected
-      : 'transparent',
-    '&:hover': {
-      backgroundColor: ownerState?.selected
-        ? (theme.vars || theme).palette.action.selected
-        : (theme.vars || theme).palette.action.hover,
-    },
-    '&:focus-visible': {
-      outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
-      outlineOffset: -2,
+      : (theme.vars || theme).palette.action.hover,
+  },
+  '&:focus-visible': {
+    outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
+    outlineOffset: -2,
+  },
+  ...(ownerState?.variant === 'compact' && {
+    gap: theme.spacing(1),
+    padding: theme.spacing(0.75, 1.5),
+    borderRadius: theme.shape.borderRadius,
+    '&:hover .MuiChatConversationList-itemActions': {
+      opacity: 1,
     },
   }),
-);
+}));
 
 // ---------------------------------------------------------------------------
 // Styled inner roots — pure styling, no rendering logic.
@@ -217,7 +247,7 @@ const ChatConversationListUnreadBadgeRoot = styled('div', {
   slot: 'ItemUnreadBadge',
   shouldForwardProp: itemSlotShouldForwardProp,
   overridesResolver: (_, styles) => styles.itemUnreadBadge,
-})(({ theme }) => ({
+})<{ ownerState?: { variant?: ConversationListVariant } }>(({ theme, ownerState }) => ({
   minWidth: 18,
   height: 18,
   borderRadius: 9,
@@ -232,6 +262,39 @@ const ChatConversationListUnreadBadgeRoot = styled('div', {
   flexShrink: 0,
   alignSelf: 'center',
   lineHeight: 1,
+  ...(ownerState?.variant === 'compact' && {
+    minWidth: 8,
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    padding: 0,
+    fontSize: 0,
+    overflow: 'hidden',
+  }),
+}));
+
+// ---------------------------------------------------------------------------
+// Item actions — visible on hover in compact mode, always available in default.
+// ---------------------------------------------------------------------------
+
+const ChatConversationListItemActionsRoot = styled('div', {
+  name: 'MuiChatConversationList',
+  slot: 'ItemActions',
+  shouldForwardProp: itemSlotShouldForwardProp,
+  overridesResolver: (_, styles) => styles.itemActions,
+})<{ ownerState?: { variant?: ConversationListVariant } }>(({ theme, ownerState }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  flexShrink: 0,
+  ...(ownerState?.variant === 'compact' && {
+    opacity: 0,
+    transition: theme.transitions.create('opacity', {
+      duration: theme.transitions.duration.shortest,
+    }),
+    '@media (prefers-reduced-motion: reduce)': {
+      transition: 'none',
+    },
+  }),
 }));
 
 // ---------------------------------------------------------------------------
@@ -311,15 +374,57 @@ const ChatConversationListUnreadBadgeStyled = React.forwardRef<HTMLDivElement>(
   },
 );
 
+// Default inline SVG for the 3-dot "more" icon (MoreHoriz style).
+
+function DefaultMoreIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <circle cx="6" cy="12" r="2" />
+      <circle cx="12" cy="12" r="2" />
+      <circle cx="18" cy="12" r="2" />
+    </svg>
+  );
+}
+
+const ChatConversationListItemActionsStyled = React.forwardRef<HTMLDivElement>(
+  function ChatConversationListItemActionsStyled(props: any, ref) {
+    return (
+      <ConversationListItemActions
+        ref={ref}
+        {...props}
+        slots={{ root: ChatConversationListItemActionsRoot, ...props.slots }}
+      >
+        {props.children ?? <DefaultMoreIcon />}
+      </ConversationListItemActions>
+    );
+  },
+);
+
 const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationListProps>(
   function ChatConversationList(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatConversationList' });
-    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
+    const {
+      variant = 'default',
+      slots,
+      slotProps,
+      className,
+      classes: classesProp,
+      sx,
+      ...other
+    } = props;
     const classes = useChatConversationListUtilityClasses(classesProp);
+    const isCompact = variant === 'compact';
 
     return (
       <ConversationListRoot
         ref={ref}
+        variant={variant}
         {...other}
         slots={{
           root: slots?.root ?? ChatConversationListStyled,
@@ -334,12 +439,13 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
           preview: slots?.preview ?? (ChatConversationListPreviewStyled as any),
           timestamp: slots?.timestamp ?? (ChatConversationListTimestampStyled as any),
           unreadBadge: slots?.unreadBadge ?? (ChatConversationListUnreadBadgeStyled as any),
+          itemActions: slots?.itemActions ?? (ChatConversationListItemActionsStyled as any),
           ...slots,
         }}
         slotProps={{
           ...slotProps,
           root: {
-            className: clsx(classes.root, className),
+            className: clsx(classes.root, isCompact && classes.compact, className),
             sx,
             ...slotProps?.root,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -392,6 +498,11 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
             ...slotProps?.unreadBadge,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
+          itemActions: {
+            className: classes.itemActions,
+            ...slotProps?.itemActions,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any,
         }}
       />
     );
@@ -412,6 +523,13 @@ ChatConversationList.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The visual variant of the conversation list.
+   * - `'default'` – shows avatar, title, preview, timestamp, and unread badge.
+   * - `'compact'` – shows only a small unread indicator, the title, and an actions button.
+   * @default 'default'
+   */
+  variant: PropTypes.oneOf(['compact', 'default']),
 } as any;
 
 export { ChatConversationList };

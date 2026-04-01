@@ -1,6 +1,12 @@
 // ─── Top-level ChatBox (one-liner) ───────────────────────────────────────────
 export { ChatBox } from './ChatBox/ChatBox';
-export type { ChatBoxProps, ChatBoxSlots, ChatBoxSlotProps } from './ChatBox/ChatBox.types';
+export type {
+  ChatBoxProps,
+  ChatBoxSlots,
+  ChatBoxSlotProps,
+  ChatBoxFeatures,
+} from './ChatBox/ChatBox.types';
+export type { ChatVariant } from '@mui/x-chat-unstyled';
 export { chatBoxClasses, getChatBoxUtilityClass } from './ChatBox/chatBoxClasses';
 export type { ChatBoxClasses, ChatBoxClassKey } from './ChatBox/chatBoxClasses';
 
@@ -37,6 +43,8 @@ export { ChatConversationTitle } from './ChatConversation/ChatConversationTitle'
 export type { ChatConversationTitleProps } from './ChatConversation/ChatConversationTitle';
 export { ChatConversationSubtitle } from './ChatConversation/ChatConversationSubtitle';
 export type { ChatConversationSubtitleProps } from './ChatConversation/ChatConversationSubtitle';
+export { ChatConversationHeaderInfo } from './ChatConversation/ChatConversationHeaderInfo';
+export type { ChatConversationHeaderInfoProps } from './ChatConversation/ChatConversationHeaderInfo';
 export { ChatConversationHeaderActions } from './ChatConversation/ChatConversationHeaderActions';
 export type { ChatConversationHeaderActionsProps } from './ChatConversation/ChatConversationHeaderActions';
 export {
@@ -50,13 +58,15 @@ export type {
 
 // ─── ChatComposer ────────────────────────────────────────────────────
 export { ChatComposer } from './ChatComposer/ChatComposer';
-export type { ChatComposerProps } from './ChatComposer/ChatComposer';
+export type { ChatComposerProps, ChatComposerFeatures } from './ChatComposer/ChatComposer';
 export { ChatComposerTextArea } from './ChatComposer/ChatComposerTextArea';
 export type { ChatComposerTextAreaProps } from './ChatComposer/ChatComposerTextArea';
 export { ChatComposerSendButton } from './ChatComposer/ChatComposerSendButton';
 export type { ChatComposerSendButtonProps } from './ChatComposer/ChatComposerSendButton';
 export { ChatComposerAttachButton } from './ChatComposer/ChatComposerAttachButton';
 export type { ChatComposerAttachButtonProps } from './ChatComposer/ChatComposerAttachButton';
+export { ChatComposerAttachmentList } from './ChatComposer/ChatComposerAttachmentList';
+export type { ChatComposerAttachmentListProps } from './ChatComposer/ChatComposerAttachmentList';
 export { ChatComposerToolbar } from './ChatComposer/ChatComposerToolbar';
 export type { ChatComposerToolbarProps } from './ChatComposer/ChatComposerToolbar';
 export { ChatComposerHelperText } from './ChatComposer/ChatComposerHelperText';
@@ -112,11 +122,6 @@ export type {
   ChatMessageListClassKey,
 } from './ChatMessageList/chatMessageListClasses';
 
-// ─── ChatPlan ─────────────────────────────────────────────────────────────────
-export { ChatPlan } from './ChatPlan/ChatPlan';
-export type { ChatPlanProps, PlanStep } from './ChatPlan/ChatPlan';
-export { chatPlanClasses, getChatPlanUtilityClass } from './ChatPlan/chatPlanClasses';
-export type { ChatPlanClasses, ChatPlanClassKey } from './ChatPlan/chatPlanClasses';
 
 // ─── ChatSuggestions ─────────────────────────────────────────────────────────
 export { ChatSuggestions } from './ChatSuggestions/ChatSuggestions';
@@ -160,11 +165,6 @@ export type {
   ChatMessageSourceClassKey,
 } from './ChatMessageSources/chatMessageSourceClasses';
 
-// ─── ChatTask ─────────────────────────────────────────────────────────────────
-export { ChatTask } from './ChatTask/ChatTask';
-export type { ChatTaskProps, ChatTaskStatus } from './ChatTask/ChatTask';
-export { chatTaskClasses, getChatTaskUtilityClass } from './ChatTask/chatTaskClasses';
-export type { ChatTaskClasses, ChatTaskClassKey } from './ChatTask/chatTaskClasses';
 
 // ─── ChatMessageSkeleton ──────────────────────────────────────────────────────
 export { ChatMessageSkeleton } from './ChatMessageSkeleton';

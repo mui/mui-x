@@ -20,8 +20,43 @@ const ChatMessageStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState?: { role?: string; isGrouped?: boolean; showAvatar?: boolean } }>(
-  ({ theme, ownerState }) => ({
+})<{ ownerState?: { role?: string; isGrouped?: boolean; variant?: string } }>(({
+  theme,
+  ownerState,
+}) => {
+  const isCompact = ownerState?.variant === 'compact';
+  const isUser = ownerState?.role === 'user';
+
+  if (isCompact) {
+    // Compact: avatar and author name share the first row, content below.
+    // For grouped messages (not first in group) the avatar column stays for alignment
+    // but no avatar/author name is rendered.
+    const isGrouped = ownerState?.isGrouped;
+    return {
+      display: 'grid',
+      columnGap: theme.spacing(1),
+      width: '100%',
+      boxSizing: 'border-box',
+      paddingInline: theme.spacing(2),
+      paddingBlock: isGrouped ? 0 : `0 ${theme.spacing(0.25)}`,
+      fontFamily: theme.typography.fontFamily,
+      ...(isGrouped
+        ? {
+            // Grouped: no avatar/authorName rows — just content + meta, indented.
+            gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr',
+            gridTemplateAreas: '". content" ". meta"',
+          }
+        : {
+            // First in group: avatar spans authorName + content rows, centered vertically.
+            gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr',
+            gridTemplateRows: 'auto auto auto',
+            gridTemplateAreas:
+              '"avatar authorName" "avatar content" ". meta"',
+          }),
+    };
+  }
+
+  return {
     display: 'grid',
     gridTemplateColumns: 'auto 1fr auto',
     gridTemplateAreas: '"avatar content actions" ". meta ."',
@@ -34,18 +69,14 @@ const ChatMessageStyled = styled('div', {
     paddingInlineEnd: `calc(${theme.spacing(2)} + var(--MuiChatMessage-avatarSize))`,
     paddingBlock: ownerState?.isGrouped ? 0 : `0 ${theme.spacing(0.5)}`,
     fontFamily: theme.typography.fontFamily,
-    // Collapse the phantom column when this row has no avatar (e.g. no avatarUrl set).
-    ...(!ownerState?.showAvatar && {
-      '--MuiChatMessage-avatarSize': '0px',
-    }),
-    ...(ownerState?.role === 'user' && {
+    ...(isUser && {
       gridTemplateAreas: '"actions content avatar" ". meta ."',
       gridTemplateColumns: 'auto 1fr auto',
       paddingInlineStart: `calc(${theme.spacing(2)} + var(--MuiChatMessage-avatarSize))`,
       paddingInlineEnd: theme.spacing(2),
     }),
-  }),
-);
+  };
+});
 
 const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
   function ChatMessage(inProps, ref) {

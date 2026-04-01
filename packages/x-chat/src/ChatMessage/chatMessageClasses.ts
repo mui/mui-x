@@ -21,6 +21,8 @@ export interface ChatMessageClasses {
   group: string;
   /** Class applied to the group author name element. */
   groupAuthorName: string;
+  /** Class applied to the group timestamp element (compact variant only). */
+  groupTimestamp: string;
   /** Styles applied to the date divider element. */
   dateDivider: string;
   /** Applied when the message role is 'user' */
@@ -49,6 +51,7 @@ export const chatMessageClasses: ChatMessageClasses = generateUtilityClasses('Mu
   'actions',
   'group',
   'groupAuthorName',
+  'groupTimestamp',
   'dateDivider',
   'roleUser',
   'roleAssistant',
@@ -66,6 +69,7 @@ const slots: Record<ChatMessageClassKey, string[]> = {
   actions: ['actions'],
   group: ['group'],
   groupAuthorName: ['groupAuthorName'],
+  groupTimestamp: ['groupTimestamp'],
   dateDivider: ['dateDivider'],
   roleUser: ['roleUser'],
   roleAssistant: ['roleAssistant'],

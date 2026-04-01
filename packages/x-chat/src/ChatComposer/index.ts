@@ -1,5 +1,5 @@
 export { ChatComposer } from './ChatComposer';
-export type { ChatComposerProps } from './ChatComposer';
+export type { ChatComposerProps, ChatComposerFeatures } from './ChatComposer';
 export { ChatComposerTextArea } from './ChatComposerTextArea';
 export type { ChatComposerTextAreaProps } from './ChatComposerTextArea';
 export { ChatComposerToolbar } from './ChatComposerToolbar';
@@ -8,6 +8,8 @@ export { ChatComposerSendButton } from './ChatComposerSendButton';
 export type { ChatComposerSendButtonProps } from './ChatComposerSendButton';
 export { ChatComposerAttachButton } from './ChatComposerAttachButton';
 export type { ChatComposerAttachButtonProps } from './ChatComposerAttachButton';
+export { ChatComposerAttachmentList } from './ChatComposerAttachmentList';
+export type { ChatComposerAttachmentListProps } from './ChatComposerAttachmentList';
 export { ChatComposerHelperText } from './ChatComposerHelperText';
 export type { ChatComposerHelperTextProps } from './ChatComposerHelperText';
 export {

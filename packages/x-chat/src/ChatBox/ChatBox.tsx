@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 
 const useThemeProps = createUseThemeProps('MuiChatBox');
-import { ChatRoot } from '@mui/x-chat-unstyled';
+import { ChatRoot, ChatVariantProvider } from '@mui/x-chat-unstyled';
 import { useChatBoxUtilityClasses } from './chatBoxClasses';
 import { ChatBoxContent } from './ChatBoxContent';
 import type { ChatBoxProps } from './ChatBox.types';
@@ -69,6 +69,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     suggestions,
     suggestionsAutoSubmit,
     // Styled / visual props
+    variant = 'default',
     className,
     classes: classesProp,
     sx,
@@ -107,18 +108,21 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
       localeText={localeText}
       slotProps={{ root: { style: { display: 'contents' } } }}
     >
-      <ChatBoxStyled ref={ref} className={clsx(classes.root, className)} sx={sx} {...other}>
-        <ChatBoxContent
-          slots={slots}
-          slotProps={slotProps}
-          features={features}
-          suggestions={suggestions}
-          suggestionsAutoSubmit={suggestionsAutoSubmit}
-          layoutClassName={classes.layout}
-          conversationsPaneClassName={classes.conversationsPane}
-          threadPaneClassName={classes.threadPane}
-        />
-      </ChatBoxStyled>
+      <ChatVariantProvider variant={variant}>
+        <ChatBoxStyled ref={ref} className={clsx(classes.root, className)} sx={sx} {...other}>
+          <ChatBoxContent
+            variant={variant}
+            slots={slots}
+            slotProps={slotProps}
+            features={features}
+            suggestions={suggestions}
+            suggestionsAutoSubmit={suggestionsAutoSubmit}
+            layoutClassName={classes.layout}
+            conversationsPaneClassName={classes.conversationsPane}
+            threadPaneClassName={classes.threadPane}
+          />
+        </ChatBoxStyled>
+      </ChatVariantProvider>
     </ChatRoot>
   );
 }) as ChatBoxComponent;
@@ -150,6 +154,7 @@ ChatBox.propTypes = {
   composerValue: PropTypes.string,
   conversations: PropTypes.arrayOf(
     PropTypes.shape({
+      avatarUrl: PropTypes.string,
       id: PropTypes.string.isRequired,
       lastMessageAt: PropTypes.string,
       metadata: PropTypes.object,
@@ -184,7 +189,7 @@ ChatBox.propTypes = {
    * Feature flags to enable or disable built-in ChatBox behaviours.
    */
   features: PropTypes.shape({
-    attachButton: PropTypes.bool,
+    attachments: PropTypes.bool,
     autoScroll: PropTypes.oneOfType([
       PropTypes.shape({
         buffer: PropTypes.number,
@@ -196,10 +201,20 @@ ChatBox.propTypes = {
     scrollToBottom: PropTypes.bool,
     suggestions: PropTypes.bool,
   }),
+  /**
+   * The initial active conversation ID when uncontrolled. Ignored after initialization and when `activeConversationId` is provided.
+   */
   initialActiveConversationId: PropTypes.string,
+  /**
+   * The initial composer value when uncontrolled. Ignored after initialization and when `composerValue` is provided.
+   */
   initialComposerValue: PropTypes.string,
+  /**
+   * The initial conversations when uncontrolled. Ignored after initialization and when `conversations` is provided.
+   */
   initialConversations: PropTypes.arrayOf(
     PropTypes.shape({
+      avatarUrl: PropTypes.string,
       id: PropTypes.string.isRequired,
       lastMessageAt: PropTypes.string,
       metadata: PropTypes.object,
@@ -219,6 +234,9 @@ ChatBox.propTypes = {
       unreadCount: PropTypes.number,
     }),
   ),
+  /**
+   * The initial messages when uncontrolled. Ignored after initialization and when `messages` is provided.
+   */
   initialMessages: PropTypes.arrayOf(
     PropTypes.shape({
       author: PropTypes.shape({
@@ -510,6 +528,13 @@ ChatBox.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The visual layout variant of the chat.
+   * - `'default'` – Standard layout with avatars, individual timestamps, and full spacing.
+   * - `'compact'` – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing.
+   * @default 'default'
+   */
+  variant: PropTypes.oneOf(['compact', 'default']),
 } as any;
 
 export { ChatBox };

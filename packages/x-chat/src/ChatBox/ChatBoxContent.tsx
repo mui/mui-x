@@ -1,18 +1,21 @@
 'use client';
 import * as React from 'react';
 import { useMessageIds, useConversations } from '@mui/x-chat-headless';
+import IconButton from '@mui/material/IconButton';
+import { ChatLayout, useChatLocaleText, type ChatSuggestion, type ChatVariant } from '@mui/x-chat-unstyled';
 import { styled } from '../internals/zero-styled';
-import { ChatLayout, useChatLocaleText } from '@mui/x-chat-unstyled';
 import { ChatConversation } from '../ChatConversation/ChatConversation';
 import { ChatConversationHeader } from '../ChatConversation/ChatConversationHeader';
 import { ChatConversationTitle } from '../ChatConversation/ChatConversationTitle';
 import { ChatConversationSubtitle } from '../ChatConversation/ChatConversationSubtitle';
+import { ChatConversationHeaderInfo } from '../ChatConversation/ChatConversationHeaderInfo';
 import { ChatConversationHeaderActions } from '../ChatConversation/ChatConversationHeaderActions';
 import { ChatConversationList } from '../ChatConversationList/ChatConversationList';
 import { ChatComposer } from '../ChatComposer/ChatComposer';
 import { ChatComposerTextArea } from '../ChatComposer/ChatComposerTextArea';
 import { ChatComposerSendButton } from '../ChatComposer/ChatComposerSendButton';
 import { ChatComposerAttachButton } from '../ChatComposer/ChatComposerAttachButton';
+import { ChatComposerAttachmentList } from '../ChatComposer/ChatComposerAttachmentList';
 import { ChatComposerToolbar } from '../ChatComposer/ChatComposerToolbar';
 import { ChatComposerHelperText } from '../ChatComposer/ChatComposerHelperText';
 import { ChatMessageList } from '../ChatMessageList/ChatMessageList';
@@ -24,9 +27,10 @@ import { ChatMessage } from '../ChatMessage/ChatMessage';
 import { ChatScrollToBottomAffordance } from '../ChatIndicators/ChatScrollToBottomAffordance';
 import { ChatSuggestions } from '../ChatSuggestions/ChatSuggestions';
 import type { ChatBoxSlots, ChatBoxSlotProps, ChatBoxFeatures } from './ChatBox.types';
-import type { ChatSuggestion } from '@mui/x-chat-unstyled';
 import DefaultSendIcon from '../icons/DefaultSendIcon';
 import DefaultAttachIcon from '../icons/DefaultAttachIcon';
+import DefaultNewChatIcon from '../icons/DefaultNewChatIcon';
+import DefaultSettingsIcon from '../icons/DefaultSettingsIcon';
 
 const ChatBoxEmptyState = styled('div', {
   name: 'MuiChatBox',
@@ -45,6 +49,7 @@ const ChatBoxEmptyState = styled('div', {
 }));
 
 interface ChatBoxContentProps {
+  variant?: ChatVariant;
   slots?: Partial<ChatBoxSlots>;
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
@@ -98,6 +103,8 @@ function DefaultConversationHeader({
   }
   const ConversationHeaderComponent = (slots?.conversationHeader ??
     ChatConversationHeader) as typeof ChatConversationHeader;
+  const ConversationHeaderInfoComponent = (slots?.conversationHeaderInfo ??
+    ChatConversationHeaderInfo) as typeof ChatConversationHeaderInfo;
   const ConversationTitleComponent = (slots?.conversationTitle ??
     ChatConversationTitle) as typeof ChatConversationTitle;
   const ConversationSubtitleComponent = (slots?.conversationSubtitle ??
@@ -107,9 +114,18 @@ function DefaultConversationHeader({
 
   return (
     <ConversationHeaderComponent {...(slotProps?.conversationHeader ?? {})}>
-      <ConversationTitleComponent {...(slotProps?.conversationTitle ?? {})} />
-      <ConversationSubtitleComponent {...(slotProps?.conversationSubtitle ?? {})} />
-      <ConversationHeaderActionsComponent {...(slotProps?.conversationHeaderActions ?? {})} />
+      <ConversationHeaderInfoComponent {...(slotProps?.conversationHeaderInfo ?? {})}>
+        <ConversationTitleComponent {...(slotProps?.conversationTitle ?? {})} />
+        <ConversationSubtitleComponent {...(slotProps?.conversationSubtitle ?? {})} />
+      </ConversationHeaderInfoComponent>
+      <ConversationHeaderActionsComponent {...(slotProps?.conversationHeaderActions ?? {})}>
+        <IconButton size="small" aria-label="New chat">
+          <DefaultNewChatIcon />
+        </IconButton>
+        <IconButton size="small" aria-label="Settings">
+          <DefaultSettingsIcon />
+        </IconButton>
+      </ConversationHeaderActionsComponent>
     </ConversationHeaderComponent>
   );
 }
@@ -123,7 +139,7 @@ function DefaultComposer({
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
 }) {
-  const showAttachButton = features?.attachButton !== false;
+  const showAttachments = features?.attachments !== false;
   const showHelperText = features?.helperText !== false;
   const ComposerRootComponent = (slots?.composerRoot ?? ChatComposer) as typeof ChatComposer;
   const ComposerInputComponent = (slots?.composerInput ??
@@ -134,19 +150,24 @@ function DefaultComposer({
     ChatComposerSendButton) as typeof ChatComposerSendButton;
   const ComposerAttachButtonComponent = (slots?.composerAttachButton ??
     ChatComposerAttachButton) as typeof ChatComposerAttachButton;
+  const ComposerAttachmentListComponent = (slots?.composerAttachmentList ??
+    ChatComposerAttachmentList) as typeof ChatComposerAttachmentList;
   const ComposerHelperTextComponent = (slots?.composerHelperText ??
     ChatComposerHelperText) as typeof ChatComposerHelperText;
   const localeText = useChatLocaleText();
 
   return (
     <ComposerRootComponent {...(slotProps?.composerRoot ?? {})}>
+      {showAttachments && (
+        <ComposerAttachmentListComponent {...(slotProps?.composerAttachmentList ?? {})} />
+      )}
       <ComposerInputComponent
         placeholder={localeText.composerInputPlaceholder}
         {...(slotProps?.composerInput ?? {})}
       />
       {showHelperText && <ComposerHelperTextComponent {...(slotProps?.composerHelperText ?? {})} />}
       <ComposerToolbarComponent {...(slotProps?.composerToolbar ?? {})}>
-        {showAttachButton && (
+        {showAttachments && (
           <ComposerAttachButtonComponent
             aria-label={localeText.composerAttachButtonLabel}
             {...(slotProps?.composerAttachButton ?? {})}
@@ -167,6 +188,7 @@ function DefaultComposer({
 
 export function ChatBoxContent(props: ChatBoxContentProps) {
   const {
+    variant,
     slots,
     slotProps,
     features,
@@ -234,7 +256,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       }}
     >
       {hasConversationList && (
-        <ConversationListComponent {...(slotProps?.conversationList ?? {})} />
+        <ConversationListComponent variant={variant} {...(slotProps?.conversationList ?? {})} />
       )}
 
       <ChatConversation>

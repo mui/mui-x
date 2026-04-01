@@ -6,11 +6,13 @@ import {
   type ChatRootProps,
   type MessageListRootAutoScrollConfig,
   type ChatSuggestion,
+  type ChatVariant,
 } from '@mui/x-chat-unstyled';
 import type { ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
 import type { ChatConversationHeaderProps } from '../ChatConversation/ChatConversationHeader';
 import type { ChatConversationTitleProps } from '../ChatConversation/ChatConversationTitle';
 import type { ChatConversationSubtitleProps } from '../ChatConversation/ChatConversationSubtitle';
+import type { ChatConversationHeaderInfoProps } from '../ChatConversation/ChatConversationHeaderInfo';
 import type { ChatConversationHeaderActionsProps } from '../ChatConversation/ChatConversationHeaderActions';
 import type { ChatMessageListProps } from '../ChatMessageList/ChatMessageList';
 import type { ChatMessageProps } from '../ChatMessage/ChatMessage';
@@ -24,6 +26,7 @@ import type { ChatComposerProps } from '../ChatComposer/ChatComposer';
 import type { ChatComposerTextAreaProps } from '../ChatComposer/ChatComposerTextArea';
 import type { ChatComposerSendButtonProps } from '../ChatComposer/ChatComposerSendButton';
 import type { ChatComposerAttachButtonProps } from '../ChatComposer/ChatComposerAttachButton';
+import type { ChatComposerAttachmentListProps } from '../ChatComposer/ChatComposerAttachmentList';
 import type { ChatComposerToolbarProps } from '../ChatComposer/ChatComposerToolbar';
 import type { ChatComposerHelperTextProps } from '../ChatComposer/ChatComposerHelperText';
 import type { ChatTypingIndicatorProps } from '../ChatIndicators/ChatTypingIndicator';
@@ -49,6 +52,8 @@ export interface ChatBoxSlots {
   conversationTitle: React.ElementType;
   /** Override the conversation subtitle component. */
   conversationSubtitle: React.ElementType;
+  /** Override the conversation header info wrapper (title + subtitle column). */
+  conversationHeaderInfo: React.ElementType;
   /** Override the conversation header actions component. */
   conversationHeaderActions: React.ElementType;
   /** Override the message list component. */
@@ -75,6 +80,8 @@ export interface ChatBoxSlots {
   composerSendButton: React.ElementType;
   /** Override the composer attach button. */
   composerAttachButton: React.ElementType;
+  /** Override the composer attachment list. */
+  composerAttachmentList: React.ElementType;
   /** Override the composer toolbar. */
   composerToolbar: React.ElementType;
   /** Override the composer helper text component. */
@@ -98,6 +105,7 @@ export interface ChatBoxSlotProps {
   conversationHeader?: Partial<ChatConversationHeaderProps>;
   conversationTitle?: Partial<ChatConversationTitleProps>;
   conversationSubtitle?: Partial<ChatConversationSubtitleProps>;
+  conversationHeaderInfo?: Partial<ChatConversationHeaderInfoProps>;
   conversationHeaderActions?: Partial<ChatConversationHeaderActionsProps>;
   messageList?: Partial<ChatMessageListProps>;
   messageRoot?: Partial<ChatMessageProps>;
@@ -111,6 +119,7 @@ export interface ChatBoxSlotProps {
   composerInput?: Partial<ChatComposerTextAreaProps>;
   composerSendButton?: Partial<ChatComposerSendButtonProps>;
   composerAttachButton?: Partial<ChatComposerAttachButtonProps>;
+  composerAttachmentList?: Partial<ChatComposerAttachmentListProps>;
   composerToolbar?: Partial<ChatComposerToolbarProps>;
   composerHelperText?: Partial<ChatComposerHelperTextProps>;
   typingIndicator?: Partial<ChatTypingIndicatorProps>;
@@ -131,10 +140,10 @@ export interface ChatBoxFeatures {
    */
   conversationHeader?: boolean;
   /**
-   * Whether to show the file attach button in the composer toolbar.
+   * Whether to enable attachment functionality (attach button and attachment preview list).
    * @default true
    */
-  attachButton?: boolean;
+  attachments?: boolean;
   /**
    * Whether to show the helper text below the composer input.
    * @default true
@@ -171,6 +180,13 @@ export interface ChatBoxProps<Cursor = string> extends Omit<
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChatBoxClasses>;
+  /**
+   * The visual layout variant of the chat.
+   * - `'default'` – Standard layout with avatars, individual timestamps, and full spacing.
+   * - `'compact'` – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing.
+   * @default 'default'
+   */
+  variant?: ChatVariant;
   /**
    * The components used for each slot inside the ChatBox.
    */

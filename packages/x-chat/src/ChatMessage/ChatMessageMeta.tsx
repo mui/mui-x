@@ -19,7 +19,7 @@ const ChatMessageMetaStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Meta',
   overridesResolver: (_, styles) => styles.meta,
-})(({ theme }) => ({
+})<{ ownerState?: { role?: string } }>(({ theme, ownerState }) => ({
   gridArea: 'meta',
   display: 'flex',
   alignItems: 'center',
@@ -28,6 +28,9 @@ const ChatMessageMetaStyled = styled('div', {
   color: (theme.vars || theme).palette.text.disabled,
   lineHeight: 1.4,
   minHeight: '1.2em',
+  ...(ownerState?.role === 'user' && {
+    justifyContent: 'flex-end',
+  }),
 }));
 
 const ChatMessageMeta = React.forwardRef<HTMLDivElement, ChatMessageMetaProps>(

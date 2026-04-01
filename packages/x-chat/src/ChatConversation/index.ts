@@ -6,6 +6,8 @@ export { ChatConversationTitle } from './ChatConversationTitle';
 export type { ChatConversationTitleProps } from './ChatConversationTitle';
 export { ChatConversationSubtitle } from './ChatConversationSubtitle';
 export type { ChatConversationSubtitleProps } from './ChatConversationSubtitle';
+export { ChatConversationHeaderInfo } from './ChatConversationHeaderInfo';
+export type { ChatConversationHeaderInfoProps } from './ChatConversationHeaderInfo';
 export { ChatConversationHeaderActions } from './ChatConversationHeaderActions';
 export type { ChatConversationHeaderActionsProps } from './ChatConversationHeaderActions';
 export {

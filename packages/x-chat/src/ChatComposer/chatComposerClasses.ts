@@ -15,6 +15,8 @@ export interface ChatComposerClasses {
   attachButton: string;
   /** Styles applied to the toolbar element. */
   toolbar: string;
+  /** Styles applied to the attachment list element. */
+  attachmentList: string;
   /** Styles applied to the helper text element. */
   helperText: string;
 }
@@ -32,6 +34,7 @@ export const chatComposerClasses: ChatComposerClasses = generateUtilityClasses('
   'sendButton',
   'attachButton',
   'toolbar',
+  'attachmentList',
   'helperText',
 ]);
 
@@ -42,6 +45,7 @@ const slots: Record<ChatComposerClassKey, string[]> = {
   sendButton: ['sendButton'],
   attachButton: ['attachButton'],
   toolbar: ['toolbar'],
+  attachmentList: ['attachmentList'],
   helperText: ['helperText'],
 };
 
