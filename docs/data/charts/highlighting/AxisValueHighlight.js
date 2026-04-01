@@ -15,9 +15,8 @@ function valueFormatter(value) {
 
 export default function AxisValueHighlight() {
   return (
-    <div style={{ width: 400, height: 400, margin: 'auto' }}>
+    <div style={{ width: '100%', height: 300, minHeight: 0, margin: 'auto' }}>
       <ScatterChart
-        height={300}
         series={[
           {
             label: 'Series A',
@@ -28,7 +27,6 @@ export default function AxisValueHighlight() {
             data: data.map((v) => ({ x: v.x2, y: v.y2, id: v.id })),
           },
         ]}
-        // highlightedAxis={[{axis}]}
         slotProps={{ tooltip: { trigger: 'none' } }}
         axisHighlight={{ x: 'line', y: 'line' }}
       >

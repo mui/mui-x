@@ -1,33 +1,46 @@
 'use client';
 import * as React from 'react';
 import { styled, type SxProps } from '@mui/material/styles';
-import {
-  chartsAxisHighlightValueClasses,
-  useUtilityClasses,
-} from './chartsAxisHighlightValueClasses';
+import { shouldForwardProp } from '@mui/system/createStyled';
+import { useUtilityClasses } from './chartsAxisHighlightValueClasses';
 
 const ChartsAxisHighlightValueText = styled('div', {
   name: 'MuiChartsAxisHighlightValue',
   slot: 'Root',
-})(({ theme }) => ({
+
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'position',
+})<Pick<ChartsAxisHighlightValueItemProps, 'position'>>(({ theme }) => ({
   ...theme.typography.caption,
   padding: theme.spacing(0.5, 1),
   border: `solid ${theme.palette.divider} 1px`,
   backgroundColor: theme.palette.background.paper,
-
-  '--gap': 'calc(-1*min(var(--min),max(calc(100% - var(--max)),50%)))',
-  [`&.${chartsAxisHighlightValueClasses.top}`]: {
-    transform: `translate(var(--gap), -100%)`,
-  },
-  [`&.${chartsAxisHighlightValueClasses.bottom}`]: {
-    transform: 'translate(var(--gap), 0)',
-  },
-  [`&.${chartsAxisHighlightValueClasses.left}`]: {
-    transform: 'translate(-100%, var(--gap))',
-  },
-  [`&.${chartsAxisHighlightValueClasses.right}`]: {
-    transform: 'translate(0,var(--gap))',
-  },
+  '--clamped-offset': 'calc(-1*min(var(--min),max(calc(100% - var(--max)),50%)))',
+  variants: [
+    {
+      props: { position: 'top' },
+      style: {
+        transform: `translate(var(--clamped-offset), -100%)`,
+      },
+    },
+    {
+      props: { position: 'bottom' },
+      style: {
+        transform: 'translate(var(--clamped-offset), 0)',
+      },
+    },
+    {
+      props: { position: 'left' },
+      style: {
+        transform: 'translate(-100%, var(--clamped-offset))',
+      },
+    },
+    {
+      props: { position: 'right' },
+      style: {
+        transform: 'translate(0,var(--clamped-offset))',
+      },
+    },
+  ],
 }));
 
 export interface ChartsAxisHighlightValueItemProps {
@@ -50,6 +63,7 @@ function ChartsAxisHighlightValueItem(props: ChartsAxisHighlightValueItemProps) 
   return (
     <ChartsAxisHighlightValueText
       className={classes.root}
+      position={position}
       style={
         {
           position: 'absolute',

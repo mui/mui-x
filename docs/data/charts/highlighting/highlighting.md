@@ -42,6 +42,13 @@ This component accept the following props:
 
 {{"demo": "AxisValueHighlight.js" }}
 
+The component defines two CSS variables:
+
+- `--clamped-offset`: the offset to center the item (`50%`) clamped to avoid overflowing the axis.
+- `--space`: available size between the drawing area and the charts container.
+
+{{"demo": "AxisValueHighlightCustomization.js" }}
+
 ## Highlighting series
 
 When hovering over elements, a tooltip is shown by default.

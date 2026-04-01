@@ -27,8 +27,6 @@ const ChartsLayerContainerDiv = styled('div', {
 })<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
-  // This is a hack to let the content expand a bit when possible, but not overflow when the container is too small.
-  aspectRatio: '1 / 1',
   display: 'flex',
   position: 'relative',
   flexDirection: 'column',
