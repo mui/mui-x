@@ -229,7 +229,7 @@ For example, in `DateRangePickerDay`, the `day` class has been removed because t
 
 For more details on how to adapt your custom styles, check the [Day slot migration guide](/x/migration/migration-pickers-v8/#day-slot).
 
-#### Examples
+### Examples
 
 Use the `--PickerDay-horizontalMargin` and `--PickerDay-size` CSS variables to easily customize the dimensions and spacing of the day slot.
 
