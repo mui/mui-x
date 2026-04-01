@@ -2,7 +2,7 @@
 
 ## MUI X vs. MUI organization
 
-MUI X is an extension of the core open-source libraries of the MUI organization (Material UI, Base UI, MUI System, Joy UI).
+MUI X is an extension of the core open-source libraries of the MUI organization (Material UI, Base UI, MUI System).
 The repositories are part of the same codebase.
 `mui/mui-x` imports the code infrastructure from [`mui/material-ui`](https://github.com/mui/material-ui).
 You can find the "contributing" guide for the main repository in [mui/material-ui/CONTRIBUTING.md](https://github.com/mui/material-ui/blob/HEAD/CONTRIBUTING.md).
