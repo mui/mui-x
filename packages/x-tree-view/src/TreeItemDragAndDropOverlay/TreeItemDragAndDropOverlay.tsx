@@ -1,6 +1,5 @@
 'use client';
 import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { TreeItemDragAndDropOverlayProps } from './TreeItemDragAndDropOverlay.types';
 import { TreeViewItemsReorderingAction } from '../models';
@@ -24,9 +23,10 @@ const TreeItemDragAndDropOverlayRoot = styled('div', {
       style: {
         marginLeft: 'calc(var(--TreeView-indentMultiplier) * var(--TreeView-itemDepth))',
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.darkChannel} / ${theme.vars.palette.action.focusOpacity})`
-          : alpha(theme.palette.primary.dark, theme.palette.action.focusOpacity),
+        backgroundColor: theme.alpha(
+          (theme.vars || theme).palette.primary.dark,
+          (theme.vars || theme).palette.action.focusOpacity,
+        ),
       },
     },
     {
