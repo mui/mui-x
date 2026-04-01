@@ -11,7 +11,7 @@ components: BarChart, LineChart, ScatterChart
 ## Overview
 
 Charts accept data through the `dataset` prop, which takes an array of objects.
-You can reference individual properties by using `dataKey` on axes and series.
+You can reference individual properties by using `dataKey` on axes and series, or `datasetKeys` for series types that require multiple fields (such as scatter, OHLC, and range bar).
 
 This is an alternative to providing `data` directly on each series or axis.
 It simplifies configuration when multiple series share the same underlying data source.
@@ -59,18 +59,26 @@ series={[
 
 {{"demo": "SeriesValueGetter.js"}}
 
-### Special series value getters
+## Special series
 
-These series types require the `valueGetter` to return values in a specific format.
+These series types require `datasetKeys` or the `valueGetter` to return values in a specific format.
 
-#### Scatter series
+### Scatter series
 
-The `valueGetter` receives the full dataset item and should return a `ScatterValueType` object.
-It can be used as an alternative to `datasetKeys`.
+The scatter series requires `x` and `y` values, and optionally `z` and `id` values.
+You can provide these values with `datasetKeys` or with `valueGetter`.
 
 ```tsx
 series={[
   {
+    type: 'scatter',
+    datasetKeys: {
+      x: 'lng',
+      y: 'lat',
+      z: 'population',
+      id: 'city',
+    },
+    // Or with valueGetter
     valueGetter: (item) => ({
       x: item.lng,
       y: item.lat,
@@ -81,14 +89,15 @@ series={[
 ]}
 ```
 
-#### Heatmap series
+### Heatmap series
 
-The heatmap `valueGetter` should return a `[xIndex, yIndex, value]` tuple.
+The heatmap should return a `[xIndex, yIndex, value]` tuple from the `valueGetter`.
 
 ```tsx
 series={[
   {
     type: 'heatmap',
+    // Or with valueGetter
     valueGetter: (item) => [item.x, item.y, item.temperature],
   },
 ]}
@@ -96,13 +105,38 @@ series={[
 
 #### OHLC series
 
-The OHLC `valueGetter` should return a `[open, high, low, close]` tuple or `null`.
+The OHLC should return a `[open, high, low, close]` tuple or `null` from the `valueGetter` or use `datasetKeys` to specify which fields to use for these values.
 
 ```tsx
 series={[
   {
     type: 'ohlc',
-    valueGetter: (item) => [item.open, item.high, item.low, item.close],
+    datasetKeys: {
+      open: 'openPrice',
+      high: 'highPrice',
+      low: 'lowPrice',
+      close: 'closePrice',
+    },
+    // Or with valueGetter
+    valueGetter: (item) => [item.openPrice, item.highPrice, item.lowPrice, item.closePrice],
+  },
+]}
+```
+
+### Range bar series
+
+The range bar should return a `[start, end]` tuple or `null` from the `valueGetter` or use `datasetKeys` to specify which fields to use for these values.
+
+```tsx
+series={[
+  {
+    type: 'rangeBar',
+    datasetKeys: {
+      start: 'minTemp',
+      end: 'maxTemp',
+    },
+    // Or with valueGetter
+    valueGetter: (item) => [item.minTemp, item.maxTemp],
   },
 ]}
 ```

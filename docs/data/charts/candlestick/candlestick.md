@@ -46,23 +46,9 @@ You can specify the time period with the `xAxis` prop. This axis must have a ban
 
 You can use the `dataset` prop to provide OHLC data and `datasetKeys` on the series to map dataset fields to the open, high, low, and close values.
 
+See the [Dataset](/x/react-charts/dataset) page to learn more.
+
 {{"demo": "DatasetCandlestick.js"}}
-
-### Value getter
-
-You can use `valueGetter` on the OHLC series to transform dataset items into OHLC values.
-The `valueGetter` receives the full dataset item and should return a `[open, high, low, close]` tuple or `null`.
-
-```tsx
-series={[
-  {
-    type: 'ohlc',
-    valueGetter: (item) => [item.open, item.high, item.low, item.close],
-  },
-]}
-```
-
-See the [Dataset](/x/react-charts/dataset) page to learn how to use value getters.
 
 ## Value formatting
 
