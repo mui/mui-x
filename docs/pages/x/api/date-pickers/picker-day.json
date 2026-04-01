@@ -119,18 +119,6 @@
       "isGlobal": false
     },
     {
-      "key": "firstVisibleCell",
-      "className": "MuiPickerDay-firstVisibleCell",
-      "description": "Styles applied to the root element if `isDayFirstVisibleCell=true`.",
-      "isGlobal": false
-    },
-    {
-      "key": "lastVisibleCell",
-      "className": "MuiPickerDay-lastVisibleCell",
-      "description": "Styles applied to the root element if `isDayLastVisibleCell=true`.",
-      "isGlobal": false
-    },
-    {
       "key": "root",
       "className": "MuiPickerDay-root",
       "description": "Styles applied to the root element.",

@@ -14,10 +14,6 @@ export interface PickerDayClasses {
   selected: string;
   /** State class applied to the root element if `disabled=true`. */
   disabled: string;
-  /** Styles applied to the root element if `isDayFirstVisibleCell=true`. */
-  firstVisibleCell: string;
-  /** Styles applied to the root element if `isDayLastVisibleCell=true`. */
-  lastVisibleCell: string;
 }
 
 export type PickerDayClassKey = keyof PickerDayClasses;
@@ -33,6 +29,4 @@ export const pickerDayClasses = generateUtilityClasses<PickerDayClassKey>('MuiPi
   'selected',
   'disabled',
   'fillerCell',
-  'firstVisibleCell',
-  'lastVisibleCell',
 ]);

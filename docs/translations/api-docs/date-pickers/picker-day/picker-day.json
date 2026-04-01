@@ -111,16 +111,6 @@
       "nodeName": "the root element",
       "conditions": "<code>outsideCurrentMonth=true</code> and <code>showDaysOutsideCurrentMonth=false</code>"
     },
-    "firstVisibleCell": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "<code>isDayFirstVisibleCell=true</code>"
-    },
-    "lastVisibleCell": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "<code>isDayLastVisibleCell=true</code>"
-    },
     "root": { "description": "Styles applied to the root element." },
     "selected": {
       "description": "State class applied to {{nodeName}} if {{conditions}}.",

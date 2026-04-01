@@ -30,8 +30,6 @@ const useUtilityClasses = (
     isDayDisabled,
     isDayOutsideMonth,
     isDayFillerCell,
-    isDayFirstVisibleCell,
-    isDayLastVisibleCell,
   } = ownerState;
 
   const slots = {
@@ -42,8 +40,6 @@ const useUtilityClasses = (
       !disableHighlightToday && isDayCurrent && !isDaySelected && !isDayFillerCell && 'today',
       isDayOutsideMonth && 'dayOutsideMonth',
       isDayFillerCell && 'fillerCell',
-      isDayFirstVisibleCell && 'firstVisibleCell',
-      isDayLastVisibleCell && 'lastVisibleCell',
     ],
   };
 
@@ -63,8 +59,6 @@ const PickerDayRoot = styled(ButtonBase, {
       !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
       ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
       ownerState.isDayFillerCell && styles.fillerCell,
-      ownerState.isDayFirstVisibleCell && styles.firstVisibleCell,
-      ownerState.isDayLastVisibleCell && styles.lastVisibleCell,
     ];
   },
 })<{ ownerState: PickerDayOwnerState }>(({ theme }) => ({
@@ -180,8 +174,8 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
     onMouseDown = noop,
     onMouseEnter = noop,
     children,
-    isFirstVisibleCell = false,
-    isLastVisibleCell = false,
+    isFirstVisibleCell,
+    isLastVisibleCell,
     day,
     selected,
     disabled,
@@ -208,8 +202,6 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
     ...pickerDayOwnerState,
     // Properties specific to the MUI implementation (some might be removed in the next major)
     isDayFillerCell: isDayFillerCellProp ?? (outsideCurrentMonth && !showDaysOutsideCurrentMonth),
-    isDayFirstVisibleCell: isFirstVisibleCell,
-    isDayLastVisibleCell: isLastVisibleCell,
   };
 
   const classes = useUtilityClasses(ownerState, classesProp);
