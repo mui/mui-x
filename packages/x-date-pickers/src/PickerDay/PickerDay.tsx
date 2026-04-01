@@ -396,7 +396,7 @@ PickerDayRaw.propTypes = {
    * Callback fired when the day is selected.
    * @param {PickerValidDate} day The day to select.
    */
-  onDaySelect: PropTypes.func,
+  onDaySelect: PropTypes.func.isRequired,
   /**
    * Callback fired when the component is focused.
    * @param {React.FocusEvent<HTMLButtonElement>} event The event object.

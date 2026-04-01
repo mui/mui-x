@@ -1,6 +1,11 @@
 {
   "props": {
     "day": { "type": { "name": "object" }, "required": true },
+    "onDaySelect": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(day: PickerValidDate) => void", "describedArgs": ["day"] }
+    },
     "action": {
       "type": {
         "name": "union",
@@ -42,10 +47,6 @@
         "type": "function(event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => void",
         "describedArgs": ["event"]
       }
-    },
-    "onDaySelect": {
-      "type": { "name": "func" },
-      "signature": { "type": "function(day: PickerValidDate) => void", "describedArgs": ["day"] }
     },
     "onFocus": {
       "type": { "name": "func" },
