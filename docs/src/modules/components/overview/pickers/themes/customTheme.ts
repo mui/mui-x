@@ -345,32 +345,6 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
           }),
         },
       },
-      MuiPickerDay: {
-        styleOverrides: {
-          root: ({ theme }) => ({
-            borderRadius: theme.shape.borderRadius,
-            fontSize: '0.8rem',
-            fontWeight: 500,
-            border: 'none',
-            '--PickerDay-size': `${theme.mixins.density.width}px`,
-
-            '&:hover': {
-              border: 'none',
-            },
-            '&.Mui-selected': {
-              transform: 'none',
-            },
-          }),
-          today: ({ theme }) => ({
-            '&:not(.Mui-selected)': {
-              borderColor: theme.palette.primary.main,
-              '&:hover': {
-                border: theme.palette.primary.main,
-              },
-            },
-          }),
-        },
-      },
       MuiMonthCalendar: {
         styleOverrides: {
           button: ({ theme }) => ({
@@ -395,13 +369,6 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
             fontWeight: 500,
             border: 'none',
 
-            '&:hover': {
-              border: 'none',
-            },
-            '&.Mui-selected': {
-              transform: 'none',
-            },
-
             '::before, ::after': {
               borderRadius: theme.shape.borderRadius,
               border: 'none',
@@ -409,7 +376,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
               right: 0,
             },
 
-            [`&.${dateRangePickerDayClasses.previewed}:not(.${dateRangePickerDayClasses.selectionStart})`]:
+            [`&.${dateRangePickerDayClasses.previewed}:not(.${dateRangePickerDayClasses.selectionStart}):not(.${dateRangePickerDayClasses.selected})`]:
               {
                 '::after': {
                   border: 'none',
@@ -438,6 +405,14 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
               ...theme.applyStyles('dark', {
                 backgroundColor: alpha(theme.palette.primary.main, 0.3),
               }),
+            },
+          }),
+          today: ({ theme }) => ({
+            '&:not(.Mui-selected)': {
+              outline: `1px solid ${(theme.vars || theme).palette.primary.main}`,
+              '&:hover': {
+                outline: `1px solid ${(theme.vars || theme).palette.primary.main}`,
+              },
             },
           }),
         },
