@@ -67,7 +67,6 @@ export default function AxisValueHighlightCustomization() {
             p: 0.5,
             bgcolor: '#610909',
             maxWidth: 50,
-            
           }}
         />
       </ScatterChart>

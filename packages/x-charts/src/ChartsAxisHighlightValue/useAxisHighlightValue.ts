@@ -8,16 +8,10 @@ import {
   selectorChartYAxis,
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type AxisId } from '../models/axis';
+import type { ComputedAxis, AxisId } from '../models/axis';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import type { ChartsAxisHighlightValuePosition } from './ChartsAxisHighlightValue';
 import type { ChartsAxisHighlightValueItemProps } from './ChartsAxisHighlightValueItem';
-
-type ComputedAxis = {
-  scaleType: string;
-  scale: any;
-  valueFormatter?: (value: any, context: any) => string;
-};
 
 function getAxisValueFormatter(
   axis: ComputedAxis,
@@ -47,6 +41,8 @@ export interface UseAxisHighlightValueParams {
   valueFormatter?: (value: number | Date | string) => string;
 }
 
+const EMPTY_ARRAY: AxisHighlightValueItem[] = [];
+
 export function useAxisHighlightValue(
   params: UseAxisHighlightValueParams,
 ): AxisHighlightValueItem[] {
@@ -64,7 +60,7 @@ export function useAxisHighlightValue(
   const axes = store.use(axisSelector);
 
   if (labelPosition === 'none') {
-    return [];
+    return EMPTY_ARRAY;
   }
 
   type AxisHighlightItem = { axisId: AxisId; value: number | Date | string };
