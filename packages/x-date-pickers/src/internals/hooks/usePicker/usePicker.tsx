@@ -67,7 +67,6 @@ export const usePicker = <
     readOnly,
     // Field props
     formatDensity,
-    enableAccessibleFieldDOMStructure,
     selectedSections,
     onSelectedSectionsChange,
     format,
@@ -378,14 +377,12 @@ export const usePicker = <
   const fieldPrivateContextValue = React.useMemo<PickerFieldPrivateContextValue>(
     () => ({
       formatDensity,
-      enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       internalFieldRef,
     }),
     [
       formatDensity,
-      enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       internalFieldRef,

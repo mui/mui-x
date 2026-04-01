@@ -1,6 +1,5 @@
 'use client';
 import {
-  PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerFieldInternalProps,
   useControlledValue,
   useFieldInternalPropsWithDefaults,
@@ -78,7 +77,6 @@ export function useMultiInputRangeField<
     selectedSections,
     onSelectedSectionsChange,
     timezone: timezoneProp,
-    enableAccessibleFieldDOMStructure,
     autoFocus,
     referenceDate,
     startFieldRef,
@@ -117,7 +115,6 @@ export function useMultiInputRangeField<
     format,
     formatDensity,
     shouldRespectLeadingZeros,
-    enableAccessibleFieldDOMStructure,
   };
 
   const rootResponse = useMultiInputRangeFieldRootProps(rootProps);
@@ -150,7 +147,6 @@ export function useMultiInputRangeField<
     root: rootResponse,
     startTextField: startTextFieldResponse,
     endTextField: endTextFieldResponse,
-    enableAccessibleFieldDOMStructure,
   };
 }
 
@@ -172,23 +168,15 @@ interface UseMultiInputRangeFieldReturnValue<
   TRootProps extends { [key: string]: any },
 > {
   root: UseMultiInputRangeFieldRootPropsReturnValue<TRootProps>;
-  startTextField: UseMultiInputRangeFieldTextFieldProps<
-    PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
-    TTextFieldProps
-  >;
-  endTextField: UseMultiInputRangeFieldTextFieldProps<
-    PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
-    TTextFieldProps
-  >;
-  enableAccessibleFieldDOMStructure: PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
+  startTextField: UseMultiInputRangeFieldTextFieldProps<TTextFieldProps>;
+  endTextField: UseMultiInputRangeFieldTextFieldProps<TTextFieldProps>;
 }
 
 export type UseMultiInputRangeFieldTextFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends UseTextFieldBaseForwardedProps,
+  TForwardedProps extends UseTextFieldBaseForwardedProps = UseTextFieldBaseForwardedProps,
 > = Omit<
   UseFieldReturnValue<
-    TEnableAccessibleFieldDOMStructure,
+    true,
     TForwardedProps & {
       onKeyDown: React.KeyboardEventHandler;
       onClick: React.MouseEventHandler;

@@ -28,10 +28,10 @@ export const useFieldV7TextField = <
   TValue extends PickerValidValue,
   TError,
   TValidationProps extends {},
-  TProps extends UseFieldProps<true>,
+  TProps extends UseFieldProps,
 >(
-  parameters: UseFieldParameters<TValue, true, TError, TValidationProps, TProps>,
-): UseFieldReturnValue<true, TProps> => {
+  parameters: UseFieldParameters<TValue, TError, TValidationProps, TProps>,
+): UseFieldReturnValue<TProps> => {
   const {
     props,
     manager,
@@ -217,10 +217,6 @@ export const useFieldV7TextField = <
         `MUI X: The \`sectionListRef\` prop has not been initialized by \`PickersSectionList\`
 You probably tried to pass a component to the \`textField\` slot that contains an \`<input />\` element instead of a \`PickersSectionList\`.
 
-If you want to keep using an \`<input />\` HTML element for the editing, please add the \`enableAccessibleFieldDOMStructure={false}\` prop to your Picker or Field component:
-
-<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: MyCustomTextField }} />
-
 Learn more about the field accessible DOM structure on the MUI documentation: https://mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element`,
       );
     }
@@ -290,7 +286,6 @@ Learn more about the field accessible DOM structure on the MUI documentation: ht
     focused: focusedProp ?? focused,
     sectionListRef: handleSectionListRef,
     // Additional
-    enableAccessibleFieldDOMStructure: true,
     elements,
     areAllSectionsEmpty,
     disabled,

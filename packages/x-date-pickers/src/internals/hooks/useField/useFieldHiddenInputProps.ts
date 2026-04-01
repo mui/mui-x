@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { PickerManager } from '../../../models';
+import { PickerAnyManager } from '../../models/manager';
 import { UseFieldStateReturnValue } from './useFieldState';
 
 /**
@@ -31,9 +31,7 @@ export function useFieldHiddenInputProps(
 
   const valueStr = React.useMemo(
     () =>
-      areAllSectionsEmpty
-        ? ''
-        : fieldValueManager.getV7HiddenInputValueFromSections(state.sections),
+      areAllSectionsEmpty ? '' : fieldValueManager.getHiddenInputValueFromSections(state.sections),
     [areAllSectionsEmpty, state.sections, fieldValueManager],
   );
 
@@ -44,7 +42,7 @@ export function useFieldHiddenInputProps(
 }
 
 interface UseFieldHiddenInputPropsParameters {
-  manager: PickerManager<any, any, any, any, any>;
+  manager: PickerAnyManager;
   stateResponse: UseFieldStateReturnValue<any>;
 }
 
