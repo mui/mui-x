@@ -97,7 +97,7 @@ function EditAction(props: Pick<GridRowParams, 'row'>) {
     setEditing(false);
   };
 
-  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSave = (event: React.FormEvent) => {
     event.preventDefault();
     apiRef.current.updateRows([{ id: row.id, name, position }]);
     handleClose();
