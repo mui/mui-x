@@ -80,8 +80,8 @@ const Scroller = styled('div', {
 });
 
 const Viewport = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'internal-Viewport',
+  slot: 'internal',
+  shouldForwardProp: undefined,
 })({
   display: 'contents',
 
