@@ -51,10 +51,10 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
       return 0;
     }
     if (empty1) {
-      return 1;
+      return -1;
     }
     if (empty2) {
-      return -1;
+      return 1;
     }
     return v1.join('').localeCompare(v2.join(''));
   },
