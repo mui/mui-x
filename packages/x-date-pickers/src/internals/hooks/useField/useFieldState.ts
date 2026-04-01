@@ -303,7 +303,6 @@ export const useFieldState = <
         date,
         formatDensity,
         shouldRespectLeadingZeros,
-        enableAccessibleFieldDOMStructure,
         isRtl,
       });
       return mergeDateIntoReferenceDate(adapter, date, sections, referenceDate, false);

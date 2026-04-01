@@ -43,7 +43,7 @@ export function useFieldSectionContainerProps(
 
 interface UseFieldSectionContainerPropsParameters {
   stateResponse: UseFieldStateReturnValue<any>;
-  internalPropsWithDefaults: UseFieldInternalProps<any, any, any>;
+  internalPropsWithDefaults: UseFieldInternalProps<any, any>;
 }
 
 type UseFieldSectionContainerPropsReturnValue = (

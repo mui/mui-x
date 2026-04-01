@@ -1,12 +1,12 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
-import { PickerManager } from '../../../models';
 import { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
 import { useFieldRootHandleKeyDown } from './useFieldRootHandleKeyDown';
 import { UseFieldStateReturnValue } from './useFieldState';
 import { getActiveElement } from '../../utils/utils';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
+import { PickerAnyManager } from '../../models';
 
 /**
  * Generate the props to pass to the root element of the field.
@@ -180,10 +180,10 @@ export function useFieldRootProps(
 }
 
 interface UseFieldRootPropsParameters {
-  manager: PickerManager<any, any, any, any, any>;
+  manager: PickerAnyManager;
   stateResponse: UseFieldStateReturnValue<any>;
   applyCharacterEditing: UseFieldCharacterEditingReturnValue;
-  internalPropsWithDefaults: UseFieldInternalProps<any, any, any>;
+  internalPropsWithDefaults: UseFieldInternalProps<any, any>;
   domGetters: UseFieldDOMGetters;
   focused: boolean;
   setFocused: (focused: boolean) => void;

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { UseFieldStateReturnValue } from './useFieldState';
-import { FieldSection, MuiPickersAdapter, PickerManager } from '../../../models';
+import { FieldSection, MuiPickersAdapter } from '../../../models';
 import { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
 import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
-import { FieldRangeSection } from '../../models';
+import { FieldRangeSection, PickerAnyManager } from '../../models';
 import { PickersSectionElement } from '../../../PickersSectionList';
 
 /**
@@ -218,10 +218,10 @@ export function useFieldSectionContentProps(
 }
 
 interface UseFieldSectionContentPropsParameters {
-  manager: PickerManager<any, any, any, any, any>;
+  manager: PickerAnyManager;
   stateResponse: UseFieldStateReturnValue<any>;
   applyCharacterEditing: UseFieldCharacterEditingReturnValue;
-  internalPropsWithDefaults: UseFieldInternalProps<any, any, any>;
+  internalPropsWithDefaults: UseFieldInternalProps<any, any>;
   domGetters: UseFieldDOMGetters;
   focused: boolean;
 }

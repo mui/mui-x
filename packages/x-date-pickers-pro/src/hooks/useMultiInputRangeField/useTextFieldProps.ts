@@ -143,7 +143,7 @@ export function useTextFieldProps<
     manager,
     props: allProps,
     skipContextFieldRefAssignment: rangePosition !== position,
-  }) as unknown as UseFieldReturnValue<true, typeof allProps>;
+  }) as unknown as UseFieldReturnValue<typeof allProps>;
 
   React.useEffect(() => {
     if (!pickerContext?.open || pickerContext?.variant === 'mobile') {
@@ -202,6 +202,6 @@ export interface UseTextFieldBaseForwardedProps {
 }
 
 interface UseTextFieldSharedInternalProps<TManager extends PickerAnyRangeManager> extends Pick<
-  UseFieldInternalProps<PickerValue, true, PickerManagerError<TManager>>,
+  UseFieldInternalProps<PickerValue, PickerManagerError<TManager>>,
   'disabled' | 'readOnly' | 'timezone' | 'format' | 'formatDensity' | 'shouldRespectLeadingZeros'
 > {}

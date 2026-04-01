@@ -44,12 +44,12 @@ import {
  * }
  * ```
  *
- * @param {UseMultiInputRangeFieldParameters<TManager, TTextFieldProps>} parameters The parameters of the hook.
+ * @param {UseMultiInputRangeFieldParameters<TManager, TTextFieldProps, TRootProps>} parameters The parameters of the hook.
  * @param {TManager} parameters.manager The manager of the field.
  * @param {PickerManagerFieldInternalProps<TManager>} parameters.internalProps The internal props of the field.
  * @param {TTextFieldProps} parameters.startForwardedProps The forwarded props of the start field.
  * @param {TTextFieldProps} parameters.endForwardedProps The forwarded props of the end field.
- * @returns {UseMultiInputRangeFieldReturnValue<TManager, TTextFieldProps>} The props to pass to the start and the end components.
+ * @returns {UseMultiInputRangeFieldReturnValue<TTextFieldProps, TRootProps>} The props to pass to the start and the end components.
  */
 export function useMultiInputRangeField<
   TManager extends PickerAnyRangeManager,
@@ -57,7 +57,7 @@ export function useMultiInputRangeField<
   TRootProps extends { [key: string]: any },
 >(
   parameters: UseMultiInputRangeFieldParameters<TManager, TTextFieldProps, TRootProps>,
-): UseMultiInputRangeFieldReturnValue<TManager, TTextFieldProps, TRootProps> {
+): UseMultiInputRangeFieldReturnValue<TTextFieldProps, TRootProps> {
   const { manager, internalProps, rootProps, startTextFieldProps, endTextFieldProps } = parameters;
 
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
@@ -163,7 +163,6 @@ interface UseMultiInputRangeFieldParameters<
 }
 
 interface UseMultiInputRangeFieldReturnValue<
-  TManager extends PickerAnyRangeManager,
   TTextFieldProps extends { [key: string]: any },
   TRootProps extends { [key: string]: any },
 > {
@@ -176,7 +175,6 @@ export type UseMultiInputRangeFieldTextFieldProps<
   TForwardedProps extends UseTextFieldBaseForwardedProps = UseTextFieldBaseForwardedProps,
 > = Omit<
   UseFieldReturnValue<
-    true,
     TForwardedProps & {
       onKeyDown: React.KeyboardEventHandler;
       onClick: React.MouseEventHandler;

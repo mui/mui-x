@@ -273,9 +273,9 @@ function adjustSectionValue<TValue extends PickerValidValue>(
 }
 
 interface UseFieldRootHandleKeyDownParameters<TValue extends PickerValidValue> {
-  manager: PickerManager<TValue, any, any, any, any>;
+  manager: PickerManager<TValue, any, any, any>;
   stateResponse: UseFieldStateReturnValue<TValue>;
-  internalPropsWithDefaults: UseFieldInternalProps<TValue, any, any> & { minutesStep?: number };
+  internalPropsWithDefaults: UseFieldInternalProps<TValue, any> & { minutesStep?: number };
 }
 
 type AvailableAdjustKeyCode = 'ArrowUp' | 'ArrowDown' | 'PageUp' | 'PageDown' | 'Home' | 'End';
