@@ -8,10 +8,8 @@ import {
 } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
-import { seriesPreviewPlotMap, type PreviewPlotProps } from '@mui/x-charts-pro/internals';
+import { type PreviewPlotProps } from '@mui/x-charts-pro/internals';
 import { useOHLCSeriesContext } from '../../../hooks/useOHLCSeries';
-
-seriesPreviewPlotMap.set('ohlc', CandlestickPreviewPlot);
 
 export function CandlestickPreviewPlot(props: PreviewPlotProps) {
   const { axisId } = props;
@@ -45,63 +43,37 @@ export function CandlestickPreviewPlot(props: PreviewPlotProps) {
         const xScale = xAxis.scale as ScaleBand<{ toString(): string }>;
         const yScale = yAxis.scale as D3ContinuousScale;
         const xDomain = xScale.domain();
-        const candleWidth = xScale.bandwidth();
-        const bullishColor = theme.palette.success.main;
-        const bearishColor = theme.palette.error.main;
-        const wickColor = theme.palette.text.primary;
+        const bandWidth = xScale.bandwidth();
+
+        // Build a line path from the close prices
+        let d = '';
+        data?.forEach((datum, dataIndex) => {
+          if (datum === null) {
+            return;
+          }
+
+          const scaledX = xScale(xDomain[dataIndex]);
+          if (scaledX === undefined) {
+            return;
+          }
+
+          const close = datum[3];
+          const cx = scaledX + bandWidth / 2;
+          const cy = yScale(close);
+
+          d += d === '' ? `M ${cx},${cy}` : ` L ${cx},${cy}`;
+        });
 
         return (
-          <g key={seriesId} data-series={seriesId}>
-            {data?.map((datum, dataIndex) => {
-              if (datum === null) {
-                return null;
-              }
-
-              const scaledX = xScale(xDomain[dataIndex]);
-              if (scaledX === undefined) {
-                return null;
-              }
-
-              const [open, high, low, close] = datum;
-
-              const cx = scaledX + candleWidth / 2;
-              const scaledOpen = yScale(open);
-              const scaledClose = yScale(close);
-              const scaledHigh = yScale(high);
-              const scaledLow = yScale(low);
-
-              const candleTop = Math.min(scaledOpen, scaledClose);
-              const candleBottom = Math.max(scaledOpen, scaledClose);
-              const candleHeight = candleBottom - candleTop;
-              const isBullish = close >= open;
-              const color = isBullish ? bullishColor : bearishColor;
-
-              // Ensure at least 1px candle body
-              const renderedCandleHeight = Math.max(candleHeight, 1);
-
-              return (
-                <g key={dataIndex}>
-                  {/* Wick */}
-                  <line
-                    x1={cx}
-                    x2={cx}
-                    y1={scaledHigh}
-                    y2={scaledLow}
-                    stroke={wickColor}
-                    strokeWidth={1}
-                  />
-                  {/* Body */}
-                  <rect
-                    x={scaledX}
-                    y={candleTop}
-                    width={candleWidth}
-                    height={renderedCandleHeight}
-                    fill={color}
-                  />
-                </g>
-              );
-            })}
-          </g>
+          <path
+            key={seriesId}
+            data-series={seriesId}
+            d={d}
+            stroke={theme.palette.text.primary}
+            strokeWidth={2}
+            strokeLinejoin="round"
+            fill="none"
+          />
         );
       })}
     </React.Fragment>

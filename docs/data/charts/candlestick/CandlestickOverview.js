@@ -161,7 +161,7 @@ export default function CandlestickOverview() {
               value.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
             zoom: {
               filterMode: 'discard',
-              slider: { enabled: true, preview: true },
+              slider: { enabled: true, preview: { seriesIds: ['ohlc'] } },
             },
           },
         ]}

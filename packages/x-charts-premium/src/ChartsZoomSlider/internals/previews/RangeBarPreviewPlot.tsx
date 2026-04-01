@@ -6,10 +6,8 @@ import {
 } from '@mui/x-charts/internals';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
-import { seriesPreviewPlotMap, type PreviewPlotProps } from '@mui/x-charts-pro/internals';
+import { type PreviewPlotProps } from '@mui/x-charts-pro/internals';
 import { useRangeBarPlotData } from '../../../BarChartPremium/RangeBar/useRangeBarPlotData';
-
-seriesPreviewPlotMap.set('rangeBar', RangeBarPreviewPlot);
 
 export function RangeBarPreviewPlot(props: PreviewPlotProps) {
   const drawingArea: ChartDrawingArea = {

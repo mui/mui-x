@@ -127,14 +127,14 @@ export default function CandlestickOverview() {
           },
           ...(movingAverageData !== null
             ? [
-              {
-                id: 'moving-average',
-                type: 'line' as const,
-                data: movingAverageData,
-                label: `${movingAverageWindow}-day Moving Average`,
-                color: '#42a5f5',
-              },
-            ]
+                {
+                  id: 'moving-average',
+                  type: 'line' as const,
+                  data: movingAverageData,
+                  label: `${movingAverageWindow}-day Moving Average`,
+                  color: '#42a5f5',
+                },
+              ]
             : []),
           {
             id: 'volume',
@@ -161,7 +161,7 @@ export default function CandlestickOverview() {
               value.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
             zoom: {
               filterMode: 'discard',
-              slider: { enabled: true, preview: true },
+              slider: { enabled: true, preview: { seriesIds: ['ohlc'] } },
             },
           },
         ]}
