@@ -2,8 +2,8 @@ import { crawl } from '@mui/internal-code-infra/brokenLinksChecker';
 
 async function main() {
   const { issues } = await crawl({
-    startCommand: 'pnpm serve --no-request-logging -p 3001',
-    host: 'http://localhost:3001/',
+    startCommand: 'pnpm serve --no-request-logging',
+    host: 'http://localhost:3010/',
     seedUrls: ['/x'],
     // Target paths to ignore during link checking
     ignoredPaths: [

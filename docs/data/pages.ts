@@ -829,6 +829,7 @@ const pages: MuiPage[] = [
     unstable: true,
     children: [
       { pathname: '/x/react-chat', title: 'Overview' },
+      { pathname: '/x/react-chat/getting-started', title: 'Getting started' },
       {
         pathname: '/x/react-chat/components',
         subheader: 'Components',
@@ -914,6 +915,10 @@ const pages: MuiPage[] = [
             pathname: '/x/react-chat/examples/customization',
             title: 'Customization',
             children: [
+              {
+                pathname: '/x/react-chat/material/examples/compact-variant',
+                title: 'Compact variant',
+              },
               {
                 pathname: '/x/react-chat/material/examples/custom-theme',
                 title: 'Custom theme',
