@@ -154,6 +154,24 @@ Notice that the `onAxisClick` will handle both bar and line series if you mix th
 </ChartsContainer>
 ```
 
+### Pointer interaction 🧪
+
+By default, line and area series are highlighted when the pointer hovers directly over the SVG element (the line stroke or area fill).
+This can make it difficult to interact with thin lines.
+
+Enabling `experimentalFeatures.enablePositionBasedPointerInteraction` switches to a pointer-position-based detection that determines the closest series to the cursor.
+For area series, it detects whether the pointer is inside the filled area.
+For line series (without area), it finds the series whose curve is closest to the pointer's vertical position.
+
+This uses the same curve interpolation as the rendered line (for example, `monotoneX`, `catmullRom`), so the hit detection matches the visual shape.
+
+:::warning
+This feature is experimental.
+Its API and behavior may change in future releases.
+:::
+
+{{"demo": "LinePointerInteraction.js"}}
+
 ## Styling
 
 ### Grid
@@ -257,6 +275,10 @@ The definition of `myGradient` is passed as a children of the chart component.
 ```
 
 {{"demo": "CSSCustomization.js"}}
+
+The next example shows how to apply a dashed stroke to the chart line, legend mark, and tooltip mark for each series using the `[data-series]` attribute selector.
+
+{{"demo": "StyledLineChart.js"}}
 
 ## Animation
 

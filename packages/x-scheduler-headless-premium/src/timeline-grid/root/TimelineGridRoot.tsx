@@ -15,6 +15,7 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     // Rendering props
     className,
     render,
+    style,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -31,17 +32,18 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     viewConfig.end,
   );
 
-  const props = {
-    role: 'grid',
-    style: {
-      [TimelineGridRootCssVars.unitCount]: viewConfig.unitCount,
-      [TimelineGridRootCssVars.rowCount]: resources.length,
-    } as React.CSSProperties,
-  };
-
   return useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [props, elementProps],
+    props: [
+      elementProps,
+      {
+        role: 'grid',
+        style: {
+          [TimelineGridRootCssVars.unitCount]: viewConfig.unitCount,
+          [TimelineGridRootCssVars.rowCount]: resources.length,
+        } as React.CSSProperties,
+      },
+    ],
   });
 });
 

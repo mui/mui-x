@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
@@ -15,37 +14,45 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   instance,
 }) => {
   const { chartsLayerContainerRef } = instance;
-  const removeFocus = useEventCallback(function removeFocus() {
-    if (store.state.keyboardNavigation.isFocused) {
-      store.set('keyboardNavigation', {
-        ...store.state.keyboardNavigation,
-        isFocused: false,
-      });
-    }
-  });
-
-  const restoreFocus = useEventCallback(function restoreFocus() {
-    if (!store.state.keyboardNavigation.isFocused) {
-      store.update({
-        ...(store.state.highlight && {
-          highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
-        }),
-        ...(store.state.interaction && {
-          interaction: { ...store.state.interaction, lastUpdate: 'keyboard' },
-        }),
-        keyboardNavigation: {
-          ...store.state.keyboardNavigation,
-          isFocused: true,
-        },
-      });
-    }
-  });
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
 
     if (!element || params.disableKeyboardNavigation) {
       return undefined;
+    }
+
+    function removeFocus(event: FocusEvent) {
+      const root = event.currentTarget as HTMLElement;
+      const next = event.relatedTarget as HTMLElement | null;
+
+      // Avoid removing focus if we know it is moving to another children in the chart.
+      // This avoid extra computation ot remove/add focus at each keyboard pressed when navigating in the chart.
+      if (root && next instanceof Node && !root.contains(next)) {
+        if (store.state.keyboardNavigation.isFocused) {
+          store.set('keyboardNavigation', {
+            ...store.state.keyboardNavigation,
+            isFocused: false,
+          });
+        }
+      }
+    }
+
+    function restoreFocus() {
+      if (!store.state.keyboardNavigation.isFocused) {
+        store.update({
+          ...(store.state.highlight && {
+            highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
+          }),
+          ...(store.state.interaction && {
+            interaction: { ...store.state.interaction, lastUpdate: 'keyboard' },
+          }),
+          keyboardNavigation: {
+            ...store.state.keyboardNavigation,
+            isFocused: true,
+          },
+        });
+      }
     }
 
     function keyboardHandler(event: KeyboardEvent) {
@@ -93,14 +100,14 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     element.addEventListener('keydown', keyboardHandler);
-    element.addEventListener('blur', removeFocus);
-    element.addEventListener('focus', restoreFocus);
+    element.addEventListener('focusout', removeFocus);
+    element.addEventListener('focusin', restoreFocus);
     return () => {
       element.removeEventListener('keydown', keyboardHandler);
-      element.removeEventListener('blur', removeFocus);
-      element.removeEventListener('focus', restoreFocus);
+      element.removeEventListener('focusout', removeFocus);
+      element.removeEventListener('focusin', restoreFocus);
     };
-  }, [chartsLayerContainerRef, removeFocus, restoreFocus, params.disableKeyboardNavigation, store]);
+  }, [chartsLayerContainerRef, params.disableKeyboardNavigation, store]);
 
   useEnhancedEffect(() => {
     store.set('keyboardNavigation', {
