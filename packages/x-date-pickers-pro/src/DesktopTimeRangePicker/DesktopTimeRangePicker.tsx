@@ -74,23 +74,21 @@ const rendererInterceptor = function RendererInterceptor(
   );
 };
 
-type DesktopTimeRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopTimeRangePickerComponent = ((
+  props: DesktopTimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker(
+  inProps: DesktopTimeRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all time range pickers
-  const defaultizedProps = useTimeRangePickerDefaultizedProps<
-    DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopTimeRangePicker');
+  const defaultizedProps = useTimeRangePickerDefaultizedProps<DesktopTimeRangePickerProps>(
+    inProps,
+    'MuiDesktopTimeRangePicker',
+  );
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -150,11 +148,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<
-    TimeViewWithMeridiem,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopRangePicker<TimeViewWithMeridiem, typeof props>({
     ref,
     props,
     valueManager: rangeValueManager,

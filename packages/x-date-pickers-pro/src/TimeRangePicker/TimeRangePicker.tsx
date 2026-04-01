@@ -9,9 +9,8 @@ import { DesktopTimeRangePicker } from '../DesktopTimeRangePicker';
 import { MobileTimeRangePicker } from '../MobileTimeRangePicker';
 import { TimeRangePickerProps } from './TimeRangePicker.types';
 
-type TimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: TimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type TimePickerComponent = ((
+  props: TimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -24,10 +23,8 @@ type TimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean 
  *
  * - [TimeRangePicker API](https://mui.com/x/api/date-pickers/time-range-picker/)
  */
-const TimeRangePicker = React.forwardRef(function TimeRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: TimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const TimeRangePicker = React.forwardRef(function TimeRangePicker(
+  inProps: TimeRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimeRangePicker' });

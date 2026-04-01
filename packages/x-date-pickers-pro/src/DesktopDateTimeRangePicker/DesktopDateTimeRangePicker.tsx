@@ -98,9 +98,8 @@ const rendererInterceptor = function RendererInterceptor(
   );
 };
 
-type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopDateRangePickerComponent = ((
+  props: DesktopDateTimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -113,17 +112,16 @@ type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure exte
  *
  * - [DesktopDateTimeRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-range-picker/)
  */
-const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker(
+  inProps: DesktopDateTimeRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
   // Props with the default values common to all date time range pickers
-  const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
-    DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopDateTimeRangePicker');
+  const defaultizedProps = useDateTimeRangePickerDefaultizedProps<DesktopDateTimeRangePickerProps>(
+    inProps,
+    'MuiDesktopDateTimeRangePicker',
+  );
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -179,11 +177,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<
-    DateTimeRangePickerView,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopRangePicker<DateTimeRangePickerView, typeof props>({
     ref,
     props,
     valueManager: rangeValueManager,

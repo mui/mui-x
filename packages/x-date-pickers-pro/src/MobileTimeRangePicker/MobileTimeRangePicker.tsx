@@ -76,23 +76,21 @@ const rendererInterceptor = function rendererInterceptor(
   return <TimeRangePickerTimeWrapper {...finalProps} viewRenderer={viewRenderer} />;
 };
 
-type MobileTimeRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MobileTimeRangePickerComponent = ((
+  props: MobileTimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker(
+  inProps: MobileTimeRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all time range pickers
-  const defaultizedProps = useTimeRangePickerDefaultizedProps<
-    MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileTimeRangePicker');
+  const defaultizedProps = useTimeRangePickerDefaultizedProps<MobileTimeRangePickerProps>(
+    inProps,
+    'MuiMobileTimeRangePicker',
+  );
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -135,11 +133,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
     },
   };
 
-  const { renderPicker } = useMobileRangePicker<
-    TimeViewWithMeridiem,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useMobileRangePicker<TimeViewWithMeridiem, typeof props>({
     ref,
     props,
     valueManager: rangeValueManager,

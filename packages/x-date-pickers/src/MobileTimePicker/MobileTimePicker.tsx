@@ -14,9 +14,8 @@ import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 
-type MobileTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MobileTimePickerComponent = ((
+  props: MobileTimePickerProps<TimeView> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -29,67 +28,60 @@ type MobileTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends bo
  *
  * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
-const MobileTimePicker = React.forwardRef(function MobileTimePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const adapter = usePickerAdapter();
+const MobileTimePicker = React.forwardRef(
+  (inProps: MobileTimePickerProps<TimeView>, ref: React.Ref<HTMLDivElement>) => {
+    const adapter = usePickerAdapter();
 
-  // Props with the default values common to all time pickers
-  const defaultizedProps = useTimePickerDefaultizedProps<
-    TimeView,
-    MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileTimePicker');
+    // Props with the default values common to all time pickers
+    const defaultizedProps = useTimePickerDefaultizedProps<
+      TimeView,
+      MobileTimePickerProps<TimeView>
+    >(inProps, 'MuiMobileTimePicker');
 
-  const viewRenderers: TimePickerViewRenderers<TimeView> = {
-    hours: renderTimeViewClock,
-    minutes: renderTimeViewClock,
-    seconds: renderTimeViewClock,
-    ...defaultizedProps.viewRenderers,
-  };
-  const ampmInClock = defaultizedProps.ampmInClock ?? false;
+    const viewRenderers: TimePickerViewRenderers<TimeView> = {
+      hours: renderTimeViewClock,
+      minutes: renderTimeViewClock,
+      seconds: renderTimeViewClock,
+      ...defaultizedProps.viewRenderers,
+    };
+    const ampmInClock = defaultizedProps.ampmInClock ?? false;
 
-  // Props with the default values specific to the mobile variant
-  const props = {
-    ...defaultizedProps,
-    ampmInClock,
-    viewRenderers,
-    format: resolveTimeFormat(adapter, defaultizedProps),
-    slots: {
-      field: TimeField,
-      ...defaultizedProps.slots,
-    },
-    slotProps: {
-      ...defaultizedProps.slotProps,
-      field: (ownerState: PickerOwnerState) => ({
-        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
-        ...extractValidationProps(defaultizedProps),
-      }),
-      toolbar: {
-        hidden: false,
-        ampmInClock,
-        ...defaultizedProps.slotProps?.toolbar,
+    // Props with the default values specific to the mobile variant
+    const props = {
+      ...defaultizedProps,
+      ampmInClock,
+      viewRenderers,
+      format: resolveTimeFormat(adapter, defaultizedProps),
+      slots: {
+        field: TimeField,
+        ...defaultizedProps.slots,
       },
-    },
-  };
+      slotProps: {
+        ...defaultizedProps.slotProps,
+        field: (ownerState: PickerOwnerState) => ({
+          ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
+          ...extractValidationProps(defaultizedProps),
+        }),
+        toolbar: {
+          hidden: false,
+          ampmInClock,
+          ...defaultizedProps.slotProps?.toolbar,
+        },
+      },
+    };
 
-  const { renderPicker } = useMobilePicker<
-    TimeView,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
-    ref,
-    props,
-    valueManager: singleItemValueManager,
-    valueType: 'time',
-    validator: validateTime,
-    steps: null,
-  });
+    const { renderPicker } = useMobilePicker<TimeView, typeof props>({
+      ref,
+      props,
+      valueManager: singleItemValueManager,
+      valueType: 'time',
+      validator: validateTime,
+      steps: null,
+    });
 
-  return renderPicker();
-}) as MobileTimePickerComponent;
+    return renderPicker();
+  },
+) as MobileTimePickerComponent;
 
 MobileTimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

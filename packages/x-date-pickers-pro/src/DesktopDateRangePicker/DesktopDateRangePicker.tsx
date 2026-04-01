@@ -15,9 +15,8 @@ import { SingleInputDateRangeField } from '../SingleInputDateRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../validation';
 
-type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopDateRangePickerComponent = ((
+  props: DesktopDateRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -30,18 +29,17 @@ type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure exte
  *
  * - [DesktopDateRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-range-picker/)
  */
-const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker(
+  inProps: DesktopDateRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all date time pickers
-  const defaultizedProps = useDateRangePickerDefaultizedProps<
-    DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopDateRangePicker');
+  const defaultizedProps = useDateRangePickerDefaultizedProps<DesktopDateRangePickerProps>(
+    inProps,
+    'MuiDesktopDateRangePicker',
+  );
 
   const viewRenderers: PickerViewRendererLookup<PickerRangeValue, any, any> = {
     day: renderDateRangeViewCalendar,
@@ -74,11 +72,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<
-    'day',
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopRangePicker<'day', typeof props>({
     ref,
     props,
     valueManager: rangeValueManager,

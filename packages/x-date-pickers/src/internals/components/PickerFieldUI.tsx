@@ -22,7 +22,7 @@ const noop = () => {};
 
 export const cleanFieldResponse = <
   TFieldResponse extends MakeOptional<
-    UseFieldReturnValue<any, ExportedPickerFieldUIProps & { [key: string]: any }>,
+    UseFieldReturnValue<ExportedPickerFieldUIProps & { [key: string]: any }>,
     'onClear' | 'clearable'
   >,
 >(
@@ -81,10 +81,7 @@ export const PickerFieldUIContext = React.createContext<PickerFieldUIContextValu
  * Adds the button to open the Picker and the button to clear the value of the field.
  * @ignore - internal component.
  */
-export function PickerFieldUI<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
->(props: PickerFieldUIProps<TEnableAccessibleFieldDOMStructure, TProps>) {
+export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUIProps<TProps>) {
   const { fieldResponse, defaultOpenPickerIcon } = props;
 
   const translations = usePickerTranslations();
@@ -323,14 +320,11 @@ export interface ExportedPickerFieldUIProps {
   openPickerButtonPosition?: 'start' | 'end';
 }
 
-export interface PickerFieldUIProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
-> {
+export interface PickerFieldUIProps<TProps extends UseFieldProps> {
   /**
    * Object returned by the `useField` hook or one of its wrapper (for example `useDateField`).
    */
-  fieldResponse: UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, TProps>;
+  fieldResponse: UseFieldReturnValue<TProps>;
   /**
    * The component to use to render the Picker opening icon if none is provided in the Picker's slots.
    */

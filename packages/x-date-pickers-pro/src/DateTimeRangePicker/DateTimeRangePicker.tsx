@@ -9,9 +9,8 @@ import { DateTimeRangePickerProps } from './DateTimeRangePicker.types';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 import { MobileDateTimeRangePicker } from '../MobileDateTimeRangePicker';
 
-type DateTimeRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DateTimeRangePickerComponent = ((
+  props: DateTimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -24,10 +23,8 @@ type DateTimeRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends
  *
  * - [DateTimeRangePicker API](https://mui.com/x/api/date-pickers/date-time-range-picker/)
  */
-const DateTimeRangePicker = React.forwardRef(function DateTimeRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DateTimeRangePicker = React.forwardRef(function DateTimeRangePicker(
+  inProps: DateTimeRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePicker' });

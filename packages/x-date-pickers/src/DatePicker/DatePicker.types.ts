@@ -14,14 +14,9 @@ import { ValidateDateProps } from '../validation/validateDate';
 export interface DatePickerSlots extends DesktopDatePickerSlots, MobileDatePickerSlots {}
 
 export interface DatePickerSlotProps
-  extends
-    DesktopDatePickerSlotProps,
-    MobileDatePickerSlotProps {}
+  extends DesktopDatePickerSlotProps, MobileDatePickerSlotProps {}
 
-export interface DatePickerProps
-  extends
-    DesktopDatePickerProps,
-    MobileDatePickerProps {
+export interface DatePickerProps extends DesktopDatePickerProps, MobileDatePickerProps {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
