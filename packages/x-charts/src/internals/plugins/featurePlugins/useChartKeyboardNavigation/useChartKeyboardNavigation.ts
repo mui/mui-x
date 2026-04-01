@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
@@ -14,21 +13,46 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   store,
   instance,
 }) => {
-  const { svgRef } = instance;
-  const removeFocus = useEventCallback(function removeFocus() {
-    if (store.state.keyboardNavigation.item !== null) {
-      store.set('keyboardNavigation', {
-        ...store.state.keyboardNavigation,
-        item: null,
-      });
-    }
-  });
+  const { chartsLayerContainerRef } = instance;
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
 
-    if (!element || !params.enableKeyboardNavigation) {
+    if (!element || params.disableKeyboardNavigation) {
       return undefined;
+    }
+
+    function removeFocus(event: FocusEvent) {
+      const root = event.currentTarget as HTMLElement;
+      const next = event.relatedTarget as HTMLElement | null;
+
+      // Avoid removing focus if we know it is moving to another children in the chart.
+      // This avoid extra computation ot remove/add focus at each keyboard pressed when navigating in the chart.
+      if (root && next instanceof Node && !root.contains(next)) {
+        if (store.state.keyboardNavigation.isFocused) {
+          store.set('keyboardNavigation', {
+            ...store.state.keyboardNavigation,
+            isFocused: false,
+          });
+        }
+      }
+    }
+
+    function restoreFocus() {
+      if (!store.state.keyboardNavigation.isFocused) {
+        store.update({
+          ...(store.state.highlight && {
+            highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
+          }),
+          ...(store.state.interaction && {
+            interaction: { ...store.state.interaction, lastUpdate: 'keyboard' },
+          }),
+          keyboardNavigation: {
+            ...store.state.keyboardNavigation,
+            isFocused: true,
+          },
+        });
+      }
     }
 
     function keyboardHandler(event: KeyboardEvent) {
@@ -76,23 +100,21 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     element.addEventListener('keydown', keyboardHandler);
-    element.addEventListener('blur', removeFocus);
+    element.addEventListener('focusout', removeFocus);
+    element.addEventListener('focusin', restoreFocus);
     return () => {
       element.removeEventListener('keydown', keyboardHandler);
-      element.removeEventListener('blur', removeFocus);
+      element.removeEventListener('focusout', removeFocus);
+      element.removeEventListener('focusin', restoreFocus);
     };
-  }, [svgRef, removeFocus, params.enableKeyboardNavigation, store]);
+  }, [chartsLayerContainerRef, params.disableKeyboardNavigation, store]);
 
   useEnhancedEffect(() => {
-    if (
-      store.state.keyboardNavigation.enableKeyboardNavigation !== params.enableKeyboardNavigation
-    ) {
-      store.set('keyboardNavigation', {
-        ...store.state.keyboardNavigation,
-        enableKeyboardNavigation: !!params.enableKeyboardNavigation,
-      });
-    }
-  }, [store, params.enableKeyboardNavigation]);
+    store.set('keyboardNavigation', {
+      ...store.state.keyboardNavigation,
+      enabled: !params.disableKeyboardNavigation,
+    });
+  }, [store, params.disableKeyboardNavigation]);
 
   return {};
 };
@@ -100,10 +122,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 useChartKeyboardNavigation.getInitialState = (params) => ({
   keyboardNavigation: {
     item: null,
-    enableKeyboardNavigation: !!params.enableKeyboardNavigation,
+    isFocused: false,
+    enabled: !params.disableKeyboardNavigation,
   },
 });
 
 useChartKeyboardNavigation.params = {
-  enableKeyboardNavigation: true,
+  disableKeyboardNavigation: true,
 };

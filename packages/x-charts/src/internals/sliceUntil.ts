@@ -1,6 +1,7 @@
 const segmenter =
   typeof window !== 'undefined' && 'Intl' in window && 'Segmenter' in Intl
-    ? new Intl.Segmenter(undefined, { granularity: 'grapheme' })
+    ? // eslint-disable-next-line compat/compat
+      new Intl.Segmenter(undefined, { granularity: 'grapheme' })
     : null;
 
 function sliceUntilFallback(text: string, endIndex: number) {

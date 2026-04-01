@@ -407,12 +407,12 @@ export async function buildInterfacesDocumentationPage(
       `import * as React from 'react';
     import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
     import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-    import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+    import mapApiPageTranslations from 'docsx/src/modules/utils/mapApiPageTranslations';
     import jsonPageContent from './${slug}.json';
   
     export default function Page(props) {
-      const { descriptions, pageContent } = props;
-      return <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={pageContent} />;
+      const { descriptions } = props;
+      return <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
     }
     
     export async function getStaticProps() {
@@ -422,13 +422,7 @@ export async function buildInterfacesDocumentationPage(
         /\\.\\/${slug}.*.json$/,
       );
       const descriptions = mapApiPageTranslations(req);
-  
-      return {
-        props: {
-          descriptions,
-          pageContent: jsonPageContent,
-        },
-      };
+      return { props: { descriptions } };
     };
     `.replace(/\r?\n/g, EOL),
     );

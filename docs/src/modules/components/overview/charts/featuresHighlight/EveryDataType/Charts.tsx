@@ -3,9 +3,9 @@ import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { RadarChart } from '@mui/x-charts/RadarChart';
 import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
-import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart';
+import { pieClasses, PieChart } from '@mui/x-charts/PieChart';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useTheme } from '@mui/material/styles';
 
@@ -39,7 +39,7 @@ const formatUSD = (value: number | null) =>
 export function LineAndBar() {
   const theme = useTheme();
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       colors={[
         (theme.vars || theme).palette.text.primary,
         'var(--palette-color-3)',
@@ -85,7 +85,7 @@ export function LineAndBar() {
         <ChartsAxis />
       </ChartsSurface>
       <ChartsTooltip trigger="axis" disablePortal />
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 }
 
@@ -137,7 +137,7 @@ export function Pie() {
       ]}
       slotProps={{ tooltip: { disablePortal: true } }}
       sx={{
-        [`& .${pieArcLabelClasses.root}`]: {
+        [`& .${pieClasses.arcLabel}`]: {
           fontWeight: 'bold',
         },
       }}

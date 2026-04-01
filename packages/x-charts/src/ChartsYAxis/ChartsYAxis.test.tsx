@@ -1,8 +1,8 @@
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { screen } from '@mui/internal-test-utils';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
-import { isJSDOM } from 'test/utils/skipIf';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 
 describe('<ChartsYAxis />', () => {
   const { render } = createRenderer();
@@ -14,26 +14,37 @@ describe('<ChartsYAxis />', () => {
     yAxis: [{ id: 'test-y-axis', label: 'Downloads', data: [1, 2, 3, 4, 5] }],
   } as const;
 
-  it.skipIf(!isJSDOM)('should not crash when axisId is invalid', () => {
+  it('should not crash when axisId is invalid', () => {
     const expectedError =
       'MUI X Charts: No axis found. The axisId "invalid-axis-id" is probably invalid.';
 
     expect(() =>
       render(
-        <ChartContainer {...defaultProps}>
+        <ChartsContainer {...defaultProps}>
           <ChartsYAxis axisId="invalid-axis-id" />
-        </ChartContainer>,
+        </ChartsContainer>,
       ),
     ).toWarnDev(expectedError);
   });
 
   it('should render with valid axisId', () => {
     render(
-      <ChartContainer {...defaultProps}>
+      <ChartsContainer {...defaultProps}>
         <ChartsYAxis axisId="test-y-axis" />
-      </ChartContainer>,
+      </ChartsContainer>,
     );
 
     expect(screen.getByText('Downloads')).toBeTruthy();
+  });
+
+  it('should apply className to root element', () => {
+    const { container } = render(
+      <ChartsContainer {...defaultProps}>
+        <ChartsYAxis className="custom-y-axis" />
+      </ChartsContainer>,
+    );
+
+    const root = container.querySelector(`.${axisClasses.root}.custom-y-axis`);
+    expect(root).not.to.equal(null);
   });
 });

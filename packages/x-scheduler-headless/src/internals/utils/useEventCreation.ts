@@ -23,6 +23,11 @@ export function useEventCreation(
   }
 
   const handler = (event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    // Don't create events when clicking on existing events
+    if (target !== event.currentTarget && target.closest('button, [role="button"]')) {
+      return;
+    }
     store.setOccurrencePlaceholder({
       type: 'creation',
       ...getCreationPlaceholder({ event, creationConfig }),

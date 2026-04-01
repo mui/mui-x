@@ -45,6 +45,7 @@
       "description": "Whether the items should be focusable when disabled."
     },
     "disableSelection": { "description": "Whether selection is disabled." },
+    "disableVirtualization": { "description": "If <code>true</code>, virtualization is disabled." },
     "domStructure": {
       "description": "When equal to &#39;flat&#39;, the tree is rendered as a flat list (children are rendered as siblings of their parents). When equal to &#39;nested&#39;, the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children). Nested DOM structure is not compatible with collapse / expansion animations."
     },
@@ -113,7 +114,7 @@
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
     "itemHeight": {
-      "description": "Sets the height in pixel of an item. If not provided, no height restriction is applied to the tree item content element."
+      "description": "Sets the height in pixel of an item. Set to <code>null</code> to explicitly remove any item height restriction when items have different heights (not compatible with virtualization)."
     },
     "itemsReordering": {
       "description": "If <code>true</code>, the reordering of items is enabled."
@@ -202,6 +203,24 @@
         }
       }
     },
+    "onItemsLazyLoaded": {
+      "description": "Callback fired when the children of an item are loaded from the data source. Only relevant for lazy-loaded tree views.",
+      "typeDescriptions": {
+        "parameters": { "name": "parameters", "description": "The parameters of the callback." },
+        "parameters.items": {
+          "name": "parameters.items",
+          "description": "The items that were loaded."
+        },
+        "parameters.parentId": {
+          "name": "parameters.parentId",
+          "description": "The id of the parent item whose children were loaded. <code>null</code> if the root items were loaded."
+        },
+        "parameters.isCacheHit": {
+          "name": "parameters.isCacheHit",
+          "description": "<code>true</code> if the items were loaded from the cache, <code>false</code> if they were fetched from the data source."
+        }
+      }
+    },
     "onSelectedItemsChange": {
       "description": "Callback fired when Tree Items are selected/deselected.",
       "typeDescriptions": {
@@ -225,9 +244,6 @@
     "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
-    },
-    "virtualization": {
-      "description": "Whether virtualization is enabled. If true, the DOM structure will be set to &#39;flat&#39;. If true and no itemHeight is provided, a default item height of 32px will be used for calculating the virtualization."
     }
   },
   "classDescriptions": {

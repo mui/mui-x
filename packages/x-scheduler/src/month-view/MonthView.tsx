@@ -6,7 +6,7 @@ import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { EventCalendarViewConfig, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
@@ -32,12 +32,14 @@ const MonthViewRoot = styled('div', {
   slot: 'MonthView',
 })(({ theme }) => ({
   width: '100%',
+  height: '100%',
   borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
   maxHeight: '100%',
+  overflowY: 'auto',
 }));
 
 const MonthViewGrid = styled(CalendarGrid.Root, {
@@ -47,7 +49,7 @@ const MonthViewGrid = styled(CalendarGrid.Root, {
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  maxHeight: '100%',
+  minHeight: 0,
 });
 
 interface MonthViewRowGridProps {
@@ -62,7 +64,7 @@ const MonthViewHeader = styled(CalendarGrid.HeaderRow, {
   gridTemplateColumns: ownerState.showWeekNumber
     ? `${FIXED_CELL_WIDTH}px repeat(auto-fit, minmax(0, 1fr))`
     : 'repeat(auto-fit, minmax(0, 1fr))',
-  borderBlockEnd: `1px solid ${theme.palette.divider}`,
+  borderBlockEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
 const MonthViewHeaderCell = styled(CalendarGrid.HeaderCell, {
@@ -74,7 +76,7 @@ const MonthViewHeaderCell = styled(CalendarGrid.HeaderCell, {
   fontSize: theme.typography.body2.fontSize,
   lineHeight: '18px',
   '&:not(:first-of-type)': {
-    borderInlineStart: `1px solid ${theme.palette.divider}`,
+    borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -86,7 +88,7 @@ const MonthViewWeekHeaderCell = styled('div', {
   textAlign: 'center',
   fontSize: theme.typography.caption.fontSize,
   lineHeight: '18px',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   fontStyle: 'italic',
 }));
 
@@ -96,16 +98,16 @@ const MonthViewBody = styled('div', {
 })({
   flex: 1,
   display: 'grid',
-  gridAutoRows: '1fr',
-  maxHeight: '100%',
+  gridAutoRows: 'minmax(0, 1fr)',
   position: 'relative',
+  flexGrow: 1,
+  overflow: 'hidden',
 });
 
-const CELL_PADDING = 12; // theme.spacing(0.7) * 2 ≈ 11.2px, rounded up
-const DAY_NUMBER_HEADER_HEIGHT = 18;
+const CELL_PADDING = 5; // theme.spacing(0.5) * 2
+const DAY_NUMBER_HEADER_HEIGHT = 22; // event height (18px) + gap (4px)
 const EVENT_HEIGHT = 18;
 const EVENT_GAP = 4; // theme.spacing(0.5) = 4px
-const CELL_GAP = 4; // theme.spacing(0.5) = 4px — gap between cell grid rows (empty rows from --row-count)
 
 const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
@@ -136,7 +138,7 @@ export const MonthView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     // Context hooks
-    const adapter = useAdapter();
+    const adapter = useAdapterContext();
     const { classes, localeText } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 
@@ -149,7 +151,7 @@ export const MonthView = React.memo(
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
 
     // State hooks
-    const [maxEvents, setMaxEvents] = React.useState<number>(4);
+    const [maxEvents, setMaxEvents] = React.useState<number>(2);
 
     // Feature hooks
     const { days } = useEventCalendarView(MONTH_VIEW_CONFIG);
@@ -177,10 +179,8 @@ export const MonthView = React.memo(
       () => {
         const cellHeight = cellRef.current!.clientHeight;
         const eventContainerHeight = cellHeight - CELL_PADDING - DAY_NUMBER_HEADER_HEIGHT;
-        const maxEventsCount = Math.floor(
-          (eventContainerHeight + EVENT_GAP) / (EVENT_HEIGHT + EVENT_GAP + CELL_GAP),
-        );
-        setMaxEvents(maxEventsCount);
+        const maxEventsCount = Math.floor(eventContainerHeight / (EVENT_HEIGHT + EVENT_GAP));
+        setMaxEvents(Math.max(1, maxEventsCount));
       },
       true,
     );

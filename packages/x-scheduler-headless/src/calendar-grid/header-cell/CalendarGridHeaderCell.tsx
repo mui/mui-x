@@ -4,7 +4,7 @@ import { createSelector, useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
-import { useAdapter } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
@@ -21,12 +21,13 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   componentProps: CalendarGridHeaderCell.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
 
   const {
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     date,
     skipDataCurrent,
@@ -42,12 +43,6 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   const { ref: listItemRef, index } = useCompositeListItem();
   const id = getCalendarGridHeaderCellId(rootId, index);
 
-  const props = {
-    role: 'columnheader',
-    id,
-    'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
-  };
-
   const state: CalendarGridHeaderCell.State = React.useMemo(
     () => ({
       current: isCurrentDay,
@@ -58,7 +53,14 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, listItemRef],
-    props: [props, elementProps],
+    props: [
+      elementProps,
+      {
+        role: 'columnheader',
+        id,
+        'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
+      },
+    ],
   });
 });
 

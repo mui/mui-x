@@ -92,7 +92,7 @@ This way the state can be persisted on refresh or navigating to another page.
 
 In the following demo, the state is saved to `localStorage` and restored when the page is refreshed.
 This is done by listening on the `beforeunload` event.
-When the component is unmounted, the `useLayoutEffect` cleanup function is being used instead.
+When the component is unmounted, the `useLayoutEffect()` cleanup function is being used instead.
 
 {{"demo": "SaveAndRestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 

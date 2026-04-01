@@ -9,10 +9,6 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Install the MUI X Scheduler package and start building your React scheduling components.</p>
 
-:::warning
-This package is not published on npm yet.
-:::
-
 ## Installation
 
 Install the Scheduler package that best suits your needs — Community, or Premium:

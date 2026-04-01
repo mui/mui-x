@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart';
+import { pieClasses, PieChart } from '@mui/x-charts/PieChart';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
@@ -21,7 +21,7 @@ export default function CSSAnimationCustomization() {
         height={200}
         hideLegend
         sx={{
-          [`& .${pieArcLabelClasses.root}.${pieArcLabelClasses.animate}`]: {
+          [`& .${pieClasses.arcLabel}.${pieClasses.animate}`]: {
             animationDuration: '2s',
           },
         }}

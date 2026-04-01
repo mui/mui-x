@@ -81,9 +81,24 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 ```
 
 `RichTreeView` receives its items dynamically from an external data source.
-This is the recommended version for larger trees, as well as those that require more advanced features like editing and virtualization.
+This is the recommended version for larger trees, as well as those that require more advanced features like editing.
 
 {{"demo": "BasicRichTreeView.js"}}
+
+### Rich Tree View Pro [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+```jsx
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
+```
+
+`RichTreeViewPro` receives its items dynamically from an external data source.
+This is the commercial version of the `RichTreeView` component that adds advanced features like virtualization or lazy-loading.
+
+{{"demo": "BasicRichTreeViewPro.js"}}
+
+:::warning
+You must set [intrinsic dimensions](/x/react-tree-view/rich-tree-view/virtualization/#layout) on the `RichTreeViewPro`'s parent container.
+:::
 
 ### Accessibility
 

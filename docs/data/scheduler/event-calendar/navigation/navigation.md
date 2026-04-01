@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 ## Default visible date
 
 Use the `defaultVisibleDate` prop to initialize the visible date:

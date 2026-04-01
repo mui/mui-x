@@ -17,7 +17,7 @@ export const tap = async <P extends PointerType>(
   const { target, taps = 1, delay = 50 } = options;
 
   if (!target) {
-    throw new Error('Target element is required for tap gesture');
+    throw new Error('MUI X: Target element is required for tap gesture');
   }
 
   // Parse pointer(s) based on pointer type

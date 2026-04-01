@@ -31,7 +31,7 @@ export type HeatmapPluginSignatures = [
   UseChartTooltipSignature<'heatmap'>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'heatmap'>,
-  UseChartHighlightSignature,
+  UseChartHighlightSignature<'heatmap'>,
   UseChartProExportSignature,
   UseChartBrushSignature,
   UseChartProZoomSignature,

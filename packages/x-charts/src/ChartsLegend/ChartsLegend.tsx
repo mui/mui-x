@@ -12,9 +12,10 @@ import { seriesContextBuilder } from './onClickContextBuilder';
 import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
 import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import {
   selectorIsItemVisibleGetter,
+  type VisibilityIdentifierWithType,
   type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 import { useStore } from '../internals/store/useStore';
@@ -108,7 +109,7 @@ const ChartsLegend = consumeSlots(
     ref: React.Ref<HTMLUListElement>,
   ) {
     const data = useLegend();
-    const { instance } = useChartContext<[UseChartVisibilityManagerSignature]>();
+    const { instance } = useChartsContext<[UseChartVisibilityManagerSignature]>();
     const store = useStore<[UseChartVisibilityManagerSignature]>();
     const isItemVisible = store.use(selectorIsItemVisibleGetter);
     const { direction, onItemClick, className, classes, toggleVisibilityOnClick, ...other } = props;
@@ -127,7 +128,7 @@ const ChartsLegend = consumeSlots(
               type: item.type,
               seriesId: item.seriesId,
               dataIndex: item.dataIndex,
-            });
+            } as VisibilityIdentifierWithType);
           }
         },
     );
@@ -166,6 +167,7 @@ const ChartsLegend = consumeSlots(
                     className={classes?.mark}
                     color={item.color}
                     type={item.markType}
+                    markShape={item.markShape}
                   />
                   <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
                 </button>
@@ -175,6 +177,7 @@ const ChartsLegend = consumeSlots(
                     className={classes?.mark}
                     color={item.color}
                     type={item.markType}
+                    markShape={item.markShape}
                   />
                   <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
                 </div>

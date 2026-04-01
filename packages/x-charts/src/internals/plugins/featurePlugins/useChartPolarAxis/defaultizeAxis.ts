@@ -27,7 +27,9 @@ export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
     }
     if (dataset === undefined) {
       throw new Error(
-        `MUI X Charts: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`,
+        `MUI X Charts: The ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided. ` +
+          'When using dataKey, a dataset must be provided to retrieve the axis data. ' +
+          `Either provide a dataset prop or use the data property directly on the ${axisName}-axis.`,
       );
     }
 

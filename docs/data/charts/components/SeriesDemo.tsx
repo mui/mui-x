@@ -4,7 +4,7 @@ import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { useLineSeries, useXAxis, useXScale, useYScale } from '@mui/x-charts/hooks';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DefaultizedLineSeriesType } from '@mui/x-charts/models';
@@ -98,7 +98,7 @@ function PointLabel({
 export default function SeriesDemo() {
   return (
     <Box sx={{ position: 'relative', width: '100%' }}>
-      <ChartDataProvider
+      <ChartsDataProvider
         xAxis={[{ id: 'x', data: [1, 2, 3, 5, 8, 10], height: 28 }]}
         series={[
           { id: 'a', type: 'line', data: [4, 6, 4, 9, 3, 5] },
@@ -113,7 +113,7 @@ export default function SeriesDemo() {
           <ChartsYAxis />
         </ChartsSurface>
         <ExtremaLabels />
-      </ChartDataProvider>
+      </ChartsDataProvider>
     </Box>
   );
 }

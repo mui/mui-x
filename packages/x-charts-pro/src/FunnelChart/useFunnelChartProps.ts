@@ -11,7 +11,7 @@ import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './FunnelChart.plugins';
 import { type FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
-import { type ChartContainerProProps } from '../ChartContainerPro';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
 
 function getCategoryAxisConfig(
   categoryAxis: FunnelChartProps['categoryAxis'],
@@ -147,7 +147,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     ? valueAxisConfig
     : getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'y');
 
-  const chartContainerProps: ChartContainerProProps<'funnel', FunnelChartPluginSignatures> = {
+  const chartsContainerProps: ChartsContainerProProps<'funnel', FunnelChartPluginSignatures> = {
     ...other,
     series: series.map((s) => ({
       type: 'funnel' as const,
@@ -163,7 +163,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     sx,
     highlightedItem,
     onHighlightChange,
-    className,
     apiRef,
     plugins: FUNNEL_CHART_PLUGINS,
   };
@@ -192,6 +191,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
+    className,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
     hideLegend: props.hideLegend ?? false,
@@ -202,7 +202,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
   };
 
   return {
-    chartContainerProps,
+    chartsContainerProps,
     funnelPlotProps,
     overlayProps,
     chartsAxisProps,

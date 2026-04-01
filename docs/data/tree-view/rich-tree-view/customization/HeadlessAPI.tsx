@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemContent,
@@ -16,7 +16,7 @@ import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 
-const ITEMS: TreeViewBaseItem[] = [
+const ITEMS: TreeViewDefaultItemModelProperties[] = [
   {
     id: '1',
     label: 'Amelia Hart',

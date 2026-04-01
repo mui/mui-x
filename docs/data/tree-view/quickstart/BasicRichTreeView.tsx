@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -25,7 +25,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
     label: 'Charts',
     children: [
       { id: 'charts-community', label: '@mui/x-charts' },
-      { id: 'charts-pro', label: '@mui/charts-pro' },
+      { id: 'charts-pro', label: '@mui/x-charts-pro' },
     ],
   },
   {

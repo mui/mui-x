@@ -77,7 +77,7 @@ export class PointerManager {
 
     const existingPointer = this.pointers.get(pointer.id);
     if (!existingPointer) {
-      throw new Error(`Pointer with id ${pointer.id} does not exist`);
+      throw new Error(`MUI X: Pointer with id ${pointer.id} does not exist`);
     }
     const newPointer = { ...existingPointer, ...pointer };
     this.pointers.set(pointer.id, newPointer);
@@ -97,7 +97,7 @@ export class PointerManager {
 
   parseMousePointer(pointer: Pointer | undefined, target: Element): Required<Pointer> {
     if (this.mode !== 'mouse') {
-      throw new Error('Mouse pointer can only be used in mouse mode');
+      throw new Error('MUI X: Mouse pointer can only be used in mouse mode');
     }
 
     // Get the existing mouse pointer (always id: 1)
@@ -136,7 +136,7 @@ export class PointerManager {
         (Array.isArray(normalizedPointers) && normalizedPointers.length > 1) ||
         (!Array.isArray(normalizedPointers) && normalizedPointers.amount !== 1)
       ) {
-        throw new Error('Mouse mode only supports one pointer');
+        throw new Error('MUI X: Mouse mode only supports one pointer');
       }
     }
 

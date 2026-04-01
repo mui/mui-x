@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { ChartProvider } from '../context/ChartProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
 import { useSkipAnimation } from './useSkipAnimation';
 
 function createWrapper({ skipAnimation }: { skipAnimation?: boolean } = {}) {
   return function Wrapper({ children }: React.PropsWithChildren) {
     return (
-      <ChartProvider pluginParams={{ skipAnimation, width: 100, height: 100 }}>
+      <ChartsProvider pluginParams={{ skipAnimation, width: 100, height: 100 }}>
         {children}
-      </ChartProvider>
+      </ChartsProvider>
     );
   };
 }
@@ -19,7 +19,11 @@ function UseSkipAnimation({ localSkipAnimation }: { localSkipAnimation?: boolean
 }
 
 const createMatchMedia = (matches: boolean) => () =>
-  ({ matches, addEventListener: () => {}, removeEventListener: () => {} }) as any;
+  ({
+    matches,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  }) as any;
 
 describe('useSkipAnimation', () => {
   const { render } = createRenderer();

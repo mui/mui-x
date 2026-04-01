@@ -1,5 +1,5 @@
 import { useAnimate } from '@mui/x-charts/hooks';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { BarLabelProps, BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
@@ -8,17 +8,17 @@ import { interpolateObject } from '@mui/x-charts-vendor/d3-interpolate';
 
 export default function LabelsAboveBars() {
   return (
-    <ChartContainer
+    <ChartsContainer
       xAxis={[{ scaleType: 'band', data: ['A', 'B', 'C'] }]}
-      series={[{ type: 'bar', id: 'base', data: [5, 17, 11] }]}
+      series={[{ type: 'bar', id: 'base', data: [5, 17, 11], barLabel: 'value' }]}
       height={400}
       yAxis={[{ width: 30 }]}
       margin={{ left: 0, right: 10 }}
     >
-      <BarPlot barLabel="value" slots={{ barLabel: BarLabel }} />
+      <BarPlot slots={{ barLabel: BarLabel }} />
       <ChartsXAxis />
       <ChartsYAxis />
-    </ChartContainer>
+    </ChartsContainer>
   );
 }
 

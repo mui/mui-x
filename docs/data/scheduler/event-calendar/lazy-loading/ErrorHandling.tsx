@@ -39,7 +39,6 @@ export default function ErrorHandling() {
       />
       <div style={{ height: '700px', width: '100%' }}>
         <EventCalendarPremium
-          events={[]}
           dataSource={{ getEvents: fetchData, updateEvents }}
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}

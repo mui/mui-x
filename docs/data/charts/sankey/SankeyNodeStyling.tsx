@@ -1,4 +1,4 @@
-import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 
 const data = {
@@ -57,7 +57,7 @@ export default function SankeyNodeStyling() {
         />
       )}
       getCode={({ props }) => {
-        return `import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+        return `import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 
 <SankeyChart
   height={300}

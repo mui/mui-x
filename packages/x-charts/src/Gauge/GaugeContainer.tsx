@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
 import { GaugeProvider, type GaugeProviderProps } from './GaugeProvider';
-import { ChartProvider } from '../context/ChartProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
 import { type MergeSignaturesProperty } from '../internals/plugins/models';
 import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
@@ -14,7 +14,7 @@ export interface GaugeContainerProps
     Omit<ChartsSurfaceProps, 'children'>,
     Omit<
       MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
-      'series' | 'dataset' | 'colors' | 'theme' | 'experimentalFeatures' | 'seriesConfig'
+      'series' | 'dataset' | 'colors' | 'theme' | 'seriesConfig' | 'experimentalFeatures'
     >,
     Omit<GaugeProviderProps, 'children'>,
     Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
@@ -32,7 +32,7 @@ const GStyled = styled('g', {
 
 const GaugeContainer = React.forwardRef(function GaugeContainer(
   props: GaugeContainerProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const {
     width: inWidth,
@@ -55,7 +55,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
   } = props;
 
   return (
-    <ChartProvider
+    <ChartsProvider
       pluginParams={{
         width: inWidth,
         height: inHeight,
@@ -89,7 +89,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
           <GStyled aria-hidden="true">{children}</GStyled>
         </ChartsSurface>
       </GaugeProvider>
-    </ChartProvider>
+    </ChartsProvider>
   );
 });
 
@@ -118,6 +118,10 @@ GaugeContainer.propTypes = {
    * The '100%' is the height the drawing area.
    */
   cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * The end angle (deg).
@@ -177,6 +181,10 @@ GaugeContainer.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The value of the gauge.

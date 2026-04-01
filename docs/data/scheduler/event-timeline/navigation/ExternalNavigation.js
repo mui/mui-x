@@ -19,7 +19,7 @@ const resources = allResources.slice(0, 5);
 
 export default function ExternalNavigation() {
   const [events, setEvents] = React.useState(initialEvents);
-  const [view, setView] = React.useState('weeks');
+  const [view, setView] = React.useState('months');
   const [visibleDate, setVisibleDate] = React.useState(defaultVisibleDate);
   const apiRef = useEventTimelinePremiumApiRef();
 

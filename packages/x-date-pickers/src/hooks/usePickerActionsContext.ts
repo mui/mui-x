@@ -22,9 +22,7 @@ export const usePickerActionsContext = <
   > | null;
   if (value == null) {
     throw new Error(
-      [
-        'MUI X: The `usePickerActionsContext` can only be called in fields that are used as a slot of a Picker component',
-      ].join('\n'),
+      `MUI X: The \`usePickerActionsContext\` can only be called in fields that are used as a slot of a Picker component`,
     );
   }
 

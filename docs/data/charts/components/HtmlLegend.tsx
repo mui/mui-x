@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import { useLegend } from '@mui/x-charts/hooks';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -46,7 +46,7 @@ const veryLongText =
 export default function HtmlLegend() {
   return (
     <Box sx={{ height: 400, display: 'flex', flexDirection: 'column' }}>
-      <ChartDataProvider
+      <ChartsDataProvider
         series={[
           { label: 'First Series', type: 'bar', data: [100, 200] },
           { label: veryLongText, type: 'bar', data: [45, 333] },
@@ -59,7 +59,7 @@ export default function HtmlLegend() {
           <ChartsYAxis />
         </ChartsSurface>
         <MyCustomLegend />
-      </ChartDataProvider>
+      </ChartsDataProvider>
     </Box>
   );
 }

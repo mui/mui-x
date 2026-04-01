@@ -1,5 +1,5 @@
 import {
-  Unstable_SankeyChart as SankeyChart,
+  SankeyChart,
   type SankeyValueFormatterContext,
 } from '@mui/x-charts-pro/SankeyChart';
 

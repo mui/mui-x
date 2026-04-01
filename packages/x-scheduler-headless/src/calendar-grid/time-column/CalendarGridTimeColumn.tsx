@@ -5,7 +5,7 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { useAdapter } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
 import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
@@ -20,6 +20,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     start,
     end,
@@ -28,7 +29,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     ...elementProps
   } = componentProps;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const isCurrentDay = useStore(store, schedulerNowSelectors.isCurrentDay, start);
   const { ref: listItemRef, index } = useCompositeListItem();
@@ -64,8 +65,6 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     [isCurrentDay],
   );
 
-  const props = { role: 'gridcell' };
-
   const contextValue: CalendarGridTimeColumnContext = React.useMemo(
     () => ({
       start,
@@ -79,7 +78,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, dropTargetRef, listItemRef],
-    props: [props, eventCreationProps, elementProps],
+    props: [elementProps, { role: 'gridcell' }, eventCreationProps],
   });
 
   return (

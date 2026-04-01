@@ -3,7 +3,7 @@ import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { type BarChartProps, type BarSeries } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { type ChartContainerProps } from '../ChartContainer';
+import { type ChartsContainerProps } from '../ChartsContainer';
 import { type BarPlotProps } from './BarPlot';
 import { type ChartsGridProps } from '../ChartsGrid';
 import { type ChartsClipPathProps } from '../ChartsClipPath';
@@ -56,7 +56,6 @@ export const useBarChartProps = (props: UseBarChartProps) => {
     highlightedItem,
     onHighlightChange,
     borderRadius,
-    barLabel,
     className,
     hideLegend,
     showToolbar,
@@ -132,7 +131,7 @@ export const useBarChartProps = (props: UseBarChartProps) => {
       : yAxis;
   }, [defaultYAxis, hasHorizontalSeries, yAxis]);
 
-  const chartContainerProps: ChartContainerProps<'bar', BarChartPluginSignatures> = {
+  const chartsContainerProps: ChartsContainerProps<'bar', BarChartPluginSignatures> = {
     ...other,
     series: seriesWithDefault,
     width,
@@ -148,7 +147,6 @@ export const useBarChartProps = (props: UseBarChartProps) => {
       slotProps?.tooltip?.trigger !== 'axis' &&
       axisHighlight?.x === 'none' &&
       axisHighlight?.y === 'none',
-    className,
     skipAnimation,
     brushConfig,
     plugins: BAR_CHART_PLUGINS,
@@ -160,7 +158,6 @@ export const useBarChartProps = (props: UseBarChartProps) => {
     slotProps,
     borderRadius,
     renderer,
-    barLabel,
   };
 
   const gridProps: ChartsGridProps = {
@@ -202,11 +199,12 @@ export const useBarChartProps = (props: UseBarChartProps) => {
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
     hideLegend: props.hideLegend ?? false,
+    className,
   };
 
   return {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     barPlotProps,
     gridProps,
     clipPathProps,

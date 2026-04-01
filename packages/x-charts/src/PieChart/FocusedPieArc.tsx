@@ -1,10 +1,10 @@
 'use client';
-import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { usePieSeriesContext, usePieSeriesLayout } from '../hooks/usePieSeries';
-import { PieArc, pieArcClasses, type PieArcProps } from './PieArc';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
+import { PieArc, type PieArcProps } from './PieArc';
+import { useUtilityClasses } from './pieClasses';
+import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { getModifiedArcProperties } from './dataTransform/getModifiedArcProperties';
 
 export function FocusedPieArc(
@@ -25,9 +25,12 @@ export function FocusedPieArc(
   const focusedItem = useFocusedItem();
   const pieSeriesLayout = usePieSeriesLayout();
 
-  const { isHighlighted, isFaded } = useItemHighlighted(focusedItem);
+  const highlightState = useItemHighlightState(focusedItem);
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
   const pieSeries = usePieSeriesContext();
 
+  const classes = useUtilityClasses();
   if (focusedItem === null || focusedItem.type !== 'pie' || !pieSeries) {
     return null;
   }
@@ -59,7 +62,7 @@ export function FocusedPieArc(
       skipAnimation
       stroke={(theme.vars ?? theme).palette.text.primary}
       seriesId={series.id}
-      className={pieArcClasses.focusIndicator}
+      className={classes.focusIndicator}
       dataIndex={focusedItem.dataIndex}
       isFaded={false}
       isHighlighted={false}

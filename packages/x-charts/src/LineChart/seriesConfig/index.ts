@@ -6,9 +6,15 @@ import legendGetter from './legend';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
+import getItemAtPosition from './getItemAtPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
+import {
+  createIsHighlighted,
+  createIsFaded,
+} from '../../internals/plugins/featurePlugins/useChartHighlight';
+import descriptionGetter from './descriptionGetter';
 
 export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   colorProcessor: getColor,
@@ -20,7 +26,11 @@ export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
+  getItemAtPosition,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  descriptionGetter,
+  isHighlightedCreator: createIsHighlighted,
+  isFadedCreator: createIsFaded,
 };

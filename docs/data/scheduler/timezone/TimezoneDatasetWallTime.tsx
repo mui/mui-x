@@ -18,8 +18,6 @@ export default function TimezoneDatasetWallTime() {
         onEventsChange={setEvents}
         defaultPreferences={{ isSidePanelOpen: false }}
         displayTimezone="Europe/Paris"
-        areEventsDraggable
-        areEventsResizable
       />
     </div>
   );

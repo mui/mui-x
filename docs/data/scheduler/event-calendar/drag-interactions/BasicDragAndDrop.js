@@ -17,8 +17,6 @@ export default function BasicDragAndDrop() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        areEventsDraggable
-        areEventsResizable
         defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>

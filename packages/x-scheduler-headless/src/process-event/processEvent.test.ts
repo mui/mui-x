@@ -53,7 +53,7 @@ describe('processEvent', () => {
       const event = EventBuilder.new(adapter)
         .rrule({
           freq: 'DAILY',
-          until: adapter.date('2025-01-10T23:59:00Z', 'default'),
+          until: '2025-01-10T23:59:00Z',
         })
         .build();
 

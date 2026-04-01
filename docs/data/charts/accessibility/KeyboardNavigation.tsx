@@ -63,7 +63,15 @@ export default function KeyboardNavigation() {
             <MenuItem value="pie">Pie</MenuItem>
           </Select>
         </FormControl>
-        <Button onClick={() => chartRef.current?.focus()} variant="contained">
+        <Button
+          onClick={() => {
+            const element = chartRef.current?.querySelector(
+              '[tabindex="0"]',
+            ) as HTMLElement;
+            element?.focus();
+          }}
+          variant="contained"
+        >
           Focus chart
         </Button>
       </Stack>
@@ -81,19 +89,11 @@ function Chart<T extends ChartType = ChartType>({
 }) {
   switch (type) {
     case 'scatter':
-      return (
-        <ScatterChart
-          ref={chartRef}
-          enableKeyboardNavigation
-          height={300}
-          series={scatterSeries}
-        />
-      );
+      return <ScatterChart ref={chartRef} height={300} series={scatterSeries} />;
     case 'line':
       return (
         <LineChart
           ref={chartRef}
-          enableKeyboardNavigation
           height={300}
           xAxis={[{ data: data.map((p) => p.x1).toSorted((a, b) => a - b) }]}
           series={series}
@@ -104,7 +104,6 @@ function Chart<T extends ChartType = ChartType>({
       return (
         <BarChart
           ref={chartRef}
-          enableKeyboardNavigation
           height={300}
           xAxis={[
             { data: data.map((p) => Math.round(p.x1)).toSorted((a, b) => a - b) },
@@ -117,7 +116,6 @@ function Chart<T extends ChartType = ChartType>({
       return (
         <PieChart
           ref={chartRef}
-          enableKeyboardNavigation
           series={[
             {
               arcLabel: 'value',

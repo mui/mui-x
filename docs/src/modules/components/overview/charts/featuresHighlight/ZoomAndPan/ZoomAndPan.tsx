@@ -25,7 +25,12 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 
 export default function ZoomAndPan() {
   return (
-    <Stack spacing={1} sx={sxColors} direction={{ xs: 'column-reverse', xl: 'column' }}>
+    <Stack
+      spacing={1}
+      sx={sxColors}
+      direction={{ xs: 'column-reverse', xl: 'column' }}
+      height="100%"
+    >
       <Box
         sx={{
           flexGrow: 1,

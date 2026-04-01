@@ -1,7 +1,7 @@
 import { useTheme } from '@mui/material/styles';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { XAxis } from '@mui/x-charts/models';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
@@ -28,7 +28,7 @@ function Background() {
 
 export default function BackgroundStyling() {
   return (
-    <ChartContainer
+    <ChartsContainer
       dataset={usUnemploymentRate}
       xAxis={xAxis}
       yAxis={yAxis}
@@ -40,7 +40,7 @@ export default function BackgroundStyling() {
       <LinePlot />
       <ChartsXAxis />
       <ChartsYAxis />
-    </ChartContainer>
+    </ChartsContainer>
   );
 }
 

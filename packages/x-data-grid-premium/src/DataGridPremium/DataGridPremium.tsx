@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import {
   GridRoot,
   GridContextProvider,
@@ -59,8 +59,12 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
     useGridParamsOverridableMethods,
   },
 };
-const releaseInfo = '__RELEASE_INFO__';
-const watermark = <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />;
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-data-grid-premium' as const,
+};
+const watermark = <Watermark packageInfo={packageInfo} />;
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
 
@@ -83,7 +87,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     initialProps,
     configuration as GridConfiguration,
   );
-  useLicenseVerifier('x-data-grid-premium', releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
@@ -248,6 +252,73 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   chartsIntegration: PropTypes.bool,
+  /**
+   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   *
+   * @warning
+   * Be careful when overriding `renderHeader` or `renderCell` in the `checkboxColDef` prop.
+   * The default implementation of these properties includes the logic for selecting all rows and selecting a single row, respectively.
+   * Overriding them without providing the same functionality will break the row selection.
+   */
+  checkboxColDef: PropTypes.shape({
+    aggregable: PropTypes.bool,
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    availableAggregationFunctions: PropTypes.arrayOf(PropTypes.string),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    chartable: PropTypes.bool,
+    colSpan: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+    description: PropTypes.string,
+    disableColumnMenu: PropTypes.bool,
+    disableExport: PropTypes.bool,
+    disableReorder: PropTypes.bool,
+    display: PropTypes.oneOf(['flex', 'text']),
+    editable: PropTypes.bool,
+    examples: PropTypes.array,
+    filterable: PropTypes.bool,
+    filterOperators: PropTypes.arrayOf(
+      PropTypes.shape({
+        getApplyFilterFn: PropTypes.func.isRequired,
+        getValueAsString: PropTypes.func,
+        headerLabel: PropTypes.string,
+        InputComponent: PropTypes.elementType,
+        InputComponentProps: PropTypes.object,
+        label: PropTypes.string,
+        requiresFilterValue: PropTypes.bool,
+        value: PropTypes.string.isRequired,
+      }),
+    ),
+    flex: PropTypes.number,
+    getApplyQuickFilterFn: PropTypes.func,
+    getSortComparator: PropTypes.func,
+    groupable: PropTypes.bool,
+    groupingValueGetter: PropTypes.func,
+    groupingValueSetter: PropTypes.func,
+    headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
+    headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    headerName: PropTypes.string,
+    hideable: PropTypes.bool,
+    hideSortIcons: PropTypes.bool,
+    maxWidth: PropTypes.number,
+    minWidth: PropTypes.number,
+    pastedValueParser: PropTypes.func,
+    pinnable: PropTypes.bool,
+    pivotable: PropTypes.bool,
+    preProcessEditCellProps: PropTypes.func,
+    renderCell: PropTypes.func,
+    renderEditCell: PropTypes.func,
+    renderHeader: PropTypes.func,
+    renderHeaderFilter: PropTypes.func,
+    resizable: PropTypes.bool,
+    rowSpanValueGetter: PropTypes.func,
+    sortable: PropTypes.bool,
+    sortComparator: PropTypes.func,
+    sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])),
+    valueFormatter: PropTypes.func,
+    valueGetter: PropTypes.func,
+    valueParser: PropTypes.func,
+    valueSetter: PropTypes.func,
+    width: PropTypes.number,
+  }),
   /**
    * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
@@ -466,7 +537,6 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    charts: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -1226,7 +1296,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
+   * Prefer to use {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} unless it doesn't fulfill your needs.
    */
   onRowsScrollEnd: PropTypes.func,
   /**

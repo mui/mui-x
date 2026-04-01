@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -67,7 +67,7 @@ export default function ReverseExample() {
         />
       </Stack>
       <Box sx={{ width: '100%' }}>
-        <ChartContainer
+        <ChartsContainer
           series={series}
           xAxis={[
             {
@@ -92,7 +92,7 @@ export default function ReverseExample() {
           <ChartsYAxis axisId="leftAxis" label="temperature (°C)" />
           <ChartsYAxis axisId="rightAxis" label="precipitation (mm)" />
           <ChartsTooltip />
-        </ChartContainer>
+        </ChartsContainer>
       </Box>
     </Stack>
   );

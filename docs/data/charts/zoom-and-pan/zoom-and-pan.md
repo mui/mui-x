@@ -1,7 +1,7 @@
 ---
 title: Charts - Zoom and pan
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro, ChartZoomSlider, ChartsBrushOverlay
+components: ScatterChartPro, BarChartPro, LineChartPro, ChartsZoomSlider, ChartsBrushOverlay
 ---
 
 # Charts - Zoom and pan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -101,7 +101,7 @@ The zoom slider does not display values outside the range delimited by `minStart
 
 ### Composition
 
-When composing a custom component, render the `ChartZoomSlider` component to show the axes' sliders.
+When composing a custom component, render the `ChartsZoomSlider` component to show the axes' sliders.
 
 {{"demo": "ZoomSliderComposition.js"}}
 
@@ -110,6 +110,12 @@ When composing a custom component, render the `ChartZoomSlider` component to sho
 When the zoom slider is enabled, preview the zoomed area by enabling the `zoom.slider.preview` property on the axis config.
 
 {{"demo": "ZoomSliderPreview.js"}}
+
+### Series filter
+
+Use `zoom.slider.preview.seriesIds` to select the series to display in the preview.
+
+{{"demo": "ZoomSliderPreviewSeriesFilter.js"}}
 
 ### Scatter marker size
 

@@ -1,7 +1,7 @@
 ---
 title: Charts - Axis
 productId: x-charts
-components: ChartsAxis, ChartsReferenceLine, ChartsText, ChartsXAxis, ChartsYAxis, ChartsReferenceLine
+components: ChartsAxis, ChartsReferenceLine, ChartsText, ChartsXAxis, ChartsYAxis
 ---
 
 # Charts - Axis
@@ -245,7 +245,7 @@ If two or more axes share the same `position`, they're displayed in the order th
 
 ### Coordinates
 
-You can obtain the coordinates of the axis by calling the `useXAxisCoordinates` or `useYAxisCoordinates` hooks.
+You can obtain the coordinates of the axis by calling the `useXAxisCoordinates()` or `useYAxisCoordinates()` hooks.
 
 Below is an example of how to use the these hooks to get the coordinates of several axes and render rectangles delineating their area.
 
@@ -254,10 +254,10 @@ Below is an example of how to use the these hooks to get the coordinates of seve
 ## Grouped axes
 
 To group `band` or `point` axes together, provide a `groups` property in the axis definition.
-This property expects an array of objects with a `getValue` function.
+This property expects an array of objects with a `getValue()` function.
 This feature is available for both x- and y-axes.
 
-The `getValue` function receives the axis data value and should return a group name.
+The `getValue()` function receives the axis data value and should return a group name.
 Each group name is used as-is, overriding any `valueFormatter` for the axis.
 Groups are displayed in the order they're defined in the `groups` array.
 
@@ -277,7 +277,7 @@ In the following demo, the y-axis is grouped by category and subcategory.
 
 You can customize the tick size for each group by providing a `tickSize` property in the `groups` array.
 The `tickSize` also affects the tick label position.
-Each item in the array corresponds to a group defined in the `getValue` function.
+Each item in the array corresponds to a group defined in the `getValue()` function.
 
 {{"demo": "GroupedAxesTickSize.js"}}
 
@@ -301,10 +301,32 @@ In the example below, the revenue axis label is styled with a teal color and the
 
 {{"demo": "AxisIdStyling.js"}}
 
+### Auto-sizing axes
+
+You can set the axis `height` (for x-axes) or `width` (for y-axes) to `'auto'` to automatically calculate the axis dimension based on the tick label measurements.
+This is useful when your tick labels have varying lengths or when you use rotated labels.
+
+{{"demo": "AxisAutoSize.js"}}
+
+Auto-sizing works well with rotated tick labels.
+In the demo below, adjust the angle slider to see how the axis height automatically adapts to accommodate the rotated labels.
+
+{{"demo": "AxisAutoSizeRotated.js"}}
+
+Auto-sizing also works with grouped axes.
+When an axis has `groups` defined, the auto-size calculation accounts for each group level's tick labels and tick sizes.
+
+{{"demo": "GroupedAxesAutoSize.js"}}
+
+:::info
+Auto-sizing is computed on the client side after hydration.
+During server-side rendering (SSR), the axis uses the default size until the client-side measurement is complete.
+:::
+
 ### Fixing tick label overflow issues
 
 When your tick labels are too long, they're clipped to avoid overflowing.
-To reduce clipping due to overflow, you can [apply an angle to the tick labels](/x/react-charts/axis/#text-customization) or [increase the axis size](/x/react-charts/styling/#placement) to accommodate them.
+To reduce clipping due to overflow, you can [apply an angle to the tick labels](/x/react-charts/axis/#text-customization), use [auto-sizing](/x/react-charts/axis/#auto-sizing-axes), or [increase the axis size](/x/react-charts/styling/#placement) to accommodate them.
 In the demo below, the size of the x- and y-axes is modified to increase the space available for tick labels.
 
 The first and last tick labels may bleed into the margin, and if that margin is not enough to display the label, it might be clipped.
@@ -368,5 +390,7 @@ You can provide an `x` or a `y` prop for a vertical or horizontal line, respecti
 
 You can also add a `label` to this reference line, and position it using the `labelAlign` prop which accepts `'start'`, `'middle'`, and `'end'` values.
 Elements can be styled with the `lineStyle` and `labelStyle` props.
+
+More examples are available in [docs page about references](/x/react-charts/references/).
 
 {{"demo": "ReferenceLine.js"}}

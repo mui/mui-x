@@ -1,8 +1,8 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const config = {
   dataset: [
@@ -25,7 +25,7 @@ describe('LineChart - click event', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onAxisClick = vi.fn();
-      const { user } = render(
+      const { user, container } = render(
         <div
           style={{
             width: 400,
@@ -43,12 +43,14 @@ describe('LineChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
 
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 198, clientY: 60 },
         },
       ]);
@@ -62,7 +64,7 @@ describe('LineChart - click event', () => {
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 201, clientY: 60 },
         },
       ]);
@@ -88,7 +90,7 @@ describe('LineChart - click event', () => {
           onMarkClick={() => {}}
         />,
       );
-      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
+      const marks = document.querySelectorAll<HTMLElement>(`.${lineClasses.mark}`);
 
       expect(Array.from(marks).map((mark) => mark.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -124,7 +126,7 @@ describe('LineChart - click event', () => {
         </div>,
       );
 
-      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
+      const marks = document.querySelectorAll<HTMLElement>(`.${lineClasses.mark}`);
 
       await user.click(marks[0]);
       expect(onMarkClick.mock.lastCall?.[1]).to.deep.equal({
@@ -162,7 +164,7 @@ describe('LineChart - click event', () => {
           onAreaClick={() => {}}
         />,
       );
-      const areas = document.querySelectorAll<HTMLElement>('path.MuiAreaElement-root');
+      const areas = document.querySelectorAll<HTMLElement>(`path.${lineClasses.area}`);
 
       expect(Array.from(areas).map((area) => area.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -192,7 +194,7 @@ describe('LineChart - click event', () => {
         </div>,
       );
 
-      const areas = document.querySelectorAll<HTMLElement>('path.MuiAreaElement-root');
+      const areas = document.querySelectorAll<HTMLElement>(`path.${lineClasses.area}`);
 
       await user.click(areas[0]);
       expect(onAreaClick.mock.lastCall?.[1]).to.deep.equal({
@@ -221,7 +223,7 @@ describe('LineChart - click event', () => {
           onLineClick={() => {}}
         />,
       );
-      const lines = document.querySelectorAll<HTMLElement>('path.MuiLineElement-root');
+      const lines = document.querySelectorAll<HTMLElement>(`path.${lineClasses.line}`);
 
       expect(Array.from(lines).map((line) => line.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -251,7 +253,7 @@ describe('LineChart - click event', () => {
         </div>,
       );
 
-      const lines = document.querySelectorAll<HTMLElement>('path.MuiLineElement-root');
+      const lines = document.querySelectorAll<HTMLElement>(`path.${lineClasses.line}`);
 
       await user.click(lines[0]);
       expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({

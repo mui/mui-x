@@ -3,29 +3,29 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { type ChartSeriesType } from '../models/seriesType/config';
 import {
-  ChartDataProvider,
-  type ChartDataProviderProps,
-  type ChartDataProviderSlotProps,
-  type ChartDataProviderSlots,
-} from '../ChartDataProvider';
+  ChartsDataProvider,
+  type ChartsDataProviderProps,
+  type ChartsDataProviderSlotProps,
+  type ChartsDataProviderSlots,
+} from '../ChartsDataProvider';
 import { useChartsContainerProps } from './useChartsContainerProps';
 import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
-export interface ChartsContainerSlots extends ChartDataProviderSlots {}
+export interface ChartsContainerSlots extends ChartsDataProviderSlots {}
 
-export interface ChartsContainerSlotProps extends ChartDataProviderSlotProps {}
+export interface ChartsContainerSlotProps extends ChartsDataProviderSlotProps {}
 
 export type ChartsContainerProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
-> = Omit<ChartDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
+> = Omit<ChartsDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
 
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *
- * This is a combination of both the `ChartDataProvider` and `ChartsSurface` components.
+ * This is a combination of both the `ChartsDataProvider` and `ChartsSurface` components.
  *
  * Demos:
  *
@@ -47,23 +47,23 @@ export type ChartsContainerProps<
  * ```
  */
 const ChartsContainer = React.forwardRef(function ChartsContainer<
-  TSeries extends ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsContainerProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
-  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartsContainerProps<
-    TSeries,
+  SeriesType extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+>(props: ChartsContainerProps<SeriesType, TSignatures>, ref: React.Ref<HTMLDivElement>) {
+  const { chartsDataProviderProps, children, chartsSurfaceProps } = useChartsContainerProps<
+    SeriesType,
     TSignatures
   >(props);
 
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
+    <ChartsDataProvider {...chartsDataProviderProps}>
       <ChartsSurface {...chartsSurfaceProps} ref={ref}>
         {children}
       </ChartsSurface>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
-}) as <TSeries extends ChartSeriesType>(
-  props: ChartsContainerProps<TSeries> & { ref?: React.ForwardedRef<SVGSVGElement> },
+}) as <SeriesType extends ChartSeriesType>(
+  props: ChartsContainerProps<SeriesType> & { ref?: React.ForwardedRef<HTMLDivElement> },
 ) => React.JSX.Element;
 
 // @ts-ignore
@@ -100,6 +100,10 @@ ChartsContainer.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -108,16 +112,17 @@ ChartsContainer.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * If true, the voronoi interaction are ignored.
+   * If true, the hit area interaction is disabled and falls back to hover events.
    */
-  disableVoronoi: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
+  disableHitArea: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.shape({
-    preferStrictDomainInLineCharts: PropTypes.bool,
-  }),
+  experimentalFeatures: PropTypes.any,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -143,11 +148,18 @@ ChartsContainer.propTypes = {
    * ```
    */
   hiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.any,
-      seriesId: PropTypes.object.isRequired,
-      type: PropTypes.object,
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
+      }),
+    ]).isRequired,
   ),
   /**
    * The controlled axis highlight.
@@ -163,10 +175,23 @@ ChartsContainer.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
+    }),
+  ]),
+  /**
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
+   * If `undefined`, the radius is assumed to be infinite.
+   */
+  hitAreaRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -194,11 +219,18 @@ ChartsContainer.propTypes = {
    * ```
    */
   initialHiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.any,
-      seriesId: PropTypes.object.isRequired,
-      type: PropTypes.object,
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
+      }),
+    ]).isRequired,
   ),
   /**
    * Localized text for chart components.
@@ -228,13 +260,13 @@ ChartsContainer.propTypes = {
   onAxisClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -263,7 +295,7 @@ ChartsContainer.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -274,6 +306,7 @@ ChartsContainer.propTypes = {
   radiusAxis: PropTypes.arrayOf(
     PropTypes.shape({
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -297,7 +330,7 @@ ChartsContainer.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      height: PropTypes.number,
+      height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       ignoreTooltip: PropTypes.bool,
@@ -346,6 +379,7 @@ ChartsContainer.propTypes = {
         barGapRatio: PropTypes.number,
         categoryGapRatio: PropTypes.number,
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -386,7 +420,7 @@ ChartsContainer.propTypes = {
             tickSize: PropTypes.number,
           }),
         ),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
@@ -435,6 +469,7 @@ ChartsContainer.propTypes = {
       }),
       PropTypes.shape({
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -475,7 +510,7 @@ ChartsContainer.propTypes = {
             tickSize: PropTypes.number,
           }),
         ),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
@@ -524,6 +559,7 @@ ChartsContainer.propTypes = {
       }),
       PropTypes.shape({
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -548,7 +584,7 @@ ChartsContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
@@ -589,6 +625,7 @@ ChartsContainer.propTypes = {
       }),
       PropTypes.shape({
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -614,7 +651,7 @@ ChartsContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
@@ -655,6 +692,7 @@ ChartsContainer.propTypes = {
       }),
       PropTypes.shape({
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -679,7 +717,7 @@ ChartsContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
@@ -720,6 +758,7 @@ ChartsContainer.propTypes = {
       }),
       PropTypes.shape({
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -744,7 +783,7 @@ ChartsContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
@@ -785,6 +824,7 @@ ChartsContainer.propTypes = {
       }),
       PropTypes.shape({
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -809,7 +849,7 @@ ChartsContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
@@ -860,6 +900,7 @@ ChartsContainer.propTypes = {
       }),
       PropTypes.shape({
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -884,7 +925,7 @@ ChartsContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
@@ -935,6 +976,7 @@ ChartsContainer.propTypes = {
       }),
       PropTypes.shape({
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -959,7 +1001,7 @@ ChartsContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
@@ -1025,6 +1067,10 @@ ChartsContainer.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The controlled axis tooltip.
@@ -1040,17 +1086,17 @@ ChartsContainer.propTypes = {
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']),
-  }),
-  /**
-   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
-   * If set to `'item'`, the radius is the `markerSize`.
-   * If `undefined`, the radius is assumed to be infinite.
-   */
-  voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -1067,6 +1113,7 @@ ChartsContainer.propTypes = {
         barGapRatio: PropTypes.number,
         categoryGapRatio: PropTypes.number,
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1106,7 +1153,7 @@ ChartsContainer.propTypes = {
             tickSize: PropTypes.number,
           }),
         ),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1155,6 +1202,7 @@ ChartsContainer.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1194,7 +1242,7 @@ ChartsContainer.propTypes = {
             tickSize: PropTypes.number,
           }),
         ),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1243,6 +1291,7 @@ ChartsContainer.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1266,7 +1315,7 @@ ChartsContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1307,6 +1356,7 @@ ChartsContainer.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1331,7 +1381,7 @@ ChartsContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1372,6 +1422,7 @@ ChartsContainer.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1395,7 +1446,7 @@ ChartsContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1436,6 +1487,7 @@ ChartsContainer.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1459,7 +1511,7 @@ ChartsContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1500,6 +1552,7 @@ ChartsContainer.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1523,7 +1576,7 @@ ChartsContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1574,6 +1627,7 @@ ChartsContainer.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1597,7 +1651,7 @@ ChartsContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1648,6 +1702,7 @@ ChartsContainer.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1671,7 +1726,7 @@ ChartsContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1723,6 +1778,7 @@ ChartsContainer.propTypes = {
         barGapRatio: PropTypes.number,
         categoryGapRatio: PropTypes.number,
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1805,11 +1861,12 @@ ChartsContainer.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1892,11 +1949,12 @@ ChartsContainer.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1955,11 +2013,12 @@ ChartsContainer.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -2019,11 +2078,12 @@ ChartsContainer.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -2082,11 +2142,12 @@ ChartsContainer.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -2145,11 +2206,12 @@ ChartsContainer.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -2218,11 +2280,12 @@ ChartsContainer.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -2291,11 +2354,12 @@ ChartsContainer.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -2354,7 +2418,7 @@ ChartsContainer.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
     ]).isRequired,
   ),

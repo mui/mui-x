@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import unsupportedProp from '@mui/utils/unsupportedProp';
-import { alpha } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';
@@ -65,31 +64,29 @@ export const TreeItemContent = styled('div', {
     backgroundColor: (theme.vars || theme).palette.action.focus,
   },
   '&[data-selected]': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      (theme.vars || theme).palette.action.selectedOpacity,
+    ),
     '&:hover': {
-      backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
-        : alpha(
-            theme.palette.primary.main,
-            theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-          ),
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.hoverOpacity}`,
+      ),
       // Reset on touch devices, it doesn't add specificity
       '@media (hover: none)': {
-        backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-          : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+        backgroundColor: theme.alpha(
+          (theme.vars || theme).palette.primary.main,
+          (theme.vars || theme).palette.action.selectedOpacity,
+        ),
       },
     },
   },
   '&[data-selected][data-focused]': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
-      : alpha(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
-        ),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
+    ),
   },
 }));
 
@@ -208,12 +205,6 @@ const useUtilityClasses = (classesProp: Partial<TreeItemClasses> | undefined) =>
     dragAndDropOverlay: ['dragAndDropOverlay'],
     errorIcon: ['errorIcon'],
     loadingIcon: ['loadingIcon'],
-    expanded: ['expanded'],
-    editing: ['editing'],
-    editable: ['editable'],
-    selected: ['selected'],
-    focused: ['focused'],
-    disabled: ['disabled'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -295,14 +286,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     getSlotProps: getContentProps,
     externalSlotProps: slotProps.content,
     ownerState: {},
-    className: clsx(classes.content, {
-      [classes.expanded]: status.expanded,
-      [classes.selected]: status.selected,
-      [classes.focused]: status.focused,
-      [classes.disabled]: status.disabled,
-      [classes.editing]: status.editing,
-      [classes.editable]: status.editable,
-    }),
+    className: classes.content,
   });
 
   const IconContainer: React.ElementType = slots.iconContainer ?? TreeItemIconContainer;

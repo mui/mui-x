@@ -12,8 +12,6 @@
       "@mui/x-charts-pro/*": ["./packages/x-charts-pro/src/*"],
       "@mui/x-charts-premium": ["./packages/x-charts-premium/src"],
       "@mui/x-charts-premium/*": ["./packages/x-charts-premium/src/*"],
-      "@mui/x-charts-vendor": ["./packages/x-charts-vendor"],
-      "@mui/x-charts-vendor/*": ["./packages/x-charts-vendor/*"],
       // There is no root import on these packages
       // "@mui/x-scheduler": ["./packages/x-scheduler/src"],
       // "@mui/x-scheduler-premium": ["./packages/x-scheduler-premium/src"],
@@ -43,6 +41,9 @@
         "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
       ],
       "test/*": ["./test/*"],
+      "docs/src/modules/utils/mapApiPageTranslations": [
+        "./docs/src/modules/utils/mapApiPageTranslations.js"
+      ],
       "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
       "docsx/*": ["./docs/*"]
     },

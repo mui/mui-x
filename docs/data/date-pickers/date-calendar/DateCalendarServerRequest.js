@@ -8,6 +8,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 
 function getRandomNumber(min, max) {
+  // eslint-disable-next-line no-restricted-properties -- used for interactive server simulation
   return Math.round(Math.random() * (max - min) + min);
 }
 

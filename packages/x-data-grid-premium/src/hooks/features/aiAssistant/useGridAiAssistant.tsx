@@ -81,7 +81,6 @@ export const useGridAiAssistant = (
     | 'disableColumnSorting'
     | 'disablePivoting'
     | 'chartsIntegration'
-    | 'experimentalFeatures'
     | 'getPivotDerivedColumns'
   >,
 ) => {
@@ -96,7 +95,6 @@ export const useGridAiAssistant = (
     disableColumnSorting,
     disablePivoting,
     chartsIntegration,
-    experimentalFeatures,
     getPivotDerivedColumns,
   } = props;
   const previousUnwrappedGroupingModel = React.useRef<string[]>([]);
@@ -313,7 +311,7 @@ export const useGridAiAssistant = (
         result.sorting = [];
       }
 
-      if (experimentalFeatures?.charts && chartsIntegration && activeChartId && result.chart) {
+      if (chartsIntegration && activeChartId && result.chart) {
         if (appliedPivoting) {
           const unsubscribe = apiRef.current.subscribeEvent('rowsSet', () => {
             const unwrappedGroupingModel = Object.keys(
@@ -378,7 +376,6 @@ export const useGridAiAssistant = (
       isAiAssistantAvailable,
       activeChartId,
       chartsIntegration,
-      experimentalFeatures?.charts,
     ],
   );
 
@@ -526,7 +523,7 @@ export const useGridAiAssistant = (
 
       const conversation = gridAiAssistantActiveConversationSelector(apiRef);
       if (!conversation) {
-        throw new Error('Conversation not found');
+        throw new Error('MUI X: Conversation not found');
       }
       return conversation;
     },

@@ -45,7 +45,7 @@ export function SharpRadarStripes(props: RadarGridStripeRenderProps) {
             stroke="none"
             fill={stripeColor?.(index) ?? 'none'}
             fillOpacity={0.1}
-            className={classes?.stripe}
+            className={classes?.gridStripe}
           />
         );
       })}

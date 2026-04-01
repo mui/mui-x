@@ -97,7 +97,7 @@ function EditAction(props: Pick<GridRowParams, 'row'>) {
     setEditing(false);
   };
 
-  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSave = (event: React.FormEvent) => {
     event.preventDefault();
     apiRef.current.updateRows([{ id: row.id, name, position }]);
     handleClose();
@@ -113,13 +113,14 @@ function EditAction(props: Pick<GridRowParams, 'row'>) {
       <IconButton aria-label="Edit" onClick={handleEdit}>
         <EditIcon />
       </IconButton>
-
       <Dialog
         open={editing}
         onClose={handleClose}
-        PaperProps={{
-          component: 'form',
-          onSubmit: handleSave,
+        slotProps={{
+          paper: {
+            component: 'form',
+            onSubmit: handleSave,
+          },
         }}
       >
         <DialogTitle>Edit Employee</DialogTitle>

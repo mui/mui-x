@@ -20,7 +20,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
   store,
   instance,
 }) => {
-  const { svgRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const { xAxis, yAxis, dataset, gap } = params;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -63,7 +63,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
   }, [drawingArea, xAxis, yAxis, dataset, store, gap]);
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     if (!isInteractionEnabled || !element || params.disableAxisListener) {
       return () => {};
     }
@@ -116,10 +116,10 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       pressHandler.cleanup();
       pressEndHandler.cleanup();
     };
-  }, [svgRef, instance, params.disableAxisListener, isInteractionEnabled]);
+  }, [chartsLayerContainerRef, instance, params.disableAxisListener, isInteractionEnabled]);
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     const onAxisClick = params.onAxisClick;
     if (element === null || !onAxisClick) {
       return () => {};
@@ -171,7 +171,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
     return () => {
       axisClickHandler.cleanup();
     };
-  }, [params.onAxisClick, svgRef, store, instance]);
+  }, [params.onAxisClick, chartsLayerContainerRef, store, instance]);
 
   return {};
 };

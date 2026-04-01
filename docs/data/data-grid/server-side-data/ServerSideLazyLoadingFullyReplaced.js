@@ -21,29 +21,25 @@ const COMPANIES = [
 ];
 
 const ROW_COUNT = 120;
-const BACKEND_REPLACEMENT_MS = 10_000;
 
-const getDatasetVersion = () => Math.floor(Date.now() / BACKEND_REPLACEMENT_MS);
-
-function getPrice(index, version) {
-  const seed = ((index + 1) * 97 + version * 53) % 500;
-  return Math.round((80 + seed) * 100) / 100;
-}
+let callCount = 0;
 
 function fakeReplacingServer(params) {
   const start = typeof params.start === 'number' ? params.start : 0;
   const end = typeof params.end === 'number' ? params.end : start + 14;
-  const version = getDatasetVersion();
+  const batch = callCount;
+  callCount += 1;
 
   const rows = [];
   for (let i = start; i <= end && i < ROW_COUNT; i += 1) {
     const company = COMPANIES[i % COMPANIES.length];
+    const seed = ((i + 1) * 97 + batch * 53) % 500;
     rows.push({
-      id: `${version}-${i}`,
+      id: `${batch}-${i}`,
       symbol: company.symbol,
       name: company.name,
-      price: getPrice(i, version),
-      batch: version,
+      price: Math.round((80 + seed) * 100) / 100,
+      batch,
     });
   }
 

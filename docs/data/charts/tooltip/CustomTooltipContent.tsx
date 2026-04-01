@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
@@ -13,7 +13,7 @@ export default function CustomTooltipContent() {
   const clipPathId = `${id}-clip-path`;
   return (
     <div style={{ width: '100%' }}>
-      <ChartContainer
+      <ChartsContainer
         height={300}
         dataset={dataset}
         series={[
@@ -31,7 +31,7 @@ export default function CustomTooltipContent() {
         <ChartsTooltipContainer trigger="item">
           <CustomItemTooltip />
         </ChartsTooltipContainer>
-      </ChartContainer>
+      </ChartsContainer>
     </div>
   );
 }

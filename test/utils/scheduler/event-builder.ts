@@ -1,10 +1,10 @@
 import {
-  SchedulerResourceId,
   RecurringEventPresetKey,
-  RecurringEventRecurrenceRule,
+  SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
+  SchedulerEventColor,
   SchedulerEventCreationProperties,
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -14,6 +14,7 @@ import { processEvent, resolveEventDate } from '@mui/x-scheduler-headless/proces
 import { getWeekDayCode } from '@mui/x-scheduler-headless/internals/utils/recurring-events';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { TemporalTimezone } from '@mui/x-scheduler-headless/base-ui-copy/types';
+import type { SchedulerResource } from '@mui/x-scheduler-headless/models';
 import { adapter as defaultAdapter } from './adapters';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
@@ -78,9 +79,9 @@ export class EventBuilder {
     return this;
   }
 
-  /** Associate a resource id. */
-  resource(resourceId?: SchedulerResourceId) {
-    this.event.resource = resourceId;
+  /** Associate a resource. */
+  resource(resource: SchedulerResource) {
+    this.event.resource = resource.id;
     return this;
   }
 
@@ -103,7 +104,7 @@ export class EventBuilder {
   }
 
   /** Set an RRULE */
-  rrule(rule?: RecurringEventRecurrenceRule) {
+  rrule(rule?: SchedulerEventRecurrenceRule) {
     this.event.rrule = rule;
     return this;
   }
@@ -123,6 +124,11 @@ export class EventBuilder {
   /** Set the display timezone for processed events. */
   withDisplayTimezone(timezone: TemporalTimezone) {
     this.displayTimezone = timezone;
+    return this;
+  }
+
+  color(color: SchedulerEventColor) {
+    this.event.color = color;
     return this;
   }
 
@@ -206,13 +212,13 @@ export class EventBuilder {
    * - If only kind: auto-generates a preset based on start or DEFAULT_VISIBLE_DATE.
    * - If kind + rule: merges your rrule over the preset.
    */
-  recurrent(kind: RecurringEventPresetKey, rrule?: Omit<RecurringEventRecurrenceRule, 'freq'>) {
+  recurrent(kind: RecurringEventPresetKey, rrule?: Omit<SchedulerEventRecurrenceRule, 'freq'>) {
     const dataTimezone = this.event.timezone ?? 'default';
     const anchor = this.event.start
       ? resolveEventDate(this.event.start, dataTimezone, this.adapter)
       : this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, 'default');
 
-    let base: RecurringEventRecurrenceRule = { freq: kind, interval: 1 };
+    let base: SchedulerEventRecurrenceRule = { freq: kind, interval: 1 };
 
     if (kind === 'WEEKLY') {
       const code = getWeekDayCode(this.adapter, anchor);
