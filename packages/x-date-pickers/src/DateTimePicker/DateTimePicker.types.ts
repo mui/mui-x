@@ -16,9 +16,7 @@ export interface DateTimePickerSlots
   extends DesktopDateTimePickerSlots, MobileDateTimePickerSlots {}
 
 export interface DateTimePickerSlotProps
-  extends
-    DesktopDateTimePickerSlotProps,
-    MobileDateTimePickerSlotProps {}
+  extends DesktopDateTimePickerSlotProps, MobileDateTimePickerSlotProps {}
 
 export interface DateTimePickerProps
   extends

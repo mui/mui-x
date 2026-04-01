@@ -12,8 +12,7 @@ import {
   MultiInputTimeRangeFieldClasses,
 } from './multiInputTimeRangeFieldClasses';
 
-export interface MultiInputTimeRangeFieldProps
-  extends MultiInputRangeFieldProps<UseTimeRangeManagerReturnValue> {
+export interface MultiInputTimeRangeFieldProps extends MultiInputRangeFieldProps<UseTimeRangeManagerReturnValue> {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
   /**
    * Override or extend the styles applied to the component.

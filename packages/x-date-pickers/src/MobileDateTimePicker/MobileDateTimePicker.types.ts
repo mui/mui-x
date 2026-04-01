@@ -14,9 +14,7 @@ export interface MobileDateTimePickerSlots
   extends BaseDateTimePickerSlots, MakeOptional<UseMobilePickerSlots, 'field'> {}
 
 export interface MobileDateTimePickerSlotProps
-  extends
-    BaseDateTimePickerSlotProps,
-    ExportedUseMobilePickerSlotProps {}
+  extends BaseDateTimePickerSlotProps, ExportedUseMobilePickerSlotProps {}
 
 export interface MobileDateTimePickerProps extends BaseDateTimePickerProps, MobileOnlyPickerProps {
   /**

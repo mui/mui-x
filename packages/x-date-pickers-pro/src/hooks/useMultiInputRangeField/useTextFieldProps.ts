@@ -202,15 +202,6 @@ export interface UseTextFieldBaseForwardedProps {
 }
 
 interface UseTextFieldSharedInternalProps<TManager extends PickerAnyRangeManager> extends Pick<
-  UseFieldInternalProps<
-    PickerValue,
-    true,
-    PickerManagerError<TManager>
-  >,
-  | 'disabled'
-  | 'readOnly'
-  | 'timezone'
-  | 'format'
-  | 'formatDensity'
-  | 'shouldRespectLeadingZeros'
+  UseFieldInternalProps<PickerValue, true, PickerManagerError<TManager>>,
+  'disabled' | 'readOnly' | 'timezone' | 'format' | 'formatDensity' | 'shouldRespectLeadingZeros'
 > {}

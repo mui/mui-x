@@ -39,10 +39,7 @@ export type PickerManagerValidationProps<TManager extends PickerAnyManager> =
   PickerManagerProperties<TManager>['validationProps'];
 
 export type PickerManagerFieldInternalPropsWithDefaults<TManager extends PickerAnyManager> =
-  UseFieldInternalProps<
-    PickerManagerValue<TManager>,
-    PickerManagerError<TManager>
-  > &
+  UseFieldInternalProps<PickerManagerValue<TManager>, PickerManagerError<TManager>> &
     PickerManagerValidationProps<TManager>;
 
 export interface PickerValueManager<TValue extends PickerValidValue, TError> {

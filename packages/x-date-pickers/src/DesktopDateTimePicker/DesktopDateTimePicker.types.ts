@@ -19,9 +19,7 @@ export interface DesktopDateTimePickerSlots
     MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'> {}
 
 export interface DesktopDateTimePickerSlotProps
-  extends
-    BaseDateTimePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps {}
+  extends BaseDateTimePickerSlotProps, ExportedUseDesktopPickerSlotProps {}
 
 export interface DesktopDateTimePickerProps
   extends

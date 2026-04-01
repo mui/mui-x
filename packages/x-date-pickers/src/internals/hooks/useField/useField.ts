@@ -8,12 +8,7 @@ export const useField = <
   TValidationProps extends {},
   TProps extends UseFieldProps,
 >(
-  parameters: UseFieldParameters<
-    TValue,
-    TError,
-    TValidationProps,
-    TProps
-  >,
+  parameters: UseFieldParameters<TValue, TError, TValidationProps, TProps>,
 ): UseFieldReturnValue<TProps> => {
   return useFieldV7TextField(parameters);
 };

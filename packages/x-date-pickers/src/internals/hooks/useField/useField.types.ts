@@ -33,10 +33,7 @@ export interface UseFieldParameters<
   skipContextFieldRefAssignment?: boolean;
 }
 
-export interface UseFieldInternalProps<
-  TValue extends PickerValidValue,
-  TError,
->
+export interface UseFieldInternalProps<TValue extends PickerValidValue, TError>
   extends TimezoneProps, FormProps, OnErrorProps<TValue, TError> {
   /**
    * The selected value.
@@ -144,9 +141,7 @@ interface UseFieldAdditionalProps {
   focused: boolean;
 }
 
-export type UseFieldReturnValue<
-  TProps extends UseFieldProps,
-> =
+export type UseFieldReturnValue<TProps extends UseFieldProps> =
   // Some internal props are returned with a default value applied.
   Required<Pick<UseFieldInternalProps<any, any>, 'disabled' | 'readOnly' | 'autoFocus'>> &
     // All the forwarded props the useField hooks is able to handled are returned with a default value applied.

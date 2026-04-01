@@ -138,8 +138,7 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
     const cleanStartTextFieldResponse = cleanFieldResponse(fieldResponse.startTextField);
     const cleanEndTextFieldResponse = cleanFieldResponse(fieldResponse.endTextField);
 
-    const TextField =
-      slots?.textField ?? pickerFieldUIContext.slots.textField ?? PickersTextField;
+    const TextField = slots?.textField ?? pickerFieldUIContext.slots.textField ?? PickersTextField;
 
     return (
       <Root {...fieldResponse.root}>

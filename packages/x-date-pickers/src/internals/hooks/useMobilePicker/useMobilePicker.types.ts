@@ -35,17 +35,11 @@ export interface ExportedUseMobilePickerSlotProps
     PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<PickerValue>,
     PickerFieldUISlotPropsFromContext {
-  field?: SlotComponentPropsFromProps<
-    PickerFieldSlotProps<PickerValue>,
-    {},
-    PickerOwnerState
-  >;
+  field?: SlotComponentPropsFromProps<PickerFieldSlotProps<PickerValue>, {}, PickerOwnerState>;
 }
 
 export interface UseMobilePickerSlotProps
-  extends
-    ExportedUseMobilePickerSlotProps,
-    Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
+  extends ExportedUseMobilePickerSlotProps, Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps extends UsePickerNonStaticProps {}
 
@@ -71,11 +65,7 @@ export interface UseMobilePickerProps<
 
 export interface UseMobilePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseMobilePickerProps<
-    TView,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseMobilePickerProps<TView, any, TExternalProps>,
 > extends Pick<
   UsePickerParameters<PickerValue, TView, TExternalProps>,
   'valueManager' | 'valueType' | 'validator' | 'ref'

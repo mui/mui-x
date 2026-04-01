@@ -15,9 +15,7 @@ export interface DesktopDatePickerSlots
   extends BaseDatePickerSlots, MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'> {}
 
 export interface DesktopDatePickerSlotProps
-  extends
-    BaseDatePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps {}
+  extends BaseDatePickerSlotProps, ExportedUseDesktopPickerSlotProps {}
 
 export interface DesktopDatePickerProps
   extends BaseDatePickerProps, DesktopOnlyPickerProps, ExportedYearCalendarProps {

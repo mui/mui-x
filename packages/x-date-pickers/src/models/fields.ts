@@ -162,9 +162,7 @@ export interface FieldOwnerState extends PickerOwnerState {
 /**
  * Props the `slotProps.field` of a Picker can receive.
  */
-export type PickerFieldSlotProps<
-  TValue extends PickerValidValue,
-> = ExportedPickerFieldUIProps &
+export type PickerFieldSlotProps<TValue extends PickerValidValue> = ExportedPickerFieldUIProps &
   Pick<
     UseFieldInternalProps<TValue, unknown>,
     'shouldRespectLeadingZeros' | 'readOnly' | 'fieldRef'
@@ -191,7 +189,9 @@ export type BaseSingleInputPickersTextFieldProps = Omit<
 /**
  * Props the built-in text field component can receive.
  */
-export type BuiltInFieldTextFieldProps = Partial<Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps>>;
+export type BuiltInFieldTextFieldProps = Partial<
+  Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps>
+>;
 
 export interface PickerTextFieldOwnerState extends FieldOwnerState {
   // Should be moved to FieldOwnerState once we drop the textField slot.

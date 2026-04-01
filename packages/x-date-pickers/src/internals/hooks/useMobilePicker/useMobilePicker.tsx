@@ -15,11 +15,7 @@ import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePi
  */
 export const useMobilePicker = <
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseMobilePickerProps<
-    TView,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseMobilePickerProps<TView, any, TExternalProps>,
 >({
   props,
   steps,

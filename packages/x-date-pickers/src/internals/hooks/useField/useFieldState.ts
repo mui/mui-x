@@ -48,12 +48,7 @@ export const useFieldState = <
   TValidationProps extends {},
   TForwardedProps extends UseFieldForwardedProps,
 >(
-  parameters: UseFieldStateParameters<
-    TValue,
-    TError,
-    TValidationProps,
-    TForwardedProps
-  >,
+  parameters: UseFieldStateParameters<TValue, TError, TValidationProps, TForwardedProps>,
 ): UseFieldStateReturnValue<TValue> => {
   const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
@@ -184,10 +179,7 @@ export const useFieldState = <
 
   const activeSectionIndex = parsedSelectedSections === 'all' ? 0 : parsedSelectedSections;
 
-  const sectionOrder = React.useMemo(
-    () => getSectionOrder(state.sections),
-    [state.sections],
-  );
+  const sectionOrder = React.useMemo(() => getSectionOrder(state.sections), [state.sections]);
 
   const areAllSectionsEmpty = React.useMemo(
     () => state.sections.every((section) => section.value === ''),

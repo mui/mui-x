@@ -381,12 +381,7 @@ export const usePicker = <
       onSelectedSectionsChange,
       internalFieldRef,
     }),
-    [
-      formatDensity,
-      selectedSections,
-      onSelectedSectionsChange,
-      internalFieldRef,
-    ],
+    [formatDensity, selectedSections, onSelectedSectionsChange, internalFieldRef],
   );
 
   const isValidContextValue = (testedValue: TValue) => {

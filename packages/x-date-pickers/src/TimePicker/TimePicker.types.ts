@@ -14,14 +14,10 @@ import { ValidateTimeProps } from '../validation/validateTime';
 export interface TimePickerSlots extends DesktopTimePickerSlots, MobileTimePickerSlots {}
 
 export interface TimePickerSlotProps
-  extends
-    DesktopTimePickerSlotProps,
-    MobileTimePickerSlotProps {}
+  extends DesktopTimePickerSlotProps, MobileTimePickerSlotProps {}
 
 export interface TimePickerProps
-  extends
-    DesktopTimePickerProps,
-    Omit<MobileTimePickerProps<TimeViewWithMeridiem>, 'views'> {
+  extends DesktopTimePickerProps, Omit<MobileTimePickerProps<TimeViewWithMeridiem>, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'

@@ -81,10 +81,7 @@ export type UseDateTimeRangeManagerReturnValue = PickerManager<
 
 export interface DateTimeRangeManagerFieldInternalProps
   extends
-    MakeOptional<
-      UseFieldInternalProps<PickerRangeValue, DateTimeRangeValidationError>,
-      'format'
-    >,
+    MakeOptional<UseFieldInternalProps<PickerRangeValue, DateTimeRangeValidationError>, 'format'>,
     ExportedValidateDateTimeRangeProps,
     AmPmProps,
     RangeFieldSeparatorProps {}

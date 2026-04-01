@@ -35,17 +35,11 @@ export interface ExportedUseDesktopPickerSlotProps
     PickerPopperSlotProps,
     ExportedPickersLayoutSlotProps<PickerValue>,
     PickerFieldUISlotPropsFromContext {
-  field?: SlotComponentPropsFromProps<
-    PickerFieldSlotProps<PickerValue>,
-    {},
-    PickerOwnerState
-  >;
+  field?: SlotComponentPropsFromProps<PickerFieldSlotProps<PickerValue>, {}, PickerOwnerState>;
 }
 
 export interface UseDesktopPickerSlotProps
-  extends
-    ExportedUseDesktopPickerSlotProps,
-    Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
+  extends ExportedUseDesktopPickerSlotProps, Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface DesktopOnlyPickerProps extends UsePickerNonStaticProps {
   /**
@@ -77,11 +71,7 @@ export interface UseDesktopPickerProps<
 
 export interface UseDesktopPickerParams<
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopPickerProps<
-    TView,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseDesktopPickerProps<TView, any, TExternalProps>,
 > extends Pick<
   UsePickerParameters<PickerValue, TView, TExternalProps>,
   'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'

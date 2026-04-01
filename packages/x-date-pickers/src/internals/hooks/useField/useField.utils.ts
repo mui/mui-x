@@ -581,9 +581,7 @@ export const mergeDateIntoReferenceDate = (
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
-export const getSectionOrder = (
-  sections: FieldSection[],
-): SectionOrdering => {
+export const getSectionOrder = (sections: FieldSection[]): SectionOrdering => {
   const neighbors: SectionNeighbors = {};
   sections.forEach((_, index) => {
     const leftIndex = index === 0 ? null : index - 1;
