@@ -5,6 +5,7 @@ import { SlotComponentProps } from '@mui/utils/types';
 import { ChatProvider, type ChatProviderProps } from '@mui/x-chat-headless';
 import type { ChatLocaleText } from './internals/chatLocaleText';
 import { ChatLocaleProvider } from './internals/ChatLocaleContext';
+import { ChatVariantProvider, type ChatVariant } from './internals/ChatVariantContext';
 
 export interface ChatRootSlots {
   root: React.ElementType;
@@ -21,6 +22,14 @@ export interface ChatRootProps<Cursor = string>
     ChatProviderProps<Cursor>,
     Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'onError'> {
   localeText?: Partial<ChatLocaleText>;
+  /**
+   * The visual layout variant of the chat.
+   * When provided, wraps descendant components with `ChatVariantProvider`
+   * so message and conversation components can respond to the variant.
+   * - `'default'` – Standard layout with avatars, individual timestamps, and full spacing.
+   * - `'compact'` – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing.
+   */
+  variant?: ChatVariant;
   slots?: Partial<ChatRootSlots>;
   slotProps?: ChatRootSlotProps;
 }
@@ -39,6 +48,7 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     slotProps,
     adapter,
     localeText,
+    variant,
     members,
     currentUser,
     messages,
@@ -100,7 +110,13 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       storeClass={storeClass}
     >
       <ChatLocaleProvider localeText={localeText}>
-        <Root {...rootProps}>{children}</Root>
+        {variant ? (
+          <ChatVariantProvider variant={variant}>
+            <Root {...rootProps}>{children}</Root>
+          </ChatVariantProvider>
+        ) : (
+          <Root {...rootProps}>{children}</Root>
+        )}
       </ChatLocaleProvider>
     </ChatProvider>
   );

@@ -603,7 +603,7 @@ describe('ToolPart', () => {
     expect(screen.getByText('Output')).not.to.equal(null);
   });
 
-  it('collapses input payload into <details> when exceeding 320 chars', () => {
+  it('shows inline content for long payloads', () => {
     const longInputMessage: ChatMessage = {
       id: 't4',
       role: 'assistant',
@@ -628,13 +628,14 @@ describe('ToolPart', () => {
       </ChatRoot>,
     );
 
-    // Long content should be in a <details> collapse
-    const details = screen.getByTestId('content').querySelector('details');
+    // Long content should be displayed inline with <strong> label, not collapsed
+    const strong = screen.getByTestId('content').querySelector('strong');
 
-    expect(details).not.to.equal(null);
+    expect(strong).not.to.equal(null);
+    expect(strong!.textContent).to.equal('Input');
   });
 
-  it('shows inline content (no <details>) for short payloads', () => {
+  it('shows inline content for short payloads', () => {
     const shortInputMessage: ChatMessage = {
       id: 't5',
       role: 'assistant',
@@ -659,7 +660,7 @@ describe('ToolPart', () => {
       </ChatRoot>,
     );
 
-    // Short content should use <strong> label, not <details>
+    // Short content should use <strong> label
     const strong = screen.getByTestId('content').querySelector('strong');
 
     expect(strong).not.to.equal(null);

@@ -8,6 +8,7 @@ export interface ComposerContextValue extends ComposerOwnerState {
   setValue(value: string): void;
   submit(): Promise<void>;
   addAttachment(file: File): void;
+  removeAttachment(localId: string): void;
   attachments: ChatDraftAttachment[];
   error: ChatError | null;
   setComposerIsComposing(value: boolean): void;
@@ -27,6 +28,7 @@ const ComposerContext = React.createContext<ComposerContextValue>({
   setValue: () => {},
   submit: async () => {},
   addAttachment: () => {},
+  removeAttachment: () => {},
   attachments: [],
   error: null,
   setComposerIsComposing: () => {},

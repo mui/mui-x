@@ -3,8 +3,10 @@ export { ComposerTextArea } from './ComposerTextArea';
 export { ComposerSendButton } from './ComposerSendButton';
 export { ComposerAttachButton } from './ComposerAttachButton';
 export { ComposerToolbar } from './ComposerToolbar';
+export { ComposerAttachmentList } from './ComposerAttachmentList';
 export { ComposerHelperText } from './ComposerHelperText';
 export { ComposerLabel } from './ComposerLabel';
+export { useComposerContext } from './internals/ComposerContext';
 
 export type { ComposerRootProps, ComposerRootSlotProps, ComposerRootSlots } from './ComposerRoot';
 export type {
@@ -28,6 +30,11 @@ export type {
   ComposerToolbarSlots,
 } from './ComposerToolbar';
 export type {
+  ComposerAttachmentListProps,
+  ComposerAttachmentListSlotProps,
+  ComposerAttachmentListSlots,
+} from './ComposerAttachmentList';
+export type {
   ComposerHelperTextProps,
   ComposerHelperTextSlotProps,
   ComposerHelperTextSlots,
@@ -39,6 +46,7 @@ export type {
 } from './ComposerLabel';
 export type {
   ComposerAttachButtonOwnerState,
+  ComposerAttachmentListOwnerState,
   ComposerHelperTextOwnerState,
   ComposerTextAreaOwnerState,
   ComposerOwnerState,

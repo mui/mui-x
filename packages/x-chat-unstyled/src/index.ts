@@ -9,15 +9,18 @@ import {
 } from './conversation';
 import {
   ComposerAttachButton,
+  ComposerAttachmentList,
   ComposerHelperText,
   ComposerLabel,
   ComposerRoot,
   ComposerSendButton,
   ComposerTextArea,
   ComposerToolbar,
+  useComposerContext,
 } from './composer';
 import {
   ConversationListItem,
+  ConversationListItemActions,
   ConversationListItemAvatar,
   ConversationListItemContent,
   ConversationListPreview,
@@ -69,13 +72,16 @@ export {
   ConversationSubtitle,
   ConversationTitle,
   ComposerAttachButton,
+  ComposerAttachmentList,
   ComposerHelperText,
   ComposerLabel,
   ComposerRoot,
   ComposerSendButton,
   ComposerTextArea,
   ComposerToolbar,
+  useComposerContext,
   ConversationListItem,
+  ConversationListItemActions,
   ConversationListItemAvatar,
   ConversationListItemContent,
   ConversationListPreview,
@@ -168,6 +174,9 @@ export type {
   ComposerToolbarProps,
   ComposerToolbarSlotProps,
   ComposerToolbarSlots,
+  ComposerAttachmentListProps,
+  ComposerAttachmentListSlotProps,
+  ComposerAttachmentListSlots,
 } from './composer';
 export type {
   ConversationListItemAvatarProps,
@@ -194,6 +203,10 @@ export type {
   ConversationListUnreadBadgeProps,
   ConversationListUnreadBadgeSlotProps,
   ConversationListUnreadBadgeSlots,
+  ConversationListItemActionsProps,
+  ConversationListItemActionsSlotProps,
+  ConversationListItemActionsSlots,
+  ConversationListVariant,
 } from './conversation-list';
 export type {
   ScrollToBottomAffordanceProps,
@@ -294,6 +307,7 @@ export type {
 } from './conversation';
 export type {
   ComposerAttachButtonOwnerState,
+  ComposerAttachmentListOwnerState,
   ComposerHelperTextOwnerState,
   ComposerOwnerState,
   ComposerRootOwnerState,
@@ -311,6 +325,7 @@ export type {
   ConversationListTimestampOwnerState,
   ConversationListTitleOwnerState,
   ConversationListUnreadBadgeOwnerState,
+  ConversationListItemActionsOwnerState,
 } from './conversation-list';
 export type {
   ScrollToBottomAffordanceOwnerState,
@@ -361,6 +376,7 @@ export const Composer = {
   TextArea: ComposerTextArea,
   SendButton: ComposerSendButton,
   AttachButton: ComposerAttachButton,
+  AttachmentList: ComposerAttachmentList,
   Toolbar: ComposerToolbar,
   HelperText: ComposerHelperText,
 };

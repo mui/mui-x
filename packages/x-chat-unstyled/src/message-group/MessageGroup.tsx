@@ -4,6 +4,8 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useMessage, useMessageIds, type ChatMessage } from '@mui/x-chat-headless';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
+import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
+import { useIsHydrated } from '../chat/internals/useIsHydrated';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { MessageAvatar } from '../message/MessageAvatar';
 import { MessageContent } from '../message/MessageContent';
@@ -88,11 +90,18 @@ function getAuthorLabel(message: ChatMessage | null) {
 export interface MessageGroupSlots {
   group: React.ElementType;
   authorName: React.ElementType;
+  /**
+   * The timestamp element rendered next to the author name in compact mode.
+   * Only rendered when `variant === 'compact'` and the message has a `createdAt` value.
+   * @default 'span'
+   */
+  groupTimestamp: React.ElementType;
 }
 
 export interface MessageGroupSlotProps {
   group?: SlotComponentProps<'div', {}, MessageGroupOwnerState>;
   authorName?: SlotComponentProps<'div', {}, MessageGroupOwnerState>;
+  groupTimestamp?: SlotComponentProps<'span', {}, MessageGroupOwnerState>;
 }
 
 export interface MessageGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -133,6 +142,8 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   const previousMessage = useMessage(previousMessageId ?? '');
   const nextMessage = useMessage(nextMessageId ?? '');
   const variant = useChatVariant();
+  const localeText = useChatLocaleText();
+  const isHydrated = useIsHydrated();
   const isFirst = !areMessagesGrouped(previousMessage, message, groupingWindowMs);
   const isLast = !areMessagesGrouped(message, nextMessage, groupingWindowMs);
   const ownerState = React.useMemo<MessageGroupOwnerState>(
@@ -147,6 +158,7 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   );
   const Group = slots?.group ?? 'div';
   const AuthorName = slots?.authorName ?? 'div';
+  const GroupTimestamp = slots?.groupTimestamp ?? 'span';
   const groupProps = useSlotProps({
     elementType: Group,
     externalSlotProps: slotProps?.group,
@@ -166,19 +178,40 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
     externalSlotProps: slotProps?.authorName,
     ownerState,
   });
+  const groupTimestampProps = useSlotProps({
+    elementType: GroupTimestamp,
+    externalSlotProps: slotProps?.groupTimestamp,
+    ownerState,
+  });
   const authorLabel = getAuthorLabel(message);
+  const showGroupAuthorName = isFirst && Boolean(authorLabel);
 
-  // In compact mode, the author name is rendered inline inside MessageRoot
-  // via MessageAuthorLabel (a sibling of MessageAvatar), so we skip it here.
-  const showGroupAuthorName = isFirst && authorLabel && variant !== 'compact';
+  // In compact mode, the group header also shows the first message's timestamp
+  // so it does not need to be repeated in the per-message meta row.
+  const compactTimestampLabel =
+    variant === 'compact' && isHydrated && message?.createdAt
+      ? localeText.messageTimestampLabel(message.createdAt)
+      : null;
+
+  const authorNameElement = showGroupAuthorName ? (
+    <AuthorName {...authorNameProps}>
+      {authorLabel}
+      {compactTimestampLabel ? (
+        <GroupTimestamp {...groupTimestampProps}>{compactTimestampLabel}</GroupTimestamp>
+      ) : null}
+    </AuthorName>
+  ) : null;
 
   return (
     <Group {...groupProps}>
-      {showGroupAuthorName ? <AuthorName {...authorNameProps}>{authorLabel}</AuthorName> : null}
+      {/* Default: author name sits above the message grid */}
+      {variant !== 'compact' ? authorNameElement : null}
       <MessageRoot isGrouped={!isFirst} messageId={messageId}>
         {children ?? (
           <React.Fragment>
             <MessageAvatar />
+            {/* Compact: author name is inside the grid so it shares a row with the avatar */}
+            {variant === 'compact' ? authorNameElement : null}
             <MessageContent />
             <MessageMeta />
           </React.Fragment>

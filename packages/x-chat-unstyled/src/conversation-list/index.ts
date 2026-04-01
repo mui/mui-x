@@ -6,6 +6,7 @@ export { ConversationListTitle } from './ConversationListTitle';
 export { ConversationListPreview } from './ConversationListPreview';
 export { ConversationListTimestamp } from './ConversationListTimestamp';
 export { ConversationListUnreadBadge } from './ConversationListUnreadBadge';
+export { ConversationListItemActions } from './ConversationListItemActions';
 
 export type {
   ConversationListRootProps,
@@ -48,6 +49,11 @@ export type {
   ConversationListUnreadBadgeSlots,
 } from './ConversationListUnreadBadge';
 export type {
+  ConversationListItemActionsProps,
+  ConversationListItemActionsSlotProps,
+  ConversationListItemActionsSlots,
+} from './ConversationListItemActions';
+export type {
   ConversationListItemAvatarOwnerState,
   ConversationListItemContentOwnerState,
   ConversationListItemOwnerState,
@@ -56,4 +62,6 @@ export type {
   ConversationListTimestampOwnerState,
   ConversationListTitleOwnerState,
   ConversationListUnreadBadgeOwnerState,
+  ConversationListItemActionsOwnerState,
+  ConversationListVariant,
 } from './conversationList.types';

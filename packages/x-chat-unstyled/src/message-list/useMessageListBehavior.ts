@@ -69,6 +69,7 @@ export function useMessageListBehavior(parameters: {
   loadMoreHistory(): Promise<void>;
   autoScrollEnabled: boolean;
   autoScrollBuffer: number;
+  isStreaming: boolean;
 }) {
   const {
     itemIds,
@@ -79,6 +80,7 @@ export function useMessageListBehavior(parameters: {
     loadMoreHistory,
     autoScrollEnabled,
     autoScrollBuffer,
+    isStreaming,
   } = parameters;
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const rowElementsRef = React.useRef(new Map<string, HTMLDivElement | null>());
@@ -89,6 +91,8 @@ export function useMessageListBehavior(parameters: {
   const topReachedRef = React.useRef(false);
   const topLoadInFlightRef = React.useRef(false);
   const resizeFrameRef = React.useRef(0);
+  const isStreamingRef = React.useRef(isStreaming);
+  isStreamingRef.current = isStreaming;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
   const [unseenMessageCount, setUnseenMessageCount] = React.useState(0);
   const isAtBottomRef = React.useRef(true);
@@ -207,8 +211,10 @@ export function useMessageListBehavior(parameters: {
   const scheduleResizeRestore = React.useCallback(() => {
     cancelAnimationFrame(resizeFrameRef.current);
     resizeFrameRef.current = requestAnimationFrame(() => {
-      if (isAtBottomRef.current && autoScrollEnabled) {
+      if (isAtBottomRef.current && autoScrollEnabled && isStreamingRef.current) {
         // Follow streaming content: the row grew (new tokens), scroll to stay at bottom.
+        // Only auto-scroll during streaming so that user-initiated resizes (e.g.
+        // expanding/collapsing tool or reasoning sections) do not cause unwanted scrolling.
         // scrollToBottom() already calls updateIsAtBottom() and captureAnchor() internally.
         scrollToBottom();
       } else {

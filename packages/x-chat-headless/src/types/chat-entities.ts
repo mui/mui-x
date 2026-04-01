@@ -34,6 +34,8 @@ export interface ChatConversation {
   id: string;
   title?: string;
   subtitle?: string;
+  /** Optional avatar URL for the conversation. When provided, this takes precedence over participant avatars in the conversation list. */
+  avatarUrl?: string;
   participants?: ChatUser[];
   unreadCount?: number;
   readState?: ConversationReadState;

@@ -47,6 +47,7 @@ export const ConversationListUnreadBadge = React.forwardRef(function Conversatio
     selected,
     unread,
     focused,
+    variant: ownerStateProp?.variant ?? 'default',
   };
   void ownerStateProp;
 
@@ -65,6 +66,14 @@ export const ConversationListUnreadBadge = React.forwardRef(function Conversatio
     conversation.unreadCount != null && conversation.unreadCount > 0
       ? conversation.unreadCount
       : null;
+
+  // In compact mode, render a dot indicator for any unread state (even without a numeric count).
+  if (ownerState.variant === 'compact') {
+    if (!unread) {
+      return null;
+    }
+    return <Root {...rootProps}>{unreadCount != null ? (unreadCount > 99 ? '99+' : unreadCount) : ''}</Root>;
+  }
 
   if (!unreadCount) {
     return null;

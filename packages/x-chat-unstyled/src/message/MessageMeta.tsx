@@ -62,11 +62,14 @@ export const MessageMeta = React.forwardRef(function MessageMeta(
     isHydrated && ownerState.message?.createdAt
       ? localeText.messageTimestampLabel(ownerState.message.createdAt)
       : '';
+  // In compact mode the timestamp is displayed in the group header,
+  // so the per-message meta row should not repeat it.
+  const showTimestamp = ownerState.variant !== 'compact' && Boolean(timestampLabel);
   const statusLabel = ownerState.message?.status
     ? localeText.messageStatusLabel(ownerState.message.status)
     : '';
   const hasMeta =
-    Boolean(timestampLabel) || Boolean(statusLabel) || ownerState.message?.editedAt != null;
+    showTimestamp || Boolean(statusLabel) || ownerState.message?.editedAt != null;
   void ownerStateProp;
 
   const Meta = slots?.meta ?? 'div';
@@ -135,7 +138,7 @@ export const MessageMeta = React.forwardRef(function MessageMeta(
           </StreamingProgressTrack>
         </StreamingProgress>
       ) : null}
-      {ownerState.message?.createdAt && timestampLabel ? (
+      {showTimestamp ? (
         <Timestamp {...timestampProps}>{timestampLabel}</Timestamp>
       ) : null}
       {ownerState.message?.status && statusLabel && !ownerState.streaming ? (

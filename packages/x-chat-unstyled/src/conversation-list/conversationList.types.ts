@@ -1,9 +1,12 @@
 'use client';
 import type { ChatConversation } from '@mui/x-chat-headless';
 
+export type ConversationListVariant = 'default' | 'compact';
+
 export interface ConversationListRootOwnerState {
   conversationCount: number;
   activeConversationId?: string;
+  variant: ConversationListVariant;
 }
 
 export interface ConversationListItemOwnerState {
@@ -11,6 +14,7 @@ export interface ConversationListItemOwnerState {
   selected: boolean;
   unread: boolean;
   focused: boolean;
+  variant?: ConversationListVariant;
 }
 
 export interface ConversationListItemAvatarOwnerState extends ConversationListItemOwnerState {}
@@ -24,3 +28,5 @@ export interface ConversationListTimestampOwnerState extends ConversationListIte
 export interface ConversationListUnreadBadgeOwnerState extends ConversationListItemOwnerState {}
 
 export interface ConversationListItemContentOwnerState extends ConversationListItemOwnerState {}
+
+export interface ConversationListItemActionsOwnerState extends ConversationListItemOwnerState {}

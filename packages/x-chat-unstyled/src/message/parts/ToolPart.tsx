@@ -12,7 +12,7 @@ import type {
 } from '@mui/x-chat-headless';
 import { useChat } from '@mui/x-chat-headless';
 import { useChatLocaleText } from '../../chat/internals/ChatLocaleContext';
-import { formatStructuredValue, shouldCollapsePayload } from './partUtils';
+import { formatStructuredValue } from './partUtils';
 
 type ToolPart = ChatToolMessagePart | ChatDynamicToolMessagePart;
 
@@ -93,7 +93,6 @@ function ToolPayloadSection(props: {
 }) {
   const { label, ownerState, section, slotProps, slots, value } = props;
   const formatted = React.useMemo(() => formatStructuredValue(value), [value]);
-  const collapsed = shouldCollapsePayload(formatted);
   const sectionOwnerState = React.useMemo<ToolPartSectionOwnerState>(
     () => ({
       ...ownerState,
@@ -114,21 +113,10 @@ function ToolPayloadSection(props: {
     ownerState: sectionOwnerState,
   });
 
-  if (!collapsed) {
-    return (
-      <Section {...sectionProps}>
-        <strong>{label}</strong>
-        <SectionContent {...sectionContentProps}>{formatted}</SectionContent>
-      </Section>
-    );
-  }
-
   return (
     <Section {...sectionProps}>
-      <details>
-        <summary>{label}</summary>
-        <SectionContent {...sectionContentProps}>{formatted}</SectionContent>
-      </details>
+      <strong>{label}</strong>
+      <SectionContent {...sectionContentProps}>{formatted}</SectionContent>
     </Section>
   );
 }

@@ -41,8 +41,13 @@ import {
   type ConversationListUnreadBadgeProps,
 } from './ConversationListUnreadBadge';
 import {
+  ConversationListItemActions,
+  type ConversationListItemActionsProps,
+} from './ConversationListItemActions';
+import {
   type ConversationListItemOwnerState,
   type ConversationListRootOwnerState,
+  type ConversationListVariant,
 } from './conversationList.types';
 
 const lastFocusedConversationIdByStore = new WeakMap<object, string>();
@@ -60,6 +65,7 @@ export interface ConversationListRootSlots {
   preview: React.JSXElementConstructor<ConversationListPreviewProps>;
   timestamp: React.JSXElementConstructor<ConversationListTimestampProps>;
   unreadBadge: React.JSXElementConstructor<ConversationListUnreadBadgeProps>;
+  itemActions: React.JSXElementConstructor<ConversationListItemActionsProps>;
 }
 
 export interface ConversationListRootSlotProps {
@@ -91,12 +97,24 @@ export interface ConversationListRootSlotProps {
     {},
     ConversationListItemOwnerState
   >;
+  itemActions?: SlotComponentProps<
+    typeof ConversationListItemActions,
+    {},
+    ConversationListItemOwnerState
+  >;
 }
 
 export interface ConversationListRootProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
 > {
+  /**
+   * The visual variant of the conversation list.
+   * - `'default'` – shows avatar, title, preview, timestamp, and unread badge.
+   * - `'compact'` – shows only a small unread indicator, the title, and an actions button.
+   * @default 'default'
+   */
+  variant?: ConversationListVariant;
   slots?: Partial<ConversationListRootSlots>;
   slotProps?: ConversationListRootSlotProps;
 }
@@ -106,6 +124,7 @@ interface ConversationListRenderedItemProps {
   focused: boolean;
   selected: boolean;
   unread: boolean;
+  variant: ConversationListVariant;
   slots: Partial<ConversationListRootSlots> | undefined;
   slotProps: ConversationListRootSlotProps | undefined;
   registerItemRef(id: string, element: HTMLElement | null): void;
@@ -120,6 +139,7 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
     focused,
     selected,
     unread,
+    variant,
     slots,
     slotProps,
     registerItemRef,
@@ -132,6 +152,7 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
     focused,
     selected,
     unread,
+    variant,
   };
   const Item = slots?.item ?? ConversationListItem;
   const ItemAvatar = slots?.itemAvatar ?? ConversationListItemAvatar;
@@ -140,6 +161,7 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
   const Preview = slots?.preview ?? ConversationListPreview;
   const Timestamp = slots?.timestamp ?? ConversationListTimestamp;
   const UnreadBadge = slots?.unreadBadge ?? ConversationListUnreadBadge;
+  const ItemActions = slots?.itemActions ?? ConversationListItemActions;
 
   const itemSlotProps = useSlotProps({
     elementType: Item,
@@ -235,6 +257,29 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
       focused,
     },
   });
+  const itemActionsProps = useSlotProps({
+    elementType: ItemActions,
+    externalSlotProps: slotProps?.itemActions,
+    ownerState,
+    additionalProps: {
+      conversation,
+      selected,
+      unread,
+      focused,
+    },
+  });
+
+  if (variant === 'compact') {
+    return (
+      <Item {...itemProps}>
+        <UnreadBadge {...unreadBadgeProps} />
+        <ItemContent {...itemContentProps}>
+          <Title {...titleProps} />
+        </ItemContent>
+        <ItemActions {...itemActionsProps} />
+      </Item>
+    );
+  }
 
   return (
     <Item {...itemProps}>
@@ -293,7 +338,7 @@ export const ConversationListRoot = markChatLayoutPane(
     props: ConversationListRootProps,
     ref: React.Ref<HTMLDivElement>,
   ) {
-    const { slots, slotProps, ...other } = props;
+    const { variant = 'default', slots, slotProps, ...other } = props;
     const conversations = useConversations();
     const { activeConversationId, setActiveConversation } = useChat();
     const store = useChatStore();
@@ -318,6 +363,7 @@ export const ConversationListRoot = markChatLayoutPane(
     const ownerState: ConversationListRootOwnerState = {
       conversationCount: conversations.length,
       activeConversationId,
+      variant,
     };
     const Scroller = slots?.scroller ?? ScrollRoot;
     const Viewport = slots?.viewport ?? ScrollViewport;
@@ -503,6 +549,7 @@ export const ConversationListRoot = markChatLayoutPane(
                   slotProps={slotProps}
                   slots={slots}
                   unread={unread}
+                  variant={variant}
                 />
               );
             })}

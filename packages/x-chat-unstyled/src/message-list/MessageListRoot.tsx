@@ -304,7 +304,7 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     ...other
   } = props;
   const defaultItems = useMessageIds();
-  const { hasMoreHistory, loadMoreHistory, messages } = useChat();
+  const { hasMoreHistory, loadMoreHistory, messages, isStreaming } = useChat();
   const itemIds = itemsProp ?? defaultItems;
 
   const autoScrollEnabled = autoScroll !== false;
@@ -323,6 +323,7 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     loadMoreHistory,
     autoScrollEnabled,
     autoScrollBuffer,
+    isStreaming,
   });
 
   React.useImperativeHandle(

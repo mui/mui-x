@@ -21,6 +21,7 @@ import {
 } from '../message-list';
 import {
   ConversationHeader,
+  ConversationHeaderInfo,
   ConversationRoot,
   ConversationSubtitle,
   ConversationTitle,
@@ -202,8 +203,10 @@ const ChatCompositionHarness = React.forwardRef(function ChatCompositionHarness(
         <ConversationListRoot aria-label="Conversations" />
         <ConversationRoot>
           <ConversationHeader>
-            <ConversationTitle />
-            <ConversationSubtitle />
+            <ConversationHeaderInfo>
+              <ConversationTitle />
+              <ConversationSubtitle />
+            </ConversationHeaderInfo>
             <TypingIndicator />
           </ConversationHeader>
           {includeBeforeAfterButtons ? <button type="button">Before list</button> : null}

@@ -17,6 +17,11 @@ const AnyScrollViewport = ScrollViewport as React.ComponentType<any>;
 const AnyScrollScrollbar = ScrollScrollbar as React.ComponentType<any>;
 const AnyScrollThumb = ScrollThumb as React.ComponentType<any>;
 
+function expectOwnerStateStripped(el: Element) {
+  expect(el.hasAttribute('ownerState')).to.equal(false);
+  expect(el.hasAttribute('ownerstate')).to.equal(false);
+}
+
 describe('ProgressSlots', () => {
   it('ProgressRoot strips ownerState and forwards ref', () => {
     const ref = React.createRef<HTMLDivElement>();
@@ -34,8 +39,7 @@ describe('ProgressSlots', () => {
     const el = screen.getByTestId('progress-root');
 
     expect(el).not.to.equal(null);
-    expect(el.hasAttribute('ownerState')).to.equal(false);
-    expect(el.hasAttribute('ownerstate')).to.equal(false);
+    expectOwnerStateStripped(el);
     expect(ref.current).to.be.instanceOf(window.HTMLDivElement);
   });
 
@@ -49,8 +53,7 @@ describe('ProgressSlots', () => {
     const el = screen.getByTestId('progress-track');
 
     expect(el).not.to.equal(null);
-    expect(el.hasAttribute('ownerState')).to.equal(false);
-    expect(el.hasAttribute('ownerstate')).to.equal(false);
+    expectOwnerStateStripped(el);
   });
 
   it('ProgressIndicator strips ownerState', () => {
@@ -65,8 +68,7 @@ describe('ProgressSlots', () => {
     const el = screen.getByTestId('progress-indicator');
 
     expect(el).not.to.equal(null);
-    expect(el.hasAttribute('ownerState')).to.equal(false);
-    expect(el.hasAttribute('ownerstate')).to.equal(false);
+    expectOwnerStateStripped(el);
   });
 });
 
@@ -85,8 +87,7 @@ describe('ScrollAreaSlots', () => {
     const el = screen.getByTestId('scroll-root');
 
     expect(el).not.to.equal(null);
-    expect(el.hasAttribute('ownerState')).to.equal(false);
-    expect(el.hasAttribute('ownerstate')).to.equal(false);
+    expectOwnerStateStripped(el);
     expect(ref.current).to.be.instanceOf(window.HTMLDivElement);
   });
 
@@ -102,8 +103,7 @@ describe('ScrollAreaSlots', () => {
     const el = screen.getByTestId('scroll-viewport');
 
     expect(el).not.to.equal(null);
-    expect(el.hasAttribute('ownerState')).to.equal(false);
-    expect(el.hasAttribute('ownerstate')).to.equal(false);
+    expectOwnerStateStripped(el);
   });
 
   it('ScrollScrollbar strips ownerState', () => {
@@ -119,8 +119,7 @@ describe('ScrollAreaSlots', () => {
     const el = screen.getByTestId('scroll-scrollbar');
 
     expect(el).not.to.equal(null);
-    expect(el.hasAttribute('ownerState')).to.equal(false);
-    expect(el.hasAttribute('ownerstate')).to.equal(false);
+    expectOwnerStateStripped(el);
   });
 
   it('ScrollThumb strips ownerState', () => {
@@ -138,7 +137,6 @@ describe('ScrollAreaSlots', () => {
     const el = screen.getByTestId('scroll-thumb');
 
     expect(el).not.to.equal(null);
-    expect(el.hasAttribute('ownerState')).to.equal(false);
-    expect(el.hasAttribute('ownerstate')).to.equal(false);
+    expectOwnerStateStripped(el);
   });
 });

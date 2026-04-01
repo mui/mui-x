@@ -44,7 +44,15 @@ export const ConversationListItemAvatar = React.forwardRef(function Conversation
   } = props as ConversationListItemAvatarProps & {
     ownerState?: ConversationListItemAvatarOwnerState;
   };
-  const participant = conversation.participants?.[0];
+  // Use conversation-level avatar if provided, otherwise pick the first
+  // non-'user' participant so the list shows the other person's avatar
+  // instead of the local user's.
+  const participant =
+    conversation.participants?.find((p) => p.role !== 'user') ??
+    conversation.participants?.[0];
+  const avatarUrl = conversation.avatarUrl ?? participant?.avatarUrl;
+  const avatarAlt = participant?.displayName ?? '';
+
   const ownerState: ConversationListItemAvatarOwnerState = {
     conversation,
     selected,
@@ -69,10 +77,10 @@ export const ConversationListItemAvatar = React.forwardRef(function Conversation
     externalSlotProps: slotProps?.image,
     ownerState,
     additionalProps: {
-      alt: participant?.displayName ?? '',
-      src: participant?.avatarUrl ?? undefined,
+      alt: avatarAlt,
+      src: avatarUrl ?? undefined,
     },
   });
 
-  return <Root {...rootProps}>{participant?.avatarUrl ? <Image {...imageProps} /> : null}</Root>;
+  return <Root {...rootProps}>{avatarUrl ? <Image {...imageProps} /> : null}</Root>;
 }) as ConversationListItemAvatarComponent;
