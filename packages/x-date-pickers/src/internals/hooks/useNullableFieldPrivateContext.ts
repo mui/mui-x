@@ -13,9 +13,8 @@ export function useNullableFieldPrivateContext() {
 }
 
 export interface PickerFieldPrivateContextValue extends Pick<
-  UseFieldInternalProps<any, any, any>,
+  UseFieldInternalProps<any, any>,
   | 'formatDensity'
-  | 'enableAccessibleFieldDOMStructure'
   | 'selectedSections'
   | 'onSelectedSectionsChange'
 > {

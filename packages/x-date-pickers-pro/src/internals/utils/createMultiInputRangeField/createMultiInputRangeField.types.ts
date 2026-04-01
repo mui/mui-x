@@ -4,10 +4,7 @@ import type { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
 import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import {
-  PickerManagerEnableAccessibleFieldDOMStructure,
-  PickerManagerFieldInternalProps,
-} from '@mui/x-date-pickers/internals';
+import { PickerManagerFieldInternalProps } from '@mui/x-date-pickers/internals';
 import {
   FieldType,
   MultiInputFieldRefs,
@@ -55,7 +52,7 @@ export interface MultiInputRangeFieldSlots {
   /**
    * Form control with an input to render a date.
    * It is rendered twice: once for the start date and once for the end date.
-   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
+   * @default <PickersTextField />
    */
   textField?: React.ElementType;
   /**
@@ -87,11 +84,7 @@ export interface MultiInputRangeFieldClasses {
 export interface CreateMultiInputRangeFieldParameters<TManager extends PickerAnyRangeManager> {
   name: string;
   getUtilityClass: (slot: string) => string;
-  useManager: (
-    params: RangeFieldSeparatorProps & {
-      enableAccessibleFieldDOMStructure: PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
-    },
-  ) => TManager;
+  useManager: (params: RangeFieldSeparatorProps) => TManager;
   allowTriggerShifting?: boolean;
 }
 
