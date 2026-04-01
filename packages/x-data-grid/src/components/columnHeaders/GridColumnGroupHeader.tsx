@@ -11,7 +11,6 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridColumnGroupsLookupSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import type { GridColumnGroup } from '../../models/gridColumnGrouping';
