@@ -28,15 +28,15 @@ This is useful when your dataset contains values in a format that the chart does
 You can use `valueGetter` on axis configuration to transform axis values.
 A common use case is converting date strings to `Date` objects for time-based axes.
 
-The function receives the raw value from the dataset and the full dataset item.
+The function receives the full dataset item and should return the axis value.
+It can be used as an alternative to `dataKey`.
 
 ```tsx
 xAxis={[
   {
-    dataKey: 'date',
     scaleType: 'time',
     // Convert ISO date strings to Date objects
-    valueGetter: (value) => new Date(value),
+    valueGetter: (item) => new Date(item.date),
   },
 ]}
 ```
@@ -51,9 +51,8 @@ For example, converting string values to numbers.
 ```tsx
 series={[
   {
-    dataKey: 'revenue',
     // Convert string values to numbers
-    valueGetter: (value) => parseFloat(value),
+    valueGetter: (item) => parseFloat(item.revenue),
   },
 ]}
 ```
@@ -66,13 +65,12 @@ These series types require the `valueGetter` to return values in a specific form
 
 #### Scatter series
 
-Scatter series use `datasetKeys` instead of a single `dataKey`.
 The `valueGetter` receives the full dataset item and should return a `ScatterValueType` object.
+It can be used as an alternative to `datasetKeys`.
 
 ```tsx
 series={[
   {
-    datasetKeys: { x: 'lng', y: 'lat' },
     valueGetter: (item) => ({
       x: item.lng,
       y: item.lat,
@@ -83,10 +81,22 @@ series={[
 ]}
 ```
 
+#### Heatmap series
+
+The heatmap `valueGetter` should return a `[xIndex, yIndex, value]` tuple.
+
+```tsx
+series={[
+  {
+    type: 'heatmap',
+    valueGetter: (item) => [item.x, item.y, item.temperature],
+  },
+]}
+```
+
 #### OHLC series
 
-You can use `valueGetter` on the OHLC series to transform dataset items into OHLC values.
-The `valueGetter` receives the full dataset item and should return a `[open, high, low, close]` tuple or `null`.
+The OHLC `valueGetter` should return a `[open, high, low, close]` tuple or `null`.
 
 ```tsx
 series={[

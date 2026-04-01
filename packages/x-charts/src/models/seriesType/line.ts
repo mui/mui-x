@@ -47,12 +47,13 @@ export interface LineSeriesType
    */
   dataKey?: string;
   /**
-   * A function to transform the value retrieved from the `dataset` before using it.
-   * @param {unknown} value The raw value from the dataset.
-   * @param {DatasetElementType} item The full dataset item.
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return the series value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
    * @returns {number | null} The transformed value.
    */
-  valueGetter?: (value: unknown, item: DatasetElementType<unknown>) => number | null;
+  valueGetter?: (item: DatasetElementType<unknown>) => number | null;
   /**
    * If `true`, the series is rendered as an area instead of a line.
    */

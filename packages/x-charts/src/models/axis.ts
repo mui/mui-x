@@ -514,12 +514,13 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    */
   dataKey?: string;
   /**
-   * A function to transform the value retrieved from the `dataset` before using it.
-   * @param {unknown} value The raw value from the dataset.
-   * @param {DatasetElementType} item The full dataset item.
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return the axis value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
    * @returns {V} The transformed value.
    */
-  valueGetter?: (value: unknown, item: DatasetElementType<unknown>) => V;
+  valueGetter?: (item: DatasetElementType<unknown>) => V;
   /**
    * Formats the axis value.
    * @param {V} value The value to format.

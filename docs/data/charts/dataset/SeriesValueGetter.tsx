@@ -8,8 +8,6 @@ const dataset = [
   { product: 'Widget E', revenue: '1750.00', cost: '900.00' },
 ];
 
-const toNumber = (value: unknown) => (typeof value === 'string' ? parseFloat(value) : null);
-
 export default function SeriesValueGetter() {
   return (
     <BarChart
@@ -17,15 +15,13 @@ export default function SeriesValueGetter() {
       xAxis={[{ dataKey: 'product', scaleType: 'band' }]}
       series={[
         {
-          dataKey: 'revenue',
           label: 'Revenue',
-          valueGetter: toNumber,
+          valueGetter: (item) => parseFloat(item.revenue as string),
           valueFormatter: (v) => (v == null ? '' : `$${v.toFixed(2)}`),
         },
         {
-          dataKey: 'cost',
           label: 'Cost',
-          valueGetter: toNumber,
+          valueGetter: (item) => parseFloat(item.cost as string),
           valueFormatter: (v) => (v == null ? '' : `$${v.toFixed(2)}`),
         },
       ]}

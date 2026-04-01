@@ -49,15 +49,15 @@ function getZAxisState(
   zAxis.forEach((axisConfig, index) => {
     const dataKey = axisConfig.dataKey;
     const defaultizedId = axisConfig.id ?? `defaultized-z-axis-${index}`;
-    if (dataKey === undefined || axisConfig.data !== undefined) {
+    if (axisConfig.data !== undefined || (dataKey === undefined && !axisConfig.valueGetter)) {
       zAxisLookup[defaultizedId] = processColorMap(addDefaultId(axisConfig, defaultizedId));
       axisIds.push(defaultizedId);
       return;
     }
     if (dataset === undefined) {
       throw new Error(
-        'MUI X Charts: The z-axis uses `dataKey` but no `dataset` is provided. ' +
-          'When using dataKey, a dataset must be provided to retrieve the axis data. ' +
+        'MUI X Charts: The z-axis uses `dataKey` or `valueGetter` but no `dataset` is provided. ' +
+          'When using dataKey or valueGetter, a dataset must be provided to retrieve the axis data. ' +
           'Either provide a dataset prop or use the data property directly on the z-axis.',
       );
     }
@@ -65,9 +65,9 @@ function getZAxisState(
       addDefaultId(
         {
           ...axisConfig,
-          data: dataset.map((d) =>
-            axisConfig.valueGetter ? axisConfig.valueGetter(d[dataKey], d) : d[dataKey],
-          ),
+          data: axisConfig.valueGetter
+            ? dataset.map((d) => axisConfig.valueGetter!(d))
+            : dataset.map((d) => d[dataKey!]),
         },
         defaultizedId,
       ),

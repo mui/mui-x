@@ -35,8 +35,10 @@ export interface ScatterSeriesType
   zAxisId?: string;
 
   /**
-   * A function to transform the dataset item into a scatter value.
-   * @param {DatasetElementType} item The full dataset item.
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return a scatter value.
+   * Can be used as an alternative to `datasetKeys`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
    * @returns {ScatterValueType} The transformed value.
    */
   valueGetter?: (item: DatasetElementType<unknown>) => ScatterValueType;

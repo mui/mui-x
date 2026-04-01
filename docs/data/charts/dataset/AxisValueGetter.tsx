@@ -15,9 +15,8 @@ export default function AxisValueGetter() {
       dataset={dataset}
       xAxis={[
         {
-          dataKey: 'date',
           scaleType: 'time',
-          valueGetter: (value: string) => new Date(value),
+          valueGetter: (item) => new Date(item.date as string),
           valueFormatter: (value: Date) =>
             value.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
         },

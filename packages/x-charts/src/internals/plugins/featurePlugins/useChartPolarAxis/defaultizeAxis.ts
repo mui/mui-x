@@ -19,7 +19,7 @@ export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
     const id = `defaultized-${axisName}-axis-${index}`;
     const dataKey = axisConfig.dataKey;
 
-    if (dataKey === undefined || axisConfig.data !== undefined) {
+    if (axisConfig.data !== undefined || (dataKey === undefined && !axisConfig.valueGetter)) {
       return {
         id,
         ...axisConfig,
@@ -27,17 +27,17 @@ export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
     }
     if (dataset === undefined) {
       throw new Error(
-        `MUI X Charts: The ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided. ` +
-          'When using dataKey, a dataset must be provided to retrieve the axis data. ' +
+        `MUI X Charts: The ${axisName}-axis uses \`dataKey\` or \`valueGetter\` but no \`dataset\` is provided. ` +
+          'When using dataKey or valueGetter, a dataset must be provided to retrieve the axis data. ' +
           `Either provide a dataset prop or use the data property directly on the ${axisName}-axis.`,
       );
     }
 
     return {
       id,
-      data: dataset.map((d) =>
-        axisConfig.valueGetter ? axisConfig.valueGetter(d[dataKey], d) : d[dataKey],
-      ),
+      data: axisConfig.valueGetter
+        ? dataset.map((d) => axisConfig.valueGetter!(d))
+        : dataset.map((d) => d[dataKey!]),
       ...axisConfig,
     } as PolarAxisConfig<TScale, any>;
   });

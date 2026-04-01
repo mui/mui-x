@@ -23,12 +23,13 @@ export interface HeatmapSeriesType
    */
   dataKey?: string;
   /**
-   * A function to transform the value retrieved from the `dataset` before using it.
-   * @param {unknown} value The raw value from the dataset.
-   * @param {DatasetElementType} item The full dataset item.
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return a heatmap value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
    * @returns {HeatmapValueType} The transformed value.
    */
-  valueGetter?: (value: unknown, item: DatasetElementType<unknown>) => HeatmapValueType;
+  valueGetter?: (item: DatasetElementType<unknown>) => HeatmapValueType;
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
