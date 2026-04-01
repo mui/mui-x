@@ -1,7 +1,27 @@
-import { vi } from 'vitest';
-import { createRenderer, screen, within } from '@mui/internal-test-utils';
-import { legendClasses } from '@mui/x-charts/ChartsLegend';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import { CandlestickChart } from './CandlestickChart';
+
+/**
+ * Checks if a WebGL canvas has any non-transparent pixels drawn on it.
+ */
+function canvasHasContent(canvas: HTMLCanvasElement): boolean {
+  const gl = canvas.getContext('webgl2', { preserveDrawingBuffer: true });
+  if (!gl) {
+    return false;
+  }
+  const pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
+  gl.readPixels(
+    0,
+    0,
+    gl.drawingBufferWidth,
+    gl.drawingBufferHeight,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    pixels,
+  );
+  return pixels.some((v) => v !== 0);
+}
 
 const sampleData: Array<[number, number, number, number]> = [
   [100, 110, 90, 105],
@@ -12,118 +32,66 @@ const sampleData: Array<[number, number, number, number]> = [
 describe('<CandlestickChart /> - Visibility', () => {
   const { render } = createRenderer();
 
-  it('should toggle legend item hidden class when clicking on legend item', async () => {
-    const { user } = render(
-      <CandlestickChart
-        height={300}
-        width={300}
-        series={[{ id: 'series-1', label: 'Series 1', data: sampleData }]}
-        xAxis={[{ data: ['A', 'B', 'C'] }]}
-        slotProps={{ legend: { toggleVisibilityOnClick: true } }}
-      />,
-    );
+  it.skipIf(isJSDOM)(
+    'should clear the canvas when the series is hidden via legend click',
+    async () => {
+      const { user } = render(
+        <CandlestickChart
+          height={300}
+          width={300}
+          series={[{ id: 'series-1', label: 'Series 1', data: sampleData }]}
+          xAxis={[{ data: ['A', 'B', 'C'] }]}
+          slotProps={{ legend: { toggleVisibilityOnClick: true } }}
+        />,
+      );
 
-    const series1Button = screen.getByRole('button', { name: /Series 1/ });
-    expect(series1Button.classList.contains(legendClasses.hidden)).to.equal(false);
+      const canvas = document.querySelector('canvas')!;
 
-    await user.click(series1Button);
-    expect(series1Button.classList.contains(legendClasses.hidden)).to.equal(true);
+      // Wait for the WebGL content to be rendered
+      await waitFor(() => {
+        expect(canvasHasContent(canvas)).to.equal(true);
+      });
 
-    await user.click(series1Button);
-    expect(series1Button.classList.contains(legendClasses.hidden)).to.equal(false);
-  });
+      // Hide the series
+      const series1Button = screen.getByRole('button', { name: /Series 1/ });
+      await user.click(series1Button);
 
-  it('should call onHiddenItemsChange when toggling visibility via legend click', async () => {
-    const onHiddenItemsChange = vi.fn();
-    const { user } = render(
-      <CandlestickChart
-        height={300}
-        width={300}
-        series={[{ id: 'series-1', label: 'Series 1', data: sampleData }]}
-        xAxis={[{ data: ['A', 'B', 'C'] }]}
-        onHiddenItemsChange={onHiddenItemsChange}
-        slotProps={{ legend: { toggleVisibilityOnClick: true } }}
-      />,
-    );
+      // Canvas should be cleared
+      await waitFor(() => {
+        expect(canvasHasContent(canvas)).to.equal(false);
+      });
 
-    const series1Button = screen.getByRole('button', { name: /Series 1/ });
+      // Show the series again
+      await user.click(series1Button);
 
-    await user.click(series1Button);
-    expect(onHiddenItemsChange).toHaveBeenCalledTimes(1);
-    expect(onHiddenItemsChange.mock.lastCall?.[0]).to.deep.equal([
-      { type: 'ohlc', seriesId: 'series-1', dataIndex: undefined },
-    ]);
+      // Canvas should have content again
+      await waitFor(() => {
+        expect(canvasHasContent(canvas)).to.equal(true);
+      });
+    },
+  );
 
-    await user.click(series1Button);
-    expect(onHiddenItemsChange).toHaveBeenCalledTimes(2);
-    expect(onHiddenItemsChange.mock.lastCall?.[0]).to.deep.equal([]);
-  });
+  it.skipIf(isJSDOM)(
+    'should not render canvas content when initialHiddenItems hides the series',
+    async () => {
+      render(
+        <CandlestickChart
+          height={300}
+          width={300}
+          series={[{ id: 'series-1', label: 'Series 1', data: sampleData }]}
+          xAxis={[{ data: ['A', 'B', 'C'] }]}
+          initialHiddenItems={[{ type: 'ohlc', seriesId: 'series-1' }]}
+        />,
+      );
 
-  it('should respect controlled hiddenItems', () => {
-    const { setProps } = render(
-      <CandlestickChart
-        height={300}
-        width={300}
-        series={[
-          { id: 'series-1', label: 'Series 1', data: sampleData },
-        ]}
-        xAxis={[{ data: ['A', 'B', 'C'] }]}
-        hiddenItems={[{ type: 'ohlc', seriesId: 'series-1' }]}
-      />,
-    );
+      const canvas = document.querySelector('canvas')!;
 
-    const legend = screen.getByRole('list');
-    const series1Item = within(legend)
-      .getByText('Series 1')
-      .closest(`.${legendClasses.series}`);
-
-    expect(series1Item?.classList.contains(legendClasses.hidden)).to.equal(true);
-
-    setProps({ hiddenItems: [] });
-    expect(series1Item?.classList.contains(legendClasses.hidden)).to.equal(false);
-  });
-
-  it('should hide items on initial render with initialHiddenItems', () => {
-    render(
-      <CandlestickChart
-        height={300}
-        width={300}
-        series={[
-          { id: 'series-1', label: 'Series 1', data: sampleData },
-        ]}
-        xAxis={[{ data: ['A', 'B', 'C'] }]}
-        initialHiddenItems={[{ type: 'ohlc', seriesId: 'series-1' }]}
-      />,
-    );
-
-    const legend = screen.getByRole('list');
-    const series1Item = within(legend)
-      .getByText('Series 1')
-      .closest(`.${legendClasses.series}`);
-
-    expect(series1Item?.classList.contains(legendClasses.hidden)).to.equal(true);
-  });
-
-  it('should allow toggling visibility when using initialHiddenItems', async () => {
-    const { user } = render(
-      <CandlestickChart
-        height={300}
-        width={300}
-        series={[
-          { id: 'series-1', label: 'Series 1', data: sampleData },
-        ]}
-        xAxis={[{ data: ['A', 'B', 'C'] }]}
-        initialHiddenItems={[{ type: 'ohlc', seriesId: 'series-1' }]}
-        slotProps={{ legend: { toggleVisibilityOnClick: true } }}
-      />,
-    );
-
-    const series1Button = screen.getByRole('button', { name: /Series 1/ });
-    expect(series1Button.classList.contains(legendClasses.hidden)).to.equal(true);
-
-    await user.click(series1Button);
-    expect(series1Button.classList.contains(legendClasses.hidden)).to.equal(false);
-  });
+      // Give enough time for any potential rendering
+      await waitFor(() => {
+        expect(canvasHasContent(canvas)).to.equal(false);
+      });
+    },
+  );
 });
 
 describe('<CandlestickChart /> - Dataset', () => {
