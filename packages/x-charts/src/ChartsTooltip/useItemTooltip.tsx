@@ -95,7 +95,9 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
  * Some specific charts like radar need more complex structure. Use specific hook like `useRadarItemTooltip` for them.
  * @returns The tooltip item config
  */
-export const useItemTooltip = <SeriesType extends Exclude<ChartSeriesType, 'radar'>>() => {
+export const useItemTooltip = <
+  SeriesType extends Exclude<ChartSeriesType, 'radar'> = Exclude<ChartSeriesType, 'radar' | 'ohlc'>,
+>() => {
   return useInternalItemTooltip<SeriesType>() as UseItemTooltipReturnValue<SeriesType> | null;
 };
 
