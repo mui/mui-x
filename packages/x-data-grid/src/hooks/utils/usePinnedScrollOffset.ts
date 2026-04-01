@@ -1,6 +1,6 @@
 import { Virtualization } from '@mui/x-virtualizer';
 import { PinnedColumnPosition } from '../../internals/constants';
-import { useGridPrivateApiContext } from './useGridPrivateApiContext';
+import type { useGridPrivateApiContext } from './useGridPrivateApiContext';
 
 export function usePinnedScrollOffset(
   apiRef: ReturnType<typeof useGridPrivateApiContext>,
