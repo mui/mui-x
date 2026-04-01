@@ -32,6 +32,7 @@ export default function CommunityOrPro({
           justifyContent: { md: 'space-between', xs: 'flex-end' },
           flexGrow: 1,
           maxWidth: { xs: '500px', md: '100%' },
+          width: '100%',
         }}
       >
         <Stack

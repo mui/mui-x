@@ -119,7 +119,6 @@ export default function ReferenceOverview() {
       </Typography>
       <ChartsDataProviderPro
         height={300}
-        experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
         dataset={usaUnemploymentAndGdp}
         series={[
           {

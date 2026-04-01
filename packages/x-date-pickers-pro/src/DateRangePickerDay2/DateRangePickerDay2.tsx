@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
+import { styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
@@ -74,9 +74,10 @@ const useUtilityClasses = (
 const highlightStyles = (theme: Theme) => ({
   content: '""' /* Creates an empty element */,
   height: '100%',
-  backgroundColor: theme.vars
-    ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
-    : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+  backgroundColor: theme.alpha(
+    (theme.vars || theme).palette.primary.main,
+    (theme.vars || theme).palette.action.focusOpacity,
+  ),
   boxSizing: 'border-box',
   left: 'calc(var(--PickerDay-horizontalMargin) * (-1))',
   right: 'calc(var(--PickerDay-horizontalMargin) * (-1))',
@@ -150,15 +151,17 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
   color: (theme.vars || theme).palette.text.primary,
   '@media (pointer: fine)': {
     '&:hover': {
-      backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`
-        : alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        (theme.vars || theme).palette.action.hoverOpacity,
+      ),
     },
   },
   '&:focus': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      (theme.vars || theme).palette.action.focusOpacity,
+    ),
   },
   zIndex: 1,
   isolation: 'isolate',

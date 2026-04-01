@@ -13,12 +13,13 @@ catalog:
   '@babel/preset-typescript': ^7.28.5
   '@babel/runtime': ^7.28.6
   '@babel/traverse': ^7.29.0
+  '@base-ui/utils': ^0.2.6
   '@date-fns/tz': ^1.2.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': https://pkg.pr.new/mui/material-ui/@mui/icons-material@a6bc3a0
-  '@mui/internal-test-utils': 2.0.18-canary.16
+  '@mui/internal-test-utils': 2.0.18-canary.17
   '@mui/material': https://pkg.pr.new/mui/material-ui/@mui/material@a6bc3a0
   '@mui/stylis-plugin-rtl': https://pkg.pr.new/mui/material-ui/@mui/stylis-plugin-rtl@a6bc3a0
   '@mui/system': https://pkg.pr.new/mui/material-ui/@mui/system@a6bc3a0

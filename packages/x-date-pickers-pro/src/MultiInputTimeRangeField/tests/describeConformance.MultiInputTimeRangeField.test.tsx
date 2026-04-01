@@ -13,6 +13,6 @@ describe('<MultiInputTimeRangeField /> - Describe Conformance', () => {
     render,
     muiName: 'MuiMultiInputTimeRangeField',
     refInstanceof: window.HTMLDivElement,
-    skip: ['themeVariants', 'componentProp', 'componentsProp'],
+    skip: ['themeVariants', 'componentProp'],
   }));
 });

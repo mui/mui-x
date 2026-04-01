@@ -706,7 +706,7 @@ const StyledTabs = styled(MUITabs, {
   name: 'MuiDataGrid',
   slot: 'Tabs',
 })(({ theme }) => ({
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
 const StyledTab = styled(MUITab, {
