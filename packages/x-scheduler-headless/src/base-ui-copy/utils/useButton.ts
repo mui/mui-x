@@ -277,8 +277,6 @@ export interface UseButtonParameters {
 export interface UseButtonReturnValue {
   /**
    * Resolver for the button props.
-   * @param externalProps additional props for the button
-   * @returns props that should be spread on the button
    */
   getButtonProps: (
     externalProps?: React.ComponentPropsWithRef<any>,
