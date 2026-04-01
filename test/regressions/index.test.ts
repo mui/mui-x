@@ -30,8 +30,6 @@ async function main() {
       // We could add the hide-scrollbars flag, which should improve argos
       // flaky tests based on the scrollbars.
       // '--hide-scrollbars',
-      // Force grayscale text anti-aliasing for consistent visual snapshots.
-      '--disable-lcd-text',
     ],
     headless: false,
   });
