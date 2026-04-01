@@ -77,7 +77,6 @@
     "@floating-ui/utils": "^0.2.10",
     "@mui/x-internals": "workspace:*",
     "prop-types": "catalog:",
-    "tabbable": "^6.4.0",
     "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {

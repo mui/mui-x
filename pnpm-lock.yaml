@@ -1680,9 +1680,6 @@ importers:
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
-      tabbable:
-        specifier: ^6.4.0
-        version: 6.4.0
       use-sync-external-store:
         specifier: 'catalog:'
         version: 1.6.0(react@19.2.3)
