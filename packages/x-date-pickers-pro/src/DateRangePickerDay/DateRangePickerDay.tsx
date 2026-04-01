@@ -483,7 +483,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
 
   const handleClick = (event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => {
     event.defaultMuiPrevented = true;
-    if (!disabled && onDaySelect) {
+    if (!disabled) {
       onDaySelect(day);
     }
 
