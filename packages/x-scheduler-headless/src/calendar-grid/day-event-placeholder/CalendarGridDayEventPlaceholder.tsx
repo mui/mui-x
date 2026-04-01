@@ -13,6 +13,7 @@ export const CalendarGridDayEventPlaceholder = React.forwardRef(
       // Rendering props
       className,
       render,
+      style,
       // Internal props
       start,
       end,

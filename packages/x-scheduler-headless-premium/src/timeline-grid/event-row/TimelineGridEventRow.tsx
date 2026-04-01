@@ -29,6 +29,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     resourceId,
     addPropertiesToDroppedEvent,
@@ -100,13 +101,11 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   const state: TimelineGridEventRow.State = { resourceId };
 
   // TODO: Add aria-rowindex using Composite.
-  const props = { role: 'row', children };
-
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef, dropTargetRef],
     state,
     stateAttributesMapping,
-    props: [props, eventCreationProps, elementProps],
+    props: [elementProps, { role: 'row', children }, eventCreationProps],
   });
 
   return (
