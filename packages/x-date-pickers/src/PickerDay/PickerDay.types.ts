@@ -80,7 +80,7 @@ export interface PickerDayProps
    * Callback fired when the day is selected.
    * @param {PickerValidDate} day The day to select.
    */
-  onDaySelect?: (day: PickerValidDate) => void;
+  onDaySelect: (day: PickerValidDate) => void;
   /**
    * Callback fired when a key is pressed.
    * @param {React.KeyboardEvent<HTMLButtonElement>} event The event object.
