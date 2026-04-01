@@ -124,6 +124,11 @@ export function FormContent(props: FormContentProps) {
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
+  const titleInputRef = React.useRef<HTMLInputElement>(null);
+  React.useEffect(() => {
+    titleInputRef.current?.focus();
+  }, []);
+
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
   const [errors, setErrors] = React.useState<Record<string, string | string[]>>({});
@@ -246,7 +251,7 @@ export function FormContent(props: FormContentProps) {
             name="title"
             defaultValue={occurrence.title}
             required
-            inputRef={(input: HTMLInputElement | null) => input?.focus()}
+            inputRef={titleInputRef}
             slotProps={{
               input: {
                 readOnly: isPropertyReadOnly('title'),
