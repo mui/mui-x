@@ -12,6 +12,7 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     id: idProp,
     // Props forwarded to the DOM element
@@ -20,13 +21,11 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
 
   const id = useId(idProp);
 
-  const props = { role: 'grid', id };
-
   const contextValue: CalendarGridRootContext = React.useMemo(() => ({ id }), [id]);
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [props, elementProps],
+    props: [elementProps, { role: 'grid', id }],
   });
 
   return (

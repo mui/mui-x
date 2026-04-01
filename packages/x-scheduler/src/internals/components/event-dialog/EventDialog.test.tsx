@@ -110,7 +110,7 @@ describe('<EventDialogContent open />', () => {
     await user.click(screen.getByRole('combobox', { name: /resource/i }));
     await user.click(await screen.findByRole('option', { name: /work/i }));
     await user.click(screen.getByRole('radio', { name: /pink/i }));
-    await user.click(screen.getByRole('button', { name: /save changes/i }));
+    await user.click(screen.getByRole('button', { name: /save/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
     const updated = onEventsChange.firstCall.firstArg[0];
@@ -144,7 +144,7 @@ describe('<EventDialogContent open />', () => {
     await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
     await user.clear(screen.getByLabelText(/end date/i));
     await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
-    await user.click(screen.getByRole('button', { name: /save changes/i }));
+    await user.click(screen.getByRole('button', { name: /save/i }));
 
     expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
       /start.*before.*end/i,
@@ -400,7 +400,7 @@ describe('<EventDialogContent open />', () => {
       currentDialog.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
     ).to.have.attribute('data-palette', 'teal');
 
-    await user.click(screen.getByRole('button', { name: /save changes/i }));
+    await user.click(screen.getByRole('button', { name: /save/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
     const updated = onEventsChange.firstCall.firstArg[0];
@@ -589,7 +589,7 @@ describe('<EventDialogContent open />', () => {
       await user.click(screen.getByRole('tab', { name: /recurrence/i }));
       await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
       await user.click(await screen.findByRole('option', { name: /daily/i }));
-      await user.click(screen.getByRole('button', { name: /save changes/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(createEventSpy?.calledOnce).to.equal(true);
       const payload = createEventSpy.lastCall.firstArg;
@@ -662,7 +662,7 @@ describe('<EventDialogContent open />', () => {
       await user.clear(screen.getByLabelText(/end time/i));
       await user.type(screen.getByLabelText(/end time/i), '10:00');
 
-      await user.click(screen.getByRole('button', { name: /save changes/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(createEventSpy?.calledOnce).to.equal(true);
       const payload = createEventSpy.lastCall.firstArg;
@@ -735,10 +735,10 @@ describe('<EventDialogContent open />', () => {
         await user.type(screen.getByLabelText(/start time/i), '10:05');
         await user.clear(screen.getByLabelText(/end time/i));
         await user.type(screen.getByLabelText(/end time/i), '10:35');
-        await user.click(screen.getByRole('button', { name: /save changes/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByText(/All events in the series/i));
+        await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Cancel/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
@@ -789,10 +789,10 @@ describe('<EventDialogContent open />', () => {
         await user.type(screen.getByLabelText(/start time/i), '10:05');
         await user.clear(screen.getByLabelText(/end time/i));
         await user.type(screen.getByLabelText(/end time/i), '10:35');
-        await user.click(screen.getByRole('button', { name: /save changes/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByText(/All events in the series/i));
+        await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
@@ -855,7 +855,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('tab', { name: /recurrence/i }));
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
         await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
-        await user.click(screen.getByRole('button', { name: /save changes/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
 
         await screen.findByText(/Apply this change to:/i);
         await user.click(screen.getByText(/Only this event/i));
@@ -920,7 +920,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('tab', { name: /recurrence/i }));
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
         await user.click(await screen.findByRole('option', { name: /don.?t repeat/i }));
-        await user.click(screen.getByRole('button', { name: /save changes/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
 
         await screen.findByText(/Apply this change to:/i);
         await user.click(screen.getByText(/This and following events/i));
@@ -1047,7 +1047,7 @@ describe('<EventDialogContent open />', () => {
           await user.click(countInput);
           await user.keyboard('{Control>}a{/Control}5');
 
-          await user.click(screen.getByRole('button', { name: /save changes/i }));
+          await user.click(screen.getByRole('button', { name: /save/i }));
 
           expect(onEventsChange.calledOnce).to.equal(true);
           const updated = onEventsChange.firstCall.firstArg[0];
@@ -1098,7 +1098,7 @@ describe('<EventDialogContent open />', () => {
           }) as HTMLInputElement;
           expect(neverRadio.checked).to.equal(true);
 
-          await user.click(screen.getByRole('button', { name: /save changes/i }));
+          await user.click(screen.getByRole('button', { name: /save/i }));
 
           expect(onEventsChange.calledOnce).to.equal(true);
           const updated = onEventsChange.firstCall.firstArg[0];
@@ -1150,7 +1150,7 @@ describe('<EventDialogContent open />', () => {
           await user.clear(dateInput);
           await user.type(dateInput, '2025-07-20');
 
-          await user.click(screen.getByRole('button', { name: /save changes/i }));
+          await user.click(screen.getByRole('button', { name: /save/i }));
 
           expect(onEventsChange.calledOnce).to.equal(true);
           const updated = onEventsChange.firstCall.firstArg[0];
@@ -1187,7 +1187,7 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByRole('checkbox', { name: /monday/i }));
           await user.click(screen.getByRole('checkbox', { name: /friday/i }));
 
-          await user.click(screen.getByRole('button', { name: /save changes/i }));
+          await user.click(screen.getByRole('button', { name: /save/i }));
 
           expect(onEventsChange.calledOnce).to.equal(true);
           const updated = onEventsChange.firstCall.firstArg[0];
@@ -1228,7 +1228,7 @@ describe('<EventDialogContent open />', () => {
           const dayButton = screen.getByRole('button', { name: /day 26/i }); // DEFAULT_EVENT is 2025-05-26
           expect(dayButton).to.have.attribute('aria-pressed', 'true');
 
-          await user.click(screen.getByRole('button', { name: /save changes/i }));
+          await user.click(screen.getByRole('button', { name: /save/i }));
 
           expect(onEventsChange.calledOnce).to.equal(true);
           const updated = onEventsChange.firstCall.firstArg[0];
@@ -1267,7 +1267,7 @@ describe('<EventDialogContent open />', () => {
           // The DEFAULT_EVENT (2025-05-26 Mon) is the last Monday of the month ("-1MO")
           await user.click(screen.getByRole('button', { name: /mon.*last week/i }));
 
-          await user.click(screen.getByRole('button', { name: /save changes/i }));
+          await user.click(screen.getByRole('button', { name: /save/i }));
 
           expect(onEventsChange.calledOnce).to.equal(true);
           const updated = onEventsChange.firstCall.firstArg[0];
@@ -1320,7 +1320,7 @@ describe('<EventDialogContent open />', () => {
         await user.type(screen.getByLabelText(/description/i), '  new description  ');
         await user.click(screen.getByRole('combobox', { name: /resource/i }));
         await user.click(await screen.findByRole('option', { name: /work/i }));
-        await user.click(screen.getByRole('button', { name: /save changes/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
 
         expect(updateEventSpy?.calledOnce).to.equal(true);
         const payload = updateEventSpy.lastCall.firstArg;
@@ -1358,7 +1358,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('tab', { name: /recurrence/i }));
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
         await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
-        await user.click(screen.getByRole('button', { name: /save changes/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
 
         expect(updateEventSpy?.calledOnce).to.equal(true);
         const payload = updateEventSpy.lastCall.firstArg;

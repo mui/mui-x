@@ -34,6 +34,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     start,
     end,
@@ -142,12 +143,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, cellIndex);
 
-  const props = {
-    id,
-    'aria-labelledby': `${columnHeaderId} ${id}`,
-    style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
-  };
-
   const contextValue: CalendarGridDayEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
     [draggableEventContextValue, getSharedDragData],
@@ -156,7 +151,15 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const element = useRenderElement('div', componentProps, {
     state: mergedState,
     ref: [forwardedRef, buttonRef, ref],
-    props: [props, elementProps, getButtonProps],
+    props: [
+      elementProps,
+      {
+        id,
+        'aria-labelledby': `${columnHeaderId} ${id}`,
+        style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
+      },
+      getButtonProps,
+    ],
     stateAttributesMapping: overflowStateAttributesMapping,
   });
 
