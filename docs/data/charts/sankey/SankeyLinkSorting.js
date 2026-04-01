@@ -1,3 +1,4 @@
+import Stack from '@mui/material/Stack';
 import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import Typography from '@mui/material/Typography';
 
@@ -17,14 +18,10 @@ const linkSortFunction = (a, b) => b.value - a.value;
 
 export default function SankeyLinkSorting() {
   return (
-    <div
-      style={{
-        gap: '24px',
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-      }}
+    <Stack
+      direction={{ xs: 'column', md: 'row' }}
+      spacing={3}
+      sx={{ width: '100%', '&>div': { flex: '1 0 0' } }}
     >
       <div>
         <Typography variant="h6" gutterBottom>
@@ -70,6 +67,6 @@ export default function SankeyLinkSorting() {
           }}
         />
       </div>
-    </div>
+    </Stack>
   );
 }
