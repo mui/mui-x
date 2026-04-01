@@ -26,7 +26,7 @@ export default function SankeyLinkSorting() {
         justifyContent: 'center',
       }}
     >
-      <div>
+      <div style={{ flexGrow: 1 }}>
         <Typography variant="h6" gutterBottom>
           auto (default)
         </Typography>
@@ -41,7 +41,7 @@ export default function SankeyLinkSorting() {
         />
       </div>
 
-      <div>
+      <div style={{ flexGrow: 1 }}>
         <Typography variant="h6" gutterBottom>
           fixed
         </Typography>
@@ -56,7 +56,7 @@ export default function SankeyLinkSorting() {
         />
       </div>
 
-      <div>
+      <div style={{ flexGrow: 1 }}>
         <Typography variant="h6" gutterBottom>
           Custom Function
         </Typography>
