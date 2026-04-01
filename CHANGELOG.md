@@ -6,21 +6,22 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.28.2
-<!-- generated comparing v8.28.1..v8.x -->
+
 _Apr 1, 2026_
 
-We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 4 contributors who made this release possible.
 
-TODO INSERT HIGHLIGHTS
+Special thanks go out to this community member for their valuable contribution:
+@mixelburg, @sibananda485
 
 The following team members contributed to this release:
-@dav-is, @JCQuintas, @mixelburg, @sibananda485
+@dav-is, @JCQuintas
 
 ### Data Grid
 
 #### `@mui/x-data-grid@8.28.2`
 
-- [DataGrid] Export `GridColumnUnsortedIconProps` for custom column icon slots (@mixelburg) (#21898) @github-actions[bot]
+- [DataGrid] Export `GridColumnUnsortedIconProps` for custom column icon slots (#21898) @mixelburg
 
 #### `@mui/x-data-grid-pro@8.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -30,59 +31,31 @@ Same changes as in `@mui/x-data-grid@8.28.2`.
 
 Same changes as in `@mui/x-data-grid-pro@8.28.2`, plus:
 
-- [DataGridPremium] Fix clipboard paste issue in portal (@sibananda485) (#21949) @github-actions[bot]
-
-### Date and Time Pickers
-
-#### `@mui/x-date-pickers@8.27.2`
-
-Internal changes.
-
-#### `@mui/x-date-pickers-pro@8.27.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-date-pickers@8.27.2`.
+- [DataGridPremium] Fix clipboard paste issue in portal (#21949) @sibananda485
 
 ### Charts
 
-#### `@mui/x-charts@8.28.1`
+#### `@mui/x-charts@8.28.2`
 
-- [charts] Fix zoom slider preview with discard filter mode (@JCQuintas) (#21906) @github-actions[bot]
+- [charts] Fix zoom slider preview with discard filter mode (#21906) @JCQuintas
 
-#### `@mui/x-charts-pro@8.28.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.28.1`.
+Same changes as in `@mui/x-charts@8.28.2`.
 
-#### `@mui/x-charts-premium@8.28.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@8.28.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@8.28.1`.
-
-### Tree View
-
-#### `@mui/x-tree-view@8.27.2`
-
-Internal changes.
-
-#### `@mui/x-tree-view-pro@8.27.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@8.27.2`.
-
-### Codemod
-
-#### `@mui/x-codemod@8.27.0`
-
-Internal changes.
+Same changes as in `@mui/x-charts-pro@8.28.2`.
 
 ### Docs
 
-- [docs] Fix JSDOM → jsdom casing (@JCQuintas) (#21908) @github-actions[bot]
+- [docs] Fix JSDOM → jsdom casing (#21908) @JCQuintas
 
 ### Core
 
 - [docs-infra] Set `SEARCH_INDEX` Env for v8 (#21875) @dav-is
 
 ## 8.28.1
-
-<!-- generated comparing v8.28.0..v8.x -->
 
 _Mar 26, 2026_
 
@@ -115,9 +88,7 @@ Same changes as in `@mui/x-data-grid-pro@8.28.1`.
 
 _Mar 19, 2026_
 
-We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
-
-TODO INSERT HIGHLIGHTS
+We'd like to extend a big thank you to the 5 contributors who made this release possible.
 
 The following team members contributed to this release:
 @alexfauquette, @brijeshb42, @Janpot, @JCQuintas, @sai6855
