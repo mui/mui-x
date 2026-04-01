@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui/utils": "0.2.5",
+    "@base-ui/utils": "0.2.6",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@mui/material": "catalog:",

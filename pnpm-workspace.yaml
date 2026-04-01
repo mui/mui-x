@@ -13,6 +13,7 @@ catalog:
   '@babel/preset-typescript': ^7.28.5
   '@babel/runtime': ^7.28.6
   '@babel/traverse': ^7.29.0
+  '@base-ui/utils': ^0.2.6
   '@date-fns/tz': ^1.2.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
@@ -53,7 +54,7 @@ catalog:
   es-toolkit: ^1.45.1
   date-fns: ^4.1.0
   date-fns-jalali: ^4.1.0-0
-  dayjs: ^1.11.18
+  dayjs: ^1.11.20
   jscodeshift: 17.3.0
   luxon: ^3.7.2
   moment: ^2.30.1

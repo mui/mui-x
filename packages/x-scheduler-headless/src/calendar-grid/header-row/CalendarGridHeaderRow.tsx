@@ -12,16 +12,16 @@ export const CalendarGridHeaderRow = React.forwardRef(function CalendarGridHeade
     // Rendering props
     className,
     render,
+    style,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const props = { role: 'row' };
   const cellsRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [props, elementProps],
+    props: [elementProps, { role: 'row' }],
   });
 
   return <CompositeList elementsRef={cellsRefs}>{element}</CompositeList>;
