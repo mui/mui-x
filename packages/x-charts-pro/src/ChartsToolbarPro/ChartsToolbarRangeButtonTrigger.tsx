@@ -25,7 +25,7 @@ export interface ChartsToolbarRangeButtonTriggerProps {
   /**
    * A function to customize the rendering of the component.
    */
-  render?: RenderProp<ChartsSlotProps['baseIconButton']>;
+  render?: RenderProp<ChartsSlotProps['baseButton']>;
   /**
    * The range value. Specifies how far back from the end of the data to zoom.
    *
@@ -40,16 +40,24 @@ export interface ChartsToolbarRangeButtonTriggerProps {
    * Defaults to the first x-axis with zoom enabled.
    */
   axisId?: AxisId;
+  /**
+   * The size of the button.
+   * @default 'small'
+   */
+  size?: 'small' | 'medium' | 'large';
 }
 
 /**
  * A button that sets the chart zoom to a predefined time range.
- * It renders the `baseIconButton` slot.
+ * It renders the `baseButton` slot.
  */
 const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<ChartsToolbarRangeButtonTriggerProps>
->(function ChartsToolbarRangeButtonTrigger({ render, value, axisId: axisIdProp, ...other }, ref) {
+>(function ChartsToolbarRangeButtonTrigger(
+  { render, value, axisId: axisIdProp, size = 'small', ...other },
+  ref,
+) {
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartsContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
@@ -106,13 +114,13 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   const isActive =
     axisDomain && currentZoom && zoomedBounds
       ? isRangeButtonActive(
-          value,
-          currentZoom,
-          axisDomain.min,
-          axisDomain.max,
-          zoomedBounds.min,
-          zoomedBounds.max,
-        )
+        value,
+        currentZoom,
+        axisDomain.min,
+        axisDomain.max,
+        zoomedBounds.min,
+        zoomedBounds.max,
+      )
       : false;
 
   const handleClick = React.useCallback(() => {
@@ -133,10 +141,17 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     });
   }, [resolvedAxisId, axisDomain, zoomedBounds, value, instance]);
 
-  const element = useComponentRenderer(slots.baseIconButton, render, {
-    ...slotProps.baseIconButton,
+  const element = useComponentRenderer(slots.baseButton, render, {
+    ...slotProps.baseButton,
     onClick: handleClick,
     'aria-pressed': isActive,
+    size,
+    style: {
+      color: 'inherit',
+      fontSize: '0.75rem',
+      padding: '2px 6px',
+      minWidth: 'unset',
+    },
     ...other,
     ref,
   });

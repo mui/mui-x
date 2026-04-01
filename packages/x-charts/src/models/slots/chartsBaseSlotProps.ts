@@ -17,6 +17,7 @@ export type ChartBaseButtonProps = ChartBaseCommonProps & {
   id?: string;
   disabled?: boolean;
   tabIndex?: number;
+  size?: 'small' | 'medium' | 'large';
 };
 
 export type ChartBaseIconButtonProps = ChartBaseCommonProps & {
