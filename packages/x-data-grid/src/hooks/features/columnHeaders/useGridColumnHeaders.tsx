@@ -18,10 +18,8 @@ import {
   gridHeaderHeightSelector,
   gridVerticalScrollbarWidthSelector,
 } from '../dimensions/gridDimensionsSelectors';
-import {
-  gridRenderContextColumnsSelector,
-  gridVirtualizationLayoutModeSelector,
-} from '../virtualization';
+import { gridRenderContextColumnsSelector } from '../virtualization';
+import { gridVirtualizationLayoutModeSelector } from '../virtualization/gridVirtualizationSelectors';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import type { GridColumnGroup } from '../../../models/gridColumnGrouping';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
