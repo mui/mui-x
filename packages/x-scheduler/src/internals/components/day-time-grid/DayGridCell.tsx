@@ -71,6 +71,8 @@ export function DayGridCell(props: DayGridCellProps) {
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
+  const rowCount = Math.max(row.maxIndex, placeholder?.position.index ?? 0);
+
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
@@ -86,7 +88,7 @@ export function DayGridCell(props: DayGridCellProps) {
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       style={
         {
-          '--row-count': row.maxIndex,
+          '--row-count': rowCount,
         } as React.CSSProperties
       }
       aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}

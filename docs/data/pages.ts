@@ -35,6 +35,17 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
               { pathname: '/x/react-scheduler/event-calendar/editing' },
               { pathname: '/x/react-scheduler/event-calendar/views' },
               { pathname: '/x/react-scheduler/event-calendar/lazy-loading', plan: 'premium' },
+              {
+                pathname: '/x/react-scheduler/event-calendar/filtering',
+                plan: 'premium',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-scheduler/event-calendar/import-export',
+                title: 'Import & Export',
+                plan: 'premium',
+                planned: true,
+              },
               { pathname: '/x/react-scheduler/event-calendar/preferences' },
               { pathname: '/x/react-scheduler/event-calendar/localization' },
             ],
@@ -50,6 +61,23 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
               { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
               { pathname: '/x/react-scheduler/event-timeline/editing' },
               { pathname: '/x/react-scheduler/event-timeline/views' },
+              {
+                pathname: '/x/react-scheduler/event-timeline/lazy-loading',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-scheduler/event-timeline/virtualization',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-scheduler/event-timeline/filtering',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-scheduler/event-timeline/import-export',
+                title: 'Import & Export',
+                planned: true,
+              },
               { pathname: '/x/react-scheduler/event-timeline/preferences' },
               { pathname: '/x/react-scheduler/event-timeline/localization' },
             ],
@@ -657,6 +685,11 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-charts/sankey', plan: 'pro' },
+          {
+            pathname: '/x/react-charts/candlestick',
+            plan: 'premium',
+            unstable: true,
+          },
           {
             pathname: '/x/react-charts/#planned-charts',
             title: 'Future Components',

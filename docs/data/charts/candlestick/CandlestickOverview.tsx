@@ -327,7 +327,9 @@ function CandlestickToolbar({
 
 function CandlestickTooltip() {
   const drawingArea = useDrawingArea();
-  const axesTooltipData = useAxesTooltip({ directions: ['x'] });
+  const axesTooltipData = useAxesTooltip<'ohlc' | 'line' | 'bar'>({
+    directions: ['x'],
+  });
 
   const tooltipData = axesTooltipData?.[0];
 
@@ -372,10 +374,10 @@ function CandlestickTooltip() {
             background: theme.palette.background.paper,
           })}
         >
-          <span>O:{formatTooltipDollarValue(ohlcItem.value![0])}</span>
-          <span>H:{formatTooltipDollarValue(ohlcItem.value![1])}</span>
-          <span>L:{formatTooltipDollarValue(ohlcItem.value![2])}</span>
-          <span>C:{formatTooltipDollarValue(ohlcItem.value![3])}</span>
+          <span>O:{formatTooltipDollarValue(ohlcItem.value!.open)}</span>
+          <span>H:{formatTooltipDollarValue(ohlcItem.value!.high)}</span>
+          <span>L:{formatTooltipDollarValue(ohlcItem.value!.low)}</span>
+          <span>C:{formatTooltipDollarValue(ohlcItem.value!.close)}</span>
           <span>V:{formatVolume(volumeItem.value!)}</span>
         </Stack>
         {movingAverageItem?.value != null && (
