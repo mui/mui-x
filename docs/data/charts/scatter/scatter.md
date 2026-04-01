@@ -22,7 +22,8 @@ A scatter series usually defines points with a `data` property: an array of obje
 
 You can also use the `dataset` prop together with `datasetKeys` instead of putting coordinates on the series directly—see [Using a dataset](#using-a-dataset).
 
-Add an optional `id` on each point so it keeps a stable identity when the data changes. If you animate the series, `id` lets added or removed points transition predictably; without it, updates follow each point’s index in the array and existing markers can be repurposed in ways that look wrong.
+Add an optional `id` on each point so it keeps a stable identity when the data changes.
+If you animate the series, `id` lets added or removed points transition predictably; without it, updates follow each point's index in the array and existing markers can be repurposed in ways that look wrong.
 
 {{"demo": "BasicScatter.js"}}
 
