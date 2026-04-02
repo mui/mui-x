@@ -42,7 +42,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
         <TimeColumnWrapper>
           <CalendarGrid.TimeColumn start={start} end={end} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext as unknown as React.Context<AnyEventCalendarStore>}
+            context={SchedulerStoreContext as any}
             onMount={(s) => {
               store = s;
             }}
@@ -68,7 +68,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
         <TimeColumnWrapper eventCreation={false}>
           <CalendarGrid.TimeColumn start={start} end={end} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext as unknown as React.Context<AnyEventCalendarStore>}
+            context={SchedulerStoreContext as any}
             onMount={(s) => {
               store = s;
             }}

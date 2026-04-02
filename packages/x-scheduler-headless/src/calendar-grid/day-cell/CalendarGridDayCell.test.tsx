@@ -44,7 +44,7 @@ describe('<CalendarGrid.DayCell />', () => {
         <DayCellWrapper>
           <CalendarGrid.DayCell value={day} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext as unknown as React.Context<AnyEventCalendarStore>}
+            context={SchedulerStoreContext as any}
             onMount={(s) => {
               store = s;
             }}
@@ -70,7 +70,7 @@ describe('<CalendarGrid.DayCell />', () => {
         <DayCellWrapper eventCreation={false}>
           <CalendarGrid.DayCell value={day} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext as unknown as React.Context<AnyEventCalendarStore>}
+            context={SchedulerStoreContext as any}
             onMount={(s) => {
               store = s;
             }}
