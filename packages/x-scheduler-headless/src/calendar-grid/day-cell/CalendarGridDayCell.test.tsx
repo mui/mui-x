@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -37,10 +37,10 @@ describe('<CalendarGrid.DayCell />', () => {
   }));
 
   describe('keyboard interactions', () => {
-    it('should create an all-day event placeholder on Enter keypress', () => {
+    it('should create an all-day event placeholder on Enter keypress', async () => {
       let store: AnyEventCalendarStore | null = null;
 
-      render(
+      const { user } = render(
         <DayCellWrapper>
           <CalendarGrid.DayCell value={day} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
@@ -53,20 +53,18 @@ describe('<CalendarGrid.DayCell />', () => {
       );
 
       const cell = screen.getByRole('gridcell');
-      act(() => {
-        cell.focus();
-      });
-      fireEvent.keyDown(cell, { key: 'Enter' });
+      await user.click(cell);
+      await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
       expect(store!.state.occurrencePlaceholder?.surfaceType).to.equal('day-grid');
     });
 
-    it('should not create event on Enter when eventCreation is false', () => {
+    it('should not create event on Enter when eventCreation is false', async () => {
       let store: AnyEventCalendarStore | null = null;
 
-      render(
+      const { user } = render(
         <DayCellWrapper eventCreation={false}>
           <CalendarGrid.DayCell value={day} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
@@ -79,10 +77,8 @@ describe('<CalendarGrid.DayCell />', () => {
       );
 
       const cell = screen.getByRole('gridcell');
-      act(() => {
-        cell.focus();
-      });
-      fireEvent.keyDown(cell, { key: 'Enter' });
+      await user.click(cell);
+      await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder).to.equal(null);
     });
