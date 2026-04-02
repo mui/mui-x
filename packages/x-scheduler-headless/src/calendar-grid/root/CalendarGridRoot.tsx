@@ -21,7 +21,20 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
 
   const id = useId(idProp);
 
-  const contextValue: CalendarGridRootContext = React.useMemo(() => ({ id }), [id]);
+  const [focusedCell, setFocusedCellState] =
+    React.useState<CalendarGridRootContext['focusedCell']>(null);
+
+  const setFocusedCell: CalendarGridRootContext['setFocusedCell'] = React.useCallback(
+    (rowType, columnIndex) => {
+      setFocusedCellState({ rowType, columnIndex });
+    },
+    [],
+  );
+
+  const contextValue: CalendarGridRootContext = React.useMemo(
+    () => ({ id, focusedCell, setFocusedCell }),
+    [id, focusedCell, setFocusedCell],
+  );
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
