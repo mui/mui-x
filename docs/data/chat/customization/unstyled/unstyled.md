@@ -1,0 +1,132 @@
+---
+productId: x-chat
+title: Unstyled Components
+packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
+components: ChatRoot
+---
+
+# Chat - Unstyled Components
+
+<p class="description">Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.</p>
+
+{{"component": "@mui/docs/ComponentLinkHeader"}}
+
+`@mui/x-chat/unstyled` builds on the headless runtime.
+It combines `@mui/x-chat/headless` state with structural components such as lists, threads, messages, composers, and indicators.
+
+## When to use the unstyled layer
+
+Use the unstyled layer when you want:
+
+- a canonical chat component model
+- accessibility and interaction behavior already wired
+- slot-based customization instead of rebuilding every subtree
+- full control over visual design and styling
+
+Use the headless layer when you want to own all DOM structure yourself.
+
+## Package surface
+
+The unstyled package is organized into structural namespaces:
+
+- `Chat`
+- `ConversationList`
+- `Conversation`
+- `MessageList`
+- `MessageGroup`
+- `Message`
+- `Composer`
+- `Indicators`
+
+It also exports helpers for default message-part rendering.
+
+## What the unstyled layer owns
+
+- structural React primitives such as `Chat.Root`, `ConversationList.Root`, `Conversation.Root`, and `Composer.Root`
+- semantics such as `listbox`, `option`, `log`, and `separator`
+- keyboard and focus behavior for conversation navigation
+- scroll behavior, unseen-message tracking, and history-loading hooks in the message list
+- message grouping, date boundaries, and default message-part renderers
+- slot and `slotProps` customization with owner state
+
+## What the unstyled layer does not own
+
+- Material UI theming or styling
+- Visual design or colors
+- Runtime contracts, adapters, or store semantics (those belong in [Headless](/x/react-chat/customization/headless/))
+
+## Namespaces and direct imports
+
+The package exports both namespaced and direct primitives:
+
+```tsx
+import {
+  Chat,
+  ConversationList,
+  Conversation,
+  MessageList,
+  MessageGroup,
+  Message,
+  Composer,
+  Indicators,
+} from '@mui/x-chat/unstyled';
+```
+
+You can also import individual components such as `ChatRoot`, `MessageListRoot`, or `ComposerTextArea` when you prefer explicit component names in your codebase.
+
+Use namespaced imports when you want the API to read like a component family.
+Use direct imports when a codebase prefers local, explicit symbols or when only one or two primitives are needed in a file.
+
+## Typical composition shape
+
+Most unstyled apps compose the surface like this:
+
+```tsx
+import {
+  Chat,
+  Composer,
+  ConversationList,
+  MessageGroup,
+  MessageList,
+  Conversation,
+} from '@mui/x-chat/unstyled';
+
+function Inbox(props: ChatRootProps) {
+  return (
+    <Chat.Root {...props}>
+      <Chat.Layout>
+        <ConversationList.Root />
+        <Conversation.Root>
+          <Conversation.Header>
+            <Conversation.Title />
+            <Conversation.Subtitle />
+          </Conversation.Header>
+          <MessageList.Root
+            renderItem={({ id, index }) => (
+              <MessageGroup index={index} messageId={id} />
+            )}
+          />
+          <Composer.Root>
+            <Composer.TextArea />
+            <Composer.Toolbar>
+              <Composer.AttachButton />
+              <Composer.SendButton />
+            </Composer.Toolbar>
+          </Composer.Root>
+        </Conversation.Root>
+      </Chat.Layout>
+    </Chat.Root>
+  );
+}
+```
+
+This gives you a complete structural shell while keeping the visual treatment in your own CSS, slots, or design-system components.
+
+## API
+
+## See also
+
+- [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling unstyled primitives with Tailwind utility classes.
+- [Headless Hooks](/x/react-chat/customization/headless/) for the headless layer that unstyled builds on.
+- [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization on the styled layer.

@@ -113,6 +113,22 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 <ChatBox variant="compact" adapter={adapter} />
 ```
 
+## Density
+
+The `density` prop controls the vertical spacing between messages.
+Three values are available — `compact`, `standard` (default), and `comfortable` — mirroring the density model used in [Data Grid](/x/react-data-grid/accessibility/#density).
+
+Use the toggle in the demo below to compare the three density levels:
+
+{{"demo": "DensityProp.js", "defaultCodeOpen": false, "bg": "inline"}}
+
+```tsx
+<ChatBox density="compact" adapter={adapter} />
+<ChatBox density="comfortable" adapter={adapter} />
+```
+
+The `density` prop is independent of `variant` — you can combine `variant="compact"` with any density value.
+
 ## Loading and streaming states
 
 While the assistant is generating a response, streaming tokens are rendered incrementally inside a `ChatMessageContent` bubble.
