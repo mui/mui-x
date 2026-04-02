@@ -108,14 +108,14 @@ To customize how code fences render inside `ChatBox`, override `partProps.text.r
 
 ## CSS classes
 
-| Class name                       | Description             |
-| :------------------------------- | :---------------------- |
-| `.MuiChatCodeBlock-root`         | Root container          |
-| `.MuiChatCodeBlock-header`       | Header bar              |
-| `.MuiChatCodeBlock-languageLabel`| Language label text     |
-| `.MuiChatCodeBlock-copyButton`   | Copy-to-clipboard button|
-| `.MuiChatCodeBlock-pre`          | Pre element wrapper     |
-| `.MuiChatCodeBlock-code`         | Code element            |
+| Class name                        | Description              |
+| :-------------------------------- | :----------------------- |
+| `.MuiChatCodeBlock-root`          | Root container           |
+| `.MuiChatCodeBlock-header`        | Header bar               |
+| `.MuiChatCodeBlock-languageLabel` | Language label text      |
+| `.MuiChatCodeBlock-copyButton`    | Copy-to-clipboard button |
+| `.MuiChatCodeBlock-pre`           | Pre element wrapper      |
+| `.MuiChatCodeBlock-code`          | Code element             |
 
 ## API
 

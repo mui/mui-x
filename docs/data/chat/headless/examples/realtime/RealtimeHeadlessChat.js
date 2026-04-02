@@ -16,7 +16,10 @@ import {
   demoConversations,
   demoUsers,
 } from 'docsx/data/chat/headless/examples/shared/demoData';
-import { createChunkStream, createTextResponseChunks } from 'docsx/data/chat/headless/examples/shared/demoUtils';
+import {
+  createChunkStream,
+  createTextResponseChunks,
+} from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 function createRealtimeAdapter() {
   let onEventRef = null;

@@ -111,49 +111,57 @@ These props are forwarded to the internal `ChatProvider`.
 ### Messages
 
 ```tsx
-{/* Uncontrolled — internal store owns the messages */}
-<ChatBox adapter={adapter} initialMessages={initialMessages} />
+{
+  /* Uncontrolled — internal store owns the messages */
+}
+<ChatBox adapter={adapter} initialMessages={initialMessages} />;
 
-{/* Controlled — you own the messages array */}
-<ChatBox
-  adapter={adapter}
-  messages={messages}
-  onMessagesChange={setMessages}
-/>
+{
+  /* Controlled — you own the messages array */
+}
+<ChatBox adapter={adapter} messages={messages} onMessagesChange={setMessages} />;
 ```
 
 ### Conversations
 
 ```tsx
-{/* Uncontrolled */}
+{
+  /* Uncontrolled */
+}
 <ChatBox
   adapter={adapter}
   initialConversations={conversations}
   initialActiveConversationId="conv-1"
-/>
+/>;
 
-{/* Controlled */}
+{
+  /* Controlled */
+}
 <ChatBox
   adapter={adapter}
   conversations={conversations}
   onConversationsChange={setConversations}
   activeConversationId={activeId}
   onActiveConversationChange={setActiveId}
-/>
+/>;
 ```
 
 ### Composer value
 
 ```tsx
-{/* Uncontrolled */}
-<ChatBox adapter={adapter} initialComposerValue="Hello" />
+{
+  /* Uncontrolled */
+}
+<ChatBox adapter={adapter} initialComposerValue="Hello" />;
 
-{/* Controlled */}
+{
+  /* Controlled */
+}
 <ChatBox
   adapter={adapter}
   composerValue={composerValue}
   onComposerValueChange={setComposerValue}
-/>
+/>;
 ```
 
 You can mix controlled and uncontrolled state freely.

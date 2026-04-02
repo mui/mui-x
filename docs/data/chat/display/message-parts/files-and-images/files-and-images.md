@@ -27,12 +27,12 @@ interface ChatFileMessagePart {
 }
 ```
 
-| Field       | Type     | Description                                                  |
-| :---------- | :------- | :----------------------------------------------------------- |
-| `type`      | `'file'` | Discriminant for the part type union                         |
+| Field       | Type     | Description                                                     |
+| :---------- | :------- | :-------------------------------------------------------------- |
+| `type`      | `'file'` | Discriminant for the part type union                            |
 | `mediaType` | `string` | MIME type of the file (e.g. `'image/png'`, `'application/pdf'`) |
-| `url`       | `string` | URL to the file resource                                     |
-| `filename`  | `string` | Optional display name for the file                           |
+| `url`       | `string` | URL to the file resource                                        |
+| `filename`  | `string` | Optional display name for the file                              |
 
 ### Example data
 
@@ -71,12 +71,12 @@ Both variants open the file in a new tab (`target="_blank"`) when clicked.
 
 The unstyled `FilePart` component exposes four slots for customization:
 
-| Slot       | Default element | Description                           |
-| :--------- | :-------------- | :------------------------------------ |
-| `root`     | `div`           | Outer container                       |
+| Slot       | Default element | Description                              |
+| :--------- | :-------------- | :--------------------------------------- |
+| `root`     | `div`           | Outer container                          |
 | `preview`  | `img`           | Image preview (only rendered for images) |
-| `link`     | `a`             | Clickable link wrapping the content   |
-| `filename` | `span`          | Filename text                         |
+| `link`     | `a`             | Clickable link wrapping the content      |
+| `filename` | `span`          | Filename text                            |
 
 ### Customizing via ChatBox
 
@@ -119,12 +119,12 @@ The file part is added to the message's `parts` array as soon as the chunk is re
 
 The `FilePart` component computes an owner state that slot components can use for conditional styling:
 
-| Property    | Type      | Description                               |
-| :---------- | :-------- | :---------------------------------------- |
-| `image`     | `boolean` | Whether the file is an image              |
-| `mediaType` | `string`  | MIME type of the file                     |
-| `messageId` | `string`  | ID of the parent message                  |
-| `role`      | `ChatRole`| Role of the message author                |
+| Property    | Type       | Description                  |
+| :---------- | :--------- | :--------------------------- |
+| `image`     | `boolean`  | Whether the file is an image |
+| `mediaType` | `string`   | MIME type of the file        |
+| `messageId` | `string`   | ID of the parent message     |
+| `role`      | `ChatRole` | Role of the message author   |
 
 ## API
 

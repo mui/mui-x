@@ -135,7 +135,7 @@ const IntercomAuthorName = React.forwardRef(function IntercomAuthorName(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { children, ownerState, style, ...other } = props;
-  if (ownerState?.role === 'user') return null;
+  if (ownerState?.role === 'user') {return null;}
   return (
     <div
       ref={ref}
@@ -182,7 +182,7 @@ const IntercomAvatar = React.forwardRef(function IntercomAvatar(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { children, ownerState, style, ...other } = props;
-  if (ownerState?.role === 'user') return null;
+  if (ownerState?.role === 'user') {return null;}
   return (
     <div
       ref={ref}

@@ -30,17 +30,15 @@ Control auto-scrolling through the `features` prop on `ChatBox`.
 The default buffer is **150 px**.
 
 ```tsx
-{/* Custom 300 px buffer threshold */}
-<ChatBox
-  adapter={adapter}
-  features={{ autoScroll: { buffer: 300 } }}
-/>
+{
+  /* Custom 300 px buffer threshold */
+}
+<ChatBox adapter={adapter} features={{ autoScroll: { buffer: 300 } }} />;
 
-{/* Disable auto-scroll entirely */}
-<ChatBox
-  adapter={adapter}
-  features={{ autoScroll: false }}
-/>
+{
+  /* Disable auto-scroll entirely */
+}
+<ChatBox adapter={adapter} features={{ autoScroll: false }} />;
 ```
 
 When auto-scroll is disabled, the user can still scroll to the bottom manually using the scroll-to-bottom affordance button.

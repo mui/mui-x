@@ -62,11 +62,11 @@ import {
 
 ### Conversation ownerState
 
-| Field             | Type                          | Description                                  |
-| :---------------- | :---------------------------- | :------------------------------------------- |
-| `conversationId`  | `string \| undefined`         | Currently selected conversation ID           |
-| `conversation`    | `ChatConversation \| null`    | Full active conversation object, when loaded |
-| `hasConversation` | `boolean`                     | Whether the thread currently has a selection |
+| Field             | Type                       | Description                                  |
+| :---------------- | :------------------------- | :------------------------------------------- |
+| `conversationId`  | `string \| undefined`      | Currently selected conversation ID           |
+| `conversation`    | `ChatConversation \| null` | Full active conversation object, when loaded |
+| `hasConversation` | `boolean`                  | Whether the thread currently has a selection |
 
 The `hasConversation` flag is particularly useful for hiding action buttons or showing a placeholder when no conversation is active. `ChatConversationHeader`, `ChatConversationTitle`, `ChatConversationSubtitle`, and `ChatConversationHeaderActions` all receive this same conversation-level state.
 

@@ -44,13 +44,13 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 
 ### When to use each variant
 
-| Scenario                                           | Recommended variant |
-| :------------------------------------------------- | :------------------ |
+| Scenario                                            | Recommended variant |
+| :-------------------------------------------------- | :------------------ |
 | AI assistant interface (single bot, longer replies) | Default             |
-| Team messaging or multi-party chat                 | Compact             |
-| Customer support widget                            | Default             |
-| Slack/Discord-style channel view                   | Compact             |
-| Code review or agentic workflows                   | Default             |
+| Team messaging or multi-party chat                  | Compact             |
+| Customer support widget                             | Default             |
+| Slack/Discord-style channel view                    | Compact             |
+| Code review or agentic workflows                    | Default             |
 
 The compact variant is particularly effective for conversations with many short messages from multiple participants, where bubbles would create excessive visual noise.
 
@@ -71,8 +71,8 @@ Use the toggle in the demo below to compare the three density levels:
 
 ### Density effects
 
-| Density       | Vertical gap between messages | Use case                              |
-| :------------ | :---------------------------- | :------------------------------------ |
+| Density       | Vertical gap between messages | Use case                               |
+| :------------ | :---------------------------- | :------------------------------------- |
 | `compact`     | Minimal                       | Dense information displays, dashboards |
 | `standard`    | Default                       | General-purpose chat                   |
 | `comfortable` | Generous                      | Accessibility, relaxed reading         |
@@ -82,11 +82,15 @@ Use the toggle in the demo below to compare the three density levels:
 The `density` prop is independent of `variant` — you can combine `variant="compact"` with any density value:
 
 ```tsx
-{/* Dense messenger-style layout with minimal spacing */}
-<ChatBox variant="compact" density="compact" adapter={adapter} />
+{
+  /* Dense messenger-style layout with minimal spacing */
+}
+<ChatBox variant="compact" density="compact" adapter={adapter} />;
 
-{/* Dense messenger-style layout with generous spacing */}
-<ChatBox variant="compact" density="comfortable" adapter={adapter} />
+{
+  /* Dense messenger-style layout with generous spacing */
+}
+<ChatBox variant="compact" density="comfortable" adapter={adapter} />;
 ```
 
 This independence gives you fine-grained control over both the visual style (bubbles vs. plain text) and the spatial rhythm (tight vs. relaxed) of the chat surface.

@@ -20,7 +20,10 @@ import {
   createTextResponseChunks,
   randomId,
 } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const CONVERSATION_ID = randomId();
 

@@ -41,10 +41,10 @@ Set the `lines` prop to control how many shimmer lines are displayed:
 
 ### Slots
 
-| Slot   | Default element | Description                    |
-| :----- | :-------------- | :----------------------------- |
-| `root` | `div`           | The outer container            |
-| `line` | `div`           | Each animated shimmer line     |
+| Slot   | Default element | Description                |
+| :----- | :-------------- | :------------------------- |
+| `root` | `div`           | The outer container        |
+| `line` | `div`           | Each animated shimmer line |
 
 Customize the skeleton appearance through slot replacement:
 
@@ -59,10 +59,10 @@ Customize the skeleton appearance through slot replacement:
 
 ### CSS classes
 
-| Class name                        | Description          |
-| :-------------------------------- | :------------------- |
-| `.MuiChatMessageSkeleton-root`    | Root container       |
-| `.MuiChatMessageSkeleton-line`    | Individual line      |
+| Class name                     | Description     |
+| :----------------------------- | :-------------- |
+| `.MuiChatMessageSkeleton-root` | Root container  |
+| `.MuiChatMessageSkeleton-line` | Individual line |
 
 ## Empty state
 

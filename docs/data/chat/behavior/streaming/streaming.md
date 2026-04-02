@@ -76,12 +76,12 @@ The `toolInvocation.state` tracks the tool lifecycle: `'input-streaming'` -> `'i
 
 ### Source, file, and data chunks
 
-| Chunk type        | Fields                        | Description           |
-| :---------------- | :---------------------------- | :-------------------- |
-| `source-url`      | `sourceId`, `url`, `title?`   | URL-based source      |
-| `source-document` | `sourceId`, `title?`, `text?` | Document-based source |
-| `file`            | `mediaType`, `url`, `filename?`, `id?` | Inline file  |
-| `data-*`          | `type`, `data`, `id?`, `transient?`    | Custom data payload |
+| Chunk type        | Fields                                 | Description           |
+| :---------------- | :------------------------------------- | :-------------------- |
+| `source-url`      | `sourceId`, `url`, `title?`            | URL-based source      |
+| `source-document` | `sourceId`, `title?`, `text?`          | Document-based source |
+| `file`            | `mediaType`, `url`, `filename?`, `id?` | Inline file           |
+| `data-*`          | `type`, `data`, `id?`, `transient?`    | Custom data payload   |
 
 Data chunks use a type that matches the `data-*` pattern (for example, `data-citations` or `data-summary`).
 They create `ChatDataMessagePart` entries and also fire the `onData` callback.

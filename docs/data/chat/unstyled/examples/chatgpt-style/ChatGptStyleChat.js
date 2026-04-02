@@ -207,7 +207,7 @@ const allThreads = {
 // 3-dot dropdown menu
 // ---------------------------------------------------------------------------
 function ConversationMenu({ anchorEl, onClose }) {
-  if (!anchorEl) return null;
+  if (!anchorEl) {return null;}
 
   const rect = anchorEl.getBoundingClientRect();
   const menuItems = [

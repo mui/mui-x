@@ -27,12 +27,12 @@ interface ChatSourceUrlMessagePart {
 }
 ```
 
-| Field      | Type          | Description                                  |
-| :--------- | :------------ | :------------------------------------------- |
-| `type`     | `'source-url'`| Discriminant for the part type union         |
-| `sourceId` | `string`      | Unique identifier for deduplication          |
-| `url`      | `string`      | URL of the source                            |
-| `title`    | `string`      | Optional display title (falls back to URL)   |
+| Field      | Type           | Description                                |
+| :--------- | :------------- | :----------------------------------------- |
+| `type`     | `'source-url'` | Discriminant for the part type union       |
+| `sourceId` | `string`       | Unique identifier for deduplication        |
+| `url`      | `string`       | URL of the source                          |
+| `title`    | `string`       | Optional display title (falls back to URL) |
 
 The default renderer displays an external link icon next to a clickable link that opens in a new tab. The link text shows the `title` when available, otherwise the raw `url`.
 
@@ -61,11 +61,11 @@ const message: ChatMessage = {
 
 The `SourceUrlPart` component exposes three slots:
 
-| Slot   | Default element | Description                    |
-| :----- | :-------------- | :----------------------------- |
-| `root` | `span`          | Outer container                |
-| `icon` | `span`          | External link icon wrapper     |
-| `link` | `a`             | Clickable source link          |
+| Slot   | Default element | Description                |
+| :----- | :-------------- | :------------------------- |
+| `root` | `span`          | Outer container            |
+| `icon` | `span`          | External link icon wrapper |
+| `link` | `a`             | Clickable source link      |
 
 ## Source document parts
 
@@ -80,12 +80,12 @@ interface ChatSourceDocumentMessagePart {
 }
 ```
 
-| Field      | Type               | Description                                  |
-| :--------- | :----------------- | :------------------------------------------- |
-| `type`     | `'source-document'`| Discriminant for the part type union         |
-| `sourceId` | `string`           | Unique identifier for deduplication          |
-| `title`    | `string`           | Optional document or section title           |
-| `text`     | `string`           | Optional excerpt text                        |
+| Field      | Type                | Description                          |
+| :--------- | :------------------ | :----------------------------------- |
+| `type`     | `'source-document'` | Discriminant for the part type union |
+| `sourceId` | `string`            | Unique identifier for deduplication  |
+| `title`    | `string`            | Optional document or section title   |
+| `text`     | `string`            | Optional excerpt text                |
 
 The default renderer displays the title in a bold style with the excerpt text below, wrapped in a bordered card.
 
@@ -93,11 +93,11 @@ The default renderer displays the title in a bold style with the excerpt text be
 
 The `SourceDocumentPart` component exposes three slots:
 
-| Slot      | Default element | Description              |
-| :-------- | :-------------- | :----------------------- |
-| `root`    | `div`           | Outer container (card)   |
-| `title`   | `div`           | Document title           |
-| `excerpt` | `div`           | Excerpt text             |
+| Slot      | Default element | Description            |
+| :-------- | :-------------- | :--------------------- |
+| `root`    | `div`           | Outer container (card) |
+| `title`   | `div`           | Document title         |
+| `excerpt` | `div`           | Excerpt text           |
 
 ## Streaming
 

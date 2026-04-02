@@ -3,7 +3,11 @@ import * as React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ChatBox } from '@mui/x-chat';
 
-import { createChunkStream, randomId, splitText } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createChunkStream,
+  randomId,
+  splitText,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
 
 // --- Task types --------------------------------------------------------------
 

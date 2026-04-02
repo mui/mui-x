@@ -14,7 +14,10 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import { createChunkStream, createTextResponseChunks } from 'docsx/data/chat/headless/examples/shared/demoUtils';
+import {
+  createChunkStream,
+  createTextResponseChunks,
+} from 'docsx/data/chat/headless/examples/shared/demoUtils';
 
 const adapter = {
   async sendMessage({ message }) {

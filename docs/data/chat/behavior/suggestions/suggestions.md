@@ -41,19 +41,29 @@ This lets you set a display label that differs from the value pre-filled into th
 <ChatBox
   adapter={adapter}
   suggestions={[
-    { value: 'Help me write a professional email to my manager about taking PTO next week', label: 'Write an email' },
-    { value: 'Summarize the key points from my Q4 performance review', label: 'Summarize a document' },
-    { value: 'What are the best practices for React state management in 2026?', label: 'Ask a question' },
+    {
+      value:
+        'Help me write a professional email to my manager about taking PTO next week',
+      label: 'Write an email',
+    },
+    {
+      value: 'Summarize the key points from my Q4 performance review',
+      label: 'Summarize a document',
+    },
+    {
+      value: 'What are the best practices for React state management in 2026?',
+      label: 'Ask a question',
+    },
   ]}
 />
 ```
 
 ### `ChatSuggestion` type
 
-| Property | Type     | Description                                                   |
-| :------- | :------- | :------------------------------------------------------------ |
-| `value`  | `string` | The value to pre-fill into the composer when clicked.         |
-| `label`  | `string` | Optional display label. Falls back to `value` if omitted.     |
+| Property | Type     | Description                                               |
+| :------- | :------- | :-------------------------------------------------------- |
+| `value`  | `string` | The value to pre-fill into the composer when clicked.     |
+| `label`  | `string` | Optional display label. Falls back to `value` if omitted. |
 
 You can mix strings and objects in the same array.
 Strings are internally normalized to `{ value: string }`.
@@ -96,12 +106,7 @@ function App() {
     'View recent activity',
   ]);
 
-  return (
-    <ChatBox
-      adapter={adapter}
-      suggestions={suggestions}
-    />
-  );
+  return <ChatBox adapter={adapter} suggestions={suggestions} />;
 }
 ```
 
@@ -114,10 +119,7 @@ When building a custom layout, use `ChatSuggestions` directly inside a `ChatRoot
 ```tsx
 import { ChatSuggestions } from '@mui/x-chat';
 
-<ChatSuggestions
-  suggestions={['Option A', 'Option B']}
-  autoSubmit={false}
-/>
+<ChatSuggestions suggestions={['Option A', 'Option B']} autoSubmit={false} />;
 ```
 
 The component renders a `role="group"` container with `aria-label` derived from the locale text system.
@@ -125,10 +127,10 @@ Each suggestion renders as a `<button>` element.
 
 ### Slots
 
-| Slot   | Default    | Description                      |
-| :----- | :--------- | :------------------------------- |
-| `root` | `'div'`    | The container element            |
-| `item` | `'button'` | Each individual suggestion chip  |
+| Slot   | Default    | Description                     |
+| :----- | :--------- | :------------------------------ |
+| `root` | `'div'`    | The container element           |
+| `item` | `'button'` | Each individual suggestion chip |
 
 ## API
 

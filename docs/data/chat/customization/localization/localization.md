@@ -57,7 +57,7 @@ import { Chat } from '@mui/x-chat/unstyled';
   }}
 >
   {/* ... */}
-</Chat.Root>
+</Chat.Root>;
 ```
 
 ## The `useChatLocaleText()` hook
@@ -80,48 +80,48 @@ This is useful when building custom slot components that need to access localize
 
 ### Static string keys
 
-| Key                                    | Default value              | Description                         |
-| :------------------------------------- | :------------------------- | :---------------------------------- |
-| `composerInputPlaceholder`             | `"Type a message"`         | Composer textarea placeholder       |
-| `composerInputAriaLabel`               | `"Message"`                | Composer textarea aria-label        |
-| `composerSendButtonLabel`              | `"Send message"`           | Send button aria-label              |
-| `composerAttachButtonLabel`            | `"Add attachment"`         | Attach button aria-label            |
-| `messageCopyButtonLabel`               | `"Copy"`                   | Copy message button label           |
-| `messageCopyCodeButtonLabel`           | `"Copy code"`              | Copy code block button label        |
-| `messageCopiedCodeButtonLabel`         | `"Copied"`                 | Copied confirmation label           |
-| `messageEditedLabel`                   | `"Edited"`                 | Edited message indicator            |
-| `messageDeletedLabel`                  | `"Deleted"`                | Deleted message indicator           |
-| `messageReasoningLabel`                | `"Reasoning"`              | Reasoning part label                |
-| `messageReasoningStreamingLabel`       | `"Thinking..."`            | Reasoning part streaming label      |
-| `messageToolInputLabel`                | `"Input"`                  | Tool input label                    |
-| `messageToolOutputLabel`               | `"Output"`                 | Tool output label                   |
-| `messageToolApproveButtonLabel`        | `"Approve"`                | Tool approval button                |
-| `messageToolDenyButtonLabel`           | `"Deny"`                   | Tool denial button                  |
-| `conversationListNoConversationsLabel` | `"No conversations"`       | Empty conversation list             |
-| `conversationListSearchPlaceholder`    | `"Search conversations"`   | Conversation search placeholder     |
-| `unreadMarkerLabel`                    | `"New messages"`           | Unread messages marker              |
-| `retryButtonLabel`                     | `"Retry"`                  | Retry button label                  |
-| `reconnectButtonLabel`                 | `"Reconnect"`              | Reconnect button label              |
-| `scrollToBottomLabel`                  | `"Scroll to bottom"`       | Scroll-to-bottom affordance label   |
-| `threadNoMessagesLabel`                | `"No messages yet"`        | Empty thread state                  |
-| `genericErrorLabel`                    | `"Something went wrong"`   | Generic error message               |
-| `loadingLabel`                         | `"Loading..."`             | Loading state label                 |
-| `suggestionsLabel`                     | `"Suggested prompts"`      | Suggestions section label           |
-| `messageListLabel`                     | `"Message log"`            | Message list aria-label             |
-| `messageLabel`                         | `"Message"`                | Individual message aria-label       |
+| Key                                    | Default value            | Description                       |
+| :------------------------------------- | :----------------------- | :-------------------------------- |
+| `composerInputPlaceholder`             | `"Type a message"`       | Composer textarea placeholder     |
+| `composerInputAriaLabel`               | `"Message"`              | Composer textarea aria-label      |
+| `composerSendButtonLabel`              | `"Send message"`         | Send button aria-label            |
+| `composerAttachButtonLabel`            | `"Add attachment"`       | Attach button aria-label          |
+| `messageCopyButtonLabel`               | `"Copy"`                 | Copy message button label         |
+| `messageCopyCodeButtonLabel`           | `"Copy code"`            | Copy code block button label      |
+| `messageCopiedCodeButtonLabel`         | `"Copied"`               | Copied confirmation label         |
+| `messageEditedLabel`                   | `"Edited"`               | Edited message indicator          |
+| `messageDeletedLabel`                  | `"Deleted"`              | Deleted message indicator         |
+| `messageReasoningLabel`                | `"Reasoning"`            | Reasoning part label              |
+| `messageReasoningStreamingLabel`       | `"Thinking..."`          | Reasoning part streaming label    |
+| `messageToolInputLabel`                | `"Input"`                | Tool input label                  |
+| `messageToolOutputLabel`               | `"Output"`               | Tool output label                 |
+| `messageToolApproveButtonLabel`        | `"Approve"`              | Tool approval button              |
+| `messageToolDenyButtonLabel`           | `"Deny"`                 | Tool denial button                |
+| `conversationListNoConversationsLabel` | `"No conversations"`     | Empty conversation list           |
+| `conversationListSearchPlaceholder`    | `"Search conversations"` | Conversation search placeholder   |
+| `unreadMarkerLabel`                    | `"New messages"`         | Unread messages marker            |
+| `retryButtonLabel`                     | `"Retry"`                | Retry button label                |
+| `reconnectButtonLabel`                 | `"Reconnect"`            | Reconnect button label            |
+| `scrollToBottomLabel`                  | `"Scroll to bottom"`     | Scroll-to-bottom affordance label |
+| `threadNoMessagesLabel`                | `"No messages yet"`      | Empty thread state                |
+| `genericErrorLabel`                    | `"Something went wrong"` | Generic error message             |
+| `loadingLabel`                         | `"Loading..."`           | Loading state label               |
+| `suggestionsLabel`                     | `"Suggested prompts"`    | Suggestions section label         |
+| `messageListLabel`                     | `"Message log"`          | Message list aria-label           |
+| `messageLabel`                         | `"Message"`              | Individual message aria-label     |
 
 ### Function keys
 
 These keys accept parameters and return formatted strings:
 
-| Key                            | Signature                                      | Default behavior                                        |
-| :----------------------------- | :--------------------------------------------- | :------------------------------------------------------ |
-| `messageStatusLabel`           | `(status: ChatMessageStatus) => string`        | Maps status to human-readable label                     |
-| `toolStateLabel`               | `(state: ChatToolInvocationState) => string`   | Maps tool state to label (e.g., "Running...", "Failed") |
-| `messageTimestampLabel`        | `(dateTime: string) => string`                 | Formats to `HH:MM` using `toLocaleTimeString`          |
-| `conversationTimestampLabel`   | `(dateTime: string) => string`                 | Time for today, `MMM DD` for older dates                |
-| `typingIndicatorLabel`         | `(users: ChatLocaleTypingUser[]) => string`    | `"Alice is typing"` or `"Alice, Bob are typing"`        |
-| `scrollToBottomWithCountLabel` | `(unseenCount: number) => string`              | `"Scroll to bottom, N new messages"`                    |
+| Key                            | Signature                                    | Default behavior                                        |
+| :----------------------------- | :------------------------------------------- | :------------------------------------------------------ |
+| `messageStatusLabel`           | `(status: ChatMessageStatus) => string`      | Maps status to human-readable label                     |
+| `toolStateLabel`               | `(state: ChatToolInvocationState) => string` | Maps tool state to label (e.g., "Running...", "Failed") |
+| `messageTimestampLabel`        | `(dateTime: string) => string`               | Formats to `HH:MM` using `toLocaleTimeString`           |
+| `conversationTimestampLabel`   | `(dateTime: string) => string`               | Time for today, `MMM DD` for older dates                |
+| `typingIndicatorLabel`         | `(users: ChatLocaleTypingUser[]) => string`  | `"Alice is typing"` or `"Alice, Bob are typing"`        |
+| `scrollToBottomWithCountLabel` | `(unseenCount: number) => string`            | `"Scroll to bottom, N new messages"`                    |
 
 ### Message status labels
 
@@ -140,15 +140,15 @@ The `messageStatusLabel` function maps from `ChatMessageStatus`:
 
 The `toolStateLabel` function maps from `ChatToolInvocationState`:
 
-| State                | Default label          |
-| :------------------- | :--------------------- |
-| `input-streaming`    | `"Running..."`         |
-| `input-available`    | `"Running..."`         |
-| `approval-requested` | `"Awaiting approval"`  |
-| `approval-responded` | `"Running..."`         |
-| `output-available`   | `"Completed"`          |
-| `output-error`       | `"Failed"`             |
-| `output-denied`      | `"Denied"`             |
+| State                | Default label         |
+| :------------------- | :-------------------- |
+| `input-streaming`    | `"Running..."`        |
+| `input-available`    | `"Running..."`        |
+| `approval-requested` | `"Awaiting approval"` |
+| `approval-responded` | `"Running..."`        |
+| `output-available`   | `"Completed"`         |
+| `output-error`       | `"Failed"`            |
+| `output-denied`      | `"Denied"`            |
 
 ## Full locale override example
 

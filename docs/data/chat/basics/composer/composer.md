@@ -96,8 +96,10 @@ A helper text line appears below the composer.
 Use it for legal disclaimers, character counts, or contextual hints.
 
 ```tsx
-{/* Hide the helper text */}
-<ChatBox adapter={adapter} features={{ helperText: false }} />
+{
+  /* Hide the helper text */
+}
+<ChatBox adapter={adapter} features={{ helperText: false }} />;
 ```
 
 ## Controlled composer value

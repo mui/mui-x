@@ -32,10 +32,10 @@ interface ChatConversation {
 }
 ```
 
-| Field         | Type                     | Description                                          |
-| :------------ | :----------------------- | :--------------------------------------------------- |
-| `unreadCount` | `number \| undefined`    | Number of unread messages in the conversation        |
-| `readState`   | `'read' \| 'unread'`    | Whether the conversation has been read by the user   |
+| Field         | Type                  | Description                                        |
+| :------------ | :-------------------- | :------------------------------------------------- |
+| `unreadCount` | `number \| undefined` | Number of unread messages in the conversation      |
+| `readState`   | `'read' \| 'unread'`  | Whether the conversation has been read by the user |
 
 These fields are set when conversations are loaded through `listConversations()` and updated in real time through `read` events from the `subscribe()` method.
 
@@ -49,7 +49,7 @@ The item's `ownerState` includes an `unread` boolean derived from the conversati
 // Item ownerState
 {
   selected: boolean;
-  unread: boolean;    // true when readState === 'unread' or unreadCount > 0
+  unread: boolean; // true when readState === 'unread' or unreadCount > 0
   focused: boolean;
   conversation: ChatConversation;
 }
@@ -110,11 +110,11 @@ onEvent({
 
 The runtime processes `read` events and updates the `readState` and `unreadCount` fields on the matching `ChatConversation` in the store.
 
-| Event field      | Type                  | Description                                |
-| :--------------- | :-------------------- | :----------------------------------------- |
-| `conversationId` | `string`              | The conversation being marked as read      |
-| `messageId`      | `string \| undefined` | Mark all messages up to this one           |
-| `userId`         | `string \| undefined` | The user who read the conversation         |
+| Event field      | Type                  | Description                           |
+| :--------------- | :-------------------- | :------------------------------------ |
+| `conversationId` | `string`              | The conversation being marked as read |
+| `messageId`      | `string \| undefined` | Mark all messages up to this one      |
+| `userId`         | `string \| undefined` | The user who read the conversation    |
 
 ## Providing initial conversations with read state
 

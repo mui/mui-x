@@ -8,7 +8,11 @@ import type {
   ChatMessageChunk,
   ChatPartRendererMap,
 } from '@mui/x-chat/headless';
-import { createChunkStream, randomId, splitText } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createChunkStream,
+  randomId,
+  splitText,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
 
 // --- Task types --------------------------------------------------------------
 
@@ -90,7 +94,12 @@ function TaskStatusIcon({ status }: { status: TaskStatus }) {
     skipped: (
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M4 7h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path
+          d="M4 7h6"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
       </svg>
     ),
   };
@@ -195,8 +204,7 @@ function TaskList({ tasks }: TaskListProps) {
             width: 16,
             height: 16,
             borderRadius: 2,
-            backgroundColor:
-              'var(--mui-palette-action-selected, rgba(0,0,0,0.08))',
+            backgroundColor: 'var(--mui-palette-action-selected, rgba(0,0,0,0.08))',
             fontSize: '0.6rem',
             flexShrink: 0,
             color: 'var(--mui-palette-text-secondary, rgba(0,0,0,0.6))',
@@ -272,7 +280,10 @@ const STEP_DELAY_MS = 900;
 
 // --- Chunk helpers -----------------------------------------------------------
 
-function createResponseChunks(messageId: string, toolCallId: string): ChatMessageChunk[] {
+function createResponseChunks(
+  messageId: string,
+  toolCallId: string,
+): ChatMessageChunk[] {
   const chunks: ChatMessageChunk[] = [];
   const textId = `${messageId}-text`;
   const text =
@@ -333,9 +344,11 @@ export default function PlanTask() {
         setTasks(
           PLAN_STEPS.map((step, i) => ({
             ...step,
-            status: (
-              i < index ? 'done' : i === index ? 'running' : 'pending'
-            ) as TaskStatus,
+            status: (i < index
+              ? 'done'
+              : i === index
+                ? 'running'
+                : 'pending') as TaskStatus,
           })),
         );
       }, STEP_DELAY_MS * index);

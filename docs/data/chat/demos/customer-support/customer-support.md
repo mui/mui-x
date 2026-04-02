@@ -31,7 +31,7 @@ Set `variant="compact"` on `ChatBox` to switch the entire surface to a messenger
 | Default                                  | Compact                                         |
 | :--------------------------------------- | :---------------------------------------------- |
 | Colored message bubbles                  | Plain text, no background                       |
-| User messages right-aligned              | All messages left-aligned                        |
+| User messages right-aligned              | All messages left-aligned                       |
 | Timestamp below each message             | Timestamp in the group header, next to author   |
 | Conversation list shows avatar + preview | Conversation list shows compact title + actions |
 

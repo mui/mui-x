@@ -23,33 +23,33 @@ import type { ChatMessage } from '@mui/x-chat/headless';
 
 A `ChatMessage` has the following shape:
 
-| Field            | Type                  | Description                                                                 |
-| :--------------- | :-------------------- | :-------------------------------------------------------------------------- |
-| `id`             | `string`              | Unique identifier for the message                                           |
-| `role`           | `ChatRole`            | `'user'`, `'assistant'`, or `'system'`                                      |
-| `parts`          | `ChatMessagePart[]`   | Content parts that make up the message body (text, files, tools, etc.)      |
+| Field            | Type                  | Description                                                                                        |
+| :--------------- | :-------------------- | :------------------------------------------------------------------------------------------------- |
+| `id`             | `string`              | Unique identifier for the message                                                                  |
+| `role`           | `ChatRole`            | `'user'`, `'assistant'`, or `'system'`                                                             |
+| `parts`          | `ChatMessagePart[]`   | Content parts that make up the message body (text, files, tools, etc.)                             |
 | `status`         | `ChatMessageStatus`   | Delivery lifecycle: `'pending'`, `'sending'`, `'streaming'`, `'sent'`, `'error'`, or `'cancelled'` |
-| `author`         | `ChatUser`            | The user who sent the message (display name, avatar, role)                  |
-| `createdAt`      | `string`              | ISO 8601 timestamp when the message was created                             |
-| `updatedAt`      | `string`              | ISO 8601 timestamp when the message was last updated                        |
-| `editedAt`       | `string`              | ISO 8601 timestamp if the message was edited                                |
-| `conversationId` | `string`              | The conversation this message belongs to                                    |
-| `metadata`       | `ChatMessageMetadata` | Extensible metadata object for custom data                                  |
+| `author`         | `ChatUser`            | The user who sent the message (display name, avatar, role)                                         |
+| `createdAt`      | `string`              | ISO 8601 timestamp when the message was created                                                    |
+| `updatedAt`      | `string`              | ISO 8601 timestamp when the message was last updated                                               |
+| `editedAt`       | `string`              | ISO 8601 timestamp if the message was edited                                                       |
+| `conversationId` | `string`              | The conversation this message belongs to                                                           |
+| `metadata`       | `ChatMessageMetadata` | Extensible metadata object for custom data                                                         |
 
 ### Message parts
 
 The `parts` array is the core content model.
 Each part has a `type` discriminant that determines how it renders:
 
-| Part type           | Description                              |
-| :------------------ | :--------------------------------------- |
-| `text`              | Plain or markdown text content           |
-| `reasoning`         | Model reasoning / chain-of-thought text  |
-| `file`              | An attached file (image, document, etc.) |
-| `source-url`        | A URL citation                           |
-| `source-document`   | A document citation                      |
-| `tool`              | A tool call invocation and its result    |
-| `step-start`        | A visual separator between agentic steps |
+| Part type         | Description                              |
+| :---------------- | :--------------------------------------- |
+| `text`            | Plain or markdown text content           |
+| `reasoning`       | Model reasoning / chain-of-thought text  |
+| `file`            | An attached file (image, document, etc.) |
+| `source-url`      | A URL citation                           |
+| `source-document` | A document citation                      |
+| `tool`            | A tool call invocation and its result    |
+| `step-start`      | A visual separator between agentic steps |
 
 This part-based model means a single message can contain mixed content — for example, a text explanation followed by a code block and a source citation.
 

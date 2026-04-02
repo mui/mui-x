@@ -84,11 +84,11 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 
 The `density` prop controls the vertical spacing between messages. Three values are available:
 
-| Value         | Description                          |
-| :------------ | :----------------------------------- |
-| `compact`     | Tight spacing, minimal gaps          |
-| `standard`    | Default spacing                      |
-| `comfortable` | Generous spacing, more breathing room|
+| Value         | Description                           |
+| :------------ | :------------------------------------ |
+| `compact`     | Tight spacing, minimal gaps           |
+| `standard`    | Default spacing                       |
+| `comfortable` | Generous spacing, more breathing room |
 
 {{"demo": "../../material/message-list/DensityProp.js", "defaultCodeOpen": false, "bg": "inline"}}
 

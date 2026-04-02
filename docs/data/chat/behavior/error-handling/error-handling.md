@@ -32,22 +32,22 @@ interface ChatError {
 
 ### Error codes
 
-| Code              | Description                                        |
-| :---------------- | :------------------------------------------------- |
-| `SEND_ERROR`      | The adapter's `sendMessage()` threw an error.      |
-| `STREAM_ERROR`    | The stream failed or disconnected unexpectedly.    |
-| `HISTORY_ERROR`   | Loading message history failed.                    |
-| `REALTIME_ERROR`  | The realtime subscription encountered an error.    |
+| Code             | Description                                     |
+| :--------------- | :---------------------------------------------- |
+| `SEND_ERROR`     | The adapter's `sendMessage()` threw an error.   |
+| `STREAM_ERROR`   | The stream failed or disconnected unexpectedly. |
+| `HISTORY_ERROR`  | Loading message history failed.                 |
+| `REALTIME_ERROR` | The realtime subscription encountered an error. |
 
 ### Error sources
 
-| Source      | Description                              |
-| :---------- | :--------------------------------------- |
-| `'send'`    | Error during message send.               |
-| `'stream'`  | Error during stream processing.          |
-| `'history'` | Error during history loading.            |
-| `'render'`  | Error during component rendering.        |
-| `'adapter'` | Generic adapter error.                   |
+| Source      | Description                       |
+| :---------- | :-------------------------------- |
+| `'send'`    | Error during message send.        |
+| `'stream'`  | Error during stream processing.   |
+| `'history'` | Error during history loading.     |
+| `'render'`  | Error during component rendering. |
+| `'adapter'` | Generic adapter error.            |
 
 ### `recoverable` vs `retryable`
 
@@ -113,11 +113,7 @@ import { useChat } from '@mui/x-chat/headless';
 function RetryButton({ messageId }: { messageId: string }) {
   const { retry } = useChat();
 
-  return (
-    <button onClick={() => retry(messageId)}>
-      Retry
-    </button>
-  );
+  return <button onClick={() => retry(messageId)}>Retry</button>;
 }
 ```
 
@@ -160,13 +156,13 @@ See [Streaming -- Reconnecting to streams](/x/react-chat/behavior/streaming/#rec
 
 The message `status` field reflects error states:
 
-| Status        | Description                                       |
-| :------------ | :------------------------------------------------ |
-| `'sending'`   | Message is being sent (optimistic update).        |
-| `'streaming'` | Assistant response is streaming.                  |
-| `'sent'`      | Message was sent and response completed.          |
-| `'error'`     | An error occurred during send or streaming.       |
-| `'cancelled'` | The stream was aborted by the user.               |
+| Status        | Description                                 |
+| :------------ | :------------------------------------------ |
+| `'sending'`   | Message is being sent (optimistic update).  |
+| `'streaming'` | Assistant response is streaming.            |
+| `'sent'`      | Message was sent and response completed.    |
+| `'error'`     | An error occurred during send or streaming. |
+| `'cancelled'` | The stream was aborted by the user.         |
 
 Components can use the `status` field to conditionally render error indicators:
 

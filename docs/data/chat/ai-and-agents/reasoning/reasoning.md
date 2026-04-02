@@ -30,11 +30,11 @@ interface ChatReasoningMessagePart {
 }
 ```
 
-| Field   | Type                         | Description                                    |
-| :------ | :--------------------------- | :--------------------------------------------- |
-| `type`  | `'reasoning'`                | Identifies this as a reasoning part            |
-| `text`  | `string`                     | The accumulated reasoning text                 |
-| `state` | `'streaming' \| 'done'`     | Whether the reasoning is still being streamed  |
+| Field   | Type                    | Description                                   |
+| :------ | :---------------------- | :-------------------------------------------- |
+| `type`  | `'reasoning'`           | Identifies this as a reasoning part           |
+| `text`  | `string`                | The accumulated reasoning text                |
+| `state` | `'streaming' \| 'done'` | Whether the reasoning is still being streamed |
 
 The `state` field transitions from `'streaming'` while deltas are arriving to `'done'` once the reasoning section is complete.
 
@@ -42,11 +42,11 @@ The `state` field transitions from `'streaming'` while deltas are arriving to `'
 
 Reasoning content is streamed using a triplet of chunks, following the same pattern as text chunks:
 
-| Chunk type         | Fields        | Description                 |
-| :----------------- | :------------ | :-------------------------- |
-| `reasoning-start`  | `id`          | Begin a reasoning part      |
-| `reasoning-delta`  | `id`, `delta` | Append reasoning content    |
-| `reasoning-end`    | `id`          | Finalize the reasoning part |
+| Chunk type        | Fields        | Description                 |
+| :---------------- | :------------ | :-------------------------- |
+| `reasoning-start` | `id`          | Begin a reasoning part      |
+| `reasoning-delta` | `id`, `delta` | Append reasoning content    |
+| `reasoning-end`   | `id`          | Finalize the reasoning part |
 
 ### How chunks become parts
 
@@ -109,10 +109,7 @@ import Typography from '@mui/material/Typography';
 
 const renderers: ChatPartRendererMap = {
   reasoning: ({ part }) => (
-    <Accordion
-      defaultExpanded={false}
-      sx={{ my: 1, bgcolor: 'action.hover' }}
-    >
+    <Accordion defaultExpanded={false} sx={{ my: 1, bgcolor: 'action.hover' }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="caption" color="text.secondary">
           {part.state === 'streaming' ? 'Thinking...' : 'Reasoning'}

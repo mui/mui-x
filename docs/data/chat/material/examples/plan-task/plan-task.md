@@ -36,7 +36,7 @@ const partRenderers: ChatPartRendererMap = {
   },
 };
 
-<ChatBox adapter={adapter} partRenderers={partRenderers} /* … */ />
+<ChatBox adapter={adapter} partRenderers={partRenderers} /* … */ />;
 ```
 
 ## Animating steps from outside the renderer
@@ -51,9 +51,9 @@ const [tasks, setTasks] = React.useState(initialTasks);
 const partRenderers = React.useMemo(
   () => ({
     'dynamic-tool': ({ part }) =>
-      part.toolInvocation.toolName === 'run_tasks'
-        ? <MyTaskList tasks={tasks} />
-        : null,
+      part.toolInvocation.toolName === 'run_tasks' ? (
+        <MyTaskList tasks={tasks} />
+      ) : null,
   }),
   [tasks],
 );
