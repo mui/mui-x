@@ -70,7 +70,7 @@ When used inside a picker, the `separator` slot is not available directly and mu
 
 You can import the `PickersTextField` component to create custom wrappers:
 
-{{"demo": "MaterialV7FieldWrapped.js"}}
+{{"demo": "MaterialFieldWrapped.js"}}
 
 :::success
 This approach is only recommended if you need complex customizations on your `PickersTextField`.
