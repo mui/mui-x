@@ -34,7 +34,9 @@ const seriesHorizontal = [
 
 export default function BarLabelPlacement() {
   return (
-    <div style={{ width: '100%', display: 'grid', gap: 2, gridTemplateColumns: 'auto repeat(2, 1fr)' }}>
+    <div
+      style={{ width: '100%', display: 'grid', gap: 2, gridTemplateColumns: 'auto repeat(2, 1fr)' }}
+    >
       <div />
       <Typography sx={{ justifySelf: 'center' }}>Layout: Vertical</Typography>
       <Typography sx={{ justifySelf: 'center' }}>Layout: Horizontal</Typography>

@@ -142,7 +142,7 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   edge?: 'start' | 'end' | false;
 };
 
-export type ToggleButtonProps = CommonProps & {
+export type ToggleButtonProps = Omit<CommonProps, 'onChange'> & {
   selected?: boolean;
   value: string;
 };

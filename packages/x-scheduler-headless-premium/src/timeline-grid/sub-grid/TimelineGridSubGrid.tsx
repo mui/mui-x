@@ -15,6 +15,7 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     children: childrenProp,
     // Props forwarded to the DOM element
@@ -41,11 +42,9 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
     return childrenProp;
   }, [childrenProp, resources]);
 
-  const props = { role: 'rowgroup', children };
-
   return useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [props, elementProps],
+    props: [elementProps, { role: 'rowgroup', children }],
   });
 });
 
