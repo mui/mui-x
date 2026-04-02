@@ -1,8 +1,4 @@
-import {
-  createPickerRenderer,
-  expectFieldValueV7,
-  buildFieldInteractions,
-} from 'test/utils/pickers';
+import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
 import { DesktopTimePicker, DesktopTimePickerProps } from '@mui/x-date-pickers/DesktopTimePicker';
 
 describe('<DesktopTimePicker /> - Field', () => {
@@ -15,16 +11,16 @@ describe('<DesktopTimePicker /> - Field', () => {
   it('should pass the ampm prop to the field', () => {
     const view = renderWithProps({ ampm: true }, { componentFamily: 'picker' });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'hh:mm aa');
+    expectFieldValue(view.getSectionsContainer(), 'hh:mm aa');
 
     view.setProps({ ampm: false });
-    expectFieldValueV7(view.getSectionsContainer(), 'hh:mm');
+    expectFieldValue(view.getSectionsContainer(), 'hh:mm');
   });
 
   it('should adapt the default field format based on the props of the picker', () => {
     const testFormat = (props: DesktopTimePickerProps, expectedFormat: string) => {
       const view = renderWithProps({ ...props }, { componentFamily: 'picker' });
-      expectFieldValueV7(view.getSectionsContainer(), expectedFormat);
+      expectFieldValue(view.getSectionsContainer(), expectedFormat);
       view.unmount();
     };
 

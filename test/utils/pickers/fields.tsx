@@ -6,7 +6,7 @@ import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionLis
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 import { fireUserEvent } from '../fireUserEvent';
-import { expectFieldValueV7 } from './assertions';
+import { expectFieldValue } from './assertions';
 
 interface BuildFieldInteractionsParams<P extends {}> {
   render: ReturnType<typeof createRenderer>['render'];
@@ -257,7 +257,7 @@ export const buildFieldInteractions = <P extends {}>({
     } as any);
     response.selectSection(selectedSection);
     response.pressKey(undefined, key);
-    expectFieldValueV7(response.getSectionsContainer(), expectedValue);
+    expectFieldValue(response.getSectionsContainer(), expectedValue);
     response.unmount();
   };
 
@@ -272,7 +272,7 @@ export const buildFieldInteractions = <P extends {}>({
     response.selectSection(selectedSection);
     keyStrokes.forEach((keyStroke) => {
       response.pressKey(undefined, keyStroke.value);
-      expectFieldValueV7(
+      expectFieldValue(
         response.getSectionsContainer(),
         keyStroke.expected,
         (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,

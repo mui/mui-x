@@ -4,7 +4,7 @@ import { fireEvent } from '@mui/internal-test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
   describeAdapters,
   buildFieldInteractions,
 } from 'test/utils/pickers';
@@ -51,7 +51,7 @@ describe('<DateTimeField /> - Timezone', () => {
         const expectedDate = fillEmptyValue(view, 'default');
 
         // Check the rendered value (uses default timezone, for example: UTC, see TZ env variable)
-        expectFieldValueV7(view.getSectionsContainer(), '12/31/2022 23');
+        expectFieldValue(view.getSectionsContainer(), '12/31/2022 23');
 
         // Check the `onChange` value (uses default timezone, for example: UTC, see TZ env variable)
         const actualDate = onChange.lastCall.firstArg;
@@ -76,7 +76,7 @@ describe('<DateTimeField /> - Timezone', () => {
             const expectedDate = fillEmptyValue(view, timezone);
 
             // Check the rendered value (uses timezone prop)
-            expectFieldValueV7(view.getSectionsContainer(), '12/31/2022 23');
+            expectFieldValue(view.getSectionsContainer(), '12/31/2022 23');
 
             // Check the `onChange` value (uses timezone prop)
             const actualDate = onChange.lastCall.firstArg;
@@ -97,7 +97,7 @@ describe('<DateTimeField /> - Timezone', () => {
             fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
             // Check the rendered value (uses America/Chicago timezone)
-            expectFieldValueV7(view.getSectionsContainer(), '05/14/2022 19');
+            expectFieldValue(view.getSectionsContainer(), '05/14/2022 19');
 
             // Check the `onChange` value (uses timezone prop)
             const expectedDate = adapter.addMonths(adapter.date(undefined, timezone), -1);
@@ -125,11 +125,11 @@ describe('<DateTimeField /> - Timezone', () => {
       const date = (adapter.date('2020-06-18T14:30:10.000Z') as DateTime).setZone('UTC');
       view.setProps({ value: date });
 
-      expectFieldValueV7(view.getSectionsContainer(), '06/18/2020 02:30 PM');
+      expectFieldValue(view.getSectionsContainer(), '06/18/2020 02:30 PM');
 
       view.setProps({ value: date.setZone('America/Los_Angeles') });
 
-      expectFieldValueV7(view.getSectionsContainer(), '06/18/2020 07:30 AM');
+      expectFieldValue(view.getSectionsContainer(), '06/18/2020 07:30 AM');
     });
   });
 });

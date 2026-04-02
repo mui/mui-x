@@ -2,7 +2,7 @@ import { screen, fireEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   openPicker,
   describeValue,
   getFieldInputRoot,
@@ -34,7 +34,7 @@ describe('<MobileDateTimePicker /> - Describe Value', () => {
         expectedValueStr = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
       }
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {

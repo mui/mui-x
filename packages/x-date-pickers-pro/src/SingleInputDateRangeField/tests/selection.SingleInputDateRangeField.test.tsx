@@ -5,7 +5,7 @@ import {
   buildFieldInteractions,
   getCleanedSelectedContent,
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
 } from 'test/utils/pickers';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
@@ -21,7 +21,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       const view = renderWithProps({
         autoFocus: true,
       });
-      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY – MM/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY – MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM');
 
       view.unmount();

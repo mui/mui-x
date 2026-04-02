@@ -2,7 +2,7 @@ import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/D
 import {
   createPickerRenderer,
   buildFieldInteractions,
-  expectFieldValueV7,
+  expectFieldValue,
   adapterToUse,
   describeAdapters,
 } from 'test/utils/pickers';
@@ -26,22 +26,22 @@ describe('<DesktopDatePicker /> - Field', () => {
       );
 
       view.selectSection('month');
-      expectFieldValueV7(view.getSectionsContainer(), 'MMMM DD');
+      expectFieldValue(view.getSectionsContainer(), 'MMMM DD');
 
       await view.user.keyboard('N');
-      expectFieldValueV7(view.getSectionsContainer(), 'November DD');
+      expectFieldValue(view.getSectionsContainer(), 'November DD');
 
       await view.user.keyboard('4');
-      expectFieldValueV7(view.getSectionsContainer(), 'November 04');
+      expectFieldValue(view.getSectionsContainer(), 'November 04');
 
       await view.user.keyboard('[Backspace]');
-      expectFieldValueV7(view.getSectionsContainer(), 'November DD');
+      expectFieldValue(view.getSectionsContainer(), 'November DD');
     });
 
     it('should adapt the default field format based on the props of the picker', () => {
       const testFormat = (props: DesktopDatePickerProps, expectedFormat: string) => {
         const view = renderWithProps({ ...props }, { componentFamily: 'picker' });
-        expectFieldValueV7(view.getSectionsContainer(), expectedFormat);
+        expectFieldValue(view.getSectionsContainer(), expectedFormat);
         view.unmount();
       };
 
@@ -66,11 +66,11 @@ describe('<DesktopDatePicker /> - Field', () => {
         { componentFamily: 'picker' },
       );
 
-      expectFieldValueV7(view.getSectionsContainer(), 'June 2022');
+      expectFieldValue(view.getSectionsContainer(), 'June 2022');
       view.selectSection('month');
 
       view.pressKey(0, '');
-      expectFieldValueV7(view.getSectionsContainer(), 'MMMM 2022');
+      expectFieldValue(view.getSectionsContainer(), 'MMMM 2022');
     });
   });
 });

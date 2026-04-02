@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { fireEvent } from '@mui/internal-test-utils';
-import { expectFieldValueV7, describeAdapters } from 'test/utils/pickers';
+import { expectFieldValue, describeAdapters } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DateField /> - Editing Keyboard', () => {
@@ -216,10 +216,10 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       // Set a value for the "month" section
       view.pressKey(0, 'j');
-      expectFieldValueV7(view.getSectionsContainer(), 'January YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'January YYYY');
 
       fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
-      expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
 
       view.unmount();
     });
@@ -250,7 +250,7 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
 
       fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
-      expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
 
       view.unmount();
     });
@@ -265,7 +265,7 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       // Set a value for the "month" section
       view.pressKey(0, 'j');
-      expectFieldValueV7(view.getSectionsContainer(), 'January YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'January YYYY');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -275,7 +275,7 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
 
       fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
-      expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
 
       view.unmount();
     });
@@ -289,13 +289,13 @@ describe('<DateField /> - Editing Keyboard', () => {
       await view.selectSectionAsync('year');
 
       view.pressKey(0, '2');
-      expectFieldValueV7(view.getSectionsContainer(), '0002');
+      expectFieldValue(view.getSectionsContainer(), '0002');
 
       await view.user.keyboard('[Delete]');
-      expectFieldValueV7(view.getSectionsContainer(), 'YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'YYYY');
 
       view.pressKey(0, '2');
-      expectFieldValueV7(view.getSectionsContainer(), '0002');
+      expectFieldValue(view.getSectionsContainer(), '0002');
 
       view.unmount();
     });

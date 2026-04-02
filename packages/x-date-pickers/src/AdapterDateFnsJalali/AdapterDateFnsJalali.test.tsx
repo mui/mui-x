@@ -2,7 +2,7 @@ import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import {
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
   describeJalaliAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
@@ -69,7 +69,7 @@ describe('<AdapterDateFnsJalali />', () => {
         it('should have correct placeholder', () => {
           const view = renderWithProps({});
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
@@ -77,7 +77,7 @@ describe('<AdapterDateFnsJalali />', () => {
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

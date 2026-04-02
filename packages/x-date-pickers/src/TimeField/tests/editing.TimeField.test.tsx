@@ -1,11 +1,7 @@
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { fireEvent } from '@mui/internal-test-utils';
-import {
-  expectFieldValueV7,
-  getCleanedSelectedContent,
-  describeAdapters,
-} from 'test/utils/pickers';
+import { expectFieldValue, getCleanedSelectedContent, describeAdapters } from 'test/utils/pickers';
 
 describe('<TimeField /> - Editing', () => {
   describeAdapters('key: ArrowDown', TimeField, ({ adapter, testFieldKeyPress }) => {
@@ -501,7 +497,7 @@ describe('<TimeField /> - Editing', () => {
       await view.selectSectionAsync('hours');
 
       view.pressKey(0, '2');
-      expectFieldValueV7(view.getSectionsContainer(), '02:mm aa');
+      expectFieldValue(view.getSectionsContainer(), '02:mm aa');
       expect(getCleanedSelectedContent()).to.equal('mm');
 
       view.unmount();
@@ -516,12 +512,12 @@ describe('<TimeField /> - Editing', () => {
       await view.selectSectionAsync('hours');
 
       view.pressKey(0, '1');
-      expectFieldValueV7(view.getSectionsContainer(), '01:mm aa');
+      expectFieldValue(view.getSectionsContainer(), '01:mm aa');
       expect(getCleanedSelectedContent()).to.equal('01');
 
       // Press "3"
       view.pressKey(0, '3');
-      expectFieldValueV7(view.getSectionsContainer(), '03:mm aa');
+      expectFieldValue(view.getSectionsContainer(), '03:mm aa');
       expect(getCleanedSelectedContent()).to.equal('mm');
 
       view.unmount();
@@ -633,10 +629,10 @@ describe('<TimeField /> - Editing', () => {
         fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowLeft' });
 
         view.pressKey(0, '3');
-        expectFieldValueV7(view.getSectionsContainer(), '03:mm');
+        expectFieldValue(view.getSectionsContainer(), '03:mm');
 
         view.pressKey(1, '4');
-        expectFieldValueV7(view.getSectionsContainer(), '03:04');
+        expectFieldValue(view.getSectionsContainer(), '03:04');
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
 
         view.unmount();

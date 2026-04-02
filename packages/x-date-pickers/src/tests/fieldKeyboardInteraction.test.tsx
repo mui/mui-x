@@ -5,7 +5,7 @@ import {
   buildFieldInteractions,
   getCleanedSelectedContent,
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
 } from 'test/utils/pickers';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { FieldSectionType, MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
@@ -199,7 +199,7 @@ adapterToTest.forEach((adapterName) => {
       view.selectSection(sectionConfig.type);
       fireEvent.keyDown(view.getActiveSection(0), { key });
 
-      expectFieldValueV7(
+      expectFieldValue(
         view.getSectionsContainer(),
         cleanValueStr(adapter.formatByString(expectedValue, format), sectionConfig),
       );

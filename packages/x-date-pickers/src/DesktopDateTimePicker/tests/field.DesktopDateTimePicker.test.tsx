@@ -1,8 +1,4 @@
-import {
-  createPickerRenderer,
-  expectFieldValueV7,
-  buildFieldInteractions,
-} from 'test/utils/pickers';
+import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
 import {
   DesktopDateTimePicker,
   DesktopDateTimePickerProps,
@@ -20,16 +16,16 @@ describe('<DesktopDateTimePicker /> - Field', () => {
       ampm: true,
     });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm aa');
+    expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm aa');
 
     view.setProps({ ampm: false });
-    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm');
+    expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm');
   });
 
   it('should adapt the default field format based on the props of the picker', () => {
     const testFormat = (props: DesktopDateTimePickerProps, expectedFormat: string) => {
       const view = renderWithProps({ ...props }, { componentFamily: 'picker' });
-      expectFieldValueV7(view.getSectionsContainer(), expectedFormat);
+      expectFieldValue(view.getSectionsContainer(), expectedFormat);
       view.unmount();
     };
 

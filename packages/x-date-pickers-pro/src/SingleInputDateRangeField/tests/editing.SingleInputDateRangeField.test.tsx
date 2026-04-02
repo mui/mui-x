@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { fireEvent, waitFor } from '@mui/internal-test-utils';
-import { expectFieldValueV7, describeAdapters } from 'test/utils/pickers';
+import { expectFieldValue, describeAdapters } from 'test/utils/pickers';
 
 describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(
@@ -12,7 +12,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Test with accessible DOM structure
         const view = renderWithProps({});
 
-        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY – MM/DD/YYYY');
+        expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY – MM/DD/YYYY');
 
         view.unmount();
       });
@@ -23,7 +23,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           defaultValue: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
         });
 
-        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
+        expectFieldValue(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
 
         view.unmount();
       });
@@ -35,7 +35,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           defaultValue: [adapter.date('2023-06-04'), adapter.date('2023-06-05')],
         });
 
-        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
+        expectFieldValue(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
 
         view.unmount();
       });
@@ -47,7 +47,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           defaultValue: [adapter.date('2023-06-04'), adapter.date('2023-06-05')],
         });
 
-        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022 – MM/DD/YYYY');
+        expectFieldValue(view.getSectionsContainer(), '06/04/2022 – MM/DD/YYYY');
 
         view.unmount();
       });
@@ -58,12 +58,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           value: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
         });
 
-        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
+        expectFieldValue(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
 
         view.setProps({
           value: [adapter.date('2023-06-04'), adapter.date('2023-06-05')],
         });
-        expectFieldValueV7(view.getSectionsContainer(), '06/04/2023 – 06/05/2023');
+        expectFieldValue(view.getSectionsContainer(), '06/04/2023 – 06/05/2023');
 
         view.unmount();
       });
@@ -74,12 +74,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           value: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
         });
 
-        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
+        expectFieldValue(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
 
         view.setProps({
           value: [null, adapter.date('2022-06-05')],
         });
-        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY – 06/05/2022');
+        expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY – 06/05/2022');
 
         view.unmount();
       });
@@ -90,12 +90,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           value: [null, adapter.date('2022-06-05')],
         });
 
-        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY – 06/05/2022');
+        expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY – 06/05/2022');
 
         view.setProps({
           value: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
         });
-        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
+        expectFieldValue(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
 
         view.unmount();
       });
@@ -111,7 +111,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         await view.selectSectionAsync('year');
 
         view.pressKey(2, 'ArrowUp');
-        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
+        expectFieldValue(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
 
         expect(onChangeV7.callCount).to.equal(1);
         expect(onChangeV7.lastCall.firstArg[0]).toEqualDateTime(new Date(2023, 5, 4));
@@ -131,7 +131,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         await view.selectSectionAsync('year');
 
         view.pressKey(2, 'ArrowUp');
-        expectFieldValueV7(view.getSectionsContainer(), '06/04/2023 – 06/05/2022');
+        expectFieldValue(view.getSectionsContainer(), '06/04/2023 – 06/05/2022');
 
         expect(onChangeV7.callCount).to.equal(1);
         expect(onChangeV7.lastCall.firstArg[0]).toEqualDateTime(new Date(2023, 5, 4));
@@ -153,7 +153,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         view.pressKey(0, '4');
         expect(onChangeV7.callCount).to.equal(0);
-        expectFieldValueV7(view.getSectionsContainer(), '04 MMMM – DD MMMM');
+        expectFieldValue(view.getSectionsContainer(), '04 MMMM – DD MMMM');
 
         view.pressKey(1, 'S');
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
@@ -161,7 +161,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChangeV7.lastCall.firstArg[0]).toEqualDateTime(new Date(2022, 8, 4));
         expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
         await waitFor(() => {
-          expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM – DD MMMM');
+          expectFieldValue(view.getSectionsContainer(), 'DD MMMM – DD MMMM');
         });
 
         view.unmount();
@@ -187,7 +187,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
-      expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
       view.unmount();
     });
@@ -202,7 +202,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       // Set a value for the "month" section
       fireEvent.input(view.getActiveSection(0), { target: { innerHTML: 'j' } });
-      expectFieldValueV7(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -212,7 +212,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
-      expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
       view.unmount();
     });
@@ -327,7 +327,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         view.pressKey(null, '');
-        expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
+        expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
         view.unmount();
       });
@@ -342,7 +342,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         // Set a value for the "month" section
         fireEvent.input(view.getActiveSection(0), { target: { innerHTML: 'j' } });
-        expectFieldValueV7(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
+        expectFieldValue(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
 
         // Select all sections
         fireEvent.keyDown(view.getActiveSection(0), {
@@ -352,7 +352,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         view.pressKey(null, '');
-        expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
+        expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
 
         view.unmount();
       });

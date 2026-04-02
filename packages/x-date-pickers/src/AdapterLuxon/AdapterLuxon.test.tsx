@@ -5,7 +5,7 @@ import { AdapterFormats } from '@mui/x-date-pickers/models';
 import {
   cleanText,
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
   buildFieldInteractions,
@@ -105,7 +105,7 @@ describe('<AdapterLuxon />', () => {
         it('should have correct placeholder', () => {
           const view = renderWithProps({});
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
@@ -113,7 +113,7 @@ describe('<AdapterLuxon />', () => {
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });
@@ -160,7 +160,7 @@ describe('<AdapterLuxon />', () => {
             format: 'DD',
           });
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
@@ -169,7 +169,7 @@ describe('<AdapterLuxon />', () => {
             format: 'DD',
           });
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

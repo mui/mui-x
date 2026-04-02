@@ -1,8 +1,4 @@
-import {
-  createPickerRenderer,
-  buildFieldInteractions,
-  expectFieldValueV7,
-} from 'test/utils/pickers';
+import { createPickerRenderer, buildFieldInteractions, expectFieldValue } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 
 describe('<MobileTimePicker /> - Field', () => {
@@ -15,9 +11,9 @@ describe('<MobileTimePicker /> - Field', () => {
   it('should pass the ampm prop to the field', () => {
     const view = renderWithProps({ ampm: true }, { componentFamily: 'picker' });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'hh:mm aa');
+    expectFieldValue(view.getSectionsContainer(), 'hh:mm aa');
 
     view.setProps({ ampm: false });
-    expectFieldValueV7(view.getSectionsContainer(), 'hh:mm');
+    expectFieldValue(view.getSectionsContainer(), 'hh:mm');
   });
 });

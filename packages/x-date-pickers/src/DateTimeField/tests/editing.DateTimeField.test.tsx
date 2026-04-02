@@ -5,7 +5,7 @@ import {
   adapterToUse,
   buildFieldInteractions,
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
 } from 'test/utils/pickers';
 
 describe('<DateTimeField /> - Editing', () => {
@@ -200,12 +200,12 @@ describe('<DateTimeField /> - Editing', () => {
       value: null,
       format: 'P',
     });
-    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+    expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
 
     view.setProps({
       format: 'Pp',
       value: adapterToUse.date('2012-05-03T14:30:00'),
     });
-    expectFieldValueV7(view.getSectionsContainer(), '05/03/2012, 02:30 PM');
+    expectFieldValue(view.getSectionsContainer(), '05/03/2012, 02:30 PM');
   });
 });

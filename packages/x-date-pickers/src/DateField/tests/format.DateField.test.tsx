@@ -1,4 +1,4 @@
-import { expectFieldValueV7, describeAdapters } from 'test/utils/pickers';
+import { expectFieldValue, describeAdapters } from 'test/utils/pickers';
 import { DateField } from '@mui/x-date-pickers/DateField';
 
 describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
@@ -10,10 +10,10 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
       format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
       value: null,
     });
-    expectFieldValueV7(view.getSectionsContainer(), 'Escaped YYYY');
+    expectFieldValue(view.getSectionsContainer(), 'Escaped YYYY');
 
     view.setProps({ value: adapter.date('2019-01-01') });
-    expectFieldValueV7(view.getSectionsContainer(), 'Escaped 2019');
+    expectFieldValue(view.getSectionsContainer(), 'Escaped 2019');
 
     view.unmount();
   });
@@ -26,10 +26,10 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
       value: null,
     });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'MMMM Escaped YYYY');
+    expectFieldValue(view.getSectionsContainer(), 'MMMM Escaped YYYY');
 
     view.setProps({ value: adapter.date('2019-01-01') });
-    expectFieldValueV7(view.getSectionsContainer(), 'January Escaped 2019');
+    expectFieldValue(view.getSectionsContainer(), 'January Escaped 2019');
 
     view.unmount();
   });
@@ -44,10 +44,10 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
       value: null,
     });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'MMMM Escaped [ YYYY');
+    expectFieldValue(view.getSectionsContainer(), 'MMMM Escaped [ YYYY');
 
     view.setProps({ value: adapter.date('2019-01-01') });
-    expectFieldValueV7(view.getSectionsContainer(), 'January Escaped [ 2019');
+    expectFieldValue(view.getSectionsContainer(), 'January Escaped [ 2019');
 
     view.unmount();
   });
@@ -60,10 +60,10 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
       value: null,
     });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'Escaped MMMM Escaped YYYY');
+    expectFieldValue(view.getSectionsContainer(), 'Escaped MMMM Escaped YYYY');
 
     view.setProps({ value: adapter.date('2019-01-01') });
-    expectFieldValueV7(view.getSectionsContainer(), 'Escaped January Escaped 2019');
+    expectFieldValue(view.getSectionsContainer(), 'Escaped January Escaped 2019');
 
     view.unmount();
   });
@@ -76,7 +76,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
       value: null,
     });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'Escaped Escaped');
+    expectFieldValue(view.getSectionsContainer(), 'Escaped Escaped');
 
     view.unmount();
   });
@@ -86,7 +86,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
       format: `${adapter.formats.dayOfMonth}${adapter.formats.monthShort}`,
     });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'DDMMMM');
+    expectFieldValue(view.getSectionsContainer(), 'DDMMMM');
   });
 
   it('should add spaces around `/` when `formatDensity = "spacious"`', () => {
@@ -96,10 +96,10 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
       value: null,
     });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'MM / DD / YYYY');
+    expectFieldValue(view.getSectionsContainer(), 'MM / DD / YYYY');
 
     view.setProps({ value: adapter.date('2019-01-01') });
-    expectFieldValueV7(view.getSectionsContainer(), '01 / 01 / 2019');
+    expectFieldValue(view.getSectionsContainer(), '01 / 01 / 2019');
 
     view.unmount();
   });
@@ -112,10 +112,10 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
       value: null,
     });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'MM . DD . YYYY');
+    expectFieldValue(view.getSectionsContainer(), 'MM . DD . YYYY');
 
     view.setProps({ value: adapter.date('2019-01-01') });
-    expectFieldValueV7(view.getSectionsContainer(), '01 . 01 . 2019');
+    expectFieldValue(view.getSectionsContainer(), '01 . 01 . 2019');
 
     view.unmount();
   });
@@ -128,10 +128,10 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
       value: null,
     });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'MM - DD - YYYY');
+    expectFieldValue(view.getSectionsContainer(), 'MM - DD - YYYY');
 
     view.setProps({ value: adapter.date('2019-01-01') });
-    expectFieldValueV7(view.getSectionsContainer(), '01 - 01 - 2019');
+    expectFieldValue(view.getSectionsContainer(), '01 - 01 - 2019');
 
     view.unmount();
   });

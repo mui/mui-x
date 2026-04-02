@@ -1,11 +1,7 @@
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
-import {
-  expectFieldValueV7,
-  describeAdapters,
-  getCleanedSelectedContent,
-} from 'test/utils/pickers';
+import { expectFieldValue, describeAdapters, getCleanedSelectedContent } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DateField /> - Editing', () => {
@@ -24,7 +20,7 @@ describe('<DateField /> - Editing', () => {
         await view.selectSectionAsync('year');
 
         view.pressKey(2, 'ArrowUp');
-        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+        expectFieldValue(view.getSectionsContainer(), '06/04/2022');
 
         expect(onChangeV7.callCount).to.equal(1);
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
@@ -43,7 +39,7 @@ describe('<DateField /> - Editing', () => {
         await view.selectSectionAsync('year');
 
         view.pressKey(2, 'ArrowUp');
-        expectFieldValueV7(view.getSectionsContainer(), '06/04/2023');
+        expectFieldValue(view.getSectionsContainer(), '06/04/2023');
 
         expect(onChangeV7.callCount).to.equal(1);
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
@@ -64,14 +60,14 @@ describe('<DateField /> - Editing', () => {
 
         view.pressKey(0, '4');
         expect(onChangeV7.callCount).to.equal(0);
-        expectFieldValueV7(view.getSectionsContainer(), '04 MMMM');
+        expectFieldValue(view.getSectionsContainer(), '04 MMMM');
 
         view.pressKey(1, 'S');
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
         expect(onChangeV7.callCount).to.equal(1);
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
         await waitFor(() => {
-          expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM');
+          expectFieldValue(view.getSectionsContainer(), 'DD MMMM');
         });
 
         view.unmount();
@@ -104,13 +100,13 @@ describe('<DateField /> - Editing', () => {
 
       keys.forEach((key) => {
         view.pressKey(0, key);
-        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+        expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
         expect(onChangeV7.callCount).to.equal(0);
       });
 
       // digit key press
       fireUserEvent.keyPress(view.getActiveSection(0), { key: '2' });
-      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       view.unmount();
     });
@@ -282,25 +278,25 @@ describe('<DateField /> - Editing', () => {
       await view.selectSectionAsync('month');
 
       await view.user.keyboard('2');
-      expectFieldValueV7(view.getSectionsContainer(), '02/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), '02/DD/YYYY');
 
       await view.user.keyboard('2');
-      expectFieldValueV7(view.getSectionsContainer(), '02/02/YYYY');
+      expectFieldValue(view.getSectionsContainer(), '02/02/YYYY');
 
       await view.user.keyboard('9');
-      expectFieldValueV7(view.getSectionsContainer(), '02/29/YYYY');
+      expectFieldValue(view.getSectionsContainer(), '02/29/YYYY');
 
       await view.user.keyboard('1');
-      expectFieldValueV7(view.getSectionsContainer(), '02/29/0001');
+      expectFieldValue(view.getSectionsContainer(), '02/29/0001');
 
       await view.user.keyboard('9');
-      expectFieldValueV7(view.getSectionsContainer(), '02/29/0019');
+      expectFieldValue(view.getSectionsContainer(), '02/29/0019');
 
       await view.user.keyboard('8');
-      expectFieldValueV7(view.getSectionsContainer(), '02/29/0198');
+      expectFieldValue(view.getSectionsContainer(), '02/29/0198');
 
       await view.user.keyboard('8');
-      expectFieldValueV7(view.getSectionsContainer(), '02/29/1988');
+      expectFieldValue(view.getSectionsContainer(), '02/29/1988');
 
       view.unmount();
     });
@@ -356,7 +352,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       view.pressKey(undefined, '2');
-      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/0002');
+      expectFieldValue(view.getSectionsContainer(), 'MM/DD/0002');
 
       view.unmount();
     });
@@ -480,10 +476,10 @@ describe('<DateField /> - Editing', () => {
 
         await view.selectSectionAsync('month');
         await view.user.keyboard('j');
-        expectFieldValueV7(view.getSectionsContainer(), 'January YYYY');
+        expectFieldValue(view.getSectionsContainer(), 'January YYYY');
 
         await view.user.keyboard('[Backspace]');
-        expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
+        expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
 
         view.unmount();
       });
@@ -498,7 +494,7 @@ describe('<DateField /> - Editing', () => {
         await view.selectSectionAsync('month');
 
         await view.user.keyboard('[Backspace]');
-        expectFieldValueV7(view.getSectionsContainer(), 'MMMM 2022');
+        expectFieldValue(view.getSectionsContainer(), 'MMMM 2022');
 
         view.unmount();
       });
@@ -520,7 +516,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         view.pressKey(null, '');
-        expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
+        expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
 
         view.unmount();
       });
@@ -533,7 +529,7 @@ describe('<DateField /> - Editing', () => {
 
         await view.selectSectionAsync('month');
         await view.user.keyboard('j');
-        expectFieldValueV7(view.getSectionsContainer(), 'January YYYY');
+        expectFieldValue(view.getSectionsContainer(), 'January YYYY');
 
         // Select all sections
         fireEvent.keyDown(view.getActiveSection(0), {
@@ -543,7 +539,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         await view.user.keyboard('[Backspace]');
-        expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY');
+        expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
 
         view.unmount();
       });
@@ -706,7 +702,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       await firePasteEventV7(view.getSectionsContainer(), 'Some invalid content');
-      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
       view.unmount();
     });
 
@@ -769,11 +765,11 @@ describe('<DateField /> - Editing', () => {
 
       await view.selectSectionAsync('month');
 
-      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
       await firePasteEventV7(view.getActiveSection(0), '12');
 
       expect(onChangeV7.callCount).to.equal(0);
-      expectFieldValueV7(view.getSectionsContainer(), '12/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), '12/DD/YYYY');
 
       view.unmount();
     });
@@ -789,9 +785,9 @@ describe('<DateField /> - Editing', () => {
 
       await view.selectSectionAsync('month');
 
-      expectFieldValueV7(view.getSectionsContainer(), '01/13/2018');
+      expectFieldValue(view.getSectionsContainer(), '01/13/2018');
       await firePasteEventV7(view.getActiveSection(0), '12');
-      expectFieldValueV7(view.getSectionsContainer(), '12/13/2018');
+      expectFieldValue(view.getSectionsContainer(), '12/13/2018');
       expect(onChangeV7.callCount).to.equal(1);
       expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
 
@@ -809,9 +805,9 @@ describe('<DateField /> - Editing', () => {
 
       await view.selectSectionAsync('month');
 
-      expectFieldValueV7(view.getSectionsContainer(), '01/13/2018');
+      expectFieldValue(view.getSectionsContainer(), '01/13/2018');
       await firePasteEventV7(view.getActiveSection(0), 'Jun');
-      expectFieldValueV7(view.getSectionsContainer(), '01/13/2018');
+      expectFieldValue(view.getSectionsContainer(), '01/13/2018');
       expect(onChangeV7.callCount).to.equal(0);
 
       view.unmount();
@@ -826,18 +822,18 @@ describe('<DateField /> - Editing', () => {
       await view.selectSectionAsync('day');
 
       view.pressKey(1, '2');
-      expectFieldValueV7(view.getSectionsContainer(), '12/02/2018');
+      expectFieldValue(view.getSectionsContainer(), '12/02/2018');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(1), { key: 'a', keyCode: 65, ctrlKey: true });
 
       await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
-      expectFieldValueV7(view.getSectionsContainer(), '09/16/2022');
+      expectFieldValue(view.getSectionsContainer(), '09/16/2022');
 
       await view.selectSectionAsync('day');
 
       view.pressKey(1, '2'); // Press 2
-      expectFieldValueV7(view.getSectionsContainer(), '09/02/2022'); // If internal state is not reset it would be 22 instead of 02
+      expectFieldValue(view.getSectionsContainer(), '09/02/2022'); // If internal state is not reset it would be 22 instead of 02
 
       view.unmount();
     });
@@ -850,14 +846,14 @@ describe('<DateField /> - Editing', () => {
       await view.selectSectionAsync('month');
 
       view.pressKey(0, '1'); // Press 1
-      expectFieldValueV7(view.getSectionsContainer(), '01/05/2018');
+      expectFieldValue(view.getSectionsContainer(), '01/05/2018');
 
       await firePasteEventV7(view.getActiveSection(0), '05');
-      expectFieldValueV7(view.getSectionsContainer(), '05/05/2018');
+      expectFieldValue(view.getSectionsContainer(), '05/05/2018');
 
       await view.selectSectionAsync('month'); // move back to month section
       view.pressKey(0, '2'); // check that the search query has been cleared after pasting
-      expectFieldValueV7(view.getSectionsContainer(), '02/05/2018'); // If internal state is not reset it would be 12 instead of 02
+      expectFieldValue(view.getSectionsContainer(), '02/05/2018'); // If internal state is not reset it would be 12 instead of 02
     });
 
     it('should not allow pasting on disabled field', async () => {
@@ -879,7 +875,7 @@ describe('<DateField /> - Editing', () => {
 
       await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
       expect(onChangeV7.callCount).to.equal(0);
-      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       view.unmount();
     });
@@ -919,20 +915,20 @@ describe('<DateField /> - Editing', () => {
           ctrlKey: true,
         });
         await view.user.keyboard('[Backspace]');
-        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+        expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
         await view.selectSectionAsync('month');
 
         await view.user.keyboard('1');
-        expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
+        expectFieldValue(view.getSectionsContainer(), '01/DD/YYYY');
 
         await view.user.keyboard('1');
-        expectFieldValueV7(view.getSectionsContainer(), '11/DD/YYYY');
+        expectFieldValue(view.getSectionsContainer(), '11/DD/YYYY');
 
         await view.user.keyboard('25');
-        expectFieldValueV7(view.getSectionsContainer(), '11/25/YYYY');
+        expectFieldValue(view.getSectionsContainer(), '11/25/YYYY');
 
         await view.user.keyboard('2009');
-        expectFieldValueV7(view.getSectionsContainer(), '11/25/2009');
+        expectFieldValue(view.getSectionsContainer(), '11/25/2009');
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2009, 10, 25, 3, 3, 3));
 
         view.unmount();
@@ -1018,12 +1014,12 @@ describe('<DateField /> - Editing', () => {
       const view = renderWithProps({
         value: adapter.date('2022-11-23'),
       });
-      expectFieldValueV7(view.getSectionsContainer(), '11/23/2022');
+      expectFieldValue(view.getSectionsContainer(), '11/23/2022');
 
       view.setProps({ value: null });
 
       await view.selectSectionAsync('month');
-      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       view.unmount();
     });
@@ -1037,13 +1033,13 @@ describe('<DateField /> - Editing', () => {
         await view.selectSectionAsync('month');
 
         await view.user.keyboard('1');
-        expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
+        expectFieldValue(view.getSectionsContainer(), '01/DD/YYYY');
 
         await view.user.keyboard('1');
-        expectFieldValueV7(view.getSectionsContainer(), '11/DD/YYYY');
+        expectFieldValue(view.getSectionsContainer(), '11/DD/YYYY');
 
         await view.user.keyboard('1');
-        expectFieldValueV7(view.getSectionsContainer(), '11/01/YYYY');
+        expectFieldValue(view.getSectionsContainer(), '11/01/YYYY');
 
         await act(async () => {
           view.getSectionsContainer().blur();
@@ -1055,13 +1051,13 @@ describe('<DateField /> - Editing', () => {
         await view.selectSectionAsync('month');
 
         await view.user.keyboard('1');
-        expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
+        expectFieldValue(view.getSectionsContainer(), '01/DD/YYYY');
 
         await view.user.keyboard('1');
-        expectFieldValueV7(view.getSectionsContainer(), '11/DD/YYYY');
+        expectFieldValue(view.getSectionsContainer(), '11/DD/YYYY');
 
         await view.user.keyboard('1');
-        expectFieldValueV7(view.getSectionsContainer(), '11/01/YYYY');
+        expectFieldValue(view.getSectionsContainer(), '11/01/YYYY');
 
         view.unmount();
       },
@@ -1084,7 +1080,7 @@ describe('<DateField /> - Editing', () => {
       // When all sections are selected, the value only contains the key pressed
       view.pressKey(null, '9');
 
-      expectFieldValueV7(view.getSectionsContainer(), '09/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), '09/DD/YYYY');
 
       view.unmount();
     });

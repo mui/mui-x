@@ -3,7 +3,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
   getCleanedSelectedContent,
   buildFieldInteractions,
   adapterToUse,
@@ -19,7 +19,7 @@ describe('<DateField /> - Selection', () => {
       const view = renderWithProps({
         autoFocus: true,
       });
-      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM');
       view.unmount();
     });
@@ -30,7 +30,7 @@ describe('<DateField /> - Selection', () => {
         autoFocus: true,
         format: `- ${adapterToUse.formats.year}`,
       });
-      expectFieldValueV7(view.getSectionsContainer(), '- YYYY');
+      expectFieldValue(view.getSectionsContainer(), '- YYYY');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
       view.unmount();
     });
@@ -41,7 +41,7 @@ describe('<DateField /> - Selection', () => {
         autoFocus: true,
         disabled: true,
       });
-      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('');
       view.unmount();
     });

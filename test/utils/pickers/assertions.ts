@@ -6,7 +6,7 @@ import {
   PickerRangeComponentType,
 } from 'test/utils/pickers';
 
-export const expectFieldValueV7 = (
+export const expectFieldValue = (
   fieldSectionsContainer: HTMLDivElement,
   expectedValue: string,
   specialCase?: 'singleDigit' | 'RTL',
