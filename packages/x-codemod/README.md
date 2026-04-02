@@ -76,9 +76,9 @@ The corresponding sub-sections are listed below
 
 <!-- - [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v900) -->
 <!-- - [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v900) -->
-<!-- - [`preset-safe-for-pickers`](#preset-safe-for-pickers-v900) -->
 
 - [`preset-safe-for-charts`](#preset-safe-for-charts-v900)
+- [`preset-safe-for-pickers`](#preset-safe-for-pickers-v900)
 
 ### Data Grid codemods
 
@@ -309,6 +309,58 @@ Replaces the deprecated `isBarSeries()` and `isDefaultizedBarSeries()` helper fu
 +if (series.type === 'bar') {
    console.log('defaultized bar series');
  }
+```
+
+### Pickers codemods
+
+#### 🚀 `preset-safe` for Pickers v9.0.0 <a id="preset-safe-for-pickers-v900"></a>
+
+The `preset-safe` codemods for Pickers.
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-field-ref`](#rename-field-ref)
+- [`remove-enable-accessible-field-dom-structure`](#remove-enable-accessible-field-dom-structure)
+
+#### `rename-field-ref`
+
+Renames the `unstableFieldRef` prop to `fieldRef` on all Picker and Field components.
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path|folder>
+```
+
+```diff
+-<DateField unstableFieldRef={ref} />
++<DateField fieldRef={ref} />
+-<DatePicker slotProps={{ field: { unstableFieldRef: ref } }} />
++<DatePicker slotProps={{ field: { fieldRef: ref } }} />
+```
+
+#### `remove-enable-accessible-field-dom-structure`
+
+Removes the `enableAccessibleFieldDOMStructure` prop from all Picker and Field components.
+The accessible DOM structure is now the only supported option and this prop has no effect.
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/remove-enable-accessible-field-dom-structure <path|folder>
+```
+
+```diff
+-<DateField enableAccessibleFieldDOMStructure={false} />
++<DateField />
+-<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: MyCustomTextField }} />
++<DatePicker slots={{ textField: MyCustomTextField }} />
 ```
 
 ## v8.0.0
