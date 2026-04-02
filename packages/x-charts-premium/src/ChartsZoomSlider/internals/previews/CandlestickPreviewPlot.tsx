@@ -70,8 +70,7 @@ export function CandlestickPreviewPlot(props: PreviewPlotProps) {
             data-series={seriesId}
             d={d}
             stroke={theme.palette.text.primary}
-            strokeWidth={2}
-            strokeLinejoin="round"
+            strokeWidth={1}
             fill="none"
           />
         );

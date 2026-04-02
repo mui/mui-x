@@ -49,6 +49,11 @@ const gdpPerCapitaFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
 });
 const populationFormatter = new Intl.NumberFormat('en-US', { notation: 'compact' });
+const dayFormatter = new Intl.DateTimeFormat(undefined, {
+  day: 'numeric',
+  month: '2-digit',
+  year: 'numeric',
+});
 
 const commonXAxisProps = {
   id: 'x',
@@ -324,6 +329,8 @@ function CandlestickChartPreview() {
         xAxis={[
           {
             data: candlestickXData,
+            valueFormatter: (v: Date | null) =>
+              v === null ? '' : dayFormatter.format(new Date(v)),
             zoom: {
               minSpan: 1,
               filterMode: 'discard',
