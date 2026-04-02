@@ -3,7 +3,7 @@ productId: x-chat
 title: ChatBox
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatBox, ChatProvider
+components: ChatBox
 ---
 
 # Chat - ChatBox
@@ -31,7 +31,10 @@ No additional configuration is needed — `ChatBox` reads `palette`, `typography
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -69,7 +72,10 @@ import Box from '@mui/material/Box';
 import { ChatBox } from '@mui/x-chat';
 import { useChatStatus } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -125,8 +131,14 @@ import {
   ChatMessageList,
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const CONVERSATION_ID = randomId();
 
@@ -300,49 +312,57 @@ These props are forwarded to the internal `ChatProvider`.
 ### Messages
 
 ```tsx
-{/* Uncontrolled — internal store owns the messages */}
-<ChatBox adapter={adapter} initialMessages={initialMessages} />
+{
+  /* Uncontrolled — internal store owns the messages */
+}
+<ChatBox adapter={adapter} initialMessages={initialMessages} />;
 
-{/* Controlled — you own the messages array */}
-<ChatBox
-  adapter={adapter}
-  messages={messages}
-  onMessagesChange={setMessages}
-/>
+{
+  /* Controlled — you own the messages array */
+}
+<ChatBox adapter={adapter} messages={messages} onMessagesChange={setMessages} />;
 ```
 
 ### Conversations
 
 ```tsx
-{/* Uncontrolled */}
+{
+  /* Uncontrolled */
+}
 <ChatBox
   adapter={adapter}
   initialConversations={conversations}
   initialActiveConversationId="conv-1"
-/>
+/>;
 
-{/* Controlled */}
+{
+  /* Controlled */
+}
 <ChatBox
   adapter={adapter}
   conversations={conversations}
   onConversationsChange={setConversations}
   activeConversationId={activeId}
   onActiveConversationChange={setActiveId}
-/>
+/>;
 ```
 
 ### Composer value
 
 ```tsx
-{/* Uncontrolled */}
-<ChatBox adapter={adapter} initialComposerValue="Hello" />
+{
+  /* Uncontrolled */
+}
+<ChatBox adapter={adapter} initialComposerValue="Hello" />;
 
-{/* Controlled */}
+{
+  /* Controlled */
+}
 <ChatBox
   adapter={adapter}
   composerValue={composerValue}
   onComposerValueChange={setComposerValue}
-/>
+/>;
 ```
 
 You can mix controlled and uncontrolled state freely.
@@ -413,8 +433,7 @@ export default function MultipleInstances() {
 
 ## API
 
-- [`ChatBox`](/x/api/chat-box/)
-- [`ChatProvider`](/x/api/chat-provider/)
+- [`ChatBox`](/x/api/chat/chat-box/)
 
 ## Next steps
 

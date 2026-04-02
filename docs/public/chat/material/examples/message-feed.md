@@ -27,8 +27,15 @@ import {
 import { useChat, useMessageIds } from '@mui/x-chat/headless';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatRoot } from '@mui/x-chat/unstyled';
-import { createChunkStream, createTextResponseChunks, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createChunkStream,
+  createTextResponseChunks,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const CONVERSATION_ID = randomId();
 

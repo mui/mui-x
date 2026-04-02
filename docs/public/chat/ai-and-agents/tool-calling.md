@@ -23,7 +23,9 @@ Tool calling lets an AI assistant invoke external functions during a conversatio
 When a tool is invoked during streaming, the runtime creates a `ChatToolMessagePart` on the assistant message:
 
 ```ts
-interface ChatToolMessagePart<TToolName extends ChatKnownToolName = ChatKnownToolName> {
+interface ChatToolMessagePart<
+  TToolName extends ChatKnownToolName = ChatKnownToolName,
+> {
   type: 'tool';
   toolInvocation: ChatToolInvocation<TToolName>;
 }
@@ -32,7 +34,9 @@ interface ChatToolMessagePart<TToolName extends ChatKnownToolName = ChatKnownToo
 Each tool message part wraps a `ChatToolInvocation` that tracks the tool's lifecycle:
 
 ```ts
-interface ChatToolInvocation<TToolName extends ChatKnownToolName = ChatKnownToolName> {
+interface ChatToolInvocation<
+  TToolName extends ChatKnownToolName = ChatKnownToolName,
+> {
   toolCallId: string;
   toolName: TToolName;
   state: ChatToolInvocationState;
@@ -50,15 +54,15 @@ interface ChatToolInvocation<TToolName extends ChatKnownToolName = ChatKnownTool
 
 The `toolInvocation.state` field tracks the tool lifecycle through well-defined states:
 
-| State                | Description                                  |
-| :------------------- | :------------------------------------------- |
-| `input-streaming`    | Tool input JSON is being streamed            |
-| `input-available`    | Tool input is fully available                |
-| `approval-requested` | User approval is needed before execution     |
-| `approval-responded` | User has responded to the approval request   |
-| `output-available`   | Tool output is ready                         |
-| `output-error`       | Tool execution failed                        |
-| `output-denied`      | User denied the tool call                    |
+| State                | Description                                |
+| :------------------- | :----------------------------------------- |
+| `input-streaming`    | Tool input JSON is being streamed          |
+| `input-available`    | Tool input is fully available              |
+| `approval-requested` | User approval is needed before execution   |
+| `approval-responded` | User has responded to the approval request |
+| `output-available`   | Tool output is ready                       |
+| `output-error`       | Tool execution failed                      |
+| `output-denied`      | User denied the tool call                  |
 
 The typical progression is: `input-streaming` -> `input-available` -> `output-available`. When human-in-the-loop approval is required, the flow includes `approval-requested` -> `approval-responded` between input and output.
 
@@ -66,15 +70,15 @@ The typical progression is: `input-streaming` -> `input-available` -> `output-av
 
 Tool chunks in the streaming protocol drive the state transitions:
 
-| Chunk type              | Fields                                           | Description                   |
-| :---------------------- | :----------------------------------------------- | :---------------------------- |
-| `tool-input-start`      | `toolCallId`, `toolName`, `dynamic?`             | Begin a tool invocation       |
-| `tool-input-delta`      | `toolCallId`, `inputTextDelta`                   | Stream tool input JSON        |
-| `tool-input-available`  | `toolCallId`, `toolName`, `input`                | Tool input is fully available |
-| `tool-input-error`      | `toolCallId`, `errorText`                        | Tool input parsing failed     |
-| `tool-output-available` | `toolCallId`, `output`, `preliminary?`           | Tool output is available      |
-| `tool-output-error`     | `toolCallId`, `errorText`                        | Tool execution failed         |
-| `tool-output-denied`    | `toolCallId`, `reason?`                          | User denied the tool call     |
+| Chunk type              | Fields                                 | Description                   |
+| :---------------------- | :------------------------------------- | :---------------------------- |
+| `tool-input-start`      | `toolCallId`, `toolName`, `dynamic?`   | Begin a tool invocation       |
+| `tool-input-delta`      | `toolCallId`, `inputTextDelta`         | Stream tool input JSON        |
+| `tool-input-available`  | `toolCallId`, `toolName`, `input`      | Tool input is fully available |
+| `tool-input-error`      | `toolCallId`, `errorText`              | Tool input parsing failed     |
+| `tool-output-available` | `toolCallId`, `output`, `preliminary?` | Tool output is available      |
+| `tool-output-error`     | `toolCallId`, `errorText`              | Tool execution failed         |
+| `tool-output-denied`    | `toolCallId`, `reason?`                | User denied the tool call     |
 
 ### Tool input streaming
 
@@ -210,9 +214,7 @@ Register custom renderers for tool parts through the `partRenderers` prop on `Ch
 
 ```tsx
 const renderers: ChatPartRendererMap = {
-  tool: ({ part, message, index }) => (
-    <ToolCard invocation={part.toolInvocation} />
-  ),
+  tool: ({ part, message, index }) => <ToolCard invocation={part.toolInvocation} />,
 };
 
 <ChatProvider adapter={adapter} partRenderers={renderers}>
@@ -236,7 +238,7 @@ function MessagePart({ part, message, index }) {
 
 ## API
 
-- [`ChatMessageContent`](/x/api/chat-message-content/)
+- [`ChatMessageContent`](/x/api/chat/chat-message-content/)
 
 ## See also
 

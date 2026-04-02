@@ -3,7 +3,6 @@ productId: x-chat
 title: Building an Adapter
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatProvider
 ---
 
 # Chat - Building an Adapter

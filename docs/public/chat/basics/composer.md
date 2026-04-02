@@ -3,7 +3,7 @@ productId: x-chat
 title: Composer
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatComposer, ChatComposerTextArea, ChatComposerSendButton
+components: ChatComposerTextArea, ChatComposerSendButton
 ---
 
 # Chat - Composer
@@ -64,7 +64,10 @@ Customize the placeholder through `slotProps`:
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -120,7 +123,10 @@ Set `features={{ attachments: false }}` to hide the attach button:
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -152,8 +158,10 @@ A helper text line appears below the composer.
 Use it for legal disclaimers, character counts, or contextual hints.
 
 ```tsx
-{/* Hide the helper text */}
-<ChatBox adapter={adapter} features={{ helperText: false }} />
+{
+  /* Hide the helper text */
+}
+<ChatBox adapter={adapter} features={{ helperText: false }} />;
 ```
 
 ## Controlled composer value
@@ -168,7 +176,10 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -243,7 +254,10 @@ When disabled, the text area is read-only and the send button is inert.
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -282,9 +296,8 @@ The composer uses these locale text keys (customizable via `localeText` on `Chat
 
 ## API
 
-- [`ChatComposer`](/x/api/chat-composer/)
-- [`ChatComposerTextArea`](/x/api/chat-composer-text-area/)
-- [`ChatComposerSendButton`](/x/api/chat-composer-send-button/)
+- [`ChatComposerTextArea`](/x/api/chat/chat-composer-text-area/)
+- [`ChatComposerSendButton`](/x/api/chat/chat-composer-send-button/)
 
 ## Next steps
 

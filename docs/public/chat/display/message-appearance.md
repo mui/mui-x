@@ -25,8 +25,14 @@ The grouping window defaults to 5 minutes (300,000 ms). Messages from the same a
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -118,8 +124,14 @@ Customize the date format through `slotProps`:
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -228,8 +240,14 @@ Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layou
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -318,11 +336,11 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 
 The `density` prop controls the vertical spacing between messages. Three values are available:
 
-| Value         | Description                          |
-| :------------ | :----------------------------------- |
-| `compact`     | Tight spacing, minimal gaps          |
-| `standard`    | Default spacing                      |
-| `comfortable` | Generous spacing, more breathing room|
+| Value         | Description                           |
+| :------------ | :------------------------------------ |
+| `compact`     | Tight spacing, minimal gaps           |
+| `standard`    | Default spacing                       |
+| `comfortable` | Generous spacing, more breathing room |
 
 ```tsx
 'use client';
@@ -332,8 +350,14 @@ import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Stack from '@mui/material/Stack';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -462,10 +486,10 @@ The following slots are available for customization through `ChatBox`:
 
 ## API
 
-- [`ChatMessageGroup`](/x/api/chat-message-group/)
-- [`ChatMessageAvatar`](/x/api/chat-message-avatar/)
-- [`ChatMessageMeta`](/x/api/chat-message-meta/)
-- [`ChatDateDivider`](/x/api/chat-date-divider/)
+- [`ChatMessageGroup`](/x/api/chat/chat-message-group/)
+- [`ChatMessageAvatar`](/x/api/chat/chat-message-avatar/)
+- [`ChatMessageMeta`](/x/api/chat/chat-message-meta/)
+- [`ChatDateDivider`](/x/api/chat/chat-date-divider/)
 
 ## See also
 

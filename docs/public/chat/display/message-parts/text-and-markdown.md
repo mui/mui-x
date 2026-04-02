@@ -34,7 +34,12 @@ const message: ChatMessage = {
   role: 'assistant',
   parts: [
     { type: 'text', text: 'Here is the analysis you requested:' },
-    { type: 'file', mediaType: 'image/png', url: '/chart.png', filename: 'chart.png' },
+    {
+      type: 'file',
+      mediaType: 'image/png',
+      url: '/chart.png',
+      filename: 'chart.png',
+    },
     { type: 'text', text: 'The chart shows a 15% increase in Q4.' },
   ],
 };
@@ -47,7 +52,7 @@ When using `ChatBox` with the Material UI layer (`@mui/x-chat`), text parts are 
 The built-in parser supports:
 
 - **Bold** (`**text**` or `__text__`)
-- *Italic* (`*text*` or `_text_`)
+- _Italic_ (`*text*` or `_text_`)
 - `Inline code` (`` `code` ``)
 - [Links](https://mui.com) (`[label](url)`)
 - Headings (`# H1` through `###### H6`)
@@ -94,11 +99,11 @@ At the unstyled layer (`@mui/x-chat/unstyled`), text parts render as plain `<div
 
 Text parts support incremental delivery through the streaming protocol. The stream uses three chunk types to build up a text part:
 
-| Chunk type   | Purpose                              |
-| :----------- | :----------------------------------- |
-| `text-start` | Opens a new text part                |
-| `text-delta` | Appends a string fragment            |
-| `text-end`   | Marks the text part as complete      |
+| Chunk type   | Purpose                         |
+| :----------- | :------------------------------ |
+| `text-start` | Opens a new text part           |
+| `text-delta` | Appends a string fragment       |
+| `text-end`   | Marks the text part as complete |
 
 While tokens are arriving, the part's `state` field is `'streaming'`. Once the `text-end` chunk arrives, `state` transitions to `'done'`.
 
@@ -127,7 +132,7 @@ The message list auto-scrolls to follow new streaming content as long as the use
 
 ## API
 
-- [`ChatMessageContent`](/x/api/chat-message-content/)
+- [`ChatMessageContent`](/x/api/chat/chat-message-content/)
 
 ## See also
 

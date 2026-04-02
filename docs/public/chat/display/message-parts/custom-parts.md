@@ -145,7 +145,7 @@ No runtime code changes are needed. The augmentation is purely compile-time.
 
 ## API
 
-- [`ChatMessageContent`](/x/api/chat-message-content/)
+- [`ChatMessageContent`](/x/api/chat/chat-message-content/)
 
 ## See also
 

@@ -29,7 +29,10 @@ Hide the attach button entirely by setting the `attachments` feature flag to `fa
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -77,21 +80,21 @@ Pass a configuration object to the `attachments` feature flag to control which f
 
 ### `ChatAttachmentsConfig`
 
-| Property              | Type                                         | Default     | Description                                                  |
-| :-------------------- | :------------------------------------------- | :---------- | :----------------------------------------------------------- |
-| `acceptedMimeTypes`   | `string[]`                                   | `undefined` | Allowed MIME types. Supports exact types (`'application/pdf'`) and wildcard subtypes (`'image/*'`). File extension patterns (e.g. `'.pdf'`) are **not** supported. |
-| `maxFileCount`        | `number`                                     | `undefined` | Maximum number of files per message.                         |
-| `maxFileSize`         | `number`                                     | `undefined` | Maximum size of each file in bytes.                          |
-| `onAttachmentReject`  | `(rejections: ChatAttachmentRejection[]) => void` | `undefined` | Callback invoked when one or more files are rejected.        |
+| Property             | Type                                              | Default     | Description                                                                                                                                                        |
+| :------------------- | :------------------------------------------------ | :---------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `acceptedMimeTypes`  | `string[]`                                        | `undefined` | Allowed MIME types. Supports exact types (`'application/pdf'`) and wildcard subtypes (`'image/*'`). File extension patterns (e.g. `'.pdf'`) are **not** supported. |
+| `maxFileCount`       | `number`                                          | `undefined` | Maximum number of files per message.                                                                                                                               |
+| `maxFileSize`        | `number`                                          | `undefined` | Maximum size of each file in bytes.                                                                                                                                |
+| `onAttachmentReject` | `(rejections: ChatAttachmentRejection[]) => void` | `undefined` | Callback invoked when one or more files are rejected.                                                                                                              |
 
 ### Rejection reasons
 
 When a file is rejected, the `ChatAttachmentRejection` object contains:
 
-| Property | Type                                       | Description                       |
-| :------- | :----------------------------------------- | :-------------------------------- |
-| `file`   | `File`                                     | The browser File object           |
-| `reason` | `'mime-type' \| 'file-size' \| 'file-count'` | Why the file was rejected      |
+| Property | Type                                         | Description               |
+| :------- | :------------------------------------------- | :------------------------ |
+| `file`   | `File`                                       | The browser File object   |
+| `reason` | `'mime-type' \| 'file-size' \| 'file-count'` | Why the file was rejected |
 
 ## The `ChatDraftAttachment` lifecycle
 
@@ -103,22 +106,22 @@ queued  -->  uploading  -->  uploaded  -->  (sent with message)
                    -->  error
 ```
 
-| Status      | Description                                                            |
-| :---------- | :--------------------------------------------------------------------- |
-| `queued`    | File has been selected and is waiting to be processed.                 |
-| `uploading` | File upload is in progress. The `progress` field tracks 0--100.        |
-| `uploaded`  | Upload completed. The file is ready to be sent with the message.       |
-| `error`     | Upload failed. The attachment can be removed or retried by the user.   |
+| Status      | Description                                                          |
+| :---------- | :------------------------------------------------------------------- |
+| `queued`    | File has been selected and is waiting to be processed.               |
+| `uploading` | File upload is in progress. The `progress` field tracks 0--100.      |
+| `uploaded`  | Upload completed. The file is ready to be sent with the message.     |
+| `error`     | Upload failed. The attachment can be removed or retried by the user. |
 
 ### `ChatDraftAttachment` type
 
 | Property     | Type                                               | Description                                  |
 | :----------- | :------------------------------------------------- | :------------------------------------------- |
-| `localId`    | `string`                                           | Unique identifier for this draft attachment   |
-| `file`       | `File`                                             | The browser File object                       |
-| `previewUrl` | `string \| undefined`                              | Object URL for image previews (auto-created)  |
-| `status`     | `'queued' \| 'uploading' \| 'uploaded' \| 'error'` | Upload lifecycle status                       |
-| `progress`   | `number \| undefined`                              | Upload progress (0--100)                      |
+| `localId`    | `string`                                           | Unique identifier for this draft attachment  |
+| `file`       | `File`                                             | The browser File object                      |
+| `previewUrl` | `string \| undefined`                              | Object URL for image previews (auto-created) |
+| `status`     | `'queued' \| 'uploading' \| 'uploaded' \| 'error'` | Upload lifecycle status                      |
+| `progress`   | `number \| undefined`                              | Upload progress (0--100)                     |
 
 ## Programmatic attachment management
 
@@ -178,7 +181,7 @@ async sendMessage({ message, attachments, signal }) {
 
 ## API
 
-- [`ChatComposerAttachButton`](/x/api/chat-composer-attach-button/)
+- [`ChatComposerAttachButton`](/x/api/chat/chat-composer-attach-button/)
 
 ## See also
 

@@ -3,7 +3,6 @@ productId: x-chat
 title: Selectors Reference
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatProvider
 ---
 
 # Chat - Selectors Reference

@@ -124,7 +124,7 @@ If `listMessages` throws, the runtime records a `ChatError` with `source: 'histo
 
 ## API
 
-- [`ChatMessageList`](/x/api/chat-message-list/)
+- [`ChatMessageList`](/x/api/chat/chat-message-list/)
 
 ## See also
 

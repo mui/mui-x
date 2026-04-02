@@ -74,7 +74,7 @@ Place the indicator in the thread header or just above the composer:
 ```tsx
 import { Indicators } from '@mui/x-chat/unstyled';
 
-<Indicators.TypingIndicator />
+<Indicators.TypingIndicator />;
 ```
 
 When no users are typing, the component renders nothing.
@@ -103,17 +103,17 @@ import { Indicators } from '@mui/x-chat/unstyled';
       </div>
     ),
   }}
-/>
+/>;
 ```
 
 ### Owner state
 
 Custom slots receive:
 
-| Property | Type       | Description                              |
-| :------- | :--------- | :--------------------------------------- |
-| `users`  | `string[]` | Display names of users currently typing  |
-| `count`  | `number`   | Number of users currently typing         |
+| Property | Type       | Description                             |
+| :------- | :--------- | :-------------------------------------- |
+| `users`  | `string[]` | Display names of users currently typing |
+| `count`  | `number`   | Number of users currently typing        |
 
 ## Using with `ChatBox`
 
@@ -132,12 +132,12 @@ import { Indicators } from '@mui/x-chat/unstyled';
   {/* Your custom message list */}
   <Indicators.TypingIndicator />
   {/* Your custom composer */}
-</ChatRoot>
+</ChatRoot>;
 ```
 
 ## API
 
-- [`ChatTypingIndicator`](/x/api/chat-typing-indicator/)
+- [`ChatTypingIndicator`](/x/api/chat/chat-typing-indicator/)
 
 ## See also
 

@@ -3,7 +3,7 @@ productId: x-chat
 title: Controlled State
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatProvider, ChatBox
+components: ChatBox
 ---
 
 # Chat - Controlled State
@@ -91,12 +91,12 @@ Start with `initial*` (uncontrolled) props during prototyping, then switch to co
 
 ## State model reference
 
-| Model               | Controlled prop        | Initial prop                    | Change callback              |
-| :------------------ | :--------------------- | :------------------------------ | :--------------------------- |
-| Messages            | `messages`             | `initialMessages`               | `onMessagesChange`           |
-| Conversations       | `conversations`        | `initialConversations`          | `onConversationsChange`      |
-| Active conversation | `activeConversationId` | `initialActiveConversationId`   | `onActiveConversationChange` |
-| Composer value      | `composerValue`        | `initialComposerValue`          | `onComposerValueChange`      |
+| Model               | Controlled prop        | Initial prop                  | Change callback              |
+| :------------------ | :--------------------- | :---------------------------- | :--------------------------- |
+| Messages            | `messages`             | `initialMessages`             | `onMessagesChange`           |
+| Conversations       | `conversations`        | `initialConversations`        | `onConversationsChange`      |
+| Active conversation | `activeConversationId` | `initialActiveConversationId` | `onActiveConversationChange` |
+| Composer value      | `composerValue`        | `initialComposerValue`        | `onComposerValueChange`      |
 
 ## Sharing context across the app
 

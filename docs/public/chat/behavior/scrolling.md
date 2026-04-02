@@ -30,17 +30,15 @@ Control auto-scrolling through the `features` prop on `ChatBox`.
 The default buffer is **150 px**.
 
 ```tsx
-{/* Custom 300 px buffer threshold */}
-<ChatBox
-  adapter={adapter}
-  features={{ autoScroll: { buffer: 300 } }}
-/>
+{
+  /* Custom 300 px buffer threshold */
+}
+<ChatBox adapter={adapter} features={{ autoScroll: { buffer: 300 } }} />;
 
-{/* Disable auto-scroll entirely */}
-<ChatBox
-  adapter={adapter}
-  features={{ autoScroll: false }}
-/>
+{
+  /* Disable auto-scroll entirely */
+}
+<ChatBox adapter={adapter} features={{ autoScroll: false }} />;
 ```
 
 When auto-scroll is disabled, the user can still scroll to the bottom manually using the scroll-to-bottom affordance button.
@@ -52,7 +50,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -189,8 +190,8 @@ await loadMoreHistory();
 
 ## API
 
-- [`ChatMessageList`](/x/api/chat-message-list/)
-- [`ChatScrollToBottomAffordance`](/x/api/chat-scroll-to-bottom-affordance/)
+- [`ChatMessageList`](/x/api/chat/chat-message-list/)
+- [`ChatScrollToBottomAffordance`](/x/api/chat/chat-scroll-to-bottom-affordance/)
 
 ## See also
 

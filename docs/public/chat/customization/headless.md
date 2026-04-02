@@ -3,7 +3,6 @@ productId: x-chat
 title: Headless Hooks
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatProvider
 ---
 
 # Chat - Headless Hooks

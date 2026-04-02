@@ -3,7 +3,7 @@ productId: x-chat
 title: Messages
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatMessageList, ChatMessage, ChatMessageGroup
+components: ChatMessageList, ChatMessageGroup
 ---
 
 # Chat - Messages
@@ -23,33 +23,33 @@ import type { ChatMessage } from '@mui/x-chat/headless';
 
 A `ChatMessage` has the following shape:
 
-| Field            | Type                  | Description                                                                 |
-| :--------------- | :-------------------- | :-------------------------------------------------------------------------- |
-| `id`             | `string`              | Unique identifier for the message                                           |
-| `role`           | `ChatRole`            | `'user'`, `'assistant'`, or `'system'`                                      |
-| `parts`          | `ChatMessagePart[]`   | Content parts that make up the message body (text, files, tools, etc.)      |
+| Field            | Type                  | Description                                                                                        |
+| :--------------- | :-------------------- | :------------------------------------------------------------------------------------------------- |
+| `id`             | `string`              | Unique identifier for the message                                                                  |
+| `role`           | `ChatRole`            | `'user'`, `'assistant'`, or `'system'`                                                             |
+| `parts`          | `ChatMessagePart[]`   | Content parts that make up the message body (text, files, tools, etc.)                             |
 | `status`         | `ChatMessageStatus`   | Delivery lifecycle: `'pending'`, `'sending'`, `'streaming'`, `'sent'`, `'error'`, or `'cancelled'` |
-| `author`         | `ChatUser`            | The user who sent the message (display name, avatar, role)                  |
-| `createdAt`      | `string`              | ISO 8601 timestamp when the message was created                             |
-| `updatedAt`      | `string`              | ISO 8601 timestamp when the message was last updated                        |
-| `editedAt`       | `string`              | ISO 8601 timestamp if the message was edited                                |
-| `conversationId` | `string`              | The conversation this message belongs to                                    |
-| `metadata`       | `ChatMessageMetadata` | Extensible metadata object for custom data                                  |
+| `author`         | `ChatUser`            | The user who sent the message (display name, avatar, role)                                         |
+| `createdAt`      | `string`              | ISO 8601 timestamp when the message was created                                                    |
+| `updatedAt`      | `string`              | ISO 8601 timestamp when the message was last updated                                               |
+| `editedAt`       | `string`              | ISO 8601 timestamp if the message was edited                                                       |
+| `conversationId` | `string`              | The conversation this message belongs to                                                           |
+| `metadata`       | `ChatMessageMetadata` | Extensible metadata object for custom data                                                         |
 
 ### Message parts
 
 The `parts` array is the core content model.
 Each part has a `type` discriminant that determines how it renders:
 
-| Part type           | Description                              |
-| :------------------ | :--------------------------------------- |
-| `text`              | Plain or markdown text content           |
-| `reasoning`         | Model reasoning / chain-of-thought text  |
-| `file`              | An attached file (image, document, etc.) |
-| `source-url`        | A URL citation                           |
-| `source-document`   | A document citation                      |
-| `tool`              | A tool call invocation and its result    |
-| `step-start`        | A visual separator between agentic steps |
+| Part type         | Description                              |
+| :---------------- | :--------------------------------------- |
+| `text`            | Plain or markdown text content           |
+| `reasoning`       | Model reasoning / chain-of-thought text  |
+| `file`            | An attached file (image, document, etc.) |
+| `source-url`      | A URL citation                           |
+| `source-document` | A document citation                      |
+| `tool`            | A tool call invocation and its result    |
+| `step-start`      | A visual separator between agentic steps |
 
 This part-based model means a single message can contain mixed content — for example, a text explanation followed by a code block and a source citation.
 
@@ -114,8 +114,14 @@ The demo below sets the window to 1 minute (60,000 ms) — notice how messages m
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -202,8 +208,14 @@ Customize the date format through `slotProps`:
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -288,7 +300,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -358,7 +373,10 @@ import {
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -419,9 +437,8 @@ export default function StandaloneMessageList() {
 
 ## API
 
-- [`ChatMessageList`](/x/api/chat-message-list/)
-- [`ChatMessage`](/x/api/chat-message/)
-- [`ChatMessageGroup`](/x/api/chat-message-group/)
+- [`ChatMessageList`](/x/api/chat/chat-message-list/)
+- [`ChatMessageGroup`](/x/api/chat/chat-message-group/)
 
 ## Next steps
 

@@ -141,7 +141,7 @@ const theme = createTheme({
 
 ## API
 
-- [`ChatBox`](/x/api/chat-box/)
+- [`ChatBox`](/x/api/chat/chat-box/)
 
 ## Next steps
 

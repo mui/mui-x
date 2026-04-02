@@ -564,7 +564,10 @@ The simplest working `ChatBox` setup: a single adapter, one conversation, and an
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -597,4 +600,4 @@ export default function BasicAiChat() {
 
 ## API
 
-- [`ChatBox`](/x/api/chat-box/)
+- [`ChatBox`](/x/api/chat/chat-box/)

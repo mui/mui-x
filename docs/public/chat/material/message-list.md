@@ -64,7 +64,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -142,8 +145,14 @@ Customize the date format through `slotProps`. The demo below uses a short month
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -224,8 +233,14 @@ The demo below sets the window to 1 minute (60,000 ms) — notice how messages m
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -317,8 +332,14 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -416,8 +437,14 @@ import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Stack from '@mui/material/Stack';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -555,7 +582,10 @@ import {
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 

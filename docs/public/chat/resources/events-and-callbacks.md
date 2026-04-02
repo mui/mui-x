@@ -3,7 +3,7 @@ productId: x-chat
 title: Events & Callbacks
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatProvider, ChatBox
+components: ChatBox
 ---
 
 # Chat - Events & Callbacks
@@ -17,12 +17,12 @@ Use them for logging, analytics, side effects, and error handling without modify
 
 ## Callback overview
 
-| Prop         | When it fires                                    | Typical use case                       |
-| :----------- | :----------------------------------------------- | :------------------------------------- |
-| `onFinish`   | When a stream reaches a terminal state           | Analytics, persistence, follow-up UI   |
-| `onToolCall` | When a tool invocation state changes             | Logging, triggering external workflows |
-| `onData`     | When a `data-*` chunk arrives during streaming   | Transient data, app-level side effects |
-| `onError`    | When any runtime error surfaces                  | Error reporting, toast notifications   |
+| Prop         | When it fires                                  | Typical use case                       |
+| :----------- | :--------------------------------------------- | :------------------------------------- |
+| `onFinish`   | When a stream reaches a terminal state         | Analytics, persistence, follow-up UI   |
+| `onToolCall` | When a tool invocation state changes           | Logging, triggering external workflows |
+| `onData`     | When a `data-*` chunk arrives during streaming | Transient data, app-level side effects |
+| `onError`    | When any runtime error surfaces                | Error reporting, toast notifications   |
 
 ## `onFinish`
 
@@ -61,12 +61,12 @@ interface ChatOnFinishPayload {
 
 The `onFinish` callback fires in four scenarios:
 
-| Scenario      | `isAbort` | `isDisconnect` | `isError` | Description                          |
-| :------------ | :-------- | :------------- | :-------- | :----------------------------------- |
-| Success       | `false`   | `false`        | `false`   | Stream completed normally            |
-| User abort    | `true`    | `false`        | `false`   | User clicked the stop button         |
-| Disconnect    | `false`   | `true`         | `false`   | Connection dropped mid-stream        |
-| Error         | `false`   | `false`        | `true`    | Stream ended with an error           |
+| Scenario   | `isAbort` | `isDisconnect` | `isError` | Description                   |
+| :--------- | :-------- | :------------- | :-------- | :---------------------------- |
+| Success    | `false`   | `false`        | `false`   | Stream completed normally     |
+| User abort | `true`    | `false`        | `false`   | User clicked the stop button  |
+| Disconnect | `false`   | `true`         | `false`   | Connection dropped mid-stream |
+| Error      | `false`   | `false`        | `true`    | Stream ended with an error    |
 
 ## `onToolCall`
 
@@ -95,15 +95,15 @@ interface ChatOnToolCallPayload {
 
 ### Tool invocation states
 
-| State                | Description                                       |
-| :------------------- | :------------------------------------------------ |
-| `input-streaming`    | Tool input is being streamed                      |
-| `input-available`    | Tool input is fully available                     |
-| `approval-requested` | Waiting for human-in-the-loop approval            |
-| `approval-responded` | User has approved or denied                       |
-| `output-available`   | Tool execution completed with output              |
-| `output-error`       | Tool execution failed                             |
-| `output-denied`      | User denied the tool execution                    |
+| State                | Description                            |
+| :------------------- | :------------------------------------- |
+| `input-streaming`    | Tool input is being streamed           |
+| `input-available`    | Tool input is fully available          |
+| `approval-requested` | Waiting for human-in-the-loop approval |
+| `approval-responded` | User has approved or denied            |
+| `output-available`   | Tool execution completed with output   |
+| `output-error`       | Tool execution failed                  |
+| `output-denied`      | User denied the tool execution         |
 
 ## `onData`
 
@@ -169,13 +169,13 @@ type ChatErrorSource = 'send' | 'stream' | 'history' | 'render' | 'adapter';
 
 ### Error sources
 
-| Source    | When it fires                                              |
-| :-------- | :--------------------------------------------------------- |
-| `send`    | `sendMessage()` rejected                                   |
-| `stream`  | Stream processing encountered an error                     |
-| `history` | `listMessages()` or `listConversations()` rejected         |
-| `render`  | A rendering error occurred in the message list             |
-| `adapter` | A generic adapter method threw                             |
+| Source    | When it fires                                      |
+| :-------- | :------------------------------------------------- |
+| `send`    | `sendMessage()` rejected                           |
+| `stream`  | Stream processing encountered an error             |
+| `history` | `listMessages()` or `listConversations()` rejected |
+| `render`  | A rendering error occurred in the message list     |
+| `adapter` | A generic adapter method threw                     |
 
 ## Reading errors in components
 

@@ -74,7 +74,7 @@ function MyMessageActions(props) {
   slots={{
     messageActions: MyMessageActions,
   }}
-/>
+/>;
 ```
 
 ### Accessing message context
@@ -89,7 +89,9 @@ function MyMessageActions(props) {
 
   return (
     <div {...props}>
-      <CopyButton text={message?.parts.map(p => p.type === 'text' ? p.text : '').join('')} />
+      <CopyButton
+        text={message?.parts.map((p) => (p.type === 'text' ? p.text : '')).join('')}
+      />
       {role === 'user' && <EditButton messageId={message?.id} />}
     </div>
   );
@@ -118,13 +120,13 @@ function MyMessageActions(props) {
 
 The `MessageActions` component receives the message context as owner state, which slot components can use for conditional styling:
 
-| Property    | Type            | Description                            |
-| :---------- | :-------------- | :------------------------------------- |
-| `messageId` | `string`        | ID of the current message              |
-| `role`      | `ChatRole`      | Role of the message author             |
-| `status`    | `ChatMessageStatus` | Current status of the message      |
-| `streaming` | `boolean`       | Whether the message is streaming       |
-| `isGrouped` | `boolean`       | Whether the message is in a group      |
+| Property    | Type                | Description                       |
+| :---------- | :------------------ | :-------------------------------- |
+| `messageId` | `string`            | ID of the current message         |
+| `role`      | `ChatRole`          | Role of the message author        |
+| `status`    | `ChatMessageStatus` | Current status of the message     |
+| `streaming` | `boolean`           | Whether the message is streaming  |
+| `isGrouped` | `boolean`           | Whether the message is in a group |
 
 ## Slots
 
@@ -134,7 +136,7 @@ The `MessageActions` component receives the message context as owner state, whic
 
 ## API
 
-- [`ChatMessageActions`](/x/api/chat-message-actions/)
+- [`ChatMessageActions`](/x/api/chat/chat-message-actions/)
 
 ## See also
 

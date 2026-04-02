@@ -21,8 +21,15 @@ This demo uses a slow adapter (500ms per chunk) to make the streaming behavior c
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createTextResponseChunks, createChunkStream } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createTextResponseChunks,
+  createChunkStream,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  minimalConversation,
+  minimalMessages,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const slowAdapter: ChatAdapter = {

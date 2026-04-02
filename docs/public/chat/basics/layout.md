@@ -22,7 +22,10 @@ The thread pane contains the conversation header, scrollable message list, and c
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -191,8 +194,8 @@ On narrow containers, consider switching to thread-only mode and managing conver
 
 ## API
 
-- [`ChatBox`](/x/api/chat-box/)
-- [`ChatLayout`](/x/api/chat-layout/)
+- [`ChatBox`](/x/api/chat/chat-box/)
+- [`ChatLayout`](/x/api/chat/chat-layout/)
 
 ## Next steps
 

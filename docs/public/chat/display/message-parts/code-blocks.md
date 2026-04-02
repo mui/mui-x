@@ -39,7 +39,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ChatBox, ChatCodeBlock } from '@mui/x-chat';
-import { createChunkStream, createTextResponseChunks, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createChunkStream,
+  createTextResponseChunks,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   demoUsers,
   minimalConversation,
@@ -241,18 +245,18 @@ To customize how code fences render inside `ChatBox`, override `partProps.text.r
 
 ## CSS classes
 
-| Class name                       | Description             |
-| :------------------------------- | :---------------------- |
-| `.MuiChatCodeBlock-root`         | Root container          |
-| `.MuiChatCodeBlock-header`       | Header bar              |
-| `.MuiChatCodeBlock-languageLabel`| Language label text     |
-| `.MuiChatCodeBlock-copyButton`   | Copy-to-clipboard button|
-| `.MuiChatCodeBlock-pre`          | Pre element wrapper     |
-| `.MuiChatCodeBlock-code`         | Code element            |
+| Class name                        | Description              |
+| :-------------------------------- | :----------------------- |
+| `.MuiChatCodeBlock-root`          | Root container           |
+| `.MuiChatCodeBlock-header`        | Header bar               |
+| `.MuiChatCodeBlock-languageLabel` | Language label text      |
+| `.MuiChatCodeBlock-copyButton`    | Copy-to-clipboard button |
+| `.MuiChatCodeBlock-pre`           | Pre element wrapper      |
+| `.MuiChatCodeBlock-code`          | Code element             |
 
 ## API
 
-- [`ChatCodeBlock`](/x/api/chat-code-block/)
+- [`ChatCodeBlock`](/x/api/chat/chat-code-block/)
 
 ## See also
 

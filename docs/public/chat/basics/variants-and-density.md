@@ -45,8 +45,14 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -127,13 +133,13 @@ export default function CompactVariant() {
 
 ### When to use each variant
 
-| Scenario                                           | Recommended variant |
-| :------------------------------------------------- | :------------------ |
+| Scenario                                            | Recommended variant |
+| :-------------------------------------------------- | :------------------ |
 | AI assistant interface (single bot, longer replies) | Default             |
-| Team messaging or multi-party chat                 | Compact             |
-| Customer support widget                            | Default             |
-| Slack/Discord-style channel view                   | Compact             |
-| Code review or agentic workflows                   | Default             |
+| Team messaging or multi-party chat                  | Compact             |
+| Customer support widget                             | Default             |
+| Slack/Discord-style channel view                    | Compact             |
+| Code review or agentic workflows                    | Default             |
 
 The compact variant is particularly effective for conversations with many short messages from multiple participants, where bubbles would create excessive visual noise.
 
@@ -158,8 +164,14 @@ import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Stack from '@mui/material/Stack';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -266,8 +278,8 @@ export default function DensityProp() {
 
 ### Density effects
 
-| Density       | Vertical gap between messages | Use case                              |
-| :------------ | :---------------------------- | :------------------------------------ |
+| Density       | Vertical gap between messages | Use case                               |
+| :------------ | :---------------------------- | :------------------------------------- |
 | `compact`     | Minimal                       | Dense information displays, dashboards |
 | `standard`    | Default                       | General-purpose chat                   |
 | `comfortable` | Generous                      | Accessibility, relaxed reading         |
@@ -277,18 +289,22 @@ export default function DensityProp() {
 The `density` prop is independent of `variant` — you can combine `variant="compact"` with any density value:
 
 ```tsx
-{/* Dense messenger-style layout with minimal spacing */}
-<ChatBox variant="compact" density="compact" adapter={adapter} />
+{
+  /* Dense messenger-style layout with minimal spacing */
+}
+<ChatBox variant="compact" density="compact" adapter={adapter} />;
 
-{/* Dense messenger-style layout with generous spacing */}
-<ChatBox variant="compact" density="comfortable" adapter={adapter} />
+{
+  /* Dense messenger-style layout with generous spacing */
+}
+<ChatBox variant="compact" density="comfortable" adapter={adapter} />;
 ```
 
 This independence gives you fine-grained control over both the visual style (bubbles vs. plain text) and the spatial rhythm (tight vs. relaxed) of the chat surface.
 
 ## API
 
-- [`ChatBox`](/x/api/chat-box/)
+- [`ChatBox`](/x/api/chat/chat-box/)
 
 ## Next steps
 

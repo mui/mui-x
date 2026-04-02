@@ -27,12 +27,12 @@ The `streamFlushInterval` prop controls the batching window in milliseconds:
 />
 ```
 
-| Value    | Effect                                                |
-| :------- | :---------------------------------------------------- |
-| `16`     | Default. Flushes at ~60fps for smooth character-level animation. |
-| `32-50`  | Reduces store update frequency. Good for lower-end devices or when streaming is visually less important. |
-| `100+`   | Chunks arrive in larger batches. Text appears to "jump" forward. Useful when minimizing re-renders matters more than streaming smoothness. |
-| `0`      | No batching — every delta triggers a store update immediately. Only use for debugging. |
+| Value   | Effect                                                                                                                                     |
+| :------ | :----------------------------------------------------------------------------------------------------------------------------------------- |
+| `16`    | Default. Flushes at ~60fps for smooth character-level animation.                                                                           |
+| `32-50` | Reduces store update frequency. Good for lower-end devices or when streaming is visually less important.                                   |
+| `100+`  | Chunks arrive in larger batches. Text appears to "jump" forward. Useful when minimizing re-renders matters more than streaming smoothness. |
+| `0`     | No batching — every delta triggers a store update immediately. Only use for debugging.                                                     |
 
 The optimal value depends on your UI complexity and target devices. Start with the default and increase it if profiling shows excessive re-renders during streaming.
 

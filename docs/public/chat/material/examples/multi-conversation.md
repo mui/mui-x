@@ -21,8 +21,14 @@ The conversation sidebar is rendered automatically when more than one conversati
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter, syncConversationPreview } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { inboxConversations, inboxThreads } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  syncConversationPreview,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 const adapter = createEchoAdapter({

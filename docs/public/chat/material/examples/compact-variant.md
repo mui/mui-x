@@ -16,8 +16,14 @@ Both the conversation list and the message list adapt automatically.
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter, syncConversationPreview } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { inboxConversations, inboxThreads } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  syncConversationPreview,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 const adapter = createEchoAdapter({
@@ -78,6 +84,6 @@ export default function CompactVariant() {
 | Default                                  | Compact                                         |
 | :--------------------------------------- | :---------------------------------------------- |
 | Colored message bubbles                  | Plain text, no background                       |
-| User messages right-aligned              | All messages left-aligned                        |
+| User messages right-aligned              | All messages left-aligned                       |
 | Timestamp below each message             | Timestamp in the group header, next to author   |
 | Conversation list shows avatar + preview | Conversation list shows compact title + actions |

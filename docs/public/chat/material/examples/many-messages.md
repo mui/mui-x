@@ -21,8 +21,14 @@ This demo verifies that the ChatBox handles a large number of messages correctly
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 const adapter = createEchoAdapter();

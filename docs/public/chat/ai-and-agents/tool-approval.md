@@ -22,14 +22,14 @@ Tool approval lets you pause the agent when it requests a potentially dangerous 
 
 The approval lifecycle extends the standard tool invocation states with two additional phases:
 
-| State                | Description                                        |
-| :------------------- | :------------------------------------------------- |
-| `input-streaming`    | Tool input JSON is being streamed                  |
-| `input-available`    | Tool input is fully available                      |
-| `approval-requested` | Stream pauses — user approval is needed            |
-| `approval-responded` | User has responded, stream continues               |
-| `output-available`   | Tool output is ready (if approved)                 |
-| `output-denied`      | User denied the tool call                          |
+| State                | Description                             |
+| :------------------- | :-------------------------------------- |
+| `input-streaming`    | Tool input JSON is being streamed       |
+| `input-available`    | Tool input is fully available           |
+| `approval-requested` | Stream pauses — user approval is needed |
+| `approval-responded` | User has responded, stream continues    |
+| `output-available`   | Tool output is ready (if approved)      |
+| `output-denied`      | User denied the tool call               |
 
 The stream pauses at `approval-requested` until your UI calls `addToolApprovalResponse()`.
 
@@ -47,12 +47,12 @@ controller.enqueue({
 });
 ```
 
-| Field        | Type                  | Description                                 |
-| :----------- | :-------------------- | :------------------------------------------ |
-| `toolCallId` | `string`              | The tool invocation being gated             |
-| `toolName`   | `string`              | Name of the tool requesting approval        |
-| `input`      | `object`              | The tool's input, shown to the user         |
-| `approvalId` | `string \| undefined` | Optional distinct approval ID               |
+| Field        | Type                  | Description                          |
+| :----------- | :-------------------- | :----------------------------------- |
+| `toolCallId` | `string`              | The tool invocation being gated      |
+| `toolName`   | `string`              | Name of the tool requesting approval |
+| `input`      | `object`              | The tool's input, shown to the user  |
+| `approvalId` | `string \| undefined` | Optional distinct approval ID        |
 
 When this chunk arrives, the tool invocation moves to `state: 'approval-requested'`.
 
@@ -62,9 +62,9 @@ Implement `addToolApprovalResponse` on your adapter to send the user's decision 
 
 ```ts
 interface ChatAddToolApproveResponseInput {
-  id: string;        // the approval request ID from the stream chunk
+  id: string; // the approval request ID from the stream chunk
   approved: boolean; // true = approved, false = denied
-  reason?: string;   // optional reason surfaced to the model when denied
+  reason?: string; // optional reason surfaced to the model when denied
 }
 ```
 
@@ -151,16 +151,18 @@ const adapter = React.useMemo(
 );
 
 // In your JSX:
-{pendingConfirmation && (
-  <ChatConfirmation
-    message="Proceed with this action?"
-    onConfirm={() => {
-      setPendingConfirmation(false);
-      /* approve the tool */
-    }}
-    onCancel={() => setPendingConfirmation(false)}
-  />
-)}
+{
+  pendingConfirmation && (
+    <ChatConfirmation
+      message="Proceed with this action?"
+      onConfirm={() => {
+        setPendingConfirmation(false);
+        /* approve the tool */
+      }}
+      onCancel={() => setPendingConfirmation(false)}
+    />
+  );
+}
 ```
 
 ## Relationship to tool-call approval
@@ -221,7 +223,7 @@ const renderers: ChatPartRendererMap = {
 
 ## API
 
-- [`ChatConfirmation`](/x/api/chat-confirmation/)
+- [`ChatConfirmation`](/x/api/chat/chat-confirmation/)
 
 ## See also
 

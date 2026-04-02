@@ -32,22 +32,22 @@ interface ChatError {
 
 ### Error codes
 
-| Code              | Description                                        |
-| :---------------- | :------------------------------------------------- |
-| `SEND_ERROR`      | The adapter's `sendMessage()` threw an error.      |
-| `STREAM_ERROR`    | The stream failed or disconnected unexpectedly.    |
-| `HISTORY_ERROR`   | Loading message history failed.                    |
-| `REALTIME_ERROR`  | The realtime subscription encountered an error.    |
+| Code             | Description                                     |
+| :--------------- | :---------------------------------------------- |
+| `SEND_ERROR`     | The adapter's `sendMessage()` threw an error.   |
+| `STREAM_ERROR`   | The stream failed or disconnected unexpectedly. |
+| `HISTORY_ERROR`  | Loading message history failed.                 |
+| `REALTIME_ERROR` | The realtime subscription encountered an error. |
 
 ### Error sources
 
-| Source      | Description                              |
-| :---------- | :--------------------------------------- |
-| `'send'`    | Error during message send.               |
-| `'stream'`  | Error during stream processing.          |
-| `'history'` | Error during history loading.            |
-| `'render'`  | Error during component rendering.        |
-| `'adapter'` | Generic adapter error.                   |
+| Source      | Description                       |
+| :---------- | :-------------------------------- |
+| `'send'`    | Error during message send.        |
+| `'stream'`  | Error during stream processing.   |
+| `'history'` | Error during history loading.     |
+| `'render'`  | Error during component rendering. |
+| `'adapter'` | Generic adapter error.            |
 
 ### `recoverable` vs `retryable`
 
@@ -82,7 +82,11 @@ Handle errors at the application level using the `onError` prop on `ChatBox`:
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { minimalConversation, minimalMessages, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const demoMembers = [demoUsers.you, demoUsers.agent];
@@ -176,11 +180,7 @@ import { useChat } from '@mui/x-chat/headless';
 function RetryButton({ messageId }: { messageId: string }) {
   const { retry } = useChat();
 
-  return (
-    <button onClick={() => retry(messageId)}>
-      Retry
-    </button>
-  );
+  return <button onClick={() => retry(messageId)}>Retry</button>;
 }
 ```
 
@@ -223,13 +223,13 @@ See [Streaming -- Reconnecting to streams](/x/react-chat/behavior/streaming/#rec
 
 The message `status` field reflects error states:
 
-| Status        | Description                                       |
-| :------------ | :------------------------------------------------ |
-| `'sending'`   | Message is being sent (optimistic update).        |
-| `'streaming'` | Assistant response is streaming.                  |
-| `'sent'`      | Message was sent and response completed.          |
-| `'error'`     | An error occurred during send or streaming.       |
-| `'cancelled'` | The stream was aborted by the user.               |
+| Status        | Description                                 |
+| :------------ | :------------------------------------------ |
+| `'sending'`   | Message is being sent (optimistic update).  |
+| `'streaming'` | Assistant response is streaming.            |
+| `'sent'`      | Message was sent and response completed.    |
+| `'error'`     | An error occurred during send or streaming. |
+| `'cancelled'` | The stream was aborted by the user.         |
 
 Components can use the `status` field to conditionally render error indicators:
 
@@ -248,7 +248,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 
 ## API
 
-- [`ChatBox`](/x/api/chat-box/)
+- [`ChatBox`](/x/api/chat/chat-box/)
 
 ## See also
 

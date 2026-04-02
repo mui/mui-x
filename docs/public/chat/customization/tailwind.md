@@ -95,13 +95,19 @@ Every unstyled component exposes `data-*` attributes that reflect its current st
 Use Tailwind's attribute selectors to style state variations without JavaScript:
 
 ```tsx
-{/* The send button sets data-disabled when the composer is empty or streaming */}
+{
+  /* The send button sets data-disabled when the composer is empty or streaming */
+}
 <Composer.SendButton className="bg-blue-600 text-white data-[disabled]:opacity-40 data-[disabled]:cursor-not-allowed" />;
 
-{/* Message root sets data-author="self" or data-author="other" */}
+{
+  /* Message root sets data-author="self" or data-author="other" */
+}
 <Message.Root className="flex gap-3 data-[author=self]:flex-row-reverse" />;
 
-{/* Typing indicator sets data-visible when the assistant is responding */}
+{
+  /* Typing indicator sets data-visible when the assistant is responding */
+}
 <Indicators.TypingIndicator className="hidden data-[visible]:flex items-center gap-1 text-sm text-gray-500" />;
 ```
 

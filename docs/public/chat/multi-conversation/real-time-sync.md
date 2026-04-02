@@ -257,7 +257,7 @@ The runtime calls `setTyping` when the composer value changes from empty to non-
 
 ## API
 
-- [`ChatBox`](/x/api/chat-box/)
+- [`ChatBox`](/x/api/chat/chat-box/)
 
 ## See also
 

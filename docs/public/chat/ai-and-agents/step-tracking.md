@@ -178,13 +178,23 @@ After streaming, the message's `parts` array contains `step-start` entries inter
 ```ts
 // Example parts array after streaming
 [
-  { type: 'step-start' },                          // Step 1 delimiter
-  { type: 'tool', toolInvocation: { /* ... */ } },  // Step 1 content
-  { type: 'step-start' },                          // Step 2 delimiter
-  { type: 'tool', toolInvocation: { /* ... */ } },  // Step 2 content
-  { type: 'step-start' },                          // Step 3 delimiter
-  { type: 'text', text: 'Final answer...' },        // Step 3 content
-]
+  { type: 'step-start' }, // Step 1 delimiter
+  {
+    type: 'tool',
+    toolInvocation: {
+      /* ... */
+    },
+  }, // Step 1 content
+  { type: 'step-start' }, // Step 2 delimiter
+  {
+    type: 'tool',
+    toolInvocation: {
+      /* ... */
+    },
+  }, // Step 2 content
+  { type: 'step-start' }, // Step 3 delimiter
+  { type: 'text', text: 'Final answer...' }, // Step 3 content
+];
 ```
 
 This structure makes it straightforward to group parts by step when building custom renderers. Iterate through the parts and treat each `step-start` as a new group boundary.
@@ -224,7 +234,7 @@ controller.enqueue({ type: 'finish-step' });
 
 ## API
 
-- [`ChatMessageContent`](/x/api/chat-message-content/)
+- [`ChatMessageContent`](/x/api/chat/chat-message-content/)
 
 ## See also
 

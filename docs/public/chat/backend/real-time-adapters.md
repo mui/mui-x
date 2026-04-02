@@ -3,7 +3,6 @@ productId: x-chat
 title: Real-Time Adapters
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatProvider
 ---
 
 # Chat - Real-Time Adapters

@@ -22,8 +22,14 @@ The conversation list is the sidebar that shows all available conversations and 
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter, syncConversationPreview } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { inboxConversations, inboxThreads } from 'docsx/data/chat/material/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  syncConversationPreview,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 const adapter = createEchoAdapter({
@@ -488,7 +494,7 @@ Pass `aria-label` to the root through `slotProps`:
 
 ## API
 
-- [`ChatConversationList`](/x/api/chat-conversation-list/)
+- [`ChatConversationList`](/x/api/chat/chat-conversation-list/)
 
 ## See also
 

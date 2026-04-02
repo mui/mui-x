@@ -3,7 +3,6 @@ productId: x-chat
 title: Adapters
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatProvider
 ---
 
 # Chat - Adapters
@@ -325,10 +324,6 @@ export default function App() {
 ```
 
 Everything else — hooks, selectors, streaming — works the same way regardless of whether you use `ChatBox` or build your own layout.
-
-## API
-
-- [`ChatProvider`](/x/api/chat-provider/)
 
 ## See also
 

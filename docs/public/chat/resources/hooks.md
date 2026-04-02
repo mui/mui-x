@@ -3,7 +3,6 @@ productId: x-chat
 title: Hooks Reference
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatProvider
 ---
 
 # Chat - Hooks Reference

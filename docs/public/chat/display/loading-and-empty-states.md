@@ -41,10 +41,10 @@ Set the `lines` prop to control how many shimmer lines are displayed:
 
 ### Slots
 
-| Slot   | Default element | Description                    |
-| :----- | :-------------- | :----------------------------- |
-| `root` | `div`           | The outer container            |
-| `line` | `div`           | Each animated shimmer line     |
+| Slot   | Default element | Description                |
+| :----- | :-------------- | :------------------------- |
+| `root` | `div`           | The outer container        |
+| `line` | `div`           | Each animated shimmer line |
 
 Customize the skeleton appearance through slot replacement:
 
@@ -59,10 +59,10 @@ Customize the skeleton appearance through slot replacement:
 
 ### CSS classes
 
-| Class name                        | Description          |
-| :-------------------------------- | :------------------- |
-| `.MuiChatMessageSkeleton-root`    | Root container       |
-| `.MuiChatMessageSkeleton-line`    | Individual line      |
+| Class name                     | Description     |
+| :----------------------------- | :-------------- |
+| `.MuiChatMessageSkeleton-root` | Root container  |
+| `.MuiChatMessageSkeleton-line` | Individual line |
 
 ## Empty state
 
@@ -72,7 +72,10 @@ When a conversation exists but has no messages yet, `ChatBox` renders an empty m
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createEchoAdapter,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
 import { demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const demoMembers = [demoUsers.you, demoUsers.agent];
@@ -163,7 +166,7 @@ function TypingIndicator({ message }) {
 
 ## API
 
-- [`ChatMessageSkeleton`](/x/api/chat-message-skeleton/)
+- [`ChatMessageSkeleton`](/x/api/chat/chat-message-skeleton/)
 
 ## See also
 

@@ -20,7 +20,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ChatBox, ChatCodeBlock } from '@mui/x-chat';
-import { createChunkStream, createTextResponseChunks, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  createChunkStream,
+  createTextResponseChunks,
+  randomId,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   demoUsers,
   minimalConversation,
