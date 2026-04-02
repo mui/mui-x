@@ -47,14 +47,13 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   const cellRef = React.useRef<HTMLDivElement>(null);
   const hasFocus = focusedCell?.rowType === 'header' && focusedCell?.columnIndex === index;
 
-  // Apply DOM focus when this cell becomes the focused cell (Data Grid pattern)
+  // Apply DOM focus when this cell becomes the focused cell
   React.useEffect(() => {
     if (!hasFocus || !cellRef.current) {
       return;
     }
-    // Focus the button inside if it exists, otherwise the cell itself
-    const button = cellRef.current.querySelector<HTMLElement>('button:not([tabindex="-1"])');
-    const elementToFocus = button ?? cellRef.current;
+    const focusableChild = cellRef.current.querySelector<HTMLElement>('[tabindex="0"]');
+    const elementToFocus = focusableChild ?? cellRef.current;
     if (!cellRef.current.contains(document.activeElement)) {
       elementToFocus.focus({ preventScroll: true });
     }
@@ -88,7 +87,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   );
 
   const keyboardProps = {
-    tabIndex: focusedCell === null ? -1 : hasFocus ? 0 : -1,
+    tabIndex: hasFocus ? 0 : -1,
     onKeyDown: handleKeyDown,
     onFocus: handleFocus,
   };
