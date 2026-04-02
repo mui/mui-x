@@ -4,7 +4,6 @@ import { fireEvent } from '@mui/internal-test-utils';
 import {
   buildFieldInteractions,
   getCleanedSelectedContent,
-  getTextbox,
   createPickerRenderer,
   expectFieldValueV7,
 } from 'test/utils/pickers';
@@ -74,7 +73,7 @@ describe(`RTL - test arrows navigation`, () => {
     const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
 
     // Test with accessible DOM structure
-    let view = renderWithProps({ enableAccessibleFieldDOMStructure: true }, { direction: 'rtl' });
+    const view = renderWithProps({}, { direction: 'rtl' });
 
     view.selectSection('hours');
 
@@ -84,24 +83,13 @@ describe(`RTL - test arrows navigation`, () => {
     });
 
     view.unmount();
-
-    // Test with non-accessible DOM structure
-    view = renderWithProps({ enableAccessibleFieldDOMStructure: false }, { direction: 'rtl' });
-
-    const input = getTextbox();
-    view.selectSection('hours');
-
-    expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      fireEvent.keyDown(input, { key: 'ArrowRight' });
-    });
   });
 
   it('should move selected section to the previous section respecting RTL order in empty field', () => {
     const expectedValues = ['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'];
 
     // Test with accessible DOM structure
-    let view = renderWithProps({ enableAccessibleFieldDOMStructure: true }, { direction: 'rtl' });
+    const view = renderWithProps({}, { direction: 'rtl' });
 
     view.selectSection('day');
 
@@ -111,17 +99,6 @@ describe(`RTL - test arrows navigation`, () => {
     });
 
     view.unmount();
-
-    // Test with non-accessible DOM structure
-    view = renderWithProps({ enableAccessibleFieldDOMStructure: false }, { direction: 'rtl' });
-
-    const input = getTextbox();
-    view.selectSection('day');
-
-    expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      fireEvent.keyDown(input, { key: 'ArrowLeft' });
-    });
   });
 
   it('should move selected section to the next section respecting RTL order in non-empty field', () => {
@@ -129,9 +106,8 @@ describe(`RTL - test arrows navigation`, () => {
     const expectedValues = ['11', '54', '1397', '02', '05', '05'];
 
     // Test with accessible DOM structure
-    let view = renderWithProps(
+    const view = renderWithProps(
       {
-        enableAccessibleFieldDOMStructure: true,
         defaultValue: adapter.date('2018-04-25T11:54:00'),
       },
       { direction: 'rtl' },
@@ -145,23 +121,6 @@ describe(`RTL - test arrows navigation`, () => {
     });
 
     view.unmount();
-
-    // Test with non-accessible DOM structure
-    view = renderWithProps(
-      {
-        defaultValue: adapter.date('2018-04-25T11:54:00'),
-        enableAccessibleFieldDOMStructure: false,
-      },
-      { direction: 'rtl' },
-    );
-
-    const input = getTextbox();
-    view.selectSection('hours');
-
-    expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      fireEvent.keyDown(input, { key: 'ArrowRight' });
-    });
   });
 
   it('should move selected section to the previous section respecting RTL order in non-empty field', () => {
@@ -169,9 +128,8 @@ describe(`RTL - test arrows navigation`, () => {
     const expectedValues = ['05', '02', '1397', '54', '11', '11'];
 
     // Test with accessible DOM structure
-    let view = renderWithProps(
+    const view = renderWithProps(
       {
-        enableAccessibleFieldDOMStructure: true,
         defaultValue: adapter.date('2018-04-25T11:54:00'),
       },
       { direction: 'rtl' },
@@ -185,23 +143,6 @@ describe(`RTL - test arrows navigation`, () => {
     });
 
     view.unmount();
-
-    // Test with non-accessible DOM structure
-    view = renderWithProps(
-      {
-        defaultValue: adapter.date('2018-04-25T11:54:00'),
-        enableAccessibleFieldDOMStructure: false,
-      },
-      { direction: 'rtl' },
-    );
-
-    const input = getTextbox();
-    view.selectSection('day');
-
-    expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      fireEvent.keyDown(input, { key: 'ArrowLeft' });
-    });
   });
 });
 
@@ -252,7 +193,6 @@ adapterToTest.forEach((adapterName) => {
       sectionConfig: ReturnType<typeof getDateSectionConfigFromFormatToken>;
     }) => {
       const view = renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
         defaultValue: initialValue,
         format,
       });
