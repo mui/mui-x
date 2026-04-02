@@ -4,6 +4,6 @@ import { UseDateFieldProps } from './DateField.types';
 import { useDateManager } from '../managers';
 
 export const useDateField = <TProps extends UseDateFieldProps>(props: TProps) => {
-  const manager = useDateManager(props);
+  const manager = useDateManager();
   return useField({ manager, props });
 };
