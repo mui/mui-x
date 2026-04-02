@@ -1,7 +1,16 @@
 <LineChartPro
-  xAxis={[{ scaleType: 'time', data: dates, zoom: true }]}
-  series={[{ data: values, showMark: false, label: 'Value' }]}
-  height={300}
+  {...chartConfiguration}
   showToolbar
-  slots={{ toolbar: CustomToolbar }}
+  slots={{
+    toolbar: () => {
+      return (<Toolbar>
+        <ChartsToolbarRangeButtonTrigger value={{ unit: 'month' }}>
+          1 month
+        </ChartsToolbarRangeButtonTrigger>
+        <ChartsToolbarRangeButtonTrigger value={null}>
+          Everything
+        </ChartsToolbarRangeButtonTrigger>
+      </Toolbar>);
+    }
+  }}
 />
