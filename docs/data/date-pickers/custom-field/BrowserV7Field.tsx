@@ -43,7 +43,7 @@ const BrowserIconButton = styled('button', {
 });
 
 function BrowserDateField(props: DatePickerFieldProps) {
-  const fieldResponse = useDateField<true, typeof props>(props);
+  const fieldResponse = useDateField<typeof props>(props);
 
   const {
     // Should be passed to the PickersSectionList component
