@@ -103,14 +103,13 @@ describe('<AdapterLuxon />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({});
 
           expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
           const view = renderWithProps({
-            enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
@@ -158,7 +157,6 @@ describe('<AdapterLuxon />', () => {
 
         it('should have correct placeholder', () => {
           const view = renderWithProps({
-            enableAccessibleFieldDOMStructure: true,
             format: 'DD',
           });
 
@@ -167,7 +165,6 @@ describe('<AdapterLuxon />', () => {
 
         it('should have well formatted value', () => {
           const view = renderWithProps({
-            enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
             format: 'DD',
           });

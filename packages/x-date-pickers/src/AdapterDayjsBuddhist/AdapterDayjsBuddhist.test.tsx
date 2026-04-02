@@ -47,7 +47,6 @@ describe('<AdapterDayjsBuddhist />', () => {
 
       it('should have well formatted value', () => {
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           value: adapter.date(testDate),
         });
 

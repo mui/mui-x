@@ -6,7 +6,7 @@ import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionLis
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 import { fireUserEvent } from '../fireUserEvent';
-import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
+import { expectFieldValueV7 } from './assertions';
 
 export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
 
@@ -32,7 +32,7 @@ export type FieldPressCharacter = (
 
 export interface BuildFieldInteractionsResponse<P extends {}> {
   renderWithProps: (
-    props: P & { enableAccessibleFieldDOMStructure: boolean },
+    props: P,
     config?: {
       hook?: (props: P) => Record<string, any>;
       componentFamily?: 'picker' | 'field';
@@ -81,7 +81,6 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
     params: P & {
       keyStrokes: { value: string; expected: string }[];
       selectedSection?: FieldSectionType;
-      skipV7?: boolean;
     },
   ) => void;
 }
@@ -145,10 +144,6 @@ export const buildFieldInteractions = <P extends {}>({
     const result = render(<WrappedComponent {...(props as any)} />);
 
     const getSectionsContainer = () => {
-      if (!props.enableAccessibleFieldDOMStructure) {
-        throw new Error('Cannot use fake input with v6 TextField');
-      }
-
       return document.querySelector<HTMLDivElement>(`.${pickersSectionListClasses.root}`)!;
     };
 
@@ -174,15 +169,10 @@ export const buildFieldInteractions = <P extends {}>({
 
       act(() => {
         fieldRef.current!.setSelectedSections(sectionIndexToSelect);
-        if (!props.enableAccessibleFieldDOMStructure) {
-          getTextbox().focus();
-        }
       });
 
       act(() => {
-        if (props.enableAccessibleFieldDOMStructure) {
-          getSection(sectionIndexToSelect).focus();
-        }
+        getSection(sectionIndexToSelect).focus();
       });
     };
 
@@ -202,15 +192,10 @@ export const buildFieldInteractions = <P extends {}>({
 
       await act(async () => {
         fieldRef.current!.setSelectedSections(sectionIndexToSelect);
-        if (!props.enableAccessibleFieldDOMStructure) {
-          getTextbox().focus();
-        }
       });
 
       await act(async () => {
-        if (props.enableAccessibleFieldDOMStructure) {
-          getSection(sectionIndexToSelect).focus();
-        }
+        getSection(sectionIndexToSelect).focus();
       });
     };
 
@@ -229,10 +214,6 @@ export const buildFieldInteractions = <P extends {}>({
     };
 
     const pressKey: FieldPressCharacter = (sectionIndex, key) => {
-      if (!props.enableAccessibleFieldDOMStructure) {
-        throw new Error('`pressKey` is only available with v7 TextField');
-      }
-
       const target =
         sectionIndex === null ? getSectionsContainer() : getActiveSection(sectionIndex);
 
@@ -273,26 +254,13 @@ export const buildFieldInteractions = <P extends {}>({
     selectedSection,
     ...props
   }) => {
-    // Test with accessible DOM structure
-    const v7Response = renderWithProps({
+    const response = renderWithProps({
       ...props,
-      enableAccessibleFieldDOMStructure: true,
     } as any);
-    v7Response.selectSection(selectedSection);
-    v7Response.pressKey(undefined, key);
-    expectFieldValueV7(v7Response.getSectionsContainer(), expectedValue);
-    v7Response.unmount();
-
-    // Test with non-accessible DOM structure
-    const v6Response = renderWithProps({
-      ...props,
-      enableAccessibleFieldDOMStructure: false,
-    } as any);
-    v6Response.selectSection(selectedSection);
-    const input = getTextbox();
-    fireUserEvent.keyPress(input, { key });
-    expectFieldValueV6(input, expectedValue);
-    v6Response.unmount();
+    response.selectSection(selectedSection);
+    response.pressKey(undefined, key);
+    expectFieldValueV7(response.getSectionsContainer(), expectedValue);
+    response.unmount();
   };
 
   const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
@@ -300,39 +268,19 @@ export const buildFieldInteractions = <P extends {}>({
     selectedSection,
     ...props
   }) => {
-    // Test with accessible DOM structure
-    const v7Response = renderWithProps({
+    const response = renderWithProps({
       ...props,
-      enableAccessibleFieldDOMStructure: true,
     } as any);
-    v7Response.selectSection(selectedSection);
+    response.selectSection(selectedSection);
     keyStrokes.forEach((keyStroke) => {
-      v7Response.pressKey(undefined, keyStroke.value);
+      response.pressKey(undefined, keyStroke.value);
       expectFieldValueV7(
-        v7Response.getSectionsContainer(),
+        response.getSectionsContainer(),
         keyStroke.expected,
         (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
       );
     });
-    v7Response.unmount();
-
-    // Test with non-accessible DOM structure
-    const v6Response = renderWithProps({
-      ...props,
-      enableAccessibleFieldDOMStructure: false,
-    } as any);
-    v6Response.selectSection(selectedSection);
-    const input = getTextbox();
-
-    keyStrokes.forEach((keyStroke) => {
-      fireEvent.change(input, { target: { value: keyStroke.value } });
-      expectFieldValueV6(
-        input,
-        keyStroke.expected,
-        (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
-      );
-    });
-    v6Response.unmount();
+    response.unmount();
   };
 
   return { testFieldKeyPress, testFieldChange, renderWithProps };

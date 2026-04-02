@@ -14,7 +14,6 @@ describe('<MobileDateTimePicker /> - Field', () => {
 
   it('should pass the ampm prop to the field', () => {
     const view = renderWithProps({
-      enableAccessibleFieldDOMStructure: true as const,
       ampm: true,
     });
 

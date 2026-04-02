@@ -150,7 +150,6 @@ describe('<MobileDatePicker />', () => {
 
     it('should update internal state when controlled value is updated', async () => {
       const view = renderWithProps({
-        enableAccessibleFieldDOMStructure: true as const,
         value: adapterToUse.date('2019-01-01'),
       });
 

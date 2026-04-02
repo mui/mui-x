@@ -44,7 +44,6 @@ describe('<DateTimeField /> - Timezone', () => {
       it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
         const onChange = spy();
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           format,
         });
@@ -70,7 +69,6 @@ describe('<DateTimeField /> - Timezone', () => {
           it('should use timezone prop for onChange and rendering when no value is provided', () => {
             const onChange = spy();
             const view = renderWithProps({
-              enableAccessibleFieldDOMStructure: true,
               onChange,
               format,
               timezone,
@@ -89,7 +87,6 @@ describe('<DateTimeField /> - Timezone', () => {
           it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
             const onChange = spy();
             const view = renderWithProps({
-              enableAccessibleFieldDOMStructure: true,
               defaultValue: adapter.date(undefined, timezone),
               onChange,
               format,
@@ -123,7 +120,7 @@ describe('<DateTimeField /> - Timezone', () => {
     });
 
     it('should update the field when the timezone changes (timestamp remains the same)', () => {
-      const view = renderWithProps({ enableAccessibleFieldDOMStructure: true, value: null });
+      const view = renderWithProps({ value: null });
 
       const date = (adapter.date('2020-06-18T14:30:10.000Z') as DateTime).setZone('UTC');
       view.setProps({ value: date });
