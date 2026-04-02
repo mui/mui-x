@@ -68,7 +68,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     }
 
     if (event.key === 'Enter' && event.target === event.currentTarget) {
-      const button = (event.currentTarget as HTMLElement).querySelector('button');
+      const button = event.currentTarget.querySelector('button');
       if (button) {
         button.click();
       }
