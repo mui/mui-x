@@ -16,19 +16,24 @@ describe('<CalendarGrid.DayCell />', () => {
 
   const day = adapter.now('default');
 
+  function DayCellWrapper({
+    children,
+    ...providerProps
+  }: { children: React.ReactNode } & Partial<React.ComponentProps<typeof EventCalendarProvider>>) {
+    return (
+      <EventCalendarProvider events={[]} {...providerProps}>
+        <CalendarGrid.Root>
+          <CalendarGrid.DayRow start={adapter.startOfDay(day)} end={adapter.endOfDay(day)}>
+            {children}
+          </CalendarGrid.DayRow>
+        </CalendarGrid.Root>
+      </EventCalendarProvider>
+    );
+  }
+
   describeConformance(<CalendarGrid.DayCell value={day} />, () => ({
     refInstanceof: window.HTMLDivElement,
-    render(node) {
-      return render(
-        <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root>
-            <CalendarGrid.DayRow start={adapter.startOfDay(day)} end={adapter.endOfDay(day)}>
-              {node}
-            </CalendarGrid.DayRow>
-          </CalendarGrid.Root>
-        </EventCalendarProvider>,
-      );
-    },
+    render: (node) => render(<DayCellWrapper>{node}</DayCellWrapper>),
   }));
 
   describe('keyboard interactions', () => {
@@ -36,19 +41,15 @@ describe('<CalendarGrid.DayCell />', () => {
       let store: AnyEventCalendarStore | null = null;
 
       render(
-        <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root>
-            <CalendarGrid.DayRow start={adapter.startOfDay(day)} end={adapter.endOfDay(day)}>
-              <CalendarGrid.DayCell value={day} />
-            </CalendarGrid.DayRow>
-          </CalendarGrid.Root>
+        <DayCellWrapper>
+          <CalendarGrid.DayCell value={day} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as unknown as React.Context<AnyEventCalendarStore>}
             onMount={(s) => {
               store = s;
             }}
           />
-        </EventCalendarProvider>,
+        </DayCellWrapper>,
       );
 
       const cell = screen.getByRole('gridcell');
@@ -66,19 +67,15 @@ describe('<CalendarGrid.DayCell />', () => {
       let store: AnyEventCalendarStore | null = null;
 
       render(
-        <EventCalendarProvider events={[]} eventCreation={false}>
-          <CalendarGrid.Root>
-            <CalendarGrid.DayRow start={adapter.startOfDay(day)} end={adapter.endOfDay(day)}>
-              <CalendarGrid.DayCell value={day} />
-            </CalendarGrid.DayRow>
-          </CalendarGrid.Root>
+        <DayCellWrapper eventCreation={false}>
+          <CalendarGrid.DayCell value={day} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as unknown as React.Context<AnyEventCalendarStore>}
             onMount={(s) => {
               store = s;
             }}
           />
-        </EventCalendarProvider>,
+        </DayCellWrapper>,
       );
 
       const cell = screen.getByRole('gridcell');

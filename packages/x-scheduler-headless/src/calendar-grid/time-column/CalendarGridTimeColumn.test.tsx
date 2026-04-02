@@ -15,37 +15,39 @@ describe('<CalendarGrid.TimeColumn />', () => {
   const { render } = createSchedulerRenderer();
 
   const day = adapter.now('default');
+  const start = adapter.startOfDay(day);
+  const end = adapter.endOfDay(day);
 
-  describeConformance(
-    <CalendarGrid.TimeColumn start={adapter.startOfDay(day)} end={adapter.endOfDay(day)} />,
-    () => ({
-      refInstanceof: window.HTMLDivElement,
-      render(node) {
-        return render(
-          <EventCalendarProvider events={[]}>
-            <CalendarGrid.Root>{node}</CalendarGrid.Root>
-          </EventCalendarProvider>,
-        );
-      },
-    }),
-  );
+  function TimeColumnWrapper({
+    children,
+    ...providerProps
+  }: { children: React.ReactNode } & Partial<React.ComponentProps<typeof EventCalendarProvider>>) {
+    return (
+      <EventCalendarProvider events={[]} {...providerProps}>
+        <CalendarGrid.Root>{children}</CalendarGrid.Root>
+      </EventCalendarProvider>
+    );
+  }
+
+  describeConformance(<CalendarGrid.TimeColumn start={start} end={end} />, () => ({
+    refInstanceof: window.HTMLDivElement,
+    render: (node) => render(<TimeColumnWrapper>{node}</TimeColumnWrapper>),
+  }));
 
   describe('keyboard interactions', () => {
     it('should create a timed event placeholder on Enter keypress', () => {
       let store: AnyEventCalendarStore | null = null;
 
       render(
-        <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn start={adapter.startOfDay(day)} end={adapter.endOfDay(day)} />
-          </CalendarGrid.Root>
+        <TimeColumnWrapper>
+          <CalendarGrid.TimeColumn start={start} end={end} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as unknown as React.Context<AnyEventCalendarStore>}
             onMount={(s) => {
               store = s;
             }}
           />
-        </EventCalendarProvider>,
+        </TimeColumnWrapper>,
       );
 
       const cell = screen.getByRole('gridcell');
@@ -63,17 +65,15 @@ describe('<CalendarGrid.TimeColumn />', () => {
       let store: AnyEventCalendarStore | null = null;
 
       render(
-        <EventCalendarProvider events={[]} eventCreation={false}>
-          <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn start={adapter.startOfDay(day)} end={adapter.endOfDay(day)} />
-          </CalendarGrid.Root>
+        <TimeColumnWrapper eventCreation={false}>
+          <CalendarGrid.TimeColumn start={start} end={end} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as unknown as React.Context<AnyEventCalendarStore>}
             onMount={(s) => {
               store = s;
             }}
           />
-        </EventCalendarProvider>,
+        </TimeColumnWrapper>,
       );
 
       const cell = screen.getByRole('gridcell');
