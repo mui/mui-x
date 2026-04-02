@@ -8,9 +8,6 @@ const ROW_ORDER: GridCellRowType[] = ['header', 'day-grid', 'time-grid'];
 /**
  * Computes the target cell coordinates for a given arrow key press.
  * Returns `null` if navigation is not possible (e.g., ArrowUp on the header row).
- *
- * This is a pure function with no DOM side effects.
- * Focus application is handled by each cell via React state + effect.
  */
 export function getNavigationTarget(
   key: string,
