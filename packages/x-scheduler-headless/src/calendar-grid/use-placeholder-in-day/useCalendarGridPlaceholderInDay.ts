@@ -13,6 +13,7 @@ import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-ut
 export function useCalendarGridPlaceholderInDay(
   day: TemporalSupportedObject,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
+  maxEvents?: number,
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
@@ -86,14 +87,22 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     let positionIndex = 1;
-    for (const rowDay of row.days) {
-      const found = rowDay.withPosition.find(
-        (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
+    const targetDay = row.days.find((rowDay) => adapter.isSameDay(rowDay.value, day));
+    if (targetDay) {
+      const usedIndexes = new Set(
+        targetDay.withPosition
+          .filter((occ) => occ.key !== rawPlaceholder.occurrenceKey)
+          .map((occ) => occ.position.index),
       );
-      if (found) {
-        positionIndex = found.position.index;
-        break;
+      while (usedIndexes.has(positionIndex)) {
+        positionIndex += 1;
       }
+    }
+
+    // If the position exceeds the available event rows, clamp it so the
+    // placeholder renders on top of an existing event instead of overflowing.
+    if (maxEvents != null && positionIndex > maxEvents) {
+      positionIndex = maxEvents;
     }
 
     return {
@@ -106,5 +115,5 @@ export function useCalendarGridPlaceholderInDay(
         daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
       },
     };
-  }, [adapter, day, originalEvent, originalEventId, rawPlaceholder, row.days, rowEnd]);
+  }, [adapter, day, maxEvents, originalEvent, originalEventId, rawPlaceholder, row.days, rowEnd]);
 }
