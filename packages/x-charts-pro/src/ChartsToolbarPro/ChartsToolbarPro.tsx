@@ -245,7 +245,17 @@ ChartsToolbarPro.propTypes = {
         PropTypes.func,
         PropTypes.shape({
           step: PropTypes.number,
-          unit: PropTypes.oneOf(['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'second', 'week', 'year']).isRequired,
+          unit: PropTypes.oneOf([
+            'day',
+            'hour',
+            'microsecond',
+            'millisecond',
+            'minute',
+            'month',
+            'second',
+            'week',
+            'year',
+          ]).isRequired,
         }),
       ]),
     }),
