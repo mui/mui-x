@@ -239,7 +239,9 @@ function createSupportAdapter(): ChatAdapter {
   return {
     async sendMessage({ conversationId }) {
       const conversationKey = conversationId ?? conversationsSeed[0].id;
-      const replies = scriptedRepliesByConversation[conversationKey] ?? scriptedRepliesByConversation['support-chat'];
+      const replies =
+        scriptedRepliesByConversation[conversationKey] ??
+        scriptedRepliesByConversation['support-chat'];
       const nextIndex = replyIndexByConversation[conversationKey] ?? 0;
       const reply = replies[nextIndex % replies.length];
       replyIndexByConversation[conversationKey] = nextIndex + 1;
@@ -303,7 +305,11 @@ function MetricCard({
       })}
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, letterSpacing: 0.3 }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{ fontWeight: 600, letterSpacing: 0.3 }}
+        >
           {label}
         </Typography>
         <Box sx={{ color: 'text.disabled', '& .MuiSvgIcon-root': { fontSize: 16 } }}>{icon}</Box>
@@ -323,7 +329,11 @@ function ActivityRow({ name, action, time }: { name: string; action: string; tim
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      sx={{ px: 1.5, py: 1, '&:not(:last-child)': { borderBottom: '1px solid', borderColor: 'divider' } }}
+      sx={{
+        px: 1.5,
+        py: 1,
+        '&:not(:last-child)': { borderBottom: '1px solid', borderColor: 'divider' },
+      }}
     >
       <Stack direction="row" alignItems="center" spacing={1.5}>
         <Box
@@ -338,7 +348,10 @@ function ActivityRow({ name, action, time }: { name: string; action: string; tim
           })}
         >
           <Typography sx={{ fontSize: 11, fontWeight: 700, color: 'primary.main' }}>
-            {name.split(' ').map((n) => n[0]).join('')}
+            {name
+              .split(' ')
+              .map((n) => n[0])
+              .join('')}
           </Typography>
         </Box>
         <div>
@@ -687,13 +700,18 @@ export default function WidgetDemo() {
   );
   const [threads, setThreads] = React.useState<Record<string, ChatMessageModel[]>>(() =>
     Object.fromEntries(
-      Object.entries(threadSeed).map(([id, messages]) => [id, messages.map((message) => ({ ...message }))]),
+      Object.entries(threadSeed).map(([id, messages]) => [
+        id,
+        messages.map((message) => ({ ...message })),
+      ]),
     ),
   );
 
   const adapter = React.useMemo(() => createSupportAdapter(), []);
-  const activeConversation = conversations.find((conversation) => conversation.id === activeConversationId);
-  const messages = activeConversation == null ? [] : threads[activeConversationId] ?? [];
+  const activeConversation = conversations.find(
+    (conversation) => conversation.id === activeConversationId,
+  );
+  const messages = activeConversation == null ? [] : (threads[activeConversationId] ?? []);
 
   const handleStartConversation = React.useCallback(() => {
     const conversationId = randomId();
@@ -751,7 +769,9 @@ export default function WidgetDemo() {
               <Typography sx={{ color: '#fff', fontSize: 14, fontWeight: 800 }}>A</Typography>
             </Box>
             <div>
-              <Typography sx={{ fontSize: 16, fontWeight: 700, lineHeight: 1.2 }}>Acme Inc.</Typography>
+              <Typography sx={{ fontSize: 16, fontWeight: 700, lineHeight: 1.2 }}>
+                Acme Inc.
+              </Typography>
               <Typography variant="caption" color="text.secondary">
                 Dashboard
               </Typography>
@@ -767,7 +787,8 @@ export default function WidgetDemo() {
                   py: 0.5,
                   borderRadius: 1,
                   fontWeight: tab === 'Overview' ? 600 : 400,
-                  bgcolor: tab === 'Overview' ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
+                  bgcolor:
+                    tab === 'Overview' ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
                   color: tab === 'Overview' ? 'primary.main' : 'text.secondary',
                   cursor: 'default',
                 })}

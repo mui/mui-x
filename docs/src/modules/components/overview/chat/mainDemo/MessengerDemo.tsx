@@ -10,12 +10,7 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SearchIcon from '@mui/icons-material/Search';
 import { ChatBox, ChatConversationList } from '@mui/x-chat';
-import type {
-  ChatAdapter,
-  ChatConversation,
-  ChatMessage,
-  ChatUser,
-} from '@mui/x-chat/headless';
+import type { ChatAdapter, ChatConversation, ChatMessage, ChatUser } from '@mui/x-chat/headless';
 import {
   createChunkStream,
   createTextResponseChunks,
@@ -128,29 +123,107 @@ const messengerConversations: ChatConversation[] = [
 const messengerThreads: Record<string, ChatMessage[]> = {
   // 1:1 with Alice — casual catch-up
   [aliceConvId]: [
-    msg(aliceConvId, 'assistant', alice, 'Hey! Are you going to the concert on Friday?', '2026-03-31T09:10:00.000Z'),
-    msg(aliceConvId, 'user', you, "Yes! I got tickets yesterday. Section B, row 12.", '2026-03-31T09:15:00.000Z'),
-    msg(aliceConvId, 'assistant', alice, 'Nice, we are in row 14! Want to grab dinner before?', '2026-03-31T09:20:00.000Z'),
-    msg(aliceConvId, 'user', you, 'Definitely. That Thai place near the venue?', '2026-03-31T09:30:00.000Z'),
+    msg(
+      aliceConvId,
+      'assistant',
+      alice,
+      'Hey! Are you going to the concert on Friday?',
+      '2026-03-31T09:10:00.000Z',
+    ),
+    msg(
+      aliceConvId,
+      'user',
+      you,
+      'Yes! I got tickets yesterday. Section B, row 12.',
+      '2026-03-31T09:15:00.000Z',
+    ),
+    msg(
+      aliceConvId,
+      'assistant',
+      alice,
+      'Nice, we are in row 14! Want to grab dinner before?',
+      '2026-03-31T09:20:00.000Z',
+    ),
+    msg(
+      aliceConvId,
+      'user',
+      you,
+      'Definitely. That Thai place near the venue?',
+      '2026-03-31T09:30:00.000Z',
+    ),
     msg(aliceConvId, 'assistant', alice, 'Sounds good, see you there!', '2026-03-31T09:45:00.000Z'),
   ],
 
   // 1:1 with Marco — book recommendation
   [marcoConvId]: [
-    msg(marcoConvId, 'user', you, 'Any good book recs? I just finished Project Hail Mary.', '2026-03-30T17:00:00.000Z'),
-    msg(marcoConvId, 'assistant', marco, "Oh nice, if you liked that you'd love Children of Time by Adrian Tchaikovsky.", '2026-03-30T17:15:00.000Z'),
+    msg(
+      marcoConvId,
+      'user',
+      you,
+      'Any good book recs? I just finished Project Hail Mary.',
+      '2026-03-30T17:00:00.000Z',
+    ),
+    msg(
+      marcoConvId,
+      'assistant',
+      marco,
+      "Oh nice, if you liked that you'd love Children of Time by Adrian Tchaikovsky.",
+      '2026-03-30T17:15:00.000Z',
+    ),
     msg(marcoConvId, 'user', you, "Added to my list! What's it about?", '2026-03-30T17:20:00.000Z'),
-    msg(marcoConvId, 'assistant', marco, "Humanity finds a terraformed planet, but evolution took an unexpected turn. It's wild. Let me know what you think.", '2026-03-30T18:30:00.000Z'),
+    msg(
+      marcoConvId,
+      'assistant',
+      marco,
+      "Humanity finds a terraformed planet, but evolution took an unexpected turn. It's wild. Let me know what you think.",
+      '2026-03-30T18:30:00.000Z',
+    ),
   ],
 
   // Group chat — planning a weekend hike
   [groupConvId]: [
-    msg(groupConvId, 'user', you, "Anyone up for a hike this Saturday?", '2026-03-31T10:00:00.000Z'),
-    msg(groupConvId, 'assistant', alice, "I'm in! Where are you thinking?", '2026-03-31T10:05:00.000Z'),
-    msg(groupConvId, 'user', you, 'Eagle Creek trail — about 2 hours, nice waterfalls along the way.', '2026-03-31T10:10:00.000Z'),
-    msg(groupConvId, 'assistant', marco, 'Count me in. Should we carpool?', '2026-03-31T10:30:00.000Z'),
-    msg(groupConvId, 'user', you, 'Sure, I can drive. I have room for 3 more.', '2026-03-31T10:35:00.000Z'),
-    msg(groupConvId, 'assistant', alice, 'Perfect. 8 AM pickup works for everyone?', '2026-03-31T11:00:00.000Z'),
+    msg(
+      groupConvId,
+      'user',
+      you,
+      'Anyone up for a hike this Saturday?',
+      '2026-03-31T10:00:00.000Z',
+    ),
+    msg(
+      groupConvId,
+      'assistant',
+      alice,
+      "I'm in! Where are you thinking?",
+      '2026-03-31T10:05:00.000Z',
+    ),
+    msg(
+      groupConvId,
+      'user',
+      you,
+      'Eagle Creek trail — about 2 hours, nice waterfalls along the way.',
+      '2026-03-31T10:10:00.000Z',
+    ),
+    msg(
+      groupConvId,
+      'assistant',
+      marco,
+      'Count me in. Should we carpool?',
+      '2026-03-31T10:30:00.000Z',
+    ),
+    msg(
+      groupConvId,
+      'user',
+      you,
+      'Sure, I can drive. I have room for 3 more.',
+      '2026-03-31T10:35:00.000Z',
+    ),
+    msg(
+      groupConvId,
+      'assistant',
+      alice,
+      'Perfect. 8 AM pickup works for everyone?',
+      '2026-03-31T11:00:00.000Z',
+    ),
     msg(groupConvId, 'assistant', marco, 'Works for me.', '2026-03-31T11:10:00.000Z'),
     msg(groupConvId, 'assistant', priya, 'I can bring snacks!', '2026-03-31T11:20:00.000Z'),
   ],
@@ -196,10 +269,9 @@ const adapter: ChatAdapter = {
     const text = pool[idx % pool.length];
     const author = respondents[conversationId] ?? alice;
 
-    return createChunkStream(
-      createTextResponseChunks(randomId(), text, { author }),
-      { delayMs: 140 },
-    );
+    return createChunkStream(createTextResponseChunks(randomId(), text, { author }), {
+      delayMs: 140,
+    });
   },
 };
 
@@ -378,10 +450,7 @@ export default function MessengerDemo() {
   );
   const [threads, setThreads] = React.useState<Record<string, ChatMessage[]>>(() =>
     Object.fromEntries(
-      Object.entries(messengerThreads).map(([id, msgs]) => [
-        id,
-        msgs.map((m) => ({ ...m })),
-      ]),
+      Object.entries(messengerThreads).map(([id, msgs]) => [id, msgs.map((m) => ({ ...m }))]),
     ),
   );
 
