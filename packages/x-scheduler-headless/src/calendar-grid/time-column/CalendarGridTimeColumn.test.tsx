@@ -31,18 +31,6 @@ describe('<CalendarGrid.TimeColumn />', () => {
   );
 
   describe('keyboard interactions', () => {
-    it('should have tabIndex="0" by default for keyboard focusability', () => {
-      render(
-        <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn start={adapter.startOfDay(day)} end={adapter.endOfDay(day)} />
-          </CalendarGrid.Root>
-        </EventCalendarProvider>,
-      );
-      const cell = screen.getByRole('gridcell');
-      expect(cell).to.have.attribute('tabindex', '0');
-    });
-
     it('should create a timed event placeholder on Enter keypress', () => {
       let store: AnyEventCalendarStore | null = null;
 

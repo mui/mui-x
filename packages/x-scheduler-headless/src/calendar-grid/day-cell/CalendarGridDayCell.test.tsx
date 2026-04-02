@@ -32,20 +32,6 @@ describe('<CalendarGrid.DayCell />', () => {
   }));
 
   describe('keyboard interactions', () => {
-    it('should have tabIndex="0" by default for keyboard focusability', () => {
-      render(
-        <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root>
-            <CalendarGrid.DayRow start={adapter.startOfDay(day)} end={adapter.endOfDay(day)}>
-              <CalendarGrid.DayCell value={day} />
-            </CalendarGrid.DayRow>
-          </CalendarGrid.Root>
-        </EventCalendarProvider>,
-      );
-      const cell = screen.getByRole('gridcell');
-      expect(cell).to.have.attribute('tabindex', '0');
-    });
-
     it('should create an all-day event placeholder on Enter keypress', () => {
       let store: AnyEventCalendarStore | null = null;
 

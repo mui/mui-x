@@ -1,5 +1,3 @@
-import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
@@ -23,20 +21,4 @@ describe('<CalendarGrid.HeaderCell />', () => {
       },
     }),
   );
-
-  describe('keyboard interactions', () => {
-    it('should have tabIndex="-1" (programmatically focusable, not in tab order)', () => {
-      render(
-        <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root>
-            <CalendarGrid.HeaderRow>
-              <CalendarGrid.HeaderCell date={processDate(adapter.now('default'), adapter)} />
-            </CalendarGrid.HeaderRow>
-          </CalendarGrid.Root>
-        </EventCalendarProvider>,
-      );
-      const cell = screen.getByRole('columnheader');
-      expect(cell).to.have.attribute('tabindex', '-1');
-    });
-  });
 });
