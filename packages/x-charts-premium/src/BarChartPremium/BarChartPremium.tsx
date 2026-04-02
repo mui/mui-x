@@ -20,7 +20,7 @@ import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { seriesPreviewPlotMap, useChartsContainerProProps } from '@mui/x-charts-pro/internals';
+import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
@@ -32,11 +32,8 @@ import {
 } from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
-import { RangeBarPreviewPlot } from '../ChartsZoomSlider/internals/previews/RangeBarPreviewPlot';
 
 import type {} from '../typeOverloads/modules';
-
-seriesPreviewPlotMap.set('rangeBar', RangeBarPreviewPlot);
 
 export type RangeBarSeries = RangeBarSeriesType;
 
