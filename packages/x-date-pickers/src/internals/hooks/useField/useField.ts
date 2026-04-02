@@ -197,7 +197,7 @@ export const useField = <
       const content = createSectionContentProps(section, sectionIndex);
       return {
         container: createSectionContainerProps(sectionIndex),
-        content: createSectionContentProps(section, sectionIndex),
+        content,
         before: {
           children: section.startSeparator,
         },
