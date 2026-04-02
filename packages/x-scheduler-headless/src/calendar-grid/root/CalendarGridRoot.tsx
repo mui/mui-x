@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useId } from '@base-ui/utils/useId';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { CalendarGridRootContext } from './CalendarGridRootContext';
+import { CalendarGridRootContext, type GridCellCoordinates, type GridCellRowType } from './CalendarGridRootContext';
 
 export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   componentProps: CalendarGridRoot.Props,
@@ -21,11 +21,10 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
 
   const id = useId(idProp);
 
-  const [focusedCell, setFocusedCellState] =
-    React.useState<CalendarGridRootContext['focusedCell']>(null);
+  const [focusedCell, setFocusedCellState] = React.useState<GridCellCoordinates | null>(null);
 
-  const setFocusedCell: CalendarGridRootContext['setFocusedCell'] = React.useCallback(
-    (rowType, columnIndex) => {
+  const setFocusedCell = React.useCallback(
+    (rowType: GridCellRowType, columnIndex: number) => {
       setFocusedCellState({ rowType, columnIndex });
     },
     [],
