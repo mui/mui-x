@@ -37,7 +37,6 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps extends UseMultiInputRangeFieldTextFieldProps<
-  true,
   React.HTMLAttributes<HTMLDivElement>
 > {
   triggerRef?: React.Ref<HTMLDivElement>;

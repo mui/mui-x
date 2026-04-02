@@ -141,7 +141,7 @@ interface UseFieldAdditionalProps {
   focused: boolean;
 }
 
-export type UseFieldReturnValue<TProps extends UseFieldProps> =
+export type UseFieldReturnValue<TProps extends {}> =
   // Some internal props are returned with a default value applied.
   Required<Pick<UseFieldInternalProps<any, any>, 'disabled' | 'readOnly' | 'autoFocus'>> &
     // All the forwarded props the useField hooks is able to handled are returned with a default value applied.

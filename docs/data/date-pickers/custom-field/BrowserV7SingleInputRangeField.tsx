@@ -47,7 +47,7 @@ interface BrowserSingleInputDateRangeFieldProps extends DateRangePickerFieldProp
 function BrowserSingleInputDateRangeField(
   props: BrowserSingleInputDateRangeFieldProps,
 ) {
-  const fieldResponse = useSingleInputDateRangeField<true, typeof props>(props);
+  const fieldResponse = useSingleInputDateRangeField<typeof props>(props);
 
   const {
     // Should be passed to the PickersSectionList component
