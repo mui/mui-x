@@ -23,20 +23,23 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
         );
       }
 
-      const data =
-        !datasetKeys && !seriesData.valueGetter
-          ? (seriesData.data ?? [])
-          : (dataset?.map((d) => {
-              if (seriesData.valueGetter) {
-                return seriesData.valueGetter(d);
-              }
-              return {
-                x: d[datasetKeys!.x] ?? null,
-                y: d[datasetKeys!.y] ?? null,
-                z: datasetKeys!.z && d[datasetKeys!.z],
-                id: datasetKeys!.id && d[datasetKeys!.id],
-              } as ScatterValueType;
-            }) ?? []);
+      let data: readonly ScatterValueType[];
+      if (seriesData.valueGetter) {
+        data = dataset?.map((d) => seriesData.valueGetter!(d)) ?? [];
+      } else if (datasetKeys) {
+        data =
+          dataset?.map(
+            (d) =>
+              ({
+                x: d[datasetKeys.x] ?? null,
+                y: d[datasetKeys.y] ?? null,
+                z: datasetKeys.z && d[datasetKeys.z],
+                id: datasetKeys.id && d[datasetKeys.id],
+              }) as ScatterValueType,
+          ) ?? [];
+      } else {
+        data = seriesData.data ?? [];
+      }
 
       return [
         seriesId,
