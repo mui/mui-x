@@ -145,12 +145,12 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
   const toolName = part.toolInvocation.toolName;
   const resolvedSlots = React.useMemo(
     () => ({ ...slots, ...toolSlots?.[toolName] }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [slots, toolSlots, toolName],
   );
   const resolvedSlotProps = React.useMemo(
     () => ({ ...slotProps, ...toolSlotProps?.[toolName] }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [slotProps, toolSlotProps, toolName],
   );
   const ownerState = React.useMemo<ToolPartOwnerState>(

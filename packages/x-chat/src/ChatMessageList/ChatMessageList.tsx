@@ -2,9 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatMessageList');
 import { SxProps, Theme } from '@mui/system';
 import {
   MessageListRoot,
@@ -12,10 +9,13 @@ import {
   type MessageListRootHandle,
   useChatDensity,
 } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatMessageListUtilityClasses,
   type ChatMessageListClasses,
 } from './chatMessageListClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatMessageList');
 
 export interface ChatMessageListProps extends MessageListRootProps {
   className?: string;
@@ -89,18 +89,18 @@ const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListP
             className: clsx(classes.root, className),
             sx,
             ...slotProps?.messageList,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
           messageListScroller: {
             className: classes.scroller,
             ...slotProps?.messageListScroller,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
           messageListContent: {
             className: classes.content,
             ownerState: { density },
             ...slotProps?.messageListContent,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
         }}
       />

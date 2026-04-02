@@ -11,7 +11,11 @@ const { render } = createRenderer();
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   return {
     async sendMessage() {
-      return new ReadableStream({ start(c) { c.close(); } });
+      return new ReadableStream({
+        start(c) {
+          c.close();
+        },
+      });
     },
     ...overrides,
   };
@@ -22,9 +26,7 @@ describe('ChatUnreadMarker', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
-        initialMessages={[
-          { id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] },
-        ]}
+        initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] }]}
       >
         {null}
       </ChatBox>,
@@ -38,7 +40,9 @@ describe('ChatUnreadMarker', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        initialConversations={[{ id: 'c1', title: 'Chat', unreadCount: 2, readState: 'unread' as const }]}
+        initialConversations={[
+          { id: 'c1', title: 'Chat', unreadCount: 2, readState: 'unread' as const },
+        ]}
         initialActiveConversationId="c1"
         initialMessages={[
           { id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Old' }] },

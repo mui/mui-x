@@ -130,9 +130,7 @@ describe('finalizeStreamingParts', () => {
   });
 
   it('returns the same array reference when no streaming parts exist', () => {
-    const parts: ChatMessagePart[] = [
-      { type: 'text', text: 'Hello', state: 'done' },
-    ];
+    const parts: ChatMessagePart[] = [{ type: 'text', text: 'Hello', state: 'done' }];
 
     const result = finalizeStreamingParts(parts);
 
@@ -164,7 +162,12 @@ describe('updateMessageParts', () => {
   it('applies the updater function and updates the store', () => {
     const store = new ChatStore({
       initialMessages: [
-        { id: 'a1', role: 'assistant', status: 'streaming', parts: [{ type: 'text', text: 'Hi', state: 'streaming' }] },
+        {
+          id: 'a1',
+          role: 'assistant',
+          status: 'streaming',
+          parts: [{ type: 'text', text: 'Hi', state: 'streaming' }],
+        },
       ],
     });
 
@@ -187,9 +190,7 @@ describe('updateMessageParts', () => {
 
   it('no-ops when the updater returns the same parts reference', () => {
     const store = new ChatStore({
-      initialMessages: [
-        { id: 'a1', role: 'assistant', status: 'streaming', parts: [] },
-      ],
+      initialMessages: [{ id: 'a1', role: 'assistant', status: 'streaming', parts: [] }],
     });
     const stateBefore = store.state;
 

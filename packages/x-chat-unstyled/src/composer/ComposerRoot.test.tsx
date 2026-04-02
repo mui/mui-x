@@ -604,7 +604,11 @@ describe('ComposerRoot disabled', () => {
     });
 
     render(
-      <ChatRoot adapter={adapter} initialActiveConversationId="c1" initialComposerValue="Should not send">
+      <ChatRoot
+        adapter={adapter}
+        initialActiveConversationId="c1"
+        initialComposerValue="Should not send"
+      >
         <ComposerRoot data-testid="composer-form" disabled>
           <ComposerTextArea />
           <ComposerSendButton />
@@ -655,7 +659,9 @@ describe('ComposerAttachButton', () => {
       render(
         <ChatRoot adapter={createAdapter()}>
           <ComposerRoot>
-            <ComposerAttachButton onClick={(event) => event.preventDefault()}>Attach</ComposerAttachButton>
+            <ComposerAttachButton onClick={(event) => event.preventDefault()}>
+              Attach
+            </ComposerAttachButton>
           </ComposerRoot>
         </ChatRoot>,
       );

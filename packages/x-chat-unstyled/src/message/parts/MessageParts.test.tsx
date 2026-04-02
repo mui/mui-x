@@ -113,9 +113,7 @@ describe('ReasoningPart', () => {
         partRenderers={{
           reasoning: (rendererProps) => (
             <details>
-              <CustomSummary>
-                {rendererProps.part.text}
-              </CustomSummary>
+              <CustomSummary>{rendererProps.part.text}</CustomSummary>
             </details>
           ),
         }}
@@ -276,9 +274,7 @@ describe('SourceDocumentPart', () => {
 
 describe('defaultMessagePartRenderers', () => {
   it('getDefaultMessagePartRenderer returns correct renderer for text', () => {
-    expect(getDefaultMessagePartRenderer({ type: 'text', text: 'hi' })).toBe(
-      renderDefaultTextPart,
-    );
+    expect(getDefaultMessagePartRenderer({ type: 'text', text: 'hi' })).toBe(renderDefaultTextPart);
   });
 
   it('getDefaultMessagePartRenderer returns correct renderer for reasoning', () => {
@@ -334,15 +330,13 @@ describe('defaultMessagePartRenderers', () => {
   });
 
   it('getDefaultMessagePartRenderer returns correct renderer for source-document', () => {
-    expect(
-      getDefaultMessagePartRenderer({ type: 'source-document', sourceId: 'd1' }),
-    ).toBe(renderDefaultSourceDocumentPart);
+    expect(getDefaultMessagePartRenderer({ type: 'source-document', sourceId: 'd1' })).toBe(
+      renderDefaultSourceDocumentPart,
+    );
   });
 
   it('getDefaultMessagePartRenderer returns correct renderer for step-start', () => {
-    expect(getDefaultMessagePartRenderer({ type: 'step-start' })).toBe(
-      renderDefaultStepStartPart,
-    );
+    expect(getDefaultMessagePartRenderer({ type: 'step-start' })).toBe(renderDefaultStepStartPart);
   });
 
   it('getDefaultMessagePartRenderer returns data renderer for data-* types', () => {
@@ -355,8 +349,6 @@ describe('defaultMessagePartRenderers', () => {
   });
 
   it('getDefaultMessagePartRenderer returns null for unknown types', () => {
-    expect(
-      getDefaultMessagePartRenderer({ type: 'totally-unknown' } as any),
-    ).to.equal(null);
+    expect(getDefaultMessagePartRenderer({ type: 'totally-unknown' } as any)).to.equal(null);
   });
 });

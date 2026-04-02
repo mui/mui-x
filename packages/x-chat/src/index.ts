@@ -127,7 +127,6 @@ export type {
   ChatMessageListClassKey,
 } from './ChatMessageList/chatMessageListClasses';
 
-
 // ─── ChatSuggestions ─────────────────────────────────────────────────────────
 export { ChatSuggestions } from './ChatSuggestions/ChatSuggestions';
 export type { ChatSuggestionsProps } from './ChatSuggestions/ChatSuggestions';
@@ -169,7 +168,6 @@ export type {
   ChatMessageSourceClasses,
   ChatMessageSourceClassKey,
 } from './ChatMessageSources/chatMessageSourceClasses';
-
 
 // ─── ChatMessageSkeleton ──────────────────────────────────────────────────────
 export { ChatMessageSkeleton } from './ChatMessageSkeleton';

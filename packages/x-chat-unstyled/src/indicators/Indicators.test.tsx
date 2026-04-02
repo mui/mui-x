@@ -351,9 +351,7 @@ describe('Indicators', () => {
       </MessageListContextProvider>,
     );
 
-    expect(screen.getByRole('button', { name: 'Nach unten, 2 neu' })).to.have.text(
-      'Nach unten2',
-    );
+    expect(screen.getByRole('button', { name: 'Nach unten, 2 neu' })).to.have.text('Nach unten2');
 
     rerender(
       <MessageListContextProvider
@@ -371,9 +369,7 @@ describe('Indicators', () => {
       </MessageListContextProvider>,
     );
 
-    expect(screen.getByRole('button', { name: 'Nach unten' })).to.have.text(
-      'Nach unten',
-    );
+    expect(screen.getByRole('button', { name: 'Nach unten' })).to.have.text('Nach unten');
   });
 
   it('UnreadMarker renders at the unread boundary derived from unreadCount', () => {

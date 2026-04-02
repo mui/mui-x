@@ -106,7 +106,10 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
               rejections.push({ file, reason: 'file-size' });
               continue;
             }
-            if (attachmentConfig?.maxFileCount != null && currentCount + accepted.length >= attachmentConfig.maxFileCount) {
+            if (
+              attachmentConfig?.maxFileCount != null &&
+              currentCount + accepted.length >= attachmentConfig.maxFileCount
+            ) {
               rejections.push({ file, reason: 'file-count' });
               continue;
             }

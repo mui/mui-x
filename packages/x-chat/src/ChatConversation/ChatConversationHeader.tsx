@@ -2,14 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatConversation');
 import { ConversationHeader, type ConversationHeaderProps } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatConversationUtilityClasses,
   type ChatConversationClasses,
 } from './chatConversationClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatConversation');
 
 export interface ChatConversationHeaderProps extends ConversationHeaderProps {
   className?: string;

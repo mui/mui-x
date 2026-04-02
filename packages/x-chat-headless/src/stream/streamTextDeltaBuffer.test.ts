@@ -35,9 +35,7 @@ describe('createTextDeltaBuffer', () => {
 
   describe('resolveTextLikePartIndex', () => {
     it('returns the mapped index when the map entry exists and matches part type', () => {
-      const { store, buffer } = setupBuffer([
-        { type: 'text', text: 'Hello', state: 'streaming' },
-      ]);
+      const { store, buffer } = setupBuffer([{ type: 'text', text: 'Hello', state: 'streaming' }]);
 
       // First call creates the mapping
       const index1 = buffer.resolveTextLikePartIndex(
@@ -85,9 +83,7 @@ describe('createTextDeltaBuffer', () => {
     });
 
     it('falls back to findLastStreamingPartIndex when map entry does not match current parts', () => {
-      const { store, buffer } = setupBuffer([
-        { type: 'text', text: 'First', state: 'streaming' },
-      ]);
+      const { store, buffer } = setupBuffer([{ type: 'text', text: 'First', state: 'streaming' }]);
 
       // Artificially set a stale map entry pointing to index 99
       buffer.textPartIndexesByStreamId.set('stream-1', 99);
@@ -106,9 +102,7 @@ describe('createTextDeltaBuffer', () => {
 
   describe('applyTextLikeDelta', () => {
     it('appends delta text to the resolved text part', () => {
-      const { store, buffer } = setupBuffer([
-        { type: 'text', text: 'Hello', state: 'streaming' },
-      ]);
+      const { store, buffer } = setupBuffer([{ type: 'text', text: 'Hello', state: 'streaming' }]);
 
       buffer.applyTextLikeDelta('text', 'stream-1', ' world');
 
@@ -124,13 +118,15 @@ describe('createTextDeltaBuffer', () => {
       buffer.applyTextLikeDelta('reasoning', 'stream-r1', ' more');
 
       const part = store.state.messagesById.a1.parts[0];
-      expect(part).toMatchObject({ type: 'reasoning', text: 'Thinking... more', state: 'streaming' });
+      expect(part).toMatchObject({
+        type: 'reasoning',
+        text: 'Thinking... more',
+        state: 'streaming',
+      });
     });
 
     it('no-ops when the part type does not match at the resolved index', () => {
-      const { store, buffer } = setupBuffer([
-        { type: 'text', text: 'Hello', state: 'streaming' },
-      ]);
+      const { store, buffer } = setupBuffer([{ type: 'text', text: 'Hello', state: 'streaming' }]);
 
       // Force a mapping to index 0, but then try to apply a 'reasoning' delta
       buffer.reasoningPartIndexesByStreamId.set('stream-1', 0);
@@ -147,9 +143,7 @@ describe('createTextDeltaBuffer', () => {
   describe('scheduleTextLikeDelta', () => {
     it('buffers a delta and applies it after the flush interval', async () => {
       vi.useFakeTimers();
-      const { store, buffer } = setupBuffer([
-        { type: 'text', text: '', state: 'streaming' },
-      ]);
+      const { store, buffer } = setupBuffer([{ type: 'text', text: '', state: 'streaming' }]);
 
       buffer.scheduleTextLikeDelta('text', 'stream-1', 'Hello');
 
@@ -163,9 +157,7 @@ describe('createTextDeltaBuffer', () => {
 
     it('coalesces multiple deltas for the same partType and streamId before flush', async () => {
       vi.useFakeTimers();
-      const { store, buffer } = setupBuffer([
-        { type: 'text', text: '', state: 'streaming' },
-      ]);
+      const { store, buffer } = setupBuffer([{ type: 'text', text: '', state: 'streaming' }]);
 
       buffer.scheduleTextLikeDelta('text', 'stream-1', 'Hello');
       buffer.scheduleTextLikeDelta('text', 'stream-1', ' world');
@@ -177,9 +169,7 @@ describe('createTextDeltaBuffer', () => {
     });
 
     it('immediately flushes pending delta when partType changes', () => {
-      const { store, buffer } = setupBuffer([
-        { type: 'text', text: '', state: 'streaming' },
-      ]);
+      const { store, buffer } = setupBuffer([{ type: 'text', text: '', state: 'streaming' }]);
 
       buffer.scheduleTextLikeDelta('text', 'stream-1', 'Hello');
 
@@ -191,9 +181,7 @@ describe('createTextDeltaBuffer', () => {
     });
 
     it('immediately flushes pending delta when streamId changes', () => {
-      const { store, buffer } = setupBuffer([
-        { type: 'text', text: '', state: 'streaming' },
-      ]);
+      const { store, buffer } = setupBuffer([{ type: 'text', text: '', state: 'streaming' }]);
 
       buffer.scheduleTextLikeDelta('text', 'stream-1', 'Part1');
 
@@ -207,9 +195,7 @@ describe('createTextDeltaBuffer', () => {
   describe('flushPendingTextLikeDelta', () => {
     it('immediately applies buffered delta and clears the timer', async () => {
       vi.useFakeTimers();
-      const { store, buffer } = setupBuffer([
-        { type: 'text', text: '', state: 'streaming' },
-      ]);
+      const { store, buffer } = setupBuffer([{ type: 'text', text: '', state: 'streaming' }]);
 
       buffer.scheduleTextLikeDelta('text', 'stream-1', 'Immediate');
       buffer.flushPendingTextLikeDelta();
@@ -237,9 +223,7 @@ describe('createTextDeltaBuffer', () => {
   describe('clearPendingTextLikeDeltaTimer', () => {
     it('cancels the scheduled timer without applying the pending delta', async () => {
       vi.useFakeTimers();
-      const { store, buffer } = setupBuffer([
-        { type: 'text', text: '', state: 'streaming' },
-      ]);
+      const { store, buffer } = setupBuffer([{ type: 'text', text: '', state: 'streaming' }]);
 
       buffer.scheduleTextLikeDelta('text', 'stream-1', 'Cancelled');
       buffer.clearPendingTextLikeDeltaTimer();

@@ -99,7 +99,7 @@ export function useChatController<Cursor = string>({
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [setRuntimeError, stopStreaming, store],
   );
 
@@ -112,7 +112,7 @@ export function useChatController<Cursor = string>({
         setRuntimeError,
         assistantMessageIdByUserMessageIdRef,
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [setRuntimeError, store, storeUnknown],
   );
 

@@ -9,7 +9,11 @@ const { render } = createRenderer();
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   return {
     async sendMessage() {
-      return new ReadableStream({ start(c) { c.close(); } });
+      return new ReadableStream({
+        start(c) {
+          c.close();
+        },
+      });
     },
     ...overrides,
   };
@@ -18,10 +22,7 @@ function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
 describe('ChatSuggestions', () => {
   it('renders without crashing inside ChatBox when suggestions are provided', () => {
     render(
-      <ChatBox
-        adapter={createAdapter()}
-        suggestions={['How can I help you?', 'Tell me more']}
-      >
+      <ChatBox adapter={createAdapter()} suggestions={['How can I help you?', 'Tell me more']}>
         {null}
       </ChatBox>,
     );
@@ -31,10 +32,7 @@ describe('ChatSuggestions', () => {
 
   it('applies MuiChatSuggestions-root class when rendered', () => {
     render(
-      <ChatBox
-        adapter={createAdapter()}
-        suggestions={['Suggestion A']}
-      >
+      <ChatBox adapter={createAdapter()} suggestions={['Suggestion A']}>
         {null}
       </ChatBox>,
     );

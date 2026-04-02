@@ -1,4 +1,3 @@
- 
 import * as React from 'react';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
@@ -129,7 +128,6 @@ describe('ChatCodeBlock', () => {
 
     expect(screen.getByRole('button', { name: 'Copied!' })).not.toBe(null);
 
-     
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2000);
     });

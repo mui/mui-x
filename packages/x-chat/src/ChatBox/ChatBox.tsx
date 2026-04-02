@@ -2,13 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatBox');
 import { ChatRoot, ChatVariantProvider, ChatDensityProvider } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatBoxUtilityClasses } from './chatBoxClasses';
 import { ChatBoxContent } from './ChatBoxContent';
 import type { ChatBoxProps } from './ChatBox.types';
+
+const useThemeProps = createUseThemeProps('MuiChatBox');
 
 const ChatBoxStyled = styled('div', {
   name: 'MuiChatBox',

@@ -3,12 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { alpha } from '@mui/material/styles';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatMessage');
 import { MessageContent, type MessageContentProps } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 import { renderMarkdown } from './renderMarkdown';
+
+const useThemeProps = createUseThemeProps('MuiChatMessage');
 
 export interface ChatMessageContentProps extends MessageContentProps {
   className?: string;
@@ -714,12 +714,12 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
           content: {
             className: clsx(classes.content, className),
             ...slotProps?.content,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
           bubble: {
             className: classes.bubble,
             ...slotProps?.bubble,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
         }}
         partProps={{

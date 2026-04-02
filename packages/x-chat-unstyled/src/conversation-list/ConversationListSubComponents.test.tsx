@@ -72,10 +72,7 @@ describe('ConversationListItem', () => {
   it('does not render data-selected when not selected', () => {
     render(
       <Wrapper>
-        <ConversationListItem
-          conversation={basicConversation}
-          data-testid="list-item"
-        >
+        <ConversationListItem conversation={basicConversation} data-testid="list-item">
           <span>Content</span>
         </ConversationListItem>
       </Wrapper>,

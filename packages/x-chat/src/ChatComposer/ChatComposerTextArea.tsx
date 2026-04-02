@@ -2,12 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatComposer');
 import { SxProps, Theme } from '@mui/system';
 import { ComposerTextArea, type ComposerTextAreaProps } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatComposer');
 
 export interface ChatComposerTextAreaProps extends ComposerTextAreaProps {
   className?: string;
@@ -65,7 +65,7 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
             className: clsx(classes.textArea, className),
             sx,
             ...slotProps?.input,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
         }}
       />

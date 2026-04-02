@@ -17,6 +17,8 @@ export interface ChatCodeBlockProps {
   /**
    * Optional syntax highlighter. Receives (code, language) and should return
    * highlighted React nodes. When omitted, raw code is displayed.
+   * @param code
+   * @param language
    */
   highlighter?: (code: string, language: string) => React.ReactNode;
   className?: string;

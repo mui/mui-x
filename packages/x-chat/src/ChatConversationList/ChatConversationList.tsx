@@ -2,9 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatConversationList');
 import { SxProps, Theme } from '@mui/system';
 import {
   ConversationListRoot,
@@ -18,10 +15,13 @@ import {
   type ConversationListRootProps,
   type ConversationListVariant,
 } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatConversationListUtilityClasses,
   type ChatConversationListClasses,
 } from './chatConversationListClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatConversationList');
 
 export interface ChatConversationListProps extends ConversationListRootProps {
   className?: string;
@@ -448,14 +448,14 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
             className: clsx(classes.root, isCompact && classes.compact, className),
             sx,
             ...slotProps?.root,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
           scroller: {
             className: classes.scroller,
             ...slotProps?.scroller,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           item: ((ownerState: any) => ({
             className: clsx(
               classes.item,
@@ -466,42 +466,42 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
             ...(typeof slotProps?.item === 'function'
               ? (slotProps.item as (s: any) => any)(ownerState)
               : slotProps?.item),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           })) as any,
           itemAvatar: {
             className: classes.itemAvatar,
             ...slotProps?.itemAvatar,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
           itemContent: {
             className: classes.itemContent,
             ...slotProps?.itemContent,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
           title: {
             className: classes.itemTitle,
             ...slotProps?.title,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
           preview: {
             className: classes.itemPreview,
             ...slotProps?.preview,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
           timestamp: {
             className: classes.itemTimestamp,
             ...slotProps?.timestamp,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
           unreadBadge: {
             className: classes.itemUnreadBadge,
             ...slotProps?.unreadBadge,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
           itemActions: {
             className: classes.itemActions,
             ...slotProps?.itemActions,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
         }}
       />

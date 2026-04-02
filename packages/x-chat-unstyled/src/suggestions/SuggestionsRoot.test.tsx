@@ -32,10 +32,7 @@ describe('SuggestionsRoot', () => {
   it('renders role="group" when conversation is empty', () => {
     render(
       <ChatRoot adapter={createAdapter()}>
-        <SuggestionsRoot
-          data-testid="suggestions"
-          suggestions={['Hello', 'How are you?']}
-        />
+        <SuggestionsRoot data-testid="suggestions" suggestions={['Hello', 'How are you?']} />
       </ChatRoot>,
     );
 
@@ -225,10 +222,7 @@ describe('SuggestionItem', () => {
     render(
       <ChatRoot adapter={adapter} initialActiveConversationId="c1">
         <SuggestionsRoot>
-          <SuggestionItem
-            onClick={(event) => event.preventDefault()}
-            value="blocked"
-          >
+          <SuggestionItem onClick={(event) => event.preventDefault()} value="blocked">
             Blocked
           </SuggestionItem>
         </SuggestionsRoot>
@@ -277,10 +271,7 @@ describe('SuggestionItem', () => {
     render(
       <ChatRoot adapter={createAdapter()}>
         <SuggestionsRoot
-          suggestions={[
-            { value: 'val1', label: 'Fancy Label' },
-            { value: 'plain-value' },
-          ]}
+          suggestions={[{ value: 'val1', label: 'Fancy Label' }, { value: 'plain-value' }]}
         />
       </ChatRoot>,
     );

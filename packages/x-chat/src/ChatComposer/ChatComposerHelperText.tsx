@@ -2,16 +2,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatComposer');
 import { SxProps, Theme } from '@mui/system';
 import {
   ComposerHelperText,
   type ComposerHelperTextProps,
   type ComposerHelperTextOwnerState,
 } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatComposer');
 
 export interface ChatComposerHelperTextProps extends ComposerHelperTextProps {
   className?: string;
@@ -57,7 +57,7 @@ const ChatComposerHelperText = React.forwardRef<HTMLParagraphElement, ChatCompos
             className: clsx(classes.helperText, className),
             sx,
             ...slotProps?.helperText,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
         }}
       />

@@ -10,7 +10,11 @@ const { render } = createRenderer();
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   return {
     async sendMessage() {
-      return new ReadableStream({ start(c) { c.close(); } });
+      return new ReadableStream({
+        start(c) {
+          c.close();
+        },
+      });
     },
     ...overrides,
   };
@@ -26,7 +30,12 @@ describe('ChatDateDivider', () => {
       <ChatRoot
         adapter={createAdapter()}
         initialMessages={[
-          { id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Yesterday' }], createdAt: yesterday },
+          {
+            id: 'm1',
+            role: 'user',
+            parts: [{ type: 'text', text: 'Yesterday' }],
+            createdAt: yesterday,
+          },
           { id: 'm2', role: 'user', parts: [{ type: 'text', text: 'Today' }], createdAt: today },
         ]}
       >
@@ -47,7 +56,12 @@ describe('ChatDateDivider', () => {
         adapter={createAdapter()}
         initialMessages={[
           { id: 'm1', role: 'user', parts: [{ type: 'text', text: 'First' }], createdAt: now },
-          { id: 'm2', role: 'user', parts: [{ type: 'text', text: 'Second' }], createdAt: slightlyLater },
+          {
+            id: 'm2',
+            role: 'user',
+            parts: [{ type: 'text', text: 'Second' }],
+            createdAt: slightlyLater,
+          },
         ]}
       >
         <ChatDateDivider messageId="m2" />

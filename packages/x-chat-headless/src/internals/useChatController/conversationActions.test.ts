@@ -291,7 +291,11 @@ describe('createConversationActions', () => {
       });
       const adapter: ChatAdapter = {
         sendMessage: vi.fn().mockResolvedValue(
-          new ReadableStream({ start(c) { c.close(); } }),
+          new ReadableStream({
+            start(c) {
+              c.close();
+            },
+          }),
         ),
         loadMore,
       };

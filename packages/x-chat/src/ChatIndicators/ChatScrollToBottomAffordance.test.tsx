@@ -2,8 +2,8 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
-import { ChatScrollToBottomAffordance } from './ChatScrollToBottomAffordance';
 import { ChatRoot, MessageListRoot } from '@mui/x-chat-unstyled';
+import { ChatScrollToBottomAffordance } from './ChatScrollToBottomAffordance';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -26,10 +26,7 @@ describe('ChatScrollToBottomAffordance', () => {
   it('renders without crashing inside a message list overlay', () => {
     render(
       <ChatRoot adapter={createAdapter()}>
-        <MessageListRoot
-          renderItem={() => null}
-          overlay={<ChatScrollToBottomAffordance />}
-        />
+        <MessageListRoot renderItem={() => null} overlay={<ChatScrollToBottomAffordance />} />
       </ChatRoot>,
     );
     // In jsdom, isAtBottom=true so the affordance returns null — just verify no crash

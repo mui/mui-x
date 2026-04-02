@@ -695,10 +695,7 @@ describe('processStream', () => {
   it('returns sent status when no chunks and no messageId', async () => {
     const store = new ChatStore();
 
-    const result = await processStream(
-      store,
-      createStream([]),
-    );
+    const result = await processStream(store, createStream([]));
 
     expect(result).toEqual({
       messageId: undefined,

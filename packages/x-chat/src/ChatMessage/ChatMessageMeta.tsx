@@ -2,12 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatMessage');
 import { SxProps, Theme } from '@mui/system';
 import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatMessage');
 
 export interface ChatMessageMetaProps extends MessageMetaProps {
   className?: string;
@@ -73,18 +73,19 @@ const ChatMessageStatusStyled = styled('span', {
  * Custom Status slot for ChatMessage.
  * In compact mode, renders a checkmark icon for "sent" status instead of text.
  */
-const ChatMessageStatusSlot = React.forwardRef<HTMLSpanElement, any>(
-  function ChatMessageStatusSlot({ ownerState, children, ...other }, ref) {
-    const isCompact = ownerState?.variant === 'compact';
-    const isSent = ownerState?.message?.status === 'sent';
+const ChatMessageStatusSlot = React.forwardRef<HTMLSpanElement, any>(function ChatMessageStatusSlot(
+  { ownerState, children, ...other },
+  ref,
+) {
+  const isCompact = ownerState?.variant === 'compact';
+  const isSent = ownerState?.message?.status === 'sent';
 
-    return (
-      <ChatMessageStatusStyled ref={ref} ownerState={ownerState} {...other}>
-        {isCompact && isSent ? <StatusCheckIcon /> : children}
-      </ChatMessageStatusStyled>
-    );
-  },
-);
+  return (
+    <ChatMessageStatusStyled ref={ref} ownerState={ownerState} {...other}>
+      {isCompact && isSent ? <StatusCheckIcon /> : children}
+    </ChatMessageStatusStyled>
+  );
+});
 
 const ChatMessageMeta = React.forwardRef<HTMLDivElement, ChatMessageMetaProps>(
   function ChatMessageMeta(inProps, ref) {

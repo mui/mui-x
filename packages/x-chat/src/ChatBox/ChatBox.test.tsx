@@ -1,4 +1,3 @@
- 
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
@@ -47,10 +46,7 @@ describe('ChatBox', () => {
   describe('feature: conversationHeader', () => {
     it('hides conversation header when features.conversationHeader=false', () => {
       render(
-        <ChatBox
-          adapter={createAdapter()}
-          features={{ conversationHeader: false }}
-        >
+        <ChatBox adapter={createAdapter()} features={{ conversationHeader: false }}>
           {null}
         </ChatBox>,
       );
@@ -66,10 +62,7 @@ describe('ChatBox', () => {
 
     it('hides attach button when features.attachments=false', () => {
       render(
-        <ChatBox
-          adapter={createAdapter()}
-          features={{ attachments: false }}
-        >
+        <ChatBox adapter={createAdapter()} features={{ attachments: false }}>
           {null}
         </ChatBox>,
       );
@@ -80,10 +73,7 @@ describe('ChatBox', () => {
   describe('feature: helperText', () => {
     it('hides helper text when features.helperText=false', () => {
       render(
-        <ChatBox
-          adapter={createAdapter()}
-          features={{ helperText: false }}
-        >
+        <ChatBox adapter={createAdapter()} features={{ helperText: false }}>
           {null}
         </ChatBox>,
       );
@@ -94,10 +84,7 @@ describe('ChatBox', () => {
   describe('feature: suggestions', () => {
     it('shows suggestions in empty state when provided', () => {
       render(
-        <ChatBox
-          adapter={createAdapter()}
-          suggestions={['Tell me a joke', 'What is AI?']}
-        >
+        <ChatBox adapter={createAdapter()} suggestions={['Tell me a joke', 'What is AI?']}>
           {null}
         </ChatBox>,
       );
@@ -126,9 +113,7 @@ describe('ChatBox', () => {
         <ChatBox
           adapter={createAdapter()}
           suggestions={['Tell me a joke']}
-          initialMessages={[
-            { id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] },
-          ]}
+          initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] }]}
         >
           {null}
         </ChatBox>,
@@ -153,7 +138,11 @@ describe('ChatBox', () => {
   describe('ref forwarding', () => {
     it('forwards ref to root element', () => {
       const ref = React.createRef<HTMLDivElement>();
-      render(<ChatBox ref={ref} adapter={createAdapter()}>{null}</ChatBox>);
+      render(
+        <ChatBox ref={ref} adapter={createAdapter()}>
+          {null}
+        </ChatBox>,
+      );
       expect(ref.current).not.toBe(null);
       expect(ref.current!.tagName).toBe('DIV');
     });

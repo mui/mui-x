@@ -290,15 +290,17 @@ describe('createSendMessageActions', () => {
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
       });
 
-      await sendMessage({ id: 'new-1', conversationId: 'c1', parts: [{ type: 'text', text: 'Hi' }] });
+      await sendMessage({
+        id: 'new-1',
+        conversationId: 'c1',
+        parts: [{ type: 'text', text: 'Hi' }],
+      });
 
       expect(adapter.sendMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           conversationId: 'c1',
           message: expect.objectContaining({ id: 'new-1', role: 'user' }),
-          messages: expect.arrayContaining([
-            expect.objectContaining({ id: 'prev-1' }),
-          ]),
+          messages: expect.arrayContaining([expect.objectContaining({ id: 'prev-1' })]),
           signal: expect.any(AbortSignal),
         }),
       );
@@ -347,7 +349,11 @@ describe('createSendMessageActions', () => {
     });
 
     it('removes associated assistant messages and re-sends the user message', async () => {
-      const userMsg: ChatMessage = { id: 'u1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] };
+      const userMsg: ChatMessage = {
+        id: 'u1',
+        role: 'user',
+        parts: [{ type: 'text', text: 'Hello' }],
+      };
       const assistantMsg: ChatMessage = {
         id: 'a1',
         role: 'assistant',
@@ -380,8 +386,8 @@ describe('createSendMessageActions', () => {
       await retry('u1');
 
       // The old assistant message should be removed and a new one created
-      expect(store.state.messagesById['a1']).toBeUndefined();
-      expect(store.state.messagesById['a2']).toBeDefined();
+      expect(store.state.messagesById.a1).toBeUndefined();
+      expect(store.state.messagesById.a2).toBeDefined();
       // The adapter should have been called with the user message
       expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
       expect(adapter.sendMessage).toHaveBeenCalledWith(

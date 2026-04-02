@@ -90,10 +90,7 @@ describe('ChatConversationList', () => {
 
   it('renders NoopScrollbar (no scrollbar elements) in the conversation list', () => {
     render(
-      <ChatBox
-        adapter={createAdapter()}
-        initialConversations={[{ id: 'c1', title: 'General' }]}
-      >
+      <ChatBox adapter={createAdapter()} initialConversations={[{ id: 'c1', title: 'General' }]}>
         {null}
       </ChatBox>,
     );

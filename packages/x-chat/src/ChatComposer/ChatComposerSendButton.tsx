@@ -2,12 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatComposer');
 import { SxProps, Theme } from '@mui/system';
 import { ComposerSendButton, type ComposerSendButtonProps } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatComposer');
 
 export interface ChatComposerSendButtonProps extends ComposerSendButtonProps {
   className?: string;
@@ -79,7 +79,7 @@ const ChatComposerSendButton = React.forwardRef<HTMLButtonElement, ChatComposerS
             className: clsx(classes.sendButton, className),
             sx,
             ...slotProps?.sendButton,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
         }}
       />

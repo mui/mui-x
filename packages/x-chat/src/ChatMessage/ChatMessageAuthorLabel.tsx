@@ -2,11 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { MessageAuthorLabel, type MessageAuthorLabelProps } from '@mui/x-chat-unstyled';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatMessage');
-import { MessageAuthorLabel, type MessageAuthorLabelProps } from '@mui/x-chat-unstyled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 
 export interface ChatMessageAuthorLabelProps extends MessageAuthorLabelProps {
   className?: string;

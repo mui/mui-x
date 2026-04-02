@@ -2,15 +2,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatConversation');
 import { SxProps, Theme } from '@mui/system';
 import { ConversationRoot, type ConversationRootProps } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatConversationUtilityClasses,
   type ChatConversationClasses,
 } from './chatConversationClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatConversation');
 
 export interface ChatConversationProps extends ConversationRootProps {
   className?: string;
@@ -51,7 +51,7 @@ const ChatConversation = React.forwardRef<HTMLDivElement, ChatConversationProps>
             className: clsx(classes.root, className),
             sx,
             ...slotProps?.root,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
         }}
       />

@@ -10,7 +10,11 @@ const { render } = createRenderer();
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   return {
     async sendMessage() {
-      return new ReadableStream({ start(c) { c.close(); } });
+      return new ReadableStream({
+        start(c) {
+          c.close();
+        },
+      });
     },
     ...overrides,
   };

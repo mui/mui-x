@@ -55,7 +55,12 @@ describe('ChatMessageGroup', () => {
         adapter={createAdapter()}
         initialMessages={[
           { id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Question' }] },
-          { id: 'm2', role: 'assistant', status: 'sent', parts: [{ type: 'text', text: 'Answer' }] },
+          {
+            id: 'm2',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Answer' }],
+          },
         ]}
       >
         {null}

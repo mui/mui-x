@@ -13,7 +13,7 @@ describe('ChatConfirmation', () => {
 
   it('renders warning icon', () => {
     render(<ChatConfirmation message="msg" />);
-     
+
     expect(document.querySelector('svg')).not.toBe(null);
   });
 

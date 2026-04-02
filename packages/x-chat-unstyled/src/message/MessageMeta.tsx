@@ -68,8 +68,7 @@ export const MessageMeta = React.forwardRef(function MessageMeta(
   const statusLabel = ownerState.message?.status
     ? localeText.messageStatusLabel(ownerState.message.status)
     : '';
-  const hasMeta =
-    showTimestamp || Boolean(statusLabel) || ownerState.message?.editedAt != null;
+  const hasMeta = showTimestamp || Boolean(statusLabel) || ownerState.message?.editedAt != null;
   void ownerStateProp;
 
   const Meta = slots?.meta ?? 'div';
@@ -138,9 +137,7 @@ export const MessageMeta = React.forwardRef(function MessageMeta(
           </StreamingProgressTrack>
         </StreamingProgress>
       ) : null}
-      {showTimestamp ? (
-        <Timestamp {...timestampProps}>{timestampLabel}</Timestamp>
-      ) : null}
+      {showTimestamp ? <Timestamp {...timestampProps}>{timestampLabel}</Timestamp> : null}
       {ownerState.message?.status && statusLabel && !ownerState.streaming ? (
         <Status {...statusProps}>{statusLabel}</Status>
       ) : null}

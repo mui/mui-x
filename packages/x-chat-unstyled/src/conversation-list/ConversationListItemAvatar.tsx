@@ -48,8 +48,7 @@ export const ConversationListItemAvatar = React.forwardRef(function Conversation
   // non-'user' participant so the list shows the other person's avatar
   // instead of the local user's.
   const participant =
-    conversation.participants?.find((p) => p.role !== 'user') ??
-    conversation.participants?.[0];
+    conversation.participants?.find((p) => p.role !== 'user') ?? conversation.participants?.[0];
   const avatarUrl = conversation.avatarUrl ?? participant?.avatarUrl;
   const avatarAlt = participant?.displayName ?? '';
 

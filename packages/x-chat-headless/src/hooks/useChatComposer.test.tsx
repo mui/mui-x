@@ -424,9 +424,7 @@ describe('useChatComposer', () => {
     const objectUrls = mockObjectUrlApis();
     const adapter = createAdapter({
       sendMessage: vi.fn(async ({ message }) => {
-        const filePart = message.parts.find(
-          (part: any) => part.type === 'file',
-        );
+        const filePart = message.parts.find((part: any) => part.type === 'file');
         expect(filePart).toEqual(
           expect.objectContaining({
             type: 'file',
@@ -464,9 +462,7 @@ describe('useChatComposer', () => {
     const objectUrls = mockObjectUrlApis();
     const adapter = createAdapter({
       sendMessage: vi.fn(async ({ message }) => {
-        const filePart = message.parts.find(
-          (part: any) => part.type === 'file',
-        );
+        const filePart = message.parts.find((part: any) => part.type === 'file');
         expect(filePart).toEqual(
           expect.objectContaining({
             type: 'file',
@@ -486,7 +482,9 @@ describe('useChatComposer', () => {
       const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
 
       act(() => {
-        result.current.addAttachment(new File(['pdf-content'], 'doc.pdf', { type: 'application/pdf' }));
+        result.current.addAttachment(
+          new File(['pdf-content'], 'doc.pdf', { type: 'application/pdf' }),
+        );
       });
 
       await act(async () => {

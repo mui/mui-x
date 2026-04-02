@@ -37,6 +37,7 @@ export interface TextPartExternalProps {
    * Custom renderer for text message parts.
    * When provided, this overrides the default plain-text rendering and
    * receives the raw text string (e.g. for markdown-to-JSX conversion).
+   * @param text
    */
   renderText?: (text: string) => React.ReactNode;
 }
@@ -85,7 +86,7 @@ function DefaultPartFallback(props: { part: ChatMessagePart }) {
 function TextPart(props: { text: string; renderText: (text: string) => React.ReactNode }) {
   const { text, renderText } = props;
   const rendered = React.useMemo(() => renderText(text), [text, renderText]);
-  return <>{rendered}</>;
+  return <React.Fragment>{rendered}</React.Fragment>;
 }
 
 function JsonBlock(props: { value: unknown }) {

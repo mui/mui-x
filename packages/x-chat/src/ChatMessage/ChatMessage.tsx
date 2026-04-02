@@ -2,13 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatMessage');
 import { SxProps, Theme } from '@mui/system';
 import { useMessage } from '@mui/x-chat-headless';
 import { MessageRoot, type MessageRootProps } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatMessage');
 
 export interface ChatMessageProps extends MessageRootProps {
   className?: string;
@@ -114,7 +114,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
             className: clsx(classes.root, stateClasses, className),
             sx,
             ...slotProps?.root,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             
           } as any,
         }}
       />

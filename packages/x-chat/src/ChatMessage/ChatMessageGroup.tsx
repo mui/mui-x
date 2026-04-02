@@ -2,12 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, createUseThemeProps } from '../internals/zero-styled';
-
-const useThemeProps = createUseThemeProps('MuiChatMessage');
 import { SxProps, Theme } from '@mui/system';
 import { MessageGroup, type MessageGroupProps } from '@mui/x-chat-unstyled';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatMessage');
 
 export interface ChatMessageGroupProps extends MessageGroupProps {
   className?: string;

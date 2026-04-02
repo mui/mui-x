@@ -2,7 +2,12 @@
 import * as React from 'react';
 import { useMessageIds, useConversations } from '@mui/x-chat-headless';
 import IconButton from '@mui/material/IconButton';
-import { ChatLayout, useChatLocaleText, type ChatSuggestion, type ChatVariant } from '@mui/x-chat-unstyled';
+import {
+  ChatLayout,
+  useChatLocaleText,
+  type ChatSuggestion,
+  type ChatVariant,
+} from '@mui/x-chat-unstyled';
 import { styled } from '../internals/zero-styled';
 import { ChatConversation } from '../ChatConversation/ChatConversation';
 import { ChatConversationHeader } from '../ChatConversation/ChatConversationHeader';
@@ -159,10 +164,7 @@ function DefaultComposer({
   const localeText = useChatLocaleText();
 
   return (
-    <ComposerRootComponent
-      attachmentConfig={attachmentConfig}
-      {...(slotProps?.composerRoot ?? {})}
-    >
+    <ComposerRootComponent attachmentConfig={attachmentConfig} {...(slotProps?.composerRoot ?? {})}>
       {showAttachments && (
         <ComposerAttachmentListComponent {...(slotProps?.composerAttachmentList ?? {})} />
       )}

@@ -80,14 +80,9 @@ describe('useChatControllerHelpers', () => {
 
   describe('createRuntimeError', () => {
     it('returns a ChatError with all fields', () => {
-      const error = createRuntimeError(
-        'SEND_ERROR',
-        'Failed to send',
-        'send',
-        true,
-        true,
-        { messageId: 'u1' },
-      );
+      const error = createRuntimeError('SEND_ERROR', 'Failed to send', 'send', true, true, {
+        messageId: 'u1',
+      });
 
       expect(error).toEqual({
         code: 'SEND_ERROR',
@@ -100,25 +95,16 @@ describe('useChatControllerHelpers', () => {
     });
 
     it('includes details when provided', () => {
-      const error = createRuntimeError(
-        'STREAM_ERROR',
-        'Stream broke',
-        'stream',
-        false,
-        false,
-        { streamId: 's1', chunkIndex: 42 },
-      );
+      const error = createRuntimeError('STREAM_ERROR', 'Stream broke', 'stream', false, false, {
+        streamId: 's1',
+        chunkIndex: 42,
+      });
 
       expect(error.details).toEqual({ streamId: 's1', chunkIndex: 42 });
     });
 
     it('defaults retryable to false', () => {
-      const error = createRuntimeError(
-        'HISTORY_ERROR',
-        'Cannot load',
-        'history',
-        true,
-      );
+      const error = createRuntimeError('HISTORY_ERROR', 'Cannot load', 'history', true);
 
       expect(error.retryable).toBe(false);
       expect(error.details).toBeUndefined();
@@ -284,9 +270,7 @@ describe('useChatControllerHelpers', () => {
       const conv2: ChatConversation = {
         id: 'c2',
         title: 'Support',
-        participants: [
-          { id: 'u1', displayName: 'Alice', isOnline: false },
-        ],
+        participants: [{ id: 'u1', displayName: 'Alice', isOnline: false }],
       };
       const store = new ChatStore({
         initialConversations: [conv1, conv2],
@@ -307,9 +291,7 @@ describe('useChatControllerHelpers', () => {
       const conv2: ChatConversation = {
         id: 'c2',
         title: 'Support',
-        participants: [
-          { id: 'u1', displayName: 'Alice', isOnline: false },
-        ],
+        participants: [{ id: 'u1', displayName: 'Alice', isOnline: false }],
       };
       const store = new ChatStore({
         initialConversations: [conv1, conv2],
@@ -325,9 +307,7 @@ describe('useChatControllerHelpers', () => {
       const conv: ChatConversation = {
         id: 'c1',
         title: 'General',
-        participants: [
-          { id: 'u1', displayName: 'Alice', isOnline: true },
-        ],
+        participants: [{ id: 'u1', displayName: 'Alice', isOnline: true }],
       };
       const store = new ChatStore({
         initialConversations: [conv],
@@ -343,16 +323,18 @@ describe('useChatControllerHelpers', () => {
       const conv: ChatConversation = {
         id: 'c1',
         title: 'General',
-        participants: [
-          { id: 'u1', displayName: 'Alice', isOnline: false },
-        ],
+        participants: [{ id: 'u1', displayName: 'Alice', isOnline: false }],
       };
       const store = new ChatStore({
         initialConversations: [conv],
       });
       const stateBefore = store.state;
 
-      applyPresenceUpdate(asUnknown(store), { type: 'presence', userId: 'unknown', isOnline: true });
+      applyPresenceUpdate(asUnknown(store), {
+        type: 'presence',
+        userId: 'unknown',
+        isOnline: true,
+      });
 
       expect(store.state.conversationsById).toBe(stateBefore.conversationsById);
     });
