@@ -26,14 +26,14 @@ import { type AxisTooltipContentProps, type ItemTooltipContentProps } from './To
 
 export type ChartSeriesTypeRequiredPlugins<SeriesType extends ChartSeriesType> =
   ChartsSeriesConfig[SeriesType] extends { axisType: infer A }
-  ? 'cartesian' extends A
-  ? 'polar' extends A
-  ? [] // Dual-mode series (both cartesian and polar): no specific axis plugin required
-  : [UseChartCartesianAxisSignature]
-  : 'polar' extends A
-  ? [UseChartPolarAxisSignature]
-  : []
-  : [];
+    ? 'cartesian' extends A
+      ? 'polar' extends A
+        ? [] // Dual-mode series (both cartesian and polar): no specific axis plugin required
+        : [UseChartCartesianAxisSignature]
+      : 'polar' extends A
+        ? [UseChartPolarAxisSignature]
+        : []
+    : [];
 
 /**
  * Helper type to compute the axis directions available for a given series type.
@@ -75,24 +75,24 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
   isFadedCreator: HighlightCreator<SeriesType>;
 } & (SeriesType extends CartesianChartSeriesType
   ? {
-    xExtremumGetter: CartesianExtremumGetter<SeriesType>;
-    yExtremumGetter: CartesianExtremumGetter<SeriesType>;
-  }
+      xExtremumGetter: CartesianExtremumGetter<SeriesType>;
+      yExtremumGetter: CartesianExtremumGetter<SeriesType>;
+    }
   : {}) &
   (SeriesType extends PolarChartSeriesType
     ? {
-      rotationExtremumGetter: PolarExtremumGetter<SeriesType>;
-      radiusExtremumGetter: PolarExtremumGetter<SeriesType>;
-    }
+        rotationExtremumGetter: PolarExtremumGetter<SeriesType>;
+        radiusExtremumGetter: PolarExtremumGetter<SeriesType>;
+      }
     : {}) &
   (SeriesType extends CartesianChartSeriesType | PolarChartSeriesType
     ? {
-      axisTooltipGetter?: AxisTooltipGetter<
-        SeriesType,
-        ChartSeriesTypeAxisDirections<SeriesType>
-      >;
-      AxisTooltipContent?: React.ComponentType<AxisTooltipContentProps<SeriesType>>;
-    }
+        axisTooltipGetter?: AxisTooltipGetter<
+          SeriesType,
+          ChartSeriesTypeAxisDirections<SeriesType>
+        >;
+        AxisTooltipContent?: React.ComponentType<AxisTooltipContentProps<SeriesType>>;
+      }
     : {});
 
 export type ChartSeriesConfig<SeriesType extends ChartSeriesType> = {

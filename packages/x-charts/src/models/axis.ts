@@ -562,6 +562,7 @@ export type PolarAxisConfig<
   MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
+  // TickParams &
   AxisConfigExtension;
 
 /**
