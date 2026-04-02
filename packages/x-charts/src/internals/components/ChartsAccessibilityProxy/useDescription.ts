@@ -57,7 +57,8 @@ export function useDescription(): string | null {
     const yAxisId = focusedSeries.yAxisId ?? yAxisIds[0];
     descriptionParams.xAxis = xAxis[xAxisId];
     descriptionParams.yAxis = yAxis[yAxisId];
-  } else if (isPolarSeriesType(type)) {
+  }
+  if (isPolarSeriesType(type)) {
     descriptionParams.rotationAxis = rotationAxis[rotationAxisIds[0]];
     descriptionParams.radiusAxis = radiusAxis[radiusAxisIds[0]];
   }
