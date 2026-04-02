@@ -89,11 +89,11 @@ You will have access to the `clearable` and `onClear` props using native HTML el
 but the **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
 
-{{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
+{{"demo": "BrowserField.js", "defaultCodeOpen": false}}
 
-{{"demo": "BrowserV7SingleInputRangeField.js", "defaultCodeOpen": false}}
+{{"demo": "BrowserSingleInputRangeField.js", "defaultCodeOpen": false}}
 
-{{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
+{{"demo": "BrowserMultiInputRangeField.js", "defaultCodeOpen": false}}
 
 ## With a custom editing experience
 
