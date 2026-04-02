@@ -84,7 +84,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   const keyboardProps = {
     // When no cell has been focused yet (focusedCell === null), use default tabIndex.
     // Once a cell is focused, use roving tabIndex (only the focused cell has tabIndex=0).
-    tabIndex: focusedCell === null ? 0 : hasFocus ? 0 : -1,
+    tabIndex: focusedCell === null || hasFocus ? 0 : -1,
     onKeyDown: handleKeyDown,
     onFocus: handleFocus,
   };

@@ -120,7 +120,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   );
 
   const keyboardProps = {
-    tabIndex: focusedCell === null ? 0 : hasFocus ? 0 : -1,
+    tabIndex: focusedCell === null || hasFocus ? 0 : -1,
     onKeyDown: handleKeyDown,
     onFocus: handleFocus,
   };
