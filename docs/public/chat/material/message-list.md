@@ -401,6 +401,134 @@ export default function CompactVariant() {
 <ChatBox variant="compact" adapter={adapter} />
 ```
 
+## Density
+
+The `density` prop controls the vertical spacing between messages.
+Three values are available — `compact`, `standard` (default), and `comfortable` — mirroring the density model used in [Data Grid](/x/react-data-grid/accessibility/#density).
+
+Use the toggle in the demo below to compare the three density levels:
+
+```tsx
+'use client';
+import * as React from 'react';
+import { ChatBox, type ChatDensity } from '@mui/x-chat';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import Stack from '@mui/material/Stack';
+import { createEchoAdapter, randomId } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createTextMessage, demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
+
+const adapter = createEchoAdapter();
+
+const CONV_ID = randomId();
+
+const conversation: ChatConversation = {
+  id: CONV_ID,
+  title: 'Design review',
+  subtitle: 'UI team',
+  participants: [demoUsers.you, demoUsers.agent],
+  readState: 'read',
+  unreadCount: 0,
+  lastMessageAt: '2026-03-15T14:10:00.000Z',
+};
+
+const messages: ChatMessage[] = [
+  createTextMessage({
+    id: randomId(),
+    conversationId: CONV_ID,
+    role: 'assistant',
+    author: demoUsers.agent,
+    createdAt: '2026-03-15T14:00:00.000Z',
+    text: 'Hey! I just pushed the updated mockups for the settings page.',
+  }),
+  createTextMessage({
+    id: randomId(),
+    conversationId: CONV_ID,
+    role: 'assistant',
+    author: demoUsers.agent,
+    createdAt: '2026-03-15T14:00:10.000Z',
+    text: 'Let me know what you think about the new spacing.',
+  }),
+  createTextMessage({
+    id: randomId(),
+    conversationId: CONV_ID,
+    role: 'user',
+    author: demoUsers.you,
+    createdAt: '2026-03-15T14:02:00.000Z',
+    text: 'Looks great! The layout feels much more balanced now.',
+  }),
+  createTextMessage({
+    id: randomId(),
+    conversationId: CONV_ID,
+    role: 'user',
+    author: demoUsers.you,
+    createdAt: '2026-03-15T14:02:15.000Z',
+    text: 'One thing: can we increase the gap between the sections?',
+  }),
+  createTextMessage({
+    id: randomId(),
+    conversationId: CONV_ID,
+    role: 'assistant',
+    author: demoUsers.agent,
+    createdAt: '2026-03-15T14:05:00.000Z',
+    text: 'Sure, I will add more vertical breathing room. Give me 10 minutes.',
+  }),
+  createTextMessage({
+    id: randomId(),
+    conversationId: CONV_ID,
+    role: 'user',
+    author: demoUsers.you,
+    createdAt: '2026-03-15T14:10:00.000Z',
+    text: 'Perfect, take your time!',
+  }),
+];
+
+export default function DensityProp() {
+  const [density, setDensity] = React.useState<ChatDensity>('standard');
+
+  return (
+    <Stack spacing={2}>
+      <ToggleButtonGroup
+        value={density}
+        exclusive
+        onChange={(_, value) => {
+          if (value !== null) {
+            setDensity(value as ChatDensity);
+          }
+        }}
+        size="small"
+      >
+        <ToggleButton value="compact">Compact</ToggleButton>
+        <ToggleButton value="standard">Standard</ToggleButton>
+        <ToggleButton value="comfortable">Comfortable</ToggleButton>
+      </ToggleButtonGroup>
+      <ChatBox
+        density={density}
+        adapter={adapter}
+        initialActiveConversationId={conversation.id}
+        initialConversations={[conversation]}
+        initialMessages={messages}
+        sx={{
+          height: 400,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+        }}
+      />
+    </Stack>
+  );
+}
+
+```
+
+```tsx
+<ChatBox density="compact" adapter={adapter} />
+<ChatBox density="comfortable" adapter={adapter} />
+```
+
+The `density` prop is independent of `variant` — you can combine `variant="compact"` with any density value.
+
 ## Loading and streaming states
 
 While the assistant is generating a response, streaming tokens are rendered incrementally inside a `ChatMessageContent` bubble.

@@ -31,7 +31,7 @@ const themeOptions: { value: CustomThemeName; label: string }[] = [
 export default function MainDemo() {
   const brandingTheme = useTheme();
   const [selectedView, setSelectedView] = React.useState<ChatView>('messenger');
-  const [selectedTheme, setSelectedTheme] = React.useState<CustomThemeName>('default');
+  const [selectedTheme, setSelectedTheme] = React.useState<CustomThemeName>('softEdges');
 
   const handleThemeChange = (event: SelectChangeEvent) => {
     setSelectedTheme(event.target.value as CustomThemeName);

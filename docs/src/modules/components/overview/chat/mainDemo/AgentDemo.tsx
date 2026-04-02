@@ -1,6 +1,25 @@
 'use client';
 import * as React from 'react';
-import { ChatBox } from '@mui/x-chat';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Collapse from '@mui/material/Collapse';
+import Typography from '@mui/material/Typography';
+import AddIcon from '@mui/icons-material/Add';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import {
+  ChatBox,
+  chatMessageClasses,
+  ChatComposer,
+  ChatComposerSendButton,
+  ChatComposerTextArea,
+} from '@mui/x-chat';
 import type {
   ChatAdapter,
   ChatConversation,
@@ -8,6 +27,7 @@ import type {
   ChatMessageChunk,
   ChatMessagePart,
 } from '@mui/x-chat/headless';
+import { useChat } from '@mui/x-chat/headless';
 import {
   createChunkStream,
   randomId,
@@ -16,13 +36,500 @@ import {
 } from '../../../../../../data/chat/material/examples/shared/demoUtils';
 import { demoUsers } from '../../../../../../data/chat/material/examples/shared/demoData';
 
+// --- Types ------------------------------------------------------------------
+
+interface TaskNode {
+  conversationId: string;
+  label: string;
+  relativeTime: string;
+  status: 'working' | 'completed';
+}
+
+interface ProjectNode {
+  id: string;
+  name: string;
+  tasks: TaskNode[];
+}
+
+// --- Constants --------------------------------------------------------------
+
+const SIDEBAR_WIDTH = 260;
+
+// --- Null slot component (hides avatar, meta, etc.) -------------------------
+
+function NullSlot(_props: Record<string, unknown>) {
+  return null;
+}
+
+// --- Conversation IDs -------------------------------------------------------
+
+const taskMarketingId = randomId();
+const taskDeployId = randomId();
+const taskBundlerId = randomId();
+const taskThemeId = randomId();
+const taskSecurityId = randomId();
+
+// --- Project tree data ------------------------------------------------------
+
+const projects: ProjectNode[] = [
+  {
+    id: 'acme-web',
+    name: 'acme-web',
+    tasks: [
+      {
+        conversationId: taskMarketingId,
+        label: 'I need to create a marketing site for this app',
+        relativeTime: '8m ago',
+        status: 'working',
+      },
+      {
+        conversationId: taskDeployId,
+        label: 'Scaffold Vercel deployment config',
+        relativeTime: '1h ago',
+        status: 'completed',
+      },
+    ],
+  },
+  {
+    id: 'tooling',
+    name: 'tooling',
+    tasks: [
+      {
+        conversationId: taskBundlerId,
+        label: 'I want to modernize the bundler config',
+        relativeTime: '2h ago',
+        status: 'working',
+      },
+    ],
+  },
+  {
+    id: 'design-system',
+    name: 'design-system',
+    tasks: [
+      {
+        conversationId: taskThemeId,
+        label: 'Update MUI theme colors to teal',
+        relativeTime: '3h ago',
+        status: 'completed',
+      },
+      {
+        conversationId: taskSecurityId,
+        label: 'Review security configuration',
+        relativeTime: '5h ago',
+        status: 'working',
+      },
+    ],
+  },
+];
+
+// Map conversationId → projectName for the header chip
+const conversationToProject: Record<string, string> = {};
+projects.forEach((p) =>
+  p.tasks.forEach((t) => {
+    conversationToProject[t.conversationId] = p.name;
+  }),
+);
+
+// --- AgentTaskTree (conversationList slot) -----------------------------------
+
+function AgentTaskTree(_props: Record<string, unknown>) {
+  const { activeConversationId, setActiveConversation } = useChat();
+
+  const [expanded, setExpanded] = React.useState<Record<string, boolean>>(() =>
+    Object.fromEntries(projects.map((p) => [p.id, true])),
+  );
+
+  const toggleProject = (projectId: string) => {
+    setExpanded((prev) => ({ ...prev, [projectId]: !prev[projectId] }));
+  };
+
+  return (
+    <Box
+      sx={{
+        width: SIDEBAR_WIDTH,
+        minWidth: SIDEBAR_WIDTH,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: (theme) =>
+          theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.015)',
+        borderRight: '1px solid',
+        borderColor: 'divider',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Header */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          px: 2,
+          py: 1.5,
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
+        <Typography variant="subtitle2" sx={{ fontWeight: 700, fontFamily: 'monospace', flex: 1 }}>
+          MUI Agent
+        </Typography>
+        <Chip
+          label="active"
+          size="small"
+          icon={
+            <FiberManualRecordIcon
+              sx={{ fontSize: 8, color: 'success.main', '&&': { color: 'success.main' } }}
+            />
+          }
+          sx={{
+            height: 20,
+            fontSize: '0.65rem',
+            fontWeight: 600,
+            bgcolor: (theme) =>
+              theme.palette.mode === 'dark' ? 'rgba(102,187,106,0.12)' : 'rgba(46,125,50,0.08)',
+            color: 'success.main',
+            '& .MuiChip-icon': { ml: 0.5, mr: -0.25 },
+          }}
+        />
+      </Box>
+
+      {/* Tree body */}
+      <Box sx={{ flex: 1, overflowY: 'auto', py: 0.5 }}>
+        {projects.map((project) => (
+          <React.Fragment key={project.id}>
+            {/* Project header */}
+            <Box
+              component="button"
+              onClick={() => toggleProject(project.id)}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                px: 1,
+                py: 0.5,
+                cursor: 'pointer',
+                border: 'none',
+                bgcolor: 'transparent',
+                color: 'text.primary',
+                fontFamily: 'monospace',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                textAlign: 'left',
+                transition: 'background-color 150ms ease',
+                '&:hover': { bgcolor: 'action.hover' },
+              }}
+            >
+              {expanded[project.id] ? (
+                <ExpandMoreIcon sx={{ fontSize: 16, mr: 0.25, color: 'text.secondary' }} />
+              ) : (
+                <ChevronRightIcon sx={{ fontSize: 16, mr: 0.25, color: 'text.secondary' }} />
+              )}
+              {project.name}
+            </Box>
+
+            {/* Tasks */}
+            <Collapse in={expanded[project.id]}>
+              {project.tasks.map((task) => {
+                const isActive = activeConversationId === task.conversationId;
+                return (
+                  <Box
+                    key={task.conversationId}
+                    component="button"
+                    onClick={() => setActiveConversation(task.conversationId)}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      width: '100%',
+                      pl: 3.5,
+                      pr: 1,
+                      py: 0.75,
+                      cursor: 'pointer',
+                      border: 'none',
+                      bgcolor: isActive ? 'action.selected' : 'transparent',
+                      color: 'text.primary',
+                      fontFamily: 'inherit',
+                      fontSize: '0.75rem',
+                      textAlign: 'left',
+                      lineHeight: 1.4,
+                      transition: 'background-color 150ms ease',
+                      '&:hover': { bgcolor: isActive ? 'action.selected' : 'action.hover' },
+                    }}
+                  >
+                    {/* Status indicator */}
+                    <Box sx={{ flexShrink: 0, mr: 0.75, mt: '1px' }}>
+                      {task.status === 'working' ? (
+                        <FiberManualRecordIcon sx={{ fontSize: 8, color: 'warning.main' }} />
+                      ) : (
+                        <CheckCircleOutlineIcon sx={{ fontSize: 11, color: 'success.main' }} />
+                      )}
+                    </Box>
+
+                    {/* Task label + meta */}
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            fontWeight: 600,
+                            fontSize: '0.65rem',
+                            color: task.status === 'working' ? 'warning.main' : 'success.main',
+                            textTransform: 'capitalize',
+                            lineHeight: 1,
+                          }}
+                        >
+                          {task.status === 'working' ? 'Working' : 'Completed'}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: 'text.disabled',
+                            fontSize: '0.6rem',
+                            flexShrink: 0,
+                            lineHeight: 1,
+                          }}
+                        >
+                          {task.relativeTime}
+                        </Typography>
+                      </Box>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          display: 'block',
+                          color: 'text.secondary',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          lineHeight: 1.3,
+                          mt: 0.25,
+                        }}
+                      >
+                        {task.label}
+                      </Typography>
+                    </Box>
+                  </Box>
+                );
+              })}
+            </Collapse>
+          </React.Fragment>
+        ))}
+      </Box>
+
+      {/* Footer */}
+      <Box
+        sx={{
+          borderTop: '1px solid',
+          borderColor: 'divider',
+          px: 1.5,
+          py: 1,
+        }}
+      >
+        <Box
+          component="button"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.5,
+            width: '100%',
+            px: 1,
+            py: 0.5,
+            cursor: 'pointer',
+            border: 'none',
+            bgcolor: 'transparent',
+            color: 'text.secondary',
+            fontFamily: 'inherit',
+            fontSize: '0.8rem',
+            borderRadius: 1,
+            transition: 'background-color 150ms ease',
+            '&:hover': { bgcolor: 'action.hover' },
+          }}
+        >
+          <AddIcon sx={{ fontSize: 16 }} />
+          Add project
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+// --- AgentHeaderBar (conversationHeader slot) --------------------------------
+
+function AgentHeaderBar(_props: Record<string, unknown>) {
+  const { conversations, activeConversationId } = useChat();
+  const active = conversations.find((c) => c.id === activeConversationId);
+  const projectName = activeConversationId
+    ? conversationToProject[activeConversationId]
+    : undefined;
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1,
+        px: 2,
+        py: 1,
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        minHeight: 48,
+        bgcolor: 'background.paper',
+      }}
+    >
+      <Typography variant="body2" noWrap sx={{ flex: 1, fontWeight: 600, minWidth: 0 }}>
+        {active?.title ?? 'Select a task'}
+      </Typography>
+      {projectName && (
+        <Chip
+          label={projectName}
+          size="small"
+          variant="outlined"
+          sx={{
+            height: 22,
+            fontSize: '0.7rem',
+            fontFamily: 'monospace',
+            borderRadius: 1,
+            flexShrink: 0,
+          }}
+        />
+      )}
+      <Box sx={{ display: 'flex', gap: 0.5, flexShrink: 0 }}>
+        <Button
+          size="small"
+          variant="text"
+          startIcon={<AddIcon sx={{ fontSize: 14 }} />}
+          sx={{ fontSize: '0.75rem', textTransform: 'none', minWidth: 'auto', px: 1 }}
+        >
+          Add action
+        </Button>
+        <Button
+          size="small"
+          variant="text"
+          startIcon={<OpenInNewOutlinedIcon sx={{ fontSize: 14 }} />}
+          sx={{ fontSize: '0.75rem', textTransform: 'none', minWidth: 'auto', px: 1 }}
+        >
+          Open
+        </Button>
+        <Button
+          size="small"
+          variant="contained"
+          disableElevation
+          endIcon={<KeyboardArrowDownIcon sx={{ fontSize: 16 }} />}
+          sx={{ fontSize: '0.75rem', textTransform: 'none', minWidth: 'auto', px: 1.5 }}
+        >
+          Commit &amp; push
+        </Button>
+      </Box>
+    </Box>
+  );
+}
+
+// --- AgentComposer (composerRoot slot) ---------------------------------------
+
+function AgentComposer({ children: _children, ...other }: Record<string, unknown>) {
+  return (
+    <ChatComposer
+      {...other}
+      sx={{
+        borderTop: '1px solid',
+        borderColor: 'divider',
+        p: 1.5,
+        gap: 1,
+      }}
+    >
+      <ChatComposerTextArea
+        placeholder="Ask anything, drop files/folders, or use threads"
+        sx={{
+          fontSize: '0.85rem',
+          minHeight: 40,
+          maxHeight: 120,
+          px: 1.5,
+          py: 1,
+          borderRadius: 2,
+          border: '1px solid',
+          borderColor: 'divider',
+          bgcolor: (theme) =>
+            theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)',
+          '&:focus-within': {
+            borderColor: 'primary.main',
+          },
+        }}
+      />
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 0.5,
+          flexWrap: 'wrap',
+        }}
+      >
+        <Chip
+          label="Claude 4"
+          size="small"
+          variant="outlined"
+          sx={{ height: 24, fontSize: '0.7rem', fontWeight: 500, borderRadius: 1 }}
+        />
+        <Chip
+          label="High"
+          size="small"
+          sx={{
+            height: 24,
+            fontSize: '0.7rem',
+            fontWeight: 500,
+            borderRadius: 1,
+            bgcolor: (theme) =>
+              theme.palette.mode === 'dark' ? 'rgba(255,167,38,0.15)' : 'rgba(237,108,2,0.08)',
+            color: 'warning.main',
+          }}
+        />
+        <Chip
+          label="Chat"
+          size="small"
+          variant="outlined"
+          sx={{ height: 24, fontSize: '0.7rem', fontWeight: 500, borderRadius: 1 }}
+        />
+        <Box sx={{ flex: 1 }} />
+        <Chip
+          label="Full access"
+          size="small"
+          variant="outlined"
+          sx={{ height: 24, fontSize: '0.7rem', fontWeight: 500, borderRadius: 1 }}
+        />
+        <ChatComposerSendButton
+          sx={{
+            bgcolor: 'error.main',
+            color: 'error.contrastText',
+            width: 32,
+            height: 32,
+            '&:hover': { bgcolor: 'error.dark' },
+            '&.Mui-disabled': {
+              bgcolor: 'action.disabledBackground',
+              color: 'action.disabled',
+            },
+          }}
+        >
+          <ArrowUpwardIcon sx={{ fontSize: 18 }} />
+        </ChatComposerSendButton>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          px: 0.5,
+        }}
+      >
+        <Typography variant="caption" sx={{ color: 'text.disabled', fontSize: '0.65rem' }}>
+          Local
+        </Typography>
+        <Typography variant="caption" sx={{ color: 'text.disabled', fontSize: '0.65rem' }}>
+          main
+        </Typography>
+      </Box>
+    </ChatComposer>
+  );
+}
+
 // --- Message factories -------------------------------------------------------
 
-function makeUserMessage(
-  conversationId: string,
-  text: string,
-  createdAt: string,
-): ChatMessage {
+function makeUserMessage(conversationId: string, text: string, createdAt: string): ChatMessage {
   return {
     id: randomId(),
     conversationId,
@@ -50,64 +557,125 @@ function makeAssistantMessage(
   };
 }
 
-// --- Conversation IDs — generated once at module load ------------------------
-
-const codeReviewId = randomId();
-const webResearchId = randomId();
-const themeUpdateId = randomId();
-
 // --- Pre-populated conversations ---------------------------------------------
 
 const initialConversations: ChatConversation[] = [
   {
-    id: codeReviewId,
-    title: 'Code review',
-    subtitle: 'The project structure looks clean…',
+    id: taskMarketingId,
+    title: 'Create a marketing site for this app',
+    subtitle: 'The repo doesn\u2019t have existing Vercel wiring\u2026',
     participants: [demoUsers.you, demoUsers.agent],
     readState: 'read',
     unreadCount: 0,
     lastMessageAt: '2026-03-31T09:30:00.000Z',
   },
   {
-    id: webResearchId,
-    title: 'Web research',
-    subtitle: 'Here is a summary of React 19…',
-    participants: [demoUsers.you, demoUsers.agent],
-    readState: 'unread',
-    unreadCount: 1,
-    lastMessageAt: '2026-03-31T10:15:00.000Z',
-  },
-  {
-    id: themeUpdateId,
-    title: 'Update MUI theme',
-    subtitle: 'Done — primary color updated to teal.',
+    id: taskDeployId,
+    title: 'Scaffold Vercel deployment config',
+    subtitle: 'Done \u2014 deployment config is ready.',
     participants: [demoUsers.you, demoUsers.agent],
     readState: 'read',
     unreadCount: 0,
-    lastMessageAt: '2026-03-31T11:00:00.000Z',
+    lastMessageAt: '2026-03-31T08:30:00.000Z',
+  },
+  {
+    id: taskBundlerId,
+    title: 'Modernize the bundler configuration',
+    subtitle: 'Checking the current Webpack setup\u2026',
+    participants: [demoUsers.you, demoUsers.agent],
+    readState: 'unread',
+    unreadCount: 1,
+    lastMessageAt: '2026-03-31T07:30:00.000Z',
+  },
+  {
+    id: taskThemeId,
+    title: 'Update MUI theme colors to teal',
+    subtitle: 'Done \u2014 primary color updated to teal.',
+    participants: [demoUsers.you, demoUsers.agent],
+    readState: 'read',
+    unreadCount: 0,
+    lastMessageAt: '2026-03-31T06:30:00.000Z',
+  },
+  {
+    id: taskSecurityId,
+    title: 'Review security configuration',
+    subtitle: 'Checking dependency audit reports\u2026',
+    participants: [demoUsers.you, demoUsers.agent],
+    readState: 'read',
+    unreadCount: 0,
+    lastMessageAt: '2026-03-31T05:30:00.000Z',
   },
 ];
 
 // --- Pre-populated threads ---------------------------------------------------
 
 const initialThreads: Record<string, ChatMessage[]> = {
-  // ── Code review ─────────────────────────────────────────────────────────
-  [codeReviewId]: [
+  // ── Marketing site ────────────────────────────────────────────────────
+  [taskMarketingId]: [
     makeUserMessage(
-      codeReviewId,
-      'Can you review the project structure and suggest improvements?',
+      taskMarketingId,
+      'I need to create a marketing site for this app before launch. Can you scaffold it?',
       '2026-03-31T09:20:00.000Z',
     ),
-    makeAssistantMessage(codeReviewId, '2026-03-31T09:21:00.000Z', [
+    makeAssistantMessage(taskMarketingId, '2026-03-31T09:21:00.000Z', [
       { type: 'step-start' },
       {
         type: 'reasoning',
-        text: 'I need to explore the repository to understand how the project is organized. Let me start by finding the source files, then read the main entry point.',
+        text: "The repo doesn't have existing Vercel/marketing-site wiring, so I have room to scaffold a purpose-built app. Let me check the monorepo conventions first.",
         state: 'done',
       },
       {
         type: 'text',
-        text: "I'll start by looking at the file structure.",
+        text: "The repo doesn't have existing Vercel/marketing-site wiring, so I have room to add a purpose-built app instead of working around prior deployment config. I'm checking the monorepo task conventions next, then I'll scaffold `apps/site` and build the first version in one pass.",
+        state: 'done',
+      },
+      {
+        type: 'dynamic-tool',
+        toolInvocation: {
+          toolCallId: randomId(),
+          toolName: 'bash',
+          state: 'output-available',
+          input: { command: 'ls -la apps/' },
+          output: {
+            stdout:
+              'total 8\ndrwxr-xr-x  4 user staff 128 Mar 31 09:00 .\ndrwxr-xr-x 12 user staff 384 Mar 31 08:00 ..\ndrwxr-xr-x  6 user staff 192 Mar 30 14:00 dashboard\ndrwxr-xr-x  5 user staff 160 Mar 29 10:00 docs',
+            exit_code: 0,
+          },
+        },
+      },
+      {
+        type: 'dynamic-tool',
+        toolInvocation: {
+          toolCallId: randomId(),
+          toolName: 'bash',
+          state: 'output-available',
+          input: { command: 'cat apps/dashboard/package.json | head -12' },
+          output: {
+            stdout:
+              '{\n  "name": "@acme/dashboard",\n  "private": true,\n  "scripts": {\n    "dev": "next dev",\n    "build": "next build"\n  },\n  "dependencies": {\n    "next": "^15.1.0",\n    "react": "^19.0.0"\n  }\n}',
+            exit_code: 0,
+          },
+        },
+      },
+      {
+        type: 'dynamic-tool',
+        toolInvocation: {
+          toolCallId: randomId(),
+          toolName: 'bash',
+          state: 'output-available',
+          input: {
+            command:
+              'mkdir -p apps/site && npx create-next-app@latest apps/site --ts --tailwind --app --no-git',
+          },
+          output: {
+            stdout: 'Creating a new Next.js app in apps/site.\nSuccess! Created site at apps/site',
+            exit_code: 0,
+          },
+        },
+      },
+      {
+        type: 'text',
+        text: "I've confirmed the new app can stand alone without touching the product runtimes. I'm inspecting the existing brand assets now so the marketing site can reuse what you already have rather than inventing a disconnected visual identity.",
         state: 'done',
       },
       {
@@ -116,23 +684,16 @@ const initialThreads: Record<string, ChatMessage[]> = {
           toolCallId: randomId(),
           toolName: 'glob',
           state: 'output-available',
-          input: { pattern: 'src/**/*' },
+          input: { pattern: 'packages/ui/src/**/*.{ts,tsx}' },
           output: {
             files: [
-              'src/index.ts',
-              'src/api.ts',
-              'src/utils.ts',
-              'src/types.ts',
-              'src/components/Header.tsx',
-              'src/components/Footer.tsx',
+              'packages/ui/src/index.ts',
+              'packages/ui/src/Button.tsx',
+              'packages/ui/src/theme.ts',
+              'packages/ui/src/colors.ts',
             ],
           },
         },
-      },
-      {
-        type: 'text',
-        text: 'Found 6 files. Let me read the main entry point.',
-        state: 'done',
       },
       {
         type: 'dynamic-tool',
@@ -140,99 +701,123 @@ const initialThreads: Record<string, ChatMessage[]> = {
           toolCallId: randomId(),
           toolName: 'read_file',
           state: 'output-available',
-          input: { path: 'src/index.ts' },
+          input: { path: 'packages/ui/src/colors.ts' },
           output: {
             content:
-              "import { fetchUser } from './api';\nimport { formatDate } from './utils';\n\nexport async function main() {\n  const user = await fetchUser('1');\n  console.log(`Joined: ${formatDate(user.createdAt)}`);\n}",
+              "export const brand = {\n  primary: '#1976d2',\n  secondary: '#9c27b0',\n  accent: '#00bcd4',\n  background: '#fafafa',\n  surface: '#ffffff',\n};",
           },
         },
       },
       {
         type: 'text',
-        text: "The project structure looks clean. Here are a few suggestions:\n\n1. **Group by feature** — consider moving `api.ts` and `types.ts` into a `services/` folder.\n2. **Add barrel exports** — each directory could have an `index.ts` to simplify imports.\n3. **Separate concerns** — `utils.ts` could be split into `date.ts` and `string.ts` as it grows.",
+        text: "The marketing site scaffold is ready at `apps/site`. I've matched the existing brand colors from `packages/ui/src/colors.ts` and set up the Next.js app with TypeScript and Tailwind. The shared color tokens will keep the marketing site visually consistent with the dashboard.",
         state: 'done',
       },
     ]),
   ],
 
-  // ── Web research ────────────────────────────────────────────────────────
-  [webResearchId]: [
+  // ── Deploy config (simple placeholder) ──────────────────────────────
+  [taskDeployId]: [
     makeUserMessage(
-      webResearchId,
-      'What are the key new features in React 19? Summarize the official blog post.',
-      '2026-03-31T10:00:00.000Z',
+      taskDeployId,
+      'Set up the Vercel deployment config for the new marketing site.',
+      '2026-03-31T08:20:00.000Z',
     ),
-    makeAssistantMessage(webResearchId, '2026-03-31T10:02:00.000Z', [
+    makeAssistantMessage(taskDeployId, '2026-03-31T08:25:00.000Z', [
+      {
+        type: 'text',
+        text: "Done \u2014 I've created `apps/site/vercel.json` with the build settings and environment variables. The deployment pipeline will trigger on pushes to `main`.",
+        state: 'done',
+      },
+    ]),
+  ],
+
+  // ── Bundler config ────────────────────────────────────────────────────
+  [taskBundlerId]: [
+    makeUserMessage(
+      taskBundlerId,
+      'Our Webpack config is getting unwieldy. Can you modernize it?',
+      '2026-03-31T07:20:00.000Z',
+    ),
+    makeAssistantMessage(taskBundlerId, '2026-03-31T07:22:00.000Z', [
       { type: 'step-start' },
       {
         type: 'reasoning',
-        text: "The user wants a summary of React 19 features. Let me fetch the official React blog post and extract the key points.",
+        text: 'The user wants to modernize the bundler. Let me check what version of Webpack they use and assess whether a migration to Vite or Rspack makes sense.',
         state: 'done',
       },
       {
         type: 'text',
-        text: "Let me fetch the official announcement.",
-        state: 'done',
-      },
-      {
-        type: 'dynamic-tool',
-        toolInvocation: {
-          toolCallId: randomId(),
-          toolName: 'web_fetch',
-          state: 'output-available',
-          input: { url: 'https://react.dev/blog/2024/12/05/react-19' },
-          output: {
-            status: 200,
-            title: 'React 19 — React Blog',
-            excerpt:
-              'React 19 is now stable! Here is a summary of the new features, improvements, and breaking changes included in this release.',
-          },
-        },
-      },
-      {
-        type: 'text',
-        text: "Good, I have the content. Let me also check for any community-curated migration guides.",
+        text: 'Let me check the current bundler setup and assess options.',
         state: 'done',
       },
       {
         type: 'dynamic-tool',
         toolInvocation: {
           toolCallId: randomId(),
-          toolName: 'web_search',
+          toolName: 'glob',
           state: 'output-available',
-          input: { query: 'React 19 migration guide best practices' },
+          input: { pattern: '**/webpack*.{js,ts,mjs}' },
           output: {
-            results: [
-              { title: 'React 19 Upgrade Guide', url: 'https://react.dev/blog/2024/04/25/react-19-upgrade-guide' },
-              { title: 'Migrating to React 19 — practical tips', url: 'https://example.com/react-19-tips' },
-            ],
+            files: ['webpack.config.js', 'webpack.dev.js', 'webpack.prod.js'],
+          },
+        },
+      },
+      {
+        type: 'dynamic-tool',
+        toolInvocation: {
+          toolCallId: randomId(),
+          toolName: 'read_file',
+          state: 'output-available',
+          input: { path: 'webpack.config.js' },
+          output: {
+            content:
+              "const path = require('path');\nconst HtmlPlugin = require('html-webpack-plugin');\n\nmodule.exports = {\n  entry: './src/index.ts',\n  module: {\n    rules: [\n      { test: /\\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },\n      { test: /\\.css$/, use: ['style-loader', 'css-loader'] },\n    ],\n  },\n  resolve: { extensions: ['.tsx', '.ts', '.js'] },\n  output: { filename: 'bundle.js', path: path.resolve(__dirname, 'dist') },\n  plugins: [new HtmlPlugin({ template: './public/index.html' })],\n};",
           },
         },
       },
       {
         type: 'text',
-        text: "Here is a summary of React 19's key features:\n\n" +
-          '1. **Actions** — async functions in transitions that handle pending states, errors, and optimistic updates automatically.\n' +
-          '2. **`useActionState`** — new hook for common action patterns, returns state + a submit function.\n' +
-          '3. **`useOptimistic`** — show optimistic UI while an async action is in progress.\n' +
-          '4. **`use` API** — read resources (promises, context) during render.\n' +
-          '5. **Server Components** — components that run ahead of time, before bundling.\n' +
-          '6. **Ref as a prop** — function components can now accept `ref` as a regular prop.\n' +
-          '7. **Document metadata** — native support for `<title>`, `<meta>`, and `<link>` in components.\n\n' +
-          'I also found an [upgrade guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) with practical migration tips.',
+        text: 'Checking the dependency tree for any Webpack 4-only plugins that might block migration.',
+        state: 'done',
+      },
+      {
+        type: 'dynamic-tool',
+        toolInvocation: {
+          toolCallId: randomId(),
+          toolName: 'bash',
+          state: 'output-available',
+          input: {
+            command: 'cat package.json | grep -E "webpack|ts-loader|style-loader|css-loader"',
+          },
+          output: {
+            stdout:
+              '    "webpack": "^5.90.0",\n    "webpack-cli": "^5.1.0",\n    "ts-loader": "^9.5.0",\n    "style-loader": "^3.3.0",\n    "css-loader": "^6.9.0",\n    "html-webpack-plugin": "^5.6.0"',
+            exit_code: 0,
+          },
+        },
+      },
+      {
+        type: 'text',
+        text:
+          "Here's my assessment:\n\n" +
+          '1. **Current state** \u2014 Webpack 5 with `ts-loader`, a standard setup but slower dev server.\n' +
+          '2. **Recommended** \u2014 Migrate to **Vite** for 10\u201320\u00d7 faster cold starts via ESM.\n' +
+          "3. **Migration path** \u2014 Replace all three config files with a single `vite.config.ts`, swap `ts-loader` for Vite's built-in esbuild transform, and remove `style-loader`/`css-loader` (Vite handles CSS natively).\n\n" +
+          'Want me to perform the migration?',
         state: 'done',
       },
     ]),
   ],
 
-  // ── Update MUI theme ───────────────────────────────────────────────────
-  [themeUpdateId]: [
+  // ── Theme update ──────────────────────────────────────────────────────
+  [taskThemeId]: [
     makeUserMessage(
-      themeUpdateId,
+      taskThemeId,
       'Change the primary color in our MUI theme from blue to teal.',
-      '2026-03-31T10:50:00.000Z',
+      '2026-03-31T06:20:00.000Z',
     ),
-    makeAssistantMessage(themeUpdateId, '2026-03-31T10:51:00.000Z', [
+    makeAssistantMessage(taskThemeId, '2026-03-31T06:22:00.000Z', [
       { type: 'step-start' },
       {
         type: 'reasoning',
@@ -251,9 +836,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
           toolName: 'glob',
           state: 'output-available',
           input: { pattern: 'src/**/theme*' },
-          output: {
-            files: ['src/theme.ts', 'src/theme.test.ts'],
-          },
+          output: { files: ['src/theme.ts', 'src/theme.test.ts'] },
         },
       },
       {
@@ -282,8 +865,10 @@ const initialThreads: Record<string, ChatMessage[]> = {
           state: 'output-available',
           input: {
             path: 'src/theme.ts',
-            old_str: "import { blue } from '@mui/material/colors';\n\nexport const theme = createTheme({\n  palette: {\n    primary: { main: blue[700] },",
-            new_str: "import { teal } from '@mui/material/colors';\n\nexport const theme = createTheme({\n  palette: {\n    primary: { main: teal[600] },",
+            old_str:
+              "import { blue } from '@mui/material/colors';\n\nexport const theme = createTheme({\n  palette: {\n    primary: { main: blue[700] },",
+            new_str:
+              "import { teal } from '@mui/material/colors';\n\nexport const theme = createTheme({\n  palette: {\n    primary: { main: teal[600] },",
           },
           output: { patched: true },
         },
@@ -295,15 +880,28 @@ const initialThreads: Record<string, ChatMessage[]> = {
           toolName: 'bash',
           state: 'output-available',
           input: { command: 'pnpm tsc --noEmit' },
-          output: {
-            stdout: 'No errors found.',
-            exit_code: 0,
-          },
+          output: { stdout: 'No errors found.', exit_code: 0 },
         },
       },
       {
         type: 'text',
-        text: "Done — primary color updated to teal. The TypeScript build passes with no errors. You'll see the change reflected across all components that use `theme.palette.primary`.",
+        text: "Done \u2014 primary color updated to teal. The TypeScript build passes with no errors. You'll see the change reflected across all components that use `theme.palette.primary`.",
+        state: 'done',
+      },
+    ]),
+  ],
+
+  // ── Security review (placeholder) ─────────────────────────────────────
+  [taskSecurityId]: [
+    makeUserMessage(
+      taskSecurityId,
+      'Can you review our security configuration and flag any issues?',
+      '2026-03-31T05:20:00.000Z',
+    ),
+    makeAssistantMessage(taskSecurityId, '2026-03-31T05:22:00.000Z', [
+      {
+        type: 'text',
+        text: "I'll start by running a dependency audit and checking for known vulnerabilities. Give me a moment to scan the project.",
         state: 'done',
       },
     ]),
@@ -344,14 +942,13 @@ function pushTool(
     toolCallId,
     toolName,
     input,
-    dynamic: true,
-  });
+  } as ChatMessageChunk);
   chunks.push({ type: 'tool-output-available', toolCallId, output });
 }
 
 // --- Scripted responses per conversation ------------------------------------
 
-function createCodeReviewChunks(messageId: string): ChatMessageChunk[] {
+function createMarketingChunks(messageId: string): ChatMessageChunk[] {
   const chunks: ChatMessageChunk[] = [];
 
   chunks.push({ type: 'start', messageId, author: demoUsers.agent });
@@ -359,84 +956,115 @@ function createCodeReviewChunks(messageId: string): ChatMessageChunk[] {
   pushReasoning(
     chunks,
     `${messageId}-r`,
-    'The user sent a follow-up. Let me check the utility file to give a more specific recommendation about how to refactor it.',
+    'Follow-up on the marketing site. Let me check if the layout components are set up correctly.',
   );
 
   chunks.push({ type: 'start-step' });
 
-  pushText(chunks, `${messageId}-t1`, 'Let me take a closer look at the utilities file.');
+  pushText(chunks, `${messageId}-t1`, 'Let me verify the page structure and check the layout.');
 
-  pushTool(chunks, `${messageId}-read`, 'read_file', { path: 'src/utils.ts' }, {
-    content:
-      'export function formatDate(d: Date) { return d.toLocaleDateString(); }\nexport function capitalize(s: string) { return s[0].toUpperCase() + s.slice(1); }\nexport function slugify(s: string) { return s.toLowerCase().replace(/\\s+/g, "-"); }',
-  });
-
-  pushText(chunks, `${messageId}-t2`, 'I can see mixed concerns. Let me check usage across files.');
-
-  pushTool(chunks, `${messageId}-grep`, 'grep', { pattern: 'formatDate|capitalize|slugify', path: 'src/' }, {
-    matches: [
-      { file: 'src/index.ts', line: 2, text: "import { formatDate } from './utils'" },
-      { file: 'src/components/Header.tsx', line: 5, text: "import { capitalize } from '../utils'" },
-    ],
-  });
-
-  pushText(
+  pushTool(
     chunks,
-    `${messageId}-t3`,
-    "Here's my recommendation:\n\n" +
-      '- Move `formatDate` → `src/utils/date.ts`\n' +
-      '- Move `capitalize` and `slugify` → `src/utils/string.ts`\n' +
-      '- Add `src/utils/index.ts` as a barrel export\n\n' +
-      'This keeps imports clean while separating date and string helpers.',
+    `${messageId}-read`,
+    'read_file',
+    { path: 'apps/site/app/page.tsx' },
+    {
+      content:
+        'export default function Home() {\n  return (\n    <main>\n      <h1>Welcome to Acme</h1>\n      <p>The fastest way to ship.</p>\n    </main>\n  );\n}',
+    },
   );
-
-  chunks.push({ type: 'finish', messageId, finishReason: 'stop' });
-  return chunks;
-}
-
-function createWebResearchChunks(messageId: string): ChatMessageChunk[] {
-  const chunks: ChatMessageChunk[] = [];
-
-  chunks.push({ type: 'start', messageId, author: demoUsers.agent });
-
-  pushReasoning(
-    chunks,
-    `${messageId}-r`,
-    'The user wants me to look something up on the web. Let me search for it and summarize the findings.',
-  );
-
-  chunks.push({ type: 'start-step' });
-
-  pushText(chunks, `${messageId}-t1`, 'Searching the web for relevant information…');
-
-  pushTool(chunks, `${messageId}-search`, 'web_search', { query: 'latest web development trends 2026' }, {
-    results: [
-      { title: 'Web Dev Trends 2026 — State of JS', url: 'https://stateofjs.com/2026' },
-      { title: 'Frontend Predictions for 2026', url: 'https://example.com/frontend-2026' },
-    ],
-  });
-
-  pushTool(chunks, `${messageId}-fetch`, 'web_fetch', { url: 'https://stateofjs.com/2026' }, {
-    status: 200,
-    title: 'State of JavaScript 2026',
-    excerpt: 'Server components adoption grew 3x, signals are in every major framework, and AI-assisted coding reached 72% adoption among professional developers.',
-  });
 
   pushText(
     chunks,
     `${messageId}-t2`,
-    "Here's what I found:\n\n" +
-      '1. **Server Components** — adoption grew 3× year-over-year, now supported across all major frameworks.\n' +
-      '2. **Signals** — every major framework has adopted a signals-based reactivity model.\n' +
-      '3. **AI-assisted development** — 72% of professional developers now use AI coding tools daily.\n\n' +
-      'Would you like me to dig deeper into any of these topics?',
+    'The landing page needs hero and feature sections. Let me add them.',
+  );
+
+  pushTool(
+    chunks,
+    `${messageId}-edit`,
+    'edit_file',
+    {
+      path: 'apps/site/app/page.tsx',
+      old_str: '<h1>Welcome to Acme</h1>',
+      new_str: '<Hero />\n      <Features />\n      <Pricing />',
+    },
+    { patched: true },
+  );
+
+  pushText(
+    chunks,
+    `${messageId}-t3`,
+    "Updated the landing page with Hero, Features, and Pricing sections. Each pulls colors from the shared brand tokens. The layout is responsive out of the box via Tailwind's grid utilities.",
   );
 
   chunks.push({ type: 'finish', messageId, finishReason: 'stop' });
   return chunks;
 }
 
-function createThemeUpdateChunks(messageId: string): ChatMessageChunk[] {
+function createBundlerChunks(messageId: string): ChatMessageChunk[] {
+  const chunks: ChatMessageChunk[] = [];
+
+  chunks.push({ type: 'start', messageId, author: demoUsers.agent });
+
+  pushReasoning(
+    chunks,
+    `${messageId}-r`,
+    'The user confirmed migration. Let me create the Vite config and remove the old Webpack files.',
+  );
+
+  chunks.push({ type: 'start-step' });
+
+  pushText(chunks, `${messageId}-t1`, 'Starting the migration to Vite now.');
+
+  pushTool(
+    chunks,
+    `${messageId}-install`,
+    'bash',
+    {
+      command:
+        'pnpm add -D vite @vitejs/plugin-react && pnpm remove webpack webpack-cli ts-loader style-loader css-loader html-webpack-plugin',
+    },
+    {
+      stdout: 'Packages: +2 -6\nProgress: resolved 847, reused 830, downloaded 2\ndone',
+      exit_code: 0,
+    },
+  );
+
+  pushTool(
+    chunks,
+    `${messageId}-create`,
+    'edit_file',
+    {
+      path: 'vite.config.ts',
+      new_content:
+        "import { defineConfig } from 'vite';\nimport react from '@vitejs/plugin-react';\n\nexport default defineConfig({\n  plugins: [react()],\n  server: { port: 3000 },\n});",
+    },
+    { created: true },
+  );
+
+  pushTool(
+    chunks,
+    `${messageId}-rm`,
+    'bash',
+    { command: 'rm webpack.config.js webpack.dev.js webpack.prod.js' },
+    {
+      stdout: '',
+      exit_code: 0,
+    },
+  );
+
+  pushText(
+    chunks,
+    `${messageId}-t2`,
+    'Migration complete. Replaced three Webpack config files with a single `vite.config.ts`. Dev server cold-start should drop from ~8s to under 500ms.',
+  );
+
+  chunks.push({ type: 'finish', messageId, finishReason: 'stop' });
+  return chunks;
+}
+
+function createThemeChunks(messageId: string): ChatMessageChunk[] {
   const chunks: ChatMessageChunk[] = [];
 
   chunks.push({ type: 'start', messageId, author: demoUsers.agent });
@@ -449,30 +1077,48 @@ function createThemeUpdateChunks(messageId: string): ChatMessageChunk[] {
 
   chunks.push({ type: 'start-step' });
 
-  pushText(chunks, `${messageId}-t1`, 'Reading the current theme configuration…');
+  pushText(chunks, `${messageId}-t1`, 'Reading the current theme configuration\u2026');
 
-  pushTool(chunks, `${messageId}-read`, 'read_file', { path: 'src/theme.ts' }, {
-    content:
-      "import { createTheme } from '@mui/material/styles';\nimport { teal } from '@mui/material/colors';\n\nexport const theme = createTheme({\n  palette: {\n    primary: { main: teal[600] },\n  },\n});",
-  });
+  pushTool(
+    chunks,
+    `${messageId}-read`,
+    'read_file',
+    { path: 'src/theme.ts' },
+    {
+      content:
+        "import { createTheme } from '@mui/material/styles';\nimport { teal } from '@mui/material/colors';\n\nexport const theme = createTheme({\n  palette: {\n    primary: { main: teal[600] },\n  },\n});",
+    },
+  );
 
-  pushText(chunks, `${messageId}-t2`, 'Applying the requested changes now…');
+  pushText(chunks, `${messageId}-t2`, 'Applying the requested changes now\u2026');
 
-  pushTool(chunks, `${messageId}-edit`, 'edit_file', {
-    path: 'src/theme.ts',
-    old_str: "primary: { main: teal[600] },",
-    new_str: "primary: { main: '#9c27b0' }, // Deep Purple",
-  }, { patched: true });
+  pushTool(
+    chunks,
+    `${messageId}-edit`,
+    'edit_file',
+    {
+      path: 'src/theme.ts',
+      old_str: 'primary: { main: teal[600] },',
+      new_str: "primary: { main: '#9c27b0' }, // Deep Purple",
+    },
+    { patched: true },
+  );
 
-  pushTool(chunks, `${messageId}-check`, 'bash', { command: 'pnpm tsc --noEmit' }, {
-    stdout: 'No errors found.',
-    exit_code: 0,
-  });
+  pushTool(
+    chunks,
+    `${messageId}-check`,
+    'bash',
+    { command: 'pnpm tsc --noEmit' },
+    {
+      stdout: 'No errors found.',
+      exit_code: 0,
+    },
+  );
 
   pushText(
     chunks,
     `${messageId}-t3`,
-    'Updated and verified — the build passes. The new primary color will apply across all MUI components.',
+    'Updated and verified \u2014 the build passes. The new primary color will apply across all MUI components.',
   );
 
   chunks.push({ type: 'finish', messageId, finishReason: 'stop' });
@@ -480,12 +1126,12 @@ function createThemeUpdateChunks(messageId: string): ChatMessageChunk[] {
 }
 
 const chunkBuilders: Record<string, (messageId: string) => ChatMessageChunk[]> = {
-  [codeReviewId]: createCodeReviewChunks,
-  [webResearchId]: createWebResearchChunks,
-  [themeUpdateId]: createThemeUpdateChunks,
+  [taskMarketingId]: createMarketingChunks,
+  [taskBundlerId]: createBundlerChunks,
+  [taskThemeId]: createThemeChunks,
 };
 
-// --- Component ---------------------------------------------------------------
+// --- Main component ----------------------------------------------------------
 
 export default function AgentDemo() {
   const [activeId, setActiveId] = React.useState(() => initialConversations[0].id);
@@ -494,10 +1140,7 @@ export default function AgentDemo() {
   );
   const [threads, setThreads] = React.useState<Record<string, ChatMessage[]>>(() =>
     Object.fromEntries(
-      Object.entries(initialThreads).map(([id, msgs]) => [
-        id,
-        msgs.map((m) => ({ ...m })),
-      ]),
+      Object.entries(initialThreads).map(([id, msgs]) => [id, msgs.map((m) => ({ ...m }))]),
     ),
   );
 
@@ -507,7 +1150,7 @@ export default function AgentDemo() {
   const adapter = React.useMemo<ChatAdapter>(
     () => ({
       async sendMessage() {
-        const buildChunks = chunkBuilders[activeIdRef.current] ?? createCodeReviewChunks;
+        const buildChunks = chunkBuilders[activeIdRef.current] ?? createMarketingChunks;
         return createChunkStream(buildChunks(randomId()), { delayMs: 120 });
       },
     }),
@@ -522,6 +1165,29 @@ export default function AgentDemo() {
       activeConversationId={activeId}
       conversations={conversations}
       messages={messages}
+      variant="compact"
+      density="compact"
+      slots={{
+        conversationList: AgentTaskTree,
+        conversationHeader: AgentHeaderBar,
+        messageAvatar: NullSlot,
+        messageMeta: NullSlot,
+        composerRoot: AgentComposer,
+      }}
+      slotProps={{
+        messageRoot: {
+          sx: {
+            '--MuiChatMessage-avatarSize': '0px',
+            columnGap: 0,
+          },
+        },
+        messageGroup: {
+          slots: {
+            authorName: NullSlot,
+            groupTimestamp: NullSlot,
+          },
+        } as any,
+      }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {
           setActiveId(nextId);
@@ -529,16 +1195,36 @@ export default function AgentDemo() {
       }}
       onMessagesChange={(nextMessages) => {
         setThreads((prev) => ({ ...prev, [activeId]: nextMessages }));
-        setConversations((prev) =>
-          syncConversationPreview(prev, activeId, nextMessages),
-        );
+        setConversations((prev) => syncConversationPreview(prev, activeId, nextMessages));
       }}
-      sx={{ height: '100%' }}
-      slotProps={{
-        conversationList: {
-          variant: 'compact'
-        }
+      sx={{
+        height: '100%',
+        // User messages: subtle left border to visually distinguish
+        [`& .${chatMessageClasses.roleUser} .${chatMessageClasses.bubble}`]: {
+          borderLeft: '3px solid',
+          borderColor: 'primary.main',
+          borderRadius: 1,
+          pl: 1.5,
+          py: 0.5,
+          bgcolor: (theme) =>
+            theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
+        },
+        // Tool invocation blocks: dark code-block style
+        '& details': {
+          bgcolor: (theme) =>
+            theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.35)' : 'rgba(0,0,0,0.04)',
+          borderRadius: 1,
+          border: '1px solid',
+          borderColor: 'divider',
+          my: 0.75,
+          overflow: 'hidden',
+        },
+        '& details > summary': {
+          fontFamily: '"Menlo", "Monaco", "Consolas", monospace',
+        },
       }}
-    />
+    >
+      {undefined}
+    </ChatBox>
   );
 }
