@@ -33,7 +33,7 @@ The scatter series work a bit differently than in other charts.
 You need to specify the `datasetKeys` properties which is an object that requires the `x` and `y` keys.
 With an optional `id` and `z` keys if needed.
 
-See the [Dataset](/x/react-charts/dataset) page to learn more.
+See the [Dataset](/x/react-charts/dataset/) page to learn more.
 
 {{"demo": "ScatterDataset.js"}}
 

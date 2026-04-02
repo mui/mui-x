@@ -15,13 +15,10 @@ describe('ScatterChart - seriesProcessor', () => {
     };
 
     it('should get data from the dataset', () => {
-      const result = scatterProcessor(
-        { seriesOrder, series },
-        [
-          { name: 'p1', a: 1, b: 2 },
-          { name: 'p2', a: 3, b: 4 },
-        ],
-      );
+      const result = scatterProcessor({ seriesOrder, series }, [
+        { name: 'p1', a: 1, b: 2 },
+        { name: 'p2', a: 3, b: 4 },
+      ]);
       expect(result.series.id1.data).to.deep.equal([
         { x: 1, y: 2, z: undefined, id: 'p1' },
         { x: 3, y: 4, z: undefined, id: 'p2' },
@@ -44,13 +41,10 @@ describe('ScatterChart - seriesProcessor', () => {
     };
 
     it('should get data using valueGetter without datasetKeys', () => {
-      const result = scatterProcessor(
-        { seriesOrder, series },
-        [
-          { city: 'London', lon: -0.12, lat: 51.5 },
-          { city: 'Paris', lon: 2.35, lat: 48.86 },
-        ],
-      );
+      const result = scatterProcessor({ seriesOrder, series }, [
+        { city: 'London', lon: -0.12, lat: 51.5 },
+        { city: 'Paris', lon: 2.35, lat: 48.86 },
+      ]);
       expect(result.series.id1.data).to.deep.equal([
         { x: -0.12, y: 51.5, id: 'London' },
         { x: 2.35, y: 48.86, id: 'Paris' },

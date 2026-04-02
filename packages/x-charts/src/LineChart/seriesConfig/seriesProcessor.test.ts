@@ -43,10 +43,11 @@ describe('LineChart - formatter', () => {
 
   describe('data from valueGetter', () => {
     it('should get data using valueGetter', () => {
-      const { series } = lineProcessor(
-        { seriesOrder, series: seriesWithValueGetter },
-        [{ k: '1.5' }, { k: '2.5' }, { k: '3.5' }],
-      );
+      const { series } = lineProcessor({ seriesOrder, series: seriesWithValueGetter }, [
+        { k: '1.5' },
+        { k: '2.5' },
+        { k: '3.5' },
+      ]);
       expect(series.id1.data).to.deep.equal([1.5, 2.5, 3.5]);
     });
 
@@ -59,10 +60,11 @@ describe('LineChart - formatter', () => {
           valueGetter: (item) => (item.k === 'missing' ? null : parseFloat(item.k as string)),
         },
       };
-      const { series } = lineProcessor(
-        { seriesOrder, series: seriesWithNullGetter },
-        [{ k: '1' }, { k: 'missing' }, { k: '3' }],
-      );
+      const { series } = lineProcessor({ seriesOrder, series: seriesWithNullGetter }, [
+        { k: '1' },
+        { k: 'missing' },
+        { k: '3' },
+      ]);
       expect(series.id1.data).to.deep.equal([1, null, 3]);
     });
   });
