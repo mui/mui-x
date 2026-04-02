@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider, keyframes } from '@mui/material/styles';
+import { keyframes } from '@mui/material/styles';
 import CallEndIcon from '@mui/icons-material/CallEnd';
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
 import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
@@ -175,10 +175,6 @@ const allCaptions: CaptionEntry[] = [
   },
 ];
 
-// --- Dark theme --------------------------------------------------------------
-
-const darkTheme = createTheme({ palette: { mode: 'dark' } });
-
 // --- No-op adapter -----------------------------------------------------------
 
 const noOpAdapter: ChatAdapter = {
@@ -320,7 +316,7 @@ function CaptionList() {
             sx={{
               '& .MuiChatMessageContent-root': {
                 bgcolor: 'transparent',
-                color: '#e8eaed',
+                color: 'text.primary',
                 p: 0,
                 fontSize: 14,
                 lineHeight: 1.5,
@@ -385,7 +381,7 @@ function ParticipantTile({ user }: { user: ChatUser }) {
     <Box
       sx={{
         height: '100%',
-        bgcolor: '#3c4043',
+        bgcolor: 'grey.400',
         borderRadius: 2,
         display: 'flex',
         alignItems: 'center',
@@ -395,7 +391,7 @@ function ParticipantTile({ user }: { user: ChatUser }) {
         minHeight: 0,
       }}
     >
-      <Typography sx={{ color: '#e8eaed', fontSize: 48, fontWeight: 600, userSelect: 'none' }}>
+      <Typography sx={{ color: 'text.primary', fontSize: 48, fontWeight: 600, userSelect: 'none' }}>
         {initials}
       </Typography>
       <Typography
@@ -403,7 +399,7 @@ function ParticipantTile({ user }: { user: ChatUser }) {
           position: 'absolute',
           bottom: 8,
           left: 12,
-          color: '#e8eaed',
+          color: 'text.primary',
           fontSize: 12,
           fontWeight: 500,
         }}
@@ -425,19 +421,19 @@ function ToolbarButton({
 }) {
   const styles = {
     default: {
-      color: '#e8eaed',
-      bgcolor: '#3c4043',
-      '&:hover': { bgcolor: '#4a4d51' },
+      color: 'text.primary',
+      bgcolor: 'grey.400',
+      '&:hover': { bgcolor: 'grey.500' },
     },
     active: {
-      color: '#202124',
-      bgcolor: '#8ab4f8',
-      '&:hover': { bgcolor: '#aecbfa' },
+      color: 'primary.contrastText',
+      bgcolor: 'primary.main',
+      '&:hover': { bgcolor: 'primary.light' },
     },
     end: {
-      color: '#fff',
-      bgcolor: '#ea4335',
-      '&:hover': { bgcolor: '#d33828' },
+      color: 'error.contrastText',
+      bgcolor: 'error.main',
+      '&:hover': { bgcolor: 'error.dark' },
       borderRadius: 5,
       px: 2.5,
     },
@@ -456,148 +452,150 @@ export default function CaptionsDemo() {
   const messages = useStreamingCaptions();
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <Box
-        sx={{
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          bgcolor: '#202124',
-          color: '#e8eaed',
-        }}
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: 'background.default',
+        color: 'text.primary',
+      }}
+    >
+      {/* Top bar — meeting title + participants */}
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ px: 2, py: 1, minHeight: 44 }}
       >
-        {/* Top bar — meeting title + participants */}
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Typography sx={{ fontSize: 14, fontWeight: 500 }}>Monthly Meeting</Typography>
+          <InfoOutlinedIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+        </Stack>
+        <Stack direction="row" alignItems="center" spacing={0.5}>
+          {meetParticipants.map((p) => (
+            <Avatar
+              key={p.id}
+              src={p.avatarUrl}
+              sx={{ width: 24, height: 24, fontSize: 10 }}
+              alt={p.displayName}
+            />
+          ))}
+          <Typography sx={{ color: 'text.secondary', fontSize: 12, ml: 0.5 }}>+3</Typography>
+        </Stack>
+      </Stack>
+
+      {/* Video area — 3 participants in a row */}
+      <Box sx={{ flex: 1, minHeight: 0, px: 0.5, display: 'flex', gap: 0.5 }}>
+        {meetParticipants.map((p) => (
+          <Box key={p.id} sx={{ flex: 1, minWidth: 0 }}>
+            <ParticipantTile user={p} />
+          </Box>
+        ))}
+      </Box>
+
+      {/* Caption area — below videos */}
+      <Box sx={{ height: 300, display: 'flex', flexDirection: 'column' }}>
+        {/* Language bar */}
         <Stack
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          sx={{ px: 2, py: 1, minHeight: 44 }}
+          sx={{ px: 2, py: 0.5, minHeight: 28, flexShrink: 0 }}
         >
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>Monthly Meeting</Typography>
-            <InfoOutlinedIcon sx={{ fontSize: 16, color: '#9aa0a6' }} />
+          <Stack direction="row" alignItems="center" spacing={0.5}>
+            <Typography sx={{ color: 'text.secondary', fontSize: 11 }}>
+              Meeting language:
+            </Typography>
+            <Typography sx={{ color: 'primary.main', fontSize: 11, cursor: 'pointer' }}>
+              English ▾
+            </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" spacing={0.5}>
-            {meetParticipants.map((p) => (
-              <Avatar
-                key={p.id}
-                src={p.avatarUrl}
-                sx={{ width: 24, height: 24, fontSize: 10 }}
-                alt={p.displayName}
-              />
-            ))}
-            <Typography sx={{ color: '#9aa0a6', fontSize: 12, ml: 0.5 }}>+3</Typography>
+            <Typography sx={{ color: 'primary.main', fontSize: 11, cursor: 'pointer' }}>
+              Translated captions ▾
+            </Typography>
+            <SettingsOutlinedIcon
+              sx={{ fontSize: 14, color: 'text.secondary', cursor: 'pointer' }}
+            />
           </Stack>
         </Stack>
 
-        {/* Video area — 3 participants in a row */}
-        <Box sx={{ flex: 1, minHeight: 0, px: 0.5, display: 'flex', gap: 0.5 }}>
-          {meetParticipants.map((p) => (
-            <Box key={p.id} sx={{ flex: 1, minWidth: 0 }}>
-              <ParticipantTile user={p} />
-            </Box>
-          ))}
-        </Box>
-
-        {/* Caption area — below videos */}
-        <Box sx={{ height: 300, display: 'flex', flexDirection: 'column' }}>
-          {/* Language bar */}
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ px: 2, py: 0.5, minHeight: 28, flexShrink: 0 }}
+        {/* Streaming captions */}
+        <Box sx={{ flex: 1, minHeight: 0 }}>
+          <ChatProvider
+            adapter={noOpAdapter}
+            activeConversationId={CONVERSATION_ID}
+            conversations={[
+              {
+                id: CONVERSATION_ID,
+                title: 'Monthly Meeting',
+                participants: meetParticipants,
+                readState: 'read' as const,
+                unreadCount: 0,
+                lastMessageAt: new Date(baseTime).toISOString(),
+              },
+            ]}
+            messages={messages}
+            onMessagesChange={() => {}}
+            currentUser={fatima}
           >
-            <Stack direction="row" alignItems="center" spacing={0.5}>
-              <Typography sx={{ color: '#9aa0a6', fontSize: 11 }}>Meeting language:</Typography>
-              <Typography sx={{ color: '#8ab4f8', fontSize: 11, cursor: 'pointer' }}>
-                English ▾
-              </Typography>
-            </Stack>
-            <Stack direction="row" alignItems="center" spacing={0.5}>
-              <Typography sx={{ color: '#8ab4f8', fontSize: 11, cursor: 'pointer' }}>
-                Translated captions ▾
-              </Typography>
-              <SettingsOutlinedIcon sx={{ fontSize: 14, color: '#9aa0a6', cursor: 'pointer' }} />
-            </Stack>
-          </Stack>
-
-          {/* Streaming captions */}
-          <Box sx={{ flex: 1, minHeight: 0 }}>
-            <ChatProvider
-              adapter={noOpAdapter}
-              activeConversationId={CONVERSATION_ID}
-              conversations={[
-                {
-                  id: CONVERSATION_ID,
-                  title: 'Monthly Meeting',
-                  participants: meetParticipants,
-                  readState: 'read' as const,
-                  unreadCount: 0,
-                  lastMessageAt: new Date(baseTime).toISOString(),
-                },
-              ]}
-              messages={messages}
-              onMessagesChange={() => {}}
-              currentUser={fatima}
-            >
-              <ChatVariantProvider variant="compact">
-                <CaptionList />
-              </ChatVariantProvider>
-            </ChatProvider>
-          </Box>
+            <ChatVariantProvider variant="compact">
+              <CaptionList />
+            </ChatVariantProvider>
+          </ChatProvider>
         </Box>
+      </Box>
 
-        {/* Bottom toolbar */}
+      {/* Bottom toolbar */}
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ px: 2, py: 1, minHeight: 52 }}
+      >
+        {/* Left: meeting time + info */}
+        <Typography sx={{ color: 'text.secondary', fontSize: 13, fontWeight: 500, minWidth: 80 }}>
+          3:53 PM
+        </Typography>
+
+        {/* Center: meeting controls */}
+        <Stack direction="row" alignItems="center" spacing={0.75}>
+          <ToolbarButton variant="active">
+            <MicIcon fontSize="small" />
+          </ToolbarButton>
+          <ToolbarButton variant="active">
+            <VideocamIcon fontSize="small" />
+          </ToolbarButton>
+          <ToolbarButton>
+            <EmojiEmotionsOutlinedIcon fontSize="small" />
+          </ToolbarButton>
+          <ToolbarButton>
+            <PresentToAllOutlinedIcon fontSize="small" />
+          </ToolbarButton>
+          <ToolbarButton>
+            <PanToolOutlinedIcon fontSize="small" />
+          </ToolbarButton>
+          <ToolbarButton>
+            <MoreVertIcon fontSize="small" />
+          </ToolbarButton>
+          <ToolbarButton variant="end">
+            <CallEndIcon fontSize="small" />
+          </ToolbarButton>
+        </Stack>
+
+        {/* Right: grid view */}
         <Stack
           direction="row"
           alignItems="center"
-          justifyContent="space-between"
-          sx={{ px: 2, py: 1, minHeight: 52 }}
+          spacing={0.5}
+          sx={{ minWidth: 80, justifyContent: 'flex-end' }}
         >
-          {/* Left: meeting time + info */}
-          <Typography sx={{ color: '#9aa0a6', fontSize: 13, fontWeight: 500, minWidth: 80 }}>
-            3:53 PM
-          </Typography>
-
-          {/* Center: meeting controls */}
-          <Stack direction="row" alignItems="center" spacing={0.75}>
-            <ToolbarButton variant="active">
-              <MicIcon fontSize="small" />
-            </ToolbarButton>
-            <ToolbarButton variant="active">
-              <VideocamIcon fontSize="small" />
-            </ToolbarButton>
-            <ToolbarButton>
-              <EmojiEmotionsOutlinedIcon fontSize="small" />
-            </ToolbarButton>
-            <ToolbarButton>
-              <PresentToAllOutlinedIcon fontSize="small" />
-            </ToolbarButton>
-            <ToolbarButton>
-              <PanToolOutlinedIcon fontSize="small" />
-            </ToolbarButton>
-            <ToolbarButton>
-              <MoreVertIcon fontSize="small" />
-            </ToolbarButton>
-            <ToolbarButton variant="end">
-              <CallEndIcon fontSize="small" />
-            </ToolbarButton>
-          </Stack>
-
-          {/* Right: grid view */}
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={0.5}
-            sx={{ minWidth: 80, justifyContent: 'flex-end' }}
-          >
-            <IconButton size="small" sx={{ color: '#9aa0a6', width: 32, height: 32 }}>
-              <GridViewOutlinedIcon fontSize="small" />
-            </IconButton>
-          </Stack>
+          <IconButton size="small" sx={{ color: 'text.secondary', width: 32, height: 32 }}>
+            <GridViewOutlinedIcon fontSize="small" />
+          </IconButton>
         </Stack>
-      </Box>
-    </ThemeProvider>
+      </Stack>
+    </Box>
   );
 }

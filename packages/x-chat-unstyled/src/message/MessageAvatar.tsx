@@ -61,7 +61,11 @@ export const MessageAvatar = React.forwardRef(function MessageAvatar(
     },
   });
 
-  if (ownerState.isGrouped || ownerState.role === 'system' || ownerState.message == null) {
+  if (ownerState.role === 'system' || ownerState.message == null) {
+    return null;
+  }
+
+  if (ownerState.isGrouped && ownerState.variant === 'compact') {
     return null;
   }
 

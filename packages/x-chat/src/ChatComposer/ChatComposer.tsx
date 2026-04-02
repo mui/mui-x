@@ -5,11 +5,17 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import {
   ComposerRoot,
+  useChatVariant,
   type ComposerRootProps,
   type ChatAttachmentsConfig,
+  type ChatVariant,
 } from '@mui/x-chat-unstyled';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+import {
+  chatComposerClasses,
+  useChatComposerUtilityClasses,
+  type ChatComposerClasses,
+} from './chatComposerClasses';
 import { ChatComposerTextArea } from './ChatComposerTextArea';
 import { ChatComposerToolbar } from './ChatComposerToolbar';
 import { ChatComposerSendButton } from './ChatComposerSendButton';
@@ -42,6 +48,15 @@ export interface ChatComposerProps extends ComposerRootProps {
    * Feature flags to control composer capabilities.
    */
   features?: ChatComposerFeatures;
+  /**
+   * The visual layout variant of the composer.
+   * - `'default'` – Stacked layout: attachment list, textarea, then toolbar below.
+   * - `'compact'` – Inline layout: start actions, textarea, end actions in a single row.
+   *
+   * When omitted, inherits from the nearest `ChatVariantProvider` (e.g. set by `ChatBox`).
+   * @default 'default'
+   */
+  variant?: ChatVariant;
 }
 
 const ChatComposerStyled = styled('form', {
@@ -60,6 +75,23 @@ const ChatComposerStyled = styled('form', {
   backgroundColor: (theme.vars || theme).palette.action.hover,
   boxSizing: 'border-box',
   flexShrink: 0,
+  [`&.${chatComposerClasses.variantCompact}`]: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    flexWrap: 'wrap',
+    padding: theme.spacing(0.5, 1),
+    gap: theme.spacing(0.5),
+    [`& .${chatComposerClasses.attachmentList}`]: {
+      flexBasis: '100%',
+      order: -1,
+    },
+    [`& .${chatComposerClasses.sendButton}`]: {
+      borderRadius: theme.shape.borderRadius,
+      padding: theme.spacing(1, 2),
+      width: 'auto',
+      height: 'auto',
+    },
+  },
 }));
 
 const DefaultComposerContent = React.memo(function DefaultComposerContent({
@@ -105,6 +137,47 @@ const DefaultComposerContent = React.memo(function DefaultComposerContent({
   }),
 };
 
+const CompactComposerContent = React.memo(function CompactComposerContent({
+  features,
+}: {
+  features?: ChatComposerFeatures;
+}) {
+  const showAttachments = features?.attachments !== false;
+
+  return (
+    <React.Fragment>
+      {showAttachments && <ChatComposerAttachmentList />}
+      {showAttachments && (
+        <ChatComposerAttachButton>
+          <DefaultAttachIcon />
+        </ChatComposerAttachButton>
+      )}
+      <ChatComposerTextArea maxRows={5} />
+      <ChatComposerSendButton>
+        <DefaultSendIcon />
+      </ChatComposerSendButton>
+    </React.Fragment>
+  );
+});
+
+(CompactComposerContent as any).propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  features: PropTypes.shape({
+    attachments: PropTypes.oneOfType([
+      PropTypes.shape({
+        acceptedMimeTypes: PropTypes.arrayOf(PropTypes.string),
+        maxFileCount: PropTypes.number,
+        maxFileSize: PropTypes.number,
+        onAttachmentReject: PropTypes.func,
+      }),
+      PropTypes.bool,
+    ]),
+  }),
+};
+
 const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
   function ChatComposer(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
@@ -116,11 +189,21 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
       sx,
       children,
       features,
+      variant: variantProp,
       ...other
     } = props;
+    const contextVariant = useChatVariant();
+    const variant = variantProp ?? contextVariant;
+    const isCompact = variant === 'compact';
     const classes = useChatComposerUtilityClasses(classesProp);
     const attachmentConfig =
       typeof features?.attachments === 'object' ? features.attachments : undefined;
+
+    const defaultContent = isCompact ? (
+      <CompactComposerContent features={features} />
+    ) : (
+      <DefaultComposerContent features={features} />
+    );
 
     return (
       <ComposerRoot
@@ -134,13 +217,13 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
         slotProps={{
           ...slotProps,
           root: {
-            className: clsx(classes.root, className),
+            className: clsx(classes.root, isCompact && classes.variantCompact, className),
             sx,
             ...slotProps?.root,
           } as any,
         }}
       >
-        {children ?? <DefaultComposerContent features={features} />}
+        {children ?? defaultContent}
       </ComposerRoot>
     );
   },
@@ -175,6 +258,15 @@ ChatComposer.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The visual layout variant of the composer.
+   * - `'default'` – Stacked layout: attachment list, textarea, then toolbar below.
+   * - `'compact'` – Inline layout: start actions, textarea, end actions in a single row.
+   *
+   * When omitted, inherits from the nearest `ChatVariantProvider` (e.g. set by `ChatBox`).
+   * @default 'default'
+   */
+  variant: PropTypes.oneOf(['compact', 'default']),
 } as any;
 
 export { ChatComposer };

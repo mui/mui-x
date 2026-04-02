@@ -12,13 +12,9 @@ components: ChatMessageList
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-:::info
-History & Pagination is part of the MUI X Pro plan.
-:::
-
 When working with multi-conversation layouts, each conversation typically has a message history stored on the server. The `listMessages` adapter method lets you load that history page by page using cursor-based pagination.
 
-## The `listMessages` adapter method [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+## The `listMessages` adapter method
 
 Implement `listMessages` to load message history when the user opens a conversation. The runtime calls it whenever `activeConversationId` changes to a conversation that has no messages in the store yet.
 

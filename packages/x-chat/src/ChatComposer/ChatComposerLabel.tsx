@@ -48,7 +48,6 @@ const ChatComposerLabel = React.forwardRef<HTMLLabelElement, ChatComposerLabelPr
             className: clsx(classes.label, className),
             sx,
             ...slotProps?.label,
-             
           } as any,
         }}
       />

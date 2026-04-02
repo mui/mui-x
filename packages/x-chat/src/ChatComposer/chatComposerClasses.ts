@@ -19,6 +19,8 @@ export interface ChatComposerClasses {
   attachmentList: string;
   /** Styles applied to the helper text element. */
   helperText: string;
+  /** Styles applied to the root element when variant="compact". */
+  variantCompact: string;
 }
 
 export type ChatComposerClassKey = keyof ChatComposerClasses;
@@ -36,6 +38,7 @@ export const chatComposerClasses: ChatComposerClasses = generateUtilityClasses('
   'toolbar',
   'attachmentList',
   'helperText',
+  'variantCompact',
 ]);
 
 const slots: Record<ChatComposerClassKey, string[]> = {
@@ -47,6 +50,7 @@ const slots: Record<ChatComposerClassKey, string[]> = {
   toolbar: ['toolbar'],
   attachmentList: ['attachmentList'],
   helperText: ['helperText'],
+  variantCompact: ['variantCompact'],
 };
 
 export const useChatComposerUtilityClasses = (

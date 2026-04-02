@@ -31,6 +31,7 @@ const ChatComposerSendButtonStyled = styled('button', {
   color: (theme.vars || theme).palette.primary.contrastText,
   cursor: 'pointer',
   flexShrink: 0,
+  marginInlineStart: 'auto',
   transition: theme.transitions.create(['background-color', 'opacity'], {
     duration: theme.transitions.duration.short,
   }),
@@ -79,7 +80,6 @@ const ChatComposerSendButton = React.forwardRef<HTMLButtonElement, ChatComposerS
             className: clsx(classes.sendButton, className),
             sx,
             ...slotProps?.sendButton,
-             
           } as any,
         }}
       />

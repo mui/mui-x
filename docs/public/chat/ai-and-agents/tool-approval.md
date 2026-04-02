@@ -12,13 +12,9 @@ components: ChatConfirmation
 
 
 
-:::info
-Tool Approval is part of the MUI X Premium plan.
-:::
-
 Tool approval lets you pause the agent when it requests a potentially dangerous action, present the user with an approve/deny interface, and resume or cancel the tool execution based on the user's decision.
 
-## Approval workflow [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+## Approval workflow
 
 The approval lifecycle extends the standard tool invocation states with two additional phases:
 

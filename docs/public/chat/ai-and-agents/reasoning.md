@@ -12,13 +12,9 @@ components: ChatMessageContent
 
 
 
-:::info
-Reasoning is part of the MUI X Premium plan.
-:::
-
 Many large language models expose a "thinking" or "reasoning" trace alongside their final response. The Chat component supports streaming and displaying this reasoning content through dedicated chunk types and a specialized message part.
 
-## `ChatReasoningMessagePart` [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+## `ChatReasoningMessagePart`
 
 When reasoning chunks arrive during streaming, the runtime creates a `ChatReasoningMessagePart` on the assistant message:
 

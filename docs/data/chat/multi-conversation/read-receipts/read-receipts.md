@@ -12,13 +12,9 @@ components: ChatUnreadMarker
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-:::info
-Read Receipts is part of the MUI X Pro plan.
-:::
-
 Read receipts let users see which conversations have unread messages and mark them as read when opened. The system uses three pieces working together: the `readState` and `unreadCount` fields on `ChatConversation`, the `markRead()` adapter method, and the `read` realtime event.
 
-## Read/unread state on `ChatConversation` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+## Read/unread state on `ChatConversation`
 
 Each `ChatConversation` object carries read state:
 

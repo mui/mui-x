@@ -109,7 +109,7 @@ function CustomAuthorName(
 }
 
 describe('MessageGroup', () => {
-  it('groups adjacent messages by author and time and renders compact follow-ups', () => {
+  it('groups adjacent messages by author and time and shows avatars for all messages in default variant', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
@@ -143,8 +143,10 @@ describe('MessageGroup', () => {
       </ChatRoot>,
     );
 
+    // Author name only shows on first message of each group (m1 and m3)
     expect(screen.getAllByText('Assistant')).to.have.length(2);
-    expect(screen.getAllByRole('img')).to.have.length(2);
+    // In default variant, avatars are shown for all messages including grouped ones
+    expect(screen.getAllByRole('img')).to.have.length(3);
     expect(screen.getByText('First message')).not.to.equal(null);
     expect(screen.getByText('Follow-up message')).not.to.equal(null);
     expect(screen.getByText('New group message')).not.to.equal(null);

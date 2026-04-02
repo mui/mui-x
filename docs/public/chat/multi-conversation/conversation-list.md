@@ -12,10 +12,6 @@ Render a sidebar that lists all available conversations, supports switching betw
 
 
 
-:::info
-The Conversation List is part of the MUI X Pro plan.
-:::
-
 The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component that wraps the unstyled `ConversationListRoot` primitive with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
 
 ```tsx
@@ -84,7 +80,7 @@ export default function MultiConversation() {
 
 ```
 
-## Component anatomy [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+## Component anatomy
 
 `ChatConversationList` renders one row per conversation. The default row structure is:
 

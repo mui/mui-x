@@ -12,13 +12,9 @@ components: ChatMessageContent
 
 
 
-:::info
-Step Tracking is part of the MUI X Premium plan.
-:::
-
 Agentic AI workflows often involve multiple processing steps — reasoning, tool calls, intermediate results, and a final answer. Step tracking lets you visually delimit these phases in the message stream so users can follow the agent's progress.
 
-## Step boundary chunks [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+## Step boundary chunks
 
 The streaming protocol provides two chunks for step boundaries:
 

@@ -54,7 +54,7 @@ The auto-scroll behavior is gated by a **buffer** — if the user has scrolled m
 ### Configuration
 
 Control auto-scrolling through the `features` prop on `ChatBox`.
-The first demo below uses a custom 300 px buffer threshold; the second disables auto-scroll entirely.
+Use the toggle in the demo below to compare the behavior with auto-scroll enabled and disabled.
 When auto-scroll is disabled, the user can still scroll to the bottom manually using the scroll-to-bottom affordance button.
 
 {{"demo": "AutoScrollConfig.js", "defaultCodeOpen": false, "bg": "inline"}}

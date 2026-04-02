@@ -714,12 +714,10 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
           content: {
             className: clsx(classes.content, className),
             ...slotProps?.content,
-             
           } as any,
           bubble: {
             className: classes.bubble,
             ...slotProps?.bubble,
-             
           } as any,
         }}
         partProps={{

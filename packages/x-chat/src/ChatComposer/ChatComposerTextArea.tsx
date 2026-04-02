@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
+import { useTheme } from '@mui/material/styles';
 import { ComposerTextArea, type ComposerTextAreaProps } from '@mui/x-chat-unstyled';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
@@ -13,6 +14,11 @@ export interface ChatComposerTextAreaProps extends ComposerTextAreaProps {
   className?: string;
   sx?: SxProps<Theme>;
   classes?: Partial<ChatComposerClasses>;
+  /**
+   * Maximum number of rows the textarea can expand to before it starts scrolling.
+   * When set, the textarea starts at 1 row and auto-grows up to `maxRows`.
+   */
+  maxRows?: number;
 }
 
 const ChatComposerTextAreaStyled = styled('textarea', {
@@ -48,7 +54,7 @@ const ChatComposerTextAreaStyled = styled('textarea', {
 const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerTextAreaProps>(
   function ChatComposerTextArea(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
-    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
+    const { slots, slotProps, className, classes: classesProp, sx, maxRows, ...other } = props;
     const classes = useChatComposerUtilityClasses(classesProp);
 
     return (
@@ -64,8 +70,13 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
           input: {
             className: clsx(classes.textArea, className),
             sx,
+            style: {
+              minHeight: 'unset',
+              margin: 'auto 0px',
+              height: '28px',
+            },
+            ...(maxRows != null ? { rows: 1 } : {}),
             ...slotProps?.input,
-             
           } as any,
         }}
       />
@@ -80,6 +91,11 @@ ChatComposerTextArea.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * Maximum number of rows the textarea can expand to before it starts scrolling.
+   * When set, the textarea starts at 1 row and auto-grows up to `maxRows`.
+   */
+  maxRows: PropTypes.number,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
   sx: PropTypes.oneOfType([

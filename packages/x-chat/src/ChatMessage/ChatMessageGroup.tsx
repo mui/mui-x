@@ -44,6 +44,7 @@ const ChatMessageGroupAuthorNameStyled = styled('div', {
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: theme.spacing(1),
+        lineHeight: 1,
         color: (theme.vars || theme).palette.primary.main,
       }
     : {

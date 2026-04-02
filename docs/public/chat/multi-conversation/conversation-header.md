@@ -12,10 +12,6 @@ Display the active conversation's title, subtitle, participants, and action butt
 
 
 
-:::info
-The Conversation Header is part of the MUI X Pro plan.
-:::
-
 `ChatConversationHeader` is a `<header>` element with divider styling. It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
 
 ```tsx
@@ -28,7 +24,7 @@ import {
 } from '@mui/x-chat';
 ```
 
-## Component anatomy [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+## Component anatomy
 
 ```text
 ChatConversation                    <- thread shell, derives the active conversation

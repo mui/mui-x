@@ -6,6 +6,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { getSoftEdgesTheme } from '../theme/softEdgesTheme';
 import { getNeutralVibesTheme } from '../theme/neutralVibesTheme';
+import { darkGrey } from '../theme/colors';
 import ViewToggleGroup, { ChatView } from './ViewToggleGroup';
 import MessengerDemo from './MessengerDemo';
 import AgentDemo from './AgentDemo';
@@ -37,7 +38,7 @@ export default function MainDemo() {
     setSelectedTheme(event.target.value as CustomThemeName);
   };
 
-  const mode = brandingTheme.palette.mode;
+  const mode = selectedView === 'captions' ? 'dark' : brandingTheme.palette.mode;
   const baseTheme = createTheme(darkThemeManagement, { palette: { mode } });
   const softEdgesTheme = getSoftEdgesTheme(mode);
   const neutralVibesTheme = getNeutralVibesTheme(mode);
@@ -50,6 +51,26 @@ export default function MainDemo() {
         return neutralVibesTheme;
       default:
         return baseTheme;
+    }
+  };
+
+  // CaptionsDemo always uses dark mode to match Google Meet style,
+  // but still respects the selected custom theme (softEdges, neutralVibes, etc.)
+  const getDarkThemeByName = (name: CustomThemeName) => {
+    switch (name) {
+      case 'softEdges':
+        return getSoftEdgesTheme('dark');
+      case 'neutralVibes':
+        return getNeutralVibesTheme('dark');
+      default:
+        return createTheme(darkThemeManagement, {
+          palette: {
+            mode: 'dark',
+            grey: darkGrey,
+            text: { primary: darkGrey[900], secondary: darkGrey[700] },
+            background: { default: darkGrey[50], paper: '#121113' },
+          },
+        });
     }
   };
 
@@ -102,13 +123,15 @@ export default function MainDemo() {
         )}
 
         {selectedView === 'captions' && (
-          <Paper
-            variant="outlined"
-            elevation={0}
-            sx={{ height: 600, width: '100%', overflow: 'hidden' }}
-          >
-            <CaptionsDemo />
-          </Paper>
+          <ThemeProvider theme={getDarkThemeByName(selectedTheme)}>
+            <Paper
+              variant="outlined"
+              elevation={0}
+              sx={{ height: 600, width: '100%', overflow: 'hidden' }}
+            >
+              <CaptionsDemo />
+            </Paper>
+          </ThemeProvider>
         )}
       </ThemeProvider>
     </Stack>

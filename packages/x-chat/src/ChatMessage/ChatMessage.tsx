@@ -28,8 +28,8 @@ const ChatMessageStyled = styled('div', {
   const isUser = ownerState?.role === 'user';
   const densityPaddingBlock: Record<string, string> = {
     compact: theme.spacing(0.25),
-    standard: theme.spacing(0.75),
-    comfortable: theme.spacing(1.5),
+    standard: theme.spacing(1),
+    comfortable: theme.spacing(2),
   };
   const paddingBottom = densityPaddingBlock[ownerState?.density ?? 'standard'];
 
@@ -44,7 +44,7 @@ const ChatMessageStyled = styled('div', {
       width: '100%',
       boxSizing: 'border-box',
       paddingInline: theme.spacing(2),
-      paddingBlock: isGrouped ? 0 : `0 ${paddingBottom}`,
+      paddingBlock: `0 ${paddingBottom}`,
       fontFamily: theme.typography.fontFamily,
       ...(isGrouped
         ? {
@@ -58,7 +58,7 @@ const ChatMessageStyled = styled('div', {
             // Meta (✓ 10:55) sits top-right on the same row as the author name.
             gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
             gridTemplateRows: 'auto auto',
-            gridTemplateAreas: '"avatar authorName meta" "avatar content content"',
+            gridTemplateAreas: '"avatar authorName meta" "avatar content ."',
           }),
     };
   }
@@ -114,7 +114,6 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
             className: clsx(classes.root, stateClasses, className),
             sx,
             ...slotProps?.root,
-             
           } as any,
         }}
       />

@@ -12,13 +12,9 @@ components: ChatMessageContent
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-:::info
-Tool Calling is part of the MUI X Premium plan.
-:::
-
 Tool calling lets an AI assistant invoke external functions during a conversation. The runtime handles the full tool lifecycle: streaming tool input, making the input available, executing the tool, and displaying the output — all through the streaming chunk protocol.
 
-## `ChatToolMessagePart` [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+## `ChatToolMessagePart`
 
 When a tool is invoked during streaming, the runtime creates a `ChatToolMessagePart` on the assistant message:
 

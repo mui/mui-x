@@ -57,7 +57,6 @@ const ChatComposerHelperText = React.forwardRef<HTMLParagraphElement, ChatCompos
             className: clsx(classes.helperText, className),
             sx,
             ...slotProps?.helperText,
-             
           } as any,
         }}
       />

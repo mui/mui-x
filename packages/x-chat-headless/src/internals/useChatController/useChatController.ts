@@ -99,7 +99,7 @@ export function useChatController<Cursor = string>({
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
       }),
-     
+
     [setRuntimeError, stopStreaming, store],
   );
 
@@ -112,7 +112,7 @@ export function useChatController<Cursor = string>({
         setRuntimeError,
         assistantMessageIdByUserMessageIdRef,
       }),
-     
+
     [setRuntimeError, store, storeUnknown],
   );
 

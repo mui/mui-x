@@ -458,7 +458,21 @@ describe('MessageRoot', () => {
     expect(screen.getByTestId('custom-message-meta')).to.have.attribute('data-status', 'error');
   });
 
-  it('hides the avatar for grouped follow-up messages', () => {
+  it('hides the avatar for grouped follow-up messages in compact variant', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
+        <ChatVariantProvider variant="compact">
+          <MessageRoot isGrouped messageId="m1">
+            <MessageAvatar />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.queryByRole('img')).to.equal(null);
+  });
+
+  it('shows the avatar for grouped follow-up messages in default variant', () => {
     render(
       <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
         <MessageRoot isGrouped messageId="m1">
@@ -467,7 +481,7 @@ describe('MessageRoot', () => {
       </ChatRoot>,
     );
 
-    expect(screen.queryByRole('img')).to.equal(null);
+    expect(screen.queryByRole('img')).not.to.equal(null);
   });
 
   it('tolerates missing messages and empty meta without crashing', () => {

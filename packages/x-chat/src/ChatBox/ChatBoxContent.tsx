@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import {
   ChatLayout,
   useChatLocaleText,
+  useChatVariant,
   type ChatSuggestion,
   type ChatVariant,
 } from '@mui/x-chat-unstyled';
@@ -144,6 +145,7 @@ function DefaultComposer({
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
 }) {
+  const variant = useChatVariant();
   const showAttachments = features?.attachments !== false;
   const showHelperText = features?.helperText !== false;
   const attachmentConfig =
@@ -162,6 +164,39 @@ function DefaultComposer({
   const ComposerHelperTextComponent = (slots?.composerHelperText ??
     ChatComposerHelperText) as typeof ChatComposerHelperText;
   const localeText = useChatLocaleText();
+
+  if (variant === 'compact') {
+    return (
+      <ComposerRootComponent
+        variant="compact"
+        attachmentConfig={attachmentConfig}
+        {...(slotProps?.composerRoot ?? {})}
+      >
+        {showAttachments && (
+          <ComposerAttachmentListComponent {...(slotProps?.composerAttachmentList ?? {})} />
+        )}
+        {showAttachments && (
+          <ComposerAttachButtonComponent
+            aria-label={localeText.composerAttachButtonLabel}
+            {...(slotProps?.composerAttachButton ?? {})}
+          >
+            <DefaultAttachIcon />
+          </ComposerAttachButtonComponent>
+        )}
+        <ComposerInputComponent
+          maxRows={5}
+          placeholder={localeText.composerInputPlaceholder}
+          {...(slotProps?.composerInput ?? {})}
+        />
+        <ComposerSendButtonComponent
+          aria-label={localeText.composerSendButtonLabel}
+          {...(slotProps?.composerSendButton ?? {})}
+        >
+          <DefaultSendIcon />
+        </ComposerSendButtonComponent>
+      </ComposerRootComponent>
+    );
+  }
 
   return (
     <ComposerRootComponent attachmentConfig={attachmentConfig} {...(slotProps?.composerRoot ?? {})}>

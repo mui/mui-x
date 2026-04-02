@@ -127,7 +127,9 @@ const IntercomMessageGroup = React.forwardRef(
 
 const IntercomAuthorName = React.forwardRef(function IntercomAuthorName(props, ref) {
   const { children, ownerState, style, ...other } = props;
-  if (ownerState?.role === 'user') {return null;}
+  if (ownerState?.role === 'user') {
+    return null;
+  }
   return (
     <div
       ref={ref}
@@ -166,7 +168,9 @@ const IntercomMessageRoot = React.forwardRef(
 
 const IntercomAvatar = React.forwardRef(function IntercomAvatar(props, ref) {
   const { children, ownerState, style, ...other } = props;
-  if (ownerState?.role === 'user') {return null;}
+  if (ownerState?.role === 'user') {
+    return null;
+  }
   return (
     <div
       ref={ref}

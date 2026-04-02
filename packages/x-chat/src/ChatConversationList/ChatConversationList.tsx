@@ -448,14 +448,12 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
             className: clsx(classes.root, isCompact && classes.compact, className),
             sx,
             ...slotProps?.root,
-             
           } as any,
           scroller: {
             className: classes.scroller,
             ...slotProps?.scroller,
-             
           } as any,
-           
+
           item: ((ownerState: any) => ({
             className: clsx(
               classes.item,
@@ -466,42 +464,34 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
             ...(typeof slotProps?.item === 'function'
               ? (slotProps.item as (s: any) => any)(ownerState)
               : slotProps?.item),
-             
           })) as any,
           itemAvatar: {
             className: classes.itemAvatar,
             ...slotProps?.itemAvatar,
-             
           } as any,
           itemContent: {
             className: classes.itemContent,
             ...slotProps?.itemContent,
-             
           } as any,
           title: {
             className: classes.itemTitle,
             ...slotProps?.title,
-             
           } as any,
           preview: {
             className: classes.itemPreview,
             ...slotProps?.preview,
-             
           } as any,
           timestamp: {
             className: classes.itemTimestamp,
             ...slotProps?.timestamp,
-             
           } as any,
           unreadBadge: {
             className: classes.itemUnreadBadge,
             ...slotProps?.unreadBadge,
-             
           } as any,
           itemActions: {
             className: classes.itemActions,
             ...slotProps?.itemActions,
-             
           } as any,
         }}
       />

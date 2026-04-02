@@ -217,7 +217,9 @@ function ConversationMenu({
   anchorEl: HTMLElement | null;
   onClose: () => void;
 }) {
-  if (!anchorEl) {return null;}
+  if (!anchorEl) {
+    return null;
+  }
 
   const rect = anchorEl.getBoundingClientRect();
   const menuItems = [

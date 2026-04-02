@@ -12,13 +12,9 @@ components: ChatBox
 
 
 
-:::info
-Real-Time Sync is part of the MUI X Pro plan.
-:::
-
 The adapter's `subscribe()` method enables push-based updates from the backend. The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
 
-## Subscription lifecycle [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+## Subscription lifecycle
 
 When `ChatProvider` mounts and the adapter implements `subscribe()`, the runtime:
 

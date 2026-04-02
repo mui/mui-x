@@ -89,18 +89,15 @@ const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListP
             className: clsx(classes.root, className),
             sx,
             ...slotProps?.messageList,
-             
           } as any,
           messageListScroller: {
             className: classes.scroller,
             ...slotProps?.messageListScroller,
-             
           } as any,
           messageListContent: {
             className: classes.content,
             ownerState: { density },
             ...slotProps?.messageListContent,
-             
           } as any,
         }}
       />

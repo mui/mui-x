@@ -296,8 +296,8 @@ The auto-scroll behavior is gated by a buffer — if the user has scrolled more 
 ```tsx
 'use client';
 import * as React from 'react';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
@@ -308,45 +308,33 @@ import {
 const adapter = createEchoAdapter();
 
 export default function AutoScrollConfig() {
+  const [autoScroll, setAutoScroll] = React.useState(true);
+
   return (
-    <Stack spacing={3}>
-      <div>
-        <Typography variant="subtitle2" gutterBottom>
-          Custom buffer (300 px)
-        </Typography>
-        <ChatBox
-          adapter={adapter}
-          initialActiveConversationId={minimalConversation.id}
-          initialConversations={[minimalConversation]}
-          initialMessages={minimalMessages}
-          features={{ autoScroll: { buffer: 300 } }}
-          sx={{
-            height: 400,
-            border: '1px solid',
-            borderColor: 'divider',
-            borderRadius: 1,
-          }}
-        />
-      </div>
-      <div>
-        <Typography variant="subtitle2" gutterBottom>
-          Auto-scroll disabled
-        </Typography>
-        <ChatBox
-          adapter={adapter}
-          initialActiveConversationId={minimalConversation.id}
-          initialConversations={[minimalConversation]}
-          initialMessages={minimalMessages}
-          features={{ autoScroll: false }}
-          sx={{
-            height: 400,
-            border: '1px solid',
-            borderColor: 'divider',
-            borderRadius: 1,
-          }}
-        />
-      </div>
-    </Stack>
+    <div>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={autoScroll}
+            onChange={(event) => setAutoScroll(event.target.checked)}
+          />
+        }
+        label="Auto-scroll"
+      />
+      <ChatBox
+        adapter={adapter}
+        initialActiveConversationId={minimalConversation.id}
+        initialConversations={[minimalConversation]}
+        initialMessages={minimalMessages}
+        features={{ autoScroll: autoScroll ? true : false }}
+        sx={{
+          height: 400,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+        }}
+      />
+    </div>
   );
 }
 

@@ -51,7 +51,6 @@ const ChatConversation = React.forwardRef<HTMLDivElement, ChatConversationProps>
             className: clsx(classes.root, className),
             sx,
             ...slotProps?.root,
-             
           } as any,
         }}
       />

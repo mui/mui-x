@@ -925,27 +925,22 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-chat/multi-conversation/conversation-list',
             title: 'Conversation List',
-            plan: 'pro',
           },
           {
             pathname: '/x/react-chat/multi-conversation/conversation-header',
             title: 'Conversation Header',
-            plan: 'pro',
           },
           {
             pathname: '/x/react-chat/multi-conversation/history-and-pagination',
             title: 'History & Pagination',
-            plan: 'pro',
           },
           {
             pathname: '/x/react-chat/multi-conversation/read-receipts',
             title: 'Read Receipts',
-            plan: 'pro',
           },
           {
             pathname: '/x/react-chat/multi-conversation/real-time-sync',
             title: 'Real-Time Sync',
-            plan: 'pro',
           },
         ],
       },
@@ -956,22 +951,18 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-chat/ai-and-agents/tool-calling',
             title: 'Tool Calling',
-            plan: 'premium',
           },
           {
             pathname: '/x/react-chat/ai-and-agents/tool-approval',
             title: 'Tool Approval',
-            plan: 'premium',
           },
           {
             pathname: '/x/react-chat/ai-and-agents/reasoning',
             title: 'Reasoning',
-            plan: 'premium',
           },
           {
             pathname: '/x/react-chat/ai-and-agents/step-tracking',
             title: 'Step Tracking',
-            plan: 'premium',
           },
         ],
       },
@@ -987,7 +978,6 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-chat/backend/real-time-adapters',
             title: 'Real-Time Adapters',
-            plan: 'pro',
           },
           {
             pathname: '/x/react-chat/backend/controlled-state',

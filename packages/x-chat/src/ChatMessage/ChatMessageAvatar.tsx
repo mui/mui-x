@@ -41,6 +41,7 @@ const ChatMessageAvatarStyled = styled('div', {
   ...(ownerState?.variant === 'compact' && {
     gridRow: '1 / 3',
     alignSelf: 'flex-start',
+    marginTop: theme.spacing(0.25),
   }),
 }));
 
