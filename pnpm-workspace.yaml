@@ -94,6 +94,6 @@ onlyBuiltDependencies:
   - sharp
   - unrs-resolver
 
-overrides:
-  # Temoporary till next canary release of internal packages
-  '@mui/internal-markdown': 'file:node_modules/@mui/monorepo/packages-internal/markdown'
+patchedDependencies:
+  # Temporary fix till next release of @mui/internal-markdown
+  '@mui/internal-markdown@3.0.6': patches/@mui__internal-markdown@3.0.6.patch
