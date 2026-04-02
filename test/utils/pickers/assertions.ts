@@ -15,24 +15,6 @@ export const expectFieldValueV7 = (
   return expect(value).to.equal(expectedValue);
 };
 
-export const expectFieldValueV6 = (
-  input: HTMLInputElement,
-  expectedValue: string,
-  specialCase?: 'singleDigit' | 'RTL',
-) => {
-  const value = cleanText(input.value, specialCase);
-  return expect(value).to.equal(expectedValue);
-};
-
-export const expectFieldPlaceholderV6 = (
-  input: HTMLInputElement,
-  placeholder: string,
-  specialCase?: 'singleDigit' | 'RTL',
-) => {
-  const cleanPlaceholder = cleanText(input.placeholder, specialCase);
-  return expect(cleanPlaceholder).to.equal(placeholder);
-};
-
 export function expectPickerChangeHandlerValue(
   type: PickerComponentType | PickerRangeComponentType,
   spyCallback: SinonSpy,

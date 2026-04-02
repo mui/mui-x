@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, act, fireEvent } from '@mui/internal-test-utils';
 import { FieldRef, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 import { fireUserEvent } from '../fireUserEvent';
 import { expectFieldValueV7 } from './assertions';
-
-export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
 
 interface BuildFieldInteractionsParams<P extends {}> {
   render: ReturnType<typeof createRenderer>['render'];
