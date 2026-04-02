@@ -53,11 +53,15 @@
       "@mui/x-telemetry/*": ["./packages/x-telemetry/src/*"],
       "@mui/x-virtualizer": ["./packages/x-virtualizer/src"],
       "@mui/x-virtualizer/*": ["./packages/x-virtualizer/src/*"],
-      "@mui/docs": ["./node_modules/@mui/monorepo/packages/mui-docs/src"],
-      "@mui/docs/*": ["./node_modules/@mui/monorepo/packages/mui-docs/src/*"],
-      "@mui-internal/api-docs-builder": ["./node_modules/@mui/monorepo/packages/api-docs-builder"],
+      "@mui/internal-core-docs": ["./node_modules/@mui/monorepo/packages-internal/core-docs/src"],
+      "@mui/internal-core-docs/*": [
+        "./node_modules/@mui/monorepo/packages-internal/core-docs/src/*"
+      ],
+      "@mui-internal/api-docs-builder": [
+        "./node_modules/@mui/monorepo/packages-internal/api-docs-builder"
+      ],
       "@mui-internal/api-docs-builder/*": [
-        "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
+        "./node_modules/@mui/monorepo/packages-internal/api-docs-builder/*"
       ],
       "@mui-internal-scripts/generate-llms-txt": [
         "./node_modules/@mui/monorepo/packages-internal/scripts/generate-llms-txt/src"

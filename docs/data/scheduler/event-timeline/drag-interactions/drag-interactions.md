@@ -9,7 +9,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Re-schedule or resize your events using drag and drop.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 Events can be moved to a different time slot by dragging them, and resized by dragging their start or end edge.
 Both behaviors are enabled by default:

@@ -9,7 +9,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Configure how events are created and edited.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Event creation
 
