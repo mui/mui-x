@@ -1,6 +1,8 @@
 {
   "componentDescription": "",
   "propDescriptions": {},
-  "classDescriptions": {},
-  "slotDescriptions": { "label": "", "root": "" }
+  "classDescriptions": {
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },
+    "root": { "description": "Styles applied to the root element." }
+  }
 }

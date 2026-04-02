@@ -1,69 +1,77 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "currentUser": {
+      "description": "The local user sending messages. If omitted, derived from <code>members</code> by finding the entry with <code>role === &#39;user&#39;</code>."
+    },
+    "density": {
+      "description": "The vertical spacing density of chat messages. - <code>&#39;compact&#39;</code> – Reduced vertical spacing between messages. - <code>&#39;standard&#39;</code> – Default spacing. - <code>&#39;comfortable&#39;</code> – Increased vertical spacing between messages."
+    },
+    "features": {
+      "description": "Feature flags to enable or disable built-in ChatBox behaviours."
+    },
+    "initialActiveConversationId": {
+      "description": "The initial active conversation ID when uncontrolled. Ignored after initialization and when <code>activeConversationId</code> is provided."
+    },
+    "initialComposerValue": {
+      "description": "The initial composer value when uncontrolled. Ignored after initialization and when <code>composerValue</code> is provided."
+    },
+    "initialConversations": {
+      "description": "The initial conversations when uncontrolled. Ignored after initialization and when <code>conversations</code> is provided."
+    },
+    "initialMessages": {
+      "description": "The initial messages when uncontrolled. Ignored after initialization and when <code>messages</code> is provided."
+    },
+    "members": {
+      "description": "All participants in the chat. The current (local) user is derived as the first member with <code>role === &#39;user&#39;</code>, unless <code>currentUser</code> is provided explicitly."
+    },
+    "slotProps": { "description": "The extra props for the slot components." },
+    "slots": { "description": "The components used for each slot inside the ChatBox." },
+    "storeClass": { "description": "The store class to use for this provider." },
+    "streamFlushInterval": {
+      "description": "Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store."
+    },
+    "suggestions": {
+      "description": "Prompt suggestions displayed in the empty state. Clicking a suggestion pre-fills the composer."
+    },
+    "suggestionsAutoSubmit": {
+      "description": "Whether clicking a suggestion automatically submits the message."
+    },
     "variant": {
-      "description": "The visual style variant of the message list. - <code>&#39;default&#39;</code>: Bubble-style layout with colored backgrounds and role-based alignment. - <code>&#39;compact&#39;</code>: ChatGPT-style layout with no bubbles, left-aligned messages, and inline author name."
+      "description": "The visual layout variant of the chat. - <code>&#39;default&#39;</code> – Standard layout with avatars, individual timestamps, and full spacing. - <code>&#39;compact&#39;</code> – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing."
     }
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "composer": "",
-    "composerAttachButton": "",
-    "composerAttachInput": "",
-    "composerHelperText": "",
-    "composerInput": "",
-    "composerRoot": "",
-    "composerSendButton": "",
-    "composerToolbar": "",
-    "conversationItem": "",
-    "conversationItemAvatar": "",
-    "conversationPreview": "",
-    "conversations": "",
-    "conversationsEmptyState": "",
-    "conversationsErrorState": "",
-    "conversationsLoadingState": "",
-    "conversationsPane": "",
-    "conversationsRoot": "",
-    "conversationTimestamp": "",
-    "conversationTitle": "",
-    "conversationUnreadBadge": "",
-    "dateDivider": "",
-    "dateDividerLabel": "",
-    "dateDividerLine": "",
-    "errorState": "",
-    "historyError": "",
-    "historyLoading": "",
-    "loadingState": "",
-    "messageActions": "",
-    "messageAuthorName": "",
-    "messageAvatar": "",
-    "messageBubble": "",
-    "messageContent": "",
-    "messageEdited": "",
-    "messageGroup": "",
-    "messageList": "",
-    "messageListContent": "",
-    "messageListOverlay": "",
-    "messageListScroller": "",
-    "messageMeta": "",
-    "messageRoot": "",
-    "messageStatus": "",
-    "messageTimestamp": "",
-    "root": "",
-    "scrollToBottomAffordance": "",
-    "scrollToBottomBadge": "",
-    "thread": "",
-    "threadActions": "",
-    "threadEmptyState": "",
-    "threadErrorState": "",
-    "threadHeader": "",
-    "threadLoadingState": "",
-    "threadPane": "",
-    "threadRoot": "",
-    "threadSubtitle": "",
-    "threadTitle": "",
-    "typingIndicator": "",
-    "unreadMarker": "",
-    "unreadMarkerLabel": ""
+    "composerAttachButton": "Override the composer attach button.",
+    "composerAttachmentList": "Override the composer attachment list.",
+    "composerHelperText": "Override the composer helper text component.",
+    "composerInput": "Override the composer textarea component.",
+    "composerRoot": "Override the composer (input) root component.",
+    "composerSendButton": "Override the composer send button.",
+    "composerToolbar": "Override the composer toolbar.",
+    "conversationHeader": "Override the conversation header component.",
+    "conversationHeaderActions": "Override the conversation header actions component.",
+    "conversationHeaderInfo": "Override the conversation header info wrapper (title + subtitle column).",
+    "conversationList": "Override the conversation list component.",
+    "conversationsPane": "The conversations pane container. Defaults to <code>div</code>.",
+    "conversationSubtitle": "Override the conversation subtitle component.",
+    "conversationTitle": "Override the conversation title component.",
+    "dateDivider": "Override the date divider component.",
+    "layout": "The layout element that arranges conversations + thread panes. Defaults to <code>div</code>.",
+    "messageActions": "Override the message actions component.",
+    "messageAvatar": "Override the message avatar component.",
+    "messageContent": "Override the message content (bubble) component.",
+    "messageGroup": "Override the message group component.",
+    "messageList": "Override the message list component.",
+    "messageMeta": "Override the message meta component.",
+    "messageRoot": "Override the message root component for each message.",
+    "root": "The outermost container element. Defaults to <code>div</code>.",
+    "scrollToBottom": "Override the scroll-to-bottom affordance component.",
+    "suggestions": "Override the prompt suggestions container component.",
+    "threadPane": "The thread pane container. Defaults to <code>div</code>.",
+    "typingIndicator": "Override the typing indicator component.",
+    "unreadMarker": "Override the unread marker component."
   }
 }

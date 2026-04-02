@@ -1,0 +1,29 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "children": { "description": "The code string to display." },
+    "highlighter": {
+      "description": "Optional syntax highlighter. Receives (code, language) and should return highlighted React nodes. When omitted, raw code is displayed."
+    },
+    "language": {
+      "description": "Language identifier shown in the header (e.g. &quot;typescript&quot;, &quot;python&quot;)."
+    }
+  },
+  "classDescriptions": {
+    "code": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the code element" },
+    "copyButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the copy button element"
+    },
+    "header": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header element"
+    },
+    "languageLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the language label element"
+    },
+    "pre": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the pre element" },
+    "root": { "description": "Styles applied to the root element." }
+  }
+}

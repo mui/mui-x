@@ -1,6 +1,5 @@
 {
   "componentDescription": "",
   "propDescriptions": {},
-  "classDescriptions": {},
-  "slotDescriptions": { "badge": "", "root": "" }
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
 }
