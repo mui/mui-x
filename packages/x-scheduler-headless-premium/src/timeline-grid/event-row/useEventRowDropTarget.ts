@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import {
   SchedulerResourceId,
   SchedulerEvent,
@@ -28,7 +28,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
   const { resourceId, addPropertiesToDroppedEvent } = parameters;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
   // Ref hooks

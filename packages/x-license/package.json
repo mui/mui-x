@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0-beta.0",
   "author": "MUI Team",
   "description": "MUI X License verification.",
   "license": "SEE LICENSE IN LICENSE",
@@ -46,12 +46,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts",
-    "./Watermark": "./src/Watermark/index.ts",
-    "./useLicenseVerifier": "./src/useLicenseVerifier/index.ts",
-    "./verifyLicense": "./src/verifyLicense/index.ts",
-    "./utils": "./src/utils/index.ts",
-    "./test-keys": "./src/test-keys.ts"
+    "./internals": "./src/internals/index.ts"
   },
   "imports": {
     "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"

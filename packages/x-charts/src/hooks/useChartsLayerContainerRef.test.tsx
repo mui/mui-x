@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
-import { isJSDOM } from 'test/utils/skipIf';
 import { useChartsLayerContainerRef } from './useChartsLayerContainerRef';
 import { ChartsProvider } from '../context/ChartsProvider';
 
@@ -16,9 +15,7 @@ function UseChartsLayerContainerRef() {
 describe('useChartsLayerContainerRef', () => {
   const { render } = createRenderer();
 
-  // can't catch render errors in the browser for unknown reason
-  // tried try-catch + error boundary + window onError preventDefault
-  it.skipIf(!isJSDOM)('should throw an error when parent context not present', () => {
+  it('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
     const expectedError = [

@@ -1,5 +1,7 @@
 import type {
   AllSeriesType,
+  HighlightItemIdentifier,
+  HighlightItemIdentifierWithType,
   SeriesItemIdentifier,
   SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
@@ -13,8 +15,12 @@ import {
   type SeriesProcessorResult,
   type UseChartSeriesConfigSignature,
 } from '../useChartSeriesConfig';
+import {
+  type VisibilityIdentifier,
+  type VisibilityIdentifierWithType,
+} from '../../featurePlugins/useChartVisibilityManager/useChartVisibilityManager.types';
 
-export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
+export interface UseChartSeriesParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
@@ -24,7 +30,7 @@ export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSerie
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
    */
-  series?: Readonly<AllSeriesType<T>[]>;
+  series?: Readonly<AllSeriesType<SeriesType>[]>;
   /**
    * Color palette used to colorize multiple series.
    * @default rainbowSurgePalette
@@ -33,43 +39,71 @@ export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSerie
   theme?: 'light' | 'dark';
 }
 
-export type UseChartSeriesDefaultizedParameters<T extends ChartSeriesType = ChartSeriesType> =
-  UseChartSeriesParameters<T> & {
-    /**
-     * The array of series to display.
-     * Each type of series has its own specificity.
-     * Please refer to the appropriate docs page to learn more about it.
-     */
-    series: Readonly<AllSeriesType<T>[]>;
-    /**
-     * Color palette used to colorize multiple series.
-     * @default rainbowSurgePalette
-     */
-    colors: ChartsColorPalette;
-    theme: 'light' | 'dark';
-  };
-
-export type ProcessedSeries<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {
-  [type in TSeriesTypes]?: SeriesProcessorResult<type>;
+export type UseChartSeriesDefaultizedParameters<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> = UseChartSeriesParameters<SeriesType> & {
+  /**
+   * The array of series to display.
+   * Each type of series has its own specificity.
+   * Please refer to the appropriate docs page to learn more about it.
+   */
+  series: Readonly<AllSeriesType<SeriesType>[]>;
+  /**
+   * Color palette used to colorize multiple series.
+   * @default rainbowSurgePalette
+   */
+  colors: ChartsColorPalette;
+  theme: 'light' | 'dark';
 };
 
-export type SeriesLayout<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {
-  [type in TSeriesTypes]?: SeriesLayoutGetterResult<type>;
+export type ProcessedSeries<SeriesType extends ChartSeriesType = ChartSeriesType> = {
+  [type in SeriesType]?: SeriesProcessorResult<type>;
 };
 
-export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {
-  [type in TSeriesTypes]?: SeriesProcessorParams<type>;
+export type SeriesLayout<SeriesType extends ChartSeriesType = ChartSeriesType> = {
+  [type in SeriesType]?: SeriesLayoutGetterResult<type>;
+};
+
+export type DefaultizedSeriesGroups<SeriesType extends ChartSeriesType = ChartSeriesType> = {
+  [type in SeriesType]?: SeriesProcessorParams<type>;
 };
 
 export type SeriesIdToType = ReadonlyMap<SeriesId, ChartSeriesType>;
 
-export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType> {
+export interface UseChartSeriesState<SeriesType extends ChartSeriesType = ChartSeriesType> {
   series: {
-    defaultizedSeries: DefaultizedSeriesGroups<T>;
+    defaultizedSeries: DefaultizedSeriesGroups<SeriesType>;
     idToType: SeriesIdToType;
     dataset?: Readonly<DatasetType>;
   };
 }
+
+export type IdentifierWithTypeFunction = {
+  // Overloads for different identifier types
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends SeriesItemIdentifier<SeriesType> | SeriesItemIdentifierWithType<SeriesType>,
+  >(
+    identifier: Item,
+    typeOfIdentifier: 'seriesItem',
+  ): SeriesItemIdentifierWithType<SeriesType>;
+
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends HighlightItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType>,
+  >(
+    identifier: Item,
+    typeOfIdentifier: 'highlightItem',
+  ): HighlightItemIdentifierWithType<SeriesType>;
+
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends VisibilityIdentifier<SeriesType> | VisibilityIdentifierWithType<SeriesType>,
+  >(
+    identifier: Item,
+    typeOfIdentifier: 'visibility',
+  ): VisibilityIdentifierWithType<SeriesType>;
+};
 
 interface UseChartSeriesInstance {
   /**
@@ -77,14 +111,7 @@ interface UseChartSeriesInstance {
    * @param {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'>} identifier The series identifier without its type
    * @returns {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'> & Pick<SeriesItemIdentifier<SeriesType>, 'type'>}The identifier with the type.
    */
-  identifierWithType: <
-    SeriesType extends ChartSeriesType,
-    Item extends { seriesId: SeriesId; type?: SeriesType },
-  >(
-    identifier: Item,
-  ) => Item extends SeriesItemIdentifier<SeriesType>
-    ? SeriesItemIdentifierWithType<SeriesType>
-    : Item & { type: SeriesType };
+  identifierWithType: IdentifierWithTypeFunction;
 }
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =

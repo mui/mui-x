@@ -507,10 +507,10 @@ For example, if you were writing a test with `react-testing-library`, here is wh
  })
 ```
 
-### ✅ Use `useTreeItemState` instead of `useTreeItem`
+### ✅ Use `useTreeItemState()` instead of `useTreeItem()`
 
-The `useTreeItem` hook has been renamed `useTreeItemState`.
-This will help create a new headless version of the Tree Item component based on a future `useTreeItem` hook.
+The `useTreeItem()` hook has been renamed `useTreeItemState()`.
+This will help create a new headless version of the Tree Item component based on a future `useTreeItem()` hook.
 
 ```diff
 -import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';

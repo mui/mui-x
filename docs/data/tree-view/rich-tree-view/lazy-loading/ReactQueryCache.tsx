@@ -5,7 +5,6 @@ import {
   randomId,
   randomBoolean,
 } from '@mui/x-data-grid-generator';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DataSourceCache } from '@mui/x-tree-view/utils';
 
@@ -29,11 +28,12 @@ const cache: DataSourceCache = {
   },
 };
 
-type ItemType = TreeViewBaseItem<{
+type ItemType = {
   id: string;
   label: string;
   childrenCount?: number;
-}>;
+  children?: ItemType[];
+};
 const fetchData = async (_parentId?: string): Promise<ItemType[]> => {
   const length: number = randomInt(5, 10);
   const rows = Array.from({ length }, () => ({
@@ -51,14 +51,16 @@ const fetchData = async (_parentId?: string): Promise<ItemType[]> => {
 
 export function FetchChildren() {
   return (
-    <RichTreeViewPro
-      items={[]}
-      dataSource={{
-        getChildrenCount: (item) => item?.childrenCount as number,
-        getTreeItems: fetchData,
-      }}
-      dataSourceCache={cache}
-    />
+    <div style={{ width: 300, height: 240 }}>
+      <RichTreeViewPro
+        items={[]}
+        dataSource={{
+          getChildrenCount: (item) => item?.childrenCount as number,
+          getTreeItems: fetchData,
+        }}
+        dataSourceCache={cache}
+      />
+    </div>
   );
 }
 

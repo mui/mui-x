@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store/useStore';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
@@ -25,7 +25,7 @@ const TimeHeaderCell = styled('div', {
   alignItems: 'center',
   flexDirection: 'column',
   '&:not(:last-child)': {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -38,7 +38,7 @@ const DayLabel = styled('time', {
   fontWeight: theme.typography.fontWeightMedium,
   display: 'flex',
   justifyContent: 'center',
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
 const TimeCellsRow = styled('div', {
@@ -63,12 +63,12 @@ const TimeLabel = styled('time', {
   slot: 'TimeHeaderTimeLabel',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
 }));
 
 export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
   const { classes } = useEventTimelinePremiumStyledContext();
 

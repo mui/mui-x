@@ -6,6 +6,9 @@ import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import identifierSerializer from './identifierSerializer';
 import identifierCleaner from './identifierCleaner';
+import { createSankeyIsHighlighted } from './createIsHighlighted';
+import { createSankeyIsFaded } from './createIsFaded';
+import descriptionGetter from './descriptionGetter';
 
 // Simple passthrough functions for sankey chart
 const seriesProcessor = (series: any) => series;
@@ -34,4 +37,7 @@ export const sankeySeriesConfig: ChartSeriesTypeConfig<'sankey'> = {
   keyboardFocusHandler,
   identifierSerializer,
   identifierCleaner,
+  descriptionGetter,
+  isHighlightedCreator: createSankeyIsHighlighted,
+  isFadedCreator: createSankeyIsFaded,
 };

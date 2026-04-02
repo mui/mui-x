@@ -1,0 +1,11 @@
+<LineChart {...chartsConfig}>
+  <ReferencePoint x="Apr" y={7} r={6} fill="red" />
+  <ReferencePoint
+    x="Jun"
+    y={6}
+    r={8}
+    fill="none"
+    stroke="green"
+    strokeWidth={2}
+  />
+</LineChart>

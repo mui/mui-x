@@ -2,9 +2,9 @@ import Box from '@mui/material/Box';
 import { styled, alpha } from '@mui/material/styles';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {
     id: 'grid',
     label: 'Data Grid',

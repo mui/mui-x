@@ -4,10 +4,10 @@ import {
   selectorChartPolarCenter,
   type UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { useChartContext } from '../../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 
 export function useRadarGridData() {
-  const { instance, store } = useChartContext<[UseChartPolarAxisSignature]>();
+  const { instance, store } = useChartsContext<[UseChartPolarAxisSignature]>();
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis } = useRadiusAxes();
 

@@ -106,21 +106,6 @@ but the **focus** and **hover** behavior depends on styles applied via the `sx` 
 
 {{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
 
-### Using Joy UI
-
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
-
-{{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6SingleInputRangeField.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
-
-:::warning
-All the Joy UI examples use the non-accessible DOM structure.
-The new accessible DOM structure will become compatible with Joy UI in the future.
-:::
-
 ## With a custom editing experience
 
 ### Using an Autocomplete
@@ -196,7 +181,7 @@ function CustomDateRangeField(props: DateRangePickerFieldProps) {
 
 ### Validation
 
-You can use the `useValidation` hook to check if the current value passed to your field is valid or not:
+You can use the `useValidation()` hook to check if the current value passed to your field is valid or not:
 
 ```js
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
@@ -234,14 +219,14 @@ Each Picker component has a validator adapted to its value type:
 
 ### Localized placeholder
 
-You can use the `useParsedFormat` to get a clean placeholder.
+You can use the `useParsedFormat()` to get a clean placeholder.
 This hook applies two main transformations on the format:
 
 1. It replaces all the localized tokens (for example `L` for a date with `dayjs`) with their expanded value (`DD/MM/YYYY` for the same date with `dayjs`).
 2. It replaces each token with its token from the localization object (for example `YYYY` remains `YYYY` for the English locale but becomes `AAAA` for the French locale).
 
 :::warning
-The format returned by `useParsedFormat` cannot be parsed by your date library.
+The format returned by `useParsedFormat()` cannot be parsed by your date library.
 :::
 
 ```js
@@ -262,7 +247,7 @@ The picker can receive some commonly used props that should be forwarded to the 
 <DatePicker label="Birth date" name="birthdate" className="date-picker" sx={{ borderColor: 'red'}}>
 ```
 
-If you are using any of those props in one of your pickers, make sure to retrieve them in your field using the `usePickerContext` hook:
+If you are using any of those props in one of your pickers, make sure to retrieve them in your field using the `usePickerContext()` hook:
 
 ```jsx
 const { label, name, rootClassName, rootSx, rootRef } = usePickerContext();
@@ -281,7 +266,7 @@ return (
 ### Spread props to the DOM
 
 The field receives a lot of props that cannot be forwarded to the DOM element without warnings.
-You can use the `useSplitFieldProps` hook to get the props that can be forwarded safely to the DOM:
+You can use the `useSplitFieldProps()` hook to get the props that can be forwarded safely to the DOM:
 
 ```jsx
 const { internalProps, forwardedProps } = useSplitFieldProps(

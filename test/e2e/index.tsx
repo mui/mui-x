@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router';
 import { LicenseInfo } from '@mui/x-license';
-import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/test-keys';
+import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/internals';
 import TestViewer from './TestViewer';
 
 LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);

@@ -16,6 +16,5 @@ export {
   useTreeItemUtils,
   useTreeItemModel,
   useApplyPropagationToSelectedItemsOnMount,
-  useTreeViewApiRef,
 } from '@mui/x-tree-view/hooks';
 export * from './hooks';

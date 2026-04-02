@@ -1,4 +1,4 @@
-import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
+import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import Box from '@mui/material/Box';
 
 const margin = { right: 24 };
@@ -32,7 +32,7 @@ export default function StackedAreaChart() {
         xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}
         sx={{
-          [`& .${lineElementClasses.root}`]: {
+          [`& .${lineClasses.line}`]: {
             display: 'none',
           },
         }}

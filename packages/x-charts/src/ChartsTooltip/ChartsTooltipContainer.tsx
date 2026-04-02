@@ -8,6 +8,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { type PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { warnOnce } from '@mui/x-internals/warning';
 import { type TriggerOptions, useIsFineMainPointer } from './utils';
 import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useStore } from '../internals/store/useStore';
@@ -18,6 +19,7 @@ import {
 import {
   selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
+  type UseChartTooltipSignature,
 } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
@@ -152,7 +154,34 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     ...other
   } = props;
 
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartInteractionSignature]>();
+  const store =
+    useStore<
+      [UseChartCartesianAxisSignature, UseChartInteractionSignature, UseChartTooltipSignature]
+    >();
+
+  if (process.env.NODE_ENV !== 'production') {
+    const isItemControlled = store.state.tooltip?.itemIsControlled ?? false;
+    const isAxisControlled = store.state.controlledCartesianAxisTooltip !== undefined;
+
+    if (trigger !== 'item' && isItemControlled) {
+      warnOnce(
+        [
+          `MUI X Charts: The \`tooltipItem\` prop is provided, but the tooltip trigger is set to '${trigger}'.`,
+          "The `tooltipItem` prop only has an effect when the tooltip trigger is 'item'.",
+        ],
+        'error',
+      );
+    }
+    if (trigger !== 'axis' && isAxisControlled) {
+      warnOnce(
+        [
+          `MUI X Charts: The \`tooltipAxis\` prop is provided, but the tooltip trigger is set to '${trigger}'.`,
+          "The `tooltipAxis` prop only has an effect when the tooltip trigger is 'axis'.",
+        ],
+        'error',
+      );
+    }
+  }
 
   const chartsLayerContainerRef = useChartsLayerContainerRef();
   const anchorRef = React.useRef<HTMLDivElement | null>(null);
@@ -288,6 +317,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         {isOpen && (
           <ChartsTooltipRoot
             {...other}
+            // The key is here to make sure the tooltip uses the new anchor immediately.
+            key={itemPosition ? 'charts-anchored' : 'charts-pointer'}
             className={classes?.root}
             open={isOpen}
             placement={
@@ -298,6 +329,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
             popperRef={popperRef}
             anchorEl={itemPosition ? anchorRef.current : pointerAnchorEl}
             modifiers={modifiers}
+            container={chartsLayerContainerRef.current}
+            popperOptions={{ ...other.popperOptions, strategy: 'fixed' }}
           >
             {children}
           </ChartsTooltipRoot>

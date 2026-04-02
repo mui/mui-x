@@ -19,7 +19,7 @@ This guide is also available in <a href="https://raw.githubusercontent.com/mui/m
 
 ## Prepare for the migration
 
-We highly recommend updating `@mui/x-charts` and `@mui/x-charts-pro` to the latest v8 version before migrating to v9.
+We highly recommend updating `@mui/x-charts`, `@mui/x-charts-pro`, and `@mui/x-charts-premium` to the latest v8 version before migrating to v9.
 This will help you resolve deprecation warnings at your own pace, reducing the number of changes needed when upgrading.
 
 Below is a list of deprecated APIs that have alternatives in the latest minor of v8. We recommend you move from these deprecated APIs before upgrading to v9 to ease the migration.
@@ -29,7 +29,7 @@ Items marked with ✅ are handled by the [codemod](#run-codemods).
 
 The `Chart` prefix has been renamed to `Charts` (with an S) to align with other components.
 
-| Deprecated                             | Replacement                             |
+| v8                                     | v9                                      |
 | :------------------------------------- | :-------------------------------------- |
 | `ChartContainer`                       | `ChartsContainer`                       |
 | `ChartContainerProps`                  | `ChartsContainerProps`                  |
@@ -43,11 +43,21 @@ The `Chart` prefix has been renamed to `Charts` (with an S) to align with other 
 | `ChartContainerProSlotProps`           | `ChartsContainerProSlotProps`           |
 | `useChartContainerProProps()`          | `useChartsContainerProProps()`          |
 | `UseChartContainerProPropsReturnValue` | `UseChartsContainerProPropsReturnValue` |
+| `ChartZoomSlider`                      | `ChartsZoomSlider`                      |
+| `ChartAxisZoomSliderThumbClasses`      | `ChartsAxisZoomSliderThumbClasses`      |
+| `ChartAxisZoomSliderThumbClassKey`     | `ChartsAxisZoomSliderThumbClassKey`     |
+| `chartAxisZoomSliderThumbClasses`      | `chartsAxisZoomSliderThumbClasses`      |
+| `ChartAxisZoomSliderTrackClasses`      | `ChartsAxisZoomSliderTrackClasses`      |
+| `ChartAxisZoomSliderTrackClassKey`     | `ChartsAxisZoomSliderTrackClassKey`     |
+| `chartAxisZoomSliderTrackClasses`      | `chartsAxisZoomSliderTrackClasses`      |
 
-### CSS class deprecations (`highlighted` / `faded`)
+### CSS class removed (`highlighted` / `faded` / `seriesId`)
 
-The highlighted and faded CSS state classes are deprecated across all chart element types.
+The highlighted and faded CSS state classes are removed across all chart element types.
 Use `[data-highlighted]` and `[data-faded]` attribute selectors instead.
+
+The CSS classes built with `.${classes.series}-${seriesId}` are removed across all chart element types.
+Use `[data-series]` attribute selectors instead.
 
 This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkElement`, `PieArc`, `PieArcLabel`, `RadarSeriesPlot`, `Heatmap`, and `FunnelSection`.
 
@@ -57,14 +67,74 @@ This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkEleme
 
 -`.MuiBarElement-root.MuiBarElement-faded`
 +`.MuiBarElement-root[data-faded]`
+
+-`.MuiBarElement-root.${barElementClasses.series}-seriesA`
++`.MuiBarElement-root[data-series="seriesA"]`
 ```
+
+### CSS class reorganized
+
+The classes per components got replaced by classes per charts.
+Here is the table of the classes renamed.
+
+Run the following command to do the renaming.
+
+```bash
+npx @mui/x-codemod@next v9.0.0/charts/rename-classes <path|folder>
+```
+
+After running the codemod, make sure the type check are passing.
+This codemod does not handle:
+
+- The `highlighted` / `faded` / `seriesId` classes mentioned in the previous section.
+- The type associated to those classes renaming.
+
+| v8                                 | v9                               |
+| :--------------------------------- | :------------------------------- |
+| `barElementClasses.root`           | `barClasses.element`             |
+| `barLabelClasses.root`             | `barClasses.label`               |
+| `barLabelClasses.animate`          | `barClasses.labelAnimate`        |
+| `areaElementClasses.root`          | `lineClasses.area`               |
+| `lineElementClasses.root`          | `lineClasses.line`               |
+| `lineHighlightElementClasses.root` | `lineClasses.highlight`          |
+| `markElementClasses.root`          | `lineClasses.mark`               |
+| `markElementClasses.animate`       | `lineClasses.markAnimate`        |
+| `pieArcClasses.root`               | `pieClasses.arc`                 |
+| `pieArcClasses.focusIndicator`     | `pieClasses.focusIndicator`      |
+| `pieArcLabelClasses.root`          | `pieClasses.arcLabel`            |
+| `pieArcLabelClasses.animate`       | `pieClasses.animate`             |
+| `funnelSectionClasses.root`        | `funnelClasses.section`          |
+| `funnelSectionClasses.filled`      | `funnelClasses.sectionFilled`    |
+| `funnelSectionClasses.outlined`    | `funnelClasses.sectionOutlined`  |
+| `funnelSectionClasses.label`       | `funnelClasses.sectionLabel`     |
+| `radarSeriesPlotClasses.root`      | `radarClasses.seriesRoot`        |
+| `radarSeriesPlotClasses.area`      | `radarClasses.seriesArea`        |
+| `radarSeriesPlotClasses.mark`      | `radarClasses.seriesMark`        |
+| `chartsAxisHighlightClasses.root`  | `radarClasses.axisHighlightRoot` |
+| `chartsAxisHighlightClasses.line`  | `radarClasses.axisHighlightLine` |
+| `chartsAxisHighlightClasses.dot`   | `radarClasses.axisHighlightDot`  |
+| `chartsAxisClasses.root`           | `radarClasses.axisRoot`          |
+| `chartsAxisClasses.line`           | `radarClasses.axisLine`          |
+| `chartsAxisClasses.label`          | `radarClasses.axisLabel`         |
+| `chartsGridClasses.radial`         | `radarClasses.gridRadial`        |
+| `chartsGridClasses.divider`        | `radarClasses.gridDivider`       |
+| `chartsGridClasses.stripe`         | `radarClasses.gridStripe`        |
+| `sankeyPlotClasses.root`           | `sankeyClasses.root`             |
+| `sankeyPlotClasses.nodes`          | `sankeyClasses.nodes`            |
+| `sankeyPlotClasses.nodeLabels`     | `sankeyClasses.nodeLabels`       |
+| `sankeyPlotClasses.links`          | `sankeyClasses.links`            |
+| `sankeyPlotClasses.linkLabels`     | `sankeyClasses.linkLabels`       |
+| `sankeyPlotClasses.node`           | `sankeyClasses.node`             |
+| `sankeyPlotClasses.link`           | `sankeyClasses.link`             |
+| `sankeyPlotClasses.nodeLabel`      | `sankeyClasses.nodeLabel`        |
+| `sankeyPlotClasses.linkLabel`      | `sankeyClasses.linkLabel`        |
 
 ### Unstable exports are now stable
 
 - `Unstable_RadarChart` → `RadarChart`
 - `Unstable_RadarDataProvider` → `RadarDataProvider`
 - `Unstable_FunnelChart` → `FunnelChart`
-<!-- - `Unstable_SankeyChart` → `SankeyChart` -->
+- `Unstable_SankeyChart` → `SankeyChart`
 
 ### Props
 
@@ -82,14 +152,17 @@ This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkEleme
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `latest`.
+In `package.json`, change the version of the charts package to `next`.
 
 ```diff
 -"@mui/x-charts": "^8.x.x",
-+"@mui/x-charts": "latest",
++"@mui/x-charts": "next",
 
 -"@mui/x-charts-pro": "^8.x.x",
-+"@mui/x-charts-pro": "latest",
++"@mui/x-charts-pro": "next",
+
+-"@mui/x-charts-premium": "^8.x.x",
++"@mui/x-charts-premium": "next",
 ```
 
 Since `v9` is a major release, it contains changes that affect the public API.
@@ -179,7 +252,7 @@ Here is the list of slots and components that are impacted by the renaming:
 
 The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
 
-### Series types
+### ✅ Series types
 
 The following type aliases have been removed from `@mui/x-charts/models`:
 
@@ -204,7 +277,7 @@ The `ChartApi` type export has been moved from `@mui/x-charts/ChartContainer` to
 +import type { ChartApi } from '@mui/x-charts/context';
 ```
 
-### Series helper functions
+### ✅ Series helper functions
 
 The following helper functions have been removed:
 
@@ -237,9 +310,39 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
-### Rename `useAxisTooltip` hook
+### `useItemHighlighted()` replaced by `useItemHighlightState()`
 
-The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect its functionality of handling multiple axes.
+The `useItemHighlighted()` hook is replaced by `useItemHighlightState()`.
+Instead of returning an object with `isHighlighted` and `isFaded` booleans.
+It now returns a `HighlightState` union type: `'highlighted' | 'faded' | 'none'`.
+
+```diff
+-const { isHighlighted, isFaded } = useItemHighlighted(identifier);
++const highlightState = useItemHighlightState(identifier);
++const isHighlighted = highlightState === 'highlighted';
++const isFaded = highlightState === 'faded';
+```
+
+### `useItemHighlightedGetter()` replaced by `useItemHighlightStateGetter()`
+
+The `useItemHighlightedGetter()` hook is replaced by `useItemHighlightStateGetter()`.
+instead of returning an object with two callbacks `isHighlighted()` and `isFaded()`.
+It now returns a single callback `(item) => HighlightState`.
+The `HighlightState` type is the union of the following variants: `'highlighted' | 'faded' | 'none'`
+
+```diff
+-const { isHighlighted, isFaded } = useItemHighlightedGetter();
+-const isItemHighlighted = isHighlighted(item);
+-const isItemFaded = !isItemHighlighted && isFaded(item);
++const getHighlightState = useItemHighlightStateGetter();
+
++const isItemHighlighted = (item) => getHighlightState(item) === 'highlighted'
++const isItemFaded = (item) => getHighlightState(item) === 'faded'
+```
+
+### Rename `useAxisTooltip()` hook
+
+The `useAxisTooltip()` hook has been renamed to `useAxesTooltip()` to better reflect its functionality of handling multiple axes.
 
 The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
 
@@ -267,6 +370,29 @@ After running the codemod make sure to adapt the hook returned value to your nee
  }
 ```
 
+### `useInteractionItemProps` signature changed
+
+The `skip` parameter has been removed from `useInteractionItemProps`.
+If you were using it, you can remove it — the hook now always returns interaction props.
+
+```diff
+-const interactionProps = useInteractionItemProps(identifier, skip);
++const interactionProps = useInteractionItemProps(identifier);
+```
+
+### Removed item-level pointer handlers
+
+Individual chart elements no longer attach `onPointerEnter`/`onPointerLeave` event handlers for highlight and tooltip interactions.
+These interactions are now handled at the container level using position-based hit detection.
+
+This affects the following components:
+
+- **Bar Chart**: `BarElement`
+- **Heatmap**: Custom `cell` slots that received `onPointerEnter` via `slotProps`
+
+If you were relying on these pointer events being attached to individual SVG elements (for example, via custom slots or DOM inspection), note that they are no longer present.
+The highlight and tooltip behavior remains the same from the user's perspective.
+
 ## Line Chart
 
 ### `showMark` default value changed ✅
@@ -286,6 +412,39 @@ If you were relying on marks being visible by default, explicitly set `showMark`
  />
 ```
 
+### Default `shape` changed
+
+In v8, the `shape` was set to `'circle'` by default.
+Now it alternates across series according to the following order:
+`'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, `'wye'`.
+
+This modification improves accessibility for color blind people.
+
+If you want to keep the previous behavior, set the `shape` property to `'circle'` on all series.
+
+### Rename `[data-series-id]` by `[data-series]`
+
+The data attribute used to select a given series by it's id got renamed.
+Replace the `[data-series-id="<SeriesId>"]` by `[data-series="<SeriesId>"]`.
+
+## Bar Chart
+
+### `onItemClick` event type changed
+
+The `onItemClick` callback on `BarPlot` and `BarChart` now receives a native `MouseEvent` instead of a `React.MouseEvent`.
+
+```diff
+ <BarChart
+   onItemClick={(
+-    event: React.MouseEvent<SVGElement, MouseEvent>,
++    event: MouseEvent,
+     barItemIdentifier: BarItemIdentifier,
+   ) => {
+     // ...
+   }}
+ />
+```
+
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
@@ -299,6 +458,44 @@ This improves consistency across chart components and developer experience.
  />
 ```
 
+### Theme style overrides use `cell` slot
+
+The `MuiHeatmap` theme style overrides now correctly use the `cell` key instead of `arc`.
+Previously, the `overridesResolver` was incorrectly referencing `styles.arc` due to a copy-paste error.
+If you were using `arc` as a workaround, update it to `cell`.
+
+```diff
+ const theme = createTheme({
+   components: {
+     MuiHeatmap: {
+       styleOverrides: {
+-        arc: {
++        cell: {
+           fill: 'red',
+         },
+       },
+     },
+   },
+ });
+```
+
+## Sankey
+
+### Removed group
+
+The DOM structure got simplified by removing the group wrapping each nodes.
+It's `data-node` attribute got moved to the `rect` associated to it.
+
+```diff
+-<g data-node="nodeId-A">
+   <rect
++    data-node="nodeId-A"
+     x="20"
+     /* ... */
+   />
+-</g>
+```
+
 ### New identifier structure
 
 The heatmap identifier type has been modified as follows.
@@ -309,11 +506,31 @@ This new type relies on the `xIndex`/`yIndex` to identify the cell instead of ju
  {
   type: 'heatmap';
   seriesId: SeriesId;
-  dataIndex?: number;
+-  dataIndex?: number;
 -  xIndex?: number;
 +  xIndex: number;
 -  yIndex?: number;
 +  yIndex: number;
+ }
+```
+
+The return type of the `useItemTooltip()` for heatmap series was modified.
+Instead of returning an object where the `value` was a `[x, y, cellValue]` tuple, it now returns cell value directly.
+
+If the cell is empty, it returns `null`.
+
+Here is an example about how to get exactly the same info from `useItemTooltip()`.
+
+```diff
+ const { identifier, value } = useItemTooltip<'heatmap'>();
+
+ return {
+-  xIndex: value[0],
++  xIndex: identifier.xIndex,
+-  yIndex: value[1],
++  yIndex: identifier.yIndex,
+-  cellValue: value[2],
++  cellValue: value,
  }
 ```
 
@@ -445,7 +662,7 @@ If you're using these classes manually in your styles, update them accordingly:
 ### `data-has-focused-item` attribute removed
 
 The `data-has-focused-item` data attribute has been removed from the root `<svg>` element rendered by `ChartsSurface`.
-If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem` hook instead.
+If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem()` hook instead.
 
 ```ts
 const focusedItem = useFocusedItem();
@@ -465,6 +682,44 @@ The `useSvgRef()` is replaced by `useChartsLayerContainerRef()` which returns a 
 ### Ref target
 
 The `ChartsSurface` `ref` is now propagated to the `<div />` rendered by `ChartsLayerContainer` instead of an `<svg />`.
+
+## Tooltip
+
+### Tooltip now renders inside the chart container
+
+The tooltip is now portaled into the `ChartsLayerContainer` instead of `document.body`.
+This means the tooltip DOM is a child of the chart container, making it easier to style using the chart's `sx` prop.
+
+If you were querying for the tooltip element in the DOM using selectors scoped to `document.body`, you should update them to look inside the chart container instead.
+
+The tooltip uses `position: fixed` to ensure it can still visually overflow the chart boundaries despite being rendered inside the container.
+
+## Keyboard navigation ✅
+
+The keyboard navigation is no enabled by default.
+If you used `enableKeyboardNavigation` prop, you can remove it.
+
+To disable this feature, use the prop `disableKeyboardNavigation`.
+
+## Stabilized `experimentalFeatures` ✅
+
+The `preferStrictDomainInLineCharts` experimental feature is now the default behavior.
+The x-axis domain limit for line charts defaults to `'strict'`, meaning the axis range matches the data range exactly without extra padding.
+
+If you were using the `experimentalFeatures` prop with `preferStrictDomainInLineCharts`, you can remove it.
+
+```diff
+ <LineChart
+-  experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
+   series={[{ data: [1, 2, 3] }]}
+ />
+```
+
+If you want to revert to the previous behavior (rounded/"nice" domain limits on the x-axis), set `domainLimit` to `'nice'` on the x-axis configuration:
+
+```jsx
+<LineChart xAxis={[{ domainLimit: 'nice' }]} series={[{ data: [1, 2, 3] }]} />
+```
 
 ## Props propagation
 
@@ -495,12 +750,31 @@ Internally this change looks like this.
 
 ## Typescript
 
-### Remove default generic of `SeriesItemIdentifier`
+### Identifiers are now generics
 
-In v9 the argument of `SeriesItemIdentifier` is now required.
+In v9 we introduce generics to our identifiers.
+
+This will allow you to get the correct type according to the series you're using.
+
+#### Remove default generic of `SeriesItemIdentifier`
+
+The argument of `SeriesItemIdentifier` is now required.
 
 It accepts an union of series types.
 For example:
 
 - `SeriesItemIdentifier<'bar'>` for a BarChart.
 - `SeriesItemIdentifier<'bar' | 'line'>` if you compose bar and line series.
+
+#### Add generic to `HighlightScope`
+
+The `HighlightScope` is now a generic and require its argument the same way `SeriesItemIdentifier` does.
+
+#### Replace `HighlightItemData` by `HighlightItemIdentifier<SeriesType>`
+
+The `HighlightItemData` type was replaced by `HighlightItemIdentifier<SeriesType>`.
+
+The main difference from the `SeriesItemIdentifier` is the ability to identify a whole series.
+
+For example, in a `SeriesItemIdentifier<'bar'>` the `dataIndex` is required since it identifies an item of the series.
+A `HighlightItemIdentifier<'bar'>` can identify a data point, which requires a `dataIndex`, but also an entire series, in which case the `dataIndex` is optional.

@@ -22,34 +22,7 @@
       "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "faded",
-      "className": "MuiBarElement-faded",
-      "description": "Styles applied to the root element if it is faded.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "highlighted",
-      "className": "MuiBarElement-highlighted",
-      "description": "Styles applied to the root element if it is highlighted.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "root",
-      "className": "MuiBarElement-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "series",
-      "className": "MuiBarElement-series",
-      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${barElementClasses.series}-${seriesId}`.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiBarElement",
   "filename": "/packages/x-charts/src/BarChart/BarElement.tsx",
   "inheritance": null,

@@ -49,11 +49,12 @@ export function useExtractRichTreeViewProParameters<
     // RichTreeViewProStore parameters
     dataSource,
     dataSourceCache,
+    onItemsLazyLoaded,
     itemsReordering,
     isItemReorderable,
     canMoveItemToNewPosition,
     onItemPositionChange,
-    virtualization,
+    disableVirtualization,
 
     // Forwarded props
     ...forwardedProps
@@ -96,11 +97,12 @@ export function useExtractRichTreeViewProParameters<
       // RichTreeViewProStore parameters
       dataSource,
       dataSourceCache,
+      onItemsLazyLoaded,
       itemsReordering,
       isItemReorderable,
       canMoveItemToNewPosition,
       onItemPositionChange,
-      virtualization,
+      disableVirtualization,
     }),
     [
       // Shared parameters
@@ -138,11 +140,12 @@ export function useExtractRichTreeViewProParameters<
       // RichTreeViewProStore parameters
       dataSource,
       dataSourceCache,
+      onItemsLazyLoaded,
       itemsReordering,
       isItemReorderable,
       canMoveItemToNewPosition,
       onItemPositionChange,
-      virtualization,
+      disableVirtualization,
     ],
   );
 

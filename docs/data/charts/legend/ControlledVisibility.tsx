@@ -5,7 +5,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import type { VisibilityIdentifier } from '@mui/x-charts/plugins';
+import type { VisibilityIdentifierWithType } from '@mui/x-charts/plugins';
 
 const data = [
   { value: 10, label: 'Series A' },
@@ -15,7 +15,7 @@ const data = [
 
 export default function ControlledVisibility() {
   const [hiddenItems, setHiddenItems] = React.useState<
-    VisibilityIdentifier<'pie'>[]
+    VisibilityIdentifierWithType<'pie'>[]
   >([{ type: 'pie', seriesId: 'custom', dataIndex: 0 }]);
 
   const handleShowAll = () => {
@@ -95,6 +95,7 @@ export default function ControlledVisibility() {
       <PieChart
         series={[{ id: 'custom', data }]}
         height={300}
+        width={300}
         hiddenItems={hiddenItems}
         slotProps={{
           legend: {

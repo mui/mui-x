@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import type { ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
@@ -38,6 +39,7 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
 
   const {
     position,
+    className,
     disableLine,
     label,
     labelStyle,
@@ -119,7 +121,7 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
   return (
     <YAxisRoot
       transform={`translate(${position === 'right' ? left + width + offset : left - offset}, 0)`}
-      className={classes.root}
+      className={clsx(classes.root, className)}
       data-axis-id={defaultizedProps.id}
       sx={sx}
     >

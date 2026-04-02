@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
+import SectionHeadline from '@mui/docs/SectionHeadline';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';

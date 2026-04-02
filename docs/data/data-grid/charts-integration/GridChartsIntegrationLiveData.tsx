@@ -116,9 +116,6 @@ export default function GridChartsIntegrationLiveData() {
                 sortModel: [{ field: 'cpu', sort: 'desc' }],
               },
             }}
-            experimentalFeatures={{
-              charts: true,
-            }}
           />
         </div>
         <div style={{ marginTop: 32, marginRight: 32, display: 'flex' }}>

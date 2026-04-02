@@ -1,8 +1,7 @@
 import { screen } from '@mui/internal-test-utils';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import { LicenseInfo } from '@mui/x-license';
-import { TEST_LICENSE_KEY_PRO } from '@mui/x-license/test-keys';
-import { clearLicenseStatusCache } from '@mui/x-license/useLicenseVerifier';
+import { TEST_LICENSE_KEY_PRO, clearLicenseStatusCache } from '@mui/x-license/internals';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,

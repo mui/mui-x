@@ -5,7 +5,7 @@ import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { legendClasses, ChartsLegend } from '@mui/x-charts/ChartsLegend';
@@ -64,7 +64,7 @@ export default function BarScatterCompostion() {
       <Typography variant="h6">
         GDP growth rate comparison (2024 vs 2010-19 Avg)
       </Typography>
-      <ChartDataProvider
+      <ChartsDataProvider
         dataset={GDPdata}
         series={[
           {
@@ -104,7 +104,7 @@ export default function BarScatterCompostion() {
           <ChartsXAxis axisId="bar" />
           <ChartsYAxis />
         </ChartsSurface>
-      </ChartDataProvider>
+      </ChartsDataProvider>
     </Box>
   );
 }

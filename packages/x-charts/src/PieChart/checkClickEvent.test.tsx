@@ -1,6 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
-import { PieChart } from '@mui/x-charts/PieChart';
+import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 
 const config = {
   width: 400,
@@ -29,7 +29,7 @@ describe('PieChart - click event', () => {
           onItemClick={() => {}}
         />,
       );
-      const slices = container.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
+      const slices = container.querySelectorAll<HTMLElement>(`path.${pieClasses.arc}`);
 
       expect(Array.from(slices).map((slice) => slice.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -54,7 +54,7 @@ describe('PieChart - click event', () => {
           onItemClick={onItemClick}
         />,
       );
-      const slices = document.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
+      const slices = document.querySelectorAll<HTMLElement>(`path.${pieClasses.arc}`);
 
       await user.click(slices[0]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({

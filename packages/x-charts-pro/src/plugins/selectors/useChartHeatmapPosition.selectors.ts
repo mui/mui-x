@@ -6,7 +6,7 @@ import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '@mui/x-charts/internals';
-import { type HeatmapItemIdentifier } from '../../models';
+import { type HeatmapItemIdentifierWithData } from '../../models';
 
 export const selectorHeatmapItemAtPosition = createSelector(
   selectorChartXAxis,
@@ -17,7 +17,7 @@ export const selectorHeatmapItemAtPosition = createSelector(
     { axis: yAxes, axisIds: yAxisIds },
     processedSeries,
     svgPoint: Pick<DOMPoint, 'x' | 'y'>,
-  ): HeatmapItemIdentifier | undefined {
+  ): HeatmapItemIdentifierWithData | undefined {
     const { series, seriesOrder } = processedSeries?.heatmap ?? {};
     const defaultXAxisId = xAxisIds[0];
     const defaultYAxisId = yAxisIds[0];
@@ -41,15 +41,15 @@ export const selectorHeatmapItemAtPosition = createSelector(
       const xIndex = getDataIndexForOrdinalScaleValue(xScale, svgPoint.x);
       const yIndex = getDataIndexForOrdinalScaleValue(yScale, svgPoint.y);
 
-      const dataIndex = aSeries.data.findIndex((d) => d[0] === xIndex && d[1] === yIndex);
+      const value = aSeries.heatmapData.getValue(xIndex, yIndex);
 
-      if (dataIndex !== -1) {
+      if (value !== null) {
         return {
           type: 'heatmap',
           seriesId,
-          dataIndex,
           xIndex,
           yIndex,
+          value,
         };
       }
     }

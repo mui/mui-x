@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { animated, useSpring } from '@react-spring/web';
 import {
   ThemeOptions,
@@ -25,6 +24,7 @@ import {
   UseTreeItemParameters,
   UseTreeItemContentSlotOwnProps,
   UseTreeItemGroupTransitionSlotOwnProps,
+  UseTreeItemStatus,
 } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemCheckbox,
@@ -82,6 +82,7 @@ function TransitionComponent(
 interface CustomTreeItemContentProps extends UseTreeItemContentSlotOwnProps {
   corner: Corner;
   density: Density;
+  status: UseTreeItemStatus;
 }
 
 const CustomTreeItemContent = styled(TreeItemContent)(({
@@ -189,13 +190,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
       <CustomTreeItemRoot
         {...getRootProps({
           ...other,
-          className: clsx(treeItemClasses.root, {
-            'Mui-selected': status.selected,
-            'Mui-disabled': status.disabled,
-          }),
+          className: treeItemClasses.root,
         })}
       >
-        <CustomTreeItemContent {...getContentProps({ corner, density })}>
+        <CustomTreeItemContent {...getContentProps({ corner, density })} status={status}>
           <Stack
             direction="row"
             spacing={1}

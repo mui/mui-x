@@ -29,6 +29,7 @@
     "./sort-event-occurrences": "./src/sort-event-occurrences/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
     "./use-adapter": "./src/use-adapter/index.ts",
+    "./use-adapter-context": "./src/use-adapter-context/index.ts",
     "./use-event-calendar": "./src/use-event-calendar/index.ts",
     "./use-event-calendar-store-context": "./src/use-event-calendar-store-context/index.ts",
     "./use-event-calendar-view": "./src/use-event-calendar-view/index.ts",
@@ -69,14 +70,14 @@
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
     "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.2",
     "@babel/runtime": "catalog:",
-    "@base-ui/react": "^1.0.0",
-    "@base-ui/utils": "^0.2.3",
+    "@base-ui/react": "^1.3.0",
+    "@base-ui/utils": "catalog:",
     "@floating-ui/react": "^0.27.16",
     "@floating-ui/react-dom": "^2.1.6",
     "@floating-ui/utils": "^0.2.10",
     "@mui/x-internals": "workspace:*",
     "prop-types": "catalog:",
-    "tabbable": "^6.3.0"
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",

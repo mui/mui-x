@@ -24,11 +24,11 @@ import {
   type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
-import { ChartZoomSlider } from '../ChartZoomSlider';
+import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { type ChartContainerProProps } from '../ChartContainerPro';
-import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
+import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { BAR_CHART_PRO_PLUGINS, type BarChartProPluginSignatures } from './BarChartPro.plugins';
 
 export interface BarChartProSlots
@@ -43,8 +43,8 @@ export interface BarChartProProps
   extends
     Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'seriesConfig' | 'plugins'>,
     Omit<
-      ChartContainerProProps<'bar', BarChartProPluginSignatures>,
-      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
+      ChartsContainerProProps<'bar', BarChartProPluginSignatures>,
+      'series' | 'slots' | 'slotProps'
     > {
   /**
    * Overridable component slots.
@@ -77,7 +77,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
   const {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     barPlotProps,
     gridProps,
     clipPathProps,
@@ -89,11 +89,11 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     children,
   } = useBarChartProps(other);
 
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+  const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'bar',
     BarChartProPluginSignatures
   >({
-    ...chartContainerProps,
+    ...chartsContainerProps,
     initialZoom,
     zoomData,
     onZoomChange,
@@ -105,7 +105,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro<'bar', BarChartProPluginSignatures> {...chartDataProviderProProps}>
+    <ChartsDataProviderPro<'bar', BarChartProPluginSignatures> {...chartsDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -117,14 +117,14 @@ const BarChartPro = React.forwardRef(function BarChartPro(
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
           <ChartsAxis {...chartsAxisProps} />
-          <ChartZoomSlider />
+          <ChartsZoomSlider />
           <ChartsBrushOverlay />
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </ChartsDataProviderPro>
   );
 });
 
@@ -157,15 +157,6 @@ BarChartPro.propTypes = {
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
-   * @deprecated Use `barLabel` in the chart series instead.
-   * If provided, the function will be used to format the label of the bar.
-   * It can be set to 'value' to display the current value.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
-   */
-  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
-  /**
    * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
@@ -188,6 +179,10 @@ BarChartPro.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -195,7 +190,14 @@ BarChartPro.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -228,11 +230,18 @@ BarChartPro.propTypes = {
    * ```
    */
   hiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']),
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['bar']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['bar']).isRequired,
+      }),
+    ]).isRequired,
   ),
   /**
    * If `true`, the legend is not rendered.
@@ -252,10 +261,17 @@ BarChartPro.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -283,11 +299,18 @@ BarChartPro.propTypes = {
    * ```
    */
   initialHiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']),
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['bar']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['bar']).isRequired,
+      }),
+    ]).isRequired,
   ),
   /**
    * The list of zoom data related to each axis.
@@ -338,13 +361,13 @@ BarChartPro.propTypes = {
   onAxisClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -357,7 +380,7 @@ BarChartPro.propTypes = {
   onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,
@@ -372,7 +395,7 @@ BarChartPro.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -421,6 +444,10 @@ BarChartPro.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The controlled axis tooltip.
@@ -436,11 +463,17 @@ BarChartPro.propTypes = {
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.shape({
-    dataIndex: PropTypes.number.isRequired,
-    seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['bar']),
-  }),
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -457,6 +490,7 @@ BarChartPro.propTypes = {
         barGapRatio: PropTypes.number,
         categoryGapRatio: PropTypes.number,
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -496,7 +530,7 @@ BarChartPro.propTypes = {
             tickSize: PropTypes.number,
           }),
         ),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -551,7 +585,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -563,6 +597,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -602,7 +637,7 @@ BarChartPro.propTypes = {
             tickSize: PropTypes.number,
           }),
         ),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -657,7 +692,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -669,6 +704,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -692,7 +728,7 @@ BarChartPro.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -739,7 +775,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -751,6 +787,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -775,7 +812,7 @@ BarChartPro.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -822,7 +859,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -834,6 +871,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -857,7 +895,7 @@ BarChartPro.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -904,7 +942,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -916,6 +954,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -939,7 +978,7 @@ BarChartPro.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -986,7 +1025,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -998,6 +1037,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1021,7 +1061,7 @@ BarChartPro.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1078,7 +1118,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1090,6 +1130,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1113,7 +1154,7 @@ BarChartPro.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1170,7 +1211,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1182,6 +1223,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1205,7 +1247,7 @@ BarChartPro.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        height: PropTypes.number,
+        height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1252,7 +1294,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1275,6 +1317,7 @@ BarChartPro.propTypes = {
         barGapRatio: PropTypes.number,
         categoryGapRatio: PropTypes.number,
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1357,7 +1400,7 @@ BarChartPro.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1368,7 +1411,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1380,6 +1423,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1462,7 +1506,7 @@ BarChartPro.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1473,7 +1517,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1485,6 +1529,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1543,7 +1588,7 @@ BarChartPro.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1554,7 +1599,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1566,6 +1611,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1625,7 +1671,7 @@ BarChartPro.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1636,7 +1682,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1648,6 +1694,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1706,7 +1753,7 @@ BarChartPro.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1717,7 +1764,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1729,6 +1776,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1787,7 +1835,7 @@ BarChartPro.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1798,7 +1846,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1810,6 +1858,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1878,7 +1927,7 @@ BarChartPro.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1889,7 +1938,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1901,6 +1950,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1969,7 +2019,7 @@ BarChartPro.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1980,7 +2030,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1992,6 +2042,7 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -2050,7 +2101,7 @@ BarChartPro.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -2061,7 +2112,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -2170,8 +2221,8 @@ BarChartPro.propTypes = {
           type: PropTypes.oneOf(['doubleTapReset']).isRequired,
         }),
         PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.array,
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,

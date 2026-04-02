@@ -74,7 +74,7 @@ It's important to note that by modifying the layout with CSS, the new positions 
 In the previous demonstration, the tab order is broken because the action bar appears before the calendar, whereas in the DOM the action bar is still after.
 
 To modify the DOM structure, you can create a custom `Layout` wrapper.
-Use the `usePickerLayout` hook to get the subcomponents React nodes.
+Use the `usePickerLayout()` hook to get the subcomponents React nodes.
 Then you can fully customize the DOM structure.
 
 ```jsx

@@ -3,7 +3,7 @@ import type { KeyboardFocusHandler } from '../../internals/plugins/featurePlugin
 import {
   type ComposableCartesianChartSeriesType,
   composableCartesianSeriesTypes,
-} from '../../internals/commonNextFocusItem';
+} from '../../models/seriesType/composition';
 
 const keyboardFocusHandler: KeyboardFocusHandler<'scatter', ComposableCartesianChartSeriesType> =
   createCommonKeyboardFocusHandler(composableCartesianSeriesTypes);

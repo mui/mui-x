@@ -1,8 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
-import { Watermark } from '@mui/x-license/Watermark';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import {
   GridRoot,
   GridContextProvider,
@@ -60,8 +59,12 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
     useGridParamsOverridableMethods,
   },
 };
-const releaseInfo = '__RELEASE_INFO__';
-const watermark = <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />;
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-data-grid-premium' as const,
+};
+const watermark = <Watermark packageInfo={packageInfo} />;
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
 
@@ -84,7 +87,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     initialProps,
     configuration as GridConfiguration,
   );
-  useLicenseVerifier('x-data-grid-premium', releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
@@ -534,7 +537,6 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    charts: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -1294,7 +1296,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
+   * Prefer to use {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} unless it doesn't fulfill your needs.
    */
   onRowsScrollEnd: PropTypes.func,
   /**

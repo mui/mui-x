@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { HighlightScope } from '@mui/x-charts/context';
+import { HighlightScope } from '@mui/x-charts-pro/context';
 import {
   BarChartPremium,
   RangeBarSeries,

@@ -3,7 +3,7 @@ title: Charts - useDrawingArea
 productId: x-charts
 ---
 
-# useDrawingArea
+# `useDrawingArea()`
 
 <p class="description">Get the chart's drawing area dimensions and coordinates for positioning custom content.</p>
 

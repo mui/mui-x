@@ -3,7 +3,7 @@ import type { ChartState } from '../../../models/chart';
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 import type { ChartSeriesTypeRequiredPlugins } from './seriesConfig.types';
 
-export type GetItemAtPosition<TSeriesType extends ChartSeriesType> = (
-  state: ChartState<ChartSeriesTypeRequiredPlugins<TSeriesType>>,
+export type GetItemAtPosition<SeriesType extends ChartSeriesType> = (
+  state: ChartState<ChartSeriesTypeRequiredPlugins<SeriesType>>,
   point: { x: number; y: number },
-) => SeriesItemIdentifierWithType<TSeriesType> | undefined;
+) => SeriesItemIdentifierWithType<SeriesType> | undefined;

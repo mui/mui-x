@@ -2,7 +2,6 @@ import { spy } from 'sinon';
 import { act, fireEvent, reactMajor, waitFor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
-import { isJSDOM } from 'test/utils/skipIf';
 import { TreeViewAnyStore } from '../../models';
 
 describeTreeView<TreeViewAnyStore>(
@@ -10,9 +9,7 @@ describeTreeView<TreeViewAnyStore>(
   ({ render, renderFromJSX, treeViewComponentName, TreeViewComponent, TreeItemComponent }) => {
     const isRichTreeView = treeViewComponentName.startsWith('RichTreeView');
 
-    // can't catch render errors in the browser for unknown reason
-    // tried try-catch + error boundary + window onError preventDefault
-    it.skipIf(!isJSDOM)('should throw an error when two items have the same ID', () => {
+    it('should throw an error when two items have the same ID', () => {
       if (treeViewComponentName === 'SimpleTreeView') {
         // eslint-disable-next-line vitest/no-conditional-expect
         expect(() =>
@@ -533,13 +530,15 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
     });
 
     describe('itemHeight prop', () => {
-      it('should not set --TreeView-itemHeight CSS variable when itemHeight is not defined', () => {
+      it('should not set --TreeView-itemHeight CSS variable when itemHeight is not defined except on RichTreeViewPro component', () => {
         const view = render({
           items: [{ id: '1' }],
         });
 
         const itemRoot = view.getItemRoot('1');
-        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('');
+        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal(
+          treeViewComponentName === 'RichTreeViewPro' ? '32px' : '',
+        );
       });
 
       it('should set --TreeView-itemHeight CSS variable when itemHeight is defined', () => {
@@ -583,11 +582,21 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
           '48px',
         );
       });
+
+      it('should not set --TreeView-itemHeight CSS variable when itemHeight is null', () => {
+        const view = render({
+          items: [{ id: '1' }],
+          itemHeight: null,
+        });
+
+        const itemRoot = view.getItemRoot('1');
+        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('');
+      });
     });
 
     describe('domStructure prop', () => {
-      it.skipIf(!isRichTreeView)(
-        'should use nested DOM structure by default (children inside parent)',
+      it.skipIf(treeViewComponentName !== 'RichTreeView')(
+        'should use nested DOM structure by default on RichTreeView (children inside parent)',
         () => {
           const view = render({
             items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -599,6 +608,24 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
 
           // In nested DOM structure, the child is a descendant of the parent
           expect(parentRoot.contains(childRoot)).to.equal(true);
+        },
+      );
+
+      it.skipIf(treeViewComponentName !== 'RichTreeViewPro')(
+        'should use flat DOM structure by default on RichTreeViewPro (children as siblings)',
+        () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            defaultExpandedItems: ['1'],
+          });
+
+          const parentRoot = view.getItemRoot('1');
+          const childRoot = view.getItemRoot('1.1');
+
+          // In flat DOM structure, the child is NOT a descendant of the parent
+          expect(parentRoot.contains(childRoot)).to.equal(false);
+          // Both items should be siblings (same parent)
+          expect(parentRoot.parentElement).to.equal(childRoot.parentElement);
         },
       );
 

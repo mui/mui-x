@@ -177,11 +177,6 @@ export class SchedulerDataSourceCacheDefault<
     return result;
   }
 
-  // Only for testing purposes - will remove later
-  public getLoadedRangesInfo() {
-    return this.loadedRanges;
-  }
-
   clear() {
     this.loadedRanges = [];
     this.cache = {};

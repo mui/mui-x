@@ -20,7 +20,7 @@ import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
-import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
+import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
 import { HeatmapPlotPremium } from './HeatmapPlotPremium';
 
@@ -45,7 +45,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
 
   const {
-    chartDataProviderPremiumProps,
+    chartsDataProviderPremiumProps,
     chartsWrapperProps,
     chartsAxisProps,
     clipPathProps,
@@ -61,8 +61,8 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   const renderer = heatmapPlotPremiumProps.renderer;
 
   return (
-    <ChartDataProviderPremium<'heatmap', HeatmapPremiumPluginSignatures>
-      {...chartDataProviderPremiumProps}
+    <ChartsDataProviderPremium<'heatmap', HeatmapPremiumPluginSignatures>
+      {...chartsDataProviderPremiumProps}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
@@ -87,7 +87,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
         </ChartsLayerContainer>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPremium>
+    </ChartsDataProviderPremium>
   );
 });
 
@@ -126,6 +126,10 @@ HeatmapPremium.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -133,7 +137,14 @@ HeatmapPremium.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -146,10 +157,19 @@ HeatmapPremium.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['heatmap']).isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -191,24 +211,15 @@ HeatmapPremium.propTypes = {
     }),
   ]),
   /**
-   * The function called for onClick events.
-   * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
-   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
-   *
-   * @deprecated Use `onItemClick` instead to get access to both x- and y-axis values.
-   */
-  onAxisClick: PropTypes.func,
-  /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
    * The callback fired when an item is clicked.
    *
-   * @param {React.MouseEvent<SVGSVGElement, MouseEvent>} event The click event.
+   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
    * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,
@@ -223,7 +234,7 @@ HeatmapPremium.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -265,6 +276,10 @@ HeatmapPremium.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The configuration of the tooltip.
@@ -285,13 +300,19 @@ HeatmapPremium.propTypes = {
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['heatmap']),
-    xIndex: PropTypes.number.isRequired,
-    yIndex: PropTypes.number.isRequired,
-  }),
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['heatmap']).isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -307,6 +328,7 @@ HeatmapPremium.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -346,7 +368,7 @@ HeatmapPremium.propTypes = {
           tickSize: PropTypes.number,
         }),
       ),
-      height: PropTypes.number,
+      height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
@@ -399,7 +421,7 @@ HeatmapPremium.propTypes = {
           panning: PropTypes.bool,
           slider: PropTypes.shape({
             enabled: PropTypes.bool,
-            preview: PropTypes.bool,
+            preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
             showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
             size: PropTypes.number,
           }),
@@ -420,6 +442,7 @@ HeatmapPremium.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -500,7 +523,7 @@ HeatmapPremium.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
-      width: PropTypes.number,
+      width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
           filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -511,7 +534,7 @@ HeatmapPremium.propTypes = {
           panning: PropTypes.bool,
           slider: PropTypes.shape({
             enabled: PropTypes.bool,
-            preview: PropTypes.bool,
+            preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
             showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
             size: PropTypes.number,
           }),
@@ -619,8 +642,8 @@ HeatmapPremium.propTypes = {
           type: PropTypes.oneOf(['doubleTapReset']).isRequired,
         }),
         PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.array,
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,

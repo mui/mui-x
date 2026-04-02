@@ -127,7 +127,7 @@ The **Transaction Date** column is represented by additional columns in pivot mo
 
 ### Custom derived columns
 
-Use the `getPivotDerivedColumns()` prop to customize derived columns.
+Use the `getPivotDerivedColumns` prop to customize derived columns.
 This prop is called for each original column and returns an array of derived columns, or `undefined` if no derived columns are needed.
 
 :::success

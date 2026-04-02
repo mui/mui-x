@@ -8,7 +8,6 @@ import {
 import { spy } from 'sinon';
 import { DataGrid, type DataGridProps, GridOverlay } from '@mui/x-data-grid';
 import { getCell, getRow, openLongTextViewPopup } from 'test/utils/helperFn';
-import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Slots', () => {
   const { render } = createRenderer();
@@ -158,9 +157,7 @@ describe('<DataGrid /> - Slots', () => {
     });
   });
 
-  // can't catch render errors in the browser for unknown reason
-  // tried try-catch + error boundary + window onError preventDefault
-  it.skipIf(!isJSDOM)('should throw if a component is used without providing the context', () => {
+  it('should throw if a component is used without providing the context', () => {
     expect(() => {
       render(
         <ErrorBoundary>

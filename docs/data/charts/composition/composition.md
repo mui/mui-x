@@ -21,9 +21,12 @@ Structural components are used to define a chart's dimensions, surfaces, and dat
 
 - Basics
   - `ChartsDataProvider` provides data to descendants.
-  - `ChartsSurface` renders the SVG element.
+  - `ChartsLayerContainer` a `div` that handles the responsiveness of the chart and contains the layers.
+  - `ChartsSvgLayer` renders a layer that is an SVG element, which can be used to render axes, plots, etc.
+  - `ChartsWebGLLayer` renders a layer that is a WebGL canvas, which can be used to render plots.
 - Helpers
   - `ChartsContainer` combines the Data Provider and Surface components.
+  - `ChartsSurface` combines the layer container and an SVG layer.
   - `ChartsWrapper` styled div that positions surface, tooltip, and legend on a grid.
 
 :::info
@@ -33,9 +36,9 @@ For demos using `ChartsDataProvider` and `ChartsSurface`, see [HTML components](
 
 ### Chart Data Provider and Surface usage
 
-Notice that the `width` and `height` props are passed to `ChartsDataProvider` and not `ChartsSurface`.
+Notice that the `width` and `height` props are passed to the `ChartsDataProvider`.
 
-`ChartsLegend` is placed inside `ChartsDataProvider` to get access to the context, but outside `ChartsSurface` since it's not an SVG component.
+`ChartsLegend` is placed inside `ChartsDataProvider` to get access to the context, but outside `ChartsLayerContainer` since we want to display it outside the chart itself.
 
 ```jsx
 <ChartsDataProvider
@@ -46,12 +49,30 @@ Notice that the `width` and `height` props are passed to `ChartsDataProvider` an
   height={300}
 >
   <ChartsLegend />
-  <ChartsSurface
-    // Ref needs to be directly on ChartsSurface
-    ref={mySvgRef}
-  >
-    {children}
-  </ChartsSurface>
+  <ChartsLayerContainer>
+    <ChartsSvgLayer>{children}</ChartsSvgLayer>
+  </ChartsLayerContainer>
+</ChartsDataProvider>
+```
+
+### Chart Surface usage
+
+The `ChartsSurface` component is composed of `ChartsLayerContainer` and a `ChartsSvgLayer`.
+It can be used as a shortcut when your chart only has one SVG layer.
+
+When using `ChartsSurface`, all the children are rendered inside the SVG element.
+This means that you can't interleave different layers, such as rendering a canvas between two SVG layers.
+
+```jsx
+<ChartsDataProvider
+  // The configuration of the chart
+  series={[{ type: 'bar', data: [100, 200] }]}
+  xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+  width={500}
+  height={300}
+>
+  <ChartsLegend />
+  <ChartsSurface>{children}</ChartsSurface>
 </ChartsDataProvider>
 ```
 
@@ -70,16 +91,14 @@ You can't render HTML elements such as `ChartsLegend` as shown in the previous e
   xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
   width={500}
   height={300}
-  // Ref is forwarded internally to ChartsSurface
-  ref={mySvgRef}
 >
-  {children} // Only SVG component here
+  {children} // Only SVG components here
 </ChartsContainer>
 ```
 
 ### Chart Wrapper usage
 
-Charts are often constructed of a graphic with a legend.
+Charts often consist of a graphic and a legend.
 `ChartsWrapper` helps position those elements in a grid structure.
 
 The children should have a CSS `gridArea` property set to `'chart'`, `'legend'`, or `'toolbar'`.
@@ -304,6 +323,21 @@ If you're not using the axis highlight or the tooltip, consider disabling this f
 ```
 
 :::
+
+## Layering
+
+Use `ChartsLayerContainer`, `ChartsSvgLayer` and `ChartsWebGLLayer` to create multiple layers of elements that share the same coordinate system.
+This is useful for managing the depth ordering of alternating SVG and WebGL elements.
+
+In the example below, we create three layers:
+
+1. An SVG layer that displays the chart's grid;
+2. A WebGL layer for rendering with `CandlestickPlot`;
+3. An SVG layer that renders the axes and crosshair
+
+{{"demo": "Layering.js"}}
+
+Since all layers are absolutely positioned, they stack on top of each other in the order they are defined.
 
 ## Examples
 

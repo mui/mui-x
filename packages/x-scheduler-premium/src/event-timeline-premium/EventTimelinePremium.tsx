@@ -2,8 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
-import { Watermark } from '@mui/x-license/Watermark';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   useExtractEventTimelinePremiumParameters,
@@ -15,7 +14,6 @@ import {
   eventDialogSlots,
   EventDialogStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-  schedulerTokens,
 } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
@@ -25,25 +23,31 @@ import {
 } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
 
-const releaseInfo = '__RELEASE_INFO__';
-const watermark = <Watermark packageName="x-scheduler-premium" releaseInfo={releaseInfo} />;
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-scheduler-premium' as const,
+};
+const watermark = <Watermark packageInfo={packageInfo} />;
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
     root: ['root'],
     content: ['content'],
     grid: ['grid'],
-    titleSubGridWrapper: ['titleSubGridWrapper'],
+    headerRow: ['headerRow'],
+    titleHeaderCell: ['titleHeaderCell'],
+    eventsHeaderCell: ['eventsHeaderCell'],
+    eventsHeaderCellContent: ['eventsHeaderCellContent'],
     titleSubGrid: ['titleSubGrid'],
-    titleSubGridHeaderRow: ['titleSubGridHeaderRow'],
-    titleSubGridHeaderCell: ['titleSubGridHeaderCell'],
     eventsSubGridWrapper: ['eventsSubGridWrapper'],
     eventsSubGrid: ['eventsSubGrid'],
-    eventsSubGridHeaderRow: ['eventsSubGridHeaderRow'],
     eventsSubGridRow: ['eventsSubGridRow'],
     titleCellRow: ['titleCellRow'],
     titleCell: ['titleCell'],
     titleCellLegendColor: ['titleCellLegendColor'],
+    currentTimeIndicator: ['currentTimeIndicator'],
+    currentTimeIndicatorCircle: ['currentTimeIndicatorCircle'],
     event: ['event'],
     eventPlaceholder: ['eventPlaceholder'],
     eventResizeHandler: ['eventResizeHandler'],
@@ -81,7 +85,6 @@ const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
-  ...schedulerTokens,
   '--time-cell-width': '64px',
   '--days-cell-width': '120px',
   '--weeks-cell-width': 'calc(64px * 7)',
@@ -112,7 +115,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   // We don't want the plan suffix in the theme, otherwise we couldn't share the theme entry across packages
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
-  useLicenseVerifier('x-scheduler-premium', releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   const {
     parameters,
@@ -121,7 +124,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   const store = useEventTimelinePremium(parameters);
   const classes = useUtilityClasses(classesProp);
 
-  const { localeText, apiRef, ...other } = forwardedProps;
+  const { localeText, resourceColumnLabel, apiRef, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
   const mergedLocaleText = React.useMemo(
@@ -130,8 +133,8 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   );
 
   const timelineStyledContextValue = React.useMemo(
-    () => ({ classes, localeText: mergedLocaleText }),
-    [classes, mergedLocaleText],
+    () => ({ classes, localeText: mergedLocaleText, resourceColumnLabel }),
+    [classes, mergedLocaleText, resourceColumnLabel],
   );
 
   const dialogStyledContextValue = React.useMemo(

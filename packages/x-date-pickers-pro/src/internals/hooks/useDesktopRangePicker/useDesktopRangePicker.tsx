@@ -1,6 +1,6 @@
 import useSlotProps from '@mui/utils/useSlotProps';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import { useLicenseVerifier } from '@mui/x-license/internals';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
@@ -32,7 +32,11 @@ export const useDesktopRangePicker = <
   steps,
   ...pickerParams
 }: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
-  useLicenseVerifier('x-date-pickers-pro', '__RELEASE_INFO__');
+  useLicenseVerifier({
+    releaseDate: '__RELEASE_INFO__',
+    version: process.env.MUI_VERSION!,
+    name: 'x-date-pickers-pro',
+  });
 
   const { slots, slotProps, inputRef, localeText } = props;
 

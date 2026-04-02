@@ -1,5 +1,4 @@
 import { type ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
-import { type PieItemId } from '../models';
 import { type SeriesId } from '../models/seriesType/common';
 import type { ChartSeriesType } from '../models/seriesType/config';
 
@@ -39,6 +38,7 @@ export interface SeriesLegendItemParams
    */
   type: ChartSeriesType;
   markType: ChartsLabelMarkProps['type'];
+  markShape?: ChartsLabelMarkProps['markShape'];
 }
 
 export interface SeriesLegendItemContext extends LegendItemContextBase {
@@ -52,11 +52,6 @@ export interface SeriesLegendItemContext extends LegendItemContextBase {
    * The identifier of the series
    */
   seriesId: SeriesId;
-  /**
-   * The identifier of the pie item
-   * @deprecated use `dataIndex` instead
-   */
-  itemId?: PieItemId;
   /**
    * The data index of the item in the series data array
    */
