@@ -137,6 +137,9 @@ To generate `.js` files, run `pnpm docs:typescript:formatted`.
 
 Codemods are run by consumers of the MUI X libraries to migrate to newer versions of the libraries.
 
+When adding a new codemod, make sure to also document it in the `x-codemod/README.MD` following existing examples.
+You also need to create or expand the `preset-safe` preset to include the new codemod, and document the preset in the `README.md` as well.
+
 ### Versioning
 
 When creating codemods, the code should be created in the directory of the target version. E.g., a codemod to migrate from v8 to v9 should be placed inside the `v9.0.0` directory.
