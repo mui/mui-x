@@ -46,9 +46,6 @@ function BrowserDateField(props: DatePickerFieldProps) {
   const fieldResponse = useDateField<true, typeof props>(props);
 
   const {
-    // Should be ignored
-    enableAccessibleFieldDOMStructure,
-
     // Should be passed to the PickersSectionList component
     elements,
     sectionListRef,

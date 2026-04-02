@@ -27,8 +27,6 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 
 function BrowserTextField(props) {
   const {
-    // Should be ignored
-    enableAccessibleFieldDOMStructure,
     // Should be passed to the PickersSectionList component
     elements,
     sectionListRef,

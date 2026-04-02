@@ -50,9 +50,6 @@ function BrowserSingleInputDateRangeField(
   const fieldResponse = useSingleInputDateRangeField<true, typeof props>(props);
 
   const {
-    // Should be ignored
-    enableAccessibleFieldDOMStructure,
-
     // Should be passed to the PickersSectionList component
     elements,
     sectionListRef,

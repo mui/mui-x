@@ -78,17 +78,6 @@ This approach is only recommended if you need complex customizations on your `Pi
 If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
 :::
 
-### Using Material `TextField`
-
-Pass the `enableAccessibleFieldDOMStructure={false}` to any Field or Picker component to use an `<input />` for the editing instead of the new accessible DOM structure:
-
-{{"demo": "MaterialV6Field.js"}}
-
-:::warning
-The non-accessible DOM structure will be deprecated in a follow-up minor version and removed in `v9.x`.
-If you are unable to migrate for some reason, please open an issue to describe what is missing from the new DOM structure so that we can improve it before dropping the old one.
-:::
-
 ## With another Design System
 
 ### Using a custom input
