@@ -33,7 +33,7 @@ StandaloneEvent.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * CSS class applied to the element, or a function that
-   * returns a class based on the component’s state.
+   * returns a class based on the component's state.
    */
   className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   data: PropTypes.oneOfType([
@@ -282,12 +282,17 @@ StandaloneEvent.propTypes = {
    */
   onEventDrop: PropTypes.func,
   /**
-   * Allows you to replace the component’s HTML element
+   * Allows you to replace the component's HTML element
    * with a different tag, or compose it with another component.
    *
    * Accepts a `ReactElement` or a function that returns the element to render.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  /**
+   * Style applied to the element, or a function that
+   * returns a style object based on the component's state.
+   */
+  style: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
