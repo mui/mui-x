@@ -230,6 +230,9 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       flex: 1,
     },
+    [`& .${c.columnHeader}`]: {
+      flex: '0 0 auto',
+    },
     [`& .${c.columnHeader}, & .${c.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
       padding: '0 10px',
