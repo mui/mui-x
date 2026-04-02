@@ -105,7 +105,7 @@ export interface PickersComponentsPropsList {
   MuiMobileDateTimePicker: MobileDateTimePickerProps;
   MuiStaticDateTimePicker: StaticDateTimePickerProps;
 
-  // V7 Picker's TextField
+  // Picker's TextField
   MuiPickersTextField: PickersTextFieldProps;
   MuiPickersInputBase: PickersInputBaseProps;
   MuiPickersInput: PickersInputProps;
