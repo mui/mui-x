@@ -66,6 +66,12 @@ SingleInputTimeRangeField.propTypes = {
    */
   ampm: PropTypes.bool,
   /**
+   * Is `true` if the current values equals the empty value.
+   * For a single item value, it means that `value === null`
+   * For a range value, it means that `value === [null, null]`
+   */
+  areAllSectionsEmpty: PropTypes.bool,
+  /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
    */
@@ -121,6 +127,15 @@ SingleInputTimeRangeField.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * End `InputAdornment` for this component.
+   */
+  endAdornment: PropTypes.node,
+  /**
+   * If `true`, the `input` will indicate an error.
+   * The prop defaults to the value (`false`) inherited from the parent FormControl component.
+   */
+  error: PropTypes.bool,
+  /**
    * The ref object used to imperatively interact with the field.
    */
   fieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
@@ -161,7 +176,6 @@ SingleInputTimeRangeField.propTypes = {
   hiddenLabel: PropTypes.bool,
   /**
    * The id of the `input` element.
-   * Use this prop to make `label` and `helperText` accessible for screen readers.
    */
   id: PropTypes.string,
   /**
@@ -228,6 +242,7 @@ SingleInputTimeRangeField.propTypes = {
    * Callback fired when the clear button is clicked.
    */
   onClear: PropTypes.func,
+  onClick: PropTypes.func,
   /**
    * Callback fired when the error associated with the current value changes.
    * When a validation error is detected, the `error` parameter contains a non-null value.
@@ -239,6 +254,9 @@ SingleInputTimeRangeField.propTypes = {
    */
   onError: PropTypes.func,
   onFocus: PropTypes.func,
+  onInput: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  onPaste: PropTypes.func,
   /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
@@ -257,7 +275,7 @@ SingleInputTimeRangeField.propTypes = {
    */
   referenceDate: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
   /**
-   * If `true`, the label is displayed as required and the `input` element is required.
+   * If `true`, the label will indicate that the `input` is required.
    * @default false
    */
   required: PropTypes.bool,
@@ -322,6 +340,10 @@ SingleInputTimeRangeField.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Start `InputAdornment` for this component.
+   */
+  startAdornment: PropTypes.node,
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
