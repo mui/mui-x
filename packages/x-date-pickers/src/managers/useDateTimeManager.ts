@@ -18,9 +18,7 @@ import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../int
 import { useDefaultDates } from '../internals/hooks/useUtils';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 
-export function useDateTimeManager(
-  parameters: UseDateTimeManagerParameters = {},
-): UseDateTimeManagerReturnValue {
+export function useDateTimeManager(): UseDateTimeManagerReturnValue {
   return React.useMemo(
     () => ({
       valueType: 'date-time',
@@ -111,8 +109,6 @@ export function useApplyDefaultValuesToDateTimeValidationProps(
     ],
   );
 }
-
-export interface UseDateTimeManagerParameters {}
 
 export type UseDateTimeManagerReturnValue = PickerManager<
   PickerValue,
