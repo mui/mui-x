@@ -1054,6 +1054,9 @@ describe('<DataGridPro /> - Row selection', () => {
       });
 
       it('should preserve selected tree data parents when rows are paged out and back', async () => {
+        // Mixed selectability: Thomas (id: 1) and some children (Robert: 2, Karen: 3) are
+        // selectable, while others (Nancy: 4, Daniel: 5, Christopher: 6, Donald: 7) are not.
+        const selectableIds = new Set([1, 2, 3, 8]);
         function TreeDataServerPaginationSelection() {
           apiRef = useGridApiRef();
           const [page, setPage] = React.useState(0);
@@ -1076,7 +1079,7 @@ describe('<DataGridPro /> - Row selection', () => {
                 getTreeDataPath={getTreeDataPath}
                 checkboxSelection
                 keepNonExistentRowsSelected
-                isRowSelectable={(params) => params.row.hierarchy.length === 1}
+                isRowSelectable={(params) => selectableIds.has(params.id as number)}
                 disableVirtualization
               />
             </div>
@@ -1084,13 +1087,15 @@ describe('<DataGridPro /> - Row selection', () => {
         }
 
         const { user } = render(<TreeDataServerPaginationSelection />);
+        // With descendants propagation, selecting Thomas auto-selects selectable children
         await user.click(getCell(0, 0).querySelector('input')!);
-        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([1]);
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([1, 2, 3]);
 
         await user.click(screen.getByRole('button', { name: /toggle page/i }));
         await user.click(screen.getByRole('button', { name: /toggle page/i }));
 
-        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([1]);
+        // Thomas and its selectable children should still be selected
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([1, 2, 3]);
         expect((getCell(0, 0).querySelector('input') as HTMLInputElement).checked).to.equal(true);
       });
 

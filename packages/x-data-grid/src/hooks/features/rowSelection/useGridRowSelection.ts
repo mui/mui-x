@@ -555,7 +555,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
       ids: new Set(currentSelection.ids),
     };
     const selectionManager = createRowSelectionManager(newSelectionModel);
-    const hasVisibleSelectableDescendant = (nodeId: GridRowId): boolean => {
+    const isOrHasSelectableDescendant = (nodeId: GridRowId): boolean => {
       const node = rowTree[nodeId];
       if (!node) {
         return false;
@@ -570,13 +570,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         return Boolean(rowsLookup[nodeId]) && apiRef.current.isRowSelectable(nodeId);
       }
 
-      for (let i = 0; i < node.children.length; i += 1) {
-        if (hasVisibleSelectableDescendant(node.children[i])) {
-          return true;
-        }
-      }
-
-      return false;
+      return node.children.some((childId) => isOrHasSelectableDescendant(childId));
     };
 
     let hasChanged = false;
@@ -605,7 +599,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         if (
           node.children.some(
             (childId) =>
-              filteredRowsLookup[childId] !== false && hasVisibleSelectableDescendant(childId),
+              filteredRowsLookup[childId] !== false && isOrHasSelectableDescendant(childId),
           )
         ) {
           selectionManager.unselect(id);
