@@ -6,7 +6,12 @@ export type {
   ChatBoxSlotProps,
   ChatBoxFeatures,
 } from './ChatBox/ChatBox.types';
-export type { ChatVariant } from '@mui/x-chat-unstyled';
+export type { ChatVariant, ChatDensity } from '@mui/x-chat-unstyled';
+export type {
+  ChatAttachmentRejection,
+  ChatAttachmentRejectionReason,
+  ChatAttachmentsConfig,
+} from '@mui/x-chat-unstyled';
 export { chatBoxClasses, getChatBoxUtilityClass } from './ChatBox/chatBoxClasses';
 export type { ChatBoxClasses, ChatBoxClassKey } from './ChatBox/chatBoxClasses';
 

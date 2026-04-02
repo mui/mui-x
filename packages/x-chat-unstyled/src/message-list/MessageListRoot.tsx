@@ -304,8 +304,16 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     ...other
   } = props;
   const defaultItems = useMessageIds();
-  const { hasMoreHistory, loadMoreHistory, messages, isStreaming } = useChat();
+  const { hasMoreHistory, loadMoreHistory, messages, isStreaming: isAdapterStreaming } = useChat();
   const itemIds = itemsProp ?? defaultItems;
+
+  // Combine adapter-level streaming (active stream via processStream) with
+  // message-level streaming (any message with status 'streaming').  This
+  // ensures auto-scroll on resize works for externally-managed messages
+  // (e.g. the Captions demo) that set status: 'streaming' without going
+  // through the adapter stream flow.
+  const isAnyMessageStreaming = messages.some((m) => m.status === 'streaming');
+  const isStreaming = isAdapterStreaming || isAnyMessageStreaming;
 
   const autoScrollEnabled = autoScroll !== false;
   const autoScrollBuffer = autoScrollEnabled

@@ -2,7 +2,12 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
-import { useChatComposer, useChatStatus, useChatStore } from '@mui/x-chat-headless';
+import {
+  useChatComposer,
+  useChatStatus,
+  useChatStore,
+  type ChatAttachmentsConfig,
+} from '@mui/x-chat-headless';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { ComposerContextProvider } from './internals/ComposerContext';
 import { type ComposerRootOwnerState } from './composer.types';
@@ -20,6 +25,11 @@ export interface ComposerRootProps extends Omit<
   'onSubmit'
 > {
   disabled?: boolean;
+  /**
+   * Configuration for attachment validation constraints.
+   * When provided, file attachments are validated against these rules.
+   */
+  attachmentConfig?: ChatAttachmentsConfig;
   slots?: Partial<ComposerRootSlots>;
   slotProps?: ComposerRootSlotProps;
 }
@@ -32,7 +42,7 @@ export const ComposerRoot = React.forwardRef(function ComposerRoot(
   props: ComposerRootProps,
   ref: React.Ref<HTMLFormElement>,
 ) {
-  const { slots, slotProps, children, disabled = false, ...other } = props;
+  const { slots, slotProps, children, disabled = false, attachmentConfig, ...other } = props;
   const composer = useChatComposer();
   const status = useChatStatus();
   const store = useChatStore();
@@ -61,10 +71,12 @@ export const ComposerRoot = React.forwardRef(function ComposerRoot(
       addAttachment: composer.addAttachment,
       removeAttachment: composer.removeAttachment,
       attachments: composer.attachments,
+      attachmentConfig,
       error: status.error,
       setComposerIsComposing: store.setComposerIsComposing,
     }),
     [
+      attachmentConfig,
       composer.addAttachment,
       composer.removeAttachment,
       composer.attachments,

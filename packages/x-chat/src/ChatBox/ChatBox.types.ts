@@ -7,6 +7,8 @@ import {
   type MessageListRootAutoScrollConfig,
   type ChatSuggestion,
   type ChatVariant,
+  type ChatDensity,
+  type ChatAttachmentsConfig,
 } from '@mui/x-chat-unstyled';
 import type { ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
 import type { ChatConversationHeaderProps } from '../ChatConversation/ChatConversationHeader';
@@ -140,10 +142,16 @@ export interface ChatBoxFeatures {
    */
   conversationHeader?: boolean;
   /**
-   * Whether to enable attachment functionality (attach button and attachment preview list).
+   * Whether to enable attachment functionality (attach button and attachment preview list),
+   * and optionally configure attachment validation constraints.
+   *
+   * - `true` – enable with no restrictions (default).
+   * - `false` – disable attachment functionality entirely.
+   * - `{ acceptedMimeTypes, maxFileCount, maxFileSize, onAttachmentReject }` – enable
+   *   with the specified validation rules.
    * @default true
    */
-  attachments?: boolean;
+  attachments?: boolean | ChatAttachmentsConfig;
   /**
    * Whether to show the helper text below the composer input.
    * @default true
@@ -187,6 +195,14 @@ export interface ChatBoxProps<Cursor = string> extends Omit<
    * @default 'default'
    */
   variant?: ChatVariant;
+  /**
+   * The vertical spacing density of chat messages.
+   * - `'compact'` – Reduced vertical spacing between messages.
+   * - `'standard'` – Default spacing.
+   * - `'comfortable'` – Increased vertical spacing between messages.
+   * @default 'standard'
+   */
+  density?: ChatDensity;
   /**
    * The components used for each slot inside the ChatBox.
    */

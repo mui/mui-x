@@ -4,6 +4,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useMessage } from '@mui/x-chat-headless';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
+import { useChatDensity } from '../chat/internals/ChatDensityContext';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { MessageContextProvider } from './internals/MessageContext';
@@ -35,6 +36,7 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
   const { messageId, isGrouped = false, slots, slotProps, children, ...other } = props;
   const message = useMessage(messageId);
   const variant = useChatVariant();
+  const density = useChatDensity();
   const localeText = useChatLocaleText();
   const ownerState = React.useMemo<MessageRootOwnerState>(
     () => ({
@@ -46,9 +48,10 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
       error: message?.status === 'error',
       isGrouped,
       variant,
+      density,
       showAvatar: message?.author?.avatarUrl != null,
     }),
-    [isGrouped, message, messageId, variant],
+    [density, isGrouped, message, messageId, variant],
   );
   const Root = slots?.root ?? 'div';
   const rootProps = useSlotProps({

@@ -19,8 +19,8 @@ const ChatMessageGroupStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Group',
   overridesResolver: (_, styles) => styles.group,
-})(() => ({
-  '--MuiChatMessage-avatarSize': '36px',
+})<{ ownerState?: { variant?: string } }>(({ ownerState }) => ({
+  '--MuiChatMessage-avatarSize': ownerState?.variant === 'compact' ? '28px' : '36px',
   display: 'flex',
   flexDirection: 'column',
   gap: 0,
@@ -44,6 +44,7 @@ const ChatMessageGroupAuthorNameStyled = styled('div', {
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: theme.spacing(1),
+        color: (theme.vars || theme).palette.primary.main,
       }
     : {
         // Default: offset by avatar width, user right-aligned

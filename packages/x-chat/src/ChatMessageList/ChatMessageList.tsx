@@ -10,6 +10,7 @@ import {
   MessageListRoot,
   type MessageListRootProps,
   type MessageListRootHandle,
+  useChatDensity,
 } from '@mui/x-chat-unstyled';
 import {
   useChatMessageListUtilityClasses,
@@ -51,18 +52,26 @@ const ChatMessageListContentStyled = styled('div', {
   name: 'MuiChatMessageList',
   slot: 'Content',
   overridesResolver: (_, styles) => styles.content,
-})(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  paddingBlock: theme.spacing(1),
-  boxSizing: 'border-box',
-}));
+})<{ ownerState?: { density?: string } }>(({ theme, ownerState }) => {
+  const densityPaddingBlock: Record<string, string> = {
+    compact: theme.spacing(0.5),
+    standard: theme.spacing(1),
+    comfortable: theme.spacing(1.5),
+  };
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    paddingBlock: densityPaddingBlock[ownerState?.density ?? 'standard'],
+    boxSizing: 'border-box',
+  };
+});
 
 const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListProps>(
   function ChatMessageList(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageList' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
     const classes = useChatMessageListUtilityClasses(classesProp);
+    const density = useChatDensity();
 
     return (
       <MessageListRoot
@@ -89,6 +98,7 @@ const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListP
           } as any,
           messageListContent: {
             className: classes.content,
+            ownerState: { density },
             ...slotProps?.messageListContent,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,

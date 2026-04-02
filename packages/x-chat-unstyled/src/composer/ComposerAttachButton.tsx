@@ -2,9 +2,11 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
+import type { ChatAttachmentRejection } from '@mui/x-chat-headless';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useComposerContext } from './internals/ComposerContext';
 import { type ComposerAttachButtonOwnerState } from './composer.types';
+import { matchesMimeType } from './internals/matchesMimeType';
 
 export interface ComposerAttachButtonSlots {
   attachButton: React.ElementType;
@@ -54,6 +56,8 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
       ref,
     },
   }) as React.ButtonHTMLAttributes<HTMLButtonElement> & React.RefAttributes<HTMLButtonElement>;
+  const { attachmentConfig } = composer;
+  const acceptAttr = attachmentConfig?.acceptedMimeTypes?.join(',') || undefined;
   const inputProps = useSlotProps({
     elementType: AttachInput,
     externalSlotProps: slotProps?.attachInput,
@@ -63,6 +67,7 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
       multiple: true,
       ref: inputRef,
       type: 'file',
+      accept: acceptAttr,
     },
   }) as React.InputHTMLAttributes<HTMLInputElement> & React.RefAttributes<HTMLInputElement>;
   const externalOnClick = rootProps.onClick as
@@ -83,9 +88,39 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
             return;
           }
 
-          Array.from(event.currentTarget.files ?? []).forEach((file) => {
+          const files = Array.from(event.currentTarget.files ?? []);
+          const rejections: ChatAttachmentRejection[] = [];
+          const accepted: File[] = [];
+          const currentCount = composer.attachmentCount;
+
+          for (const file of files) {
+            if (
+              attachmentConfig?.acceptedMimeTypes &&
+              attachmentConfig.acceptedMimeTypes.length > 0 &&
+              !matchesMimeType(file.type, attachmentConfig.acceptedMimeTypes)
+            ) {
+              rejections.push({ file, reason: 'mime-type' });
+              continue;
+            }
+            if (attachmentConfig?.maxFileSize != null && file.size > attachmentConfig.maxFileSize) {
+              rejections.push({ file, reason: 'file-size' });
+              continue;
+            }
+            if (attachmentConfig?.maxFileCount != null && currentCount + accepted.length >= attachmentConfig.maxFileCount) {
+              rejections.push({ file, reason: 'file-count' });
+              continue;
+            }
+            accepted.push(file);
+          }
+
+          if (rejections.length > 0) {
+            attachmentConfig?.onAttachmentReject?.(rejections);
+          }
+
+          for (const file of accepted) {
             composer.addAttachment(file);
-          });
+          }
+
           event.currentTarget.value = '';
         }}
       />

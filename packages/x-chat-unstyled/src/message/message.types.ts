@@ -1,6 +1,7 @@
 'use client';
 import type { ChatMessage, ChatMessageStatus, ChatRole } from '@mui/x-chat-headless';
 import type { ChatVariant } from '../chat/internals/ChatVariantContext';
+import type { ChatDensity } from '../chat/internals/ChatDensityContext';
 
 export interface MessageOwnerState {
   messageId: string;
@@ -11,6 +12,7 @@ export interface MessageOwnerState {
   error: boolean;
   isGrouped: boolean;
   variant: ChatVariant;
+  density: ChatDensity;
   /**
    * Whether the message has an avatar to display.
    * Drives the `--MuiChatMessage-avatarSize` CSS variable so the opposite-side

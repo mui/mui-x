@@ -4,6 +4,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useMessage, useMessageIds, type ChatMessage } from '@mui/x-chat-headless';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
+import { useChatDensity } from '../chat/internals/ChatDensityContext';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useIsHydrated } from '../chat/internals/useIsHydrated';
 import { getDataAttributes } from '../internals/getDataAttributes';
@@ -142,6 +143,7 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   const previousMessage = useMessage(previousMessageId ?? '');
   const nextMessage = useMessage(nextMessageId ?? '');
   const variant = useChatVariant();
+  const density = useChatDensity();
   const localeText = useChatLocaleText();
   const isHydrated = useIsHydrated();
   const isFirst = !areMessagesGrouped(previousMessage, message, groupingWindowMs);
@@ -153,8 +155,9 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
       authorRole: message?.role,
       authorId: message?.author?.id,
       variant,
+      density,
     }),
-    [isFirst, isLast, message?.author?.id, message?.role, variant],
+    [density, isFirst, isLast, message?.author?.id, message?.role, variant],
   );
   const Group = slots?.group ?? 'div';
   const AuthorName = slots?.authorName ?? 'div';
@@ -186,37 +189,52 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   const authorLabel = getAuthorLabel(message);
   const showGroupAuthorName = isFirst && Boolean(authorLabel);
 
-  // In compact mode, the group header also shows the first message's timestamp
-  // so it does not need to be repeated in the per-message meta row.
-  const compactTimestampLabel =
-    variant === 'compact' && isHydrated && message?.createdAt
-      ? localeText.messageTimestampLabel(message.createdAt)
-      : null;
-
   const authorNameElement = showGroupAuthorName ? (
-    <AuthorName {...authorNameProps}>
-      {authorLabel}
-      {compactTimestampLabel ? (
-        <GroupTimestamp {...groupTimestampProps}>{compactTimestampLabel}</GroupTimestamp>
-      ) : null}
-    </AuthorName>
+    <AuthorName {...authorNameProps}>{authorLabel}</AuthorName>
   ) : null;
+
+  // In compact mode the author name lives inside the message grid so it shares
+  // a row with the avatar. In default mode it sits above the grid.
+  const compactAuthorName = variant === 'compact' ? authorNameElement : null;
+  const defaultAuthorName = variant !== 'compact' ? authorNameElement : null;
 
   return (
     <Group {...groupProps}>
-      {/* Default: author name sits above the message grid */}
-      {variant !== 'compact' ? authorNameElement : null}
-      <MessageRoot isGrouped={!isFirst} messageId={messageId}>
-        {children ?? (
-          <React.Fragment>
-            <MessageAvatar />
-            {/* Compact: author name is inside the grid so it shares a row with the avatar */}
-            {variant === 'compact' ? authorNameElement : null}
-            <MessageContent />
-            <MessageMeta />
-          </React.Fragment>
-        )}
-      </MessageRoot>
+      {defaultAuthorName}
+      {children ? (
+        // When custom children are provided (e.g. from DefaultMessageItem),
+        // pass `isGrouped` via cloneElement so the inner MessageRoot/ChatMessage
+        // receives the correct grouping state for its context.
+        // In compact mode, also inject the author name element into the
+        // children so it appears inside the CSS grid (sharing a row with the avatar).
+        // We wrap in a Fragment to avoid duplicate-key warnings.
+        React.Children.map(children, (child) => {
+          if (!React.isValidElement(child) || typeof child.type === 'string') {
+            return child;
+          }
+          const clone = child as React.ReactElement<Record<string, unknown>>;
+          if (compactAuthorName) {
+            const existingChildren = (clone.props as { children?: React.ReactNode }).children;
+            return React.cloneElement(clone, {
+              isGrouped: !isFirst,
+              children: (
+                <React.Fragment>
+                  {compactAuthorName}
+                  {existingChildren}
+                </React.Fragment>
+              ),
+            });
+          }
+          return React.cloneElement(clone, { isGrouped: !isFirst });
+        })
+      ) : (
+        <MessageRoot isGrouped={!isFirst} messageId={messageId}>
+          <MessageAvatar />
+          {compactAuthorName}
+          <MessageContent />
+          <MessageMeta />
+        </MessageRoot>
+      )}
     </Group>
   );
 }) as MessageGroupComponent;

@@ -20,12 +20,18 @@ const ChatMessageStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState?: { role?: string; isGrouped?: boolean; variant?: string } }>(({
+})<{ ownerState?: { role?: string; isGrouped?: boolean; variant?: string; density?: string } }>(({
   theme,
   ownerState,
 }) => {
   const isCompact = ownerState?.variant === 'compact';
   const isUser = ownerState?.role === 'user';
+  const densityPaddingBlock: Record<string, string> = {
+    compact: theme.spacing(0.25),
+    standard: theme.spacing(0.75),
+    comfortable: theme.spacing(1.5),
+  };
+  const paddingBottom = densityPaddingBlock[ownerState?.density ?? 'standard'];
 
   if (isCompact) {
     // Compact: avatar and author name share the first row, content below.
@@ -38,20 +44,21 @@ const ChatMessageStyled = styled('div', {
       width: '100%',
       boxSizing: 'border-box',
       paddingInline: theme.spacing(2),
-      paddingBlock: isGrouped ? 0 : `0 ${theme.spacing(0.25)}`,
+      paddingBlock: isGrouped ? 0 : `0 ${paddingBottom}`,
       fontFamily: theme.typography.fontFamily,
       ...(isGrouped
         ? {
-            // Grouped: no avatar/authorName rows — just content + meta, indented.
-            gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr',
-            gridTemplateAreas: '". content" ". meta"',
+            // Grouped: no avatar/authorName rows — content + meta on the same row.
+            // Meta (✓ 10:55) sits top-right, aligned to the start of the content.
+            gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
+            gridTemplateAreas: '". content meta"',
           }
         : {
-            // First in group: avatar spans authorName + content rows, centered vertically.
-            gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr',
-            gridTemplateRows: 'auto auto auto',
-            gridTemplateAreas:
-              '"avatar authorName" "avatar content" ". meta"',
+            // First in group: avatar spans authorName + content rows.
+            // Meta (✓ 10:55) sits top-right on the same row as the author name.
+            gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
+            gridTemplateRows: 'auto auto',
+            gridTemplateAreas: '"avatar authorName meta" "avatar content content"',
           }),
     };
   }
@@ -67,7 +74,7 @@ const ChatMessageStyled = styled('div', {
     // Phantom column: reserve the same width as the avatar on the opposite side so
     // assistant and user bubbles always share the same horizontal content lane.
     paddingInlineEnd: `calc(${theme.spacing(2)} + var(--MuiChatMessage-avatarSize))`,
-    paddingBlock: ownerState?.isGrouped ? 0 : `0 ${theme.spacing(0.5)}`,
+    paddingBlock: ownerState?.isGrouped ? 0 : `0 ${paddingBottom}`,
     fontFamily: theme.typography.fontFamily,
     ...(isUser && {
       gridTemplateAreas: '"actions content avatar" ". meta ."',

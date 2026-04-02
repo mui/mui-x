@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 
 const useThemeProps = createUseThemeProps('MuiChatBox');
-import { ChatRoot, ChatVariantProvider } from '@mui/x-chat-unstyled';
+import { ChatRoot, ChatVariantProvider, ChatDensityProvider } from '@mui/x-chat-unstyled';
 import { useChatBoxUtilityClasses } from './chatBoxClasses';
 import { ChatBoxContent } from './ChatBoxContent';
 import type { ChatBoxProps } from './ChatBox.types';
@@ -70,6 +70,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     suggestionsAutoSubmit,
     // Styled / visual props
     variant = 'default',
+    density = 'standard',
     className,
     classes: classesProp,
     sx,
@@ -109,19 +110,21 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
       slotProps={{ root: { style: { display: 'contents' } } }}
     >
       <ChatVariantProvider variant={variant}>
-        <ChatBoxStyled ref={ref} className={clsx(classes.root, className)} sx={sx} {...other}>
-          <ChatBoxContent
-            variant={variant}
-            slots={slots}
-            slotProps={slotProps}
-            features={features}
-            suggestions={suggestions}
-            suggestionsAutoSubmit={suggestionsAutoSubmit}
-            layoutClassName={classes.layout}
-            conversationsPaneClassName={classes.conversationsPane}
-            threadPaneClassName={classes.threadPane}
-          />
-        </ChatBoxStyled>
+        <ChatDensityProvider density={density}>
+          <ChatBoxStyled ref={ref} className={clsx(classes.root, className)} sx={sx} {...other}>
+            <ChatBoxContent
+              variant={variant}
+              slots={slots}
+              slotProps={slotProps}
+              features={features}
+              suggestions={suggestions}
+              suggestionsAutoSubmit={suggestionsAutoSubmit}
+              layoutClassName={classes.layout}
+              conversationsPaneClassName={classes.conversationsPane}
+              threadPaneClassName={classes.threadPane}
+            />
+          </ChatBoxStyled>
+        </ChatDensityProvider>
       </ChatVariantProvider>
     </ChatRoot>
   );
@@ -186,10 +189,26 @@ ChatBox.propTypes = {
     role: PropTypes.oneOf(['assistant', 'system', 'user']),
   }),
   /**
+   * The vertical spacing density of chat messages.
+   * - `'compact'` – Reduced vertical spacing between messages.
+   * - `'standard'` – Default spacing.
+   * - `'comfortable'` – Increased vertical spacing between messages.
+   * @default 'standard'
+   */
+  density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
+  /**
    * Feature flags to enable or disable built-in ChatBox behaviours.
    */
   features: PropTypes.shape({
-    attachments: PropTypes.bool,
+    attachments: PropTypes.oneOfType([
+      PropTypes.shape({
+        acceptedMimeTypes: PropTypes.arrayOf(PropTypes.string),
+        maxFileCount: PropTypes.number,
+        maxFileSize: PropTypes.number,
+        onAttachmentReject: PropTypes.func,
+      }),
+      PropTypes.bool,
+    ]),
     autoScroll: PropTypes.oneOfType([
       PropTypes.shape({
         buffer: PropTypes.number,

@@ -141,6 +141,8 @@ function DefaultComposer({
 }) {
   const showAttachments = features?.attachments !== false;
   const showHelperText = features?.helperText !== false;
+  const attachmentConfig =
+    typeof features?.attachments === 'object' ? features.attachments : undefined;
   const ComposerRootComponent = (slots?.composerRoot ?? ChatComposer) as typeof ChatComposer;
   const ComposerInputComponent = (slots?.composerInput ??
     ChatComposerTextArea) as typeof ChatComposerTextArea;
@@ -157,7 +159,10 @@ function DefaultComposer({
   const localeText = useChatLocaleText();
 
   return (
-    <ComposerRootComponent {...(slotProps?.composerRoot ?? {})}>
+    <ComposerRootComponent
+      attachmentConfig={attachmentConfig}
+      {...(slotProps?.composerRoot ?? {})}
+    >
       {showAttachments && (
         <ComposerAttachmentListComponent {...(slotProps?.composerAttachmentList ?? {})} />
       )}

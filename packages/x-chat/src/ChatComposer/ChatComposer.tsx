@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import { ComposerRoot, type ComposerRootProps } from '@mui/x-chat-unstyled';
+import { ComposerRoot, type ComposerRootProps, type ChatAttachmentsConfig } from '@mui/x-chat-unstyled';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 import { ChatComposerTextArea } from './ChatComposerTextArea';
@@ -18,10 +18,16 @@ const useThemeProps = createUseThemeProps('MuiChatComposer');
 
 export interface ChatComposerFeatures {
   /**
-   * Whether to enable attachment functionality (attach button and attachment preview list).
+   * Whether to enable attachment functionality (attach button and attachment preview list),
+   * and optionally configure attachment validation constraints.
+   *
+   * - `true` – enable with no restrictions (default).
+   * - `false` – disable attachment functionality entirely.
+   * - `{ acceptedMimeTypes, maxFileCount, maxFileSize, onAttachmentReject }` – enable
+   *   with the specified validation rules.
    * @default true
    */
-  attachments?: boolean;
+  attachments?: boolean | ChatAttachmentsConfig;
 }
 
 export interface ChatComposerProps extends ComposerRootProps {
@@ -83,7 +89,15 @@ const DefaultComposerContent = React.memo(function DefaultComposerContent({
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   features: PropTypes.shape({
-    attachments: PropTypes.bool,
+    attachments: PropTypes.oneOfType([
+      PropTypes.shape({
+        acceptedMimeTypes: PropTypes.arrayOf(PropTypes.string),
+        maxFileCount: PropTypes.number,
+        maxFileSize: PropTypes.number,
+        onAttachmentReject: PropTypes.func,
+      }),
+      PropTypes.bool,
+    ]),
   }),
 };
 
@@ -101,11 +115,14 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
       ...other
     } = props;
     const classes = useChatComposerUtilityClasses(classesProp);
+    const attachmentConfig =
+      typeof features?.attachments === 'object' ? features.attachments : undefined;
 
     return (
       <ComposerRoot
         ref={ref}
         {...other}
+        attachmentConfig={attachmentConfig}
         slots={{
           root: slots?.root ?? ChatComposerStyled,
           ...slots,
@@ -137,7 +154,15 @@ ChatComposer.propTypes = {
    * Feature flags to control composer capabilities.
    */
   features: PropTypes.shape({
-    attachments: PropTypes.bool,
+    attachments: PropTypes.oneOfType([
+      PropTypes.shape({
+        acceptedMimeTypes: PropTypes.arrayOf(PropTypes.string),
+        maxFileCount: PropTypes.number,
+        maxFileSize: PropTypes.number,
+        onAttachmentReject: PropTypes.func,
+      }),
+      PropTypes.bool,
+    ]),
   }),
   slotProps: PropTypes.object,
   slots: PropTypes.object,

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { ChatError, ChatDraftAttachment } from '@mui/x-chat-headless';
+import type { ChatError, ChatDraftAttachment, ChatAttachmentsConfig } from '@mui/x-chat-headless';
 import type { ComposerOwnerState } from '../composer.types';
 
 export interface ComposerContextValue extends ComposerOwnerState {
@@ -10,6 +10,7 @@ export interface ComposerContextValue extends ComposerOwnerState {
   addAttachment(file: File): void;
   removeAttachment(localId: string): void;
   attachments: ChatDraftAttachment[];
+  attachmentConfig?: ChatAttachmentsConfig;
   error: ChatError | null;
   setComposerIsComposing(value: boolean): void;
 }
@@ -30,6 +31,7 @@ const ComposerContext = React.createContext<ComposerContextValue>({
   addAttachment: () => {},
   removeAttachment: () => {},
   attachments: [],
+  attachmentConfig: undefined,
   error: null,
   setComposerIsComposing: () => {},
 });

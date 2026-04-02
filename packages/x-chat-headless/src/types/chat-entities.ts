@@ -65,3 +65,38 @@ export interface ChatDraftAttachment {
   status: ChatDraftAttachmentStatus;
   progress?: number;
 }
+
+export type ChatAttachmentRejectionReason = 'mime-type' | 'file-size' | 'file-count';
+
+export interface ChatAttachmentRejection {
+  file: File;
+  reason: ChatAttachmentRejectionReason;
+}
+
+export interface ChatAttachmentsConfig {
+  /**
+   * Accepted MIME types for file attachments.
+   * Supports exact types (e.g. `'application/pdf'`) and wildcard
+   * subtypes (e.g. `'image/*'`). File extension patterns (e.g. `'.pdf'`)
+   * are **not** supported — use MIME types only.
+   * @default undefined (all file types accepted)
+   */
+  acceptedMimeTypes?: string[];
+  /**
+   * Maximum number of files that can be attached to a single message.
+   * @default undefined (unlimited)
+   */
+  maxFileCount?: number;
+  /**
+   * Maximum size of each file in bytes.
+   * @default undefined (unlimited)
+   */
+  maxFileSize?: number;
+  /**
+   * Callback invoked when one or more files are rejected during attachment.
+   * Receives an array of rejection objects describing which files failed
+   * and why.
+   * @param {ChatAttachmentRejection[]} rejections The list of rejected files with reasons.
+   */
+  onAttachmentReject?: (rejections: ChatAttachmentRejection[]) => void;
+}

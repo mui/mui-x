@@ -15,11 +15,27 @@ export interface ChatMessageMetaProps extends MessageMetaProps {
   classes?: Partial<ChatMessageClasses>;
 }
 
+// Inline SVG — avoids @mui/icons-material dependency
+function StatusCheckIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      width="1em"
+      height="1em"
+      aria-hidden="true"
+    >
+      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+    </svg>
+  );
+}
+
 const ChatMessageMetaStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Meta',
   overridesResolver: (_, styles) => styles.meta,
-})<{ ownerState?: { role?: string } }>(({ theme, ownerState }) => ({
+})<{ ownerState?: { role?: string; variant?: string } }>(({ theme, ownerState }) => ({
   gridArea: 'meta',
   display: 'flex',
   alignItems: 'center',
@@ -28,10 +44,47 @@ const ChatMessageMetaStyled = styled('div', {
   color: (theme.vars || theme).palette.text.disabled,
   lineHeight: 1.4,
   minHeight: '1.2em',
-  ...(ownerState?.role === 'user' && {
+  // Compact: always right-align status + timestamp regardless of role.
+  // Align to the top of the grid row so it stays at the top when content wraps.
+  // Default: only right-align for user messages.
+  ...((ownerState?.variant === 'compact' || ownerState?.role === 'user') && {
     justifyContent: 'flex-end',
   }),
+  ...(ownerState?.variant === 'compact' && {
+    alignSelf: 'start',
+    whiteSpace: 'nowrap',
+  }),
 }));
+
+const ChatMessageStatusStyled = styled('span', {
+  name: 'MuiChatMessage',
+  slot: 'Status',
+  overridesResolver: (_, styles) => styles.status,
+})<{ ownerState?: { variant?: string } }>(({ ownerState }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  // In compact mode, place the status icon before the timestamp.
+  ...(ownerState?.variant === 'compact' && {
+    order: -1,
+  }),
+}));
+
+/**
+ * Custom Status slot for ChatMessage.
+ * In compact mode, renders a checkmark icon for "sent" status instead of text.
+ */
+const ChatMessageStatusSlot = React.forwardRef<HTMLSpanElement, any>(
+  function ChatMessageStatusSlot({ ownerState, children, ...other }, ref) {
+    const isCompact = ownerState?.variant === 'compact';
+    const isSent = ownerState?.message?.status === 'sent';
+
+    return (
+      <ChatMessageStatusStyled ref={ref} ownerState={ownerState} {...other}>
+        {isCompact && isSent ? <StatusCheckIcon /> : children}
+      </ChatMessageStatusStyled>
+    );
+  },
+);
 
 const ChatMessageMeta = React.forwardRef<HTMLDivElement, ChatMessageMetaProps>(
   function ChatMessageMeta(inProps, ref) {
@@ -44,7 +97,8 @@ const ChatMessageMeta = React.forwardRef<HTMLDivElement, ChatMessageMetaProps>(
         ref={ref}
         {...other}
         slots={{
-          meta: slots?.meta ?? ChatMessageMetaStyled,
+          meta: ChatMessageMetaStyled,
+          status: ChatMessageStatusSlot,
           ...slots,
         }}
         slotProps={{

@@ -51,6 +51,9 @@ export type {
 } from './types/chat-callbacks';
 
 export type {
+  ChatAttachmentRejection,
+  ChatAttachmentRejectionReason,
+  ChatAttachmentsConfig,
   ChatConversation,
   ChatDateTimeString,
   ChatDraftAttachment,

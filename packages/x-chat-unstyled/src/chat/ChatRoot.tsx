@@ -6,6 +6,7 @@ import { ChatProvider, type ChatProviderProps } from '@mui/x-chat-headless';
 import type { ChatLocaleText } from './internals/chatLocaleText';
 import { ChatLocaleProvider } from './internals/ChatLocaleContext';
 import { ChatVariantProvider, type ChatVariant } from './internals/ChatVariantContext';
+import { ChatDensityProvider, type ChatDensity } from './internals/ChatDensityContext';
 
 export interface ChatRootSlots {
   root: React.ElementType;
@@ -30,6 +31,14 @@ export interface ChatRootProps<Cursor = string>
    * - `'compact'` – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing.
    */
   variant?: ChatVariant;
+  /**
+   * The vertical spacing density of chat messages.
+   * When provided, wraps descendant components with `ChatDensityProvider`.
+   * - `'compact'` – Reduced vertical spacing between messages.
+   * - `'standard'` – Default spacing.
+   * - `'comfortable'` – Increased vertical spacing between messages.
+   */
+  density?: ChatDensity;
   slots?: Partial<ChatRootSlots>;
   slotProps?: ChatRootSlotProps;
 }
@@ -49,6 +58,7 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     adapter,
     localeText,
     variant,
+    density,
     members,
     currentUser,
     messages,
@@ -110,13 +120,16 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       storeClass={storeClass}
     >
       <ChatLocaleProvider localeText={localeText}>
-        {variant ? (
-          <ChatVariantProvider variant={variant}>
-            <Root {...rootProps}>{children}</Root>
-          </ChatVariantProvider>
-        ) : (
-          <Root {...rootProps}>{children}</Root>
-        )}
+        {(() => {
+          let content = <Root {...rootProps}>{children}</Root>;
+          if (variant) {
+            content = <ChatVariantProvider variant={variant}>{content}</ChatVariantProvider>;
+          }
+          if (density) {
+            content = <ChatDensityProvider density={density}>{content}</ChatDensityProvider>;
+          }
+          return content;
+        })()}
       </ChatLocaleProvider>
     </ChatProvider>
   );

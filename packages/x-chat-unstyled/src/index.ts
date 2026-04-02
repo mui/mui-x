@@ -349,9 +349,20 @@ export type { MessageListDateDividerOwnerState, MessageListRootOwnerState } from
 // Locale types
 export type { ChatLocaleText, ChatLocaleTypingUser } from './chat';
 
+// Attachment config types (re-exported from headless)
+export type {
+  ChatAttachmentRejection,
+  ChatAttachmentRejectionReason,
+  ChatAttachmentsConfig,
+} from '@mui/x-chat-headless';
+
 // Variant types
 export type { ChatVariant } from './chat';
 export { ChatVariantProvider, useChatVariant } from './chat';
+
+// Density types
+export type { ChatDensity } from './chat';
+export { ChatDensityProvider, useChatDensity } from './chat';
 
 // Namespace exports for dot-notation usage (e.g. <Chat.Root />, <Message.Avatar />)
 export const Chat = {

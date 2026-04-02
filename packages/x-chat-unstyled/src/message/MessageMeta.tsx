@@ -62,9 +62,9 @@ export const MessageMeta = React.forwardRef(function MessageMeta(
     isHydrated && ownerState.message?.createdAt
       ? localeText.messageTimestampLabel(ownerState.message.createdAt)
       : '';
-  // In compact mode the timestamp is displayed in the group header,
-  // so the per-message meta row should not repeat it.
-  const showTimestamp = ownerState.variant !== 'compact' && Boolean(timestampLabel);
+  // Show the timestamp in the per-message meta row for all variants,
+  // so it appears inline with the status indicator (e.g. "Sent · 10:55").
+  const showTimestamp = Boolean(timestampLabel);
   const statusLabel = ownerState.message?.status
     ? localeText.messageStatusLabel(ownerState.message.status)
     : '';

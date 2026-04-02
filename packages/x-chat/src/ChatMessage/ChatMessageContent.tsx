@@ -539,6 +539,71 @@ const reasoningPartSlots = {
 };
 
 // ---------------------------------------------------------------------------
+// File Part — MUI-styled slot overrides (compact chip appearance)
+// ---------------------------------------------------------------------------
+
+const ChatFilePartRoot = styled('div', {
+  name: 'MuiChatMessage',
+  slot: 'FileRoot',
+})(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 4,
+  maxWidth: 180,
+  padding: theme.spacing(0.25, 0.75),
+  border: '1px solid currentColor',
+  borderRadius: (theme.shape.borderRadius as number) * 2,
+  fontSize: theme.typography.caption.fontSize,
+  lineHeight: theme.typography.caption.lineHeight,
+  color: 'inherit',
+  opacity: 0.75,
+  transition: 'opacity 150ms',
+  '&:hover': {
+    opacity: 1,
+  },
+}));
+
+const ChatFilePartPreview = styled('img', {
+  name: 'MuiChatMessage',
+  slot: 'FilePreview',
+})({
+  width: 20,
+  height: 20,
+  objectFit: 'cover',
+  borderRadius: 3,
+  flexShrink: 0,
+});
+
+const ChatFilePartLink = styled('a', {
+  name: 'MuiChatMessage',
+  slot: 'FileLink',
+})({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 4,
+  textDecoration: 'none',
+  color: 'inherit',
+  minWidth: 0,
+});
+
+const ChatFilePartFilename = styled('span', {
+  name: 'MuiChatMessage',
+  slot: 'FileFilename',
+})({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  minWidth: 0,
+});
+
+const filePartSlots = {
+  root: ChatFilePartRoot,
+  preview: ChatFilePartPreview,
+  link: ChatFilePartLink,
+  filename: ChatFilePartFilename,
+};
+
+// ---------------------------------------------------------------------------
 // Source URL Part — MUI-styled slot overrides
 // ---------------------------------------------------------------------------
 
@@ -659,12 +724,16 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
         }}
         partProps={{
           // Spread first so the specific entries below always override.
-          // This lets unknown part types (file, source-url, …) pass through
-          // without clobbering the Material-slot merges for the known ones.
+          // This lets unknown part types pass through without clobbering
+          // the Material-slot merges for the known ones.
           ...userPartProps,
           text: {
             renderText: renderMarkdown,
             ...userPartProps?.text,
+          },
+          file: {
+            slots: filePartSlots,
+            ...userPartProps?.file,
           },
           tool: {
             slots: toolPartSlots,

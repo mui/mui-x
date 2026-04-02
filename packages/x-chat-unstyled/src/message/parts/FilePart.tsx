@@ -51,9 +51,10 @@ function FileIcon() {
       aria-hidden="true"
       fill="currentColor"
       focusable="false"
-      height="1em"
+      height="16"
       viewBox="0 0 24 24"
-      width="1em"
+      width="16"
+      style={{ flexShrink: 0 }}
     >
       <path d="M6 2h8l4 4v16H6V2Zm8 1.5V7h3.5L14 3.5Z" />
     </svg>
@@ -108,16 +109,14 @@ export const FilePart = React.forwardRef(function FilePart(
 
   return (
     <Root {...rootProps}>
-      {ownerState.image ? (
-        <LinkSlot href={part.url} rel="noreferrer noopener" target="_blank" {...linkProps}>
+      <LinkSlot href={part.url} rel="noreferrer noopener" target="_blank" {...linkProps}>
+        {ownerState.image ? (
           <Preview alt={part.filename ?? ''} src={part.url} {...previewProps} />
-        </LinkSlot>
-      ) : (
-        <LinkSlot href={part.url} rel="noreferrer noopener" target="_blank" {...linkProps}>
+        ) : (
           <FileIcon />
-          <Filename {...filenameProps}>{part.filename ?? part.url}</Filename>
-        </LinkSlot>
-      )}
+        )}
+        <Filename {...filenameProps}>{part.filename ?? part.url}</Filename>
+      </LinkSlot>
     </Root>
   );
 }) as FilePartComponent;

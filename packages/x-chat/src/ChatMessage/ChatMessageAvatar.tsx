@@ -37,11 +37,10 @@ const ChatMessageAvatarStyled = styled('div', {
     height: '100%',
     objectFit: 'cover',
   },
-  // Compact: avatar spans both the authorName and content rows, centered vertically
-  // so it aligns with the combined height of the name + first line of text.
+  // Compact: avatar spans both the authorName and content rows, aligned to the top.
   ...(ownerState?.variant === 'compact' && {
     gridRow: '1 / 3',
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
   }),
 }));
 
