@@ -25,8 +25,6 @@ import {
 
 /**
  * Generate the props to pass to the root element of the field.
- * It is not used by the non-accessible DOM structure (with an <input /> element for editing).
- * It should be used in the MUI accessible DOM structure and the Base UI implementation.
  * @param {UseFieldRootPropsParameters} parameters The parameters of the hook.
  * @returns {UseFieldRootPropsReturnValue} The props to forward to the root element of the field.
  */
