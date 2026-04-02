@@ -1,0 +1,203 @@
+{
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "currentUser": {
+      "type": {
+        "name": "shape",
+        "description": "{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }"
+      }
+    },
+    "density": {
+      "type": {
+        "name": "enum",
+        "description": "'comfortable'<br>&#124;&nbsp;'compact'<br>&#124;&nbsp;'standard'"
+      },
+      "default": "'standard'"
+    },
+    "features": {
+      "type": {
+        "name": "shape",
+        "description": "{ attachments?: { acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func }<br>&#124;&nbsp;bool, autoScroll?: { buffer?: number }<br>&#124;&nbsp;bool, conversationHeader?: bool, helperText?: bool, scrollToBottom?: bool, suggestions?: bool }"
+      }
+    },
+    "initialActiveConversationId": { "type": { "name": "string" } },
+    "initialComposerValue": { "type": { "name": "string" } },
+    "initialConversations": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ avatarUrl?: string, id: string, lastMessageAt?: string, metadata?: object, participants?: Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }&gt;, readState?: 'read'<br>&#124;&nbsp;'unread', subtitle?: string, title?: string, unreadCount?: number }&gt;"
+      }
+    },
+    "initialMessages": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: object, parts: Array&lt;{ state?: 'done'<br>&#124;&nbsp;'streaming', text: string, type: 'text' }<br>&#124;&nbsp;{ state?: 'done'<br>&#124;&nbsp;'streaming', text: string, type: 'reasoning' }<br>&#124;&nbsp;{ filename?: string, mediaType: string, type: 'file', url: string }<br>&#124;&nbsp;{ sourceId: string, title?: string, type: 'source-url', url: string }<br>&#124;&nbsp;{ sourceId: string, text?: string, title?: string, type: 'source-document' }<br>&#124;&nbsp;{ data: any, id?: string, transient?: bool, type: object }<br>&#124;&nbsp;{ type: 'step-start' }<br>&#124;&nbsp;{ toolInvocation: { approval?: object, callProviderMetadata?: object, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'tool' }<br>&#124;&nbsp;{ toolInvocation: { approval?: object, callProviderMetadata?: object, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'dynamic-tool' }&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }&gt;"
+      }
+    },
+    "members": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }&gt;"
+      }
+    },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "storeClass": { "type": { "name": "func" }, "default": "ChatStore" },
+    "streamFlushInterval": { "type": { "name": "number" }, "default": "16" },
+    "suggestions": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ label?: string, value: string }<br>&#124;&nbsp;string&gt;"
+      }
+    },
+    "suggestionsAutoSubmit": { "type": { "name": "bool" }, "default": "false" },
+    "variant": {
+      "type": { "name": "enum", "description": "'compact'<br>&#124;&nbsp;'default'" },
+      "default": "'default'"
+    }
+  },
+  "name": "ChatBox",
+  "imports": [
+    "import { ChatBox } from '@mui/x-chat/ChatBox';",
+    "import { ChatBox } from '@mui/x-chat';"
+  ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The outermost container element. Defaults to `div`.",
+      "class": "MuiChatBox-root"
+    },
+    {
+      "name": "layout",
+      "description": "The layout element that arranges conversations + thread panes. Defaults to `div`.",
+      "class": "MuiChatBox-layout"
+    },
+    {
+      "name": "conversationsPane",
+      "description": "The conversations pane container. Defaults to `div`.",
+      "class": "MuiChatBox-conversationsPane"
+    },
+    {
+      "name": "threadPane",
+      "description": "The thread pane container. Defaults to `div`.",
+      "class": "MuiChatBox-threadPane"
+    },
+    {
+      "name": "conversationList",
+      "description": "Override the conversation list component.",
+      "class": null
+    },
+    {
+      "name": "conversationHeader",
+      "description": "Override the conversation header component.",
+      "class": null
+    },
+    {
+      "name": "conversationTitle",
+      "description": "Override the conversation title component.",
+      "class": null
+    },
+    {
+      "name": "conversationSubtitle",
+      "description": "Override the conversation subtitle component.",
+      "class": null
+    },
+    {
+      "name": "conversationHeaderInfo",
+      "description": "Override the conversation header info wrapper (title + subtitle column).",
+      "class": null
+    },
+    {
+      "name": "conversationHeaderActions",
+      "description": "Override the conversation header actions component.",
+      "class": null
+    },
+    { "name": "messageList", "description": "Override the message list component.", "class": null },
+    {
+      "name": "messageRoot",
+      "description": "Override the message root component for each message.",
+      "class": null
+    },
+    {
+      "name": "messageAvatar",
+      "description": "Override the message avatar component.",
+      "class": null
+    },
+    {
+      "name": "messageContent",
+      "description": "Override the message content (bubble) component.",
+      "class": null
+    },
+    { "name": "messageMeta", "description": "Override the message meta component.", "class": null },
+    {
+      "name": "messageActions",
+      "description": "Override the message actions component.",
+      "class": null
+    },
+    {
+      "name": "messageGroup",
+      "description": "Override the message group component.",
+      "class": null
+    },
+    { "name": "dateDivider", "description": "Override the date divider component.", "class": null },
+    {
+      "name": "composerRoot",
+      "description": "Override the composer (input) root component.",
+      "class": null
+    },
+    {
+      "name": "composerInput",
+      "description": "Override the composer textarea component.",
+      "class": null
+    },
+    {
+      "name": "composerSendButton",
+      "description": "Override the composer send button.",
+      "class": null
+    },
+    {
+      "name": "composerAttachButton",
+      "description": "Override the composer attach button.",
+      "class": null
+    },
+    {
+      "name": "composerAttachmentList",
+      "description": "Override the composer attachment list.",
+      "class": null
+    },
+    { "name": "composerToolbar", "description": "Override the composer toolbar.", "class": null },
+    {
+      "name": "composerHelperText",
+      "description": "Override the composer helper text component.",
+      "class": null
+    },
+    {
+      "name": "typingIndicator",
+      "description": "Override the typing indicator component.",
+      "class": null
+    },
+    {
+      "name": "unreadMarker",
+      "description": "Override the unread marker component.",
+      "class": null
+    },
+    {
+      "name": "scrollToBottom",
+      "description": "Override the scroll-to-bottom affordance component.",
+      "class": null
+    },
+    {
+      "name": "suggestions",
+      "description": "Override the prompt suggestions container component.",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatBox",
+  "filename": "/packages/x-chat/src/ChatBox/ChatBox.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/backend/controlled-state/\">Chat - Controlled State</a></li>\n<li><a href=\"/x/react-chat/basics/chatbox/\">Chat - ChatBox</a></li>\n<li><a href=\"/x/react-chat/basics/layout/\">Chat - Layout</a></li>\n<li><a href=\"/x/react-chat/basics/variants-and-density/\">Chat - Variants &amp; Density</a></li>\n<li><a href=\"/x/react-chat/behavior/error-handling/\">Chat - Error Handling</a></li>\n<li><a href=\"/x/react-chat/behavior/streaming/\">Chat - Streaming</a></li>\n<li><a href=\"/x/react-chat/customization/slots-and-composition/\">Chat - Slots &amp; Composition</a></li>\n<li><a href=\"/x/react-chat/customization/styling/\">Chat - Styling</a></li>\n<li><a href=\"/x/react-chat/demos/ai-assistant/\">Chat - AI Assistant demo</a></li>\n<li><a href=\"/x/react-chat/demos/customer-support/\">Chat - Customer Support demo</a></li>\n<li><a href=\"/x/react-chat/demos/team-messaging/\">Chat - Team Messaging demo</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/real-time-sync/\">Chat - Real-Time Sync</a></li>\n<li><a href=\"/x/react-chat/quickstart/\">Chat - Quickstart</a></li>\n<li><a href=\"/x/react-chat/resources/events-and-callbacks/\">Chat - Events &amp; Callbacks</a></li>\n<li><a href=\"/x/react-chat/resources/performance/\">Chat - Performance</a></li></ul>",
+  "cssComponent": false
+}
