@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { ChartsToolbarRangeButtonTrigger } from '@mui/x-charts-pro/ChartsToolbarPro';
-import { Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
+import { Toolbar } from '@mui/x-charts/Toolbar';
 
 const startDate = new Date(2023, 0, 1);
 const dates = Array.from(
@@ -15,28 +15,16 @@ const values = dates.map(
 function CustomToolbar() {
   return (
     <Toolbar>
-      <ChartsToolbarRangeButtonTrigger
-        value={{ unit: 'month' }}
-        render={<ToolbarButton size="small" style={{ fontSize: '0.75rem' }} />}
-      >
+      <ChartsToolbarRangeButtonTrigger value={{ unit: 'month' }}>
         1M
       </ChartsToolbarRangeButtonTrigger>
-      <ChartsToolbarRangeButtonTrigger
-        value={{ unit: 'month', step: 6 }}
-        render={<ToolbarButton size="small" style={{ fontSize: '0.75rem' }} />}
-      >
+      <ChartsToolbarRangeButtonTrigger value={{ unit: 'month', step: 6 }}>
         6M
       </ChartsToolbarRangeButtonTrigger>
-      <ChartsToolbarRangeButtonTrigger
-        value={{ unit: 'year' }}
-        render={<ToolbarButton size="small" style={{ fontSize: '0.75rem' }} />}
-      >
+      <ChartsToolbarRangeButtonTrigger value={{ unit: 'year' }}>
         1Y
       </ChartsToolbarRangeButtonTrigger>
-      <ChartsToolbarRangeButtonTrigger
-        value={null}
-        render={<ToolbarButton size="small" style={{ fontSize: '0.75rem' }} />}
-      >
+      <ChartsToolbarRangeButtonTrigger value={null}>
         All
       </ChartsToolbarRangeButtonTrigger>
     </Toolbar>

@@ -5,13 +5,14 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { type ChartsBaseSlots } from '../../models/slots/chartsBaseSlots';
 import { type ChartsIconSlots } from '../../models/slots/chartsIconSlots';
+import type { ChartBaseToggleButtonProps } from '../../models';
 
 const baseSlots: ChartsBaseSlots = {
   baseButton: Button,
   baseIconButton: IconButton,
-  baseToggleButton: ToggleButton as unknown as ChartsBaseSlots['baseToggleButton'],
-  baseToggleButtonGroup:
-    ToggleButtonGroup as unknown as ChartsBaseSlots['baseToggleButtonGroup'],
+  // Toggle button has an href prop that is not compatible with our API.
+  baseToggleButton: ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps>,
+  baseToggleButtonGroup: ToggleButtonGroup,
 };
 
 const iconSlots: ChartsIconSlots = {};

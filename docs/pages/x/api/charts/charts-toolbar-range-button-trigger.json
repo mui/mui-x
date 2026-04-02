@@ -1,0 +1,31 @@
+{
+  "props": {
+    "value": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;Date&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;{ step?: number, unit: 'day'<br>&#124;&nbsp;'hour'<br>&#124;&nbsp;'microsecond'<br>&#124;&nbsp;'millisecond'<br>&#124;&nbsp;'minute'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'second'<br>&#124;&nbsp;'week'<br>&#124;&nbsp;'year' }"
+      },
+      "required": true
+    },
+    "axisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
+      },
+      "default": "'small'"
+    }
+  },
+  "name": "ChartsToolbarRangeButtonTrigger",
+  "imports": [
+    "import { ChartsToolbarRangeButtonTrigger } from '@mui/x-charts-pro/ChartsToolbarPro';",
+    "import { ChartsToolbarRangeButtonTrigger } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsToolbarRangeButtonTrigger",
+  "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarRangeButtonTrigger.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li></ul>",
+  "cssComponent": false
+}
