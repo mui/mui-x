@@ -88,10 +88,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   );
 
   const keyboardProps = {
-    role: 'columnheader' as const,
-    id,
     tabIndex: focusedCell === null ? -1 : hasFocus ? 0 : -1,
-    'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
     onKeyDown: handleKeyDown,
     onFocus: handleFocus,
   };
@@ -99,7 +96,15 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, listItemRef, cellRef],
-    props: [elementProps, keyboardProps],
+    props: [
+      elementProps,
+      {
+        role: 'columnheader',
+        id,
+        'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
+      },
+      keyboardProps,
+    ],
   });
 });
 
