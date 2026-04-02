@@ -208,10 +208,6 @@ MobileTimeRangePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
-  /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */
