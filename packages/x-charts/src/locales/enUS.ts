@@ -210,6 +210,10 @@ export const enUSLocaleText: ChartsLocaleText = {
     high,
     low,
     close,
+    formattedOpen,
+    formattedHigh,
+    formattedLow,
+    formattedClose,
     formattedDate,
     seriesLabel,
   }) {
@@ -217,7 +221,9 @@ export const enUSLocaleText: ChartsLocaleText = {
     return [
       formattedDate,
       seriesLabel,
-      hasValues ? `Open: ${open}, High: ${high}, Low: ${low}, Close: ${close}` : this.a11yNoValue,
+      hasValues
+        ? `Open: ${formattedOpen ?? open}, High: ${formattedHigh ?? high}, Low: ${formattedLow ?? low}, Close: ${formattedClose ?? close}`
+        : this.a11yNoValue,
     ]
       .filter(Boolean)
       .join(this.a11yConnector);

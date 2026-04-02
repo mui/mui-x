@@ -18,6 +18,8 @@ import {
   BarChartPremium,
   BarChartPremiumProps,
 } from '@mui/x-charts-premium/BarChartPremium';
+import { Unstable_CandlestickChart as CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
+import { OHLCValueType } from '@mui/x-charts-premium/models';
 import {
   dateAxisFormatter,
   usUnemploymentRate,
@@ -32,6 +34,7 @@ import {
 import { shareOfRenewables } from '../dataset/shareOfRenewables';
 import { populationPrediction2050 } from '../dataset/populationPrediction2050';
 import { temperatureBerlinPorto } from '../dataset/temperatureBerlinPorto';
+import sp500 from '../dataset/sp500-intraday.json';
 
 const lineData = usUnemploymentRate.map((d) => d.rate / 100);
 
@@ -46,6 +49,11 @@ const gdpPerCapitaFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
 });
 const populationFormatter = new Intl.NumberFormat('en-US', { notation: 'compact' });
+const dayFormatter = new Intl.DateTimeFormat(undefined, {
+  day: 'numeric',
+  month: '2-digit',
+  year: 'numeric',
+});
 
 const commonXAxisProps = {
   id: 'x',
@@ -175,6 +183,14 @@ const rangeBarSettings = {
   ],
 } satisfies BarChartPremiumProps;
 
+const candlestickXData = sp500.map((entry) => new Date(Date.parse(entry.date)));
+const candlestickData: Array<OHLCValueType> = sp500.map((entry) => [
+  entry.open,
+  entry.high,
+  entry.low,
+  entry.close,
+]);
+
 export default function ZoomSliderPreview() {
   const [chartType, setChartType] = React.useState('bar');
 
@@ -198,17 +214,20 @@ export default function ZoomSliderPreview() {
         aria-label="chart type"
         fullWidth
       >
-        {['bar', 'rangeBar', 'line', 'area', 'scatter'].map((type) => (
-          <ToggleButton key={type} value={type}>
-            {type}
-          </ToggleButton>
-        ))}
+        {['bar', 'rangeBar', 'line', 'area', 'scatter', 'candlestick'].map(
+          (type) => (
+            <ToggleButton key={type} value={type}>
+              {type}
+            </ToggleButton>
+          ),
+        )}
       </ToggleButtonGroup>
       {chartType === 'bar' && <BarChartPreview />}
       {chartType === 'rangeBar' && <RangeBarChartPreview />}
       {chartType === 'line' && <LineChartPreview />}
       {chartType === 'area' && <AreaChartPreview />}
       {chartType === 'scatter' && <ScatterChartPreview />}
+      {chartType === 'candlestick' && <CandlestickChartPreview />}
     </Stack>
   );
 }
@@ -300,6 +319,33 @@ function ScatterChartPreview() {
         GDP per capita is expressed in international dollars at 2021 prices. <br />
         Source: Our World in Data. Updated: 2023.
       </Typography>
+    </React.Fragment>
+  );
+}
+
+function CandlestickChartPreview() {
+  return (
+    <React.Fragment>
+      <Typography variant="h6" sx={{ alignSelf: 'center' }}>
+        S&P 500 Intraday Price
+      </Typography>
+      <CandlestickChart
+        series={[{ data: candlestickData }]}
+        xAxis={[
+          {
+            data: candlestickXData,
+            valueFormatter: (v: Date | null) =>
+              v === null ? '' : dayFormatter.format(new Date(v)),
+            zoom: {
+              minSpan: 1,
+              filterMode: 'discard',
+              slider: { enabled: true, preview: true },
+            },
+          },
+        ]}
+        height={400}
+      />
+      <Typography variant="caption">Source: Yahoo Finance</Typography>
     </React.Fragment>
   );
 }

@@ -239,6 +239,8 @@
     }
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiCandlestickChart",
   "filename": "/packages/x-charts-premium/src/CandlestickChart/CandlestickChart.tsx",
   "inheritance": null,
