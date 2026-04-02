@@ -632,7 +632,7 @@ createTheme({
       },
     },
 
-    // V7 Pickers's TextField
+    // Pickers TextField
     MuiPickersTextField: {
       defaultProps: {
         classes: { root: 'test' },
