@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { FunnelChart, funnelSectionClasses } from '@mui/x-charts-pro/FunnelChart';
+import { FunnelChart, funnelClasses } from '@mui/x-charts-pro/FunnelChart';
 
 export default function FunnelLabelStyling() {
   return (
@@ -11,7 +11,7 @@ export default function FunnelLabelStyling() {
           },
         ]}
         sx={{
-          [`& .${funnelSectionClasses.label}`]: {
+          [`& .${funnelClasses.sectionLabel}`]: {
             fill: 'white',
             textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
           },

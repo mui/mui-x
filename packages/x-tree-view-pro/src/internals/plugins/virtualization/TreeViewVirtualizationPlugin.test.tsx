@@ -13,7 +13,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       it('should default itemHeight to 32px when virtualization is enabled and itemHeight is not provided', () => {
         const view = render({
           items: [{ id: '1' }],
-          virtualization: true,
+          disableVirtualization: false,
         });
 
         const itemRoot = view.getItemRoot('1');
@@ -23,12 +23,33 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       it('should use provided itemHeight when virtualization is enabled', () => {
         const view = render({
           items: [{ id: '1' }],
-          virtualization: true,
+          disableVirtualization: false,
           itemHeight: 48,
         });
 
         const itemRoot = view.getItemRoot('1');
         expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('48px');
+      });
+
+      it('should default itemHeight to 32px when virtualization is disabled', () => {
+        const view = render({
+          items: [{ id: '1' }],
+          disableVirtualization: true,
+        });
+
+        const itemRoot = view.getItemRoot('1');
+        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('32px');
+      });
+
+      it('should not set --TreeView-itemHeight CSS variable when itemHeight is null', () => {
+        const view = render({
+          items: [{ id: '1' }],
+          disableVirtualization: true,
+          itemHeight: null,
+        });
+
+        const itemRoot = view.getItemRoot('1');
+        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('');
       });
     });
 
@@ -36,7 +57,22 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       it('should use flat DOM structure when virtualization is enabled', () => {
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
-          virtualization: true,
+          disableVirtualization: false,
+          defaultExpandedItems: ['1'],
+        });
+
+        // In flat DOM structure, the parent item does not contain the children
+        const itemRoot = view.getItemRoot('1');
+        const childItemRoot = view.getItemRoot('1.1');
+
+        // Both items should be siblings (same parent)
+        expect(itemRoot.parentElement).to.equal(childItemRoot.parentElement);
+      });
+
+      it('should use flat DOM structure when virtualization is disabled', () => {
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          disableVirtualization: true,
           defaultExpandedItems: ['1'],
         });
 
@@ -53,7 +89,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       it('should render items with virtualization enabled', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          virtualization: true,
+          disableVirtualization: false,
         });
 
         expect(view.getAllTreeItemIds()).to.include('1');
@@ -64,7 +100,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       it('should render expanded items with virtualization enabled', () => {
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-          virtualization: true,
+          disableVirtualization: false,
           defaultExpandedItems: ['1'],
         });
 

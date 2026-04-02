@@ -6,28 +6,29 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 # Charts - Bars
 
-<p class="description">Bar charts express quantities through a bar's length, using a common baseline.</p>
+<p class="description">Use bar charts to compare discrete categories and quantities using bar length and a common baseline.</p>
 
 ## Overview
 
-Bar charts are ideal for comparing discrete categories.
-They excel at visualizing differences in magnitude across categories (or a group of categories), highlight trends, and compare proportions at a glance.
-The categories can represent progressive values such as time periods, or independent groups such as products, countries, age brackets, etc.
-Here are the basic requirements to create a bar chart:
+Bar charts compare discrete categories by showing quantities as bar lengths from a common baseline.
+They work well for comparing magnitude across categories, highlighting trends, and comparing proportions at a glance.
+Categories can be progressive (for example, time periods) or independent (for example, products, countries, or age brackets).
 
-- One categorical dimension (x-axis for vertical bars, y-axis for horizontal bars)
-- One or more numerical metric for length of each bar
-
-The horizontal bar chart below compares voter turnout in some European countries:
+The horizontal bar chart below compares voter turnout in several European countries.
 
 {{"demo": "ShinyBarChartHorizontal.js"}}
 
 ## Basics
 
-Bar charts series should contain a `data` property containing an array of values.
+To create a bar chart you need:
+
+- One categorical dimension (for example, the x-axis for vertical bars or the y-axis for horizontal bars)
+- One or more numerical values that set the length of each bar
+
+Bar chart series must contain a `data` property with an array of values.
 
 You can specify bar ticks with the `xAxis` prop.
-This axis might have `scaleType='band'` and its `data` should have the same length as your series.
+The category axis uses `scaleType='band'` and its `data` should have the same length as your series.
 
 {{"demo": "BasicBars.js"}}
 
@@ -36,9 +37,8 @@ This axis might have `scaleType='band'` and its `data` should have the same leng
 If your data is stored in an array of objects, you can use the `dataset` helper prop.
 It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
 
-You can reuse this data when defining the series and axis, thanks to the `dataKey` property.
-
-For example `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
+You can reuse this data when defining the series and axes by using the `dataKey` property.
+For example, `xAxis={[{ dataKey: 'x' }]}` or `series={[{ dataKey: 'y' }]}`.
 
 {{"demo": "BarsDataset.js"}}
 
@@ -52,37 +52,37 @@ The ratio is obtained by dividing the size of the gap by the size of the categor
 The `barGapRatio` defines the gap between two bars of the same category.
 It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
-And a value of `-1` will make bars overlap on top of each other.
+A value of `-1` will make bars overlap.
 
 {{"demo": "BarGap.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Stacking
 
-Bar series accept a string property named `stack`.
+Bar series accept a string property called `stack`.
 Series with the same `stack` value are stacked on top of each other.
 
 {{"demo": "StackBars.js"}}
 
 ### Stacking strategy
 
-You can use the `stackOffset` and `stackOrder` properties to define how the series will be stacked.
+You can use the `stackOffset` and `stackOrder` properties to define how the series is stacked.
 
 By default, they are stacked in the order you defined them, with positive values stacked above 0 and negative values stacked below 0.
 
-For more information, see [stacking docs](/x/react-charts/stacking/).
+See [Stacking](/x/react-charts/stacking/) for more details.
 
 ## Layout
 
 ### Bar direction
 
-Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
-If you're using [composition](/x/react-charts/composition/), you should set the property `layout: 'horizontal'` to each bar series object.
+Use the `layout="horizontal"` prop to render bar charts in a horizontal layout.
+If you're composing a custom component, set the `layout: 'horizontal'` property on each bar series object.
 
 {{"demo": "HorizontalBars.js"}}
 
 ### Tick placement
 
-When using a `"band"` scale, the axis has some additional customization properties about the tick position.
+When using a `"band"` scale, the axis has some additional customization properties for the tick position:
 
 - `tickPlacement` for the position of ticks
 - `tickLabelPlacement` for the position of the label associated with the tick
@@ -93,7 +93,7 @@ You can test all configuration options in the following demo:
 
 ### Date axis
 
-If your band axis represents dates in a usual way (they are sorted and evenly spaced), you can set `ordinalTimeTicks` to pick some date frequencies.
+If your band axis represents dates that are sorted and evenly spaced (as is typical), you can set `ordinalTimeTicks` to pick certain date frequencies.
 This modifies the [tick management](/x/react-charts/axis/#ordinal-tick-management).
 
 Instead of one tick per band, the axis renders ticks according to the provided frequencies and the tick number.
@@ -120,7 +120,7 @@ You can work around this limitation by using a [symlog scale](/x/react-charts/ax
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+See [Axis—Grid](/x/react-charts/axis/#grid) for details.
 
 {{"demo": "GridDemo.js"}}
 
@@ -128,24 +128,23 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 As with other charts, you can modify the [series color](/x/react-charts/styling/#colors) either directly, or with the color palette.
 
-You can also modify the color by using axes `colorMap` which maps values to colors.
-The bar charts use by priority:
+You can also modify the color by using the axes' `colorMap`, which maps values to colors.
+Bar charts use the following, in order of priority:
 
 1. The value axis color
 2. The band axis color
 3. The series color
 
-Learn more about the `colorMap` properties in [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors).
+See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for the `colorMap` properties.
 
 {{"demo": "ColorScale.js"}}
 
 ### Border radius
 
-To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
-
+To give your bar chart rounded corners, set the `borderRadius` property on [`BarChart`](/x/api/charts/bar-chart/#bar-chart-prop-slots).
 It works with any positive value and is properly applied to horizontal layouts, stacks, and negative values.
 
-When using composition, you can set the `borderRadius` prop on the `BarPlot` component.
+When composing a custom component, you can set the `borderRadius` prop on the `BarPlot` component.
 
 {{"demo": "BorderRadius.js"}}
 
@@ -164,69 +163,70 @@ By default, a gradient's units are set to [`objectBoundingBox`](https://develope
 When applied to a bar, the gradient stretches to fill the entire size of the bar, regardless of the bar's value.
 
 Alternatively, you can set `gradientUnits` to `userSpaceOnUse`, which stretches the gradient to fill the entire size of the chart.
-`userSpaceOnUse` means that the gradient's coordinates are relative to the SVG, meaning that a gradient with `x1="0"` and `x2="100%"` stretches across the entire width of the SVG.
+With `userSpaceOnUse`, the gradient's coordinates are relative to the SVG, so a gradient with `x1="0"` and `x2="100%"` stretches across the entire width of the SVG.
 This effectively reveals the gradient depending on the bar's value, as the gradient is clipped to the bar's size.
 
-{{"demo": "BarOECDHouseholdSavings.js"}}
+In the example below, there are two gradients:
 
-Note that, in the example above, there are two gradients:
-
-- The series `color` property references the gradient with `gradientUnits="objectBoundingBox"`, which is applied to the tooltip, legend, and other elements that reference the series color.
-- The bar's `fill` property is overridden using CSS to reference the gradient with `gradientUnits="userSpaceOnUse"`.
+1. The series `color` property references the gradient with `gradientUnits="objectBoundingBox"`, which is applied to the tooltip, legend, and other elements that reference the series color.
+2. The bar's `fill` property is overridden using CSS to reference the gradient with `gradientUnits="userSpaceOnUse"`.
 
 The first gradient is used for elements showing the whole gradient, such as tooltips and legend.
 The second one is shown in the bars themselves that display the part of the gradient that corresponds to their value.
 
+{{"demo": "BarOECDHouseholdSavings.js"}}
+
 ## Labels
 
-You can display labels on the bars. This can be useful to show the value of each bar directly on the chart.
+You can display labels on the bars.
+This can be useful to show the value of each bar directly on the chart.
 
 If you provide `'value'` to the `barLabel` property of a bar series, the value of that bar is shown.
 Alternatively, the `barLabel` property accepts a function that is called with the bar item and context about the bar.
 
-In the example below, the value of the first series is displayed using the default formatter, and format the value of the second series as US dollars. The labels of the third series are hidden.
+In the example below, the value of the first series is displayed using the default formatter, and the value of the second series is formatted as US dollars.
+The labels of the third series are hidden.
 
 {{"demo": "BarLabel.js"}}
 
 ### Label placement
 
-The position of the bar label can be customized.
-To do so, set a series' `barLabelPlacement` property to one of the following values:
+To customize the position of the bar label, set a series' `barLabelPlacement` property to one of the following values:
 
-- `center`: the label is centered on the bar;
-- `outside`: the label is placed after the end of the bar, from the point of the view of the origin. For a vertical positive bar, the label is above its top edge; for a horizontal negative bar, the label is placed to the left of its leftmost limit.
+- `center`: the label is centered on the bar.
+- `outside`: the label is placed after the end of the bar, from the point of view of the origin.
+  For a vertical positive bar, the label is above its top edge.
+  For a horizontal negative bar, the label is to the left of its leftmost limit.
 
 {{"demo": "BarLabelPlacement.js"}}
 
 :::info
-When using `outside` placement, if the label does not fit in the chart area, it will be clipped.
-To avoid this, you can decrease/increase the axis min/max respectively so that there's enough space for the labels.
+When using `outside` placement, if the label doesn't fit in the chart area, it will be clipped.
+To avoid this, you can decrease or increase the axis min/max, respectively, to make enough space for the labels.
 :::
 
 ### Custom labels
 
-You can display, change, or hide labels based on conditional logic.
-To do so, provide a function to the `barLabel`.
+To display, change, or hide labels based on conditional logic, provide a function to the `barLabel` prop.
 Labels are not displayed if the function returns `null`.
 
-In the example we display a `'High'` text on values higher than 10, and hide values when the generated bar height is lower than 60px.
+The example below displays the text `'High'` on values higher than 10 and hides values when the generated bar height is lower than 60px.
 
 {{"demo": "CustomLabels.js"}}
 
 You can further customize the labels by providing a component to the `barLabel` slot.
-
-In the example below, we position the labels above the bars they refer to.
+The example below positions the labels above the bars they refer to.
 
 {{"demo": "LabelsAboveBars.js"}}
 
-## Click event
+## Click events
 
-Bar charts provides two click handlers:
+Bar charts provide two click handlers:
 
-- `onItemClick` for click on a specific bar.
-- `onAxisClick` for a click anywhere in the chart
+- `onItemClick` for clicks on a specific bar
+- `onAxisClick` for clicks anywhere in the chart
 
-They both provide the following signature.
+They both provide the following signature:
 
 ```js
 const clickHandler = (
@@ -240,8 +240,8 @@ const clickHandler = (
 :::info
 There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
 
-- For `onItemClick` it's a React synthetic mouse event emitted by the bar component.
-- For `onAxisClick` it's a native mouse event emitted by the svg component.
+- For `onItemClick` the event is a React synthetic mouse event emitted by the bar component.
+- For `onAxisClick` the event is a native mouse event emitted by the SVG component.
 
 :::
 
@@ -259,7 +259,7 @@ Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-When `skipAnimation` is enabled, the chart renders without any animations.
+When you set `skipAnimation` to `true`, the chart renders without animations.
 
 ```jsx
 // For a single component chart
@@ -275,16 +275,17 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 
 ## Performance
 
-Bar charts can display many bars, which can impact performance. The default rendering of bars use SVG `rect` elements, which can be slow for a large number of bars.
+By default, each bar is drawn as an SVG `rect` element.
+With many bars, this can slow down rendering.
+To render bars more efficiently, you can set the `renderer` prop to `"svg-batch"`.
+This has some trade-offs:
 
-To improve performance, you can use the `renderer` prop set to `"svg-batch"`, which renders the bars more efficiently.
-However, this comes with the following trade-offs:
-
-- CSS styling of single bars is no longer possible;
-- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted bar on top of the original bar. Applying transparency to the highlighted bar can cause the original bar to be partially visible;
-- No animation when highlighting or fading bars;
-- The event of the `onItemClick` handler is a `MouseEvent` instead of a `React.MouseEvent`. To avoid breaking changes, the type of `onItemClick` was not changed, but you can import a type overload to fix it: `import type {} from '@mui/x-charts/moduleAugmentation/barChartBatchRendererOnItemClick'`;
-- It is not available for [range bar charts](/x/react-charts/range-bar/).
+- Styling individual bars with CSS is not supported.
+- Transparent highlight styles are not fully supported: the highlight is drawn as a bar on top for performance, so transparency can make the original bar show through.
+- Bar highlight and fade animations are not available.
+- The `onItemClick` handler receives a native `MouseEvent` instead of `React.MouseEvent`.
+  The type was not changed to avoid breaking changes; add `import type {} from '@mui/x-charts/moduleAugmentation/barChartBatchRendererOnItemClick'` for correct typing.
+- The batch renderer is not available for [range bar charts](/x/react-charts/range-bar/).
 
 The example below uses the `renderer` prop to improve performance when rendering a dataset with 500 data points.
 
@@ -292,11 +293,11 @@ The example below uses the `renderer` prop to improve performance when rendering
 
 ## Composition
 
-Use the `<ChartsDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+Use `ChartDataProvider` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
-In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<BarPlot />` component that renders the bars and their labels.
+In addition to the shared chart components available for [composition](/x/react-charts/composition/), you can use the `BarPlot` component to render the bars and their labels.
 
-Here's how the Bar Chart is composed:
+Here's how the bar chart is composed:
 
 ```jsx
 <ChartsDataProvider>

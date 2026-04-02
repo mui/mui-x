@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useElementPositionInCollection } from '@mui/x-scheduler-headless/internals';
 import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
@@ -15,12 +15,13 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     componentProps: TimelineGridCurrentTimeIndicator.Props,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const adapter = useAdapter();
+    const adapter = useAdapterContext();
 
     const {
       // Rendering props
       className,
       render,
+      style,
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;
@@ -43,22 +44,19 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
       collectionEnd: viewConfig.end,
     });
 
-    const style = React.useMemo(
-      () =>
-        ({
-          [TimelineGridCurrentTimeIndicatorCssVars.xPosition]: position,
-        }) as React.CSSProperties,
-      [position],
-    );
-
-    const props = { style };
-
     const isOutOfRange =
       adapter.isBefore(now, viewConfig.start) || adapter.isAfter(now, viewConfig.end);
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],
-      props: [props, elementProps],
+      props: [
+        elementProps,
+        {
+          style: {
+            [TimelineGridCurrentTimeIndicatorCssVars.xPosition]: position,
+          } as React.CSSProperties,
+        },
+      ],
       enabled: !isOutOfRange,
     });
   },

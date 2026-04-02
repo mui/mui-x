@@ -19,10 +19,10 @@ export interface RenameDialogProps {
 export function RenameDialog(props: RenameDialogProps) {
   const { params, open, container, onSave, onClose } = props;
 
-  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSave = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(event.currentTarget as HTMLFormElement);
     const value = formData.get('name') as string;
 
     onSave(params!.row.id, value);
@@ -36,9 +36,11 @@ export function RenameDialog(props: RenameDialogProps) {
       onClose={onClose}
       aria-labelledby="rename-dialog-title"
       container={container}
-      PaperProps={{
-        component: 'form',
-        onSubmit: handleSave,
+      slotProps={{
+        paper: {
+          component: 'form',
+          onSubmit: handleSave,
+        },
       }}
     >
       {params && (

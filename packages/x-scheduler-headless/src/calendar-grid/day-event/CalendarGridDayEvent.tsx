@@ -8,7 +8,7 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
-import { useAdapter } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
   schedulerEventSelectors,
@@ -34,6 +34,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     start,
     end,
@@ -52,7 +53,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const isInteractive = true;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { id: rootId } = useCalendarGridRootContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
@@ -142,12 +143,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, cellIndex);
 
-  const props = {
-    id,
-    'aria-labelledby': `${columnHeaderId} ${id}`,
-    style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
-  };
-
   const contextValue: CalendarGridDayEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
     [draggableEventContextValue, getSharedDragData],
@@ -156,7 +151,15 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const element = useRenderElement('div', componentProps, {
     state: mergedState,
     ref: [forwardedRef, buttonRef, ref],
-    props: [props, elementProps, getButtonProps],
+    props: [
+      elementProps,
+      {
+        id,
+        'aria-labelledby': `${columnHeaderId} ${id}`,
+        style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
+      },
+      getButtonProps,
+    ],
     stateAttributesMapping: overflowStateAttributesMapping,
   });
 

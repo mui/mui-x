@@ -14,6 +14,7 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     start,
     end,
@@ -21,7 +22,6 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
     ...elementProps
   } = componentProps;
 
-  const props = { role: 'row' };
   const cellsRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
   const contextValue: CalendarGridDayRowContext = React.useMemo(
@@ -34,7 +34,7 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [props, elementProps],
+    props: [elementProps, { role: 'row' }],
   });
 
   return (

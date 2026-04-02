@@ -8,7 +8,7 @@ import {
   type ChartsRotationAxisProps,
   type PolarAxisConfig,
 } from '../../models/axis';
-import { ChartDataProvider, type ChartDataProviderProps } from '../../ChartDataProvider';
+import { ChartsDataProvider, type ChartsDataProviderProps } from '../../ChartsDataProvider';
 import { defaultizeMargin } from '../../internals/defaultizeMargin';
 import { radarSeriesConfig } from '../seriesConfig';
 import { type RadarConfig } from './radar.types';
@@ -21,8 +21,8 @@ export type RadarSeries = MakeOptional<RadarSeriesType, 'type'>;
 export type RadarDataProviderProps<
   TSignatures extends readonly ChartAnyPluginSignature[] = RadarChartPluginSignatures,
 > = Omit<
-  ChartDataProviderProps<'radar', TSignatures>,
-  'series' | 'rotationAxis' | 'radiusAxis' | 'dataset' | 'experimentalFeatures'
+  ChartsDataProviderProps<'radar', TSignatures>,
+  'series' | 'rotationAxis' | 'radiusAxis' | 'dataset'
 > & {
   /**
    * The series to display in the bar chart.
@@ -107,8 +107,8 @@ function RadarDataProvider<
   );
 
   return (
-    <ChartDataProvider<'radar', TSignatures>
-      {...(other as unknown as ChartDataProviderProps<'radar', TSignatures>)}
+    <ChartsDataProvider<'radar', TSignatures>
+      {...(other as unknown as ChartsDataProviderProps<'radar', TSignatures>)}
       series={defaultizedSeries}
       width={width}
       height={height}
@@ -121,7 +121,7 @@ function RadarDataProvider<
       seriesConfig={RADAR_SERIES_CONFIG}
     >
       {children}
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 }
 

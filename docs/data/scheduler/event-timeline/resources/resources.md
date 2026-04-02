@@ -161,6 +161,16 @@ const resource = {
 Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-timeline/editing/#read-only).
 :::
 
+## Resource column label
+
+Use the `resourceColumnLabel` prop to customize the header of the resource column:
+
+{{"demo": "ResourceColumnLabel.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+When both are provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
+:::
+
 ## Store data in custom properties
 
 Use the `resourceModelStructure` prop to define how to read properties of the resource model when they don't match the model expected by the components:

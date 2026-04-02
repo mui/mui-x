@@ -1,8 +1,8 @@
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
-import { CHART_SELECTOR } from '../../../../tests/constants';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
+import { getCenter } from 'test/utils/charts/getCenter';
 
 describe('highlight', () => {
   const { render } = createRenderer();
@@ -12,7 +12,7 @@ describe('highlight', () => {
       <BarChart height={100} width={100} skipAnimation series={[{ id: 'A', data: [50, 100] }]} />,
     );
 
-    expect(document.querySelector(`.${barElementClasses.highlighted}`)).to.equal(null);
+    expect(document.querySelector(`[data-highlighted]`)).to.equal(null);
   });
 
   it.skipIf(isJSDOM)('should set highlight when keyboard move focus', async () => {
@@ -23,21 +23,19 @@ describe('highlight', () => {
         skipAnimation
         margin={0}
         series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
-        enableKeyboardNavigation
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
     const firstBar = container.querySelector(
-      `[data-series="A"] .${barElementClasses.root}:nth-child(1)`,
+      `[data-series="A"] .${barClasses.element}:nth-child(1)`,
     );
     const secondBar = container.querySelector(
-      `[data-series="A"] .${barElementClasses.root}:nth-child(2)`,
+      `[data-series="A"] .${barClasses.element}:nth-child(2)`,
     );
 
     expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
 
-    await user.click(svg);
+    await user.keyboard('{Tab}');
     await user.keyboard('[ArrowRight]');
 
     expect(firstBar!.getAttribute('data-highlighted')).to.equal('true');
@@ -54,23 +52,21 @@ describe('highlight', () => {
           skipAnimation
           margin={0}
           series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
-          enableKeyboardNavigation
           highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
         />,
       );
 
-      const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
       const firstBar = container.querySelector(
-        `[data-series="A"] .${barElementClasses.root}:nth-child(1)`,
+        `[data-series="A"] .${barClasses.element}:nth-child(1)`,
       );
       const secondBar = container.querySelector(
-        `[data-series="A"] .${barElementClasses.root}:nth-child(2)`,
+        `[data-series="A"] .${barClasses.element}:nth-child(2)`,
       );
 
       expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
       expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
 
-      await user.click(svg);
+      await user.keyboard('{Tab}');
       await user.keyboard('[ArrowRight]');
 
       expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
@@ -86,23 +82,21 @@ describe('highlight', () => {
         skipAnimation
         margin={0}
         series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
-        enableKeyboardNavigation
         highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
     const firstBar = container.querySelector(
-      `[data-series="A"] .${barElementClasses.root}:nth-child(1)`,
+      `[data-series="A"] .${barClasses.element}:nth-child(1)`,
     );
     const secondBar = container.querySelector(
-      `[data-series="A"] .${barElementClasses.root}:nth-child(2)`,
+      `[data-series="A"] .${barClasses.element}:nth-child(2)`,
     );
 
     expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
     expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
 
-    await user.click(svg);
+    await user.keyboard('{Tab}');
     await user.keyboard('[ArrowRight]');
 
     expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
@@ -128,26 +122,28 @@ describe('highlight', () => {
       />,
     );
 
-    const bars = container.querySelectorAll(`.${barElementClasses.root}`);
+    const bars = container.querySelectorAll(`.${barClasses.element}`);
 
-    await user.pointer({ target: bars[0] });
+    await user.pointer({ target: bars[0], coords: getCenter(bars[0]) });
 
     expect(handleHighlight.callCount).to.equal(0);
 
-    // Moving pointer on another rect triggers the exit (null) and the entrance (new identifier)
-    await user.pointer({ target: bars[3] });
+    // Moving pointer to between the two bars should trigger the exist of the first item highlight
+    await user.pointer({ target: container, coords: { clientX: 200, clientY: 200 } });
+    expect(handleHighlight.callCount).to.equal(1);
+    expect(handleHighlight.lastCall.args[0]).to.deep.equal(null);
+
+    // Moving pointer to the second bar should trigger the highlight of the second item
+    await user.pointer({ target: bars[3], coords: getCenter(bars[3]) });
     expect(handleHighlight.callCount).to.equal(2);
-    expect(handleHighlight.firstCall.args[0]).to.deep.equal(null);
     expect(handleHighlight.lastCall.args[0]).to.deep.equal({
       type: 'bar',
       seriesId: 'id-b',
       dataIndex: 1,
     });
 
-    // Moving pointer back only triggers the exist since the controlled value was not modified
-    await user.pointer({ target: bars[0] });
-
-    expect(handleHighlight.lastCall.args[0]).to.deep.equal(null);
-    expect(handleHighlight.callCount).to.equal(3);
+    // Moving pointer back to the same item as the controlled one should not trigger any highlight change
+    await user.pointer({ target: bars[0], coords: getCenter(bars[0]) });
+    expect(handleHighlight.callCount).to.equal(2);
   });
 });

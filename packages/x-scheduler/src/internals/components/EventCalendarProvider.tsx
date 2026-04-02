@@ -6,7 +6,6 @@ import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses'
 import { EventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { EventDialogStyledContext } from './event-dialog/EventDialogStyledContext';
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../constants/defaultLocaleText';
-import { schedulerTokens } from '../utils/tokens';
 
 /**
  * Root wrapper for standalone views that provides CSS variable tokens.
@@ -16,7 +15,6 @@ const StandaloneViewRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'StandaloneViewRoot',
 })(({ theme }) => ({
-  ...schedulerTokens,
   display: 'contents',
   fontFamily: theme.typography.fontFamily,
   boxSizing: 'border-box',

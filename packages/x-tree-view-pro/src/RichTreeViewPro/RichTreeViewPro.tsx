@@ -65,7 +65,11 @@ type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undef
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const releaseInfo = '__RELEASE_INFO__';
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-tree-view-pro' as const,
+};
 
 /**
  *
@@ -83,7 +87,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 >(inProps: RichTreeViewProProps<R, Multiple>, forwardedRef: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
 
-  useLicenseVerifier('x-tree-view-pro', releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
@@ -102,6 +106,15 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     parameters,
     forwardedProps,
   } = useExtractRichTreeViewProParameters(props);
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (parameters.itemHeight === null && !parameters.disableVirtualization) {
+      warnOnce([
+        'MUI X: `itemHeight={null}` is not compatible with virtualization.',
+        'Please use `disableVirtualization` when using `itemHeight={null}`.',
+      ]);
+    }
+  }
 
   // Context hooks
   const store = useTreeViewStore(RichTreeViewProStore, parameters);
@@ -136,7 +149,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
           ownerState={props}
           rootRef={handleRef}
         />
-        <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
+        <Watermark packageInfo={packageInfo} />
       </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );
@@ -224,10 +237,15 @@ RichTreeViewPro.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
+   * If `true`, virtualization is disabled.
+   * @default false
+   */
+  disableVirtualization: PropTypes.bool,
+  /**
    * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
    * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
    * Nested DOM structure is not compatible with collapse / expansion animations.
-   * @default 'flat' when using virtualization, 'nested' otherwise
+   * @default 'flat'
    */
   domStructure: PropTypes.oneOf(['flat', 'nested']),
   /**
@@ -309,7 +327,8 @@ RichTreeViewPro.propTypes = {
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Sets the height in pixel of an item.
-   * If not provided, no height restriction is applied to the tree item content element.
+   * Set to `null` to explicitly remove any item height restriction when items have different heights (not compatible with virtualization).
+   * @default 32
    */
   itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
@@ -370,6 +389,15 @@ RichTreeViewPro.propTypes = {
    */
   onItemSelectionToggle: PropTypes.func,
   /**
+   * Callback fired when the children of an item are loaded from the data source.
+   * Only relevant for lazy-loaded tree views.
+   * @param {object} parameters The parameters of the callback.
+   * @param {R[]} parameters.items The items that were loaded.
+   * @param {TreeViewItemId | null} parameters.parentId The id of the parent item whose children were loaded. `null` if the root items were loaded.
+   * @param {boolean} parameters.isCacheHit `true` if the items were loaded from the cache, `false` if they were fetched from the data source.
+   */
+  onItemsLazyLoaded: PropTypes.func,
+  /**
    * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {TreeViewItemId[] | TreeViewItemId} itemIds The ids of the selected items.
@@ -419,13 +447,6 @@ RichTreeViewPro.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Whether virtualization is enabled.
-   * If true, the DOM structure will be set to 'flat'.
-   * If true and no itemHeight is provided, a default item height of 32px will be used for calculating the virtualization.
-   * @default false
-   */
-  virtualization: PropTypes.bool,
 } as any;
 
 export { RichTreeViewPro };

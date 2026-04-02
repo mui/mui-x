@@ -9,14 +9,26 @@ export interface UseChartKeyboardNavigationInstance {}
 
 export interface UseChartKeyboardNavigationState {
   keyboardNavigation: {
+    /**
+     * The item with keyboard focus. It is `null` when no item is focused.
+     */
     item: null | FocusedItemIdentifier<ChartSeriesType>;
+    /**
+     * If `false` the focus is ignored, but we keep the item in the state to be able to restore it when focus is active again.
+     */
     isFocused: boolean;
-    enableKeyboardNavigation: boolean;
+    /**
+     * Indicates whether keyboard navigation is enabled or not.
+     */
+    enabled: boolean;
   };
 }
 
 type UseChartKeyboardNavigationParameters = {
-  enableKeyboardNavigation?: boolean;
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation?: boolean;
 };
 
 export type UseChartKeyboardNavigationSignature = ChartPluginSignature<{

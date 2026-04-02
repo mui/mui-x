@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { sortEventOccurrences } from '@mui/x-scheduler-headless/sort-event-occurrences';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
@@ -30,7 +30,7 @@ const AgendaViewRoot = styled('div', {
 })(({ theme }) => ({
   width: '100%',
   maxHeight: '100%',
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderRadius: theme.shape.borderRadius,
   overflowY: 'auto',
   position: 'relative',
@@ -43,7 +43,7 @@ const AgendaViewRow = styled('section', {
   display: 'grid',
   gridTemplateColumns: '190px 1fr',
   '&:not(:last-child)': {
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -53,12 +53,12 @@ const DayHeaderCell = styled('header', {
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
-  borderRight: `1px solid ${theme.palette.divider}`,
+  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   padding: theme.spacing(2),
   gap: theme.spacing(0.5),
   '&[data-current]': {
-    backgroundColor: alpha(theme.palette.primary.light, 0.05),
-    color: theme.palette.primary.main,
+    backgroundColor: theme.alpha((theme.vars || theme).palette.primary.light, 0.05),
+    color: (theme.vars || theme).palette.primary.main,
   },
 }));
 
@@ -71,9 +71,9 @@ const DayNumberCell = styled('span', {
   lineHeight: 1,
   minWidth: '4ch',
   textAlign: 'center',
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
   '&[data-current]': {
-    color: theme.palette.primary.main,
+    color: (theme.vars || theme).palette.primary.main,
   },
 }));
 
@@ -107,7 +107,7 @@ const AgendaYearAndMonthLabel = styled('span', {
 })(({ theme }) => ({
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1,
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   display: '-webkit-box',
   WebkitLineClamp: 'var(--number-of-lines)',
   WebkitBoxOrient: 'vertical',
@@ -150,7 +150,7 @@ export const AgendaView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     // Context hooks
-    const adapter = useAdapter();
+    const adapter = useAdapterContext();
     const { classes } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 

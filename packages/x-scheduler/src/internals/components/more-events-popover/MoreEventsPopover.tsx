@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
 import { EventItem } from '../event/event-item/EventItem';
@@ -22,7 +22,7 @@ const MoreEventsPopoverHeader = styled('div', {
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: theme.spacing(1),
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
 const MoreEventsPopoverTitle = styled(Typography, {
@@ -31,7 +31,7 @@ const MoreEventsPopoverTitle = styled(Typography, {
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
   lineHeight: 1.5,
   margin: 0,
 }));
@@ -65,7 +65,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   const { open, anchor, occurrences, day, onClose } = props;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
   const { subscribeCloseHandler } = useEventDialogContext();
 

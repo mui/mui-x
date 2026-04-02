@@ -1,10 +1,11 @@
 'use client';
 import * as React from 'react';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
@@ -36,23 +37,23 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   padding: theme.spacing(0.5),
   fontSize: theme.typography.body2.fontSize,
   lineHeight: '18px',
-  color: theme.palette.text.secondary,
+  borderInlineStart: `1px solid transparent`,
   '&:not(:first-of-type)': {
-    borderInlineStart: `1px solid ${theme.palette.divider}`,
+    borderInlineStartColor: (theme.vars || theme).palette.divider,
   },
   '&[data-weekend]': {
-    backgroundColor: theme.palette.action.hover,
-    color: theme.palette.text.primary,
+    backgroundColor: (theme.vars || theme).palette.action.hover,
+    color: (theme.vars || theme).palette.text.primary,
   },
   '&[data-current]': {
-    backgroundColor: alpha(theme.palette.primary.light, 0.05),
+    backgroundColor: theme.alpha((theme.vars || theme).palette.primary.light, 0.05),
   },
   [`&[data-current] .${eventCalendarClasses.monthViewCellNumber}`]: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
   },
   '&[data-other-month]': {
-    color: theme.palette.text.disabled,
+    color: (theme.vars || theme).palette.text.disabled,
   },
   // Today button states
   [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton} > .${eventCalendarClasses.monthViewCellNumber}`]:
@@ -68,15 +69,15 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
       backgroundColor: 'transparent',
     },
   [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}`]: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
     marginTop: 1,
   },
   [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}:hover`]: {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
   [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}:active`]: {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
 }));
 
@@ -107,18 +108,18 @@ const MonthViewCellNumberButton = styled('button', {
   font: 'inherit',
   color: 'inherit',
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: (theme.vars || theme).palette.action.hover,
   },
   '&:active': {
-    backgroundColor: theme.palette.action.selected,
+    backgroundColor: (theme.vars || theme).palette.action.selected,
   },
   '&:focus-visible': {
-    backgroundColor: theme.palette.action.focus,
-    outline: `2px solid ${theme.palette.primary.main}`,
+    backgroundColor: (theme.vars || theme).palette.action.focus,
+    outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
     outlineOffset: 2,
   },
   '&:focus-visible:hover': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: (theme.vars || theme).palette.action.hover,
   },
 }));
 
@@ -136,7 +137,7 @@ const MonthViewMoreEvents = styled(Button, {
   slot: 'MonthViewMoreEvents',
 })(({ theme }) => ({
   margin: 0,
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: '18px',
   paddingInlineStart: theme.spacing(0.5),
@@ -165,7 +166,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const { day, row, maxEvents } = props;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { classes, localeText } = useEventCalendarStyledContext();
   const { onOpen: startEditing } = useEventDialogContext();
@@ -180,7 +181,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   );
   const isToday = useStore(store, schedulerNowSelectors.isCurrentDay, day.value);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
+  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row, maxEvents);
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);

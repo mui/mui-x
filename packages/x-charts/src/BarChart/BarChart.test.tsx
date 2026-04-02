@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/charts/describeConformance';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -32,10 +32,9 @@ describe('<BarChart />', () => {
     expect(screen.getByText('No data to display')).toBeVisible();
   });
 
-  it('prioritizes `barLabel` from series over `barLabel` prop', () => {
+  it('show `barLabel` from series', () => {
     render(
       <BarChart
-        barLabel={() => 'Bar label from prop'}
         series={[{ data: [1], barLabel: () => 'Bar label from series' }]}
         width={100}
         height={100}
@@ -45,22 +44,6 @@ describe('<BarChart />', () => {
     );
 
     expect(screen.getByText('Bar label from series')).toBeVisible();
-  });
-
-  it("defaults to `barLabel` prop when `barLabel` from series isn't defined", () => {
-    render(
-      <BarChart
-        barLabel={() => 'Bar label from prop'}
-        series={[{ data: [1] }, { data: [1], barLabel: () => 'Bar label from 2nd series' }]}
-        width={100}
-        height={100}
-        xAxis={[{ data: ['A'] }]}
-        yAxis={[]}
-      />,
-    );
-
-    expect(screen.getByText('Bar label from prop')).toBeVisible();
-    expect(screen.getByText('Bar label from 2nd series')).toBeVisible();
   });
 
   const wrapper = ({ children }: { children?: React.ReactNode }) => (
@@ -83,7 +66,7 @@ describe('<BarChart />', () => {
         { wrapper },
       );
 
-      const bar = document.querySelector(`.${barElementClasses.root}`)!;
+      const bar = document.querySelector(`.${barClasses.element}`)!;
       await user.pointer({ target: bar, coords: { x: 200, y: 200 } });
 
       expect(await screen.findByRole('tooltip')).toBeVisible();
@@ -113,7 +96,7 @@ describe('<BarChart />', () => {
         { wrapper },
       );
 
-      const bar = document.querySelector(`.${barElementClasses.root}`)!;
+      const bar = document.querySelector(`.${barClasses.element}`)!;
 
       await user.pointer({ target: bar, coords: { x: 200, y: 200 } });
 
@@ -147,9 +130,16 @@ describe('<BarChart />', () => {
         { wrapper },
       );
 
-      const bars = document.querySelectorAll(`.${barElementClasses.root}`);
+      const bars = document.querySelectorAll(`.${barClasses.element}`);
 
-      await user.pointer({ target: bars[0] });
+      const barRect = bars[0].getBoundingClientRect();
+      await user.pointer({
+        target: bars[0],
+        coords: {
+          clientX: barRect.left + barRect.width / 2,
+          clientY: barRect.top + barRect.height / 2,
+        },
+      });
 
       expect([...bars].map((b) => b.getAttribute('data-highlighted'))).to.deep.equal([
         'true',

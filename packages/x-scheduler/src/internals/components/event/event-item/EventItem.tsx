@@ -7,9 +7,10 @@ import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import {
   schedulerEventSelectors,
+  schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { EventItemProps } from './EventItem.types';
@@ -24,7 +25,7 @@ const EventItemCard = styled('div', {
   padding: 0,
   borderRadius: theme.shape.borderRadius,
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: (theme.vars || theme).palette.action.hover,
   },
 
   '&[data-variant="compact"], &[data-variant="regular"]': {
@@ -38,9 +39,22 @@ const EventItemCard = styled('div', {
     '&:hover': {
       backgroundColor: 'var(--event-surface-bold-hover)',
     },
+    '&[data-editing]': {
+      backgroundColor: 'var(--event-surface-selected)',
+      color: 'var(--event-on-surface-selected)',
+      '&:hover': {
+        backgroundColor: 'var(--event-surface-selected-hover)',
+      },
+    },
   },
   '&[data-variant="regular"]': {
     cursor: 'pointer',
+  },
+  '&[data-editing]': {
+    backgroundColor: 'var(--event-surface-selected)',
+    '&:hover': {
+      backgroundColor: 'var(--event-surface-selected-hover)',
+    },
   },
   variants: getPaletteVariants(theme),
 }));
@@ -63,10 +77,13 @@ const EventItemTitle = styled('span', {
   slot: 'EventItemTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
 }));
 
 const EventItemTime = styled('time', {
@@ -74,7 +91,7 @@ const EventItemTime = styled('time', {
   slot: 'EventItemTime',
 })<{ 'data-compact'?: boolean }>(({ theme }) => ({
   display: 'inline-block',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -84,13 +101,19 @@ const EventItemTime = styled('time', {
     width: 'fit-content',
     marginInlineEnd: theme.spacing(0.5),
   },
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
 }));
 
 const EventItemRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'EventItemRecurringIcon',
 })(({ theme }) => ({
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
 }));
 
 const ResourceLegendColor = styled('span', {
@@ -102,6 +125,9 @@ const ResourceLegendColor = styled('span', {
   borderRadius: '50%',
   flexShrink: 0,
   backgroundColor: 'var(--event-main)',
+  '[data-editing] &': {
+    backgroundColor: 'var(--event-on-surface-selected)',
+  },
 });
 
 const EventItemCardContent = styled('p', {
@@ -146,6 +172,7 @@ export const EventItem = React.forwardRef(function EventItem(
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
+  const isEditing = useStore(store, schedulerOtherSelectors.isEditedEvent, occurrence.id);
 
   // State hooks
   const id = useId(idProp);
@@ -264,6 +291,7 @@ export const EventItem = React.forwardRef(function EventItem(
       id={id}
       data-variant={variant}
       data-palette={color}
+      data-editing={isEditing || undefined}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
       className={clsx(className, classes.eventItemCard, occurrence.className)}
@@ -281,7 +309,7 @@ function MultiDayDateLabel(props: {
 }) {
   const { occurrence, formatTime } = props;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes, localeText } = useEventCalendarStyledContext();
 
   if (

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type AnimationData } from '../types';
-import { BarLabelItem, type BarLabelItemProps } from './BarLabelItem';
+import { BarLabelItem } from './BarLabelItem';
 import type { SeriesId } from '../../models/seriesType/common';
 import { type BarSeriesType, type BarValueType } from '../../models/seriesType/bar';
 import { type BarLabelFunction } from './BarLabel.types';
@@ -9,7 +9,6 @@ interface BarLabelPlotProps {
   processedSeries: ProcessedBarLabelSeriesData;
   className: string;
   skipAnimation?: boolean;
-  barLabel?: BarLabelItemProps<BarValueType | null>['barLabel'];
 }
 
 export interface ProcessedBarLabelSeriesData {
@@ -37,9 +36,7 @@ function BarLabelPlot(props: BarLabelPlotProps) {
   const { processedSeries, className, skipAnimation, ...other } = props;
   const { seriesId, data, layout, xOrigin, yOrigin } = processedSeries;
 
-  const barLabel = processedSeries.barLabel ?? props.barLabel;
-
-  if (!barLabel) {
+  if (!processedSeries.barLabel) {
     return null;
   }
 
@@ -62,7 +59,7 @@ function BarLabelPlot(props: BarLabelPlotProps) {
           layout={layout ?? 'vertical'}
           hidden={hidden}
           {...other}
-          barLabel={barLabel}
+          barLabel={processedSeries.barLabel}
           barLabelPlacement={processedSeries.barLabelPlacement || 'center'}
         />
       ))}

@@ -1,14 +1,13 @@
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-
 export type ItemType = 'added' | 'deleted' | 'modified';
 
 export type ExtendedTreeItemProps = {
   itemType?: ItemType;
   id: string;
   label: string;
+  children?: ExtendedTreeItemProps[];
 };
 
-export const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
+export const ITEMS: ExtendedTreeItemProps[] = [
   {
     id: '1',
     label: 'docs/data/migration/migration-pickers-v7',
@@ -103,15 +102,18 @@ export const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
   },
 ];
 
+type LeafItem = {
+  itemType: ItemType;
+  id: string;
+  label: string;
+  code: string;
+  language: string;
+  children?: LeafItem[];
+};
+
 export const leafItemGroups: {
   parentPath: string;
-  leafItems: TreeViewBaseItem<{
-    itemType: ItemType;
-    id: string;
-    label: string;
-    code: string;
-    language: string;
-  }>[];
+  leafItems: LeafItem[];
 }[] = [
   {
     parentPath: 'docs/data/migration/migration-pickers-v7',

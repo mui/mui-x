@@ -18,8 +18,12 @@ import {
 } from '@mui/x-scheduler/internals';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
-const releaseInfo = '__RELEASE_INFO__';
-const watermark = <Watermark packageName="x-scheduler-premium" releaseInfo={releaseInfo} />;
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-scheduler-premium' as const,
+};
+const watermark = <Watermark packageInfo={packageInfo} />;
 
 /**
  * Premium version of EventCalendar with lazy loading support.
@@ -35,7 +39,7 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   // Use the same theme name to share theme customizations with base EventCalendar
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
-  useLicenseVerifier('x-scheduler-premium', releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   const {
     parameters,

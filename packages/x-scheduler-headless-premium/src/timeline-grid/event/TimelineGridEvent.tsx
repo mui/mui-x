@@ -18,7 +18,7 @@ import {
   generateOccurrenceFromEvent,
   useElementPositionInCollection,
 } from '@mui/x-scheduler-headless/internals';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
@@ -42,6 +42,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     start,
     end,
@@ -59,7 +60,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const isInteractive = true;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
   const { getCursorPositionInElementMs } = useTimelineGridEventRowContext();
 
@@ -132,18 +133,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
 
-  // Rendering hooks
-  const style = React.useMemo(
-    () =>
-      ({
-        [TimelineGridEventCssVars.xPosition]: `${position * 100}%`,
-        [TimelineGridEventCssVars.width]: `${duration * 100}%`,
-      }) as React.CSSProperties,
-    [position, duration],
-  );
-
-  const props = { style };
-
   const contextValue: TimelineGridEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
     [draggableEventContextValue, getSharedDragData],
@@ -152,7 +141,16 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const element = useRenderElement('div', componentProps, {
     state: mergedState,
     ref: [forwardedRef, ref, buttonRef],
-    props: [props, elementProps, getButtonProps],
+    props: [
+      elementProps,
+      {
+        style: {
+          [TimelineGridEventCssVars.xPosition]: `${position * 100}%`,
+          [TimelineGridEventCssVars.width]: `${duration * 100}%`,
+        } as React.CSSProperties,
+      },
+      getButtonProps,
+    ],
     stateAttributesMapping: overflowStateAttributesMapping,
   });
 

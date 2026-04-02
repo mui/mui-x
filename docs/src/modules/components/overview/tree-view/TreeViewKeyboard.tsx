@@ -10,10 +10,10 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 import KeyboardSvg, { SelectedKey } from '../KeyboardSvg';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {
     id: 'tree-view',
     label: 'Tree View',
@@ -39,7 +39,7 @@ export default function TreeViewKeyboard() {
           sectionContent = (ref.current as HTMLElement).querySelector('li') as HTMLElement;
         } else {
           sectionContent = (ref.current as HTMLElement).querySelector(
-            ' .Mui-focused',
+            '[data-focused]',
           ) as HTMLElement;
         }
       }
