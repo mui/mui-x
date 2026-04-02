@@ -16,24 +16,24 @@ describe('<DateTimeField /> - Timezone', () => {
     describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       const format = `${adapter.formats.keyboardDate} ${adapter.formats.hours24h}`;
 
-      const fillEmptyValue = (v7Response: ReturnType<typeof renderWithProps>, timezone: string) => {
-        v7Response.selectSection('month');
+      const fillEmptyValue = (response: ReturnType<typeof renderWithProps>, timezone: string) => {
+        response.selectSection('month');
 
         // Set month
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowDown' });
-        fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowRight' });
+        fireEvent.keyDown(response.getActiveSection(0), { key: 'ArrowDown' });
+        fireEvent.keyDown(response.getActiveSection(0), { key: 'ArrowRight' });
 
         // Set day
-        fireEvent.keyDown(v7Response.getActiveSection(1), { key: 'ArrowDown' });
-        fireEvent.keyDown(v7Response.getActiveSection(1), { key: 'ArrowRight' });
+        fireEvent.keyDown(response.getActiveSection(1), { key: 'ArrowDown' });
+        fireEvent.keyDown(response.getActiveSection(1), { key: 'ArrowRight' });
 
         // Set year
-        fireEvent.keyDown(v7Response.getActiveSection(2), { key: 'ArrowDown' });
-        fireEvent.keyDown(v7Response.getActiveSection(2), { key: 'ArrowRight' });
+        fireEvent.keyDown(response.getActiveSection(2), { key: 'ArrowDown' });
+        fireEvent.keyDown(response.getActiveSection(2), { key: 'ArrowRight' });
 
         // Set hours
-        fireEvent.keyDown(v7Response.getActiveSection(3), { key: 'ArrowDown' });
-        fireEvent.keyDown(v7Response.getActiveSection(3), { key: 'ArrowRight' });
+        fireEvent.keyDown(response.getActiveSection(3), { key: 'ArrowDown' });
+        fireEvent.keyDown(response.getActiveSection(3), { key: 'ArrowRight' });
 
         return adapter.setHours(
           adapter.setDate(adapter.setMonth(adapter.date(undefined, timezone), 11), 31),

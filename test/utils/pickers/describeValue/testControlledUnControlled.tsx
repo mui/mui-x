@@ -111,13 +111,13 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
         const onChange = spy();
 
-        const v7Response = renderWithProps({
+        const response = renderWithProps({
           defaultValue: values[0],
           onChange,
         });
         const newValue = setNewValue(values[0], {
-          selectSection: v7Response.selectSection,
-          pressKey: v7Response.pressKey,
+          selectSection: response.selectSection,
+          pressKey: response.pressKey,
           closeMobilePicker: true,
         });
 
@@ -148,13 +148,13 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           return { value, onChange: handleChange };
         };
 
-        const v7Response = renderWithProps(
+        const response = renderWithProps(
           { value: values[0], onChange },
           { hook: useControlledElement },
         );
         const newValue = setNewValue(values[0], {
-          selectSection: v7Response.selectSection,
-          pressKey: v7Response.pressKey,
+          selectSection: response.selectSection,
+          pressKey: response.pressKey,
           closeMobilePicker: true,
         });
 
@@ -209,12 +209,12 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
         const handleChange = spy();
 
-        const v7Response = renderWithProps({
+        const response = renderWithProps({
           onChange: handleChange,
           defaultValue: values[0],
         });
-        v7Response.selectSection(undefined);
-        fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+        response.selectSection(undefined);
+        fireUserEvent.keyPress(response.getActiveSection(0), { key: 'ArrowUp' });
         expect(handleChange.callCount).to.equal(isPickerSingleInput(params) ? 1 : 0);
       });
 
