@@ -94,7 +94,7 @@
         "name": "arrayOf",
         "description": "Array&lt;'agenda'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'week'&gt;"
       },
-      "default": "[\"week\", \"day\", \"month\", \"agenda\"]"
+      "default": "[\"day\", \"week\", \"month\", \"agenda\"]"
     },
     "visibleDate": { "type": { "name": "instanceOf", "description": "Date" } },
     "visibleResources": { "type": { "name": "object" } }

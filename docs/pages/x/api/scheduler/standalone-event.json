@@ -4,6 +4,7 @@
     "nativeButton": { "type": { "name": "bool" }, "default": "false" },
     "onEventDrop": { "type": { "name": "func" } },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "style": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "sx": {
       "type": {
         "name": "union",
