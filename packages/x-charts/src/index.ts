@@ -10,6 +10,8 @@ export * from './ChartsAxis';
 export * from './ChartsXAxis';
 export * from './ChartsYAxis';
 export * from './ChartsGrid';
+export * from './ChartsPolarGrid';
+export * from './ChartsPolarLine';
 export * from './ChartsText';
 export * from './ChartsTooltip';
 export * from './ChartsLabel';
@@ -31,6 +33,7 @@ export type {
   ChartsContainerSlotProps,
 } from './ChartsContainer';
 export * from './ChartsDataProvider';
+export * from './ChartsPolarDataProvider';
 export * from './Toolbar';
 export * from './ChartsWrapper';
 export * from './ChartsBrushOverlay';

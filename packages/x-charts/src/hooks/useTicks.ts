@@ -384,8 +384,10 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
   return scale.ticks(tickNumber);
 }
 
+const alwaysTrue = () => true;
+
 export function useTicks(
-  options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' },
+  options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' | 'rotation' | 'radius' },
 ): TickItem[] {
   const {
     scale,
@@ -399,7 +401,9 @@ export function useTicks(
     ordinalTimeTicks,
   } = options;
   const { instance } = useChartsContext();
-  const isInside = direction === 'x' ? instance.isXInside : instance.isYInside;
+  const isInside =
+    // eslint-disable-next-line no-nested-ternary
+    direction === 'x' ? instance.isXInside : direction === 'y' ? instance.isYInside : alwaysTrue;
 
   return React.useMemo(
     () =>

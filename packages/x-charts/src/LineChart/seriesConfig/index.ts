@@ -25,6 +25,8 @@ export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   axisTooltipGetter,
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
+  radiusExtremumGetter: getExtremumY,
+  rotationExtremumGetter: getExtremumX,
   getSeriesWithDefaultValues,
   getItemAtPosition,
   keyboardFocusHandler,

@@ -1,5 +1,6 @@
 import type { ChartSeriesTypeConfig } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { getExtremumX, getExtremumY } from './bar/extremums';
+import { getRadiusExtremum, getRotationExtremum } from './bar/polarExtremums';
 import seriesProcessor from './bar/seriesProcessor';
 import legendGetter from './bar/legend';
 import getColor from './bar/getColor';
@@ -25,6 +26,8 @@ export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   axisTooltipGetter,
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
+  radiusExtremumGetter: getRadiusExtremum,
+  rotationExtremumGetter: getRotationExtremum,
   getSeriesWithDefaultValues,
   getItemAtPosition: selectorBarItemAtPosition,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
