@@ -108,7 +108,7 @@ function initializeState(params: ParamsWithDefaults) {
         {} as Record<string, Record<string, any>>,
       ),
       context: {},
-      scrollPosition: { current: ScrollPosition.EMPTY },
+      scrollPosition: { current: { ...ScrollPosition.EMPTY } },
       ...params.initialState?.virtualization,
     },
     // FIXME: refactor once the state shape is settled
@@ -271,10 +271,12 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
     if (!shouldUpdate) {
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        scrollPosition: { current: { ...scrollPosition.current } },
-      });
+      // Mutate in place to keep the store data fresh for imperative reads
+      // (e.g. getScrollPosition(), GridScrollArea drag handlers) without
+      // triggering re-renders in subscribers.
+      const storeScrollPosition = store.state.virtualization.scrollPosition.current;
+      storeScrollPosition.top = scrollPosition.current.top;
+      storeScrollPosition.left = scrollPosition.current.left;
       return renderContext;
     }
 
@@ -314,10 +316,9 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
       scrollTimeout.start(1000, triggerUpdateRenderContext);
     } else {
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        scrollPosition: { current: { ...scrollPosition.current } },
-      });
+      const storeScrollPosition = store.state.virtualization.scrollPosition.current;
+      storeScrollPosition.top = scrollPosition.current.top;
+      storeScrollPosition.left = scrollPosition.current.left;
     }
 
     return nextRenderContext;
