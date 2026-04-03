@@ -59,7 +59,7 @@ The paste operation can be triggered by the following keyboard shortcuts:
 
 - <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">V</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">V</kbd></kbd> on macOS) pastes clipboard content into the selected cells.
 - <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">D</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">D</kbd></kbd> on macOS) fills down—copies the value of the selected cell into the cell below. If multiple cells are selected in a column, the top cell's value is copied into the cells below it.
-- <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">R</kbd></kbd> (or <kbd><kbd class="key">Cmd</kbd>+<kbd class="key">R</kbd></kbd> on macOS) copies the value from the leftmost cell of each selected row into the cells to its right. When a single cell is selected, the value is copied to the cell directly to the right, and the selection moves right. When a single column with multiple rows is selected, the values are copied to the column to the right.
+- <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">R</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">R</kbd></kbd> on macOS) copies the value from the leftmost cell of each selected row into the cells to its right. When a single cell is selected, the value is copied to the cell directly to the right, and the selection moves right. When a single column with multiple rows is selected, the values are copied to the column to the right.
 
 ### Drag to fill
 
