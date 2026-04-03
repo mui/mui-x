@@ -1236,6 +1236,39 @@ describe('<DataGridPremium /> - Cell selection', () => {
           });
         });
 
+        it('should only fill selected rows when horizontal filling with gaps', async () => {
+          const processRowUpdateSpy = spy((newRow) => newRow);
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              cellSelectionFillHandle
+              processRowUpdate={processRowUpdateSpy}
+            />,
+          );
+
+          // Select rows 0 and 2 in 'value' column (skipping row 1)
+          await user.click(getCell(0, 2)); // value=10
+          await user.keyboard('{Control>}');
+          await user.click(getCell(2, 2)); // value=30
+          await user.keyboard('{/Control}');
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          // Drag right to 'category' column
+          await simulateFillDrag(handleCell, getCell(2, 3));
+
+          await waitFor(() => {
+            expect(getCell(0, 3).textContent).to.equal('10');
+          });
+          expect(getCell(2, 3).textContent).to.equal('30');
+          // Row 1 should NOT be filled (it was not selected)
+          expect(processRowUpdateSpy.callCount).to.equal(2);
+          expect(getCell(1, 3).textContent).to.equal('B');
+        });
+
         it('should map source columns to target columns by offset', async () => {
           const processRowUpdateSpy = spy((newRow) => newRow);
           const { user } = render(

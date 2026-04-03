@@ -943,9 +943,15 @@ export const useGridCellSelection = (
             // Horizontal fill: extend columns, keep source rows
             fillDirection.current = 'horizontal';
 
+            const sourceRowIdSet = new Set(
+              fillSourceCells.current.map((c) => String(c.id)),
+            );
             for (let i = minSourceRowIdx; i <= maxSourceRowIdx; i += 1) {
               if (i < currentVisibleRows.rows.length) {
-                newTargetRowIds.push(currentVisibleRows.rows[i].id);
+                const rowId = currentVisibleRows.rows[i].id;
+                if (sourceRowIdSet.has(String(rowId))) {
+                  newTargetRowIds.push(rowId);
+                }
               }
             }
 
