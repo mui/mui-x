@@ -524,15 +524,26 @@ export const GridRootStyles = styled('div', {
       flex: '0 0 auto',
       height: 'var(--height)',
       width: 'var(--width)',
-      lineHeight: 'calc(var(--height) - 1px)', // -1px for the border
+      display: 'flex',
+      alignItems: 'center',
+      lineHeight: 'inherit', // -1px for the border
 
       boxSizing: 'border-box',
       borderTop: `1px solid var(--rowBorderColor)`,
-
+      minWidth: 0,
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
       '&.Mui-selected': selectedStyles,
+    },
+
+    [`& .${c.cell} > span`]: {
+      display: 'block',
+      flex: '1 1 auto',
+      minWidth: '0',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
     },
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
