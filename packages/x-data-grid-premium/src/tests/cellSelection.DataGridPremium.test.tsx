@@ -692,6 +692,29 @@ describe('<DataGridPremium /> - Cell selection', () => {
         expect(document.querySelector(`.${gridClasses['cell--withFillHandle']}`)).to.equal(null);
       });
 
+      it('should show fill handle on focused cell after arrow navigation when no selection exists', async () => {
+        const { user } = render(
+          <TestDataGridSelection columns={fillColumns} rows={fillRows} cellSelectionFillHandle />,
+        );
+        await user.click(getCell(0, 1)); // 'name' (editable)
+        expect(getCell(0, 1)).to.have.class(gridClasses['cell--withFillHandle']);
+
+        // Arrow down clears selection, focuses cell(1, 1)
+        await user.keyboard('{ArrowDown}');
+        expect(getCell(1, 1)).to.have.class(gridClasses['cell--withFillHandle']);
+        expect(getCell(0, 1)).not.to.have.class(gridClasses['cell--withFillHandle']);
+      });
+
+      it('should not show fill handle on focused non-editable cell after arrow navigation', async () => {
+        const { user } = render(
+          <TestDataGridSelection columns={fillColumns} rows={fillRows} cellSelectionFillHandle />,
+        );
+        await user.click(getCell(0, 1)); // 'name' (editable)
+        // Arrow left to 'id' column (non-editable)
+        await user.keyboard('{ArrowLeft}');
+        expect(document.querySelector(`.${gridClasses['cell--withFillHandle']}`)).to.equal(null);
+      });
+
       it('should show fill handle when at least one selected column in the row is editable', async () => {
         const { user } = render(
           <TestDataGridSelection columns={fillColumns} rows={fillRows} cellSelectionFillHandle />,
@@ -709,6 +732,30 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
 
     describe('Ctrl+D - Fill down', () => {
+      it('should fill down from focused cell when no selection exists', async () => {
+        const processRowUpdateSpy = spy((newRow) => newRow);
+        const { user } = render(
+          <TestDataGridSelection
+            columns={fillColumns}
+            rows={fillRows}
+            cellSelectionFillHandle
+            processRowUpdate={processRowUpdateSpy}
+          />,
+        );
+
+        // Click cell then arrow down to clear selection but keep focus
+        await user.click(getCell(0, 1)); // 'Alice'
+        await user.keyboard('{ArrowDown}'); // focus moves to cell(1, 1) = 'Bob', selection cleared
+
+        // Ctrl+D should fill from focused cell (Bob) down to cell(2, 1)
+        fireEvent.keyDown(getCell(1, 1), { key: 'd', keyCode: 68, ctrlKey: true });
+
+        await waitFor(() => {
+          expect(getCell(2, 1).textContent).to.equal('Bob');
+        });
+        expect(processRowUpdateSpy.callCount).to.equal(1);
+      });
+
       it('should fill the cell below with the selected cell value', async () => {
         const processRowUpdateSpy = spy((newRow) => newRow);
         const { user } = render(

@@ -481,41 +481,7 @@ export const useGridCellSelection = (
     }
 
     if (!event.shiftKey) {
-      if (props.cellSelectionFillHandle && event.key.startsWith('Arrow')) {
-        const currentRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
-        const currentColIndex = apiRef.current.getColumnIndex(params.field);
-        let nextRowIndex = currentRowIndex;
-        let nextColIndex = currentColIndex;
-
-        if (event.key === 'ArrowDown') {
-          nextRowIndex += 1;
-        } else if (event.key === 'ArrowUp') {
-          nextRowIndex -= 1;
-        } else if (event.key === 'ArrowRight') {
-          nextColIndex += 1;
-        } else if (event.key === 'ArrowLeft') {
-          nextColIndex -= 1;
-        }
-
-        const visibleRows = getVisibleRows(apiRef);
-        const visibleColumns = apiRef.current.getVisibleColumns();
-
-        if (
-          nextRowIndex >= 0 &&
-          nextRowIndex < visibleRows.rows.length &&
-          nextColIndex >= 0 &&
-          nextColIndex < visibleColumns.length
-        ) {
-          const nextId = visibleRows.rows[nextRowIndex].id;
-          const nextField = visibleColumns[nextColIndex].field;
-          apiRef.current.setCellSelectionModel({ [nextId]: { [nextField]: true } });
-          cellWithVirtualFocus.current = { id: nextId, field: nextField };
-        } else {
-          apiRef.current.setCellSelectionModel({});
-        }
-      } else {
-        apiRef.current.setCellSelectionModel({});
-      }
+      apiRef.current.setCellSelectionModel({});
       return;
     }
 
@@ -816,8 +782,17 @@ export const useGridCellSelection = (
       // doesn't replace the multi-cell selection with a single cell.
       skipNextCellClick.current = true;
 
-      // Store selected cells as source
-      const selectedCells = apiRef.current.getSelectedCellsAsArray();
+      // Store selected cells as source (fall back to focused cell if no selection)
+      let selectedCells = apiRef.current.getSelectedCellsAsArray();
+      if (selectedCells.length === 0) {
+        const focusedCell = gridFocusCellSelector(apiRef);
+        if (focusedCell) {
+          selectedCells = [{ id: focusedCell.id, field: focusedCell.field }];
+        }
+      }
+      if (selectedCells.length === 0) {
+        return;
+      }
 
       // Compute all source fields in visible column order
       const visibleColumns = apiRef.current.getVisibleColumns();
@@ -1092,7 +1067,13 @@ export const useGridCellSelection = (
       return;
     }
 
-    const selectedCells = apiRef.current.getSelectedCellsAsArray();
+    let selectedCells = apiRef.current.getSelectedCellsAsArray();
+    if (selectedCells.length === 0) {
+      const focusedCell = gridFocusCellSelector(apiRef);
+      if (focusedCell) {
+        selectedCells = [{ id: focusedCell.id, field: focusedCell.field }];
+      }
+    }
     if (selectedCells.length === 0) {
       return;
     }
@@ -1262,7 +1243,13 @@ export const useGridCellSelection = (
       return;
     }
 
-    const selectedCells = apiRef.current.getSelectedCellsAsArray();
+    let selectedCells = apiRef.current.getSelectedCellsAsArray();
+    if (selectedCells.length === 0) {
+      const focusedCell = gridFocusCellSelector(apiRef);
+      if (focusedCell) {
+        selectedCells = [{ id: focusedCell.id, field: focusedCell.field }];
+      }
+    }
     if (selectedCells.length === 0) {
       return;
     }
@@ -1457,6 +1444,22 @@ export const useGridCellSelection = (
       // the fill handle indicator (cell--withFillHandle) on the selection's bottom-right cell.
 
       if (!visibleRows.range || !apiRef.current.isCellSelected(id, field)) {
+        // Show fill handle on the focused cell when no cell selection exists
+        if (props.cellSelectionFillHandle && !fillDrag.current.isDragging) {
+          const focusedCell = gridFocusCellSelector(apiRef);
+          if (focusedCell && focusedCell.id === id && focusedCell.field === field) {
+            const selectionModel = apiRef.current.getCellSelectionModel();
+            const hasSelection = Object.keys(selectionModel).some((rowId) =>
+              Object.values(selectionModel[rowId]).some(Boolean),
+            );
+            if (!hasSelection) {
+              const col = apiRef.current.getColumn(field);
+              if (col?.editable) {
+                return [...classes, gridClasses['cell--withFillHandle']];
+              }
+            }
+          }
+        }
         return classes;
       }
 
