@@ -786,17 +786,14 @@ export const GridRootStyles = styled('div', {
     /* Fill handle styles */
     [`& .${c['cell--withFillHandle']}`]: {
       position: 'relative',
-      overflow: 'visible',
       '&::after': {
         content: '""',
         position: 'absolute',
-        bottom: -4,
-        insetInlineEnd: -4,
+        bottom: 0,
+        insetInlineEnd: 0,
         width: 7,
         height: 7,
         backgroundColor: vars.colors.interactive.focus,
-        borderRadius: '50%',
-        boxShadow: `0 0 0 2px ${vars.colors.background.base}`,
         cursor: 'crosshair',
         zIndex: 50,
       },
