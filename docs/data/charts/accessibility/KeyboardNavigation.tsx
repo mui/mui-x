@@ -40,20 +40,10 @@ export default function KeyboardNavigation() {
     setChartType(event.target.value as ChartType);
 
   return (
-    <Stack
-      sx={{
-        width: '100%',
-        display: 'block',
-      }}
-    >
+    <Stack sx={{ width: '100%', display: 'block' }}>
       <Stack
         direction="row"
-        sx={{
-          width: '100%',
-          gap: 2,
-          justifyContent: 'center',
-          mb: 1,
-        }}
+        sx={{ width: '100%', gap: 2, justifyContent: 'center', mb: 1 }}
       >
         <FormControl sx={{ minWidth: 200 }}>
           <InputLabel id="chart-type-label">Chart Type</InputLabel>

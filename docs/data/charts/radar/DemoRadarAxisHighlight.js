@@ -12,15 +12,7 @@ export default function DemoRadarAxisHighlight() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stack
-        direction="row"
-        sx={{
-          flexWrap: 'wrap',
-          gap: 2,
-          width: '100%',
-          mb: 2,
-        }}
-      >
+      <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 2, width: '100%', mb: 2 }}>
         <FormControlLabel
           checked={!hideMark}
           control={
@@ -32,11 +24,7 @@ export default function DemoRadarAxisHighlight() {
       </Stack>
       <Stack
         direction="row"
-        sx={{
-          flexWrap: 'wrap',
-          justifyContent: 'space-around',
-          width: '100%',
-        }}
+        sx={{ flexWrap: 'wrap', justifyContent: 'space-around', width: '100%' }}
       >
         <Box sx={{ width: '100%', maxWidth: 400 }}>
           <RadarChart

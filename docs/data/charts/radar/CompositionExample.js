@@ -13,14 +13,7 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 export default function CompositionExample() {
   return (
     <RadarDataProvider height={300} series={series} radar={radar} margin={margin}>
-      <Stack
-        direction="column"
-        sx={{
-          alignItems: 'center',
-          gap: 1,
-          width: '100%',
-        }}
-      >
+      <Stack direction="column" sx={{ alignItems: 'center', gap: 1, width: '100%' }}>
         <ChartsLegend />
         <ChartsSurface>
           <RadarGrid divisions={5} />

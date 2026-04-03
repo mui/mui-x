@@ -29,12 +29,7 @@ export default function ExportCompositionNoSnap() {
   const apiRef = useChartProApiRef();
 
   return (
-    <Stack
-      sx={{
-        width: '100%',
-        display: 'block',
-      }}
-    >
+    <Stack sx={{ width: '100%', display: 'block' }}>
       <Button
         onClick={() => apiRef.current.exportAsPrint()}
         variant="contained"

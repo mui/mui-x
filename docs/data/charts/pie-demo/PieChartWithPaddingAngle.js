@@ -10,13 +10,7 @@ const data = [
 
 export default function PieChartWithPaddingAngle() {
   return (
-    <Stack
-      direction="row"
-      sx={{
-        width: '100%',
-        height: 300,
-      }}
-    >
+    <Stack direction="row" sx={{ width: '100%', height: 300 }}>
       <PieChart
         series={[
           {

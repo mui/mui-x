@@ -50,29 +50,14 @@ export default function LegendLabelPositions() {
       <Stack
         direction="column"
         spacing={2}
-        sx={{
-          width: '100%',
-          height: '100%',
-          gap: 4,
-        }}
+        sx={{ width: '100%', height: '100%', gap: 4 }}
       >
-        <Stack
-          direction="column"
-          sx={{
-            width: '100%',
-            height: '100%',
-            gap: 2,
-          }}
-        >
+        <Stack direction="column" sx={{ width: '100%', height: '100%', gap: 2 }}>
           <Typography variant="h4">Continuous</Typography>
           <Typography variant="h5">Horizontal</Typography>
           <Stack
             direction="row"
-            sx={{
-              flexWrap: 'wrap',
-              gap: 2,
-              '&>div': { flex: 1 },
-            }}
+            sx={{ flexWrap: 'wrap', gap: 2, '&>div': { flex: 1 } }}
           >
             <div>
               <Typography>start</Typography>
@@ -142,23 +127,12 @@ export default function LegendLabelPositions() {
             </div>
           </Stack>
         </Stack>
-        <Stack
-          direction="column"
-          sx={{
-            width: '100%',
-            height: '100%',
-            gap: 2,
-          }}
-        >
+        <Stack direction="column" sx={{ width: '100%', height: '100%', gap: 2 }}>
           <Typography variant="h4">Piecewise</Typography>
           <Typography variant="h5">Horizontal</Typography>
           <Stack
             direction="row"
-            sx={{
-              flexWrap: 'wrap',
-              gap: 2,
-              '&>div': { flex: 1 },
-            }}
+            sx={{ flexWrap: 'wrap', gap: 2, '&>div': { flex: 1 } }}
           >
             <div>
               <Typography>start</Typography>

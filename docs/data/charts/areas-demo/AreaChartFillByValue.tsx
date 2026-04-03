@@ -42,13 +42,7 @@ function ColorSwitch({ threshold, color1, color2, id }: ColorSwitchProps) {
 
 export default function AreaChartFillByValue() {
   return (
-    <Stack
-      direction="column"
-      spacing={1}
-      sx={{
-        width: '100%',
-      }}
-    >
+    <Stack direction="column" spacing={1} sx={{ width: '100%' }}>
       <LineChart
         xAxis={[{ data: xData, scaleType: 'point' }]}
         yAxis={[{ min: -3000, max: 4000, width: 50 }]}

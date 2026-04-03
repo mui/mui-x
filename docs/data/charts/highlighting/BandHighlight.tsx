@@ -53,10 +53,7 @@ export default function BandHighlight() {
       <Stack
         direction={{ xs: 'row', md: 'column' }}
         spacing={2}
-        sx={{
-          justifyContent: { xs: 'space-around', md: 'flex-start' },
-          m: 2,
-        }}
+        sx={{ justifyContent: { xs: 'space-around', md: 'flex-start' }, m: 2 }}
       >
         <FormControl>
           <FormLabel id="x-highlight-label">x highlight</FormLabel>

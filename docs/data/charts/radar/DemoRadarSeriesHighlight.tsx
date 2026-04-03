@@ -34,13 +34,7 @@ export default function DemoRadarSeriesHighlight() {
     }
   };
   return (
-    <Stack
-      spacing={2}
-      sx={{
-        alignItems: 'center',
-        width: '100%',
-      }}
-    >
+    <Stack spacing={2} sx={{ alignItems: 'center', width: '100%' }}>
       <ToggleButtonGroup
         value={highlightedItem?.seriesId ?? null}
         exclusive

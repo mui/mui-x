@@ -71,10 +71,7 @@ function Controls({
       direction={{ xs: 'row', xl: 'column' }}
       spacing={3}
       useFlexGap
-      sx={{
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-      }}
+      sx={{ justifyContent: 'center', flexWrap: 'wrap' }}
     >
       <TextField
         select

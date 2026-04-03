@@ -13,19 +13,8 @@ const colorPerItem = [
 
 export default function PieColor() {
   return (
-    <Stack
-      direction="row"
-      spacing={2}
-      sx={{
-        width: '100%',
-        textAlign: 'center',
-      }}
-    >
-      <Box
-        sx={{
-          flexGrow: 1,
-        }}
-      >
+    <Stack direction="row" spacing={2} sx={{ width: '100%', textAlign: 'center' }}>
+      <Box sx={{ flexGrow: 1 }}>
         <Typography>Default</Typography>
         <PieChart
           series={[
@@ -36,11 +25,7 @@ export default function PieColor() {
           {...pieParams}
         />
       </Box>
-      <Box
-        sx={{
-          flexGrow: 1,
-        }}
-      >
+      <Box sx={{ flexGrow: 1 }}>
         <Typography>Palette</Typography>
         <PieChart
           colors={palette}
@@ -52,11 +37,7 @@ export default function PieColor() {
           {...pieParams}
         />
       </Box>
-      <Box
-        sx={{
-          flexGrow: 1,
-        }}
-      >
+      <Box sx={{ flexGrow: 1 }}>
         <Typography>Item</Typography>
         <PieChart
           series={[

@@ -51,12 +51,7 @@ function DatasetStats() {
       }}
     >
       <div>
-        <Typography
-          variant="caption"
-          sx={{
-            color: 'text.secondary',
-          }}
-        >
+        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
           Total Revenue
         </Typography>
         <Typography variant="h6" color="primary">
@@ -64,12 +59,7 @@ function DatasetStats() {
         </Typography>
       </div>
       <div>
-        <Typography
-          variant="caption"
-          sx={{
-            color: 'text.secondary',
-          }}
-        >
+        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
           Total Expenses
         </Typography>
         <Typography variant="h6" color="error">
@@ -77,12 +67,7 @@ function DatasetStats() {
         </Typography>
       </div>
       <div>
-        <Typography
-          variant="caption"
-          sx={{
-            color: 'text.secondary',
-          }}
-        >
+        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
           Net Profit
         </Typography>
         <Typography
@@ -93,12 +78,7 @@ function DatasetStats() {
         </Typography>
       </div>
       <div>
-        <Typography
-          variant="caption"
-          sx={{
-            color: 'text.secondary',
-          }}
-        >
+        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
           Data Points
         </Typography>
         <Typography variant="h6">{chartDataset.length}</Typography>

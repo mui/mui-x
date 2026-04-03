@@ -53,9 +53,7 @@ export default function RadarClick() {
         <Stack
           spacing={1}
           direction={{ xs: 'row', md: 'column' }}
-          sx={{
-            alignItems: { xs: 'center', md: 'start' },
-          }}
+          sx={{ alignItems: { xs: 'center', md: 'start' } }}
         >
           <Typography>Item click listener</Typography>
           <ToggleButtonGroup

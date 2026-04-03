@@ -53,11 +53,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 
 export default function HeatmapDemo() {
   return (
-    <Stack
-      sx={{
-        width: '100%',
-      }}
-    >
+    <Stack sx={{ width: '100%' }}>
       <Typography align="center" sx={{ width: '100%', mb: 1 }}>
         Bicycle count: Paris - Rivoli street (West-East)
       </Typography>
@@ -114,12 +110,7 @@ export default function HeatmapDemo() {
           }}
         />
       </div>
-      <Typography
-        variant="caption"
-        sx={{
-          textAlign: 'end',
-        }}
-      >
+      <Typography variant="caption" sx={{ textAlign: 'end' }}>
         Data from{' '}
         <a href="https://parisdata.opendatasoft.com/explore/dataset/comptage-velo-donnees-compteurs/">
           Paris Data

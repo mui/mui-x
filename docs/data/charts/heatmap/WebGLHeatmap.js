@@ -43,11 +43,7 @@ const settings = {
 
 export default function WebGLHeatmap() {
   return (
-    <Stack
-      sx={{
-        width: '100%',
-      }}
-    >
+    <Stack sx={{ width: '100%' }}>
       <Typography variant="h6" sx={{ alignSelf: 'center', textAlign: 'center' }}>
         Yellow Taxi Trip Count - 2024
       </Typography>

@@ -7,11 +7,7 @@ import { dataset } from './tempAnomaly';
 
 export default function BasicColorLegend() {
   return (
-    <Stack
-      sx={{
-        width: '100%',
-      }}
-    >
+    <Stack sx={{ width: '100%' }}>
       <Typography variant="body1">
         Global temperature anomaly relative to 1961-1990 average
       </Typography>

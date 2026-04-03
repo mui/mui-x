@@ -45,13 +45,7 @@ export default function LineAnimation() {
           height={400}
         />
       </div>
-      <Stack
-        spacing={1}
-        direction="row"
-        sx={{
-          flexWrap: 'wrap',
-        }}
-      >
+      <Stack spacing={1} direction="row" sx={{ flexWrap: 'wrap' }}>
         <Button
           variant="outlined"
           onClick={() =>

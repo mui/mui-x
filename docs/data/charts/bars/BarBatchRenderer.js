@@ -17,11 +17,7 @@ export default function BarBatchRenderer() {
   const [renderer, setRenderer] = React.useState('svg-batch');
 
   return (
-    <Stack
-      sx={{
-        width: '100%',
-      }}
-    >
+    <Stack sx={{ width: '100%' }}>
       <FormControl fullWidth>
         <FormLabel id="bar-chart-renderer-label">Rendering Strategy</FormLabel>
         <RadioGroup

@@ -25,12 +25,7 @@ const series = [
 
 export default function ScrollableLegend() {
   return (
-    <Stack
-      sx={{
-        height: 200,
-        width: 200,
-      }}
-    >
+    <Stack sx={{ height: 200, width: 200 }}>
       <PieChart
         series={series}
         sx={{

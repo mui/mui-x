@@ -28,13 +28,7 @@ export default function ControlledAxisHighlight() {
   };
 
   return (
-    <Stack
-      spacing={2}
-      sx={{
-        alignItems: 'center',
-        width: '100%',
-      }}
-    >
+    <Stack spacing={2} sx={{ alignItems: 'center', width: '100%' }}>
       <FormControl>
         <FormLabel id="axis-index-radio-group">Highlighted index</FormLabel>
         <RadioGroup

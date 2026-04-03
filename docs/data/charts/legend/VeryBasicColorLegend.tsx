@@ -39,11 +39,7 @@ const data: LineChartProps = {
 
 export default function VeryBasicColorLegend() {
   return (
-    <Stack
-      sx={{
-        width: '100%',
-      }}
-    >
+    <Stack sx={{ width: '100%' }}>
       <LineChart
         {...data}
         xAxis={[

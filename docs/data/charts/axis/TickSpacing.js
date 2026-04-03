@@ -14,22 +14,11 @@ export default function TickSpacing() {
   const [tickSpacing, setTickSpacing] = React.useState(50);
 
   return (
-    <Stack
-      direction="column"
-      sx={{
-        gap: 4,
-        width: '100%',
-      }}
-    >
+    <Stack direction="column" sx={{ gap: 4, width: '100%' }}>
       <Stack
         direction="column"
         spacing={1}
-        sx={{
-          flex: 1,
-          width: '100%',
-          maxWidth: 400,
-          alignSelf: 'center',
-        }}
+        sx={{ flex: 1, width: '100%', maxWidth: 400, alignSelf: 'center' }}
       >
         <Typography gutterBottom id="tickSpacing">
           Tick Spacing

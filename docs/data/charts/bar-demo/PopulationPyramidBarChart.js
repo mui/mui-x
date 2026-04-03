@@ -49,20 +49,12 @@ const valueFormatter = (population) =>
 
 export default function PopulationPyramidBarChart() {
   return (
-    <Stack
-      sx={{
-        width: '100%',
-        height: 550,
-        mx: [0, 4],
-      }}
-    >
+    <Stack sx={{ width: '100%', height: 550, mx: [0, 4] }}>
       <Typography
         variant="h6"
         component="span"
         data-hide-overview
-        sx={{
-          textAlign: 'center',
-        }}
+        sx={{ textAlign: 'center' }}
       >
         South Korea Population Pyramid - 2022
       </Typography>

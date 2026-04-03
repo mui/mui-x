@@ -15,12 +15,7 @@ export default function SymlogScale() {
   };
 
   return (
-    <Stack
-      sx={{
-        width: '100%',
-        gap: 2,
-      }}
-    >
+    <Stack sx={{ width: '100%', gap: 2 }}>
       <ToggleButtonGroup
         value={chartType}
         exclusive
