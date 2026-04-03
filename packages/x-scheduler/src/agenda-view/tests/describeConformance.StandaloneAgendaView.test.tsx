@@ -27,7 +27,6 @@ describe('<StandaloneAgendaView /> - Describe Conformance', () => {
       refInstanceof: window.HTMLDivElement,
       skip: [
         'componentProp',
-        'componentsProp',
         'themeVariants',
         'rootClass',
         'themeDefaultProps',

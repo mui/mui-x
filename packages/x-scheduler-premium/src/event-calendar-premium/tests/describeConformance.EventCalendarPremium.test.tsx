@@ -25,7 +25,7 @@ describe('<EventCalendarPremium /> - Describe Conformance', () => {
       render,
       muiName: 'MuiEventCalendar',
       refInstanceof: window.HTMLDivElement,
-      skip: ['componentProp', 'componentsProp', 'themeVariants'],
+      skip: ['componentProp', 'themeVariants'],
     }),
   );
 });
