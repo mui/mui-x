@@ -1,7 +1,7 @@
 ---
 title: Charts - Toolbar
 productId: x-charts
-components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger, ChartsToolbarPrintExportTrigger, ChartsToolbarImageExportTrigger
+components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger, ChartsToolbarRangeButtonTrigger, ChartsToolbarPrintExportTrigger, ChartsToolbarImageExportTrigger
 ---
 
 # Charts - Toolbar
@@ -48,7 +48,7 @@ Alternatively, you can pass a function to the `render` prop, which receives the 
 
 The section below provides an example of this.
 
-## Fully custom toolbar
+### Fully custom toolbar
 
 You can partially or entirely replace the toolbar with a custom implementation to further customize its functionality.
 To do so, provide a custom component to the `toolbar` slot.
@@ -63,6 +63,67 @@ If you're replacing the toolbar with a custom one, the container should have the
 The `ChartsWrapper` component uses this class to place the toolbar relative to the legend and the chart.
 If you're composing a custom component without `ChartsWrapper`, you can ignore this information.
 :::
+
+## Range buttons
+
+Range buttons allow users to quickly zoom to predefined time ranges from the toolbar.
+They are particularly useful for time-series charts where users need to switch between different time windows.
+
+Pass the `rangeButtons` prop to the toolbar to configure the available ranges.
+Each button zooms the chart to show a specific time period calculated from the end of the data.
+
+{{"demo": "ChartsToolbarRangeButtons.js"}}
+
+### Range button values
+
+The `value` property of each range button supports the following formats:
+
+#### Calendar interval
+
+Use `{ unit, step }` to show a time period from the end of the data. The `step` defaults to `1`.
+Supported units: `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, and `'microsecond'`.
+
+```tsx
+{ label: '1M', value: { unit: 'month' } }
+{ label: '3M', value: { unit: 'month', step: 3 } }
+{ label: '1Y', value: { unit: 'year' } }
+```
+
+#### Absolute date range
+
+Use `[startDate, endDate]` to zoom to a fixed date range.
+
+```tsx
+{ label: '2024 H1', value: [new Date(2024, 0, 1), new Date(2024, 6, 1)] }
+```
+
+#### Function
+
+Use a function to compute custom zoom percentages (0–100).
+It receives the full domain bounds and the current zoomed-in bounds as timestamps.
+
+```tsx
+{ label: 'First half', value: () => ({ start: 0, end: 50 }) }
+{ label: 'Last half', value: () => ({ start: 50, end: 100 }) }
+```
+
+#### Reset
+
+Use `null` to reset zoom to show all data.
+
+```tsx
+{ label: 'All', value: null }
+```
+
+The following demo shows all value types together:
+
+{{"demo": "ChartsToolbarRangeButtonValues.js"}}
+
+### Custom toolbar with range buttons
+
+You can use `ChartsToolbarRangeButtonTrigger` directly in a custom toolbar to have full control over layout and behavior.
+
+{{"demo": "ChartsToolbarCustomRangeButtons.js"}}
 
 ## Accessibility
 

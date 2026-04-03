@@ -1,0 +1,14 @@
+{
+  "componentDescription": "A button that sets the chart zoom to a predefined time range.\nIt renders the `baseButton` slot.",
+  "propDescriptions": {
+    "axisId": {
+      "description": "The axis ID to apply the range to. Defaults to the first x-axis with zoom enabled."
+    },
+    "render": { "description": "A function to customize the rendering of the component." },
+    "size": { "description": "The size of the button." },
+    "value": {
+      "description": "<p>The range value. Specifies how far back from the end of the data to zoom.</p>\n<ul>\n<li><code>{ unit, step }</code> — A calendar interval from the end of the data (e.g., <code>{ unit: &#39;month&#39;, step: 3 }</code> for 3 months).</li>\n<li><code>[start, end]</code> — An absolute date range.</li>\n<li><code>(domainMin, domainMax, zoomedMin, zoomedMax) =&gt; { start, end }</code> — A function that receives the full axis domain bounds and the current zoomed-in bounds (as timestamps) and returns zoom percentages.</li>\n<li><code>null</code> — Resets zoom to show all data.</li>\n</ul>\n"
+    }
+  },
+  "classDescriptions": {}
+}
