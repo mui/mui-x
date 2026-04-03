@@ -42,6 +42,21 @@ You can specify the time period with the `xAxis` prop. This axis must have a ban
 
 {{"demo": "BasicCandlestick.js"}}
 
+### Using a dataset
+
+You can use the `dataset` prop to provide OHLC data and `datasetKeys` on the series to map dataset fields to the open, high, low, and close values.
+
+{{"demo": "DatasetCandlestick.js"}}
+
+## Value formatting
+
+Use the series `valueFormatter` to customize how OHLC values appear in the tooltip.
+
+The `valueFormatter` receives the individual field value (a number) and a context object with `dataIndex` and `field` properties.
+The `field` property indicates which OHLC component is being formatted: `'open'`, `'high'`, `'low'`, or `'close'`.
+
+{{"demo": "CandlestickValueFormatter.js"}}
+
 ## Customization
 
 Similarly to other chart types, you can customize the appearance and behavior of the candlestick chart.
@@ -58,6 +73,27 @@ The `upColor` is used when the close price is greater than or equal to the open 
 Those properties accept callback with type `(mode: 'light' | 'dark') => string`.
 
 {{"demo": "ColorCandlestick.js"}}
+
+### Custom tooltip
+
+When building a custom tooltip with the `useItemTooltip()` or `useAxesTooltip()` hooks, you need to provide `'ohlc'` as a generic type parameter.
+By default, these hooks exclude the `'ohlc'` series type, so the OHLC-specific value shape is not available unless explicitly specified.
+
+```tsx
+// Item tooltip
+const itemTooltipData = useItemTooltip<'ohlc'>();
+
+// Axis tooltip
+const axesTooltipData = useAxesTooltip<'ohlc'>();
+```
+
+This gives you properly typed `value` and `formattedValue` properties. Which are now objects containing the `open`, `high`, `low`, and `close` properties.
+
+If your chart combines OHLC with other series types, provide a union:
+
+```tsx
+const axesTooltipData = useAxesTooltip<'ohlc' | 'line' | 'bar'>();
+```
 
 ## Composition
 

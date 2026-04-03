@@ -21,8 +21,16 @@ function CandlestickWebGLPlot() {
   const series = useOHLCSeriesContext();
 
   const seriesToDisplay = series?.series[series.seriesOrder[0]];
+  const isHidden = !seriesToDisplay || seriesToDisplay.hidden;
 
-  if (!gl || !seriesToDisplay) {
+  React.useEffect(() => {
+    if (gl && isHidden) {
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+    }
+  }, [gl, isHidden]);
+
+  if (!gl || isHidden) {
     return null;
   }
 
