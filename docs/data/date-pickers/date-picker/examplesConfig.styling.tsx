@@ -83,7 +83,7 @@ export const staticDatePickerExamples: PickersSubcomponentType = {
       'weekNumber',
     ],
   },
-  PickersDay: {
+  PickerDay: {
     examples: {
       customTheme: {
         type: 'success',
@@ -200,7 +200,7 @@ export const datePickerExamples: PickersSubcomponentType = {
       'weekNumber',
     ],
   },
-  PickersDay: {
+  PickerDay: {
     examples: {
       customTheme: {
         type: 'success',
