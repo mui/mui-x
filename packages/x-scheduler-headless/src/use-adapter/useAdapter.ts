@@ -9,8 +9,7 @@ const DEFAULT_ADAPTER = new TemporalAdapterDateFns();
 // TODO: Replace with Base UI adapter when available.
 export function useAdapter(dateLocale?: DateLocale) {
   return React.useMemo(
-    () =>
-      dateLocale ? new TemporalAdapterDateFns({ locale: dateLocale }) : DEFAULT_ADAPTER,
+    () => (dateLocale ? new TemporalAdapterDateFns({ locale: dateLocale }) : DEFAULT_ADAPTER),
     [dateLocale],
   );
 }

@@ -7,10 +7,7 @@ import {
   SchedulerStore,
 } from '@mui/x-scheduler-headless/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
-import type {
-  TemporalAdapter,
-  TemporalSupportedObject,
-} from '@base-ui/react/internals/temporal';
+import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import { EventTimelinePremiumPreferences, EventTimelinePremiumView } from '../models';
 import {
   EventTimelinePremiumState,
