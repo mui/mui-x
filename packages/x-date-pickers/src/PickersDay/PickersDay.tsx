@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { CSSInterpolation, lineHeight } from '@mui/system';
+import { CSSInterpolation } from '@mui/system';
 import ButtonBase from '@mui/material/ButtonBase';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import composeClasses from '@mui/utils/composeClasses';
