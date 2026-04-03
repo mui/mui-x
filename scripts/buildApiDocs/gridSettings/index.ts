@@ -78,7 +78,7 @@ export const projectGridSettings: ProjectSettings = {
       .filter((page): page is PageType => page !== null)
       .sort((a: PageType, b: PageType) => a.title.localeCompare(b.title));
 
-    return `import type { MuiPage } from '@mui/docs/MuiPage';
+    return `import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
 const dataGridApiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
 export default dataGridApiPages;

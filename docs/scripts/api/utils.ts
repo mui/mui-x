@@ -8,9 +8,9 @@ import {
   getSymbolJSDocTags as getSymbolJSDocTagsBase,
   formatType,
   stringifySymbol as stringifySymbolBase,
-} from '@mui/monorepo/packages/api-docs-builder/buildApiUtils';
+} from '@mui/monorepo/packages-internal/api-docs-builder/buildApiUtils';
 // eslint-disable-next-line no-restricted-imports
-import resolveExportSpecifierBase from '@mui/monorepo/packages/api-docs-builder/utils/resolveExportSpecifier';
+import resolveExportSpecifierBase from '@mui/monorepo/packages-internal/api-docs-builder/utils/resolveExportSpecifier';
 import { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
 import { resolvePrettierConfigPath } from '../utils';
 

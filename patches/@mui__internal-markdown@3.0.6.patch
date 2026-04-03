@@ -1,0 +1,13 @@
+diff --git a/loader.mjs b/loader.mjs
+index 5a68a3fb78e23ddb98a87750acd0ecd94be77171..1f979e818da87ad9681a0b43ef74940cefec5584 100644
+--- a/loader.mjs
++++ b/loader.mjs
+@@ -660,7 +660,7 @@ export default async function demoLoader() {
+   );
+ 
+   componentNames.forEach((componentName) => {
+-    const moduleID = componentName.startsWith('@mui/docs/')
++    const moduleID = componentName.startsWith('@mui/internal-core-docs/')
+       ? componentName
+       : path.join(this.rootContext, 'src', componentName).replace(/\\/g, '/');
+ 
