@@ -18,8 +18,6 @@ import { useEventDialogStyledContext } from '../event-dialog/EventDialogStyledCo
 
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
   function ScopeDialog(props, ref) {
-    const other = props;
-
     // Context hooks
     const { localeText } = useEventDialogStyledContext();
     const store = useSchedulerStoreContext();
@@ -50,7 +48,7 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopove
         ref={ref}
         onClose={() => handleOpenChange(false)}
         aria-labelledby="scope-dialog-title"
-        {...other}
+        {...props}
       >
         <form onSubmit={handleSubmit}>
           <DialogTitle id="scope-dialog-title">{localeText.title}</DialogTitle>
