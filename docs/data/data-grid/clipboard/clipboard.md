@@ -70,6 +70,13 @@ Drag it up or down to fill rows, or left and right to fill adjacent columns.
 
 {{"demo": "CellSelectionFillHandle.js", "bg": "inline"}}
 
+:::info
+
+You can use the `GridColDef['pastedValueParser']` prop to handle how copying different types of data across columns, for example pasting a string into a number column, is handled.
+The above demo uses a `pastedValueParser` to convert the pasted value to a number if it is not a valid number, if the value is not cnvertible to a number, it falls back to the previous valid value.
+
+:::
+
 ### Disable clipboard paste
 
 To disable clipboard paste, set the `disableClipboardPaste` prop to `true`:
