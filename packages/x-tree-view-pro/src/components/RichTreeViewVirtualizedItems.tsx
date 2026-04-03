@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import { LayoutList, useVirtualizer, Virtualizer } from '@mui/x-virtualizer';
+import { LayoutList, useVirtualizerList, VirtualizerList } from '@mui/x-virtualizer';
 import { createSelectorMemoized, useStore } from '@mui/x-internals/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
@@ -17,7 +17,7 @@ import {
 import useSlotProps from '@mui/utils/useSlotProps';
 import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
 
-const VirtualizerContext = React.createContext<Virtualizer | null>(null);
+const VirtualizerContext = React.createContext<VirtualizerList | null>(null);
 
 const expandedItemsIdSelectors = createSelectorMemoized(expansionSelectors.flatList, (items) =>
   items.map((itemId) => ({ id: itemId, model: EMPTY_OBJECT })),
@@ -60,7 +60,7 @@ export function RichTreeViewVirtualizedItems<TProps extends object>(
     scroller: React.useRef<HTMLDivElement>(null),
   };
   const layout = useRefWithInit(() => new LayoutList(refs)).current;
-  const virtualizer = useVirtualizer({
+  const virtualizer = useVirtualizerList({
     layout,
     dimensions: {
       rowHeight: defaultItemHeight ?? 32,
