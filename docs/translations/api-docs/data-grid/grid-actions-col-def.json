@@ -35,6 +35,9 @@
     "examples": {
       "description": "Example values that can be used by the grid to get more context about the column."
     },
+    "excelValueGetter": {
+      "description": "Value getter for Excel export. If provided, this value is used instead of<br />the cell&#39;s displayed value when exporting to Excel.<br /><br />Return a string starting with &#39;=&#39; to export as an Excel formula<br />(requires <code>escapeFormulas: false</code> in export options).<br />Return other values to export as regular cell values.<br /><br />Note: This option is not supported when using the Excel export web worker."
+    },
     "filterable": { "description": "If <code>true</code>, the column is filterable." },
     "filterOperators": { "description": "Allows setting the filter operators for this column." },
     "flex": { "description": "The flex grow factor of the column. Must be a positive number." },
