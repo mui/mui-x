@@ -1,4 +1,4 @@
-import { TemporalSupportedObject, TemporalTimezone } from '../../../base-ui-copy/types';
+import { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 import {
   RecurringEventByDayValue,

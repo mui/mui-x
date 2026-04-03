@@ -1,5 +1,6 @@
 import { warn } from '@base-ui/utils/warn';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import {
   EventCalendarPreferences,
   CalendarView,
@@ -15,7 +16,6 @@ import {
   SchedulerInstanceName,
 } from '../internals/utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
-import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';

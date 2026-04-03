@@ -1,4 +1,4 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
+import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '../use-adapter';
 
 /**

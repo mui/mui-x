@@ -14,7 +14,6 @@
     "url": "https://opencollective.com/mui-org"
   },
   "exports": {
-    "./base-ui-copy": "./src/base-ui-copy/index.ts",
     "./build-is-valid-drop-target": "./src/build-is-valid-drop-target/index.ts",
     "./internals": "./src/internals/index.ts",
     "./calendar-grid": "./src/calendar-grid/index.ts",
@@ -70,7 +69,7 @@
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
     "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.2",
     "@babel/runtime": "catalog:",
-    "@base-ui/react": "^1.3.0",
+    "@base-ui/react": "https://pkg.pr.new/mui/base-ui/@base-ui/react@0882bfb",
     "@base-ui/utils": "catalog:",
     "@floating-ui/react": "^0.27.16",
     "@floating-ui/react-dom": "^2.1.6",
