@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { BaseUIComponentProps } from '@base-ui/react/internals/types';
-import { CompositeList } from '../../base-ui-copy/composite/list/CompositeList';
+import { CompositeList } from '@base-ui/react/internals/composite';
 
 export const CalendarGridHeaderRow = React.forwardRef(function CalendarGridHeaderRow(
   componentProps: CalendarGridHeaderRow.Props,

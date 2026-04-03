@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { BaseUIComponentProps } from '@base-ui/react/internals/types';
-import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
+import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useAdapterContext } from '../../use-adapter-context';
 import { schedulerNowSelectors } from '../../scheduler-selectors';

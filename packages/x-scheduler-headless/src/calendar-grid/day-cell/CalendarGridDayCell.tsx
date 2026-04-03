@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { BaseUIComponentProps } from '@base-ui/react/internals/types';
-import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
+import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useDayCellDropTarget } from './useDayCellDropTarget';

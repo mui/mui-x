@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui/react": "https://pkg.pr.new/mui/base-ui/@base-ui/react@c6abacc",
+    "@base-ui/react": "https://pkg.pr.new/mui/base-ui/@base-ui/react@4e7402b",
     "@base-ui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
