@@ -14,7 +14,7 @@ import type {
  */
 export interface BaseMultiInputFieldProps
   extends
-    Pick<UseFieldInternalProps<PickerRangeValue, boolean>, 'readOnly' | 'autoFocus'>,
+    Pick<UseFieldInternalProps<PickerRangeValue, unknown>, 'readOnly' | 'autoFocus'>,
     MultiInputFieldRefs {
   slots?: {
     root?: React.ElementType;
