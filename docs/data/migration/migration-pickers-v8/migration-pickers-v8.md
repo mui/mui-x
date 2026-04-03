@@ -284,3 +284,11 @@ Renames `PickersDay` to `PickerDay` and all related types and theme components.
 ```bash
 npx @mui/x-codemod@next v9.0.0/pickers/rename-pickers-day <path>
 ```
+
+### `remove-disable-margin`
+
+Removes the `disableMargin` prop from `PickerDay` (and legacy `PickersDay`) components and replaces it with the `--PickerDay-horizontalMargin` CSS variable set to `0` via the `sx` prop.
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/remove-disable-margin <path>
+```

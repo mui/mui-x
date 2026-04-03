@@ -153,7 +153,7 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
   display: 'flex',
   width: 'var(--PickerDay-size)',
   height: 'var(--PickerDay-size)',
-  borderRadius: '18px',
+  borderRadius: 'calc(var(--PickerDay-size) / 2)',
   padding: 0,
   position: 'relative',
   marginLeft: 'var(--PickerDay-horizontalMargin)',
