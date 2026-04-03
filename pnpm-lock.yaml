@@ -259,8 +259,8 @@ importers:
         specifier: 9.0.0-beta.1
         version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#899a9a8641bebdf0b4b341ee191db038396e831c
-        version: https://codeload.github.com/mui/material-ui/tar.gz/899a9a8641bebdf0b4b341ee191db038396e831c(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
+        specifier: github:mui/material-ui#e1e43bd51af112e1dad4fab838075244fe5c0363
+        version: https://codeload.github.com/mui/material-ui/tar.gz/e1e43bd51af112e1dad4fab838075244fe5c0363(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
       '@mui/utils':
         specifier: 9.0.0-beta.1
         version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
@@ -487,7 +487,7 @@ importers:
         specifier: ^0.7.1-canary.1
         version: 0.7.1-canary.1(@types/react@19.2.14)(next@16.2.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(prettier@3.8.1)(react@19.2.4)(typescript@5.9.3)
       '@mui/lab':
-        specifier: ^9.0.0-beta.0
+        specifier: ^9.0.0-beta.1
         version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/material':
         specifier: 9.0.0-beta.1
@@ -4453,8 +4453,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/899a9a8641bebdf0b4b341ee191db038396e831c':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/899a9a8641bebdf0b4b341ee191db038396e831c}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/e1e43bd51af112e1dad4fab838075244fe5c0363':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/e1e43bd51af112e1dad4fab838075244fe5c0363}
     version: 9.0.0-beta.1
     engines: {node: '>=22.18.0', pnpm: 10.33.0}
 
@@ -15249,7 +15249,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/react': 19.2.14
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/899a9a8641bebdf0b4b341ee191db038396e831c(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/e1e43bd51af112e1dad4fab838075244fe5c0363(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
     dependencies:
       '@netlify/functions': 5.1.5
       '@slack/bolt': 4.6.0(@types/express@5.0.3)

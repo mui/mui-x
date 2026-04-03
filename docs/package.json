@@ -30,7 +30,7 @@
     "@mui/icons-material": "catalog:",
     "@mui/base": "^5.0.0-beta.70",
     "@mui/internal-docs-infra": "^0.7.1-canary.1",
-    "@mui/lab": "^9.0.0-beta.0",
+    "@mui/lab": "^9.0.0-beta.1",
     "@mui/material": "catalog:",
     "@mui/material-nextjs": "^9.0.0-beta.0",
     "@mui/stylis-plugin-rtl": "catalog:",
