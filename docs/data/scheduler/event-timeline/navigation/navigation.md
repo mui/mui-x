@@ -10,7 +10,7 @@ components: EventTimelinePremium
 
 <p class="description">Navigate in time to find the events you are looking for.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Default visible date
 

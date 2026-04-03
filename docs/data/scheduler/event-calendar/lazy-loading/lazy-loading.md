@@ -10,7 +10,7 @@ components: EventCalendarPremium
 
 <p class="description">The `dataSource` prop accepts a `getEvents()` method to lazily load events.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 Instead of loading all events upfront, you can use the `dataSource` prop to fetch events on demand as the user navigates between dates and views.
 The `dataSource.getEvents(start, end)` method is called whenever the visible date range changes, so only the events needed for the current view are fetched.
