@@ -88,7 +88,11 @@ export function DemoItem(props: DemoItemProps) {
   }
 
   return (
-    <Stack direction="column" spacing={spacing} sx={{ alignItems, ...sx }}>
+    <Stack
+      direction="column"
+      spacing={spacing}
+      sx={[{ alignItems }, ...(Array.isArray(sx) ? sx : [sx])]}
+    >
       {label && <Typography variant="body2">{label}</Typography>}
       {children}
     </Stack>
