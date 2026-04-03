@@ -63,6 +63,7 @@ const getSupportedSectionFromChildName = (childName: string): PickersSupportedSe
 interface DemoItemProps extends Omit<StackProps, 'component'> {
   label?: React.ReactNode;
   component?: string;
+  alignItems?: React.CSSProperties['alignItems'];
 }
 /**
  * WARNING: This is an internal component used in documentation to achieve a desired layout.
@@ -87,7 +88,11 @@ export function DemoItem(props: DemoItemProps) {
   }
 
   return (
-    <Stack direction="column" alignItems={alignItems} spacing={spacing} sx={sx}>
+    <Stack
+      direction="column"
+      spacing={spacing}
+      sx={[{ alignItems }, ...(Array.isArray(sx) ? sx : [sx])]}
+    >
       {label && <Typography variant="body2">{label}</Typography>}
       {children}
     </Stack>

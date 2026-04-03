@@ -65,7 +65,11 @@ export function CustomAxisTooltip() {
                 />
               </td>
               <td>
-                <Typography fontWeight="light">
+                <Typography
+                  sx={{
+                    fontWeight: 'light',
+                  }}
+                >
                   {seriesItem.formattedLabel}
                 </Typography>
               </td>

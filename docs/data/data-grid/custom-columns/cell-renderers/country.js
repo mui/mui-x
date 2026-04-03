@@ -106,11 +106,13 @@ function EditCountry(props) {
           autoFocus
           fullWidth
           id={params.id}
-          inputProps={{
-            ...params.inputProps,
-            autoComplete: 'new-password', // disable autocomplete and autofill
+          {...params.slotProps.input}
+          slotProps={{
+            input: {
+              ...params.slotProps.htmlInput,
+              autoComplete: 'new-password', // disable autocomplete and autofill
+            },
           }}
-          {...params.InputProps}
         />
       )}
     />

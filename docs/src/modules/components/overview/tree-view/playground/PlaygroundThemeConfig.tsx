@@ -71,20 +71,30 @@ export default function ThemesConfig({
 }: ThemesConfigProps) {
   return (
     <Stack
-      justifyContent="flex-start"
       spacing={2}
-      sx={(theme) => ({
-        minWidth: '300px',
-        borderRadius: {
-          xs: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
-          md: `0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0`,
+      sx={[
+        {
+          justifyContent: 'flex-start',
         },
-        padding: 2,
-        overflow: 'auto',
-      })}
+        (theme) => ({
+          minWidth: '300px',
+          borderRadius: {
+            xs: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+            md: `0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0`,
+          },
+          padding: 2,
+          overflow: 'auto',
+        }),
+      ]}
     >
       <Stack spacing={1.5}>
-        <Typography fontSize="0.8rem" gutterBottom color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: '0.8rem',
+            color: 'hsl(220, 25%, 45%)',
+          }}
+        >
           Color
         </Typography>
         <ConfigToggleButtons
@@ -97,7 +107,13 @@ export default function ThemesConfig({
         />
       </Stack>
       <Stack spacing={1.5}>
-        <Typography fontSize="0.8rem" gutterBottom color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: '0.8rem',
+            color: 'hsl(220, 25%, 45%)',
+          }}
+        >
           Border radius
         </Typography>
         <ConfigToggleButtons
@@ -120,7 +136,13 @@ export default function ThemesConfig({
         />
       </Stack>
       <Stack spacing={1.5}>
-        <Typography fontSize="0.8rem" gutterBottom color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: '0.8rem',
+            color: 'hsl(220, 25%, 45%)',
+          }}
+        >
           Density
         </Typography>
         <ConfigToggleButtons
@@ -143,7 +165,13 @@ export default function ThemesConfig({
         />
       </Stack>
       <Stack spacing={1.5}>
-        <Typography gutterBottom fontSize="0.8rem" color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: '0.8rem',
+            color: 'hsl(220, 25%, 45%)',
+          }}
+        >
           Layout
         </Typography>
 
@@ -152,18 +180,24 @@ export default function ThemesConfig({
           labelPlacement="start"
           label="Add children outline"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
         <FormControlLabel
           control={<Switch checked={showFolderIcon} onChange={handleToggleFolderIcon} />}
           labelPlacement="start"
           label="Mark folders with icon"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
       </Stack>
       <Stack spacing={1.5}>
-        <Typography gutterBottom fontSize="0.8rem" color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: '0.8rem',
+            color: 'hsl(220, 25%, 45%)',
+          }}
+        >
           Behavior
         </Typography>
 
@@ -172,19 +206,24 @@ export default function ThemesConfig({
           labelPlacement="start"
           label="Show disable button"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
         <FormControlLabel
           control={<Switch checked={showSecondaryLabel} onChange={handleToggleSecondaryLabel} />}
           labelPlacement="start"
           label="Add secondary label"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
       </Stack>
-
       <Stack spacing={1.5}>
-        <Typography gutterBottom fontSize="0.8rem" color="hsl(220, 25%, 45%)">
+        <Typography
+          gutterBottom
+          sx={{
+            fontSize: '0.8rem',
+            color: 'hsl(220, 25%, 45%)',
+          }}
+        >
           Selection behavior
         </Typography>
 
@@ -195,14 +234,14 @@ export default function ThemesConfig({
           labelPlacement="start"
           label="Checkbox selection"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
         <FormControlLabel
           control={<Switch checked={isMultiSelectEnabled} onChange={handleToggleMultiSelect} />}
           labelPlacement="start"
           label="Multiple selection"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
         <FormControlLabel
           control={
@@ -220,7 +259,7 @@ export default function ThemesConfig({
           labelPlacement="start"
           label="Auto select parents"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
         <FormControlLabel
           control={
@@ -238,7 +277,7 @@ export default function ThemesConfig({
           labelPlacement="start"
           label="Auto select descendants"
           sx={{ gap: 1, justifyContent: 'space-between' }}
-          slotProps={{ typography: { fontSize: '0.8rem' } }}
+          slotProps={{ typography: { sx: { fontSize: '0.8rem' } } }}
         />
       </Stack>
     </Stack>

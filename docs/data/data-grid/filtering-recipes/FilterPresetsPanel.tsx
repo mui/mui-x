@@ -282,7 +282,12 @@ function CustomFilterPanel(props: GridFilterPanelProps) {
                   <ListItemText
                     primary={preset.name}
                     secondary={
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: 'text.secondary',
+                        }}
+                      >
                         {preset.filterModel.items.length} filter
                         {preset.filterModel.items.length > 1 ? 's' : ''}
                       </Typography>
@@ -294,11 +299,8 @@ function CustomFilterPanel(props: GridFilterPanelProps) {
           </List>
         )}
       </Box>
-
       <Divider orientation="vertical" sx={{ height: 'auto' }} />
-
       <GridFilterPanel {...props} />
-
       <Dialog
         open={createFilterDialogOpen}
         onClose={() => setCreateFilterDialogOpen(false)}

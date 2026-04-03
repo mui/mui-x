@@ -89,7 +89,13 @@ export default function Legends() {
         width={400}
         height={60}
       >
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <ChartsLegend direction="horizontal" />
           <div style={{ flexGrow: 1 }}>
             <ContinuousColorLegend

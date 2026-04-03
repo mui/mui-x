@@ -13,14 +13,18 @@ export default function GitHubExample() {
   return (
     <Stack sx={{ width: '100%', height: '100%', overflowY: 'auto' }} direction="row" spacing={0}>
       <Stack
-        p={2}
-        sx={(theme) => ({
-          overflowY: 'auto',
-          borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
-          height: '100%',
-          minWidth: { xs: '100%', md: 'fit-content' },
-          alignItems: 'center',
-        })}
+        sx={[
+          {
+            p: 2,
+          },
+          (theme) => ({
+            overflowY: 'auto',
+            borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
+            height: '100%',
+            minWidth: { xs: '100%', md: 'fit-content' },
+            alignItems: 'center',
+          }),
+        ]}
       >
         <GitHubTreeView selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
       </Stack>

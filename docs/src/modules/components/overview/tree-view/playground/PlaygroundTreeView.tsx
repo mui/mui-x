@@ -197,9 +197,11 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           <Stack
             direction="row"
             spacing={1}
-            alignItems="center"
-            flexGrow={1}
-            justifyContent="flex-start"
+            sx={{
+              alignItems: 'center',
+              flexGrow: 1,
+              justifyContent: 'flex-start',
+            }}
           >
             <TreeItemIconContainer
               {...getIconContainerProps({ sx: { '& svg': { fontSize: 13 } } })}
@@ -224,13 +226,24 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
                 })}
               />
               {showSecondaryLabel && (
-                <Typography variant="caption" color="text.secondary">
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: 'text.secondary',
+                  }}
+                >
                   {item.secondaryLabel}
                 </Typography>
               )}
             </Stack>
           </Stack>
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              alignItems: 'center',
+            }}
+          >
             {showDisableButton && (
               <IconButton
                 size="small"
@@ -403,18 +416,22 @@ export default function PlaygroundTreeView({
 
   return (
     <Stack
-      justifyContent="center"
-      alignItems="center"
-      pl={1}
-      py={1}
-      sx={(theme) => ({
-        borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
-        height: '100%',
-        width: '100%',
-        flexGrow: 1,
-        backgroundImage: `linear-gradient(${theme.palette.divider} 1px, transparent 1px), linear-gradient(to right,${theme.palette.divider} 1px, ${theme.palette.background.paper} 1px)`,
-        backgroundSize: '20px 20px',
-      })}
+      sx={[
+        {
+          justifyContent: 'center',
+          alignItems: 'center',
+          pl: 1,
+          py: 1,
+        },
+        (theme) => ({
+          borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
+          height: '100%',
+          width: '100%',
+          flexGrow: 1,
+          backgroundImage: `linear-gradient(${theme.palette.divider} 1px, transparent 1px), linear-gradient(to right,${theme.palette.divider} 1px, ${theme.palette.background.paper} 1px)`,
+          backgroundSize: '20px 20px',
+        }),
+      ]}
     >
       <ThemeProvider theme={customTheme}>
         <Paper variant="outlined" sx={{ padding: 2, minHeight: 480, overflow: 'auto' }}>

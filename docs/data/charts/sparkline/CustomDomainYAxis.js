@@ -52,7 +52,13 @@ export default function CustomDomainYAxis() {
         width: '100%',
       }}
     >
-      <Stack direction="row" alignItems="baseline" justifyContent="space-between">
+      <Stack
+        direction="row"
+        sx={{
+          alignItems: 'baseline',
+          justifyContent: 'space-between',
+        }}
+      >
         <TextField
           select
           value={domainLimitKey}

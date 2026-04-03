@@ -44,7 +44,6 @@ export function ToolbarColumnsItem(props: ToolbarColumnsItemProps) {
       <ToolbarButton onClick={() => setOpen(true)}>
         <GridColumnIcon fontSize="small" />
       </ToolbarButton>
-
       <Drawer
         anchor={listView ? 'bottom' : 'right'}
         open={open}
@@ -52,7 +51,13 @@ export function ToolbarColumnsItem(props: ToolbarColumnsItemProps) {
         onClose={() => setOpen(false)}
       >
         <DrawerHeader>
-          <Typography fontWeight={500}>Fields</Typography>
+          <Typography
+            sx={{
+              fontWeight: 500,
+            }}
+          >
+            Fields
+          </Typography>
         </DrawerHeader>
 
         <List>

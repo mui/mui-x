@@ -140,11 +140,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
         <CustomTreeItemContent {...getContentProps()}>
           <Stack
             direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ maxWidth: '100%' }}
-            flexGrow={1}
             spacing={0.5}
+            sx={{
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexGrow: 1,
+              maxWidth: '100%',
+            }}
           >
             <TreeItemIconContainer
               {...getIconContainerProps({ sx: { '& svg': { fontSize: 13 } } })}
@@ -169,7 +171,14 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
               })}
             />
             {!status.expandable && (
-              <Stack direction="row" spacing={1} paddingLeft={1} alignItems="center">
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{
+                  paddingLeft: 1,
+                  alignItems: 'center',
+                }}
+              >
                 <Icon sx={{ fontSize: 12 }} />
               </Stack>
             )}

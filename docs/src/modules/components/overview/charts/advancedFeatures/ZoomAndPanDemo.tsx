@@ -26,7 +26,11 @@ const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', cu
 
 function ZoomAndPan() {
   return (
-    <Stack height="100%">
+    <Stack
+      sx={{
+        height: '100%',
+      }}
+    >
       <Typography align="center">Google vs Meta stock price</Typography>
       <LineChartPro
         dataset={formattedDataset}

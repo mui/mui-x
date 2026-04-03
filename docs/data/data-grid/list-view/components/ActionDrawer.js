@@ -20,27 +20,56 @@ function DrawerContent(props) {
     <React.Fragment>
       <DrawerHeader>
         <FileIcon type={params.row.type} sx={{ width: 32, height: 32 }} />
-        <Stack gap={0.25}>
+        <Stack
+          sx={{
+            gap: 0.25,
+          }}
+        >
           <Typography variant="body1">{params.row.name}</Typography>
-          <Stack direction="row" gap={0.5}>
-            <Typography variant="caption" color="text.secondary">
+          <Stack
+            direction="row"
+            sx={{
+              gap: 0.5,
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'text.secondary',
+              }}
+            >
               {params.row.createdBy}
             </Typography>
-            <Typography variant="caption" color="text.secondary" aria-hidden>
+            <Typography
+              variant="caption"
+              aria-hidden
+              sx={{
+                color: 'text.secondary',
+              }}
+            >
               &middot;
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'text.secondary',
+              }}
+            >
               {formatSize(params.row.size)}
             </Typography>
           </Stack>
-          <Typography variant="caption" color="text.secondary">
+          <Typography
+            variant="caption"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             {params.row.updatedAt
               ? `Updated ${formatDate(params.row.updatedAt)}`
               : `Added ${formatDate(params.row.createdAt)}`}
           </Typography>
         </Stack>
       </DrawerHeader>
-
       <List>
         <ListItem disablePadding>
           <ListItemButton onClick={onPreview}>

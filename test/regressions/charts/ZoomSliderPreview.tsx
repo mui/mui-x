@@ -36,7 +36,14 @@ const barSettings = {
 export default function ZoomSliderPreview() {
   return (
     <ThemeProvider theme={darkTheme}>
-      <Stack width="100%" sx={(theme) => ({ background: theme.palette.background.default })}>
+      <Stack
+        sx={[
+          {
+            width: '100%',
+          },
+          (theme) => ({ background: theme.palette.background.default }),
+        ]}
+      >
         <BarChartPro
           {...barSettings}
           xAxis={[

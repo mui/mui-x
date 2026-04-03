@@ -25,7 +25,12 @@ function CustomColumnMenu(props) {
   };
   return (
     <React.Fragment>
-      <Stack px={0.5} py={0.5}>
+      <Stack
+        sx={{
+          px: 0.5,
+          py: 0.5,
+        }}
+      >
         <GridColumnMenuSortItem {...itemProps} />
         {/* Only provide filtering on desk */}
         {itemProps.colDef.field === 'desk' ? (
@@ -33,7 +38,12 @@ function CustomColumnMenu(props) {
         ) : null}
       </Stack>
       <Divider />
-      <Stack px={0.5} py={0.5}>
+      <Stack
+        sx={{
+          px: 0.5,
+          py: 0.5,
+        }}
+      >
         <GridColumnMenuColumnsItem {...itemProps} />
         <MenuCloseComponent {...itemProps} />
       </Stack>

@@ -33,7 +33,12 @@ export default function ControlledAxisTooltip() {
       sx={{ width: '100%' }}
     >
       <Box sx={{ flexGrow: 1 }}>
-        <Stack spacing={2} alignItems={'center'}>
+        <Stack
+          spacing={2}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <FormControl>
             <FormLabel id="item-id-radio-group">Item ID</FormLabel>
             <RadioGroup

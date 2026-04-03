@@ -31,7 +31,13 @@ function CircularProgressWithLabel(props) {
           justifyContent: 'center',
         }}
       >
-        <Typography variant="caption" component="div" color="text.primary">
+        <Typography
+          variant="caption"
+          component="div"
+          sx={{
+            color: 'text.primary',
+          }}
+        >
           {`${Math.round(props.value)}%`}
         </Typography>
       </Box>

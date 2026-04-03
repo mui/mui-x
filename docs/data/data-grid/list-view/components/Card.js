@@ -6,14 +6,16 @@ export function Card(props) {
   return (
     <Stack
       direction="row"
-      gap={2}
-      sx={{
-        alignItems: 'center',
-        width: '100%',
-        height: '100%',
-        ...(other.sx || {}),
-      }}
       {...other}
+      sx={[
+        {
+          gap: 2,
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+        },
+        ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
+      ]}
     >
       {children}
     </Stack>
@@ -24,8 +26,11 @@ export function CardMedia(props) {
   const { children, ...other } = props;
   return (
     <Stack
-      sx={{ flexShrink: 0, alignItems: 'center', ...(other.sx || {}) }}
       {...other}
+      sx={[
+        { flexShrink: 0, alignItems: 'center' },
+        ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
+      ]}
     >
       {children}
     </Stack>
@@ -35,7 +40,16 @@ export function CardMedia(props) {
 export function CardContent(props) {
   const { children, ...other } = props;
   return (
-    <Stack gap={0.25} sx={{ flexGrow: 1, ...(other.sx || {}) }} {...other}>
+    <Stack
+      {...other}
+      sx={[
+        {
+          gap: 0.25,
+          flexGrow: 1,
+        },
+        ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
+      ]}
+    >
       {children}
     </Stack>
   );
@@ -53,7 +67,17 @@ export function CardTitle(props) {
 export function CardDetailList(props) {
   const { children, ...other } = props;
   return (
-    <Stack direction="row" flexWrap="wrap" gap={1} {...other}>
+    <Stack
+      direction="row"
+      {...other}
+      sx={[
+        {
+          flexWrap: 'wrap',
+          gap: 1,
+        },
+        ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
+      ]}
+    >
       {children}
     </Stack>
   );
@@ -62,7 +86,16 @@ export function CardDetailList(props) {
 export function CardDetail(props) {
   const { children, ...other } = props;
   return (
-    <Typography variant="caption" color="text.secondary" {...other}>
+    <Typography
+      variant="caption"
+      {...other}
+      sx={[
+        {
+          color: 'text.secondary',
+        },
+        ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
+      ]}
+    >
       {children}
     </Typography>
   );
