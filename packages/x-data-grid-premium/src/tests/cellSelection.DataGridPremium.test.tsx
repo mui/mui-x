@@ -15,14 +15,6 @@ import {
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
 
-// CSS.escape is not available in JSDOM — polyfill it for tests that use cellSelectionFillHandle
-if (typeof CSS === 'undefined') {
-  // @ts-ignore
-  globalThis.CSS = { escape: (value: string) => String(value) };
-} else if (!CSS.escape) {
-  CSS.escape = (value: string) => String(value);
-}
-
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
 

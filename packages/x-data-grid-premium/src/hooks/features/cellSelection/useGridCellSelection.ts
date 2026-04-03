@@ -6,6 +6,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import {
   type GridPipeProcessor,
   type GridStateInitializer,
+  getGridCellElement,
   getTotalHeaderHeight,
   getVisibleRows,
   isFillDownShortcut,
@@ -977,9 +978,7 @@ export const useGridCellSelection = (
 
             newTargetRowIds.forEach((rowId, rowIdx) => {
               newTargetFields.forEach((field, colIdx) => {
-                const cellEl = currentRootEl.querySelector(
-                  `[data-id="${CSS.escape(String(rowId))}"] [data-field="${CSS.escape(field)}"]`,
-                );
+                const cellEl = getGridCellElement(currentRootEl, { id: rowId, field });
                 if (cellEl) {
                   nextDecorated.add(cellEl);
                   cellEl.classList.add(gridClasses['cell--fillPreview']);

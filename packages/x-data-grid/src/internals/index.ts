@@ -198,6 +198,7 @@ export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSel
 export {
   findParentElementFromClassName,
   getActiveElement,
+  getGridCellElement,
   isEventTargetInPortal,
 } from '../utils/domUtils';
 export {
