@@ -3,7 +3,6 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { TextFieldProps } from '@mui/material/TextField';
 import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { SvgIconProps } from '@mui/material/SvgIcon';
@@ -29,7 +28,7 @@ export const cleanFieldResponse = <
   fieldResponse: TFieldResponse,
 ): ExportedPickerFieldUIProps & {
   openPickerAriaLabel: string;
-  textFieldProps: TextFieldProps | PickersTextFieldProps;
+  textFieldProps: Partial<PickersTextFieldProps> & Record<string, any>;
 } => {
   const {
     InputProps,
@@ -189,7 +188,7 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
 
   const additionalTextFieldInputProps: PickersTextFieldProps['InputProps'] = {};
   const textFieldInputProps = resolveComponentProps(
-    ((materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input) ??
+    ((materialMajor >= 6 && (textFieldProps as any)?.slotProps?.input) ??
       textFieldProps.InputProps) as PickersTextFieldProps['InputProps'] | undefined,
     ownerState,
   );
@@ -268,7 +267,7 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
   }
 
   const resolvedTextFieldInputProps =
-    materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input
+    materialMajor >= 6 && (textFieldProps as any)?.slotProps?.input
       ? resolveComponentProps(
           mergeSlotProps(textFieldInputProps, additionalTextFieldInputProps),
           ownerState,
@@ -280,18 +279,15 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
 
   // We need to resolve the `inputProps` since we are messing with those props in this component.
   textFieldProps.inputProps =
-    materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.htmlInput
-      ? resolveComponentProps(
-          (textFieldProps as TextFieldProps).slotProps!.htmlInput as any,
-          ownerState,
-        )
+    materialMajor >= 6 && (textFieldProps as any)?.slotProps?.htmlInput
+      ? resolveComponentProps((textFieldProps as any).slotProps!.htmlInput as any, ownerState)
       : textFieldProps.inputProps;
 
   // Remove the `input` slotProps to avoid them overriding the manually resolved `InputProps`.
   // Relevant on `materialMajor >= 6` since `slotProps` would take precedence.
-  delete (textFieldProps as TextFieldProps)?.slotProps?.input;
+  delete (textFieldProps as any)?.slotProps?.input;
   // Remove the `slotProps` on `PickersTextField` as they are not supported.
-  delete (textFieldProps as TextFieldProps)?.slotProps;
+  delete (textFieldProps as any)?.slotProps;
 
   return <TextField {...textFieldProps} InputProps={resolvedTextFieldInputProps} />;
 }
@@ -368,7 +364,14 @@ export interface PickerFieldUISlotsFromContext extends PickerFieldUISlots {
 
 export interface PickerFieldUISlotProps {
   textField?: SlotComponentPropsFromProps<
-    Omit<TextFieldProps, 'onKeyDown'> | PickersTextFieldProps,
+    PickersTextFieldProps & {
+      // Temporary solution until we update the PickersTextField props to accept the `slotProps` as in `@mui/material` v9.
+      // TODO v9: Refactor
+      slotProps?: {
+        input?: Record<string, any>;
+        htmlInput?: Record<string, any>;
+      };
+    },
     {},
     FieldOwnerState
   >;
@@ -506,11 +509,7 @@ export function useFieldTextFieldProps<
 interface UseFieldTextFieldPropsParameters {
   slotProps:
     | {
-        textField?: SlotComponentPropsFromProps<
-          Omit<TextFieldProps, 'onKeyDown'> | PickersTextFieldProps,
-          {},
-          FieldOwnerState
-        >;
+        textField?: PickerFieldUISlotProps['textField'];
       }
     | undefined;
   ref: React.Ref<HTMLDivElement>;

@@ -1,6 +1,5 @@
 import type { TypographyProps } from '@mui/material/Typography';
 import type { StackProps } from '@mui/material/Stack';
-import type { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
 import { FieldOwnerState } from '@mui/x-date-pickers/models';
@@ -65,7 +64,7 @@ export interface MultiInputRangeFieldSlots {
 export interface MultiInputRangeFieldSlotProps {
   root?: SlotComponentPropsFromProps<StackProps, {}, FieldOwnerState>;
   textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps | TextFieldProps,
+    PickersTextFieldProps,
     {},
     FieldOwnerState & {
       position: RangePosition;
