@@ -34,19 +34,8 @@ function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
 describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
   const { render } = createRenderer();
 
-  let env: any;
-
-  beforeEach(() => {
-    env = process.env.NODE_ENV;
-    // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-    // eslint-disable-next-line no-useless-concat
-    process.env['NODE_' + 'ENV'] = 'test';
-  });
-
   afterEach(() => {
-    // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-    // eslint-disable-next-line no-useless-concat
-    process.env['NODE_' + 'ENV'] = env;
+    vi.unstubAllEnvs();
   });
 
   describe('error', () => {
@@ -76,9 +65,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
     });
 
     it('should throw if the license is expired by more than a 30 days', () => {
-      // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-      // eslint-disable-next-line no-useless-concat
-      process.env['NODE_' + 'ENV'] = 'development';
+      vi.stubGlobal('MUI_TEST_ENV', undefined);
 
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2024-06-15T00:00:00.000Z'));
@@ -182,9 +169,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
     it.each(planCombinations)(
       'should reject v8 plan $planVersion with scope $planScope',
       ({ licenseKey, outOfScope, notInInitial, notValidForPackage }) => {
-        // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-        // eslint-disable-next-line no-useless-concat
-        process.env['NODE_' + 'ENV'] = 'development';
+        vi.stubGlobal('MUI_TEST_ENV', undefined);
 
         LicenseInfo.setLicenseKey(licenseKey);
 

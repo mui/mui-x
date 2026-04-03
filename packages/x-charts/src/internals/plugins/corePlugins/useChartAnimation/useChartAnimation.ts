@@ -77,7 +77,9 @@ useChartAnimation.getInitialState = ({ skipAnimation }) => {
   // We use the value of `isAnimationDisabledEnvironment` as the initial value of `skipAnimation` to avoid
   // re-rendering the component on environments where matchMedia is not supported, hence skipAnimation will always be true.
   const disableAnimations =
-    process.env.NODE_ENV === 'test' ? isAnimationDisabledEnvironment : false;
+    process.env.NODE_ENV !== 'production' && (globalThis as any).MUI_TEST_ENV
+      ? isAnimationDisabledEnvironment
+      : false;
 
   return {
     animation: {
