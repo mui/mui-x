@@ -166,9 +166,11 @@ describe('<DataGrid /> - Material Slots', () => {
           slotProps={{
             htmlInput: { ref: htmlInputRef } as any,
           }}
-          material={{
-            slotProps: { input: { ref: materialInputRef } },
-          } as any}
+          material={
+            {
+              slotProps: { input: { ref: materialInputRef } },
+            } as any
+          }
         />,
       );
 
