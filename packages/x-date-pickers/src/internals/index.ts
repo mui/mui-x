@@ -63,6 +63,7 @@ export type {
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export {
+  DAY_SIZE,
   DAY_MARGIN,
   DIALOG_WIDTH,
   VIEW_HEIGHT,
@@ -202,7 +203,7 @@ export { useCalendarState } from '../DateCalendar/useCalendarState';
 
 export { DateTimePickerToolbarOverrideContext } from '../DateTimePicker/DateTimePickerToolbar';
 
-export { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
+export { usePickerDayOwnerState } from './hooks/usePickerDayOwnerState';
 
 export { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 export { useApplyDefaultValuesToTimeValidationProps } from '../managers/useTimeManager';
