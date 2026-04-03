@@ -12,7 +12,7 @@ import {
   RadarSeriesType,
 } from '@mui/x-charts/models';
 import { RadarChart } from '@mui/x-charts/RadarChart';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 
 export default function RadarClick() {
   const [itemData, setItemData] = React.useState<RadarItemIdentifier>();

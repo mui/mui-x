@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import { BrandingProvider } from '@mui/docs/branding';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { BrandingProvider } from '@mui/internal-core-docs/branding';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import DemoPropsForm, { DataType, PropsFromData } from './DemoPropsForm';
 
 export type ChartsUsageDemoProps<Data extends Record<string, DataType>, Props> = {

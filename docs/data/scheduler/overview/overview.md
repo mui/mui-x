@@ -11,7 +11,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">A collection of React UI components to schedule your events.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 {{"component": "modules/components/overview/scheduler/mainDemo/MainDemo.tsx"}}
 {{"component": "modules/components/overview/scheduler/SchedulerFeaturesHighlight.tsx"}}
