@@ -45,6 +45,52 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
     <div style={{ width: 400, height: 400 }}>{children}</div>
   );
 
+  describe('axis trigger - keyboard navigation', () => {
+    it('should show tooltip when navigating with keyboard', async () => {
+      const { user } = render(
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis' } }}
+        />,
+        { wrapper },
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '4'];
+        const secondRow = ['S2', '2'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'A',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
+
+      await user.keyboard('[ArrowRight]');
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '1'];
+        const secondRow = ['S2', '1'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'B',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
+    });
+  });
+
   describe('axis trigger', () => {
     it('should show right values with vertical layout on axis', async () => {
       const { user, container } = render(

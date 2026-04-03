@@ -58,7 +58,7 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
    */
   identifierCleaner: IdentifierCleaner<SeriesType>;
   getItemAtPosition?: GetItemAtPosition<SeriesType>;
-  descriptionGetter?: DescriptionGetter<SeriesType>;
+  descriptionGetter: DescriptionGetter<SeriesType>;
   isHighlightedCreator: HighlightCreator<SeriesType>;
   isFadedCreator: HighlightCreator<SeriesType>;
 } & (SeriesType extends CartesianChartSeriesType

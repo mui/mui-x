@@ -24,6 +24,7 @@ import {
   getPublicApiRef,
   isPasteShortcut,
   useGridLogger,
+  isEventTargetInPortal,
 } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
@@ -371,6 +372,11 @@ export const useGridClipboardImport = (
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
+      // Ignore portal
+      // Do not apply shortcuts if the focus is not on the cell root component
+      if (isEventTargetInPortal(event)) {
+        return;
+      }
       if (!enableClipboardPaste) {
         return;
       }

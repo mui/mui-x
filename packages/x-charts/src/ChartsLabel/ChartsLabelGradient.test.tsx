@@ -31,7 +31,7 @@ describe('<ChartsLabelGradient />', () => {
     ThemeProvider,
     createTheme,
     // SKIP
-    skip: ['themeVariants', 'componentProp', 'componentsProp'],
+    skip: ['themeVariants', 'componentProp'],
   }));
 
   // JSDOM does not support SVGMatrix

@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { PieChart } from '@mui/x-charts/PieChart';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { PieItemIdentifier } from '@mui/x-charts/models';
 import { mobileAndDesktopOS, platforms, valueFormatter } from './webUsageStats';
 

@@ -13,6 +13,7 @@ import {
   createIsHighlighted,
   createIsFaded,
 } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import descriptionGetter from './descriptionGetter';
 
 export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   colorProcessor: getColor,
@@ -27,6 +28,7 @@ export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  descriptionGetter,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
 };

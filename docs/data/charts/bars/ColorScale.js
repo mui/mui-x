@@ -3,7 +3,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 
 const series = [{ data: [-2, -9, 12, 11, 6, -4] }];
 

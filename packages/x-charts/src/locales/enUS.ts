@@ -123,10 +123,110 @@ export const enUSLocaleText: ChartsLocaleText = {
   low: 'Low',
   close: 'Close',
 
-  barDescription: ({ value, formattedValue, formattedCategoryValue, seriesLabel }) => {
-    return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue]
+  // Accessibility descriptions
+  a11yNoValue: 'no value',
+  a11yConnector: '; ',
+  barDescription: function barDescription({
+    value,
+    formattedValue,
+    formattedCategoryValue,
+    seriesLabel,
+  }) {
+    return [formattedCategoryValue, seriesLabel, value === null ? this.a11yNoValue : formattedValue]
       .filter(Boolean)
-      .join('; ');
+      .join(this.a11yConnector);
+  },
+  lineDescription: function lineDescription({ y, formattedXValue, formattedYValue, seriesLabel }) {
+    return [formattedXValue, seriesLabel, y === null ? this.a11yNoValue : formattedYValue]
+      .filter(Boolean)
+      .join(this.a11yConnector);
+  },
+  scatterDescription: function scatterDescription({
+    formattedXValue,
+    formattedYValue,
+    seriesLabel,
+  }) {
+    return [seriesLabel, formattedXValue, formattedYValue].filter(Boolean).join(this.a11yConnector);
+  },
+  pieDescription: function pieDescription({ value, formattedValue, seriesLabel }) {
+    return [seriesLabel, value === null ? this.a11yNoValue : formattedValue]
+      .filter(Boolean)
+      .join(this.a11yConnector);
+  },
+  radarDescription: function radarDescription({
+    value,
+    formattedValue,
+    formattedCategoryValue,
+    seriesLabel,
+  }) {
+    return [formattedCategoryValue, seriesLabel, value === null ? this.a11yNoValue : formattedValue]
+      .filter(Boolean)
+      .join(this.a11yConnector);
+  },
+  funnelDescription: function funnelDescription({ value, formattedValue, seriesLabel }) {
+    return [seriesLabel, value === null ? this.a11yNoValue : formattedValue]
+      .filter(Boolean)
+      .join(this.a11yConnector);
+  },
+  heatmapDescription: function heatmapDescription({
+    value,
+    formattedValue,
+    formattedXValue,
+    formattedYValue,
+  }) {
+    return [formattedXValue, formattedYValue, value === null ? this.a11yNoValue : formattedValue]
+      .filter(Boolean)
+      .join(this.a11yConnector);
+  },
+  sankeyNodeDescription: function sankeyNodeDescription({ formattedValue, nodeLabel }) {
+    return [nodeLabel, formattedValue].filter(Boolean).join(this.a11yConnector);
+  },
+  sankeyLinkDescription: function sankeyLinkDescription({
+    formattedValue,
+    sourceLabel,
+    targetLabel,
+  }) {
+    return [
+      sourceLabel && targetLabel
+        ? `${sourceLabel} to ${targetLabel}`
+        : (sourceLabel ?? targetLabel),
+      formattedValue,
+    ]
+      .filter(Boolean)
+      .join(this.a11yConnector);
+  },
+  rangeBarDescription: function rangeBarDescription({
+    value,
+    formattedValue,
+    formattedCategoryValue,
+    seriesLabel,
+  }) {
+    return [formattedCategoryValue, seriesLabel, value === null ? this.a11yNoValue : formattedValue]
+      .filter(Boolean)
+      .join(this.a11yConnector);
+  },
+  ohlcDescription: function ohlcDescription({
+    open,
+    high,
+    low,
+    close,
+    formattedOpen,
+    formattedHigh,
+    formattedLow,
+    formattedClose,
+    formattedDate,
+    seriesLabel,
+  }) {
+    const hasValues = open !== null && high !== null && low !== null && close !== null;
+    return [
+      formattedDate,
+      seriesLabel,
+      hasValues
+        ? `Open: ${formattedOpen ?? open}, High: ${formattedHigh ?? high}, Low: ${formattedLow ?? low}, Close: ${formattedClose ?? close}`
+        : this.a11yNoValue,
+    ]
+      .filter(Boolean)
+      .join(this.a11yConnector);
   },
 };
 
