@@ -41,7 +41,7 @@ import {
 } from './SchedulerStore.utils';
 import { dateToEventString } from '../date-utils';
 import { TimeoutManager } from '../TimeoutManager';
-import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import { applyDataTimezoneToEventUpdate } from '../recurring-events/applyDataTimezoneToEventUpdate';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;

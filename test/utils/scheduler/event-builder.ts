@@ -1,6 +1,7 @@
 import {
   RecurringEventPresetKey,
   SchedulerEventRecurrenceRule,
+  TemporalTimezone,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
@@ -13,7 +14,6 @@ import {
 import { processEvent, resolveEventDate } from '@mui/x-scheduler-headless/process-event';
 import { getWeekDayCode } from '@mui/x-scheduler-headless/internals/utils/recurring-events';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
-import { TemporalTimezone } from '@mui/x-scheduler-headless/base-ui-copy/types';
 import type { SchedulerResource } from '@mui/x-scheduler-headless/models';
 import { adapter as defaultAdapter } from './adapters';
 

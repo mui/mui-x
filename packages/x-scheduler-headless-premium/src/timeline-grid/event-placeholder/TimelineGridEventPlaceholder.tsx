@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useElementPositionInCollection, useEvent } from '@mui/x-scheduler-headless/internals';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { TimelineGridEventPlaceholderCssVars } from './TimelineGridEventPlaceholderCssVars';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';

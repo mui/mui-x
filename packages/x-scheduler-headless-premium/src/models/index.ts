@@ -1,4 +1,4 @@
-export type { TemporalSupportedObject } from '@mui/x-scheduler-headless/base-ui-copy';
+export type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 
 export * from './preferences';
 export * from './view';

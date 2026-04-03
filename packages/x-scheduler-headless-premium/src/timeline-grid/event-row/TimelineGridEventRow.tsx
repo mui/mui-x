@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';

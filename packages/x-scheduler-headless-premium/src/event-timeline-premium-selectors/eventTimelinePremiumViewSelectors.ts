@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { TemporalAdapter } from '@mui/x-scheduler-headless/base-ui-copy';
+import { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { TemporalSupportedObject, EventTimelinePremiumView } from '../models';
 

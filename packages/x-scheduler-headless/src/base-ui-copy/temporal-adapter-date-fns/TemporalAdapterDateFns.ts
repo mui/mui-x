@@ -63,7 +63,7 @@ import {
   DateBuilderReturnType,
   TemporalTimezone,
   TemporalAdapter,
-} from '../types';
+} from '@base-ui/react/internals/temporal';
 
 const FORMATS: TemporalAdapterFormats = {
   // Digit formats with leading zeroes
@@ -93,7 +93,7 @@ const FORMATS: TemporalAdapterFormats = {
   localizedNumericDate: 'P', // Note: Day and month are padded on enUS unlike Luxon
 };
 
-declare module '@mui/x-scheduler-headless/base-ui-copy/types' {
+declare module '@base-ui/react/internals/temporal' {
   interface TemporalSupportedObjectLookup {
     'date-fns': Date;
   }

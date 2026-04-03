@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { CalendarGridTimeEventPlaceholderCssVars } from './CalendarGridTimeEventPlaceholderCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useEvent } from '../../internals/utils/useEvent';

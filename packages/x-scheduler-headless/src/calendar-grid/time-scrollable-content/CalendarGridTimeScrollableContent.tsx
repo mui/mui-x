@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { CompositeList } from '../../base-ui-copy/composite/list/CompositeList';
 
 export const CalendarGridTimeScrollableContent = React.forwardRef(
