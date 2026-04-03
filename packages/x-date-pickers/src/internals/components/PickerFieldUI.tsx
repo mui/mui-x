@@ -353,6 +353,10 @@ export function PickerFieldUI<
         )
       : textFieldProps.inputProps;
 
+  /**
+   * On Material UI v9, deprecated `inputProps` and `InputProps` are removed.
+   * They should be passed through `slotProps`.
+   */
   if (materialMajor >= 9 && TextField === MuiTextField) {
     if (!(textFieldProps as TextFieldProps).slotProps) {
       (textFieldProps as TextFieldProps).slotProps = {};
