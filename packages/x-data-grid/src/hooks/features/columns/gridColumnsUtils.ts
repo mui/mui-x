@@ -16,6 +16,7 @@ import {
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import { isGridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
@@ -25,7 +26,13 @@ import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeade
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 
-export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
+const dimensionsWithResizedStatus = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
+
+export const COLUMNS_DIMENSION_PROPERTIES = [
+  ...dimensionsWithResizedStatus,
+  'autoSizingMinWidth',
+  'autoSizingMaxWidth',
+] as const;
 
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
 
@@ -276,9 +283,20 @@ export const applyInitialState = (
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
     const field = columnsWithUpdatedDimensions[i];
 
+    const column = columnsState.lookup[field];
+    let hasBeenResized = false;
+    if (isGridStateColDef(column)) {
+      hasBeenResized = column.hasBeenResized ?? false;
+    }
+    dimensionsWithResizedStatus.forEach((key) => {
+      if (dimensions[field][key] !== undefined) {
+        hasBeenResized = true;
+      }
+    });
+
     const newColDef: Omit<GridStateColDef, 'computedWidth'> = {
       ...newColumnLookup[field],
-      hasBeenResized: true,
+      hasBeenResized,
     };
 
     Object.entries(dimensions[field]).forEach(([key, value]) => {
@@ -377,18 +395,25 @@ export const createColumnsState = ({
       };
     }
 
-    let hasBeenResized = existingState.hasBeenResized;
-    COLUMNS_DIMENSION_PROPERTIES.forEach((key) => {
+    let hasBeenResized = false;
+    if (isGridStateColDef(existingState)) {
+      hasBeenResized = existingState.hasBeenResized ?? false;
+    }
+    dimensionsWithResizedStatus.forEach((key) => {
       if (newColumn[key] !== undefined) {
         hasBeenResized = true;
+      }
+    });
 
+    COLUMNS_DIMENSION_PROPERTIES.forEach((key) => {
+      if (newColumn[key] !== undefined) {
         if (newColumn[key] === -1) {
           newColumn[key] = Infinity;
         }
       }
     });
 
-    const mergedProps = {
+    const mergedProps: any = {
       ...getDefaultColTypeDef(newColumn.type),
       hasBeenResized,
       field,
@@ -401,7 +426,7 @@ export const createColumnsState = ({
       }
     }
 
-    columnsState.lookup[field] = resolveProps(existingState, mergedProps);
+    columnsState.lookup[field] = resolveProps(existingState, mergedProps) as GridStateColDef;
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
