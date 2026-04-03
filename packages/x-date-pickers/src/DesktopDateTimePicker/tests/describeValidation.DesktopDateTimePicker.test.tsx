@@ -6,7 +6,8 @@ describe('<DesktopDateTimePicker /> - Describe Validation', () => {
 
   describeValidation(DesktopDateTimePicker, () => ({
     render,
-    views: ['year', 'month', 'day', 'hours', 'minutes'],
+    views: ['year', 'month', 'day', 'hours', 'minutes', 'meridiem'],
     componentFamily: 'picker',
+    variant: 'desktop',
   }));
 });
