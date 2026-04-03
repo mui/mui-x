@@ -74,6 +74,11 @@ export const GridRootStyles = styled('div', {
     hover: vars.colors.interactive.hover,
     selected: selectedColor,
     selectedHover: selectedColor,
+    // For pinned cells: fall back to the solid pinned background so older WebKit
+    // (no color-mix support) doesn't render them as transparent on hover (see #18273).
+    pinnedHover: pinnedBackground,
+    pinnedSelected: pinnedBackground,
+    pinnedSelectedHover: pinnedBackground,
   };
 
   const hoverBackground = mix(baseBackground, hoverColor, hoverOpacity, fallbackColors.hover);
@@ -94,37 +99,32 @@ export const GridRootStyles = styled('div', {
     pinnedBackground,
     hoverColor,
     hoverOpacity,
-    fallbackColors.hover,
+    fallbackColors.pinnedHover,
   );
   const pinnedSelectedBackground = mix(
     pinnedBackground,
     selectedColor,
     selectedOpacity,
-    fallbackColors.selected,
+    fallbackColors.pinnedSelected,
   );
   const pinnedSelectedHoverBackground = mix(
     pinnedBackground,
     selectedHoverColor,
     selectedHoverOpacity,
-    fallbackColors.selectedHover,
+    fallbackColors.pinnedSelectedHover,
   );
 
   const getPinnedBackgroundStyles = (backgroundColor: string) => ({
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       backgroundColor,
       '&.Mui-selected': {
-        backgroundColor: mix(
-          backgroundColor,
-          selectedBackground,
-          selectedOpacity,
-          fallbackColors.selected,
-        ),
+        backgroundColor: mix(backgroundColor, selectedBackground, selectedOpacity, backgroundColor),
         '&:hover': {
           backgroundColor: mix(
             backgroundColor,
             selectedHoverBackground,
             selectedHoverOpacity,
-            fallbackColors.selectedHover,
+            backgroundColor,
           ),
         },
       },
