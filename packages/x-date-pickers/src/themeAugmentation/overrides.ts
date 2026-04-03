@@ -69,7 +69,7 @@ export interface PickersComponentNameToClassKey {
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;
 
-  // V7 Picker's TextField
+  // Picker's TextField
   MuiPickersTextField: PickersTextFieldClassKey;
   MuiPickersInputBase: PickersInputBaseClassKey
   MuiPickersInput: PickersInputClassKey

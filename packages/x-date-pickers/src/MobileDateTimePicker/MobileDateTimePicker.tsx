@@ -32,9 +32,8 @@ import { DATE_VIEWS } from '../internals/utils/date-utils';
 
 const STEPS: PickerStep[] = [{ views: DATE_VIEWS }, { views: EXPORTED_TIME_VIEWS }];
 
-type MobileDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MobileDateTimePickerComponent = ((
+  props: MobileDateTimePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -47,18 +46,17 @@ type MobileDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extend
  *
  * - [MobileDateTimePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-picker/)
  */
-const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
+const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker(
+  inProps: MobileDateTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all date time pickers
-  const defaultizedProps = useDateTimePickerDefaultizedProps<
-    MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileDateTimePicker');
+  const defaultizedProps = useDateTimePickerDefaultizedProps<MobileDateTimePickerProps>(
+    inProps,
+    'MuiMobileDateTimePicker',
+  );
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -143,11 +141,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
     },
   };
 
-  const { renderPicker } = useMobilePicker<
-    DateOrTimeViewWithMeridiem,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useMobilePicker<DateOrTimeViewWithMeridiem, typeof props>({
     ref,
     props,
     valueManager: singleItemValueManager,
@@ -235,10 +229,6 @@ MobileDateTimePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars

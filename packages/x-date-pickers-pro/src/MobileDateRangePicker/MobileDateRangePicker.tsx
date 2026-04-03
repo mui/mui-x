@@ -15,9 +15,8 @@ import { SingleInputDateRangeField } from '../SingleInputDateRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateRange } from '../validation';
 
-type MobileDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: MobileDateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = ((
+  props: MobileDateRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -30,18 +29,17 @@ type MobileDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure exten
  *
  * - [MobileDateRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-range-picker/)
  */
-const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: MobileDateRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker(
+  inProps: MobileDateRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all date time pickers
-  const defaultizedProps = useDateRangePickerDefaultizedProps<
-    MobileDateRangePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileDateRangePicker');
+  const defaultizedProps = useDateRangePickerDefaultizedProps<MobileDateRangePickerProps>(
+    inProps,
+    'MuiMobileDateRangePicker',
+  );
 
   const viewRenderers: PickerViewRendererLookup<PickerRangeValue, any, any> = {
     day: renderDateRangeViewCalendar,
@@ -76,11 +74,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     },
   };
 
-  const { renderPicker } = useMobileRangePicker<
-    'day',
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useMobileRangePicker<'day', typeof props>({
     ref,
     props,
     valueManager: rangeValueManager,
@@ -174,10 +168,6 @@ MobileDateRangePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars

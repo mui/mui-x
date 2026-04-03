@@ -202,5 +202,6 @@
   "201": "MUI X: Unimplemented: rowspan feature is required",
   "202": "MUI X Charts: Series with ID \"%s\" should have an x-axis of type \"band\". Candlestick charts require a band scale for the x-axis. Set the scaleType to \"band\" for this axis.",
   "203": "MUI X Charts: OHLC series with id='%s' has no data.\nEither provide a data property to the series or use the dataset prop.",
-  "204": "MUI X Charts: OHLC series with id='%s' has incomplete datasetKeys.\nProperties %s are missing."
+  "204": "MUI X Charts: OHLC series with id='%s' has incomplete datasetKeys.\nProperties %s are missing.",
+  "205": "MUI X: The `sectionListRef` prop has not been initialized by `PickersSectionList`\nYou probably tried to pass a component to the `textField` slot that contains an `<input />` element instead of a `PickersSectionList`.\n\nLearn more about the field accessible DOM structure on the MUI documentation: https://mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element"
 }
