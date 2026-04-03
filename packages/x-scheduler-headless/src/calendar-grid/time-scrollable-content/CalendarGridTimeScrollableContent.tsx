@@ -14,6 +14,7 @@ export const CalendarGridTimeScrollableContent = React.forwardRef(
       // Rendering props
       className,
       render,
+      style,
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;

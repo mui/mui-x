@@ -27,6 +27,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     date,
     skipDataCurrent,
@@ -42,12 +43,6 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   const { ref: listItemRef, index } = useCompositeListItem();
   const id = getCalendarGridHeaderCellId(rootId, index);
 
-  const props = {
-    role: 'columnheader',
-    id,
-    'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
-  };
-
   const state: CalendarGridHeaderCell.State = React.useMemo(
     () => ({
       current: isCurrentDay,
@@ -58,7 +53,14 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, listItemRef],
-    props: [props, elementProps],
+    props: [
+      elementProps,
+      {
+        role: 'columnheader',
+        id,
+        'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
+      },
+    ],
   });
 });
 

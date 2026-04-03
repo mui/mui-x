@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { Chance } from 'chance';
 
 const POINTS_NUMBER = 50;
