@@ -55,8 +55,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
   } else if (canonicalAs.startsWith('/x/api/charts/')) {
     productId = 'x-charts';
   } else if (canonicalAs.startsWith('/x/api/scheduler/')) {
-    // TODO: Remove cast once https://github.com/mui/material-ui/pull/48185 is merged
-    productId = 'x-scheduler' as typeof productId;
+    productId = 'x-scheduler';
   }
 
   return React.useMemo(() => {
