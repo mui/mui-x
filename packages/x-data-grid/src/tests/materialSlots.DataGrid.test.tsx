@@ -6,6 +6,7 @@ import {
   type GridColDef,
   type GridFilterModel,
 } from '@mui/x-data-grid';
+import materialSlots from '../material';
 
 describe('<DataGrid /> - Material Slots', () => {
   const { render } = createRenderer();
@@ -97,6 +98,84 @@ describe('<DataGrid /> - Material Slots', () => {
         />,
       );
       expect(screen.getByTestId('from-slotProps')).not.to.equal(null);
+    });
+  });
+
+  describe('BaseCheckbox', () => {
+    it('should forward slotProps.htmlInput to the checkbox input element', () => {
+      render(
+        <TestDataGrid
+          checkboxSelection
+          slotProps={{
+            baseCheckbox: {
+              slotProps: {
+                htmlInput: { 'data-testid': 'checkbox-html-input' } as any,
+              },
+            },
+          }}
+        />,
+      );
+      expect(screen.getAllByTestId('checkbox-html-input').length).not.to.equal(0);
+    });
+
+    it('should forward material prop to MUI Checkbox', () => {
+      render(
+        <TestDataGrid
+          checkboxSelection
+          slotProps={{
+            baseCheckbox: {
+              material: { color: 'secondary' } as any,
+            },
+          }}
+        />,
+      );
+      const checkbox = document.querySelector('.MuiCheckbox-colorSecondary');
+      expect(checkbox).not.to.equal(null);
+    });
+
+    it('should merge material.slotProps.input with slotProps.htmlInput', () => {
+      render(
+        <TestDataGrid
+          checkboxSelection
+          slotProps={{
+            baseCheckbox: {
+              slotProps: {
+                htmlInput: { 'data-testid': 'from-slotProps' } as any,
+              },
+              material: {
+                slotProps: { input: { 'data-from-material': 'true' } },
+              } as any,
+            },
+          }}
+        />,
+      );
+      const input = screen.getAllByTestId('from-slotProps')[0];
+      expect(input).not.to.equal(null);
+      expect(input.getAttribute('data-from-material')).to.equal('true');
+    });
+
+    it('should combine inputRef, slotProps.htmlInput.ref, and material.slotProps.input.ref via useForkRef', () => {
+      const BaseCheckbox = materialSlots.baseCheckbox;
+      const inputRef = React.createRef<HTMLInputElement>();
+      const htmlInputRef = React.createRef<HTMLInputElement>();
+      const materialInputRef = React.createRef<HTMLInputElement>();
+
+      render(
+        <BaseCheckbox
+          inputRef={inputRef}
+          slotProps={{
+            htmlInput: { ref: htmlInputRef } as any,
+          }}
+          material={{
+            slotProps: { input: { ref: materialInputRef } },
+          } as any}
+        />,
+      );
+
+      expect(inputRef.current).not.to.equal(null);
+      expect(inputRef.current!.tagName).to.equal('INPUT');
+      expect(htmlInputRef.current).to.equal(inputRef.current);
+      expect(materialInputRef.current).to.equal(inputRef.current);
     });
   });
 

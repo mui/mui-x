@@ -270,6 +270,11 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
   const rippleRef = React.useRef<any>(null);
+  const combinedInputRef = useForkRef(
+    inputRef,
+    slotProps?.htmlInput?.ref,
+    (material?.slotProps?.input as any)?.ref,
+  );
 
   React.useEffect(() => {
     if (autoFocus) {
@@ -288,10 +293,10 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
       input: {
         ...material?.slotProps?.input,
         ...slotProps?.htmlInput,
-        ...(inputRef ? { ref: inputRef } : {}),
+        ref: combinedInputRef,
       },
     }),
-    [material?.slotProps, slotProps?.htmlInput, inputRef],
+    [material?.slotProps, slotProps?.htmlInput, combinedInputRef],
   );
 
   if (!label) {
