@@ -339,7 +339,6 @@ export default function PickersPlayground() {
     React.useState<boolean>(false);
   const [displayWeekNumber, setDisplayWeekNumber] = React.useState<boolean>(false);
   const [fixed6Weeks, setFixed6Weeks] = React.useState<boolean>(false);
-  const [disableDayMargin, setDisableDayMargin] = React.useState<boolean>(false);
   const [isLandscape, setIsLandscape] = React.useState<boolean>(false);
   const [isStaticDesktopMode, setIsStaticDesktopMode] = React.useState<boolean>(false);
   const [ampm, setAmpm] = React.useState<boolean | undefined>();
@@ -390,9 +389,6 @@ export default function PickersPlayground() {
             actions: ['clear', 'today', 'cancel', 'accept'],
           },
         }),
-        day: {
-          disableMargin: disableDayMargin,
-        },
       },
       displayWeekNumber,
       fixedWeekNumber: fixed6Weeks ? 6 : undefined,
@@ -405,7 +401,6 @@ export default function PickersPlayground() {
       ampm,
       ampmInClock,
       customActions,
-      disableDayMargin,
       displayWeekNumber,
       fixed6Weeks,
       isLandscape,
@@ -710,13 +705,6 @@ export default function PickersPlayground() {
               value={displayWeekNumber}
               onChange={setDisplayWeekNumber}
             />
-            {selectedPickers !== 'date-range' && selectedPickers !== 'date-time-range' && (
-              <BooleanGroupControl
-                label="Disable day margin"
-                value={disableDayMargin}
-                onChange={setDisableDayMargin}
-              />
-            )}
             {(selectedPickers === 'time' || selectedPickers === 'date-time') && (
               <React.Fragment>
                 <TriBooleanGroupControl label="AM/PM" value={ampm} onChange={setAmpm} />
