@@ -186,7 +186,7 @@ TODO: Uncomment once available
 ### Feature availability
 
 :::info
-MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Premium commercial license.
+MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license. The Scheduler's advanced features are only available with a Premium license.
 See [Licensing](/x/introduction/licensing/) for details.
 :::
 
