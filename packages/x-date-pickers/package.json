@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "9.0.0-alpha.4",
+  "version": "9.0.0-beta.1",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Date and Time Picker components.",
   "license": "MIT",

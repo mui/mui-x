@@ -1,5 +1,101 @@
 # Changelog
 
+## 9.0.0-beta.1
+
+_Apr 1, 2026_
+
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes and internal improvements
+- ✅ Refining stable release
+
+Special thanks go out to these community members for their valuable contributions:
+@mixelburg, @sibananda485
+
+The following team members contributed to this release:
+@aemartos, @alexfauquette, @flaviendelangle, @JCQuintas, @MBilalShafi, @noraleonte, @rita-codes, @romgrk, @siriwatknp, @ZeeshanTamboli
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.0.0-beta.1`
+
+- [DataGrid] Export `GridColumnUnsortedIconProps` for custom column icon slots (#21658) @mixelburg
+- [DataGrid] Remove `x-virtualizer`'s `virtualScroller` from public API (#21936) @romgrk
+
+#### `@mui/x-data-grid-pro@9.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.0.0-beta.1`, plus:
+
+- [DataGridPro] Undeprecate `onRowsScrollEnd` prop (#21912) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@9.0.0-beta.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.0.0-beta.1`, plus:
+
+- [DataGridPremium] Fix clipboard paste issue in portal (#21931) @sibananda485
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.0.0-beta.1`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@9.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.0.0-beta.1`.
+
+### Charts
+
+#### `@mui/x-charts@9.0.0-beta.1`
+
+- [charts] Add `seriesIds` filter to zoom slider preview (#21933) @JCQuintas
+- [charts] Fix zoom slider preview with discard filter mode (#21883) @JCQuintas
+- [charts] Make line visibility toggle start from the baseline (#21893) @alexfauquette
+
+#### `@mui/x-charts-pro@9.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.0.0-beta.1`, plus:
+
+- [charts-pro] Zoom slider touch improvements (#21832) @JCQuintas
+
+#### `@mui/x-charts-premium@9.0.0-beta.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.0.0-beta.1`, plus:
+
+- [charts-premium] Allow color customization in Candlestick chart (#21838) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@9.0.0-beta.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.0.0-beta.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.0-beta.1`, plus:
+
+- [RichTreeViewPro] Allow to auto-expand lazy loaded items (#21759) @flaviendelangle
+
+### Codemod
+
+#### `@mui/x-codemod@9.0.0-alpha.4`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix JSDOM → jsdom casing (#21907) @JCQuintas
+- [docs] Remove Joy UI references and dependency (#21937) @siriwatknp
+- [docs] Remove none generated files (#21886) @alexfauquette
+
+### Miscellaneous
+
+- [deps] bump minimum core packages to 7.3.0 to adopt theme color manipulator (#21892) @siriwatknp
+- [telemetry] prefer upstream remote over origin for projectId (#21882) @aemartos
+- [telemetry] send `repoHash`, `[x]packageNameHash`, and `rootPathHash` alongside `projectId` (#21896) @aemartos
+- [test] Remove `componentsProp` test from `describeConformance` (#21897) @ZeeshanTamboli
+- [x-license] change `orderId` type from number to string (#21885) @aemartos
+
 ## 9.0.0-beta.0
 
 <!-- generated comparing v9.0.0-alpha.4..master -->
