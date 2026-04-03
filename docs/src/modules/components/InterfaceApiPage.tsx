@@ -6,19 +6,18 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { alpha } from '@mui/material/styles';
-import { Translate, useTranslate, useUserLanguage } from '@mui/docs/i18n';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { MarkdownElement } from '@mui/docs/MarkdownElement';
-import { SectionTitle, SectionTitleProps } from '@mui/docs/SectionTitle';
-import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
-import { type LayoutStorageKeys } from '@mui/docs/ApiPage';
-// eslint-disable-next-line no-restricted-imports
+import { Translate, useTranslate, useUserLanguage } from '@mui/internal-core-docs/i18n';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
+import { MarkdownElement } from '@mui/internal-core-docs/MarkdownElement';
+import { LayoutStorageKeys } from '@mui/internal-core-docs/ApiPage';
 import {
   PropertiesSection,
-  type PropertyDefinition,
+  PropertyDefinition,
   DEFAULT_API_LAYOUT_STORAGE_KEYS,
-  type ApiDisplayLayout,
-} from '@mui/docs/ApiPage/private';
+  ApiDisplayLayout,
+} from '@mui/internal-core-docs/ApiPage/private';
+import { SectionTitle, SectionTitleProps } from '@mui/internal-core-docs/SectionTitle';
+import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
 import {
   InterfaceApiTranslation,
   InterfaceApiContent,

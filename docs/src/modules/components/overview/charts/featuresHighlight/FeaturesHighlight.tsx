@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import ColorPaletteSequence from './ColorPaletteSequence';
 import BarChartToggle from './BarChartToggle/BarChartToggle';
 import ZoomAndPan from './ZoomAndPan/ZoomAndPan';

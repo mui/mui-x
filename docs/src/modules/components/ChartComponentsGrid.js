@@ -1,6 +1,6 @@
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import { Link } from '@mui/docs/Link';
+import { Link } from '@mui/internal-core-docs/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';

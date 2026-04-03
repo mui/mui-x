@@ -9,7 +9,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Let your user customize the component to their needs.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Initialize the preferences
 
