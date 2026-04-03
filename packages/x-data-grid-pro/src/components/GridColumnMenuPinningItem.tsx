@@ -23,10 +23,25 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
     apiRef.current.unpinColumn(colDef.field);
     onClick(event);
   };
+
+  if (!colDef) {
+    return null;
+  }
+
+  const side = apiRef.current.isColumnPinned(colDef.field);
+
+  // Keep the menu items state-dependent (as in the current UI):
+  // - unpinned: show "Pin left" + "Pin right"
+  // - pinned: show "Unpin" + the opposite-side pin action
+  //
+  // `columnMenuPinIcon` is used as a fallback when the deprecated left/right icon slots are not provided.
+  const PinLeftIcon = rootProps.slots.columnMenuPinLeftIcon ?? rootProps.slots.columnMenuPinIcon;
+  const PinRightIcon = rootProps.slots.columnMenuPinRightIcon ?? rootProps.slots.columnMenuPinIcon;
+
   const pinToLeftMenuItem = (
     <rootProps.slots.baseMenuItem
       onClick={pinColumn(GridPinnedColumnPosition.LEFT)}
-      iconStart={<rootProps.slots.columnMenuPinLeftIcon fontSize="small" />}
+      iconStart={<PinLeftIcon fontSize="small" />}
     >
       {apiRef.current.getLocaleText('pinToLeft')}
     </rootProps.slots.baseMenuItem>
@@ -35,17 +50,11 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
   const pinToRightMenuItem = (
     <rootProps.slots.baseMenuItem
       onClick={pinColumn(GridPinnedColumnPosition.RIGHT)}
-      iconStart={<rootProps.slots.columnMenuPinRightIcon fontSize="small" />}
+      iconStart={<PinRightIcon fontSize="small" />}
     >
       {apiRef.current.getLocaleText('pinToRight')}
     </rootProps.slots.baseMenuItem>
   );
-
-  if (!colDef) {
-    return null;
-  }
-
-  const side = apiRef.current.isColumnPinned(colDef.field);
 
   if (side) {
     const otherSide =
@@ -53,10 +62,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
         ? GridPinnedColumnPosition.LEFT
         : GridPinnedColumnPosition.RIGHT;
     const label = otherSide === GridPinnedColumnPosition.RIGHT ? 'pinToRight' : 'pinToLeft';
-    const Icon =
-      side === GridPinnedColumnPosition.RIGHT
-        ? rootProps.slots.columnMenuPinLeftIcon
-        : rootProps.slots.columnMenuPinRightIcon;
+    const Icon = side === GridPinnedColumnPosition.RIGHT ? PinLeftIcon : PinRightIcon;
     return (
       <React.Fragment>
         <rootProps.slots.baseMenuItem

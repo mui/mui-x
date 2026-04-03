@@ -28,6 +28,7 @@ import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
 import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPagination, { tablePaginationClasses } from '@mui/material/TablePagination';
+import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
 import MUIPopper, { type PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
@@ -53,6 +54,7 @@ import {
   GridFilterAltIcon,
   GridFilterListIcon,
   GridKeyboardArrowRight,
+  GridKeyboardArrowLeft,
   GridMoreVertIcon,
   GridRemoveIcon,
   GridSearchIcon,
@@ -62,13 +64,14 @@ import {
   GridViewHeadlineIcon,
   GridViewStreamIcon,
   GridVisibilityOffIcon,
-  GridViewColumnIcon,
   GridClearIcon,
   GridLoadIcon,
   GridDeleteForeverIcon,
   GridDownloadIcon,
   GridLongTextCellExpandIcon,
   GridLongTextCellCollapseIcon,
+  GridFirstPageIcon,
+  GridLastPageIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -215,6 +218,29 @@ const StyledPagination = styled(MUIPagination, {
   },
 })) as typeof MUIPagination;
 
+type TablePaginationActionsProps = React.ComponentProps<typeof TablePaginationActions>;
+
+const PaginationActionsWithIcons = React.forwardRef<HTMLDivElement, TablePaginationActionsProps>(
+  function PaginationActionsWithIcons(props, ref) {
+    const rootProps = useGridRootProps();
+    const { slots, ...other } = props;
+
+    return (
+      <TablePaginationActions
+        ref={ref}
+        {...(other as any)}
+        slots={{
+          firstButtonIcon: rootProps.slots.paginationFirstIcon,
+          previousButtonIcon: rootProps.slots.paginationPreviousIcon,
+          nextButtonIcon: rootProps.slots.paginationNextIcon,
+          lastButtonIcon: rootProps.slots.paginationLastIcon,
+          ...(slots as any),
+        }}
+      />
+    );
+  },
+);
+
 const BasePagination = forwardRef<any, P['basePagination']>(function BasePagination(props, ref) {
   const { onRowsPerPageChange, material, disabled, ...other } = props;
   const computedProps = React.useMemo(() => {
@@ -230,6 +256,8 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const { estimatedRowCount } = rootProps;
+
+  const ActionsComponent = material?.ActionsComponent || PaginationActionsWithIcons;
 
   return (
     <StyledPagination
@@ -247,6 +275,7 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
         })
       }
       getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
+      ActionsComponent={ActionsComponent}
       {...computedProps}
       {...other}
       {...material}
@@ -792,15 +821,20 @@ const iconSlots: GridIconSlotsComponent = {
   columnMenuSortDescendingIcon: GridArrowDownwardIcon,
   columnMenuUnsortIcon: null,
   columnMenuFilterIcon: GridFilterAltIcon,
-  columnMenuManageColumnsIcon: GridViewColumnIcon,
+  columnMenuManageColumnsIcon: GridColumnIcon,
   columnMenuClearIcon: GridClearIcon,
   loadIcon: GridLoadIcon,
   filterPanelAddIcon: GridAddIcon,
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
+  filterPanelDeleteAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
   menuItemCheckIcon: GridCheckIcon,
   longTextCellExpandIcon: GridLongTextCellExpandIcon,
   longTextCellCollapseIcon: GridLongTextCellCollapseIcon,
+  paginationFirstIcon: GridFirstPageIcon,
+  paginationPreviousIcon: GridKeyboardArrowLeft,
+  paginationNextIcon: GridKeyboardArrowRight,
+  paginationLastIcon: GridLastPageIcon,
 };
 
 const baseSlots: GridBaseSlots = {
