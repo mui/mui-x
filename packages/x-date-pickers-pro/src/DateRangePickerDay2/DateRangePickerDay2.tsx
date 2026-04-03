@@ -135,6 +135,8 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
   '--PickerDay-horizontalMargin': '2px',
   '--PickerDay-size': '36px',
   ...theme.typography.caption,
+  display: 'flex',
+  lineHeight: 1,
   width: 'var(--PickerDay-size)',
   height: 'var(--PickerDay-size)',
   borderRadius: '18px',

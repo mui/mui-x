@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { CSSInterpolation } from '@mui/system';
+import { CSSInterpolation, lineHeight } from '@mui/system';
 import ButtonBase from '@mui/material/ButtonBase';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import composeClasses from '@mui/utils/composeClasses';
@@ -53,6 +53,8 @@ const useUtilityClasses = (
 
 const styleArg = ({ theme }: { theme: Theme }) => ({
   ...theme.typography.caption,
+  display: 'flex',
+  lineHeight: 1,
   width: DAY_SIZE,
   height: DAY_SIZE,
   borderRadius: '50%',
