@@ -17,6 +17,7 @@ export default function RowGroupingFullExample() {
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 25,
+    multiSelect: true,
   });
   const apiRef = useGridApiRef();
 

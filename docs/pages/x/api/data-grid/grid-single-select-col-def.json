@@ -14,15 +14,11 @@
       "required": true
     },
     "getOptionValue": {
-      "type": { "description": "(value: ValueOptions) =&gt; any" },
+      "type": { "description": "(value: ValueOptions) =&gt; string | number" },
       "default": "{defaultGetOptionValue}",
       "required": true
     },
-    "type": {
-      "type": { "description": "'singleSelect'" },
-      "default": "'singleSelect'",
-      "required": true
-    },
+    "type": { "type": { "description": "'singleSelect'" }, "required": true },
     "aggregable": {
       "type": { "description": "boolean" },
       "default": "true",

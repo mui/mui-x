@@ -1,5 +1,6 @@
 import { Chance } from 'chance';
 import {
+  CERTIFICATION_OPTIONS,
   COLORS,
   COMMODITY_OPTIONS,
   CONTRACT_TYPE_OPTIONS,
@@ -9,6 +10,7 @@ import {
   RATE_TYPE_OPTIONS,
   STATUS_OPTIONS,
   TAXCODE_OPTIONS,
+  TRADE_TAG_OPTIONS,
 } from './static-data';
 import type { GridDataGeneratorContext } from './gridColDefGenerator';
 
@@ -114,6 +116,11 @@ export const randomDate = (start: Date, end: Date) =>
   );
 export const randomArrayItem = <T>(arr: T[]) => arr[randomInt(0, arr.length - 1)];
 export const randomBoolean = (): boolean => randomArrayItem([true, false]);
+export const randomSubarray = <T>(arr: T[], min = 0, max?: number): T[] => {
+  const count = randomInt(min, max ?? arr.length);
+  const shuffled = [...arr].sort(() => chance.floating({ min: -1, max: 1 }));
+  return shuffled.slice(0, count);
+};
 
 export const randomColor = () => randomArrayItem(COLORS);
 export const randomId = () => chanceGuid.guid();
@@ -147,6 +154,9 @@ export const randomUpdatedDate = () => dateRecent();
 export const randomJobTitle = () => chance.profession();
 export const randomRating = () => randomInt(1, 5);
 export const randomName = uniquenessHandler(() => chance.name());
+
+export const randomTradeTags = () => randomSubarray(TRADE_TAG_OPTIONS, 1, 4);
+export const randomCertifications = () => randomSubarray(CERTIFICATION_OPTIONS, 0, 3);
 
 export const generateFilledQuantity = (data: { quantity: number }) =>
   Number((data.quantity * randomRate()).toFixed()) / data.quantity;
