@@ -13,7 +13,6 @@ export function Card(props: StackProps) {
           alignItems: 'center',
           width: '100%',
           height: '100%',
-          ...(other.sx || {}),
         },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}
@@ -27,8 +26,11 @@ export function CardMedia(props: StackProps) {
   const { children, ...other } = props;
   return (
     <Stack
-      sx={{ flexShrink: 0, alignItems: 'center', ...(other.sx || {}) }}
       {...other}
+      sx={[
+        { flexShrink: 0, alignItems: 'center' },
+        ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
+      ]}
     >
       {children}
     </Stack>
@@ -44,7 +46,6 @@ export function CardContent(props: StackProps) {
         {
           gap: 0.25,
           flexGrow: 1,
-          ...(other.sx || {}),
         },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}
