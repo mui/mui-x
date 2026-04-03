@@ -94,7 +94,10 @@ export function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysPr
         className={classes.inner}
         style={{
           height,
-          width: dimensions.viewportOuterSize.width,
+          width:
+            props.loadingOverlayVariant === 'skeleton'
+              ? Math.max(dimensions.viewportOuterSize.width, dimensions.columnsTotalWidth)
+              : dimensions.viewportOuterSize.width,
         }}
         {...props}
       />
