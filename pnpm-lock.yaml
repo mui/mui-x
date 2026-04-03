@@ -1623,6 +1623,9 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
+      prop-types:
+        specifier: 'catalog:'
+        version: 15.8.1
     devDependencies:
       '@mui/icons-material':
         specifier: 'catalog:'
@@ -1797,6 +1800,9 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
+      prop-types:
+        specifier: 'catalog:'
+        version: 15.8.1
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'

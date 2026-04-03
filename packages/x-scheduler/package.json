@@ -1,7 +1,6 @@
 {
   "name": "@mui/x-scheduler",
   "version": "0.0.1-alpha.0",
-  "private": true,
   "description": "The community edition of the Scheduler component (MUI X).",
   "author": "MUI Team",
   "license": "MIT",
@@ -62,7 +61,8 @@
     "@base-ui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@mui/x-scheduler-headless": "workspace:*",
-    "clsx": "catalog:"
+    "clsx": "catalog:",
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
