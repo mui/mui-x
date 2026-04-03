@@ -17,6 +17,12 @@ export type TickFrequencyDefinition = {
    */
   isTick: (prev: Date, value: Date) => boolean;
   /**
+   * Decides whether the first tick should be shown depending on its value.
+   * @param {Date} value The first tick value.
+   * @returns {boolean} Whether the first tick should be shown or not.
+   */
+  shouldShowFirstTick: (value: Date) => boolean;
+  /**
    * Format the tick value for display.
    * @param {Date} date The tick value to format.
    * @returns {string} The formatted date string.

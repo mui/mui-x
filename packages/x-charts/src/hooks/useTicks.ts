@@ -171,6 +171,15 @@ function getTimeTicks<T extends { toString(): string }>(
   }
 
   const ticks: { index: number; formatter: (d: Date) => string }[] = [];
+
+  for (let i = startFrequencyIndex; i <= endFrequencyIndex; i += 1) {
+    const date = domain[0];
+    if (date instanceof Date && ticksFrequencies[i].shouldShowFirstTick(date)) {
+      ticks.push({ index: 0, formatter: ticksFrequencies[i].format });
+      break;
+    }
+  }
+
   for (let tickIndex = Math.max(1, startIndex); tickIndex <= endIndex; tickIndex += 1) {
     for (let i = startFrequencyIndex; i <= endFrequencyIndex; i += 1) {
       const prevDate = domain[tickIndex - 1];
