@@ -1,5 +1,5 @@
-import { EventCalendarState } from '../use-event-calendar';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import { EventCalendarState } from '../use-event-calendar';
 import { SchedulerProcessedDate } from './event';
 
 export type CalendarView = 'day' | 'week' | 'month' | 'agenda';

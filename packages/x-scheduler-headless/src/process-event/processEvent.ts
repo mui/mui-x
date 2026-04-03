@@ -1,8 +1,8 @@
+import { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
 import { parseRRule, projectRRuleToTimezone } from '../internals/utils/recurring-events';
-import { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { resolveEventDate } from './resolveEventDate';
 
 export function processEvent(
