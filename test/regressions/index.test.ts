@@ -1,10 +1,7 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { type Browser, chromium, Page } from '@playwright/test';
-import { major } from '@mui/material/version';
 import fs from 'node:fs/promises';
-
-const isMaterialUIv6 = major === 6;
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
@@ -407,12 +404,6 @@ async function main() {
 }
 
 function isConsoleWarningIgnored(msg?: string) {
-  const isMuiV6Error =
-    isMaterialUIv6 &&
-    msg?.startsWith(
-      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
-    );
-
   const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
 
   const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
@@ -422,7 +413,7 @@ function isConsoleWarningIgnored(msg?: string) {
     'The browser build of Tailwind CSS should not be used in production.',
   );
 
-  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning) {
+  if (isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning) {
     return true;
   }
   return false;

@@ -15,7 +15,7 @@ import PickerButton from './mainDemo/PickerButton';
 import '@mui/x-date-pickers-pro/themeAugmentation';
 
 const components: Components<Theme> = {
-  MuiPickersDay: {
+  MuiPickerDay: {
     styleOverrides: {
       root: {
         fontWeight: 400,
