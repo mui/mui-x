@@ -65,6 +65,8 @@ const PickerDay2Root = styled(ButtonBase, {
   '--PickerDay-horizontalMargin': `${DAY_MARGIN}px`,
   '--PickerDay-size': `${DAY_SIZE}px`,
   ...theme.typography.caption,
+  display: 'flex',
+  lineHeight: 1,
   width: 'var(--PickerDay-size)',
   height: 'var(--PickerDay-size)',
   borderRadius: 'calc(var(--PickerDay-size) / 2)',
