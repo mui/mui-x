@@ -54,6 +54,19 @@ const AUTO_SCROLL_SENSITIVITY = 50; // The distance from the edge to start scrol
 const AUTO_SCROLL_SPEED = 20; // The speed to scroll once the mouse enters the sensitivity area
 const FILL_HANDLE_HIT_AREA = 16; // px — size of the interactive hit area for the fill handle
 
+function getSelectedOrFocusedCells(
+  apiRef: RefObject<GridPrivateApiPremium>,
+): GridCellCoordinates[] {
+  let selectedCells = apiRef.current.getSelectedCellsAsArray();
+  if (selectedCells.length === 0) {
+    const focusedCell = gridFocusCellSelector(apiRef);
+    if (focusedCell) {
+      selectedCells = [{ id: focusedCell.id, field: focusedCell.field }];
+    }
+  }
+  return selectedCells;
+}
+
 interface FillSourceState {
   cells: { id: GridRowId; field: string }[];
   fields: string[];
@@ -783,13 +796,7 @@ export const useGridCellSelection = (
       skipNextCellClick.current = true;
 
       // Store selected cells as source (fall back to focused cell if no selection)
-      let selectedCells = apiRef.current.getSelectedCellsAsArray();
-      if (selectedCells.length === 0) {
-        const focusedCell = gridFocusCellSelector(apiRef);
-        if (focusedCell) {
-          selectedCells = [{ id: focusedCell.id, field: focusedCell.field }];
-        }
-      }
+      const selectedCells = getSelectedOrFocusedCells(apiRef);
       if (selectedCells.length === 0) {
         return;
       }
@@ -1067,13 +1074,7 @@ export const useGridCellSelection = (
       return;
     }
 
-    let selectedCells = apiRef.current.getSelectedCellsAsArray();
-    if (selectedCells.length === 0) {
-      const focusedCell = gridFocusCellSelector(apiRef);
-      if (focusedCell) {
-        selectedCells = [{ id: focusedCell.id, field: focusedCell.field }];
-      }
-    }
+    const selectedCells = getSelectedOrFocusedCells(apiRef);
     if (selectedCells.length === 0) {
       return;
     }
@@ -1243,13 +1244,7 @@ export const useGridCellSelection = (
       return;
     }
 
-    let selectedCells = apiRef.current.getSelectedCellsAsArray();
-    if (selectedCells.length === 0) {
-      const focusedCell = gridFocusCellSelector(apiRef);
-      if (focusedCell) {
-        selectedCells = [{ id: focusedCell.id, field: focusedCell.field }];
-      }
-    }
+    const selectedCells = getSelectedOrFocusedCells(apiRef);
     if (selectedCells.length === 0) {
       return;
     }
