@@ -4,7 +4,7 @@ import { useRadiusAxes } from '../../hooks/useAxis';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { type SeriesId } from '../../models/seriesType/common';
 import { type UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { useChartContext } from '../../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 /**
@@ -13,7 +13,7 @@ import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
  * @returns
  */
 export function useRadarSeriesData(querySeriesId?: SeriesId) {
-  const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
+  const { instance } = useChartsContext<[UseChartPolarAxisSignature]>();
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis } = useRadiusAxes();
 

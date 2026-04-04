@@ -2,7 +2,7 @@ import * as React from 'react';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
+import SectionHeadline from '@mui/internal-core-docs/SectionHeadline';
 import InfoCard from '../../InfoCard';
 import LabelEditingDemo from './LabelEditingDemo';
 import DragAndDropDemo from './DragAndDropDemo';

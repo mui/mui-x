@@ -1,6 +1,6 @@
 'use client';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartDataset } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
+import { selectorChartsDataset } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import { type UseChartSeriesSignature } from '../internals/plugins/corePlugins/useChartSeries';
 import { type DatasetType } from '../models/seriesType/config';
 
@@ -10,5 +10,5 @@ import { type DatasetType } from '../models/seriesType/config';
  */
 export function useDataset<T extends DatasetType>(): Readonly<T> | undefined {
   const store = useStore<[UseChartSeriesSignature]>();
-  return store.use(selectorChartDataset) as T | undefined;
+  return store.use(selectorChartsDataset) as T | undefined;
 }

@@ -38,6 +38,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     headerRow: ['headerRow'],
     titleHeaderCell: ['titleHeaderCell'],
     eventsHeaderCell: ['eventsHeaderCell'],
+    eventsHeaderCellContent: ['eventsHeaderCellContent'],
     titleSubGrid: ['titleSubGrid'],
     eventsSubGridWrapper: ['eventsSubGridWrapper'],
     eventsSubGrid: ['eventsSubGrid'],

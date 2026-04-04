@@ -727,7 +727,10 @@
           "description": "With all properties from GridRowScrollEndParams."
         },
         "event": { "name": "event", "description": "The event object." },
-        "details": { "name": "details", "description": "Additional details for this callback." }
+        "details": {
+          "name": "details",
+          "description": "Additional details for this callback. Prefer to use {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} unless it doesn&#39;t fulfill your needs."
+        }
       }
     },
     "onSortModelChange": {
@@ -1803,6 +1806,7 @@
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "redoIcon": "Icon displayed on the redo button in the toolbar.",
     "row": "Component rendered for each row.",
+    "rowCheckbox": "Component rendered for each row selection checkbox.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",

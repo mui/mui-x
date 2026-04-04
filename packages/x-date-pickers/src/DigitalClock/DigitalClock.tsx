@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
@@ -76,9 +76,10 @@ export const DigitalClockItem = styled(MenuItem, {
     marginTop: 4,
   },
   '&:hover': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      (theme.vars || theme).palette.action.hoverOpacity,
+    ),
   },
   '&.Mui-selected': {
     backgroundColor: (theme.vars || theme).palette.primary.main,
@@ -88,9 +89,10 @@ export const DigitalClockItem = styled(MenuItem, {
     },
   },
   '&.Mui-focusVisible': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      (theme.vars || theme).palette.action.focusOpacity,
+    ),
   },
 }));
 
@@ -117,6 +119,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
   const listRef = React.useRef<HTMLUListElement>(null);
+  const lastActiveRef = React.useRef<HTMLElement | null>(null);
 
   const props = useThemeProps({
     props: inProps,
@@ -226,7 +229,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
       return;
     }
     const offsetTop = activeItem.offsetTop;
-    if (autoFocus || !!focusedView) {
+    if ((autoFocus || !!focusedView) && activeItem !== lastActiveRef.current) {
+      lastActiveRef.current = activeItem;
       activeItem.focus();
     }
 

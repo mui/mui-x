@@ -1,9 +1,8 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describeConformance } from 'test/utils/charts/describeConformance';
-import { pieArcClasses, pieClasses, PieChart } from '@mui/x-charts/PieChart';
+import { pieClasses, PieChart } from '@mui/x-charts/PieChart';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();
@@ -155,13 +154,11 @@ describe('<PieChart />', () => {
         />,
       );
 
-      const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
-
       // by default does not show focus indicator
       expect(container.querySelector(`.${pieClasses.focusIndicator}`)).not.toBeTruthy();
 
       // focus the chart and navigate
-      await user.click(svg);
+      await user.keyboard('{Tab}');
       await user.keyboard('{ArrowRight}');
 
       expect(container.querySelector(`.${pieClasses.focusIndicator}`)).toBeTruthy();
@@ -185,25 +182,19 @@ describe('<PieChart />', () => {
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
-
     // by default does not show focus indicator
-    expect(container.querySelector(`.${pieArcClasses.focusIndicator}`)).not.toBeTruthy();
+    expect(container.querySelector(`.${pieClasses.focusIndicator}`)).not.toBeTruthy();
 
     // focus the chart
-    await user.click(svg);
+    await user.keyboard('{Tab}');
 
     // Focus the first arc
     await user.keyboard('{ArrowRight}');
-    expect(
-      container.querySelector(`.${pieArcClasses.focusIndicator}.MuiPieArc-data-index-0`),
-    ).toBeTruthy();
+    expect(container.querySelector(`.${pieClasses.focusIndicator}[data-index="0"]`)).toBeTruthy();
 
     // Focus the second arc
     await user.keyboard('{ArrowRight}');
-    expect(
-      container.querySelector(`.${pieArcClasses.focusIndicator}.MuiPieArc-data-index-1`),
-    ).toBeTruthy();
+    expect(container.querySelector(`.${pieClasses.focusIndicator}[data-index="1"]`)).toBeTruthy();
   });
 
   it('should only show focus indicator for the focused series', async () => {
@@ -235,30 +226,28 @@ describe('<PieChart />', () => {
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
-
     // focus the chart
-    await user.click(svg);
+    await user.keyboard('{Tab}');
 
     // Focus the first arc of series-1
     await user.keyboard('{ArrowRight}');
 
     // Should only have one focus indicator
-    const focusIndicators = container.querySelectorAll(`.${pieArcClasses.focusIndicator}`);
+    const focusIndicators = container.querySelectorAll(`.${pieClasses.focusIndicator}`);
     expect(focusIndicators.length).to.equal(1);
 
     // Focus the second arc of series-1
     await user.keyboard('{ArrowRight}');
 
     // Should still only have one focus indicator
-    const focusIndicators2 = container.querySelectorAll(`.${pieArcClasses.focusIndicator}`);
+    const focusIndicators2 = container.querySelectorAll(`.${pieClasses.focusIndicator}`);
     expect(focusIndicators2.length).to.equal(1);
 
     // Move to series-2
     await user.keyboard('{ArrowRight}');
 
     // Should still only have one focus indicator
-    const focusIndicators3 = container.querySelectorAll(`.${pieArcClasses.focusIndicator}`);
+    const focusIndicators3 = container.querySelectorAll(`.${pieClasses.focusIndicator}`);
     expect(focusIndicators3.length).to.equal(1);
   });
 

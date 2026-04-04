@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
@@ -12,6 +13,7 @@ const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.Row, {
   slot: 'TitleCellRow',
 })(({ theme }) => ({
   padding: theme.spacing(2),
+  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ${theme.spacing(2)})`,
   alignContent: 'start',
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
@@ -50,9 +52,13 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
   const resource = useStore(store, schedulerResourceSelectors.processedResource, resourceId);
+  const depth = useStore(store, schedulerResourceSelectors.resourceDepth, resourceId);
 
   return (
-    <EventTimelinePremiumTitleCellRow className={classes.titleCellRow}>
+    <EventTimelinePremiumTitleCellRow
+      className={classes.titleCellRow}
+      style={{ '--resource-depth': depth } as React.CSSProperties}
+    >
       <EventTimelinePremiumTitleCellRoot
         id={`EventTimelinePremiumTitleCell-${resourceId}`}
         className={classes.titleCell}

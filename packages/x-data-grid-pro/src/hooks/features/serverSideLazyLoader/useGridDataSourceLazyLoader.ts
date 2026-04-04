@@ -24,7 +24,9 @@ import {
   gridRenderContextSelector,
   GridStrategyGroup,
   type GridStrategyProcessor,
+  type GridPipeProcessor,
   useGridRegisterStrategyProcessor,
+  useGridRegisterPipeProcessor,
   runIf,
   DataSourceRowsUpdateStrategy,
 } from '@mui/x-data-grid/internals';
@@ -629,6 +631,42 @@ export const useGridDataSourceLazyLoader = (
         DataSourceRowsUpdateStrategy.LazyLoading,
     );
   }, [privateApiRef]);
+
+  // Provide render context based start/end for lazy loading so that
+  // `apiRef.current.dataSource.fetchRows()` without params
+  // re-fetches the currently visible range instead of always using the
+  // pagination-model state.
+  const addGetRowsParams = React.useCallback<GridPipeProcessor<'getRowsParams'>>(
+    (params) => {
+      if (!lazyLoadingRowsUpdateStrategyActive) {
+        return params;
+      }
+      const renderContext = gridRenderContextSelector(privateApiRef);
+      // On initial load the grid hasn't rendered yet — keep the defaults.
+      if (renderContext.lastRowIndex === 0) {
+        return params;
+      }
+      const paginationModel = gridPaginationModelSelector(privateApiRef);
+      const adjustedParams = adjustRowParams(
+        {
+          start: renderContext.firstRowIndex,
+          end: renderContext.lastRowIndex - 1,
+        },
+        {
+          pageSize: paginationModel.pageSize,
+          rowCount: privateApiRef.current.state.pagination.rowCount,
+        },
+      );
+      return {
+        ...params,
+        start: adjustedParams.start,
+        end: adjustedParams.end,
+      };
+    },
+    [privateApiRef, lazyLoadingRowsUpdateStrategyActive],
+  );
+
+  useGridRegisterPipeProcessor(privateApiRef, 'getRowsParams', addGetRowsParams);
 
   useGridRegisterStrategyProcessor(
     privateApiRef,

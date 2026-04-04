@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox, { checkboxClasses } from '@mui/material/Checkbox';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
@@ -46,10 +46,13 @@ const RecurrenceSelectorContainer = styled('div', {
   slot: 'RecurrenceSelectorContainer',
 })(({ theme }) => ({
   display: 'inline-flex',
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderRadius: theme.shape.borderRadius,
   width: 'fit-content',
   maxWidth: '100%',
+  '&[data-disabled]': {
+    borderColor: (theme.vars || theme).palette.action.disabled,
+  },
 }));
 
 const RadioButtonLabel = styled(FormControlLabel, {
@@ -140,10 +143,10 @@ const WeekDaySelectorCheckbox = styled(Checkbox, {
   padding: theme.spacing(0.75),
   margin: theme.spacing(0.5),
   borderRadius: theme.shape.borderRadius,
-  color: theme.palette.action.active,
-  '&.Mui-checked': {
-    color: theme.palette.text.primary,
-    backgroundColor: theme.palette.action.selected,
+  color: (theme.vars || theme).palette.action.active,
+  [`&.${checkboxClasses.checked}`]: {
+    color: (theme.vars || theme).palette.text.primary,
+    backgroundColor: (theme.vars || theme).palette.action.selected,
   },
 }));
 
@@ -493,6 +496,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                   className={classes.eventDialogRecurrenceSelectorContainer}
                   role="group"
                   aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
+                  data-disabled={customDisabled || undefined}
                 >
                   {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
                     <WeekDaySelectorCheckbox
@@ -517,6 +521,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 </RepeatSectionLabel>
                 <RecurrenceSelectorContainer
                   className={classes.eventDialogRecurrenceSelectorContainer}
+                  data-disabled={customDisabled || undefined}
                 >
                   <RecurrenceSelectorToggleGroup
                     className={classes.eventDialogRecurrenceSelectorToggleGroup}

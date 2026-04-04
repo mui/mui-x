@@ -521,8 +521,6 @@
     },
     "onRowsScrollEnd": {
       "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Use the {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} instead.",
       "signature": {
         "type": "function(params: GridRowScrollEndParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -799,6 +797,12 @@
       "description": "Component rendered for each row.",
       "default": "GridRow",
       "class": "MuiDataGridPro-row"
+    },
+    {
+      "name": "rowCheckbox",
+      "description": "Component rendered for each row selection checkbox.",
+      "default": "GridRowCheckbox",
+      "class": null
     },
     {
       "name": "baseAutocomplete",

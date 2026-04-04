@@ -153,6 +153,11 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
+   * The ID of the event currently active (e.g. open in the event dialog).
+   * `null` when no event is active.
+   */
+  editedEventId: SchedulerEventId | null;
+  /**
    * The event that has been copied or cut, if any.
    */
   copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;

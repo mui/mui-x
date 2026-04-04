@@ -54,9 +54,7 @@ export default function CustomOverlay() {
   return (
     <Stack direction={{ md: 'row', xs: 'column' }} sx={{ width: '100%' }}>
       <BarChart
-        slotProps={{
-          noDataOverlay: { message: 'No data to display in this chart' },
-        }}
+        localeText={{ noData: 'No data to display in this chart' }}
         series={[]}
         height={150}
       />

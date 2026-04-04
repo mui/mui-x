@@ -1,4 +1,4 @@
-import type { MuiPage } from 'docs/src/MuiPage';
+import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
 const datePickersApiPages: MuiPage[] = [
   {
@@ -30,11 +30,6 @@ const datePickersApiPages: MuiPage[] = [
   {
     pathname: '/x/api/date-pickers/date-range-picker-day',
     title: 'DateRangePickerDay',
-    plan: 'pro',
-  },
-  {
-    pathname: '/x/api/date-pickers/date-range-picker-day-2',
-    title: 'DateRangePickerDay2',
     plan: 'pro',
   },
   {
@@ -163,8 +158,8 @@ const datePickersApiPages: MuiPage[] = [
     title: 'MultiSectionDigitalClock',
   },
   {
-    pathname: '/x/api/date-pickers/picker-day-2',
-    title: 'PickerDay2',
+    pathname: '/x/api/date-pickers/picker-day',
+    title: 'PickerDay',
   },
   {
     pathname: '/x/api/date-pickers/pickers-action-bar',
@@ -173,10 +168,6 @@ const datePickersApiPages: MuiPage[] = [
   {
     pathname: '/x/api/date-pickers/pickers-calendar-header',
     title: 'PickersCalendarHeader',
-  },
-  {
-    pathname: '/x/api/date-pickers/pickers-day',
-    title: 'PickersDay',
   },
   {
     pathname: '/x/api/date-pickers/pickers-layout',

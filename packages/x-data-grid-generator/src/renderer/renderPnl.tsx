@@ -7,15 +7,15 @@ const Value = styled('div')(({ theme }) => ({
   width: '100%',
   fontVariantNumeric: 'tabular-nums',
   '&.positive': {
-    color: theme.palette.success.light,
+    color: (theme.vars || theme).palette.success.light,
     ...theme.applyStyles('light', {
-      color: theme.palette.success.dark,
+      color: (theme.vars || theme).palette.success.dark,
     }),
   },
   '&.negative': {
-    color: theme.palette.error.light,
+    color: (theme.vars || theme).palette.error.light,
     ...theme.applyStyles('light', {
-      color: theme.palette.error.dark,
+      color: (theme.vars || theme).palette.error.dark,
     }),
   },
 }));

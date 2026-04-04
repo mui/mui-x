@@ -31,13 +31,13 @@ describe('<ViewSwitcher />', () => {
     const menuItems = within(menu).getAllByRole('menuitem');
 
     expect(menuItems).toHaveLength(4);
-    expect(menuItems[0]).to.have.text('Week');
-    expect(menuItems[1]).to.have.text('Day');
+    expect(menuItems[0]).to.have.text('Day');
+    expect(menuItems[1]).to.have.text('Week');
     expect(menuItems[2]).to.have.text('Month');
     expect(menuItems[3]).to.have.text('Agenda');
 
     // The current view should be selected
-    expect(menuItems[0]).to.have.attribute('aria-selected', 'true');
+    expect(menuItems[1]).to.have.attribute('aria-selected', 'true');
   });
 
   it('should render all views in the menu for a custom set of views (with more than 3 views)', async () => {

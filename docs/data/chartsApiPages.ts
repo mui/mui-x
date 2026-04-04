@@ -1,4 +1,4 @@
-import type { MuiPage } from 'docs/src/MuiPage';
+import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
 const chartsApiPages: MuiPage[] = [
   {
@@ -42,6 +42,16 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/bar-plot',
     title: 'BarPlot',
+  },
+  {
+    pathname: '/x/api/charts/candlestick-chart',
+    title: 'CandlestickChart',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/candlestick-plot',
+    title: 'CandlestickPlot',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/charts-axis',
@@ -223,6 +233,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap',
     title: 'Heatmap',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-cell',
+    title: 'HeatmapCell',
     plan: 'pro',
   },
   {

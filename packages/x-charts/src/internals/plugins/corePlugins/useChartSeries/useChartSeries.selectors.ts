@@ -1,8 +1,8 @@
 import { createSelectorMemoized, createSelector } from '@mui/x-internals/store';
+import { type SeriesId } from '../../../../models';
 import { type ChartRootSelector } from '../../utils/selectors';
 import { type UseChartSeriesSignature } from './useChartSeries.types';
-import { applySeriesLayout, applySeriesProcessors } from './processSeries';
-import { selectorChartDrawingArea } from '../useChartDimensions';
+import { applySeriesProcessors } from './processSeries';
 import { selectorIsItemVisibleGetter } from '../../featurePlugins/useChartVisibilityManager';
 import { selectorChartSeriesConfig } from '../useChartSeriesConfig/useChartSeriesConfig.selectors';
 
@@ -18,7 +18,7 @@ export const selectorChartDefaultizedSeries = createSelector(
  * Get the dataset from the series state.
  * @returns {DatasetType | undefined} The dataset.
  */
-export const selectorChartDataset = createSelector(
+export const selectorChartsDataset = createSelector(
   selectorChartSeriesState,
   (seriesState) => seriesState.dataset,
 );
@@ -31,7 +31,7 @@ export const selectorChartDataset = createSelector(
 export const selectorChartSeriesProcessed = createSelectorMemoized(
   selectorChartDefaultizedSeries,
   selectorChartSeriesConfig,
-  selectorChartDataset,
+  selectorChartsDataset,
   selectorIsItemVisibleGetter,
   function selectorChartSeriesProcessed(defaultizedSeries, seriesConfig, dataset, isItemVisible) {
     return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset, isItemVisible);
@@ -39,15 +39,28 @@ export const selectorChartSeriesProcessed = createSelectorMemoized(
 );
 
 /**
- * Get the processed series after applying series processors.
- * This selector computes the processed series on-demand from the defaultized series.
- * @returns {ProcessedSeries} The processed series.
+ * Returns a function that returns the series configuration for a given series id.
  */
-export const selectorChartSeriesLayout = createSelectorMemoized(
-  selectorChartSeriesProcessed,
+export const selectorChartSeriesConfigGetter = createSelectorMemoized(
   selectorChartSeriesConfig,
-  selectorChartDrawingArea,
-  function selectorChartSeriesLayout(processedSeries, seriesConfig, drawingArea) {
-    return applySeriesLayout(processedSeries, seriesConfig, drawingArea);
+  selectorChartSeriesProcessed,
+  (seriesConfig, processedSeries) => {
+    return function getSeriesConfigById(seriesId: SeriesId) {
+      for (const type in processedSeries) {
+        if (!Object.hasOwn(processedSeries, type)) {
+          continue;
+        }
+
+        const seriesGroup = processedSeries[type as keyof typeof processedSeries];
+        if (seriesGroup?.series) {
+          const item = seriesGroup.series[seriesId];
+          if (item) {
+            return seriesConfig[type as keyof typeof processedSeries];
+          }
+        }
+      }
+
+      return null;
+    };
   },
 );
