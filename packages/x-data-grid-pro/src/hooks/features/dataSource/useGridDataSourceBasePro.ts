@@ -88,7 +88,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     cacheChunkManager,
     cache,
   } = useGridDataSourceBase(apiRef, props, {
-    fetchRowChildren: nestedDataManager.queue,
+    fetchRowChildren: (parents, fetchParams) => nestedDataManager.queue(parents, fetchParams),
     clearDataSourceState,
     handleEditRow,
     ...options,
@@ -149,7 +149,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   );
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApiPro['fetchRowChildren']>(
-    async (id) => {
+    async (id, argParams) => {
       const pipedParams = apiRef.current.unstable_applyPipeProcessors(
         'getRowsParams',
         {},
@@ -173,6 +173,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       const fetchParams = {
         ...gridGetRowsParamsSelector(apiRef),
         ...pipedParams,
+        ...argParams,
         groupKeys: rowNode.path,
       };
 
@@ -183,13 +184,13 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         : CacheChunkManager.mergeResponses(responses as GridGetRowsResponsePro[]);
 
       if (cachedData !== undefined) {
-        const rows = cachedData.rows;
         nestedDataManager.setRequestSettled(id);
-        replaceGroupRows(id, rowNode.path, rows);
-        if (cachedData.rowCount !== undefined) {
-          apiRef.current.setRowCount(cachedData.rowCount);
-        }
-        apiRef.current.setRowChildrenExpansion(id, true);
+        apiRef.current.applyStrategyProcessor('dataSourceNestedRowsUpdate', {
+          parentId: id,
+          path: rowNode.path,
+          response: cachedData,
+          fetchParams,
+        });
         apiRef.current.dataSource.setChildrenLoading(id, false);
         return;
       }
@@ -201,7 +202,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
 
       try {
         const getRowsResponse = await getRows(fetchParams);
-        if (!apiRef.current.getRowNode(id)) {
+        if (!gridRowNodeSelector(apiRef, id)) {
           // The row has been removed from the grid
           nestedDataManager.clearPendingRequest(id);
           return;
@@ -217,14 +218,21 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
           cache.set(key, response);
         });
 
-        if (getRowsResponse.rowCount !== undefined) {
-          apiRef.current.setRowCount(getRowsResponse.rowCount);
-        }
-        replaceGroupRows(id, rowNode.path, getRowsResponse.rows);
-        apiRef.current.setRowChildrenExpansion(id, true);
+        apiRef.current.applyStrategyProcessor('dataSourceNestedRowsUpdate', {
+          parentId: id,
+          path: rowNode.path,
+          response: getRowsResponse,
+          fetchParams,
+        });
       } catch (error) {
         const childrenFetchError = error as Error;
         apiRef.current.dataSource.setChildrenFetchError(id, childrenFetchError);
+        apiRef.current.applyStrategyProcessor('dataSourceNestedRowsUpdate', {
+          parentId: id,
+          path: rowNode.path,
+          error: childrenFetchError,
+          fetchParams,
+        });
         if (typeof onDataSourceErrorProp === 'function') {
           onDataSourceErrorProp(
             new GridGetRowsError({
@@ -253,7 +261,6 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       cacheChunkManager,
       cache,
       onDataSourceErrorProp,
-      replaceGroupRows,
       apiRef,
       props.treeData,
       props.dataSource?.getRows,
@@ -348,7 +355,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     [apiRef],
   );
 
-  const handleGroupedDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
+  const handleGroupedDataUpdate = React.useCallback<
+    GridStrategyProcessor<'dataSourceRootRowsUpdate'>
+  >(
     (params) => {
       if ('error' in params) {
         apiRef.current.setRows([]);
@@ -401,6 +410,30 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     [apiRef, startPolling],
   );
 
+  const handleNestedDataUpdate = React.useCallback<
+    GridStrategyProcessor<'dataSourceNestedRowsUpdate'>
+  >(
+    (params) => {
+      if ('error' in params) {
+        // Error is handled in fetchRowChildren (setChildrenFetchError)
+        return;
+      }
+
+      const { parentId, path, response } = params;
+
+      // Update row count if provided
+      if (response.rowCount !== undefined) {
+        apiRef.current.setRowCount(response.rowCount);
+      }
+
+      replaceGroupRows(parentId, path, response.rows);
+
+      // Expand the parent after children are loaded
+      apiRef.current.setRowChildrenExpansion(parentId, true);
+    },
+    [apiRef, replaceGroupRows],
+  );
+
   const dataSourceApi: GridDataSourceApiPro = {
     dataSource: {
       ...api.public.dataSource,
@@ -422,7 +455,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       scheduledGroups.current < groupsToAutoFetch.length
     ) {
       const groupsToSchedule = groupsToAutoFetch.slice(scheduledGroups.current);
-      nestedDataManager.queue(groupsToSchedule);
+      nestedDataManager.queue(groupsToSchedule, []);
       scheduledGroups.current = groupsToAutoFetch.length;
     }
   }, [apiRef, nestedDataManager, groupsToAutoFetch]);
@@ -433,8 +466,13 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     flatTreeStrategyProcessor,
     groupedDataStrategyProcessor: {
       strategyName: DataSourceRowsUpdateStrategy.GroupedData,
-      group: 'dataSourceRowsUpdate' as const,
+      group: 'dataSourceRootRowsUpdate' as const,
       processor: handleGroupedDataUpdate,
+    },
+    nestedDataStrategyProcessor: {
+      strategyName: DataSourceRowsUpdateStrategy.GroupedData,
+      group: 'dataSourceNestedRowsUpdate' as const,
+      processor: handleNestedDataUpdate,
     },
     events,
     setStrategyAvailability,

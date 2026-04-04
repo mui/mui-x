@@ -145,7 +145,6 @@ export interface GridSkeletonRowNode extends GridTreeBasicNode {
   type: 'skeletonRow';
   /**
    * The id of the group containing this node.
-   * Is always equal to `GRID_ROOT_GROUP_ID`.
    */
   parent: GridRowId;
 }
