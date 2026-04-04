@@ -11,8 +11,11 @@ import {
 const ukUADialog: Partial<EventDialogLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
+  // colorSectionLabel: 'Color',
+  // labelNoColor: 'Default',
   // dateTimeSectionLabel: 'Date & time',
   // resourceColorSectionLabel: 'Resource & color',
+  // resourceSectionLabel: 'Resource',
   // allDayLabel: 'All Day',
   // closeButtonAriaLabel: 'Close',
   // closeButtonLabel: 'Close',

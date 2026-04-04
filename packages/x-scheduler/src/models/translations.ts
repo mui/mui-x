@@ -3,8 +3,11 @@ import { CalendarView } from '@mui/x-scheduler-headless/models';
 export interface EventDialogLocaleText {
   // EventDialog
   colorPickerLabel: string;
+  colorSectionLabel: string;
+  labelNoColor: string;
   dateTimeSectionLabel: string;
   resourceColorSectionLabel: string;
+  resourceSectionLabel: string;
   allDayLabel: string;
   closeButtonAriaLabel: string;
   closeButtonLabel: string;

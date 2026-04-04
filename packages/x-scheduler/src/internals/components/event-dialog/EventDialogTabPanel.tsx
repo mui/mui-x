@@ -25,8 +25,7 @@ const EventDialogTabContent = styled('div', {
   flex: 1,
   overflow: 'auto',
   scrollbarWidth: 'thin',
-  maxHeight: 450,
-  height: 'fit-content',
+  height: 450,
 }));
 
 export { EventDialogTabPanel, EventDialogTabContent };

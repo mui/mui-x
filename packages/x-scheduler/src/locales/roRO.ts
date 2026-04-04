@@ -11,8 +11,11 @@ import {
 const roRODialog: Partial<EventDialogLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Culoarea evenimentului',
+  // colorSectionLabel: 'Color',
+  // labelNoColor: 'Default',
   dateTimeSectionLabel: 'Dată și oră',
   resourceColorSectionLabel: 'Resursă și culoare',
+  // resourceSectionLabel: 'Resource',
   allDayLabel: 'Toată ziua',
   closeButtonAriaLabel: 'Închide',
   closeButtonLabel: 'Închide',
