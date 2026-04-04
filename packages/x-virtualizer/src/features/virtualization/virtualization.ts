@@ -41,6 +41,13 @@ export type VirtualizationParams = {
   /** The column buffer in pixels to render before and after the viewport.
    * @default 150 */
   columnBufferPx?: number;
+  /**
+   * Controls how the container and render zones are positioned:
+   * - 'uncontrolled': uses CSS sticky positioning (default)
+   * - 'controlled': uses CSS absolute positioning with JS-computed offsets
+   * @default 'uncontrolled'
+   */
+  layoutMode?: 'controlled' | 'uncontrolled';
 };
 
 export type VirtualizationState<K extends string = string> = {
@@ -51,6 +58,7 @@ export type VirtualizationState<K extends string = string> = {
   props: Record<K, Record<string, any>>;
   context: Record<string, any>;
   scrollPosition: { current: ScrollPosition };
+  layoutMode: 'controlled' | 'uncontrolled';
 };
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
@@ -68,6 +76,10 @@ const selectors = (() => {
   const firstRowIndexSelector = createSelector(
     (state: BaseState) => state.virtualization.renderContext.firstRowIndex,
   );
+  const scrollPositionSelector = createSelector(
+    (state: BaseState) => state.virtualization.scrollPosition,
+  );
+
   return {
     store: createSelector((state: BaseState) => state.virtualization),
     renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
@@ -79,7 +91,26 @@ const selectors = (() => {
       (rowPositions, firstRowIndex) => rowPositions[firstRowIndex] ?? 0,
     ),
     context: createSelector((state: BaseState) => state.virtualization.context),
-    scrollPosition: createSelector((state: BaseState) => state.virtualization.scrollPosition),
+    layoutMode: createSelector((state: BaseState) => state.virtualization.layoutMode),
+    scrollPosition: scrollPositionSelector,
+    pinnedLeftOffsetSelector: createSelector(
+      scrollPositionSelector,
+      (scrollPosition) => scrollPosition.current.left,
+    ),
+    pinnedRightOffsetSelector: createSelector(
+      scrollPositionSelector,
+      Dimensions.selectors.dimensions,
+      Dimensions.selectors.columnsTotalWidth,
+      Dimensions.selectors.needsVerticalScrollbar,
+      (scrollPosition, dimensions, columnsTotalWidth, needsVerticalScrollbar) => {
+        return (
+          Math.max(columnsTotalWidth, dimensions.viewportOuterSize.width) -
+          dimensions.viewportOuterSize.width -
+          scrollPosition.current.left +
+          (needsVerticalScrollbar ? dimensions.scrollbarSize : 0)
+        );
+      },
+    ),
   };
 })();
 
@@ -109,6 +140,7 @@ function initializeState(params: ParamsWithDefaults) {
       ),
       context: {},
       scrollPosition: { current: ScrollPosition.EMPTY },
+      layoutMode: params.virtualization.layoutMode ?? 'uncontrolled',
       ...params.initialState?.virtualization,
     },
     // FIXME: refactor once the state shape is settled
@@ -520,6 +552,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         columnPositions,
         currentRenderContext,
         pinnedColumns.left.length,
+        store.state.virtualization.layoutMode,
       );
       const showBottomBorder = isLastVisibleInSection && rowParams.position === 'top';
 
@@ -1039,11 +1072,15 @@ export function computeOffsetLeft(
   columnPositions: number[],
   renderContext: ColumnsRenderContext,
   pinnedLeftLength: number,
+  layoutMode: VirtualizationState['layoutMode'] = 'uncontrolled',
 ) {
-  const left =
-    (columnPositions[renderContext.firstColumnIndex] ?? 0) -
-    (columnPositions[pinnedLeftLength] ?? 0);
-  return Math.abs(left);
+  let offset = columnPositions[renderContext.firstColumnIndex] ?? 0;
+  /* CSS sticky leaves elements in the normal flow of the DOM, so we
+   * don't need to add the offset of the pinned columns. */
+  if (layoutMode === 'uncontrolled') {
+    offset -= columnPositions[pinnedLeftLength] ?? 0;
+  }
+  return Math.abs(offset);
 }
 
 function bufferForDirection(

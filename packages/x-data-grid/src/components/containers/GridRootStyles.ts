@@ -165,6 +165,7 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-headersTotalHeight': '0px',
     '--DataGrid-topContainerHeight': '0px',
     '--DataGrid-bottomContainerHeight': '0px',
+    '--DataGrid-horizontalFiller': '0px',
 
     flex: 1,
     boxSizing: 'border-box',
@@ -283,6 +284,7 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
       backgroundColor: headerBackground,
+      flex: '0 0 auto',
     },
     [`& .${c.columnHeader} .${c.sortButton}`]: {
       backgroundColor: vars.header.background.base,
@@ -360,6 +362,11 @@ export const GridRootStyles = styled('div', {
       position: 'sticky',
       zIndex: 40, // Should be above the column separator
       background: vars.header.background.base,
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c['columnHeader--pinnedLeft']},
+      & .${c['virtualizer--layoutControlled']} .${c['columnHeader--pinnedRight']}`]: {
+      position: 'absolute',
+      height: 'var(--height)',
     },
     [`& .${c.columnSeparator}`]: {
       position: 'absolute',
@@ -496,6 +503,7 @@ export const GridRootStyles = styled('div', {
     /* Row styles */
     [`.${c.row}`]: {
       display: 'flex',
+      position: 'relative',
       width: 'var(--DataGrid-rowWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
 
@@ -516,7 +524,6 @@ export const GridRootStyles = styled('div', {
         backgroundColor: 'transparent',
       },
       '&.Mui-selected': selectedStyles,
-      position: 'relative',
     },
 
     /* Cell styles */
@@ -657,6 +664,10 @@ export const GridRootStyles = styled('div', {
         backgroundColor: pinnedSelectedBackground,
       },
     },
+    [`& .${c['virtualizer--layoutControlled']} .${c['cell--pinnedLeft']},
+      & .${c['virtualizer--layoutControlled']} .${c['cell--pinnedRight']}`]: {
+      position: 'absolute',
+    },
     [`& .${c.row}`]: {
       '&:hover': pinnedHoverStyles,
       '&.Mui-selected': pinnedSelectedStyles,
@@ -739,11 +750,11 @@ export const GridRootStyles = styled('div', {
         right: 0,
       },
     },
-    [`& .${c.filler}`]: {
-      flex: '1 0 auto',
-    },
     [`& .${c['filler--borderBottom']}`]: {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
+    },
+    [`& .${c['filler--horizontal']}`]: {
+      width: 'var(--DataGrid-horizontalFiller)',
     },
     [`& .${c.columnHeaders} .${c.filler}`]: {
       backgroundColor: headerBackground,
@@ -751,11 +762,10 @@ export const GridRootStyles = styled('div', {
 
     /* Used when skeleton/no columns overlay is visible */
     [`& .${c['main--hiddenContent']}`]: {
-      [`& .${c.virtualScrollerContent}`]: {
+      [`& .${c.virtualScrollerRenderZone}`]: {
         // We use visibility hidden so that the virtual scroller content retains its height.
         // Position fixed is used to remove the virtual scroller content from the flow.
         // https://github.com/mui/mui-x/issues/14061
-        position: 'fixed',
         visibility: 'hidden',
       },
       // Hide grid content
@@ -768,6 +778,25 @@ export const GridRootStyles = styled('div', {
       '&:hover': {
         backgroundColor: 'transparent',
       },
+    },
+
+    /* Controlled layout overrides (absolute positioning for pinned elements) */
+    [`& .${c['virtualizer--layoutControlled']} .${c.row}`]: {
+      position: 'static',
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c['scrollbarFiller--pinnedRight']}`]: {
+      position: 'absolute',
+      height: 'var(--height)',
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c.virtualScrollerRenderZone}`]: {
+      position: 'static',
+      width: 'fit-content',
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c['container--top']}`]: {
+      width: 'fit-content',
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c['container--bottom']}`]: {
+      width: 'fit-content',
     },
   };
 
