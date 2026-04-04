@@ -38,6 +38,30 @@ Column virtualization is disabled when dynamic row height is enabled.
 See [dynamic row height and column virtualization](/x/react-data-grid/row-height/#column-virtualization) to learn more.
 :::
 
+## Scrolling without render gaps
+
+:::warning
+This feature is experimental. It may change or be removed in a future release.
+:::
+
+The virtualizer supports two layout modes that differ in how scrolling and row positioning work.
+
+In the default **uncontrolled** mode, the browser drives scrolling natively and the grid uses CSS `sticky` positioning to keep headers and pinned rows in place. Rendered rows are positioned inside a filler element that stretches the scroll container to the correct total height. Because the browser and JavaScript run asynchronously, fast scrolling can outpace rendering and produce brief white areas in the viewport.
+
+In **controlled** mode, the grid takes over. All visible elements are positioned with CSS `position: absolute` and updated together in a single JavaScript pass whenever the scroll position changes. This removes the filler element and ensures that headers, pinned rows, and data rows always move as one unit—eliminating the white-area gaps that can appear under fast scrolling.
+
+Use the `virtualizerLayoutMode` key inside `experimentalFeatures` to opt in to the controlled mode:
+
+```tsx
+<DataGrid
+  experimentalFeatures={{ virtualizerLayoutMode: 'controlled' }}
+/>
+```
+
+The demo below lets you switch between modes and scroll quickly to see the difference:
+
+{{"demo": "VirtualizerLayoutMode.js", "bg": "inline"}}
+
 ## Disable virtualization
 
 The virtualization can be disabled completely using the `disableVirtualization` prop.
