@@ -11,8 +11,11 @@ import {
 const frFRDialog: Partial<EventDialogLocaleText> = {
   // EventDialog
   colorPickerLabel: "Couleur de l'événement",
+  // colorSectionLabel: 'Color',
+  // labelNoColor: 'Default',
   dateTimeSectionLabel: 'Date et heure',
   resourceColorSectionLabel: 'Ressource et couleur',
+  // resourceSectionLabel: 'Resource',
   allDayLabel: 'Toute la journée',
   closeButtonAriaLabel: 'Fermer',
   closeButtonLabel: 'Fermer',

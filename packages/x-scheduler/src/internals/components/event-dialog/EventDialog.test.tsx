@@ -109,7 +109,8 @@ describe('<EventDialogContent open />', () => {
     await user.click(screen.getByRole('tab', { name: /general/i }));
     await user.click(screen.getByRole('combobox', { name: /resource/i }));
     await user.click(await screen.findByRole('option', { name: /work/i }));
-    await user.click(screen.getByRole('radio', { name: /pink/i }));
+    await user.click(screen.getByRole('combobox', { name: /event color/i }));
+    await user.click(await screen.findByRole('option', { name: /pink/i }));
     await user.click(screen.getByRole('button', { name: /save/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
