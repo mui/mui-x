@@ -244,6 +244,13 @@ DataGridPremiumRaw.propTypes = {
    */
   cellSelection: PropTypes.bool,
   /**
+   * If `true`, a fill handle is shown at the bottom-right corner of the cell selection.
+   * Dragging the fill handle fills target cells with the values from selected cells.
+   * Requires `cellSelection` to be enabled.
+   * @default false
+   */
+  cellSelectionFillHandle: PropTypes.bool,
+  /**
    * Set the cell selection model of the grid.
    */
   cellSelectionModel: PropTypes.object,

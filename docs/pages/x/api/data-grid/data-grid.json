@@ -1180,6 +1180,36 @@
       "isGlobal": false
     },
     {
+      "key": "cell--fillPreview",
+      "className": "MuiDataGrid-cell--fillPreview",
+      "description": "Styles applied to the cell element when it is in the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewBottom",
+      "className": "MuiDataGrid-cell--fillPreviewBottom",
+      "description": "Styles applied to the cell element if it is at the bottom edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewLeft",
+      "className": "MuiDataGrid-cell--fillPreviewLeft",
+      "description": "Styles applied to the cell element if it is at the left edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewRight",
+      "className": "MuiDataGrid-cell--fillPreviewRight",
+      "description": "Styles applied to the cell element if it is at the right edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewTop",
+      "className": "MuiDataGrid-cell--fillPreviewTop",
+      "description": "Styles applied to the cell element if it is at the top edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--flex",
       "className": "MuiDataGrid-cell--flex",
       "description": "Styles applied to the cell element in flex display mode.",
@@ -1243,6 +1273,12 @@
       "key": "cell--textRight",
       "className": "MuiDataGrid-cell--textRight",
       "description": "Styles applied to the cell element if `align=\"right\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--withFillHandle",
+      "className": "MuiDataGrid-cell--withFillHandle",
+      "description": "Styles applied to the cell element when it displays the fill handle.",
       "isGlobal": false
     },
     {
