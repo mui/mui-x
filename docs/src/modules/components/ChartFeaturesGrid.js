@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid';
-import { InfoCard } from '@mui/docs/InfoCard';
+import { InfoCard } from '@mui/internal-core-docs/InfoCard';
 import ChatBubbleRoundedIcon from '@mui/icons-material/ChatBubble';
 import DashboardCustomizeRoundedIcon from '@mui/icons-material/DashboardCustomizeRounded';
 import ExtensionRoundedIcon from '@mui/icons-material/Extension';

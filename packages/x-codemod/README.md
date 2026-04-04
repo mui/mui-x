@@ -76,9 +76,9 @@ The corresponding sub-sections are listed below
 
 <!-- - [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v900) -->
 <!-- - [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v900) -->
-<!-- - [`preset-safe-for-pickers`](#preset-safe-for-pickers-v900) -->
 
 - [`preset-safe-for-charts`](#preset-safe-for-charts-v900)
+- [`preset-safe-for-pickers`](#preset-safe-for-pickers-v900)
 
 ### Data Grid codemods
 
@@ -309,6 +309,159 @@ Replaces the deprecated `isBarSeries()` and `isDefaultizedBarSeries()` helper fu
 +if (series.type === 'bar') {
    console.log('defaultized bar series');
  }
+```
+
+### Pickers codemods
+
+#### 🚀 `preset-safe` for Pickers v9.0.0
+
+The `preset-safe` codemods for Pickers.
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-field-ref`](#rename-field-ref)
+- [`remove-picker-day-2`](#remove-picker-day-2)
+- [`rename-picker-day-2`](#rename-picker-day-2)
+- [`rename-pickers-day`](#rename-pickers-day)
+- [`rename-picker-classes`](#rename-picker-classes)
+- [`remove-disable-margin`](#remove-disable-margin)
+
+#### `rename-field-ref`
+
+Renames unstable field ref props to their stable equivalents.
+
+```diff
+-<DateField unstableFieldRef={fieldRef} />
++<DateField fieldRef={fieldRef} />
+
+-<DateRangePicker unstableStartFieldRef={startRef} unstableEndFieldRef={endRef} />
++<DateRangePicker startFieldRef={startRef} endFieldRef={endRef} />
+
+-<DatePicker slotProps={{ field: { unstableFieldRef: fieldRef } }} />
++<DatePicker slotProps={{ field: { fieldRef: fieldRef } }} />
+```
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path>
+```
+
+#### `remove-picker-day-2`
+
+Removes the unnecessary `slots={{ day: PickerDay2 }}` and `slots={{ day: DateRangePickerDay2 }}` usages, since `PickerDay2` and `DateRangePickerDay2` are the new defaults.
+Also handles objects passed through variables (for example `const slots = { day: PickerDay2 }`).
+
+```diff
+-<DatePicker slots={{ day: PickerDay2 }} />
++<DatePicker />
+
+-<DateRangePicker slots={{ day: DateRangePickerDay2 }} />
++<DateRangePicker />
+```
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/remove-picker-day-2 <path>
+```
+
+#### `rename-picker-day-2`
+
+Renames `PickerDay2` and `DateRangePickerDay2` components and their related types, classes, and theme component names to `PickerDay` and `DateRangePickerDay`.
+
+```diff
+-import { PickerDay2, PickerDay2Props, pickerDay2Classes } from '@mui/x-date-pickers/PickerDay2';
++import { PickerDay, PickerDayProps, pickerDayClasses } from '@mui/x-date-pickers/PickerDay';
+
+-import { DateRangePickerDay2 } from '@mui/x-date-pickers-pro/DateRangePickerDay2';
++import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
+
+ const theme = createTheme({
+   components: {
+-    MuiPickerDay2: {
++    MuiPickerDay: {
+       styleOverrides: { root: { color: 'red' } },
+     },
+   },
+ });
+```
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-day-2 <path>
+```
+
+#### `rename-pickers-day`
+
+Renames `PickersDay` to `PickerDay` and all related types, classes, and theme component names.
+
+```diff
+-import { PickersDay, PickersDayProps, pickersDayClasses } from '@mui/x-date-pickers/PickersDay';
++import { PickerDay, PickerDayProps, pickerDayClasses } from '@mui/x-date-pickers/PickerDay';
+
+ const theme = createTheme({
+   components: {
+-    MuiPickersDay: {
++    MuiPickerDay: {
+       styleOverrides: { root: { color: 'red' } },
+     },
+   },
+ });
+```
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/rename-pickers-day <path>
+```
+
+#### `rename-picker-classes`
+
+Renames `PickerDay` and `DateRangePickerDay` CSS class keys to their new equivalents.
+
+```diff
+-'& .MuiPickerDay-outsideCurrentMonth'
++'& .MuiPickerDay-dayOutsideMonth'
+
+-'& .MuiDateRangePickerDay-rangeIntervalDayHighlightStart'
++'& .MuiDateRangePickerDay-selectionStart'
+
+-'& .MuiDateRangePickerDay-dayInsideRangeInterval'
++'& .MuiDateRangePickerDay-insideSelection'
+```
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-classes <path>
+```
+
+#### `remove-disable-margin`
+
+Removes the `disableMargin` prop from `PickerDay` and `DateRangePickerDay` components and replaces it with the `--PickerDay-horizontalMargin` CSS variable via the `sx` prop.
+
+```diff
+-<PickerDay disableMargin day={day} />
++<PickerDay day={day} sx={{ '--PickerDay-horizontalMargin': 0 }} />
+
+-<DatePicker slotProps={{ day: { disableMargin: true } }} />
++<DatePicker slotProps={{ day: { sx: { '--PickerDay-horizontalMargin': 0 } } }} />
+```
+
+When `disableMargin={false}`, the prop is simply removed without adding the CSS variable.
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/remove-disable-margin <path>
 ```
 
 ## v8.0.0

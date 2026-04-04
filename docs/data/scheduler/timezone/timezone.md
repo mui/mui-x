@@ -9,7 +9,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Display events correctly across different timezones.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Overview
 
