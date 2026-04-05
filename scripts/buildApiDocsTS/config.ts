@@ -29,13 +29,15 @@ export interface ProductFamily {
   skipComponent?: (componentName: string, filePath: string) => boolean;
   /** Props whose types should not be expanded (kept as "object" or "arrayOf object") */
   unresolvedProps?: string[];
-  /** Interfaces to generate dedicated documentation pages for */
-  documentedInterfaces?: {
+  /** Interfaces to document */
+  interfaces?: {
+    /** Extra packages to search beyond the family packages (e.g. x-data-grid-generator) */
     extraPackages?: string[];
-    names: string[];
+    /** Interfaces that get a full documentation page (JSON + translation + JS wrapper) */
+    pages?: string[];
+    /** Interfaces that only get a JSON blob (embedded in demo pages) */
+    jsonOnly?: string[];
   };
-  /** Data grid API interfaces embedded in demo pages (data-grid only) */
-  apiInterfaces?: string[];
 }
 
 // ---------------------------------------------------------------------------
@@ -95,21 +97,24 @@ export function getPackageConfigs(): PackageConfig[] {
   return configs;
 }
 
-/** Interface documentation entries derived from families that define them. */
+/** Interfaces that get full documentation pages, derived from families. */
 export function getInterfacesToDocument(): {
   folder: string;
   packages: string[];
   documentedInterfaces: string[];
 }[] {
-  return PRODUCT_FAMILIES.filter((f) => f.documentedInterfaces).map((f) => ({
+  return PRODUCT_FAMILIES.filter((f) => f.interfaces?.pages).map((f) => ({
     folder: f.section,
-    packages: [...f.packages, ...(f.documentedInterfaces!.extraPackages ?? [])],
-    documentedInterfaces: f.documentedInterfaces!.names,
+    packages: [...f.packages, ...(f.interfaces!.extraPackages ?? [])],
+    documentedInterfaces: f.interfaces!.pages!,
   }));
 }
 
-/** Data grid API interfaces (embedded in demo pages). */
-export function getDatagridApiInterfaces(): string[] {
-  const dgFamily = PRODUCT_FAMILIES.find((f) => f.section === 'data-grid');
-  return dgFamily?.apiInterfaces ?? [];
+/** Interfaces that only get a JSON blob (embedded in demo pages), per section. */
+export function getJsonOnlyInterfaces(): { folder: string; packages: string[]; names: string[] }[] {
+  return PRODUCT_FAMILIES.filter((f) => f.interfaces?.jsonOnly).map((f) => ({
+    folder: f.section,
+    packages: f.packages,
+    names: f.interfaces!.jsonOnly!,
+  }));
 }

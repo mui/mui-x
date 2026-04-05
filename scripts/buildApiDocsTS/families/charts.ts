@@ -48,7 +48,6 @@ const SKIP: Record<string, Set<string>> = {
     'ChartsWebGLLayer',
     'ChartContainerPremium',
     'ChartDataProviderPremium',
-    // cspell:disable-next-line
     'OHLCTooltipContent',
   ]),
 };
@@ -70,8 +69,8 @@ export const chartsFamily: ProductFamily = {
     return SKIP[pkg]?.has(name) ?? false;
   },
   unresolvedProps: ['series', 'axis', 'plugins', 'seriesConfig', 'manager'],
-  documentedInterfaces: {
-    names: [
+  interfaces: {
+    pages: [
       'BarSeries',
       'LineSeries',
       'PieSeries',

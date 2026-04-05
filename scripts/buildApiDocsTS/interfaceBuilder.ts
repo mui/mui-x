@@ -6,7 +6,7 @@ import * as ts from 'typescript';
 import * as path from 'path';
 import * as fs from 'node:fs';
 import { kebabCase } from 'es-toolkit/string';
-import { CWD, getInterfacesToDocument, getDatagridApiInterfaces } from './config';
+import { CWD, getInterfacesToDocument, getJsonOnlyInterfaces } from './config';
 import { extractJsDoc } from './jsDocUtils';
 import type { FileWrite } from './types';
 
@@ -187,56 +187,59 @@ export async function getStaticProps() {
     }
   }
 
-  // Data grid API interfaces (embedded in demo pages)
-  for (const interfaceName of getDatagridApiInterfaces()) {
-    const entryPath = path.resolve(CWD, 'packages/x-data-grid-premium/src/index.ts');
+  // JSON-only interfaces (embedded in demo pages, no dedicated page)
+  for (const group of getJsonOnlyInterfaces()) {
+    // Use the most complete package in the family to find the interface
+    const mostCompletePkg = group.packages[group.packages.length - 1];
+    const entryPath = path.resolve(CWD, `packages/${mostCompletePkg}/src/index.ts`);
     const sf = program.getSourceFile(entryPath);
     if (!sf) {
       continue;
     }
-
     const modSymbol = checker.getSymbolAtLocation(sf);
     if (!modSymbol) {
       continue;
     }
-
     const exports = checker.getExportsOfModule(modSymbol);
-    const found = exports.find((exportSymbol) => exportSymbol.name === interfaceName);
-    if (!found) {
-      continue;
-    }
 
-    let resolved = found;
-    if (resolved.flags & ts.SymbolFlags.Alias) {
-      resolved = checker.getAliasedSymbol(resolved);
-    }
-
-    const interfaceType = checker.getDeclaredTypeOfSymbol(resolved);
-    const description = ts.displayPartsToString(resolved.getDocumentationComment(checker));
-
-    const properties: Record<string, any> = {};
-    for (const prop of interfaceType.getProperties()) {
-      const jsDoc = extractJsDoc(prop, checker);
-      if (jsDoc.ignore) {
+    for (const interfaceName of group.names) {
+      const found = exports.find((exportSymbol) => exportSymbol.name === interfaceName);
+      if (!found) {
         continue;
       }
 
-      const propType = checker.getTypeOfSymbol(prop);
-      const typeStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
+      let resolved = found;
+      if (resolved.flags & ts.SymbolFlags.Alias) {
+        resolved = checker.getAliasedSymbol(resolved);
+      }
 
-      properties[prop.name] = {
-        type: { description: escapeHtml(typeStr) },
-      };
+      const interfaceType = checker.getDeclaredTypeOfSymbol(resolved);
+      const description = ts.displayPartsToString(resolved.getDocumentationComment(checker));
+
+      const properties: Record<string, any> = {};
+      for (const prop of interfaceType.getProperties()) {
+        const jsDoc = extractJsDoc(prop, checker);
+        if (jsDoc.ignore) {
+          continue;
+        }
+
+        const propType = checker.getTypeOfSymbol(prop);
+        const typeStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
+
+        properties[prop.name] = {
+          type: { description: escapeHtml(typeStr) },
+        };
+      }
+
+      const slug = kebabCase(interfaceName);
+      files.push({
+        path: `docs/pages/x/api/${group.folder}/${slug}.json`,
+        content: JSON.stringify({ name: interfaceName, description, properties }),
+      });
+
+      // eslint-disable-next-line no-console
+      console.log(`  Built JSON file for ${interfaceName}`);
     }
-
-    const slug = kebabCase(interfaceName);
-    files.push({
-      path: `docs/pages/x/api/data-grid/${slug}.json`,
-      content: JSON.stringify({ name: interfaceName, description, properties }),
-    });
-
-    // eslint-disable-next-line no-console
-    console.log(`  Built JSON file for ${interfaceName}`);
   }
 
   // Linkify translations
