@@ -48,15 +48,13 @@ export interface PackageConfig {
   name: string;
   packageDir: string;
   section: string;
-  discovery: 'whitelist' | 'scan';
-  /** For whitelist: component names to document (matched by filename without .tsx) */
-  componentNames?: string[];
   /**
-   * Skip component predicate (for 'scan' mode)
-   * @param {string} filename the absolute path of the file being analyzed
-   * @returns {boolean} true to skip this file/component, false to include it
+   * Return true to skip a component from documentation.
+   * @param {string} componentName the component name (filename without .tsx)
+   * @param {string} filePath the absolute path of the file
+   * @returns {boolean} true to skip
    */
-  skipComponent?: (filename: string) => boolean;
+  skipComponent?: (componentName: string, filePath: string) => boolean;
   includeUnstable?: boolean;
   reExportPackages: string[];
 }

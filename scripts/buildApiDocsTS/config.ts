@@ -12,34 +12,119 @@ export const CWD = process.cwd();
 // ---------------------------------------------------------------------------
 
 interface ProductFamily {
-  /** The docs section name (data-grid, date-pickers, charts, tree-view) */
   section: string;
   /** Packages ordered from base to most complete (community -> pro -> premium) */
   packages: string[];
-  /** How to discover components */
-  discovery: 'whitelist' | 'scan';
   includeUnstable?: boolean;
   /**
-   * Skip component predicate (for 'scan' mode)
-   * @param {string} filename the absolute path of the file being analyzed
-   * @returns {boolean} true to skip this file/component, false to include it
+   * Return true to skip a component. Receives the component name (no extension)
+   * and the full file path. Called per-package — use the `pkg` closure to
+   * differentiate behaviour between packages in the same family.
+   * @param {string} componentName the component name (filename without .tsx)
+   * @param {string} filePath the absolute path of the file being analyzed
+   * @returns {boolean} true to skip this component
    */
-  skipComponent?: (filename: string) => boolean;
-  /** Component names to skip, per package. Matched against the filename without extension. */
-  skipComponents?: Record<string, string[]>;
-  /** Component names to include, per package. Only these will be documented (whitelist mode). */
-  components?: Record<string, string[]>;
+  skipComponent?: (componentName: string, filePath: string) => boolean;
   /** Props whose types should not be expanded (kept as "object" or "arrayOf object") */
   unresolvedProps?: string[];
   /** Interfaces to generate dedicated documentation pages for */
   documentedInterfaces?: {
-    /** Extra packages to search for the interfaces (e.g. x-data-grid-generator) */
     extraPackages?: string[];
     names: string[];
   };
   /** Data grid API interfaces embedded in demo pages (data-grid only) */
   apiInterfaces?: string[];
 }
+
+// ---------------------------------------------------------------------------
+// Skip-set helpers
+// ---------------------------------------------------------------------------
+
+const DATA_GRID_COMPONENTS: Record<string, Set<string>> = {
+  'x-data-grid': new Set([
+    'DataGrid',
+    'GridFilterForm',
+    'GridFilterPanel',
+    'GridToolbarQuickFilter',
+    'Toolbar',
+    'ToolbarButton',
+    'ExportPrint',
+    'ExportCsv',
+    'QuickFilter',
+    'QuickFilterControl',
+    'QuickFilterClear',
+    'QuickFilterTrigger',
+    'FilterPanelTrigger',
+    'ColumnsPanelTrigger',
+  ]),
+  'x-data-grid-pro': new Set(['DataGridPro']),
+  'x-data-grid-premium': new Set([
+    'DataGridPremium',
+    'ExportExcel',
+    'PivotPanelTrigger',
+    'GridChartsPanel',
+    'ChartsPanelTrigger',
+    'AiAssistantPanelTrigger',
+    'PromptField',
+    'PromptFieldRecord',
+    'PromptFieldControl',
+    'PromptFieldSend',
+    'GridChartsRendererProxy',
+  ]),
+};
+
+const CHARTS_SKIP: Record<string, Set<string>> = {
+  'x-charts': new Set([
+    'GaugeReferenceArc',
+    'GaugeValueArc',
+    'GaugeValueText',
+    'FocusedBar',
+    'FocusedScatterMark',
+    'ChartsXReferenceLine',
+    'ChartsYReferenceLine',
+    'ChartsOverlay',
+    'ChartsNoDataOverlay',
+    'ChartsLoadingOverlay',
+    'CircleMarkElement',
+    'ScatterMarker',
+    'AnimatedBarElement',
+    'BarGroup',
+    'BatchBarPlot',
+    'RadarDataProvider',
+    'FocusedLineMark',
+    'FocusedPieArc',
+    'BatchScatter',
+    'IndividualBarPlot',
+    'ChartsLayerContainer',
+    'ChartsSvgLayer',
+    'ChartContainer',
+    'ChartProvider',
+    'ChartsProvider',
+    'ChartDataProvider',
+  ]),
+  'x-charts-pro': new Set([
+    'HeatmapSVGPlot',
+    'SankeyLinkPlot',
+    'SankeyNodePlot',
+    'SankeyLinkLabelPlot',
+    'SankeyNodeLabelPlot',
+    'ChartContainerPro',
+    'ChartDataProviderPro',
+  ]),
+  'x-charts-premium': new Set([
+    'AnimatedRangeBarElement',
+    'ChartsRenderer',
+    'PaletteOption',
+    'HeatmapPlotPremium',
+    'HeatmapWebGLPlot',
+    'HeatmapWebGLRenderer',
+    'ChartsWebGLLayer',
+    'ChartContainerPremium',
+    'ChartDataProviderPremium',
+    // cspell:disable-next-line
+    'OHLCTooltipContent',
+  ]),
+};
 
 // ---------------------------------------------------------------------------
 // Product families
@@ -49,38 +134,15 @@ const PRODUCT_FAMILIES: ProductFamily[] = [
   {
     section: 'data-grid',
     packages: ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'],
-    discovery: 'whitelist',
-    components: {
-      'x-data-grid': [
-        'DataGrid',
-        'GridFilterForm',
-        'GridFilterPanel',
-        'GridToolbarQuickFilter',
-        'Toolbar',
-        'ToolbarButton',
-        'ExportPrint',
-        'ExportCsv',
-        'QuickFilter',
-        'QuickFilterControl',
-        'QuickFilterClear',
-        'QuickFilterTrigger',
-        'FilterPanelTrigger',
-        'ColumnsPanelTrigger',
-      ],
-      'x-data-grid-pro': ['DataGridPro'],
-      'x-data-grid-premium': [
-        'DataGridPremium',
-        'ExportExcel',
-        'PivotPanelTrigger',
-        'GridChartsPanel',
-        'ChartsPanelTrigger',
-        'AiAssistantPanelTrigger',
-        'PromptField',
-        'PromptFieldRecord',
-        'PromptFieldControl',
-        'PromptFieldSend',
-        'GridChartsRendererProxy',
-      ],
+    // Data grid uses a whitelist: skip everything not in the allowed set for each package
+    skipComponent: (name, filePath) => {
+      let pkg = 'x-data-grid';
+      if (filePath.includes('/x-data-grid-premium/')) {
+        pkg = 'x-data-grid-premium';
+      } else if (filePath.includes('/x-data-grid-pro/')) {
+        pkg = 'x-data-grid-pro';
+      }
+      return !DATA_GRID_COMPONENTS[pkg]?.has(name);
     },
     unresolvedProps: [
       'columns',
@@ -149,7 +211,6 @@ const PRODUCT_FAMILIES: ProductFamily[] = [
   {
     section: 'date-pickers',
     packages: ['x-date-pickers', 'x-date-pickers-pro'],
-    discovery: 'scan',
     includeUnstable: true,
     unresolvedProps: [
       'value',
@@ -172,59 +233,18 @@ const PRODUCT_FAMILIES: ProductFamily[] = [
   {
     section: 'charts',
     packages: ['x-charts', 'x-charts-pro', 'x-charts-premium'],
-    discovery: 'scan',
     includeUnstable: true,
-    skipComponent: (filename: string) => filename.includes('/context/'),
-    skipComponents: {
-      'x-charts': [
-        'GaugeReferenceArc',
-        'GaugeValueArc',
-        'GaugeValueText',
-        'FocusedBar',
-        'FocusedScatterMark',
-        'ChartsXReferenceLine',
-        'ChartsYReferenceLine',
-        'ChartsOverlay',
-        'ChartsNoDataOverlay',
-        'ChartsLoadingOverlay',
-        'CircleMarkElement',
-        'ScatterMarker',
-        'AnimatedBarElement',
-        'BarGroup',
-        'BatchBarPlot',
-        'RadarDataProvider',
-        'FocusedLineMark',
-        'FocusedPieArc',
-        'BatchScatter',
-        'IndividualBarPlot',
-        'ChartsLayerContainer',
-        'ChartsSvgLayer',
-        'ChartContainer',
-        'ChartProvider',
-        'ChartsProvider',
-        'ChartDataProvider',
-      ],
-      'x-charts-pro': [
-        'HeatmapSVGPlot',
-        'SankeyLinkPlot',
-        'SankeyNodePlot',
-        'SankeyLinkLabelPlot',
-        'SankeyNodeLabelPlot',
-        'ChartContainerPro',
-        'ChartDataProviderPro',
-      ],
-      'x-charts-premium': [
-        'AnimatedRangeBarElement',
-        'ChartsRenderer',
-        'PaletteOption',
-        'HeatmapPlotPremium',
-        'HeatmapWebGLPlot',
-        'HeatmapWebGLRenderer',
-        'ChartsWebGLLayer',
-        'ChartContainerPremium',
-        'ChartDataProviderPremium',
-        'OHLCTooltipContent',
-      ],
+    skipComponent: (name, filePath) => {
+      if (filePath.includes('/context/')) {
+        return true;
+      }
+      let pkg = 'x-charts';
+      if (filePath.includes('/x-charts-premium/')) {
+        pkg = 'x-charts-premium';
+      } else if (filePath.includes('/x-charts-pro/')) {
+        pkg = 'x-charts-pro';
+      }
+      return CHARTS_SKIP[pkg]?.has(name) ?? false;
     },
     unresolvedProps: ['series', 'axis', 'plugins', 'seriesConfig', 'manager'],
     documentedInterfaces: {
@@ -246,9 +266,8 @@ const PRODUCT_FAMILIES: ProductFamily[] = [
   {
     section: 'tree-view',
     packages: ['x-tree-view', 'x-tree-view-pro'],
-    discovery: 'scan',
     includeUnstable: true,
-    skipComponent: (filename: string) => filename.includes('/components/'),
+    skipComponent: (_name, filePath) => filePath.includes('/components/'),
   },
 ];
 
@@ -275,9 +294,6 @@ export const COMMON_INHERITED_PROPS = new Set([
   'ref',
 ]);
 
-/**
- * Compute re-export packages: this package + all tiers above it.
- */
 function getReExportPackages(pkg: string, family: ProductFamily): string[] {
   const idx = family.packages.indexOf(pkg);
   return family.packages.slice(idx).map((p) => `@mui/${p}`);
@@ -288,28 +304,12 @@ export function getPackageConfigs(): PackageConfig[] {
   const configs: PackageConfig[] = [];
   for (const family of PRODUCT_FAMILIES) {
     for (const pkg of family.packages) {
-      // Build the skip predicate by combining skipComponent + skipComponents for this package
-      const skipNames = new Set(family.skipComponents?.[pkg]);
-      const skipFn = family.skipComponent;
-      let skipComponent: ((filename: string) => boolean) | undefined;
-      if (skipFn || skipNames.size > 0) {
-        skipComponent = (filename: string) => {
-          if (skipFn?.(filename)) {
-            return true;
-          }
-          const name = filename.replace(/.*\//, '').replace(/\.tsx$/, '');
-          return skipNames.has(name);
-        };
-      }
-
       configs.push({
         name: pkg,
         packageDir: `packages/${pkg}`,
         section: family.section,
-        discovery: family.discovery,
         includeUnstable: family.includeUnstable,
-        skipComponent,
-        componentNames: family.components?.[pkg],
+        skipComponent: family.skipComponent,
         reExportPackages: getReExportPackages(pkg, family),
       });
     }
