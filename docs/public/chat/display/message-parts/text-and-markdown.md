@@ -10,6 +10,8 @@ components: ChatMessageContent
 
 <p class="description">Render plain text and markdown content in chat messages using the <code>ChatTextMessagePart</code> type and the built-in markdown renderer.</p>
 
+
+
 Text parts are the most common message part type. Every message with written content — whether from a human user or an AI assistant — uses one or more `text` parts to carry that content.
 
 ## The text part data model
@@ -79,20 +81,6 @@ Override the markdown renderer through `partProps.text.renderText` on `ChatMessa
 
 This lets you plug in any markdown library (react-markdown, remark, MDX) while keeping the rest of the chat UI intact.
 
-### Plain text rendering
-
-At the unstyled layer (`@mui/x-chat/headless`), text parts render as plain `<div>` elements with no markdown processing. The markdown renderer is a Material UI layer feature. If you are building on the unstyled primitives, provide your own `renderText` function through `partProps`:
-
-```tsx
-<Message.Content
-  partProps={{
-    text: {
-      renderText: (text) => <ReactMarkdown>{text}</ReactMarkdown>,
-    },
-  }}
-/>
-```
-
 ## Streaming text
 
 Text parts support incremental delivery through the streaming protocol. The stream uses three chunk types to build up a text part:
@@ -128,12 +116,11 @@ function TextPartDisplay({ part }: { part: ChatTextMessagePart }) {
 
 The message list auto-scrolls to follow new streaming content as long as the user is near the bottom of the list.
 
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)
-
 ## See also
 
 - [Code Blocks](/x/react-chat/display/message-parts/code-blocks/) for syntax-highlighted code fence rendering
 - [Message Appearance](/x/react-chat/display/message-appearance/) for visual presentation of the message list
-- [Message parts (headless)](/x/react-chat/customization/headless/) for rendering all part types from scratch
+
+## API
+
+- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

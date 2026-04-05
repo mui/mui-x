@@ -10,6 +10,8 @@ components: ChatBox
 
 <p class="description">Override styles using the <code>sx</code> prop, Material UI theme component overrides, dark mode, and CSS class injection.</p>
 
+
+
 ## sx prop
 
 The `sx` prop on `ChatBox` applies styles to the outermost root element.
@@ -123,10 +125,9 @@ Pass `sx` overrides to any internal sub-component using `slotProps` without repl
 />
 ```
 
-## API
-
 ## See also
 
 - [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing sub-components entirely.
 - [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling with utility classes.
-- [Unstyled Components](/x/react-chat/customization/unstyled/) for building from structural primitives.
+
+## API

@@ -10,6 +10,8 @@ githubLabel: 'scope: chat'
 
 Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking.
 
+
+
 ## Primitive set
 
 The message list surface is built from:
@@ -94,13 +96,13 @@ That makes it safe to keep in the row pipeline for every message without extra f
 - Render `MessageList.DateDivider` and `Indicators.UnreadMarker` alongside each row in `renderItem`.
 - Keep grouping and row composition inside the message-list render path so ordering and affordances stay aligned.
 
+## See also
+
+- Continue with [Messages](/x/react-chat/unstyled/messages/) for the row-level primitives that usually appear inside `renderItem`.
+- Continue with [Indicators](/x/react-chat/unstyled/indicators/) for unread and scroll affordances powered by the list.
+
 ## API
 
 - [MessageListRoot](/x/api/chat/message-list-root/)
 - [MessageListDateDivider](/x/api/chat/message-list-date-divider/)
 - [ScrollToBottomAffordance](/x/api/chat/scroll-to-bottom-affordance/)
-
-## See also
-
-- Continue with [Messages](/x/react-chat/unstyled/messages/) for the row-level primitives that usually appear inside `renderItem`.
-- Continue with [Indicators](/x/react-chat/unstyled/indicators/) for unread and scroll affordances powered by the list.

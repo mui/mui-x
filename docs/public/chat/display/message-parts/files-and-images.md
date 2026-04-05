@@ -10,6 +10,8 @@ components: ChatMessageContent
 
 <p class="description">Display file attachments and inline image previews using the <code>ChatFileMessagePart</code> type.</p>
 
+
+
 File parts represent file attachments within a message. When the file is an image, an inline preview is rendered. For other file types, a compact chip with a document icon and filename is displayed.
 
 ## The file part data model
@@ -67,7 +69,7 @@ Both variants open the file in a new tab (`target="_blank"`) when clicked.
 
 ## Slots
 
-The unstyled `FilePart` component exposes four slots for customization:
+The `FilePart` component exposes four slots for customization:
 
 | Slot       | Default element | Description                              |
 | :--------- | :-------------- | :--------------------------------------- |
@@ -124,12 +126,12 @@ The `FilePart` component computes an owner state that slot components can use fo
 | `messageId` | `string`   | ID of the parent message     |
 | `role`      | `ChatRole` | Role of the message author   |
 
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)
-
 ## See also
 
 - [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the most common part type
 - [Sources & Citations](/x/react-chat/display/message-parts/sources-and-citations/) for reference links in RAG applications
 - [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom file viewers
+
+## API
+
+- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

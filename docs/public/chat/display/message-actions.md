@@ -10,6 +10,8 @@ components: ChatMessageActions
 
 Add hover-triggered action buttons to messages for copy, edit, delete, and custom operations.
 
+
+
 `ChatMessageActions` renders an action bar that appears when the user hovers over a message or focuses within it. The actions area is positioned in the message grid and transitions from hidden to visible using an opacity animation.
 
 ## Import
@@ -42,7 +44,7 @@ The transition uses a short opacity animation. When the user prefers reduced mot
 
 ## Component anatomy
 
-`ChatMessageActions` is a styled wrapper around the unstyled `MessageActions` primitive. It occupies the `actions` grid area in the message row layout:
+`ChatMessageActions` occupies the `actions` grid area in the message row layout:
 
 ```text
 ChatMessage (grid)
@@ -57,61 +59,124 @@ ChatMessage (grid)
 The `MessageActions` primitive renders a `<div>` (or custom slot element) that you populate with your own action buttons. Override the actions slot through `ChatBox`:
 
 ```tsx
-function MyMessageActions(props) {
+'use client';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { ChatBox } from '@mui/x-chat';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
+
+function MyMessageActions(props: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div {...props}>
-      <button onClick={handleCopy}>Copy</button>
-      <button onClick={handleEdit}>Edit</button>
-      <button onClick={handleDelete}>Delete</button>
-    </div>
+    <Box {...props} sx={{ display: 'flex', gap: 0.5 }}>
+      <IconButton size="small" aria-label="Copy">
+        <ContentCopyIcon fontSize="small" />
+      </IconButton>
+      <IconButton size="small" aria-label="Edit">
+        <EditIcon fontSize="small" />
+      </IconButton>
+      <IconButton size="small" aria-label="Delete">
+        <DeleteIcon fontSize="small" />
+      </IconButton>
+    </Box>
   );
 }
 
-<ChatBox
-  adapter={adapter}
-  slots={{
-    messageActions: MyMessageActions,
-  }}
-/>;
+const adapter = createEchoAdapter();
+
+export default function BasicMessageActions() {
+  return (
+    <ChatBox
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
+      slots={{ messageActions: MyMessageActions }}
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
 ```
 
 ### Accessing message context
 
-Inside a custom actions component, use the message context to access the current message data:
+Inside a custom actions component, use the `ownerState` prop to access the current message data and show different actions for user and assistant messages:
 
 ```tsx
-import { useMessageContext } from '@mui/x-chat/headless';
+'use client';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import EditIcon from '@mui/icons-material/Edit';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { ChatBox } from '@mui/x-chat';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
-function MyMessageActions(props) {
-  const { message, role } = useMessageContext();
-
-  return (
-    <div {...props}>
-      <CopyButton
-        text={message?.parts.map((p) => (p.type === 'text' ? p.text : '')).join('')}
-      />
-      {role === 'user' && <EditButton messageId={message?.id} />}
-    </div>
-  );
-}
-```
-
-### Conditional visibility by role
-
-Show different actions for user and assistant messages:
-
-```tsx
-function MyMessageActions(props) {
-  const { role } = useMessageContext();
+function RoleBasedActions({
+  ownerState,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & {
+  ownerState?: { role?: string };
+}) {
+  const role = ownerState?.role;
 
   return (
-    <div {...props}>
-      <CopyButton />
-      {role === 'assistant' && <RegenerateButton />}
-      {role === 'user' && <EditButton />}
-    </div>
+    <Box {...props} sx={{ display: 'flex', gap: 0.5 }}>
+      <IconButton size="small" aria-label="Copy">
+        <ContentCopyIcon fontSize="small" />
+      </IconButton>
+      {role === 'assistant' && (
+        <IconButton size="small" aria-label="Regenerate">
+          <RefreshIcon fontSize="small" />
+        </IconButton>
+      )}
+      {role === 'user' && (
+        <IconButton size="small" aria-label="Edit">
+          <EditIcon fontSize="small" />
+        </IconButton>
+      )}
+    </Box>
   );
 }
+
+const adapter = createEchoAdapter();
+
+export default function RoleBasedMessageActions() {
+  return (
+    <ChatBox
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
+      slots={{ messageActions: RoleBasedActions }}
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
 ```
 
 ## Owner state
@@ -132,11 +197,10 @@ The `MessageActions` component receives the message context as owner state, whic
 | :-------- | :-------------- | :----------------------- |
 | `actions` | `div`           | The action bar container |
 
-## API
-
-- [`ChatMessageActions`](/x/api/chat/chat-message-actions/)
-
 ## See also
 
 - [Message Appearance](/x/react-chat/display/message-appearance/) for the overall message layout and visual presentation
-- [Unstyled messages](/x/react-chat/customization/unstyled/) for the full primitive set and composition patterns
+
+## API
+
+- [`ChatMessageActions`](/x/api/chat/chat-message-actions/)

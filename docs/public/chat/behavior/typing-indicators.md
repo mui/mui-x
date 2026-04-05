@@ -10,6 +10,8 @@ components: ChatTypingIndicator
 
 Display real-time typing feedback so users know when other participants are composing a message.
 
+
+
 Typing indicators show labels like "Alice is typing" or "Alice, Bob are typing" in the chat UI.
 The feature connects the adapter's `setTyping()` method (outbound) with realtime `typing` events (inbound) to provide a complete typing awareness loop.
 
@@ -17,13 +19,13 @@ The feature connects the adapter's `setTyping()` method (outbound) with realtime
 
 Typing indicators involve two directions of communication:
 
-1. **Outbound** -- When the local user types in the composer, your code calls the adapter's `setTyping()` method to notify your backend.
-2. **Inbound** -- When other users type, your backend pushes `typing` events through the adapter's `subscribe()` method, and the runtime updates the store.
+1. **Outbound** — When the local user types in the composer, your code calls the adapter's `setTyping()` method to notify your backend.
+2. **Inbound** — When other users type, your backend pushes `typing` events through the adapter's `subscribe()` method, and the runtime updates the store.
 
 ### Sending typing state
 
 Implement `setTyping()` on your adapter to send typing indicators to your backend.
-The runtime does **not** call `setTyping()` automatically -- you must wire it up yourself, for example by listening to `onChange` on the composer text area:
+The runtime does **not** call `setTyping()` automatically — you must wire it up yourself, for example by listening to `onChange` on the composer text area:
 
 ```tsx
 async setTyping({ conversationId, isTyping }) {
@@ -151,7 +153,7 @@ No additional setup is required beyond implementing `setTyping()` and `subscribe
 When building a custom layout with `ChatRoot`, place the `TypingIndicator` anywhere inside the provider tree:
 
 ```tsx
-import { ChatRoot } from '@mui/x-chat/headless';
+import { ChatRoot } from '@mui/x-chat';
 import { Indicators } from '@mui/x-chat/headless';
 
 <ChatRoot adapter={adapter}>
@@ -161,11 +163,10 @@ import { Indicators } from '@mui/x-chat/headless';
 </ChatRoot>;
 ```
 
-## API
-
-- [`ChatTypingIndicator`](/x/api/chat/chat-typing-indicator/)
-
 ## See also
 
 - [Adapter](/x/react-chat/backend/adapters/) for the `setTyping()` and `subscribe()` methods.
-- [Indicators (unstyled)](/x/react-chat/customization/unstyled/) for the full unstyled primitive reference including `UnreadMarker` and `ScrollToBottomAffordance`.
+
+## API
+
+- [`ChatTypingIndicator`](/x/api/chat/chat-typing-indicator/)

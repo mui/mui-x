@@ -7,16 +7,18 @@ githubLabel: 'scope: chat'
 
 # Chat - Hooks Reference
 
-<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat/headless</code>.</p>
+<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat</code>.</p>
+
+
 
 `ChatBox` covers most use cases out of the box, but sometimes you need to reach into chat state from components that live outside `ChatBox` — a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
 
-The headless hook layer makes this possible.
+The hook layer makes this possible.
 Every hook subscribes to a precise slice of the normalized store, so components only re-render when their own data changes.
 
 ## Import
 
-All hooks are exported from `@mui/x-chat/headless`:
+All hooks are exported from `@mui/x-chat`:
 
 ```tsx
 import {
@@ -406,11 +408,11 @@ Direct store access is considered advanced API and is more likely to require cha
 | Custom part renderer lookup                              | `useChatPartRenderer(partType)`              |
 | Custom selector or store subscription                    | `useChatStore()` + `chatSelectors`           |
 
-## API
-
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the interface that the actions in these hooks call into.
 - [Selectors Reference](/x/react-chat/resources/selectors/) for the full `chatSelectors` map used with `useChatStore()`.
 - [Controlled State](/x/react-chat/backend/controlled-state/) for `ChatProvider` props and the controlled/uncontrolled model.
 - [Events & Callbacks](/x/react-chat/resources/events-and-callbacks/) for `onFinish`, `onToolCall`, `onData`, and `onError`.
+
+## API

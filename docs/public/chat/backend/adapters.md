@@ -9,6 +9,8 @@ githubLabel: 'scope: chat'
 
 <p class="description">The <code>ChatAdapter</code> interface is the single contract between your backend and the chat runtime. This page is the full interface reference.</p>
 
+
+
 `ChatBox` renders a fully styled chat surface, but it knows nothing about your backend on its own.
 The adapter is the single object that bridges them.
 It receives user messages, communicates with your server, and returns a streaming response that the runtime turns into live UI updates.
@@ -298,30 +300,6 @@ To handle errors at the application level, use the `onError` callback prop:
   }}
 />
 ```
-
-## Provider setup
-
-`ChatBox` internally renders a `ChatProvider` and passes `adapter` to it, so for most usage you simply pass `adapter` directly to `ChatBox`.
-
-If you are building a custom layout using `@mui/x-chat/headless` hooks instead of `ChatBox`, wire the adapter to `ChatProvider` directly:
-
-```tsx
-import { ChatProvider } from '@mui/x-chat/headless';
-
-export default function App() {
-  return (
-    <ChatProvider
-      adapter={adapter}
-      initialActiveConversationId="main"
-      initialConversations={[{ id: 'main', title: 'Assistant' }]}
-    >
-      <MyCustomChatLayout />
-    </ChatProvider>
-  );
-}
-```
-
-Everything else — hooks, selectors, streaming — works the same way regardless of whether you use `ChatBox` or build your own layout.
 
 ## See also
 

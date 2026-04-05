@@ -10,6 +10,8 @@ components: ChatMessageContent
 
 Stream tool invocations from the LLM, track their lifecycle through well-defined states, and render custom tool UIs using the part renderer registry.
 
+
+
 Tool calling lets an AI assistant invoke external functions during a conversation. The runtime handles the full tool lifecycle: streaming tool input, making the input available, executing the tool, and displaying the output — all through the streaming chunk protocol.
 
 ## `ChatToolMessagePart`
@@ -232,13 +234,12 @@ function MessagePart({ part, message, index }) {
 }
 ```
 
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)
-
 ## See also
 
 - [Tool Approval](/x/react-chat/ai-and-agents/tool-approval/) for human-in-the-loop approval of tool calls.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full stream chunk protocol reference.
 - [Step Tracking](/x/react-chat/ai-and-agents/step-tracking/) for multi-step agent progress tracking.
-- [State and store](/x/react-chat/customization/headless/) for the `onToolCall` callback signature.
+
+## API
+
+- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

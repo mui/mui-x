@@ -10,13 +10,15 @@ components: ChatMessageGroup, ChatMessageAvatar, ChatMessageMeta, ChatDateDivide
 
 Control the visual presentation of messages — grouping, date dividers, avatars, timestamps, and layout variants.
 
+
+
 This page covers the visual aspects of how messages are displayed in the message list. For message content rendering (text, files, code blocks), see the [Message Parts](/x/react-chat/display/message-parts/text-and-markdown/) section.
 
 ## Message groups
 
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`. Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-Grouping is controlled by the `groupKey` prop — a function that maps each message to a string or number. Messages that resolve to the same key are placed in the same visual group. Customize it through `slotProps`:
+The grouping window defaults to 5 minutes (300,000 ms). Messages from the same author that arrive within this window are placed in the same group. Customize it through `slotProps`:
 
 ```tsx
 'use client';
@@ -103,9 +105,14 @@ export default function MessageGrouping() {
     />
   );
 }
+
 ```
 
-The default `groupKey` groups all messages from the same author together, regardless of time (falling back to role when no explicit author ID exists). Pass `createTimeWindowGroupKey(windowMs)` to also split groups at time boundaries.
+Grouping is based on:
+
+- Author identity (user ID)
+- Author role fallback when no explicit author ID exists
+- An adjustable time window in milliseconds
 
 ## Date dividers
 
@@ -190,6 +197,7 @@ export default function DateDividerFormat() {
     />
   );
 }
+
 ```
 
 ## Avatars
@@ -311,11 +319,11 @@ export default function CompactVariant() {
         height: 460,
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: 1,
       }}
     />
   );
 }
+
 ```
 
 ```tsx
@@ -451,6 +459,7 @@ export default function DensityProp() {
     </Stack>
   );
 }
+
 ```
 
 ```tsx
@@ -475,15 +484,15 @@ The following slots are available for customization through `ChatBox`:
 | `messageGroup`   | `ChatMessageGroup`   | Same-author message group |
 | `dateDivider`    | `ChatDateDivider`    | Date separator            |
 
+## See also
+
+- [Message list](/x/react-chat/basics/messages/) for scrolling behavior, auto-scroll configuration, and history loading
+- [Message Actions](/x/react-chat/display/message-actions/) for the hover action menu on messages
+- [Loading & Empty States](/x/react-chat/display/loading-and-empty-states/) for skeleton and empty state display
+
 ## API
 
 - [`ChatMessageGroup`](/x/api/chat/chat-message-group/)
 - [`ChatMessageAvatar`](/x/api/chat/chat-message-avatar/)
 - [`ChatMessageMeta`](/x/api/chat/chat-message-meta/)
 - [`ChatDateDivider`](/x/api/chat/chat-date-divider/)
-
-## See also
-
-- [Message list](/x/react-chat/basics/messages/) for scrolling behavior, auto-scroll configuration, and history loading
-- [Message Actions](/x/react-chat/display/message-actions/) for the hover action menu on messages
-- [Loading & Empty States](/x/react-chat/display/loading-and-empty-states/) for skeleton and empty state display

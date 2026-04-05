@@ -10,6 +10,8 @@ components: ChatSuggestions
 
 Display prompt suggestions in the empty state to help users get started with a conversation.
 
+
+
 Suggestions are clickable prompts that appear when the message list is empty.
 Clicking a suggestion pre-fills the composer with the suggestion text, giving users a starting point for the conversation.
 
@@ -36,24 +38,45 @@ For more control, pass `ChatSuggestion` objects instead of plain strings.
 This lets you set a display label that differs from the value pre-filled into the composer:
 
 ```tsx
-<ChatBox
-  adapter={adapter}
-  suggestions={[
-    {
-      value:
-        'Help me write a professional email to my manager about taking PTO next week',
-      label: 'Write an email',
-    },
-    {
-      value: 'Summarize the key points from my Q4 performance review',
-      label: 'Summarize a document',
-    },
-    {
-      value: 'What are the best practices for React state management in 2026?',
-      label: 'Ask a question',
-    },
-  ]}
-/>
+'use client';
+import * as React from 'react';
+import { ChatBox } from '@mui/x-chat';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation } from 'docsx/data/chat/material/examples/shared/demoData';
+
+const adapter = createEchoAdapter();
+
+export default function SuggestionsWithLabels() {
+  return (
+    <ChatBox
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      suggestions={[
+        {
+          value:
+            'Help me write a professional email to my manager about taking PTO next week',
+          label: 'Write an email',
+        },
+        {
+          value: 'Summarize the key points from my Q4 performance review',
+          label: 'Summarize a document',
+        },
+        {
+          value: 'What are the best practices for React state management in 2026?',
+          label: 'Ask a question',
+        },
+      ]}
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
 ```
 
 ### `ChatSuggestion` type
@@ -72,11 +95,32 @@ By default, clicking a suggestion only pre-fills the composer so the user can re
 Set `suggestionsAutoSubmit` to automatically submit the message when a suggestion is clicked:
 
 ```tsx
-<ChatBox
-  adapter={adapter}
-  suggestions={['What can you help me with?', 'Tell me a joke']}
-  suggestionsAutoSubmit
-/>
+'use client';
+import * as React from 'react';
+import { ChatBox } from '@mui/x-chat';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation } from 'docsx/data/chat/material/examples/shared/demoData';
+
+const adapter = createEchoAdapter();
+
+export default function AutoSubmitSuggestions() {
+  return (
+    <ChatBox
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      suggestions={['What can you help me with?', 'Tell me a joke']}
+      suggestionsAutoSubmit
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
 ```
 
 ## Disabling suggestions
@@ -140,11 +184,11 @@ Each suggestion renders as a `<button>` element.
 | `root` | `'div'`    | The container element           |
 | `item` | `'button'` | Each individual suggestion chip |
 
-## API
-
-- [`ChatSuggestions`](/x/api/chat/chat-suggestions/)
-
 ## See also
 
 - [Composer](/x/react-chat/basics/composer/) for how the pre-filled value flows into the text area.
 - [Adapter](/x/react-chat/backend/adapters/) for how submitted suggestions reach your backend.
+
+## API
+
+- [`ChatSuggestions`](/x/api/chat/chat-suggestions/)

@@ -10,6 +10,8 @@ components: ChatBox
 
 <p class="description">Replace individual sub-components inside ChatBox with your own implementations using the <code>slots</code> and <code>slotProps</code> API.</p>
 
+
+
 `ChatBox` composes many themed sub-components internally — message bubbles, the composer, the conversation list, date dividers, and more.
 The `slots` prop lets you swap any of them with your own component, while `slotProps` passes extra props to those components without replacing them.
 
@@ -108,30 +110,41 @@ The `typingIndicator`, `unreadMarker`, and `messageActions` slots are defined in
 
 ## Hiding a slot
 
-Return `null` from a slot to remove it entirely:
+Return `null` from a slot to remove it entirely, or use the `features` prop for common show/hide needs:
 
 ```tsx
-<ChatBox
-  adapter={adapter}
-  slots={{
-    conversationHeader: () => null,
-    composerAttachButton: () => null,
-    suggestions: () => null,
-  }}
-/>
-```
+'use client';
+import * as React from 'react';
+import { ChatBox } from '@mui/x-chat';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
 
-For common show/hide needs, prefer the `features` prop which handles the logic cleanly:
+const adapter = createEchoAdapter();
 
-```tsx
-<ChatBox
-  adapter={adapter}
-  features={{
-    conversations: false, // hide the sidebar
-    attachments: false, // hide the attach button
-    suggestions: false, // hide suggestions
-  }}
-/>
+export default function FeatureFlags() {
+  return (
+    <ChatBox
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
+      features={{
+        conversations: false,
+        attachments: false,
+      }}
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
 ```
 
 ## Feature flags and slot rendering
@@ -226,9 +239,8 @@ const mySlotProps: ChatBoxSlotProps = {
 Slots replace the component entirely, while theme `styleOverrides` adjust the default component's styles.
 You can use both together — for example, swap the message content component via a slot while applying global border-radius tweaks through the theme.
 
-## API
-
 ## See also
 
 - [Styling](/x/react-chat/customization/styling/) for `sx` prop, theme overrides, and dark mode.
-- [Unstyled Components](/x/react-chat/customization/unstyled/) for slot and owner-state patterns in the primitive layer.
+
+## API

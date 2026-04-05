@@ -10,6 +10,8 @@ components: ChatBox
 
 Switch between the default bubble layout and a compact messenger-style layout, and control vertical spacing with the density prop.
 
+
+
 ## Variants
 
 `ChatBox` supports two visual variants that control how messages are laid out: **default** and **compact**.
@@ -121,11 +123,11 @@ export default function CompactVariant() {
         height: 460,
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: 1,
       }}
     />
   );
 }
+
 ```
 
 ### When to use each variant
@@ -270,6 +272,7 @@ export default function DensityProp() {
     </Stack>
   );
 }
+
 ```
 
 ### Density effects
@@ -301,10 +304,3 @@ This independence gives you fine-grained control over both the visual style (bub
 ## API
 
 - [`ChatBox`](/x/api/chat/chat-box/)
-
-## Next steps
-
-- [ChatBox](/x/react-chat/basics/chatbox/) — the all-in-one component and its configuration
-- [Messages](/x/react-chat/basics/messages/) — the message data model and list rendering
-- [Layout](/x/react-chat/basics/layout/) — the two-pane structure and thread-only mode
-- [Message list reference](/x/react-chat/basics/messages/) — full API details, slots, and imperative scrolling

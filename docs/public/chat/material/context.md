@@ -27,7 +27,7 @@ import { ChatBox } from '@mui/x-chat';
 <ChatBox adapter={adapter} sx={{ height: 500 }} />;
 ```
 
-All hooks work inside any component rendered as a child or descendant of `ChatBox`. Here a `StreamingBadge` component reads the streaming status via `useChatStatus` and displays a chip while the assistant is responding:
+All hooks work inside any component rendered as a child or descendant of `ChatBox`. Here a `StreamingBadge` component reads the streaming status via `useChatStatus()` and displays a chip while the assistant is responding:
 
 ```tsx
 'use client';
@@ -71,6 +71,7 @@ export default function ChatBoxWithHooks() {
     </ChatBox>
   );
 }
+
 ```
 
 ### ChatProvider (custom layout)
@@ -91,7 +92,7 @@ import {
   ChatMessageAvatar,
   ChatMessageContent,
   ChatMessageGroup,
-  ChatMessageMeta,
+  ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
@@ -157,8 +158,7 @@ function CustomChat() {
       <ChatMessageGroup key={id} messageId={id}>
         <ChatMessage messageId={id}>
           <ChatMessageAvatar />
-          <ChatMessageContent />
-          <ChatMessageMeta />
+          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
       </ChatMessageGroup>
     ),
@@ -205,6 +205,7 @@ export default function ChatProviderCustomLayout() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Controlled and uncontrolled state
@@ -355,6 +356,7 @@ export default function MultipleInstances() {
     </Box>
   );
 }
+
 ```
 
 ## Provider props reference

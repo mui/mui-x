@@ -10,6 +10,8 @@ githubLabel: 'scope: chat'
 
 Assemble the draft surface from structural primitives that already handle submission, IME-safe Enter, attachments, helper text, and disabled states.
 
+
+
 ```tsx
 import * as React from 'react';
 import {
@@ -296,6 +298,7 @@ export default function ComposerWithAttachments() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Primitive set
@@ -447,6 +450,12 @@ Use these values for styling patterns such as:
 - emphasizing the attach trigger when attachments are present
 - dimming the toolbar while a stream is active
 
+## See also
+
+- Continue with [Indicators](/x/react-chat/unstyled/indicators/) to add typing, unread, and scroll affordances around the composer.
+- Continue with [Customization](/x/react-chat/unstyled/customization/) for slot and owner-state patterns across the full unstyled surface.
+- Continue with [Composer with attachments](/x/react-chat/unstyled/examples/composer-with-attachments/) for the demo version of this page.
+
 ## API
 
 - [ComposerRoot](/x/api/chat/composer-root/)
@@ -455,9 +464,3 @@ Use these values for styling patterns such as:
 - [ComposerAttachButton](/x/api/chat/composer-attach-button/)
 - [ComposerToolbar](/x/api/chat/composer-toolbar/)
 - [ComposerHelperText](/x/api/chat/composer-helper-text/)
-
-## See also
-
-- Continue with [Indicators](/x/react-chat/unstyled/indicators/) to add typing, unread, and scroll affordances around the composer.
-- Continue with [Customization](/x/react-chat/unstyled/customization/) for slot and owner-state patterns across the full unstyled surface.
-- Continue with [Composer with attachments](/x/react-chat/unstyled/examples/composer-with-attachments/) for the demo version of this page.

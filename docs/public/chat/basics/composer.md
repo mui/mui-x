@@ -10,10 +10,12 @@ components: ChatComposerTextArea, ChatComposerSendButton
 
 The text input area where users draft and send messages, with auto-resize, keyboard shortcuts, and a send button.
 
+
+
 ## Overview
 
 The composer is the input region at the bottom of the chat surface.
-`ChatComposer` wraps the `@mui/x-chat/headless` `ComposerRoot` primitive with Material UI styling — border, padding, and theme tokens are applied automatically.
+`ChatComposer` provides Material UI styling — border, padding, and theme tokens are applied automatically.
 
 ## Import
 
@@ -88,6 +90,7 @@ export default function ComposerCustomPlaceholder() {
     />
   );
 }
+
 ```
 
 ### IME composition
@@ -144,6 +147,7 @@ export default function ComposerHiddenAttachButton() {
     />
   );
 }
+
 ```
 
 For full details on attachment configuration — accepted MIME types, file size limits, and upload lifecycle — see [Attachments](/x/react-chat/behavior/attachments/).
@@ -204,11 +208,12 @@ export default function ComposerControlled() {
     </Box>
   );
 }
+
 ```
 
 ## `useChatComposer()` hook
 
-For deeper control, the `useChatComposer()` hook from the headless layer provides direct access to the composer state:
+For deeper control, the `useChatComposer()` hook provides direct access to the composer state:
 
 ```tsx
 import { useChatComposer } from '@mui/x-chat/headless';
@@ -275,6 +280,7 @@ export default function ComposerDisabled() {
     />
   );
 }
+
 ```
 
 ## Localization
@@ -292,9 +298,3 @@ The composer uses these locale text keys (customizable via `localeText` on `Chat
 
 - [`ChatComposerTextArea`](/x/api/chat/chat-composer-text-area/)
 - [`ChatComposerSendButton`](/x/api/chat/chat-composer-send-button/)
-
-## Next steps
-
-- [ChatBox](/x/react-chat/basics/chatbox/) — the all-in-one component
-- [Messages](/x/react-chat/basics/messages/) — the message data model and list rendering
-- [Layout](/x/react-chat/basics/layout/) — the two-pane structure and thread-only mode

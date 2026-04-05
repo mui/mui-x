@@ -10,6 +10,8 @@ components: ChatMessageContent
 
 <p class="description">Display the LLM's chain-of-thought or thinking trace using <code>ChatReasoningMessagePart</code> and the reasoning stream chunks.</p>
 
+
+
 Many large language models expose a "thinking" or "reasoning" trace alongside their final response. The Chat component supports streaming and displaying this reasoning content through dedicated chunk types and a specialized message part.
 
 ## `ChatReasoningMessagePart`
@@ -175,4 +177,3 @@ This produces a message with five parts in order: reasoning, tool, reasoning, to
 - [Tool Calling](/x/react-chat/ai-and-agents/tool-calling/) for the tool invocation lifecycle.
 - [Step Tracking](/x/react-chat/ai-and-agents/step-tracking/) for multi-step agent progress tracking.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full chunk protocol reference including reasoning chunks.
-- [State and store](/x/react-chat/customization/headless/) for `streamFlushInterval` and part renderer registration.

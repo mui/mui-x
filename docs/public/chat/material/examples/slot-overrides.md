@@ -108,6 +108,7 @@ export default function SlotOverrides() {
     />
   );
 }
+
 ```
 
 ## The wrapping pattern
@@ -158,11 +159,11 @@ Forward `ownerState` destructuring to avoid passing it to DOM elements that don'
 - Spread `...props` after destructuring `ownerState` to forward all remaining props correctly.
 - Use the `slots` prop on `ChatBox` rather than on individual sub-components when wiring from the top level.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Customization](/x/react-chat/material/customization/) for the full table of available slot keys and their default components
 - [Custom theme](/x/react-chat/material/examples/custom-theme/) for rethemeing without replacing components
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

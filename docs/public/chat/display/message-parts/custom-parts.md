@@ -10,6 +10,8 @@ components: ChatMessageContent
 
 <p class="description">Extend the message part system with app-specific content types using <code>ChatDataMessagePart</code>, the type registry, and custom renderers.</p>
 
+
+
 The built-in part types (text, file, source-url, source-document, tool) cover common chat patterns. When your application needs domain-specific content — ticket cards, approval forms, charts, or product previews — use the extensibility points described on this page.
 
 ## Data parts
@@ -29,14 +31,14 @@ The default renderer displays data parts as formatted JSON. Replace it with a cu
 
 ## Type registry pattern
 
-Use TypeScript module augmentation to get compile-time safety for your custom parts. The headless package exposes two registry interfaces for this purpose:
+Use TypeScript module augmentation to get compile-time safety for your custom parts. Two registry interfaces are available for this purpose:
 
 ### Typed data parts
 
 Add entries to `ChatDataPartMap` to type the `data` payload of `data-*` parts:
 
 ```ts
-declare module '@mui/x-chat/headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatDataPartMap {
     'data-ticket-status': {
       ticketId: string;
@@ -53,7 +55,7 @@ Once registered, `data-ticket-status` parts carry typed `data` instead of `unkno
 Add entries to `ChatCustomMessagePartMap` to create part types that are not prefixed with `data-`:
 
 ```ts
-declare module '@mui/x-chat/headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatCustomMessagePartMap {
     'ticket-summary': {
       type: 'ticket-summary';
@@ -68,7 +70,7 @@ Custom parts are included in the `ChatMessagePart` union, so they appear in `mes
 
 ## Registering custom renderers
 
-### With ChatProvider (headless / unstyled)
+### With ChatProvider
 
 Register renderers on `ChatProvider` using the `partRenderers` prop:
 
@@ -98,7 +100,7 @@ Register renderers on `ChatProvider` using the `partRenderers` prop:
 Use `useChatPartRenderer()` to retrieve a registered renderer in any component:
 
 ```tsx
-import { useChatPartRenderer } from '@mui/x-chat/headless';
+import { useChatPartRenderer } from '@mui/x-chat';
 
 function MyMessagePart({ part }) {
   const renderer = useChatPartRenderer(part.type);
@@ -111,10 +113,10 @@ function MyMessagePart({ part }) {
 
 ## Selective override with getDefaultMessagePartRenderer
 
-When you only need to customize one or two part types and keep defaults for the rest, use `getDefaultMessagePartRenderer()` from the unstyled package:
+When you only need to customize one or two part types and keep defaults for the rest, use `getDefaultMessagePartRenderer()`:
 
 ```tsx
-import { getDefaultMessagePartRenderer } from '@mui/x-chat/headless';
+import { getDefaultMessagePartRenderer } from '@mui/x-chat';
 
 function renderPart(part, message, index) {
   // Custom rendering for one part type
@@ -141,12 +143,10 @@ Once declared, the augmentation affects everything at compile time:
 
 No runtime code changes are needed. The augmentation is purely compile-time.
 
+## See also
+
+- [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers
+
 ## API
 
 - [`ChatMessageContent`](/x/api/chat/chat-message-content/)
-
-## See also
-
-- [Type augmentation](/x/react-chat/customization/headless/) for the full reference covering all six registry interfaces
-- [Type augmentation demo](/x/react-chat/customization/headless/) for a runnable example combining metadata, tools, and custom parts
-- [Custom message part rendering](/x/react-chat/customization/unstyled/) for selective renderer replacement in the unstyled layer

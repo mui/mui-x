@@ -10,7 +10,9 @@ components: ConversationListRoot, ConversationListItem, ConversationListItemAvat
 
 Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components.
 
-The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component that wraps the unstyled `ConversationListRoot` primitive with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
+
+
+The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
 
 The following demo shows a multi-conversation layout with the conversation list in action:
 
@@ -77,6 +79,7 @@ export default function MultiConversation() {
     />
   );
 }
+
 ```
 
 ## Component anatomy
@@ -145,13 +148,29 @@ Because the full `conversation` object is included, custom slot components can d
 Replace the avatar slot with a custom component to render initials or a status ring:
 
 ```tsx
-import { ChatConversationList } from '@mui/x-chat';
+'use client';
+import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
+import { ChatBox } from '@mui/x-chat';
+import {
+  createEchoAdapter,
+  syncConversationPreview,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/material/examples/shared/demoData';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
-const ThemedAvatar = React.forwardRef(function ThemedAvatar(
-  { ownerState, ...props },
-  ref,
-) {
+const ThemedAvatarSlot = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & {
+    ownerState?: {
+      conversation?: ChatConversation;
+      selected?: boolean;
+    };
+  }
+>(function ThemedAvatarSlot({ ownerState, ...props }, ref) {
   const title = ownerState?.conversation?.title ?? '';
   const initials = title
     .split(' ')
@@ -170,7 +189,7 @@ const ThemedAvatar = React.forwardRef(function ThemedAvatar(
         bgcolor: ownerState?.selected ? 'primary.main' : 'grey.400',
         fontSize: 'body2.fontSize',
         fontWeight: 'fontWeightMedium',
-        ...props.sx,
+        ...props.style,
       }}
     >
       {initials}
@@ -178,7 +197,58 @@ const ThemedAvatar = React.forwardRef(function ThemedAvatar(
   );
 });
 
-<ChatConversationList slots={{ itemAvatar: ThemedAvatar }} />;
+const adapter = createEchoAdapter();
+
+export default function ThemedAvatar() {
+  const [activeConversationId, setActiveConversationId] = React.useState(
+    () => inboxConversations[0].id,
+  );
+  const [conversations, setConversations] = React.useState<ChatConversation[]>(() =>
+    inboxConversations.map((c) => ({ ...c })),
+  );
+  const [threads, setThreads] = React.useState<Record<string, ChatMessage[]>>(() =>
+    Object.fromEntries(
+      Object.entries(inboxThreads).map(([id, msgs]) => [
+        id,
+        msgs.map((m) => ({ ...m })),
+      ]),
+    ),
+  );
+
+  const messages = threads[activeConversationId] ?? [];
+
+  return (
+    <ChatBox
+      adapter={adapter}
+      activeConversationId={activeConversationId}
+      conversations={conversations}
+      messages={messages}
+      onActiveConversationChange={(nextId) => {
+        if (nextId) {
+          setActiveConversationId(nextId);
+        }
+      }}
+      onMessagesChange={(nextMessages) => {
+        setThreads((prev) => ({ ...prev, [activeConversationId]: nextMessages }));
+        setConversations((prev) =>
+          syncConversationPreview(prev, activeConversationId, nextMessages),
+        );
+      }}
+      slotProps={{
+        conversationList: {
+          slots: { itemAvatar: ThemedAvatarSlot },
+        },
+      }}
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
 ```
 
 The `ownerState` prop arrives directly on the component because the Material UI layer passes it through `slotProps` using a function form. Destructure it before spreading `...props` to avoid forwarding a non-standard attribute to the DOM.
@@ -188,22 +258,45 @@ The `ownerState` prop arrives directly on the component because the Material UI 
 Replace `itemContent` when you want to change the structural layout of the title and preview region — for example to add a participant count or an icon:
 
 ```tsx
-import { ChatConversationList } from '@mui/x-chat';
+'use client';
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import GroupIcon from '@mui/icons-material/Group';
+import { ChatBox } from '@mui/x-chat';
+import {
+  createEchoAdapter,
+  syncConversationPreview,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  inboxConversations,
+  inboxThreads,
+  demoUsers,
+} from 'docsx/data/chat/material/examples/shared/demoData';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
-const RichItemContent = React.forwardRef(function RichItemContent(
-  { ownerState, children, ...props },
-  ref,
-) {
+const RichItemContentSlot = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & {
+    ownerState?: {
+      conversation?: ChatConversation;
+      unread?: boolean;
+    };
+  }
+>(function RichItemContentSlot({ ownerState, children, ...props }, ref) {
   const { conversation, unread } = ownerState ?? {};
+  const participantCount = conversation?.participants?.length ?? 0;
 
   return (
     <Box
       ref={ref}
       {...props}
-      sx={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minWidth: 0,
+        flex: 1,
+      }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
         <Typography
@@ -214,35 +307,114 @@ const RichItemContent = React.forwardRef(function RichItemContent(
         >
           {conversation?.title}
         </Typography>
-        {conversation?.metadata?.memberCount > 2 && (
+        {participantCount > 2 && (
           <GroupIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
         )}
       </Box>
       <Typography variant="caption" color="text.secondary" noWrap>
-        {conversation?.lastMessage?.text ?? 'No messages yet'}
+        {conversation?.subtitle ?? 'No messages yet'}
       </Typography>
     </Box>
   );
 });
 
-<ChatConversationList slots={{ itemContent: RichItemContent }} />;
+// Create conversations with extra participants so the group icon shows
+const richConversations: ChatConversation[] = inboxConversations.map(
+  (conv, index) => ({
+    ...conv,
+    participants:
+      index === 0
+        ? [demoUsers.alice, demoUsers.marco, demoUsers.priya, demoUsers.agent]
+        : conv.participants,
+  }),
+);
+
+const adapter = createEchoAdapter();
+
+export default function RichItemContent() {
+  const [activeConversationId, setActiveConversationId] = React.useState(
+    () => richConversations[0].id,
+  );
+  const [conversations, setConversations] = React.useState<ChatConversation[]>(() =>
+    richConversations.map((c) => ({ ...c })),
+  );
+  const [threads, setThreads] = React.useState<Record<string, ChatMessage[]>>(() =>
+    Object.fromEntries(
+      Object.entries(inboxThreads).map(([id, msgs]) => [
+        id,
+        msgs.map((m) => ({ ...m })),
+      ]),
+    ),
+  );
+
+  const messages = threads[activeConversationId] ?? [];
+
+  return (
+    <ChatBox
+      adapter={adapter}
+      activeConversationId={activeConversationId}
+      conversations={conversations}
+      messages={messages}
+      onActiveConversationChange={(nextId) => {
+        if (nextId) {
+          setActiveConversationId(nextId);
+        }
+      }}
+      onMessagesChange={(nextMessages) => {
+        setThreads((prev) => ({ ...prev, [activeConversationId]: nextMessages }));
+        setConversations((prev) =>
+          syncConversationPreview(prev, activeConversationId, nextMessages),
+        );
+      }}
+      slotProps={{
+        conversationList: {
+          slots: { itemContent: RichItemContentSlot },
+        },
+      }}
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
 ```
 
 When you replace `itemContent`, the `title` and `preview` slots are no longer rendered (they are children of the default `itemContent`). Render any equivalent content directly inside your custom component.
 
 ## Overriding the full item row
 
-Replace the `item` slot to take full control of a row's layout while still benefiting from the built-in selection, keyboard navigation, and `aria-selected` wiring that the unstyled layer provides:
+Replace the `item` slot to take full control of a row's layout while still benefiting from the built-in selection, keyboard navigation, and `aria-selected` wiring:
 
 ```tsx
-import { ChatConversationList } from '@mui/x-chat';
+'use client';
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { ChatBox } from '@mui/x-chat';
+import {
+  createEchoAdapter,
+  syncConversationPreview,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/material/examples/shared/demoData';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
-const CompactRow = React.forwardRef(function CompactRow(
-  { ownerState, ...props },
-  ref,
-) {
+const CompactRowSlot = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & {
+    ownerState?: {
+      conversation?: ChatConversation;
+      selected?: boolean;
+      unread?: boolean;
+    };
+  }
+>(function CompactRowSlot({ ownerState, ...props }, ref) {
   const { conversation, selected, unread } = ownerState ?? {};
 
   return (
@@ -257,7 +429,9 @@ const CompactRow = React.forwardRef(function CompactRow(
         py: 0.75,
         cursor: 'pointer',
         bgcolor: selected ? 'action.selected' : 'transparent',
-        '&:hover': { bgcolor: selected ? 'action.selected' : 'action.hover' },
+        '&:hover': {
+          bgcolor: selected ? 'action.selected' : 'action.hover',
+        },
         '&:focus-visible': {
           outline: '2px solid',
           outlineColor: 'primary.main',
@@ -288,10 +462,61 @@ const CompactRow = React.forwardRef(function CompactRow(
   );
 });
 
-<ChatConversationList slots={{ item: CompactRow }} />;
+const adapter = createEchoAdapter();
+
+export default function CompactRow() {
+  const [activeConversationId, setActiveConversationId] = React.useState(
+    () => inboxConversations[0].id,
+  );
+  const [conversations, setConversations] = React.useState<ChatConversation[]>(() =>
+    inboxConversations.map((c) => ({ ...c })),
+  );
+  const [threads, setThreads] = React.useState<Record<string, ChatMessage[]>>(() =>
+    Object.fromEntries(
+      Object.entries(inboxThreads).map(([id, msgs]) => [
+        id,
+        msgs.map((m) => ({ ...m })),
+      ]),
+    ),
+  );
+
+  const messages = threads[activeConversationId] ?? [];
+
+  return (
+    <ChatBox
+      adapter={adapter}
+      activeConversationId={activeConversationId}
+      conversations={conversations}
+      messages={messages}
+      onActiveConversationChange={(nextId) => {
+        if (nextId) {
+          setActiveConversationId(nextId);
+        }
+      }}
+      onMessagesChange={(nextMessages) => {
+        setThreads((prev) => ({ ...prev, [activeConversationId]: nextMessages }));
+        setConversations((prev) =>
+          syncConversationPreview(prev, activeConversationId, nextMessages),
+        );
+      }}
+      slotProps={{
+        conversationList: {
+          slots: { item: CompactRowSlot },
+        },
+      }}
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
 ```
 
-The `role="option"` and `aria-selected` attributes are set by the unstyled layer before the slot renders, so they are present on the element even without the default styled item. Spread `...props` to pass them through.
+The `role="option"` and `aria-selected` attributes are set automatically before the slot renders, so they are present on the element even without the default styled item. Spread `...props` to pass them through.
 
 ## Styling without slot replacement
 
@@ -349,30 +574,57 @@ Or set the CSS variable on a parent element to control the width from a layout l
 The `conversation` object in `ownerState` lets you derive everything you need to render a rich row without additional data fetching or selectors. The following example builds a full item renderer that shows an avatar with initials, a bold title for unread conversations, a truncated preview, a human-readable timestamp, and a count badge:
 
 ```tsx
+'use client';
 import * as React from 'react';
-import { ChatConversationList } from '@mui/x-chat';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { ChatBox } from '@mui/x-chat';
+import {
+  createEchoAdapter,
+  syncConversationPreview,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/material/examples/shared/demoData';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 function formatRelativeTime(iso?: string) {
-  if (!iso) return '';
+  if (!iso) {
+    return '';
+  }
   const diff = Date.now() - new Date(iso).getTime();
-  if (diff <= 0) return 'now';
+  if (diff <= 0) {
+    return 'now';
+  }
   const minutes = Math.floor(diff / 60_000);
-  if (minutes < 1) return 'now';
-  if (minutes < 60) return `${minutes}m`;
+  if (minutes < 1) {
+    return 'now';
+  }
+  if (minutes < 60) {
+    return `${minutes}m`;
+  }
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h`;
+  if (hours < 24) {
+    return `${hours}h`;
+  }
   return `${Math.floor(hours / 24)}d`;
 }
 
-const FullCustomRow = React.forwardRef(function FullCustomRow(
-  { ownerState, ...props },
-  ref,
-) {
-  const { conversation, selected, unread, focused } = ownerState ?? {};
+const FullCustomRowSlot = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & {
+    ownerState?: {
+      conversation?: ChatConversation;
+      selected?: boolean;
+      unread?: boolean;
+      focused?: boolean;
+    };
+  }
+>(function FullCustomRowSlot({ ownerState, ...props }, ref) {
+  const { conversation, selected, unread } = ownerState ?? {};
   const title = conversation?.title ?? 'Untitled';
   const initials = title
     .split(' ')
@@ -445,23 +697,64 @@ const FullCustomRow = React.forwardRef(function FullCustomRow(
     </Box>
   );
 });
-```
 
-Pass it to `ChatBox` via `slotProps.conversationList`:
+const adapter = createEchoAdapter();
 
-```tsx
-<ChatBox
-  slotProps={{
-    conversationList: {
-      slots: { item: FullCustomRow },
-    },
-  }}
-/>
+export default function FullCustomRow() {
+  const [activeConversationId, setActiveConversationId] = React.useState(
+    () => inboxConversations[0].id,
+  );
+  const [conversations, setConversations] = React.useState<ChatConversation[]>(() =>
+    inboxConversations.map((c) => ({ ...c })),
+  );
+  const [threads, setThreads] = React.useState<Record<string, ChatMessage[]>>(() =>
+    Object.fromEntries(
+      Object.entries(inboxThreads).map(([id, msgs]) => [
+        id,
+        msgs.map((m) => ({ ...m })),
+      ]),
+    ),
+  );
+
+  const messages = threads[activeConversationId] ?? [];
+
+  return (
+    <ChatBox
+      adapter={adapter}
+      activeConversationId={activeConversationId}
+      conversations={conversations}
+      messages={messages}
+      onActiveConversationChange={(nextId) => {
+        if (nextId) {
+          setActiveConversationId(nextId);
+        }
+      }}
+      onMessagesChange={(nextMessages) => {
+        setThreads((prev) => ({ ...prev, [activeConversationId]: nextMessages }));
+        setConversations((prev) =>
+          syncConversationPreview(prev, activeConversationId, nextMessages),
+        );
+      }}
+      slotProps={{
+        conversationList: {
+          slots: { item: FullCustomRowSlot },
+        },
+      }}
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
 ```
 
 ## Accessibility notes
 
-The default list uses `role="listbox"` on the root and `role="option"` with `aria-selected` on each row. The unstyled layer manages roving focus: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, and `Enter` are handled automatically.
+The default list uses `role="listbox"` on the root and `role="option"` with `aria-selected` on each row. Roving focus is managed automatically: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, and `Enter` are handled automatically.
 
 Custom `item` slot components must forward all `...props` to the DOM element they render so the `role`, `aria-selected`, and keyboard handler props are preserved. Failing to spread `...props` breaks both keyboard navigation and screen-reader semantics.
 
@@ -470,6 +763,12 @@ Pass `aria-label` to the root through `slotProps`:
 ```tsx
 <ChatConversationList slotProps={{ root: { 'aria-label': 'Conversations' } }} />
 ```
+
+## See also
+
+- [Thread](/x/react-chat/material/thread/) for the conversation thread surface and its composition model.
+- [Customization](/x/react-chat/material/customization/) for the full slot and slotProps reference.
+- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for a two-pane inbox demo using controlled state.
 
 ## API
 
@@ -480,10 +779,3 @@ Pass `aria-label` to the root through `slotProps`:
 - [ConversationListPreview](/x/api/chat/conversation-list-preview/)
 - [ConversationListTimestamp](/x/api/chat/conversation-list-timestamp/)
 - [ConversationListUnreadBadge](/x/api/chat/conversation-list-unread-badge/)
-
-## See also
-
-- [Thread](/x/react-chat/material/thread/) for the conversation thread surface and its composition model.
-- [Customization](/x/react-chat/material/customization/) for the full slot and slotProps reference.
-- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for a two-pane inbox demo using controlled state.
-- [Unstyled conversation list](/x/react-chat/unstyled/conversation-list/) for the primitive layer underneath.

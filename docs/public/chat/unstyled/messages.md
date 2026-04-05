@@ -10,6 +10,8 @@ githubLabel: 'scope: chat'
 
 Compose thread rows from message grouping primitives, message subparts, and default message-part renderers.
 
+
+
 ```tsx
 import * as React from 'react';
 import {
@@ -34,7 +36,7 @@ import {
 
 export default function GroupedMessageTimeline() {
   const [windowMs, setWindowMs] = React.useState(5 * 60_000);
-  const groupKey = React.useMemo(() => createTimeWindowGroupKey(windowMs), [windowMs]);
+  const groupKey = React.useMemo<GroupKeyFn>(() => createTimeWindowGroupKey(windowMs), [windowMs]);
   const adapter = React.useMemo(
     () => createEchoAdapter({ agent: demoUsers.agent }),
     [],
@@ -236,6 +238,7 @@ export default function GroupedMessageTimeline() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Primitive set
@@ -255,36 +258,14 @@ The message surface is built from:
 It derives the previous and next message, then decides whether the current message starts or ends a visual group.
 
 ```tsx
-<MessageGroup index={index} messageId={id} />
+<MessageGroup groupingWindowMs={300_000} index={index} messageId={id} />
 ```
 
-Grouping is controlled by the `groupKey` prop — a function `(message) => string | number`.
-Messages that resolve to the same key are placed in the same visual group, showing a shared avatar and author name only on the first message.
+Grouping is based on:
 
-The default groups all messages from the same author together regardless of time (falling back to role when no explicit author ID exists).
-Use the built-in `createTimeWindowGroupKey` helper to also split groups at time boundaries:
-
-```tsx
-import { createTimeWindowGroupKey } from '@mui/x-chat/headless';
-
-// Split groups when the same author has a gap longer than 5 minutes
-<MessageGroup
-  groupKey={createTimeWindowGroupKey(5 * 60_000)}
-  index={index}
-  messageId={id}
-/>
-```
-
-You can also provide a fully custom function — for example, to group by conversation thread, topic tag, or any other domain-specific key:
-
-```tsx
-// Group messages by a custom thread ID stored in metadata
-<MessageGroup
-  groupKey={(message) => message.metadata?.threadId ?? message.author?.id ?? message.role}
-  index={index}
-  messageId={id}
-/>
-```
+- author identity
+- author role fallback when no explicit author id exists
+- an adjustable grouping window in milliseconds
 
 This gives you `isFirst` and `isLast` grouping state without manual row bookkeeping.
 
@@ -374,6 +355,12 @@ Rebuild more of the message surface when:
 - message actions need a different placement model
 - grouped and ungrouped messages need distinct markup
 
+## See also
+
+- Continue with [Message list](/x/react-chat/unstyled/message-list/) for ordering, date boundaries, and thread scrolling behavior.
+- Continue with [Customization](/x/react-chat/unstyled/customization/) for slot replacement patterns on message rows and subparts.
+- Continue with [Custom message part rendering](/x/react-chat/unstyled/examples/custom-message-part-rendering/) for the demo version of selective renderer replacement.
+
 ## API
 
 - [MessageRoot](/x/api/chat/message-root/)
@@ -384,9 +371,3 @@ Rebuild more of the message surface when:
 - [MessageAuthorLabel](/x/api/chat/message-author-label/)
 - [MessageActions](/x/api/chat/message-actions/)
 - [MessageListDateDivider](/x/api/chat/message-list-date-divider/)
-
-## See also
-
-- Continue with [Message list](/x/react-chat/unstyled/message-list/) for ordering, date boundaries, and thread scrolling behavior.
-- Continue with [Customization](/x/react-chat/unstyled/customization/) for slot replacement patterns on message rows and subparts.
-- Continue with [Custom message part rendering](/x/react-chat/unstyled/examples/custom-message-part-rendering/) for the demo version of selective renderer replacement.

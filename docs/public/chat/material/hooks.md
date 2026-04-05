@@ -1,22 +1,21 @@
 ---
 productId: x-chat
 title: Chat - Hooks
-packageName: '@mui/x-chat/headless'
+packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
 # Chat - Hooks
 
-<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat/headless</code>.</p>
+<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat</code>.</p>
 
 `ChatBox` covers most use cases out of the box, but sometimes you need to reach into chat state from components that live outside `ChatBox` — a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
 
-The headless hook layer makes this possible.
 Every hook subscribes to a precise slice of the normalized store, so components only re-render when their own data changes.
 
 ## Import
 
-All hooks are exported from `@mui/x-chat/headless`:
+All hooks are exported from `@mui/x-chat`:
 
 ```tsx
 import {
@@ -30,7 +29,7 @@ import {
   useChatOnToolCall,
   useChatPartRenderer,
   useChatStore,
-} from '@mui/x-chat/headless';
+} from '@mui/x-chat';
 ```
 
 ## Provider requirement
@@ -101,6 +100,7 @@ export default function ChatBoxWithHooks() {
     </ChatBox>
   );
 }
+
 ```
 
 ## State hooks
@@ -173,16 +173,78 @@ const {
 ```
 
 ```tsx
-function StatusFooter() {
+'use client';
+import * as React from 'react';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
+import {
+  ChatConversation,
+  ChatConversationHeader,
+  ChatMessageList,
+  ChatMessageGroup,
+  ChatComposer,
+} from '@mui/x-chat';
+import { ChatProvider, useChatStatus } from '@mui/x-chat/headless';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
+
+function StatusFooterContent() {
   const { isStreaming, typingUserIds, error } = useChatStatus();
 
-  if (error) return <Alert severity="error">{error.message}</Alert>;
-  if (isStreaming) return <LinearProgress />;
+  if (error) {
+    return <Alert severity="error">{error.message}</Alert>;
+  }
+  if (isStreaming) {
+    return <LinearProgress />;
+  }
   if (typingUserIds.length > 0) {
     return <Typography variant="caption">Someone is typing...</Typography>;
   }
   return null;
 }
+
+const adapter = createEchoAdapter();
+
+export default function StatusFooter() {
+  return (
+    <ChatProvider
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
+    >
+      <Box
+        sx={{
+          height: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <ChatConversation sx={{ height: '100%' }}>
+          <ChatConversationHeader />
+          <ChatMessageList
+            renderItem={({ id, index }) => (
+              <ChatMessageGroup index={index} messageId={id} />
+            )}
+          />
+          <Box sx={{ px: 2, py: 0.5 }}>
+            <StatusFooterContent />
+          </Box>
+          <ChatComposer />
+        </ChatConversation>
+      </Box>
+    </ChatProvider>
+  );
+}
+
 ```
 
 Prefer `useChatStatus()` over `useChat()` whenever you only need streaming or error state.
@@ -198,12 +260,41 @@ const conversations: ChatConversation[] = useConversations();
 ```
 
 ```tsx
-function ConversationSidebar() {
+'use client';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import {
+  ChatConversation,
+  ChatConversationHeader,
+  ChatMessageList,
+  ChatMessageGroup,
+  ChatComposer,
+} from '@mui/x-chat';
+import { ChatProvider, useConversations, useChat } from '@mui/x-chat/headless';
+import {
+  createEchoAdapter,
+  syncConversationPreview,
+} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/material/examples/shared/demoData';
+import type {
+  ChatConversation as ChatConversationType,
+  ChatMessage,
+} from '@mui/x-chat/headless';
+
+function CustomSidebar() {
   const conversations = useConversations();
   const { setActiveConversation } = useChat();
 
   return (
-    <List>
+    <List
+      dense
+      sx={{ width: 200, borderRight: '1px solid', borderColor: 'divider' }}
+    >
       {conversations.map((c) => (
         <ListItemButton key={c.id} onClick={() => setActiveConversation(c.id)}>
           {c.title}
@@ -212,6 +303,69 @@ function ConversationSidebar() {
     </List>
   );
 }
+
+const adapter = createEchoAdapter();
+
+export default function ConversationSidebar() {
+  const [activeConversationId, setActiveConversationId] = React.useState(
+    () => inboxConversations[0].id,
+  );
+  const [conversations, setConversations] = React.useState<ChatConversationType[]>(
+    () => inboxConversations.map((c) => ({ ...c })),
+  );
+  const [threads, setThreads] = React.useState<Record<string, ChatMessage[]>>(() =>
+    Object.fromEntries(
+      Object.entries(inboxThreads).map(([id, msgs]) => [
+        id,
+        msgs.map((m) => ({ ...m })),
+      ]),
+    ),
+  );
+
+  const messages = threads[activeConversationId] ?? [];
+
+  return (
+    <ChatProvider
+      adapter={adapter}
+      activeConversationId={activeConversationId}
+      conversations={conversations}
+      messages={messages}
+      onActiveConversationChange={(nextId) => {
+        if (nextId) {
+          setActiveConversationId(nextId);
+        }
+      }}
+      onMessagesChange={(nextMessages) => {
+        setThreads((prev) => ({ ...prev, [activeConversationId]: nextMessages }));
+        setConversations((prev) =>
+          syncConversationPreview(prev, activeConversationId, nextMessages),
+        );
+      }}
+    >
+      <Box
+        sx={{
+          height: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+          display: 'flex',
+        }}
+      >
+        <CustomSidebar />
+        <ChatConversation sx={{ flex: 1 }}>
+          <ChatConversationHeader />
+          <ChatMessageList
+            renderItem={({ id, index }) => (
+              <ChatMessageGroup index={index} messageId={id} />
+            )}
+          />
+          <ChatComposer />
+        </ChatConversation>
+      </Box>
+    </ChatProvider>
+  );
+}
+
 ```
 
 ### `useConversation(id)`
@@ -255,11 +409,52 @@ const message: ChatMessage | null = useMessage(id);
 The recommended pattern for efficient thread rendering:
 
 ```tsx
+'use client';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import {
+  ChatProvider,
+  useMessageIds,
+  useMessage,
+  useChatComposer,
+} from '@mui/x-chat/headless';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
+
+function MessageRow({ id }: { id: string }) {
+  const message = useMessage(id);
+  if (!message) {
+    return null;
+  }
+
+  const textPart = message.parts.find((p) => p.type === 'text');
+  return (
+    <Paper
+      sx={{
+        p: 1.5,
+        alignSelf: message.role === 'user' ? 'flex-end' : 'flex-start',
+        maxWidth: '80%',
+        bgcolor: message.role === 'user' ? 'primary.main' : 'grey.100',
+        color: message.role === 'user' ? 'primary.contrastText' : 'text.primary',
+      }}
+    >
+      {textPart?.type === 'text' ? textPart.text : null}
+    </Paper>
+  );
+}
+
 function Thread() {
   const messageIds = useMessageIds();
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1} sx={{ flex: 1, overflow: 'auto', p: 2 }}>
       {messageIds.map((id) => (
         <MessageRow key={id} id={id} />
       ))}
@@ -267,15 +462,62 @@ function Thread() {
   );
 }
 
-function MessageRow({ id }: { id: string }) {
-  const message = useMessage(id);
-  if (!message) return null;
+function SimpleComposer() {
+  const { value, setValue, submit, isSubmitting } = useChatComposer();
 
-  const textPart = message.parts.find((p) => p.type === 'text');
   return (
-    <Paper sx={{ p: 1.5 }}>{textPart?.type === 'text' ? textPart.text : null}</Paper>
+    <Stack
+      direction="row"
+      spacing={1}
+      sx={{ p: 1, borderTop: '1px solid', borderColor: 'divider' }}
+    >
+      <TextField
+        fullWidth
+        size="small"
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            submit();
+          }
+        }}
+        placeholder="Type a message..."
+      />
+      <Button variant="contained" onClick={submit} disabled={isSubmitting}>
+        Send
+      </Button>
+    </Stack>
   );
 }
+
+const adapter = createEchoAdapter();
+
+export default function EfficientThread() {
+  return (
+    <ChatProvider
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
+    >
+      <Box
+        sx={{
+          height: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Thread />
+        <SimpleComposer />
+      </Box>
+    </ChatProvider>
+  );
+}
+
 ```
 
 This pattern scales to threads with hundreds of messages because no unnecessary re-renders propagate up the tree.
@@ -307,18 +549,34 @@ The hook handles several details automatically:
 - **Double-send prevention** — `submit` is blocked when `isSubmitting` is `true`.
 
 ```tsx
-function CustomComposer() {
+'use client';
+import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import { ChatBox } from '@mui/x-chat';
+import { useChatComposer } from '@mui/x-chat/headless';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/material/examples/shared/demoData';
+
+function CustomComposerContent() {
   const { value, setValue, submit, isSubmitting, addAttachment } = useChatComposer();
 
   return (
-    <Stack direction="row" spacing={1}>
+    <Stack direction="row" spacing={1} sx={{ p: 1 }}>
       <TextField
         fullWidth
+        size="small"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
+        onChange={(event) => setValue(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
             submit();
           }
         }}
@@ -329,9 +587,11 @@ function CustomComposer() {
         <input
           type="file"
           hidden
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) addAttachment(file);
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            if (file) {
+              addAttachment(file);
+            }
           }}
         />
       </IconButton>
@@ -341,6 +601,27 @@ function CustomComposer() {
     </Stack>
   );
 }
+
+const adapter = createEchoAdapter();
+
+export default function CustomComposer() {
+  return (
+    <ChatBox
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
+      slots={{ composerRoot: CustomComposerContent }}
+      sx={{
+        height: 500,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
+  );
+}
+
 ```
 
 ## Config hooks
@@ -416,10 +697,10 @@ This is the escape hatch for cases that none of the dedicated hooks cover — wr
 const store: ChatStore<Cursor> = useChatStore();
 ```
 
-Use it with `useStore` from `@mui/x-internals/store` to create a custom subscription:
+Use it with `useStore()` from `@mui/x-internals/store` to create a custom subscription:
 
 ```tsx
-import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
+import { useChatStore, chatSelectors } from '@mui/x-chat';
 import { useStore } from '@mui/x-internals/store';
 
 function MessageCounter() {
@@ -450,14 +731,11 @@ Direct store access is considered advanced API and is more likely to require cha
 | Custom part renderer lookup                              | `useChatPartRenderer(partType)`              |
 | Custom selector or store subscription                    | `useChatStore()` + `chatSelectors`           |
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Adapter](/x/react-chat/material/adapter/) for the interface that the actions in these hooks call into.
 - [Customization](/x/react-chat/material/customization/) for slot and `slotProps` overrides on `ChatBox`.
-- [Selectors](/x/react-chat/headless/selectors/) for the full `chatSelectors` map used with `useChatStore()`.
-- [State and store](/x/react-chat/headless/state/) for `ChatProvider` props and the controlled/uncontrolled model.
-- [Composer demo](/x/react-chat/headless/examples/composer/) for `useChatComposer()` with attachments in action.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

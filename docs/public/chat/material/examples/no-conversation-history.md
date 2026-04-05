@@ -23,7 +23,7 @@ import {
   ChatMessageAvatar,
   ChatMessageContent,
   ChatMessageGroup,
-  ChatMessageMeta,
+  ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
 import { useMessageIds } from '@mui/x-chat/headless';
@@ -106,8 +106,7 @@ function ThreadContent() {
       <ChatMessageGroup key={id} messageId={id}>
         <ChatMessage messageId={id}>
           <ChatMessageAvatar />
-          <ChatMessageContent />
-          <ChatMessageMeta />
+          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
       </ChatMessageGroup>
     ),
@@ -157,6 +156,7 @@ export default function NoConversationHistory() {
     </ChatRoot>
   );
 }
+
 ```
 
 ## How it works
@@ -218,11 +218,11 @@ const adapter: ChatAdapter = {
 };
 ```
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Thread-only](/x/react-chat/material/examples/thread-only/) for a layout-focused view of the single-pane pattern
 - [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for the full two-pane inbox with a conversation sidebar
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

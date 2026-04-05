@@ -10,6 +10,8 @@ components: ChatRoot
 
 <p class="description">Replace individual sub-components inside ChatBox with your own implementations using the <code>slots</code> and <code>slotProps</code> API.</p>
 
+
+
 `ChatBox` composes many themed sub-components internally — message bubbles, the composer, the conversation list, date dividers, and more.
 The `slots` prop lets you swap any of them with your own component, while `slotProps` passes extra props to those components without replacing them.
 
@@ -75,6 +77,7 @@ export default function SlotBasicReplacement() {
     />
   );
 }
+
 ```
 
 ## Passing extra props with `slotProps`
@@ -117,6 +120,7 @@ export default function SlotPropsCustomization() {
     />
   );
 }
+
 ```
 
 ## Complete slot reference
@@ -228,6 +232,7 @@ export default function FeatureFlags() {
     />
   );
 }
+
 ```
 
 The `autoScroll` feature flag controls scroll behavior rather than slot visibility:
@@ -364,6 +369,7 @@ export default function ThemeAndSlotCombination() {
     </ThemeProvider>
   );
 }
+
 ```
 
 ## API

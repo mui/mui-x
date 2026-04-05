@@ -10,6 +10,8 @@ components: ChatBox
 
 <p class="description">Push typing, presence, and collection changes into the runtime via the adapter's <code>subscribe()</code> method for live synchronization.</p>
 
+
+
 The adapter's `subscribe()` method enables push-based updates from the backend. The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
 
 ## Subscription lifecycle
@@ -253,12 +255,12 @@ async setTyping({ conversationId, isTyping }) {
 
 The runtime calls `setTyping` when the composer value changes from empty to non-empty (and vice versa). To receive typing indicators from other users, push `typing` events through the `onEvent` callback in `subscribe()`.
 
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)
-
 ## See also
 
 - [Read Receipts](/x/react-chat/multi-conversation/read-receipts/) for the `markRead()` adapter method and unread badge display.
 - [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that reflects realtime conversation updates.
 - [Adapter](/x/react-chat/backend/adapters/) for the full `subscribe()` and `setTyping()` method reference.
+
+## API
+
+- [`ChatBox`](/x/api/chat/chat-box/)

@@ -80,6 +80,7 @@ export default function MultiConversation() {
     />
   );
 }
+
 ```
 
 ## Controlled vs. uncontrolled conversations
@@ -113,11 +114,11 @@ If only one conversation is provided, `ChatBox` renders the thread pane directly
 - Sync conversation previews after messages change using `onMessagesChange`.
 - The `unreadCount` and `readState` on each conversation drive the sidebar badge and read indicator.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Custom theme](/x/react-chat/material/examples/custom-theme/) to apply brand colors across the entire surface
 - [Customization](/x/react-chat/material/customization/) for `slotProps` on the conversation list and thread header
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

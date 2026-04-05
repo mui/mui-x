@@ -44,6 +44,7 @@ export default function BasicAiChat() {
     />
   );
 }
+
 ```
 
 ## Why start here
@@ -82,11 +83,11 @@ const adapter: ChatAdapter = {
 - Omitting `initialConversations` renders an empty surface without a thread.
 - Omitting `initialActiveConversationId` shows the conversation list pane without an active thread.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) to add a conversation sidebar
 - [Customization](/x/react-chat/material/customization/) for theme overrides, slots, and slotProps
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

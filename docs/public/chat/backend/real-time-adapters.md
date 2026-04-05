@@ -9,6 +9,8 @@ githubLabel: 'scope: chat'
 
 <p class="description">Push typing indicators, presence updates, read receipts, and collection changes into the runtime through the adapter's <code>subscribe()</code> method.</p>
 
+
+
 The adapter's `subscribe()` method enables push-based updates from the backend.
 The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
 
@@ -241,10 +243,10 @@ const adapter: ChatAdapter = {
 };
 ```
 
-## API
-
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the full adapter interface including `subscribe()`.
 - [Hooks Reference](/x/react-chat/resources/hooks/) for `useChatStatus()` and the typing/presence consumption pattern.
 - [Selectors Reference](/x/react-chat/resources/selectors/) for `chatSelectors.typingUserIds` and other store selectors.
+
+## API

@@ -10,6 +10,8 @@ githubLabel: 'scope: chat'
 
 Use shared structural affordances for typing, unread boundaries, and scroll-to-bottom behavior.
 
+
+
 ```tsx
 import * as React from 'react';
 import type { ChatAdapter, ChatRealtimeEvent } from '@mui/x-chat/headless';
@@ -287,6 +289,7 @@ export default function IndicatorsInContext() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Primitive set
@@ -395,14 +398,14 @@ Custom slots receive owner state such as:
 
 That makes it straightforward to map the indicators into an existing design system without rewriting the underlying behavior.
 
-## API
-
-- [TypingIndicator](/x/api/chat/typing-indicator/)
-- [UnreadMarker](/x/api/chat/unread-marker/)
-- [ScrollToBottomAffordance](/x/api/chat/scroll-to-bottom-affordance/)
-
 ## See also
 
 - Continue with [Message list](/x/react-chat/unstyled/message-list/) for the list context that powers unread boundaries and scroll affordances.
 - Continue with [Thread](/x/react-chat/unstyled/thread/) for header composition patterns.
 - Continue with [Indicators in context](/x/react-chat/unstyled/examples/indicators-in-context/) for the demo version of these primitives.
+
+## API
+
+- [TypingIndicator](/x/api/chat/typing-indicator/)
+- [UnreadMarker](/x/api/chat/unread-marker/)
+- [ScrollToBottomAffordance](/x/api/chat/scroll-to-bottom-affordance/)

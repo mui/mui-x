@@ -15,7 +15,7 @@ It shows how to render a thread that visually groups messages by author and time
 That makes it a good fit for products where readability and density matter more than showing every message as an isolated card.
 
 - `MessageGroup`
-- `groupKey` / `createTimeWindowGroupKey`
+- `groupingWindowMs`
 - `Message.Avatar`
 - `Message.Content`
 - `Message.Meta`
@@ -45,7 +45,7 @@ import {
 
 export default function GroupedMessageTimeline() {
   const [windowMs, setWindowMs] = React.useState(5 * 60_000);
-  const groupKey = React.useMemo(() => createTimeWindowGroupKey(windowMs), [windowMs]);
+  const groupKey = React.useMemo<GroupKeyFn>(() => createTimeWindowGroupKey(windowMs), [windowMs]);
   const adapter = React.useMemo(
     () => createEchoAdapter({ agent: demoUsers.agent }),
     [],
@@ -247,6 +247,7 @@ export default function GroupedMessageTimeline() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Key primitives
@@ -275,13 +276,13 @@ This is especially useful in support timelines, collaboration surfaces, and assi
 ## What to pay attention to
 
 - `MessageGroup` keeps neighbor comparison logic out of the page layer.
-- `groupKey` is a presentation decision, so it belongs near the message row composition rather than in the data model. Use `createTimeWindowGroupKey(windowMs)` when time-based splitting is needed.
-
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
+- `groupingWindowMs` is a presentation decision, so it belongs near the message row composition rather than in the data model.
 
 ## See also
 
 - Continue with [Messages](/x/react-chat/unstyled/messages/) for the message primitive reference.
 - Continue with [Custom message part rendering](/x/react-chat/unstyled/examples/custom-message-part-rendering/) when the row structure is correct but certain part types need a custom presentation.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

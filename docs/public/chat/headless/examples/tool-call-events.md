@@ -300,6 +300,7 @@ export default function ToolCallEventsHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways
@@ -309,13 +310,13 @@ export default function ToolCallEventsHeadlessChat() {
 - Tool invocation state progresses through a well-defined lifecycle from input to output
 - For approval flows, see the [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) demo
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Streaming](/x/react-chat/headless/streaming/) for the tool chunk protocol reference
 - [Type augmentation](/x/react-chat/headless/types/) for typing tool input and output
 - [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) for approval flows and custom part rendering
 - [State and store](/x/react-chat/headless/state/) for all callback signatures
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

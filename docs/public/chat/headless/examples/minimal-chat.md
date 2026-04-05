@@ -245,6 +245,7 @@ export default function MinimalHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways
@@ -253,13 +254,13 @@ export default function MinimalHeadlessChat() {
 - `useChat()` provides both state and actions in a single hook
 - No CSS, no components, no design system required — headless is pure runtime
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for the full hook API reference
 - [Adapters](/x/react-chat/headless/adapters/) for writing real adapters
 - [Controlled state](/x/react-chat/headless/examples/controlled-state/) for owning state externally
 - [Selector-driven thread](/x/react-chat/headless/examples/selector-driven-thread/) for efficient large threads
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

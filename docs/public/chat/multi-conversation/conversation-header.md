@@ -10,6 +10,8 @@ components: ChatConversationHeader, ChatConversationTitle, ChatConversationSubti
 
 Display the active conversation's title, subtitle, participants, and action buttons using the themed header components.
 
+
+
 `ChatConversationHeader` is a `<header>` element with divider styling. It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
 
 ```tsx
@@ -197,14 +199,14 @@ function CustomThread() {
 }
 ```
 
-## API
-
-- [`ChatConversationHeader`](/x/api/chat/chat-conversation-header/)
-- [`ChatConversationTitle`](/x/api/chat/chat-conversation-title/)
-- [`ChatConversationSubtitle`](/x/api/chat/chat-conversation-subtitle/)
-
 ## See also
 
 - [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that lists conversations.
 - [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for live updates to conversation metadata displayed in the header.
 - [Layout](/x/react-chat/basics/layout/) for the full thread anatomy including message list and composer.
+
+## API
+
+- [`ChatConversationHeader`](/x/api/chat/chat-conversation-header/)
+- [`ChatConversationTitle`](/x/api/chat/chat-conversation-title/)
+- [`ChatConversationSubtitle`](/x/api/chat/chat-conversation-subtitle/)

@@ -128,16 +128,16 @@ You can also import individual components such as `ChatRoot`, `MessageListRoot`,
 Use namespaced imports when you want the API to read like a component family.
 Use direct imports when a codebase prefers local, explicit symbols or when only one or two primitives are needed in a file.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-- [ChatLayout](/x/api/chat/chat-layout/)
-
 ## See also
 
 - Start with [Composition](/x/react-chat/unstyled/composition/) for the canonical shell.
 - Continue with [Layout](/x/react-chat/unstyled/layout/) and [Conversation list](/x/react-chat/unstyled/conversation-list/) for the main application skeleton.
 - Use [Examples](/x/react-chat/unstyled/examples/) when you want end-to-end patterns rather than component reference pages.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+- [ChatLayout](/x/api/chat/chat-layout/)
 
 ## Package boundary
 

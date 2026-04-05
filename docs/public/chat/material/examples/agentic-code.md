@@ -543,6 +543,7 @@ export default function AgenticCode() {
     />
   );
 }
+
 ```
 
 ## How it works
@@ -1207,6 +1208,7 @@ export default function ToolStylingA() {
     />
   );
 }
+
 ```
 
 ### Block themes
@@ -1846,6 +1848,7 @@ export default function ToolStylingB() {
     />
   );
 }
+
 ```
 
 ### Custom renderer
@@ -2526,13 +2529,14 @@ export default function ToolStylingC() {
     />
   );
 }
+
 ```
-
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
 
 ## See also
 
 - [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) — two-pane inbox layout
 - [Split layout](/x/react-chat/material/examples/split-layout/) — place message list and composer in separate DOM zones
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

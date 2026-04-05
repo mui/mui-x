@@ -10,6 +10,8 @@ components: ChatBox, ChatLayout
 
 Understand the two-pane layout structure, thread-only mode, and how to recompose the chat surface.
 
+
+
 ## Overview
 
 `ChatBox` renders a two-pane layout by default: a **conversation list** on the left and a **thread pane** on the right.
@@ -43,6 +45,7 @@ export default function BasicAiChat() {
     />
   );
 }
+
 ```
 
 ## Component anatomy
@@ -106,6 +109,7 @@ export default function ThreadOnly() {
     />
   );
 }
+
 ```
 
 In thread-only mode `ChatBox` does not render the conversation list sidebar, and the thread pane fills the entire width of the `ChatBox` container.
@@ -192,10 +196,3 @@ On narrow containers, consider switching to thread-only mode and managing conver
 
 - [`ChatBox`](/x/api/chat/chat-box/)
 - [`ChatLayout`](/x/api/chat/chat-layout/)
-
-## Next steps
-
-- [ChatBox](/x/react-chat/basics/chatbox/) — the all-in-one component and its configuration
-- [Messages](/x/react-chat/basics/messages/) — the message data model and list rendering
-- [Composer](/x/react-chat/basics/composer/) — the text input experience
-- [Variants & Density](/x/react-chat/basics/variants-and-density/) — compact variant and density levels

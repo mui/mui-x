@@ -10,6 +10,8 @@ components: ChatRoot
 
 Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.
 
+
+
 `@mui/x-chat/headless` builds on the headless runtime.
 It combines `@mui/x-chat/headless` state with structural components such as lists, threads, messages, composers, and indicators.
 
@@ -121,10 +123,10 @@ function Inbox(props: ChatRootProps) {
 
 This gives you a complete structural shell while keeping the visual treatment in your own CSS, slots, or design-system components.
 
-## API
-
 ## See also
 
 - [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling unstyled primitives with Tailwind utility classes.
 - [Headless Hooks](/x/react-chat/customization/headless/) for the headless layer that unstyled builds on.
 - [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization on the styled layer.
+
+## API

@@ -10,6 +10,8 @@ components: ChatComposerAttachButton
 
 Enable file attachments in the composer, with support for MIME type filtering, file size limits, upload progress tracking, and rejection callbacks.
 
+
+
 The attach button opens the browser file picker.
 Selected files are queued as draft attachments and previewed in the composer area before the message is sent.
 
@@ -51,6 +53,7 @@ export default function ComposerHiddenAttachButton() {
     />
   );
 }
+
 ```
 
 ## Attachment validation
@@ -122,10 +125,10 @@ queued  -->  uploading  -->  uploaded  -->  (sent with message)
 
 ## Programmatic attachment management
 
-The `useChatComposer` hook from the headless layer provides direct access to attachment state:
+The `useChatComposer()` hook provides direct access to attachment state:
 
 ```tsx
-import { useChatComposer } from '@mui/x-chat/headless';
+import { useChatComposer } from '@mui/x-chat';
 
 function AttachmentManager() {
   const composer = useChatComposer();

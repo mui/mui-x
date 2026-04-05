@@ -297,6 +297,7 @@ export default function IndicatorsInContext() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Key primitives
@@ -328,10 +329,10 @@ This pattern is common in shared support queues, collaborative assistant surface
 - `UnreadMarker` belongs in the row pipeline because it marks a message boundary, not a global thread status.
 - `ScrollToBottomAffordance` depends on message-list state, so it is easiest to reason about when it stays inside a message-list-aware container.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - Continue with [Indicators](/x/react-chat/unstyled/indicators/) for the reference page.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

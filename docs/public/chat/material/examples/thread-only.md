@@ -43,6 +43,7 @@ export default function ThreadOnly() {
     />
   );
 }
+
 ```
 
 ## When to use this layout
@@ -70,11 +71,11 @@ To restore the sidebar at any time, pass at least one conversation:
 />
 ```
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for the smallest working setup with a single conversation
 - [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for the full two-pane inbox layout
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

@@ -270,6 +270,7 @@ export default function SelectorDrivenThread() {
     </Stack>
   );
 }
+
 ```
 
 ## Key takeaways
@@ -279,12 +280,12 @@ export default function SelectorDrivenThread() {
 - Wrap row components in `React.memo()` for maximum efficiency
 - `useConversations()` and `useConversation(id)` follow the same pattern for conversation lists
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Selectors](/x/react-chat/headless/selectors/) for the full selector API and custom subscriptions
 - [Hooks](/x/react-chat/headless/hooks/) for all available hooks
 - [Advanced store access](/x/react-chat/headless/examples/advanced-store-access/) for custom selectors with `useChatStore()`
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

@@ -160,6 +160,7 @@ export default function MinimalUnstyledShell() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Why start here
@@ -203,11 +204,11 @@ This pattern is a good fit for:
 - `Chat.Layout` is already enough to produce a recognizable application shell.
 - Most richer demos keep the same baseline structure and only add behavior or customization on top.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - Continue with [Two-pane inbox](/x/react-chat/unstyled/examples/two-pane-inbox/) for the standard application layout.
 - Continue with [Composition](/x/react-chat/unstyled/composition/) for the conceptual explanation of the same shell.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

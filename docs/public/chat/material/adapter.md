@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Adapter
-packageName: '@mui/x-chat/headless'
+packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
@@ -43,13 +43,14 @@ export default function BasicAiChat() {
     />
   );
 }
+
 ```
 
 You author the adapter once and pass it directly to `ChatBox`:
 
 ```tsx
 import { ChatBox } from '@mui/x-chat';
-import type { ChatAdapter } from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message, signal }) {
@@ -76,7 +77,7 @@ The full interface is generic over your pagination cursor type.
 The default cursor type is `string`, which covers the majority of REST and cursor-based APIs:
 
 ```ts
-import type { ChatAdapter } from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat';
 
 interface ChatAdapter<Cursor = string> {
   // Required
@@ -148,7 +149,7 @@ const adapter: ChatAdapter = {
 };
 ```
 
-For the full chunk type reference, see [Streaming](/x/react-chat/headless/streaming/).
+For the full chunk type reference, see the streaming protocol documentation.
 
 ### Abort signal
 
@@ -328,7 +329,7 @@ async subscribe({ onEvent }) {
 },
 ```
 
-For the full list of realtime event types, see [Realtime](/x/react-chat/headless/realtime/).
+For the full list of realtime event types, see the realtime events documentation.
 
 ### `addToolApprovalResponse(input)`
 
@@ -429,10 +430,10 @@ To handle errors at the application level, use the `onError` callback prop:
 
 `ChatBox` internally renders a `ChatProvider` and passes `adapter` to it, so for most usage you simply pass `adapter` directly to `ChatBox`.
 
-If you are building a custom layout using `@mui/x-chat/headless` hooks instead of `ChatBox`, wire the adapter to `ChatProvider` directly:
+If you are building a custom layout using hooks instead of `ChatBox`, wire the adapter to `ChatProvider` directly:
 
 ```tsx
-import { ChatProvider } from '@mui/x-chat/headless';
+import { ChatProvider } from '@mui/x-chat';
 
 export default function App() {
   return (
@@ -449,14 +450,11 @@ export default function App() {
 
 Everything else — hooks, selectors, streaming — works the same way regardless of whether you use `ChatBox` or build your own layout.
 
+## See also
+
+- [Hooks](/x/react-chat/material/hooks/) to see which runtime actions trigger adapter methods.
+- [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for a minimal end-to-end demo.
+
 ## API
 
 - [ChatRoot](/x/api/chat/chat-root/)
-
-## See also
-
-- [Streaming](/x/react-chat/headless/streaming/) for the full stream chunk protocol reference.
-- [Realtime](/x/react-chat/headless/realtime/) for the event types used by `subscribe()`.
-- [Hooks](/x/react-chat/material/hooks/) to see which runtime actions trigger adapter methods.
-- [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for a minimal end-to-end demo.
-- [Conversation history](/x/react-chat/headless/examples/conversation-history/) for adapter-driven history loading.

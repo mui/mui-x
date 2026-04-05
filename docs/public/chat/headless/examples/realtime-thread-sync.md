@@ -425,6 +425,7 @@ export default function RealtimeThreadSyncHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways
@@ -434,12 +435,12 @@ export default function RealtimeThreadSyncHeadlessChat() {
 - Active conversation automatically resets when its conversation is removed
 - These events work alongside the streaming lifecycle — you can push messages while a stream is active
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Realtime](/x/react-chat/headless/realtime/) for the full event type reference
 - [Realtime](/x/react-chat/headless/examples/realtime/) for typing, presence, and read-state events
 - [Adapters](/x/react-chat/headless/adapters/) for the `subscribe()` method reference
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

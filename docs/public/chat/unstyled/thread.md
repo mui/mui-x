@@ -10,6 +10,8 @@ githubLabel: 'scope: chat'
 
 Build the active conversation surface from thread primitives that derive their state from the selected conversation.
 
+
+
 ```tsx
 import * as React from 'react';
 import {
@@ -220,6 +222,7 @@ export default function TwoPaneInbox() {
     </Chat.Root>
   );
 }
+
 ```
 
 ```tsx
@@ -332,6 +335,12 @@ It is intentionally light on policy so the app can decide which actions belong t
 - Keep header composition inside `Conversation.Root` so title, subtitle, and actions stay in sync with the active conversation.
 - Pair `Conversation.Root` with `MessageList.Root` and `Composer.Root` for the canonical thread surface.
 
+## See also
+
+- Continue with [Message list](/x/react-chat/unstyled/message-list/) for the scrolling and history behavior inside the thread.
+- Continue with [Indicators](/x/react-chat/unstyled/indicators/) for thread-level affordances such as typing feedback.
+- Continue with [Two-pane inbox](/x/react-chat/unstyled/examples/two-pane-inbox/) for the full thread-in-layout demo.
+
 ## API
 
 - [ConversationRoot](/x/api/chat/conversation-root/)
@@ -339,9 +348,3 @@ It is intentionally light on policy so the app can decide which actions belong t
 - [ConversationTitle](/x/api/chat/conversation-title/)
 - [ConversationSubtitle](/x/api/chat/conversation-subtitle/)
 - [ConversationHeaderActions](/x/api/chat/conversation-header-actions/)
-
-## See also
-
-- Continue with [Message list](/x/react-chat/unstyled/message-list/) for the scrolling and history behavior inside the thread.
-- Continue with [Indicators](/x/react-chat/unstyled/indicators/) for thread-level affordances such as typing feedback.
-- Continue with [Two-pane inbox](/x/react-chat/unstyled/examples/two-pane-inbox/) for the full thread-in-layout demo.

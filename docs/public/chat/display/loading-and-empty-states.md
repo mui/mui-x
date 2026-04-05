@@ -10,6 +10,8 @@ components: ChatMessageSkeleton
 
 Display loading skeletons while messages load and empty state content when a conversation has no messages.
 
+
+
 ## Loading state with ChatMessageSkeleton
 
 `ChatMessageSkeleton` renders animated shimmer lines that serve as a placeholder while message content is loading. Use it during initial data fetching or when loading older messages via history pagination.
@@ -107,6 +109,7 @@ export default function EmptyState() {
     />
   );
 }
+
 ```
 
 Key characteristics of the empty state:
@@ -118,28 +121,107 @@ Key characteristics of the empty state:
 
 ### Custom empty state content
 
-Provide custom empty state content by replacing the message list slot. A common pattern is to display suggested prompts that help users start a conversation:
+Provide custom empty state content by composing the thread from individual components. A common pattern is to display suggested prompts that help users start a conversation:
 
 ```tsx
-function EmptyStateContent() {
-  const { messages } = useChat();
+'use client';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import {
+  ChatConversation,
+  ChatConversationHeader,
+  ChatMessageList,
+  ChatMessageGroup,
+  ChatComposer,
+} from '@mui/x-chat';
+import { ChatProvider, useChat } from '@mui/x-chat/headless';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation } from 'docsx/data/chat/material/examples/shared/demoData';
 
-  if (messages.length > 0) return null;
+function EmptyStateContent() {
+  const { messages, sendMessage } = useChat();
+
+  if (messages.length > 0) {
+    return null;
+  }
 
   return (
-    <div className="empty-state">
-      <h3>How can I help you today?</h3>
-      <div className="suggestions">
-        <button onClick={() => sendMessage('Explain quantum computing')}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 2,
+        py: 4,
+      }}
+    >
+      <Typography variant="h6">How can I help you today?</Typography>
+      <Box
+        sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: 'center' }}
+      >
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() =>
+            sendMessage({
+              parts: [{ type: 'text', text: 'Explain quantum computing' }],
+            })
+          }
+        >
           Explain quantum computing
-        </button>
-        <button onClick={() => sendMessage('Write a haiku about React')}>
+        </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() =>
+            sendMessage({
+              parts: [{ type: 'text', text: 'Write a haiku about React' }],
+            })
+          }
+        >
           Write a haiku about React
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Box>
   );
 }
+
+const adapter = createEchoAdapter();
+
+export default function CustomEmptyState() {
+  return (
+    <ChatProvider
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+    >
+      <Box
+        sx={{
+          height: 500,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <ChatConversation sx={{ height: '100%' }}>
+          <ChatConversationHeader />
+          <ChatMessageList
+            renderItem={({ id, index }) => (
+              <ChatMessageGroup index={index} messageId={id} />
+            )}
+          />
+          <EmptyStateContent />
+          <ChatComposer />
+        </ChatConversation>
+      </Box>
+    </ChatProvider>
+  );
+}
+
 ```
 
 ## Streaming indicator
@@ -161,12 +243,12 @@ function TypingIndicator({ message }) {
 }
 ```
 
-## API
-
-- [`ChatMessageSkeleton`](/x/api/chat/chat-message-skeleton/)
-
 ## See also
 
 - [Message Appearance](/x/react-chat/display/message-appearance/) for the overall message layout
 - [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for streaming text display
 - [Message list](/x/react-chat/basics/messages/) for auto-scroll behavior during streaming
+
+## API
+
+- [`ChatMessageSkeleton`](/x/api/chat/chat-message-skeleton/)

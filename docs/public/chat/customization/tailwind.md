@@ -8,14 +8,16 @@ components: ChatRoot
 
 # Chat - Tailwind CSS
 
-<p class="description">Style chat components using Tailwind CSS utility classes with the unstyled primitives from <code>@mui/x-chat/headless</code>.</p>
+<p class="description">Style chat components using Tailwind CSS utility classes with the structural primitives from <code>@mui/x-chat</code>.</p>
 
-The unstyled layer (`@mui/x-chat/headless`) ships structural chat primitives with zero built-in styles.
+
+
+The chat primitives ship structural components with zero built-in styles.
 Each component renders semantic HTML elements with `data-*` attributes that reflect component state, making them a natural fit for Tailwind CSS utility classes.
 
 ## Installation
 
-Install the unstyled package alongside Tailwind:
+Install the package alongside Tailwind:
 
 <codeblock storageKey="package-manager">
 
@@ -33,13 +35,9 @@ yarn add @mui/x-chat
 
 </codeblock>
 
-:::info
-`@mui/x-chat/headless` is a subpath export of the main `@mui/x-chat` package. No separate package install is needed.
-:::
-
 ## Namespace API
 
-Unstyled components are available as namespace exports for clean dot-notation usage:
+Structural primitives are available as namespace exports for clean dot-notation usage:
 
 ```tsx
 import {
@@ -69,7 +67,7 @@ import {
 
 ## Applying Tailwind classes
 
-Pass `className` to any unstyled component:
+Pass `className` to any structural primitive:
 
 ```tsx
 <Composer.Root className="flex flex-col gap-1 border-t border-gray-200 p-3 bg-white">
@@ -89,7 +87,7 @@ Pass `className` to any unstyled component:
 
 ## Data attributes
 
-Every unstyled component exposes `data-*` attributes that reflect its current state.
+Every structural primitive exposes `data-*` attributes that reflect its current state.
 Use Tailwind's attribute selectors to style state variations without JavaScript:
 
 ```tsx
@@ -137,20 +135,9 @@ Use the `slots` and `slotProps` props to replace inner elements while keeping be
 />
 ```
 
-## When to use unstyled vs. styled
-
-| Scenario                                      | Recommendation                                 |
-| :-------------------------------------------- | :--------------------------------------------- |
-| Material UI project, minimal customization    | Use `@mui/x-chat` (styled)                     |
-| Material UI project, heavy slot customization | Use `@mui/x-chat` with `slots` and `slotProps` |
-| Tailwind CSS project                          | Use `@mui/x-chat/headless` + Tailwind classes  |
-| Custom design system / CSS Modules            | Use `@mui/x-chat/headless`                     |
-| Headless state only, fully custom rendering   | Use `@mui/x-chat/headless` hooks               |
-
-## API
-
 ## See also
 
-- [Unstyled Components](/x/react-chat/customization/unstyled/) for the full unstyled layer overview.
-- [Headless Hooks](/x/react-chat/customization/headless/) for building fully custom UIs with hooks only.
 - [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization.
+- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing sub-components entirely.
+
+## API

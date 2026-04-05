@@ -817,6 +817,7 @@ export default function SlotCustomization() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Customization model
@@ -934,12 +935,12 @@ The important boundary is:
 - unstyled owns structure, semantics, and interaction behavior
 - your app owns visual design
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - Continue with [Conversation list](/x/react-chat/unstyled/conversation-list/) to see owner state on row-level slots.
 - Continue with [Messages](/x/react-chat/unstyled/messages/) for selective message-part replacement.
 - Continue with [Slot customization](/x/react-chat/unstyled/examples/slot-customization/) for a full demo that replaces multiple slots in one surface.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

@@ -10,8 +10,10 @@ components: ChatBox
 
 How errors are captured, surfaced, and recovered from across the chat runtime.
 
+
+
 The chat runtime captures errors from adapters, streams, and history loading, and surfaces them through a unified error model.
-You do not need to catch errors inside adapter methods -- the runtime handles them for you.
+You do not need to catch errors inside adapter methods — the runtime handles them for you.
 
 ## The `ChatError` type
 
@@ -49,8 +51,8 @@ interface ChatError {
 
 ### `recoverable` vs `retryable`
 
-- **`recoverable`** -- The runtime can potentially recover from this error automatically (for example, by reconnecting a dropped stream via `reconnectToStream()`).
-- **`retryable`** -- The user can reasonably try the operation again (for example, re-sending a failed message).
+- **`recoverable`** — The runtime can potentially recover from this error automatically (for example, by reconnecting a dropped stream via `reconnectToStream()`).
+- **`retryable`** — The user can reasonably try the operation again (for example, re-sending a failed message).
 
 ## Error propagation
 
@@ -140,11 +142,12 @@ export default function ErrorState() {
     </div>
   );
 }
+
 ```
 
 ## Accessing the error state
 
-The `useChat` hook exposes the current error:
+The `useChat()` hook exposes the current error:
 
 ```tsx
 import { useChat } from '@mui/x-chat/headless';
@@ -167,7 +170,7 @@ function ErrorBanner() {
 
 When `sendMessage()` fails, the user's message is still displayed in the thread (optimistic update) and the composer is re-enabled so the user can try again.
 
-The `useChat` hook provides a `retry` method that re-sends the message associated with a given message ID:
+The `useChat()` hook provides a `retry` method that re-sends the message associated with a given message ID:
 
 ```tsx
 import { useChat } from '@mui/x-chat/headless';
@@ -183,7 +186,7 @@ function RetryButton({ messageId }: { messageId: string }) {
 
 ## Error from adapter methods
 
-You do not need to wrap adapter methods in try/catch -- the runtime handles all thrown errors.
+You do not need to wrap adapter methods in try/catch — the runtime handles all thrown errors.
 If you want to transform or enrich an error before the runtime sees it, throw a plain `Error` with a custom message.
 The runtime wraps it in a `ChatError` with source `'adapter'`:
 
@@ -212,7 +215,7 @@ If a stream closes without a terminal chunk (`finish` or `abort`), the runtime:
 3. Calls `onError` and `onFinish` with `isDisconnect: true`.
 4. If `reconnectToStream()` is implemented on the adapter, attempts to resume the stream.
 
-See [Streaming -- Reconnecting to streams](/x/react-chat/behavior/streaming/#reconnecting-to-streams) for implementation details.
+See [Streaming—Reconnecting to streams](/x/react-chat/behavior/streaming/#reconnecting-to-streams) for implementation details.
 
 ## Message status and errors
 
@@ -241,11 +244,11 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 }
 ```
 
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)
-
 ## See also
 
 - [Streaming](/x/react-chat/behavior/streaming/) for stream lifecycle and disconnect handling.
 - [Adapter](/x/react-chat/backend/adapters/) for the adapter interface and error propagation details.
+
+## API
+
+- [`ChatBox`](/x/api/chat/chat-box/)

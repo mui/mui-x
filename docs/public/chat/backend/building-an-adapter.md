@@ -9,6 +9,8 @@ githubLabel: 'scope: chat'
 
 <p class="description">A step-by-step tutorial for implementing a custom <code>ChatAdapter</code> that connects your chat UI to any backend.</p>
 
+
+
 This page walks you through building a `ChatAdapter` from scratch.
 You will start with the minimum viable adapter (`sendMessage` only), then progressively add history loading and conversation management.
 
@@ -275,10 +277,10 @@ To handle errors at the application level:
 />
 ```
 
-## API
-
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the full interface reference.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full stream chunk protocol reference.
 - [Real-Time Adapters](/x/react-chat/backend/real-time-adapters/) for adding `subscribe()`, `setTyping()`, and `markRead()`.
+
+## API

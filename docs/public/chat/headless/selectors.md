@@ -225,6 +225,7 @@ export default function SelectorDrivenThread() {
     </Stack>
   );
 }
+
 ```
 
 ## Selector reference
@@ -307,13 +308,13 @@ This design has three benefits:
 
 This is why the `useMessageIds()` + `useMessage(id)` pattern performs well for large threads — the ID list stays stable while individual rows subscribe to their own message record.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for the hook API that wraps these selectors.
 - [State and store](/x/react-chat/headless/state/) for the internal state shape and controlled/uncontrolled models.
 - [Advanced store access](/x/react-chat/headless/examples/advanced-store-access/) for a demo using `useChatStore()` with custom selectors.
 - [Selector-driven thread](/x/react-chat/headless/examples/selector-driven-thread/) for the row-level subscription pattern in action.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

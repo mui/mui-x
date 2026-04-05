@@ -345,6 +345,7 @@ function StreamingLifecycleWithLogs() {
     </Paper>
   );
 }
+
 ```
 
 ## Chunk categories
@@ -548,13 +549,13 @@ async function fromSSE(
 }
 ```
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Adapters](/x/react-chat/headless/adapters/) for the adapter interface that produces streams.
 - [State and store](/x/react-chat/headless/state/) for `streamFlushInterval` and error model.
 - [Streaming lifecycle](/x/react-chat/headless/examples/streaming-lifecycle/) for send, stop, retry, and callbacks in action.
 - [Message parts](/x/react-chat/headless/examples/message-parts/) for rendering the parts that chunks produce.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

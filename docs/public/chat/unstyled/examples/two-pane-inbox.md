@@ -229,6 +229,7 @@ export default function TwoPaneInbox() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Key primitives
@@ -260,10 +261,10 @@ It is especially applicable when users need to switch threads frequently without
 - `ConversationList.Root` and `Conversation.Root` already coordinate through active conversation state, so the page-level layout code can stay small.
 - `Chat.Layout` should stay the structural owner of the two-pane arrangement even when the visual layout is heavily customized.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - Continue with [Conversation list](/x/react-chat/unstyled/conversation-list/) for list semantics and keyboard behavior.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

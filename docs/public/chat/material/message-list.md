@@ -10,8 +10,10 @@ components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 
 Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators.
 
+
+
 The message list is the scrollable region that renders conversation history.
-`ChatMessageList` wraps the `@mui/x-chat/headless` `MessageListRoot` primitive with Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
+`ChatMessageList` provides Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
 
 ## Import
 
@@ -99,6 +101,7 @@ export default function AutoScrollConfig() {
     </div>
   );
 }
+
 ```
 
 ### Scroll-to-bottom affordance
@@ -202,6 +205,7 @@ export default function DateDividerFormat() {
     />
   );
 }
+
 ```
 
 ## Message groups
@@ -209,11 +213,7 @@ export default function DateDividerFormat() {
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
 Within a group only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-Grouping is controlled by the `groupKey` prop — a function that maps each message to a string or number.
-Messages that resolve to the same key are placed in the same visual group.
-
-By default, all messages from the same author are grouped regardless of time (falling back to role when no explicit author ID exists).
-To split groups after a time gap, use the built-in `createTimeWindowGroupKey` helper via `slotProps`.
+The grouping window defaults to 5 minutes (300,000 ms). Customize it through `slotProps`.
 The demo below sets the window to 1 minute (60,000 ms) — notice how messages more than 1 minute apart start a new group with a fresh avatar:
 
 ```tsx
@@ -301,6 +301,7 @@ export default function MessageGrouping() {
     />
   );
 }
+
 ```
 
 ## Compact variant
@@ -398,11 +399,11 @@ export default function CompactVariant() {
         height: 460,
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: 1,
       }}
     />
   );
 }
+
 ```
 
 ```tsx
@@ -533,6 +534,7 @@ export default function DensityProp() {
     </Stack>
   );
 }
+
 ```
 
 ```tsx
@@ -563,7 +565,7 @@ import {
   ChatMessageAvatar,
   ChatMessageContent,
   ChatMessageGroup,
-  ChatMessageMeta,
+  ChatMessageInlineMeta,
   ChatConversation,
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
@@ -583,8 +585,7 @@ function CustomLayout() {
       <ChatMessageGroup key={id} messageId={id}>
         <ChatMessage messageId={id}>
           <ChatMessageAvatar />
-          <ChatMessageContent />
-          <ChatMessageMeta />
+          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
       </ChatMessageGroup>
     ),
@@ -627,6 +628,7 @@ export default function StandaloneMessageList() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Imperative scrolling
@@ -635,7 +637,7 @@ The `ChatMessageList` exposes a ref handle for imperative scroll control:
 
 ```tsx
 import { ChatMessageList } from '@mui/x-chat';
-import type { MessageListRootHandle } from '@mui/x-chat/headless';
+import type { MessageListRootHandle } from '@mui/x-chat';
 
 const listRef = React.useRef<MessageListRootHandle>(null);
 
@@ -650,7 +652,7 @@ listRef.current?.scrollToBottom({ behavior: 'smooth' });
 Child components inside the message list can access scroll state via context:
 
 ```tsx
-import { useMessageListContext } from '@mui/x-chat/headless';
+import { useMessageListContext } from '@mui/x-chat';
 
 function CustomScrollIndicator() {
   const { isAtBottom, unseenMessageCount, scrollToBottom } = useMessageListContext();

@@ -21,7 +21,7 @@ import {
   ChatMessageAvatar,
   ChatMessageContent,
   ChatMessageGroup,
-  ChatMessageMeta,
+  ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
 import { useChat, useMessageIds } from '@mui/x-chat/headless';
@@ -88,8 +88,7 @@ function Feed() {
       <ChatMessageGroup key={id} messageId={id}>
         <ChatMessage messageId={id}>
           <ChatMessageAvatar />
-          <ChatMessageContent />
-          <ChatMessageMeta />
+          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
       </ChatMessageGroup>
     ),
@@ -152,6 +151,7 @@ export default function MessageFeed() {
     </ChatRoot>
   );
 }
+
 ```
 
 ## When to use this pattern
@@ -181,11 +181,11 @@ sendMessage({
 });
 ```
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [No conversation history](/x/react-chat/material/examples/no-conversation-history/) — compose a thread from individual components without `ChatBox`
 - [Split layout](/x/react-chat/material/examples/split-layout/) — message list and composer in separate DOM zones
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

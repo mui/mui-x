@@ -73,6 +73,7 @@ export default function CustomTheme() {
     </ThemeProvider>
   );
 }
+
 ```
 
 ## How theme tokens map to chat elements
@@ -94,11 +95,11 @@ export default function CustomTheme() {
 - Use `CssBaseline` inside the `ThemeProvider` if you need baseline styles applied to the chat container.
 - The `@mui/x-chat/themeAugmentation` import adds TypeScript types for `MuiChatBox` and related component overrides in `createTheme`.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Slot overrides](/x/react-chat/material/examples/slot-overrides/) to replace individual sub-components rather than styling through the theme
 - [Customization](/x/react-chat/material/customization/) for the full reference of style override keys
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

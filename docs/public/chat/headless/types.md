@@ -531,6 +531,7 @@ export default function TypeAugmentationHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## The six registry interfaces
@@ -716,10 +717,6 @@ declare module '@mui/x-chat/headless/types' {
 
 You can split augmentations across multiple files. TypeScript merges all declarations for the same module. Just make sure each file is included in your `tsconfig`.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for `useChatPartRenderer()` and typed hook return values.
@@ -727,3 +724,7 @@ You can split augmentations across multiple files. TypeScript merges all declara
 - [Streaming](/x/react-chat/headless/streaming/) for how typed chunks flow through the stream.
 - [Type augmentation](/x/react-chat/headless/examples/type-augmentation/) for a runnable demo combining all registry interfaces.
 - [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) for custom part rendering with the registry.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

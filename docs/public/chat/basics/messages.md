@@ -10,13 +10,14 @@ components: ChatMessageList, ChatMessageGroup
 
 Understand the ChatMessage data model and how messages render in a scrollable, grouped list.
 
+
+
 ## The ChatMessage data model
 
-Every message in the chat system is represented by the `ChatMessage` interface.
-Import it from the headless layer:
+Every message in the chat system is represented by the `ChatMessage` interface:
 
 ```tsx
-import type { ChatMessage } from '@mui/x-chat/headless';
+import type { ChatMessage } from '@mui/x-chat';
 ```
 
 A `ChatMessage` has the following shape:
@@ -97,18 +98,14 @@ ChatMessageList                     ← scrollable container
 ## How messages render
 
 The `ChatMessageList` component is the scrollable region that renders conversation history.
-It wraps the `@mui/x-chat/headless` `MessageListRoot` primitive with Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
+Scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
 
 ### Message groups
 
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
 Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-Grouping is controlled by the `groupKey` prop — a function that maps each message to a string or number.
-Messages that resolve to the same key are placed in the same visual group.
-
-By default, all messages from the same author are grouped regardless of time (falling back to role when no explicit author ID exists).
-To split groups after a time gap, use the built-in `createTimeWindowGroupKey` helper.
+The grouping window defaults to 5 minutes (300,000 ms). Customize it through `slotProps`.
 The demo below sets the window to 1 minute (60,000 ms) — notice how messages more than 1 minute apart start a new group with a fresh avatar:
 
 ```tsx
@@ -196,6 +193,7 @@ export default function MessageGrouping() {
     />
   );
 }
+
 ```
 
 ### Date dividers
@@ -282,6 +280,7 @@ export default function DateDividerFormat() {
     />
   );
 }
+
 ```
 
 ### Auto-scrolling
@@ -338,6 +337,7 @@ export default function AutoScrollConfig() {
     </div>
   );
 }
+
 ```
 
 ## Standalone usage
@@ -356,7 +356,7 @@ import {
   ChatMessageAvatar,
   ChatMessageContent,
   ChatMessageGroup,
-  ChatMessageMeta,
+  ChatMessageInlineMeta,
   ChatConversation,
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
@@ -376,8 +376,7 @@ function CustomLayout() {
       <ChatMessageGroup key={id} messageId={id}>
         <ChatMessage messageId={id}>
           <ChatMessageAvatar />
-          <ChatMessageContent />
-          <ChatMessageMeta />
+          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
       </ChatMessageGroup>
     ),
@@ -420,15 +419,10 @@ export default function StandaloneMessageList() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## API
 
 - [`ChatMessageList`](/x/api/chat/chat-message-list/)
 - [`ChatMessageGroup`](/x/api/chat/chat-message-group/)
-
-## Next steps
-
-- [ChatBox](/x/react-chat/basics/chatbox/) — the all-in-one component
-- [Composer](/x/react-chat/basics/composer/) — the text input area
-- [Variants & Density](/x/react-chat/basics/variants-and-density/) — compact variant and density levels
