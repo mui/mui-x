@@ -1,31 +1,13 @@
 {
   "name": "GridPaginationApi",
   "description": "The pagination API interface that is available in the grid `apiRef`.",
-  "properties": [
-    {
-      "name": "setPage",
-      "description": "Sets the displayed page to the value given by <code>page</code>.",
-      "type": "(page: number) => void"
-    },
-    {
-      "name": "setPageSize",
-      "description": "Sets the number of displayed rows to the value given by <code>pageSize</code>.",
-      "type": "(pageSize: number) => void"
-    },
-    {
-      "name": "setPaginationMeta",
-      "description": "Sets the <code>paginationMeta</code> to a new value.",
-      "type": "(paginationMeta: GridPaginationMeta) => void"
-    },
-    {
-      "name": "setPaginationModel",
-      "description": "Sets the <code>paginationModel</code> to a new value.",
-      "type": "(model: GridPaginationModel) => void"
-    },
-    {
-      "name": "setRowCount",
-      "description": "Sets the <code>rowCount</code> to a new value.",
-      "type": "(rowCount: number) => void"
+  "properties": {
+    "setPage": { "type": { "description": "(page: number) =&gt; void" } },
+    "setPageSize": { "type": { "description": "(pageSize: number) =&gt; void" } },
+    "setPaginationModel": { "type": { "description": "(model: GridPaginationModel) =&gt; void" } },
+    "setRowCount": { "type": { "description": "(rowCount: number) =&gt; void" } },
+    "setPaginationMeta": {
+      "type": { "description": "(paginationMeta: GridPaginationMeta) =&gt; void" }
     }
-  ]
+  }
 }

@@ -52,9 +52,9 @@
   ],
   "classes": [
     {
-      "key": "contentWrapper",
-      "className": "MuiPickersLayout-contentWrapper",
-      "description": "Styles applied to the contentWrapper element (which contains the tabs and the view itself).",
+      "key": "root",
+      "className": "MuiPickersLayout-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
@@ -64,9 +64,33 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiPickersLayout-root",
-      "description": "Styles applied to the root element.",
+      "key": "contentWrapper",
+      "className": "MuiPickersLayout-contentWrapper",
+      "description": "Styles applied to the contentWrapper element (which contains the tabs and the view itself).",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbar",
+      "className": "MuiPickersLayout-toolbar",
+      "description": "Styles applied to the toolbar.",
+      "isGlobal": false
+    },
+    {
+      "key": "actionBar",
+      "className": "MuiPickersLayout-actionBar",
+      "description": "Styles applied to the action bar.",
+      "isGlobal": false
+    },
+    {
+      "key": "tabs",
+      "className": "MuiPickersLayout-tabs",
+      "description": "Styles applied to the tabs.",
+      "isGlobal": false
+    },
+    {
+      "key": "shortcuts",
+      "className": "MuiPickersLayout-shortcuts",
+      "description": "Styles applied to the shortcuts container.",
       "isGlobal": false
     }
   ],

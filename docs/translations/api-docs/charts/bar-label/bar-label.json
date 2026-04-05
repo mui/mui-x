@@ -1,43 +1,24 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "dataIndex": { "description": "" },
     "height": { "description": "Height of the bar this label belongs to." },
-    "hidden": { "description": "If true, the bar label is hidden." },
-    "placement": {
-      "description": "The placement of the bar label. It controls whether the label is rendered in the center or outside the bar."
-    },
+    "isFaded": { "description": "" },
+    "isHighlighted": { "description": "" },
+    "layout": { "description": "" },
+    "seriesId": { "description": "" },
+    "skipAnimation": { "description": "" },
     "width": { "description": "Width of the bar this label belongs to." },
     "x": { "description": "Position in the x-axis of the bar this label belongs to." },
     "xOrigin": { "description": "The x-coordinate of the stack this bar label belongs to." },
     "y": { "description": "Position in the y-axis of the bar this label belongs to." },
-    "yOrigin": { "description": "The y-coordinate of the stack this bar label belongs to." }
-  },
-  "classDescriptions": {
-    "element": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "an individual bar element"
-    },
-    "label": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "an individual bar label"
-    },
-    "labelAnimate": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "a bar label",
-      "conditions": "it is animated"
-    },
-    "root": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the bar plot element"
-    },
-    "series": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the group surrounding a series&#39; bar elements"
-    },
-    "seriesLabels": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the group surrounding a series&#39; labels"
+    "yOrigin": { "description": "The y-coordinate of the stack this bar label belongs to." },
+    "classes": { "description": "" },
+    "hidden": { "description": "If true, the bar label is hidden." },
+    "placement": {
+      "description": "The placement of the bar label.\nIt controls whether the label is rendered in the center or outside the bar."
     }
   },
-  "slotDescriptions": { "barLabel": "The component that renders the bar label." }
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

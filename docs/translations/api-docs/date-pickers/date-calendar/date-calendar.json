@@ -1,8 +1,8 @@
 {
-  "componentDescription": "",
+  "componentDescription": "Demos:\n\n- [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)\n- [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)\n- [Validation](https://mui.com/x/react-date-pickers/validation/)\n\nAPI:\n\n- [DateCalendar API](https://mui.com/x/api/date-pickers/date-calendar/)",
   "propDescriptions": {
     "autoFocus": {
-      "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered."
+      "description": "If <code>true</code>, the main element is focused during the first mount.\nThis main element is:\n- the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view).\n- the <code>input</code> element if there is a field rendered."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "dayOfWeekFormatter": {
@@ -11,21 +11,20 @@
         "date": {
           "name": "date",
           "description": "The date of the day of week provided by the adapter."
-        },
-        "string": { "name": "string", "description": "The name to display." }
+        }
       }
     },
     "defaultValue": {
-      "description": "The default selected value. Used when the component is not controlled."
+      "description": "The default selected value.\nUsed when the component is not controlled."
     },
     "disabled": {
-      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
+      "description": "If <code>true</code>, the component is disabled.\nWhen disabled, the value cannot be changed and no interaction is possible."
     },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
     "disableHighlightToday": {
-      "description": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle."
+      "description": "If <code>true</code>, today's date is rendering without highlighting with circle."
     },
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
@@ -34,11 +33,11 @@
       "description": "If <code>true</code>, the week number will be display in the calendar."
     },
     "fixedWeekNumber": {
-      "description": "The day view will show as many weeks as needed after the end of the current month to match this value. Put it to 6 to have a fixed number of weeks in Gregorian calendars"
+      "description": "The day view will show as many weeks as needed after the end of the current month to match this value.\nPut it to 6 to have a fixed number of weeks in Gregorian calendars"
     },
     "focusedView": { "description": "Controlled focused view." },
     "loading": {
-      "description": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar. Can be used to preload information and show it in calendar."
+      "description": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar.\nCan be used to preload information and show it in calendar."
     },
     "maxDate": { "description": "Maximal selectable date." },
     "minDate": { "description": "Minimal selectable date." },
@@ -46,12 +45,7 @@
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
-        "value": {
-          "name": "value",
-          "description": "The new value.",
-          "argType": "TValue",
-          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
-        },
+        "value": { "name": "value", "description": "The new value." },
         "selectionState": {
           "name": "selectionState",
           "description": "Indicates if the date selection is complete."
@@ -65,12 +59,7 @@
     "onFocusedViewChange": {
       "description": "Callback fired on focused view change.",
       "typeDescriptions": {
-        "view": {
-          "name": "view",
-          "description": "The new view to focus or not.",
-          "argType": "TView",
-          "argTypeDescription": "Type of the view. It will vary based on the Picker type and the <code>views</code> it uses."
-        },
+        "view": { "name": "view", "description": "The new view to focus or not." },
         "hasFocus": {
           "name": "hasFocus",
           "description": "<code>true</code> if the view should be focused."
@@ -83,70 +72,39 @@
     },
     "onViewChange": {
       "description": "Callback fired on view change.",
-      "typeDescriptions": {
-        "view": {
-          "name": "view",
-          "description": "The new view.",
-          "argType": "TView",
-          "argTypeDescription": "Type of the view. It will vary based on the Picker type and the <code>views</code> it uses."
-        }
-      }
+      "typeDescriptions": { "view": { "name": "view", "description": "The new view." } }
     },
     "onYearChange": {
       "description": "Callback fired on year change.",
       "typeDescriptions": { "year": { "name": "year", "description": "The new year." } }
     },
     "openTo": {
-      "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."
+      "description": "The default visible view.\nUsed when the component view is not controlled.\nMust be a valid option from <code>views</code> list."
     },
     "readOnly": {
-      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
+      "description": "If <code>true</code>, the component is read-only.\nWhen read-only, the value cannot be changed but the user can interact with the interface."
     },
     "reduceAnimations": { "description": "If <code>true</code>, disable heavy animations." },
     "referenceDate": {
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
     },
     "renderLoading": {
-      "description": "Component displaying when passed <code>loading</code> true.",
-      "typeDescriptions": {
-        "React.ReactNode": {
-          "name": "React.ReactNode",
-          "description": "The node to render when loading."
-        }
-      }
+      "description": "Component displaying when passed <code>loading</code> true."
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
-      "typeDescriptions": {
-        "day": { "name": "day", "description": "The date to test." },
-        "boolean": {
-          "name": "boolean",
-          "description": "If <code>true</code> the date will be disabled."
-        }
-      }
+      "description": "Disable specific date.<br><br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
+      "typeDescriptions": { "day": { "name": "day", "description": "The date to test." } }
     },
     "shouldDisableMonth": {
       "description": "Disable specific month.",
-      "typeDescriptions": {
-        "month": { "name": "month", "description": "The month to test." },
-        "boolean": {
-          "name": "boolean",
-          "description": "If <code>true</code>, the month will be disabled."
-        }
-      }
+      "typeDescriptions": { "month": { "name": "month", "description": "The month to test." } }
     },
     "shouldDisableYear": {
       "description": "Disable specific year.",
-      "typeDescriptions": {
-        "year": { "name": "year", "description": "The year to test." },
-        "boolean": {
-          "name": "boolean",
-          "description": "If <code>true</code>, the year will be disabled."
-        }
-      }
+      "typeDescriptions": { "year": { "name": "year", "description": "The year to test." } }
     },
     "showDaysOutsideCurrentMonth": {
-      "description": "If <code>true</code>, days outside the current month are rendered:<br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
+      "description": "If <code>true</code>, days outside the current month are rendered:<br><br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br><br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br><br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
@@ -154,36 +112,36 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
-      "seeMoreText": "See the {{link}} for more details."
+      "description": "Choose which timezone to use for the value.\nExample: \"default\", \"system\", \"UTC\", \"America/New_York\".\nIf you pass values from other timezones to some props, they will be converted to this timezone before being used.",
+      "seeMoreText": "See {{link}} for more details."
     },
-    "value": { "description": "The selected value. Used when the component is controlled." },
+    "value": { "description": "The selected value.\nUsed when the component is controlled." },
     "view": {
-      "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
+      "description": "The visible view.\nUsed when the component view is controlled.\nMust be a valid option from <code>views</code> list."
     },
     "views": { "description": "Available views." },
     "yearsOrder": {
-      "description": "Years are displayed in ascending (chronological) order by default. If <code>desc</code>, years are displayed in descending order."
+      "description": "Years are displayed in ascending (chronological) order by default.\nIf <code>desc</code>, years are displayed in descending order."
     },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
   "classDescriptions": {
-    "root": { "description": "Styles applied to the root element." },
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
     "viewTransitionContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the transition group element"
     }
   },
   "slotDescriptions": {
-    "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
-    "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+    "calendarHeader": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
+    "day": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
-    "monthButton": "Button displayed to render a single month in the <code>month</code> view.",
+    "monthButton": "Button displayed to render a single month in the `month` view.",
     "nextIconButton": "Button allowing to switch to the right view.",
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
-    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is <code>year</code>.",
-    "yearButton": "Button displayed to render a single year in the <code>year</code> view."
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is `year`.",
+    "yearButton": "Button displayed to render a single year in the `year` view."
   }
 }

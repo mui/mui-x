@@ -1,13 +1,5 @@
 {
   "props": {
-    "contentEditable": { "type": { "name": "bool" }, "required": true },
-    "elements": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ after: object, before: object, container: object, content: object }&gt;"
-      },
-      "required": true
-    },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } }
@@ -28,7 +20,26 @@
     },
     { "name": "sectionSeparator", "description": "", "class": null }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiPickersSectionList-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "section",
+      "className": "MuiPickersSectionList-section",
+      "description": "Styles applied to the container of a section.",
+      "isGlobal": false
+    },
+    {
+      "key": "sectionContent",
+      "className": "MuiPickersSectionList-sectionContent",
+      "description": "Styles applied to the content of a section.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiPickersSectionList",
   "filename": "/packages/x-date-pickers/src/PickersSectionList/PickersSectionList.tsx",
   "inheritance": null,

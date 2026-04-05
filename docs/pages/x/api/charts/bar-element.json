@@ -1,5 +1,15 @@
 {
   "props": {
+    "dataIndex": { "type": { "name": "number" }, "required": true },
+    "layout": {
+      "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
+      "required": true
+    },
+    "seriesId": { "type": { "name": "string" }, "required": true },
+    "skipAnimation": { "type": { "name": "bool" }, "required": true },
+    "xOrigin": { "type": { "name": "number" }, "required": true },
+    "yOrigin": { "type": { "name": "number" }, "required": true },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

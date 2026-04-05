@@ -1,6 +1,6 @@
 {
   "props": {
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } }
   },
   "name": "Toolbar",
   "imports": [
@@ -9,12 +9,11 @@
     "import { Toolbar } from '@mui/x-charts-pro';",
     "import { Toolbar } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
-  "muiName": "MuiToolbar",
+  "muiName": "MuiChartsToolbar",
   "filename": "/packages/x-charts/src/Toolbar/Toolbar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li>\n<li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar component</a></li></ul>",
   "cssComponent": false
 }

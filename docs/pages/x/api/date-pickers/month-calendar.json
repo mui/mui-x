@@ -1,11 +1,15 @@
 {
   "props": {
+    "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "currentMonth": { "type": { "name": "object" } },
     "defaultValue": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
+    "gridLabelId": { "type": { "name": "string" } },
+    "hasFocus": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
     "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "monthsPerRow": {
@@ -18,6 +22,14 @@
         "type": "function(value: PickerValidDate) => void",
         "describedArgs": ["value"]
       }
+    },
+    "onFocusedViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(hasFocus: boolean) => void", "describedArgs": [] }
+    },
+    "onMonthFocus": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(month: number) => void", "describedArgs": [] }
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
@@ -71,6 +83,12 @@
   ],
   "classes": [
     {
+      "key": "root",
+      "className": "MuiMonthCalendar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
       "key": "button",
       "className": "MuiMonthCalendar-button",
       "description": "Styles applied to the button element that represents a single month",
@@ -83,22 +101,13 @@
       "isGlobal": true
     },
     {
-      "key": "root",
-      "className": "MuiMonthCalendar-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
       "key": "selected",
       "className": "Mui-selected",
       "description": "Styles applied to a selected button element.",
       "isGlobal": true
     }
   ],
-  "spread": true,
-  "themeDefaultProps": true,
   "muiName": "MuiMonthCalendar",
-  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",

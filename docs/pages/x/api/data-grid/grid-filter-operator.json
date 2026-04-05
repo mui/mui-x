@@ -1,24 +1,27 @@
 {
   "name": "GridFilterOperator",
   "imports": [
-    "import { GridFilterOperator } from '@mui/x-data-grid-premium'",
-    "import { GridFilterOperator } from '@mui/x-data-grid-pro'",
-    "import { GridFilterOperator } from '@mui/x-data-grid'"
+    "import { GridFilterOperator } from '@mui/x-data-grid';",
+    "import { GridFilterOperator } from '@mui/x-data-grid-pro';",
+    "import { GridFilterOperator } from '@mui/x-data-grid-premium';"
   ],
-  "demos": "<ul><li><a href=\"/x/react-data-grid/filtering/customization/#create-a-custom-operator\">Custom filter operator</a></li></ul>",
+  "demos": "  - [Custom filter operator](/x/react-data-grid/filtering/customization/#create-a-custom-operator)",
   "properties": {
     "getApplyFilterFn": {
       "type": { "description": "GetApplyFilterFn&lt;R, V, F&gt;" },
       "required": true
     },
-    "value": { "type": { "description": "GridFilterItem['operator']" }, "required": true },
-    "getValueAsString": {
-      "type": { "description": "(value: GridFilterItem['value']) =&gt; string" }
+    "value": {
+      "type": {
+        "description": "(string & {}) | \"endsWith\" | \"startsWith\" | \"is\" | \"contains\" | \"doesNotContain\" | \"equals\" | \"doesNotEqual\" | \"=\" | \"!=\" | \"&gt;\" | \"&gt;=\" | \"&lt;\" | \"&lt;=\" | \"not\" | \"after\" | \"onOrAfter\" | \"before\" | \"onOrBefore\" | \"isEmpty\" | \"isNotEmpty\" | \"isAnyOf\""
+      },
+      "required": true
     },
-    "headerLabel": { "type": { "description": "string" } },
-    "InputComponent": { "type": { "description": "React.JSXElementConstructor&lt;I&gt;" } },
-    "InputComponentProps": { "type": { "description": "Partial&lt;I&gt;" } },
-    "label": { "type": { "description": "string" } },
-    "requiresFilterValue": { "type": { "description": "boolean" }, "default": "true" }
+    "getValueAsString": { "type": { "description": "((value: any) =&gt; string) | undefined" } },
+    "headerLabel": { "type": { "description": "string | undefined" } },
+    "InputComponent": { "type": { "description": "JSXElementConstructor&lt;I&gt; | undefined" } },
+    "InputComponentProps": { "type": { "description": "Partial&lt;I&gt; | undefined" } },
+    "label": { "type": { "description": "string | undefined" } },
+    "requiresFilterValue": { "type": { "description": "boolean | undefined" }, "default": "true" }
   }
 }

@@ -7,11 +7,12 @@
     }
   },
   "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "week": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the week element" },
     "daySkeleton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the day element"
-    },
-    "root": { "description": "Styles applied to the root element." },
-    "week": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the week element" }
-  }
+    }
+  },
+  "slotDescriptions": {}
 }

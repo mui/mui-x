@@ -1,8 +1,28 @@
 {
-  "componentDescription": "A component that takes user input.\nIt renders the `baseTextField` slot.",
+  "componentDescription": "",
   "propDescriptions": {
+    "autoComplete": { "description": "" },
+    "autoFocus": { "description": "" },
     "className": { "description": "Override or extend the styles applied to the component." },
-    "render": { "description": "A function to customize rendering of the component." }
+    "color": { "description": "" },
+    "disabled": { "description": "" },
+    "error": { "description": "" },
+    "fullWidth": { "description": "" },
+    "helperText": { "description": "" },
+    "id": { "description": "" },
+    "inputRef": { "description": "" },
+    "label": { "description": "" },
+    "multiline": { "description": "" },
+    "placeholder": { "description": "" },
+    "render": { "description": "A function to customize rendering of the component." },
+    "role": { "description": "" },
+    "size": { "description": "" },
+    "slotProps": { "description": "" },
+    "style": { "description": "" },
+    "tabIndex": { "description": "" },
+    "type": { "description": "" },
+    "value": { "description": "" }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

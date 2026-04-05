@@ -1,11 +1,11 @@
 {
   "name": "GridRowClassNameParams",
   "imports": [
-    "import { GridRowClassNameParams } from '@mui/x-data-grid-premium'",
-    "import { GridRowClassNameParams } from '@mui/x-data-grid-pro'",
-    "import { GridRowClassNameParams } from '@mui/x-data-grid'"
+    "import { GridRowClassNameParams } from '@mui/x-data-grid';",
+    "import { GridRowClassNameParams } from '@mui/x-data-grid-pro';",
+    "import { GridRowClassNameParams } from '@mui/x-data-grid-premium';"
   ],
-  "demos": "<ul><li><a href=\"/x/react-data-grid/style/#styling-rows\">Styling rows</a></li></ul>",
+  "demos": "  - [Styling rows](/x/react-data-grid/style/#styling-rows)",
   "properties": {
     "columns": { "type": { "description": "GridColDef[]" }, "required": true },
     "id": { "type": { "description": "GridRowId" }, "required": true },

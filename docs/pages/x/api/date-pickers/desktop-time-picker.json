@@ -12,9 +12,10 @@
       "type": { "name": "bool" },
       "default": "false",
       "deprecated": true,
-      "deprecationInfo": "Use the <a href=\"https://mui.com/x/react-date-pickers/fields/\">field component</a> instead."
+      "deprecationInfo": "Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead."
     },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
+    "enableAccessibleFieldDOMStructure": { "type": { "name": "any" }, "default": "true" },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
@@ -42,7 +43,10 @@
         "describedArgs": ["value", "context"]
       }
     },
-    "onClose": { "type": { "name": "func" } },
+    "onClose": {
+      "type": { "name": "func" },
+      "signature": { "type": "function() => void", "describedArgs": [] }
+    },
     "onError": {
       "type": { "name": "func" },
       "signature": {
@@ -50,7 +54,10 @@
         "describedArgs": ["error", "value"]
       }
     },
-    "onOpen": { "type": { "name": "func" } },
+    "onOpen": {
+      "type": { "name": "func" },
+      "signature": { "type": "function() => void", "describedArgs": [] }
+    },
     "onSelectedSectionsChange": {
       "type": { "name": "func" },
       "signature": {
@@ -66,11 +73,11 @@
     "openTo": {
       "type": {
         "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'meridiem'"
       }
     },
     "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
+      "type": { "name": "enum", "description": "'portrait'<br>&#124;&nbsp;'landscape'" }
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
@@ -84,7 +91,7 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
+        "description": "number<br>&#124;&nbsp;'all'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'empty'"
       }
     },
     "shouldDisableTime": {
@@ -101,13 +108,6 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
     },
     "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
     "timeSteps": {
@@ -129,13 +129,13 @@
     "view": {
       "type": {
         "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'meridiem'"
       }
     },
     "viewRenderers": {
       "type": {
         "name": "shape",
-        "description": "{ hours?: func, meridiem?: func, minutes?: func, seconds?: func }"
+        "description": "{ hours?: func, minutes?: func, seconds?: func, meridiem?: func }"
       }
     },
     "views": {
@@ -277,10 +277,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
-  "themeDefaultProps": false,
   "muiName": "MuiDesktopTimePicker",
-  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DesktopTimePicker/DesktopTimePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",

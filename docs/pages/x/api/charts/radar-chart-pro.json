@@ -1,17 +1,10 @@
 {
   "props": {
-    "radar": {
-      "type": {
-        "name": "shape",
-        "description": "{ labelFormatter?: func, labelGap?: number, max?: number, metrics: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;{ max?: number, min?: number, name: string }&gt;, startAngle?: number }"
-      },
-      "required": true
-    },
+    "radar": { "type": { "name": "object" }, "required": true },
     "series": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "className": { "type": { "name": "string" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
@@ -23,38 +16,32 @@
     "experimentalFeatures": { "type": { "name": "object" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
-      }
+      "type": { "name": "arrayOf", "description": "Array&lt;object<br>&#124;&nbsp;object&gt;" }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlight": {
       "type": {
         "name": "enum",
-        "description": "'axis'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'series'"
+        "description": "'none'<br>&#124;&nbsp;'series'<br>&#124;&nbsp;'axis'"
       },
       "default": "'axis'"
     },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ type: 'radar', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ seriesId: string, dataIndex?: number }"
       }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
-      }
+      "type": { "name": "arrayOf", "description": "Array&lt;object<br>&#124;&nbsp;object&gt;" }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
       }
     },
     "onAreaClick": {
@@ -100,7 +87,7 @@
       }
     },
     "shape": {
-      "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
+      "type": { "name": "enum", "description": "'sharp'<br>&#124;&nbsp;'circular'" },
       "default": "'sharp'"
     },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
@@ -124,7 +111,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ type: 'radar', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ seriesId: string, dataIndex?: number }"
       }
     },
     "width": { "type": { "name": "number" } }
@@ -132,7 +119,8 @@
   "name": "RadarChartPro",
   "imports": [
     "import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';",
-    "import { RadarChartPro } from '@mui/x-charts-pro';"
+    "import { RadarChartPro } from '@mui/x-charts-pro';",
+    "import { RadarChartPro } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },
@@ -195,6 +183,6 @@
   "muiName": "MuiRadarChartPro",
   "filename": "/packages/x-charts-pro/src/RadarChartPro/RadarChartPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
   "cssComponent": false
 }

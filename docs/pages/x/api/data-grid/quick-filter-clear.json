@@ -1,7 +1,30 @@
 {
   "props": {
-    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "className": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;func" } },
+    "color": {
+      "type": {
+        "name": "enum",
+        "description": "'inherit'<br>&#124;&nbsp;'default'<br>&#124;&nbsp;'primary'"
+      }
+    },
+    "disabled": { "type": { "name": "bool" } },
+    "edge": {
+      "type": { "name": "union", "description": "bool<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'start'" }
+    },
+    "id": { "type": { "name": "string" } },
+    "label": { "type": { "name": "string" } },
+    "render": { "type": { "name": "element" } },
+    "role": { "type": { "name": "string" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'small'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'large'"
+      }
+    },
+    "style": { "type": { "name": "object" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "title": { "type": { "name": "string" } },
+    "touchRippleRef": { "type": { "name": "any" } }
   },
   "name": "QuickFilterClear",
   "imports": [
@@ -10,9 +33,9 @@
     "import { QuickFilterClear } from '@mui/x-data-grid-pro';",
     "import { QuickFilterClear } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiQuickFilterClear",
-  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilterClear.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/components/quick-filter\">Data Grid - Quick Filter component</a></li></ul>",

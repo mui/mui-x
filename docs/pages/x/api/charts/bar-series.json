@@ -1,40 +1,52 @@
 {
   "name": "BarSeries",
   "imports": [
-    "import { BarSeries } from '@mui/x-charts-premium'",
-    "import { BarSeries } from '@mui/x-charts-pro'",
-    "import { BarSeries } from '@mui/x-charts'"
+    "import { BarSeries } from '@mui/x-charts';",
+    "import { BarSeries } from '@mui/x-charts-pro';",
+    "import { BarSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "type": { "type": { "description": "'bar'" }, "required": true },
     "barLabel": {
       "type": {
-        "description": "'value' | ((item: BarItem, context: BarLabelContext) =&gt; string | null | undefined)"
+        "description": "\"value\" | ((item: BarItem, context: BarLabelContext) =&gt; string | null | undefined) | undefined"
       }
     },
     "barLabelPlacement": {
-      "type": { "description": "'center' | 'outside'" },
+      "type": { "description": "\"center\" | \"outside\" | undefined" },
       "default": "'center'"
     },
-    "color": { "type": { "description": "string" } },
+    "color": { "type": { "description": "string | undefined" } },
     "colorGetter": {
-      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
+      "type": {
+        "description": "((data: ColorCallbackValue&lt;number | null&gt;) =&gt; string) | undefined"
+      }
     },
-    "data": { "type": { "description": "ReadonlyArray&lt;BarValueType | null&gt;" } },
-    "dataKey": { "type": { "description": "string" } },
-    "highlightScope": { "type": { "description": "HighlightScope&lt;SeriesType&gt;" } },
-    "id": { "type": { "description": "SeriesId" } },
+    "data": { "type": { "description": "readonly (number | null)[] | undefined" } },
+    "dataKey": { "type": { "description": "string | undefined" } },
+    "highlightScope": { "type": { "description": "CommonHighlightScope | undefined" } },
+    "id": { "type": { "description": "string | undefined" } },
     "label": {
-      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
+      "type": {
+        "description": "string | ((location: \"tooltip\" | \"legend\") =&gt; string) | undefined"
+      }
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
-    "layout": { "type": { "description": "'horizontal' | 'vertical'" }, "default": "'vertical'" },
-    "minBarSize": { "type": { "description": "number" }, "default": "0px" },
-    "stack": { "type": { "description": "string" } },
-    "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },
-    "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
-    "xAxisId": { "type": { "description": "AxisId" } },
-    "yAxisId": { "type": { "description": "AxisId" } }
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType | undefined" } },
+    "layout": {
+      "type": { "description": "\"horizontal\" | \"vertical\" | undefined" },
+      "default": "'vertical'"
+    },
+    "minBarSize": { "type": { "description": "number | undefined" }, "default": "0px" },
+    "stack": { "type": { "description": "string | undefined" } },
+    "stackOffset": {
+      "type": { "description": "StackOffsetType | undefined" },
+      "default": "'diverging'"
+    },
+    "stackOrder": { "type": { "description": "StackOrderType | undefined" }, "default": "'none'" },
+    "type": { "type": { "description": "\"bar\" | undefined" } },
+    "valueFormatter": {
+      "type": { "description": "SeriesValueFormatter&lt;number | null&gt; | undefined" }
+    },
+    "xAxisId": { "type": { "description": "AxisId | undefined" } },
+    "yAxisId": { "type": { "description": "AxisId | undefined" } }
   }
 }

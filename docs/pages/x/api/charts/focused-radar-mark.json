@@ -7,6 +7,7 @@
     "import { FocusedRadarMark } from '@mui/x-charts-pro';",
     "import { FocusedRadarMark } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiFocusedRadarMark",
   "filename": "/packages/x-charts/src/RadarChart/FocusedRadarMark.tsx",

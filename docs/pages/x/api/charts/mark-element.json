@@ -1,17 +1,19 @@
 {
   "props": {
     "dataIndex": { "type": { "name": "number" }, "required": true },
+    "seriesId": { "type": { "name": "string" }, "required": true },
     "shape": {
       "type": {
         "name": "enum",
-        "description": "'circle'<br>&#124;&nbsp;'cross'<br>&#124;&nbsp;'diamond'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'star'<br>&#124;&nbsp;'triangle'<br>&#124;&nbsp;'wye'"
+        "description": "'circle'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'cross'<br>&#124;&nbsp;'diamond'<br>&#124;&nbsp;'star'<br>&#124;&nbsp;'triangle'<br>&#124;&nbsp;'wye'"
       },
       "required": true
     },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "false" },
     "isFaded": { "type": { "name": "bool" }, "default": "false" },
     "isHighlighted": { "type": { "name": "bool" }, "default": "false" },
-    "skipAnimation": { "type": { "name": "bool" } }
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "MarkElement",
   "imports": [
@@ -20,9 +22,8 @@
     "import { MarkElement } from '@mui/x-charts-pro';",
     "import { MarkElement } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiMarkElement",
   "filename": "/packages/x-charts/src/LineChart/MarkElement.tsx",
   "inheritance": null,

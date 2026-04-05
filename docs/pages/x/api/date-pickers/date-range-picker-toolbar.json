@@ -2,13 +2,7 @@
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
+    "titleId": { "type": { "name": "string" } },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
@@ -17,17 +11,18 @@
     "import { DateRangePickerToolbar } from '@mui/x-date-pickers-pro/DateRangePicker';",
     "import { DateRangePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
-    {
-      "key": "container",
-      "className": "MuiDateRangePickerToolbar-container",
-      "description": "Styles applied to the container element.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiDateRangePickerToolbar-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "container",
+      "className": "MuiDateRangePickerToolbar-container",
+      "description": "Styles applied to the container element.",
       "isGlobal": false
     }
   ],

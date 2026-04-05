@@ -1,21 +1,17 @@
 {
   "props": {
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" }, "required": true },
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, isItemExpanded?: func, setEditedItem?: func, setIsItemDisabled?: func, setItemExpansion?: func, setItemSelection?: func, updateItemChildren?: func, updateItemLabel?: func } }"
+        "description": "{ current: { updateItemChildren?: func, setEditedItem?: func, updateItemLabel?: func, setItemSelection?: func, isItemExpanded?: func, setItemExpansion?: func, focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, setIsItemDisabled?: func } }"
       }
     },
     "canMoveItemToNewPosition": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => boolean",
-        "describedArgs": [
-          "parameters",
-          "parameters.itemId",
-          "parameters.oldPosition",
-          "parameters.newPosition"
-        ],
+        "type": "function(parameters: @param {TreeViewItemId} parameters.itemId The id of the item that is being moved to a new position.\n   * @param {TreeViewItemReorderPosition} parameters.oldPosition The old position of the item.\n   * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.\n   * ) => boolean",
+        "describedArgs": ["parameters"],
         "returned": "boolean"
       }
     },
@@ -25,7 +21,7 @@
       "type": { "name": "shape", "description": "{ getChildrenCount: func, getTreeItems: func }" }
     },
     "dataSourceCache": {
-      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+      "type": { "name": "shape", "description": "{ set: func, get: func, clear: func }" }
     },
     "defaultExpandedItems": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
@@ -48,18 +44,18 @@
       "type": { "name": "func" },
       "default": "(item) => item.children",
       "signature": {
-        "type": "function(item: R) => Array<R>",
+        "type": "function(item: R) => Array<R> | undefined",
         "describedArgs": ["item"],
-        "returned": "Array<R>"
+        "returned": "Array<R> | undefined"
       }
     },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",
       "signature": {
-        "type": "function(item: R) => TreeViewItemId",
+        "type": "function(item: R) => string",
         "describedArgs": ["item"],
-        "returned": "TreeViewItemId"
+        "returned": "string"
       }
     },
     "getItemLabel": {
@@ -81,7 +77,7 @@
       }
     },
     "isItemEditable": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" },
+      "type": { "name": "union", "description": "bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;func" },
       "default": "() => false"
     },
     "isItemReorderable": {
@@ -102,12 +98,12 @@
       }
     },
     "itemChildrenIndentation": {
-      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
       "default": "12px"
     },
     "itemHeight": { "type": { "name": "number" }, "default": "32" },
     "itemsReordering": { "type": { "name": "bool" }, "default": "false" },
-    "multiSelect": { "type": { "name": "bool" }, "default": "false" },
+    "multiSelect": { "type": { "name": "any" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
@@ -146,13 +142,8 @@
     "onItemPositionChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => void",
-        "describedArgs": [
-          "parameters",
-          "parameters.itemId",
-          "parameters.oldPosition",
-          "parameters.newPosition"
-        ]
+        "type": "function(parameters: @param {TreeViewItemId} parameters.itemId The id of the item moved.\n   * @param {TreeViewItemReorderPosition} parameters.oldPosition The old position of the item.\n   * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.\n   ) => void",
+        "describedArgs": ["parameters"]
       }
     },
     "onItemSelectionToggle": {
@@ -165,13 +156,8 @@
     "onItemsLazyLoaded": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(parameters: object, parameters.items: Array<R>, parameters.parentId: TreeViewItemId | null, parameters.isCacheHit: boolean) => void",
-        "describedArgs": [
-          "parameters",
-          "parameters.items",
-          "parameters.parentId",
-          "parameters.isCacheHit"
-        ]
+        "type": "function(parameters: @param {Array<R>} parameters.items The items that were loaded.\n   * @param {TreeViewItemId | null} parameters.parentId The id of the parent item whose children were loaded. `null` if the root items were loaded.\n   * @param {boolean} parameters.isCacheHit `true` if the items were loaded from the cache, `false` if they were fetched from the data source.\n   ) => void",
+        "describedArgs": ["parameters"]
       }
     },
     "onSelectedItemsChange": {
@@ -207,19 +193,8 @@
   ],
   "slots": [
     {
-      "name": "root",
-      "description": "Element rendered at the root.",
-      "default": "RichTreeViewProRoot",
-      "class": "MuiRichTreeViewPro-root"
-    },
-    {
       "name": "collapseIcon",
       "description": "The default icon used to collapse the item.",
-      "class": null
-    },
-    {
-      "name": "expandIcon",
-      "description": "The default icon used to expand the item.",
       "class": null
     },
     {
@@ -228,35 +203,40 @@
       "class": null
     },
     {
+      "name": "expandIcon",
+      "description": "The default icon used to expand the item.",
+      "class": null
+    },
+    {
       "name": "item",
       "description": "Custom component to render a Tree Item.",
       "default": "TreeItem.",
       "class": "MuiRichTreeViewPro-item"
+    },
+    {
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "RichTreeViewProRoot",
+      "class": "MuiRichTreeViewPro-root"
     }
   ],
   "classes": [
     {
-      "key": "itemCheckbox",
-      "className": "MuiRichTreeViewPro-itemCheckbox",
-      "description": "Styles applied to the item's checkbox element.",
+      "key": "root",
+      "className": "MuiRichTreeViewPro-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "item",
+      "className": "MuiRichTreeViewPro-item",
+      "description": "Styles applied to the item's root element.",
       "isGlobal": false
     },
     {
       "key": "itemContent",
       "className": "MuiRichTreeViewPro-itemContent",
       "description": "Styles applied to the item's content element.",
-      "isGlobal": false
-    },
-    {
-      "key": "itemDragAndDropOverlay",
-      "className": "MuiRichTreeViewPro-itemDragAndDropOverlay",
-      "description": "Styles applied to the item's drag and drop overlay element.",
-      "isGlobal": false
-    },
-    {
-      "key": "itemErrorIcon",
-      "className": "MuiRichTreeViewPro-itemErrorIcon",
-      "description": "Styles applied to the item's error icon element",
       "isGlobal": false
     },
     {
@@ -284,6 +264,24 @@
       "isGlobal": false
     },
     {
+      "key": "itemCheckbox",
+      "className": "MuiRichTreeViewPro-itemCheckbox",
+      "description": "Styles applied to the item's checkbox element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemDragAndDropOverlay",
+      "className": "MuiRichTreeViewPro-itemDragAndDropOverlay",
+      "description": "Styles applied to the item's drag and drop overlay element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemErrorIcon",
+      "className": "MuiRichTreeViewPro-itemErrorIcon",
+      "description": "Styles applied to the item's error icon element",
+      "isGlobal": false
+    },
+    {
       "key": "itemLoadingIcon",
       "className": "MuiRichTreeViewPro-itemLoadingIcon",
       "description": "Styles applied to the item's loading icon element",
@@ -296,6 +294,6 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view-pro/src/RichTreeViewPro/RichTreeViewPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/lazy-loading/\">Rich Tree View - Lazy loading <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/lazy-loading/\">Rich Tree View - Lazy loading [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
   "cssComponent": false
 }

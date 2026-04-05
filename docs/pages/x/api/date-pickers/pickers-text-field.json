@@ -2,47 +2,123 @@
   "props": {
     "areAllSectionsEmpty": { "type": { "name": "bool" }, "required": true },
     "contentEditable": { "type": { "name": "bool" }, "required": true },
+    "disabled": { "type": { "name": "bool" }, "required": true },
     "elements": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ after: object, before: object, container: object, content: object }&gt;"
+        "description": "Array&lt;{ container: object, content: object, before: object, after: object }&gt;"
       },
       "required": true
     },
+    "error": { "type": { "name": "bool" }, "required": true },
+    "onBlur": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: FocusEvent<HTMLDivElement, Element>) => void",
+        "describedArgs": []
+      }
+    },
+    "onChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: ChangeEvent<HTMLInputElement, Element>) => void",
+        "describedArgs": []
+      }
+    },
+    "onClick": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: MouseEvent<HTMLDivElement, MouseEvent>) => void",
+        "describedArgs": []
+      }
+    },
+    "onFocus": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: FocusEvent<HTMLDivElement, Element>) => void",
+        "describedArgs": []
+      }
+    },
+    "onInput": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: FormEvent<HTMLDivElement>) => void",
+        "describedArgs": []
+      }
+    },
+    "onKeyDown": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: MuiEvent<KeyboardEvent<HTMLDivElement>>) => void",
+        "describedArgs": []
+      }
+    },
+    "onPaste": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: ClipboardEvent<HTMLDivElement>) => void",
+        "describedArgs": []
+      }
+    },
+    "sectionListRef": { "type": { "name": "custom", "description": "ref" }, "required": true },
+    "value": { "type": { "name": "object" }, "required": true },
     "color": {
       "type": {
         "name": "enum",
-        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
+        "description": "'info'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
       },
       "default": "'primary'"
     },
+    "component": {
+      "type": {
+        "name": "union",
+        "description": "'symbol'<br>&#124;&nbsp;'object'<br>&#124;&nbsp;'label'<br>&#124;&nbsp;'style'<br>&#124;&nbsp;'desc'<br>&#124;&nbsp;'filter'<br>&#124;&nbsp;'footer'<br>&#124;&nbsp;'main'<br>&#124;&nbsp;'clipPath'<br>&#124;&nbsp;'marker'<br>&#124;&nbsp;'mask'<br>&#124;&nbsp;'p'<br>&#124;&nbsp;'input'<br>&#124;&nbsp;'progress'<br>&#124;&nbsp;'select'<br>&#124;&nbsp;'text'<br>&#124;&nbsp;'center'<br>&#124;&nbsp;'search'<br>&#124;&nbsp;'big'<br>&#124;&nbsp;'link'<br>&#124;&nbsp;'small'<br>&#124;&nbsp;'sub'<br>&#124;&nbsp;'sup'<br>&#124;&nbsp;'slot'<br>&#124;&nbsp;'title'<br>&#124;&nbsp;'article'<br>&#124;&nbsp;'button'<br>&#124;&nbsp;'dialog'<br>&#124;&nbsp;'figure'<br>&#124;&nbsp;'form'<br>&#124;&nbsp;'img'<br>&#124;&nbsp;'menu'<br>&#124;&nbsp;'menuitem'<br>&#124;&nbsp;'option'<br>&#124;&nbsp;'switch'<br>&#124;&nbsp;'table'<br>&#124;&nbsp;'div'<br>&#124;&nbsp;func<br>&#124;&nbsp;{ propTypes?: any, contextType?: func, defaultProps?: object, displayName?: string, getDerivedStateFromProps?: func, getDerivedStateFromError?: func }<br>&#124;&nbsp;'a'<br>&#124;&nbsp;'abbr'<br>&#124;&nbsp;'address'<br>&#124;&nbsp;'area'<br>&#124;&nbsp;'aside'<br>&#124;&nbsp;'audio'<br>&#124;&nbsp;'b'<br>&#124;&nbsp;'base'<br>&#124;&nbsp;'bdi'<br>&#124;&nbsp;'bdo'<br>&#124;&nbsp;'blockquote'<br>&#124;&nbsp;'body'<br>&#124;&nbsp;'br'<br>&#124;&nbsp;'canvas'<br>&#124;&nbsp;'caption'<br>&#124;&nbsp;'cite'<br>&#124;&nbsp;'code'<br>&#124;&nbsp;'col'<br>&#124;&nbsp;'colgroup'<br>&#124;&nbsp;'data'<br>&#124;&nbsp;'datalist'<br>&#124;&nbsp;'dd'<br>&#124;&nbsp;'del'<br>&#124;&nbsp;'details'<br>&#124;&nbsp;'dfn'<br>&#124;&nbsp;'dl'<br>&#124;&nbsp;'dt'<br>&#124;&nbsp;'em'<br>&#124;&nbsp;'embed'<br>&#124;&nbsp;'fieldset'<br>&#124;&nbsp;'figcaption'<br>&#124;&nbsp;'h1'<br>&#124;&nbsp;'h2'<br>&#124;&nbsp;'h3'<br>&#124;&nbsp;'h4'<br>&#124;&nbsp;'h5'<br>&#124;&nbsp;'h6'<br>&#124;&nbsp;'head'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'hgroup'<br>&#124;&nbsp;'hr'<br>&#124;&nbsp;'html'<br>&#124;&nbsp;'i'<br>&#124;&nbsp;'iframe'<br>&#124;&nbsp;'ins'<br>&#124;&nbsp;'kbd'<br>&#124;&nbsp;'keygen'<br>&#124;&nbsp;'legend'<br>&#124;&nbsp;'li'<br>&#124;&nbsp;'map'<br>&#124;&nbsp;'mark'<br>&#124;&nbsp;'meta'<br>&#124;&nbsp;'meter'<br>&#124;&nbsp;'nav'<br>&#124;&nbsp;'noindex'<br>&#124;&nbsp;'noscript'<br>&#124;&nbsp;'ol'<br>&#124;&nbsp;'optgroup'<br>&#124;&nbsp;'output'<br>&#124;&nbsp;'param'<br>&#124;&nbsp;'picture'<br>&#124;&nbsp;'pre'<br>&#124;&nbsp;'q'<br>&#124;&nbsp;'rp'<br>&#124;&nbsp;'rt'<br>&#124;&nbsp;'ruby'<br>&#124;&nbsp;'s'<br>&#124;&nbsp;'samp'<br>&#124;&nbsp;'script'<br>&#124;&nbsp;'section'<br>&#124;&nbsp;'source'<br>&#124;&nbsp;'span'<br>&#124;&nbsp;'strong'<br>&#124;&nbsp;'summary'<br>&#124;&nbsp;'template'<br>&#124;&nbsp;'tbody'<br>&#124;&nbsp;'td'<br>&#124;&nbsp;'textarea'<br>&#124;&nbsp;'tfoot'<br>&#124;&nbsp;'th'<br>&#124;&nbsp;'thead'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'tr'<br>&#124;&nbsp;'track'<br>&#124;&nbsp;'u'<br>&#124;&nbsp;'ul'<br>&#124;&nbsp;'var'<br>&#124;&nbsp;'video'<br>&#124;&nbsp;'wbr'<br>&#124;&nbsp;'webview'<br>&#124;&nbsp;'svg'<br>&#124;&nbsp;'animate'<br>&#124;&nbsp;'animateMotion'<br>&#124;&nbsp;'animateTransform'<br>&#124;&nbsp;'circle'<br>&#124;&nbsp;'defs'<br>&#124;&nbsp;'ellipse'<br>&#124;&nbsp;'feBlend'<br>&#124;&nbsp;'feColorMatrix'<br>&#124;&nbsp;'feComponentTransfer'<br>&#124;&nbsp;'feComposite'<br>&#124;&nbsp;'feConvolveMatrix'<br>&#124;&nbsp;'feDiffuseLighting'<br>&#124;&nbsp;'feDisplacementMap'<br>&#124;&nbsp;'feDistantLight'<br>&#124;&nbsp;'feDropShadow'<br>&#124;&nbsp;'feFlood'<br>&#124;&nbsp;'feFuncA'<br>&#124;&nbsp;'feFuncB'<br>&#124;&nbsp;'feFuncG'<br>&#124;&nbsp;'feFuncR'<br>&#124;&nbsp;'feGaussianBlur'<br>&#124;&nbsp;'feImage'<br>&#124;&nbsp;'feMerge'<br>&#124;&nbsp;'feMergeNode'<br>&#124;&nbsp;'feMorphology'<br>&#124;&nbsp;'feOffset'<br>&#124;&nbsp;'fePointLight'<br>&#124;&nbsp;'feSpecularLighting'<br>&#124;&nbsp;'feSpotLight'<br>&#124;&nbsp;'feTile'<br>&#124;&nbsp;'feTurbulence'<br>&#124;&nbsp;'foreignObject'<br>&#124;&nbsp;'g'<br>&#124;&nbsp;'image'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'linearGradient'<br>&#124;&nbsp;'metadata'<br>&#124;&nbsp;'mpath'<br>&#124;&nbsp;'path'<br>&#124;&nbsp;'pattern'<br>&#124;&nbsp;'polygon'<br>&#124;&nbsp;'polyline'<br>&#124;&nbsp;'radialGradient'<br>&#124;&nbsp;'rect'<br>&#124;&nbsp;'set'<br>&#124;&nbsp;'stop'<br>&#124;&nbsp;'textPath'<br>&#124;&nbsp;'tspan'<br>&#124;&nbsp;'use'<br>&#124;&nbsp;'view'"
+      }
+    },
+    "endAdornment": { "type": { "name": "node" } },
     "focused": { "type": { "name": "bool" } },
+    "FormHelperTextProps": { "type": { "name": "object" } },
+    "fullWidth": { "type": { "name": "bool" } },
     "helperText": { "type": { "name": "node" } },
     "hiddenLabel": { "type": { "name": "bool" }, "default": "false" },
-    "InputProps": { "type": { "name": "object" } },
+    "id": { "type": { "name": "string" } },
+    "InputLabelProps": { "type": { "name": "object" } },
+    "inputProps": { "type": { "name": "custom", "description": "ref" } },
+    "InputProps": {
+      "type": {
+        "name": "union",
+        "description": "object<br>&#124;&nbsp;object<br>&#124;&nbsp;object"
+      }
+    },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
+    "label": { "type": { "name": "node" } },
     "margin": {
       "type": {
         "name": "enum",
-        "description": "'dense'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'normal'"
+        "description": "'none'<br>&#124;&nbsp;'normal'<br>&#124;&nbsp;'dense'"
       },
       "default": "'none'"
     },
+    "name": { "type": { "name": "string" } },
+    "readOnly": { "type": { "name": "bool" } },
     "required": { "type": { "name": "bool" }, "default": "false" },
     "size": {
-      "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" },
+      "type": { "name": "enum", "description": "'small'<br>&#124;&nbsp;'medium'" },
       "default": "'medium'"
     },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
+    "startAdornment": { "type": { "name": "node" } },
+    "style": { "type": { "name": "object" } },
     "variant": {
       "type": {
         "name": "enum",
-        "description": "'filled'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'standard'"
+        "description": "'standard'<br>&#124;&nbsp;'filled'<br>&#124;&nbsp;'outlined'"
       },
       "default": "'outlined'"
     }
@@ -53,30 +129,37 @@
     "import { PickersTextField } from '@mui/x-date-pickers';",
     "import { PickersTextField } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
-    {
-      "key": "fullWidth",
-      "className": "MuiPickersTextField-fullWidth",
-      "description": "Styles applied to the root element if `fullWidth={true}`.",
-      "isGlobal": false
-    },
-    {
-      "key": "marginDense",
-      "className": "MuiPickersTextField-marginDense",
-      "description": "Styles applied to the root element if `margin=\"dense\"`.",
-      "isGlobal": false
-    },
-    {
-      "key": "marginNormal",
-      "className": "MuiPickersTextField-marginNormal",
-      "description": "Styles applied to the root element if `margin=\"normal\"`.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiPickersTextField-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
+    },
+    {
+      "key": "focused",
+      "className": "Mui-focused",
+      "description": "Styles applied to the root element if focused.",
+      "isGlobal": true
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "error",
+      "className": "Mui-error",
+      "description": "State class applied to the root element if `error=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "required",
+      "className": "Mui-required",
+      "description": "State class applied to the root element id `required=true`",
+      "isGlobal": true
     }
   ],
   "muiName": "MuiPickersTextField",

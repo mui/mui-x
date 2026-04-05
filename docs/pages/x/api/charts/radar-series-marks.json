@@ -17,6 +17,7 @@
     "import { RadarSeriesMarks } from '@mui/x-charts-pro';",
     "import { RadarSeriesMarks } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiRadarSeriesMarks",
   "filename": "/packages/x-charts/src/RadarChart/RadarSeriesPlot/RadarSeriesMarks.tsx",

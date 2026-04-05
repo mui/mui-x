@@ -1,0 +1,32 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "color": {
+      "description": "Color to use when displaying the series.\nIf `colorGetter` is provided, it will be used to get the color for each data point instead.\nOtherwise, this color will be used for all data points in the series."
+    },
+    "colorGetter": {
+      "description": "A function that returns a color based on the value and/or the data index of a point.\nThe returned color is used when displaying the specific data point, e.g., a marker in a line chart.\nWhen the color of the entire series is required, e.g., in legends, the `color` property is used instead."
+    },
+    "data": { "description": "" },
+    "datasetKeys": {
+      "description": "The keys used to retrieve data from the dataset.\n\nWhen this prop is provided, all of `x`, `y`, and `id` must be provided.\nWhile `z` is optional."
+    },
+    "highlightScope": { "description": "The scope to apply when the series is highlighted." },
+    "id": { "description": "The id of this series." },
+    "label": {
+      "description": "The label to display on the tooltip or the legend. It can be a string or a function."
+    },
+    "labelMarkType": {
+      "description": "Defines the mark type for the series.\n\nThere is a default mark type for each series type."
+    },
+    "markerSize": { "description": "Size of the markers in the scatter plot, in pixels." },
+    "preview": { "description": "" },
+    "type": { "description": "" },
+    "valueFormatter": {
+      "description": "Formatter used to render values in tooltip or other data display."
+    },
+    "xAxisId": { "description": "The id of the x-axis used to render the series." },
+    "yAxisId": { "description": "The id of the y-axis used to render the series." },
+    "zAxisId": { "description": "The id of the z-axis used to render the series." }
+  }
+}

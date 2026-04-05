@@ -15,13 +15,8 @@
     "import { DayCalendarSkeleton } from '@mui/x-date-pickers';",
     "import { DayCalendarSkeleton } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
-    {
-      "key": "daySkeleton",
-      "className": "MuiDayCalendarSkeleton-daySkeleton",
-      "description": "Styles applied to the day element.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiDayCalendarSkeleton-root",
@@ -32,6 +27,12 @@
       "key": "week",
       "className": "MuiDayCalendarSkeleton-week",
       "description": "Styles applied to the week element.",
+      "isGlobal": false
+    },
+    {
+      "key": "daySkeleton",
+      "className": "MuiDayCalendarSkeleton-daySkeleton",
+      "description": "Styles applied to the day element.",
       "isGlobal": false
     }
   ],

@@ -55,18 +55,12 @@
         "returned": "boolean"
       }
     },
+    "showViewSwitcher": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
@@ -125,22 +119,19 @@
   ],
   "classes": [
     {
-      "key": "arrowSwitcher",
-      "className": "MuiTimeClock-arrowSwitcher",
-      "description": "Styles applied to the arrowSwitcher element.",
-      "isGlobal": false
-    },
-    {
       "key": "root",
       "className": "MuiTimeClock-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
+    },
+    {
+      "key": "arrowSwitcher",
+      "className": "MuiTimeClock-arrowSwitcher",
+      "description": "Styles applied to the arrowSwitcher element.",
+      "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": true,
   "muiName": "MuiTimeClock",
-  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/TimeClock/TimeClock.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/time-clock/\">Time Clock</a></li>\n<li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li></ul>",

@@ -1,0 +1,184 @@
+{
+  "interfaceDescription": "The full grid API.",
+  "propertiesDescriptions": {
+    "applySorting": { "description": "Applies the current sort model to the rows." },
+    "autosizeColumns": {
+      "description": "Auto-size the columns of the grid based on the cells' content and the space available."
+    },
+    "dataSource": { "description": "The data source API." },
+    "deleteFilterItem": { "description": "Deletes a [[GridFilterItem]]." },
+    "exportDataAsCsv": { "description": "Downloads and exports a CSV of the grid's data." },
+    "exportDataAsPrint": { "description": "Print the grid's data." },
+    "exportState": {
+      "description": "Generates a serializable object containing the exportable parts of the DataGrid state.\nThese values can then be passed to the `initialState` prop or injected using the `restoreState` method."
+    },
+    "getAllColumns": {
+      "description": "Returns an array of [[GridColDef]] containing all the column definitions."
+    },
+    "getAllGroupDetails": { "description": "Returns the column group lookup." },
+    "getAllRowIds": {
+      "description": "Gets the list of row ids.\nTODO rows v6: Rename or remove ?"
+    },
+    "getCellElement": {
+      "description": "Gets the [[GridCellParams]] object that is passed as argument in events."
+    },
+    "getCellMode": { "description": "Gets the mode of a cell." },
+    "getCellParams": {
+      "description": "Gets the [[GridCellParams]] object that is passed as argument in events."
+    },
+    "getCellValue": { "description": "Gets the value of a cell at the given `id` and `field`." },
+    "getColumn": { "description": "Returns the [[GridColDef]] for the given `field`." },
+    "getColumnGroupPath": {
+      "description": "Returns the id of the groups leading to the requested column.\nThe array is ordered by increasing depth (the last element is the direct parent of the column)."
+    },
+    "getColumnHeaderElement": {
+      "description": "Gets the underlying DOM element for the column header with the given `field`."
+    },
+    "getColumnHeaderParams": {
+      "description": "Gets the [[GridColumnHeaderParams]] object that is passed as argument in events."
+    },
+    "getColumnIndex": {
+      "description": "Returns the index position of a column. By default, only the visible columns are considered.\nPass `false` to `useVisibleColumns` to consider all columns."
+    },
+    "getColumnIndexRelativeToVisibleColumns": {
+      "description": "Gets the index of a column relative to the columns that are reachable by scroll."
+    },
+    "getColumnPosition": {
+      "description": "Returns the left-position of a column relative to the inner border of the grid."
+    },
+    "getDataAsCsv": {
+      "description": "Returns the grid data as a CSV string.\nThis method is used internally by `exportDataAsCsv`."
+    },
+    "getFilterState": {
+      "description": "Returns the filter state for the given filter model without applying it to the Data Grid."
+    },
+    "getLocaleText": { "description": "Returns the translation for the `key`." },
+    "getRootDimensions": { "description": "Returns the dimensions of the grid" },
+    "getRow": { "description": "Gets the row data with a given id." },
+    "getRowElement": {
+      "description": "Gets the underlying DOM element for a row at the given `id`."
+    },
+    "getRowId": { "description": "Gets the ID of a row given its data." },
+    "getRowIdFromRowIndex": {
+      "description": "Gets the `GridRowId` of a row at a specific index.\nThe index is based on the sorted but unfiltered row list."
+    },
+    "getRowIndexRelativeToVisibleRows": {
+      "description": "Gets the index of a row relative to the rows that are reachable by scroll."
+    },
+    "getRowMode": { "description": "Gets the mode of a row." },
+    "getRowModels": {
+      "description": "Gets the full set of rows as [[Map<GridRowId, GridRowModel>]]."
+    },
+    "getRowNode": { "description": "Gets the row node from the internal tree structure." },
+    "getRowParams": {
+      "description": "Gets the [[GridRowParams]] object that is passed as argument in events."
+    },
+    "getRowsCount": { "description": "Gets the total number of rows in the grid." },
+    "getRowWithUpdatedValues": {
+      "description": "Returns the row with the values that were set by editing the cells.\nIn row editing, `field` is ignored and all fields are considered."
+    },
+    "getScrollPosition": { "description": "Returns the current scroll position." },
+    "getSelectedRows": { "description": "Returns an array of the selected rows." },
+    "getSortedRowIds": {
+      "description": "Returns all row ids sorted according to the active sort model."
+    },
+    "getSortedRows": {
+      "description": "Returns all rows sorted according to the active sort model."
+    },
+    "getSortModel": { "description": "Returns the sort model currently applied to the grid." },
+    "getVisibleColumns": { "description": "Returns the currently visible columns." },
+    "hideColumnMenu": { "description": "Hides the column menu that is open." },
+    "hideFilterPanel": { "description": "Hides the filter panel." },
+    "hideHeaderFilterMenu": { "description": "Hides the header filter menu." },
+    "hidePreferences": { "description": "Hides the preferences panel." },
+    "ignoreDiacritics": { "description": "Returns the value of the `ignoreDiacritics` prop." },
+    "isCellEditable": { "description": "Controls if a cell is editable." },
+    "isRowSelectable": { "description": "Determines if a row can be selected or not." },
+    "isRowSelected": { "description": "Determines if a row is selected or not." },
+    "publishEvent": { "description": "Emits an event." },
+    "resetRowHeights": { "description": "Forces the recalculation of the heights of all rows." },
+    "restoreState": { "description": "Inject the given values into the state of the DataGrid." },
+    "scroll": {
+      "description": "Triggers the viewport to scroll to the given positions (in pixels)."
+    },
+    "scrollToIndexes": {
+      "description": "Triggers the viewport to scroll to the cell at indexes given by `params`.\nReturns `true` if the grid had to scroll to reach the target."
+    },
+    "selectRow": { "description": "Change the selection state of a row." },
+    "setCellFocus": { "description": "Sets the focus to the cell at the given `id` and `field`." },
+    "setColumnHeaderFilterFocus": {
+      "description": "Sets the focus to the column header filter at the given `field`."
+    },
+    "setColumnHeaderFocus": {
+      "description": "Sets the focus to the column header at the given `field`."
+    },
+    "setColumnVisibility": {
+      "description": "Changes the visibility of the column referred by `field`."
+    },
+    "setColumnVisibilityModel": {
+      "description": "Sets the column visibility model to the one given by `model`."
+    },
+    "setColumnWidth": { "description": "Updates the width of a column." },
+    "setDensity": { "description": "Sets the density of the grid." },
+    "setEditCellValue": {
+      "description": "Sets the value of the edit cell.\nCommonly used inside the edit cell component."
+    },
+    "setFilterLogicOperator": {
+      "description": "Changes the [[GridLogicOperator]] used to connect the filters."
+    },
+    "setFilterModel": { "description": "Sets the filter model to the one given by `model`." },
+    "setLoading": { "description": "Sets the internal loading state." },
+    "setPage": { "description": "Sets the displayed page to the value given by `page`." },
+    "setPageSize": {
+      "description": "Sets the number of displayed rows to the value given by `pageSize`."
+    },
+    "setPaginationMeta": { "description": "Sets the `paginationMeta` to a new value." },
+    "setPaginationModel": { "description": "Sets the `paginationModel` to a new value." },
+    "setQuickFilterValues": {
+      "description": "Set the quick filter values to the one given by `values`"
+    },
+    "setRowCount": { "description": "Sets the `rowCount` to a new value." },
+    "setRows": { "description": "Sets a new set of rows." },
+    "setRowSelectionModel": {
+      "description": "Sets the new row selection model.\n\n⚠️ Caution: `setRowSelectionModel` doesn't apply the selection propagation automatically.\nPass model returned by API method `getPropagatedRowSelectionModel` instead to apply the selection propagation."
+    },
+    "setSortModel": { "description": "Updates the sort model and triggers the sorting of rows." },
+    "showColumnMenu": { "description": "Display the column menu under the `field` column." },
+    "showFilterPanel": {
+      "description": "Shows the filter panel. If `targetColumnField` is given, a filter for this field is also added."
+    },
+    "showHeaderFilterMenu": { "description": "Opens the header filter menu for the given field." },
+    "showPreferences": {
+      "description": "Displays the preferences panel. The `newValue` argument controls the content of the panel."
+    },
+    "sortColumn": { "description": "Sorts a column." },
+    "startCellEditMode": {
+      "description": "Puts the cell corresponding to the given row id and field into edit mode."
+    },
+    "startHeaderFilterEditMode": {
+      "description": "Puts the cell corresponding to the given row id and field into edit mode."
+    },
+    "startRowEditMode": {
+      "description": "Puts the row corresponding to the given id into edit mode."
+    },
+    "state": { "description": "Property that contains the whole state of the grid." },
+    "stopCellEditMode": {
+      "description": "Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.\nIf `params.ignoreModifications` is `true` it will discard the modifications made."
+    },
+    "stopHeaderFilterEditMode": { "description": "Stops the edit mode for the current field." },
+    "stopRowEditMode": {
+      "description": "Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.\nIf `params.ignoreModifications` is `true` it will discard the modifications made."
+    },
+    "subscribeEvent": { "description": "Registers a handler for an event." },
+    "toggleColumnMenu": { "description": "Toggles the column menu under the `field` column." },
+    "unstable_replaceRows": { "description": "Replace a set of rows with new rows." },
+    "unstable_setColumnVirtualization": { "description": "Enable/disable column virtualization." },
+    "unstable_setVirtualization": { "description": "Enable/disable virtualization." },
+    "updateColumns": {
+      "description": "Updates the definition of multiple columns at the same time."
+    },
+    "updateRows": { "description": "Allows to update, insert and delete rows." },
+    "upsertFilterItem": { "description": "Updates or inserts a [[GridFilterItem]]." },
+    "upsertFilterItems": { "description": "Updates or inserts many [[GridFilterItem]]." }
+  }
+}

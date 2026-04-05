@@ -1,17 +1,23 @@
 {
   "name": "ChartPrintExportOptions",
-  "imports": ["import { ChartPrintExportOptions } from '@mui/x-charts-pro'"],
-  "demos": "<ul><li><a href=\"https://mui.com/x/react-charts/export/#print-export-as-pdf\">Print export</a></li></ul>",
+  "imports": ["import { ChartPrintExportOptions } from '@mui/x-charts-pro';"],
+  "demos": "  - [Print export](https://mui.com/x/react-charts/export/#print-export-as-pdf)",
   "properties": {
-    "copyStyles": { "type": { "description": "boolean" }, "default": "true", "isProPlan": true },
+    "copyStyles": {
+      "type": { "description": "boolean | undefined" },
+      "default": "true",
+      "isProPlan": true
+    },
     "fileName": {
-      "type": { "description": "string" },
+      "type": { "description": "string | undefined" },
       "default": "The title of the document the chart belongs to",
       "isProPlan": true
     },
-    "nonce": { "type": { "description": "string" }, "isProPlan": true },
+    "nonce": { "type": { "description": "string | undefined" }, "isProPlan": true },
     "onBeforeExport": {
-      "type": { "description": "(iframe: HTMLIFrameElement) =&gt; Promise&lt;void&gt; | void" },
+      "type": {
+        "description": "((iframe: HTMLIFrameElement) =&gt; void | Promise&lt;void&gt;) | undefined"
+      },
       "isProPlan": true
     }
   }

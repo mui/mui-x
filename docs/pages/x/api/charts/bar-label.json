@@ -1,11 +1,21 @@
 {
   "props": {
+    "dataIndex": { "type": { "name": "number" }, "required": true },
     "height": { "type": { "name": "number" }, "required": true },
+    "isFaded": { "type": { "name": "bool" }, "required": true },
+    "isHighlighted": { "type": { "name": "bool" }, "required": true },
+    "layout": {
+      "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
+      "required": true
+    },
+    "seriesId": { "type": { "name": "string" }, "required": true },
+    "skipAnimation": { "type": { "name": "bool" }, "required": true },
     "width": { "type": { "name": "number" }, "required": true },
     "x": { "type": { "name": "number" }, "required": true },
     "xOrigin": { "type": { "name": "number" }, "required": true },
     "y": { "type": { "name": "number" }, "required": true },
     "yOrigin": { "type": { "name": "number" }, "required": true },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" } },
     "placement": {
       "type": { "name": "enum", "description": "'center'<br>&#124;&nbsp;'outside'" },
@@ -19,52 +29,8 @@
     "import { BarLabel } from '@mui/x-charts-pro';",
     "import { BarLabel } from '@mui/x-charts-premium';"
   ],
-  "slots": [
-    {
-      "name": "barLabel",
-      "description": "The component that renders the bar label.",
-      "default": "BarLabel",
-      "class": null
-    }
-  ],
-  "classes": [
-    {
-      "key": "element",
-      "className": "MuiBarLabel-element",
-      "description": "Styles applied to an individual bar element.",
-      "isGlobal": false
-    },
-    {
-      "key": "label",
-      "className": "MuiBarLabel-label",
-      "description": "Styles applied to an individual bar label.",
-      "isGlobal": false
-    },
-    {
-      "key": "labelAnimate",
-      "className": "MuiBarLabel-labelAnimate",
-      "description": "Styles applied to a bar label when it is animated.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiBarLabel-root",
-      "description": "Styles applied to the bar plot element.",
-      "isGlobal": false
-    },
-    {
-      "key": "series",
-      "className": "MuiBarLabel-series",
-      "description": "Styles applied to the group surrounding a series' bar elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "seriesLabels",
-      "className": "MuiBarLabel-seriesLabels",
-      "description": "Styles applied to the group surrounding a series' labels.",
-      "isGlobal": false
-    }
-  ],
+  "slots": [],
+  "classes": [],
   "muiName": "MuiBarLabel",
   "filename": "/packages/x-charts/src/BarChart/BarLabel/BarLabel.tsx",
   "inheritance": null,

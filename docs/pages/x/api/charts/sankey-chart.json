@@ -13,7 +13,7 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string }"
+        "description": "{ type: 'sankey', seriesId: string, subType: 'node', nodeId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ type: 'sankey', seriesId: string, subType: 'link', sourceId: string<br>&#124;&nbsp;number, targetId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ seriesId: string, subType: 'node', nodeId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ seriesId: string, subType: 'link', sourceId: string<br>&#124;&nbsp;number, targetId: string<br>&#124;&nbsp;number }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -22,7 +22,7 @@
     "margin": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
       }
     },
     "onHighlightChange": {
@@ -63,7 +63,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string }"
+        "description": "{ type: 'sankey', seriesId: string, subType: 'node', nodeId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ type: 'sankey', seriesId: string, subType: 'link', sourceId: string<br>&#124;&nbsp;number, targetId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ seriesId: string, subType: 'node', nodeId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ seriesId: string, subType: 'link', sourceId: string<br>&#124;&nbsp;number, targetId: string<br>&#124;&nbsp;number }"
       }
     },
     "width": { "type": { "name": "number" } }
@@ -71,7 +71,8 @@
   "name": "SankeyChart",
   "imports": [
     "import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';",
-    "import { SankeyChart } from '@mui/x-charts-pro';"
+    "import { SankeyChart } from '@mui/x-charts-pro';",
+    "import { SankeyChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },
@@ -101,65 +102,10 @@
       "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "link",
-      "className": "MuiSankeyChart-link",
-      "description": "Styles applied to an individual link element.",
-      "isGlobal": false
-    },
-    {
-      "key": "linkLabel",
-      "className": "MuiSankeyChart-linkLabel",
-      "description": "Styles applied to an individual link label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "linkLabels",
-      "className": "MuiSankeyChart-linkLabels",
-      "description": "Styles applied to the link label container.",
-      "isGlobal": false
-    },
-    {
-      "key": "links",
-      "className": "MuiSankeyChart-links",
-      "description": "Styles applied to the links container.",
-      "isGlobal": false
-    },
-    {
-      "key": "node",
-      "className": "MuiSankeyChart-node",
-      "description": "Styles applied to an individual node element.",
-      "isGlobal": false
-    },
-    {
-      "key": "nodeLabel",
-      "className": "MuiSankeyChart-nodeLabel",
-      "description": "Styles applied to an individual node label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "nodeLabels",
-      "className": "MuiSankeyChart-nodeLabels",
-      "description": "Styles applied to the node label container.",
-      "isGlobal": false
-    },
-    {
-      "key": "nodes",
-      "className": "MuiSankeyChart-nodes",
-      "description": "Styles applied to the nodes container.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiSankeyChart-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiSankeyChart",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-charts/sankey/\">Charts - Sankey [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
   "cssComponent": false
 }

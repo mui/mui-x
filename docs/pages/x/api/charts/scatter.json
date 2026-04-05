@@ -1,13 +1,39 @@
 {
   "props": {
-    "colorGetter": { "type": { "name": "func" }, "required": true },
+    "color": { "type": { "name": "string" }, "required": true },
+    "colorGetter": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(dataIndex: number | undefined) => string",
+        "describedArgs": []
+      }
+    },
+    "series": { "type": { "name": "object" }, "required": true },
+    "xScale": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func"
+      },
+      "required": true
+    },
+    "yScale": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func"
+      },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
-    }
+    },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } }
   },
   "name": "Scatter",
   "imports": [
@@ -26,12 +52,6 @@
   ],
   "classes": [
     {
-      "key": "focusedMark",
-      "className": "MuiScatter-focusedMark",
-      "description": "Styles applied to the focused scatter mark element.",
-      "isGlobal": false
-    },
-    {
       "key": "root",
       "className": "MuiScatter-root",
       "description": "Styles applied to the scatter plot element.",
@@ -41,6 +61,18 @@
       "key": "series",
       "className": "MuiScatter-series",
       "description": "Styles applied to the group surrounding a series' scatter elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "marker",
+      "className": "MuiScatter-marker",
+      "description": "Styles applied to an individual scatter marker element.\nNot applied when using the `svg-batch` renderer.",
+      "isGlobal": false
+    },
+    {
+      "key": "focusedMark",
+      "className": "MuiScatter-focusedMark",
+      "description": "Styles applied to the focused scatter mark element.",
       "isGlobal": false
     }
   ],

@@ -1,5 +1,14 @@
 {
-  "props": {},
+  "props": {
+    "seriesId": { "type": { "name": "string" }, "required": true },
+    "shape": {
+      "type": {
+        "name": "enum",
+        "description": "'circle'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'cross'<br>&#124;&nbsp;'diamond'<br>&#124;&nbsp;'star'<br>&#124;&nbsp;'triangle'<br>&#124;&nbsp;'wye'"
+      },
+      "required": true
+    }
+  },
   "name": "LineHighlightElement",
   "imports": [
     "import { LineHighlightElement } from '@mui/x-charts/LineChart';",
@@ -7,6 +16,7 @@
     "import { LineHighlightElement } from '@mui/x-charts-pro';",
     "import { LineHighlightElement } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiLineHighlightElement",
   "filename": "/packages/x-charts/src/LineChart/LineHighlightElement.tsx",

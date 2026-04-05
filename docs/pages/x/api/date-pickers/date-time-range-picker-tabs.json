@@ -6,13 +6,6 @@
       "type": { "name": "bool" },
       "default": "`window.innerHeight < 667` for `DesktopDateTimeRangePicker` and `MobileDateTimeRangePicker`"
     },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
     "timeIcon": { "type": { "name": "element" }, "default": "TimeIcon" }
   },
   "name": "DateTimeRangePickerTabs",
@@ -20,19 +13,8 @@
     "import { DateTimeRangePickerTabs } from '@mui/x-date-pickers-pro/DateTimeRangePicker';",
     "import { DateTimeRangePickerTabs } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
-    {
-      "key": "filler",
-      "className": "MuiDateTimeRangePickerTabs-filler",
-      "description": "Styles applied to the filler element, shown instead of a navigation arrow.",
-      "isGlobal": false
-    },
-    {
-      "key": "navigationButton",
-      "className": "MuiDateTimeRangePickerTabs-navigationButton",
-      "description": "Styles applied to the tab navigation button elements.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiDateTimeRangePickerTabs-root",
@@ -44,11 +26,23 @@
       "className": "MuiDateTimeRangePickerTabs-tabButton",
       "description": "Styles applied to the tab button element.",
       "isGlobal": false
+    },
+    {
+      "key": "navigationButton",
+      "className": "MuiDateTimeRangePickerTabs-navigationButton",
+      "description": "Styles applied to the tab navigation button elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "filler",
+      "className": "MuiDateTimeRangePickerTabs-filler",
+      "description": "Styles applied to the filler element, shown instead of a navigation arrow.",
+      "isGlobal": false
     }
   ],
   "muiName": "MuiDateTimeRangePickerTabs",
   "filename": "/packages/x-date-pickers-pro/src/DateTimeRangePicker/DateTimeRangePickerTabs.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
   "cssComponent": false
 }

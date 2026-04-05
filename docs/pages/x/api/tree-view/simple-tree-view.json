@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, isItemExpanded?: func, setIsItemDisabled?: func, setItemExpansion?: func, setItemSelection?: func } }"
+        "description": "{ current: { setItemSelection?: func, isItemExpanded?: func, setItemExpansion?: func, focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, setIsItemDisabled?: func } }"
       }
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
@@ -23,11 +23,11 @@
     },
     "id": { "type": { "name": "string" } },
     "itemChildrenIndentation": {
-      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
       "default": "12px"
     },
     "itemHeight": { "type": { "name": "number" }, "default": "null" },
-    "multiSelect": { "type": { "name": "bool" }, "default": "false" },
+    "multiSelect": { "type": { "name": "any" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
@@ -93,14 +93,13 @@
   ],
   "slots": [
     {
-      "name": "root",
-      "description": "Element rendered at the root.",
-      "default": "SimpleTreeViewRoot",
-      "class": "MuiSimpleTreeView-root"
-    },
-    {
       "name": "collapseIcon",
       "description": "The default icon used to collapse the item.",
+      "class": null
+    },
+    {
+      "name": "endIcon",
+      "description": "The default icon displayed next to an end item.\nThis is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.",
       "class": null
     },
     {
@@ -109,22 +108,23 @@
       "class": null
     },
     {
-      "name": "endIcon",
-      "description": "The default icon displayed next to an end item.\nThis is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.",
-      "class": null
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "SimpleTreeViewRoot",
+      "class": "MuiSimpleTreeView-root"
     }
   ],
   "classes": [
     {
-      "key": "item",
-      "className": "MuiSimpleTreeView-item",
-      "description": "Styles applied to the item's root element.",
+      "key": "root",
+      "className": "MuiSimpleTreeView-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
-      "key": "itemCheckbox",
-      "className": "MuiSimpleTreeView-itemCheckbox",
-      "description": "Styles applied to the item's checkbox element.",
+      "key": "item",
+      "className": "MuiSimpleTreeView-item",
+      "description": "Styles applied to the item's root element.",
       "isGlobal": false
     },
     {
@@ -149,6 +149,12 @@
       "key": "itemLabel",
       "className": "MuiSimpleTreeView-itemLabel",
       "description": "Styles applied to the item's label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemCheckbox",
+      "className": "MuiSimpleTreeView-itemCheckbox",
+      "description": "Styles applied to the item's checkbox element.",
       "isGlobal": false
     }
   ],

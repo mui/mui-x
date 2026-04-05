@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "columnsSort": {
-      "description": "Changes how the options in the columns selector should be ordered. If not specified, the order is derived from the <code>columns</code> prop."
+      "description": "Changes how the options in the columns selector should be ordered.\nIf not specified, the order is derived from the <code>columns</code> prop."
     },
     "disableAddFilterButton": {
       "description": "If <code>true</code>, the <code>Add filter</code> button will not be displayed."
@@ -22,5 +22,6 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

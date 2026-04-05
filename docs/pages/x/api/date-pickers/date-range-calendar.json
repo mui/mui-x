@@ -6,12 +6,12 @@
       "default": "['start', 'end']"
     },
     "calendars": {
-      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
+      "type": { "name": "enum", "description": "2<br>&#124;&nbsp;1<br>&#124;&nbsp;3" },
       "default": "2"
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "currentMonthCalendarPosition": {
-      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
+      "type": { "name": "enum", "description": "2<br>&#124;&nbsp;1<br>&#124;&nbsp;3" },
       "default": "1"
     },
     "dayOfWeekFormatter": {
@@ -27,7 +27,7 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "defaultValue": { "type": { "name": "object" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" }, "default": "false" },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
@@ -80,16 +80,16 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "union", "description": "Array&lt;object&gt;<br>&#124;&nbsp;object" },
+      "type": { "name": "object" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`."
     },
     "renderLoading": {
       "type": { "name": "func" },
       "default": "() => \"...\"",
       "signature": {
-        "type": "function() => React.ReactNode",
+        "type": "function() => ReactNode",
         "describedArgs": [],
-        "returned": "React.ReactNode"
+        "returned": "ReactNode"
       }
     },
     "shouldDisableDate": {
@@ -122,7 +122,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "value": { "type": { "name": "object" } },
     "view": { "type": { "name": "enum", "description": "'day'" } },
     "views": { "type": { "name": "arrayOf", "description": "Array&lt;'day'&gt;" } }
   },
@@ -183,9 +183,9 @@
   ],
   "classes": [
     {
-      "key": "dayDragging",
-      "className": "MuiDateRangeCalendar-dayDragging",
-      "description": "Styles applied to the day calendar container when dragging",
+      "key": "root",
+      "className": "MuiDateRangeCalendar-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
@@ -195,9 +195,9 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiDateRangeCalendar-root",
-      "description": "Styles applied to the root element.",
+      "key": "dayDragging",
+      "className": "MuiDateRangeCalendar-dayDragging",
+      "description": "Styles applied to the day calendar container when dragging",
       "isGlobal": false
     }
   ],
@@ -207,6 +207,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangeCalendar/DateRangeCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Range Calendar <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Range Calendar [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
   "cssComponent": false
 }

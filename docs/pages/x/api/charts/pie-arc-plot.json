@@ -1,5 +1,12 @@
 {
   "props": {
+    "data": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ id?: string<br>&#124;&nbsp;number, value: number, label?: string<br>&#124;&nbsp;func, color: string, labelMarkType?: 'circle'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'line+mark'<br>&#124;&nbsp;object<br>&#124;&nbsp;func, startAngle: number, endAngle: number, index: number, padAngle: number, formattedValue: string, hidden: bool }&gt;"
+      },
+      "required": true
+    },
     "outerRadius": { "type": { "name": "number" }, "required": true },
     "seriesId": { "type": { "name": "string" }, "required": true },
     "arcLabelRadius": {
@@ -10,14 +17,14 @@
     "faded": {
       "type": {
         "name": "shape",
-        "description": "{ additionalRadius?: number, arcLabelRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
+        "description": "{ additionalRadius?: number, innerRadius?: number, outerRadius?: number, cornerRadius?: number, paddingAngle?: number, arcLabelRadius?: number, color?: string }"
       },
       "default": "{ additionalRadius: -5 }"
     },
     "highlighted": {
       "type": {
         "name": "shape",
-        "description": "{ additionalRadius?: number, arcLabelRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
+        "description": "{ additionalRadius?: number, innerRadius?: number, outerRadius?: number, cornerRadius?: number, paddingAngle?: number, arcLabelRadius?: number, color?: string }"
       }
     },
     "innerRadius": { "type": { "name": "number" }, "default": "0" },

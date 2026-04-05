@@ -1,37 +1,39 @@
 {
   "name": "ScatterSeries",
   "imports": [
-    "import { ScatterSeries } from '@mui/x-charts-premium'",
-    "import { ScatterSeries } from '@mui/x-charts-pro'",
-    "import { ScatterSeries } from '@mui/x-charts'"
+    "import { ScatterSeries } from '@mui/x-charts';",
+    "import { ScatterSeries } from '@mui/x-charts-pro';",
+    "import { ScatterSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "type": { "type": { "description": "'scatter'" }, "required": true },
-    "color": { "type": { "description": "string" } },
+    "color": { "type": { "description": "string | undefined" } },
     "colorGetter": {
-      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
+      "type": {
+        "description": "((data: ColorCallbackValue&lt;ScatterValueType | null&gt;) =&gt; string) | undefined"
+      }
     },
-    "data": { "type": { "description": "readonly ScatterValueType[]" } },
+    "data": { "type": { "description": "readonly ScatterValueType[] | undefined" } },
     "datasetKeys": {
       "type": {
-        "description": "{<br />  /**<br />   * The key used to retrieve data from the dataset for the X axis.<br />   */<br />  x: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Y axis.<br />   */<br />  y: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Z axis.<br />   */<br />  z?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the id.<br />   */<br />  id?: string<br />}"
+        "description": "{ x: string; y: string; z?: string | undefined; id?: string | undefined; } | undefined"
       }
     },
-    "highlightScope": { "type": { "description": "HighlightScope&lt;SeriesType&gt;" } },
-    "id": { "type": { "description": "SeriesId" } },
+    "highlightScope": { "type": { "description": "CommonHighlightScope | undefined" } },
+    "id": { "type": { "description": "string | undefined" } },
     "label": {
-      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
-    },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
-    "markerSize": { "type": { "description": "number" } },
-    "preview": {
       "type": {
-        "description": "{<br />  /**<br />   * The size of the preview marker in pixels.<br />   * @default 1<br />   */<br />  markerSize?: number<br />}"
+        "description": "string | ((location: \"tooltip\" | \"legend\") =&gt; string) | undefined"
       }
     },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
-    "xAxisId": { "type": { "description": "AxisId" } },
-    "yAxisId": { "type": { "description": "AxisId" } },
-    "zAxisId": { "type": { "description": "string" } }
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType | undefined" } },
+    "markerSize": { "type": { "description": "number | undefined" } },
+    "preview": { "type": { "description": "{ markerSize?: number | undefined; } | undefined" } },
+    "type": { "type": { "description": "\"scatter\" | undefined" } },
+    "valueFormatter": {
+      "type": { "description": "SeriesValueFormatter&lt;ScatterValueType | null&gt; | undefined" }
+    },
+    "xAxisId": { "type": { "description": "AxisId | undefined" } },
+    "yAxisId": { "type": { "description": "AxisId | undefined" } },
+    "zAxisId": { "type": { "description": "string | undefined" } }
   }
 }

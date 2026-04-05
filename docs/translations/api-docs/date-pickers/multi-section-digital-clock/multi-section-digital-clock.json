@@ -1,16 +1,16 @@
 {
-  "componentDescription": "",
+  "componentDescription": "Demos:\n\n- [TimePicker](https://mui.com/x/react-date-pickers/time-picker/)\n- [DigitalClock](https://mui.com/x/react-date-pickers/digital-clock/)\n\nAPI:\n\n- [MultiSectionDigitalClock API](https://mui.com/x/api/date-pickers/multi-section-digital-clock/)",
   "propDescriptions": {
     "ampm": { "description": "12h/24h view for hour selection clock." },
     "autoFocus": {
-      "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered."
+      "description": "If <code>true</code>, the main element is focused during the first mount.\nThis main element is:\n- the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view).\n- the <code>input</code> element if there is a field rendered."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "defaultValue": {
-      "description": "The default selected value. Used when the component is not controlled."
+      "description": "The default selected value.\nUsed when the component is not controlled."
     },
     "disabled": {
-      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
+      "description": "If <code>true</code>, the component is disabled.\nWhen disabled, the value cannot be changed and no interaction is possible."
     },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
@@ -23,21 +23,16 @@
     },
     "focusedView": { "description": "Controlled focused view." },
     "maxTime": {
-      "description": "Maximal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
+      "description": "Maximal selectable time.\nThe date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
     },
     "minTime": {
-      "description": "Minimal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
+      "description": "Minimal selectable time.\nThe date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
     },
     "minutesStep": { "description": "Step over minutes." },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
-        "value": {
-          "name": "value",
-          "description": "The new value.",
-          "argType": "TValue",
-          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
-        },
+        "value": { "name": "value", "description": "The new value." },
         "selectionState": {
           "name": "selectionState",
           "description": "Indicates if the date selection is complete."
@@ -51,12 +46,7 @@
     "onFocusedViewChange": {
       "description": "Callback fired on focused view change.",
       "typeDescriptions": {
-        "view": {
-          "name": "view",
-          "description": "The new view to focus or not.",
-          "argType": "TView",
-          "argTypeDescription": "Type of the view. It will vary based on the Picker type and the <code>views</code> it uses."
-        },
+        "view": { "name": "view", "description": "The new view to focus or not." },
         "hasFocus": {
           "name": "hasFocus",
           "description": "<code>true</code> if the view should be focused."
@@ -65,20 +55,13 @@
     },
     "onViewChange": {
       "description": "Callback fired on view change.",
-      "typeDescriptions": {
-        "view": {
-          "name": "view",
-          "description": "The new view.",
-          "argType": "TView",
-          "argTypeDescription": "Type of the view. It will vary based on the Picker type and the <code>views</code> it uses."
-        }
-      }
+      "typeDescriptions": { "view": { "name": "view", "description": "The new view." } }
     },
     "openTo": {
-      "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."
+      "description": "The default visible view.\nUsed when the component view is not controlled.\nMust be a valid option from <code>views</code> list."
     },
     "readOnly": {
-      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
+      "description": "If <code>true</code>, the component is read-only.\nWhen read-only, the value cannot be changed but the user can interact with the interface."
     },
     "referenceDate": {
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
@@ -87,11 +70,7 @@
       "description": "Disable specific time.",
       "typeDescriptions": {
         "value": { "name": "value", "description": "The value to check." },
-        "view": { "name": "view", "description": "The clock type of the timeValue." },
-        "boolean": {
-          "name": "boolean",
-          "description": "If <code>true</code> the time will be disabled."
-        }
+        "view": { "name": "view", "description": "The clock type of the timeValue." }
       }
     },
     "skipDisabled": {
@@ -99,23 +78,22 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overrideable component slots." },
-    "sx": {
-      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
-    },
     "timeSteps": {
-      "description": "The time steps between two time unit options. For example, if <code>timeSteps.minutes = 8</code>, then the available minute options will be <code>[0, 8, 16, 24, 32, 40, 48, 56]</code>."
+      "description": "The time steps between two time unit options.\nFor example, if <code>timeSteps.minutes = 8</code>, then the available minute options will be <code>[0, 8, 16, 24, 32, 40, 48, 56]</code>."
     },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
-      "seeMoreText": "See the {{link}} for more details."
+      "description": "Choose which timezone to use for the value.\nExample: \"default\", \"system\", \"UTC\", \"America/New_York\".\nIf you pass values from other timezones to some props, they will be converted to this timezone before being used.",
+      "seeMoreText": "See {{link}} for more details."
     },
-    "value": { "description": "The selected value. Used when the component is controlled." },
+    "value": { "description": "The selected value.\nUsed when the component is controlled." },
     "view": {
-      "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
+      "description": "The visible view.\nUsed when the component view is controlled.\nMust be a valid option from <code>views</code> list."
     },
     "views": { "description": "Available views." }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" }
+  },
   "slotDescriptions": {
     "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item."
   }

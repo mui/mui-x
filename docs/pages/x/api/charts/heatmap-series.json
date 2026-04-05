@@ -1,30 +1,32 @@
 {
   "name": "HeatmapSeries",
   "imports": [
-    "import { HeatmapSeries } from '@mui/x-charts-premium'",
-    "import { HeatmapSeries } from '@mui/x-charts-pro'"
+    "import { HeatmapSeries } from '@mui/x-charts-pro';",
+    "import { HeatmapSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "type": { "type": { "description": "'heatmap'" }, "required": true, "isProPlan": true },
-    "data": { "type": { "description": "readonly HeatmapValueType[]" }, "isProPlan": true },
-    "dataKey": { "type": { "description": "string" }, "isProPlan": true },
-    "highlightScope": {
-      "type": { "description": "HighlightScope&lt;SeriesType&gt;" },
+    "data": {
+      "type": { "description": "readonly HeatmapValueType[] | undefined" },
       "isProPlan": true
     },
-    "id": { "type": { "description": "SeriesId" }, "isProPlan": true },
+    "dataKey": { "type": { "description": "string | undefined" }, "isProPlan": true },
+    "highlightScope": { "type": { "description": "CommonHighlightScope | undefined" } },
+    "id": { "type": { "description": "string | undefined" } },
     "label": {
-      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" },
-      "isProPlan": true
-    },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" }, "isProPlan": true },
-    "valueFormatter": {
       "type": {
-        "description": "(value: number | null, context: { xIndex: number; yIndex: number }) =&gt; string | null"
+        "description": "string | ((location: \"tooltip\" | \"legend\") =&gt; string) | undefined"
       },
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "AxisId" }, "isProPlan": true },
-    "yAxisId": { "type": { "description": "AxisId" }, "isProPlan": true }
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType | undefined" } },
+    "type": { "type": { "description": "\"heatmap\" | undefined" }, "isProPlan": true },
+    "valueFormatter": {
+      "type": {
+        "description": "((value: number | null, context: { xIndex: number; yIndex: number; }) =&gt; string | null) | undefined"
+      },
+      "isProPlan": true
+    },
+    "xAxisId": { "type": { "description": "AxisId | undefined" } },
+    "yAxisId": { "type": { "description": "AxisId | undefined" } }
   }
 }

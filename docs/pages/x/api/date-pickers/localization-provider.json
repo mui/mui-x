@@ -2,7 +2,7 @@
   "props": {
     "adapterLocale": { "type": { "name": "any" } },
     "dateAdapter": {
-      "type": { "name": "func" },
+      "type": { "name": "object" },
       "seeMoreLink": {
         "url": "https://mui.com/x/react-date-pickers/quickstart/#integrate-provider-and-adapter",
         "text": "date adapter setup section"
@@ -11,7 +11,7 @@
     "dateFormats": {
       "type": {
         "name": "shape",
-        "description": "{ dayOfMonth?: string, dayOfMonthFull?: string, fullDate?: string, fullTime12h?: string, fullTime24h?: string, hours12h?: string, hours24h?: string, keyboardDate?: string, keyboardDateTime12h?: string, keyboardDateTime24h?: string, meridiem?: string, minutes?: string, month?: string, monthShort?: string, normalDate?: string, normalDateWithWeekday?: string, seconds?: string, shortDate?: string, weekday?: string, weekdayShort?: string, year?: string }"
+        "description": "{ year?: string, month?: string, monthShort?: string, dayOfMonth?: string, dayOfMonthFull?: string, weekday?: string, weekdayShort?: string, hours24h?: string, hours12h?: string, meridiem?: string, minutes?: string, seconds?: string, fullDate?: string, keyboardDate?: string, shortDate?: string, normalDate?: string, normalDateWithWeekday?: string, fullTime12h?: string, fullTime24h?: string, keyboardDateTime12h?: string, keyboardDateTime24h?: string }"
       }
     },
     "dateLibInstance": { "type": { "name": "any" } },
@@ -23,9 +23,8 @@
     "import { LocalizationProvider } from '@mui/x-date-pickers';",
     "import { LocalizationProvider } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiLocalizationProvider",
   "filename": "/packages/x-date-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
   "inheritance": null,

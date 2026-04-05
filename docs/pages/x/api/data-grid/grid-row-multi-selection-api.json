@@ -1,21 +1,21 @@
 {
   "name": "GridRowMultiSelectionApi",
   "description": "",
-  "properties": [
-    {
-      "name": "getPropagatedRowSelectionModel",
-      "description": "Returns the modified selection model after applying row selection propagation.<br>Use this to achieve proper <code>rowSelectionPropagation</code> behavior when setting the selection model using <code>setRowSelectionModel</code>.",
-      "type": "(inputSelectionModel: GridRowSelectionModel) => GridRowSelectionModel"
+  "properties": {
+    "selectRows": {
+      "type": {
+        "description": "(ids: GridRowId[], isSelected?: boolean | undefined, resetSelection?: boolean | undefined) =&gt; void"
+      }
     },
-    {
-      "name": "selectRowRange",
-      "description": "Change the selection state of all the selectable rows in a range.",
-      "type": "(range: { startId: GridRowId; endId: GridRowId }, isSelected?: boolean, resetSelection?: boolean) => void"
+    "selectRowRange": {
+      "type": {
+        "description": "(range: { startId: GridRowId; endId: GridRowId; }, isSelected?: boolean | undefined, resetSelection?: boolean | undefined) =&gt; void"
+      }
     },
-    {
-      "name": "selectRows",
-      "description": "Change the selection state of multiple rows.",
-      "type": "(ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void"
+    "getPropagatedRowSelectionModel": {
+      "type": {
+        "description": "(inputSelectionModel: GridRowSelectionModel) =&gt; GridRowSelectionModel"
+      }
     }
-  ]
+  }
 }

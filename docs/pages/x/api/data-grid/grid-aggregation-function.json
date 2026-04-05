@@ -1,35 +1,40 @@
 {
   "name": "GridAggregationFunction",
-  "imports": ["import { GridAggregationFunction } from '@mui/x-data-grid-premium'"],
-  "demos": "<ul><li><a href=\"/x/react-data-grid/aggregation/#aggregation-functions\">Aggregation functions</a></li></ul>",
+  "imports": ["import { GridAggregationFunction } from '@mui/x-data-grid-premium';"],
+  "demos": "  - [Aggregation functions](/x/react-data-grid/aggregation/#aggregation-functions)",
   "properties": {
     "apply": {
       "type": {
-        "description": "(params: GridAggregationParams&lt;V&gt;, api?: GridApiPremium) =&gt; AV | null | undefined"
+        "description": "(params: GridAggregationParams&lt;V&gt;, api?: GridApiPremium | undefined) =&gt; AV | null | undefined"
       },
       "required": true,
       "isPremiumPlan": true
     },
     "applySorting": {
-      "type": { "description": "boolean" },
+      "type": { "description": "boolean | undefined" },
       "default": "false",
       "isPremiumPlan": true
     },
-    "columnTypes": { "type": { "description": "string[]" }, "isPremiumPlan": true },
+    "columnTypes": { "type": { "description": "string[] | undefined" }, "isPremiumPlan": true },
     "getCellValue": {
-      "type": { "description": "(params: GridAggregationGetCellValueParams) =&gt; V" },
+      "type": {
+        "description": "((params: GridAggregationGetCellValueParams) =&gt; V) | undefined"
+      },
       "isPremiumPlan": true
     },
     "hasCellUnit": {
-      "type": { "description": "boolean" },
+      "type": { "description": "boolean | undefined" },
       "default": "true",
       "isPremiumPlan": true
     },
     "label": {
-      "type": { "description": "string" },
+      "type": { "description": "string | undefined" },
       "default": "apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})",
       "isPremiumPlan": true
     },
-    "valueFormatter": { "type": { "description": "GridValueFormatter" }, "isPremiumPlan": true }
+    "valueFormatter": {
+      "type": { "description": "GridValueFormatter | undefined" },
+      "isPremiumPlan": true
+    }
   }
 }

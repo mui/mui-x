@@ -5,24 +5,18 @@
       "required": true
     },
     "xAxis": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axis?: 'x', barGapRatio?: number, categoryGapRatio?: number, classes?: object, className?: string, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, groups?: Array&lt;{ getValue: func, tickLabelStyle?: object, tickSize?: number }&gt;, height?: 'auto'<br>&#124;&nbsp;number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, offset?: number, ordinalTimeTicks?: Array&lt;'biweekly'<br>&#124;&nbsp;'days'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'months'<br>&#124;&nbsp;'quarterly'<br>&#124;&nbsp;'weeks'<br>&#124;&nbsp;'years'<br>&#124;&nbsp;{ format: func, getTickNumber: func, isTick: func }&gt;, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'band', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelMinGap?: number, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, zoom?: { filterMode?: 'discard'<br>&#124;&nbsp;'keep', maxEnd?: number, maxSpan?: number, minSpan?: number, minStart?: number, panning?: bool, slider?: { enabled?: bool, preview?: object<br>&#124;&nbsp;bool, showTooltip?: 'always'<br>&#124;&nbsp;'hover'<br>&#124;&nbsp;'never', size?: number }, step?: number }<br>&#124;&nbsp;bool }&gt;"
-      },
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
     "yAxis": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axis?: 'y', barGapRatio?: number, categoryGapRatio?: number, classes?: object, className?: string, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, groups?: Array&lt;{ getValue: func, tickLabelStyle?: object, tickSize?: number }&gt;, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, offset?: number, ordinalTimeTicks?: Array&lt;'biweekly'<br>&#124;&nbsp;'days'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'months'<br>&#124;&nbsp;'quarterly'<br>&#124;&nbsp;'weeks'<br>&#124;&nbsp;'years'<br>&#124;&nbsp;{ format: func, getTickNumber: func, isTick: func }&gt;, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'band', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, width?: 'auto'<br>&#124;&nbsp;number, zoom?: { filterMode?: 'discard'<br>&#124;&nbsp;'keep', maxEnd?: number, maxSpan?: number, minSpan?: number, minStart?: number, panning?: bool, slider?: { enabled?: bool, preview?: object<br>&#124;&nbsp;bool, showTooltip?: 'always'<br>&#124;&nbsp;'hover'<br>&#124;&nbsp;'never', size?: number }, step?: number }<br>&#124;&nbsp;bool }&gt;"
-      },
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
     "borderRadius": { "type": { "name": "number" } },
     "brushConfig": {
       "type": {
         "name": "shape",
-        "description": "{ enabled?: bool, preventHighlight?: bool, preventTooltip?: bool }"
+        "description": "{ enabled?: bool, preventTooltip?: bool, preventHighlight?: bool }"
       }
     },
     "colors": {
@@ -39,14 +33,14 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }"
+        "description": "{ type: 'heatmap', seriesId: string, xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }"
       }
     },
     "id": { "type": { "name": "string" } },
     "initialZoom": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
+        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, start: number, end: number }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -54,7 +48,7 @@
     "margin": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
       }
     },
     "onHighlightChange": {
@@ -101,45 +95,49 @@
     },
     "title": { "type": { "name": "string" } },
     "tooltip": {
-      "type": { "name": "object" },
+      "type": {
+        "name": "union",
+        "description": "object<br>&#124;&nbsp;object<br>&#124;&nbsp;object"
+      },
       "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
     },
     "tooltipAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
+        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, dataIndex: number }&gt;"
       }
     },
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }"
+        "description": "{ type: 'heatmap', seriesId: string, xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }"
       }
     },
     "width": { "type": { "name": "number" } },
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
+        "description": "Array&lt;{ data?: Array&lt;any&gt;, max?: number, min?: number, dataKey?: string, colorMap?: object<br>&#124;&nbsp;object<br>&#124;&nbsp;object, id?: string }&gt;"
       }
     },
     "zoomData": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
+        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, start: number, end: number }&gt;"
       }
     },
     "zoomInteractionConfig": {
       "type": {
         "name": "shape",
-        "description": "{ pan?: Array&lt;'drag'<br>&#124;&nbsp;'pressAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'drag' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'pressAndDrag' }<br>&#124;&nbsp;{ allowedDirection?: 'x'<br>&#124;&nbsp;'xy'<br>&#124;&nbsp;'y', pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }&gt;, zoom?: Array&lt;'brush'<br>&#124;&nbsp;'doubleTapReset'<br>&#124;&nbsp;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: array, type: 'pinch' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'tapAndDrag' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'doubleTapReset' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'brush' }&gt; }"
+        "description": "{ zoom?: Array&lt;'wheel'<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'doubleTapReset'<br>&#124;&nbsp;'brush'&gt;, pan?: Array&lt;'drag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;'pressAndDrag'&gt; }"
       }
     }
   },
   "name": "Heatmap",
   "imports": [
     "import { Heatmap } from '@mui/x-charts-pro/Heatmap';",
-    "import { Heatmap } from '@mui/x-charts-pro';"
+    "import { Heatmap } from '@mui/x-charts-pro';",
+    "import { Heatmap } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
@@ -242,38 +240,39 @@
   ],
   "classes": [
     {
-      "key": "faded",
-      "className": "MuiHeatmap-faded",
-      "description": "Styles applied to the cell element if faded.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "highlighted",
-      "className": "MuiHeatmap-highlighted",
-      "description": "Styles applied to the cell element if highlighted.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
       "key": "root",
       "className": "MuiHeatmap-root",
       "description": "Styles applied to the heatmap plot root element.",
       "isGlobal": false
     },
     {
+      "key": "cell",
+      "className": "MuiHeatmap-cell",
+      "description": "Styles applied to the heatmap cells.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlighted",
+      "className": "MuiHeatmap-highlighted",
+      "description": "Styles applied to the cell element if highlighted.",
+      "isGlobal": false
+    },
+    {
+      "key": "faded",
+      "className": "MuiHeatmap-faded",
+      "description": "Styles applied to the cell element if faded.",
+      "isGlobal": false
+    },
+    {
       "key": "series",
       "className": "MuiHeatmap-series",
       "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${heatmapClasses.series}-${seriesId}`.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiHeatmap",
   "filename": "/packages/x-charts-pro/src/Heatmap/Heatmap.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
   "cssComponent": false
 }

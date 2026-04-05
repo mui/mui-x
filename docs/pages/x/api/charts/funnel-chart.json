@@ -7,7 +7,7 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ x?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', y?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
+        "description": "{ x?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band', y?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band' }"
       },
       "seeMoreLink": {
         "url": "https://mui.com/x/react-charts/highlighting/",
@@ -17,7 +17,7 @@
     "categoryAxis": {
       "type": {
         "name": "union",
-        "description": "{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'log', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'symlog', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'pow', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'sqrt', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'time', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'utc', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'linear', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }"
+        "description": "{ categories?: Array&lt;string&gt;, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'none', size?: number<br>&#124;&nbsp;'auto', scaleType?: 'log', disableLine?: bool, disableTicks?: bool, tickLabelStyle?: object, tickSize?: number, id?: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'none', size?: number<br>&#124;&nbsp;'auto', scaleType?: 'time', disableLine?: bool, disableTicks?: bool, tickLabelStyle?: object, tickSize?: number, id?: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'none', size?: number<br>&#124;&nbsp;'auto', scaleType?: 'band', disableLine?: bool, disableTicks?: bool, tickLabelStyle?: object, tickSize?: number, id?: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'none', size?: number<br>&#124;&nbsp;'auto', scaleType?: 'symlog', disableLine?: bool, disableTicks?: bool, tickLabelStyle?: object, tickSize?: number, id?: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'none', size?: number<br>&#124;&nbsp;'auto', scaleType?: 'pow', disableLine?: bool, disableTicks?: bool, tickLabelStyle?: object, tickSize?: number, id?: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'none', size?: number<br>&#124;&nbsp;'auto', scaleType?: 'sqrt', disableLine?: bool, disableTicks?: bool, tickLabelStyle?: object, tickSize?: number, id?: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'none', size?: number<br>&#124;&nbsp;'auto', scaleType?: 'utc', disableLine?: bool, disableTicks?: bool, tickLabelStyle?: object, tickSize?: number, id?: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'none', size?: number<br>&#124;&nbsp;'auto', scaleType?: 'linear', disableLine?: bool, disableTicks?: bool, tickLabelStyle?: object, tickSize?: number, id?: string<br>&#124;&nbsp;number }"
       },
       "default": "{ position: 'none' }"
     },
@@ -32,31 +32,25 @@
     "gap": { "type": { "name": "number" }, "default": "0" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }&gt;"
-      }
+      "type": { "name": "arrayOf", "description": "Array&lt;object<br>&#124;&nbsp;object&gt;" }
     },
     "hideLegend": { "type": { "name": "bool" }, "default": "false" },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ type: 'funnel', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ seriesId: string, dataIndex?: number }"
       }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }&gt;"
-      }
+      "type": { "name": "arrayOf", "description": "Array&lt;object<br>&#124;&nbsp;object&gt;" }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
       }
     },
     "onAxisClick": {
@@ -105,7 +99,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "description": "{ type: 'funnel', seriesId: string, dataIndex: number }<br>&#124;&nbsp;{ seriesId: string, dataIndex: number }"
       }
     },
     "width": { "type": { "name": "number" } }
@@ -113,7 +107,8 @@
   "name": "FunnelChart",
   "imports": [
     "import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';",
-    "import { FunnelChart } from '@mui/x-charts-pro';"
+    "import { FunnelChart } from '@mui/x-charts-pro';",
+    "import { FunnelChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
@@ -204,6 +199,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts-pro/src/FunnelChart/FunnelChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/pyramid/\">Charts - Pyramid <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-charts/funnel/\">Charts - Funnel [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-charts/pyramid/\">Charts - Pyramid [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
   "cssComponent": false
 }

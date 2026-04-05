@@ -1,21 +1,11 @@
 {
   "name": "GridScrollApi",
-  "description": "The scroll API interface that is available in the grid apiRef.",
-  "properties": [
-    {
-      "name": "getScrollPosition",
-      "description": "Returns the current scroll position.",
-      "type": "() => GridScrollParams"
-    },
-    {
-      "name": "scroll",
-      "description": "Triggers the viewport to scroll to the given positions (in pixels).",
-      "type": "(params: Partial<GridScrollParams>) => void"
-    },
-    {
-      "name": "scrollToIndexes",
-      "description": "Triggers the viewport to scroll to the cell at indexes given by <code>params</code>. Returns <code>true</code> if the grid had to scroll to reach the target.",
-      "type": "(params: Partial<GridCellIndexCoordinates>) => boolean"
+  "description": "The scroll API interface that is available in the grid [[apiRef]].",
+  "properties": {
+    "scroll": { "type": { "description": "(params: Partial&lt;GridScrollParams&gt;) =&gt; void" } },
+    "getScrollPosition": { "type": { "description": "() =&gt; GridScrollParams" } },
+    "scrollToIndexes": {
+      "type": { "description": "(params: Partial&lt;GridCellIndexCoordinates&gt;) =&gt; boolean" }
     }
-  ]
+  }
 }

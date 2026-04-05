@@ -1,33 +1,33 @@
 {
   "props": {
     "cornerRadius": {
-      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
       "default": "0"
     },
-    "cx": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
-    "cy": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
+    "cx": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" } },
+    "cy": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" } },
     "desc": { "type": { "name": "string" } },
     "endAngle": { "type": { "name": "number" }, "default": "360" },
     "height": { "type": { "name": "number" } },
     "id": { "type": { "name": "string" } },
     "innerRadius": {
-      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
       "default": "'80%'"
     },
     "margin": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
       }
     },
     "outerRadius": {
-      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
       "default": "'100%'"
     },
     "skipAnimation": { "type": { "name": "bool" } },
     "startAngle": { "type": { "name": "number" }, "default": "0" },
     "title": { "type": { "name": "string" } },
-    "value": { "type": { "name": "number" } },
+    "value": { "type": { "name": "object" } },
     "valueMax": { "type": { "name": "number" }, "default": "100" },
     "valueMin": { "type": { "name": "number" }, "default": "0" },
     "width": { "type": { "name": "number" } }
@@ -39,6 +39,7 @@
     "import { GaugeContainer } from '@mui/x-charts-pro';",
     "import { GaugeContainer } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiGaugeContainer",
   "filename": "/packages/x-charts/src/Gauge/GaugeContainer.tsx",

@@ -46,7 +46,8 @@
     "onClose": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Please avoid using as it will be removed in next major version."
+      "deprecationInfo": "Please avoid using as it will be removed in next major version.",
+      "signature": { "type": "function() => void", "describedArgs": [] }
     },
     "onError": {
       "type": { "name": "func" },
@@ -73,11 +74,11 @@
     "openTo": {
       "type": {
         "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
+        "description": "'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'"
       }
     },
     "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
+      "type": { "name": "enum", "description": "'portrait'<br>&#124;&nbsp;'landscape'" }
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
@@ -92,9 +93,9 @@
       "type": { "name": "func" },
       "default": "() => <span>...</span>",
       "signature": {
-        "type": "function() => React.ReactNode",
+        "type": "function() => ReactNode",
         "describedArgs": [],
-        "returned": "React.ReactNode"
+        "returned": "ReactNode"
       }
     },
     "shouldDisableDate": {
@@ -128,13 +129,6 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
     "timezone": {
       "type": { "name": "string" },
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
@@ -147,16 +141,16 @@
     "view": {
       "type": {
         "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
+        "description": "'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'"
       }
     },
     "viewRenderers": {
-      "type": { "name": "shape", "description": "{ day?: func, month?: func, year?: func }" }
+      "type": { "name": "shape", "description": "{ month?: func, year?: func, day?: func }" }
     },
     "views": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
+        "description": "Array&lt;'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'&gt;"
       }
     },
     "yearsOrder": {
@@ -260,10 +254,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
-  "themeDefaultProps": false,
   "muiName": "MuiStaticDatePicker",
-  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/StaticDatePicker/StaticDatePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",

@@ -8,17 +8,18 @@
       "description": "If <code>true</code>, a clear button will be shown in the field allowing value clearing."
     },
     "clearButtonPosition": {
-      "description": "The position at which the clear button is placed. If the field is not clearable, the button is not rendered."
+      "description": "The position at which the clear button is placed.\nIf the field is not clearable, the button is not rendered."
     },
     "color": {
-      "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>."
+      "description": "The color of the component.\nIt supports both default and custom theme colors, which can be added as shown in the\n[palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors)."
     },
+    "component": { "description": "" },
     "dateSeparator": { "description": "String displayed between the start and the end dates." },
     "defaultValue": {
       "description": "The default value. Use when the component is not controlled."
     },
     "disabled": {
-      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
+      "description": "If <code>true</code>, the component is disabled.\nWhen disabled, the value cannot be changed and no interaction is possible."
     },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
@@ -26,35 +27,36 @@
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },
+    "enableAccessibleFieldDOMStructure": { "description": "" },
     "fieldRef": { "description": "The ref object used to imperatively interact with the field." },
     "focused": {
       "description": "If <code>true</code>, the component is displayed in focused state."
     },
     "format": { "description": "Format of the date when rendered in the input(s)." },
     "formatDensity": {
-      "description": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
+      "description": "Density of the format when rendered in the input.\nSetting <code>formatDensity</code> to <code>\"spacious\"</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
     },
     "FormHelperTextProps": {
-      "description": "Props applied to the <a href=\"https://mui.com/material-ui/api/form-helper-text/\"><code>FormHelperText</code></a> element."
+      "description": "Props applied to the [<code>FormHelperText</code>](https://mui.com/material-ui/api/form-helper-text/) element."
     },
     "fullWidth": {
       "description": "If <code>true</code>, the input will take up the full width of its container."
     },
     "helperText": { "description": "The helper text content." },
     "hiddenLabel": {
-      "description": "If <code>true</code>, the label is hidden. This is used to increase density for a <code>FilledInput</code>. Be sure to add <code>aria-label</code> to the <code>input</code> element."
+      "description": "If <code>true</code>, the label is hidden.\nThis is used to increase density for a <code>FilledInput</code>.\nBe sure to add <code>aria-label</code> to the <code>input</code> element."
     },
     "id": {
-      "description": "The id of the <code>input</code> element. Use this prop to make <code>label</code> and <code>helperText</code> accessible for screen readers."
+      "description": "The id of the <code>input</code> element.\nUse this prop to make <code>label</code> and <code>helperText</code> accessible for screen readers."
     },
     "InputLabelProps": {
-      "description": "Props applied to the <a href=\"https://mui.com/material-ui/api/input-label/\"><code>InputLabel</code></a> element. Pointer events like <code>onClick</code> are enabled if and only if <code>shrink</code> is <code>true</code>."
+      "description": "Props applied to the [<code>InputLabel</code>](https://mui.com/material-ui/api/input-label/) element.\nPointer events like <code>onClick</code> are enabled if and only if <code>shrink</code> is <code>true</code>."
     },
     "inputProps": {
-      "description": "<a href=\"https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes\">Attributes</a> applied to the <code>input</code> element."
+      "description": "[Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the <code>input</code> element."
     },
     "InputProps": {
-      "description": "Props applied to the Input element. It will be a <a href=\"https://mui.com/material-ui/api/filled-input/\"><code>FilledInput</code></a>, <a href=\"https://mui.com/material-ui/api/outlined-input/\"><code>OutlinedInput</code></a> or <a href=\"https://mui.com/material-ui/api/input/\"><code>Input</code></a> component depending on the <code>variant</code> prop value."
+      "description": "Props applied to the Input element.\nIt will be a [<code>FilledInput</code>](https://mui.com/material-ui/api/filled-input/),\n[<code>OutlinedInput</code>](https://mui.com/material-ui/api/outlined-input/) or [<code>Input</code>](https://mui.com/material-ui/api/input/)\ncomponent depending on the <code>variant</code> prop value.\nProps applied to the Input element.\nIt will be a [<code>FilledInput</code>](/material-ui/api/filled-input/),\n[<code>OutlinedInput</code>](/material-ui/api/outlined-input/) or [<code>Input</code>](/material-ui/api/input/)\ncomponent depending on the <code>variant</code> prop value."
     },
     "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
     "label": { "description": "The label content." },
@@ -64,15 +66,11 @@
     "maxDate": { "description": "Maximal selectable date." },
     "minDate": { "description": "Minimal selectable date." },
     "name": { "description": "Name attribute of the <code>input</code> element." },
+    "onBlur": { "description": "" },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
-        "value": {
-          "name": "value",
-          "description": "The new value.",
-          "argType": "TValue",
-          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
-        },
+        "value": { "name": "value", "description": "The new value." },
         "context": {
           "name": "context",
           "description": "The context containing the validation result of the current value."
@@ -81,22 +79,16 @@
     },
     "onClear": { "description": "Callback fired when the clear button is clicked." },
     "onError": {
-      "description": "Callback fired when the error associated with the current value changes. When a validation error is detected, the <code>error</code> parameter contains a non-null value. This can be used to render an appropriate form error.",
+      "description": "Callback fired when the error associated with the current value changes.\nWhen a validation error is detected, the <code>error</code> parameter contains a non-null value.\nThis can be used to render an appropriate form error.",
       "typeDescriptions": {
         "error": {
           "name": "error",
-          "description": "The reason why the current value is not valid.",
-          "argType": "TError",
-          "argTypeDescription": "The validation error type. It will be either <code>string</code> or a <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+          "description": "The reason why the current value is not valid."
         },
-        "value": {
-          "name": "value",
-          "description": "The value associated with the error.",
-          "argType": "TValue",
-          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
-        }
+        "value": { "name": "value", "description": "The value associated with the error." }
       }
     },
+    "onFocus": { "description": "" },
     "onSelectedSectionsChange": {
       "description": "Callback fired when the selected sections change.",
       "typeDescriptions": {
@@ -104,48 +96,39 @@
       }
     },
     "readOnly": {
-      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
+      "description": "If <code>true</code>, the component is read-only.\nWhen read-only, the value cannot be changed but the user can interact with the interface."
     },
     "referenceDate": {
-      "description": "The date used to generate a part of the new value that is not present in the format when both <code>value</code> and <code>defaultValue</code> are empty. For example, on time fields it will be used to determine the date to set."
+      "description": "The date used to generate a part of the new value that is not present in the format when both <code>value</code> and <code>defaultValue</code> are empty.\nFor example, on time fields it will be used to determine the date to set."
     },
     "required": {
-      "description": "If <code>true</code>, the label is displayed as required and the <code>input</code> element is required."
+      "description": "If <code>true</code>, the label is displayed as required and the <code>input</code> element is required.\nIf <code>true</code>, the label will indicate that the <code>input</code> is required."
     },
     "selectedSections": {
-      "description": "The currently selected sections. This prop accepts four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
+      "description": "The currently selected sections.\nThis prop accepts four formats:\n1. If a number is provided, the section at this index will be selected.\n2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected.\n3. If <code>\"all\"</code> is provided, all the sections will be selected.\n4. If <code>null</code> is provided, no section will be selected.\nIf not provided, the selected sections will be handled internally."
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
+      "description": "Disable specific date.<br><br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "typeDescriptions": {
         "day": { "name": "day", "description": "The date to test." },
-        "position": {
-          "name": "position",
-          "description": "The date to test, &#39;start&#39; or &#39;end&#39;."
-        },
-        "boolean": {
-          "name": "boolean",
-          "description": "Returns <code>true</code> if the date should be disabled."
-        }
+        "position": { "name": "position", "description": "The date to test, 'start' or 'end'." }
       }
     },
     "shouldRespectLeadingZeros": {
-      "description": "If <code>true</code>, the format will respect the leading zeroes (for example on dayjs, the format <code>M/D/YYYY</code> will render <code>8/16/2018</code>) If <code>false</code>, the format will always add leading zeroes (for example on dayjs, the format <code>M/D/YYYY</code> will render <code>08/16/2018</code>)<br>Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (for example &quot;DD&quot;), so <code>shouldRespectLeadingZeros={true}</code> might lead to inconsistencies when using <code>AdapterLuxon</code>.<br>Warning n°2: When <code>shouldRespectLeadingZeros={true}</code>, the field will add an invisible character on the sections containing a single digit to make sure <code>onChange</code> is fired. If you need to get the clean value from the input, you can remove this character using <code>input.value.replace(/\\u200e/g, &#39;&#39;)</code>.<br>Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros. This mean that when using <code>shouldRespectLeadingZeros={false}</code>, if you retrieve the value directly from the input (not listening to <code>onChange</code>) and your format contains tokens without leading zeros, the value will not be parsed by your library."
+      "description": "If <code>true</code>, the format will respect the leading zeroes (for example on dayjs, the format <code>M/D/YYYY</code> will render <code>8/16/2018</code>)\nIf <code>false</code>, the format will always add leading zeroes (for example on dayjs, the format <code>M/D/YYYY</code> will render <code>08/16/2018</code>)<br><br>Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (for example \"DD\"), so <code>shouldRespectLeadingZeros={true}</code> might lead to inconsistencies when using <code>AdapterLuxon</code>.<br><br>Warning n°2: When <code>shouldRespectLeadingZeros={true}</code>, the field will add an invisible character on the sections containing a single digit to make sure <code>onChange</code> is fired.\nIf you need to get the clean value from the input, you can remove this character using <code>input.value.replace(/\\u200e/g, '')</code>.<br><br>Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.\nThis mean that when using <code>shouldRespectLeadingZeros={false}</code>, if you retrieve the value directly from the input (not listening to <code>onChange</code>) and your format contains tokens without leading zeros, the value will not be parsed by your library."
     },
     "size": { "description": "The size of the component." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "sx": {
-      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
-    },
+    "style": { "description": "" },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
-      "seeMoreText": "See the {{link}} for more details."
+      "description": "Choose which timezone to use for the value.\nExample: \"default\", \"system\", \"UTC\", \"America/New_York\".\nIf you pass values from other timezones to some props, they will be converted to this timezone before being used.",
+      "seeMoreText": "See {{link}} for more details."
     },
-    "value": { "description": "The selected value. Used when the component is controlled." },
+    "value": { "description": "The selected value.\nUsed when the component is controlled." },
     "variant": { "description": "The variant to use." }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "classDescriptions": {},
   "slotDescriptions": {
     "clearButton": "Button to clear the value.",
     "clearIcon": "Icon to display in the button used to clean the value.",

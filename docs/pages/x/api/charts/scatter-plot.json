@@ -8,7 +8,7 @@
       }
     },
     "renderer": {
-      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
+      "type": { "name": "enum", "description": "'svg-single'<br>&#124;&nbsp;'svg-batch'" },
       "default": "'svg-single'"
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

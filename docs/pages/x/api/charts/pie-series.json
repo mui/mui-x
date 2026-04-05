@@ -1,49 +1,64 @@
 {
   "name": "PieSeries",
   "imports": [
-    "import { PieSeries } from '@mui/x-charts-premium'",
-    "import { PieSeries } from '@mui/x-charts-pro'",
-    "import { PieSeries } from '@mui/x-charts'"
+    "import { PieSeries } from '@mui/x-charts';",
+    "import { PieSeries } from '@mui/x-charts-pro';",
+    "import { PieSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "data": { "type": { "description": "Readonly&lt;TData[]&gt;" }, "required": true },
-    "type": { "type": { "description": "'pie'" }, "required": true },
+    "data": {
+      "type": { "description": "readonly MakeOptional&lt;PieValueType, \"id\"&gt;[]" },
+      "required": true
+    },
     "arcLabel": {
       "type": {
-        "description": "'formattedValue' | 'label' | 'value' | ((item: Omit&lt;DefaultizedPieValueType, 'label'&gt; & { label?: string }) =&gt; string)"
+        "description": "\"label\" | \"value\" | \"formattedValue\" | ((item: Omit&lt;DefaultizedPieValueType, \"label\"&gt; & { label?: string | undefined; }) =&gt; string) | undefined"
       }
     },
-    "arcLabelMinAngle": { "type": { "description": "number" }, "default": "0" },
+    "arcLabelMinAngle": { "type": { "description": "number | undefined" }, "default": "0" },
     "arcLabelRadius": {
-      "type": { "description": "number | string" },
+      "type": { "description": "string | number | undefined" },
       "default": "(innerRadius - outerRadius) / 2"
     },
-    "color": { "type": { "description": "string" } },
+    "color": { "type": { "description": "string | undefined" } },
     "colorGetter": {
-      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
+      "type": {
+        "description": "((data: ColorCallbackValue&lt;MakeOptional&lt;PieValueType, \"id\"&gt;&gt;) =&gt; string) | undefined"
+      }
     },
-    "cornerRadius": { "type": { "description": "number" }, "default": "0" },
-    "cx": { "type": { "description": "number | string" }, "default": "'50%'" },
-    "cy": { "type": { "description": "number | string" }, "default": "'50%'" },
-    "endAngle": { "type": { "description": "number" }, "default": "360" },
+    "cornerRadius": { "type": { "description": "number | undefined" }, "default": "0" },
+    "cx": { "type": { "description": "string | number | undefined" }, "default": "'50%'" },
+    "cy": { "type": { "description": "string | number | undefined" }, "default": "'50%'" },
+    "endAngle": { "type": { "description": "number | undefined" }, "default": "360" },
     "faded": {
       "type": {
-        "description": "{<br />  /**<br />   * Value added to the default `outerRadius`.<br />   * Can be negative. It is ignored if you provide a `faded.outerRadius` value.<br />   */<br />  additionalRadius?: number<br />  innerRadius?: number<br />  outerRadius?: number<br />  cornerRadius?: number<br />  paddingAngle?: number<br />  arcLabelRadius?: number<br />  color?: string<br />}"
+        "description": "{ additionalRadius?: number | undefined; innerRadius?: number | undefined; outerRadius?: number | undefined; cornerRadius?: number | undefined; paddingAngle?: number | undefined; arcLabelRadius?: number | undefined; color?: string | undefined; } | undefined"
       }
     },
     "highlighted": {
       "type": {
-        "description": "{<br />  /**<br />   * Value added to the default `outerRadius`.<br />   * Can be negative. It is ignored if you provide a `highlighted.outerRadius` value.<br />   */<br />  additionalRadius?: number<br />  innerRadius?: number<br />  outerRadius?: number<br />  cornerRadius?: number<br />  paddingAngle?: number<br />  arcLabelRadius?: number<br />  color?: string<br />}"
+        "description": "{ additionalRadius?: number | undefined; innerRadius?: number | undefined; outerRadius?: number | undefined; cornerRadius?: number | undefined; paddingAngle?: number | undefined; arcLabelRadius?: number | undefined; color?: string | undefined; } | undefined"
       }
     },
-    "highlightScope": { "type": { "description": "HighlightScope&lt;SeriesType&gt;" } },
-    "id": { "type": { "description": "SeriesId" } },
-    "innerRadius": { "type": { "description": "number | string" }, "default": "0" },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
-    "outerRadius": { "type": { "description": "number | string" }, "default": "'100%'" },
-    "paddingAngle": { "type": { "description": "number" }, "default": "0" },
-    "sortingValues": { "type": { "description": "ChartsPieSorting" }, "default": "'none'" },
-    "startAngle": { "type": { "description": "number" }, "default": "0" },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } }
+    "highlightScope": { "type": { "description": "CommonHighlightScope | undefined" } },
+    "id": { "type": { "description": "string | undefined" } },
+    "innerRadius": { "type": { "description": "string | number | undefined" }, "default": "0" },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType | undefined" } },
+    "outerRadius": {
+      "type": { "description": "string | number | undefined" },
+      "default": "'100%'"
+    },
+    "paddingAngle": { "type": { "description": "number | undefined" }, "default": "0" },
+    "sortingValues": {
+      "type": { "description": "ChartsPieSorting | undefined" },
+      "default": "'none'"
+    },
+    "startAngle": { "type": { "description": "number | undefined" }, "default": "0" },
+    "type": { "type": { "description": "\"pie\" | undefined" } },
+    "valueFormatter": {
+      "type": {
+        "description": "SeriesValueFormatter&lt;MakeOptional&lt;PieValueType, \"id\"&gt;&gt; | undefined"
+      }
+    }
   }
 }

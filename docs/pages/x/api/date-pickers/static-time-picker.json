@@ -33,7 +33,8 @@
     "onClose": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Please avoid using as it will be removed in next major version."
+      "deprecationInfo": "Please avoid using as it will be removed in next major version.",
+      "signature": { "type": "function() => void", "describedArgs": [] }
     },
     "onError": {
       "type": { "name": "func" },
@@ -53,7 +54,7 @@
       }
     },
     "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
+      "type": { "name": "enum", "description": "'portrait'<br>&#124;&nbsp;'landscape'" }
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
@@ -77,13 +78,6 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
@@ -166,10 +160,9 @@
     }
   ],
   "classes": [],
-  "spread": false,
-  "themeDefaultProps": false,
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiStaticTimePicker",
-  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/StaticTimePicker/StaticTimePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",

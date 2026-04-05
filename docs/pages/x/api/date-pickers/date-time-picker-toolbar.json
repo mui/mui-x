@@ -1,14 +1,10 @@
 {
   "props": {
+    "ampm": { "type": { "name": "bool" } },
+    "ampmInClock": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
+    "titleId": { "type": { "name": "string" } },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" },
     "toolbarTitle": { "type": { "name": "node" } }
@@ -19,31 +15,8 @@
     "import { DateTimePickerToolbar } from '@mui/x-date-pickers';",
     "import { DateTimePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
-    {
-      "key": "ampmLabel",
-      "className": "MuiDateTimePickerToolbar-ampmLabel",
-      "description": "Styles applied to am/pm labels.",
-      "isGlobal": false
-    },
-    {
-      "key": "ampmLandscape",
-      "className": "MuiDateTimePickerToolbar-ampmLandscape",
-      "description": "Styles applied to am/pm section in landscape mode.",
-      "isGlobal": false
-    },
-    {
-      "key": "ampmSelection",
-      "className": "MuiDateTimePickerToolbar-ampmSelection",
-      "description": "Styles applied to the am/pm section.",
-      "isGlobal": false
-    },
-    {
-      "key": "dateContainer",
-      "className": "MuiDateTimePickerToolbar-dateContainer",
-      "description": "Styles applied to the date container element.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiDateTimePickerToolbar-root",
@@ -51,9 +24,9 @@
       "isGlobal": false
     },
     {
-      "key": "separator",
-      "className": "MuiDateTimePickerToolbar-separator",
-      "description": "Styles applied to the separator element.",
+      "key": "dateContainer",
+      "className": "MuiDateTimePickerToolbar-dateContainer",
+      "description": "Styles applied to the date container element.",
       "isGlobal": false
     },
     {
@@ -72,6 +45,30 @@
       "key": "timeLabelReverse",
       "className": "MuiDateTimePickerToolbar-timeLabelReverse",
       "description": "Styles applied to the time container if rtl.",
+      "isGlobal": false
+    },
+    {
+      "key": "separator",
+      "className": "MuiDateTimePickerToolbar-separator",
+      "description": "Styles applied to the separator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "ampmSelection",
+      "className": "MuiDateTimePickerToolbar-ampmSelection",
+      "description": "Styles applied to the am/pm section.",
+      "isGlobal": false
+    },
+    {
+      "key": "ampmLandscape",
+      "className": "MuiDateTimePickerToolbar-ampmLandscape",
+      "description": "Styles applied to am/pm section in landscape mode.",
+      "isGlobal": false
+    },
+    {
+      "key": "ampmLabel",
+      "className": "MuiDateTimePickerToolbar-ampmLabel",
+      "description": "Styles applied to am/pm labels.",
       "isGlobal": false
     }
   ],

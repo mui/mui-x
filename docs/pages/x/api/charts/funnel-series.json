@@ -1,59 +1,61 @@
 {
   "name": "FunnelSeries",
   "imports": [
-    "import { FunnelSeries } from '@mui/x-charts-premium'",
-    "import { FunnelSeries } from '@mui/x-charts-pro'"
+    "import { FunnelSeries } from '@mui/x-charts-pro';",
+    "import { FunnelSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
     "data": {
-      "type": { "description": "Readonly&lt;FunnelValueType[]&gt;" },
+      "type": { "description": "readonly FunnelValueType[]" },
       "required": true,
       "isProPlan": true
     },
-    "type": { "type": { "description": "'funnel'" }, "required": true, "isProPlan": true },
-    "borderRadius": { "type": { "description": "number" }, "default": "8", "isProPlan": true },
+    "borderRadius": {
+      "type": { "description": "number | undefined" },
+      "default": "8",
+      "isProPlan": true
+    },
     "curve": {
-      "type": { "description": "FunnelCurveType" },
+      "type": { "description": "FunnelCurveType | undefined" },
       "default": "'linear'",
       "isProPlan": true
     },
     "funnelDirection": {
-      "type": { "description": "'increasing' | 'decreasing' | 'auto'" },
+      "type": { "description": "\"auto\" | \"increasing\" | \"decreasing\" | undefined" },
       "default": "'auto'",
       "isProPlan": true
     },
-    "highlightScope": {
-      "type": { "description": "HighlightScope&lt;SeriesType&gt;" },
-      "isProPlan": true
-    },
-    "id": { "type": { "description": "SeriesId" }, "isProPlan": true },
+    "highlightScope": { "type": { "description": "CommonHighlightScope | undefined" } },
+    "id": { "type": { "description": "string | undefined" } },
     "label": {
-      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" },
+      "type": {
+        "description": "string | ((location: \"tooltip\" | \"legend\") =&gt; string) | undefined"
+      },
       "isProPlan": true
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" }, "isProPlan": true },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType | undefined" } },
     "layout": {
-      "type": { "description": "'horizontal' | 'vertical'" },
+      "type": { "description": "\"horizontal\" | \"vertical\" | undefined" },
       "default": "'vertical'",
       "isProPlan": true
     },
     "sectionLabel": {
       "type": {
-        "description": "FunnelLabelOptions | ((item: FunnelItem) =&gt; FunnelLabelOptions | false) | false"
+        "description": "false | FunnelLabelOptions | ((item: FunnelItem) =&gt; false | FunnelLabelOptions) | undefined"
       },
       "default": "{ vertical: 'middle', horizontal: 'center' }",
       "isProPlan": true
     },
+    "type": { "type": { "description": "\"funnel\" | undefined" }, "isProPlan": true },
     "valueFormatter": {
-      "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" },
-      "isProPlan": true
+      "type": { "description": "SeriesValueFormatter&lt;FunnelValueType&gt; | undefined" }
     },
     "variant": {
-      "type": { "description": "'filled' | 'outlined'" },
+      "type": { "description": "\"filled\" | \"outlined\" | undefined" },
       "default": "'filled'",
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "AxisId" }, "isProPlan": true },
-    "yAxisId": { "type": { "description": "AxisId" }, "isProPlan": true }
+    "xAxisId": { "type": { "description": "AxisId | undefined" } },
+    "yAxisId": { "type": { "description": "AxisId | undefined" } }
   }
 }

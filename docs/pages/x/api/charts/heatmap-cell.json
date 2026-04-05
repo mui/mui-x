@@ -1,14 +1,22 @@
 {
-  "props": {},
+  "props": {
+    "height": { "type": { "name": "number" }, "required": true },
+    "ownerState": { "type": { "name": "object" }, "required": true },
+    "width": { "type": { "name": "number" }, "required": true },
+    "x": { "type": { "name": "number" }, "required": true },
+    "y": { "type": { "name": "number" }, "required": true }
+  },
   "name": "HeatmapCell",
   "imports": [
     "import { HeatmapCell } from '@mui/x-charts-pro/Heatmap';",
-    "import { HeatmapCell } from '@mui/x-charts-pro';"
+    "import { HeatmapCell } from '@mui/x-charts-pro';",
+    "import { HeatmapCell } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
-  "muiName": "MuiHeatmapCell",
+  "muiName": "MuiHeatmap",
   "filename": "/packages/x-charts-pro/src/Heatmap/HeatmapCell.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
   "cssComponent": false
 }

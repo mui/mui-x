@@ -1,6 +1,7 @@
 {
   "props": {
-    "axisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
+    "axis": { "type": { "name": "object" } },
+    "axisId": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disableLine": { "type": { "name": "bool" }, "default": "false" },
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
@@ -13,8 +14,15 @@
       "additionalInfo": { "slotsApi": true }
     },
     "tickInterval": {
-      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
-      "default": "'auto'"
+      "type": {
+        "name": "union",
+        "description": "Array&lt;any&gt;<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;func"
+      },
+      "default": "'auto'",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-charts/axis/#fixed-tick-positions",
+        "text": ""
+      }
     },
     "tickLabelInterval": {
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;func" },
@@ -31,7 +39,7 @@
     "tickPlacement": {
       "type": {
         "name": "enum",
-        "description": "'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start'"
+        "description": "'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'extremities'"
       },
       "default": "'extremities'"
     },
@@ -83,8 +91,6 @@
     }
   ],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChartsYAxis",
   "filename": "/packages/x-charts/src/ChartsYAxis/ChartsYAxis.tsx",
   "inheritance": null,

@@ -1,11 +1,15 @@
 {
-  "props": {},
+  "props": {
+    "id": { "type": { "name": "string" }, "required": true },
+    "itemId": { "type": { "name": "string" }, "required": true }
+  },
   "name": "TreeItemProvider",
   "imports": [
     "import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';",
     "import { TreeItemProvider } from '@mui/x-tree-view';",
     "import { TreeItemProvider } from '@mui/x-tree-view-pro';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiTreeItemProvider",
   "filename": "/packages/x-tree-view/src/TreeItemProvider/TreeItemProvider.tsx",

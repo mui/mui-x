@@ -1,22 +1,27 @@
 {
   "name": "GridCsvExportOptions",
   "imports": [
-    "import { GridCsvExportOptions } from '@mui/x-data-grid-premium'",
-    "import { GridCsvExportOptions } from '@mui/x-data-grid-pro'",
-    "import { GridCsvExportOptions } from '@mui/x-data-grid'"
+    "import { GridCsvExportOptions } from '@mui/x-data-grid';",
+    "import { GridCsvExportOptions } from '@mui/x-data-grid-pro';",
+    "import { GridCsvExportOptions } from '@mui/x-data-grid-premium';"
   ],
-  "demos": "<ul><li><a href=\"/x/react-data-grid/export/#csv-export\">CSV export</a></li></ul>",
+  "demos": "  - [CSV export](/x/react-data-grid/export/#csv-export)",
   "properties": {
-    "allColumns": { "type": { "description": "boolean" }, "default": "false" },
-    "delimiter": { "type": { "description": "string" }, "default": "','" },
-    "escapeFormulas": { "type": { "description": "boolean" }, "default": "true" },
-    "fields": { "type": { "description": "string[]" } },
-    "fileName": { "type": { "description": "string" }, "default": "document.title" },
+    "allColumns": { "type": { "description": "boolean | undefined" }, "default": "false" },
+    "delimiter": { "type": { "description": "string | undefined" }, "default": "','" },
+    "escapeFormulas": { "type": { "description": "boolean | undefined" }, "default": "true" },
+    "fields": { "type": { "description": "string[] | undefined" } },
+    "fileName": { "type": { "description": "string | undefined" }, "default": "document.title" },
     "getRowsToExport": {
-      "type": { "description": "(params: GridCsvGetRowsToExportParams) =&gt; GridRowId[]" }
+      "type": {
+        "description": "((params: GridCsvGetRowsToExportParams&lt;GridApiCommunity&gt;) =&gt; GridRowId[]) | undefined"
+      }
     },
-    "includeColumnGroupsHeaders": { "type": { "description": "boolean" }, "default": "true" },
-    "includeHeaders": { "type": { "description": "boolean" }, "default": "true" },
-    "utf8WithBom": { "type": { "description": "boolean" }, "default": "false" }
+    "includeColumnGroupsHeaders": {
+      "type": { "description": "boolean | undefined" },
+      "default": "true"
+    },
+    "includeHeaders": { "type": { "description": "boolean | undefined" }, "default": "true" },
+    "utf8WithBom": { "type": { "description": "boolean | undefined" }, "default": "false" }
   }
 }

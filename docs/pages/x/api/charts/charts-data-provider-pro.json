@@ -11,7 +11,7 @@
     "margin": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
       }
     },
     "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
@@ -23,7 +23,8 @@
   "name": "ChartsDataProviderPro",
   "imports": [
     "import { ChartsDataProviderPro } from '@mui/x-charts-pro/ChartsDataProviderPro';",
-    "import { ChartsDataProviderPro } from '@mui/x-charts-pro';"
+    "import { ChartsDataProviderPro } from '@mui/x-charts-pro';",
+    "import { ChartsDataProviderPro } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

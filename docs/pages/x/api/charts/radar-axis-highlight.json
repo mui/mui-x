@@ -7,6 +7,7 @@
     "import { RadarAxisHighlight } from '@mui/x-charts-pro';",
     "import { RadarAxisHighlight } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiRadarAxisHighlight",
   "filename": "/packages/x-charts/src/RadarChart/RadarAxisHighlight/RadarAxisHighlight.tsx",

@@ -1,51 +1,35 @@
 {
   "name": "GridEditingApi",
   "description": "The editing API interface that is available in the grid `apiRef`.",
-  "properties": [
-    {
-      "name": "getCellMode",
-      "description": "Gets the mode of a cell.",
-      "type": "(id: GridRowId, field: string) => GridCellMode"
+  "properties": {
+    "getCellMode": {
+      "type": { "description": "(id: GridRowId, field: string) =&gt; GridCellMode" }
     },
-    {
-      "name": "getRowMode",
-      "description": "Gets the mode of a row.",
-      "type": "(id: GridRowId) => GridRowMode"
+    "startCellEditMode": {
+      "type": { "description": "(params: GridStartCellEditModeParams) =&gt; void" }
     },
-    {
-      "name": "getRowWithUpdatedValues",
-      "description": "Returns the row with the values that were set by editing the cells. In row editing, <code>field</code> is ignored and all fields are considered.",
-      "type": "(id: GridRowId, field: string) => GridRowModel"
+    "stopCellEditMode": {
+      "type": { "description": "(params: GridStopCellEditModeParams) =&gt; void" }
     },
-    {
-      "name": "isCellEditable",
-      "description": "Controls if a cell is editable.",
-      "type": "(params: GridCellParams) => boolean"
+    "isCellEditable": {
+      "type": {
+        "description": "(params: GridCellParams&lt;any, unknown, unknown, GridTreeNode&gt;) =&gt; boolean"
+      }
     },
-    {
-      "name": "setEditCellValue",
-      "description": "Sets the value of the edit cell. Commonly used inside the edit cell component.",
-      "type": "(params: GridEditCellValueParams, event?: MuiBaseEvent) => Promise<boolean> | void"
+    "setEditCellValue": {
+      "type": {
+        "description": "(params: GridEditCellValueParams, event?: MuiBaseEvent | undefined) =&gt; void | Promise&lt;boolean&gt;"
+      }
     },
-    {
-      "name": "startCellEditMode",
-      "description": "Puts the cell corresponding to the given row id and field into edit mode.",
-      "type": "(params: GridStartCellEditModeParams) => void"
+    "getRowWithUpdatedValues": {
+      "type": { "description": "(id: GridRowId, field: string) =&gt; GridValidRowModel" }
     },
-    {
-      "name": "startRowEditMode",
-      "description": "Puts the row corresponding to the given id into edit mode.",
-      "type": "(params: GridStartRowEditModeParams) => void"
+    "getRowMode": { "type": { "description": "(id: GridRowId) =&gt; GridRowMode" } },
+    "startRowEditMode": {
+      "type": { "description": "(params: GridStartRowEditModeParams) =&gt; void" }
     },
-    {
-      "name": "stopCellEditMode",
-      "description": "Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored. If <code>params.ignoreModifications</code> is <code>true</code> it will discard the modifications made.",
-      "type": "(params: GridStopCellEditModeParams) => void"
-    },
-    {
-      "name": "stopRowEditMode",
-      "description": "Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored. If <code>params.ignoreModifications</code> is <code>true</code> it will discard the modifications made.",
-      "type": "(params: GridStopRowEditModeParams) => void"
+    "stopRowEditMode": {
+      "type": { "description": "(params: GridStopRowEditModeParams) =&gt; void" }
     }
-  ]
+  }
 }

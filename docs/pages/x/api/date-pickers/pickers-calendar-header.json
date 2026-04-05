@@ -1,11 +1,42 @@
 {
   "props": {
+    "currentMonth": { "type": { "name": "object" }, "required": true },
+    "maxDate": { "type": { "name": "object" }, "required": true },
+    "minDate": { "type": { "name": "object" }, "required": true },
+    "onMonthChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(date: any) => void", "describedArgs": [] }
+    },
+    "reduceAnimations": { "type": { "name": "bool" }, "required": true },
+    "timezone": { "type": { "name": "string" }, "required": true },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'"
+      },
+      "required": true
+    },
+    "views": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'&gt;"
+      },
+      "required": true
+    },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
     "format": {
       "type": { "name": "string" },
       "default": "`${adapter.formats.month} ${adapter.formats.year}`"
     },
     "labelId": { "type": { "name": "string" } },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: DateView) => void", "describedArgs": [] }
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -66,9 +97,9 @@
   ],
   "classes": [
     {
-      "key": "label",
-      "className": "MuiPickersCalendarHeader-label",
-      "description": "Styles applied to the label element.",
+      "key": "root",
+      "className": "MuiPickersCalendarHeader-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
@@ -78,16 +109,25 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiPickersCalendarHeader-root",
-      "description": "Styles applied to the root element.",
+      "key": "label",
+      "className": "MuiPickersCalendarHeader-label",
+      "description": "Styles applied to the label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "switchViewButton",
+      "className": "MuiPickersCalendarHeader-switchViewButton",
+      "description": "Styles applied to the switch view button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "switchViewIcon",
+      "className": "MuiPickersCalendarHeader-switchViewIcon",
+      "description": "Styles applied to the switch view icon element.",
       "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": true,
   "muiName": "MuiPickersCalendarHeader",
-  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/PickersCalendarHeader/PickersCalendarHeader.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",

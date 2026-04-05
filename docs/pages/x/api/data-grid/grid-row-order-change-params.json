@@ -1,10 +1,10 @@
 {
   "name": "GridRowOrderChangeParams",
   "imports": [
-    "import { GridRowOrderChangeParams } from '@mui/x-data-grid-premium'",
-    "import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro'"
+    "import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro';",
+    "import { GridRowOrderChangeParams } from '@mui/x-data-grid-premium';"
   ],
-  "demos": "<ul><li><a href=\"/x/react-data-grid/row-ordering/#implementing-row-reordering\">Flat row reordering</a></li></ul>",
+  "demos": "  - [Flat row reordering](/x/react-data-grid/row-ordering/#implementing-row-reordering)\n  - [Tree data reordering](/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering)\n  - [Row grouping reordering](/x/react-data-grid/row-grouping/#drag-and-drop-group-reordering)",
   "properties": {
     "newParent": {
       "type": { "description": "GridRowId | null" },
@@ -17,7 +17,7 @@
       "required": true,
       "isProPlan": true
     },
-    "row": { "type": { "description": "GridRowModel" }, "required": true, "isProPlan": true },
+    "row": { "type": { "description": "GridValidRowModel" }, "required": true, "isProPlan": true },
     "targetIndex": { "type": { "description": "number" }, "required": true, "isProPlan": true }
   }
 }

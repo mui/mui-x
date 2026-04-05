@@ -1,14 +1,6 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
+    "ampm": { "type": { "name": "bool" }, "required": true },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
   "name": "TimeRangePickerToolbar",
@@ -16,17 +8,18 @@
     "import { TimeRangePickerToolbar } from '@mui/x-date-pickers-pro/TimeRangePicker';",
     "import { TimeRangePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
-    {
-      "key": "container",
-      "className": "MuiTimeRangePickerToolbar-container",
-      "description": "Styles applied to the container element.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiTimeRangePickerToolbar-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "container",
+      "className": "MuiTimeRangePickerToolbar-container",
+      "description": "Styles applied to the container element.",
       "isGlobal": false
     },
     {
@@ -45,6 +38,6 @@
   "muiName": "MuiTimeRangePickerToolbar",
   "filename": "/packages/x-date-pickers-pro/src/TimeRangePicker/TimeRangePickerToolbar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-range-picker/\">Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-range-picker/\">Time Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
   "cssComponent": false
 }

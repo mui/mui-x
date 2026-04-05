@@ -1,20 +1,20 @@
 {
   "name": "GridFilterItem",
   "imports": [
-    "import { GridFilterItem } from '@mui/x-data-grid-premium'",
-    "import { GridFilterItem } from '@mui/x-data-grid-pro'",
-    "import { GridFilterItem } from '@mui/x-data-grid'"
+    "import { GridFilterItem } from '@mui/x-data-grid';",
+    "import { GridFilterItem } from '@mui/x-data-grid-pro';",
+    "import { GridFilterItem } from '@mui/x-data-grid-premium';"
   ],
-  "demos": "<ul><li><a href=\"/x/react-data-grid/filtering/customization/#create-a-custom-operator\">Custom filter operator</a></li></ul>",
+  "demos": "  - [Custom filter operator](/x/react-data-grid/filtering/customization/#create-a-custom-operator)",
   "properties": {
-    "field": { "type": { "description": "GridBaseColDef['field']" }, "required": true },
+    "field": { "type": { "description": "string" }, "required": true },
     "operator": {
       "type": {
-        "description": "'contains' | 'doesNotContain' | 'equals' | 'doesNotEqual' | 'startsWith' | 'endsWith' | '=' | '!=' | '&gt;' | '&gt;=' | '&lt;' | '&lt;=' | 'is' | 'not' | 'after' | 'onOrAfter' | 'before' | 'onOrBefore' | 'isEmpty' | 'isNotEmpty' | 'isAnyOf' | (string & {})"
+        "description": "(string & {}) | \"endsWith\" | \"startsWith\" | \"is\" | \"contains\" | \"doesNotContain\" | \"equals\" | \"doesNotEqual\" | \"=\" | \"!=\" | \"&gt;\" | \"&gt;=\" | \"&lt;\" | \"&lt;=\" | \"not\" | \"after\" | \"onOrAfter\" | \"before\" | \"onOrBefore\" | \"isEmpty\" | \"isNotEmpty\" | \"isAnyOf\""
       },
       "required": true
     },
-    "id": { "type": { "description": "number | string" } },
+    "id": { "type": { "description": "string | number | undefined" } },
     "value": { "type": { "description": "any" } }
   }
 }

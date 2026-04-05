@@ -1,35 +1,45 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "color": { "description": "" },
     "colorGetter": {
-      "description": "Function to get the color of a scatter item given its data index. The data index argument is optional. If not provided, the color for the entire series is returned. If provided, the color for the specific scatter item is returned."
+      "description": "Function to get the color of a scatter item given its data index.\nThe data index argument is optional. If not provided, the color for the entire series is returned.\nIf provided, the color for the specific scatter item is returned."
     },
+    "series": { "description": "" },
+    "xScale": { "description": "" },
+    "yScale": { "description": "" },
+    "classes": { "description": "" },
     "onItemClick": {
       "description": "Callback fired when clicking on a scatter item.",
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element."
+          "description": "Mouse event recorded on the <code><svg/></code> element."
         },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",
           "description": "The scatter item identifier."
         }
       }
-    }
+    },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
   },
   "classDescriptions": {
-    "focusedMark": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the focused scatter mark element"
-    },
     "root": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the scatter plot element"
     },
     "series": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the group surrounding a series&#39; scatter elements"
+      "nodeName": "the group surrounding a series' scatter elements"
+    },
+    "marker": {
+      "description": "Styles applied to an individual scatter marker element.\nNot applied when using the `svg-batch` renderer."
+    },
+    "focusedMark": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the focused scatter mark element"
     }
   },
   "slotDescriptions": { "marker": "The component that renders the marker for a scatter point." }

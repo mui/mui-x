@@ -1,16 +1,10 @@
 {
   "name": "GridVirtualizationApi",
   "description": "",
-  "properties": [
-    {
-      "name": "unstable_setColumnVirtualization",
-      "description": "Enable/disable column virtualization.",
-      "type": "(enabled: boolean) => void"
-    },
-    {
-      "name": "unstable_setVirtualization",
-      "description": "Enable/disable virtualization.",
-      "type": "(enabled: boolean) => void"
+  "properties": {
+    "unstable_setVirtualization": { "type": { "description": "(enabled: boolean) =&gt; void" } },
+    "unstable_setColumnVirtualization": {
+      "type": { "description": "(enabled: boolean) =&gt; void" }
     }
-  ]
+  }
 }

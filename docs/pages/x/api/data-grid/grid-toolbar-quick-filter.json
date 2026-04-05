@@ -12,13 +12,14 @@
     },
     "quickFilterParser": {
       "type": { "name": "func" },
-      "default": "(searchText: string) => searchText\n  .split(' ')\n  .filter((word) => word !== '')",
+      "default": "(searchText: string) => searchText\n.split(' ')\n.filter((word) => word !== '')",
       "signature": {
         "type": "function(input: string) => Array<any>",
         "describedArgs": ["input"],
         "returned": "Array<any>"
       }
-    }
+    },
+    "slotProps": { "type": { "name": "object" } }
   },
   "name": "GridToolbarQuickFilter",
   "imports": [
@@ -27,12 +28,11 @@
     "import { GridToolbarQuickFilter } from '@mui/x-data-grid-pro';",
     "import { GridToolbarQuickFilter } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
-  "muiName": "MuiGridToolbarQuickFilter",
-  "forwardsRefTo": "GridRoot",
+  "muiName": "MuiDataGrid",
   "filename": "/packages/x-data-grid/src/components/toolbar/GridToolbarQuickFilter.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
-  "cssComponent": false,
-  "deprecated": true
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a> <span class=\"plan-pro\"></span></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a> <span class=\"plan-premium\"></span></li></ul>",
+  "cssComponent": false
 }

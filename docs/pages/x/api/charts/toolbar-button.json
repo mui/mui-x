@@ -1,6 +1,16 @@
 {
   "props": {
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
+    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'small'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'large'"
+      }
+    },
+    "style": { "type": { "name": "object" } },
+    "tabIndex": { "type": { "name": "number" } }
   },
   "name": "ToolbarButton",
   "imports": [
@@ -9,10 +19,11 @@
     "import { ToolbarButton } from '@mui/x-charts-pro';",
     "import { ToolbarButton } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiToolbarButton",
   "filename": "/packages/x-charts/src/Toolbar/ToolbarButton.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li>\n<li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar component</a></li></ul>",
   "cssComponent": false
 }

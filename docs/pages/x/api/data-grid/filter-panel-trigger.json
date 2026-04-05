@@ -1,7 +1,21 @@
 {
   "props": {
-    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "className": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;func" } },
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
+    "render": { "type": { "name": "element" } },
+    "role": { "type": { "name": "string" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'small'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'large'"
+      }
+    },
+    "startIcon": { "type": { "name": "node" } },
+    "style": { "type": { "name": "object" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "title": { "type": { "name": "string" } },
+    "touchRippleRef": { "type": { "name": "any" } }
   },
   "name": "FilterPanelTrigger",
   "imports": [
@@ -10,9 +24,9 @@
     "import { FilterPanelTrigger } from '@mui/x-data-grid-pro';",
     "import { FilterPanelTrigger } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiFilterPanelTrigger",
-  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/filterPanel/FilterPanelTrigger.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/components/filter-panel\">Data Grid - Filter Panel component 🚧</a></li></ul>",

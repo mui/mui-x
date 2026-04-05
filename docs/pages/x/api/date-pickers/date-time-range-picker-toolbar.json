@@ -1,14 +1,9 @@
 {
   "props": {
+    "ampm": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
+    "titleId": { "type": { "name": "string" } },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
@@ -17,13 +12,8 @@
     "import { DateTimeRangePickerToolbar } from '@mui/x-date-pickers-pro/DateTimeRangePicker';",
     "import { DateTimeRangePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
-    {
-      "key": "endToolbar",
-      "className": "MuiDateTimeRangePickerToolbar-endToolbar",
-      "description": "Styles applied to the end toolbar element.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiDateTimeRangePickerToolbar-root",
@@ -35,11 +25,17 @@
       "className": "MuiDateTimeRangePickerToolbar-startToolbar",
       "description": "Styles applied to the start toolbar element.",
       "isGlobal": false
+    },
+    {
+      "key": "endToolbar",
+      "className": "MuiDateTimeRangePickerToolbar-endToolbar",
+      "description": "Styles applied to the end toolbar element.",
+      "isGlobal": false
     }
   ],
   "muiName": "MuiDateTimeRangePickerToolbar",
   "filename": "/packages/x-date-pickers-pro/src/DateTimeRangePicker/DateTimeRangePickerToolbar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
   "cssComponent": false
 }

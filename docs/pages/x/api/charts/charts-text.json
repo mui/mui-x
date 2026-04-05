@@ -3,6 +3,7 @@
     "text": { "type": { "name": "string" }, "required": true },
     "lineHeight": { "type": { "name": "number" } },
     "needsComputation": { "type": { "name": "bool" }, "default": "false" },
+    "ownerState": { "type": { "name": "any" } },
     "style": { "type": { "name": "object" } }
   },
   "name": "ChartsText",
@@ -12,6 +13,7 @@
     "import { ChartsText } from '@mui/x-charts-pro';",
     "import { ChartsText } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiChartsText",
   "filename": "/packages/x-charts/src/ChartsText/ChartsText.tsx",

@@ -1,12 +1,26 @@
 {
   "props": {
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
     "options": {
       "type": {
         "name": "shape",
-        "description": "{ allColumns?: bool, bodyClassName?: string, copyStyles?: bool, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, hideFooter?: bool, hideToolbar?: bool, includeCheckboxes?: bool, pageStyle?: func<br>&#124;&nbsp;string }"
+        "description": "{ fileName?: string, hideToolbar?: bool, hideFooter?: bool, includeCheckboxes?: bool, copyStyles?: bool, bodyClassName?: string, pageStyle?: string<br>&#124;&nbsp;func, getRowsToExport?: func, fields?: Array&lt;string&gt;, allColumns?: bool }"
       }
     },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
+    "role": { "type": { "name": "string" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'small'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'large'"
+      }
+    },
+    "startIcon": { "type": { "name": "node" } },
+    "style": { "type": { "name": "object" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "title": { "type": { "name": "string" } },
+    "touchRippleRef": { "type": { "name": "any" } }
   },
   "name": "ExportPrint",
   "imports": [
@@ -15,9 +29,9 @@
     "import { ExportPrint } from '@mui/x-data-grid-pro';",
     "import { ExportPrint } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiExportPrint",
-  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/export/ExportPrint.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/components/export\">Data Grid - Export component</a></li></ul>",

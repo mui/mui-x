@@ -1,12 +1,26 @@
 {
   "props": {
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
     "options": {
       "type": {
         "name": "shape",
-        "description": "{ allColumns?: bool, delimiter?: string, escapeFormulas?: bool, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, includeColumnGroupsHeaders?: bool, includeHeaders?: bool, shouldAppendQuotes?: bool, utf8WithBom?: bool }"
+        "description": "{ delimiter?: string, fileName?: string, utf8WithBom?: bool, includeHeaders?: bool, includeColumnGroupsHeaders?: bool, getRowsToExport?: func, shouldAppendQuotes?: bool, escapeFormulas?: bool, fields?: Array&lt;string&gt;, allColumns?: bool }"
       }
     },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
+    "role": { "type": { "name": "string" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'small'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'large'"
+      }
+    },
+    "startIcon": { "type": { "name": "node" } },
+    "style": { "type": { "name": "object" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "title": { "type": { "name": "string" } },
+    "touchRippleRef": { "type": { "name": "any" } }
   },
   "name": "ExportCsv",
   "imports": [
@@ -15,9 +29,9 @@
     "import { ExportCsv } from '@mui/x-data-grid-pro';",
     "import { ExportCsv } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiExportCsv",
-  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/export/ExportCsv.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/components/export\">Data Grid - Export component</a></li></ul>",

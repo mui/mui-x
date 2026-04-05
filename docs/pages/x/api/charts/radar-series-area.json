@@ -17,6 +17,7 @@
     "import { RadarSeriesArea } from '@mui/x-charts-pro';",
     "import { RadarSeriesArea } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiRadarSeriesArea",
   "filename": "/packages/x-charts/src/RadarChart/RadarSeriesPlot/RadarSeriesArea.tsx",

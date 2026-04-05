@@ -2,7 +2,6 @@
   "componentDescription": "",
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "className": { "description": "A CSS class name applied to the root element." },
     "onItemClick": {
       "description": "Callback fired when an area is clicked.",
       "typeDescriptions": {
@@ -14,8 +13,9 @@
       }
     },
     "seriesId": {
-      "description": "The id of the series to display. If undefined all series are displayed."
+      "description": "The id of the series to display.\nIf undefined all series are displayed."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

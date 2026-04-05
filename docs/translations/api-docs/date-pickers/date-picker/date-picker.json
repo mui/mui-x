@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "autoFocus": {
-      "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered."
+      "description": "If <code>true</code>, the main element is focused during the first mount.\nThis main element is:\n- the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view).\n- the <code>input</code> element if there is a field rendered."
     },
     "closeOnSelect": {
       "description": "If <code>true</code>, the Picker will close after submitting the full date."
@@ -13,24 +13,23 @@
         "date": {
           "name": "date",
           "description": "The date of the day of week provided by the adapter."
-        },
-        "string": { "name": "string", "description": "The name to display." }
+        }
       }
     },
     "defaultValue": {
-      "description": "The default value. Used when the component is not controlled."
+      "description": "The default value.\nUsed when the component is not controlled."
     },
     "desktopModeMediaQuery": {
       "description": "CSS media query when <code>Mobile</code> mode will be changed to <code>Desktop</code>."
     },
     "disabled": {
-      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
+      "description": "If <code>true</code>, the component is disabled.\nWhen disabled, the value cannot be changed and no interaction is possible."
     },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
     "disableHighlightToday": {
-      "description": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle."
+      "description": "If <code>true</code>, today's date is rendering without highlighting with circle."
     },
     "disableOpenPicker": {
       "description": "If <code>true</code>, the button to open the Picker will not be rendered (it will only render the field)."
@@ -41,25 +40,26 @@
     "displayWeekNumber": {
       "description": "If <code>true</code>, the week number will be display in the calendar."
     },
+    "enableAccessibleFieldDOMStructure": { "description": "" },
     "fixedWeekNumber": {
-      "description": "The day view will show as many weeks as needed after the end of the current month to match this value. Put it to 6 to have a fixed number of weeks in Gregorian calendars"
+      "description": "The day view will show as many weeks as needed after the end of the current month to match this value.\nPut it to 6 to have a fixed number of weeks in Gregorian calendars"
     },
     "format": {
-      "description": "Format of the date when rendered in the input(s). Defaults to localized format based on the used <code>views</code>."
+      "description": "Format of the date when rendered in the input(s).\nDefaults to localized format based on the used <code>views</code>."
     },
     "formatDensity": {
-      "description": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
+      "description": "Density of the format when rendered in the input.\nSetting <code>formatDensity</code> to <code>\"spacious\"</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
     },
     "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
     "keepOpenDuringFieldFocus": {
-      "description": "If <code>true</code>, keep the picker open when the value is edited from the field. Useful to prevent the popper/dialog from closing while typing in the input. This only affects changes with <code>source = &quot;field&quot;</code> and does not alter view interactions."
+      "description": "If <code>true</code>, keep the picker open when the value is edited from the field.\nUseful to prevent the popper/dialog from closing while typing in the input.\nThis only affects changes with <code>source = \"field\"</code> and does not alter view interactions."
     },
     "label": { "description": "The label content." },
     "loading": {
-      "description": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar. Can be used to preload information and show it in calendar."
+      "description": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar.\nCan be used to preload information and show it in calendar."
     },
     "localeText": {
-      "description": "Locale for components texts. Allows overriding texts coming from <code>LocalizationProvider</code> and <code>theme</code>."
+      "description": "Locale for components texts.\nAllows overriding texts coming from <code>LocalizationProvider</code> and <code>theme</code>."
     },
     "maxDate": { "description": "Maximal selectable date." },
     "minDate": { "description": "Minimal selectable date." },
@@ -70,51 +70,34 @@
     "onAccept": {
       "description": "Callback fired when the value is accepted.",
       "typeDescriptions": {
-        "value": {
-          "name": "value",
-          "description": "The value that was just accepted.",
-          "argType": "TValue",
-          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
-        },
+        "value": { "name": "value", "description": "The value that was just accepted." },
         "context": {
           "name": "context",
-          "description": "<p>Context about this acceptance: - <code>validationError</code>: validation result of the current value - <code>source</code>: source of the acceptance. One of &#39;field&#39; | &#39;view&#39; | &#39;unknown&#39; - <code>shortcut</code> (optional): the shortcut metadata if the value was accepted via a shortcut selection</p>\n"
+          "description": "Context about this acceptance:\n- <code>validationError</code>: validation result of the current value\n- <code>source</code>: source of the acceptance. One of 'field' | 'view' | 'unknown'\n- <code>shortcut</code> (optional): the shortcut metadata if the value was accepted via a shortcut selection"
         }
       }
     },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
-        "value": {
-          "name": "value",
-          "description": "The new value.",
-          "argType": "TValue",
-          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
-        },
+        "value": { "name": "value", "description": "The new value." },
         "context": {
           "name": "context",
-          "description": "<p>Context about this change: - <code>validationError</code>: validation result of the current value - <code>source</code>: source of the change. One of &#39;field&#39; | &#39;view&#39; | &#39;unknown&#39; - <code>shortcut</code> (optional): the shortcut metadata if the change was triggered by a shortcut selection</p>\n"
+          "description": "Context about this change:\n- <code>validationError</code>: validation result of the current value\n- <code>source</code>: source of the change. One of 'field' | 'view' | 'unknown'\n- <code>shortcut</code> (optional): the shortcut metadata if the change was triggered by a shortcut selection"
         }
       }
     },
     "onClose": {
-      "description": "Callback fired when the popup requests to be closed. Use in controlled mode (see <code>open</code>)."
+      "description": "Callback fired when the popup requests to be closed.\nUse in controlled mode (see <code>open</code>)."
     },
     "onError": {
-      "description": "Callback fired when the error associated with the current value changes. When a validation error is detected, the <code>error</code> parameter contains a non-null value. This can be used to render an appropriate form error.",
+      "description": "Callback fired when the error associated with the current value changes.\nWhen a validation error is detected, the <code>error</code> parameter contains a non-null value.\nThis can be used to render an appropriate form error.",
       "typeDescriptions": {
         "error": {
           "name": "error",
-          "description": "The reason why the current value is not valid.",
-          "argType": "TError",
-          "argTypeDescription": "The validation error type. It will be either <code>string</code> or a <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+          "description": "The reason why the current value is not valid."
         },
-        "value": {
-          "name": "value",
-          "description": "The value associated with the error.",
-          "argType": "TValue",
-          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
-        }
+        "value": { "name": "value", "description": "The value associated with the error." }
       }
     },
     "onMonthChange": {
@@ -122,7 +105,7 @@
       "typeDescriptions": { "month": { "name": "month", "description": "The new month." } }
     },
     "onOpen": {
-      "description": "Callback fired when the popup requests to be opened. Use in controlled mode (see <code>open</code>)."
+      "description": "Callback fired when the popup requests to be opened.\nUse in controlled mode (see <code>open</code>)."
     },
     "onSelectedSectionsChange": {
       "description": "Callback fired when the selected sections change.",
@@ -132,14 +115,7 @@
     },
     "onViewChange": {
       "description": "Callback fired on view change.",
-      "typeDescriptions": {
-        "view": {
-          "name": "view",
-          "description": "The new view.",
-          "argType": "TView",
-          "argTypeDescription": "Type of the view. It will vary based on the Picker type and the <code>views</code> it uses."
-        }
-      }
+      "typeDescriptions": { "view": { "name": "view", "description": "The new view." } }
     },
     "onYearChange": {
       "description": "Callback fired on year change.",
@@ -147,101 +123,74 @@
     },
     "open": { "description": "Control the popup or dialog open state." },
     "openTo": {
-      "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."
+      "description": "The default visible view.\nUsed when the component view is not controlled.\nMust be a valid option from <code>views</code> list."
     },
     "orientation": { "description": "Force rendering in particular orientation." },
     "readOnly": {
-      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
+      "description": "If <code>true</code>, the component is read-only.\nWhen read-only, the value cannot be changed but the user can interact with the interface."
     },
     "reduceAnimations": { "description": "If <code>true</code>, disable heavy animations." },
     "referenceDate": {
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
     },
     "renderLoading": {
-      "description": "Component displaying when passed <code>loading</code> true.",
-      "typeDescriptions": {
-        "React.ReactNode": {
-          "name": "React.ReactNode",
-          "description": "The node to render when loading."
-        }
-      }
+      "description": "Component displaying when passed <code>loading</code> true."
     },
     "selectedSections": {
-      "description": "The currently selected sections. This prop accepts four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
+      "description": "The currently selected sections.\nThis prop accepts four formats:\n1. If a number is provided, the section at this index will be selected.\n2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected.\n3. If <code>\"all\"</code> is provided, all the sections will be selected.\n4. If <code>null</code> is provided, no section will be selected.\nIf not provided, the selected sections will be handled internally."
     },
     "shouldDisableDate": {
-      "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
-      "typeDescriptions": {
-        "day": { "name": "day", "description": "The date to test." },
-        "boolean": {
-          "name": "boolean",
-          "description": "If <code>true</code> the date will be disabled."
-        }
-      }
+      "description": "Disable specific date.<br><br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
+      "typeDescriptions": { "day": { "name": "day", "description": "The date to test." } }
     },
     "shouldDisableMonth": {
       "description": "Disable specific month.",
-      "typeDescriptions": {
-        "month": { "name": "month", "description": "The month to test." },
-        "boolean": {
-          "name": "boolean",
-          "description": "If <code>true</code>, the month will be disabled."
-        }
-      }
+      "typeDescriptions": { "month": { "name": "month", "description": "The month to test." } }
     },
     "shouldDisableYear": {
       "description": "Disable specific year.",
-      "typeDescriptions": {
-        "year": { "name": "year", "description": "The year to test." },
-        "boolean": {
-          "name": "boolean",
-          "description": "If <code>true</code>, the year will be disabled."
-        }
-      }
+      "typeDescriptions": { "year": { "name": "year", "description": "The year to test." } }
     },
     "showDaysOutsideCurrentMonth": {
-      "description": "If <code>true</code>, days outside the current month are rendered:<br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
+      "description": "If <code>true</code>, days outside the current month are rendered:<br><br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br><br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br><br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "sx": {
-      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
-    },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
-      "seeMoreText": "See the {{link}} for more details."
+      "description": "Choose which timezone to use for the value.\nExample: \"default\", \"system\", \"UTC\", \"America/New_York\".\nIf you pass values from other timezones to some props, they will be converted to this timezone before being used.",
+      "seeMoreText": "See {{link}} for more details."
     },
-    "value": { "description": "The selected value. Used when the component is controlled." },
+    "value": { "description": "The selected value.\nUsed when the component is controlled." },
     "view": {
-      "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
+      "description": "The visible view.\nUsed when the component view is controlled.\nMust be a valid option from <code>views</code> list."
     },
     "viewRenderers": {
-      "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be used."
+      "description": "Define custom view renderers for each section.\nIf <code>null</code>, the section will only have field editing.\nIf <code>undefined</code>, internally defined view will be used."
     },
     "views": { "description": "Available views." },
     "yearsOrder": {
-      "description": "Years are displayed in ascending (chronological) order by default. If <code>desc</code>, years are displayed in descending order."
+      "description": "Years are displayed in ascending (chronological) order by default.\nIf <code>desc</code>, years are displayed in descending order."
     },
     "yearsPerRow": { "description": "Years rendered per row." }
   },
   "classDescriptions": {},
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
-    "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+    "calendarHeader": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
     "clearButton": "Button to clear the value.",
     "clearIcon": "Icon to display in the button used to clean the value.",
-    "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
-    "desktopPaper": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
-    "desktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
+    "day": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
+    "desktopPaper": "Custom component for the paper rendered inside the desktop picker's Popper.",
+    "desktopTransition": "Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).",
     "desktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "field": "Component used to enter the date with the keyboard.",
     "inputAdornment": "Component displayed on the start or end input adornment used to open the Picker.",
-    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
+    "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
-    "mobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
-    "mobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-    "monthButton": "Button displayed to render a single month in the <code>month</code> view.",
+    "mobilePaper": "Custom component for the paper rendered inside the mobile picker's Dialog.",
+    "mobileTransition": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
+    "monthButton": "Button displayed to render a single month in the `month` view.",
     "nextIconButton": "Button allowing to switch to the right view.",
     "openPickerButton": "Button to open the Picker.",
     "openPickerIcon": "Icon to display in the button used to open the Picker.",
@@ -250,9 +199,9 @@
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
     "switchViewButton": "Button displayed to switch between different calendar views.",
-    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is <code>year</code>.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is `year`.",
     "textField": "Form control with an input to render the value.",
     "toolbar": "Custom component for the toolbar rendered above the views.",
-    "yearButton": "Button displayed to render a single year in the <code>year</code> view."
+    "yearButton": "Button displayed to render a single year in the `year` view."
   }
 }

@@ -1,7 +1,31 @@
 {
   "props": {
-    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "autoComplete": { "type": { "name": "string" } },
+    "autoFocus": { "type": { "name": "bool" } },
+    "className": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;func" } },
+    "color": { "type": { "name": "enum", "description": "'error'<br>&#124;&nbsp;'primary'" } },
+    "disabled": { "type": { "name": "bool" } },
+    "error": { "type": { "name": "bool" } },
+    "fullWidth": { "type": { "name": "bool" } },
+    "helperText": { "type": { "name": "string" } },
+    "id": { "type": { "name": "string" } },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
+    "label": { "type": { "name": "node" } },
+    "multiline": { "type": { "name": "bool" } },
+    "placeholder": { "type": { "name": "string" } },
+    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
+    "role": { "type": { "name": "string" } },
+    "size": { "type": { "name": "enum", "description": "'small'<br>&#124;&nbsp;'medium'" } },
+    "slotProps": { "type": { "name": "object" } },
+    "style": { "type": { "name": "object" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "type": {
+      "type": {
+        "name": "union",
+        "description": "'number'<br>&#124;&nbsp;object<br>&#124;&nbsp;'color'<br>&#124;&nbsp;'reset'<br>&#124;&nbsp;'submit'<br>&#124;&nbsp;'text'<br>&#124;&nbsp;'search'<br>&#124;&nbsp;'hidden'<br>&#124;&nbsp;'button'<br>&#124;&nbsp;'checkbox'<br>&#124;&nbsp;'radio'<br>&#124;&nbsp;'tel'<br>&#124;&nbsp;'url'<br>&#124;&nbsp;'email'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'image'<br>&#124;&nbsp;'date'<br>&#124;&nbsp;'datetime-local'<br>&#124;&nbsp;'file'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'password'<br>&#124;&nbsp;'range'<br>&#124;&nbsp;'week'"
+      }
+    },
+    "value": { "type": { "name": "object" } }
   },
   "name": "QuickFilterControl",
   "imports": [
@@ -10,9 +34,9 @@
     "import { QuickFilterControl } from '@mui/x-data-grid-pro';",
     "import { QuickFilterControl } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiQuickFilterControl",
-  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilterControl.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/components/quick-filter\">Data Grid - Quick Filter component</a></li></ul>",

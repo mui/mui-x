@@ -1,16 +1,12 @@
 {
   "name": "GridCsvExportApi",
-  "description": "The CSV export API interface that is available in the grid apiRef.",
-  "properties": [
-    {
-      "name": "exportDataAsCsv",
-      "description": "Downloads and exports a CSV of the grid&#39;s data.",
-      "type": "(options?: GridCsvExportOptions) => void"
+  "description": "The CSV export API interface that is available in the grid [[apiRef]].",
+  "properties": {
+    "getDataAsCsv": {
+      "type": { "description": "(options?: GridCsvExportOptions | undefined) =&gt; string" }
     },
-    {
-      "name": "getDataAsCsv",
-      "description": "Returns the grid data as a CSV string. This method is used internally by <code>exportDataAsCsv</code>.",
-      "type": "(options?: GridCsvExportOptions) => string"
+    "exportDataAsCsv": {
+      "type": { "description": "(options?: GridCsvExportOptions | undefined) =&gt; void" }
     }
-  ]
+  }
 }

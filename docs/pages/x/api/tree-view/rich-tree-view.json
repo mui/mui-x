@@ -1,9 +1,10 @@
 {
   "props": {
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" }, "required": true },
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, isItemExpanded?: func, setEditedItem?: func, setIsItemDisabled?: func, setItemExpansion?: func, setItemSelection?: func, updateItemLabel?: func } }"
+        "description": "{ current: { setEditedItem?: func, updateItemLabel?: func, setItemSelection?: func, isItemExpanded?: func, setItemExpansion?: func, focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, setIsItemDisabled?: func } }"
       }
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
@@ -28,18 +29,18 @@
       "type": { "name": "func" },
       "default": "(item) => item.children",
       "signature": {
-        "type": "function(item: R) => Array<R>",
+        "type": "function(item: R) => Array<R> | undefined",
         "describedArgs": ["item"],
-        "returned": "Array<R>"
+        "returned": "Array<R> | undefined"
       }
     },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",
       "signature": {
-        "type": "function(item: R) => TreeViewItemId",
+        "type": "function(item: R) => string",
         "describedArgs": ["item"],
-        "returned": "TreeViewItemId"
+        "returned": "string"
       }
     },
     "getItemLabel": {
@@ -61,7 +62,7 @@
       }
     },
     "isItemEditable": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" },
+      "type": { "name": "union", "description": "bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;func" },
       "default": "() => false"
     },
     "isItemSelectionDisabled": {
@@ -73,11 +74,11 @@
       }
     },
     "itemChildrenIndentation": {
-      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
       "default": "12px"
     },
     "itemHeight": { "type": { "name": "number" }, "default": "null" },
-    "multiSelect": { "type": { "name": "bool" }, "default": "false" },
+    "multiSelect": { "type": { "name": "any" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
@@ -153,19 +154,8 @@
   ],
   "slots": [
     {
-      "name": "root",
-      "description": "Element rendered at the root.",
-      "default": "RichTreeViewRoot",
-      "class": "MuiRichTreeView-root"
-    },
-    {
       "name": "collapseIcon",
       "description": "The default icon used to collapse the item.",
-      "class": null
-    },
-    {
-      "name": "expandIcon",
-      "description": "The default icon used to expand the item.",
       "class": null
     },
     {
@@ -174,17 +164,34 @@
       "class": null
     },
     {
+      "name": "expandIcon",
+      "description": "The default icon used to expand the item.",
+      "class": null
+    },
+    {
       "name": "item",
       "description": "Custom component to render a Tree Item.",
       "default": "TreeItem.",
       "class": "MuiRichTreeView-item"
+    },
+    {
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "RichTreeViewRoot",
+      "class": "MuiRichTreeView-root"
     }
   ],
   "classes": [
     {
-      "key": "itemCheckbox",
-      "className": "MuiRichTreeView-itemCheckbox",
-      "description": "Styles applied to the item's checkbox element.",
+      "key": "root",
+      "className": "MuiRichTreeView-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "item",
+      "className": "MuiRichTreeView-item",
+      "description": "Styles applied to the item's root element.",
       "isGlobal": false
     },
     {
@@ -215,6 +222,12 @@
       "key": "itemLabelInput",
       "className": "MuiRichTreeView-itemLabelInput",
       "description": "Styles applied to the item's label input element (visible only when editing is enabled).",
+      "isGlobal": false
+    },
+    {
+      "key": "itemCheckbox",
+      "className": "MuiRichTreeView-itemCheckbox",
+      "description": "Styles applied to the item's checkbox element.",
       "isGlobal": false
     }
   ],

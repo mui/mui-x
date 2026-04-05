@@ -1,31 +1,21 @@
 {
   "name": "GridRowSelectionApi",
-  "description": "The selection API interface that is available in the grid apiRef.",
-  "properties": [
-    {
-      "name": "getSelectedRows",
-      "description": "Returns an array of the selected rows.",
-      "type": "() => Map<GridRowId, GridRowModel>"
+  "description": "The selection API interface that is available in the grid [[apiRef]].",
+  "properties": {
+    "selectRow": {
+      "type": {
+        "description": "(id: GridRowId, isSelected?: boolean | undefined, resetSelection?: boolean | undefined) =&gt; void"
+      }
     },
-    {
-      "name": "isRowSelectable",
-      "description": "Determines if a row can be selected or not.",
-      "type": "(id: GridRowId) => boolean"
+    "isRowSelected": { "type": { "description": "(id: GridRowId) =&gt; boolean" } },
+    "isRowSelectable": { "type": { "description": "(id: GridRowId) =&gt; boolean" } },
+    "getSelectedRows": {
+      "type": { "description": "() =&gt; Map&lt;GridRowId, GridValidRowModel&gt;" }
     },
-    {
-      "name": "isRowSelected",
-      "description": "Determines if a row is selected or not.",
-      "type": "(id: GridRowId) => boolean"
-    },
-    {
-      "name": "selectRow",
-      "description": "Change the selection state of a row.",
-      "type": "(id: GridRowId, isSelected?: boolean, resetSelection?: boolean) => void"
-    },
-    {
-      "name": "setRowSelectionModel",
-      "description": "Sets the new row selection model.<br>⚠️ Caution: <code>setRowSelectionModel</code> doesn&#39;t apply the selection propagation automatically. Pass model returned by API method <code>getPropagatedRowSelectionModel</code> instead to apply the selection propagation.",
-      "type": "(rowSelectionModel: GridRowSelectionModel, reason?: GridControlledStateReasonLookup['rowSelection']) => void"
+    "setRowSelectionModel": {
+      "type": {
+        "description": "(rowSelectionModel: GridRowSelectionModel, reason?: \"singleRowSelection\" | \"multipleRowsSelection\" | undefined) =&gt; void"
+      }
     }
-  ]
+  }
 }

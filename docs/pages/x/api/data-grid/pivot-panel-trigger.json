@@ -1,18 +1,32 @@
 {
   "props": {
-    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "className": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;func" } },
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
+    "render": { "type": { "name": "element" } },
+    "role": { "type": { "name": "string" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'small'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'large'"
+      }
+    },
+    "startIcon": { "type": { "name": "node" } },
+    "style": { "type": { "name": "object" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "title": { "type": { "name": "string" } },
+    "touchRippleRef": { "type": { "name": "any" } }
   },
   "name": "PivotPanelTrigger",
   "imports": [
     "import { PivotPanelTrigger } from '@mui/x-data-grid-premium/components';",
     "import { PivotPanelTrigger } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiPivotPanelTrigger",
-  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-premium/src/components/pivotPanel/PivotPanelTrigger.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/components/pivot-panel\">Data Grid - Pivot Panel component <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🚧</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/pivot-panel\">Data Grid - Pivot Panel component [<span class=\"plan-premium\"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧</a></li></ul>",
   "cssComponent": false
 }

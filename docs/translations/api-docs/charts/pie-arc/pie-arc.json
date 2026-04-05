@@ -1,33 +1,23 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "cornerRadius": { "description": "" },
+    "dataIndex": { "description": "" },
+    "endAngle": { "description": "" },
+    "innerRadius": { "description": "" },
+    "isFaded": { "description": "" },
+    "isFocused": { "description": "" },
+    "isHighlighted": { "description": "" },
+    "outerRadius": { "description": "" },
+    "paddingAngle": { "description": "" },
+    "seriesId": { "description": "" },
+    "startAngle": { "description": "" },
+    "classes": { "description": "" },
     "skipAnimation": { "description": "If <code>true</code>, the animation is disabled." },
     "skipInteraction": {
-      "description": "If <code>true</code>, the default event handlers are disabled. Those are used, for example, to display a tooltip or highlight the arc on hover."
+      "description": "If <code>true</code>, the default event handlers are disabled.\nThose are used, for example, to display a tooltip or highlight the arc on hover."
     }
   },
-  "classDescriptions": {
-    "animate": { "description": "Styles applied when animation is not skipped." },
-    "arc": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "an individual pie arc element"
-    },
-    "arcLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "an individual pie arc label element"
-    },
-    "focusIndicator": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the focused pie arc element"
-    },
-    "root": { "description": "Styles applied to the root element." },
-    "series": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the <code>g</code> element that contains all pie arcs of a series"
-    },
-    "seriesLabels": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the <code>g</code> element that contains all pie arc labels of a series"
-    }
-  }
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

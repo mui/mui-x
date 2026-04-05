@@ -1,14 +1,66 @@
 {
-  "props": {},
+  "props": {
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "rainbowSurgePalette"
+    },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "desc": { "type": { "name": "string" } },
+    "experimentalFeatures": { "type": { "name": "any" } },
+    "height": { "type": { "name": "number" } },
+    "id": { "type": { "name": "string" } },
+    "localeText": { "type": { "name": "object" } },
+    "margin": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
+      }
+    },
+    "plugins": { "type": { "name": "object" } },
+    "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "seriesConfig": { "type": { "name": "object" } },
+    "skipAnimation": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "title": { "type": { "name": "string" } },
+    "width": { "type": { "name": "number" } }
+  },
   "name": "ChartsContainerPremium",
   "imports": [
     "import { ChartsContainerPremium } from '@mui/x-charts-premium/ChartsContainerPremium';",
     "import { ChartsContainerPremium } from '@mui/x-charts-premium';"
   ],
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseDivider", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
+    { "name": "baseMenuItem", "description": "", "class": null },
+    { "name": "baseMenuList", "description": "", "class": null },
+    { "name": "basePopper", "description": "", "class": null },
+    { "name": "baseTooltip", "description": "", "class": null },
+    {
+      "name": "exportIcon",
+      "description": "Icon displayed on the toolbar's export button.",
+      "default": "ChartsExportIcon",
+      "class": null
+    },
+    {
+      "name": "zoomInIcon",
+      "description": "Icon displayed on the toolbar's zoom in button.",
+      "default": "ChartsZoomInIcon",
+      "class": null
+    },
+    {
+      "name": "zoomOutIcon",
+      "description": "Icon displayed on the toolbar's zoom out button.",
+      "default": "ChartsZoomOutIcon",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiChartsContainerPremium",
   "filename": "/packages/x-charts-premium/src/ChartsContainerPremium/ChartsContainerPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar [<span class=\"plan-premium\"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')</a></li></ul>",
   "cssComponent": false
 }

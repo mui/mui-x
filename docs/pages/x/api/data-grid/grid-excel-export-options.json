@@ -1,52 +1,43 @@
 {
   "name": "GridExcelExportOptions",
-  "imports": ["import { GridExcelExportOptions } from '@mui/x-data-grid-premium'"],
-  "demos": "<ul><li><a href=\"/x/react-data-grid/export/#excel-export\">Excel export</a></li></ul>",
+  "imports": ["import { GridExcelExportOptions } from '@mui/x-data-grid-premium';"],
+  "demos": "  - [Excel export](/x/react-data-grid/export/#excel-export)",
   "properties": {
-    "allColumns": {
-      "type": { "description": "boolean" },
-      "default": "false",
+    "allColumns": { "type": { "description": "boolean | undefined" }, "default": "false" },
+    "columnsStyles": {
+      "type": { "description": "ColumnsStylesInterface | undefined" },
       "isPremiumPlan": true
     },
-    "columnsStyles": { "type": { "description": "ColumnsStylesInterface" }, "isPremiumPlan": true },
-    "escapeFormulas": {
-      "type": { "description": "boolean" },
-      "default": "true",
-      "isPremiumPlan": true
-    },
+    "escapeFormulas": { "type": { "description": "boolean | undefined" }, "default": "true" },
     "exceljsPostProcess": {
       "type": {
-        "description": "(processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;"
+        "description": "((processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;) | undefined"
       },
       "isPremiumPlan": true
     },
     "exceljsPreProcess": {
       "type": {
-        "description": "(processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;"
+        "description": "((processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;) | undefined"
       },
       "isPremiumPlan": true
     },
-    "fields": { "type": { "description": "string[]" }, "isPremiumPlan": true },
-    "fileName": {
-      "type": { "description": "string" },
-      "default": "document.title",
-      "isPremiumPlan": true
-    },
+    "fields": { "type": { "description": "string[] | undefined" } },
+    "fileName": { "type": { "description": "string | undefined" }, "default": "document.title" },
     "getRowsToExport": {
-      "type": { "description": "(params: GridGetRowsToExportParams&lt;Api&gt;) =&gt; GridRowId[]" },
-      "isPremiumPlan": true
+      "type": {
+        "description": "((params: GridGetRowsToExportParams&lt;GridApiCommunity&gt;) =&gt; GridRowId[]) | undefined"
+      }
     },
     "includeColumnGroupsHeaders": {
-      "type": { "description": "boolean" },
+      "type": { "description": "boolean | undefined" },
       "default": "true",
       "isPremiumPlan": true
     },
-    "includeHeaders": {
-      "type": { "description": "boolean" },
-      "default": "true",
+    "includeHeaders": { "type": { "description": "boolean | undefined" }, "default": "true" },
+    "valueOptionsSheetName": {
+      "type": { "description": "string | undefined" },
       "isPremiumPlan": true
     },
-    "valueOptionsSheetName": { "type": { "description": "string" }, "isPremiumPlan": true },
-    "worker": { "type": { "description": "() =&gt; Worker" }, "isPremiumPlan": true }
+    "worker": { "type": { "description": "(() =&gt; Worker) | undefined" }, "isPremiumPlan": true }
   }
 }

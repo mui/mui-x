@@ -1,12 +1,15 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "dataIndex": { "description": "The index to the element in the series&#39; data array." },
+    "dataIndex": { "description": "The index to the element in the series' data array." },
+    "seriesId": { "description": "" },
+    "shape": { "description": "The shape of the marker." },
+    "classes": { "description": "" },
     "hidden": { "description": "If <code>true</code>, the marker is hidden." },
     "isFaded": { "description": "If <code>true</code>, the marker is faded." },
     "isHighlighted": { "description": "If <code>true</code>, the marker is highlighted." },
-    "shape": { "description": "The shape of the marker." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

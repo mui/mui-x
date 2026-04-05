@@ -1,14 +1,10 @@
 {
   "props": {
+    "ampm": { "type": { "name": "bool" } },
+    "ampmInClock": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
+    "titleId": { "type": { "name": "string" } },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
@@ -18,23 +14,18 @@
     "import { TimePickerToolbar } from '@mui/x-date-pickers';",
     "import { TimePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
     {
-      "key": "ampmLabel",
-      "className": "MuiTimePickerToolbar-ampmLabel",
-      "description": "Styles applied to the meridiem label element.",
+      "key": "root",
+      "className": "MuiTimePickerToolbar-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
-      "key": "ampmLandscape",
-      "className": "MuiTimePickerToolbar-ampmLandscape",
-      "description": "Styles applied to the meridiem selection element in landscape mode.",
-      "isGlobal": false
-    },
-    {
-      "key": "ampmSelection",
-      "className": "MuiTimePickerToolbar-ampmSelection",
-      "description": "Styles applied to the meridiem selection element.",
+      "key": "separator",
+      "className": "MuiTimePickerToolbar-separator",
+      "description": "Styles applied to the separator element.",
       "isGlobal": false
     },
     {
@@ -56,15 +47,21 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiTimePickerToolbar-root",
-      "description": "Styles applied to the root element.",
+      "key": "ampmSelection",
+      "className": "MuiTimePickerToolbar-ampmSelection",
+      "description": "Styles applied to the meridiem selection element.",
       "isGlobal": false
     },
     {
-      "key": "separator",
-      "className": "MuiTimePickerToolbar-separator",
-      "description": "Styles applied to the separator element.",
+      "key": "ampmLandscape",
+      "className": "MuiTimePickerToolbar-ampmLandscape",
+      "description": "Styles applied to the meridiem selection element in landscape mode.",
+      "isGlobal": false
+    },
+    {
+      "key": "ampmLabel",
+      "className": "MuiTimePickerToolbar-ampmLabel",
+      "description": "Styles applied to the meridiem label element.",
       "isGlobal": false
     }
   ],

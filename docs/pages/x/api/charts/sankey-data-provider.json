@@ -1,14 +1,66 @@
 {
-  "props": {},
+  "props": {
+    "series": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "rainbowSurgePalette"
+    },
+    "desc": { "type": { "name": "string" } },
+    "disableKeyboardNavigation": { "type": { "name": "bool" } },
+    "experimentalFeatures": { "type": { "name": "object" } },
+    "height": { "type": { "name": "number" } },
+    "highlightedItem": {
+      "type": {
+        "name": "union",
+        "description": "{ type: 'sankey', seriesId: string, subType: 'node', nodeId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ type: 'sankey', seriesId: string, subType: 'link', sourceId: string<br>&#124;&nbsp;number, targetId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ seriesId: string, subType: 'node', nodeId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ seriesId: string, subType: 'link', sourceId: string<br>&#124;&nbsp;number, targetId: string<br>&#124;&nbsp;number }"
+      }
+    },
+    "id": { "type": { "name": "string" } },
+    "localeText": { "type": { "name": "object" } },
+    "margin": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
+      }
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
+        "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<SeriesType> | null) => void",
+        "describedArgs": ["tooltipItem"]
+      }
+    },
+    "seriesConfig": { "type": { "name": "object" } },
+    "title": { "type": { "name": "string" } },
+    "tooltipItem": {
+      "type": {
+        "name": "union",
+        "description": "{ type: 'sankey', seriesId: string, subType: 'node', nodeId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ type: 'sankey', seriesId: string, subType: 'link', sourceId: string<br>&#124;&nbsp;number, targetId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ seriesId: string, subType: 'node', nodeId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ seriesId: string, subType: 'link', sourceId: string<br>&#124;&nbsp;number, targetId: string<br>&#124;&nbsp;number }"
+      }
+    },
+    "width": { "type": { "name": "number" } }
+  },
   "name": "SankeyDataProvider",
   "imports": [
     "import { SankeyDataProvider } from '@mui/x-charts-pro/SankeyChart';",
-    "import { SankeyDataProvider } from '@mui/x-charts-pro';"
+    "import { SankeyDataProvider } from '@mui/x-charts-pro';",
+    "import { SankeyDataProvider } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiSankeyDataProvider",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyDataProvider.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
   "cssComponent": false
 }

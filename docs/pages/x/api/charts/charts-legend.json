@@ -36,15 +36,9 @@
   ],
   "classes": [
     {
-      "key": "hidden",
-      "className": "MuiChartsLegend-hidden",
-      "description": "Styles applied to hidden items.",
-      "isGlobal": false
-    },
-    {
-      "key": "horizontal",
-      "className": "MuiChartsLegend-horizontal",
-      "description": "Styles applied to the legend in row layout.",
+      "key": "root",
+      "className": "MuiChartsLegend-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
@@ -54,9 +48,15 @@
       "isGlobal": false
     },
     {
-      "key": "label",
-      "className": "MuiChartsLegend-label",
-      "description": "Styles applied to the series label.",
+      "key": "series",
+      "className": "MuiChartsLegend-series",
+      "description": "Styles applied to a series element.",
+      "isGlobal": false
+    },
+    {
+      "key": "hidden",
+      "className": "MuiChartsLegend-hidden",
+      "description": "Styles applied to hidden items.",
       "isGlobal": false
     },
     {
@@ -66,15 +66,9 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiChartsLegend-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "series",
-      "className": "MuiChartsLegend-series",
-      "description": "Styles applied to a series element.",
+      "key": "label",
+      "className": "MuiChartsLegend-label",
+      "description": "Styles applied to the series label.",
       "isGlobal": false
     },
     {
@@ -82,12 +76,17 @@
       "className": "MuiChartsLegend-vertical",
       "description": "Styles applied to the legend in column layout.",
       "isGlobal": false
+    },
+    {
+      "key": "horizontal",
+      "className": "MuiChartsLegend-horizontal",
+      "description": "Styles applied to the legend in row layout.",
+      "isGlobal": false
     }
   ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiChartsLegend",
-  "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-charts/src/ChartsLegend/ChartsLegend.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",
