@@ -6,160 +6,163 @@ import * as ts from 'typescript';
 import * as path from 'path';
 import * as fs from 'node:fs';
 import { kebabCase } from 'es-toolkit/string';
-import { CWD, getInterfacesToDocument, getJsonOnlyInterfaces, debug } from './config';
+import { CWD, debug } from './config';
 import { extractJsDoc } from './jsDocUtils';
 import type { FileWrite } from './types';
 
-export function buildInterfaceDocumentation(checker: ts.TypeChecker, program: ts.Program): FileWrite[] {
+/**
+ * Build full documentation pages for interfaces (JSON + translation + JS wrapper).
+ * Returns the files to write and a map of documented interface names → packages.
+ */
+export function buildInterfacePages(
+  entry: { folder: string; packages: string[]; documentedInterfaces: string[] },
+  checker: ts.TypeChecker,
+  program: ts.Program,
+): { files: FileWrite[]; documentedInterfaces: Map<string, string[]> } {
   const files: FileWrite[] = [];
   const documentedInterfaces = new Map<string, string[]>();
-  const interfacesToDocument = getInterfacesToDocument();
 
-  for (const entry of interfacesToDocument) {
-    for (const interfaceName of entry.documentedInterfaces) {
-      // Find the interface in one of the packages
-      const projects: string[] = [];
-      let interfaceType: ts.Type | undefined;
-      let interfaceSymbol: ts.Symbol | undefined;
+  for (const interfaceName of entry.documentedInterfaces) {
+    const projects: string[] = [];
+    let interfaceType: ts.Type | undefined;
+    let interfaceSymbol: ts.Symbol | undefined;
 
-      for (const pkg of entry.packages) {
-        const entryPath = path.resolve(CWD, `packages/${pkg}/src/index.ts`);
-        const sf = program.getSourceFile(entryPath);
-        if (!sf) {
-          continue;
-        }
-
-        const modSymbol = checker.getSymbolAtLocation(sf);
-        if (!modSymbol) {
-          continue;
-        }
-
-        const exports = checker.getExportsOfModule(modSymbol);
-        const found = exports.find((exportSymbol) => exportSymbol.name === interfaceName);
-        if (found) {
-          projects.push(pkg);
-          if (!interfaceSymbol) {
-            let resolved = found;
-            if (resolved.flags & ts.SymbolFlags.Alias) {
-              resolved = checker.getAliasedSymbol(resolved);
-            }
-            interfaceSymbol = resolved;
-            interfaceType = checker.getDeclaredTypeOfSymbol(resolved);
-          }
-        }
-      }
-
-      if (!interfaceType || !interfaceSymbol) {
+    for (const pkg of entry.packages) {
+      const entryPath = path.resolve(CWD, `packages/${pkg}/src/index.ts`);
+      const sf = program.getSourceFile(entryPath);
+      if (!sf) {
         continue;
       }
 
-      documentedInterfaces.set(interfaceName, projects);
+      const modSymbol = checker.getSymbolAtLocation(sf);
+      if (!modSymbol) {
+        continue;
+      }
 
-      const slug = kebabCase(interfaceName);
-      const description = ts.displayPartsToString(interfaceSymbol.getDocumentationComment(checker));
+      const exports = checker.getExportsOfModule(modSymbol);
+      const found = exports.find((exportSymbol) => exportSymbol.name === interfaceName);
+      if (found) {
+        projects.push(pkg);
+        if (!interfaceSymbol) {
+          let resolved = found;
+          if (resolved.flags & ts.SymbolFlags.Alias) {
+            resolved = checker.getAliasedSymbol(resolved);
+          }
+          interfaceSymbol = resolved;
+          interfaceType = checker.getDeclaredTypeOfSymbol(resolved);
+        }
+      }
+    }
 
-      // Extract demos from @demos JSDoc tag on declarations
-      let demos: string | undefined;
-      const interfaceDecls = interfaceSymbol.getDeclarations() || [];
-      for (const decl of interfaceDecls) {
-        for (const jsDocTag of ts.getJSDocTags(decl)) {
-          if (jsDocTag.tagName.text === 'demos') {
-            const comment =
-              typeof jsDocTag.comment === 'string'
-                ? jsDocTag.comment
-                : ts.getTextOfJSDocComment(jsDocTag.comment);
-            if (comment) {
-              demos = comment;
-            }
+    if (!interfaceType || !interfaceSymbol) {
+      continue;
+    }
+
+    documentedInterfaces.set(interfaceName, projects);
+
+    const slug = kebabCase(interfaceName);
+    const description = ts.displayPartsToString(interfaceSymbol.getDocumentationComment(checker));
+
+    // Extract demos from @demos JSDoc tag on declarations
+    let demos: string | undefined;
+    const interfaceDecls = interfaceSymbol.getDeclarations() || [];
+    for (const decl of interfaceDecls) {
+      for (const jsDocTag of ts.getJSDocTags(decl)) {
+        if (jsDocTag.tagName.text === 'demos') {
+          const comment =
+            typeof jsDocTag.comment === 'string'
+              ? jsDocTag.comment
+              : ts.getTextOfJSDocComment(jsDocTag.comment);
+          if (comment) {
+            demos = comment;
           }
         }
       }
+    }
 
-      // Build imports
-      const imports = projects.map((p) => `import { ${interfaceName} } from '@mui/${p}';`);
+    // Build imports
+    const imports = projects.map((p) => `import { ${interfaceName} } from '@mui/${p}';`);
 
-      // Build properties
-      const properties: Record<string, any> = {};
-      const propDescriptions: Record<string, { description: string }> = {};
+    // Build properties
+    const properties: Record<string, any> = {};
+    const propDescriptions: Record<string, { description: string }> = {};
 
-      for (const prop of interfaceType.getProperties()) {
-        const jsDoc = extractJsDoc(prop, checker);
-        if (jsDoc.ignore) {
-          continue;
-        }
-
-        const propType = checker.getTypeOfSymbol(prop);
-        const typeStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
-
-        const propInfo: Record<string, any> = {
-          type: { description: escapeHtml(typeStr) },
-        };
-
-        if (jsDoc.defaultValue !== undefined) {
-          propInfo.default = jsDoc.defaultValue;
-        }
-        if (!(prop.flags & ts.SymbolFlags.Optional)) {
-          propInfo.required = true;
-        }
-
-        // Detect plan level from projects
-        const propDeclarations = prop.getDeclarations();
-        if (propDeclarations) {
-          const isPro = propDeclarations.some((d) => d.getSourceFile().fileName.includes('-pro'));
-          const isPremium = propDeclarations.some((d) =>
-            d.getSourceFile().fileName.includes('-premium'),
-          );
-          if (isPremium) {
-            propInfo.isPremiumPlan = true;
-          } else if (isPro) {
-            propInfo.isProPlan = true;
-          }
-        }
-
-        properties[prop.name] = propInfo;
-        propDescriptions[prop.name] = { description: jsDoc.description };
+    for (const prop of interfaceType.getProperties()) {
+      const jsDoc = extractJsDoc(prop, checker);
+      if (jsDoc.ignore) {
+        continue;
       }
 
-      // Sort: required first, then alphabetically
-      const sortedProps: Record<string, any> = {};
-      const sortedDescs: Record<string, { description: string }> = {};
-      const propNames = Object.keys(properties).sort((a, b) => {
-        const aReq = properties[a].required ? 0 : 1;
-        const bReq = properties[b].required ? 0 : 1;
-        if (aReq !== bReq) {
-          return aReq - bReq;
-        }
-        return a.localeCompare(b);
-      });
-      for (const name of propNames) {
-        sortedProps[name] = properties[name];
-        sortedDescs[name] = propDescriptions[name];
+      const propType = checker.getTypeOfSymbol(prop);
+      const typeStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
+
+      const propInfo: Record<string, any> = {
+        type: { description: escapeHtml(typeStr) },
+      };
+
+      if (jsDoc.defaultValue !== undefined) {
+        propInfo.default = jsDoc.defaultValue;
+      }
+      if (!(prop.flags & ts.SymbolFlags.Optional)) {
+        propInfo.required = true;
       }
 
-      // Generate files
-      const content = {
+      // Detect plan level from projects
+      const propDeclarations = prop.getDeclarations();
+      if (propDeclarations) {
+        const isPro = propDeclarations.some((d) => d.getSourceFile().fileName.includes('-pro'));
+        const isPremium = propDeclarations.some((d) =>
+          d.getSourceFile().fileName.includes('-premium'),
+        );
+        if (isPremium) {
+          propInfo.isPremiumPlan = true;
+        } else if (isPro) {
+          propInfo.isProPlan = true;
+        }
+      }
+
+      properties[prop.name] = propInfo;
+      propDescriptions[prop.name] = { description: jsDoc.description };
+    }
+
+    // Sort: required first, then alphabetically
+    const sortedProps: Record<string, any> = {};
+    const sortedDescs: Record<string, { description: string }> = {};
+    const propNames = Object.keys(properties).sort((a, b) => {
+      const aReq = properties[a].required ? 0 : 1;
+      const bReq = properties[b].required ? 0 : 1;
+      if (aReq !== bReq) {
+        return aReq - bReq;
+      }
+      return a.localeCompare(b);
+    });
+    for (const name of propNames) {
+      sortedProps[name] = properties[name];
+      sortedDescs[name] = propDescriptions[name];
+    }
+
+    // Content JSON
+    files.push({
+      path: `docs/pages/x/api/${entry.folder}/${slug}.json`,
+      content: JSON.stringify({
         name: interfaceName,
         imports,
         ...(demos ? { demos } : {}),
         properties: sortedProps,
-      };
-      files.push({
-        path: `docs/pages/x/api/${entry.folder}/${slug}.json`,
-        content: JSON.stringify(content),
-      });
+      }),
+    });
 
-      // Translation
-      const translation = {
+    // Translation JSON
+    files.push({
+      path: `docs/translations/api-docs/${entry.folder}/${slug}/${slug}.json`,
+      content: JSON.stringify({
         interfaceDescription: description,
         propertiesDescriptions: sortedDescs,
-      };
-      files.push({
-        path: `docs/translations/api-docs/${entry.folder}/${slug}/${slug}.json`,
-        content: JSON.stringify(translation),
-      });
+      }),
+    });
 
-      // JS page
-      const jsContent = `import * as React from 'react';
+    // JS page wrapper
+    const jsContent = `import * as React from 'react';
 import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
 import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
@@ -180,76 +183,81 @@ export async function getStaticProps() {
   return { props: { descriptions } };
 }
 `;
-      files.push({
-        path: `docs/pages/x/api/${entry.folder}/${slug}.js`,
-        content: jsContent,
-      });
-    }
+    files.push({
+      path: `docs/pages/x/api/${entry.folder}/${slug}.js`,
+      content: jsContent,
+    });
   }
 
-  // JSON-only interfaces (embedded in demo pages, no dedicated page)
-  for (const group of getJsonOnlyInterfaces()) {
-    // Use the most complete package in the family to find the interface
-    const mostCompletePkg = group.packages[group.packages.length - 1];
-    const entryPath = path.resolve(CWD, `packages/${mostCompletePkg}/src/index.ts`);
-    const sf = program.getSourceFile(entryPath);
-    if (!sf) {
-      continue;
-    }
-    const modSymbol = checker.getSymbolAtLocation(sf);
-    if (!modSymbol) {
-      continue;
-    }
-    const exports = checker.getExportsOfModule(modSymbol);
+  return { files, documentedInterfaces };
+}
 
-    for (const interfaceName of group.names) {
-      const found = exports.find((exportSymbol) => exportSymbol.name === interfaceName);
-      if (!found) {
+/**
+ * Build JSON-only interface docs (no dedicated page, embedded in demos).
+ */
+export function buildJsonOnlyInterfaces(
+  group: { folder: string; packages: string[]; names: string[] },
+  checker: ts.TypeChecker,
+  program: ts.Program,
+): FileWrite[] {
+  const files: FileWrite[] = [];
+
+  const mostCompletePkg = group.packages[group.packages.length - 1];
+  const entryPath = path.resolve(CWD, `packages/${mostCompletePkg}/src/index.ts`);
+  const sf = program.getSourceFile(entryPath);
+  if (!sf) {
+    return files;
+  }
+  const modSymbol = checker.getSymbolAtLocation(sf);
+  if (!modSymbol) {
+    return files;
+  }
+  const exports = checker.getExportsOfModule(modSymbol);
+
+  for (const interfaceName of group.names) {
+    const found = exports.find((exportSymbol) => exportSymbol.name === interfaceName);
+    if (!found) {
+      continue;
+    }
+
+    let resolved = found;
+    if (resolved.flags & ts.SymbolFlags.Alias) {
+      resolved = checker.getAliasedSymbol(resolved);
+    }
+
+    const interfaceType = checker.getDeclaredTypeOfSymbol(resolved);
+    const description = ts.displayPartsToString(resolved.getDocumentationComment(checker));
+
+    const properties: Record<string, any> = {};
+    for (const prop of interfaceType.getProperties()) {
+      const jsDoc = extractJsDoc(prop, checker);
+      if (jsDoc.ignore) {
         continue;
       }
 
-      let resolved = found;
-      if (resolved.flags & ts.SymbolFlags.Alias) {
-        resolved = checker.getAliasedSymbol(resolved);
-      }
+      const propType = checker.getTypeOfSymbol(prop);
+      const typeStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
 
-      const interfaceType = checker.getDeclaredTypeOfSymbol(resolved);
-      const description = ts.displayPartsToString(resolved.getDocumentationComment(checker));
-
-      const properties: Record<string, any> = {};
-      for (const prop of interfaceType.getProperties()) {
-        const jsDoc = extractJsDoc(prop, checker);
-        if (jsDoc.ignore) {
-          continue;
-        }
-
-        const propType = checker.getTypeOfSymbol(prop);
-        const typeStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
-
-        properties[prop.name] = {
-          type: { description: escapeHtml(typeStr) },
-        };
-      }
-
-      const slug = kebabCase(interfaceName);
-      files.push({
-        path: `docs/pages/x/api/${group.folder}/${slug}.json`,
-        content: JSON.stringify({ name: interfaceName, description, properties }),
-      });
-
-      debug(`  Built JSON file for ${interfaceName}`);
+      properties[prop.name] = {
+        type: { description: escapeHtml(typeStr) },
+      };
     }
-  }
 
-  // Linkify translations
-  for (const entry of interfacesToDocument) {
-    const translationDir = path.resolve(CWD, `docs/translations/api-docs/${entry.folder}`);
-    linkifyTranslations(translationDir, documentedInterfaces, entry.folder);
+    const slug = kebabCase(interfaceName);
+    files.push({
+      path: `docs/pages/x/api/${group.folder}/${slug}.json`,
+      content: JSON.stringify({ name: interfaceName, description, properties }),
+    });
+
+    debug(`    ${interfaceName} (json-only)`);
   }
 
   return files;
 }
 
+/**
+ * Replace [[InterfaceName]] references in translation files with links.
+ */
 export function linkifyTranslations(
   directory: string,
   documentedInterfaces: Map<string, string[]>,
@@ -266,7 +274,7 @@ export function linkifyTranslations(
       linkifyTranslations(fullPath, documentedInterfaces, folder);
     } else if (entry.name.endsWith('.json')) {
       const content = fs.readFileSync(fullPath, 'utf8');
-      const modified = content.replace(/\[\[([^\]]+)\]\]/g, (match, name) => {
+      const modified = content.replace(/\[\[([^\]]+)\]\]/g, (_match, name) => {
         if (documentedInterfaces.has(name)) {
           const slug = kebabCase(name);
           return `<a href="/x/api/${folder}/${slug}/">${name}</a>`;
