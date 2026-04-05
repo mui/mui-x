@@ -1,159 +1,9 @@
+/* eslint-disable no-bitwise */
 /**
- * TypeScript type analysis utilities.
- * Converts TypeScript types to the PropType-style format used in API docs.
+ * Type formatting logic: converts TypeScript types to PropType-style format.
  */
 import * as ts from 'typescript';
-import * as path from 'path';
-
-const CWD = process.cwd();
-
-// ---------------------------------------------------------------------------
-// TS Program
-// ---------------------------------------------------------------------------
-
-export function createTSProgram(): { program: ts.Program; checker: ts.TypeChecker } {
-  const configPath = ts.findConfigFile(CWD, ts.sys.fileExists, 'tsconfig.json')!;
-  const config = ts.readConfigFile(configPath, ts.sys.readFile);
-  const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, CWD);
-
-  // Include all package entry points so we can verify exports from any package.
-  // Premium/pro packages re-export from base, but we still need the base entry
-  // files in the program to resolve their module symbols directly.
-  const entryPoints = [
-    'packages/x-data-grid/src/index.ts',
-    'packages/x-data-grid-pro/src/index.ts',
-    'packages/x-data-grid-premium/src/index.ts',
-    'packages/x-data-grid-generator/src/index.ts',
-    'packages/x-date-pickers/src/index.ts',
-    'packages/x-date-pickers-pro/src/index.ts',
-    'packages/x-charts/src/index.ts',
-    'packages/x-charts-pro/src/index.ts',
-    'packages/x-charts-premium/src/index.ts',
-    'packages/x-tree-view/src/index.ts',
-    'packages/x-tree-view-pro/src/index.ts',
-    'packages/x-license/src/index.ts',
-  ].map((p) => path.resolve(CWD, p));
-
-  const program = ts.createProgram(entryPoints, {
-    ...parsed.options,
-    skipLibCheck: true,
-    noEmit: true,
-  });
-
-  return { program, checker: program.getTypeChecker() };
-}
-
-// ---------------------------------------------------------------------------
-// Prop type output shapes
-// ---------------------------------------------------------------------------
-
-export interface PropTypeInfo {
-  name: string;
-  description?: string;
-}
-
-export interface PropSignature {
-  type: string;
-  describedArgs: string[];
-  returned?: string;
-}
-
-export interface PropInfo {
-  type: PropTypeInfo;
-  default?: string;
-  required?: true;
-  deprecated?: true;
-  deprecationInfo?: string;
-  signature?: PropSignature;
-  additionalInfo?: Record<string, true>;
-  seeMoreLink?: { url: string; text: string };
-}
-
-export interface JsDocInfo {
-  description: string;
-  defaultValue?: string;
-  deprecated?: string;
-  ignore?: boolean;
-  seeMoreLink?: { url: string; text: string };
-  params: Map<string, string>;
-  /** JSDoc type annotations for params (from {Type} syntax) */
-  paramTypes: Map<string, string>;
-  returnDescription?: string;
-}
-
-// ---------------------------------------------------------------------------
-// JSDoc extraction
-// ---------------------------------------------------------------------------
-
-export function extractJsDoc(symbol: ts.Symbol, checker: ts.TypeChecker): JsDocInfo {
-  const description = ts.displayPartsToString(symbol.getDocumentationComment(checker));
-
-  const params = new Map<string, string>();
-  const paramTypes = new Map<string, string>();
-  let defaultValue: string | undefined;
-  let deprecated: string | undefined;
-  let ignore = false;
-  let seeMoreLink: { url: string; text: string } | undefined;
-  let returnDescription: string | undefined;
-
-  // Get JSDoc tags from declarations (AST nodes, not JSDocTagInfo)
-  const declarations = symbol.getDeclarations() || [];
-  for (const decl of declarations) {
-    for (const jsDocTag of ts.getJSDocTags(decl)) {
-      const tagName = jsDocTag.tagName.text;
-      const comment =
-        typeof jsDocTag.comment === 'string'
-          ? jsDocTag.comment
-          : ts.getTextOfJSDocComment(jsDocTag.comment) || '';
-
-      if (tagName === 'default') {
-        defaultValue = comment;
-      } else if (tagName === 'deprecated') {
-        deprecated = comment || '';
-      } else if (tagName === 'ignore') {
-        ignore = true;
-      } else if (tagName === 'param') {
-        // For @param tags, extract the name from the AST and type from the braces
-        const paramTag = jsDocTag as ts.JSDocParameterTag;
-        if (paramTag.name && ts.isIdentifier(paramTag.name)) {
-          params.set(paramTag.name.text, comment);
-        }
-        // Also store the JSDoc type annotation if present (e.g., {React.MouseEvent<...>})
-        if (paramTag.name && ts.isIdentifier(paramTag.name) && paramTag.typeExpression) {
-          const typeText = paramTag.typeExpression.getText().replace(/^\{|\}$/g, '');
-          paramTypes.set(paramTag.name.text, typeText);
-        }
-      } else if (tagName === 'returns' || tagName === 'return') {
-        returnDescription = comment;
-      } else if (tagName === 'see') {
-        const linkMatch = comment.match(/\{@link\s+(https?:\/\/[^\s}]+)(?:\s+([^}]+))?\}/);
-        if (linkMatch) {
-          seeMoreLink = { url: linkMatch[1], text: linkMatch[2]?.trim() || '' };
-        }
-      }
-    }
-  }
-
-  return {
-    description,
-    defaultValue,
-    deprecated,
-    ignore,
-    seeMoreLink,
-    params,
-    paramTypes,
-    returnDescription,
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Type classification helpers
-// ---------------------------------------------------------------------------
-
-export function isMuiXDeclaration(declaration: ts.Declaration): boolean {
-  const fileName = declaration.getSourceFile().fileName;
-  return fileName.includes('/packages/x-');
-}
+import type { PropTypeInfo, PropSignature, JsDocInfo } from './types';
 
 const UNION_SEP = '<br>&#124;&nbsp;';
 
@@ -193,7 +43,8 @@ function stripUndefinedNull(type: ts.Type, checker: ts.TypeChecker): ts.Type {
   if (filtered.length === 1) {
     return filtered[0];
   }
-  return checker.getUnionType(filtered);
+  // Reconstruct union without undefined/null using the internal API
+  return (checker as unknown as { getUnionType(types: ts.Type[]): ts.Type }).getUnionType(filtered);
 }
 
 function isBooleanUnion(type: ts.Type): boolean {
@@ -593,16 +444,4 @@ export function extractFunctionSignature(
   }
 
   return result;
-}
-
-// ---------------------------------------------------------------------------
-// Determine which props belong to the MUI X component (not DOM/React)
-// ---------------------------------------------------------------------------
-
-export function isMuiXProp(prop: ts.Symbol): boolean {
-  const declarations = prop.getDeclarations();
-  if (!declarations || declarations.length === 0) {
-    return false;
-  }
-  return declarations.some((d) => isMuiXDeclaration(d));
 }
