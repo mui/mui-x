@@ -27,13 +27,14 @@ const ChatMessageListStyled = styled('div', {
   name: 'MuiChatMessageList',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})(() => ({
+})(({ theme }) => ({
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   flex: 1,
   minHeight: 0,
   overflow: 'hidden',
+  backgroundColor: (theme.vars || theme).palette.background.default,
 }));
 
 const ChatMessageListScrollerStyled = styled('div', {

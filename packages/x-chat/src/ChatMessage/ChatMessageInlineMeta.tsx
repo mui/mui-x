@@ -44,7 +44,13 @@ const ChatMessageInlineMetaContainer = styled('span', {
     whiteSpace: 'nowrap',
     pointerEvents: 'none',
     userSelect: 'none',
+    // Light mode: primary.main is dark blue → white meta is readable.
+    // Dark mode (user): primary.main becomes a lighter blue → switch to dark meta for contrast.
     color: isUser ? 'rgba(255,255,255,0.65)' : (theme.vars || theme).palette.text.disabled,
+    ...(isUser &&
+      theme.applyStyles('dark', {
+        color: 'rgba(0,0,0,0.55)',
+      })),
     ...(!isUser &&
       theme.applyStyles('dark', {
         color: 'rgba(255,255,255,0.45)',

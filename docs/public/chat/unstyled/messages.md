@@ -19,6 +19,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
+  createTimeWindowGroupKey,
 } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
@@ -32,7 +33,8 @@ import {
 } from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 export default function GroupedMessageTimeline() {
-  const [groupingWindowMs, setGroupingWindowMs] = React.useState(5 * 60_000);
+  const [windowMs, setWindowMs] = React.useState(5 * 60_000);
+  const groupKey = React.useMemo(() => createTimeWindowGroupKey(windowMs), [windowMs]);
   const adapter = React.useMemo(
     () => createEchoAdapter({ agent: demoUsers.agent }),
     [],
@@ -85,14 +87,14 @@ export default function GroupedMessageTimeline() {
           </div>
           <Conversation.HeaderActions style={{ display: 'flex', gap: 8 }}>
             <DemoToolbarButton
-              onClick={() => setGroupingWindowMs(5 * 60_000)}
-              tone={groupingWindowMs === 5 * 60_000 ? 'accent' : 'default'}
+              onClick={() => setWindowMs(5 * 60_000)}
+              tone={windowMs === 5 * 60_000 ? 'accent' : 'default'}
             >
               5 minute window
             </DemoToolbarButton>
             <DemoToolbarButton
-              onClick={() => setGroupingWindowMs(12 * 60_000)}
-              tone={groupingWindowMs === 12 * 60_000 ? 'accent' : 'default'}
+              onClick={() => setWindowMs(12 * 60_000)}
+              tone={windowMs === 12 * 60_000 ? 'accent' : 'default'}
             >
               12 minute window
             </DemoToolbarButton>
@@ -106,7 +108,7 @@ export default function GroupedMessageTimeline() {
 
             return (
               <MessageGroup
-                groupingWindowMs={groupingWindowMs}
+                groupKey={groupKey}
                 index={index}
                 key={id}
                 messageId={id}
@@ -253,14 +255,36 @@ The message surface is built from:
 It derives the previous and next message, then decides whether the current message starts or ends a visual group.
 
 ```tsx
-<MessageGroup groupingWindowMs={300_000} index={index} messageId={id} />
+<MessageGroup index={index} messageId={id} />
 ```
 
-Grouping is based on:
+Grouping is controlled by the `groupKey` prop — a function `(message) => string | number`.
+Messages that resolve to the same key are placed in the same visual group, showing a shared avatar and author name only on the first message.
 
-- author identity
-- author role fallback when no explicit author id exists
-- an adjustable grouping window in milliseconds
+The default groups all messages from the same author together regardless of time (falling back to role when no explicit author ID exists).
+Use the built-in `createTimeWindowGroupKey` helper to also split groups at time boundaries:
+
+```tsx
+import { createTimeWindowGroupKey } from '@mui/x-chat/headless';
+
+// Split groups when the same author has a gap longer than 5 minutes
+<MessageGroup
+  groupKey={createTimeWindowGroupKey(5 * 60_000)}
+  index={index}
+  messageId={id}
+/>
+```
+
+You can also provide a fully custom function — for example, to group by conversation thread, topic tag, or any other domain-specific key:
+
+```tsx
+// Group messages by a custom thread ID stored in metadata
+<MessageGroup
+  groupKey={(message) => message.metadata?.threadId ?? message.author?.id ?? message.role}
+  index={index}
+  messageId={id}
+/>
+```
 
 This gives you `isFirst` and `isLast` grouping state without manual row bookkeeping.
 

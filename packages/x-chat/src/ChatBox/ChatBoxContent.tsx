@@ -95,7 +95,12 @@ function DefaultMessageItem({
   // Default variant: inline meta inside the bubble (Telegram-style).
   // Skip during streaming — there is no timestamp yet, and the streaming state
   // is already communicated via the MuiChatMessage-streaming CSS class.
-  const inlineMeta = isDefault && !isStreaming ? <ChatMessageInlineMeta /> : undefined;
+  // Also skip when the message carries no displayable meta at all (no timestamp,
+  // no edited label, no delivery status) so the spacer does not add dead space.
+  const hasMeta =
+    Boolean(message?.createdAt) || Boolean(message?.editedAt) || Boolean(message?.status);
+  const inlineMeta =
+    isDefault && !isStreaming && hasMeta ? <ChatMessageInlineMeta /> : undefined;
 
   return (
     <MessageGroupComponent messageId={id} {...(slotProps?.messageGroup ?? {})}>

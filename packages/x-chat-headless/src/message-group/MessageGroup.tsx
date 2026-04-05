@@ -15,7 +15,34 @@ import { MessageMeta } from '../message/MessageMeta';
 import { MessageRoot } from '../message/MessageRoot';
 import { type MessageGroupOwnerState } from './messageGroup.types';
 
-const DEFAULT_GROUPING_WINDOW_MS = 300_000;
+/**
+ * A function that maps a message to a group key.
+ * Messages that resolve to the same key are visually grouped together
+ * (shared avatar, author name, etc.).
+ */
+export type GroupKeyFn = (message: ChatMessage) => string | number;
+
+const DEFAULT_GROUP_KEY: GroupKeyFn = (message) => message.author?.id ?? message.role ?? '';
+
+/**
+ * Creates a `groupKey` function that groups messages by author within a sliding
+ * time window. Messages from the same author sent more than `windowMs` milliseconds
+ * apart will start a new group.
+ *
+ * @param windowMs - The grouping window in milliseconds. Defaults to 300 000 (5 minutes).
+ *
+ * @example
+ * // Group messages from the same author within a 1-minute window
+ * <MessageGroup groupKey={createTimeWindowGroupKey(60_000)} messageId={id} />
+ */
+export function createTimeWindowGroupKey(windowMs: number = 300_000): GroupKeyFn {
+  return (message: ChatMessage) => {
+    const timestamp = message.createdAt ? Date.parse(message.createdAt) : null;
+    const bucket =
+      timestamp != null && !Number.isNaN(timestamp) ? Math.floor(timestamp / windowMs) : 0;
+    return `${message.author?.id ?? message.role ?? ''}-${bucket}`;
+  };
+}
 
 function resolveMessageIndex(messageId: string, index: number | undefined, items: string[]) {
   if (index != null) {
@@ -23,62 +50,6 @@ function resolveMessageIndex(messageId: string, index: number | undefined, items
   }
 
   return items.indexOf(messageId);
-}
-
-function parseTimestamp(value: string | undefined) {
-  if (!value) {
-    return null;
-  }
-
-  const parsed = Date.parse(value);
-
-  return Number.isNaN(parsed) ? null : parsed;
-}
-
-function getAuthorIdentity(message: ChatMessage | null) {
-  if (!message) {
-    return null;
-  }
-
-  return {
-    id: message.author?.id,
-    role: message.role,
-  };
-}
-
-function areMessagesGrouped(
-  left: ChatMessage | null,
-  right: ChatMessage | null,
-  groupingWindowMs: number,
-) {
-  if (!left || !right) {
-    return false;
-  }
-
-  const leftAuthor = getAuthorIdentity(left);
-  const rightAuthor = getAuthorIdentity(right);
-
-  if (!leftAuthor || !rightAuthor) {
-    return false;
-  }
-
-  const sameAuthor =
-    leftAuthor.id && rightAuthor.id
-      ? leftAuthor.id === rightAuthor.id
-      : leftAuthor.role === rightAuthor.role;
-
-  if (!sameAuthor) {
-    return false;
-  }
-
-  const leftTimestamp = parseTimestamp(left.createdAt);
-  const rightTimestamp = parseTimestamp(right.createdAt);
-
-  if (leftTimestamp == null || rightTimestamp == null) {
-    return true;
-  }
-
-  return Math.abs(rightTimestamp - leftTimestamp) <= groupingWindowMs;
 }
 
 function getAuthorLabel(message: ChatMessage | null) {
@@ -111,7 +82,13 @@ export interface MessageGroupProps extends Omit<React.HTMLAttributes<HTMLDivElem
   messageId: string;
   index?: number;
   items?: string[];
-  groupingWindowMs?: number;
+  /**
+   * A function that maps a message to a group key.
+   * Messages that resolve to the same key are visually grouped (shared avatar, author name, etc.).
+   * Use `createTimeWindowGroupKey(windowMs)` to replicate time-window-based grouping.
+   * @default (message) => message.author?.id ?? message.role
+   */
+  groupKey?: GroupKeyFn;
   slots?: Partial<MessageGroupSlots>;
   slotProps?: MessageGroupSlotProps;
 }
@@ -129,7 +106,7 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
     messageId,
     index,
     items: itemsProp,
-    groupingWindowMs = DEFAULT_GROUPING_WINDOW_MS,
+    groupKey = DEFAULT_GROUP_KEY,
     slots,
     slotProps,
     ...other
@@ -147,9 +124,15 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   const density = useChatDensity();
   const localeText = useChatLocaleText();
   const isHydrated = useIsHydrated();
-  const isFirst = !areMessagesGrouped(previousMessage, message, groupingWindowMs);
+
+  const prevKey = previousMessage ? groupKey(previousMessage) : null;
+  const currentKey = message ? groupKey(message) : null;
+  const nextKey = nextMessage ? groupKey(nextMessage) : null;
+
+  const isFirst = prevKey === null || prevKey !== currentKey;
   const isFirstInList = messageIndex === 0;
-  const isLast = !areMessagesGrouped(message, nextMessage, groupingWindowMs);
+  const isLast = nextKey === null || nextKey !== currentKey;
+
   const ownerState = React.useMemo<MessageGroupOwnerState>(
     () => ({
       isFirst,

@@ -159,7 +159,7 @@ import {
 } from './message';
 import { getDefaultMessagePartRenderer } from './message/defaultMessagePartRenderers';
 import { SuggestionItem, SuggestionsRoot } from './suggestions';
-import { MessageGroup } from './message-group';
+import { MessageGroup, createTimeWindowGroupKey } from './message-group';
 import { MessageListDateDivider, MessageListRoot, useMessageListContext } from './message-list';
 
 export {
@@ -221,6 +221,7 @@ export {
   SuggestionItem,
   SuggestionsRoot,
   MessageGroup,
+  createTimeWindowGroupKey,
   MessageListDateDivider,
   MessageListRoot,
   useMessageListContext,
@@ -384,7 +385,7 @@ export type {
   SuggestionsRootSlotProps,
   SuggestionsRootSlots,
 } from './suggestions';
-export type { MessageGroupProps, MessageGroupSlotProps, MessageGroupSlots } from './message-group';
+export type { GroupKeyFn, MessageGroupProps, MessageGroupSlotProps, MessageGroupSlots } from './message-group';
 export type {
   MessageListDateDividerProps,
   MessageListDateDividerSlotProps,

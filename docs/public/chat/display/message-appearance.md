@@ -16,13 +16,14 @@ This page covers the visual aspects of how messages are displayed in the message
 
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`. Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-The grouping window defaults to 5 minutes (300,000 ms). Messages from the same author that arrive within this window are placed in the same group. Customize it through `slotProps`:
+Grouping is controlled by the `groupKey` prop — a function that maps each message to a string or number. Messages that resolve to the same key are placed in the same visual group. Customize it through `slotProps`:
 
 ```tsx
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import { createTimeWindowGroupKey } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   randomId,
@@ -79,7 +80,7 @@ const messages: ChatMessage[] = [
     role: 'assistant',
     author: demoUsers.agent,
     createdAt: '2026-03-15T10:05:00.000Z',
-    text: 'With groupingWindowMs set to 60 000 (1 minute), consecutive messages from the same author are grouped only when they are less than 1 minute apart. The avatar appears only on the first message in each group.',
+    text: 'With createTimeWindowGroupKey(60 000), consecutive messages from the same author are grouped only when they are less than 1 minute apart. The avatar appears only on the first message in each group.',
   }),
 ];
 
@@ -91,7 +92,7 @@ export default function MessageGrouping() {
       initialConversations={[conversation]}
       initialMessages={messages}
       slotProps={{
-        messageGroup: { groupingWindowMs: 60000 },
+        messageGroup: { groupKey: createTimeWindowGroupKey(60_000) },
       }}
       sx={{
         height: 400,
@@ -104,11 +105,7 @@ export default function MessageGrouping() {
 }
 ```
 
-Grouping is based on:
-
-- Author identity (user ID)
-- Author role fallback when no explicit author ID exists
-- An adjustable time window in milliseconds
+The default `groupKey` groups all messages from the same author together, regardless of time (falling back to role when no explicit author ID exists). Pass `createTimeWindowGroupKey(windowMs)` to also split groups at time boundaries.
 
 ## Date dividers
 

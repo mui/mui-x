@@ -209,7 +209,11 @@ export default function DateDividerFormat() {
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
 Within a group only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-The grouping window defaults to 5 minutes (300,000 ms). Customize it through `slotProps`.
+Grouping is controlled by the `groupKey` prop — a function that maps each message to a string or number.
+Messages that resolve to the same key are placed in the same visual group.
+
+By default, all messages from the same author are grouped regardless of time (falling back to role when no explicit author ID exists).
+To split groups after a time gap, use the built-in `createTimeWindowGroupKey` helper via `slotProps`.
 The demo below sets the window to 1 minute (60,000 ms) — notice how messages more than 1 minute apart start a new group with a fresh avatar:
 
 ```tsx
@@ -217,6 +221,7 @@ The demo below sets the window to 1 minute (60,000 ms) — notice how messages m
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import { createTimeWindowGroupKey } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   randomId,
@@ -273,7 +278,7 @@ const messages: ChatMessage[] = [
     role: 'assistant',
     author: demoUsers.agent,
     createdAt: '2026-03-15T10:05:00.000Z',
-    text: 'With groupingWindowMs set to 60 000 (1 minute), consecutive messages from the same author are grouped only when they are less than 1 minute apart. The avatar appears only on the first message in each group.',
+    text: 'With createTimeWindowGroupKey(60 000), consecutive messages from the same author are grouped only when they are less than 1 minute apart. The avatar appears only on the first message in each group.',
   }),
 ];
 
@@ -285,7 +290,7 @@ export default function MessageGrouping() {
       initialConversations={[conversation]}
       initialMessages={messages}
       slotProps={{
-        messageGroup: { groupingWindowMs: 60000 },
+        messageGroup: { groupKey: createTimeWindowGroupKey(60_000) },
       }}
       sx={{
         height: 400,

@@ -5,7 +5,7 @@ import type { ChatAdapter } from '../adapters/chatAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import { ChatRoot } from '../chat/ChatRoot';
 import type { MessageGroupProps } from './MessageGroup';
-import { MessageGroup } from './MessageGroup';
+import { MessageGroup, createTimeWindowGroupKey } from './MessageGroup';
 
 const { render } = createRenderer();
 
@@ -63,7 +63,7 @@ const CustomRoot = React.forwardRef(function CustomRoot(
 ) {
   const {
     children,
-    groupingWindowMs,
+    groupKey,
     index,
     items,
     messageId,
@@ -72,7 +72,7 @@ const CustomRoot = React.forwardRef(function CustomRoot(
     slots,
     ...other
   } = props;
-  void groupingWindowMs;
+  void groupKey;
   void index;
   void items;
   void slotProps;
@@ -110,7 +110,7 @@ function CustomAuthorName(
 }
 
 describe('MessageGroup', () => {
-  it('groups adjacent messages by author and time and shows avatar only for the first message in each group', () => {
+  it('groups all messages from the same author by default, regardless of time', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
@@ -134,7 +134,7 @@ describe('MessageGroup', () => {
             avatarUrl: 'https://example.com/avatar.png',
             createdAt: '2026-03-15T10:11:00.000Z',
             displayName: 'Assistant',
-            text: 'New group message',
+            text: 'Later message — still same group by default',
           }),
         ]}
       >
@@ -144,13 +144,53 @@ describe('MessageGroup', () => {
       </ChatRoot>,
     );
 
-    // Author name only shows on first message of each group (m1 and m3)
-    expect(screen.getAllByText('Assistant')).to.have.length(2);
-    // Avatars are only shown for the first message in each group (m1 and m3)
-    expect(screen.getAllByRole('img')).to.have.length(2);
+    // All three messages are from the same author — default groupKey groups them all together.
+    // Only the first message in the group shows the author name and avatar.
+    expect(screen.getAllByText('Assistant')).to.have.length(1);
+    expect(screen.getAllByRole('img')).to.have.length(1);
     expect(screen.getByText('First message')).not.to.equal(null);
     expect(screen.getByText('Follow-up message')).not.to.equal(null);
-    expect(screen.getByText('New group message')).not.to.equal(null);
+    expect(screen.getByText('Later message — still same group by default')).not.to.equal(null);
+  });
+
+  it('splits groups at time boundaries when using createTimeWindowGroupKey', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          createMessage('m1', {
+            authorId: 'assistant-1',
+            avatarUrl: 'https://example.com/avatar.png',
+            createdAt: '2026-03-15T10:00:00.000Z',
+            displayName: 'Assistant',
+            text: 'First message',
+          }),
+          createMessage('m2', {
+            authorId: 'assistant-1',
+            avatarUrl: 'https://example.com/avatar.png',
+            createdAt: '2026-03-15T10:03:00.000Z',
+            displayName: 'Assistant',
+            text: 'Follow-up message (3 min later, same group)',
+          }),
+          createMessage('m3', {
+            authorId: 'assistant-1',
+            avatarUrl: 'https://example.com/avatar.png',
+            createdAt: '2026-03-15T10:11:00.000Z',
+            displayName: 'Assistant',
+            text: 'New group message (11 min later, new group)',
+          }),
+        ]}
+      >
+        <MessageGroup groupKey={createTimeWindowGroupKey()} messageId="m1" />
+        <MessageGroup groupKey={createTimeWindowGroupKey()} messageId="m2" />
+        <MessageGroup groupKey={createTimeWindowGroupKey()} messageId="m3" />
+      </ChatRoot>,
+    );
+
+    // m1 and m2 are within the default 5-minute window → one group.
+    // m3 is 11 minutes after m1 → new group. So 2 author names and 2 avatars.
+    expect(screen.getAllByText('Assistant')).to.have.length(2);
+    expect(screen.getAllByRole('img')).to.have.length(2);
   });
 
   it('falls back to role-based grouping when author ids are absent and supports custom children', () => {
@@ -180,7 +220,7 @@ describe('MessageGroup', () => {
     expect(screen.getByTestId('custom-group-child')).to.have.text('Custom child');
   });
 
-  it('respects custom item order, grouping windows, and slot ownerState', () => {
+  it('respects custom item order, groupKey, and slot ownerState', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
@@ -205,7 +245,7 @@ describe('MessageGroup', () => {
         />
         <MessageGroup
           data-testid="group-root-m1"
-          groupingWindowMs={60_000}
+          groupKey={createTimeWindowGroupKey(60_000)}
           items={['m2', 'm1']}
           messageId="m1"
           slots={{ group: CustomRoot }}
@@ -213,8 +253,10 @@ describe('MessageGroup', () => {
       </ChatRoot>,
     );
 
+    // m2 is first in items — isFirst=true
     expect(screen.getByTestId('group-root-m2')).to.have.attribute('data-first', 'true');
     expect(screen.getByTestId('custom-author-name')).to.have.attribute('data-first', 'true');
+    // m1 is 4 min after m2, outside the 1-minute window — isFirst=true
     expect(screen.getByTestId('group-root-m1')).to.have.attribute('data-first', 'true');
   });
 });

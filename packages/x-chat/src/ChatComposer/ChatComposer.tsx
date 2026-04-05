@@ -103,8 +103,10 @@ const ChatComposerStyled = styled('form', {
     borderRadius: (theme.vars || theme).shape.borderRadius,
     backgroundColor: (theme.vars || theme).palette.background.paper,
     border: '1px solid',
-    borderColor:
-      (theme.vars || theme).palette.mode === 'dark' ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)',
+    borderColor: 'rgba(0,0,0,0.23)',
+    ...theme.applyStyles('dark', {
+      borderColor: 'rgba(255,255,255,0.23)',
+    }),
     margin: theme.spacing(0, 1, 1),
     padding: theme.spacing(0.5),
     boxShadow: 'none',

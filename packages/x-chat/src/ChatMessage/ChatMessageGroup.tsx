@@ -128,7 +128,7 @@ ChatMessageGroup.propTypes = {
   children: PropTypes.node,
   classes: PropTypes.object,
   className: PropTypes.string,
-  groupingWindowMs: PropTypes.number,
+  groupKey: PropTypes.func,
   index: PropTypes.number,
   items: PropTypes.arrayOf(PropTypes.string),
   messageId: PropTypes.string.isRequired,

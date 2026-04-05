@@ -4,21 +4,25 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Collapse from '@mui/material/Collapse';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import {
   ChatBox,
-  chatMessageClasses,
   ChatComposer,
+  ChatComposerAttachButton,
+  ChatComposerAttachmentList,
   ChatComposerSendButton,
   ChatComposerTextArea,
+  ChatComposerToolbar,
 } from '@mui/x-chat';
 import type {
   ChatAdapter,
@@ -54,12 +58,6 @@ interface ProjectNode {
 // --- Constants --------------------------------------------------------------
 
 const SIDEBAR_WIDTH = 260;
-
-// --- Null slot component (hides avatar, meta, etc.) -------------------------
-
-function NullSlot(_props: Record<string, unknown>) {
-  return null;
-}
 
 // --- Conversation IDs -------------------------------------------------------
 
@@ -170,27 +168,9 @@ function AgentTaskTree(_props: Record<string, unknown>) {
           borderColor: 'divider',
         }}
       >
-        <Typography variant="subtitle2" sx={{ fontWeight: 700, fontFamily: 'monospace', flex: 1 }}>
-          MUI Agent
+        <Typography variant="subtitle2" sx={{ fontWeight: 700, flex: 1 }}>
+          Tasks
         </Typography>
-        <Chip
-          label="active"
-          size="small"
-          icon={
-            <FiberManualRecordIcon
-              sx={{ fontSize: 8, color: 'success.main', '&&': { color: 'success.main' } }}
-            />
-          }
-          sx={{
-            height: 20,
-            fontSize: '0.65rem',
-            fontWeight: 600,
-            bgcolor: (theme) =>
-              theme.palette.mode === 'dark' ? 'rgba(102,187,106,0.12)' : 'rgba(46,125,50,0.08)',
-            color: 'success.main',
-            '& .MuiChip-icon': { ml: 0.5, mr: -0.25 },
-          }}
-        />
       </Box>
 
       {/* Tree body */}
@@ -420,107 +400,185 @@ function AgentHeaderBar(_props: Record<string, unknown>) {
   );
 }
 
-// --- AgentComposer (composerRoot slot) ---------------------------------------
+// --- Composer selectors -------------------------------------------------------
+
+const MODEL_PROVIDERS = [
+  { id: 'claude', label: 'Claude', models: ['Opus 4.6', 'Sonnet 4.6', 'Haiku 4.5'] },
+  { id: 'codex', label: 'Codex', models: [] as string[] },
+  { id: 'cursor', label: 'Cursor', models: [] as string[] },
+  { id: 'gemini', label: 'Gemini', models: [] as string[] },
+  { id: 'copilot', label: 'GitHub Copilot', models: [] as string[] },
+  { id: 'opencode', label: 'OpenCode', models: [] as string[] },
+];
+
+const EFFORT_OPTIONS = ['Low', 'Medium', 'High'];
+
+function ModelSelector() {
+  const [model, setModel] = React.useState('Sonnet 4.6');
+  const [mainAnchor, setMainAnchor] = React.useState<HTMLElement | null>(null);
+  const [subAnchor, setSubAnchor] = React.useState<HTMLElement | null>(null);
+
+  const closeAll = () => {
+    setMainAnchor(null);
+    setSubAnchor(null);
+  };
+  const pick = (m: string) => {
+    setModel(m);
+    closeAll();
+  };
+
+  return (
+    <React.Fragment>
+      <Button
+        size="small"
+        onClick={(e) => setMainAnchor(e.currentTarget)}
+        endIcon={<KeyboardArrowDownIcon sx={{ fontSize: 14 }} />}
+        sx={{
+          textTransform: 'none',
+          fontSize: '0.75rem',
+          fontWeight: 500,
+          color: 'text.primary',
+          px: 1,
+          py: 0.25,
+          minWidth: 0,
+        }}
+      >
+        ✳ {model}
+      </Button>
+
+      <Menu
+        anchorEl={mainAnchor}
+        open={Boolean(mainAnchor)}
+        onClose={closeAll}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        slotProps={{ paper: { sx: { minWidth: 180 } } }}
+      >
+        {MODEL_PROVIDERS.map((p) => (
+          <MenuItem
+            key={p.id}
+            dense
+            onMouseEnter={(e) => {
+              if (p.models.length > 0) {
+                setSubAnchor(e.currentTarget);
+              } else {
+                setSubAnchor(null);
+              }
+            }}
+          >
+            <Box component="span" sx={{ flex: 1 }}>
+              {p.label}
+            </Box>
+            {p.models.length > 0 && <ChevronRightIcon sx={{ fontSize: 16, color: 'text.secondary' }} />}
+          </MenuItem>
+        ))}
+      </Menu>
+
+      {/* Claude model sub-menu */}
+      <Menu
+        anchorEl={subAnchor}
+        open={Boolean(subAnchor)}
+        onClose={closeAll}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        sx={{ pointerEvents: 'none' }}
+        slotProps={{ paper: { sx: { pointerEvents: 'auto', minWidth: 140 } } }}
+      >
+        {MODEL_PROVIDERS[0].models.map((m) => (
+          <MenuItem key={m} dense selected={m === model} onClick={() => pick(m)}>
+            <Typography variant="body2" sx={{ fontWeight: m === model ? 700 : 400 }}>
+              {m}
+            </Typography>
+          </MenuItem>
+        ))}
+      </Menu>
+    </React.Fragment>
+  );
+}
+
+function EffortSelector() {
+  const [effort, setEffort] = React.useState('Medium');
+  const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
+
+  return (
+    <React.Fragment>
+      <Button
+        size="small"
+        onClick={(e) => setAnchor(e.currentTarget)}
+        endIcon={<KeyboardArrowDownIcon sx={{ fontSize: 14 }} />}
+        sx={{
+          textTransform: 'none',
+          fontSize: '0.75rem',
+          fontWeight: 500,
+          color: 'text.primary',
+          px: 1,
+          py: 0.25,
+          minWidth: 0,
+        }}
+      >
+        {effort} effort
+      </Button>
+      <Menu
+        anchorEl={anchor}
+        open={Boolean(anchor)}
+        onClose={() => setAnchor(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      >
+        {EFFORT_OPTIONS.map((opt) => (
+          <MenuItem
+            key={opt}
+            dense
+            selected={opt === effort}
+            onClick={() => {
+              setEffort(opt);
+              setAnchor(null);
+            }}
+          >
+            {opt}
+          </MenuItem>
+        ))}
+      </Menu>
+    </React.Fragment>
+  );
+}
+
+// --- AgentComposer (composerRoot slot) ----------------------------------------
 
 function AgentComposer({ children: _children, ...other }: Record<string, unknown>) {
   return (
-    <ChatComposer
-      {...other}
-      sx={{
-        borderTop: '1px solid',
-        borderColor: 'divider',
-        p: 1.5,
-        gap: 1,
-      }}
-    >
-      <ChatComposerTextArea
-        placeholder="Ask anything, drop files/folders, or use threads"
-        sx={{
-          fontSize: '0.85rem',
-          minHeight: 40,
-          maxHeight: 120,
-          px: 1.5,
-          py: 1,
-          borderRadius: 2,
-          border: '1px solid',
-          borderColor: 'divider',
-          bgcolor: (theme) =>
-            theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)',
-          '&:focus-within': {
-            borderColor: 'primary.main',
-          },
-        }}
-      />
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0.5,
-          flexWrap: 'wrap',
-        }}
-      >
+    <ChatComposer {...other} variant="default">
+      <ChatComposerAttachmentList />
+      <ChatComposerTextArea />
+      <ChatComposerToolbar>
+        <ChatComposerAttachButton>
+          <AddIcon sx={{ fontSize: 18 }} />
+        </ChatComposerAttachButton>
+        <ModelSelector />
+        <EffortSelector />
         <Chip
-          label="Claude 4"
-          size="small"
-          variant="outlined"
-          sx={{ height: 24, fontSize: '0.7rem', fontWeight: 500, borderRadius: 1 }}
-        />
-        <Chip
-          label="High"
+          label="Default"
           size="small"
           sx={{
             height: 24,
             fontSize: '0.7rem',
-            fontWeight: 500,
-            borderRadius: 1,
+            fontWeight: 600,
             bgcolor: (theme) =>
               theme.palette.mode === 'dark' ? 'rgba(255,167,38,0.15)' : 'rgba(237,108,2,0.08)',
             color: 'warning.main',
           }}
         />
         <Chip
-          label="Chat"
-          size="small"
-          variant="outlined"
-          sx={{ height: 24, fontSize: '0.7rem', fontWeight: 500, borderRadius: 1 }}
-        />
-        <Box sx={{ flex: 1 }} />
-        <Chip
           label="Full access"
           size="small"
           variant="outlined"
-          sx={{ height: 24, fontSize: '0.7rem', fontWeight: 500, borderRadius: 1 }}
+          sx={{ height: 24, fontSize: '0.7rem', fontWeight: 500 }}
         />
-        <ChatComposerSendButton
-          sx={{
-            bgcolor: 'error.main',
-            color: 'error.contrastText',
-            width: 32,
-            height: 32,
-            '&:hover': { bgcolor: 'error.dark' },
-            '&.Mui-disabled': {
-              bgcolor: 'action.disabledBackground',
-              color: 'action.disabled',
-            },
-          }}
-        >
+        <Box sx={{ flex: 1 }} />
+        <ChatComposerSendButton>
           <ArrowUpwardIcon sx={{ fontSize: 18 }} />
         </ChatComposerSendButton>
-      </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          px: 0.5,
-        }}
-      >
-        <Typography variant="caption" sx={{ color: 'text.disabled', fontSize: '0.65rem' }}>
-          Local
-        </Typography>
-        <Typography variant="caption" sx={{ color: 'text.disabled', fontSize: '0.65rem' }}>
-          main
-        </Typography>
-      </Box>
+      </ChatComposerToolbar>
     </ChatComposer>
   );
 }
@@ -1168,23 +1226,7 @@ export default function AgentDemo() {
       slots={{
         conversationList: AgentTaskTree,
         conversationHeader: AgentHeaderBar,
-        messageAvatar: NullSlot,
-        messageMeta: NullSlot,
         composerRoot: AgentComposer,
-      }}
-      slotProps={{
-        messageRoot: {
-          sx: {
-            '--MuiChatMessage-avatarSize': '0px',
-            columnGap: 0,
-          },
-        },
-        messageGroup: {
-          slots: {
-            authorName: NullSlot,
-            groupTimestamp: NullSlot,
-          },
-        } as any,
       }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {
@@ -1195,34 +1237,7 @@ export default function AgentDemo() {
         setThreads((prev) => ({ ...prev, [activeId]: nextMessages }));
         setConversations((prev) => syncConversationPreview(prev, activeId, nextMessages));
       }}
-      sx={{
-        height: '100%',
-        // User messages: subtle left border to visually distinguish
-        [`& .${chatMessageClasses.roleUser} .${chatMessageClasses.bubble}`]: {
-          borderLeft: '3px solid',
-          borderColor: 'primary.main',
-          borderRadius: 1,
-          pl: 1.5,
-          py: 0.5,
-          bgcolor: (theme) =>
-            theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-        },
-        // Tool invocation blocks: dark code-block style
-        '& details': {
-          bgcolor: (theme) =>
-            theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.35)' : 'rgba(0,0,0,0.04)',
-          borderRadius: 1,
-          border: '1px solid',
-          borderColor: 'divider',
-          my: 0.75,
-          overflow: 'hidden',
-        },
-        '& details > summary': {
-          fontFamily: '"Menlo", "Monaco", "Consolas", monospace',
-        },
-      }}
-    >
-      {undefined}
-    </ChatBox>
+      sx={{ height: '100%' }}
+    />
   );
 }

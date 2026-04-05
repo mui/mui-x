@@ -15,7 +15,7 @@ It shows how to render a thread that visually groups messages by author and time
 That makes it a good fit for products where readability and density matter more than showing every message as an isolated card.
 
 - `MessageGroup`
-- `groupingWindowMs`
+- `groupKey` / `createTimeWindowGroupKey`
 - `Message.Avatar`
 - `Message.Content`
 - `Message.Meta`
@@ -30,6 +30,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
+  createTimeWindowGroupKey,
 } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
@@ -43,7 +44,8 @@ import {
 } from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 export default function GroupedMessageTimeline() {
-  const [groupingWindowMs, setGroupingWindowMs] = React.useState(5 * 60_000);
+  const [windowMs, setWindowMs] = React.useState(5 * 60_000);
+  const groupKey = React.useMemo(() => createTimeWindowGroupKey(windowMs), [windowMs]);
   const adapter = React.useMemo(
     () => createEchoAdapter({ agent: demoUsers.agent }),
     [],
@@ -96,14 +98,14 @@ export default function GroupedMessageTimeline() {
           </div>
           <Conversation.HeaderActions style={{ display: 'flex', gap: 8 }}>
             <DemoToolbarButton
-              onClick={() => setGroupingWindowMs(5 * 60_000)}
-              tone={groupingWindowMs === 5 * 60_000 ? 'accent' : 'default'}
+              onClick={() => setWindowMs(5 * 60_000)}
+              tone={windowMs === 5 * 60_000 ? 'accent' : 'default'}
             >
               5 minute window
             </DemoToolbarButton>
             <DemoToolbarButton
-              onClick={() => setGroupingWindowMs(12 * 60_000)}
-              tone={groupingWindowMs === 12 * 60_000 ? 'accent' : 'default'}
+              onClick={() => setWindowMs(12 * 60_000)}
+              tone={windowMs === 12 * 60_000 ? 'accent' : 'default'}
             >
               12 minute window
             </DemoToolbarButton>
@@ -117,7 +119,7 @@ export default function GroupedMessageTimeline() {
 
             return (
               <MessageGroup
-                groupingWindowMs={groupingWindowMs}
+                groupKey={groupKey}
                 index={index}
                 key={id}
                 messageId={id}
@@ -273,7 +275,7 @@ This is especially useful in support timelines, collaboration surfaces, and assi
 ## What to pay attention to
 
 - `MessageGroup` keeps neighbor comparison logic out of the page layer.
-- `groupingWindowMs` is a presentation decision, so it belongs near the message row composition rather than in the data model.
+- `groupKey` is a presentation decision, so it belongs near the message row composition rather than in the data model. Use `createTimeWindowGroupKey(windowMs)` when time-based splitting is needed.
 
 ## API
 
