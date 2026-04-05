@@ -39,7 +39,7 @@
     "tickPlacement": {
       "type": {
         "name": "enum",
-        "description": "'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'extremities'"
+        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'extremities'"
       },
       "default": "'extremities'"
     },

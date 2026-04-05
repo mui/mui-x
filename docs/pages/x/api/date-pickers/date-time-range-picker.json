@@ -21,7 +21,7 @@
       }
     },
     "defaultRangePosition": {
-      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "type": { "name": "enum", "description": "'start'<br>&#124;&nbsp;'end'" },
       "default": "'start'"
     },
     "defaultValue": { "type": { "name": "object" } },
@@ -124,7 +124,7 @@
         "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       }
     },
-    "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
+    "rangePosition": { "type": { "name": "enum", "description": "'start'<br>&#124;&nbsp;'end'" } },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },

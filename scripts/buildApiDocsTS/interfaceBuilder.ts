@@ -6,15 +6,16 @@ import * as ts from 'typescript';
 import * as path from 'path';
 import * as fs from 'node:fs';
 import { kebabCase } from 'es-toolkit/string';
-import { CWD, INTERFACES_TO_DOCUMENT, DATAGRID_API_INTERFACES } from './config';
+import { CWD, getInterfacesToDocument, getDatagridApiInterfaces } from './config';
 import { extractJsDoc } from './jsDocUtils';
 import type { FileWrite } from './types';
 
 export function buildInterfaceDocumentation(checker: ts.TypeChecker, program: ts.Program): FileWrite[] {
   const files: FileWrite[] = [];
   const documentedInterfaces = new Map<string, string[]>();
+  const interfacesToDocument = getInterfacesToDocument();
 
-  for (const entry of INTERFACES_TO_DOCUMENT) {
+  for (const entry of interfacesToDocument) {
     for (const interfaceName of entry.documentedInterfaces) {
       // Find the interface in one of the packages
       const projects: string[] = [];
@@ -187,7 +188,7 @@ export async function getStaticProps() {
   }
 
   // Data grid API interfaces (embedded in demo pages)
-  for (const interfaceName of DATAGRID_API_INTERFACES) {
+  for (const interfaceName of getDatagridApiInterfaces()) {
     const entryPath = path.resolve(CWD, 'packages/x-data-grid-premium/src/index.ts');
     const sf = program.getSourceFile(entryPath);
     if (!sf) {
@@ -239,7 +240,7 @@ export async function getStaticProps() {
   }
 
   // Linkify translations
-  for (const entry of INTERFACES_TO_DOCUMENT) {
+  for (const entry of interfacesToDocument) {
     const translationDir = path.resolve(CWD, `docs/translations/api-docs/${entry.folder}`);
     linkifyTranslations(translationDir, documentedInterfaces, entry.folder);
   }

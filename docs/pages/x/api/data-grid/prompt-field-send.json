@@ -4,12 +4,12 @@
     "color": {
       "type": {
         "name": "enum",
-        "description": "'inherit'<br>&#124;&nbsp;'default'<br>&#124;&nbsp;'primary'"
+        "description": "'default'<br>&#124;&nbsp;'inherit'<br>&#124;&nbsp;'primary'"
       }
     },
     "disabled": { "type": { "name": "bool" } },
     "edge": {
-      "type": { "name": "union", "description": "bool<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'start'" }
+      "type": { "name": "union", "description": "bool<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'end'" }
     },
     "id": { "type": { "name": "string" } },
     "label": { "type": { "name": "string" } },

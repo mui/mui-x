@@ -24,7 +24,7 @@
     "labelPosition": {
       "type": {
         "name": "enum",
-        "description": "'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'inline-start'<br>&#124;&nbsp;'inline-end'"
+        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'inline-start'<br>&#124;&nbsp;'inline-end'"
       },
       "default": "'extremes'"
     },

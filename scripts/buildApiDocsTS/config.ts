@@ -1,288 +1,337 @@
 /**
- * Configuration constants and package config builders.
+ * All configuration for the API docs generation pipeline lives here.
+ * Product families are the single source of truth for package relationships,
+ * component discovery, interface documentation, and prop resolution rules.
  */
-import type { PackageConfig, InterfaceDocEntry } from './types';
+import type { PackageConfig } from './types';
 
 export const CWD = process.cwd();
 
-// Charts: skip components by file path suffix (matches chartsSettings/index.ts)
-export const CHARTS_SKIP_PATHS = [
-  'x-charts/src/Gauge/GaugeReferenceArc.tsx',
-  'x-charts/src/Gauge/GaugeValueArc.tsx',
-  'x-charts/src/Gauge/GaugeValueText.tsx',
-  'x-charts/src/BarChart/FocusedBar.tsx',
-  'x-charts/src/ScatterChart/FocusedScatterMark.tsx',
-  'x-charts/src/ChartsReferenceLine/ChartsXReferenceLine.tsx',
-  'x-charts/src/ChartsReferenceLine/ChartsYReferenceLine.tsx',
-  'x-charts/src/ChartsOverlay/ChartsOverlay.tsx',
-  'x-charts/src/ChartsOverlay/ChartsNoDataOverlay.tsx',
-  'x-charts/src/ChartsOverlay/ChartsLoadingOverlay.tsx',
-  'x-charts/src/LineChart/CircleMarkElement.tsx',
-  'x-charts/src/ScatterChart/ScatterMarker.tsx',
-  'x-charts/src/BarChart/AnimatedBarElement.tsx',
-  'x-charts/src/BarChart/BatchBarPlot/BarGroup.tsx',
-  'x-charts/src/BarChart/BatchBarPlot/BatchBarPlot.tsx',
-  'x-charts/src/RadarChart/RadarDataProvider/RadarDataProvider.tsx',
-  'x-charts/src/LineChart/FocusedLineMark.tsx',
-  'x-charts/src/PieChart/FocusedPieArc.tsx',
-  'x-charts/src/ScatterChart/BatchScatter.tsx',
-  'x-charts/src/BarChart/BatchBarPlot.tsx',
-  'x-charts/src/BarChart/IndividualBarPlot.tsx',
-  'x-charts-pro/src/Heatmap/HeatmapSVGPlot.tsx',
-  'x-charts-pro/src/SankeyChart/SankeyLinkPlot.tsx',
-  'x-charts-pro/src/SankeyChart/SankeyNodePlot.tsx',
-  'x-charts-pro/src/SankeyChart/SankeyLinkLabelPlot.tsx',
-  'x-charts-pro/src/SankeyChart/SankeyNodeLabelPlot.tsx',
-  'x-charts-premium/src/BarChartPremium/RangeBar/AnimatedRangeBarElement.tsx',
-  'x-charts-premium/src/ChartsRenderer/ChartsRenderer.tsx',
-  'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
-  'x-charts-premium/src/HeatmapPremium/HeatmapPlotPremium.tsx',
-  'x-charts-premium/src/HeatmapPremium/webgl/HeatmapWebGLPlot.tsx',
-  'x-charts-premium/src/HeatmapPremium/webgl/HeatmapWebGLRenderer.tsx',
-  'x-charts-premium/src/ChartsWebGLLayer/ChartsWebGLLayer.tsx',
-  'x-charts/src/ChartsLayerContainer/ChartsLayerContainer.tsx',
-  'x-charts/src/ChartsSvgLayer/ChartsSvgLayer.tsx',
-  'x-charts/src/ChartContainer/ChartContainer.tsx',
-  'x-charts-pro/src/ChartContainerPro/ChartContainerPro.tsx',
-  'x-charts-premium/src/ChartContainerPremium/ChartContainerPremium.tsx',
-  'x-charts/src/ChartProvider/ChartProvider.tsx',
-  'x-charts/src/ChartsProvider/ChartsProvider.tsx',
-  'x-charts/src/ChartDataProvider/ChartDataProvider.tsx',
-  'x-charts-pro/src/ChartDataProviderPro/ChartDataProviderPro.tsx',
-  'x-charts-premium/src/ChartDataProviderPremium/ChartDataProviderPremium.tsx',
-  'x-charts-premium/src/CandlestickChart/seriesConfig/OHLCTooltipContent.tsx',
+// ---------------------------------------------------------------------------
+// Product family definition
+// ---------------------------------------------------------------------------
+
+interface ProductFamily {
+  /** The docs section name (data-grid, date-pickers, charts, tree-view) */
+  section: string;
+  /** Packages ordered from base to most complete (community -> pro -> premium) */
+  packages: string[];
+  /** How to discover components */
+  discovery: 'whitelist' | 'scan';
+  includeUnstable?: boolean;
+  /**
+   * Skip component predicate (for 'scan' mode)
+   * @param {string} filename the absolute path of the file being analyzed
+   * @returns {boolean} true to skip this file/component, false to include it
+   */
+  skipComponent?: (filename: string) => boolean;
+  /** Component names to skip, per package. Matched against the filename without extension. */
+  skipComponents?: Record<string, string[]>;
+  /** Component names to include, per package. Only these will be documented (whitelist mode). */
+  components?: Record<string, string[]>;
+  /** Props whose types should not be expanded (kept as "object" or "arrayOf object") */
+  unresolvedProps?: string[];
+  /** Interfaces to generate dedicated documentation pages for */
+  documentedInterfaces?: {
+    /** Extra packages to search for the interfaces (e.g. x-data-grid-generator) */
+    extraPackages?: string[];
+    names: string[];
+  };
+  /** Data grid API interfaces embedded in demo pages (data-grid only) */
+  apiInterfaces?: string[];
+}
+
+// ---------------------------------------------------------------------------
+// Product families
+// ---------------------------------------------------------------------------
+
+const PRODUCT_FAMILIES: ProductFamily[] = [
+  {
+    section: 'data-grid',
+    packages: ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'],
+    discovery: 'whitelist',
+    components: {
+      'x-data-grid': [
+        'DataGrid',
+        'GridFilterForm',
+        'GridFilterPanel',
+        'GridToolbarQuickFilter',
+        'Toolbar',
+        'ToolbarButton',
+        'ExportPrint',
+        'ExportCsv',
+        'QuickFilter',
+        'QuickFilterControl',
+        'QuickFilterClear',
+        'QuickFilterTrigger',
+        'FilterPanelTrigger',
+        'ColumnsPanelTrigger',
+      ],
+      'x-data-grid-pro': ['DataGridPro'],
+      'x-data-grid-premium': [
+        'DataGridPremium',
+        'ExportExcel',
+        'PivotPanelTrigger',
+        'GridChartsPanel',
+        'ChartsPanelTrigger',
+        'AiAssistantPanelTrigger',
+        'PromptField',
+        'PromptFieldRecord',
+        'PromptFieldControl',
+        'PromptFieldSend',
+        'GridChartsRendererProxy',
+      ],
+    },
+    unresolvedProps: [
+      'columns',
+      'currentColumn',
+      'colDef',
+      'initialState',
+      'renderedColumns',
+      'scrollBarState',
+      'renderState',
+      'visibleColumns',
+      'cellFocus',
+      'cellTabIndex',
+      'csvOptions',
+      'printOptions',
+      'column',
+      'groupingColDef',
+      'rowNode',
+      'pinnedColumns',
+      'localeText',
+      'columnGroupingModel',
+    ],
+    documentedInterfaces: {
+      extraPackages: ['x-data-grid-generator'],
+      names: [
+        'GridApi',
+        'GridCellParams',
+        'GridRenderContext',
+        'GridRowParams',
+        'GridRowClassNameParams',
+        'GridRowSpacingParams',
+        'GridExportStateParams',
+        'GridRowOrderChangeParams',
+        'GridColDef',
+        'GridSingleSelectColDef',
+        'GridActionsColDef',
+        'GridListViewColDef',
+        'GridCsvExportOptions',
+        'GridPrintExportOptions',
+        'GridExcelExportOptions',
+        'GridFilterModel',
+        'GridFilterItem',
+        'GridFilterOperator',
+        'GridAggregationFunction',
+        'GridAggregationFunctionDataSource',
+      ],
+    },
+    apiInterfaces: [
+      'GridCellSelectionApi',
+      'GridColumnPinningApi',
+      'GridColumnResizeApi',
+      'GridCsvExportApi',
+      'GridDetailPanelApi',
+      'GridEditingApi',
+      'GridExcelExportApi',
+      'GridFilterApi',
+      'GridPaginationApi',
+      'GridPrintExportApi',
+      'GridRowGroupingApi',
+      'GridRowMultiSelectionApi',
+      'GridRowSelectionApi',
+      'GridScrollApi',
+      'GridSortApi',
+      'GridVirtualizationApi',
+    ],
+  },
+  {
+    section: 'date-pickers',
+    packages: ['x-date-pickers', 'x-date-pickers-pro'],
+    discovery: 'scan',
+    includeUnstable: true,
+    unresolvedProps: [
+      'value',
+      'defaultValue',
+      'minDate',
+      'maxDate',
+      'minDateTime',
+      'maxDateTime',
+      'minTime',
+      'maxTime',
+      'referenceDate',
+      'day',
+      'currentMonth',
+      'month',
+      'fieldRef',
+      'startFieldRef',
+      'endFieldRef',
+    ],
+  },
+  {
+    section: 'charts',
+    packages: ['x-charts', 'x-charts-pro', 'x-charts-premium'],
+    discovery: 'scan',
+    includeUnstable: true,
+    skipComponent: (filename: string) => filename.includes('/context/'),
+    skipComponents: {
+      'x-charts': [
+        'GaugeReferenceArc',
+        'GaugeValueArc',
+        'GaugeValueText',
+        'FocusedBar',
+        'FocusedScatterMark',
+        'ChartsXReferenceLine',
+        'ChartsYReferenceLine',
+        'ChartsOverlay',
+        'ChartsNoDataOverlay',
+        'ChartsLoadingOverlay',
+        'CircleMarkElement',
+        'ScatterMarker',
+        'AnimatedBarElement',
+        'BarGroup',
+        'BatchBarPlot',
+        'RadarDataProvider',
+        'FocusedLineMark',
+        'FocusedPieArc',
+        'BatchScatter',
+        'IndividualBarPlot',
+        'ChartsLayerContainer',
+        'ChartsSvgLayer',
+        'ChartContainer',
+        'ChartProvider',
+        'ChartsProvider',
+        'ChartDataProvider',
+      ],
+      'x-charts-pro': [
+        'HeatmapSVGPlot',
+        'SankeyLinkPlot',
+        'SankeyNodePlot',
+        'SankeyLinkLabelPlot',
+        'SankeyNodeLabelPlot',
+        'ChartContainerPro',
+        'ChartDataProviderPro',
+      ],
+      'x-charts-premium': [
+        'AnimatedRangeBarElement',
+        'ChartsRenderer',
+        'PaletteOption',
+        'HeatmapPlotPremium',
+        'HeatmapWebGLPlot',
+        'HeatmapWebGLRenderer',
+        'ChartsWebGLLayer',
+        'ChartContainerPremium',
+        'ChartDataProviderPremium',
+        'OHLCTooltipContent',
+      ],
+    },
+    unresolvedProps: ['series', 'axis', 'plugins', 'seriesConfig', 'manager'],
+    documentedInterfaces: {
+      names: [
+        'BarSeries',
+        'LineSeries',
+        'PieSeries',
+        'ScatterSeries',
+        'FunnelSeries',
+        'HeatmapSeries',
+        'RadarSeries',
+        'AxisConfig',
+        'ChartImageExportOptions',
+        'ChartPrintExportOptions',
+        'LegendItemParams',
+      ],
+    },
+  },
+  {
+    section: 'tree-view',
+    packages: ['x-tree-view', 'x-tree-view-pro'],
+    discovery: 'scan',
+    includeUnstable: true,
+    skipComponent: (filename: string) => filename.includes('/components/'),
+  },
 ];
 
-export const GRID_WHITELIST: Record<string, string[]> = {
-  'x-data-grid': [
-    'src/DataGrid/DataGrid.tsx',
-    'src/components/panel/filterPanel/GridFilterForm.tsx',
-    'src/components/panel/filterPanel/GridFilterPanel.tsx',
-    'src/components/toolbar/GridToolbarQuickFilter.tsx',
-    'src/components/toolbarV8/Toolbar.tsx',
-    'src/components/toolbarV8/ToolbarButton.tsx',
-    'src/components/export/ExportPrint.tsx',
-    'src/components/export/ExportCsv.tsx',
-    'src/components/quickFilter/QuickFilter.tsx',
-    'src/components/quickFilter/QuickFilterControl.tsx',
-    'src/components/quickFilter/QuickFilterClear.tsx',
-    'src/components/quickFilter/QuickFilterTrigger.tsx',
-    'src/components/filterPanel/FilterPanelTrigger.tsx',
-    'src/components/columnsPanel/ColumnsPanelTrigger.tsx',
-  ],
-  'x-data-grid-pro': ['src/DataGridPro/DataGridPro.tsx'],
-  'x-data-grid-premium': [
-    'src/DataGridPremium/DataGridPremium.tsx',
-    'src/components/export/ExportExcel.tsx',
-    'src/components/pivotPanel/PivotPanelTrigger.tsx',
-    'src/components/chartsPanel/GridChartsPanel.tsx',
-    'src/components/chartsPanel/ChartsPanelTrigger.tsx',
-    'src/components/aiAssistantPanel/AiAssistantPanelTrigger.tsx',
-    'src/components/promptField/PromptField.tsx',
-    'src/components/promptField/PromptFieldRecord.tsx',
-    'src/components/promptField/PromptFieldControl.tsx',
-    'src/components/promptField/PromptFieldSend.tsx',
-    'src/context/GridChartsRendererProxy.tsx',
-  ],
-};
+// ---------------------------------------------------------------------------
+// Derived / computed exports
+// ---------------------------------------------------------------------------
 
-// Packages config
+/** Props that should never be type-resolved regardless of family */
+const GLOBAL_UNRESOLVED_PROPS = ['classes', 'slots', 'slotProps'];
+
+/** Build the combined set of unresolved prop names from all families */
+export const UNRESOLVED_OBJECT_PROPS = new Set([
+  ...GLOBAL_UNRESOLVED_PROPS,
+  ...PRODUCT_FAMILIES.flatMap((f) => f.unresolvedProps ?? []),
+]);
+
+/** Props inherited from base types — only documented when declared on the component itself */
+export const COMMON_INHERITED_PROPS = new Set([
+  'apiRef',
+  'children',
+  'className',
+  'sx',
+  'theme',
+  'ref',
+]);
+
+/**
+ * Compute re-export packages: this package + all tiers above it.
+ */
+function getReExportPackages(pkg: string, family: ProductFamily): string[] {
+  const idx = family.packages.indexOf(pkg);
+  return family.packages.slice(idx).map((p) => `@mui/${p}`);
+}
+
+/** Build the flat list of PackageConfig from the product families. */
 export function getPackageConfigs(): PackageConfig[] {
   const configs: PackageConfig[] = [];
+  for (const family of PRODUCT_FAMILIES) {
+    for (const pkg of family.packages) {
+      // Build the skip predicate by combining skipComponent + skipComponents for this package
+      const skipNames = new Set(family.skipComponents?.[pkg]);
+      const skipFn = family.skipComponent;
+      let skipComponent: ((filename: string) => boolean) | undefined;
+      if (skipFn || skipNames.size > 0) {
+        skipComponent = (filename: string) => {
+          if (skipFn?.(filename)) {
+            return true;
+          }
+          const name = filename.replace(/.*\//, '').replace(/\.tsx$/, '');
+          return skipNames.has(name);
+        };
+      }
 
-  // Data Grid
-  for (const [pkg, files] of Object.entries(GRID_WHITELIST)) {
-    configs.push({
-      name: pkg,
-      packageDir: `packages/${pkg}`,
-      section: 'data-grid',
-      discovery: 'whitelist',
-      whitelist: files,
-      reExportPackages: getReExportPackages(pkg),
-    });
+      configs.push({
+        name: pkg,
+        packageDir: `packages/${pkg}`,
+        section: family.section,
+        discovery: family.discovery,
+        includeUnstable: family.includeUnstable,
+        skipComponent,
+        componentNames: family.components?.[pkg],
+        reExportPackages: getReExportPackages(pkg, family),
+      });
+    }
   }
-
-  // Date Pickers
-  for (const pkg of ['x-date-pickers', 'x-date-pickers-pro']) {
-    configs.push({
-      name: pkg,
-      packageDir: `packages/${pkg}`,
-      section: 'date-pickers',
-      discovery: 'scan',
-      includeUnstable: true,
-      reExportPackages: getReExportPackages(pkg),
-    });
-  }
-
-  // Charts
-  for (const pkg of ['x-charts', 'x-charts-pro', 'x-charts-premium']) {
-    configs.push({
-      name: pkg,
-      packageDir: `packages/${pkg}`,
-      section: 'charts',
-      discovery: 'scan',
-      includeUnstable: true,
-      skipComponent: (filename: string) => {
-        if (filename.includes('/context/')) {
-          return true;
-        }
-        return CHARTS_SKIP_PATHS.some((skipPath) => filename.endsWith(skipPath));
-      },
-      reExportPackages: getReExportPackages(pkg),
-    });
-  }
-
-  // Tree View
-  for (const pkg of ['x-tree-view', 'x-tree-view-pro']) {
-    configs.push({
-      name: pkg,
-      packageDir: `packages/${pkg}`,
-      section: 'tree-view',
-      discovery: 'scan',
-      includeUnstable: true,
-      skipComponent: (filename: string) => filename.includes('/components/'),
-      reExportPackages: getReExportPackages(pkg),
-    });
-  }
-
   return configs;
 }
 
-export function getReExportPackages(pkg: string): string[] {
-  switch (pkg) {
-    case 'x-data-grid':
-      return ['@mui/x-data-grid', '@mui/x-data-grid-pro', '@mui/x-data-grid-premium'];
-    case 'x-data-grid-pro':
-      return ['@mui/x-data-grid-pro', '@mui/x-data-grid-premium'];
-    case 'x-data-grid-premium':
-      return ['@mui/x-data-grid-premium'];
-    case 'x-date-pickers':
-      return ['@mui/x-date-pickers', '@mui/x-date-pickers-pro'];
-    case 'x-date-pickers-pro':
-      return ['@mui/x-date-pickers-pro'];
-    case 'x-charts':
-      return ['@mui/x-charts', '@mui/x-charts-pro', '@mui/x-charts-premium'];
-    case 'x-charts-pro':
-      return ['@mui/x-charts-pro', '@mui/x-charts-premium'];
-    case 'x-charts-premium':
-      return ['@mui/x-charts-premium'];
-    case 'x-tree-view':
-      return ['@mui/x-tree-view', '@mui/x-tree-view-pro'];
-    case 'x-tree-view-pro':
-      return ['@mui/x-tree-view-pro'];
-    default:
-      return [`@mui/${pkg}`];
-  }
+/** Interface documentation entries derived from families that define them. */
+export function getInterfacesToDocument(): {
+  folder: string;
+  packages: string[];
+  documentedInterfaces: string[];
+}[] {
+  return PRODUCT_FAMILIES.filter((f) => f.documentedInterfaces).map((f) => ({
+    folder: f.section,
+    packages: [...f.packages, ...(f.documentedInterfaces!.extraPackages ?? [])],
+    documentedInterfaces: f.documentedInterfaces!.names,
+  }));
 }
 
-export const INTERFACES_TO_DOCUMENT: InterfaceDocEntry[] = [
-  {
-    folder: 'data-grid',
-    packages: ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium', 'x-data-grid-generator'],
-    documentedInterfaces: [
-      'GridApi',
-      'GridCellParams',
-      'GridRenderContext',
-      'GridRowParams',
-      'GridRowClassNameParams',
-      'GridRowSpacingParams',
-      'GridExportStateParams',
-      'GridRowOrderChangeParams',
-      'GridColDef',
-      'GridSingleSelectColDef',
-      'GridActionsColDef',
-      'GridListViewColDef',
-      'GridCsvExportOptions',
-      'GridPrintExportOptions',
-      'GridExcelExportOptions',
-      'GridFilterModel',
-      'GridFilterItem',
-      'GridFilterOperator',
-      'GridAggregationFunction',
-      'GridAggregationFunctionDataSource',
-    ],
-  },
-  {
-    folder: 'charts',
-    packages: ['x-charts', 'x-charts-pro', 'x-charts-premium'],
-    documentedInterfaces: [
-      'BarSeries',
-      'LineSeries',
-      'PieSeries',
-      'ScatterSeries',
-      'FunnelSeries',
-      'HeatmapSeries',
-      'RadarSeries',
-      'AxisConfig',
-      'ChartImageExportOptions',
-      'ChartPrintExportOptions',
-      'LegendItemParams',
-    ],
-  },
-];
-
-export const DATAGRID_API_INTERFACES = [
-  'GridCellSelectionApi',
-  'GridColumnPinningApi',
-  'GridColumnResizeApi',
-  'GridCsvExportApi',
-  'GridDetailPanelApi',
-  'GridEditingApi',
-  'GridExcelExportApi',
-  'GridFilterApi',
-  'GridPaginationApi',
-  'GridPrintExportApi',
-  'GridRowGroupingApi',
-  'GridRowMultiSelectionApi',
-  'GridRowSelectionApi',
-  'GridScrollApi',
-  'GridSortApi',
-  'GridVirtualizationApi',
-];
-
-export const UNRESOLVED_OBJECT_PROPS = new Set([
-  'classes',
-  'slots',
-  'slotProps',
-  'columns',
-  'currentColumn',
-  'colDef',
-  'initialState',
-  'renderedColumns',
-  'scrollBarState',
-  'renderState',
-  'visibleColumns',
-  'cellFocus',
-  'cellTabIndex',
-  'csvOptions',
-  'printOptions',
-  'column',
-  'groupingColDef',
-  'rowNode',
-  'pinnedColumns',
-  'localeText',
-  'columnGroupingModel',
-  'fieldRef',
-  'startFieldRef',
-  'endFieldRef',
-  'series',
-  'axis',
-  'plugins',
-  'seriesConfig',
-  'manager',
-  // Date picker date objects
-  'value',
-  'defaultValue',
-  'minDate',
-  'maxDate',
-  'minDateTime',
-  'maxDateTime',
-  'minTime',
-  'maxTime',
-  'referenceDate',
-  'day',
-  'currentMonth',
-  'month',
-]);
-
-export const COMMON_INHERITED_PROPS = new Set(['apiRef', 'children', 'className', 'sx', 'theme', 'ref']);
+/** Data grid API interfaces (embedded in demo pages). */
+export function getDatagridApiInterfaces(): string[] {
+  const dgFamily = PRODUCT_FAMILIES.find((f) => f.section === 'data-grid');
+  return dgFamily?.apiInterfaces ?? [];
+}

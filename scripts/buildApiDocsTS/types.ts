@@ -47,20 +47,17 @@ export interface JsDocInfo {
 export interface PackageConfig {
   name: string;
   packageDir: string;
-  section: string; // data-grid | date-pickers | charts | tree-view
-  /** How to discover components: 'whitelist' uses explicit list, 'scan' scans src/ */
+  section: string;
   discovery: 'whitelist' | 'scan';
-  /** For whitelist: list of file paths relative to package root */
-  whitelist?: string[];
+  /** For whitelist: component names to document (matched by filename without .tsx) */
+  componentNames?: string[];
   /**
    * Skip component predicate (for 'scan' mode)
    * @param {string} filename the absolute path of the file being analyzed
    * @returns {boolean} true to skip this file/component, false to include it
    */
   skipComponent?: (filename: string) => boolean;
-  /** Include Unstable_ prefixed components */
   includeUnstable?: boolean;
-  /** Import patterns for this package */
   reExportPackages: string[];
 }
 
@@ -139,8 +136,3 @@ export interface FileWrite {
   content: string;
 }
 
-export interface InterfaceDocEntry {
-  folder: string;
-  packages: string[];
-  documentedInterfaces: string[];
-}

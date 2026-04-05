@@ -8,7 +8,7 @@
         "description": "{ fileName?: string, hideToolbar?: bool, hideFooter?: bool, includeCheckboxes?: bool, copyStyles?: bool, bodyClassName?: string, pageStyle?: string<br>&#124;&nbsp;func, getRowsToExport?: func, fields?: Array&lt;string&gt;, allColumns?: bool }"
       }
     },
-    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
+    "render": { "type": { "name": "element" } },
     "role": { "type": { "name": "string" } },
     "size": {
       "type": {

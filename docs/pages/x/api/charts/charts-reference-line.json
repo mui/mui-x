@@ -9,7 +9,7 @@
     "labelAlign": {
       "type": {
         "name": "enum",
-        "description": "'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'middle'"
+        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'middle'"
       },
       "default": "'middle'"
     },

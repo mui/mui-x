@@ -8,7 +8,7 @@
         "description": "{ worker?: func, valueOptionsSheetName?: string, exceljsPreProcess?: func, exceljsPostProcess?: func, columnsStyles?: object, includeColumnGroupsHeaders?: bool, fileName?: string, includeHeaders?: bool, getRowsToExport?: func, escapeFormulas?: bool, fields?: Array&lt;string&gt;, allColumns?: bool }"
       }
     },
-    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
+    "render": { "type": { "name": "element" } },
     "role": { "type": { "name": "string" } },
     "size": {
       "type": {

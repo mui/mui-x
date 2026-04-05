@@ -22,7 +22,7 @@
     "type": {
       "type": {
         "name": "union",
-        "description": "'number'<br>&#124;&nbsp;object<br>&#124;&nbsp;'color'<br>&#124;&nbsp;'reset'<br>&#124;&nbsp;'submit'<br>&#124;&nbsp;'text'<br>&#124;&nbsp;'search'<br>&#124;&nbsp;'hidden'<br>&#124;&nbsp;'button'<br>&#124;&nbsp;'checkbox'<br>&#124;&nbsp;'radio'<br>&#124;&nbsp;'tel'<br>&#124;&nbsp;'url'<br>&#124;&nbsp;'email'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'image'<br>&#124;&nbsp;'date'<br>&#124;&nbsp;'datetime-local'<br>&#124;&nbsp;'file'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'password'<br>&#124;&nbsp;'range'<br>&#124;&nbsp;'week'"
+        "description": "'number'<br>&#124;&nbsp;object<br>&#124;&nbsp;'color'<br>&#124;&nbsp;'reset'<br>&#124;&nbsp;'submit'<br>&#124;&nbsp;'text'<br>&#124;&nbsp;'search'<br>&#124;&nbsp;'button'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'image'<br>&#124;&nbsp;'hidden'<br>&#124;&nbsp;'checkbox'<br>&#124;&nbsp;'date'<br>&#124;&nbsp;'datetime-local'<br>&#124;&nbsp;'email'<br>&#124;&nbsp;'file'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'password'<br>&#124;&nbsp;'radio'<br>&#124;&nbsp;'range'<br>&#124;&nbsp;'tel'<br>&#124;&nbsp;'url'<br>&#124;&nbsp;'week'"
       }
     },
     "value": { "type": { "name": "object" } }

@@ -35,12 +35,9 @@ export function discoverComponents(
     const pkgRoot = path.resolve(CWD, config.packageDir);
     let files: string[] = [];
 
-    if (config.discovery === 'whitelist' && config.whitelist) {
-      files = config.whitelist.map((f) => path.resolve(pkgRoot, f));
-    } else {
-      // Scan src/ for component files
-      files = getComponentFilesInFolder(path.join(pkgRoot, 'src'));
-    }
+    // Always scan — whitelist mode filters by name afterwards
+    files = getComponentFilesInFolder(path.join(pkgRoot, 'src'));
+    const allowedNames = config.componentNames ? new Set(config.componentNames) : null;
 
     for (const filePath of files) {
       if (!fs.existsSync(filePath)) {
@@ -53,7 +50,12 @@ export function discoverComponents(
       const componentName = path.basename(filePath, '.tsx');
       if (componentName.startsWith('use')) {
         continue;
-      } // Skip hooks
+      }
+
+      // In whitelist mode, only include components in the allowed set
+      if (allowedNames && !allowedNames.has(componentName)) {
+        continue;
+      }
 
       // Check if exported from the package
       const sourceFile = program.getSourceFile(filePath);

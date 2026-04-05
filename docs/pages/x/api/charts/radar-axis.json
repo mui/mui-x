@@ -17,7 +17,7 @@
     "textAnchor": {
       "type": {
         "name": "union",
-        "description": "'inherit'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;func"
+        "description": "'inherit'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;func"
       }
     }
   },

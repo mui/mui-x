@@ -8,7 +8,7 @@
         "description": "{ delimiter?: string, fileName?: string, utf8WithBom?: bool, includeHeaders?: bool, includeColumnGroupsHeaders?: bool, getRowsToExport?: func, shouldAppendQuotes?: bool, escapeFormulas?: bool, fields?: Array&lt;string&gt;, allColumns?: bool }"
       }
     },
-    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
+    "render": { "type": { "name": "element" } },
     "role": { "type": { "name": "string" } },
     "size": {
       "type": {

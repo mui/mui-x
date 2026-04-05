@@ -29,7 +29,7 @@
     "id": { "type": { "description": "string | undefined" } },
     "label": {
       "type": {
-        "description": "string | ((location: \"tooltip\" | \"legend\") =&gt; string) | undefined"
+        "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string) | undefined"
       },
       "isProPlan": true
     },

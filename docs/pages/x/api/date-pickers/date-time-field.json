@@ -4,7 +4,7 @@
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
     "clearButtonPosition": {
-      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "type": { "name": "enum", "description": "'start'<br>&#124;&nbsp;'end'" },
       "default": "'end'"
     },
     "color": { "type": { "name": "any" }, "default": "'primary'" },
@@ -88,7 +88,7 @@
       }
     },
     "openPickerButtonPosition": {
-      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "type": { "name": "enum", "description": "'start'<br>&#124;&nbsp;'end'" },
       "default": "'end'"
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },

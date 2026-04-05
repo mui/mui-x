@@ -645,7 +645,7 @@
     "tabNavigation": {
       "type": {
         "name": "enum",
-        "description": "'content'<br>&#124;&nbsp;'all'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'header'"
+        "description": "'content'<br>&#124;&nbsp;'all'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'none'"
       },
       "default": "\"none\""
     },

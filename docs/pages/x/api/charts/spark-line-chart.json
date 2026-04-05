@@ -8,7 +8,7 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ x?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band', y?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band' }"
+        "description": "{ x?: 'line'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'band', y?: 'line'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'band' }"
       }
     },
     "baseline": {
