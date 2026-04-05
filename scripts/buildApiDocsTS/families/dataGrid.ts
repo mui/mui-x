@@ -1,0 +1,111 @@
+import type { ProductFamily } from '../config';
+
+const COMPONENTS: Record<string, Set<string>> = {
+  'x-data-grid': new Set([
+    'DataGrid',
+    'GridFilterForm',
+    'GridFilterPanel',
+    'GridToolbarQuickFilter',
+    'Toolbar',
+    'ToolbarButton',
+    'ExportPrint',
+    'ExportCsv',
+    'QuickFilter',
+    'QuickFilterControl',
+    'QuickFilterClear',
+    'QuickFilterTrigger',
+    'FilterPanelTrigger',
+    'ColumnsPanelTrigger',
+  ]),
+  'x-data-grid-pro': new Set(['DataGridPro']),
+  'x-data-grid-premium': new Set([
+    'DataGridPremium',
+    'ExportExcel',
+    'PivotPanelTrigger',
+    'GridChartsPanel',
+    'ChartsPanelTrigger',
+    'AiAssistantPanelTrigger',
+    'PromptField',
+    'PromptFieldRecord',
+    'PromptFieldControl',
+    'PromptFieldSend',
+    'GridChartsRendererProxy',
+  ]),
+};
+
+export const dataGridFamily: ProductFamily = {
+  section: 'data-grid',
+  packages: ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'],
+  skipComponent: (name, filePath) => {
+    let pkg = 'x-data-grid';
+    if (filePath.includes('/x-data-grid-premium/')) {
+      pkg = 'x-data-grid-premium';
+    } else if (filePath.includes('/x-data-grid-pro/')) {
+      pkg = 'x-data-grid-pro';
+    }
+    return !COMPONENTS[pkg]?.has(name);
+  },
+  unresolvedProps: [
+    'columns',
+    'currentColumn',
+    'colDef',
+    'initialState',
+    'renderedColumns',
+    'scrollBarState',
+    'renderState',
+    'visibleColumns',
+    'cellFocus',
+    'cellTabIndex',
+    'csvOptions',
+    'printOptions',
+    'column',
+    'groupingColDef',
+    'rowNode',
+    'pinnedColumns',
+    'localeText',
+    'columnGroupingModel',
+  ],
+  documentedInterfaces: {
+    extraPackages: ['x-data-grid-generator'],
+    names: [
+      'GridApi',
+      'GridCellParams',
+      'GridRenderContext',
+      'GridRowParams',
+      'GridRowClassNameParams',
+      'GridRowSpacingParams',
+      'GridExportStateParams',
+      'GridRowOrderChangeParams',
+      'GridColDef',
+      'GridSingleSelectColDef',
+      'GridActionsColDef',
+      'GridListViewColDef',
+      'GridCsvExportOptions',
+      'GridPrintExportOptions',
+      'GridExcelExportOptions',
+      'GridFilterModel',
+      'GridFilterItem',
+      'GridFilterOperator',
+      'GridAggregationFunction',
+      'GridAggregationFunctionDataSource',
+    ],
+  },
+  apiInterfaces: [
+    'GridCellSelectionApi',
+    'GridColumnPinningApi',
+    'GridColumnResizeApi',
+    'GridCsvExportApi',
+    'GridDetailPanelApi',
+    'GridEditingApi',
+    'GridExcelExportApi',
+    'GridFilterApi',
+    'GridPaginationApi',
+    'GridPrintExportApi',
+    'GridRowGroupingApi',
+    'GridRowMultiSelectionApi',
+    'GridRowSelectionApi',
+    'GridScrollApi',
+    'GridSortApi',
+    'GridVirtualizationApi',
+  ],
+};
