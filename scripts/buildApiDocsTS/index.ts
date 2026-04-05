@@ -9,7 +9,7 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { createTSProgram } from './createProgram';
-import { getPackageConfigs } from './config';
+import { getPackageConfigs, debug } from './config';
 import { discoverComponents } from './componentDiscovery';
 import { loadDemos } from './demoLoader';
 import { extractComponentApi } from './componentExtractor';
@@ -28,24 +28,24 @@ import type { FileWrite, ComponentApi } from './types';
 async function main() {
   const start = Date.now();
 
-  console.log('Creating TypeScript program...');
+  console.log('Building API docs...');
   const { program, checker } = createTSProgram();
-  console.log(`  Program created in ${Date.now() - start}ms`);
+  debug(`Program created in ${Date.now() - start}ms`);
 
-  console.log('Loading demos from markdown...');
   const demos = loadDemos();
-  console.log(`  Found demos for ${demos.size} components`);
-
-  console.log('Discovering components...');
   const configs = getPackageConfigs();
   const components = discoverComponents(configs, checker, program);
-  console.log(`  Found ${components.length} components`);
 
-  console.log('Extracting component APIs...');
   const allFiles: FileWrite[] = [];
   const componentsBySection = new Map<string, ComponentApi[]>();
 
+  // Extract component APIs grouped by section
+  let currentSection = '';
   for (const comp of components) {
+    if (comp.section !== currentSection) {
+      currentSection = comp.section;
+      console.log(`  ${currentSection}`);
+    }
     const api = extractComponentApi(comp, checker, program, demos);
     if (!api) {
       continue;
@@ -56,41 +56,23 @@ async function main() {
     componentsBySection.set(comp.section, sectionComponents);
 
     allFiles.push(...generateComponentFiles(api));
-    console.log(`  ${api.name}\r`);
+    debug(`    ${api.name}`);
   }
-  console.log(`  Extracted ${allFiles.length / 3} component APIs`);
 
-  // Generate manifests
-  console.log('Generating manifests...');
   for (const [section, comps] of componentsBySection) {
     allFiles.push(generateManifest(section, comps));
   }
 
-  // Interface documentation
-  console.log('Building interface documentation...');
+  console.log('  interfaces');
   allFiles.push(...buildInterfaceDocumentation(checker, program));
-
-  // Grid events
-  console.log('Building grid events...');
   allFiles.push(...buildGridEventsDocumentation(checker, program));
-
-  // Grid selectors
-  console.log('Building grid selectors...');
   allFiles.push(...buildGridSelectorsDocumentation(checker, program));
-
-  // Exports
-  console.log('Building exports documentation...');
   allFiles.push(...buildExportsDocumentation(checker, program));
 
-  // Clean up stale files from previous runs
-  console.log('Cleaning up stale files...');
   cleanupStaleFiles(allFiles);
-
-  // Write all files
-  console.log(`Writing ${allFiles.length} files...`);
   await writeAllFiles(allFiles);
 
-  console.log(`Done in ${Date.now() - start}ms`);
+  console.log(`Done in ${Date.now() - start}ms — ${allFiles.length} files written`);
 }
 
 yargs(hideBin(process.argv))

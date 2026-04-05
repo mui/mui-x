@@ -6,7 +6,7 @@ import * as ts from 'typescript';
 import * as path from 'path';
 import * as fs from 'node:fs';
 import { kebabCase } from 'es-toolkit/string';
-import { CWD, getInterfacesToDocument, getJsonOnlyInterfaces } from './config';
+import { CWD, getInterfacesToDocument, getJsonOnlyInterfaces, debug } from './config';
 import { extractJsDoc } from './jsDocUtils';
 import type { FileWrite } from './types';
 
@@ -237,8 +237,7 @@ export async function getStaticProps() {
         content: JSON.stringify({ name: interfaceName, description, properties }),
       });
 
-      // eslint-disable-next-line no-console
-      console.log(`  Built JSON file for ${interfaceName}`);
+      debug(`  Built JSON file for ${interfaceName}`);
     }
   }
 

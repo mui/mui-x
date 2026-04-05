@@ -3,7 +3,7 @@
  */
 import * as ts from 'typescript';
 import * as path from 'path';
-import { CWD } from './config';
+import { CWD, debug } from './config';
 import { extractJsDoc } from './jsDocUtils';
 import type { FileWrite } from './types';
 
@@ -121,7 +121,6 @@ export function buildGridEventsDocumentation(
     content: JSON.stringify(sorted),
   });
 
-  // eslint-disable-next-line no-console
-  console.log('  Built events file');
+  debug('  Built events file');
   return files;
 }

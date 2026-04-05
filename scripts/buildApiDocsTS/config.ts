@@ -11,6 +11,12 @@ import { treeViewFamily } from './families/treeView';
 
 export const CWD = process.cwd();
 
+const DEBUG = process.env.CI === 'true' || process.env.DEBUG === 'true';
+
+/** Logs only when DEBUG is enabled (CI=true or DEBUG=true). */
+// eslint-disable-next-line no-console
+export const debug = DEBUG ? console.log.bind(console) : () => {};
+
 // ---------------------------------------------------------------------------
 // Product family type (used by family definition files)
 // ---------------------------------------------------------------------------
