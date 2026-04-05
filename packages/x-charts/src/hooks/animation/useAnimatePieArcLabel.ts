@@ -1,8 +1,8 @@
 import type * as React from 'react';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
-import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { useAnimate } from './useAnimate';
 import type { PieArcLabelProps } from '../../PieChart';
+import { createInterpolator } from './common';
 
 type UseAnimatePieArcLabelParams = Pick<
   PieArcLabelProps,
@@ -15,31 +15,10 @@ type UseAnimatePieArcLabelReturn = {
   x: number;
   y: number;
 };
-type PieArcLabelInterpolatedProps = Pick<
+export type PieArcLabelInterpolatedProps = Pick<
   UseAnimatePieArcLabelParams,
   'startAngle' | 'endAngle' | 'arcLabelRadius' | 'paddingAngle' | 'cornerRadius'
 >;
-
-function pieArcLabelPropsInterpolator(
-  from: PieArcLabelInterpolatedProps,
-  to: PieArcLabelInterpolatedProps,
-) {
-  const interpolateStartAngle = interpolateNumber(from.startAngle, to.startAngle);
-  const interpolateEndAngle = interpolateNumber(from.endAngle, to.endAngle);
-  const interpolateArcLabelRadius = interpolateNumber(from.arcLabelRadius, to.arcLabelRadius);
-  const interpolatePaddingAngle = interpolateNumber(from.paddingAngle, to.paddingAngle);
-  const interpolateCornerRadius = interpolateNumber(from.cornerRadius, to.cornerRadius);
-
-  return (t: number) => {
-    return {
-      startAngle: interpolateStartAngle(t),
-      endAngle: interpolateEndAngle(t),
-      arcLabelRadius: interpolateArcLabelRadius(t),
-      paddingAngle: interpolatePaddingAngle(t),
-      cornerRadius: interpolateCornerRadius(t),
-    };
-  };
-}
 
 /** Animates the label of pie slice from its middle point to the centroid of the slice.
  * The props object also accepts a `ref` which will be merged with the ref returned from this hook. This means you can
@@ -64,7 +43,7 @@ export function useAnimatePieArcLabel(
       cornerRadius: props.cornerRadius,
     },
     {
-      createInterpolator: pieArcLabelPropsInterpolator,
+      createInterpolator: createInterpolator<PieArcLabelInterpolatedProps>,
       transformProps: (animatedProps) => {
         const [x, y] = d3Arc().cornerRadius(animatedProps.cornerRadius).centroid({
           padAngle: animatedProps.paddingAngle,
