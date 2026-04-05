@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
-import { ChatRoot, MessageListRoot } from '@mui/x-chat-unstyled';
+import { ChatRoot, MessageListRoot } from '@mui/x-chat-headless';
 import { ChatScrollToBottomAffordance } from './ChatScrollToBottomAffordance';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

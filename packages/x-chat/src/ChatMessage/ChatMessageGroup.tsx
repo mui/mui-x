@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import { MessageGroup, type MessageGroupProps } from '@mui/x-chat-unstyled';
+import { MessageGroup, type MessageGroupProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 
@@ -19,13 +19,33 @@ const ChatMessageGroupStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Group',
   overridesResolver: (_, styles) => styles.group,
-})<{ ownerState?: { variant?: string } }>(({ ownerState }) => ({
-  '--MuiChatMessage-avatarSize': ownerState?.variant === 'compact' ? '28px' : '36px',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 0,
-  width: '100%',
-}));
+})<{
+  ownerState?: {
+    variant?: string;
+    isFirst?: boolean;
+    isFirstInList?: boolean;
+    density?: string;
+  };
+}>(({ theme, ownerState }) => {
+  const densityMarginBlockStart: Record<string, string> = {
+    compact: theme.spacing(0.25),
+    standard: theme.spacing(1),
+    comfortable: theme.spacing(2),
+  };
+  const marginBlockStart =
+    ownerState?.isFirst && !ownerState?.isFirstInList
+      ? densityMarginBlockStart[ownerState?.density ?? 'standard']
+      : 0;
+
+  return {
+    '--MuiChatMessage-avatarSize': ownerState?.variant === 'compact' ? '28px' : '36px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 0,
+    width: '100%',
+    marginBlockStart,
+  };
+});
 
 const ChatMessageGroupAuthorNameStyled = styled('div', {
   name: 'MuiChatMessage',

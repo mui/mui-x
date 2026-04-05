@@ -10,8 +10,6 @@ components: ChatMessageActions
 
 Add hover-triggered action buttons to messages for copy, edit, delete, and custom operations.
 
-
-
 `ChatMessageActions` renders an action bar that appears when the user hovers over a message or focuses within it. The actions area is positioned in the message grid and transitions from hidden to visible using an opacity animation.
 
 ## Import
@@ -82,7 +80,7 @@ function MyMessageActions(props) {
 Inside a custom actions component, use the message context to access the current message data:
 
 ```tsx
-import { useMessageContext } from '@mui/x-chat/unstyled';
+import { useMessageContext } from '@mui/x-chat/headless';
 
 function MyMessageActions(props) {
   const { message, role } = useMessageContext();

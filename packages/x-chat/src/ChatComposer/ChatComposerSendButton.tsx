@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import { ComposerSendButton, type ComposerSendButtonProps } from '@mui/x-chat-unstyled';
+import { ComposerSendButton, type ComposerSendButtonProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 

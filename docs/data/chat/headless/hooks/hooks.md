@@ -124,7 +124,7 @@ Manages draft text, file attachments, and submission behavior.
 
 ### Preview URLs
 
-When you add an image attachment, `useChatComposer` automatically creates an object URL for previewing the image.
+When you add an image attachment, `useChatComposer()` automatically creates an object URL for previewing the image.
 The hook revokes these URLs when the attachment is removed, the composer is cleared, or the component unmounts.
 You do not need to manage URL lifecycle manually.
 
@@ -301,10 +301,6 @@ function CustomPart({ part, message, index }) {
 | Custom selector or store subscription     | `useChatStore()` + `chatSelectors`            |
 | Registered part renderer lookup           | `useChatPartRenderer(partType)`               |
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Selectors](/x/react-chat/headless/selectors/) for the full selector API and advanced store subscriptions.
@@ -312,3 +308,7 @@ function CustomPart({ part, message, index }) {
 - [Minimal headless chat](/x/react-chat/headless/examples/minimal-chat/) for the smallest working demo.
 - [Selector-driven thread](/x/react-chat/headless/examples/selector-driven-thread/) for the `useMessageIds()` + `useMessage(id)` pattern in action.
 - [Composer](/x/react-chat/headless/examples/composer/) for `useChatComposer()` with attachments.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

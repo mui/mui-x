@@ -10,9 +10,7 @@ components: ConversationRoot, ConversationHeader, ConversationTitle, Conversatio
 
 Compose the active conversation surface from themed thread components, override individual slots, and recompose the layout using context hooks.
 
-
-
-The thread pane is the single-conversation view in a chat interface. It combines a header area, a scrollable message log, and a composer into one cohesive surface. `@mui/x-chat` ships each region as a themed component that wraps the corresponding `@mui/x-chat/unstyled` primitive with `styled()` and Material UI theme tokens. Use `@mui/x-chat/unstyled` when you want the same structural primitives without Material styling, and `@mui/x-chat/headless` when you want runtime state and hooks without any prescribed UI structure.
+The thread pane is the single-conversation view in a chat interface. It combines a header area, a scrollable message log, and a composer into one cohesive surface. `@mui/x-chat` ships each region as a themed component that wraps the corresponding `@mui/x-chat/headless` primitive with `styled()` and Material UI theme tokens. Use `@mui/x-chat/headless` when you want the same structural primitives without Material styling, and `@mui/x-chat/headless` when you want runtime state and hooks without any prescribed UI structure.
 
 The following demo shows the thread in action:
 
@@ -44,7 +42,6 @@ export default function BasicAiChat() {
     />
   );
 }
-
 ```
 
 ## Component anatomy
@@ -463,7 +460,7 @@ function CustomThread() {
 }
 ```
 
-Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter. If you want structural primitives instead of the fully themed Material components shown on this page, move one layer down to `@mui/x-chat/unstyled`.
+Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter. If you want structural primitives instead of the fully themed Material components shown on this page, move one layer down to `@mui/x-chat/headless`.
 
 ## API
 

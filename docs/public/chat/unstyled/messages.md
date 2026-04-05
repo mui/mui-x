@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled messages
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 components: MessageRoot, MessageAvatar, MessageAuthorLabel, MessageContent, MessageMeta, MessageActions, MessageGroup, MessageListDateDivider
 githubLabel: 'scope: chat'
 ---
@@ -9,8 +9,6 @@ githubLabel: 'scope: chat'
 # Chat - Unstyled messages
 
 Compose thread rows from message grouping primitives, message subparts, and default message-part renderers.
-
-
 
 ```tsx
 import * as React from 'react';
@@ -21,7 +19,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   demoUsers,
@@ -236,7 +234,6 @@ export default function GroupedMessageTimeline() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Primitive set

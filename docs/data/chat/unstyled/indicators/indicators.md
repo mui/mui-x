@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled indicators
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 components: TypingIndicator, UnreadMarker, ScrollToBottomAffordance
 githubLabel: 'scope: chat'
 ---
@@ -40,7 +40,7 @@ It renders a polite live region and shows labels such as:
 ### Typical placement
 
 ```tsx
-import { Indicators, Conversation } from '@mui/x-chat/unstyled';
+import { Indicators, Conversation } from '@mui/x-chat/headless';
 
 <Conversation.Header>
   <Conversation.Title />
@@ -120,14 +120,14 @@ Custom slots receive owner state such as:
 
 That makes it straightforward to map the indicators into an existing design system without rewriting the underlying behavior.
 
-## API
-
-- [TypingIndicator](/x/api/chat/typing-indicator/)
-- [UnreadMarker](/x/api/chat/unread-marker/)
-- [ScrollToBottomAffordance](/x/api/chat/scroll-to-bottom-affordance/)
-
 ## See also
 
 - Continue with [Message list](/x/react-chat/unstyled/message-list/) for the list context that powers unread boundaries and scroll affordances.
 - Continue with [Thread](/x/react-chat/unstyled/thread/) for header composition patterns.
 - Continue with [Indicators in context](/x/react-chat/unstyled/examples/indicators-in-context/) for the demo version of these primitives.
+
+## API
+
+- [TypingIndicator](/x/api/chat/typing-indicator/)
+- [UnreadMarker](/x/api/chat/unread-marker/)
+- [ScrollToBottomAffordance](/x/api/chat/scroll-to-bottom-affordance/)

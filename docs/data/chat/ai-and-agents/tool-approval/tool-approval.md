@@ -157,7 +157,7 @@ const adapter = React.useMemo(
       }}
       onCancel={() => setPendingConfirmation(false)}
     />
-  );
+  )
 }
 ```
 
@@ -217,13 +217,13 @@ const renderers: ChatPartRendererMap = {
 </ChatProvider>;
 ```
 
-## API
-
-- [`ChatConfirmation`](/x/api/chat/chat-confirmation/)
-
 ## See also
 
 - [Tool Calling](/x/react-chat/ai-and-agents/tool-calling/) for the full tool invocation lifecycle and chunk protocol.
 - [Adapter](/x/react-chat/backend/adapters/) for the `addToolApprovalResponse()` method reference.
 - [Streaming](/x/react-chat/behavior/streaming/) for the `tool-approval-request` chunk type.
 - [Reasoning](/x/react-chat/ai-and-agents/reasoning/) for displaying LLM thinking alongside tool calls.
+
+## API
+
+- [`ChatConfirmation`](/x/api/chat/chat-confirmation/)

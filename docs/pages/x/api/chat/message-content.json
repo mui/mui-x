@@ -2,8 +2,8 @@
   "props": {},
   "name": "MessageContent",
   "imports": [
-    "import { MessageContent } from '@mui/x-chat-unstyled/message';",
-    "import { MessageContent } from '@mui/x-chat-unstyled';"
+    "import { MessageContent } from '@mui/x-chat-headless/message';",
+    "import { MessageContent } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "content", "description": "", "class": null },
@@ -11,7 +11,7 @@
   ],
   "classes": [],
   "muiName": "MuiMessageContent",
-  "filename": "/packages/x-chat-unstyled/src/message/MessageContent.tsx",
+  "filename": "/packages/x-chat-headless/src/message/MessageContent.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/unstyled/messages/\">Unstyled messages</a></li></ul>",
   "cssComponent": false

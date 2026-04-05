@@ -125,22 +125,27 @@ Register a custom renderer for `step-start` parts:
 
 ```tsx
 const renderers: ChatPartRendererMap = {
-  'step-start': ({ index }) => (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        margin: '8px 0',
-        color: 'gray',
-        fontSize: '0.8em',
-      }}
-    >
-      <div style={{ flex: 1, height: 1, background: 'lightgray' }} />
-      <span>Step {index + 1}</span>
-      <div style={{ flex: 1, height: 1, background: 'lightgray' }} />
-    </div>
-  ),
+  'step-start': ({ index, message }) => {
+    const stepNumber = message.parts
+      .slice(0, index + 1)
+      .filter((part) => part.type === 'step-start').length;
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          margin: '8px 0',
+          color: 'gray',
+          fontSize: '0.8em',
+        }}
+      >
+        <div style={{ flex: 1, height: 1, background: 'lightgray' }} />
+        <span>Step {stepNumber}</span>
+        <div style={{ flex: 1, height: 1, background: 'lightgray' }} />
+      </div>
+    );
+  },
 };
 
 <ChatProvider adapter={adapter} partRenderers={renderers}>
@@ -157,13 +162,18 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
 const renderers: ChatPartRendererMap = {
-  'step-start': ({ index }) => (
-    <Divider sx={{ my: 1 }}>
-      <Typography variant="caption" color="text.secondary">
-        Step {index + 1}
-      </Typography>
-    </Divider>
-  ),
+  'step-start': ({ index, message }) => {
+    const stepNumber = message.parts
+      .slice(0, index + 1)
+      .filter((part) => part.type === 'step-start').length;
+    return (
+      <Divider sx={{ my: 1 }}>
+        <Typography variant="caption" color="text.secondary">
+          Step {stepNumber}
+        </Typography>
+      </Divider>
+    );
+  },
 };
 ```
 

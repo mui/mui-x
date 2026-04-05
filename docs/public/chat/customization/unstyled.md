@@ -10,9 +10,7 @@ components: ChatRoot
 
 Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.
 
-
-
-`@mui/x-chat/unstyled` builds on the headless runtime.
+`@mui/x-chat/headless` builds on the headless runtime.
 It combines `@mui/x-chat/headless` state with structural components such as lists, threads, messages, composers, and indicators.
 
 ## When to use the unstyled layer
@@ -70,7 +68,7 @@ import {
   Message,
   Composer,
   Indicators,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 ```
 
 You can also import individual components such as `ChatRoot`, `MessageListRoot`, or `ComposerTextArea` when you prefer explicit component names in your codebase.
@@ -90,7 +88,7 @@ import {
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 
 function Inbox(props: ChatRootProps) {
   return (

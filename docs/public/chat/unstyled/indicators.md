@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled indicators
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 components: TypingIndicator, UnreadMarker, ScrollToBottomAffordance
 githubLabel: 'scope: chat'
 ---
@@ -9,8 +9,6 @@ githubLabel: 'scope: chat'
 # Chat - Unstyled indicators
 
 Use shared structural affordances for typing, unread boundaries, and scroll-to-bottom behavior.
-
-
 
 ```tsx
 import * as React from 'react';
@@ -23,7 +21,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneMessages,
@@ -289,7 +287,6 @@ export default function IndicatorsInContext() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Primitive set
@@ -318,7 +315,7 @@ It renders a polite live region and shows labels such as:
 ### Typical placement
 
 ```tsx
-import { Indicators, Conversation } from '@mui/x-chat/unstyled';
+import { Indicators, Conversation } from '@mui/x-chat/headless';
 
 <Conversation.Header>
   <Conversation.Title />

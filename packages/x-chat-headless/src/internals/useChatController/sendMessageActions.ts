@@ -136,7 +136,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       parts: input.parts,
       metadata: input.metadata,
       author: input.author,
-      createdAt: input.createdAt,
+      createdAt: input.createdAt ?? new Date().toISOString(),
     };
 
     await sendExistingMessage(message, input.attachments);

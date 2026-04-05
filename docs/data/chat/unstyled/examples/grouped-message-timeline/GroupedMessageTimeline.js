@@ -6,7 +6,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   demoUsers,

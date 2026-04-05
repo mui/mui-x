@@ -226,7 +226,6 @@ export default function MinimalHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 The runtime is easiest to understand as a pipeline:

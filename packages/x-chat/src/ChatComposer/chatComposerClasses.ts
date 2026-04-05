@@ -5,6 +5,8 @@ import composeClasses from '@mui/utils/composeClasses';
 export interface ChatComposerClasses {
   /** Styles applied to the input root element. */
   root: string;
+  /** Styles applied to the root element when disabled. */
+  disabled: string;
   /** Styles applied to the input label element. */
   label: string;
   /** Styles applied to the textarea element. */
@@ -31,6 +33,7 @@ export function getChatComposerUtilityClass(slot: string): string {
 
 export const chatComposerClasses: ChatComposerClasses = generateUtilityClasses('MuiChatComposer', [
   'root',
+  'disabled',
   'label',
   'textArea',
   'sendButton',
@@ -43,6 +46,7 @@ export const chatComposerClasses: ChatComposerClasses = generateUtilityClasses('
 
 const slots: Record<ChatComposerClassKey, string[]> = {
   root: ['root'],
+  disabled: ['disabled'],
   label: ['label'],
   textArea: ['textArea'],
   sendButton: ['sendButton'],

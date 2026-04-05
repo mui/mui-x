@@ -1,7 +1,7 @@
 ---
 title: Chat - ChatGPT-style layout
 productId: x-chat
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -18,7 +18,7 @@ This demo shows how the same unstyled primitives can be customized to produce a 
 - No sender names or timestamps — clean, minimal message display
 - Centered content column with a maximum width and a pill-shaped composer
 
-```tsx
+````tsx
 import * as React from 'react';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
@@ -35,7 +35,7 @@ import type {
   ReasoningPartOwnerState,
   ToolPartOwnerState,
   ToolPartSectionOwnerState,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import {
   Chat,
   Conversation,
@@ -44,7 +44,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import type { ChatMessage, ChatUser } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
@@ -1292,8 +1292,7 @@ export default function ChatGptStyleChat() {
     </Chat.Root>
   );
 }
-
-```
+````
 
 ## Key techniques
 

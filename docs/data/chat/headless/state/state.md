@@ -207,13 +207,13 @@ interface ChatStoreConstructor<Cursor = string> {
 
 Use this when you need to override internal normalization, add computed state, or integrate with an external store.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for the full hook API reference.
 - [Selectors](/x/react-chat/headless/selectors/) for store selectors and advanced subscriptions.
 - [Controlled state](/x/react-chat/headless/examples/controlled-state/) for the controlled model pattern in action.
 - [Streaming lifecycle](/x/react-chat/headless/examples/streaming-lifecycle/) for send, stream, stop, and retry callbacks.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

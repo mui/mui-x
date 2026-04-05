@@ -270,7 +270,6 @@ export default function SelectorDrivenThread() {
     </Stack>
   );
 }
-
 ```
 
 ## Key takeaways

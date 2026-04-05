@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled thread
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 components: ConversationRoot, ConversationHeader, ConversationTitle, ConversationSubtitle, ConversationHeaderActions
 githubLabel: 'scope: chat'
 ---
@@ -9,8 +9,6 @@ githubLabel: 'scope: chat'
 # Chat - Unstyled thread
 
 Build the active conversation surface from thread primitives that derive their state from the selected conversation.
-
-
 
 ```tsx
 import * as React from 'react';
@@ -22,7 +20,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -222,7 +220,6 @@ export default function TwoPaneInbox() {
     </Chat.Root>
   );
 }
-
 ```
 
 ```tsx
@@ -231,7 +228,7 @@ import {
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 
 <Conversation.Root>
   <Conversation.Header>

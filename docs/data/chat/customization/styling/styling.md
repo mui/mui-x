@@ -42,11 +42,11 @@ const theme = createTheme({
   components: {
     MuiChatBox: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           border: '1px solid',
-          borderColor: 'divider',
+          borderColor: theme.palette.divider,
           borderRadius: 8,
-        },
+        }),
         layout: {
           gap: 0,
         },
@@ -125,10 +125,9 @@ Pass `sx` overrides to any internal sub-component using `slotProps` without repl
 />
 ```
 
-## API
-
 ## See also
 
 - [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing sub-components entirely.
 - [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling with utility classes.
-- [Unstyled Components](/x/react-chat/customization/unstyled/) for building from structural primitives.
+
+## API

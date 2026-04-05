@@ -2,13 +2,13 @@
   "props": {},
   "name": "ComposerHelperText",
   "imports": [
-    "import { ComposerHelperText } from '@mui/x-chat-unstyled/composer';",
-    "import { ComposerHelperText } from '@mui/x-chat-unstyled';"
+    "import { ComposerHelperText } from '@mui/x-chat-headless/composer';",
+    "import { ComposerHelperText } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "helperText", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiComposerHelperText",
-  "filename": "/packages/x-chat-unstyled/src/composer/ComposerHelperText.tsx",
+  "filename": "/packages/x-chat-headless/src/composer/ComposerHelperText.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/unstyled/composer/\">Unstyled composer</a></li></ul>",
   "cssComponent": false

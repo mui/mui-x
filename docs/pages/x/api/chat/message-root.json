@@ -2,15 +2,15 @@
   "props": {},
   "name": "MessageRoot",
   "imports": [
-    "import { MessageRoot } from '@mui/x-chat-unstyled/message';",
-    "import { MessageRoot } from '@mui/x-chat-unstyled';"
+    "import { MessageRoot } from '@mui/x-chat-headless/message';",
+    "import { MessageRoot } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiMessageRoot",
-  "filename": "/packages/x-chat-unstyled/src/message/MessageRoot.tsx",
+  "filename": "/packages/x-chat-headless/src/message/MessageRoot.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/unstyled/messages/\">Unstyled messages</a></li></ul>",
   "cssComponent": false

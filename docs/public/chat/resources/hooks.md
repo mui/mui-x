@@ -9,8 +9,6 @@ githubLabel: 'scope: chat'
 
 <p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat/headless</code>.</p>
 
-
-
 `ChatBox` covers most use cases out of the box, but sometimes you need to reach into chat state from components that live outside `ChatBox` — a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
 
 The headless hook layer makes this possible.
@@ -88,6 +86,9 @@ const {
   retry, // (messageId: string) => Promise<void>
   setError, // (error: ChatError | null) => void
   addToolApprovalResponse, // (input: ChatAddToolApproveResponseInput) => Promise<void>
+  reloadConversations, // () => Promise<void> — planned API stub, not yet implemented
+  reloadMessages, // (conversationId?: string) => Promise<void> — planned API stub, not yet implemented
+  reconnectRealtime, // () => Promise<void> — planned API stub, not yet implemented
 } = useChat();
 ```
 
@@ -372,15 +373,14 @@ This is the escape hatch for cases that none of the dedicated hooks cover — wr
 const store: ChatStore<Cursor> = useChatStore();
 ```
 
-Use it with `useStore` from `@mui/x-internals/store` to create a custom subscription:
+Use the store's built-in `use()` method to create a reactive subscription with a custom selector:
 
 ```tsx
 import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
-import { useStore } from '@mui/x-internals/store';
 
 function MessageCounter() {
   const store = useChatStore();
-  const count = useStore(store, chatSelectors.messageCount);
+  const count = store.use(chatSelectors.messageCount);
 
   return <Chip label={`${count} messages`} />;
 }

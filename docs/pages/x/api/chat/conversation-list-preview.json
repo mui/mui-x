@@ -2,13 +2,13 @@
   "props": {},
   "name": "ConversationListPreview",
   "imports": [
-    "import { ConversationListPreview } from '@mui/x-chat-unstyled/conversation-list';",
-    "import { ConversationListPreview } from '@mui/x-chat-unstyled';"
+    "import { ConversationListPreview } from '@mui/x-chat-headless/conversation-list';",
+    "import { ConversationListPreview } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiConversationListPreview",
-  "filename": "/packages/x-chat-unstyled/src/conversation-list/ConversationListPreview.tsx",
+  "filename": "/packages/x-chat-headless/src/conversation-list/ConversationListPreview.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/unstyled/conversation-list/\">Unstyled conversation list</a></li></ul>",
   "cssComponent": false

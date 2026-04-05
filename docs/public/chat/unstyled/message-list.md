@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled message list
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 components: MessageListRoot
 githubLabel: 'scope: chat'
 ---
@@ -9,8 +9,6 @@ githubLabel: 'scope: chat'
 # Chat - Unstyled message list
 
 Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking.
-
-
 
 ## Primitive set
 

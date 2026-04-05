@@ -10,18 +10,16 @@ components: ChatRoot
 
 <p class="description">Customize all user-facing strings in the chat UI using the <code>localeText</code> prop on <code>ChatRoot</code> or the <code>useChatLocaleText()</code> hook.</p>
 
-
-
 Every user-facing string in the chat UI — placeholders, button labels, status messages, timestamps — is defined in a locale text object.
 You can override any string by passing a partial `localeText` object to `ChatRoot` (unstyled) or `ChatBox` (styled).
 
 ## Default locale
 
 The default locale is English (US).
-It is exported as `chatEnUS` from `@mui/x-chat`:
+It is exported as `chatEnUS` from `@mui/x-chat/locales`:
 
 ```tsx
-import { chatEnUS } from '@mui/x-chat';
+import { chatEnUS } from '@mui/x-chat/locales';
 ```
 
 This object contains all the default string values used by the chat components.
@@ -47,7 +45,7 @@ Unspecified keys fall back to the defaults:
 For the unstyled layer:
 
 ```tsx
-import { Chat } from '@mui/x-chat/unstyled';
+import { Chat } from '@mui/x-chat/headless';
 
 <Chat.Root
   adapter={adapter}
@@ -65,7 +63,7 @@ import { Chat } from '@mui/x-chat/unstyled';
 Inside any descendant of `ChatRoot` or `ChatBox`, use the `useChatLocaleText()` hook to read the current locale text:
 
 ```tsx
-import { useChatLocaleText } from '@mui/x-chat/unstyled';
+import { useChatLocaleText } from '@mui/x-chat/headless';
 
 function CustomSendButton() {
   const localeText = useChatLocaleText();
@@ -133,6 +131,7 @@ The `messageStatusLabel` function maps from `ChatMessageStatus`:
 | `sending`   | `"Sending"`   |
 | `streaming` | `"Streaming"` |
 | `sent`      | `"Sent"`      |
+| `read`      | `"Read"`      |
 | `error`     | `"Error"`     |
 | `cancelled` | `"Cancelled"` |
 

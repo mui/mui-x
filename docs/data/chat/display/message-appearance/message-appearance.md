@@ -40,11 +40,11 @@ Customize the date format through `slotProps`:
 
 The `ChatMessageAvatar` component renders the author's avatar for the first message in each group. Avatars are sourced from the `ChatUser.avatarUrl` field on the message's author.
 
-Within a group, subsequent messages omit the avatar to keep the layout clean. The avatar area is still allocated in the grid so that message content stays aligned.
+Within a group, subsequent messages omit the avatar entirely — the component returns `null` rather than rendering a placeholder. If no `avatarUrl` is set on the author and no custom `avatar` slot is provided, the avatar is also omitted for the first message in the group.
 
 ## Timestamps and metadata
 
-`ChatMessageMeta` renders the timestamp and delivery status below each message. The timestamp is derived from the `createdAt` field on `ChatMessage`.
+`ChatMessageMeta` renders metadata below each message: a streaming progress bar while the message is being streamed, a delivery status label (`sent` or `read`) for outgoing messages, an "edited" label when `message.editedAt` is set, and a timestamp derived from the `createdAt` field on `ChatMessage`.
 
 In the default layout, timestamps appear below the message bubble, aligned to the same side as the bubble (right for user messages, left for assistant messages).
 
@@ -59,7 +59,7 @@ ChatMessageList                     ← scrollable container
     ChatMessage                     ← individual message row
       ChatMessageAvatar             ← author avatar
       ChatMessageContent            ← message bubble with part renderers
-      ChatMessageMeta               ← timestamp, delivery status
+      ChatMessageMeta               ← timestamp, delivery status, streaming progress, edited label
       ChatMessageActions            ← hover action buttons
 ```
 
@@ -109,10 +109,16 @@ The following slots are available for customization through `ChatBox`:
 | `messageRoot`    | `ChatMessage`        | Individual message row    |
 | `messageAvatar`  | `ChatMessageAvatar`  | Author avatar             |
 | `messageContent` | `ChatMessageContent` | Message bubble            |
-| `messageMeta`    | `ChatMessageMeta`    | Timestamp and status      |
+| `messageMeta`    | `ChatMessageMeta`    | Timestamp, status, streaming progress, edited label |
 | `messageActions` | `ChatMessageActions` | Hover action menu         |
 | `messageGroup`   | `ChatMessageGroup`   | Same-author message group |
 | `dateDivider`    | `ChatDateDivider`    | Date separator            |
+
+## See also
+
+- [Message list](/x/react-chat/basics/messages/) for scrolling behavior, auto-scroll configuration, and history loading
+- [Message Actions](/x/react-chat/display/message-actions/) for the hover action menu on messages
+- [Loading & Empty States](/x/react-chat/display/loading-and-empty-states/) for skeleton and empty state display
 
 ## API
 
@@ -120,9 +126,3 @@ The following slots are available for customization through `ChatBox`:
 - [`ChatMessageAvatar`](/x/api/chat/chat-message-avatar/)
 - [`ChatMessageMeta`](/x/api/chat/chat-message-meta/)
 - [`ChatDateDivider`](/x/api/chat/chat-date-divider/)
-
-## See also
-
-- [Message list](/x/react-chat/basics/messages/) for scrolling behavior, auto-scroll configuration, and history loading
-- [Message Actions](/x/react-chat/display/message-actions/) for the hover action menu on messages
-- [Loading & Empty States](/x/react-chat/display/loading-and-empty-states/) for skeleton and empty state display

@@ -2,13 +2,13 @@
   "props": {},
   "name": "ComposerToolbar",
   "imports": [
-    "import { ComposerToolbar } from '@mui/x-chat-unstyled/composer';",
-    "import { ComposerToolbar } from '@mui/x-chat-unstyled';"
+    "import { ComposerToolbar } from '@mui/x-chat-headless/composer';",
+    "import { ComposerToolbar } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "toolbar", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiComposerToolbar",
-  "filename": "/packages/x-chat-unstyled/src/composer/ComposerToolbar.tsx",
+  "filename": "/packages/x-chat-headless/src/composer/ComposerToolbar.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/unstyled/composer/\">Unstyled composer</a></li></ul>",
   "cssComponent": false

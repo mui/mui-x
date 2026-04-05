@@ -2,15 +2,15 @@
   "props": {},
   "name": "ComposerRoot",
   "imports": [
-    "import { ComposerRoot } from '@mui/x-chat-unstyled/composer';",
-    "import { ComposerRoot } from '@mui/x-chat-unstyled';"
+    "import { ComposerRoot } from '@mui/x-chat-headless/composer';",
+    "import { ComposerRoot } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiComposerRoot",
-  "filename": "/packages/x-chat-unstyled/src/composer/ComposerRoot.tsx",
+  "filename": "/packages/x-chat-headless/src/composer/ComposerRoot.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/unstyled/composer/\">Unstyled composer</a></li></ul>",
   "cssComponent": false

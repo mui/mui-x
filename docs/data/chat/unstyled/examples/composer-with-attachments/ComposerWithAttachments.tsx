@@ -6,7 +6,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import { useChatComposer } from '@mui/x-chat/headless';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 import {

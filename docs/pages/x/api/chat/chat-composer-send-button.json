@@ -53,6 +53,12 @@
       "className": "MuiChatComposerSendButton-toolbar",
       "description": "Styles applied to the toolbar element.",
       "isGlobal": false
+    },
+    {
+      "key": "variantCompact",
+      "className": "MuiChatComposerSendButton-variantCompact",
+      "description": "Styles applied to the root element when variant=\"compact\".",
+      "isGlobal": false
     }
   ],
   "spread": true,

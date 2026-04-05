@@ -1,7 +1,7 @@
 ---
 title: Chat - Intercom-style widget
 productId: x-chat
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -27,7 +27,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import type { ChatMessage, ChatUser } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
@@ -566,7 +566,6 @@ export default function IntercomStyleChat() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Key techniques

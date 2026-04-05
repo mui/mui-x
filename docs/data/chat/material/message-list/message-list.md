@@ -13,7 +13,7 @@ components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
 The message list is the scrollable region that renders conversation history.
-`ChatMessageList` wraps the `@mui/x-chat/unstyled` `MessageListRoot` primitive with Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
+`ChatMessageList` provides Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
 
 ## Import
 
@@ -147,7 +147,7 @@ The `ChatMessageList` exposes a ref handle for imperative scroll control:
 
 ```tsx
 import { ChatMessageList } from '@mui/x-chat';
-import type { MessageListRootHandle } from '@mui/x-chat/unstyled';
+import type { MessageListRootHandle } from '@mui/x-chat';
 
 const listRef = React.useRef<MessageListRootHandle>(null);
 
@@ -162,7 +162,7 @@ listRef.current?.scrollToBottom({ behavior: 'smooth' });
 Child components inside the message list can access scroll state via context:
 
 ```tsx
-import { useMessageListContext } from '@mui/x-chat/unstyled';
+import { useMessageListContext } from '@mui/x-chat';
 
 function CustomScrollIndicator() {
   const { isAtBottom, unseenMessageCount, scrollToBottom } = useMessageListContext();

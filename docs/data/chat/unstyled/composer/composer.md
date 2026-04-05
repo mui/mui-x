@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled composer
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachButton, ComposerToolbar, ComposerHelperText
 githubLabel: 'scope: chat'
 ---
@@ -28,7 +28,7 @@ The composer surface is built from:
 ## Canonical composition
 
 ```tsx
-import { Composer } from '@mui/x-chat/unstyled';
+import { Composer } from '@mui/x-chat/headless';
 
 function ThreadComposer() {
   return (
@@ -163,6 +163,12 @@ Use these values for styling patterns such as:
 - emphasizing the attach trigger when attachments are present
 - dimming the toolbar while a stream is active
 
+## See also
+
+- Continue with [Indicators](/x/react-chat/unstyled/indicators/) to add typing, unread, and scroll affordances around the composer.
+- Continue with [Customization](/x/react-chat/unstyled/customization/) for slot and owner-state patterns across the full unstyled surface.
+- Continue with [Composer with attachments](/x/react-chat/unstyled/examples/composer-with-attachments/) for the demo version of this page.
+
 ## API
 
 - [ComposerRoot](/x/api/chat/composer-root/)
@@ -171,9 +177,3 @@ Use these values for styling patterns such as:
 - [ComposerAttachButton](/x/api/chat/composer-attach-button/)
 - [ComposerToolbar](/x/api/chat/composer-toolbar/)
 - [ComposerHelperText](/x/api/chat/composer-helper-text/)
-
-## See also
-
-- Continue with [Indicators](/x/react-chat/unstyled/indicators/) to add typing, unread, and scroll affordances around the composer.
-- Continue with [Customization](/x/react-chat/unstyled/customization/) for slot and owner-state patterns across the full unstyled surface.
-- Continue with [Composer with attachments](/x/react-chat/unstyled/examples/composer-with-attachments/) for the demo version of this page.

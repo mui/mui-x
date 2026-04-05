@@ -45,7 +45,7 @@ function Dashboard() {
 ### Parameterized selectors
 
 Some selectors accept arguments.
-Pass them as additional arguments to `useStore`:
+Pass them as additional arguments to `useStore()`:
 
 ```tsx
 // Single message by ID
@@ -69,7 +69,7 @@ Use `useChatStore()` + `chatSelectors` when:
 - you need to subscribe to store changes outside the React render cycle
 - you want to combine multiple selectors into a single subscription
 
-For standard rendering, the built-in hooks (`useChat`, `useMessageIds`, `useMessage`, etc.) are easier and sufficient.
+For standard rendering, the built-in hooks (`useChat()`, `useMessageIds()`, `useMessage()`, etc.) are easier and sufficient.
 
 {{"demo": "AdvancedStoreAccessHeadlessChat.js"}}
 
@@ -80,13 +80,13 @@ For standard rendering, the built-in hooks (`useChat`, `useMessageIds`, `useMess
 - Combine with `useStore()` for React subscriptions or use the store directly for imperative access
 - Prefer the built-in hooks for standard use cases — they wrap these selectors with a better developer experience
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Selectors](/x/react-chat/headless/selectors/) for the full selector reference
 - [Hooks](/x/react-chat/headless/hooks/) for the convenience hooks that wrap these selectors
 - [State and store](/x/react-chat/headless/state/) for the normalized store internals
 - [Selector-driven thread](/x/react-chat/headless/examples/selector-driven-thread/) for the `useMessageIds()` + `useMessage(id)` pattern
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

@@ -80,7 +80,6 @@ export default function CompactVariant() {
         height: 460,
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: 1,
       }}
     />
   );

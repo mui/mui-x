@@ -1,7 +1,7 @@
 ---
 title: Chat - Composer with attachments
 productId: x-chat
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -52,11 +52,11 @@ This applies to support chat with screenshots, copilots that accept reference fi
 - `Composer.HelperText` is the natural place for both authored guidance and runtime error fallback.
 - `Composer.TextArea` already handles the IME and Enter behavior that teams often reimplement by hand.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - Continue with [Composer](/x/react-chat/unstyled/composer/) for the reference-level API and behaviors.
 - Continue with [Slot customization](/x/react-chat/unstyled/examples/slot-customization/) when the default composer structure is correct but the markup needs to match a custom design system.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

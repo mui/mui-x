@@ -116,11 +116,11 @@ renders as a single-line process trace: tool name, a dotted rule, and a state ba
 
 {{"demo": "ToolStylingC.js", "bg": "inline"}}
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) — two-pane inbox layout
 - [Split layout](/x/react-chat/material/examples/split-layout/) — place message list and composer in separate DOM zones
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

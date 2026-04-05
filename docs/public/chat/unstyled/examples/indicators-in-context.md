@@ -1,7 +1,7 @@
 ---
 title: Chat - Indicators in context
 productId: x-chat
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -31,7 +31,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneMessages,
@@ -297,7 +297,6 @@ export default function IndicatorsInContext() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Key primitives

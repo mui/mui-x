@@ -7,7 +7,7 @@ import {
   ComposerAttachmentList,
   useComposerContext,
   type ComposerAttachmentListProps,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 import DefaultCloseIcon from '../icons/DefaultCloseIcon';

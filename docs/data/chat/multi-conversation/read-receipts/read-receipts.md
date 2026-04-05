@@ -53,6 +53,59 @@ The item's `ownerState` includes an `unread` boolean derived from the conversati
 
 This `unread` flag drives both the badge visibility and the bold title weight in the default styled slots.
 
+## The `ChatUnreadMarker` component
+
+`ChatUnreadMarker` is an in-thread divider that appears inside the message list at the boundary between already-read messages and the first unread message. It displays a "New messages" label (localizable via `unreadMarkerLabel`) styled as a horizontal rule with a centered caption.
+
+The component is position-aware: it reads `unreadCount` and `readState` from the active `ChatConversation` and calculates which message index sits at the read/unread boundary. It renders itself only for that one message and returns `null` for every other message, so you can render it inside every list item without any extra bookkeeping:
+
+```tsx
+// Inside a custom renderItem callback
+function MessageItem({ id, index }) {
+  return (
+    <React.Fragment>
+      <ChatUnreadMarker messageId={id} index={index} />
+      <ChatMessage messageId={id} />
+    </React.Fragment>
+  );
+}
+```
+
+The boundary is computed as follows:
+
+- When `unreadCount` is set and greater than zero, the marker appears before the last `unreadCount` messages (`items.length - unreadCount`).
+- When `unreadCount` is absent but `readState` is `'unread'`, the marker appears before the very first message.
+- When the conversation is fully read (or no conversation is active), the marker renders nothing.
+
+### Customizing `ChatUnreadMarker`
+
+Pass `slotProps.unreadMarker` on `ChatBox` to forward extra props, or swap the component entirely with `slots.unreadMarker`:
+
+```tsx
+<ChatBox
+  slotProps={{
+    unreadMarker: {
+      label: <strong>Unread messages below</strong>,
+    },
+  }}
+/>
+```
+
+To override styles with the MUI theme, use the `MuiChatUnreadMarker` key:
+
+```tsx
+const theme = createTheme({
+  components: {
+    MuiChatUnreadMarker: {
+      styleOverrides: {
+        root: { opacity: 0.7 },
+        label: { fontStyle: 'italic' },
+      },
+    },
+  },
+});
+```
+
 ## The `markRead` adapter method
 
 Implement `markRead` to signal to your backend that the user has seen a conversation or a specific message:
@@ -73,7 +126,11 @@ async markRead({ conversationId, messageId }) {
 },
 ```
 
-The runtime does not call `markRead` automatically — call it from your own UI event handler when the user opens or scrolls through a conversation. For example, mark a conversation as read when it becomes the active thread:
+The runtime does not call `markRead` automatically — call it from your own UI event handler when the user opens or scrolls through a conversation.
+
+### Triggering `markRead` when a conversation becomes active
+
+The most common pattern is to mark a conversation as read the moment the user opens it. Use the `onActiveConversationChange` prop on `ChatBox` (or `ChatProvider`) to call the adapter:
 
 ```tsx
 const adapter = React.useMemo(
@@ -89,6 +146,40 @@ const adapter = React.useMemo(
   }),
   [],
 );
+
+<ChatBox
+  adapter={adapter}
+  onActiveConversationChange={(id) => {
+    if (id) {
+      adapter.markRead({ conversationId: id });
+    }
+  }}
+/>
+```
+
+### Triggering `markRead` when the user scrolls to the bottom
+
+For long conversations you may prefer to mark messages as read only once the user has scrolled to the last message. Use the `onReachBottom` callback on the `messageList` slot combined with a ref to the current conversation:
+
+```tsx
+const activeConversationIdRef = React.useRef<string | undefined>(undefined);
+
+<ChatBox
+  adapter={adapter}
+  onActiveConversationChange={(id) => {
+    activeConversationIdRef.current = id ?? undefined;
+  }}
+  slotProps={{
+    messageList: {
+      onReachBottom: () => {
+        const id = activeConversationIdRef.current;
+        if (id) {
+          adapter.markRead({ conversationId: id });
+        }
+      },
+    },
+  }}
+/>
 ```
 
 ## Real-time read events

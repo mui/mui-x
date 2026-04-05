@@ -19,13 +19,13 @@ The feature connects the adapter's `setTyping()` method (outbound) with realtime
 
 Typing indicators involve two directions of communication:
 
-1. **Outbound** -- When the local user types in the composer, the runtime calls the adapter's `setTyping()` method to notify your backend.
-2. **Inbound** -- When other users type, your backend pushes `typing` events through the adapter's `subscribe()` method, and the runtime updates the store.
+1. **Outbound** — When the local user types in the composer, your code calls the adapter's `setTyping()` method to notify your backend.
+2. **Inbound** — When other users type, your backend pushes `typing` events through the adapter's `subscribe()` method, and the runtime updates the store.
 
 ### Sending typing state
 
 Implement `setTyping()` on your adapter to send typing indicators to your backend.
-The runtime calls it when the composer value changes from empty to non-empty (and vice versa):
+The runtime does **not** call `setTyping()` automatically — you must wire it up yourself, for example by listening to `onChange` on the composer text area:
 
 ```tsx
 async setTyping({ conversationId, isTyping }) {
@@ -35,6 +35,8 @@ async setTyping({ conversationId, isTyping }) {
   });
 },
 ```
+
+Call `adapter.setTyping({ conversationId, isTyping: true })` when the user starts typing, and `adapter.setTyping({ conversationId, isTyping: false })` when they stop (for example, when the composer becomes empty or when they send the message).
 
 ### Receiving typing state
 
@@ -72,7 +74,7 @@ It renders a polite live region (`aria-live="polite"`) and shows labels such as:
 Place the indicator in the thread header or just above the composer:
 
 ```tsx
-import { Indicators } from '@mui/x-chat/unstyled';
+import { Indicators } from '@mui/x-chat/headless';
 
 <Indicators.TypingIndicator />;
 ```
@@ -81,11 +83,37 @@ When no users are typing, the component renders nothing.
 
 ## Typing timeout behavior
 
-Typing indicators include built-in timeout handling.
-When a `typing` event with `isTyping: true` is received, the runtime expects a follow-up event with `isTyping: false` within a timeout window.
-If no follow-up arrives, the typing state is automatically cleared to prevent stale "is typing" indicators.
+The runtime does **not** include built-in timeout handling for stale typing state.
+When a `typing` event with `isTyping: true` is received, the store updates immediately.
+If no follow-up `isTyping: false` event arrives (for example, because a user closed the browser tab), the indicator will remain visible indefinitely.
 
-This means your backend only needs to send `isTyping: true` events reliably -- the frontend handles cleanup if the `isTyping: false` event is lost.
+To prevent stale indicators, implement timeout logic yourself.
+A common pattern is to reset the typing state after a short idle period on the sender side:
+
+```tsx
+// In your composer onChange handler
+let typingTimeout: ReturnType<typeof setTimeout> | null = null;
+
+function handleComposerChange(value: string) {
+  if (value !== '') {
+    adapter.setTyping({ conversationId, isTyping: true });
+
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+    typingTimeout = setTimeout(() => {
+      adapter.setTyping({ conversationId, isTyping: false });
+    }, 3000);
+  } else {
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+    adapter.setTyping({ conversationId, isTyping: false });
+  }
+}
+```
+
+Alternatively, handle cleanup server-side by expiring typing state after a timeout window.
 
 ## Customizing the indicator appearance
 
@@ -93,7 +121,7 @@ The `TypingIndicator` primitive exposes a `root` slot for custom rendering.
 The slot receives owner state including the resolved typing users and count:
 
 ```tsx
-import { Indicators } from '@mui/x-chat/unstyled';
+import { Indicators } from '@mui/x-chat/headless';
 
 <Indicators.TypingIndicator
   slots={{
@@ -125,8 +153,8 @@ No additional setup is required beyond implementing `setTyping()` and `subscribe
 When building a custom layout with `ChatRoot`, place the `TypingIndicator` anywhere inside the provider tree:
 
 ```tsx
-import { ChatRoot } from '@mui/x-chat/unstyled';
-import { Indicators } from '@mui/x-chat/unstyled';
+import { ChatRoot } from '@mui/x-chat';
+import { Indicators } from '@mui/x-chat/headless';
 
 <ChatRoot adapter={adapter}>
   {/* Your custom message list */}
@@ -135,11 +163,10 @@ import { Indicators } from '@mui/x-chat/unstyled';
 </ChatRoot>;
 ```
 
-## API
-
-- [`ChatTypingIndicator`](/x/api/chat/chat-typing-indicator/)
-
 ## See also
 
 - [Adapter](/x/react-chat/backend/adapters/) for the `setTyping()` and `subscribe()` methods.
-- [Indicators (unstyled)](/x/react-chat/customization/unstyled/) for the full unstyled primitive reference including `UnreadMarker` and `ScrollToBottomAffordance`.
+
+## API
+
+- [`ChatTypingIndicator`](/x/api/chat/chat-typing-indicator/)

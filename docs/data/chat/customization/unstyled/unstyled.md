@@ -12,7 +12,7 @@ components: ChatRoot
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-`@mui/x-chat/unstyled` builds on the headless runtime.
+`@mui/x-chat/headless` builds on the headless runtime.
 It combines `@mui/x-chat/headless` state with structural components such as lists, threads, messages, composers, and indicators.
 
 ## When to use the unstyled layer
@@ -70,7 +70,7 @@ import {
   Message,
   Composer,
   Indicators,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 ```
 
 You can also import individual components such as `ChatRoot`, `MessageListRoot`, or `ComposerTextArea` when you prefer explicit component names in your codebase.
@@ -90,7 +90,7 @@ import {
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 
 function Inbox(props: ChatRootProps) {
   return (
@@ -123,10 +123,10 @@ function Inbox(props: ChatRootProps) {
 
 This gives you a complete structural shell while keeping the visual treatment in your own CSS, slots, or design-system components.
 
-## API
-
 ## See also
 
 - [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling unstyled primitives with Tailwind utility classes.
 - [Headless Hooks](/x/react-chat/customization/headless/) for the headless layer that unstyled builds on.
 - [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization on the styled layer.
+
+## API

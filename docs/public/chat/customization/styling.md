@@ -10,8 +10,6 @@ components: ChatBox
 
 <p class="description">Override styles using the <code>sx</code> prop, Material UI theme component overrides, dark mode, and CSS class injection.</p>
 
-
-
 ## sx prop
 
 The `sx` prop on `ChatBox` applies styles to the outermost root element.
@@ -42,11 +40,11 @@ const theme = createTheme({
   components: {
     MuiChatBox: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           border: '1px solid',
-          borderColor: 'divider',
+          borderColor: theme.palette.divider,
           borderRadius: 8,
-        },
+        }),
         layout: {
           gap: 0,
         },

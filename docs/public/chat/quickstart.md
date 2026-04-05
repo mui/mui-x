@@ -10,8 +10,6 @@ components: ChatBox
 
 <p class="description">Install <code>@mui/x-chat</code> and render a fully styled, theme-aware chat interface in under five minutes.</p>
 
-
-
 ## Installation
 
 Install the package using your preferred package manager:
@@ -97,12 +95,8 @@ export default function App() {
 `ChatBox` renders a full chat surface — conversation list, thread header, message log, and composer — in a single component.
 All visual styles are derived from your active Material UI theme.
 
-Three things are required:
-
-1. An `adapter` that implements `sendMessage`
-2. An `initialConversations` array with at least one conversation
-3. An `initialActiveConversationId` that matches one of those conversations
-
+Only `adapter` is required — it must implement `sendMessage`.
+`initialConversations` and `initialActiveConversationId` are optional conveniences that pre-populate the conversation list on first render.
 Every other prop is optional.
 
 ## Theme integration
@@ -124,6 +118,7 @@ See [Custom theme](/x/react-chat/customization/styling/) for a working demo.
 To get autocomplete for style overrides in `createTheme`, import the augmentation side-effect:
 
 ```tsx
+import { createTheme } from '@mui/material/styles';
 import type {} from '@mui/x-chat/themeAugmentation';
 
 const theme = createTheme({
@@ -148,5 +143,4 @@ const theme = createTheme({
 - [ChatBox](/x/react-chat/basics/chatbox/) — learn about the ChatBox component, its props, and architecture
 - [Customization](/x/react-chat/customization/styling/) — theme overrides, sx, slots, and CSS class names
 - [Demos](/x/react-chat/demos/ai-assistant/) — end-to-end patterns
-- [Headless layer](/x/react-chat/customization/headless/) — adapters, hooks, and runtime contracts
-- [Unstyled layer](/x/react-chat/customization/unstyled/) — structural composition primitives
+- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) — structural composition primitives and slot overrides

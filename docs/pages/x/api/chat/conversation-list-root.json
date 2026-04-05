@@ -2,8 +2,8 @@
   "props": {},
   "name": "ConversationListRoot",
   "imports": [
-    "import { ConversationListRoot } from '@mui/x-chat-unstyled/conversation-list';",
-    "import { ConversationListRoot } from '@mui/x-chat-unstyled';"
+    "import { ConversationListRoot } from '@mui/x-chat-headless/conversation-list';",
+    "import { ConversationListRoot } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "root", "description": "", "class": null },
@@ -23,7 +23,7 @@
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiConversationListRoot",
-  "filename": "/packages/x-chat-unstyled/src/conversation-list/ConversationListRoot.tsx",
+  "filename": "/packages/x-chat-headless/src/conversation-list/ConversationListRoot.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/unstyled/conversation-list/\">Unstyled conversation list</a></li></ul>",
   "cssComponent": false

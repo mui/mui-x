@@ -97,12 +97,12 @@ For the runtime-specific approval flow, see [Tool approval and renderers](/x/rea
 - Six registry interfaces cover metadata, tools, data parts, and custom message parts
 - Custom renderers pair naturally with custom part types through `partRenderers` and `useChatPartRenderer()`
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Type augmentation](/x/react-chat/headless/types/) for the full reference covering all six registry interfaces and gotchas
 - [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) for the approval flow pattern
 - [Streaming](/x/react-chat/headless/streaming/) for how typed chunks flow through the protocol
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

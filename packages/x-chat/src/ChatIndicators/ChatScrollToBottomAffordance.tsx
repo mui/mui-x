@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
-import { ScrollToBottomAffordance, type ScrollToBottomAffordanceProps } from '@mui/x-chat-unstyled';
+import { ScrollToBottomAffordance, type ScrollToBottomAffordanceProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatScrollToBottomAffordanceUtilityClasses,

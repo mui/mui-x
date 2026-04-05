@@ -33,9 +33,7 @@ export default function ErrorState() {
         initialConversations={[minimalConversation]}
         initialMessages={minimalMessages}
         onError={(error) => {
-          setErrorMessage(
-            error instanceof Error ? error.message : 'An unknown error occurred',
-          );
+          setErrorMessage(error.message ?? 'An unknown error occurred');
         }}
         sx={{
           height: 460,

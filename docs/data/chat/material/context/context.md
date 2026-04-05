@@ -27,7 +27,7 @@ import { ChatBox } from '@mui/x-chat';
 <ChatBox adapter={adapter} sx={{ height: 500 }} />;
 ```
 
-All hooks work inside any component rendered as a child or descendant of `ChatBox`. Here a `StreamingBadge` component reads the streaming status via `useChatStatus` and displays a chip while the assistant is responding:
+All hooks work inside any component rendered as a child or descendant of `ChatBox`. Here a `StreamingBadge` component reads the streaming status via `useChatStatus()` and displays a chip while the assistant is responding:
 
 {{"demo": "ChatBoxWithHooks.js", "defaultCodeOpen": false, "bg": "inline"}}
 

@@ -38,11 +38,11 @@ sendMessage({
 });
 ```
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [No conversation history](/x/react-chat/material/examples/no-conversation-history/) — compose a thread from individual components without `ChatBox`
 - [Split layout](/x/react-chat/material/examples/split-layout/) — message list and composer in separate DOM zones
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

@@ -37,26 +37,7 @@ Suggestions are hidden once the first message appears in the conversation.
 For more control, pass `ChatSuggestion` objects instead of plain strings.
 This lets you set a display label that differs from the value pre-filled into the composer:
 
-```tsx
-<ChatBox
-  adapter={adapter}
-  suggestions={[
-    {
-      value:
-        'Help me write a professional email to my manager about taking PTO next week',
-      label: 'Write an email',
-    },
-    {
-      value: 'Summarize the key points from my Q4 performance review',
-      label: 'Summarize a document',
-    },
-    {
-      value: 'What are the best practices for React state management in 2026?',
-      label: 'Ask a question',
-    },
-  ]}
-/>
-```
+{{"demo": "SuggestionsWithLabels.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ### `ChatSuggestion` type
 
@@ -73,13 +54,7 @@ Strings are internally normalized to `{ value: string }`.
 By default, clicking a suggestion only pre-fills the composer so the user can review or edit before sending.
 Set `suggestionsAutoSubmit` to automatically submit the message when a suggestion is clicked:
 
-```tsx
-<ChatBox
-  adapter={adapter}
-  suggestions={['What can you help me with?', 'Tell me a joke']}
-  suggestionsAutoSubmit
-/>
-```
+{{"demo": "AutoSubmitSuggestions.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Disabling suggestions
 
@@ -97,7 +72,8 @@ This is useful when you want to conditionally show suggestions based on applicat
 
 ## Dynamic suggestions
 
-Since `suggestions` is a standard React prop, you can compute it dynamically:
+Since `suggestions` is a standard React prop, you can compute it dynamically.
+The example below loads user-specific suggestions after sign-in and updates them once available:
 
 ```tsx
 function App() {
@@ -105,6 +81,12 @@ function App() {
     'Get started',
     'View recent activity',
   ]);
+
+  React.useEffect(() => {
+    fetchUserSuggestions().then((personalized) => {
+      setSuggestions(personalized);
+    });
+  }, []);
 
   return <ChatBox adapter={adapter} suggestions={suggestions} />;
 }
@@ -118,8 +100,11 @@ When building a custom layout, use `ChatSuggestions` directly inside a `ChatRoot
 
 ```tsx
 import { ChatSuggestions } from '@mui/x-chat';
+import { ChatRoot } from '@mui/x-chat/headless';
 
-<ChatSuggestions suggestions={['Option A', 'Option B']} autoSubmit={false} />;
+<ChatRoot adapter={adapter}>
+  <ChatSuggestions suggestions={['Option A', 'Option B']} autoSubmit={false} />
+</ChatRoot>;
 ```
 
 The component renders a `role="group"` container with `aria-label` derived from the locale text system.
@@ -132,11 +117,11 @@ Each suggestion renders as a `<button>` element.
 | `root` | `'div'`    | The container element           |
 | `item` | `'button'` | Each individual suggestion chip |
 
-## API
-
-- [`ChatSuggestions`](/x/api/chat/chat-suggestions/)
-
 ## See also
 
 - [Composer](/x/react-chat/basics/composer/) for how the pre-filled value flows into the text area.
 - [Adapter](/x/react-chat/backend/adapters/) for how submitted suggestions reach your backend.
+
+## API
+
+- [`ChatSuggestions`](/x/api/chat/chat-suggestions/)

@@ -13,7 +13,7 @@ components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachBu
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
 The composer is the input region at the bottom of the chat surface.
-`ChatComposer` wraps the `@mui/x-chat/unstyled` `ComposerRoot` primitive with Material UI styling — border, padding, and theme tokens are applied automatically.
+`ChatComposer` provides Material UI styling — border, padding, and theme tokens are applied automatically.
 
 ## Import
 
@@ -105,12 +105,12 @@ The demo below mirrors the current composer value above the chat surface:
 
 {{"demo": "ComposerControlled.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## `useChatComposer` hook
+## `useChatComposer()` hook
 
-For deeper control, the `useChatComposer` hook from the headless layer provides direct access to the composer state:
+For deeper control, the `useChatComposer()` hook provides direct access to the composer state:
 
 ```tsx
-import { useChatComposer } from '@mui/x-chat/headless';
+import { useChatComposer } from '@mui/x-chat';
 
 function ComposerInfo() {
   const composer = useChatComposer();
@@ -149,6 +149,12 @@ The attachment type used by the composer:
 | `previewUrl` | `string \| undefined`                              | Object URL for image previews (auto-created) |
 | `status`     | `'queued' \| 'uploading' \| 'uploaded' \| 'error'` | Upload lifecycle status                      |
 | `progress`   | `number \| undefined`                              | Upload progress (0–100)                      |
+
+## Compact composer ideas
+
+Five design ideas for the compact variant composer — click into the textarea to see the focus state.
+
+{{"demo": "CompactComposerIdeas.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Disabling the composer
 

@@ -1,22 +1,21 @@
 ---
 productId: x-chat
 title: Chat - Hooks
-packageName: '@mui/x-chat/headless'
+packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
 # Chat - Hooks
 
-<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat/headless</code>.</p>
+<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat</code>.</p>
 
 `ChatBox` covers most use cases out of the box, but sometimes you need to reach into chat state from components that live outside `ChatBox` — a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
 
-The headless hook layer makes this possible.
 Every hook subscribes to a precise slice of the normalized store, so components only re-render when their own data changes.
 
 ## Import
 
-All hooks are exported from `@mui/x-chat/headless`:
+All hooks are exported from `@mui/x-chat`:
 
 ```tsx
 import {
@@ -30,7 +29,7 @@ import {
   useChatOnToolCall,
   useChatPartRenderer,
   useChatStore,
-} from '@mui/x-chat/headless';
+} from '@mui/x-chat';
 ```
 
 ## Provider requirement
@@ -130,18 +129,7 @@ const {
 } = useChatStatus();
 ```
 
-```tsx
-function StatusFooter() {
-  const { isStreaming, typingUserIds, error } = useChatStatus();
-
-  if (error) return <Alert severity="error">{error.message}</Alert>;
-  if (isStreaming) return <LinearProgress />;
-  if (typingUserIds.length > 0) {
-    return <Typography variant="caption">Someone is typing...</Typography>;
-  }
-  return null;
-}
-```
+{{"demo": "StatusFooter.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 Prefer `useChatStatus()` over `useChat()` whenever you only need streaming or error state.
 The component does not re-render when a new message is sent — only when the status fields themselves change.
@@ -155,22 +143,7 @@ Use it to render a sidebar or drawer that shows all threads.
 const conversations: ChatConversation[] = useConversations();
 ```
 
-```tsx
-function ConversationSidebar() {
-  const conversations = useConversations();
-  const { setActiveConversation } = useChat();
-
-  return (
-    <List>
-      {conversations.map((c) => (
-        <ListItemButton key={c.id} onClick={() => setActiveConversation(c.id)}>
-          {c.title}
-        </ListItemButton>
-      ))}
-    </List>
-  );
-}
-```
+{{"demo": "ConversationSidebar.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ### `useConversation(id)`
 
@@ -212,29 +185,7 @@ const message: ChatMessage | null = useMessage(id);
 
 The recommended pattern for efficient thread rendering:
 
-```tsx
-function Thread() {
-  const messageIds = useMessageIds();
-
-  return (
-    <Stack spacing={1}>
-      {messageIds.map((id) => (
-        <MessageRow key={id} id={id} />
-      ))}
-    </Stack>
-  );
-}
-
-function MessageRow({ id }: { id: string }) {
-  const message = useMessage(id);
-  if (!message) return null;
-
-  const textPart = message.parts.find((p) => p.type === 'text');
-  return (
-    <Paper sx={{ p: 1.5 }}>{textPart?.type === 'text' ? textPart.text : null}</Paper>
-  );
-}
-```
+{{"demo": "EfficientThread.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 This pattern scales to threads with hundreds of messages because no unnecessary re-renders propagate up the tree.
 
@@ -264,42 +215,7 @@ The hook handles several details automatically:
 - **IME safety** — `submit` is a no-op during an active IME composition session (relevant for East Asian input methods).
 - **Double-send prevention** — `submit` is blocked when `isSubmitting` is `true`.
 
-```tsx
-function CustomComposer() {
-  const { value, setValue, submit, isSubmitting, addAttachment } = useChatComposer();
-
-  return (
-    <Stack direction="row" spacing={1}>
-      <TextField
-        fullWidth
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            submit();
-          }
-        }}
-        placeholder="Type a message..."
-      />
-      <IconButton component="label">
-        <AttachFileIcon />
-        <input
-          type="file"
-          hidden
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) addAttachment(file);
-          }}
-        />
-      </IconButton>
-      <Button variant="contained" onClick={submit} disabled={isSubmitting}>
-        Send
-      </Button>
-    </Stack>
-  );
-}
-```
+{{"demo": "CustomComposer.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Config hooks
 
@@ -374,10 +290,10 @@ This is the escape hatch for cases that none of the dedicated hooks cover — wr
 const store: ChatStore<Cursor> = useChatStore();
 ```
 
-Use it with `useStore` from `@mui/x-internals/store` to create a custom subscription:
+Use it with `useStore()` from `@mui/x-internals/store` to create a custom subscription:
 
 ```tsx
-import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
+import { useChatStore, chatSelectors } from '@mui/x-chat';
 import { useStore } from '@mui/x-internals/store';
 
 function MessageCounter() {
@@ -408,14 +324,11 @@ Direct store access is considered advanced API and is more likely to require cha
 | Custom part renderer lookup                              | `useChatPartRenderer(partType)`              |
 | Custom selector or store subscription                    | `useChatStore()` + `chatSelectors`           |
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Adapter](/x/react-chat/material/adapter/) for the interface that the actions in these hooks call into.
 - [Customization](/x/react-chat/material/customization/) for slot and `slotProps` overrides on `ChatBox`.
-- [Selectors](/x/react-chat/headless/selectors/) for the full `chatSelectors` map used with `useChatStore()`.
-- [State and store](/x/react-chat/headless/state/) for `ChatProvider` props and the controlled/uncontrolled model.
-- [Composer demo](/x/react-chat/headless/examples/composer/) for `useChatComposer()` with attachments in action.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

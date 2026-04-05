@@ -325,7 +325,6 @@ export default function AdvancedStoreAccessHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Key takeaways

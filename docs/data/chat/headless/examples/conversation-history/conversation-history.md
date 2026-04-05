@@ -78,12 +78,12 @@ const { setActiveConversation } = useChat();
 - Switching conversations triggers automatic thread loading through the adapter
 - New messages can still be sent and streamed within a loaded thread
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Adapters](/x/react-chat/headless/adapters/) for the full adapter interface reference
 - [Controlled state](/x/react-chat/headless/examples/controlled-state/) for externally-owned conversation state
 - [Streaming lifecycle](/x/react-chat/headless/examples/streaming-lifecycle/) for send, stop, and retry flows
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

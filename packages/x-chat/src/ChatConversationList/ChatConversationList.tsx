@@ -14,7 +14,7 @@ import {
   ConversationListItemActions,
   type ConversationListRootProps,
   type ConversationListVariant,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatConversationListUtilityClasses,
@@ -453,7 +453,6 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
             className: classes.scroller,
             ...slotProps?.scroller,
           } as any,
-
           item: ((ownerState: any) => ({
             className: clsx(
               classes.item,

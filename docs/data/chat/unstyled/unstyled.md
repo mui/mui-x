@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.</p>
 
-`@mui/x-chat/unstyled` builds on the headless runtime.
+`@mui/x-chat/headless` builds on the headless runtime.
 It combines `@mui/x-chat/headless` state with structural components such as lists, threads, messages, composers, and indicators.
 
 ## When to use the unstyled layer
@@ -60,7 +60,7 @@ import {
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 
 function Inbox(props: ChatRootProps) {
   return (
@@ -120,7 +120,7 @@ import {
   Message,
   Composer,
   Indicators,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 ```
 
 You can also import individual components such as `ChatRoot`, `MessageListRoot`, or `ComposerTextArea` when you prefer explicit component names in your codebase.
@@ -128,16 +128,16 @@ You can also import individual components such as `ChatRoot`, `MessageListRoot`,
 Use namespaced imports when you want the API to read like a component family.
 Use direct imports when a codebase prefers local, explicit symbols or when only one or two primitives are needed in a file.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-- [ChatLayout](/x/api/chat/chat-layout/)
-
 ## See also
 
 - Start with [Composition](/x/react-chat/unstyled/composition/) for the canonical shell.
 - Continue with [Layout](/x/react-chat/unstyled/layout/) and [Conversation list](/x/react-chat/unstyled/conversation-list/) for the main application skeleton.
 - Use [Examples](/x/react-chat/unstyled/examples/) when you want end-to-end patterns rather than component reference pages.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)
+- [ChatLayout](/x/api/chat/chat-layout/)
 
 ## Package boundary
 

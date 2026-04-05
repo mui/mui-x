@@ -73,7 +73,6 @@ export default function CustomTheme() {
     </ThemeProvider>
   );
 }
-
 ```
 
 ## How theme tokens map to chat elements

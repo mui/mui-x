@@ -1,15 +1,15 @@
 ---
 productId: x-chat
 title: Chat - Tailwind CSS
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
 # Chat - Tailwind CSS
 
-<p class="description">Style chat components using Tailwind CSS utility classes with the unstyled primitives from <code>@mui/x-chat/unstyled</code>.</p>
+<p class="description">Style chat components using Tailwind CSS utility classes with the unstyled primitives from <code>@mui/x-chat/headless</code>.</p>
 
-The unstyled layer (`@mui/x-chat/unstyled`) ships structural chat primitives with zero built-in styles.
+The unstyled layer (`@mui/x-chat/headless`) ships structural chat primitives with zero built-in styles.
 Each component renders semantic HTML elements with `data-*` attributes that reflect component state, making them a natural fit for Tailwind CSS utility classes.
 
 ## Installation
@@ -33,7 +33,7 @@ yarn add @mui/x-chat
 </codeblock>
 
 :::info
-`@mui/x-chat/unstyled` is a subpath export of the main `@mui/x-chat` package. No separate package install is needed.
+`@mui/x-chat/headless` is a subpath export of the main `@mui/x-chat` package. No separate package install is needed.
 :::
 
 ## Namespace API
@@ -49,7 +49,7 @@ import {
   Conversation,
   ConversationList,
   Indicators,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 
 // Usage
 <Chat.Root>
@@ -138,7 +138,7 @@ Use the `slots` and `slotProps` props to replace inner elements while keeping be
 
 ## Complete demo: chat shell
 
-The following interactive demo shows a fully functional chat styled entirely with Tailwind CSS utility classes, using the unstyled primitives from `@mui/x-chat/unstyled`:
+The following interactive demo shows a fully functional chat styled entirely with Tailwind CSS utility classes, using the unstyled primitives from `@mui/x-chat/headless`:
 
 ```tsx
 import * as React from 'react';
@@ -150,7 +150,7 @@ import {
   Message,
   MessageList,
   Indicators,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -268,7 +268,6 @@ export default function TailwindChatDemo({ window }: { window?: () => Window }) 
     </div>
   );
 }
-
 ```
 
 ## When to use unstyled vs. styled
@@ -277,8 +276,8 @@ export default function TailwindChatDemo({ window }: { window?: () => Window }) 
 | :-------------------------------------------- | :--------------------------------------------- |
 | Material UI project, minimal customization    | Use `@mui/x-chat` (styled)                     |
 | Material UI project, heavy slot customization | Use `@mui/x-chat` with `slots` and `slotProps` |
-| Tailwind CSS project                          | Use `@mui/x-chat/unstyled` + Tailwind classes  |
-| Custom design system / CSS Modules            | Use `@mui/x-chat/unstyled`                     |
+| Tailwind CSS project                          | Use `@mui/x-chat/headless` + Tailwind classes  |
+| Custom design system / CSS Modules            | Use `@mui/x-chat/headless`                     |
 | Headless state only, fully custom rendering   | Use `@mui/x-chat/headless` hooks               |
 
 ## API

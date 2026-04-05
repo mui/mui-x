@@ -96,12 +96,12 @@ onEvent({
 - `useChatStatus().typingUserIds` is the primary hook for typing indicators
 - Presence and read updates surface through conversation-level selectors
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Realtime](/x/react-chat/headless/realtime/) for the full event type reference and store effects
 - [Adapters](/x/react-chat/headless/adapters/) for the `subscribe()` method reference
 - [Realtime thread sync](/x/react-chat/headless/examples/realtime-thread-sync/) for message and conversation add/update/remove events
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

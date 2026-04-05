@@ -16,15 +16,13 @@ The Chat component streams assistant responses token-by-token.
 The adapter's `sendMessage()` method returns a `ReadableStream<ChatMessageChunk | ChatStreamEnvelope>`.
 The runtime reads this stream, processes each chunk, and updates the normalized store so that UI components re-render incrementally.
 
-{{"demo": "../../headless/examples/streaming-lifecycle/StreamingLifecycleHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
-
 ## Stream lifecycle
 
 Every stream must follow this lifecycle:
 
-1. **`start`** -- Begin a new assistant message. The runtime creates the message shell and sets its status to `'streaming'`.
-2. **Content chunks** -- Text, reasoning, tool, source, file, or data chunks populate the message parts.
-3. **`finish`** or **`abort`** -- Terminal chunk. `finish` marks the message as `'sent'`; `abort` marks it as `'cancelled'`.
+1. **`start`** — Begin a new assistant message. The runtime creates the message shell and sets its status to `'streaming'`.
+2. **Content chunks** — Text, reasoning, tool, source, file, or data chunks populate the message parts.
+3. **`finish`** or **`abort`** — Terminal chunk. `finish` marks the message as `'sent'`; `abort` marks it as `'cancelled'`.
 
 If the stream closes without a terminal chunk, the runtime treats it as a disconnect (see [Error and disconnect handling](#error-and-disconnect-handling) below).
 
@@ -127,6 +125,7 @@ async function fromSSE(
   const response = await fetch(url, { signal });
   const reader = response.body!.getReader();
   const decoder = new TextDecoder();
+  let buffer = '';
 
   return new ReadableStream({
     async pull(controller) {
@@ -135,8 +134,17 @@ async function fromSSE(
         controller.close();
         return;
       }
-      const chunk = JSON.parse(decoder.decode(value));
-      controller.enqueue(chunk);
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() ?? '';
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6).trim();
+          if (data && data !== '[DONE]') {
+            controller.enqueue(JSON.parse(data));
+          }
+        }
+      }
     },
   });
 }
@@ -196,7 +204,7 @@ stop() {
 },
 ```
 
-You can also stop streaming programmatically using the `useChat` hook:
+You can also stop streaming programmatically using the `useChat()` hook:
 
 ```tsx
 const { stopStreaming } = useChat();
@@ -207,7 +215,7 @@ stopStreaming();
 
 ## Reconnecting to streams
 
-Implement the adapter's `reconnectToStream()` method to resume an interrupted stream -- for example, when an SSE connection drops mid-response:
+Implement the adapter's `reconnectToStream()` method to resume an interrupted stream — for example, when an SSE connection drops mid-response:
 
 ```tsx
 async reconnectToStream({ conversationId, messageId, signal }) {
@@ -249,11 +257,11 @@ The stream processor maps chunks to `ChatMessagePart` entries:
 
 The message's `status` field also updates through the stream:
 
-- `'sending'` -- set when the user message is optimistically added
-- `'streaming'` -- set when `start` arrives
-- `'sent'` -- set when `finish` arrives
-- `'cancelled'` -- set when `abort` arrives
-- `'error'` -- set when the stream fails
+- `'sending'` — set when the user message is optimistically added
+- `'streaming'` — set when `start` arrives
+- `'sent'` — set when `finish` arrives
+- `'cancelled'` — set when `abort` arrives
+- `'error'` — set when the stream fails
 
 ## API
 

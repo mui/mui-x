@@ -54,7 +54,7 @@ The `onEvent` callback receives `ChatRealtimeEvent` objects. There are nine even
 | Event type             | Payload              | Store effect                                                |
 | :--------------------- | :------------------- | :---------------------------------------------------------- |
 | `conversation-added`   | `{ conversation }`   | Adds the conversation to the store                          |
-| `conversation-updated` | `{ conversation }`   | Replaces the conversation record                            |
+| `conversation-updated` | `{ conversation }`   | Upserts the conversation record (replaces if present, adds if missing) |
 | `conversation-removed` | `{ conversationId }` | Removes the conversation and resets active ID if it matched |
 
 ### Message events
@@ -62,7 +62,7 @@ The `onEvent` callback receives `ChatRealtimeEvent` objects. There are nine even
 | Event type        | Payload                          | Store effect                       |
 | :---------------- | :------------------------------- | :--------------------------------- |
 | `message-added`   | `{ message }`                    | Adds the message to the store      |
-| `message-updated` | `{ message }`                    | Replaces the message record        |
+| `message-updated` | `{ message }`                    | Upserts the message record (replaces if present, adds if missing) |
 | `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store |
 
 ### Typing events
@@ -214,18 +214,22 @@ The runtime manages subscription cleanup automatically on unmount. For reconnect
 ```tsx
 subscribe({ onEvent }) {
   let ws: WebSocket;
+  let timeoutId: ReturnType<typeof setTimeout>;
 
   function connect() {
     ws = new WebSocket('/api/realtime');
     ws.onmessage = (event) => onEvent(JSON.parse(event.data));
     ws.onclose = () => {
       // Reconnect after a delay
-      setTimeout(connect, 3000);
+      timeoutId = setTimeout(connect, 3000);
     };
   }
 
   connect();
-  return () => ws.close();
+  return () => {
+    clearTimeout(timeoutId);
+    ws.close();
+  };
 },
 ```
 
@@ -251,12 +255,12 @@ async setTyping({ conversationId, isTyping }) {
 
 The runtime calls `setTyping` when the composer value changes from empty to non-empty (and vice versa). To receive typing indicators from other users, push `typing` events through the `onEvent` callback in `subscribe()`.
 
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)
-
 ## See also
 
 - [Read Receipts](/x/react-chat/multi-conversation/read-receipts/) for the `markRead()` adapter method and unread badge display.
 - [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that reflects realtime conversation updates.
 - [Adapter](/x/react-chat/backend/adapters/) for the full `subscribe()` and `setTyping()` method reference.
+
+## API
+
+- [`ChatBox`](/x/api/chat/chat-box/)

@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled composer
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachButton, ComposerToolbar, ComposerHelperText
 githubLabel: 'scope: chat'
 ---
@@ -9,8 +9,6 @@ githubLabel: 'scope: chat'
 # Chat - Unstyled composer
 
 Assemble the draft surface from structural primitives that already handle submission, IME-safe Enter, attachments, helper text, and disabled states.
-
-
 
 ```tsx
 import * as React from 'react';
@@ -21,7 +19,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import { useChatComposer } from '@mui/x-chat/headless';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 import {
@@ -298,7 +296,6 @@ export default function ComposerWithAttachments() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Primitive set
@@ -315,7 +312,7 @@ The composer surface is built from:
 ## Canonical composition
 
 ```tsx
-import { Composer } from '@mui/x-chat/unstyled';
+import { Composer } from '@mui/x-chat/headless';
 
 function ThreadComposer() {
   return (

@@ -122,11 +122,11 @@ See [Real-Time Adapters](/x/react-chat/backend/real-time-adapters/) for event ty
 - Stay on headless when you want runtime primitives and complete control over UI.
 - Move to [Unstyled Components](/x/react-chat/customization/unstyled/) when you want structure and composition primitives.
 
-## API
-
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the full adapter interface.
 - [Hooks Reference](/x/react-chat/resources/hooks/) for the hook API reference.
 - [Selectors Reference](/x/react-chat/resources/selectors/) for the selector API reference.
 - [Controlled State](/x/react-chat/backend/controlled-state/) for state management patterns.
+
+## API

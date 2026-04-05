@@ -42,6 +42,7 @@ interface ChatToolInvocation<
   approval?: ChatToolApproval;
   providerExecuted?: boolean;
   title?: string;
+  callProviderMetadata?: Record<string, unknown>;
   preliminary?: boolean;
 }
 ```
@@ -161,7 +162,7 @@ The `toolCall` object includes `toolCallId`, `toolName`, `state`, `input`, `outp
 Use TypeScript module augmentation to register typed tool definitions. This gives you type-safe `input` and `output` on tool invocations:
 
 ```ts
-declare module '@mui/x-chat/headless' {
+declare module '@mui/x-chat/types' {
   interface ChatToolDefinitionMap {
     get_weather: {
       input: { city: string };
@@ -201,6 +202,7 @@ interface ChatDynamicToolInvocation<TToolName extends string = string> {
   output?: unknown;
   errorText?: string;
   approval?: ChatToolApproval;
+  callProviderMetadata?: Record<string, unknown>;
 }
 ```
 
@@ -232,13 +234,12 @@ function MessagePart({ part, message, index }) {
 }
 ```
 
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)
-
 ## See also
 
 - [Tool Approval](/x/react-chat/ai-and-agents/tool-approval/) for human-in-the-loop approval of tool calls.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full stream chunk protocol reference.
 - [Step Tracking](/x/react-chat/ai-and-agents/step-tracking/) for multi-step agent progress tracking.
-- [State and store](/x/react-chat/customization/headless/) for the `onToolCall` callback signature.
+
+## API
+
+- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

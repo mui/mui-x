@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled customization
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -13,7 +13,7 @@ githubLabel: 'scope: chat'
 
 ## Customization model
 
-`@mui/x-chat/unstyled` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
+`@mui/x-chat/headless` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
 
 The main tools are:
 
@@ -126,12 +126,12 @@ The important boundary is:
 - unstyled owns structure, semantics, and interaction behavior
 - your app owns visual design
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - Continue with [Conversation list](/x/react-chat/unstyled/conversation-list/) to see owner state on row-level slots.
 - Continue with [Messages](/x/react-chat/unstyled/messages/) for selective message-part replacement.
 - Continue with [Slot customization](/x/react-chat/unstyled/examples/slot-customization/) for a full demo that replaces multiple slots in one surface.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

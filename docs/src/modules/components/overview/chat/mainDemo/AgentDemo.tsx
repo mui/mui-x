@@ -256,16 +256,14 @@ function AgentTaskTree(_props: Record<string, unknown>) {
                     }}
                   >
                     {/* Status indicator */}
-                    <Box sx={{ flexShrink: 0, mr: 0.75, mt: '1px' }}>
-                      {task.status === 'working' ? (
-                        <FiberManualRecordIcon sx={{ fontSize: 8, color: 'warning.main' }} />
-                      ) : (
-                        <CheckCircleOutlineIcon sx={{ fontSize: 11, color: 'success.main' }} />
-                      )}
-                    </Box>
+                    {task.status === 'working' ? (
+                      <FiberManualRecordIcon sx={{ fontSize: 8, color: 'warning.main' }} />
+                    ) : (
+                      <CheckCircleOutlineIcon sx={{ fontSize: 11, color: 'success.main' }} />
+                    )}
 
                     {/* Task label + meta */}
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Box sx={{ flex: 1, minWidth: 0, pl: 0.5 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                         <Typography
                           variant="caption"

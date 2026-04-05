@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { alpha } from '@mui/material/styles';
-import { MessageContent, type MessageContentProps } from '@mui/x-chat-unstyled';
+import { MessageContent, type MessageContentProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 import { renderMarkdown } from './renderMarkdown';
@@ -97,6 +97,7 @@ const ChatMessageBubbleStyled = styled('div', {
 
   return {
     ...baseTextStyles,
+    position: 'relative', // Anchor for inline meta (timestamp + status)
     padding: theme.spacing(1, 1.5),
     borderRadius: theme.shape.borderRadius,
     // Shrink to fit content width; align to the side that matches the message role.
@@ -764,6 +765,11 @@ ChatMessageContent.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Content rendered inside the bubble after the message parts.
+   * Useful for placing inline metadata (e.g. timestamp, status) inside the bubble.
+   */
+  afterContent: PropTypes.node,
   classes: PropTypes.object,
   className: PropTypes.string,
   /**

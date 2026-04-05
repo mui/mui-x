@@ -204,11 +204,10 @@ const CustomMessageContent = React.forwardRef(
 | `unreadMarker`              | `ChatUnreadMarker`              | Unread message marker        |
 | `scrollToBottom`            | `ChatScrollToBottomAffordance`  | Scroll to bottom affordance  |
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Examples](/x/react-chat/material/examples/) for end-to-end customization demos
-- [Unstyled customization](/x/react-chat/unstyled/customization/) for slot and owner-state patterns in the primitive layer
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

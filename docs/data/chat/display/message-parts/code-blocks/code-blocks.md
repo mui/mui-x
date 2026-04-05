@@ -117,11 +117,11 @@ To customize how code fences render inside `ChatBox`, override `partProps.text.r
 | `.MuiChatCodeBlock-pre`           | Pre element wrapper      |
 | `.MuiChatCodeBlock-code`          | Code element             |
 
-## API
-
-- [`ChatCodeBlock`](/x/api/chat/chat-code-block/)
-
 ## See also
 
 - [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text part data model and markdown rendering
 - [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers
+
+## API
+
+- [`ChatCodeBlock`](/x/api/chat/chat-code-block/)

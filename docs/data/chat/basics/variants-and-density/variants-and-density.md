@@ -98,10 +98,3 @@ This independence gives you fine-grained control over both the visual style (bub
 ## API
 
 - [`ChatBox`](/x/api/chat/chat-box/)
-
-## Next steps
-
-- [ChatBox](/x/react-chat/basics/chatbox/) — the all-in-one component and its configuration
-- [Messages](/x/react-chat/basics/messages/) — the message data model and list rendering
-- [Layout](/x/react-chat/basics/layout/) — the two-pane structure and thread-only mode
-- [Message list reference](/x/react-chat/basics/messages/) — full API details, slots, and imperative scrolling

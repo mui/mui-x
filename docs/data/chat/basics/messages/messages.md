@@ -14,11 +14,10 @@ components: ChatMessageList, ChatMessageGroup
 
 ## The ChatMessage data model
 
-Every message in the chat system is represented by the `ChatMessage` interface.
-Import it from the headless layer:
+Every message in the chat system is represented by the `ChatMessage` interface:
 
 ```tsx
-import type { ChatMessage } from '@mui/x-chat/headless';
+import type { ChatMessage } from '@mui/x-chat';
 ```
 
 A `ChatMessage` has the following shape:
@@ -99,7 +98,7 @@ ChatMessageList                     ← scrollable container
 ## How messages render
 
 The `ChatMessageList` component is the scrollable region that renders conversation history.
-It wraps the `@mui/x-chat/unstyled` `MessageListRoot` primitive with Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
+Scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
 
 ### Message groups
 
@@ -143,9 +142,3 @@ The demo below renders only the message list with a placeholder for a custom com
 
 - [`ChatMessageList`](/x/api/chat/chat-message-list/)
 - [`ChatMessageGroup`](/x/api/chat/chat-message-group/)
-
-## Next steps
-
-- [ChatBox](/x/react-chat/basics/chatbox/) — the all-in-one component
-- [Composer](/x/react-chat/basics/composer/) — the text input area
-- [Variants & Density](/x/react-chat/basics/variants-and-density/) — compact variant and density levels

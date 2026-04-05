@@ -38,7 +38,7 @@ The default renderer displays an external link icon next to a clickable link tha
 
 ### Rendering
 
-The Material UI layer renders source URLs as inline links with an external-link icon. The unstyled layer uses a simple `<a>` element.
+Source URLs are rendered as inline links with an external-link icon.
 
 ```tsx
 // How it appears in the parts array
@@ -150,12 +150,11 @@ For fully custom source rendering, register a custom renderer through `partRende
 </ChatProvider>
 ```
 
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)
-
 ## See also
 
 - [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text content that references sources
 - [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building fully custom citation UI
-- [Type augmentation](/x/react-chat/customization/headless/) for adding typed data parts with richer citation structures
+
+## API
+
+- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

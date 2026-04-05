@@ -1,5 +1,5 @@
 {
-  "props": {},
+  "props": { "maxRows": { "type": { "name": "number" } } },
   "name": "ChatComposerTextArea",
   "imports": [
     "import { ChatComposerTextArea } from '@mui/x-chat/ChatComposer';",
@@ -52,6 +52,12 @@
       "key": "toolbar",
       "className": "MuiChatComposerTextArea-toolbar",
       "description": "Styles applied to the toolbar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "variantCompact",
+      "className": "MuiChatComposerTextArea-variantCompact",
+      "description": "Styles applied to the root element when variant=\"compact\".",
       "isGlobal": false
     }
   ],

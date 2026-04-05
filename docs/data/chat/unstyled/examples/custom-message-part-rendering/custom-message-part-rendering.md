@@ -1,7 +1,7 @@
 ---
 title: Chat - Custom message part rendering
 productId: x-chat
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -47,11 +47,11 @@ This is especially useful for reasoning disclosures, tool outputs, citations, fi
 - `getDefaultMessagePartRenderer()` is the key tool for progressive customization.
 - Overriding one part type does not require forking message rows, groups, or the entire message surface.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - Continue with [Messages](/x/react-chat/unstyled/messages/) for the default part renderer reference.
 - Continue with [Slot customization](/x/react-chat/unstyled/examples/slot-customization/) when the customization needs to extend beyond message content and into row structure.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

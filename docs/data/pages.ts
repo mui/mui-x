@@ -825,7 +825,7 @@ const pages: MuiPage[] = [
   ...schedulerPages,
   {
     pathname: '/x/react-chat-group',
-    title: 'Chatbox',
+    title: 'Chat',
     unstable: true,
     children: [
       { pathname: '/x/react-chat', title: 'Overview' },
@@ -995,14 +995,6 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-chat/customization/styling', title: 'Styling' },
           { pathname: '/x/react-chat/customization/tailwind', title: 'Tailwind CSS' },
-          {
-            pathname: '/x/react-chat/customization/unstyled',
-            title: 'Unstyled Components',
-          },
-          {
-            pathname: '/x/react-chat/customization/headless',
-            title: 'Headless Hooks',
-          },
           {
             pathname: '/x/react-chat/customization/localization',
             title: 'Localization',

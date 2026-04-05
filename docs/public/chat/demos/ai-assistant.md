@@ -10,8 +10,6 @@ components: ChatBox
 
 A full ChatGPT-style AI assistant with streaming responses, tool calling, and rich content rendering.
 
-
-
 ## Agentic code assistant
 
 An advanced agentic chat that demonstrates the full range of AI assistant capabilities: streaming tool calls (Bash, Read, Edit, Write, Glob), collapsible reasoning blocks, step boundaries between agentic iterations, and an interactive tool approval flow.
@@ -552,7 +550,6 @@ export default function AgenticCode() {
     />
   );
 }
-
 ```
 
 ## Basic AI chat
@@ -587,7 +584,6 @@ export default function BasicAiChat() {
     />
   );
 }
-
 ```
 
 ## What these demos show

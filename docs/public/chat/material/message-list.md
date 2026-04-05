@@ -10,10 +10,8 @@ components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 
 Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators.
 
-
-
 The message list is the scrollable region that renders conversation history.
-`ChatMessageList` wraps the `@mui/x-chat/unstyled` `MessageListRoot` primitive with Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
+`ChatMessageList` wraps the `@mui/x-chat/headless` `MessageListRoot` primitive with Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
 
 ## Import
 
@@ -101,7 +99,6 @@ export default function AutoScrollConfig() {
     </div>
   );
 }
-
 ```
 
 ### Scroll-to-bottom affordance
@@ -205,7 +202,6 @@ export default function DateDividerFormat() {
     />
   );
 }
-
 ```
 
 ## Message groups
@@ -300,7 +296,6 @@ export default function MessageGrouping() {
     />
   );
 }
-
 ```
 
 ## Compact variant
@@ -403,7 +398,6 @@ export default function CompactVariant() {
     />
   );
 }
-
 ```
 
 ```tsx
@@ -534,7 +528,6 @@ export default function DensityProp() {
     </Stack>
   );
 }
-
 ```
 
 ```tsx
@@ -629,7 +622,6 @@ export default function StandaloneMessageList() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Imperative scrolling
@@ -638,7 +630,7 @@ The `ChatMessageList` exposes a ref handle for imperative scroll control:
 
 ```tsx
 import { ChatMessageList } from '@mui/x-chat';
-import type { MessageListRootHandle } from '@mui/x-chat/unstyled';
+import type { MessageListRootHandle } from '@mui/x-chat/headless';
 
 const listRef = React.useRef<MessageListRootHandle>(null);
 
@@ -653,7 +645,7 @@ listRef.current?.scrollToBottom({ behavior: 'smooth' });
 Child components inside the message list can access scroll state via context:
 
 ```tsx
-import { useMessageListContext } from '@mui/x-chat/unstyled';
+import { useMessageListContext } from '@mui/x-chat/headless';
 
 function CustomScrollIndicator() {
   const { isAtBottom, unseenMessageCount, scrollToBottom } = useMessageListContext();

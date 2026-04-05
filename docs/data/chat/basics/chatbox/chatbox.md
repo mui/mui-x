@@ -33,7 +33,7 @@ No additional configuration is needed — `ChatBox` reads `palette`, `typography
 ### ChatBox (all-in-one)
 
 `ChatBox` is the right choice when you want a complete chat surface with minimal setup.
-It creates a `ChatProvider` internally, so all headless hooks work inside any component rendered as a child or descendant of `ChatBox`:
+It creates a `ChatProvider` internally, so all hooks work inside any component rendered as a child or descendant of `ChatBox`:
 
 {{"demo": "../../material/context/ChatBoxWithHooks.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -64,44 +64,6 @@ When you need full control over the layout — for example, placing the conversa
 ```
 
 Feature flags let you progressively enable functionality without replacing slots or restructuring the component tree.
-
-## Package model
-
-`@mui/x-chat` is the Material UI styling layer of a three-tier package family:
-
-```text
-@mui/x-chat
-  -> @mui/x-chat/unstyled
-       -> @mui/x-chat/headless
-```
-
-Each layer builds on the one below it:
-
-- **Material UI** (`@mui/x-chat`) adds visual styles via Material UI `styled()` on top of the unstyled primitives.
-- **Unstyled** (`@mui/x-chat/unstyled`) adds structural DOM wiring, slots, and accessibility on top of the headless runtime.
-- **Headless** (`@mui/x-chat/headless`) owns state, streaming, adapters, and hooks with no DOM output.
-
-### Choosing a layer
-
-| If you want…                                                                   | Use                    |
-| :----------------------------------------------------------------------------- | :--------------------- |
-| A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`          |
-| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat/unstyled` |
-| Complete control over DOM structure with only React state and hooks            | `@mui/x-chat/headless` |
-
-### Package boundary
-
-`@mui/x-chat` re-exports `@mui/x-chat/headless` and `@mui/x-chat/unstyled` through dedicated entry points:
-
-```tsx
-// Headless hooks and types
-import { useChat, useChatComposer } from '@mui/x-chat/headless';
-
-// Unstyled structural primitives
-import { Chat, MessageList } from '@mui/x-chat/unstyled';
-```
-
-This means you can mix the styled layer with lower-level primitives in the same application.
 
 ## Controlled and uncontrolled state
 
@@ -177,10 +139,3 @@ To render multiple independent chat surfaces side by side, use separate `ChatBox
 ## API
 
 - [`ChatBox`](/x/api/chat/chat-box/)
-
-## Next steps
-
-- [Messages](/x/react-chat/basics/messages/) — the message data model and how messages render
-- [Composer](/x/react-chat/basics/composer/) — the text input experience
-- [Layout](/x/react-chat/basics/layout/) — the two-pane structure and thread-only mode
-- [Variants & Density](/x/react-chat/basics/variants-and-density/) — compact variant and density levels

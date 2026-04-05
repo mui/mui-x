@@ -243,10 +243,10 @@ const adapter: ChatAdapter = {
 };
 ```
 
-## API
-
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the full adapter interface including `subscribe()`.
 - [Hooks Reference](/x/react-chat/resources/hooks/) for `useChatStatus()` and the typing/presence consumption pattern.
 - [Selectors Reference](/x/react-chat/resources/selectors/) for `chatSelectors.typingUserIds` and other store selectors.
+
+## API

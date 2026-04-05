@@ -134,13 +134,13 @@ Here are the full shapes:
 { type: 'read', conversationId: string, messageId?: string, userId?: string }
 ```
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Adapters](/x/react-chat/headless/adapters/) for the full adapter interface including `subscribe()`.
 - [Hooks](/x/react-chat/headless/hooks/) for `useChatStatus()` and the typing/presence consumption pattern.
 - [Realtime](/x/react-chat/headless/examples/realtime/) for a demo covering subscriptions, typing, and presence.
 - [Realtime thread sync](/x/react-chat/headless/examples/realtime-thread-sync/) for add, update, and remove events.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

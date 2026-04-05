@@ -12,7 +12,7 @@ components: ChatConversationList
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component that wraps the unstyled `ConversationListRoot` primitive with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
+The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
 
 {{"demo": "../../material/examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
@@ -167,12 +167,12 @@ const RichItemContent = React.forwardRef(function RichItemContent(
         >
           {conversation?.title}
         </Typography>
-        {conversation?.metadata?.memberCount > 2 && (
+        {(conversation?.participants?.length ?? 0) > 2 && (
           <GroupIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
         )}
       </Box>
       <Typography variant="caption" color="text.secondary" noWrap>
-        {conversation?.lastMessage?.text ?? 'No messages yet'}
+        {conversation?.subtitle ?? 'No messages yet'}
       </Typography>
     </Box>
   );
@@ -185,7 +185,7 @@ When you replace `itemContent`, the `title` and `preview` slots are no longer re
 
 ## Overriding the full item row
 
-Replace the `item` slot to take full control of a row's layout while still benefiting from the built-in selection, keyboard navigation, and `aria-selected` wiring that the unstyled layer provides:
+Replace the `item` slot to take full control of a row's layout while still benefiting from the built-in selection, keyboard navigation, and `aria-selected` wiring:
 
 ```tsx
 import { ChatConversationList } from '@mui/x-chat';
@@ -244,7 +244,7 @@ const CompactRow = React.forwardRef(function CompactRow(
 <ChatConversationList slots={{ item: CompactRow }} />;
 ```
 
-The `role="option"` and `aria-selected` attributes are set by the unstyled layer before the slot renders, so they are present on the element even without the default styled item. Spread `...props` to pass them through.
+The `role="option"` and `aria-selected` attributes are set automatically before the slot renders, so they are present on the element even without the default styled item. Spread `...props` to pass them through.
 
 ## Full custom item renderer
 
@@ -414,7 +414,7 @@ Or set the CSS variable on a parent element to control the width from a layout l
 
 ## Accessibility notes
 
-The default list uses `role="listbox"` on the root and `role="option"` with `aria-selected` on each row. The unstyled layer manages roving focus: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, and `Enter` are handled automatically.
+The default list uses `role="listbox"` on the root and `role="option"` with `aria-selected` on each row. The component manages roving focus: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, and `Enter` are handled automatically.
 
 Custom `item` slot components must forward all `...props` to the DOM element they render so the `role`, `aria-selected`, and keyboard handler props are preserved. Failing to spread `...props` breaks both keyboard navigation and screen-reader semantics.
 
@@ -424,12 +424,12 @@ Pass `aria-label` to the root through `slotProps`:
 <ChatConversationList slotProps={{ root: { 'aria-label': 'Conversations' } }} />
 ```
 
-## API
-
-- [`ChatConversationList`](/x/api/chat/chat-conversation-list/)
-
 ## See also
 
 - [Conversation Header](/x/react-chat/multi-conversation/conversation-header/) for the header bar that accompanies the active thread.
 - [Multi-conversation demo](/x/react-chat/demos/team-messaging/) for a two-pane inbox layout using controlled state.
 - [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing conversation updates through subscriptions.
+
+## API
+
+- [`ChatConversationList`](/x/api/chat/chat-conversation-list/)

@@ -1,7 +1,7 @@
 ---
 title: Chat - Minimal unstyled shell
 productId: x-chat
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">Start with the smallest complete chat surface built from unstyled primitives.</p>
 
-This is the entry-point demo for `@mui/x-chat/unstyled`.
+This is the entry-point demo for `@mui/x-chat/headless`.
 It shows the smallest surface that still feels like a real chat UI: a root, a pane layout, a conversation list, a thread container, a message log, and a composer.
 
 It is intentionally simple so the structural responsibilities are easy to see before any advanced customization is introduced.
@@ -64,11 +64,11 @@ This pattern is a good fit for:
 - `Chat.Layout` is already enough to produce a recognizable application shell.
 - Most richer demos keep the same baseline structure and only add behavior or customization on top.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - Continue with [Two-pane inbox](/x/react-chat/unstyled/examples/two-pane-inbox/) for the standard application layout.
 - Continue with [Composition](/x/react-chat/unstyled/composition/) for the conceptual explanation of the same shell.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

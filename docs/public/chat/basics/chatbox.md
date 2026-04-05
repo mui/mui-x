@@ -10,8 +10,6 @@ components: ChatBox
 
 The all-in-one component that renders a complete chat surface with a single import.
 
-
-
 ## Overview
 
 `ChatBox` is the fastest way to add a chat interface to your application.
@@ -54,7 +52,6 @@ export default function BasicAiChat() {
     />
   );
 }
-
 ```
 
 ## ChatBox vs. ChatProvider
@@ -106,7 +103,6 @@ export default function ChatBoxWithHooks() {
     </ChatBox>
   );
 }
-
 ```
 
 ### ChatProvider (custom layout)
@@ -241,7 +237,6 @@ export default function ChatProviderCustomLayout() {
     </ChatProvider>
   );
 }
-
 ```
 
 :::warning
@@ -272,14 +267,14 @@ Feature flags let you progressively enable functionality without replacing slots
 
 ```text
 @mui/x-chat
-  -> @mui/x-chat/unstyled
+  -> @mui/x-chat/headless
        -> @mui/x-chat/headless
 ```
 
 Each layer builds on the one below it:
 
 - **Material UI** (`@mui/x-chat`) adds visual styles via Material UI `styled()` on top of the unstyled primitives.
-- **Unstyled** (`@mui/x-chat/unstyled`) adds structural DOM wiring, slots, and accessibility on top of the headless runtime.
+- **Unstyled** (`@mui/x-chat/headless`) adds structural DOM wiring, slots, and accessibility on top of the headless runtime.
 - **Headless** (`@mui/x-chat/headless`) owns state, streaming, adapters, and hooks with no DOM output.
 
 ### Choosing a layer
@@ -287,19 +282,19 @@ Each layer builds on the one below it:
 | If you want…                                                                   | Use                    |
 | :----------------------------------------------------------------------------- | :--------------------- |
 | A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`          |
-| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat/unstyled` |
+| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat/headless` |
 | Complete control over DOM structure with only React state and hooks            | `@mui/x-chat/headless` |
 
 ### Package boundary
 
-`@mui/x-chat` re-exports `@mui/x-chat/headless` and `@mui/x-chat/unstyled` through dedicated entry points:
+`@mui/x-chat` re-exports `@mui/x-chat/headless` and `@mui/x-chat/headless` through dedicated entry points:
 
 ```tsx
 // Headless hooks and types
 import { useChat, useChatComposer } from '@mui/x-chat/headless';
 
 // Unstyled structural primitives
-import { Chat, MessageList } from '@mui/x-chat/unstyled';
+import { Chat, MessageList } from '@mui/x-chat/headless';
 ```
 
 This means you can mix the styled layer with lower-level primitives in the same application.
@@ -428,7 +423,6 @@ export default function MultipleInstances() {
     </Box>
   );
 }
-
 ```
 
 ## API

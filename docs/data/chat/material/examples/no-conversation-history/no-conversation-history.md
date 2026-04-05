@@ -70,11 +70,11 @@ const adapter: ChatAdapter = {
 };
 ```
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Thread-only](/x/react-chat/material/examples/thread-only/) for a layout-focused view of the single-pane pattern
 - [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for the full two-pane inbox with a conversation sidebar
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled conversation list
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
 githubLabel: 'scope: chat'
 ---
@@ -9,8 +9,6 @@ githubLabel: 'scope: chat'
 # Chat - Unstyled conversation list
 
 Render and navigate the conversation rail with structural list primitives, built-in selection behavior, and roving focus.
-
-
 
 ```tsx
 import * as React from 'react';
@@ -22,7 +20,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -222,7 +220,6 @@ export default function TwoPaneInbox() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Primitive set

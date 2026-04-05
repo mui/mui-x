@@ -44,7 +44,7 @@ The transition uses a short opacity animation. When the user prefers reduced mot
 
 ## Component anatomy
 
-`ChatMessageActions` is a styled wrapper around the unstyled `MessageActions` primitive. It occupies the `actions` grid area in the message row layout:
+`ChatMessageActions` occupies the `actions` grid area in the message row layout:
 
 ```text
 ChatMessage (grid)
@@ -58,63 +58,13 @@ ChatMessage (grid)
 
 The `MessageActions` primitive renders a `<div>` (or custom slot element) that you populate with your own action buttons. Override the actions slot through `ChatBox`:
 
-```tsx
-function MyMessageActions(props) {
-  return (
-    <div {...props}>
-      <button onClick={handleCopy}>Copy</button>
-      <button onClick={handleEdit}>Edit</button>
-      <button onClick={handleDelete}>Delete</button>
-    </div>
-  );
-}
-
-<ChatBox
-  adapter={adapter}
-  slots={{
-    messageActions: MyMessageActions,
-  }}
-/>;
-```
+{{"demo": "BasicMessageActions.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ### Accessing message context
 
-Inside a custom actions component, use the message context to access the current message data:
+Inside a custom actions component, use the `ownerState` prop to access the current message data and show different actions for user and assistant messages:
 
-```tsx
-import { useMessageContext } from '@mui/x-chat/unstyled';
-
-function MyMessageActions(props) {
-  const { message, role } = useMessageContext();
-
-  return (
-    <div {...props}>
-      <CopyButton
-        text={message?.parts.map((p) => (p.type === 'text' ? p.text : '')).join('')}
-      />
-      {role === 'user' && <EditButton messageId={message?.id} />}
-    </div>
-  );
-}
-```
-
-### Conditional visibility by role
-
-Show different actions for user and assistant messages:
-
-```tsx
-function MyMessageActions(props) {
-  const { role } = useMessageContext();
-
-  return (
-    <div {...props}>
-      <CopyButton />
-      {role === 'assistant' && <RegenerateButton />}
-      {role === 'user' && <EditButton />}
-    </div>
-  );
-}
-```
+{{"demo": "RoleBasedMessageActions.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Owner state
 
@@ -134,11 +84,10 @@ The `MessageActions` component receives the message context as owner state, whic
 | :-------- | :-------------- | :----------------------- |
 | `actions` | `div`           | The action bar container |
 
-## API
-
-- [`ChatMessageActions`](/x/api/chat/chat-message-actions/)
-
 ## See also
 
 - [Message Appearance](/x/react-chat/display/message-appearance/) for the overall message layout and visual presentation
-- [Unstyled messages](/x/react-chat/customization/unstyled/) for the full primitive set and composition patterns
+
+## API
+
+- [`ChatMessageActions`](/x/api/chat/chat-message-actions/)

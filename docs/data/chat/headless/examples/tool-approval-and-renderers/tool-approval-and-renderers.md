@@ -89,13 +89,13 @@ For a dedicated walkthrough of TypeScript module augmentation, see [Type augment
 - `partRenderers` decouples rendering from the message loop — register once, look up anywhere
 - Custom part types registered through module augmentation integrate seamlessly with the renderer registry
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Type augmentation](/x/react-chat/headless/types/) for registering custom types
 - [Streaming](/x/react-chat/headless/streaming/) for the tool chunk protocol
 - [Tool call events](/x/react-chat/headless/examples/tool-call-events/) for the `onToolCall` callback pattern
 - [Hooks](/x/react-chat/headless/hooks/) for the `useChatPartRenderer()` API reference
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

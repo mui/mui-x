@@ -218,6 +218,8 @@ ChatCodeBlock.propTypes = {
   /**
    * Optional syntax highlighter. Receives (code, language) and should return
    * highlighted React nodes. When omitted, raw code is displayed.
+   * @param code
+   * @param language
    */
   highlighter: PropTypes.func,
   /**

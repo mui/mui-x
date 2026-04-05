@@ -44,7 +44,6 @@ export default function BasicAiChat() {
     />
   );
 }
-
 ```
 
 ## Why start here

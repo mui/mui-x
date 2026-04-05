@@ -110,31 +110,9 @@ The `typingIndicator`, `unreadMarker`, and `messageActions` slots are defined in
 
 ## Hiding a slot
 
-Return `null` from a slot to remove it entirely:
+Return `null` from a slot to remove it entirely, or use the `features` prop for common show/hide needs:
 
-```tsx
-<ChatBox
-  adapter={adapter}
-  slots={{
-    conversationHeader: () => null,
-    composerAttachButton: () => null,
-    suggestions: () => null,
-  }}
-/>
-```
-
-For common show/hide needs, prefer the `features` prop which handles the logic cleanly:
-
-```tsx
-<ChatBox
-  adapter={adapter}
-  features={{
-    conversations: false, // hide the sidebar
-    attachments: false, // hide the attach button
-    suggestions: false, // hide suggestions
-  }}
-/>
-```
+{{"demo": "FeatureFlags.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Feature flags and slot rendering
 
@@ -228,9 +206,8 @@ const mySlotProps: ChatBoxSlotProps = {
 Slots replace the component entirely, while theme `styleOverrides` adjust the default component's styles.
 You can use both together — for example, swap the message content component via a slot while applying global border-radius tweaks through the theme.
 
-## API
-
 ## See also
 
 - [Styling](/x/react-chat/customization/styling/) for `sx` prop, theme overrides, and dark mode.
-- [Unstyled Components](/x/react-chat/customization/unstyled/) for slot and owner-state patterns in the primitive layer.
+
+## API

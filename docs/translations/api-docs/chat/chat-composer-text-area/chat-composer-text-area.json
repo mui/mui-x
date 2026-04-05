@@ -1,6 +1,10 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "maxRows": {
+      "description": "Maximum number of rows the textarea can expand to before it starts scrolling. When set, the textarea starts at 1 row and auto-grows up to <code>maxRows</code>."
+    }
+  },
   "classDescriptions": {
     "attachButton": {
       "description": "Styles applied to {{nodeName}}.",
@@ -33,6 +37,11 @@
     "toolbar": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar element"
+    },
+    "variantCompact": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "variant=&quot;compact&quot;"
     }
   }
 }

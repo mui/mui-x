@@ -10,8 +10,6 @@ components: ChatBox
 
 How the streaming protocol works end-to-end, from adapter response to live UI updates.
 
-
-
 The Chat component streams assistant responses token-by-token.
 The adapter's `sendMessage()` method returns a `ReadableStream<ChatMessageChunk | ChatStreamEnvelope>`.
 The runtime reads this stream, processes each chunk, and updates the normalized store so that UI components re-render incrementally.
@@ -346,7 +344,6 @@ function StreamingLifecycleWithLogs() {
     </Paper>
   );
 }
-
 ```
 
 ## Stream lifecycle
@@ -458,6 +455,7 @@ async function fromSSE(
   const response = await fetch(url, { signal });
   const reader = response.body!.getReader();
   const decoder = new TextDecoder();
+  let buffer = '';
 
   return new ReadableStream({
     async pull(controller) {
@@ -466,8 +464,17 @@ async function fromSSE(
         controller.close();
         return;
       }
-      const chunk = JSON.parse(decoder.decode(value));
-      controller.enqueue(chunk);
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() ?? '';
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6).trim();
+          if (data && data !== '[DONE]') {
+            controller.enqueue(JSON.parse(data));
+          }
+        }
+      }
     },
   });
 }

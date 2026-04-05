@@ -27,7 +27,7 @@ The styled components are designed to be used inside an unstyled `ChatRoot` prov
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { Chat } from '@mui/x-chat/unstyled';
+import { Chat } from '@mui/x-chat/headless';
 import { ChatConversations, ChatConversation, ChatComposer } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/shared/demoUtils';
 import {
@@ -72,7 +72,7 @@ When you do not need a conversations sidebar, compose `ChatConversation` and `Ch
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { Chat } from '@mui/x-chat/unstyled';
+import { Chat } from '@mui/x-chat/headless';
 import { ChatConversation, ChatComposer } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/shared/demoUtils';
 import { demoUsers } from 'docsx/data/chat/material/shared/demoData';

@@ -10,10 +10,8 @@ components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachBu
 
 The text input area where users draft and send messages, with support for attachments, toolbar actions, and helper text.
 
-
-
 The composer is the input region at the bottom of the chat surface.
-`ChatComposer` wraps the `@mui/x-chat/unstyled` `ComposerRoot` primitive with Material UI styling — border, padding, and theme tokens are applied automatically.
+`ChatComposer` wraps the `@mui/x-chat/headless` `ComposerRoot` primitive with Material UI styling — border, padding, and theme tokens are applied automatically.
 
 ## Import
 
@@ -88,7 +86,6 @@ export default function ComposerCustomPlaceholder() {
     />
   );
 }
-
 ```
 
 ### IME composition
@@ -145,7 +142,6 @@ export default function ComposerHiddenAttachButton() {
     />
   );
 }
-
 ```
 
 ## Helper text
@@ -204,7 +200,6 @@ export default function ComposerControlled() {
     </Box>
   );
 }
-
 ```
 
 ## `useChatComposer` hook
@@ -289,7 +284,6 @@ export default function ComposerDisabled() {
     />
   );
 }
-
 ```
 
 ## Localization

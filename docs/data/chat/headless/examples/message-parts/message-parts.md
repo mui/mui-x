@@ -88,12 +88,12 @@ Use this to show a typing indicator or pulsing cursor while content is arriving.
 - Use `part.state` on text and reasoning parts to show streaming indicators
 - For app-specific part types, register renderers via `partRenderers` or use `useChatPartRenderer()`
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Streaming](/x/react-chat/headless/streaming/) for how chunks produce each part type
 - [Type augmentation](/x/react-chat/headless/types/) for registering custom part types
 - [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) for custom renderer registration
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

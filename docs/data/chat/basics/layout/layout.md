@@ -138,10 +138,3 @@ On narrow containers, consider switching to thread-only mode and managing conver
 
 - [`ChatBox`](/x/api/chat/chat-box/)
 - [`ChatLayout`](/x/api/chat/chat-layout/)
-
-## Next steps
-
-- [ChatBox](/x/react-chat/basics/chatbox/) — the all-in-one component and its configuration
-- [Messages](/x/react-chat/basics/messages/) — the message data model and list rendering
-- [Composer](/x/react-chat/basics/composer/) — the text input experience
-- [Variants & Density](/x/react-chat/basics/variants-and-density/) — compact variant and density levels

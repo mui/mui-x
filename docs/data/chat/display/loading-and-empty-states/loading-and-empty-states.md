@@ -79,29 +79,9 @@ Key characteristics of the empty state:
 
 ### Custom empty state content
 
-Provide custom empty state content by replacing the message list slot. A common pattern is to display suggested prompts that help users start a conversation:
+Provide custom empty state content by composing the thread from individual components. A common pattern is to display suggested prompts that help users start a conversation:
 
-```tsx
-function EmptyStateContent() {
-  const { messages } = useChat();
-
-  if (messages.length > 0) return null;
-
-  return (
-    <div className="empty-state">
-      <h3>How can I help you today?</h3>
-      <div className="suggestions">
-        <button onClick={() => sendMessage('Explain quantum computing')}>
-          Explain quantum computing
-        </button>
-        <button onClick={() => sendMessage('Write a haiku about React')}>
-          Write a haiku about React
-        </button>
-      </div>
-    </div>
-  );
-}
-```
+{{"demo": "CustomEmptyState.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Streaming indicator
 
@@ -122,12 +102,12 @@ function TypingIndicator({ message }) {
 }
 ```
 
-## API
-
-- [`ChatMessageSkeleton`](/x/api/chat/chat-message-skeleton/)
-
 ## See also
 
 - [Message Appearance](/x/react-chat/display/message-appearance/) for the overall message layout
 - [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for streaming text display
 - [Message list](/x/react-chat/basics/messages/) for auto-scroll behavior during streaming
+
+## API
+
+- [`ChatMessageSkeleton`](/x/api/chat/chat-message-skeleton/)

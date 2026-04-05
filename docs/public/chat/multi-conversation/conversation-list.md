@@ -10,8 +10,6 @@ components: ChatConversationList
 
 Render a sidebar that lists all available conversations, supports switching between them, and is fully customizable through slots and theme overrides.
 
-
-
 The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component that wraps the unstyled `ConversationListRoot` primitive with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
 
 ```tsx
@@ -77,7 +75,6 @@ export default function MultiConversation() {
     />
   );
 }
-
 ```
 
 ## Component anatomy
@@ -231,12 +228,12 @@ const RichItemContent = React.forwardRef(function RichItemContent(
         >
           {conversation?.title}
         </Typography>
-        {conversation?.metadata?.memberCount > 2 && (
+        {(conversation?.participants?.length ?? 0) > 2 && (
           <GroupIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
         )}
       </Box>
       <Typography variant="caption" color="text.secondary" noWrap>
-        {conversation?.lastMessage?.text ?? 'No messages yet'}
+        {conversation?.subtitle ?? 'No messages yet'}
       </Typography>
     </Box>
   );

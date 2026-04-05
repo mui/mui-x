@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled thread
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 components: ConversationRoot, ConversationHeader, ConversationTitle, ConversationSubtitle, ConversationHeaderActions
 githubLabel: 'scope: chat'
 ---
@@ -20,7 +20,7 @@ import {
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 
 <Conversation.Root>
   <Conversation.Header>
@@ -124,6 +124,12 @@ It is intentionally light on policy so the app can decide which actions belong t
 - Keep header composition inside `Conversation.Root` so title, subtitle, and actions stay in sync with the active conversation.
 - Pair `Conversation.Root` with `MessageList.Root` and `Composer.Root` for the canonical thread surface.
 
+## See also
+
+- Continue with [Message list](/x/react-chat/unstyled/message-list/) for the scrolling and history behavior inside the thread.
+- Continue with [Indicators](/x/react-chat/unstyled/indicators/) for thread-level affordances such as typing feedback.
+- Continue with [Two-pane inbox](/x/react-chat/unstyled/examples/two-pane-inbox/) for the full thread-in-layout demo.
+
 ## API
 
 - [ConversationRoot](/x/api/chat/conversation-root/)
@@ -131,9 +137,3 @@ It is intentionally light on policy so the app can decide which actions belong t
 - [ConversationTitle](/x/api/chat/conversation-title/)
 - [ConversationSubtitle](/x/api/chat/conversation-subtitle/)
 - [ConversationHeaderActions](/x/api/chat/conversation-header-actions/)
-
-## See also
-
-- Continue with [Message list](/x/react-chat/unstyled/message-list/) for the scrolling and history behavior inside the thread.
-- Continue with [Indicators](/x/react-chat/unstyled/indicators/) for thread-level affordances such as typing feedback.
-- Continue with [Two-pane inbox](/x/react-chat/unstyled/examples/two-pane-inbox/) for the full thread-in-layout demo.

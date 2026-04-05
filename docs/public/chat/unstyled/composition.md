@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled composition
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 components: ChatRoot, ChatLayout
 githubLabel: 'scope: chat'
 ---
@@ -9,8 +9,6 @@ githubLabel: 'scope: chat'
 # Chat - Unstyled composition
 
 Compose a complete chat UI from the unstyled namespaces while keeping styling decisions in your own code.
-
-
 
 ```tsx
 import * as React from 'react';
@@ -22,7 +20,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -151,7 +149,6 @@ export default function MinimalUnstyledShell() {
     </Chat.Root>
   );
 }
-
 ```
 
 The canonical unstyled shell combines a provider-backed root, a pane layout, a conversation rail, a thread view, a message list, and a composer.
@@ -164,7 +161,7 @@ import {
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 
 function ChatSurface(props: ChatRootProps) {
   return (

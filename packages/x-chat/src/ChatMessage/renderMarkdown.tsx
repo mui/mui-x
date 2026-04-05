@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { normalizeMarkdownForRender } from '@mui/x-chat-unstyled/internals';
+import { normalizeMarkdownForRender } from '@mui/x-chat-headless/internals';
 import { ChatCodeBlock } from '../ChatCodeBlock';
 
 // ---------------------------------------------------------------------------

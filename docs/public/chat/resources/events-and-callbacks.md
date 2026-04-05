@@ -10,8 +10,6 @@ components: ChatBox
 
 <p class="description">Respond to streaming lifecycle events, tool calls, data chunks, and errors using callback props on <code>ChatProvider</code> and <code>ChatBox</code>.</p>
 
-
-
 `ChatProvider` (and by extension `ChatBox`) exposes four callback props that fire at key moments in the chat lifecycle.
 Use them for logging, analytics, side effects, and error handling without modifying the adapter.
 
@@ -118,7 +116,7 @@ type ChatOnData = (part: ChatDataMessagePart) => void;
 <ChatBox
   adapter={adapter}
   onData={(part) => {
-    if (part.dataType === 'progress') {
+    if (part.type === 'progress') {
       setProgressPercent(part.data.percent);
     }
   }}
@@ -155,8 +153,10 @@ type ChatOnError = (error: ChatError) => void;
 ### The `ChatError` type
 
 ```ts
+type ChatErrorCode = 'HISTORY_ERROR' | 'SEND_ERROR' | 'STREAM_ERROR' | 'REALTIME_ERROR';
+
 interface ChatError {
-  code: string; // machine-readable error code
+  code: ChatErrorCode; // machine-readable error code
   message: string; // human-readable description
   source: ChatErrorSource; // where the error originated
   recoverable: boolean; // whether the runtime can continue

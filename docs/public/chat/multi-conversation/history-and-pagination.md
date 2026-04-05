@@ -10,13 +10,11 @@ components: ChatMessageList
 
 <p class="description">Load older messages on demand using cursor-based pagination through the adapter's <code>listMessages</code> method.</p>
 
-
-
 When working with multi-conversation layouts, each conversation typically has a message history stored on the server. The `listMessages` adapter method lets you load that history page by page using cursor-based pagination.
 
 ## The `listMessages` adapter method
 
-Implement `listMessages` to load message history when the user opens a conversation. The runtime calls it whenever `activeConversationId` changes to a conversation that has no messages in the store yet.
+Implement `listMessages` to load message history when the user opens a conversation. The runtime calls it whenever `activeConversationId` changes to a non-null conversation, clearing any previously loaded messages before fetching the new page.
 
 ```ts
 interface ChatListMessagesInput<Cursor> {
@@ -78,7 +76,7 @@ The cursor type flows automatically through `ChatBox`, the store, hooks, and all
 
 ## The `hasMoreHistory` state
 
-When `listMessages` returns `hasMore: true`, the runtime sets `hasMoreHistory` to `true` in the store. This flag drives the "Load earlier messages" affordance in the message list.
+When `listMessages` returns `hasMore: true`, the runtime sets `hasMoreHistory` to `true` in the store. This flag tells the message list that an additional page of history can be fetched when the user scrolls to the top.
 
 The normalized store tracks history pagination state:
 
@@ -89,19 +87,19 @@ The normalized store tracks history pagination state:
 
 ## Loading older messages
 
-When `hasMoreHistory` is `true`, `ChatBox` shows a "Load earlier messages" control at the top of the message list. Clicking it calls `listMessages` again with the stored `historyCursor`.
+When `hasMoreHistory` is `true`, the message list automatically calls `listMessages` with the stored `historyCursor` as soon as the user scrolls to the top of the list. There is no separate button rendered by `ChatBox`; the load is triggered by the scroll position.
 
 The flow works as follows:
 
 1. User opens a conversation — runtime calls `listMessages({ conversationId })`.
 2. Adapter returns messages plus `{ cursor: nextCursor, hasMore: true }`.
 3. Runtime stores messages, sets `hasMoreHistory: true` and `historyCursor: nextCursor`.
-4. User scrolls to the top and triggers load — runtime calls `listMessages({ conversationId, cursor: nextCursor })`.
-5. Adapter returns the next page. If `hasMore: false`, the "load more" control disappears.
+4. User scrolls to the top — runtime automatically calls `listMessages({ conversationId, cursor: nextCursor })`.
+5. Adapter returns the next page. If `hasMore: false`, no further automatic loads are triggered.
 
 ## History loading indicator
 
-While `listMessages` is in flight, the runtime enters a history-loading state. The message list renders a loading indicator at the top of the scroll area. This happens automatically when using `ChatBox`.
+While `listMessages` is in flight, the runtime blocks duplicate requests (a debounce guard prevents overlapping loads). However, `ChatBox` and `ChatMessageList` do not render a built-in loading indicator during history fetches. If you want to show a spinner or skeleton at the top of the list while older messages are loading, implement it yourself using the `overlay` prop on `ChatMessageList` combined with the `hasMoreHistory` and `isStreaming` values from `useChat`.
 
 ## Error handling
 

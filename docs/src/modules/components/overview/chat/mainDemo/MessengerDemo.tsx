@@ -79,6 +79,28 @@ function msg(
   };
 }
 
+function msgWithFile(
+  conversationId: string,
+  role: 'user' | 'assistant',
+  author: ChatUser,
+  file: { url: string; mediaType: string; filename: string },
+  caption: string | null,
+  createdAt: string,
+): ChatMessage {
+  return {
+    id: randomId(),
+    conversationId,
+    role,
+    status: 'sent',
+    createdAt,
+    author,
+    parts: [
+      { type: 'file', mediaType: file.mediaType, url: file.url, filename: file.filename },
+      ...(caption ? [{ type: 'text' as const, text: caption }] : []),
+    ],
+  };
+}
+
 // --- Conversation IDs --------------------------------------------------------
 
 const aliceConvId = randomId();
@@ -91,30 +113,30 @@ const messengerConversations: ChatConversation[] = [
   {
     id: groupConvId,
     title: 'Weekend Hiking',
-    subtitle: 'Priya: I can bring snacks!',
+    subtitle: 'You: Yes! Charging it tonight 🔋',
     avatarUrl: createAvatarDataUrl('WH', '#2e7d32'),
     participants: [you, alice, marco, priya],
     readState: 'unread',
-    unreadCount: 3,
-    lastMessageAt: '2026-03-31T11:20:00.000Z',
+    unreadCount: 5,
+    lastMessageAt: '2026-03-31T12:05:00.000Z',
   },
   {
     id: aliceConvId,
     title: 'Alice Chen',
-    subtitle: 'Sounds good, see you there!',
+    subtitle: 'Alice: See you Friday 🎶',
     participants: [you, alice],
-    readState: 'read',
-    unreadCount: 0,
-    lastMessageAt: '2026-03-31T09:45:00.000Z',
+    readState: 'unread',
+    unreadCount: 3,
+    lastMessageAt: '2026-03-31T10:02:00.000Z',
   },
   {
     id: marcoConvId,
     title: 'Marco Diaz',
-    subtitle: 'Let me know what you think',
+    subtitle: 'Marco: Let me know when you start!',
     participants: [you, marco],
     readState: 'unread',
-    unreadCount: 1,
-    lastMessageAt: '2026-03-30T18:30:00.000Z',
+    unreadCount: 3,
+    lastMessageAt: '2026-03-30T18:43:00.000Z',
   },
 ];
 
@@ -152,6 +174,41 @@ const messengerThreads: Record<string, ChatMessage[]> = {
       '2026-03-31T09:30:00.000Z',
     ),
     msg(aliceConvId, 'assistant', alice, 'Sounds good, see you there!', '2026-03-31T09:45:00.000Z'),
+    msgWithFile(
+      aliceConvId,
+      'assistant',
+      alice,
+      {
+        url: 'https://picsum.photos/seed/concert-stage/800/500',
+        mediaType: 'image/jpeg',
+        filename: 'concert-stage.jpg',
+      },
+      'Look what the stage looked like last year 😍',
+      '2026-03-31T09:50:00.000Z',
+    ),
+    msg(
+      aliceConvId,
+      'assistant',
+      alice,
+      'The light show was absolutely insane',
+      '2026-03-31T09:51:00.000Z',
+    ),
+    msg(
+      aliceConvId,
+      'assistant',
+      alice,
+      'Front row energy the whole night',
+      '2026-03-31T09:52:00.000Z',
+    ),
+    msg(aliceConvId, 'user', you, 'Wow, we are SO ready for this!', '2026-03-31T09:55:00.000Z'),
+    msg(
+      aliceConvId,
+      'user',
+      you,
+      'Grabbing earplugs just in case haha',
+      '2026-03-31T09:56:00.000Z',
+    ),
+    msg(aliceConvId, 'assistant', alice, 'See you Friday 🎶', '2026-03-31T10:02:00.000Z'),
   ],
 
   // 1:1 with Marco — book recommendation
@@ -175,9 +232,45 @@ const messengerThreads: Record<string, ChatMessage[]> = {
       marcoConvId,
       'assistant',
       marco,
-      "Humanity finds a terraformed planet, but evolution took an unexpected turn. It's wild. Let me know what you think.",
+      "Humanity finds a terraformed planet, but evolution took an unexpected turn. It's wild.",
       '2026-03-30T18:30:00.000Z',
     ),
+    msgWithFile(
+      marcoConvId,
+      'assistant',
+      marco,
+      {
+        url: 'https://picsum.photos/seed/bookcover-cot/300/450',
+        mediaType: 'image/jpeg',
+        filename: 'children-of-time.jpg',
+      },
+      'Check out the cover art — won the Arthur C. Clarke Award',
+      '2026-03-30T18:35:00.000Z',
+    ),
+    msg(
+      marcoConvId,
+      'assistant',
+      marco,
+      "There's also a sequel — Children of Memory",
+      '2026-03-30T18:36:00.000Z',
+    ),
+    msg(
+      marcoConvId,
+      'assistant',
+      marco,
+      'Came out in 2023, just as good',
+      '2026-03-30T18:37:00.000Z',
+    ),
+    msg(marcoConvId, 'user', you, 'Three books to read, haha', '2026-03-30T18:40:00.000Z'),
+    msg(
+      marcoConvId,
+      'user',
+      you,
+      'Worth it though, adding them all to my list',
+      '2026-03-30T18:41:00.000Z',
+    ),
+    msg(marcoConvId, 'assistant', marco, 'Worth every page, trust me!', '2026-03-30T18:42:00.000Z'),
+    msg(marcoConvId, 'assistant', marco, 'Let me know when you start!', '2026-03-30T18:43:00.000Z'),
   ],
 
   // Group chat — planning a weekend hike
@@ -226,6 +319,49 @@ const messengerThreads: Record<string, ChatMessage[]> = {
     ),
     msg(groupConvId, 'assistant', marco, 'Works for me.', '2026-03-31T11:10:00.000Z'),
     msg(groupConvId, 'assistant', priya, 'I can bring snacks!', '2026-03-31T11:20:00.000Z'),
+    msgWithFile(
+      groupConvId,
+      'user',
+      you,
+      {
+        url: 'https://picsum.photos/seed/eagle-creek-trail/800/500',
+        mediaType: 'image/jpeg',
+        filename: 'trail-map.jpg',
+      },
+      'Found the trail map — waterfall lookout is about halfway through',
+      '2026-03-31T11:25:00.000Z',
+    ),
+    msg(
+      groupConvId,
+      'assistant',
+      alice,
+      'Oh nice! That waterfall is gorgeous',
+      '2026-03-31T11:28:00.000Z',
+    ),
+    msg(groupConvId, 'assistant', marco, 'How long is the full loop?', '2026-03-31T11:30:00.000Z'),
+    msg(groupConvId, 'assistant', marco, 'Asking for my legs 😅', '2026-03-31T11:31:00.000Z'),
+    msg(groupConvId, 'assistant', priya, 'Haha same question', '2026-03-31T11:32:00.000Z'),
+    msg(
+      groupConvId,
+      'assistant',
+      priya,
+      "I'll bring extra trail mix just in case 😄",
+      '2026-03-31T11:33:00.000Z',
+    ),
+    msg(
+      groupConvId,
+      'assistant',
+      alice,
+      'Should we bring a portable speaker?',
+      '2026-03-31T11:45:00.000Z',
+    ),
+    msg(
+      groupConvId,
+      'user',
+      you,
+      'Yes! I have one — charging it tonight 🔋',
+      '2026-03-31T12:05:00.000Z',
+    ),
   ],
 };
 
@@ -509,6 +645,9 @@ export default function MessengerDemo() {
           searchValue,
           onSearchChange: setSearchValue,
         } as React.ComponentProps<typeof MessengerConversationSidebar>,
+        composerRoot: {
+          variant: 'compact',
+        },
       }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {

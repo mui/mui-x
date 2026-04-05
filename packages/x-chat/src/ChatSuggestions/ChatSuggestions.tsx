@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SuggestionsRoot, type SuggestionsRootProps } from '@mui/x-chat-unstyled';
+import { SuggestionsRoot, type SuggestionsRootProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatSuggestionsUtilityClasses,

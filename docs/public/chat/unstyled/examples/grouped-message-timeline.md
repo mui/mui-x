@@ -1,7 +1,7 @@
 ---
 title: Chat - Grouped message timeline
 productId: x-chat
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -30,7 +30,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   demoUsers,
@@ -245,7 +245,6 @@ export default function GroupedMessageTimeline() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Key primitives

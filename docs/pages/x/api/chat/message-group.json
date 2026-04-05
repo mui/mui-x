@@ -2,8 +2,8 @@
   "props": {},
   "name": "MessageGroup",
   "imports": [
-    "import { MessageGroup } from '@mui/x-chat-unstyled/message-group';",
-    "import { MessageGroup } from '@mui/x-chat-unstyled';"
+    "import { MessageGroup } from '@mui/x-chat-headless/message-group';",
+    "import { MessageGroup } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "group", "description": "", "class": null },
@@ -13,7 +13,7 @@
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiMessageGroup",
-  "filename": "/packages/x-chat-unstyled/src/message-group/MessageGroup.tsx",
+  "filename": "/packages/x-chat-headless/src/message-group/MessageGroup.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/unstyled/messages/\">Unstyled messages</a></li></ul>",
   "cssComponent": false

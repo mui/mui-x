@@ -10,8 +10,6 @@ components: ChatMessageContent
 
 <p class="description">Display the LLM's chain-of-thought or thinking trace using <code>ChatReasoningMessagePart</code> and the reasoning stream chunks.</p>
 
-
-
 Many large language models expose a "thinking" or "reasoning" trace alongside their final response. The Chat component supports streaming and displaying this reasoning content through dedicated chunk types and a specialized message part.
 
 ## `ChatReasoningMessagePart`

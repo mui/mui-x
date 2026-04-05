@@ -31,7 +31,7 @@ import {
   type ChatMessage as ChatMessageModel,
   type ChatUser,
 } from '@mui/x-chat/headless';
-import { ChatVariantProvider } from '@mui/x-chat/unstyled';
+import { ChatVariantProvider } from '@mui/x-chat/headless';
 import { randomId } from '../../../../../../data/chat/material/examples/shared/demoUtils';
 
 // --- Avatar helper -----------------------------------------------------------

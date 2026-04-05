@@ -10,8 +10,6 @@ components: ChatRoot, ChatLayout
 
 <p class="description">Install <code>@mui/x-chat</code> and render a fully styled, theme-aware chat interface in minutes.</p>
 
-
-
 ## Installation
 
 Install the package using your preferred package manager:
@@ -139,7 +137,7 @@ const theme = createTheme({
 
 ```text
 @mui/x-chat
-  -> @mui/x-chat/unstyled
+  -> @mui/x-chat/headless
        -> @mui/x-chat/headless
 ```
 
@@ -154,19 +152,19 @@ Each layer builds on the one below it:
 | If you want…                                                                   | Use                    |
 | :----------------------------------------------------------------------------- | :--------------------- |
 | A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`          |
-| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat/unstyled` |
+| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat/headless` |
 | Complete control over DOM structure with only React state and hooks            | `@mui/x-chat/headless` |
 
 ### Package boundary
 
-`@mui/x-chat` re-exports `@mui/x-chat/headless` and `@mui/x-chat/unstyled` through dedicated entry points:
+`@mui/x-chat` re-exports `@mui/x-chat/headless` and `@mui/x-chat/headless` through dedicated entry points:
 
 ```tsx
 // Headless hooks and types
 import { useChat, useChatComposer } from '@mui/x-chat/headless';
 
 // Unstyled structural primitives
-import { Chat, MessageList } from '@mui/x-chat/unstyled';
+import { Chat, MessageList } from '@mui/x-chat/headless';
 ```
 
 This means you can mix the styled layer with lower-level primitives in the same application.

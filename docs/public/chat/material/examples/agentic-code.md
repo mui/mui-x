@@ -543,7 +543,6 @@ export default function AgenticCode() {
     />
   );
 }
-
 ```
 
 ## How it works
@@ -1208,7 +1207,6 @@ export default function ToolStylingA() {
     />
   );
 }
-
 ```
 
 ### Block themes
@@ -1232,7 +1230,7 @@ import type {
   ChatMessageChunk,
   ChatMessagePart,
 } from '@mui/x-chat/headless';
-import type { ToolPartSlotProps } from '@mui/x-chat/unstyled';
+import type { ToolPartSlotProps } from '@mui/x-chat/headless';
 import {
   createChunkStream,
   randomId,
@@ -1848,7 +1846,6 @@ export default function ToolStylingB() {
     />
   );
 }
-
 ```
 
 ### Custom renderer
@@ -2529,7 +2526,6 @@ export default function ToolStylingC() {
     />
   );
 }
-
 ```
 
 ## API

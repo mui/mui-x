@@ -6,12 +6,12 @@ export type {
   ChatBoxSlotProps,
   ChatBoxFeatures,
 } from './ChatBox/ChatBox.types';
-export type { ChatVariant, ChatDensity } from '@mui/x-chat-unstyled';
+export type { ChatVariant, ChatDensity } from '@mui/x-chat-headless';
 export type {
   ChatAttachmentRejection,
   ChatAttachmentRejectionReason,
   ChatAttachmentsConfig,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat-headless';
 export { chatBoxClasses, getChatBoxUtilityClass } from './ChatBox/chatBoxClasses';
 export type { ChatBoxClasses, ChatBoxClassKey } from './ChatBox/chatBoxClasses';
 
@@ -106,6 +106,7 @@ export { ChatMessageContent } from './ChatMessage/ChatMessageContent';
 export type { ChatMessageContentProps } from './ChatMessage/ChatMessageContent';
 export { ChatMessageMeta } from './ChatMessage/ChatMessageMeta';
 export type { ChatMessageMetaProps } from './ChatMessage/ChatMessageMeta';
+export { ChatMessageInlineMeta } from './ChatMessage/ChatMessageInlineMeta';
 export { ChatMessageActions } from './ChatMessage/ChatMessageActions';
 export type { ChatMessageActionsProps } from './ChatMessage/ChatMessageActions';
 export { ChatMessageGroup } from './ChatMessage/ChatMessageGroup';

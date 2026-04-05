@@ -2,13 +2,13 @@
   "props": {},
   "name": "MessageAuthorLabel",
   "imports": [
-    "import { MessageAuthorLabel } from '@mui/x-chat-unstyled/message';",
-    "import { MessageAuthorLabel } from '@mui/x-chat-unstyled';"
+    "import { MessageAuthorLabel } from '@mui/x-chat-headless/message';",
+    "import { MessageAuthorLabel } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "authorLabel", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiMessageAuthorLabel",
-  "filename": "/packages/x-chat-unstyled/src/message/MessageAuthorLabel.tsx",
+  "filename": "/packages/x-chat-headless/src/message/MessageAuthorLabel.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/unstyled/messages/\">Unstyled messages</a></li></ul>",
   "cssComponent": false

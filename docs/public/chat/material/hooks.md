@@ -101,7 +101,6 @@ export default function ChatBoxWithHooks() {
     </ChatBox>
   );
 }
-
 ```
 
 ## State hooks

@@ -9,7 +9,7 @@ import {
   type ComposerRootProps,
   type ChatAttachmentsConfig,
   type ChatVariant,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   chatComposerClasses,
@@ -62,34 +62,78 @@ export interface ChatComposerProps extends ComposerRootProps {
 const ChatComposerStyled = styled('form', {
   name: 'MuiChatComposer',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
+  overridesResolver: (props, styles) => [
+    styles.root,
+    props.ownerState?.disabled && styles.disabled,
+  ],
 })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  position: 'relative',
+  zIndex: 1,
   gap: theme.spacing(0.5),
-  margin: theme.spacing(1),
   padding: theme.spacing(1, 1.5),
   border: '1px solid',
   borderColor: (theme.vars || theme).palette.divider,
-  borderRadius: (theme.shape.borderRadius as number) * 3,
+  borderRadius: (theme.vars || theme).shape.borderRadius,
   backgroundColor: (theme.vars || theme).palette.action.hover,
   boxSizing: 'border-box',
   flexShrink: 0,
+  margin: theme.spacing(0, 1, 1),
+  transition: theme.transitions.create(['border-color', 'box-shadow'], {
+    duration: theme.transitions.duration.short,
+  }),
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+  },
+  '&:focus-within:not([data-disabled])': {
+    borderColor: (theme.vars || theme).palette.primary.main,
+    boxShadow: `0 0 0 1px ${(theme.vars || theme).palette.primary.main}`,
+  },
+  '&[data-disabled]': {
+    backgroundColor: (theme.vars || theme).palette.action.disabledBackground,
+    opacity: (theme.vars || theme).palette.action.disabledOpacity,
+    pointerEvents: 'none',
+  },
   [`&.${chatComposerClasses.variantCompact}`]: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     flexWrap: 'wrap',
-    padding: theme.spacing(0.5, 1),
     gap: theme.spacing(0.5),
+    borderRadius: (theme.vars || theme).shape.borderRadius,
+    backgroundColor: (theme.vars || theme).palette.background.paper,
+    border: '1px solid',
+    borderColor:
+      (theme.vars || theme).palette.mode === 'dark' ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)',
+    margin: theme.spacing(0, 1, 1),
+    padding: theme.spacing(0.5),
+    boxShadow: 'none',
+    '&:focus-within:not([data-disabled])': {
+      borderColor: (theme.vars || theme).palette.primary.main,
+      boxShadow: `0 0 0 1px ${(theme.vars || theme).palette.primary.main}`,
+    },
     [`& .${chatComposerClasses.attachmentList}`]: {
       flexBasis: '100%',
       order: -1,
     },
+    [`& .${chatComposerClasses.attachButton}`]: {
+      borderRadius: '50%',
+      width: 36,
+      height: 36,
+    },
     [`& .${chatComposerClasses.sendButton}`]: {
-      borderRadius: theme.shape.borderRadius,
-      padding: theme.spacing(1, 2),
-      width: 'auto',
-      height: 'auto',
+      borderRadius: (theme.vars || theme).shape.borderRadius,
+      width: 36,
+      height: 36,
+      padding: 0,
+      backgroundColor: (theme.vars || theme).palette.primary.main,
+      color: (theme.vars || theme).palette.primary.contrastText,
+      '&:disabled': {
+        backgroundColor: (theme.vars || theme).palette.primary.main,
+        color: (theme.vars || theme).palette.primary.contrastText,
+        opacity: (theme.vars || theme).palette.action.disabledOpacity,
+        cursor: 'not-allowed',
+      },
     },
   },
 }));
@@ -190,6 +234,7 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
       children,
       features,
       variant: variantProp,
+      disabled = false,
       ...other
     } = props;
     const contextVariant = useChatVariant();
@@ -208,6 +253,7 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
     return (
       <ComposerRoot
         ref={ref}
+        disabled={disabled}
         {...other}
         attachmentConfig={attachmentConfig}
         slots={{
@@ -217,7 +263,12 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
         slotProps={{
           ...slotProps,
           root: {
-            className: clsx(classes.root, isCompact && classes.variantCompact, className),
+            className: clsx(
+              classes.root,
+              isCompact && classes.variantCompact,
+              disabled && classes.disabled,
+              className,
+            ),
             sx,
             ...slotProps?.root,
           } as any,

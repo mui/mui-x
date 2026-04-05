@@ -12,6 +12,7 @@ export type ChatMessageStatus =
   | 'sending'
   | 'streaming'
   | 'sent'
+  | 'read'
   | 'error'
   | 'cancelled';
 

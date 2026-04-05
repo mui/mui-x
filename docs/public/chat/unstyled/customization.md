@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled customization
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -19,7 +19,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -817,12 +817,11 @@ export default function SlotCustomization() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Customization model
 
-`@mui/x-chat/unstyled` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
+`@mui/x-chat/headless` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
 
 The main tools are:
 

@@ -64,13 +64,13 @@ Register callbacks on `ChatProvider` to observe lifecycle events:
 - `retry()` removes failed assistant messages and resends the original user turn
 - Callbacks (`onData`, `onFinish`, `onError`) provide lifecycle observability without modifying the store
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Streaming](/x/react-chat/headless/streaming/) for the full chunk protocol reference
 - [State and store](/x/react-chat/headless/state/) for the error model and callback signatures
 - [Message parts](/x/react-chat/headless/examples/message-parts/) for rendering multi-part responses
 - [Tool call events](/x/react-chat/headless/examples/tool-call-events/) for tool-specific lifecycle callbacks
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

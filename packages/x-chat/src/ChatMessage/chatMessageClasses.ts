@@ -23,6 +23,10 @@ export interface ChatMessageClasses {
   groupAuthorName: string;
   /** Class applied to the group timestamp element (compact variant only). */
   groupTimestamp: string;
+  /** Styles applied to the inline meta spacer element (default variant). */
+  inlineMetaSpacer: string;
+  /** Styles applied to the inline meta container element (default variant). */
+  inlineMeta: string;
   /** Styles applied to the date divider element. */
   dateDivider: string;
   /** Applied when the message role is 'user' */
@@ -52,6 +56,8 @@ export const chatMessageClasses: ChatMessageClasses = generateUtilityClasses('Mu
   'group',
   'groupAuthorName',
   'groupTimestamp',
+  'inlineMetaSpacer',
+  'inlineMeta',
   'dateDivider',
   'roleUser',
   'roleAssistant',
@@ -70,6 +76,8 @@ const slots: Record<ChatMessageClassKey, string[]> = {
   group: ['group'],
   groupAuthorName: ['groupAuthorName'],
   groupTimestamp: ['groupTimestamp'],
+  inlineMetaSpacer: ['inlineMetaSpacer'],
+  inlineMeta: ['inlineMeta'],
   dateDivider: ['dateDivider'],
   roleUser: ['roleUser'],
   roleAssistant: ['roleAssistant'],

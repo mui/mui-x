@@ -9,7 +9,7 @@ import {
   type ChatVariant,
   type ChatDensity,
   type ChatAttachmentsConfig,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat-headless';
 import type { ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
 import type { ChatConversationHeaderProps } from '../ChatConversation/ChatConversationHeader';
 import type { ChatConversationTitleProps } from '../ChatConversation/ChatConversationTitle';

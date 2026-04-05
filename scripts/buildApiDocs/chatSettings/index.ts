@@ -56,8 +56,8 @@ export default chatApiPages;
       entryPointPath: 'src/index.ts',
     },
     {
-      name: 'x-chat-unstyled',
-      rootPath: path.join(process.cwd(), 'packages/x-chat-unstyled'),
+      name: 'x-chat-headless',
+      rootPath: path.join(process.cwd(), 'packages/x-chat-headless'),
       entryPointPath: 'src/index.ts',
     },
   ],

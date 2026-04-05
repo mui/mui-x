@@ -8,16 +8,16 @@ components: ChatRoot
 
 # Chat - Tailwind CSS
 
-<p class="description">Style chat components using Tailwind CSS utility classes with the unstyled primitives from <code>@mui/x-chat/unstyled</code>.</p>
+<p class="description">Style chat components using Tailwind CSS utility classes with the structural primitives from <code>@mui/x-chat</code>.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-The unstyled layer (`@mui/x-chat/unstyled`) ships structural chat primitives with zero built-in styles.
+The chat primitives ship structural components with zero built-in styles.
 Each component renders semantic HTML elements with `data-*` attributes that reflect component state, making them a natural fit for Tailwind CSS utility classes.
 
 ## Installation
 
-Install the unstyled package alongside Tailwind:
+Install the package alongside Tailwind:
 
 <codeblock storageKey="package-manager">
 
@@ -35,13 +35,9 @@ yarn add @mui/x-chat
 
 </codeblock>
 
-:::info
-`@mui/x-chat/unstyled` is a subpath export of the main `@mui/x-chat` package. No separate package install is needed.
-:::
-
 ## Namespace API
 
-Unstyled components are available as namespace exports for clean dot-notation usage:
+Structural primitives are available as namespace exports for clean dot-notation usage:
 
 ```tsx
 import {
@@ -52,7 +48,7 @@ import {
   Conversation,
   ConversationList,
   Indicators,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 
 // Usage
 <Chat.Root>
@@ -71,7 +67,7 @@ import {
 
 ## Applying Tailwind classes
 
-Pass `className` to any unstyled component:
+Pass `className` to any structural primitive:
 
 ```tsx
 <Composer.Root className="flex flex-col gap-1 border-t border-gray-200 p-3 bg-white">
@@ -91,35 +87,35 @@ Pass `className` to any unstyled component:
 
 ## Data attributes
 
-Every unstyled component exposes `data-*` attributes that reflect its current state.
+Every structural primitive exposes `data-*` attributes that reflect its current state.
 Use Tailwind's attribute selectors to style state variations without JavaScript:
 
 ```tsx
 {
-  /* The send button sets data-disabled when the composer is empty or streaming */
+  /* The send button sets data-disabled when the composer has the disabled prop */
 }
 <Composer.SendButton className="bg-blue-600 text-white data-[disabled]:opacity-40 data-[disabled]:cursor-not-allowed" />;
 
 {
-  /* Message root sets data-author="self" or data-author="other" */
+  /* Message root sets data-role="user" or data-role="assistant" */
 }
-<Message.Root className="flex gap-3 data-[author=self]:flex-row-reverse" />;
+<Message.Root className="flex gap-3 data-[role=user]:flex-row-reverse" />;
 
 {
-  /* Typing indicator sets data-visible when the assistant is responding */
+  /* Typing indicator sets data-count when users are typing; returns null when count=0 */
 }
-<Indicators.TypingIndicator className="hidden data-[visible]:flex items-center gap-1 text-sm text-gray-500" />;
+<Indicators.TypingIndicator className="flex items-center gap-1 text-sm text-gray-500" />;
 ```
 
 ### Common data attributes
 
-| Component               | Attribute        | Values                           | Description                         |
-| :---------------------- | :--------------- | :------------------------------- | :---------------------------------- |
-| `Message.Root`          | `data-author`    | `"self"`, `"other"`              | Current user vs. other participants |
-| `Message.Root`          | `data-status`    | `"sending"`, `"sent"`, `"error"` | Message delivery status             |
-| `Composer.SendButton`   | `data-disabled`  | present / absent                 | Empty input or streaming            |
-| `Composer.Root`         | `data-streaming` | present / absent                 | Response in progress                |
-| `ConversationList.Item` | `data-active`    | present / absent                 | Currently selected conversation     |
+| Component               | Attribute           | Values                                                                   | Description                         |
+| :---------------------- | :------------------ | :----------------------------------------------------------------------- | :---------------------------------- |
+| `Message.Root`          | `data-role`         | `"user"`, `"assistant"`                                                  | Message sender role                 |
+| `Message.Root`          | `data-status`       | `"pending"`, `"sending"`, `"streaming"`, `"sent"`, `"read"`, `"error"`, `"cancelled"` | Message delivery status |
+| `Composer.SendButton`   | `data-disabled`     | present / absent                                                         | Composer has the `disabled` prop    |
+| `Composer.Root`         | `data-is-streaming` | present / absent                                                         | Response in progress                |
+| `ConversationList.Item` | `data-selected`     | present / absent                                                         | Currently selected conversation     |
 
 ## Slot props for custom elements
 
@@ -139,20 +135,9 @@ Use the `slots` and `slotProps` props to replace inner elements while keeping be
 />
 ```
 
-## When to use unstyled vs. styled
-
-| Scenario                                      | Recommendation                                 |
-| :-------------------------------------------- | :--------------------------------------------- |
-| Material UI project, minimal customization    | Use `@mui/x-chat` (styled)                     |
-| Material UI project, heavy slot customization | Use `@mui/x-chat` with `slots` and `slotProps` |
-| Tailwind CSS project                          | Use `@mui/x-chat/unstyled` + Tailwind classes  |
-| Custom design system / CSS Modules            | Use `@mui/x-chat/unstyled`                     |
-| Headless state only, fully custom rendering   | Use `@mui/x-chat/headless` hooks               |
-
-## API
-
 ## See also
 
-- [Unstyled Components](/x/react-chat/customization/unstyled/) for the full unstyled layer overview.
-- [Headless Hooks](/x/react-chat/customization/headless/) for building fully custom UIs with hooks only.
 - [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization.
+- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing sub-components entirely.
+
+## API

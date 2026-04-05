@@ -11,7 +11,7 @@ import {
   ChatMessageAvatar,
   ChatMessageContent,
   ChatMessageGroup,
-  ChatMessageMeta,
+  ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
@@ -77,8 +77,7 @@ function CustomChat() {
       <ChatMessageGroup key={id} messageId={id}>
         <ChatMessage messageId={id}>
           <ChatMessageAvatar />
-          <ChatMessageContent />
-          <ChatMessageMeta />
+          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
       </ChatMessageGroup>
     ),

@@ -12,7 +12,7 @@ components: ConversationRoot, ConversationHeader, ConversationTitle, Conversatio
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
-The thread pane is the single-conversation view in a chat interface. It combines a header area, a scrollable message log, and a composer into one cohesive surface. `@mui/x-chat` ships each region as a themed component that wraps the corresponding `@mui/x-chat/unstyled` primitive with `styled()` and Material UI theme tokens. Use `@mui/x-chat/unstyled` when you want the same structural primitives without Material styling, and `@mui/x-chat/headless` when you want runtime state and hooks without any prescribed UI structure.
+The thread pane is the single-conversation view in a chat interface. It combines a header area, a scrollable message log, and a composer into one cohesive surface. `@mui/x-chat` ships each region as a themed component built with `styled()` and Material UI theme tokens.
 
 The following demo shows the thread in action:
 
@@ -74,26 +74,7 @@ The `hasConversation` flag is particularly useful for hiding action buttons or s
 
 The most targeted customization is to replace the element type on one slot while keeping everything else:
 
-```tsx
-import { ChatConversationHeader } from '@mui/x-chat';
-import { styled } from '@mui/material/styles';
-
-const GradientHeader = styled('header')(({ theme }) => ({
-  background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
-  color: theme.palette.primary.contrastText,
-  '& *': { color: 'inherit' },
-}));
-
-function CustomHeader(props) {
-  return <ChatConversationHeader {...props} slots={{ header: GradientHeader }} />;
-}
-```
-
-Pass `CustomHeader` through `ChatBox`'s `slots.conversationHeader` prop:
-
-```tsx
-<ChatBox slots={{ conversationHeader: CustomHeader }} />
-```
+{{"demo": "GradientHeader.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ### Using ownerState in a custom title
 
@@ -124,7 +105,7 @@ function CustomConversationTitle(props) {
 
 ## Message list anatomy
 
-`ChatMessageList` wraps `MessageListRoot` from the unstyled layer with three styled slots: a flex column outer shell, a scrolling scroller, and a padded content container.
+`ChatMessageList` renders three styled slots: a flex column outer shell, a scrolling scroller, and a padded content container.
 
 ```tsx
 import { ChatMessageList, ChatMessageGroup } from '@mui/x-chat';
@@ -194,45 +175,7 @@ import {
 
 The recommended pattern for customizing the bubble is to wrap `ChatMessageContent` and replace only its inner `bubble` slot. This preserves part iteration, markdown rendering, tool-call renderers, and source citations:
 
-```tsx
-import { ChatBox, ChatMessageContent } from '@mui/x-chat';
-import Paper from '@mui/material/Paper';
-
-const PaperBubble = React.forwardRef(function PaperBubble(
-  { ownerState, ...props },
-  ref,
-) {
-  return (
-    <Paper
-      ref={ref}
-      elevation={ownerState?.role === 'user' ? 0 : 2}
-      {...props}
-      sx={{
-        ...props.sx,
-        px: 2,
-        py: 1.25,
-        borderRadius: 2,
-        bgcolor: ownerState?.role === 'user' ? 'primary.main' : 'background.paper',
-        color: ownerState?.role === 'user' ? 'primary.contrastText' : 'text.primary',
-      }}
-    />
-  );
-});
-
-const CustomMessageContent = React.forwardRef(
-  function CustomMessageContent(props, ref) {
-    return (
-      <ChatMessageContent
-        ref={ref}
-        {...props}
-        slots={{ ...props.slots, bubble: PaperBubble }}
-      />
-    );
-  },
-);
-
-<ChatBox slots={{ messageContent: CustomMessageContent }} />;
-```
+{{"demo": "PaperBubble.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 Forward `ref` and spread `...props` before your overrides so the wrapping pattern does not silently discard required props.
 
@@ -302,71 +245,13 @@ Use `slotProps` on `ChatBox` for light prop-only overrides that do not require a
 
 The `isStreaming` flag lets you replace the send icon with a stop icon while a response is in progress:
 
-```tsx
-import IconButton from '@mui/material/IconButton';
-import SendIcon from '@mui/icons-material/Send';
-import StopIcon from '@mui/icons-material/Stop';
-import { ChatComposerSendButton } from '@mui/x-chat';
-
-const AdaptiveSendButton = React.forwardRef(function AdaptiveSendButton(
-  { ownerState, ...props },
-  ref,
-) {
-  return (
-    <IconButton
-      ref={ref}
-      {...props}
-      aria-label={ownerState?.isStreaming ? 'Stop' : 'Send'}
-    >
-      {ownerState?.isStreaming ? <StopIcon /> : <SendIcon />}
-    </IconButton>
-  );
-});
-
-function CustomSendButton(props) {
-  return <ChatComposerSendButton {...props} slots={{ root: AdaptiveSendButton }} />;
-}
-
-<ChatBox slots={{ composerSendButton: CustomSendButton }} />;
-```
+{{"demo": "AdaptiveSendButton.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Accessing message state in custom children
 
 Custom children placed inside `ChatMessage` receive the message's `ownerState` through the slot system. When you need to read message state (role, streaming status, error) inside a deeply nested component, define a custom slot and accept `ownerState` as a prop:
 
-```tsx
-import { ChatMessageContent } from '@mui/x-chat';
-
-// A custom bubble slot that renders a colored status dot
-const BubbleWithStatus = React.forwardRef(function BubbleWithStatus(
-  { ownerState, children, ...props },
-  ref,
-) {
-  const dotColor = ownerState?.streaming
-    ? 'blue'
-    : ownerState?.error
-      ? 'red'
-      : ownerState?.status === 'sent'
-        ? 'green'
-        : 'transparent';
-
-  return (
-    <div ref={ref} {...props}>
-      {children}
-      <span style={{ color: dotColor, marginLeft: 4 }}>●</span>
-    </div>
-  );
-});
-
-function CustomMessageContent(props) {
-  return (
-    <ChatMessageContent
-      {...props}
-      slots={{ ...props.slots, bubble: BubbleWithStatus }}
-    />
-  );
-}
-```
+{{"demo": "BubbleWithStatus.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 The `ownerState` includes `role`, `status`, `streaming`, `error`, `isGrouped`, and `showAvatar` — the same fields listed in the `ChatMessage` ownerState table above.
 
@@ -376,65 +261,17 @@ For conversation-level state (the active conversation title, participants, etc.)
 
 When `ChatBox` slots are not enough — for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header instead of above the composer — you can assemble the thread from individual Material UI components directly.
 
-The following example shows a fully assembled thread pane without relying on `ChatBox` layout defaults:
+The following example shows a fully assembled thread pane without relying on `ChatBox` layout defaults. It inserts a custom warning banner between the header and the message list:
 
-```tsx
-import {
-  ChatConversation,
-  ChatConversationHeader,
-  ChatConversationTitle,
-  ChatConversationSubtitle,
-  ChatConversationHeaderActions,
-  ChatMessageList,
-  ChatMessageGroup,
-  ChatComposer,
-  ChatComposerTextArea,
-  ChatComposerToolbar,
-  ChatComposerSendButton,
-} from '@mui/x-chat';
-import Box from '@mui/material/Box';
+{{"demo": "ThreadRecomposition.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-function CustomThread() {
-  return (
-    <ChatConversation sx={{ height: '100%' }}>
-      <ChatConversationHeader>
-        <ChatConversationTitle />
-        <ChatConversationSubtitle />
-        <Box sx={{ flex: 1 }} />
-        <ChatConversationHeaderActions />
-      </ChatConversationHeader>
+Wrap your custom thread with a `ChatProvider` from `@mui/x-chat` to wire runtime state to your adapter.
 
-      {/* Custom pinned notice between header and messages */}
-      <Box
-        sx={{
-          px: 2,
-          py: 0.75,
-          bgcolor: 'warning.light',
-          color: 'warning.contrastText',
-          fontSize: 'caption.fontSize',
-        }}
-      >
-        Responses are AI-generated. Verify before acting.
-      </Box>
+## See also
 
-      <ChatMessageList
-        renderItem={({ id, index }) => (
-          <ChatMessageGroup index={index} messageId={id} />
-        )}
-      />
-
-      <ChatComposer>
-        <ChatComposerTextArea placeholder="Type a message…" />
-        <ChatComposerToolbar>
-          <ChatComposerSendButton />
-        </ChatComposerToolbar>
-      </ChatComposer>
-    </ChatConversation>
-  );
-}
-```
-
-Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter. If you want structural primitives instead of the fully themed Material components shown on this page, move one layer down to `@mui/x-chat/unstyled`.
+- [Conversation list](/x/react-chat/material/conversation-list/) for the companion sidebar component.
+- [Customization](/x/react-chat/material/customization/) for the complete slot and slotProps reference.
+- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for a runnable demo using a `Paper` bubble.
 
 ## API
 
@@ -443,10 +280,3 @@ Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire ru
 - [ConversationTitle](/x/api/chat/conversation-title/)
 - [ConversationSubtitle](/x/api/chat/conversation-subtitle/)
 - [ConversationHeaderActions](/x/api/chat/conversation-header-actions/)
-
-## See also
-
-- [Conversation list](/x/react-chat/material/conversation-list/) for the companion sidebar component.
-- [Customization](/x/react-chat/material/customization/) for the complete slot and slotProps reference.
-- [Unstyled thread](/x/react-chat/unstyled/thread/) for the primitive layer that this page builds on.
-- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for a runnable demo using a `Paper` bubble.

@@ -28,7 +28,7 @@ import {
 } from '@mui/x-chat';
 import { useMessageIds } from '@mui/x-chat/headless';
 import type { ChatAdapter } from '@mui/x-chat/headless';
-import { ChatRoot } from '@mui/x-chat/unstyled';
+import { ChatRoot } from '@mui/x-chat/headless';
 import {
   createChunkStream,
   createTextResponseChunks,
@@ -157,7 +157,6 @@ export default function NoConversationHistory() {
     </ChatRoot>
   );
 }
-
 ```
 
 ## How it works

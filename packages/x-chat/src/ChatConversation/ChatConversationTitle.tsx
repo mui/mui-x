@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import { ConversationTitle, type ConversationTitleProps } from '@mui/x-chat-unstyled';
+import { ConversationTitle, type ConversationTitleProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatConversationUtilityClasses,

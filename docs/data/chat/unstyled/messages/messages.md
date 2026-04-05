@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled messages
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 components: MessageRoot, MessageAvatar, MessageAuthorLabel, MessageContent, MessageMeta, MessageActions, MessageGroup, MessageListDateDivider
 githubLabel: 'scope: chat'
 ---
@@ -128,6 +128,12 @@ Rebuild more of the message surface when:
 - message actions need a different placement model
 - grouped and ungrouped messages need distinct markup
 
+## See also
+
+- Continue with [Message list](/x/react-chat/unstyled/message-list/) for ordering, date boundaries, and thread scrolling behavior.
+- Continue with [Customization](/x/react-chat/unstyled/customization/) for slot replacement patterns on message rows and subparts.
+- Continue with [Custom message part rendering](/x/react-chat/unstyled/examples/custom-message-part-rendering/) for the demo version of selective renderer replacement.
+
 ## API
 
 - [MessageRoot](/x/api/chat/message-root/)
@@ -138,9 +144,3 @@ Rebuild more of the message surface when:
 - [MessageAuthorLabel](/x/api/chat/message-author-label/)
 - [MessageActions](/x/api/chat/message-actions/)
 - [MessageListDateDivider](/x/api/chat/message-list-date-divider/)
-
-## See also
-
-- Continue with [Message list](/x/react-chat/unstyled/message-list/) for ordering, date boundaries, and thread scrolling behavior.
-- Continue with [Customization](/x/react-chat/unstyled/customization/) for slot replacement patterns on message rows and subparts.
-- Continue with [Custom message part rendering](/x/react-chat/unstyled/examples/custom-message-part-rendering/) for the demo version of selective renderer replacement.

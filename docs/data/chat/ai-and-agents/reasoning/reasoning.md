@@ -177,4 +177,3 @@ This produces a message with five parts in order: reasoning, tool, reasoning, to
 - [Tool Calling](/x/react-chat/ai-and-agents/tool-calling/) for the tool invocation lifecycle.
 - [Step Tracking](/x/react-chat/ai-and-agents/step-tracking/) for multi-step agent progress tracking.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full chunk protocol reference including reasoning chunks.
-- [State and store](/x/react-chat/customization/headless/) for `streamFlushInterval` and part renderer registration.

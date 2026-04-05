@@ -1,7 +1,7 @@
 ---
 title: Chat - Grouped message timeline
 productId: x-chat
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -51,11 +51,11 @@ This is especially useful in support timelines, collaboration surfaces, and assi
 - `MessageGroup` keeps neighbor comparison logic out of the page layer.
 - `groupingWindowMs` is a presentation decision, so it belongs near the message row composition rather than in the data model.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - Continue with [Messages](/x/react-chat/unstyled/messages/) for the message primitive reference.
 - Continue with [Custom message part rendering](/x/react-chat/unstyled/examples/custom-message-part-rendering/) when the row structure is correct but certain part types need a custom presentation.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

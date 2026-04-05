@@ -183,7 +183,7 @@ export const inboxThreads: Record<string, ChatMessage[]> = {
     createTextMessage({
       id: 'design-m1',
       conversationId: 'design',
-      role: 'assistant',
+      role: 'user',
       author: demoUsers.marco,
       createdAt: '2026-03-15T08:52:00.000Z',
       text: 'That also keeps focus restoration predictable when the active thread changes.',
@@ -193,7 +193,7 @@ export const inboxThreads: Record<string, ChatMessage[]> = {
     createTextMessage({
       id: 'ops-a1',
       conversationId: 'ops',
-      role: 'assistant',
+      role: 'user',
       author: demoUsers.priya,
       createdAt: '2026-03-14T17:12:00.000Z',
       text: 'The overnight backlog crossed 600 messages. Virtualization should be the default here.',
@@ -209,7 +209,7 @@ export const inboxThreads: Record<string, ChatMessage[]> = {
     createTextMessage({
       id: 'ops-a2',
       conversationId: 'ops',
-      role: 'assistant',
+      role: 'user',
       author: demoUsers.priya,
       createdAt: '2026-03-14T17:31:00.000Z',
       text: 'I will prepare a thread recipe that focuses only on history loading and unseen state.',
@@ -221,7 +221,7 @@ export const groupedTimelineMessages: ChatMessage[] = [
   createTextMessage({
     id: 'timeline-a1',
     conversationId: 'timeline',
-    role: 'assistant',
+    role: 'user',
     author: demoUsers.alice,
     createdAt: '2026-03-15T09:00:00.000Z',
     text: 'I reviewed the incident summary and grouped the first remediation steps.',
@@ -229,7 +229,7 @@ export const groupedTimelineMessages: ChatMessage[] = [
   createTextMessage({
     id: 'timeline-a2',
     conversationId: 'timeline',
-    role: 'assistant',
+    role: 'user',
     author: demoUsers.alice,
     createdAt: '2026-03-15T09:03:00.000Z',
     text: 'The access token mismatch explains the initial deployment confusion.',
@@ -237,7 +237,7 @@ export const groupedTimelineMessages: ChatMessage[] = [
   createTextMessage({
     id: 'timeline-a3',
     conversationId: 'timeline',
-    role: 'assistant',
+    role: 'user',
     author: demoUsers.alice,
     createdAt: '2026-03-15T09:12:00.000Z',
     text: 'Nine minutes later, the customer confirmed the reset worked.',

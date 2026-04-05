@@ -10,8 +10,6 @@ components: ChatSuggestions
 
 Display prompt suggestions in the empty state to help users get started with a conversation.
 
-
-
 Suggestions are clickable prompts that appear when the message list is empty.
 Clicking a suggestion pre-fills the composer with the suggestion text, giving users a starting point for the conversation.
 
@@ -97,7 +95,8 @@ This is useful when you want to conditionally show suggestions based on applicat
 
 ## Dynamic suggestions
 
-Since `suggestions` is a standard React prop, you can compute it dynamically:
+Since `suggestions` is a standard React prop, you can compute it dynamically.
+The example below loads user-specific suggestions after sign-in and updates them once available:
 
 ```tsx
 function App() {
@@ -105,6 +104,12 @@ function App() {
     'Get started',
     'View recent activity',
   ]);
+
+  React.useEffect(() => {
+    fetchUserSuggestions().then((personalized) => {
+      setSuggestions(personalized);
+    });
+  }, []);
 
   return <ChatBox adapter={adapter} suggestions={suggestions} />;
 }
@@ -118,8 +123,11 @@ When building a custom layout, use `ChatSuggestions` directly inside a `ChatRoot
 
 ```tsx
 import { ChatSuggestions } from '@mui/x-chat';
+import { ChatRoot } from '@mui/x-chat/headless';
 
-<ChatSuggestions suggestions={['Option A', 'Option B']} autoSubmit={false} />;
+<ChatRoot adapter={adapter}>
+  <ChatSuggestions suggestions={['Option A', 'Option B']} autoSubmit={false} />
+</ChatRoot>;
 ```
 
 The component renders a `role="group"` container with `aria-label` derived from the locale text system.

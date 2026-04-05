@@ -97,12 +97,12 @@ Wire composition events on your input element:
 - IME composition tracking prevents accidental submission during text input
 - `submit()` also blocks while a stream is already active, preventing double sends
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Hooks](/x/react-chat/headless/hooks/) for the full `useChatComposer()` API reference
 - [Streaming lifecycle](/x/react-chat/headless/examples/streaming-lifecycle/) for what happens after submission
 - [Minimal headless chat](/x/react-chat/headless/examples/minimal-chat/) for a simpler draft pattern without `useChatComposer()`
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

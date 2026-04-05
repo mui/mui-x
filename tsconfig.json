@@ -35,8 +35,6 @@
       "@mui/x-chat/*": ["./packages/x-chat/src/*"],
       "@mui/x-chat-headless": ["./packages/x-chat-headless/src"],
       "@mui/x-chat-headless/*": ["./packages/x-chat-headless/src/*"],
-      "@mui/x-chat-unstyled": ["./packages/x-chat-unstyled/src"],
-      "@mui/x-chat-unstyled/*": ["./packages/x-chat-unstyled/src/*"],
       // There is no root import on these packages
       // "@mui/x-scheduler": ["./packages/x-scheduler/src"],
       // "@mui/x-scheduler-premium": ["./packages/x-scheduler-premium/src"],

@@ -10,8 +10,6 @@ components: ChatMessageList, ChatMessageGroup
 
 Understand the ChatMessage data model and how messages render in a scrollable, grouped list.
 
-
-
 ## The ChatMessage data model
 
 Every message in the chat system is represented by the `ChatMessage` interface.
@@ -99,7 +97,7 @@ ChatMessageList                     ← scrollable container
 ## How messages render
 
 The `ChatMessageList` component is the scrollable region that renders conversation history.
-It wraps the `@mui/x-chat/unstyled` `MessageListRoot` primitive with Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
+It wraps the `@mui/x-chat/headless` `MessageListRoot` primitive with Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
 
 ### Message groups
 
@@ -193,7 +191,6 @@ export default function MessageGrouping() {
     />
   );
 }
-
 ```
 
 ### Date dividers
@@ -280,7 +277,6 @@ export default function DateDividerFormat() {
     />
   );
 }
-
 ```
 
 ### Auto-scrolling
@@ -337,7 +333,6 @@ export default function AutoScrollConfig() {
     </div>
   );
 }
-
 ```
 
 ## Standalone usage
@@ -420,7 +415,6 @@ export default function StandaloneMessageList() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## API

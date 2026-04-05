@@ -90,11 +90,11 @@ export default function App() {
 - Define the slot component **outside** the render function, or stabilize it with `React.useMemo`, to avoid remounting the header on every render.
 - Use `size="small"` on `Select` to match the default header height.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for replacing deeper sub-components
 - [Customization](/x/react-chat/material/customization/) for the full slot key reference
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

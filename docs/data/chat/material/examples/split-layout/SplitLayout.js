@@ -13,12 +13,12 @@ import {
   ChatMessageAvatar,
   ChatMessageContent,
   ChatMessageGroup,
-  ChatMessageMeta,
+  ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
 import { useMessageIds } from '@mui/x-chat/headless';
 
-import { ChatRoot } from '@mui/x-chat/unstyled';
+import { ChatRoot } from '@mui/x-chat/headless';
 import {
   createChunkStream,
   createTextResponseChunks,
@@ -93,8 +93,7 @@ function MessagePane() {
       <ChatMessageGroup key={id} messageId={id}>
         <ChatMessage messageId={id}>
           <ChatMessageAvatar />
-          <ChatMessageContent />
-          <ChatMessageMeta />
+          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
       </ChatMessageGroup>
     ),

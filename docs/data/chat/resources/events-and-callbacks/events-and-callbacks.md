@@ -118,7 +118,7 @@ type ChatOnData = (part: ChatDataMessagePart) => void;
 <ChatBox
   adapter={adapter}
   onData={(part) => {
-    if (part.dataType === 'progress') {
+    if (part.type === 'progress') {
       setProgressPercent(part.data.percent);
     }
   }}
@@ -155,8 +155,10 @@ type ChatOnError = (error: ChatError) => void;
 ### The `ChatError` type
 
 ```ts
+type ChatErrorCode = 'HISTORY_ERROR' | 'SEND_ERROR' | 'STREAM_ERROR' | 'REALTIME_ERROR';
+
 interface ChatError {
-  code: string; // machine-readable error code
+  code: ChatErrorCode; // machine-readable error code
   message: string; // human-readable description
   source: ChatErrorSource; // where the error originated
   recoverable: boolean; // whether the runtime can continue
@@ -215,10 +217,10 @@ All callbacks are registered as props on `ChatBox` or `ChatProvider`:
 </ChatProvider>
 ```
 
-## API
-
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the adapter interface that produces these events.
 - [Controlled State](/x/react-chat/backend/controlled-state/) for the full `ChatProvider` props reference.
 - [Hooks Reference](/x/react-chat/resources/hooks/) for `useChatStatus()` and reading error state in components.
+
+## API

@@ -64,12 +64,12 @@ Start with `default*` props for prototyping and switch to controlled when the ne
 - You can switch from uncontrolled to controlled at any time without changing the runtime model
 - The `onMessagesChange` callback fires with the full array after every update, including streaming deltas
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [State and store](/x/react-chat/headless/state/) for the full `ChatProvider` props reference
 - [Selector-driven thread](/x/react-chat/headless/examples/selector-driven-thread/) for efficient rendering with controlled state
 - [Conversation history](/x/react-chat/headless/examples/conversation-history/) for adapter-driven conversation loading
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

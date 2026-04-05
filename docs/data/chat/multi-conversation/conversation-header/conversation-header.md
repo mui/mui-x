@@ -199,14 +199,14 @@ function CustomThread() {
 }
 ```
 
+## See also
+
+- [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that lists conversations.
+- [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for live updates to conversation metadata displayed in the header.
+- [Layout](/x/react-chat/basics/layout/) for the full thread anatomy including message list and composer.
+
 ## API
 
 - [`ChatConversationHeader`](/x/api/chat/chat-conversation-header/)
 - [`ChatConversationTitle`](/x/api/chat/chat-conversation-title/)
 - [`ChatConversationSubtitle`](/x/api/chat/chat-conversation-subtitle/)
-
-## See also
-
-- [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that lists conversations.
-- [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for live updates to conversation metadata displayed in the header.
-- [Thread](/x/react-chat/basics/layout/) for the full thread anatomy including message list and composer.

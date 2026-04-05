@@ -10,8 +10,6 @@ components: ChatMessageContent
 
 <p class="description">Extend the message part system with app-specific content types using <code>ChatDataMessagePart</code>, the type registry, and custom renderers.</p>
 
-
-
 The built-in part types (text, file, source-url, source-document, tool) cover common chat patterns. When your application needs domain-specific content — ticket cards, approval forms, charts, or product previews — use the extensibility points described on this page.
 
 ## Data parts
@@ -116,7 +114,7 @@ function MyMessagePart({ part }) {
 When you only need to customize one or two part types and keep defaults for the rest, use `getDefaultMessagePartRenderer()` from the unstyled package:
 
 ```tsx
-import { getDefaultMessagePartRenderer } from '@mui/x-chat/unstyled';
+import { getDefaultMessagePartRenderer } from '@mui/x-chat/headless';
 
 function renderPart(part, message, index) {
   // Custom rendering for one part type

@@ -14,7 +14,7 @@ import type {
   ReasoningPartOwnerState,
   ToolPartOwnerState,
   ToolPartSectionOwnerState,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import {
   Chat,
   Conversation,
@@ -23,7 +23,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import type { ChatMessage, ChatUser } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,

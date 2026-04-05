@@ -14,7 +14,7 @@ githubLabel: 'scope: chat'
 ## How it works
 
 `ChatRoot` sets up a `ChatProvider` context. Any descendant can read from that context
-via headless hooks — regardless of where it sits in the DOM tree.
+via hooks — regardless of where it sits in the DOM tree.
 
 This means `ChatMessageList` and `ChatComposer` don't need to be siblings
 or share a parent component. Place them wherever your layout requires:
@@ -38,11 +38,11 @@ Use split layout when `ChatBox`'s default two-pane structure doesn't fit your pr
 - Message history is displayed in one panel while the send area is in another
 - You are embedding chat into an existing layout that already manages its own structure
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [No conversation history](/x/react-chat/material/examples/no-conversation-history/) — compose a thread without `ChatBox`
 - [Message feed](/x/react-chat/material/examples/message-feed/) — display-only embed with no input
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

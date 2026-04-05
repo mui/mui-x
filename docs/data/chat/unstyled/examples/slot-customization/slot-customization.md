@@ -1,7 +1,7 @@
 ---
 title: Chat - Slot customization
 productId: x-chat
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -48,11 +48,11 @@ This is common in design-system-heavy products where avatars, typography, button
 - Owner state is the bridge between shipped behavior and product-specific rendering.
 - Slot replacement is still a structural customization path, not a full runtime rewrite.
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - Continue with [Customization](/x/react-chat/unstyled/customization/) for the cross-cutting reference page.
 - Return to [Minimal unstyled shell](/x/react-chat/unstyled/examples/minimal-shell/) if the slot model feels abstract and you want to re-anchor on the default structure.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

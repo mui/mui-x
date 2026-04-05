@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { TypingIndicator, type TypingIndicatorProps } from '@mui/x-chat-unstyled';
+import { TypingIndicator, type TypingIndicatorProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatTypingIndicatorUtilityClasses,

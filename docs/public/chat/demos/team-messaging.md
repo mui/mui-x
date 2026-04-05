@@ -10,8 +10,6 @@ components: ChatBox
 
 A two-pane inbox layout with a conversation sidebar, thread switching, and per-conversation message state.
 
-
-
 ## Multi-conversation inbox
 
 A full team messaging surface with multiple conversations. The sidebar renders automatically when more than one conversation is provided, allowing users to switch between threads while each conversation maintains its own message history.
@@ -79,7 +77,6 @@ export default function MultiConversation() {
     />
   );
 }
-
 ```
 
 ## What this demo shows

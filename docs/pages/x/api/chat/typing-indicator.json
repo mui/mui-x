@@ -2,13 +2,13 @@
   "props": {},
   "name": "TypingIndicator",
   "imports": [
-    "import { TypingIndicator } from '@mui/x-chat-unstyled/indicators';",
-    "import { TypingIndicator } from '@mui/x-chat-unstyled';"
+    "import { TypingIndicator } from '@mui/x-chat-headless/indicators';",
+    "import { TypingIndicator } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiTypingIndicator",
-  "filename": "/packages/x-chat-unstyled/src/indicators/TypingIndicator.tsx",
+  "filename": "/packages/x-chat-headless/src/indicators/TypingIndicator.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/unstyled/indicators/\">Unstyled indicators</a></li></ul>",
   "cssComponent": false

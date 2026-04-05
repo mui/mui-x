@@ -10,8 +10,6 @@ components: ChatMessageContent
 
 <p class="description">Render plain text and markdown content in chat messages using the <code>ChatTextMessagePart</code> type and the built-in markdown renderer.</p>
 
-
-
 Text parts are the most common message part type. Every message with written content — whether from a human user or an AI assistant — uses one or more `text` parts to carry that content.
 
 ## The text part data model
@@ -83,7 +81,7 @@ This lets you plug in any markdown library (react-markdown, remark, MDX) while k
 
 ### Plain text rendering
 
-At the unstyled layer (`@mui/x-chat/unstyled`), text parts render as plain `<div>` elements with no markdown processing. The markdown renderer is a Material UI layer feature. If you are building on the unstyled primitives, provide your own `renderText` function through `partProps`:
+At the unstyled layer (`@mui/x-chat/headless`), text parts render as plain `<div>` elements with no markdown processing. The markdown renderer is a Material UI layer feature. If you are building on the unstyled primitives, provide your own `renderText` function through `partProps`:
 
 ```tsx
 <Message.Content

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
-import { ChatRoot, MessageRoot } from '@mui/x-chat-unstyled';
+import { ChatRoot, MessageRoot } from '@mui/x-chat-headless';
 import { ChatMessageContent } from './ChatMessageContent';
 
 const { render } = createRenderer();

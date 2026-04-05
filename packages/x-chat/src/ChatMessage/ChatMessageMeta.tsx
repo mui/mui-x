@@ -3,7 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-unstyled';
+import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-headless';
+import DoneIcon from '@mui/icons-material/Done';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 
@@ -13,22 +15,6 @@ export interface ChatMessageMetaProps extends MessageMetaProps {
   className?: string;
   sx?: SxProps<Theme>;
   classes?: Partial<ChatMessageClasses>;
-}
-
-// Inline SVG — avoids @mui/icons-material dependency
-function StatusCheckIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      width="1em"
-      height="1em"
-      aria-hidden="true"
-    >
-      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-    </svg>
-  );
 }
 
 const ChatMessageMetaStyled = styled('div', {
@@ -71,18 +57,28 @@ const ChatMessageStatusStyled = styled('span', {
 
 /**
  * Custom Status slot for ChatMessage.
- * In compact mode, renders a checkmark icon for "sent" status instead of text.
+ * In compact mode, renders a Done icon for "sent" status and DoneAll icon
+ * for "read" status instead of text labels.
  */
 const ChatMessageStatusSlot = React.forwardRef<HTMLSpanElement, any>(function ChatMessageStatusSlot(
   { ownerState, children, ...other },
   ref,
 ) {
   const isCompact = ownerState?.variant === 'compact';
-  const isSent = ownerState?.message?.status === 'sent';
+  const status = ownerState?.message?.status;
+  const isSent = status === 'sent';
+  const isRead = status === 'read';
+
+  let content = children;
+  if (isCompact && isSent) {
+    content = <DoneIcon sx={{ fontSize: '1em' }} aria-hidden="true" />;
+  } else if (isCompact && isRead) {
+    content = <DoneAllIcon sx={{ fontSize: '1em' }} aria-hidden="true" />;
+  }
 
   return (
     <ChatMessageStatusStyled ref={ref} ownerState={ownerState} {...other}>
-      {isCompact && isSent ? <StatusCheckIcon /> : children}
+      {content}
     </ChatMessageStatusStyled>
   );
 });

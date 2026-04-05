@@ -8,7 +8,7 @@ import {
   type MessageListRootProps,
   type MessageListRootHandle,
   useChatDensity,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatMessageListUtilityClasses,

@@ -1,7 +1,7 @@
 ---
 title: Chat - Two-pane inbox
 productId: x-chat
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -29,7 +29,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -229,7 +229,6 @@ export default function TwoPaneInbox() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Key primitives

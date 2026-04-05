@@ -8,7 +8,7 @@ import {
   ChatMessageAvatar,
   ChatMessageContent,
   ChatMessageGroup,
-  ChatMessageMeta,
+  ChatMessageInlineMeta,
   ChatConversation,
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
@@ -28,8 +28,7 @@ function CustomLayout() {
       <ChatMessageGroup key={id} messageId={id}>
         <ChatMessage messageId={id}>
           <ChatMessageAvatar />
-          <ChatMessageContent />
-          <ChatMessageMeta />
+          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
       </ChatMessageGroup>
     ),

@@ -8,7 +8,7 @@ components: ChatBox
 
 # Chat - Quickstart
 
-<p class="description">Install <code>@mui/x-chat</code> and render a fully styled, theme-aware chat interface in under five minutes.</p>
+<p class="description">Install the MUI X Chat package and start building your React chat interface.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
@@ -34,7 +34,10 @@ yarn add @mui/x-chat
 
 ### Peer dependencies
 
-`@mui/x-chat` requires Material UI and Emotion. If they are not already in your project, install them:
+#### Material UI
+
+The Chat package has a peer dependency on `@mui/material`.
+If it is not already in your project, install it now:
 
 <codeblock storageKey="package-manager">
 
@@ -52,18 +55,20 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 </codeblock>
 
+#### React
+
 <!-- #react-peer-version -->
 
-React 17, 18, and 19 are supported:
+[`react`](https://www.npmjs.com/package/react) and [`react-dom`](https://www.npmjs.com/package/react-dom) are also peer dependencies:
 
 ```json
 "peerDependencies": {
   "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
   "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
-}
+},
 ```
 
-## Basic usage
+## Rendering a ChatBox
 
 Import `ChatBox` and wire it to an adapter.
 The adapter implements `sendMessage` and returns a streaming response:
@@ -97,12 +102,8 @@ export default function App() {
 `ChatBox` renders a full chat surface — conversation list, thread header, message log, and composer — in a single component.
 All visual styles are derived from your active Material UI theme.
 
-Three things are required:
-
-1. An `adapter` that implements `sendMessage`
-2. An `initialConversations` array with at least one conversation
-3. An `initialActiveConversationId` that matches one of those conversations
-
+Only `adapter` is required — it must implement `sendMessage`.
+`initialConversations` and `initialActiveConversationId` are optional conveniences that pre-populate the conversation list on first render.
 Every other prop is optional.
 
 ## Theme integration
@@ -124,6 +125,7 @@ See [Custom theme](/x/react-chat/customization/styling/) for a working demo.
 To get autocomplete for style overrides in `createTheme`, import the augmentation side-effect:
 
 ```tsx
+import { createTheme } from '@mui/material/styles';
 import type {} from '@mui/x-chat/themeAugmentation';
 
 const theme = createTheme({
@@ -139,14 +141,26 @@ const theme = createTheme({
 });
 ```
 
-## API
+## Using this documentation
 
-- [`ChatBox`](/x/api/chat/chat-box/)
+### Feature availability
+
+:::info
+MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
+See [Licensing](/x/introduction/licensing/) for details.
+:::
+
+Throughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') and [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') icons, respectively.
+
+All documentation for Community components and features also applies to their Pro and Premium counterparts.
 
 ## Next steps
 
 - [ChatBox](/x/react-chat/basics/chatbox/) — learn about the ChatBox component, its props, and architecture
 - [Customization](/x/react-chat/customization/styling/) — theme overrides, sx, slots, and CSS class names
 - [Demos](/x/react-chat/demos/ai-assistant/) — end-to-end patterns
-- [Headless layer](/x/react-chat/customization/headless/) — adapters, hooks, and runtime contracts
-- [Unstyled layer](/x/react-chat/customization/unstyled/) — structural composition primitives
+- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) — structural composition primitives and slot overrides
+
+## API
+
+- [`ChatBox`](/x/api/chat/chat-box/)

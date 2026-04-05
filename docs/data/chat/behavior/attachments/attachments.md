@@ -95,10 +95,10 @@ queued  -->  uploading  -->  uploaded  -->  (sent with message)
 
 ## Programmatic attachment management
 
-The `useChatComposer` hook from the headless layer provides direct access to attachment state:
+The `useChatComposer()` hook provides direct access to attachment state:
 
 ```tsx
-import { useChatComposer } from '@mui/x-chat/headless';
+import { useChatComposer } from '@mui/x-chat';
 
 function AttachmentManager() {
   const composer = useChatComposer();

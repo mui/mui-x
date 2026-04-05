@@ -31,7 +31,7 @@ import {
   ChatMessageContent,
   ChatMessageGroup,
   ChatMessageList,
-  ChatMessageMeta,
+  ChatMessageInlineMeta,
 } from '@mui/x-chat';
 import {
   ChatProvider,
@@ -581,8 +581,7 @@ function FloatingSupportThread({
         <ChatMessageGroup messageId={item.id}>
           <ChatMessage messageId={item.id}>
             <ChatMessageAvatar />
-            <ChatMessageContent />
-            <ChatMessageMeta />
+            <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
           </ChatMessage>
         </ChatMessageGroup>
       </Box>
@@ -604,7 +603,7 @@ function FloatingSupportThread({
           },
         }}
       />
-      <ChatComposer sx={{ mx: 1.5, mb: 1.5, mt: 0 }} />
+      <ChatComposer variant="compact" sx={{ mx: 1.5, mb: 1.5, mt: 0 }} />
     </ChatConversation>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useMessageIds, useConversations } from '@mui/x-chat-headless';
+import { useMessage, useMessageIds, useConversations } from '@mui/x-chat-headless';
 import IconButton from '@mui/material/IconButton';
 import {
   ChatLayout,
@@ -8,7 +8,7 @@ import {
   useChatVariant,
   type ChatSuggestion,
   type ChatVariant,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat-headless';
 import { styled } from '../internals/zero-styled';
 import { ChatConversation } from '../ChatConversation/ChatConversation';
 import { ChatConversationHeader } from '../ChatConversation/ChatConversationHeader';
@@ -30,6 +30,7 @@ import { ChatMessageContent } from '../ChatMessage/ChatMessageContent';
 import { ChatMessageMeta } from '../ChatMessage/ChatMessageMeta';
 import { ChatMessageAvatar } from '../ChatMessage/ChatMessageAvatar';
 import { ChatMessage } from '../ChatMessage/ChatMessage';
+import { ChatMessageInlineMeta } from '../ChatMessage/ChatMessageInlineMeta';
 import { ChatScrollToBottomAffordance } from '../ChatIndicators/ChatScrollToBottomAffordance';
 import { ChatSuggestions } from '../ChatSuggestions/ChatSuggestions';
 import type { ChatBoxSlots, ChatBoxSlotProps, ChatBoxFeatures } from './ChatBox.types';
@@ -70,11 +71,15 @@ function DefaultMessageItem({
   id,
   slots,
   slotProps,
+  features,
 }: {
   id: string;
   slots?: Partial<ChatBoxSlots>;
   slotProps?: ChatBoxSlotProps;
+  features?: ChatBoxFeatures;
 }) {
+  const variant = useChatVariant();
+  const message = useMessage(id);
   const MessageGroupComponent = (slots?.messageGroup ??
     ChatMessageGroup) as typeof ChatMessageGroup;
   const MessageAvatarComponent = (slots?.messageAvatar ??
@@ -84,12 +89,21 @@ function DefaultMessageItem({
   const MessageMetaComponent = (slots?.messageMeta ?? ChatMessageMeta) as typeof ChatMessageMeta;
   const MessageRootComponent = (slots?.messageRoot ?? ChatMessage) as typeof ChatMessage;
 
+  const isDefault = variant !== 'compact';
+  const isStreaming = message?.status === 'streaming';
+
+  // Default variant: inline meta inside the bubble (Telegram-style).
+  // Skip during streaming — there is no timestamp yet, and the streaming state
+  // is already communicated via the MuiChatMessage-streaming CSS class.
+  const inlineMeta = isDefault && !isStreaming ? <ChatMessageInlineMeta /> : undefined;
+
   return (
     <MessageGroupComponent messageId={id} {...(slotProps?.messageGroup ?? {})}>
       <MessageRootComponent messageId={id} {...(slotProps?.messageRoot ?? {})}>
         <MessageAvatarComponent {...(slotProps?.messageAvatar ?? {})} />
-        <MessageContentComponent {...(slotProps?.messageContent ?? {})} />
-        <MessageMetaComponent {...(slotProps?.messageMeta ?? {})} />
+        <MessageContentComponent {...(slotProps?.messageContent ?? {})} afterContent={inlineMeta} />
+        {/* External meta is only used in the compact variant */}
+        {!isDefault && <MessageMetaComponent {...(slotProps?.messageMeta ?? {})} />}
       </MessageRootComponent>
     </MessageGroupComponent>
   );
@@ -145,7 +159,8 @@ function DefaultComposer({
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
 }) {
-  const variant = useChatVariant();
+  const contextVariant = useChatVariant();
+  const variant = slotProps?.composerRoot?.variant ?? contextVariant;
   const showAttachments = features?.attachments !== false;
   const showHelperText = features?.helperText !== false;
   const attachmentConfig =
@@ -261,8 +276,10 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   // to re-render every time a new object reference is passed for slots/slotProps.
   const slotsRef = React.useRef(slots);
   const slotPropsRef = React.useRef(slotProps);
+  const featuresRef = React.useRef(features);
   slotsRef.current = slots;
   slotPropsRef.current = slotProps;
+  featuresRef.current = features;
 
   const renderItem = React.useCallback(
     ({ id }: { id: string; index: number }) => (
@@ -271,6 +288,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
         id={id}
         slots={slotsRef.current}
         slotProps={slotPropsRef.current}
+        features={featuresRef.current}
       />
     ),
     [],

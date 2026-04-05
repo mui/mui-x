@@ -277,10 +277,10 @@ To handle errors at the application level:
 />
 ```
 
-## API
-
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the full interface reference.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full stream chunk protocol reference.
 - [Real-Time Adapters](/x/react-chat/backend/real-time-adapters/) for adding `subscribe()`, `setTyping()`, and `markRead()`.
+
+## API

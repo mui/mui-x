@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled layout
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -19,7 +19,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -148,7 +148,6 @@ export default function MinimalUnstyledShell() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## `Chat.Root`

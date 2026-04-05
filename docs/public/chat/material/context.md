@@ -71,7 +71,6 @@ export default function ChatBoxWithHooks() {
     </ChatBox>
   );
 }
-
 ```
 
 ### ChatProvider (custom layout)
@@ -206,7 +205,6 @@ export default function ChatProviderCustomLayout() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Controlled and uncontrolled state
@@ -357,7 +355,6 @@ export default function MultipleInstances() {
     </Box>
   );
 }
-
 ```
 
 ## Provider props reference

@@ -337,10 +337,6 @@ When an adapter method throws, the runtime:
 You do not need to catch errors inside adapter methods — the runtime handles them for you. When an adapter method throws, the runtime records a `ChatError`, surfaces it through the UI and callbacks, and marks it recoverable or retryable when applicable.
 :::
 
-## API
-
-- [ChatRoot](/x/api/chat/chat-root/)
-
 ## See also
 
 - [Streaming](/x/react-chat/headless/streaming/) for the full stream chunk protocol.
@@ -348,3 +344,7 @@ You do not need to catch errors inside adapter methods — the runtime handles t
 - [Hooks](/x/react-chat/headless/hooks/) for the runtime actions that trigger adapter methods.
 - [Minimal headless chat](/x/react-chat/headless/examples/minimal-chat/) for the smallest working adapter.
 - [Conversation history](/x/react-chat/headless/examples/conversation-history/) for adapter-driven history loading.
+
+## API
+
+- [ChatRoot](/x/api/chat/chat-root/)

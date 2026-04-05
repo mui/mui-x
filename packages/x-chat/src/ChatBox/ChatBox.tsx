@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { ChatRoot, ChatVariantProvider, ChatDensityProvider } from '@mui/x-chat-unstyled';
+import { ChatRoot, ChatVariantProvider, ChatDensityProvider } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatBoxUtilityClasses } from './chatBoxClasses';
 import { ChatBoxContent } from './ChatBoxContent';
@@ -361,7 +361,15 @@ ChatBox.propTypes = {
         ]).isRequired,
       ).isRequired,
       role: PropTypes.oneOf(['assistant', 'system', 'user']).isRequired,
-      status: PropTypes.oneOf(['cancelled', 'error', 'pending', 'sending', 'sent', 'streaming']),
+      status: PropTypes.oneOf([
+        'cancelled',
+        'error',
+        'pending',
+        'read',
+        'sending',
+        'sent',
+        'streaming',
+      ]),
       updatedAt: PropTypes.string,
     }),
   ),
@@ -484,7 +492,15 @@ ChatBox.propTypes = {
         ]).isRequired,
       ).isRequired,
       role: PropTypes.oneOf(['assistant', 'system', 'user']).isRequired,
-      status: PropTypes.oneOf(['cancelled', 'error', 'pending', 'sending', 'sent', 'streaming']),
+      status: PropTypes.oneOf([
+        'cancelled',
+        'error',
+        'pending',
+        'read',
+        'sending',
+        'sent',
+        'streaming',
+      ]),
       updatedAt: PropTypes.string,
     }),
   ),

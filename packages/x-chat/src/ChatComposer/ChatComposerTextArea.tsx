@@ -3,8 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import { useTheme } from '@mui/material/styles';
-import { ComposerTextArea, type ComposerTextAreaProps } from '@mui/x-chat-unstyled';
+import { ComposerTextArea, type ComposerTextAreaProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
@@ -70,12 +69,16 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
           input: {
             className: clsx(classes.textArea, className),
             sx,
-            style: {
-              minHeight: 'unset',
-              margin: 'auto 0px',
-              height: '28px',
-            },
-            ...(maxRows != null ? { rows: 1 } : {}),
+            ...(maxRows != null
+              ? {
+                  style: {
+                    minHeight: 'unset',
+                    margin: 'auto 0px',
+                    height: '28px',
+                  },
+                  rows: 1,
+                }
+              : {}),
             ...slotProps?.input,
           } as any,
         }}

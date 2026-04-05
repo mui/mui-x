@@ -15,7 +15,7 @@ import type { ChatError } from './types/chat-error';
 import { ChatStoreContext } from './internals/useChatStoreContext';
 
 export interface ChatProviderProps<Cursor = string> extends ChatStoreParameters<Cursor> {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   adapter: ChatAdapter<Cursor>;
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;

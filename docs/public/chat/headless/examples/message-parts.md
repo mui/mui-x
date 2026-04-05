@@ -370,7 +370,6 @@ export default function MessagePartsHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Key takeaways

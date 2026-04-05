@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { ConversationHeader, type ConversationHeaderProps } from '@mui/x-chat-unstyled';
+import { ConversationHeader, type ConversationHeaderProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatConversationUtilityClasses,

@@ -6,7 +6,7 @@ import { SxProps, Theme } from '@mui/system';
 import {
   ConversationHeaderActions,
   type ConversationHeaderActionsProps,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatConversationUtilityClasses,

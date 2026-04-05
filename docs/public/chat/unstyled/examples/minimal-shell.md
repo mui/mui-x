@@ -1,7 +1,7 @@
 ---
 title: Chat - Minimal unstyled shell
 productId: x-chat
-packageName: '@mui/x-chat/unstyled'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 Start with the smallest complete chat surface built from unstyled primitives.
 
-This is the entry-point demo for `@mui/x-chat/unstyled`.
+This is the entry-point demo for `@mui/x-chat/headless`.
 It shows the smallest surface that still feels like a real chat UI: a root, a pane layout, a conversation list, a thread container, a message log, and a composer.
 
 It is intentionally simple so the structural responsibilities are easy to see before any advanced customization is introduced.
@@ -31,7 +31,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat/unstyled';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -160,7 +160,6 @@ export default function MinimalUnstyledShell() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Why start here

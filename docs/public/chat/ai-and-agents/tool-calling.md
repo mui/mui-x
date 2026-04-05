@@ -10,8 +10,6 @@ components: ChatMessageContent
 
 Stream tool invocations from the LLM, track their lifecycle through well-defined states, and render custom tool UIs using the part renderer registry.
 
-
-
 Tool calling lets an AI assistant invoke external functions during a conversation. The runtime handles the full tool lifecycle: streaming tool input, making the input available, executing the tool, and displaying the output — all through the streaming chunk protocol.
 
 ## `ChatToolMessagePart`
@@ -42,6 +40,7 @@ interface ChatToolInvocation<
   approval?: ChatToolApproval;
   providerExecuted?: boolean;
   title?: string;
+  callProviderMetadata?: Record<string, unknown>;
   preliminary?: boolean;
 }
 ```
@@ -161,7 +160,7 @@ The `toolCall` object includes `toolCallId`, `toolName`, `state`, `input`, `outp
 Use TypeScript module augmentation to register typed tool definitions. This gives you type-safe `input` and `output` on tool invocations:
 
 ```ts
-declare module '@mui/x-chat/headless' {
+declare module '@mui/x-chat/types' {
   interface ChatToolDefinitionMap {
     get_weather: {
       input: { city: string };
@@ -201,6 +200,7 @@ interface ChatDynamicToolInvocation<TToolName extends string = string> {
   output?: unknown;
   errorText?: string;
   approval?: ChatToolApproval;
+  callProviderMetadata?: Record<string, unknown>;
 }
 ```
 

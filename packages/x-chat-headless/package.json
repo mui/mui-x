@@ -2,7 +2,7 @@
   "name": "@mui/x-chat-headless",
   "version": "9.0.0-alpha.3",
   "author": "MUI Team",
-  "description": "The community edition of the headless MUI X Chat components.",
+  "description": "The community edition of the headless MUI X Chat components, including core logic and unstyled UI.",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -21,7 +21,8 @@
     "chat",
     "ai",
     "assistant",
-    "headless"
+    "headless",
+    "unstyled"
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
@@ -35,6 +36,8 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/react": "^1.0.0",
+    "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*"
   },
   "peerDependencies": {
@@ -52,6 +55,8 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./core": "./src/core/index.ts",
+    "./internals": "./src/internals/index.ts",
     "./*": "./src/*/index.ts"
   }
 }

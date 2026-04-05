@@ -13,15 +13,15 @@ components: ChatRoot
 {{"component": "@mui/docs/ComponentLinkHeader"}}
 
 Every user-facing string in the chat UI — placeholders, button labels, status messages, timestamps — is defined in a locale text object.
-You can override any string by passing a partial `localeText` object to `ChatRoot` (unstyled) or `ChatBox` (styled).
+You can override any string by passing a partial `localeText` object to `ChatBox`.
 
 ## Default locale
 
 The default locale is English (US).
-It is exported as `chatEnUS` from `@mui/x-chat`:
+It is exported as `chatEnUS` from `@mui/x-chat/locales`:
 
 ```tsx
-import { chatEnUS } from '@mui/x-chat';
+import { chatEnUS } from '@mui/x-chat/locales';
 ```
 
 This object contains all the default string values used by the chat components.
@@ -44,28 +44,12 @@ Unspecified keys fall back to the defaults:
 />
 ```
 
-For the unstyled layer:
-
-```tsx
-import { Chat } from '@mui/x-chat/unstyled';
-
-<Chat.Root
-  adapter={adapter}
-  localeText={{
-    composerInputPlaceholder: 'Nachricht eingeben',
-    composerSendButtonLabel: 'Senden',
-  }}
->
-  {/* ... */}
-</Chat.Root>;
-```
-
 ## The `useChatLocaleText()` hook
 
-Inside any descendant of `ChatRoot` or `ChatBox`, use the `useChatLocaleText()` hook to read the current locale text:
+Inside any descendant of `ChatBox`, use the `useChatLocaleText()` hook to read the current locale text:
 
 ```tsx
-import { useChatLocaleText } from '@mui/x-chat/unstyled';
+import { useChatLocaleText } from '@mui/x-chat/headless';
 
 function CustomSendButton() {
   const localeText = useChatLocaleText();
@@ -133,6 +117,7 @@ The `messageStatusLabel` function maps from `ChatMessageStatus`:
 | `sending`   | `"Sending"`   |
 | `streaming` | `"Streaming"` |
 | `sent`      | `"Sent"`      |
+| `read`      | `"Read"`      |
 | `error`     | `"Error"`     |
 | `cancelled` | `"Cancelled"` |
 
@@ -177,9 +162,9 @@ const frenchLocale = {
 <ChatBox adapter={adapter} localeText={frenchLocale} />;
 ```
 
-## API
-
 ## See also
 
 - [Styling](/x/react-chat/customization/styling/) for visual customization.
 - [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing components that render localized text.
+
+## API

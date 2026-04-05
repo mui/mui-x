@@ -8,7 +8,7 @@ import type {
   ChatMessageChunk,
   ChatMessagePart,
 } from '@mui/x-chat/headless';
-import type { ToolPartSlotProps } from '@mui/x-chat/unstyled';
+import type { ToolPartSlotProps } from '@mui/x-chat/headless';
 import {
   createChunkStream,
   randomId,

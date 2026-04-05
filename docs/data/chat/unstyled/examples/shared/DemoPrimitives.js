@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScrollArea } from '@base-ui/react/scroll-area';
-import { Indicators } from '@mui/x-chat/unstyled';
+import { Indicators } from '@mui/x-chat/headless';
 import { useChatComposer, useChatStatus } from '@mui/x-chat/headless';
 import { formatBytes, formatConversationTime, formatMessageTime } from './demoUtils';
 
