@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -13,10 +14,12 @@ import {
 import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { type UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import { useChartsLayerContainerRef } from '../hooks';
+import { useRegisterPointerInteractions } from '../internals/plugins/featurePlugins/shared/useRegisterPointerInteractions';
 // eslint-disable-next-line import/no-cycle
 import { ChartsSurface } from '../ChartsSurface';
+import { ChartsAccessibilityProxy } from '../internals/components/ChartsAccessibilityProxy';
 
 const ChartsLayerContainerDiv = styled('div', {
   name: 'MuiChartsLayerContainer',
@@ -24,14 +27,11 @@ const ChartsLayerContainerDiv = styled('div', {
 })<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
-  // This is a hack to let the content expand a bit when possible, but not overflow when the container is too small.
-  aspectRatio: '1 / 1',
   display: 'flex',
   position: 'relative',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  overflow: 'hidden',
   touchAction: 'pan-y',
   userSelect: 'none',
   gridArea: 'chart',
@@ -60,13 +60,15 @@ export interface ChartsLayerContainerProps extends React.ComponentProps<'div'> {
  */
 const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContainerProps>(
   function ChartsLayerContainer(inProps, ref) {
-    const { store, instance } = useChartContext<
+    const { store, instance } = useChartsContext<
       [],
       [UseChartInteractionSignature, UseChartItemClickSignature]
     >();
     const propsWidth = store.use(selectorChartPropsWidth);
     const propsHeight = store.use(selectorChartPropsHeight);
     const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
+
+    useRegisterPointerInteractions();
 
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsLayerContainer' });
     const { children, title, desc, className, ...other } = themeProps;
@@ -97,7 +99,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
       <ChartsLayerContainerDiv
         ref={handleRef}
         ownerState={{ width: propsWidth, height: propsHeight }}
-        tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
+        role="presentation"
         aria-label={title}
         aria-describedby={desc ? descId : undefined}
         className={clsx(classes.root, className)}
@@ -115,6 +117,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
           instance.handleClick?.(event);
         }}
       >
+        {isKeyboardNavigationEnabled && <ChartsAccessibilityProxy />}
         {desc && (
           <span id={descId} style={{ display: 'none' }}>
             {desc}

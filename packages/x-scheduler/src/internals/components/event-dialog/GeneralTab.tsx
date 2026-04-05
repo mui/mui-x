@@ -4,7 +4,7 @@ import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import {
@@ -54,6 +54,17 @@ const DateTimeFieldsRow = styled('div', {
     flex: '1 1 0%',
   },
 }));
+
+const AllDayFormControlLabel = styled(FormControlLabel, {
+  name: 'MuiEventDialog',
+  slot: 'AllDayFormControlLabel',
+})({
+  width: '100%',
+  justifyContent: 'space-between',
+  [`&.${formControlLabelClasses.root}`]: {
+    marginLeft: 0,
+  },
+});
 
 interface GeneralTabProps {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -207,7 +218,7 @@ export function GeneralTab(props: GeneralTabProps) {
               />
             )}
           </DateTimeFieldsRow>
-          <FormControlLabel
+          <AllDayFormControlLabel
             control={
               <Switch
                 id="enable-all-day-switch"
@@ -218,7 +229,6 @@ export function GeneralTab(props: GeneralTabProps) {
             }
             label={localeText.allDayLabel}
             labelPlacement="start"
-            sx={{ width: '100%', justifyContent: 'space-between', ml: 0 }}
           />
         </DateTimeFieldsContainer>
         <Divider />

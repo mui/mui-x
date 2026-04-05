@@ -94,12 +94,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       {...props}
       className={clsx(props.className, classes.headerToolbar)}
     >
-      <HeaderToolbarLeftElement
-        ref={forwardedRef}
-        role="navigation"
-        {...props}
-        className={classes.headerToolbarLeftElement}
-      >
+      <HeaderToolbarLeftElement className={classes.headerToolbarLeftElement}>
         <IconButton
           className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
@@ -113,7 +108,12 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           {adapter.format(visibleDate, 'monthFullLetter')}{' '}
           {adapter.format(visibleDate, 'yearPadded')}
         </HeaderToolbarLabel>
-        <HeaderToolbarDateNavigator className={classes.headerToolbarDateNavigator}>
+      </HeaderToolbarLeftElement>
+      <HeaderToolbarActions className={classes.headerToolbarActions}>
+        <HeaderToolbarDateNavigator
+          role="navigation"
+          className={classes.headerToolbarDateNavigator}
+        >
           <IconButton
             className={classes.headerToolbarPreviousButton}
             onClick={store.goToPreviousVisibleDate}
@@ -129,14 +129,11 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             <ChevronRight />
           </IconButton>
         </HeaderToolbarDateNavigator>
-      </HeaderToolbarLeftElement>
-      <HeaderToolbarActions className={classes.headerToolbarActions}>
-        <PreferencesMenu />
-
         <Button onClick={store.goToToday}>{localeText.today}</Button>
         {showViewSwitcher && (
           <ViewSwitcher views={views} view={view} onViewChange={store.setView} />
         )}
+        <PreferencesMenu />
       </HeaderToolbarActions>
     </HeaderToolbarRoot>
   );

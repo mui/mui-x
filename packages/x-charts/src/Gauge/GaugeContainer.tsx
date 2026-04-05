@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
 import { GaugeProvider, type GaugeProviderProps } from './GaugeProvider';
-import { ChartProvider } from '../context/ChartProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
 import { type MergeSignaturesProperty } from '../internals/plugins/models';
 import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
@@ -14,7 +14,7 @@ export interface GaugeContainerProps
     Omit<ChartsSurfaceProps, 'children'>,
     Omit<
       MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
-      'series' | 'dataset' | 'colors' | 'theme' | 'seriesConfig'
+      'series' | 'dataset' | 'colors' | 'theme' | 'seriesConfig' | 'experimentalFeatures'
     >,
     Omit<GaugeProviderProps, 'children'>,
     Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
@@ -55,7 +55,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
   } = props;
 
   return (
-    <ChartProvider
+    <ChartsProvider
       pluginParams={{
         width: inWidth,
         height: inHeight,
@@ -89,7 +89,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
           <GStyled aria-hidden="true">{children}</GStyled>
         </ChartsSurface>
       </GaugeProvider>
-    </ChartProvider>
+    </ChartsProvider>
   );
 });
 
@@ -128,10 +128,6 @@ GaugeContainer.propTypes = {
    * @default 360
    */
   endAngle: PropTypes.number,
-  /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

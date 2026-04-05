@@ -6,6 +6,8 @@ import {
   createIsHighlighted,
   createIsFaded,
 } from '@mui/x-charts/internals';
+import { seriesPreviewPlotMap } from '@mui/x-charts-pro/internals';
+import { CandlestickPreviewPlot } from '../../ChartsZoomSlider/internals/previews/CandlestickPreviewPlot';
 import { getExtremumX, getExtremumY } from './extrema';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import seriesProcessor from './seriesProcessor';
@@ -14,6 +16,7 @@ import legendGetter from './legend';
 import tooltipItemPositionGetter from './tooltipPosition';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 import { OHLCTooltipContent } from './OHLCTooltipContent';
+import descriptionGetter from './descriptionGetter';
 
 export const ohlcSeriesConfig: ChartSeriesTypeConfig<'ohlc'> = {
   seriesProcessor,
@@ -29,8 +32,10 @@ export const ohlcSeriesConfig: ChartSeriesTypeConfig<'ohlc'> = {
   getSeriesWithDefaultValues,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  descriptionGetter,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
 };
 
 cartesianSeriesTypes.addType('ohlc');
+seriesPreviewPlotMap.set('ohlc', CandlestickPreviewPlot);

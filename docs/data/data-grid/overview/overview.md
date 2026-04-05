@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 
 <p class="description">A fast and extensible React data table and React data grid, with filtering, sorting, aggregation, and more.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Overview
 

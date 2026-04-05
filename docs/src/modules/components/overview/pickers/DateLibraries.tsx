@@ -1,6 +1,6 @@
 import * as React from 'react';
-import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import SectionHeadline from '@mui/internal-core-docs/SectionHeadline';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';

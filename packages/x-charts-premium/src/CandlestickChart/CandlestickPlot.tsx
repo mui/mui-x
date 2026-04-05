@@ -1,14 +1,9 @@
 'use client';
 import * as React from 'react';
-import {
-  type ContinuousScaleName,
-  useDrawingArea,
-  useRegisterPointerInteractions,
-} from '@mui/x-charts/internals';
+import { type ContinuousScaleName, useDrawingArea } from '@mui/x-charts/internals';
 import { useXScale, useYScale } from '@mui/x-charts/hooks';
 import { type DefaultizedOHLCSeriesType } from '../models';
 import { useOHLCSeriesContext } from '../hooks/useOHLCSeries';
-import { selectorCandlestickItemAtPosition } from '../plugins/selectors/useChartCandlestickPosition.selectors';
 import { useCandlestickPlotData } from './useCandlestickPlotData';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
 import { useWebGLContext } from '../ChartsWebGLLayer/ChartsWebGLLayer';
@@ -26,8 +21,16 @@ function CandlestickWebGLPlot() {
   const series = useOHLCSeriesContext();
 
   const seriesToDisplay = series?.series[series.seriesOrder[0]];
+  const isHidden = !seriesToDisplay || seriesToDisplay.hidden;
 
-  if (!gl || !seriesToDisplay) {
+  React.useEffect(() => {
+    if (gl && isHidden) {
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+    }
+  }, [gl, isHidden]);
+
+  if (!gl || isHidden) {
     return null;
   }
 
@@ -49,7 +52,6 @@ function CandlestickWebGLPlotImpl({
   const [program, setProgram] = React.useState<CandlestickWebGLProgram | null>(null);
   const dataLength = series.data.length;
   const renderScheduledRef = React.useRef<boolean>(false);
-  useRegisterPointerInteractions(selectorCandlestickItemAtPosition);
 
   React.useEffect(() => {
     const prog = new CandlestickWebGLProgram(gl);

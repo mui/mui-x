@@ -6,18 +6,9 @@ import { createInterpolator } from './common';
 
 type UseAnimatePieArcLabelParams = Pick<
   PieArcLabelProps,
-  'startAngle' | 'endAngle' | 'cornerRadius' | 'paddingAngle' | 'skipAnimation'
+  'startAngle' | 'endAngle' | 'arcLabelRadius' | 'cornerRadius' | 'paddingAngle' | 'skipAnimation'
 > & {
   ref?: React.Ref<SVGTextElement>;
-  arcLabelRadius?: number;
-  /**
-   * @deprecated Use `arcLabelRadius` instead. This prop will be removed in the next major version.
-   */
-  innerRadius: PieArcLabelProps['innerRadius'];
-  /**
-   * @deprecated Use `arcLabelRadius` instead. This prop will be removed in the next major version.
-   */
-  outerRadius: PieArcLabelProps['outerRadius'];
 };
 type UseAnimatePieArcLabelReturn = {
   ref: React.Ref<SVGTextElement>;
@@ -26,7 +17,7 @@ type UseAnimatePieArcLabelReturn = {
 };
 export type PieArcLabelInterpolatedProps = Pick<
   UseAnimatePieArcLabelParams,
-  'startAngle' | 'endAngle' | 'innerRadius' | 'outerRadius' | 'paddingAngle' | 'cornerRadius'
+  'startAngle' | 'endAngle' | 'arcLabelRadius' | 'paddingAngle' | 'cornerRadius'
 >;
 
 /** Animates the label of pie slice from its middle point to the centroid of the slice.
@@ -38,8 +29,7 @@ export function useAnimatePieArcLabel(
   const initialProps = {
     startAngle: (props.startAngle + props.endAngle) / 2,
     endAngle: (props.startAngle + props.endAngle) / 2,
-    innerRadius: props.arcLabelRadius ?? props.innerRadius,
-    outerRadius: props.arcLabelRadius ?? props.outerRadius,
+    arcLabelRadius: props.arcLabelRadius,
     paddingAngle: props.paddingAngle,
     cornerRadius: props.cornerRadius,
   };
@@ -48,8 +38,7 @@ export function useAnimatePieArcLabel(
     {
       startAngle: props.startAngle,
       endAngle: props.endAngle,
-      innerRadius: props.arcLabelRadius ?? props.innerRadius,
-      outerRadius: props.arcLabelRadius ?? props.outerRadius,
+      arcLabelRadius: props.arcLabelRadius,
       paddingAngle: props.paddingAngle,
       cornerRadius: props.cornerRadius,
     },
@@ -60,8 +49,8 @@ export function useAnimatePieArcLabel(
           padAngle: animatedProps.paddingAngle,
           startAngle: animatedProps.startAngle,
           endAngle: animatedProps.endAngle,
-          innerRadius: animatedProps.innerRadius,
-          outerRadius: animatedProps.outerRadius,
+          innerRadius: animatedProps.arcLabelRadius,
+          outerRadius: animatedProps.arcLabelRadius,
         });
 
         return { x, y };

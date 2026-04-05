@@ -15,6 +15,8 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   titleHeaderCell: string;
   /** Styles applied to the events header cell element. */
   eventsHeaderCell: string;
+  /** Styles applied to the events header cell content element. */
+  eventsHeaderCellContent: string;
   /** Styles applied to the title sub-grid element. */
   titleSubGrid: string;
   /** Styles applied to the events sub-grid wrapper element. */
@@ -104,6 +106,7 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'headerRow',
     'titleHeaderCell',
     'eventsHeaderCell',
+    'eventsHeaderCellContent',
     'titleSubGrid',
     'eventsSubGridWrapper',
     'eventsSubGrid',

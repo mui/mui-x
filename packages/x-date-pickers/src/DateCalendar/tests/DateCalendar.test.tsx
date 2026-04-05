@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
+import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
 import { spy } from 'sinon';
@@ -613,7 +613,7 @@ describe('<DateCalendar />', () => {
 
   describe('Performance', () => {
     it('should only render newly selected day when selecting a day without a previously selected day', () => {
-      const RenderCount = spy((props) => <PickersDay {...props} />);
+      const RenderCount = spy((props) => <PickerDay {...props} />);
 
       render(
         <DateCalendar
@@ -630,7 +630,7 @@ describe('<DateCalendar />', () => {
     });
 
     it('should only re-render previously selected day and newly selected day when selecting a day', () => {
-      const RenderCount = spy((props) => <PickersDay {...props} />);
+      const RenderCount = spy((props) => <PickerDay {...props} />);
 
       render(
         <DateCalendar

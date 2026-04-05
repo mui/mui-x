@@ -106,7 +106,7 @@ export interface UseFieldInternalProps<
   /**
    * The ref object used to imperatively interact with the field.
    */
-  unstableFieldRef?: React.Ref<FieldRef<TValue>>;
+  fieldRef?: React.Ref<FieldRef<TValue>>;
   /**
    * @default true
    */
