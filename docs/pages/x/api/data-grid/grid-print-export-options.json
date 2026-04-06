@@ -13,9 +13,7 @@
     "fields": { "type": { "description": "string[]" } },
     "fileName": { "type": { "description": "string" }, "default": "The title of the page." },
     "getRowsToExport": {
-      "type": {
-        "description": "(params: GridPrintGetRowsToExportParams&lt;GridApiCommunity&gt;) =&gt; GridRowId[]"
-      }
+      "type": { "description": "(params: GridPrintGetRowsToExportParams) =&gt; GridRowId[]" }
     },
     "hideFooter": { "type": { "description": "boolean" }, "default": "false" },
     "hideToolbar": { "type": { "description": "boolean" }, "default": "false" },

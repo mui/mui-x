@@ -10,9 +10,7 @@
     "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
     "className": { "type": { "description": "string" } },
     "colorMap": {
-      "type": {
-        "description": "ContinuousColorConfig&lt;number | Date&gt; | PiecewiseColorConfig&lt;number | Date&gt; | OrdinalColorConfig&lt;string | number | Date&gt;"
-      }
+      "type": { "description": "ContinuousColorConfig | PiecewiseColorConfig | OrdinalColorConfig" }
     },
     "data": { "type": { "description": "readonly V[]" } },
     "dataKey": { "type": { "description": "string" } },
@@ -44,15 +42,9 @@
       "default": "{}"
     },
     "slots": { "type": { "description": "Partial&lt;ChartsAxisSlots&gt;" }, "default": "{}" },
-    "sx": {
-      "type": {
-        "description": "SystemCssProperties&lt;{}&gt; | CSSPseudoSelectorProps&lt;{}&gt; | CSSSelectorObjectOrCssVariables&lt;{}&gt; | ((theme: {}) =&gt; SystemStyleObject&lt;{}&gt;) | readonly (boolean | SystemStyleObject&lt;{}&gt; | ((theme: {}) =&gt; SystemStyleObject&lt;{}&gt;))[]"
-      }
-    },
+    "sx": { "type": { "description": "SxProps" } },
     "tickInterval": {
-      "type": {
-        "description": "any[] | \"auto\" | ((value: any, index: number) =&gt; boolean) | (\"auto\" & any[]) | (((value: any, index: number) =&gt; boolean) & any[]) | (any[] & \"auto\") | (((value: any, index: number) =&gt; boolean) & \"auto\") | (any[] & ((value: any, index: number) =&gt; boolean)) | (\"auto\" & ((value: any, index: number) =&gt; boolean))"
-      },
+      "type": { "description": "'auto' | ((value: any, index: number) =&gt; boolean) | any[]" },
       "default": "'auto'"
     },
     "tickLabelInterval": {

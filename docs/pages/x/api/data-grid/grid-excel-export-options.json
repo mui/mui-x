@@ -21,9 +21,7 @@
     "fields": { "type": { "description": "string[]" } },
     "fileName": { "type": { "description": "string" }, "default": "document.title" },
     "getRowsToExport": {
-      "type": {
-        "description": "(params: GridGetRowsToExportParams&lt;GridApiCommunity&gt;) =&gt; GridRowId[]"
-      }
+      "type": { "description": "(params: GridGetRowsToExportParams&lt;Api&gt;) =&gt; GridRowId[]" }
     },
     "includeColumnGroupsHeaders": {
       "type": { "description": "boolean" },

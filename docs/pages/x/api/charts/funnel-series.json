@@ -12,9 +12,7 @@
     },
     "borderRadius": { "type": { "description": "number" }, "default": "8", "isProPlan": true },
     "curve": {
-      "type": {
-        "description": "\"step\" | \"linear\" | \"linear-sharp\" | \"bump\" | \"pyramid\" | \"step-pyramid\""
-      },
+      "type": { "description": "FunnelCurveType" },
       "default": "'linear'",
       "isProPlan": true
     },
@@ -29,11 +27,7 @@
       "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" },
       "isProPlan": true
     },
-    "labelMarkType": {
-      "type": {
-        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
-      }
-    },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
     "layout": {
       "type": { "description": "\"horizontal\" | \"vertical\"" },
       "default": "'vertical'",
@@ -47,13 +41,13 @@
       "isProPlan": true
     },
     "type": { "type": { "description": "\"funnel\"" }, "isProPlan": true },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;FunnelValueType&gt;" } },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
     "variant": {
       "type": { "description": "\"filled\" | \"outlined\"" },
       "default": "'filled'",
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "string | number" } },
-    "yAxisId": { "type": { "description": "string | number" } }
+    "xAxisId": { "type": { "description": "AxisId" } },
+    "yAxisId": { "type": { "description": "AxisId" } }
   }
 }

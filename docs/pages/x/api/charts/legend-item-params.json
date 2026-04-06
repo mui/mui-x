@@ -9,7 +9,7 @@
     "color": { "type": { "description": "string" }, "required": true },
     "label": { "type": { "description": "string" }, "required": true },
     "markType": { "type": { "description": "ChartsLabelMarkType | undefined" }, "required": true },
-    "type": { "type": { "description": "keyof ChartsSeriesConfig" }, "required": true },
+    "type": { "type": { "description": "ChartSeriesType" }, "required": true },
     "dataIndex": { "type": { "description": "number" } },
     "maxValue": { "type": { "description": "number | Date" } },
     "minValue": { "type": { "description": "number | Date" } },

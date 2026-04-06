@@ -17,7 +17,7 @@
     },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": { "description": "(data: ColorCallbackValue&lt;number | null&gt;) =&gt; string" }
+      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
     },
     "data": { "type": { "description": "readonly (number | null)[]" } },
     "dataKey": { "type": { "description": "string" } },
@@ -26,32 +26,18 @@
     "label": {
       "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" }
     },
-    "labelMarkType": {
-      "type": {
-        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
-      }
-    },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
     "layout": {
       "type": { "description": "\"horizontal\" | \"vertical\"" },
       "default": "'vertical'"
     },
     "minBarSize": { "type": { "description": "number" }, "default": "0px" },
     "stack": { "type": { "description": "string" } },
-    "stackOffset": {
-      "type": {
-        "description": "\"none\" | \"expand\" | \"diverging\" | \"silhouette\" | \"wiggle\""
-      },
-      "default": "'diverging'"
-    },
-    "stackOrder": {
-      "type": {
-        "description": "\"appearance\" | \"none\" | \"reverse\" | \"ascending\" | \"descending\" | \"insideOut\""
-      },
-      "default": "'none'"
-    },
+    "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },
+    "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "type": { "type": { "description": "\"bar\"" } },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;number | null&gt;" } },
-    "xAxisId": { "type": { "description": "string | number" } },
-    "yAxisId": { "type": { "description": "string | number" } }
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "xAxisId": { "type": { "description": "AxisId" } },
+    "yAxisId": { "type": { "description": "AxisId" } }
   }
 }

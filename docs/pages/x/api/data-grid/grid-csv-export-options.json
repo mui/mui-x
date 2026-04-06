@@ -13,9 +13,7 @@
     "fields": { "type": { "description": "string[]" } },
     "fileName": { "type": { "description": "string" }, "default": "document.title" },
     "getRowsToExport": {
-      "type": {
-        "description": "(params: GridCsvGetRowsToExportParams&lt;GridApiCommunity&gt;) =&gt; GridRowId[]"
-      }
+      "type": { "description": "(params: GridCsvGetRowsToExportParams) =&gt; GridRowId[]" }
     },
     "includeColumnGroupsHeaders": { "type": { "description": "boolean" }, "default": "true" },
     "includeHeaders": { "type": { "description": "boolean" }, "default": "true" },

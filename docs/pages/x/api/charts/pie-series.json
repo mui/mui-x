@@ -6,13 +6,10 @@
     "import { PieSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "data": {
-      "type": { "description": "readonly MakeOptional&lt;PieValueType, \"id\"&gt;[]" },
-      "required": true
-    },
+    "data": { "type": { "description": "Readonly&lt;TData[]&gt;" }, "required": true },
     "arcLabel": {
       "type": {
-        "description": "\"label\" | \"value\" | \"formattedValue\" | ((item: Omit&lt;DefaultizedPieValueType, \"label\"&gt; & { label?: string | undefined; }) =&gt; string)"
+        "description": " | 'formattedValue' | 'label' | 'value' | ((item: Omit&lt;DefaultizedPieValueType, 'label'&gt; & { label?: string }) =&gt; string)"
       }
     },
     "arcLabelMinAngle": { "type": { "description": "number" }, "default": "0" },
@@ -22,9 +19,7 @@
     },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": {
-        "description": "(data: ColorCallbackValue&lt;MakeOptional&lt;PieValueType, \"id\"&gt;&gt;) =&gt; string"
-      }
+      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
     },
     "cornerRadius": { "type": { "description": "number" }, "default": "0" },
     "cx": { "type": { "description": "string | number" }, "default": "'50%'" },
@@ -32,36 +27,23 @@
     "endAngle": { "type": { "description": "number" }, "default": "360" },
     "faded": {
       "type": {
-        "description": "{ additionalRadius?: number | undefined; innerRadius?: number | undefined; outerRadius?: number | undefined; cornerRadius?: number | undefined; paddingAngle?: number | undefined; arcLabelRadius?: number | undefined; color?: string | undefined; }"
+        "description": "{\n    /**\n     * Value added to the default `outerRadius`.\n     * Can be negative. It is ignored if you provide a `faded.outerRadius` value.\n     */\n    additionalRadius?: number;\n    innerRadius?: number;\n    outerRadius?: number;\n    cornerRadius?: number;\n    paddingAngle?: number;\n    arcLabelRadius?: number;\n    color?: string;\n  }"
       }
     },
     "highlighted": {
       "type": {
-        "description": "{ additionalRadius?: number | undefined; innerRadius?: number | undefined; outerRadius?: number | undefined; cornerRadius?: number | undefined; paddingAngle?: number | undefined; arcLabelRadius?: number | undefined; color?: string | undefined; }"
+        "description": "{\n    /**\n     * Value added to the default `outerRadius`.\n     * Can be negative. It is ignored if you provide a `highlighted.outerRadius` value.\n     */\n    additionalRadius?: number;\n    innerRadius?: number;\n    outerRadius?: number;\n    cornerRadius?: number;\n    paddingAngle?: number;\n    arcLabelRadius?: number;\n    color?: string;\n  }"
       }
     },
     "highlightScope": { "type": { "description": "CommonHighlightScope" } },
     "id": { "type": { "description": "string" } },
     "innerRadius": { "type": { "description": "string | number" }, "default": "0" },
-    "labelMarkType": {
-      "type": {
-        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
-      }
-    },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
     "outerRadius": { "type": { "description": "string | number" }, "default": "'100%'" },
     "paddingAngle": { "type": { "description": "number" }, "default": "0" },
-    "sortingValues": {
-      "type": {
-        "description": "\"asc\" | \"desc\" | \"none\" | ((a: number, b: number) =&gt; number)"
-      },
-      "default": "'none'"
-    },
+    "sortingValues": { "type": { "description": "ChartsPieSorting" }, "default": "'none'" },
     "startAngle": { "type": { "description": "number" }, "default": "0" },
     "type": { "type": { "description": "\"pie\"" } },
-    "valueFormatter": {
-      "type": {
-        "description": "SeriesValueFormatter&lt;MakeOptional&lt;PieValueType, \"id\"&gt;&gt;"
-      }
-    }
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } }
   }
 }

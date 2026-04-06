@@ -10,15 +10,10 @@
     "baseline": { "type": { "description": "number | \"max\" | \"min\"" }, "default": "0" },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": { "description": "(data: ColorCallbackValue&lt;number | null&gt;) =&gt; string" }
+      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
     },
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
-    "curve": {
-      "type": {
-        "description": "\"step\" | \"linear\" | \"catmullRom\" | \"monotoneX\" | \"monotoneY\" | \"natural\" | \"stepBefore\" | \"stepAfter\" | \"bumpY\" | \"bumpX\""
-      },
-      "default": "'monotoneX'"
-    },
+    "curve": { "type": { "description": "CurveType" }, "default": "'monotoneX'" },
     "data": { "type": { "description": "readonly (number | null)[]" } },
     "dataKey": { "type": { "description": "string" } },
     "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },
@@ -27,38 +22,16 @@
     "label": {
       "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" }
     },
-    "labelMarkType": {
-      "type": {
-        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
-      }
-    },
-    "shape": {
-      "type": {
-        "description": "\"circle\" | \"square\" | \"cross\" | \"diamond\" | \"star\" | \"triangle\" | \"wye\""
-      }
-    },
-    "showMark": {
-      "type": {
-        "description": "boolean | ((params: ShowMarkParams&lt;number | Date&gt;) =&gt; boolean)"
-      }
-    },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
+    "shape": { "type": { "description": "MarkShape" } },
+    "showMark": { "type": { "description": "boolean | ((params: ShowMarkParams) =&gt; boolean)" } },
     "stack": { "type": { "description": "string" } },
-    "stackOffset": {
-      "type": {
-        "description": "\"none\" | \"expand\" | \"diverging\" | \"silhouette\" | \"wiggle\""
-      },
-      "default": "'none'"
-    },
-    "stackOrder": {
-      "type": {
-        "description": "\"appearance\" | \"none\" | \"reverse\" | \"ascending\" | \"descending\" | \"insideOut\""
-      },
-      "default": "'none'"
-    },
+    "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },
+    "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "strictStepCurve": { "type": { "description": "boolean" } },
     "type": { "type": { "description": "\"line\"" } },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;number | null&gt;" } },
-    "xAxisId": { "type": { "description": "string | number" } },
-    "yAxisId": { "type": { "description": "string | number" } }
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "xAxisId": { "type": { "description": "AxisId" } },
+    "yAxisId": { "type": { "description": "AxisId" } }
   }
 }

@@ -10,7 +10,7 @@
         "description": "(field: string, direction?: GridSortDirection, allowMultipleSorting?: boolean | undefined) =&gt; void"
       }
     },
-    "getSortedRows": { "type": { "description": "() =&gt; GridValidRowModel[]" } },
+    "getSortedRows": { "type": { "description": "() =&gt; GridRowModel[]" } },
     "getSortedRowIds": { "type": { "description": "() =&gt; GridRowId[]" } },
     "getRowIdFromRowIndex": { "type": { "description": "(index: number) =&gt; GridRowId" } }
   }

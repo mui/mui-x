@@ -8,14 +8,12 @@
   "properties": {
     "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": {
-        "description": "(data: ColorCallbackValue&lt;ScatterValueType | null&gt;) =&gt; string"
-      }
+      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
     },
     "data": { "type": { "description": "readonly ScatterValueType[]" } },
     "datasetKeys": {
       "type": {
-        "description": "{ x: string; y: string; z?: string | undefined; id?: string | undefined; }"
+        "description": "{\n    /**\n     * The key used to retrieve data from the dataset for the X axis.\n     */\n    x: string;\n    /**\n     * The key used to retrieve data from the dataset for the Y axis.\n     */\n    y: string;\n    /**\n     * The key used to retrieve data from the dataset for the Z axis.\n     */\n    z?: string;\n    /**\n     * The key used to retrieve data from the dataset for the id.\n     */\n    id?: string;\n  }"
       }
     },
     "highlightScope": { "type": { "description": "CommonHighlightScope" } },
@@ -23,19 +21,13 @@
     "label": {
       "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" }
     },
-    "labelMarkType": {
-      "type": {
-        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
-      }
-    },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
     "markerSize": { "type": { "description": "number" } },
     "preview": { "type": { "description": "{ markerSize?: number | undefined; }" } },
     "type": { "type": { "description": "\"scatter\"" } },
-    "valueFormatter": {
-      "type": { "description": "SeriesValueFormatter&lt;ScatterValueType | null&gt;" }
-    },
-    "xAxisId": { "type": { "description": "string | number" } },
-    "yAxisId": { "type": { "description": "string | number" } },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "xAxisId": { "type": { "description": "AxisId" } },
+    "yAxisId": { "type": { "description": "AxisId" } },
     "zAxisId": { "type": { "description": "string" } }
   }
 }

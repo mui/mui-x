@@ -3,7 +3,7 @@
   "description": "The Print export API interface that is available in the grid [[apiRef]].",
   "properties": {
     "exportDataAsPrint": {
-      "type": { "description": "(options?: GridPrintExportOptions | undefined) =&gt; void" }
+      "type": { "description": "(options?: GridPrintExportOptions) =&gt; void" }
     }
   }
 }

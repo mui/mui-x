@@ -8,12 +8,12 @@
   "demos": "  - [List view](/x/react-data-grid/list-view/)",
   "properties": {
     "field": { "type": { "description": "string" }, "required": true },
-    "align": { "type": { "description": "\"left\" | \"right\" | \"center\"" } },
+    "align": { "type": { "description": "GridAlignment" } },
     "cellClassName": { "type": { "description": "string | GridCellClassFn&lt;R, V&gt;" } },
     "display": { "type": { "description": "\"flex\" | \"text\"" } },
     "renderCell": {
       "type": {
-        "description": "(params: GridRenderCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; ReactNode"
+        "description": "(params: GridRenderCellParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
       }
     }
   }

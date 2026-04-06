@@ -13,11 +13,7 @@
       "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" },
       "isProPlan": true
     },
-    "labelMarkType": {
-      "type": {
-        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
-      }
-    },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
     "type": { "type": { "description": "\"heatmap\"" }, "isProPlan": true },
     "valueFormatter": {
       "type": {
@@ -25,7 +21,7 @@
       },
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "string | number" } },
-    "yAxisId": { "type": { "description": "string | number" } }
+    "xAxisId": { "type": { "description": "AxisId" } },
+    "yAxisId": { "type": { "description": "AxisId" } }
   }
 }

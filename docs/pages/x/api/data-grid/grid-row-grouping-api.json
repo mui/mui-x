@@ -7,7 +7,7 @@
     },
     "addRowGroupingCriteria": {
       "type": {
-        "description": "(groupingCriteriaField: string, groupingIndex?: number | undefined) =&gt; void"
+        "description": "(groupingCriteriaField: string, groupingIndex?: number) =&gt; void"
       }
     },
     "removeRowGroupingCriteria": {

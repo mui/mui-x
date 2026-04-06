@@ -4,13 +4,11 @@
   "properties": {
     "getDataAsExcel": {
       "type": {
-        "description": "(options?: GridExcelExportOptions | undefined) =&gt; Promise&lt;Workbook&gt; | null"
+        "description": "(options?: GridExcelExportOptions) =&gt; Promise&lt;Excel.Workbook&gt; | null"
       }
     },
     "exportDataAsExcel": {
-      "type": {
-        "description": "(options?: GridExcelExportOptions | undefined) =&gt; Promise&lt;void&gt;"
-      }
+      "type": { "description": "(options?: GridExcelExportOptions) =&gt; Promise&lt;void&gt;" }
     }
   }
 }

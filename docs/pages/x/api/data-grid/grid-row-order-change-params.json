@@ -17,7 +17,7 @@
       "required": true,
       "isProPlan": true
     },
-    "row": { "type": { "description": "GridValidRowModel" }, "required": true, "isProPlan": true },
+    "row": { "type": { "description": "GridRowModel" }, "required": true, "isProPlan": true },
     "targetIndex": { "type": { "description": "number" }, "required": true, "isProPlan": true }
   }
 }

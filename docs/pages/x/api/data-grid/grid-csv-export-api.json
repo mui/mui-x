@@ -2,11 +2,7 @@
   "name": "GridCsvExportApi",
   "description": "The CSV export API interface that is available in the grid [[apiRef]].",
   "properties": {
-    "getDataAsCsv": {
-      "type": { "description": "(options?: GridCsvExportOptions | undefined) =&gt; string" }
-    },
-    "exportDataAsCsv": {
-      "type": { "description": "(options?: GridCsvExportOptions | undefined) =&gt; void" }
-    }
+    "getDataAsCsv": { "type": { "description": "(options?: GridCsvExportOptions) =&gt; string" } },
+    "exportDataAsCsv": { "type": { "description": "(options?: GridCsvExportOptions) =&gt; void" } }
   }
 }

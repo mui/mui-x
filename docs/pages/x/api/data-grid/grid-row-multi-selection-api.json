@@ -4,12 +4,12 @@
   "properties": {
     "selectRows": {
       "type": {
-        "description": "(ids: GridRowId[], isSelected?: boolean | undefined, resetSelection?: boolean | undefined) =&gt; void"
+        "description": "(ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) =&gt; void"
       }
     },
     "selectRowRange": {
       "type": {
-        "description": "(range: { startId: GridRowId; endId: GridRowId; }, isSelected?: boolean | undefined, resetSelection?: boolean | undefined) =&gt; void"
+        "description": "(\n    range: { startId: GridRowId; endId: GridRowId },\n    isSelected?: boolean,\n    resetSelection?: boolean,\n  ) =&gt; void"
       }
     },
     "getPropagatedRowSelectionModel": {

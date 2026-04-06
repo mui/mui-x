@@ -11,18 +11,14 @@
     "stopCellEditMode": {
       "type": { "description": "(params: GridStopCellEditModeParams) =&gt; void" }
     },
-    "isCellEditable": {
-      "type": {
-        "description": "(params: GridCellParams&lt;any, unknown, unknown, GridTreeNode&gt;) =&gt; boolean"
-      }
-    },
+    "isCellEditable": { "type": { "description": "(params: GridCellParams) =&gt; boolean" } },
     "setEditCellValue": {
       "type": {
         "description": "(params: GridEditCellValueParams, event?: MuiBaseEvent | undefined) =&gt; void | Promise&lt;boolean&gt;"
       }
     },
     "getRowWithUpdatedValues": {
-      "type": { "description": "(id: GridRowId, field: string) =&gt; GridValidRowModel" }
+      "type": { "description": "(id: GridRowId, field: string) =&gt; GridRowModel" }
     },
     "getRowMode": { "type": { "description": "(id: GridRowId) =&gt; GridRowMode" } },
     "startRowEditMode": {

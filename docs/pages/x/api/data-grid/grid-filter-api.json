@@ -4,7 +4,7 @@
   "properties": {
     "showFilterPanel": {
       "type": {
-        "description": "(targetColumnField?: string | undefined, panelId?: string | undefined, labelId?: string | undefined) =&gt; void"
+        "description": "(targetColumnField?: string, panelId?: string, labelId?: string) =&gt; void"
       }
     },
     "hideFilterPanel": { "type": { "description": "() =&gt; void" } },

@@ -290,19 +290,65 @@ export function escapeHtml(s: string): string {
   return s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+
 /**
  * Resolve a property's type to a clean string for interface docs.
- * Uses getBaseConstraintOfType to resolve indexed access types and generics,
- * and strips undefined/null from optional props.
+ *
+ * Reads the type annotation directly from source declarations to preserve
+ * alias names (SxProps, ContinuousColorConfig). When a property has multiple
+ * declarations (e.g. discriminated union members), collects all types into a union.
+ * Falls back to the type checker for indexed access types.
  */
 function resolvePropertyType(prop: ts.Symbol, checker: ts.TypeChecker): string {
-  let propType = checker.getTypeOfSymbol(prop);
+  const declarations = prop.getDeclarations() || [];
 
-  // Resolve indexed access types / generics (e.g. Partial<AxisProps>["className"] → string)
-  const baseConstraint = checker.getBaseConstraintOfType(propType);
-  if (baseConstraint) {
-    propType = baseConstraint;
+  // Collect source-level type annotations from all declarations.
+  // When a property appears in multiple declarations (e.g. discriminated union members
+  // of the same interface), each declaration contributes its type to the union.
+  // We split compound types (A | B) so we can deduplicate individual members.
+  const sourceMembers = new Set<string>();
+  let hasIndexedAccess = false;
+  for (const decl of declarations) {
+    if (ts.isPropertySignature(decl) && decl.type) {
+      const text = decl.type.getText();
+      if (text.includes('["') || text.includes("['")) {
+        hasIndexedAccess = true;
+      } else {
+        // Split "A | B" into individual members for deduplication
+        for (const member of text.split('|').map((s) => s.trim())) {
+          sourceMembers.add(member);
+        }
+      }
+    }
   }
+
+  // Also get the checker-resolved type (strips undefined, resolves indexed access)
+  const checkerType = resolveViaChecker(prop, checker);
+
+  // If we got clean source types, pick the best representation for each member:
+  // - Use the checker resolution if it's simpler (e.g. alias → primitive)
+  // - Use the source text if the checker over-expands (e.g. SxProps → SystemCssProperties | ...)
+  if (sourceMembers.size > 0 && !hasIndexedAccess) {
+    const sourceResult = [...sourceMembers].join(' | ');
+    // If checker result is shorter or equal, it's a better (more resolved) representation
+    // unless it contains internal types (SystemCssProperties, CSSSelectorObject, etc.)
+    const checkerIsOverExpanded =
+      checkerType.includes('SystemCssProperties') ||
+      checkerType.includes('CSSPseudoSelector') ||
+      checkerType.includes('CSSSelectorObject') ||
+      checkerType.split('|').length > sourceMembers.size * 2;
+    if (!checkerIsOverExpanded && checkerType.length <= sourceResult.length) {
+      return checkerType;
+    }
+    return sourceResult;
+  }
+
+  return checkerType;
+}
+
+/** Resolve a property type using the checker, handling optional types and indexed access. */
+function resolveViaChecker(prop: ts.Symbol, checker: ts.TypeChecker): string {
+  let propType = checker.getTypeOfSymbol(prop);
 
   // Strip undefined/null for optional properties
   if (prop.flags & ts.SymbolFlags.Optional && propType.isUnion()) {
@@ -318,5 +364,28 @@ function resolvePropertyType(prop: ts.Symbol, checker: ts.TypeChecker): string {
     }
   }
 
-  return checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
+  const typeStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
+
+  // Resolve indexed access types via base constraint
+  if (typeStr.includes('["') || typeStr.includes("['")) {
+    const baseConstraint = checker.getBaseConstraintOfType(propType);
+    if (baseConstraint) {
+      let resolved = baseConstraint;
+      if (resolved.isUnion()) {
+        const filtered = resolved.types.filter(
+          (t) => !(t.flags & (ts.TypeFlags.Undefined | ts.TypeFlags.Null)),
+        );
+        if (filtered.length === 1) {
+          resolved = filtered[0];
+        } else if (filtered.length > 1) {
+          resolved = (
+            checker as unknown as { getUnionType(types: ts.Type[]): ts.Type }
+          ).getUnionType(filtered);
+        }
+      }
+      return checker.typeToString(resolved, undefined, ts.TypeFormatFlags.NoTruncation);
+    }
+  }
+
+  return typeStr;
 }
