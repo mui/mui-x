@@ -7,6 +7,23 @@ import { ChatCodeBlock } from '../ChatCodeBlock';
 // Inline parser — bold, italic, inline-code, links
 // ---------------------------------------------------------------------------
 
+const SAFE_URL_PROTOCOLS = ['http:', 'https:', 'mailto:'];
+
+function sanitizeUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    if (SAFE_URL_PROTOCOLS.includes(parsed.protocol)) {
+      return url;
+    }
+  } catch {
+    // Relative URLs (no protocol) are allowed through as-is
+    if (!url.includes(':')) {
+      return url;
+    }
+  }
+  return '#';
+}
+
 type InlinePattern = {
   regex: RegExp;
   render: (match: RegExpExecArray, key: number) => React.ReactNode;
@@ -37,7 +54,7 @@ const INLINE_PATTERNS: InlinePattern[] = [
     // Link: [label](url)
     regex: /\[([^\]]+)\]\(([^)]+)\)/,
     render: (m, k) => (
-      <a key={k} href={m[2]} target="_blank" rel="noopener noreferrer">
+      <a key={k} href={sanitizeUrl(m[2])} target="_blank" rel="noopener noreferrer">
         {m[1]}
       </a>
     ),

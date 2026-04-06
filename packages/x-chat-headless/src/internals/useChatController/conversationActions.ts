@@ -114,6 +114,10 @@ export function createConversationActions<Cursor = string>(params: {
         return;
       }
 
+      if (store.state.activeConversationId !== conversationId) {
+        return;
+      }
+
       store.prependMessages(result.messages);
       store.setHistoryState({
         cursor: result.cursor,
@@ -121,6 +125,10 @@ export function createConversationActions<Cursor = string>(params: {
       });
       store.setError(null);
     } catch (error) {
+      if (store.state.activeConversationId !== conversationId) {
+        return;
+      }
+
       setRuntimeError(
         createRuntimeError(
           'HISTORY_ERROR',
