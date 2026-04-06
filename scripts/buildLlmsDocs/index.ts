@@ -550,6 +550,7 @@ function findProjectPagesSection(projectKey: string): MuiPage | null {
     'data-grid': '/x/react-data-grid-group',
     'date-pickers': '/x/react-date-pickers-group',
     charts: '/x/react-charts-group',
+    scheduler: '/x/react-scheduler-group',
     'tree-view': '/x/react-tree-view-group',
     chat: '/x/react-chat-group',
   };
