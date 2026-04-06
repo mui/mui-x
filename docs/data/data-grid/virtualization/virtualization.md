@@ -53,9 +53,7 @@ In **controlled** mode, the grid takes over. All visible elements are positioned
 Use the `virtualizerLayoutMode` key inside `experimentalFeatures` to opt in to the controlled mode:
 
 ```tsx
-<DataGrid
-  experimentalFeatures={{ virtualizerLayoutMode: 'controlled' }}
-/>
+<DataGrid experimentalFeatures={{ virtualizerLayoutMode: 'controlled' }} />
 ```
 
 The demo below lets you switch between modes and scroll quickly to see the difference:
