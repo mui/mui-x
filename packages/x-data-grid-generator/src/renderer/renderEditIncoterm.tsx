@@ -33,8 +33,10 @@ function EditIncoterm(props: GridRenderEditCellParams<any, string | null>) {
       inputRef={inputRef}
       MenuProps={{
         onClose: handleSelectMenuClose,
-        MenuListProps: {
-          onKeyDown: handleSelectMenuListKeyDown,
+        slotProps: {
+          list: {
+            onKeyDown: handleSelectMenuListKeyDown,
+          },
         },
       }}
       sx={{
