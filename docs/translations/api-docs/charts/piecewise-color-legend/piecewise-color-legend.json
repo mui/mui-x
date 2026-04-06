@@ -16,7 +16,6 @@
       }
     },
     "labelPosition": { "description": "Where to position the labels relative to the color marks." },
-    "markType": { "description": "" },
     "onItemClick": {
       "description": "Callback fired when a legend item is clicked.",
       "typeDescriptions": {
@@ -24,7 +23,10 @@
         "legendItem": { "name": "legendItem", "description": "The legend item data." },
         "index": { "name": "index", "description": "The index of the clicked legend item." }
       }
-    }
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "tabIndex": { "description": "" }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },

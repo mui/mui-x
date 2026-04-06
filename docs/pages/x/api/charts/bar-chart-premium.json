@@ -8,7 +8,7 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ x?: 'line'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'band', y?: 'line'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'band' }"
+        "description": "{ x?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band', y?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band' }"
       },
       "seeMoreLink": {
         "url": "https://mui.com/x/react-charts/highlighting/",
@@ -135,10 +135,12 @@
         "describedArgs": ["zoomData"]
       }
     },
+    "plugins": { "type": { "name": "object" } },
     "renderer": {
       "type": { "name": "enum", "description": "'svg-single'<br>&#124;&nbsp;'svg-batch'" },
       "default": "'svg-single'"
     },
+    "seriesConfig": { "type": { "name": "object" } },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

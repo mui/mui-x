@@ -7,8 +7,6 @@
       "type": { "name": "enum", "description": "'start'<br>&#124;&nbsp;'end'" },
       "default": "'end'"
     },
-    "color": { "type": { "name": "any" }, "default": "'primary'" },
-    "component": { "type": { "name": "any" } },
     "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
     "defaultValue": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
@@ -30,7 +28,6 @@
     },
     "fullWidth": { "type": { "name": "any" }, "default": "false" },
     "helperText": { "type": { "name": "any" } },
-    "hiddenLabel": { "type": { "name": "any" }, "default": "false" },
     "id": { "type": { "name": "any" } },
     "InputLabelProps": {
       "type": { "name": "any" },
@@ -49,7 +46,6 @@
     },
     "inputRef": { "type": { "name": "any" } },
     "label": { "type": { "name": "any" } },
-    "margin": { "type": { "name": "any" }, "default": "'none'" },
     "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
     "maxDateTime": { "type": { "name": "object" } },
     "maxTime": { "type": { "name": "object" } },
@@ -73,6 +69,7 @@
         "describedArgs": []
       }
     },
+    "onClick": { "type": { "name": "any" } },
     "onError": {
       "type": { "name": "func" },
       "signature": {
@@ -81,6 +78,9 @@
       }
     },
     "onFocus": { "type": { "name": "any" } },
+    "onInput": { "type": { "name": "any" } },
+    "onKeyDown": { "type": { "name": "any" } },
+    "onPaste": { "type": { "name": "any" } },
     "onSelectedSectionsChange": {
       "type": { "name": "func" },
       "signature": {
@@ -93,7 +93,6 @@
       "type": { "name": "object" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
     },
-    "required": { "type": { "name": "any" }, "default": "false" },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -117,14 +116,12 @@
       }
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
-    "size": { "type": { "name": "any" }, "default": "'medium'" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "style": { "type": { "name": "any" } },
     "timezone": {
       "type": { "name": "string" },
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",

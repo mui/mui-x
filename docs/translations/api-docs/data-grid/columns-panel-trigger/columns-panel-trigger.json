@@ -4,6 +4,7 @@
     "className": { "description": "Override or extend the styles applied to the component." },
     "disabled": { "description": "" },
     "id": { "description": "" },
+    "material": { "description": "" },
     "render": { "description": "A function to customize rendering of the component." },
     "role": { "description": "" },
     "size": { "description": "" },

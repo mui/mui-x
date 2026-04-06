@@ -1,13 +1,19 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "color": { "description": "" },
     "dataIndex": { "description": "" },
+    "height": { "description": "" },
     "layout": { "description": "" },
     "seriesId": { "description": "" },
     "skipAnimation": { "description": "" },
+    "width": { "description": "" },
+    "x": { "description": "" },
     "xOrigin": { "description": "" },
+    "y": { "description": "" },
     "yOrigin": { "description": "" },
     "classes": { "description": "" },
+    "hidden": { "description": "" },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },

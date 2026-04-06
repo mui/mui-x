@@ -69,6 +69,8 @@
         "describedArgs": ["tooltipItem"]
       }
     },
+    "plugins": { "type": { "name": "object" } },
+    "seriesConfig": { "type": { "name": "object" } },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

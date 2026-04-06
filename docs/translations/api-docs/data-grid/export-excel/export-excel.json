@@ -3,6 +3,7 @@
   "propDescriptions": {
     "disabled": { "description": "" },
     "id": { "description": "" },
+    "material": { "description": "" },
     "options": { "description": "The options to apply on the Excel export." },
     "render": { "description": "A function to customize rendering of the component." },
     "role": { "description": "" },

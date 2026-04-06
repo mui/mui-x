@@ -6,6 +6,7 @@
     "edge": { "description": "" },
     "id": { "description": "" },
     "label": { "description": "" },
+    "material": { "description": "" },
     "render": { "description": "A function to customize rendering of the component." },
     "role": { "description": "" },
     "size": { "description": "" },

@@ -1,6 +1,7 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "className": { "type": { "name": "string" } },
     "onAreaClick": {
       "type": { "name": "func" },
       "signature": {

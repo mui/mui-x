@@ -21,20 +21,10 @@
     "onPaste": { "description": "" },
     "sectionListRef": { "description": "" },
     "value": { "description": "" },
-    "color": {
-      "description": "The color of the component.\nIt supports both default and custom theme colors, which can be added as shown in the\n[palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors)."
-    },
-    "component": { "description": "" },
     "endAdornment": { "description": "" },
-    "focused": {
-      "description": "If <code>true</code>, the component is displayed in focused state."
-    },
     "FormHelperTextProps": { "description": "" },
     "fullWidth": { "description": "" },
     "helperText": { "description": "The helper text content." },
-    "hiddenLabel": {
-      "description": "If <code>true</code>, the label is hidden.\nThis is used to increase density for a <code>FilledInput</code>.\nBe sure to add <code>aria-label</code> to the <code>input</code> element."
-    },
     "id": { "description": "" },
     "InputLabelProps": { "description": "" },
     "inputProps": { "description": "" },
@@ -43,17 +33,9 @@
     },
     "inputRef": { "description": "" },
     "label": { "description": "" },
-    "margin": {
-      "description": "If <code>dense</code> or <code>normal</code>, will adjust vertical spacing of this and contained components."
-    },
     "name": { "description": "" },
     "readOnly": { "description": "" },
-    "required": {
-      "description": "If <code>true</code>, the label will indicate that the <code>input</code> is required."
-    },
-    "size": { "description": "The size of the component." },
     "startAdornment": { "description": "" },
-    "style": { "description": "" },
     "variant": { "description": "The variant to use." }
   },
   "classDescriptions": {

@@ -44,7 +44,8 @@
       },
       "default": "'extremities'"
     },
-    "tickSize": { "type": { "name": "number" }, "default": "6" }
+    "tickSize": { "type": { "name": "number" }, "default": "6" },
+    "tickSpacing": { "type": { "name": "number" }, "default": "0" }
   },
   "name": "ChartsXAxis",
   "imports": [

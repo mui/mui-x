@@ -2,6 +2,7 @@
   "props": {
     "disabled": { "type": { "name": "bool" } },
     "id": { "type": { "name": "string" } },
+    "material": { "type": { "name": "object" } },
     "options": {
       "type": {
         "name": "shape",

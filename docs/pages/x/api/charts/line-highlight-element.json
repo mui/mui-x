@@ -1,5 +1,6 @@
 {
   "props": {
+    "color": { "type": { "name": "string" }, "required": true },
     "seriesId": { "type": { "name": "string" }, "required": true },
     "shape": {
       "type": {
@@ -7,7 +8,9 @@
         "description": "'circle'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'cross'<br>&#124;&nbsp;'diamond'<br>&#124;&nbsp;'star'<br>&#124;&nbsp;'triangle'<br>&#124;&nbsp;'wye'"
       },
       "required": true
-    }
+    },
+    "x": { "type": { "name": "number" }, "required": true },
+    "y": { "type": { "name": "number" }, "required": true }
   },
   "name": "LineHighlightElement",
   "imports": [

@@ -1,6 +1,12 @@
 {
   "componentDescription": "",
-  "propDescriptions": { "seriesId": { "description": "" }, "shape": { "description": "" } },
+  "propDescriptions": {
+    "color": { "description": "" },
+    "seriesId": { "description": "" },
+    "shape": { "description": "" },
+    "x": { "description": "" },
+    "y": { "description": "" }
+  },
   "classDescriptions": {},
   "slotDescriptions": {}
 }

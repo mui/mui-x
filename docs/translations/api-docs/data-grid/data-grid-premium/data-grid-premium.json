@@ -17,6 +17,10 @@
     "allowAiAssistantDataSampling": {
       "description": "If <code>true</code>, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context."
     },
+    "aria-label": { "description": "The <code>aria-label</code> of the Data Grid." },
+    "aria-labelledby": {
+      "description": "The <code>id</code> of the element containing a label for the Data Grid."
+    },
     "autoHeight": {
       "description": "If <code>true</code>, the Data Grid height is dynamic and takes as much space as it needs to display all rows.\nUse it instead of a flex parent container approach, if:\n- you don't need to set a minimum or maximum height for the Data Grid\n- you want to avoid the scrollbar flickering when the content changes"
     },

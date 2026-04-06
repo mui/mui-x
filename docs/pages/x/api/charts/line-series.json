@@ -25,7 +25,7 @@
     "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
+        "description": "{ highlight?: \"none\" | \"item\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
       }
     },
     "id": { "type": { "description": "string" } },
@@ -56,7 +56,7 @@
     },
     "stackOrder": {
       "type": {
-        "description": "\"appearance\" | \"none\" | \"reverse\" | \"ascending\" | \"descending\" | \"insideOut\""
+        "description": "\"none\" | \"appearance\" | \"reverse\" | \"ascending\" | \"descending\" | \"insideOut\""
       },
       "default": "'none'"
     },

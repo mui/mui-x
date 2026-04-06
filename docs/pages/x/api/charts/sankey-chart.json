@@ -53,6 +53,7 @@
         "describedArgs": ["tooltipItem"]
       }
     },
+    "seriesConfig": { "type": { "name": "object" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

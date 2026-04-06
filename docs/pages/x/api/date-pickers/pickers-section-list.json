@@ -1,5 +1,14 @@
 {
   "props": {
+    "contentEditable": { "type": { "name": "bool" }, "required": true },
+    "elements": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ container: object, content: object, before: object, after: object }&gt;"
+      },
+      "required": true
+    },
+    "sectionListRef": { "type": { "name": "custom", "description": "ref" }, "required": true },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } }

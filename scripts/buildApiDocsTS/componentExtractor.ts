@@ -69,26 +69,18 @@ export function extractComponentApi(
   const props: Record<string, PropInfo> = {};
   const propDescriptions: Record<string, TranslationPropDesc> = {};
 
-  // Get the set of prop names from the generated PropTypes block in the source file.
-  const propTypesNames = extractPropTypesNames(comp.filePath);
-
   for (const prop of allProps) {
-    // Only include props that are in the PropTypes block
-    if (propTypesNames.size > 0 && !propTypesNames.has(prop.name)) {
+    // Only include props declared in MUI X packages
+    if (!isMuiXProp(prop)) {
       continue;
     }
-    // Fallback: if no PropTypes block found, use MUI X prop check
-    if (propTypesNames.size === 0 && !isMuiXProp(prop)) {
-      continue;
-    }
-    // Exclude commonly inherited props unless they have JSDoc directly on the component's type
+    // Exclude commonly inherited props (apiRef, children, className, sx, theme, ref)
+    // unless they have JSDoc directly on the component's own type
     if (COMMON_INHERITED_PROPS.has(prop.name)) {
-      // Check if the prop has a JSDoc description on the component's own type (not inherited)
       const jsDocCheck = extractJsDoc(prop, checker);
       if (!jsDocCheck.description) {
         continue;
       }
-      // Check if the prop's description is from a base type (inherited)
       const declarations = prop.getDeclarations() || [];
       const declaredInComponent = declarations.some((d) => {
         const fileName = d.getSourceFile().fileName;
@@ -518,77 +510,6 @@ export function extractMuiName(filePath: string, componentName: string): string 
     return match[1];
   }
   return `Mui${componentName}`;
-}
-
-// ---------------------------------------------------------------------------
-// Extract prop names from the generated PropTypes block in source files
-// ---------------------------------------------------------------------------
-
-export function extractPropTypesNames(filePath: string): Set<string> {
-  const content = fs.readFileSync(filePath, 'utf8');
-
-  // Find the PropTypes block: ComponentName.propTypes = { ... }
-  const propTypesMatch = content.match(/\.propTypes\s*=\s*\{/);
-  if (!propTypesMatch) {
-    return new Set();
-  }
-
-  const startIdx = propTypesMatch.index! + propTypesMatch[0].length;
-
-  // Extract top-level prop names (at depth 1 brace level)
-  const names = new Set<string>();
-  let depth = 1;
-  let i = startIdx;
-
-  while (i < content.length && depth > 0) {
-    const ch = content[i];
-    if (ch === '{') {
-      depth += 1;
-    } else if (ch === '}') {
-      depth -= 1;
-    }
-    i += 1;
-  }
-
-  // Instead of tracking depth manually, use regex on lines
-  // Extract the PropTypes block text
-  const blockEnd = i;
-  const block = content.slice(startIdx, blockEnd);
-
-  // Re-parse: track depth and extract names at depth 0 (inside the outer {})
-  let braceDepth = 0;
-  let parenDepth = 0;
-  let bracketDepth = 0;
-  for (const line of block.split('\n')) {
-    const trimmed = line.trim();
-
-    // Only at top-level of the PropTypes object
-    if (braceDepth === 0 && parenDepth === 0 && bracketDepth === 0) {
-      const nameMatch = trimmed.match(/^(\w+)\s*:/);
-      if (nameMatch && nameMatch[1] !== 'PropTypes') {
-        names.add(nameMatch[1]);
-      }
-    }
-
-    // Update depths
-    for (const c of trimmed) {
-      if (c === '{') {
-        braceDepth += 1;
-      } else if (c === '}') {
-        braceDepth -= 1;
-      } else if (c === '(') {
-        parenDepth += 1;
-      } else if (c === ')') {
-        parenDepth -= 1;
-      } else if (c === '[') {
-        bracketDepth += 1;
-      } else if (c === ']') {
-        bracketDepth -= 1;
-      }
-    }
-  }
-
-  return names;
 }
 
 // ---------------------------------------------------------------------------

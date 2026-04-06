@@ -26,6 +26,8 @@
       "type": { "name": "arrayOf", "description": "Array&lt;{ value: string }&gt;" }
     },
     "allowAiAssistantDataSampling": { "type": { "name": "bool" } },
+    "aria-label": { "type": { "name": "string" } },
+    "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" }, "default": "false" },
     "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },
@@ -864,7 +866,7 @@
     "tabNavigation": {
       "type": {
         "name": "enum",
-        "description": "'content'<br>&#124;&nbsp;'all'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'none'"
+        "description": "'none'<br>&#124;&nbsp;'content'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'all'"
       },
       "default": "\"none\""
     },

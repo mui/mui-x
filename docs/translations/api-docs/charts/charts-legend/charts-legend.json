@@ -15,6 +15,7 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "tabIndex": { "description": "" },
     "toggleVisibilityOnClick": {
       "description": "If <code>true</code>, clicking on a legend item will toggle the visibility of the corresponding series."
     }

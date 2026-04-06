@@ -8,7 +8,7 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ x?: 'line'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'band', y?: 'line'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'band' }"
+        "description": "{ x?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band', y?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band' }"
       }
     },
     "baseline": {
@@ -139,6 +139,7 @@
       "type": { "name": "enum", "description": "'line'<br>&#124;&nbsp;'bar'" },
       "default": "'line'"
     },
+    "seriesConfig": { "type": { "name": "object" } },
     "showHighlight": { "type": { "name": "bool" }, "default": "false" },
     "showTooltip": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },

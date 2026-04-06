@@ -6,8 +6,7 @@
         "description": "Array&lt;'clear'<br>&#124;&nbsp;'cancel'<br>&#124;&nbsp;'next'<br>&#124;&nbsp;'today'<br>&#124;&nbsp;'accept'<br>&#124;&nbsp;'nextOrAccept'&gt;"
       },
       "default": "- `[]` for Pickers with one selection step which `closeOnSelect`.\n- `['cancel', 'nextOrAccept']` for all other Pickers."
-    },
-    "disableSpacing": { "type": { "name": "bool" }, "default": "false" }
+    }
   },
   "name": "PickersActionBar",
   "imports": [

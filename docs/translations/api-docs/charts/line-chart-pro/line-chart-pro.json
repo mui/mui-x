@@ -117,6 +117,10 @@
         "zoomData": { "name": "zoomData", "description": "Updated zoom data." }
       }
     },
+    "plugins": { "description": "Array of plugins used to add features to the chart." },
+    "seriesConfig": {
+      "description": "The configuration for the series types.\nThis is used to define how each series type should be processed, colored, and displayed."
+    },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },

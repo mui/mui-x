@@ -28,19 +28,20 @@
       },
       "default": "'extremes'"
     },
-    "markType": {
-      "type": {
-        "name": "union",
-        "description": "'circle'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'line+mark'<br>&#124;&nbsp;{ propTypes?: any, contextType?: func, defaultProps?: { className?: string, color?: string }, displayName?: string, getDerivedStateFromProps?: func, getDerivedStateFromError?: func }<br>&#124;&nbsp;func"
-      }
-    },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, legendItem: PiecewiseColorLegendItemContext, index: number) => void",
         "describedArgs": ["event", "legendItem", "index"]
       }
-    }
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "tabIndex": { "type": { "name": "number" } }
   },
   "name": "PiecewiseColorLegend",
   "imports": [

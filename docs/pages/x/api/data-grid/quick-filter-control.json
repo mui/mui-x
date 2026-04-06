@@ -11,7 +11,20 @@
     "id": { "type": { "name": "string" } },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
+    "material": {
+      "type": {
+        "name": "union",
+        "description": "object<br>&#124;&nbsp;object<br>&#124;&nbsp;object"
+      }
+    },
     "multiline": { "type": { "name": "bool" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: ChangeEvent<HTMLElement, Element>) => void",
+        "describedArgs": []
+      }
+    },
     "placeholder": { "type": { "name": "string" } },
     "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
     "role": { "type": { "name": "string" } },

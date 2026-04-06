@@ -1,5 +1,6 @@
 {
   "props": {
+    "color": { "type": { "name": "string" }, "required": true },
     "cornerRadius": { "type": { "name": "number" }, "required": true },
     "dataIndex": { "type": { "name": "number" }, "required": true },
     "endAngle": { "type": { "name": "number" }, "required": true },
@@ -12,6 +13,13 @@
     "seriesId": { "type": { "name": "string" }, "required": true },
     "startAngle": { "type": { "name": "number" }, "required": true },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "onClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent<SVGPathElement, MouseEvent>) => void",
+        "describedArgs": []
+      }
+    },
     "skipAnimation": { "type": { "name": "bool" } },
     "skipInteraction": { "type": { "name": "bool" } }
   },

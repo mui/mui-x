@@ -1,5 +1,6 @@
 {
   "props": {
+    "color": { "type": { "name": "string" }, "required": true },
     "dataIndex": { "type": { "name": "number" }, "required": true },
     "height": { "type": { "name": "number" }, "required": true },
     "isFaded": { "type": { "name": "bool" }, "required": true },

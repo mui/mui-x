@@ -16,7 +16,7 @@
     "hideMark": { "type": { "description": "boolean" } },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
+        "description": "{ highlight?: \"none\" | \"item\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
       }
     },
     "id": { "type": { "description": "string" } },

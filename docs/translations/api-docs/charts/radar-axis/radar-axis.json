@@ -5,6 +5,7 @@
       "description": "The absolute rotation angle of the metrics (in degree)\nIf not defined the metric angle will be used."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "className": { "description": "A CSS class name applied to the root element." },
     "divisions": { "description": "The number of divisions with label." },
     "dominantBaseline": {
       "description": "The labels dominant baseline or a function returning the dominant baseline for a given axis angle (in degree)."

@@ -3,6 +3,7 @@
     "className": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;func" } },
     "disabled": { "type": { "name": "bool" } },
     "id": { "type": { "name": "string" } },
+    "material": { "type": { "name": "object" } },
     "render": { "type": { "name": "element" } },
     "role": { "type": { "name": "string" } },
     "size": {

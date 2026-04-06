@@ -92,6 +92,8 @@
         "describedArgs": ["tooltipItem"]
       }
     },
+    "plugins": { "type": { "name": "object" } },
+    "seriesConfig": { "type": { "name": "object" } },
     "shape": {
       "type": { "name": "enum", "description": "'sharp'<br>&#124;&nbsp;'circular'" },
       "default": "'sharp'"

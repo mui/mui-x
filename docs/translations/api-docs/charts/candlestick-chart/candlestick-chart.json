@@ -104,6 +104,9 @@
         "zoomData": { "name": "zoomData", "description": "Updated zoom data." }
       }
     },
+    "seriesConfig": {
+      "description": "The configuration for the series types.\nThis is used to define how each series type should be processed, colored, and displayed."
+    },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {
       "description": "If <code>true</code>, animations are skipped.\nIf unset or <code>false</code>, the animations respects the user's <code>prefers-reduced-motion</code> setting."

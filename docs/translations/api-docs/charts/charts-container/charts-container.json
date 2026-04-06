@@ -108,6 +108,7 @@
         "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
       }
     },
+    "plugins": { "description": "Array of plugins used to add features to the chart." },
     "radiusAxis": {
       "description": "The configuration of the radial-axes.\nIf not provided, a default axis config is used.\nAn array of AxisConfig objects."
     },
@@ -116,6 +117,9 @@
     },
     "series": {
       "description": "The array of series to display.\nEach type of series has its own specificity.\nPlease refer to the appropriate docs page to learn more about it."
+    },
+    "seriesConfig": {
+      "description": "The configuration for the series types.\nThis is used to define how each series type should be processed, colored, and displayed."
     },
     "skipAnimation": {
       "description": "If <code>true</code>, animations are skipped.\nIf unset or <code>false</code>, the animations respects the user's <code>prefers-reduced-motion</code> setting."

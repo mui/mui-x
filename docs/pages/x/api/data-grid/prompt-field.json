@@ -6,6 +6,10 @@
       "signature": { "type": "function(prompt: string) => void", "describedArgs": ["prompt"] }
     },
     "className": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;func" } },
+    "lang": {
+      "type": { "name": "string" },
+      "default": "HTML lang attribute value or the user agent's language setting"
+    },
     "onRecordError": {
       "type": { "name": "func" },
       "signature": { "type": "function(error: string) => void", "describedArgs": ["error"] }

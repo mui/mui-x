@@ -121,6 +121,9 @@
       }
     },
     "plotType": { "description": "Type of plot used." },
+    "seriesConfig": {
+      "description": "The configuration for the series types.\nThis is used to define how each series type should be processed, colored, and displayed."
+    },
     "showHighlight": {
       "description": "Set to <code>true</code> to highlight the value.\nWith line, it shows a point.\nWith bar, it shows a highlight band."
     },

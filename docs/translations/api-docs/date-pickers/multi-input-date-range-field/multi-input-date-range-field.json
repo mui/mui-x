@@ -5,13 +5,9 @@
       "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount.\nIf <code>true</code>, the field is focused during the first mount."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "component": { "description": "" },
     "dateSeparator": { "description": "String displayed between the start and the end dates." },
     "defaultValue": {
       "description": "The default value. Use when the component is not controlled."
-    },
-    "direction": {
-      "description": "Defines the <code>flex-direction</code> style property.\nIt is applied for all screen sizes."
     },
     "disabled": {
       "description": "If <code>true</code>, the component is disabled.\nWhen disabled, the value cannot be changed and no interaction is possible."
@@ -22,7 +18,6 @@
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },
-    "divider": { "description": "Add an element between each child." },
     "enableAccessibleFieldDOMStructure": { "description": "" },
     "endFieldRef": {
       "description": "The ref object used to interact with the end field imperatively."
@@ -80,17 +75,12 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "spacing": { "description": "Defines the space between immediate children." },
     "startFieldRef": {
       "description": "The ref object used to interact with the start field imperatively."
     },
-    "style": { "description": "" },
     "timezone": {
       "description": "Choose which timezone to use for the value.\nExample: \"default\", \"system\", \"UTC\", \"America/New_York\".\nIf you pass values from other timezones to some props, they will be converted to this timezone before being used.",
       "seeMoreText": "See {{link}} for more details."
-    },
-    "useFlexGap": {
-      "description": "If <code>true</code>, the CSS flexbox <code>gap</code> is used instead of applying <code>margin</code> to children.<br><br>While CSS <code>gap</code> removes the [known limitations](https://mui.com/joy-ui/react-stack/#limitations),\nit is not fully supported in some browsers. We recommend checking https://caniuse.com/?search=flex%20gap before using this flag.<br><br>To enable this flag globally, follow the [theme's default props](https://mui.com/material-ui/customization/theme-components/#default-props) configuration."
     },
     "value": { "description": "The selected value.\nUsed when the component is controlled." }
   },

@@ -2,6 +2,9 @@
   "componentDescription": "",
   "propDescriptions": {
     "ampm": { "description": "" },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "hidden": { "description": "If <code>true</code>, show the toolbar even in desktop mode." },
+    "titleId": { "description": "" },
     "toolbarPlaceholder": {
       "description": "Toolbar value placeholder—it is displayed when the value is empty."
     }

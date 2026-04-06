@@ -3,9 +3,6 @@
   "propDescriptions": {
     "actions": {
       "description": "Ordered array of actions to display.\nIf empty, does not display that action bar."
-    },
-    "disableSpacing": {
-      "description": "If <code>true</code>, the actions do not have additional margin."
     }
   },
   "classDescriptions": {},

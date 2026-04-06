@@ -2,6 +2,9 @@
   "componentDescription": "",
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "ref": {
+      "description": "Allows getting a ref to the component instance.\nOnce the component unmounts, React will set <code>ref.current</code> to <code>null</code>\n(or call the ref with <code>null</code> if you passed a callback ref)."
+    },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }

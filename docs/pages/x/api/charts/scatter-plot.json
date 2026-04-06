@@ -1,5 +1,6 @@
 {
   "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {

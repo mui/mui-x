@@ -6,16 +6,22 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "desc": { "type": { "name": "string" } },
+    "experimentalFeatures": { "type": { "name": "any" } },
     "height": { "type": { "name": "number" } },
     "id": { "type": { "name": "string" } },
+    "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",
         "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
       }
     },
+    "plugins": { "type": { "name": "object" } },
     "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "seriesConfig": { "type": { "name": "object" } },
     "skipAnimation": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "title": { "type": { "name": "string" } },
     "width": { "type": { "name": "number" } }
   },

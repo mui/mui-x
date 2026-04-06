@@ -30,7 +30,13 @@
       "default": "formattedValue"
     },
     "reverse": { "type": { "name": "bool" }, "default": "false" },
-    "rotateGradient": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "tabIndex": { "type": { "name": "number" } },
     "thickness": { "type": { "name": "number" }, "default": "12" }
   },
   "name": "ContinuousColorLegend",

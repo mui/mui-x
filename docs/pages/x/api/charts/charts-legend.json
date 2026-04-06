@@ -17,6 +17,7 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "tabIndex": { "type": { "name": "number" } },
     "toggleVisibilityOnClick": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "ChartsLegend",

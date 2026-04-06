@@ -2,6 +2,10 @@
   "componentDescription": "Features:\n- [DataGridPro](https://mui.com/x/react-data-grid/features/)\n\nAPI:\n- [DataGridPro API](https://mui.com/x/api/data-grid/data-grid-pro/)",
   "propDescriptions": {
     "columns": { "description": "Set of columns of type GridColDef[]." },
+    "aria-label": { "description": "The <code>aria-label</code> of the Data Grid." },
+    "aria-labelledby": {
+      "description": "The <code>id</code> of the element containing a label for the Data Grid."
+    },
     "autoHeight": {
       "description": "If <code>true</code>, the Data Grid height is dynamic and takes as much space as it needs to display all rows.\nUse it instead of a flex parent container approach, if:\n- you don't need to set a minimum or maximum height for the Data Grid\n- you want to avoid the scrollbar flickering when the content changes"
     },

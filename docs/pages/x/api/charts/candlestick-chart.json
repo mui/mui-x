@@ -8,7 +8,7 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ x?: 'line'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'band', y?: 'line'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'band' }"
+        "description": "{ x?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band', y?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band' }"
       },
       "default": "{ x: 'line', y: 'line' }",
       "seeMoreLink": {
@@ -116,6 +116,7 @@
         "describedArgs": ["zoomData"]
       }
     },
+    "seriesConfig": { "type": { "name": "object" } },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

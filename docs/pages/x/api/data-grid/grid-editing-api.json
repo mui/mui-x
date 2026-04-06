@@ -12,7 +12,7 @@
     },
     "stopCellEditMode": {
       "type": {
-        "description": "(params: { id: string | number, field: string, ignoreModifications?: boolean, cellToFocusAfter?: \"left\" | \"right\" | \"none\" | \"below\" }) =&gt; void"
+        "description": "(params: { id: string | number, field: string, ignoreModifications?: boolean, cellToFocusAfter?: \"none\" | \"left\" | \"right\" | \"below\" }) =&gt; void"
       }
     },
     "isCellEditable": {
@@ -36,7 +36,7 @@
     },
     "stopRowEditMode": {
       "type": {
-        "description": "(params: { id: string | number, ignoreModifications?: boolean, field?: string, cellToFocusAfter?: \"left\" | \"right\" | \"none\" | \"below\" }) =&gt; void"
+        "description": "(params: { id: string | number, ignoreModifications?: boolean, field?: string, cellToFocusAfter?: \"none\" | \"left\" | \"right\" | \"below\" }) =&gt; void"
       }
     }
   }

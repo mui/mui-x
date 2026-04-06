@@ -95,6 +95,7 @@
         "describedArgs": ["tooltipItem"]
       }
     },
+    "plugins": { "type": { "name": "object" } },
     "radiusAxis": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "rotationAxis": {
       "type": {
@@ -103,6 +104,7 @@
       }
     },
     "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "seriesConfig": { "type": { "name": "object" } },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },

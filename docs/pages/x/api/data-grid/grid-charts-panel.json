@@ -1,5 +1,15 @@
 {
-  "props": {},
+  "props": {
+    "getColumnName": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(field: string) => string | undefined",
+        "describedArgs": ["field"],
+        "returned": "string | undefined"
+      }
+    },
+    "schema": { "type": { "name": "object" }, "default": "{}" }
+  },
   "name": "GridChartsPanel",
   "imports": [
     "import { GridChartsPanel } from '@mui/x-data-grid-premium/components';",

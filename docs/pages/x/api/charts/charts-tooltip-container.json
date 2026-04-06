@@ -7,60 +7,8 @@
       },
       "default": "'pointer'"
     },
-    "anchorEl": {
-      "type": {
-        "name": "union",
-        "description": "object<br>&#124;&nbsp;{ getBoundingClientRect: func, contextElement?: object }<br>&#124;&nbsp;func<br>&#124;&nbsp;func"
-      }
-    },
     "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "component": {
-      "type": {
-        "name": "union",
-        "description": "'symbol'<br>&#124;&nbsp;'object'<br>&#124;&nbsp;'label'<br>&#124;&nbsp;'style'<br>&#124;&nbsp;'desc'<br>&#124;&nbsp;'filter'<br>&#124;&nbsp;'footer'<br>&#124;&nbsp;'main'<br>&#124;&nbsp;'clipPath'<br>&#124;&nbsp;'marker'<br>&#124;&nbsp;'mask'<br>&#124;&nbsp;'p'<br>&#124;&nbsp;'input'<br>&#124;&nbsp;'progress'<br>&#124;&nbsp;'select'<br>&#124;&nbsp;'text'<br>&#124;&nbsp;'center'<br>&#124;&nbsp;'title'<br>&#124;&nbsp;'search'<br>&#124;&nbsp;'big'<br>&#124;&nbsp;'link'<br>&#124;&nbsp;'small'<br>&#124;&nbsp;'sub'<br>&#124;&nbsp;'sup'<br>&#124;&nbsp;'button'<br>&#124;&nbsp;'a'<br>&#124;&nbsp;'abbr'<br>&#124;&nbsp;'address'<br>&#124;&nbsp;'area'<br>&#124;&nbsp;'article'<br>&#124;&nbsp;'aside'<br>&#124;&nbsp;'audio'<br>&#124;&nbsp;'b'<br>&#124;&nbsp;'base'<br>&#124;&nbsp;'bdi'<br>&#124;&nbsp;'bdo'<br>&#124;&nbsp;'blockquote'<br>&#124;&nbsp;'body'<br>&#124;&nbsp;'br'<br>&#124;&nbsp;'canvas'<br>&#124;&nbsp;'caption'<br>&#124;&nbsp;'cite'<br>&#124;&nbsp;'code'<br>&#124;&nbsp;'col'<br>&#124;&nbsp;'colgroup'<br>&#124;&nbsp;'data'<br>&#124;&nbsp;'datalist'<br>&#124;&nbsp;'dd'<br>&#124;&nbsp;'del'<br>&#124;&nbsp;'details'<br>&#124;&nbsp;'dfn'<br>&#124;&nbsp;'dialog'<br>&#124;&nbsp;'div'<br>&#124;&nbsp;'dl'<br>&#124;&nbsp;'dt'<br>&#124;&nbsp;'em'<br>&#124;&nbsp;'embed'<br>&#124;&nbsp;'fieldset'<br>&#124;&nbsp;'figcaption'<br>&#124;&nbsp;'figure'<br>&#124;&nbsp;'form'<br>&#124;&nbsp;'h1'<br>&#124;&nbsp;'h2'<br>&#124;&nbsp;'h3'<br>&#124;&nbsp;'h4'<br>&#124;&nbsp;'h5'<br>&#124;&nbsp;'h6'<br>&#124;&nbsp;'head'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'hgroup'<br>&#124;&nbsp;'hr'<br>&#124;&nbsp;'html'<br>&#124;&nbsp;'i'<br>&#124;&nbsp;'iframe'<br>&#124;&nbsp;'img'<br>&#124;&nbsp;'ins'<br>&#124;&nbsp;'kbd'<br>&#124;&nbsp;'keygen'<br>&#124;&nbsp;'legend'<br>&#124;&nbsp;'li'<br>&#124;&nbsp;'map'<br>&#124;&nbsp;'mark'<br>&#124;&nbsp;'menu'<br>&#124;&nbsp;'menuitem'<br>&#124;&nbsp;'meta'<br>&#124;&nbsp;'meter'<br>&#124;&nbsp;'nav'<br>&#124;&nbsp;'noindex'<br>&#124;&nbsp;'noscript'<br>&#124;&nbsp;'ol'<br>&#124;&nbsp;'optgroup'<br>&#124;&nbsp;'option'<br>&#124;&nbsp;'output'<br>&#124;&nbsp;'param'<br>&#124;&nbsp;'picture'<br>&#124;&nbsp;'pre'<br>&#124;&nbsp;'q'<br>&#124;&nbsp;'rp'<br>&#124;&nbsp;'rt'<br>&#124;&nbsp;'ruby'<br>&#124;&nbsp;'s'<br>&#124;&nbsp;'samp'<br>&#124;&nbsp;'slot'<br>&#124;&nbsp;'script'<br>&#124;&nbsp;'section'<br>&#124;&nbsp;'source'<br>&#124;&nbsp;'span'<br>&#124;&nbsp;'strong'<br>&#124;&nbsp;'summary'<br>&#124;&nbsp;'table'<br>&#124;&nbsp;'template'<br>&#124;&nbsp;'tbody'<br>&#124;&nbsp;'td'<br>&#124;&nbsp;'textarea'<br>&#124;&nbsp;'tfoot'<br>&#124;&nbsp;'th'<br>&#124;&nbsp;'thead'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'tr'<br>&#124;&nbsp;'track'<br>&#124;&nbsp;'u'<br>&#124;&nbsp;'ul'<br>&#124;&nbsp;'var'<br>&#124;&nbsp;'video'<br>&#124;&nbsp;'wbr'<br>&#124;&nbsp;'webview'<br>&#124;&nbsp;'svg'<br>&#124;&nbsp;'animate'<br>&#124;&nbsp;'animateMotion'<br>&#124;&nbsp;'animateTransform'<br>&#124;&nbsp;'circle'<br>&#124;&nbsp;'defs'<br>&#124;&nbsp;'ellipse'<br>&#124;&nbsp;'feBlend'<br>&#124;&nbsp;'feColorMatrix'<br>&#124;&nbsp;'feComponentTransfer'<br>&#124;&nbsp;'feComposite'<br>&#124;&nbsp;'feConvolveMatrix'<br>&#124;&nbsp;'feDiffuseLighting'<br>&#124;&nbsp;'feDisplacementMap'<br>&#124;&nbsp;'feDistantLight'<br>&#124;&nbsp;'feDropShadow'<br>&#124;&nbsp;'feFlood'<br>&#124;&nbsp;'feFuncA'<br>&#124;&nbsp;'feFuncB'<br>&#124;&nbsp;'feFuncG'<br>&#124;&nbsp;'feFuncR'<br>&#124;&nbsp;'feGaussianBlur'<br>&#124;&nbsp;'feImage'<br>&#124;&nbsp;'feMerge'<br>&#124;&nbsp;'feMergeNode'<br>&#124;&nbsp;'feMorphology'<br>&#124;&nbsp;'feOffset'<br>&#124;&nbsp;'fePointLight'<br>&#124;&nbsp;'feSpecularLighting'<br>&#124;&nbsp;'feSpotLight'<br>&#124;&nbsp;'feTile'<br>&#124;&nbsp;'feTurbulence'<br>&#124;&nbsp;'foreignObject'<br>&#124;&nbsp;'g'<br>&#124;&nbsp;'image'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'linearGradient'<br>&#124;&nbsp;'metadata'<br>&#124;&nbsp;'mpath'<br>&#124;&nbsp;'path'<br>&#124;&nbsp;'pattern'<br>&#124;&nbsp;'polygon'<br>&#124;&nbsp;'polyline'<br>&#124;&nbsp;'radialGradient'<br>&#124;&nbsp;'rect'<br>&#124;&nbsp;'set'<br>&#124;&nbsp;'stop'<br>&#124;&nbsp;'switch'<br>&#124;&nbsp;'textPath'<br>&#124;&nbsp;'tspan'<br>&#124;&nbsp;'use'<br>&#124;&nbsp;'view'<br>&#124;&nbsp;func<br>&#124;&nbsp;{ propTypes?: any, contextType?: func, defaultProps?: object, displayName?: string, getDerivedStateFromProps?: func, getDerivedStateFromError?: func }"
-      }
-    },
-    "components": {
-      "type": {
-        "name": "shape",
-        "description": "{ Root?: 'symbol'<br>&#124;&nbsp;'object'<br>&#124;&nbsp;'label'<br>&#124;&nbsp;'style'<br>&#124;&nbsp;'desc'<br>&#124;&nbsp;'filter'<br>&#124;&nbsp;'footer'<br>&#124;&nbsp;'main'<br>&#124;&nbsp;'clipPath'<br>&#124;&nbsp;'marker'<br>&#124;&nbsp;'mask'<br>&#124;&nbsp;'p'<br>&#124;&nbsp;'input'<br>&#124;&nbsp;'progress'<br>&#124;&nbsp;'select'<br>&#124;&nbsp;'text'<br>&#124;&nbsp;'center'<br>&#124;&nbsp;'title'<br>&#124;&nbsp;'search'<br>&#124;&nbsp;'big'<br>&#124;&nbsp;'link'<br>&#124;&nbsp;'small'<br>&#124;&nbsp;'sub'<br>&#124;&nbsp;'sup'<br>&#124;&nbsp;'button'<br>&#124;&nbsp;'a'<br>&#124;&nbsp;'abbr'<br>&#124;&nbsp;'address'<br>&#124;&nbsp;'area'<br>&#124;&nbsp;'article'<br>&#124;&nbsp;'aside'<br>&#124;&nbsp;'audio'<br>&#124;&nbsp;'b'<br>&#124;&nbsp;'base'<br>&#124;&nbsp;'bdi'<br>&#124;&nbsp;'bdo'<br>&#124;&nbsp;'blockquote'<br>&#124;&nbsp;'body'<br>&#124;&nbsp;'br'<br>&#124;&nbsp;'canvas'<br>&#124;&nbsp;'caption'<br>&#124;&nbsp;'cite'<br>&#124;&nbsp;'code'<br>&#124;&nbsp;'col'<br>&#124;&nbsp;'colgroup'<br>&#124;&nbsp;'data'<br>&#124;&nbsp;'datalist'<br>&#124;&nbsp;'dd'<br>&#124;&nbsp;'del'<br>&#124;&nbsp;'details'<br>&#124;&nbsp;'dfn'<br>&#124;&nbsp;'dialog'<br>&#124;&nbsp;'div'<br>&#124;&nbsp;'dl'<br>&#124;&nbsp;'dt'<br>&#124;&nbsp;'em'<br>&#124;&nbsp;'embed'<br>&#124;&nbsp;'fieldset'<br>&#124;&nbsp;'figcaption'<br>&#124;&nbsp;'figure'<br>&#124;&nbsp;'form'<br>&#124;&nbsp;'h1'<br>&#124;&nbsp;'h2'<br>&#124;&nbsp;'h3'<br>&#124;&nbsp;'h4'<br>&#124;&nbsp;'h5'<br>&#124;&nbsp;'h6'<br>&#124;&nbsp;'head'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'hgroup'<br>&#124;&nbsp;'hr'<br>&#124;&nbsp;'html'<br>&#124;&nbsp;'i'<br>&#124;&nbsp;'iframe'<br>&#124;&nbsp;'img'<br>&#124;&nbsp;'ins'<br>&#124;&nbsp;'kbd'<br>&#124;&nbsp;'keygen'<br>&#124;&nbsp;'legend'<br>&#124;&nbsp;'li'<br>&#124;&nbsp;'map'<br>&#124;&nbsp;'mark'<br>&#124;&nbsp;'menu'<br>&#124;&nbsp;'menuitem'<br>&#124;&nbsp;'meta'<br>&#124;&nbsp;'meter'<br>&#124;&nbsp;'nav'<br>&#124;&nbsp;'noindex'<br>&#124;&nbsp;'noscript'<br>&#124;&nbsp;'ol'<br>&#124;&nbsp;'optgroup'<br>&#124;&nbsp;'option'<br>&#124;&nbsp;'output'<br>&#124;&nbsp;'param'<br>&#124;&nbsp;'picture'<br>&#124;&nbsp;'pre'<br>&#124;&nbsp;'q'<br>&#124;&nbsp;'rp'<br>&#124;&nbsp;'rt'<br>&#124;&nbsp;'ruby'<br>&#124;&nbsp;'s'<br>&#124;&nbsp;'samp'<br>&#124;&nbsp;'slot'<br>&#124;&nbsp;'script'<br>&#124;&nbsp;'section'<br>&#124;&nbsp;'source'<br>&#124;&nbsp;'span'<br>&#124;&nbsp;'strong'<br>&#124;&nbsp;'summary'<br>&#124;&nbsp;'table'<br>&#124;&nbsp;'template'<br>&#124;&nbsp;'tbody'<br>&#124;&nbsp;'td'<br>&#124;&nbsp;'textarea'<br>&#124;&nbsp;'tfoot'<br>&#124;&nbsp;'th'<br>&#124;&nbsp;'thead'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'tr'<br>&#124;&nbsp;'track'<br>&#124;&nbsp;'u'<br>&#124;&nbsp;'ul'<br>&#124;&nbsp;'var'<br>&#124;&nbsp;'video'<br>&#124;&nbsp;'wbr'<br>&#124;&nbsp;'webview'<br>&#124;&nbsp;'svg'<br>&#124;&nbsp;'animate'<br>&#124;&nbsp;'animateMotion'<br>&#124;&nbsp;'animateTransform'<br>&#124;&nbsp;'circle'<br>&#124;&nbsp;'defs'<br>&#124;&nbsp;'ellipse'<br>&#124;&nbsp;'feBlend'<br>&#124;&nbsp;'feColorMatrix'<br>&#124;&nbsp;'feComponentTransfer'<br>&#124;&nbsp;'feComposite'<br>&#124;&nbsp;'feConvolveMatrix'<br>&#124;&nbsp;'feDiffuseLighting'<br>&#124;&nbsp;'feDisplacementMap'<br>&#124;&nbsp;'feDistantLight'<br>&#124;&nbsp;'feDropShadow'<br>&#124;&nbsp;'feFlood'<br>&#124;&nbsp;'feFuncA'<br>&#124;&nbsp;'feFuncB'<br>&#124;&nbsp;'feFuncG'<br>&#124;&nbsp;'feFuncR'<br>&#124;&nbsp;'feGaussianBlur'<br>&#124;&nbsp;'feImage'<br>&#124;&nbsp;'feMerge'<br>&#124;&nbsp;'feMergeNode'<br>&#124;&nbsp;'feMorphology'<br>&#124;&nbsp;'feOffset'<br>&#124;&nbsp;'fePointLight'<br>&#124;&nbsp;'feSpecularLighting'<br>&#124;&nbsp;'feSpotLight'<br>&#124;&nbsp;'feTile'<br>&#124;&nbsp;'feTurbulence'<br>&#124;&nbsp;'foreignObject'<br>&#124;&nbsp;'g'<br>&#124;&nbsp;'image'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'linearGradient'<br>&#124;&nbsp;'metadata'<br>&#124;&nbsp;'mpath'<br>&#124;&nbsp;'path'<br>&#124;&nbsp;'pattern'<br>&#124;&nbsp;'polygon'<br>&#124;&nbsp;'polyline'<br>&#124;&nbsp;'radialGradient'<br>&#124;&nbsp;'rect'<br>&#124;&nbsp;'set'<br>&#124;&nbsp;'stop'<br>&#124;&nbsp;'switch'<br>&#124;&nbsp;'textPath'<br>&#124;&nbsp;'tspan'<br>&#124;&nbsp;'use'<br>&#124;&nbsp;'view'<br>&#124;&nbsp;func<br>&#124;&nbsp;{ propTypes?: any, contextType?: func, defaultProps?: object, displayName?: string, getDerivedStateFromProps?: func, getDerivedStateFromError?: func } }"
-      },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "use the <code>slots</code> prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/)."
-    },
-    "componentsProps": {
-      "type": { "name": "shape", "description": "{ root?: object<br>&#124;&nbsp;func }" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "use the <code>slotProps</code> prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/)."
-    },
-    "container": { "type": { "name": "union", "description": "object<br>&#124;&nbsp;func" } },
-    "disablePortal": { "type": { "name": "bool" }, "default": "false" },
-    "keepMounted": { "type": { "name": "bool" }, "default": "false" },
-    "modifiers": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ name?: any, enabled?: bool, phase?: 'main'<br>&#124;&nbsp;'beforeRead'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'afterRead'<br>&#124;&nbsp;'beforeMain'<br>&#124;&nbsp;'afterMain'<br>&#124;&nbsp;'beforeWrite'<br>&#124;&nbsp;'write'<br>&#124;&nbsp;'afterWrite', requires?: Array&lt;string&gt;, requiresIfExists?: Array&lt;string&gt;, fn?: func, effect?: func, options?: object, data?: object }&gt;"
-      }
-    },
-    "open": { "type": { "name": "bool" } },
-    "placement": {
-      "type": {
-        "name": "enum",
-        "description": "'auto'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'auto-start'<br>&#124;&nbsp;'auto-end'<br>&#124;&nbsp;'top-start'<br>&#124;&nbsp;'top-end'<br>&#124;&nbsp;'bottom-start'<br>&#124;&nbsp;'bottom-end'<br>&#124;&nbsp;'right-start'<br>&#124;&nbsp;'right-end'<br>&#124;&nbsp;'left-start'<br>&#124;&nbsp;'left-end'"
-      },
-      "default": "'bottom'"
-    },
-    "popperOptions": {
-      "type": {
-        "name": "shape",
-        "description": "{ placement?: 'auto'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'auto-start'<br>&#124;&nbsp;'auto-end'<br>&#124;&nbsp;'top-start'<br>&#124;&nbsp;'top-end'<br>&#124;&nbsp;'bottom-start'<br>&#124;&nbsp;'bottom-end'<br>&#124;&nbsp;'right-start'<br>&#124;&nbsp;'right-end'<br>&#124;&nbsp;'left-start'<br>&#124;&nbsp;'left-end', modifiers?: Array&lt;any&gt;, strategy?: 'fixed'<br>&#124;&nbsp;'absolute', onFirstUpdate?: func }"
-      },
-      "default": "{}"
-    },
-    "popperRef": { "type": { "name": "custom", "description": "ref" } },
     "position": {
       "type": {
         "name": "enum",
@@ -73,11 +21,10 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "transition": { "type": { "name": "bool" }, "default": "false" },
     "trigger": {
       "type": {
         "name": "enum",
-        "description": "'item'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'axis'"
+        "description": "'none'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'axis'"
       },
       "default": "'axis'"
     }

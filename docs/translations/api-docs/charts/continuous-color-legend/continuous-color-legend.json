@@ -20,7 +20,9 @@
       "description": "The label to display at the minimum side of the gradient.\nCan either be a string, or a function."
     },
     "reverse": { "description": "If <code>true</code>, the gradient and labels will be reversed." },
-    "rotateGradient": { "description": "" },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "tabIndex": { "description": "" },
     "thickness": { "description": "The thickness of the gradient" }
   },
   "classDescriptions": {

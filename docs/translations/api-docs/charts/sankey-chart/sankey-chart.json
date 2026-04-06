@@ -58,6 +58,9 @@
         "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
       }
     },
+    "seriesConfig": {
+      "description": "The configuration for the series types.\nThis is used to define how each series type should be processed, colored, and displayed."
+    },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "title": {

@@ -38,7 +38,7 @@
     "label": { "type": { "description": "string" } },
     "labelStyle": { "type": { "description": "ChartsTextStyle" } },
     "offset": { "type": { "description": "number" }, "default": "0" },
-    "position": { "type": { "description": "\"bottom\" | \"top\" | \"none\"" } },
+    "position": { "type": { "description": "\"none\" | \"bottom\" | \"top\"" } },
     "reverse": { "type": { "description": "boolean" } },
     "slotProps": {
       "type": {

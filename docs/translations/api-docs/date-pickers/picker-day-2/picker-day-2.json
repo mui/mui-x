@@ -12,14 +12,7 @@
     "outsideCurrentMonth": {
       "description": "If <code>true</code>, day is outside of month and will be hidden."
     },
-    "action": {
-      "description": "A ref for imperative actions.\nIt currently only supports <code>focusVisible()</code> action."
-    },
-    "centerRipple": {
-      "description": "If <code>true</code>, the ripples are centered.\nThey won't start at the cursor interaction position."
-    },
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "component": { "description": "" },
     "disabled": { "description": "If <code>true</code>, renders as disabled." },
     "disableHighlightToday": {
       "description": "If <code>true</code>, today's date is rendering without highlighting with circle."
@@ -27,38 +20,17 @@
     "disableMargin": {
       "description": "If <code>true</code>, days are rendering without margin. Useful for displaying linked range of days."
     },
-    "disableRipple": {
-      "description": "If <code>true</code>, the ripple effect is disabled.<br><br>⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure\nto highlight the element by applying separate styles with the <code>.Mui-focusVisible</code> class."
-    },
-    "disableTouchRipple": {
-      "description": "If <code>true</code>, the touch ripple effect is disabled."
-    },
-    "focusRipple": {
-      "description": "If <code>true</code>, the base button will have a keyboard focus ripple."
-    },
-    "focusVisibleClassName": {
-      "description": "This prop can help identify which element has keyboard focus.\nThe class name will be applied when the element gains the focus through keyboard interaction.\nIt's a polyfill for the [CSS :focus-visible selector](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo).\nThe rationale for using this feature [is explained here](https://github.com/WICG/focus-visible/blob/HEAD/explainer.md).\nA [polyfill can be used](https://github.com/WICG/focus-visible) to apply a <code>focus-visible</code> class to other components\nif needed."
-    },
     "isAnimating": { "description": "" },
     "isVisuallySelected": { "description": "Indicates if the day should be visually selected." },
     "onBlur": { "description": "" },
     "onFocus": { "description": "" },
-    "onFocusVisible": {
-      "description": "Callback fired when the component is focused with a keyboard.\nWe trigger a <code>onFocus</code> callback too."
-    },
     "onKeyDown": { "description": "" },
     "onMouseEnter": { "description": "" },
     "selected": { "description": "If <code>true</code>, renders as selected." },
     "showDaysOutsideCurrentMonth": {
       "description": "If <code>true</code>, days outside the current month are rendered:<br><br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br><br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br><br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
     },
-    "style": { "description": "" },
-    "tabIndex": { "description": "" },
-    "today": { "description": "If <code>true</code>, renders as today date." },
-    "TouchRippleProps": { "description": "Props applied to the <code>TouchRipple</code> element." },
-    "touchRippleRef": {
-      "description": "A ref that points to the <code>TouchRipple</code> element."
-    }
+    "today": { "description": "If <code>true</code>, renders as today date." }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },

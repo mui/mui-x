@@ -13,6 +13,7 @@
     },
     "id": { "type": { "name": "string" } },
     "label": { "type": { "name": "string" } },
+    "material": { "type": { "name": "object" } },
     "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
     "role": { "type": { "name": "string" } },
     "size": {
