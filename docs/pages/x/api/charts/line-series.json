@@ -10,7 +10,7 @@
     "baseline": { "type": { "description": "number | \"max\" | \"min\"" }, "default": "0" },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
+      "type": { "description": "(data: ColorCallbackValue&lt;number | null&gt;) =&gt; string" }
     },
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
     "curve": { "type": { "description": "CurveType" }, "default": "'monotoneX'" },
@@ -30,7 +30,7 @@
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "strictStepCurve": { "type": { "description": "boolean" } },
     "type": { "type": { "description": "\"line\"" } },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;number | null&gt;" } },
     "xAxisId": { "type": { "description": "AxisId" } },
     "yAxisId": { "type": { "description": "AxisId" } }
   }

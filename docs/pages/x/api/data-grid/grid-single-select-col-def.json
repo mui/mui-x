@@ -86,12 +86,12 @@
     },
     "renderCell": {
       "type": {
-        "description": "(params: GridRenderCellParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
+        "description": "(params: GridRenderCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; ReactNode"
       }
     },
     "renderEditCell": {
       "type": {
-        "description": "(params: GridRenderEditCellParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
+        "description": "(params: GridRenderEditCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; ReactNode"
       }
     },
     "renderHeader": {
@@ -102,12 +102,12 @@
       "isProPlan": true
     },
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
-    "rowSpanValueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
+    "rowSpanValueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F, never&gt;" } },
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
     "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
-    "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" } },
-    "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
+    "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F, never&gt;" } },
+    "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F, never&gt;" } },
     "valueOptions": {
       "type": {
         "description": "ValueOptions[] | ((params: GridValueOptionsParams&lt;R&gt;) =&gt; ValueOptions[])"

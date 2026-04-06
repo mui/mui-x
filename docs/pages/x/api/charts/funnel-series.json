@@ -41,7 +41,7 @@
       "isProPlan": true
     },
     "type": { "type": { "description": "\"funnel\"" }, "isProPlan": true },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;FunnelValueType&gt;" } },
     "variant": {
       "type": { "description": "\"filled\" | \"outlined\"" },
       "default": "'filled'",

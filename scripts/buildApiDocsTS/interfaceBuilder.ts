@@ -325,19 +325,25 @@ function resolvePropertyType(prop: ts.Symbol, checker: ts.TypeChecker): string {
   // Also get the checker-resolved type (strips undefined, resolves indexed access)
   const checkerType = resolveViaChecker(prop, checker);
 
-  // If we got clean source types, pick the best representation for each member:
-  // - Use the checker resolution if it's simpler (e.g. alias → primitive)
-  // - Use the source text if the checker over-expands (e.g. SxProps → SystemCssProperties | ...)
   if (sourceMembers.size > 0 && !hasIndexedAccess) {
     const sourceResult = [...sourceMembers].join(' | ');
-    // If checker result is shorter or equal, it's a better (more resolved) representation
-    // unless it contains internal types (SystemCssProperties, CSSSelectorObject, etc.)
+
+    // Detect unresolved type parameters in source text (e.g. TValue, S, V)
+    // These are single uppercase letters or T-prefixed identifiers used as generic params.
+    const hasUnresolvedGeneric = /\b[A-Z]\b|\bT[A-Z]\w*\b/.test(sourceResult);
+
+    // Detect if checker over-expands (e.g. SxProps → SystemCssProperties | ...)
     const checkerIsOverExpanded =
       checkerType.includes('SystemCssProperties') ||
       checkerType.includes('CSSPseudoSelector') ||
       checkerType.includes('CSSSelectorObject') ||
       checkerType.split('|').length > sourceMembers.size * 2;
-    if (!checkerIsOverExpanded && checkerType.length <= sourceResult.length) {
+
+    // Prefer checker when:
+    // - Source has unresolved generics (checker instantiates them)
+    // - Checker is shorter or equal (resolves aliases to primitives)
+    // But not when checker over-expands internal types.
+    if (!checkerIsOverExpanded && (hasUnresolvedGeneric || checkerType.length <= sourceResult.length)) {
       return checkerType;
     }
     return sourceResult;

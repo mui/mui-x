@@ -89,7 +89,7 @@
       "isProPlan": true
     },
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
-    "rowSpanValueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
+    "rowSpanValueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F, never&gt;" } },
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
     "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
@@ -97,8 +97,8 @@
       "type": { "description": "GridColType | 'actions' | 'singleSelect'" },
       "default": "'singleSelect'"
     },
-    "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" } },
-    "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
+    "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F, never&gt;" } },
+    "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F, never&gt;" } },
     "valueParser": { "type": { "description": "GridValueParser&lt;R, V, F&gt;" } },
     "valueSetter": { "type": { "description": "GridValueSetter&lt;R, V, F&gt;" } },
     "width": { "type": { "description": "number" }, "default": "100" }

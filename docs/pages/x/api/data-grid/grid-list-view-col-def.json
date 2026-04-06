@@ -13,7 +13,7 @@
     "display": { "type": { "description": "\"flex\" | \"text\"" } },
     "renderCell": {
       "type": {
-        "description": "(params: GridRenderCellParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
+        "description": "(params: GridRenderCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; ReactNode"
       }
     }
   }
