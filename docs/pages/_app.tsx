@@ -54,6 +54,8 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
     productId = 'x-date-pickers';
   } else if (canonicalAs.startsWith('/x/api/charts/')) {
     productId = 'x-charts';
+  } else if (canonicalAs.startsWith('/x/api/scheduler/')) {
+    productId = 'x-scheduler';
   }
 
   return React.useMemo(() => {
@@ -68,6 +70,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
       },
       'x-charts': { subpath: '/x/react-charts', version: process.env.CHARTS_VERSION },
       'x-tree-view': { subpath: '/x/react-tree-view', version: process.env.TREE_VIEW_VERSION },
+      'x-scheduler': { subpath: '/x/react-scheduler', version: process.env.SCHEDULER_VERSION },
     };
 
     const getVersionOptions = (id: string, versions: string[]) =>
@@ -151,6 +154,12 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
           },
         ],
       };
+    } else if (productId === 'x-scheduler') {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Scheduler',
+        versions: getVersionOptions('x-scheduler', [process.env.SCHEDULER_VERSION!]),
+      };
     }
 
     return {
@@ -194,6 +203,13 @@ const CSB_CONFIG = {
       '@mui/x-charts-premium': getMuiPackageVersion('x-charts-premium', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
+      '@mui/x-scheduler': getMuiPackageVersion('x-scheduler', muiCommitRef),
+      '@mui/x-scheduler-premium': getMuiPackageVersion('x-scheduler-premium', muiCommitRef),
+      '@mui/x-scheduler-headless': getMuiPackageVersion('x-scheduler-headless', muiCommitRef),
+      '@mui/x-scheduler-headless-premium': getMuiPackageVersion(
+        'x-scheduler-headless-premium',
+        muiCommitRef,
+      ),
       '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
       '@mui/x-internal-gestures': getMuiPackageVersion('x-internal-gestures', muiCommitRef),
       exceljs: 'latest',

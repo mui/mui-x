@@ -272,8 +272,8 @@ importers:
         specifier: 'catalog:'
         version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#db8c3c931801c792f14f50e36cb5636d564184ad
-        version: https://codeload.github.com/mui/material-ui/tar.gz/db8c3c931801c792f14f50e36cb5636d564184ad(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
+        specifier: github:mui/material-ui#310d80c5a551e55caf2211f15b4e30658703f114
+        version: https://codeload.github.com/mui/material-ui/tar.gz/310d80c5a551e55caf2211f15b4e30658703f114(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
@@ -1614,6 +1614,12 @@ importers:
       '@emotion/styled':
         specifier: ^11.8.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+      '@mui/icons-material':
+        specifier: ^7.3.0 || ^9.0.0-beta.1
+        version: 7.3.9(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+      '@mui/utils':
+        specifier: 'catalog:'
+        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1623,10 +1629,10 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
-    devDependencies:
-      '@mui/icons-material':
+      prop-types:
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 15.8.1
+    devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@7.3.1(@types/node@24.5.2)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
@@ -1670,6 +1676,9 @@ importers:
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.2.6(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@date-fns/tz':
+        specifier: 'catalog:'
+        version: 1.4.1
       '@floating-ui/react':
         specifier: ^0.27.16
         version: 0.27.16(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -1682,6 +1691,9 @@ importers:
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.1.0
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
@@ -1689,9 +1701,6 @@ importers:
         specifier: 'catalog:'
         version: 1.6.0(react@19.2.4)
     devDependencies:
-      '@date-fns/tz':
-        specifier: 'catalog:'
-        version: 1.4.1
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@7.3.1(@types/node@24.5.2)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
@@ -1701,9 +1710,6 @@ importers:
       '@types/use-sync-external-store':
         specifier: 'catalog:'
         version: 1.5.0
-      date-fns:
-        specifier: 'catalog:'
-        version: 4.1.0
       react:
         specifier: 'catalog:'
         version: 19.2.4
@@ -1779,6 +1785,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.8.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+      '@mui/utils':
+        specifier: 'catalog:'
+        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1797,6 +1806,9 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
+      prop-types:
+        specifier: 'catalog:'
+        version: 15.8.1
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -4522,8 +4534,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/db8c3c931801c792f14f50e36cb5636d564184ad':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/db8c3c931801c792f14f50e36cb5636d564184ad}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/310d80c5a551e55caf2211f15b4e30658703f114':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/310d80c5a551e55caf2211f15b4e30658703f114}
     version: 9.0.0-beta.1
     engines: {node: '>=22.18.0', pnpm: 10.33.0}
 
@@ -15089,6 +15101,14 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.14
 
+  '@mui/icons-material@7.3.9(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)':
+    dependencies:
+      '@babel/runtime': 7.29.2
+      '@mui/material': 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react: 19.2.4
+    optionalDependencies:
+      '@types/react': 19.2.14
+
   '@mui/icons-material@9.0.0-beta.1(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
@@ -15431,7 +15451,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/react': 19.2.14
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/db8c3c931801c792f14f50e36cb5636d564184ad(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/310d80c5a551e55caf2211f15b4e30658703f114(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
     dependencies:
       '@netlify/functions': 5.1.5
       '@slack/bolt': 4.6.0(@types/express@5.0.3)
