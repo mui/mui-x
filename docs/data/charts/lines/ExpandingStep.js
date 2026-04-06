@@ -21,7 +21,7 @@ export default function ExpandingStep() {
 
   return (
     <Stack sx={{ width: '100%' }}>
-      <Stack direction="row" justifyContent="space-between">
+      <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
         <Stack>
           <FormControlLabel
             checked={connectNulls}

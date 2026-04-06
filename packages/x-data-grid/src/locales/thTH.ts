@@ -73,7 +73,7 @@ const thTHGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'ตัวดำเนินการ',
   filterPanelOperatorAnd: 'และ',
   filterPanelOperatorOr: 'หรือ',
-  filterPanelColumns: 'คอลัมน์',
+  filterPanelColumn: 'คอลัมน์',
   filterPanelInputLabel: 'ค่า',
   filterPanelInputPlaceholder: 'ค่าตัวกรอง',
 

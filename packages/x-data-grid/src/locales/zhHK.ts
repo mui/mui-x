@@ -70,7 +70,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
   filterPanelOperator: '操作員',
   filterPanelOperatorAnd: '和',
   filterPanelOperatorOr: '或者',
-  filterPanelColumns: '列',
+  filterPanelColumn: '列',
   filterPanelInputLabel: '價值',
   filterPanelInputPlaceholder: '過濾值',
 
