@@ -28,11 +28,22 @@ export const cleanFieldResponse = <
   fieldResponse: TFieldResponse,
 ): ExportedPickerFieldUIProps & {
   openPickerAriaLabel: string;
-  textFieldProps: Partial<PickersTextFieldProps> & Record<string, any>;
+  textFieldProps: Partial<PickersTextFieldProps> &
+    // TODO: Remove v9 - temporary workaround
+    {
+      inputProps?: Record<string, any>;
+      InputProps?: Record<string, any>;
+      slotProps?: { input?: Record<string, any>; htmlInput?: Record<string, any> };
+    };
 } => {
   const {
-    InputProps,
+    onPaste,
+    onKeyDown,
+    inputMode,
     readOnly,
+    InputProps,
+    inputProps,
+    inputRef,
     onClear,
     clearable,
     clearButtonPosition,
@@ -40,11 +51,13 @@ export const cleanFieldResponse = <
     openPickerAriaLabel,
     ...other
   } = fieldResponse;
-  const mergedInputProps =
-    materialMajor >= 6 && other?.slotProps?.input
-      ? mergeSlotProps(other?.slotProps?.input, InputProps)
-      : noop;
 
+  const mergedInputProps = other?.slotProps?.input
+    ? mergeSlotProps(other?.slotProps?.input, InputProps)
+    : noop;
+  const mergedHtmlInputProps = other?.slotProps?.htmlInput
+    ? mergeSlotProps(other?.slotProps?.htmlInput, inputProps)
+    : noop;
   return {
     clearable,
     onClear,
@@ -53,7 +66,7 @@ export const cleanFieldResponse = <
     openPickerAriaLabel,
     textFieldProps: {
       ...other,
-      ...(materialMajor >= 6 && other?.slotProps?.input
+      ...(other?.slotProps?.input || other?.slotProps?.htmlInput
         ? {
             slotProps: {
               ...other?.slotProps,
@@ -61,10 +74,18 @@ export const cleanFieldResponse = <
                 ...resolveComponentProps(mergedInputProps, ownerState),
                 readOnly,
               }),
+              htmlInput: (ownerState: FieldOwnerState) => ({
+                ...resolveComponentProps(mergedHtmlInputProps, ownerState),
+                inputMode,
+                onPaste,
+                onKeyDown,
+                ref: inputRef,
+              }),
             },
           }
         : {
             InputProps: { ...(InputProps ?? {}), readOnly },
+            inputProps: { ...(inputProps ?? {}), inputMode, onPaste, onKeyDown, ref: inputRef },
           }),
     },
   };
@@ -188,8 +209,9 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
 
   const additionalTextFieldInputProps: PickersTextFieldProps['InputProps'] = {};
   const textFieldInputProps = resolveComponentProps(
-    ((materialMajor >= 6 && (textFieldProps as any)?.slotProps?.input) ??
-      textFieldProps.InputProps) as PickersTextFieldProps['InputProps'] | undefined,
+    (textFieldProps?.slotProps?.input ?? textFieldProps.InputProps) as
+      | PickersTextFieldProps['InputProps']
+      | undefined,
     ownerState,
   );
 
@@ -266,16 +288,15 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
     ];
   }
 
-  const resolvedTextFieldInputProps =
-    materialMajor >= 6 && (textFieldProps as any)?.slotProps?.input
-      ? resolveComponentProps(
-          mergeSlotProps(textFieldInputProps, additionalTextFieldInputProps),
-          ownerState,
-        )
-      : {
-          ...textFieldInputProps,
-          ...additionalTextFieldInputProps,
-        };
+  const resolvedTextFieldInputProps = textFieldProps?.slotProps?.input
+    ? resolveComponentProps(
+        mergeSlotProps(textFieldInputProps, additionalTextFieldInputProps),
+        ownerState,
+      )
+    : {
+        ...textFieldInputProps,
+        ...additionalTextFieldInputProps,
+      };
 
   // We need to resolve the `inputProps` since we are messing with those props in this component.
   textFieldProps.inputProps =

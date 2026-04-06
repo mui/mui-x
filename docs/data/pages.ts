@@ -1,4 +1,4 @@
-import type { MuiPage } from '@mui/docs/MuiPage';
+import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 import chartsComponentApi from './chartsApiPages';
 import dataGridComponentApi from './dataGridApiPages';
 import pickersComponentApi from './datePickersApiPages';

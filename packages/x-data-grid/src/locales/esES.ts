@@ -74,7 +74,7 @@ const esESGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operadores',
   filterPanelOperatorAnd: 'Y',
   filterPanelOperatorOr: 'O',
-  filterPanelColumns: 'Columnas',
+  filterPanelColumn: 'Columnas',
   filterPanelInputLabel: 'Valor',
   filterPanelInputPlaceholder: 'Valor de filtro',
 

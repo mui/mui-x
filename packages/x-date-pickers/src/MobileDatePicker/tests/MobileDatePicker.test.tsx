@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
+import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import {
@@ -119,7 +119,7 @@ describe('<MobileDatePicker />', () => {
           open
           defaultValue={adapterToUse.date('2018-01-01')}
           slots={{
-            day: (props) => <PickersDay {...props} data-testid="test-day" />,
+            day: (props) => <PickerDay {...props} data-testid="test-day" />,
           }}
         />,
       );

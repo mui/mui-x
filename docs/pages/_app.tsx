@@ -1,18 +1,18 @@
 import 'docsx/src/bootstrap';
 // --- Post bootstrap -----
 import * as React from 'react';
-import type { DocsAppProps } from '@mui/docs/DocsApp';
+import type { DocsAppProps } from '@mui/internal-core-docs/DocsApp';
 import {
   DocsApp,
   createGetInitialProps,
   printConsoleBanner,
   reportWebVitals,
-} from '@mui/docs/DocsApp';
-import { ThemeProvider } from '@mui/docs/ThemeContext';
-import findActivePage from '@mui/docs/findActivePage';
-import getProductInfoFromUrl from '@mui/docs/getProductInfoFromUrl';
-import { pathnameToLanguage } from '@mui/docs/helpers';
-import { Translations } from '@mui/docs/i18n';
+} from '@mui/internal-core-docs/DocsApp';
+import { ThemeProvider } from '@mui/internal-core-docs/ThemeContext';
+import findActivePage from '@mui/internal-core-docs/findActivePage';
+import getProductInfoFromUrl from '@mui/internal-core-docs/getProductInfoFromUrl';
+import { pathnameToLanguage } from '@mui/internal-core-docs/helpers';
+import { Translations } from '@mui/internal-core-docs/i18n';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import xPages from 'docsx/data/pages'; // DO NOT REMOVE
@@ -22,7 +22,7 @@ import { useRouter } from 'next/router';
 
 import * as config from '../config';
 
-export { fontClasses } from '@mui/docs/nextFonts';
+export { fontClasses } from '@mui/internal-core-docs/nextFonts';
 
 // Enable telemetry for internal purposes
 muiXTelemetrySettings.enableTelemetry();
