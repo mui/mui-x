@@ -37,13 +37,8 @@ export const cleanFieldResponse = <
     };
 } => {
   const {
-    onPaste,
-    onKeyDown,
-    inputMode,
-    readOnly,
     InputProps,
-    inputProps,
-    inputRef,
+    readOnly,
     onClear,
     clearable,
     clearButtonPosition,
@@ -54,9 +49,6 @@ export const cleanFieldResponse = <
 
   const mergedInputProps = other?.slotProps?.input
     ? mergeSlotProps(other?.slotProps?.input, InputProps)
-    : noop;
-  const mergedHtmlInputProps = other?.slotProps?.htmlInput
-    ? mergeSlotProps(other?.slotProps?.htmlInput, inputProps)
     : noop;
   return {
     clearable,
@@ -74,18 +66,10 @@ export const cleanFieldResponse = <
                 ...resolveComponentProps(mergedInputProps, ownerState),
                 readOnly,
               }),
-              htmlInput: (ownerState: FieldOwnerState) => ({
-                ...resolveComponentProps(mergedHtmlInputProps, ownerState),
-                inputMode,
-                onPaste,
-                onKeyDown,
-                ref: inputRef,
-              }),
             },
           }
         : {
             InputProps: { ...(InputProps ?? {}), readOnly },
-            inputProps: { ...(inputProps ?? {}), inputMode, onPaste, onKeyDown, ref: inputRef },
           }),
     },
   };
