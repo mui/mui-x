@@ -53,6 +53,7 @@
     "@mui/x-scheduler": "workspace:*",
     "@mui/x-scheduler-headless": "workspace:*",
     "@mui/x-scheduler-headless-premium": "workspace:*",
+    "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "clsx": "catalog:",
