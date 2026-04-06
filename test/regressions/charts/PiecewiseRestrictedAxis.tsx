@@ -19,11 +19,7 @@ const data = [
 
 export default function PiecewiseRestrictedAxis() {
   return (
-    <Stack
-      sx={{
-        maxWidth: 500,
-      }}
-    >
+    <Stack sx={{ maxWidth: 500 }}>
       <ScatterChart
         xAxis={[{ min: -25, max: 23 }]}
         yAxis={[

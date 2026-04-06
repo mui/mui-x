@@ -8,21 +8,8 @@ export default function MinBarSize(): React.JSX.Element {
   const minBarSize = 40;
 
   return (
-    <Stack
-      spacing={2}
-      sx={{
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+    <Stack spacing={2} sx={{ justifyContent: 'center', alignItems: 'center' }}>
+      <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', alignItems: 'center' }}>
         <BarChart
           xAxis={[{ data: sparseData.map((v) => `${v}`), scaleType: 'band' }]}
           series={[{ data: sparseData, minBarSize }]}
@@ -39,14 +26,7 @@ export default function MinBarSize(): React.JSX.Element {
           borderRadius={16}
         />
       </Stack>
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', alignItems: 'center' }}>
         <BarChart
           yAxis={[{ data: sparseData.map((v) => `${v}`), scaleType: 'band' }]}
           series={[{ data: sparseData, minBarSize, layout: 'horizontal' }]}
