@@ -97,8 +97,7 @@
   "name": "StandaloneDayView",
   "imports": [
     "import { StandaloneDayView } from '@mui/x-scheduler/day-view';",
-    "import { StandaloneDayView } from '@mui/x-scheduler';",
-    "import { StandaloneDayView } from '@mui/x-scheduler-premium';"
+    "import { StandaloneDayView } from '@mui/x-scheduler';"
   ],
   "classes": [],
   "spread": true,

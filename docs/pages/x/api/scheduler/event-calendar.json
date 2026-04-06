@@ -102,8 +102,7 @@
   "name": "EventCalendar",
   "imports": [
     "import { EventCalendar } from '@mui/x-scheduler/event-calendar';",
-    "import { EventCalendar } from '@mui/x-scheduler';",
-    "import { EventCalendar } from '@mui/x-scheduler-premium';"
+    "import { EventCalendar } from '@mui/x-scheduler';"
   ],
   "classes": [
     {

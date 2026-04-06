@@ -97,8 +97,7 @@
   "name": "StandaloneAgendaView",
   "imports": [
     "import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';",
-    "import { StandaloneAgendaView } from '@mui/x-scheduler';",
-    "import { StandaloneAgendaView } from '@mui/x-scheduler-premium';"
+    "import { StandaloneAgendaView } from '@mui/x-scheduler';"
   ],
   "classes": [],
   "spread": true,

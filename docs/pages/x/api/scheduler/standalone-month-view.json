@@ -97,8 +97,7 @@
   "name": "StandaloneMonthView",
   "imports": [
     "import { StandaloneMonthView } from '@mui/x-scheduler/month-view';",
-    "import { StandaloneMonthView } from '@mui/x-scheduler';",
-    "import { StandaloneMonthView } from '@mui/x-scheduler-premium';"
+    "import { StandaloneMonthView } from '@mui/x-scheduler';"
   ],
   "classes": [],
   "spread": true,

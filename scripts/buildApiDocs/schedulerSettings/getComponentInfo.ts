@@ -79,14 +79,8 @@ export function getComponentImports(name: string, filename: string) {
     (match, pkg, directory) => `@mui/${pkg}/${directory}`,
   );
 
-  const reExportPackage = [rootImportPath];
-
-  if (rootImportPath === '@mui/x-scheduler') {
-    reExportPackage.push('@mui/x-scheduler-premium');
-  }
-
   return [
     `import { ${name} } from '${subdirectoryImportPath}';`,
-    ...reExportPackage.map((importPath) => `import { ${name} } from '${importPath}';`),
+    `import { ${name} } from '${rootImportPath}';`,
   ];
 }
