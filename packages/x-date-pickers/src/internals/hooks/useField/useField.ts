@@ -221,7 +221,7 @@ Learn more about the field accessible DOM structure on the MUI documentation: ht
       );
     }
 
-    if (autoFocus && !disabled && sectionListRef.current) {
+    if (autoFocus && !disabled) {
       sectionListRef.current.getSectionContent(sectionOrder.startIndex).focus();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
