@@ -372,6 +372,11 @@ PickerDayRaw.propTypes = {
    */
   isVisuallySelected: PropTypes.bool,
   /**
+   * Whether the custom component is expected to render a native `<button>` element
+   * when passing a React component to the `component` or `slots` prop.
+   */
+  nativeButton: PropTypes.bool,
+  /**
    * Callback fired when the component is blurred.
    * @param {React.FocusEvent<HTMLButtonElement>} event The event object.
    * @param {PickerValidDate} day The day.

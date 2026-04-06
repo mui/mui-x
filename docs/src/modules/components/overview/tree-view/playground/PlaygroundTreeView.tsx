@@ -197,9 +197,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           <Stack
             direction="row"
             spacing={1}
-            alignItems="center"
-            flexGrow={1}
-            justifyContent="flex-start"
+            sx={{ alignItems: 'center', flexGrow: 1, justifyContent: 'flex-start' }}
           >
             <TreeItemIconContainer
               {...getIconContainerProps({ sx: { '& svg': { fontSize: 13 } } })}
@@ -224,13 +222,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
                 })}
               />
               {showSecondaryLabel && (
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                   {item.secondaryLabel}
                 </Typography>
               )}
             </Stack>
           </Stack>
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             {showDisableButton && (
               <IconButton
                 size="small"
@@ -238,10 +236,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
                   event.stopPropagation();
                   publicAPI.setIsItemDisabled({ itemId });
                 }}
-                sx={{
-                  color: 'inherit',
-                  padding: density === 'compact' ? 0.2 : 0.6,
-                }}
+                sx={{ color: 'inherit', padding: density === 'compact' ? 0.2 : 0.6 }}
               >
                 {status.disabled ? (
                   <Tooltip title="Unlock" arrow>
@@ -403,11 +398,11 @@ export default function PlaygroundTreeView({
 
   return (
     <Stack
-      justifyContent="center"
-      alignItems="center"
-      pl={1}
-      py={1}
       sx={(theme) => ({
+        justifyContent: 'center',
+        alignItems: 'center',
+        pl: 1,
+        py: 1,
         borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
         height: '100%',
         width: '100%',
