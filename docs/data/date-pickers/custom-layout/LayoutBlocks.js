@@ -51,7 +51,13 @@ export default function LayoutBlocks() {
             minWidth: '150px',
           }}
         >
-          <Stack spacing={2} alignItems="center" direction="column">
+          <Stack
+            spacing={2}
+            direction="column"
+            sx={{
+              alignItems: 'center',
+            }}
+          >
             <ToggleButtonGroup
               size="small"
               fullWidth
