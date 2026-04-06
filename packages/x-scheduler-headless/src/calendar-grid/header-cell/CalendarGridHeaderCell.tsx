@@ -10,11 +10,14 @@ import { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
-import { EventCalendarState as State } from '../../use-event-calendar';
+import type { EventCalendarState } from '../../use-event-calendar';
 
 const selectorIsCurrentDate = createSelector(
-  (state: State, date: TemporalSupportedObject, skipDataCurrent: boolean | undefined) =>
-    !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, date),
+  (
+    state: EventCalendarState,
+    date: TemporalSupportedObject,
+    skipDataCurrent: boolean | undefined,
+  ) => !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, date),
 );
 
 export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHeaderCell(

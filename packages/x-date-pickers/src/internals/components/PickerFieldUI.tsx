@@ -30,7 +30,9 @@ export const cleanFieldResponse = <
   ...fieldResponse
 }: TFieldResponse): ExportedPickerFieldUIProps & {
   openPickerAriaLabel: string;
-  textFieldProps: TextFieldProps | PickersTextFieldProps;
+  textFieldProps:
+    | (TextFieldProps & { inputProps?: Record<string, any>; InputProps?: Record<string, any> })
+    | PickersTextFieldProps;
 } => {
   if (enableAccessibleFieldDOMStructure) {
     const {
@@ -43,10 +45,9 @@ export const cleanFieldResponse = <
       openPickerAriaLabel,
       ...other
     } = fieldResponse;
-    const mergedInputProps =
-      materialMajor >= 6 && other?.slotProps?.input
-        ? mergeSlotProps(other?.slotProps?.input, InputProps)
-        : noop;
+    const mergedInputProps = other?.slotProps?.input
+      ? mergeSlotProps(other?.slotProps?.input, InputProps)
+      : noop;
 
     return {
       clearable,
@@ -56,7 +57,7 @@ export const cleanFieldResponse = <
       openPickerAriaLabel,
       textFieldProps: {
         ...other,
-        ...(materialMajor >= 6 && other?.slotProps?.input
+        ...(other?.slotProps?.input
           ? {
               slotProps: {
                 ...other?.slotProps,
@@ -89,14 +90,12 @@ export const cleanFieldResponse = <
     ...other
   } = fieldResponse;
 
-  const mergedInputProps =
-    materialMajor >= 6 && other?.slotProps?.input
-      ? mergeSlotProps(other?.slotProps?.input, InputProps)
-      : noop;
-  const mergedHtmlInputProps =
-    materialMajor >= 6 && other?.slotProps?.htmlInput
-      ? mergeSlotProps(other?.slotProps?.htmlInput, inputProps)
-      : noop;
+  const mergedInputProps = other?.slotProps?.input
+    ? mergeSlotProps(other?.slotProps?.input, InputProps)
+    : noop;
+  const mergedHtmlInputProps = other?.slotProps?.htmlInput
+    ? mergeSlotProps(other?.slotProps?.htmlInput, inputProps)
+    : noop;
   return {
     clearable,
     onClear,
@@ -105,7 +104,7 @@ export const cleanFieldResponse = <
     openPickerAriaLabel,
     textFieldProps: {
       ...other,
-      ...(materialMajor >= 6 && (other?.slotProps?.input || other?.slotProps?.htmlInput)
+      ...(other?.slotProps?.input || other?.slotProps?.htmlInput
         ? {
             slotProps: {
               ...other?.slotProps,
@@ -253,8 +252,9 @@ export function PickerFieldUI<
 
   const additionalTextFieldInputProps: PickersTextFieldProps['InputProps'] = {};
   const textFieldInputProps = resolveComponentProps(
-    ((materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input) ??
-      textFieldProps.InputProps) as PickersTextFieldProps['InputProps'] | undefined,
+    ((textFieldProps as TextFieldProps)?.slotProps?.input ?? textFieldProps.InputProps) as
+      | PickersTextFieldProps['InputProps']
+      | undefined,
     ownerState,
   );
 
@@ -331,28 +331,41 @@ export function PickerFieldUI<
     ];
   }
 
-  const resolvedTextFieldInputProps =
-    materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input
-      ? resolveComponentProps(
-          mergeSlotProps(textFieldInputProps, additionalTextFieldInputProps),
-          ownerState,
-        )
-      : {
-          ...textFieldInputProps,
-          ...additionalTextFieldInputProps,
-        };
+  const resolvedTextFieldInputProps = (textFieldProps as TextFieldProps)?.slotProps?.input
+    ? resolveComponentProps(
+        mergeSlotProps(textFieldInputProps, additionalTextFieldInputProps),
+        ownerState,
+      )
+    : {
+        ...textFieldInputProps,
+        ...additionalTextFieldInputProps,
+      };
 
   // We need to resolve the `inputProps` since we are messing with those props in this component.
-  textFieldProps.inputProps =
-    materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.htmlInput
-      ? resolveComponentProps(
-          (textFieldProps as TextFieldProps).slotProps!.htmlInput as any,
-          ownerState,
-        )
-      : textFieldProps.inputProps;
+  textFieldProps.inputProps = (textFieldProps as TextFieldProps)?.slotProps?.htmlInput
+    ? resolveComponentProps(
+        (textFieldProps as TextFieldProps).slotProps!.htmlInput as any,
+        ownerState,
+      )
+    : textFieldProps.inputProps;
+
+  /**
+   * On Material UI v9, deprecated `inputProps` and `InputProps` are removed.
+   * They should be passed through `slotProps`.
+   */
+  if (materialMajor >= 9 && TextField === MuiTextField) {
+    if (!(textFieldProps as TextFieldProps).slotProps) {
+      (textFieldProps as TextFieldProps).slotProps = {};
+    }
+    (textFieldProps as Required<TextFieldProps>).slotProps.input = resolvedTextFieldInputProps;
+    (textFieldProps as Required<TextFieldProps>).slotProps.htmlInput = textFieldProps.inputProps;
+    delete textFieldProps.inputProps;
+    delete textFieldProps.InputProps;
+    return <TextField {...textFieldProps} />;
+  }
 
   // Remove the `input` slotProps to avoid them overriding the manually resolved `InputProps`.
-  // Relevant on `materialMajor >= 6` since `slotProps` would take precedence.
+  // `slotProps` would take precedence over `InputProps`.
   delete (textFieldProps as TextFieldProps)?.slotProps?.input;
   if (fieldResponse.enableAccessibleFieldDOMStructure) {
     // Remove the `slotProps` on `PickersTextField` as they are not supported.
