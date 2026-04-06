@@ -2,7 +2,7 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeOptions, ThemeProvider, useTheme } from '@mui/material/styles';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import DemoWrapper from '../DemoWrapper';
 import { getTheme } from './theme/getTheme';
 
@@ -21,11 +21,11 @@ export default function ChartDemoWrapper(
       <Stack
         spacing={1}
         sx={{
+          justifyContent: code ? 'space-between' : 'space-around',
           width: '100%',
           padding: 2,
           minHeight: { md: 500 },
         }}
-        justifyContent={code ? 'space-between' : 'space-around'}
       >
         <Box
           sx={{

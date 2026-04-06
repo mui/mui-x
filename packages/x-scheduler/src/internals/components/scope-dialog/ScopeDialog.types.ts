@@ -1,5 +1,3 @@
-import * as React from 'react';
+import { DialogProps } from '@mui/material/Dialog';
 
-export interface ScopePopoverProps extends React.HTMLAttributes<HTMLDivElement> {
-  container?: HTMLElement | null;
-}
+export interface ScopePopoverProps extends Omit<DialogProps, 'open'> {}

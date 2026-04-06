@@ -219,8 +219,7 @@ export default function ChartDemoPropsForm<
         <Typography
           id="usage-props"
           component="h3"
-          fontWeight="bold"
-          sx={{ scrollMarginTop: 160, fontFamily: 'General Sans' }}
+          sx={{ fontWeight: 'bold', scrollMarginTop: 160, fontFamily: 'General Sans' }}
         >
           Playground
         </Typography>
@@ -390,7 +389,7 @@ export default function ChartDemoPropsForm<
           if (knob === 'title') {
             return (
               <React.Fragment key={propName}>
-                <Typography variant="body2" fontWeight="bold" sx={{ pt: i !== 0 ? 2 : 0 }}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', pt: i !== 0 ? 2 : 0 }}>
                   {title}
                 </Typography>
                 <Divider sx={{ opacity: 0.5 }} />
