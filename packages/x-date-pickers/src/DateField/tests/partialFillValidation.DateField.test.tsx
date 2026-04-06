@@ -1,12 +1,11 @@
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { describeAdapters, getFieldInputRoot, getTextbox } from 'test/utils/pickers';
-import { fireEvent } from '@mui/internal-test-utils';
+import { describeAdapters, getFieldInputRoot } from 'test/utils/pickers';
 import { spy } from 'sinon';
 
 describeAdapters(
   'DateField - partiallyFilledDate validation',
   DateField,
-  ({ adapter, renderWithProps }) => {
+  ({renderWithProps }) => {
     it('should call onError with partiallyFilledDate when date is partially filled', async () => {
       const onError = spy();
       const view = renderWithProps({
