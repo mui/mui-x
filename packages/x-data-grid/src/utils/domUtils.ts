@@ -277,7 +277,7 @@ export function findGridCells(api: GridPrivateApiCommunity, field: string) {
   const container = api.virtualScrollerRef!.current!;
   return Array.from(
     container.querySelectorAll(
-      `:scope > div > div > div > [data-field="${escapeOperandAttributeSelector(field)}"][role="gridcell"]`,
+      `:scope > div > div > div > div > [data-field="${escapeOperandAttributeSelector(field)}"][role="gridcell"]`,
     ),
   );
 }
