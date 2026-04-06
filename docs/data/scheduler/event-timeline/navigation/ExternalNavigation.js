@@ -29,13 +29,7 @@ export default function ExternalNavigation() {
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{
-          alignItems: 'center',
-        }}
-      >
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
         <IconButton
           onClick={(event) => apiRef.current?.goToPreviousVisibleDate(event)}
         >

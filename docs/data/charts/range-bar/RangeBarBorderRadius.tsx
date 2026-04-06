@@ -22,18 +22,9 @@ export default function RangeBarBorderRadius() {
       <Stack
         direction="row"
         spacing={4}
-        sx={{
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}
+        sx={{ flexWrap: 'wrap', justifyContent: 'center' }}
       >
-        <Stack
-          direction="column"
-          spacing={1}
-          sx={{
-            flex: 1,
-          }}
-        >
+        <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
           <Typography gutterBottom>Border Radius</Typography>
           <Slider
             value={radius}

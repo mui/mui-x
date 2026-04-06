@@ -66,21 +66,13 @@ export default function Keyboard() {
       <Stack
         direction={{ md: 'row', xs: 'column' }}
         spacing={6}
-        sx={{
-          alignItems: 'center',
-          py: 8,
-        }}
+        sx={{ alignItems: 'center', py: 8 }}
       >
         <Stack sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
           <SectionHeadline
             overline="Accessibility"
             title={
-              <Typography
-                variant="h2"
-                sx={{
-                  fontSize: '1.625rem',
-                }}
-              >
+              <Typography variant="h2" sx={{ fontSize: '1.625rem' }}>
                 Assistive technology support
               </Typography>
             }

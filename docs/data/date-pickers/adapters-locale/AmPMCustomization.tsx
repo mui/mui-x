@@ -18,12 +18,7 @@ export default function AmPMCustomization() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
-      <Stack
-        spacing={3}
-        sx={{
-          width: 200,
-        }}
-      >
+      <Stack spacing={3} sx={{ width: 200 }}>
         <ToggleButtonGroup
           value={locale}
           exclusive

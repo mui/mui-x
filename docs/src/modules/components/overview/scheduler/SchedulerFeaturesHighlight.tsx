@@ -33,42 +33,23 @@ export default function SchedulerFeaturesHighlight() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack
-        spacing={4}
-        sx={{
-          py: 8,
-          alignItems: 'center',
-        }}
-      >
+      <Stack spacing={4} sx={{ py: 8, alignItems: 'center' }}>
         <Stack spacing={1} sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
           <Typography
             variant="body2"
             color="primary"
-            sx={{
-              fontWeight: 'semiBold',
-              textAlign: 'center',
-            }}
+            sx={{ fontWeight: 'semiBold', textAlign: 'center' }}
           >
             Using the MUI X Scheduler
           </Typography>
           <Typography
             variant="h4"
             component="h2"
-            sx={{
-              fontWeight: 'semiBold',
-              color: 'text.primary',
-              textAlign: 'center',
-            }}
+            sx={{ fontWeight: 'semiBold', color: 'text.primary', textAlign: 'center' }}
           >
             Scheduling that adapts to your workflow
           </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: 'text.secondary',
-              textAlign: 'center',
-            }}
-          >
+          <Typography variant="body1" sx={{ color: 'text.secondary', textAlign: 'center' }}>
             A feature-rich, customizable React scheduling solution with intuitive interactions and
             best-in-class developer experience.
           </Typography>

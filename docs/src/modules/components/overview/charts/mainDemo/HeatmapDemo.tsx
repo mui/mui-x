@@ -99,14 +99,7 @@ function CustomCell(props: any) {
 export default function HeatmapDemo() {
   return (
     <React.Fragment>
-      <Typography
-        variant="body2"
-        sx={{
-          color: 'text.secondary',
-          fontWeight: 500,
-          px: 1,
-        }}
-      >
+      <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, px: 1 }}>
         Issues opening time
       </Typography>
       <Heatmap

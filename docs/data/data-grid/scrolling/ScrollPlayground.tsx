@@ -68,22 +68,12 @@ export default function ScrollPlayground() {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ width: 300, margin: '0 auto 16px' }}>
-        <Grid
-          container
-          sx={{
-            justifyContent: 'center',
-          }}
-        >
+        <Grid container sx={{ justifyContent: 'center' }}>
           <Grid>
             <Button onClick={handleClick('top')}>top</Button>
           </Grid>
         </Grid>
-        <Grid
-          container
-          sx={{
-            textAlign: 'center',
-          }}
-        >
+        <Grid container sx={{ textAlign: 'center' }}>
           <Grid size={{ xs: 4 }}>
             <Button onClick={handleClick('left')}>left</Button>
           </Grid>
@@ -100,12 +90,7 @@ export default function ScrollPlayground() {
             <Button onClick={handleClick('right')}>right</Button>
           </Grid>
         </Grid>
-        <Grid
-          container
-          sx={{
-            justifyContent: 'center',
-          }}
-        >
+        <Grid container sx={{ justifyContent: 'center' }}>
           <Grid>
             <Button onClick={handleClick('bottom')}>bottom</Button>
           </Grid>

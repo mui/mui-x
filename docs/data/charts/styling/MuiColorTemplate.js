@@ -120,10 +120,7 @@ export default function MuiColorTemplate() {
           />
           <Stack
             direction={{ xs: 'column', md: 'row' }}
-            sx={{
-              alignItems: 'center',
-              justifyContent: 'space-evenly',
-            }}
+            sx={{ alignItems: 'center', justifyContent: 'space-evenly' }}
           >
             <div>
               <Button

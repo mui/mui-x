@@ -171,14 +171,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
               })}
             />
             {!status.expandable && (
-              <Stack
-                direction="row"
-                spacing={1}
-                sx={{
-                  paddingLeft: 1,
-                  alignItems: 'center',
-                }}
-              >
+              <Stack direction="row" spacing={1} sx={{ paddingLeft: 1, alignItems: 'center' }}>
                 <Icon sx={{ fontSize: 12 }} />
               </Stack>
             )}

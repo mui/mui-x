@@ -48,11 +48,7 @@ function ComponentTag(props) {
   }
   const components = props.value.split(',');
   return (
-    <Stack
-      sx={{
-        gap: 0.5,
-      }}
-    >
+    <Stack sx={{ gap: 0.5 }}>
       {components.map((c, key) => (
         <div>
           <Typography

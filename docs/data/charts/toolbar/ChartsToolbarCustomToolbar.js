@@ -73,10 +73,7 @@ function CustomToolbar() {
     >
       <Typography
         variant="h6"
-        sx={{
-          justifyContent: 'center',
-          textAlign: { xs: 'center', sm: 'left' },
-        }}
+        sx={{ justifyContent: 'center', textAlign: { xs: 'center', sm: 'left' } }}
       >
         Chart with Custom Toolbar
       </Typography>

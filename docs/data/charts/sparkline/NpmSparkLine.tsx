@@ -69,12 +69,7 @@ export default function NpmSparkLine() {
         alignItems: 'center',
       }}
     >
-      <Stack
-        direction="column"
-        sx={{
-          width: 300,
-        }}
-      >
+      <Stack direction="column" sx={{ width: 300 }}>
         <Typography
           sx={{
             color: 'rgb(117, 117, 117)',

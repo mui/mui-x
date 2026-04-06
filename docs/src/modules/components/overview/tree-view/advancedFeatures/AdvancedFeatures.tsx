@@ -35,27 +35,13 @@ export default function AdvancedFeatures() {
       <Stack
         direction={{ xs: 'column', md: 'row' }}
         spacing={6}
-        sx={{
-          py: 8,
-          alignItems: 'center',
-        }}
+        sx={{ py: 8, alignItems: 'center' }}
       >
-        <Stack
-          spacing={2}
-          sx={{
-            minWidth: '260px',
-            maxWidth: { xs: '500px', md: '400px' },
-          }}
-        >
+        <Stack spacing={2} sx={{ minWidth: '260px', maxWidth: { xs: '500px', md: '400px' } }}>
           <SectionHeadline
             overline="Advanced features"
             title={
-              <Typography
-                variant="h2"
-                sx={{
-                  fontSize: '1.625rem',
-                }}
-              >
+              <Typography variant="h2" sx={{ fontSize: '1.625rem' }}>
                 {advancedFeatures[activeItem].title}
               </Typography>
             }

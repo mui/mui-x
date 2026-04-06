@@ -196,31 +196,23 @@ function CandlestickTooltip() {
     >
       <Stack
         direction="column"
-        sx={[
-          {
-            gap: 0.5,
-          },
-          (theme) => ({
-            ...theme.typography.caption,
-            pointerEvents: 'none',
-            marginLeft: theme.spacing(1),
-            marginTop: theme.spacing(1),
-          }),
-        ]}
+        sx={(theme) => ({
+          ...theme.typography.caption,
+          pointerEvents: 'none',
+          marginLeft: theme.spacing(1),
+          marginTop: theme.spacing(1),
+          gap: 0.5,
+        })}
       >
         <Stack
           direction="row"
-          sx={[
-            {
-              gap: 1,
-            },
-            (theme) => ({
-              width: 'min-content',
-              paddingX: theme.spacing(1),
-              paddingY: theme.spacing(0.5),
-              background: theme.palette.background.paper,
-            }),
-          ]}
+          sx={(theme) => ({
+            width: 'min-content',
+            paddingX: theme.spacing(1),
+            paddingY: theme.spacing(0.5),
+            background: theme.palette.background.paper,
+            gap: 1,
+          })}
         >
           <span>O:{formatTooltipDollarValue(ohlcItem.value.open)}</span>
           <span>H:{formatTooltipDollarValue(ohlcItem.value.high)}</span>

@@ -14,25 +14,14 @@ export default function BarChartToggle() {
   return (
     <Stack spacing={1} sx={sxColors}>
       <Typography variant="subtitle2">Advanced data visualization</Typography>
-      <Typography
-        variant="body2"
-        sx={{
-          color: 'text.secondary',
-        }}
-      >
+      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
         Compare and analyze data across categories by layering data series.
       </Typography>
       <AdvancedFeaturesToggle
         selected={selectedAdvancedFeature}
         onToggleChange={setSelectedAdvancedFeature}
       />
-      <Box
-        sx={{
-          width: '100%',
-          height: '100%',
-          minHeight: '100px',
-        }}
-      >
+      <Box sx={{ width: '100%', height: '100%', minHeight: '100px' }}>
         <BarChartDemo selected={selectedAdvancedFeature} />
       </Box>
     </Stack>

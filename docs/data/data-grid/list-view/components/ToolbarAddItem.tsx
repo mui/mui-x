@@ -52,13 +52,7 @@ export function ToolbarAddItem(props: ToolbarAddItemProps) {
         onClose={() => setOpen(false)}
       >
         <DrawerHeader>
-          <Typography
-            sx={{
-              fontWeight: 500,
-            }}
-          >
-            Add new
-          </Typography>
+          <Typography sx={{ fontWeight: 500 }}>Add new</Typography>
         </DrawerHeader>
 
         <List>

@@ -33,13 +33,7 @@ export default function MainDemo() {
           background: theme.palette.gradients.linearSubtle,
         })}
       >
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            height: '100%',
-          }}
-        >
+        <Stack direction="row" spacing={1} sx={{ height: '100%' }}>
           {/* Left/Main Section */}
           <Stack
             direction="column"
@@ -54,9 +48,7 @@ export default function MainDemo() {
             <Stack
               direction={{ xs: 'column', sm: 'row' }}
               spacing={{ md: 1, xs: 0.5 }}
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-              }}
+              sx={{ display: { xs: 'none', md: 'flex' } }}
             >
               {statCardData.map((card, index) => (
                 <StatCard key={index} {...card} />
@@ -70,10 +62,7 @@ export default function MainDemo() {
           <Stack
             direction="column"
             spacing={1}
-            sx={{
-              flexBasis: { xs: '100%', md: '35%' },
-              display: { xs: 'none', md: 'flex' },
-            }}
+            sx={{ flexBasis: { xs: '100%', md: '35%' }, display: { xs: 'none', md: 'flex' } }}
           >
             <Paper
               component="div"

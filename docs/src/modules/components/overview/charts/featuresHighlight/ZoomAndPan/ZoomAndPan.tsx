@@ -35,14 +35,7 @@ export default function ZoomAndPan() {
         ...(Array.isArray(sxColors) ? sxColors : [sxColors]),
       ]}
     >
-      <Box
-        sx={{
-          flexGrow: 1,
-          mb: 2,
-          width: '100%',
-          height: '100%',
-        }}
-      >
+      <Box sx={{ flexGrow: 1, mb: 2, width: '100%', height: '100%' }}>
         <LineChartPro
           colors={['var(--palette-color-0)', 'var(--palette-color-4)']}
           dataset={formattedDataset}
@@ -91,12 +84,7 @@ export default function ZoomAndPan() {
         <Typography variant="subtitle2" sx={{ pt: 2 }}>
           Zoom and pan
         </Typography>
-        <Typography
-          variant="body2"
-          sx={{
-            color: 'text.secondary',
-          }}
-        >
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           Explore data with greater detail by zooming in and panning across the chart.
         </Typography>
       </div>

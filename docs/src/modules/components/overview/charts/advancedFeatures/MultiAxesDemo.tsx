@@ -53,11 +53,7 @@ const series: (BarSeriesType | LineSeriesType)[] = [
 
 function MultiAxes() {
   return (
-    <Stack
-      sx={{
-        height: '100%',
-      }}
-    >
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center">Weather stats for Quebec city</Typography>
       <ChartsContainer
         series={series}

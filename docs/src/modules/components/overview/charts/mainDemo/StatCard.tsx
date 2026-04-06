@@ -29,38 +29,13 @@ export default function StatCard({ title, value, data }: StatCardProps) {
       <CardContent
         sx={{ padding: { xs: 1, md: 1.5 }, '&:last-child': { paddingBottom: { xs: 1, md: 1.5 } } }}
       >
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            alignItems: 'center',
-          }}
-        >
-          <Typography
-            variant="caption"
-            sx={{
-              color: 'text.secondary',
-              fontWeight: 500,
-            }}
-          >
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 500 }}>
             {title}
           </Typography>
         </Stack>
-        <Stack
-          direction="row"
-          spacing={2}
-          sx={{
-            alignItems: 'flex-end',
-          }}
-        >
-          <Typography
-            variant="h4"
-            component="p"
-            sx={{
-              fontSize: '1.5rem',
-              fontWeight: 500,
-            }}
-          >
+        <Stack direction="row" spacing={2} sx={{ alignItems: 'flex-end' }}>
+          <Typography variant="h4" component="p" sx={{ fontSize: '1.5rem', fontWeight: 500 }}>
             {value}
           </Typography>
           <Box sx={{ width: '100%', height: 50 }}>

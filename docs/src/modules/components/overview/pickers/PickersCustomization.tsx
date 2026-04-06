@@ -163,34 +163,24 @@ function ThemesConfig({
 
   return (
     <Stack
-      sx={[
-        {
-          justifyContent: 'flex-start',
+      sx={(theme) => ({
+        justifyContent: 'flex-start',
+        borderLeft: { xs: 0, md: `1px solid ${theme.palette.divider}` },
+        borderBottom: { xs: `1px solid ${theme.palette.divider}`, md: 0 },
+        flexBasis: '30%',
+        borderRadius: {
+          xs: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+          md: `0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0`,
         },
-        (theme) => ({
-          borderLeft: { xs: 0, md: `1px solid ${theme.palette.divider}` },
-          borderBottom: { xs: `1px solid ${theme.palette.divider}`, md: 0 },
-          flexBasis: '30%',
-          borderRadius: {
-            xs: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
-            md: `0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0`,
-          },
-          padding: 2,
-          gap: 1.5,
-          background: theme.palette.gradients.linearSubtle,
-          overflow: 'auto',
-        }),
-      ]}
+        padding: 2,
+        gap: 1.5,
+        background: theme.palette.gradients.linearSubtle,
+        overflow: 'auto',
+      })}
     >
       {/* Theme */}
       <Stack spacing={1}>
-        <Typography
-          variant="caption"
-          gutterBottom
-          sx={{
-            color: 'text.secondary',
-          }}
-        >
+        <Typography variant="caption" gutterBottom sx={{ color: 'text.secondary' }}>
           Select Theme
         </Typography>
         <ConfigToggleButtons
@@ -205,13 +195,7 @@ function ThemesConfig({
       </Stack>
       {/* Color */}
       <Stack spacing={1}>
-        <Typography
-          variant="caption"
-          gutterBottom
-          sx={{
-            color: 'text.secondary',
-          }}
-        >
+        <Typography variant="caption" gutterBottom sx={{ color: 'text.secondary' }}>
           Color
         </Typography>
         <ConfigToggleButtons
@@ -225,13 +209,7 @@ function ThemesConfig({
       </Stack>
       {/* Typography */}
       <Stack spacing={1}>
-        <Typography
-          variant="caption"
-          gutterBottom
-          sx={{
-            color: 'text.secondary',
-          }}
-        >
+        <Typography variant="caption" gutterBottom sx={{ color: 'text.secondary' }}>
           Typography
         </Typography>
         <ConfigToggleButtons
@@ -255,13 +233,7 @@ function ThemesConfig({
       </Stack>
       {/* Density */}
       <Stack spacing={1}>
-        <Typography
-          variant="caption"
-          gutterBottom
-          sx={{
-            color: 'text.secondary',
-          }}
-        >
+        <Typography variant="caption" gutterBottom sx={{ color: 'text.secondary' }}>
           Density
         </Typography>
         <ConfigToggleButtons
@@ -286,13 +258,7 @@ function ThemesConfig({
       {/* Corners */}
       {styleConfig.selectedTheme !== 'default' && (
         <Stack spacing={1}>
-          <Typography
-            variant="caption"
-            gutterBottom
-            sx={{
-              color: 'text.secondary',
-            }}
-          >
+          <Typography variant="caption" gutterBottom sx={{ color: 'text.secondary' }}>
             Corners
           </Typography>
           <ConfigToggleButtons
@@ -318,13 +284,7 @@ function ThemesConfig({
       {/* Layout */}
       {styleConfig.selectedTheme !== 'md3' && (
         <Stack spacing={1}>
-          <Typography
-            variant="caption"
-            gutterBottom
-            sx={{
-              color: 'text.secondary',
-            }}
-          >
+          <Typography variant="caption" gutterBottom sx={{ color: 'text.secondary' }}>
             Layout
           </Typography>
           <ConfigToggleButtons
@@ -368,48 +328,23 @@ export default function Customization() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack
-        spacing={4}
-        sx={{
-          py: 8,
-          alignItems: 'center',
-        }}
-      >
-        <Stack
-          sx={{
-            gap: 1,
-            maxWidth: { xs: '500px', md: '100%' },
-            width: '100%',
-          }}
-        >
+      <Stack spacing={4} sx={{ py: 8, alignItems: 'center' }}>
+        <Stack sx={{ gap: 1, maxWidth: { xs: '500px', md: '100%' }, width: '100%' }}>
           <Typography
             variant="body2"
             color="primary"
-            sx={{
-              fontWeight: 'semiBold',
-              textAlign: 'center',
-            }}
+            sx={{ fontWeight: 'semiBold', textAlign: 'center' }}
           >
             Customization
           </Typography>
           <Typography
             variant="h4"
             component="h2"
-            sx={{
-              fontWeight: 'semiBold',
-              color: 'text.primary',
-              textAlign: 'center',
-            }}
+            sx={{ fontWeight: 'semiBold', color: 'text.primary', textAlign: 'center' }}
           >
             Highly customizable components
           </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: 'text.secondary',
-              textAlign: 'center',
-            }}
-          >
+          <Typography variant="body1" sx={{ color: 'text.secondary', textAlign: 'center' }}>
             Easily adaptable to any style, our components leverage Material Design for
             out-of-the-box elegance and support extensive customization to perfectly align with your
             branding.

@@ -37,37 +37,19 @@ export default function CommunityOrPro({
       >
         <Stack
           spacing={1}
-          sx={{
-            flexBasis: { xs: '100%', md: '65%' },
-            marginBottom: { xs: '16px', md: 0 },
-          }}
+          sx={{ flexBasis: { xs: '100%', md: '65%' }, marginBottom: { xs: '16px', md: 0 } }}
         >
-          <Typography
-            variant="body2"
-            color="primary"
-            sx={{
-              fontWeight: 'semiBold',
-            }}
-          >
+          <Typography variant="body2" color="primary" sx={{ fontWeight: 'semiBold' }}>
             {caption}
           </Typography>
           <Typography
             variant="h4"
             component="h2"
-            sx={{
-              fontWeight: 'semiBold',
-              color: 'text.primary',
-              fontSize: '1.625rem',
-            }}
+            sx={{ fontWeight: 'semiBold', color: 'text.primary', fontSize: '1.625rem' }}
           >
             {title}
           </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: 'text.secondary',
-            }}
-          >
+          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
             {description}
           </Typography>
         </Stack>

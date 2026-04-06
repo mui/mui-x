@@ -201,11 +201,7 @@ function CustomLabel({
         <Box
           component={Icon}
           className="labelIcon"
-          sx={{
-            color: 'inherit',
-            mr: 1,
-            fontSize: '1.2rem',
-          }}
+          sx={{ color: 'inherit', mr: 1, fontSize: '1.2rem' }}
         />
       )}
       <TreeItemLabelText variant="body2">{children}</TreeItemLabelText>

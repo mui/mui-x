@@ -57,10 +57,7 @@ export default function CustomDomainYAxis() {
     >
       <Stack
         direction="row"
-        sx={{
-          alignItems: 'baseline',
-          justifyContent: 'space-between',
-        }}
+        sx={{ alignItems: 'baseline', justifyContent: 'space-between' }}
       >
         <TextField
           select

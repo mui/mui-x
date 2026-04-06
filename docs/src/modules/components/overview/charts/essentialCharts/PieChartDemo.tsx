@@ -54,11 +54,7 @@ function PieCenterLabel({ children }: { children: string }) {
 
 function Pie() {
   return (
-    <Stack
-      sx={{
-        height: '100%',
-      }}
-    >
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center">Desktop OS market share</Typography>
       <PieChart
         series={[

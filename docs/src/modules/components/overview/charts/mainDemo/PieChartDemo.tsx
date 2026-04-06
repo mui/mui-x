@@ -42,14 +42,7 @@ const data = dateEntry
 export default function PieChartDemo() {
   return (
     <React.Fragment>
-      <Typography
-        variant="body2"
-        sx={{
-          color: 'text.secondary',
-          fontWeight: 500,
-          px: 1,
-        }}
-      >
+      <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, px: 1 }}>
         @mui/material downloads on{' '}
         {dateEntry.date.toLocaleString('en-US', {
           month: 'short',

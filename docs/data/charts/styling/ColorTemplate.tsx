@@ -196,12 +196,7 @@ export default function ColorTemplate() {
       >
         {Object.entries(categories).map(([name, colors]) => (
           <MenuItem key={name} value={name}>
-            <Stack
-              direction="row"
-              sx={{
-                alignItems: 'center',
-              }}
-            >
+            <Stack direction="row" sx={{ alignItems: 'center' }}>
               <Typography sx={{ mr: 2 }}>{name}</Typography>
               <div style={{ width: 200, height: 20 }}>
                 {colors.map((c) => (

@@ -40,14 +40,7 @@ function CalendarToolbar() {
           py: 1.5,
         }}
       >
-        <Typography
-          sx={{
-            fontSize: '1.2rem',
-            fontWeight: 'bold',
-          }}
-        >
-          Time Off Calendar
-        </Typography>
+        <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Time Off Calendar</Typography>
         <CalendarDensity />
       </Stack>
       <Stack

@@ -31,13 +31,7 @@ function Export() {
   const apiRef = React.useRef<ChartProApi<'line'>>(undefined);
 
   return (
-    <Stack
-      spacing={3}
-      sx={{
-        height: '100%',
-        alignItems: 'center',
-      }}
-    >
+    <Stack spacing={3} sx={{ height: '100%', alignItems: 'center' }}>
       <div style={{ flexGrow: 1, minHeight: 0, width: '100%' }}>
         <Typography align="center">Google vs Meta stock price</Typography>
         <LineChartPro

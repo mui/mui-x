@@ -57,13 +57,7 @@ function CustomToolbar() {
 
   return (
     <Toolbar>
-      <Typography
-        sx={{
-          fontWeight: 'medium',
-          flex: 1,
-          mx: 0.5,
-        }}
-      >
+      <Typography sx={{ fontWeight: 'medium', flex: 1, mx: 0.5 }}>
         Toolbar
       </Typography>
       <Tooltip title="Columns">

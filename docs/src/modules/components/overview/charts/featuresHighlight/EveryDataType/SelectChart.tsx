@@ -15,13 +15,7 @@ export interface SelectChartProps {
 
 export default function SelectChart(props: SelectChartProps) {
   return (
-    <Stack
-      spacing={1}
-      direction="row"
-      sx={{
-        justifyContent: 'center',
-      }}
-    >
+    <Stack spacing={1} direction="row" sx={{ justifyContent: 'center' }}>
       <Item isSelected={props.selected === 0} onClick={() => props.setSelected(0)} />
       <Item isSelected={props.selected === 1} onClick={() => props.setSelected(1)} />
       <Item isSelected={props.selected === 2} onClick={() => props.setSelected(2)} />

@@ -43,10 +43,7 @@ export function CardContent(props: StackProps) {
     <Stack
       {...other}
       sx={[
-        {
-          gap: 0.25,
-          flexGrow: 1,
-        },
+        { gap: 0.25, flexGrow: 1 },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}
     >
@@ -71,10 +68,7 @@ export function CardDetailList(props: StackProps) {
       direction="row"
       {...other}
       sx={[
-        {
-          flexWrap: 'wrap',
-          gap: 1,
-        },
+        { flexWrap: 'wrap', gap: 1 },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}
     >
@@ -90,9 +84,7 @@ export function CardDetail(props: TypographyProps) {
       variant="caption"
       {...other}
       sx={[
-        {
-          color: 'text.secondary',
-        },
+        { color: 'text.secondary' },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}
     >

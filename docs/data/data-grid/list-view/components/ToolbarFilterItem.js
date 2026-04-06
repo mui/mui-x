@@ -119,13 +119,7 @@ export function ToolbarFilterItem(props) {
         onClose={() => setOpen(false)}
       >
         <DrawerHeader>
-          <Typography
-            sx={{
-              fontWeight: 500,
-            }}
-          >
-            Filters
-          </Typography>
+          <Typography sx={{ fontWeight: 500 }}>Filters</Typography>
         </DrawerHeader>
 
         <List

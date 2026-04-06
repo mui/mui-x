@@ -79,13 +79,7 @@ function CustomToolbar() {
             }}
             elevation={8}
           >
-            <Typography
-              sx={{
-                fontWeight: 'bold',
-              }}
-            >
-              Add new commodity
-            </Typography>
+            <Typography sx={{ fontWeight: 'bold' }}>Add new commodity</Typography>
             <form onSubmit={handleSubmit}>
               <Stack spacing={2}>
                 <TextField

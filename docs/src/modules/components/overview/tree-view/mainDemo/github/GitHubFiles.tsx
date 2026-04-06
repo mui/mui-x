@@ -52,21 +52,8 @@ function CodeAccordion({ type, title, expanded, onChange, code, language }: Code
           aria-controls={`${title}-content`}
           id={`${title}-header`}
         >
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              alignItems: 'center',
-              overflow: 'hidden',
-            }}
-          >
-            <Stack
-              direction="row"
-              spacing={0.025}
-              sx={{
-                alignItems: 'center',
-              }}
-            >
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', overflow: 'hidden' }}>
+            <Stack direction="row" spacing={0.025} sx={{ alignItems: 'center' }}>
               <SquareRoundedIcon
                 sx={{ fontSize: '16px' }}
                 color={type === 'deleted' ? 'error' : 'success'}
@@ -88,10 +75,7 @@ function CodeAccordion({ type, title, expanded, onChange, code, language }: Code
             <Typography
               variant="body2"
               noWrap
-              sx={{
-                fontFamily: 'monospace',
-                color: 'text.secondary',
-              }}
+              sx={{ fontFamily: 'monospace', color: 'text.secondary' }}
             >
               {title}
             </Typography>
@@ -134,15 +118,7 @@ export default function GitHubFiles({
     >
       {leafItemGroups.map((group, index) => (
         <Stack key={index} spacing={1}>
-          <Typography
-            variant="caption"
-            sx={[
-              {
-                fontWeight: 400,
-              },
-              (theme) => ({ color: theme.palette.grey[700] }),
-            ]}
-          >
+          <Typography variant="caption" sx={{ fontWeight: 400, color: 'grey.700' }}>
             {group.parentPath}
           </Typography>
           {group.leafItems.map((item) => (

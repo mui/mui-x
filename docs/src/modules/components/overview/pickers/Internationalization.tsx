@@ -60,19 +60,9 @@ function TimezonesDemo() {
       <DemoWrapper link="/x/react-date-pickers/timezone/">
         <Stack
           spacing={2}
-          sx={{
-            flexGrow: 1,
-            justifyContent: 'center',
-            py: 2,
-            maxWidth: '320px',
-            width: '100%',
-          }}
+          sx={{ flexGrow: 1, justifyContent: 'center', py: 2, maxWidth: '320px', width: '100%' }}
         >
-          <Typography
-            sx={{
-              fontWeight: 'semiBold',
-            }}
-          >
+          <Typography sx={{ fontWeight: 'semiBold' }}>
             {selectedTimezone ? `Selected timezone: ${selectedTimezone}` : 'Select timezone'}
           </Typography>
 
@@ -166,12 +156,7 @@ function LanguagesDemo() {
         <ThemeProvider theme={theme}>
           <Stack
             spacing={2}
-            sx={{
-              flexGrow: 1,
-              py: 2,
-              maxWidth: '320px',
-              justifyContent: 'center',
-            }}
+            sx={{ flexGrow: 1, py: 2, maxWidth: '320px', justifyContent: 'center' }}
           >
             <DatePicker
               defaultValue={dayjs('2024-02-17')}
@@ -228,13 +213,7 @@ function ValidationDemo() {
         <ThemeProvider theme={theme}>
           <Stack
             spacing={2}
-            sx={{
-              justifyContent: 'center',
-              flexGrow: 1,
-              py: 2,
-              width: '100%',
-              maxWidth: '400px',
-            }}
+            sx={{ justifyContent: 'center', flexGrow: 1, py: 2, width: '100%', maxWidth: '400px' }}
           >
             <DateTimeField
               defaultValue={dayjs('')}
@@ -278,27 +257,13 @@ export default function Internationalization() {
       <Stack
         direction={{ xs: 'column', md: 'row' }}
         spacing={6}
-        sx={{
-          py: 8,
-          alignItems: 'center',
-        }}
+        sx={{ py: 8, alignItems: 'center' }}
       >
-        <Stack
-          spacing={2}
-          sx={{
-            minWidth: '260px',
-            maxWidth: { xs: '500px', md: '400px' },
-          }}
-        >
+        <Stack spacing={2} sx={{ minWidth: '260px', maxWidth: { xs: '500px', md: '400px' } }}>
           <SectionHeadline
             overline="Internationalization"
             title={
-              <Typography
-                variant="h2"
-                sx={{
-                  fontSize: '1.625rem',
-                }}
-              >
+              <Typography variant="h2" sx={{ fontSize: '1.625rem' }}>
                 {internationalizationFeatures[activeItem].title}
               </Typography>
             }

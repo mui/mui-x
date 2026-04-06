@@ -77,18 +77,8 @@ const chartsParams = {
 
 export default function ColorCallback() {
   return (
-    <Stack
-      spacing={2}
-      sx={{
-        width: '100%',
-      }}
-    >
-      <Typography
-        variant="h6"
-        sx={{
-          textAlign: 'center',
-        }}
-      >
+    <Stack spacing={2} sx={{ width: '100%' }}>
+      <Typography variant="h6" sx={{ textAlign: 'center' }}>
         Premier League Clubs Net Spend - Summer 2025
       </Typography>
       <BarChart {...chartsParams} />

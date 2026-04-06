@@ -156,13 +156,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
               })}
             />
           </Stack>
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              alignItems: 'center',
-            }}
-          >
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <Tooltip title={status.disabled ? 'Unlock' : 'Lock'} arrow>
               <IconButton
                 size="small"

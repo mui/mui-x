@@ -49,12 +49,7 @@ export default function LabelEditingDemo() {
     <DemoWrapper link="/x/react-tree-view/rich-tree-view/editing/">
       <Stack
         spacing={1}
-        sx={{
-          justifyContent: 'space-between',
-          width: '100%',
-          padding: 2,
-          minHeight: '600px',
-        }}
+        sx={{ justifyContent: 'space-between', width: '100%', padding: 2, minHeight: '600px' }}
       >
         <Box
           sx={{

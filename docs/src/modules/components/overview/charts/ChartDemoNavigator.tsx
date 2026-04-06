@@ -33,29 +33,14 @@ export default function ChartDemoNavigator(
       <Stack
         direction={{ xs: 'column', md: 'row' }}
         spacing={{ xs: 1, md: 6 }}
-        sx={{
-          py: 8,
-          alignItems: 'start',
-        }}
+        sx={{ py: 8, alignItems: 'start' }}
       >
         {/* Chart selection column */}
-        <Stack
-          spacing={2}
-          sx={{
-            width: '100%',
-            minWidth: '260px',
-            maxWidth: { md: 300 },
-          }}
-        >
+        <Stack spacing={2} sx={{ width: '100%', minWidth: '260px', maxWidth: { md: 300 } }}>
           <SectionHeadline
             overline={overline}
             title={
-              <Typography
-                variant="h2"
-                sx={{
-                  fontSize: '1.625rem',
-                }}
-              >
+              <Typography variant="h2" sx={{ fontSize: '1.625rem' }}>
                 {descriptions[activeItem].title}
               </Typography>
             }
@@ -63,9 +48,7 @@ export default function ChartDemoNavigator(
           <Stack
             direction={{ xs: 'row', md: 'column' }}
             spacing={{ xs: 1, md: 2 }}
-            sx={{
-              overflow: 'auto',
-            }}
+            sx={{ overflow: 'auto' }}
           >
             {descriptions.map(({ title, description, iconLink }, index) => (
               <Box key={index} sx={{ minWidth: 150 }}>

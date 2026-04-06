@@ -7,14 +7,7 @@ export default function PickersCommunityOrPro() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack
-        direction="column"
-        spacing={{ xs: 1, md: 2 }}
-        sx={{
-          py: 8,
-          alignItems: 'center',
-        }}
-      >
+      <Stack direction="column" spacing={{ xs: 1, md: 2 }} sx={{ py: 8, alignItems: 'center' }}>
         <CommunityOrPro
           caption={'Community and Pro'}
           title={'Two packages for every need'}

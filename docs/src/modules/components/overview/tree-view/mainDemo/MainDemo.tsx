@@ -10,12 +10,7 @@ export default function MainDemo() {
     'figma',
   );
   return (
-    <Stack
-      spacing={1}
-      sx={{
-        pb: 8,
-      }}
-    >
+    <Stack spacing={1} sx={{ pb: 8 }}>
       <ExampleToggleGroup selected={selectedExample} onToggleChange={setSelectedExample} />
       <Paper
         component="div"

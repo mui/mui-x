@@ -24,10 +24,7 @@ function CustomLabel({
       direction="row"
       spacing={4}
       className={className}
-      sx={{
-        justifyContent: 'space-between',
-        flexGrow: 1,
-      }}
+      sx={{ justifyContent: 'space-between', flexGrow: 1 }}
     >
       <Typography>{children}</Typography>
       {!!selectFirstChildren && (

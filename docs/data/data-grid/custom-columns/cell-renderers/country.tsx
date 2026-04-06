@@ -119,20 +119,24 @@ function EditCountry(props: GridRenderEditCellParams<CountryIsoOption>) {
           {option.label}
         </Box>
       )}
-      renderInput={(params) => (
-        <InputBase
-          autoFocus
-          fullWidth
-          id={params.id}
-          {...params.slotProps.input}
-          slotProps={{
-            input: {
-              ...params.slotProps.htmlInput,
-              autoComplete: 'new-password', // disable autocomplete and autofill
-            },
-          }}
-        />
-      )}
+      renderInput={(params) => {
+        const { ref, ...htmlInputProps } = params.slotProps.htmlInput;
+        return (
+          <InputBase
+            autoFocus
+            fullWidth
+            id={params.id}
+            {...params.slotProps.input}
+            inputRef={ref}
+            slotProps={{
+              input: {
+                ...htmlInputProps,
+                autoComplete: 'new-password', // disable autocomplete and autofill
+              },
+            }}
+          />
+        );
+      }}
     />
   );
 }

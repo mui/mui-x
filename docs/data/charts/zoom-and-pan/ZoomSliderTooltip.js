@@ -23,11 +23,7 @@ export default function ZoomSliderTooltip() {
   const [showTooltip, setShowTooltip] = React.useState('hover');
 
   return (
-    <Stack
-      sx={{
-        width: '100%',
-      }}
-    >
+    <Stack sx={{ width: '100%' }}>
       <FormControl sx={{ width: 150, mb: 2, alignSelf: 'center' }}>
         <InputLabel id="show-tooltip-label">Show Tooltip</InputLabel>
         <Select

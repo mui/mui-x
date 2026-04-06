@@ -63,12 +63,7 @@ export default function ZoomSliderPreviewCustomMarkerSize() {
         flexWrap: { xs: 'wrap-reverse', sm: 'nowrap' },
       }}
     >
-      <Stack
-        sx={{
-          width: '100%',
-          gap: 2,
-        }}
-      >
+      <Stack sx={{ width: '100%', gap: 2 }}>
         <Typography variant="h6" sx={{ alignSelf: 'center' }}>
           Births per woman vs GDP per capita (USD, 2023)
         </Typography>
