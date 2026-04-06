@@ -17,11 +17,15 @@
       },
       "required": true
     },
-    "getValueAsString": { "type": { "description": "((value: any) =&gt; string) | undefined" } },
-    "headerLabel": { "type": { "description": "string | undefined" } },
-    "InputComponent": { "type": { "description": "JSXElementConstructor&lt;I&gt; | undefined" } },
-    "InputComponentProps": { "type": { "description": "Partial&lt;I&gt; | undefined" } },
-    "label": { "type": { "description": "string | undefined" } },
-    "requiresFilterValue": { "type": { "description": "boolean | undefined" }, "default": "true" }
+    "getValueAsString": { "type": { "description": "(value: any) =&gt; string" } },
+    "headerLabel": { "type": { "description": "string" } },
+    "InputComponent": {
+      "type": {
+        "description": "((props: I) =&gt; ReactNode | Promise&lt;ReactNode&gt;) | (new (props: I, context: any) =&gt; Component&lt;any, any, any&gt;)"
+      }
+    },
+    "InputComponentProps": { "type": { "description": "Partial&lt;I&gt;" } },
+    "label": { "type": { "description": "string" } },
+    "requiresFilterValue": { "type": { "description": "boolean" }, "default": "true" }
   }
 }

@@ -11,30 +11,25 @@
       "isPremiumPlan": true
     },
     "applySorting": {
-      "type": { "description": "boolean | undefined" },
+      "type": { "description": "boolean" },
       "default": "false",
       "isPremiumPlan": true
     },
-    "columnTypes": { "type": { "description": "string[] | undefined" }, "isPremiumPlan": true },
+    "columnTypes": { "type": { "description": "string[]" }, "isPremiumPlan": true },
     "getCellValue": {
-      "type": {
-        "description": "((params: GridAggregationGetCellValueParams) =&gt; V) | undefined"
-      },
+      "type": { "description": "(params: GridAggregationGetCellValueParams) =&gt; V" },
       "isPremiumPlan": true
     },
     "hasCellUnit": {
-      "type": { "description": "boolean | undefined" },
+      "type": { "description": "boolean" },
       "default": "true",
       "isPremiumPlan": true
     },
     "label": {
-      "type": { "description": "string | undefined" },
+      "type": { "description": "string" },
       "default": "apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})",
       "isPremiumPlan": true
     },
-    "valueFormatter": {
-      "type": { "description": "GridValueFormatter | undefined" },
-      "isPremiumPlan": true
-    }
+    "valueFormatter": { "type": { "description": "GridValueFormatter" }, "isPremiumPlan": true }
   }
 }

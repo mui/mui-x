@@ -12,6 +12,6 @@
     "indexRelativeToCurrentPage": { "type": { "description": "number" }, "required": true },
     "isFirstVisible": { "type": { "description": "boolean" }, "required": true },
     "isLastVisible": { "type": { "description": "boolean" }, "required": true },
-    "row": { "type": { "description": "R" }, "required": true }
+    "row": { "type": { "description": "GridValidRowModel" }, "required": true }
   }
 }

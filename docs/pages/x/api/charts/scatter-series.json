@@ -6,34 +6,36 @@
     "import { ScatterSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "color": { "type": { "description": "string | undefined" } },
+    "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": {
-        "description": "((data: ColorCallbackValue&lt;ScatterValueType | null&gt;) =&gt; string) | undefined"
+        "description": "(data: ColorCallbackValue&lt;ScatterValueType | null&gt;) =&gt; string"
       }
     },
-    "data": { "type": { "description": "readonly ScatterValueType[] | undefined" } },
+    "data": { "type": { "description": "readonly ScatterValueType[]" } },
     "datasetKeys": {
       "type": {
-        "description": "{ x: string; y: string; z?: string | undefined; id?: string | undefined; } | undefined"
+        "description": "{ x: string; y: string; z?: string | undefined; id?: string | undefined; }"
       }
     },
-    "highlightScope": { "type": { "description": "CommonHighlightScope | undefined" } },
-    "id": { "type": { "description": "string | undefined" } },
+    "highlightScope": { "type": { "description": "CommonHighlightScope" } },
+    "id": { "type": { "description": "string" } },
     "label": {
+      "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" }
+    },
+    "labelMarkType": {
       "type": {
-        "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string) | undefined"
+        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
       }
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType | undefined" } },
-    "markerSize": { "type": { "description": "number | undefined" } },
-    "preview": { "type": { "description": "{ markerSize?: number | undefined; } | undefined" } },
-    "type": { "type": { "description": "\"scatter\" | undefined" } },
+    "markerSize": { "type": { "description": "number" } },
+    "preview": { "type": { "description": "{ markerSize?: number | undefined; }" } },
+    "type": { "type": { "description": "\"scatter\"" } },
     "valueFormatter": {
-      "type": { "description": "SeriesValueFormatter&lt;ScatterValueType | null&gt; | undefined" }
+      "type": { "description": "SeriesValueFormatter&lt;ScatterValueType | null&gt;" }
     },
-    "xAxisId": { "type": { "description": "AxisId | undefined" } },
-    "yAxisId": { "type": { "description": "AxisId | undefined" } },
-    "zAxisId": { "type": { "description": "string | undefined" } }
+    "xAxisId": { "type": { "description": "string | number" } },
+    "yAxisId": { "type": { "description": "string | number" } },
+    "zAxisId": { "type": { "description": "string" } }
   }
 }

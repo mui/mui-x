@@ -7,25 +7,23 @@
   ],
   "properties": {
     "data": { "type": { "description": "number[]" }, "required": true },
-    "color": { "type": { "description": "string | undefined" } },
+    "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": {
-        "description": "((data: ColorCallbackValue&lt;number&gt;) =&gt; string) | undefined"
-      }
+      "type": { "description": "(data: ColorCallbackValue&lt;number&gt;) =&gt; string" }
     },
-    "fillArea": { "type": { "description": "boolean | undefined" } },
-    "hideMark": { "type": { "description": "boolean | undefined" } },
-    "highlightScope": { "type": { "description": "CommonHighlightScope | undefined" } },
-    "id": { "type": { "description": "string | undefined" } },
+    "fillArea": { "type": { "description": "boolean" } },
+    "hideMark": { "type": { "description": "boolean" } },
+    "highlightScope": { "type": { "description": "CommonHighlightScope" } },
+    "id": { "type": { "description": "string" } },
     "label": {
+      "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" }
+    },
+    "labelMarkType": {
       "type": {
-        "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string) | undefined"
+        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
       }
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType | undefined" } },
-    "type": { "type": { "description": "\"radar\" | undefined" } },
-    "valueFormatter": {
-      "type": { "description": "SeriesValueFormatter&lt;number&gt; | undefined" }
-    }
+    "type": { "type": { "description": "\"radar\"" } },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;number&gt;" } }
   }
 }

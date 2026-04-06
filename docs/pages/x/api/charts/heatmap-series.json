@@ -5,28 +5,27 @@
     "import { HeatmapSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "data": {
-      "type": { "description": "readonly HeatmapValueType[] | undefined" },
-      "isProPlan": true
-    },
-    "dataKey": { "type": { "description": "string | undefined" }, "isProPlan": true },
-    "highlightScope": { "type": { "description": "CommonHighlightScope | undefined" } },
-    "id": { "type": { "description": "string | undefined" } },
+    "data": { "type": { "description": "readonly HeatmapValueType[]" }, "isProPlan": true },
+    "dataKey": { "type": { "description": "string" }, "isProPlan": true },
+    "highlightScope": { "type": { "description": "CommonHighlightScope" } },
+    "id": { "type": { "description": "string" } },
     "label": {
-      "type": {
-        "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string) | undefined"
-      },
+      "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" },
       "isProPlan": true
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType | undefined" } },
-    "type": { "type": { "description": "\"heatmap\" | undefined" }, "isProPlan": true },
+    "labelMarkType": {
+      "type": {
+        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+      }
+    },
+    "type": { "type": { "description": "\"heatmap\"" }, "isProPlan": true },
     "valueFormatter": {
       "type": {
-        "description": "((value: number | null, context: { xIndex: number; yIndex: number; }) =&gt; string | null) | undefined"
+        "description": "(value: number | null, context: { xIndex: number; yIndex: number; }) =&gt; string | null"
       },
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "AxisId | undefined" } },
-    "yAxisId": { "type": { "description": "AxisId | undefined" } }
+    "xAxisId": { "type": { "description": "string | number" } },
+    "yAxisId": { "type": { "description": "string | number" } }
   }
 }

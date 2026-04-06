@@ -7,21 +7,18 @@
   ],
   "demos": "  - [CSV export](/x/react-data-grid/export/#csv-export)",
   "properties": {
-    "allColumns": { "type": { "description": "boolean | undefined" }, "default": "false" },
-    "delimiter": { "type": { "description": "string | undefined" }, "default": "','" },
-    "escapeFormulas": { "type": { "description": "boolean | undefined" }, "default": "true" },
-    "fields": { "type": { "description": "string[] | undefined" } },
-    "fileName": { "type": { "description": "string | undefined" }, "default": "document.title" },
+    "allColumns": { "type": { "description": "boolean" }, "default": "false" },
+    "delimiter": { "type": { "description": "string" }, "default": "','" },
+    "escapeFormulas": { "type": { "description": "boolean" }, "default": "true" },
+    "fields": { "type": { "description": "string[]" } },
+    "fileName": { "type": { "description": "string" }, "default": "document.title" },
     "getRowsToExport": {
       "type": {
-        "description": "((params: GridCsvGetRowsToExportParams&lt;GridApiCommunity&gt;) =&gt; GridRowId[]) | undefined"
+        "description": "(params: GridCsvGetRowsToExportParams&lt;GridApiCommunity&gt;) =&gt; GridRowId[]"
       }
     },
-    "includeColumnGroupsHeaders": {
-      "type": { "description": "boolean | undefined" },
-      "default": "true"
-    },
-    "includeHeaders": { "type": { "description": "boolean | undefined" }, "default": "true" },
-    "utf8WithBom": { "type": { "description": "boolean | undefined" }, "default": "false" }
+    "includeColumnGroupsHeaders": { "type": { "description": "boolean" }, "default": "true" },
+    "includeHeaders": { "type": { "description": "boolean" }, "default": "true" },
+    "utf8WithBom": { "type": { "description": "boolean" }, "default": "false" }
   }
 }

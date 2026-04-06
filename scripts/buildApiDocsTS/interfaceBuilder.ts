@@ -93,8 +93,7 @@ export function buildInterfacePages(
         continue;
       }
 
-      const propType = checker.getTypeOfSymbol(prop);
-      const typeStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
+      const typeStr = resolvePropertyType(prop, checker);
 
       const propInfo: Record<string, any> = {
         type: { description: escapeHtml(typeStr) },
@@ -235,8 +234,7 @@ export function buildJsonOnlyInterfaces(
         continue;
       }
 
-      const propType = checker.getTypeOfSymbol(prop);
-      const typeStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
+      const typeStr = resolvePropertyType(prop, checker);
 
       properties[prop.name] = {
         type: { description: escapeHtml(typeStr) },
@@ -290,4 +288,35 @@ export function linkifyTranslations(
 
 export function escapeHtml(s: string): string {
   return s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/**
+ * Resolve a property's type to a clean string for interface docs.
+ * Uses getBaseConstraintOfType to resolve indexed access types and generics,
+ * and strips undefined/null from optional props.
+ */
+function resolvePropertyType(prop: ts.Symbol, checker: ts.TypeChecker): string {
+  let propType = checker.getTypeOfSymbol(prop);
+
+  // Resolve indexed access types / generics (e.g. Partial<AxisProps>["className"] → string)
+  const baseConstraint = checker.getBaseConstraintOfType(propType);
+  if (baseConstraint) {
+    propType = baseConstraint;
+  }
+
+  // Strip undefined/null for optional properties
+  if (prop.flags & ts.SymbolFlags.Optional && propType.isUnion()) {
+    const filtered = propType.types.filter(
+      (t) => !(t.flags & (ts.TypeFlags.Undefined | ts.TypeFlags.Null)),
+    );
+    if (filtered.length === 1) {
+      propType = filtered[0];
+    } else if (filtered.length > 1) {
+      propType = (
+        checker as unknown as { getUnionType(types: ts.Type[]): ts.Type }
+      ).getUnionType(filtered);
+    }
+  }
+
+  return checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
 }

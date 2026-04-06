@@ -6,48 +6,59 @@
     "import { LineSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "area": { "type": { "description": "boolean | undefined" } },
-    "baseline": {
-      "type": { "description": "number | \"max\" | \"min\" | undefined" },
-      "default": "0"
-    },
-    "color": { "type": { "description": "string | undefined" } },
+    "area": { "type": { "description": "boolean" } },
+    "baseline": { "type": { "description": "number | \"max\" | \"min\"" }, "default": "0" },
+    "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": {
-        "description": "((data: ColorCallbackValue&lt;number | null&gt;) =&gt; string) | undefined"
-      }
+      "type": { "description": "(data: ColorCallbackValue&lt;number | null&gt;) =&gt; string" }
     },
-    "connectNulls": { "type": { "description": "boolean | undefined" }, "default": "false" },
-    "curve": { "type": { "description": "CurveType | undefined" }, "default": "'monotoneX'" },
-    "data": { "type": { "description": "readonly (number | null)[] | undefined" } },
-    "dataKey": { "type": { "description": "string | undefined" } },
-    "disableHighlight": { "type": { "description": "boolean | undefined" }, "default": "false" },
-    "highlightScope": { "type": { "description": "CommonHighlightScope | undefined" } },
-    "id": { "type": { "description": "string | undefined" } },
+    "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
+    "curve": {
+      "type": {
+        "description": "\"step\" | \"linear\" | \"catmullRom\" | \"monotoneX\" | \"monotoneY\" | \"natural\" | \"stepBefore\" | \"stepAfter\" | \"bumpY\" | \"bumpX\""
+      },
+      "default": "'monotoneX'"
+    },
+    "data": { "type": { "description": "readonly (number | null)[]" } },
+    "dataKey": { "type": { "description": "string" } },
+    "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },
+    "highlightScope": { "type": { "description": "CommonHighlightScope" } },
+    "id": { "type": { "description": "string" } },
     "label": {
+      "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" }
+    },
+    "labelMarkType": {
       "type": {
-        "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string) | undefined"
+        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
       }
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType | undefined" } },
-    "shape": { "type": { "description": "MarkShape | undefined" } },
+    "shape": {
+      "type": {
+        "description": "\"circle\" | \"square\" | \"cross\" | \"diamond\" | \"star\" | \"triangle\" | \"wye\""
+      }
+    },
     "showMark": {
       "type": {
-        "description": "boolean | ((params: ShowMarkParams&lt;number | Date&gt;) =&gt; boolean) | undefined"
+        "description": "boolean | ((params: ShowMarkParams&lt;number | Date&gt;) =&gt; boolean)"
       }
     },
-    "stack": { "type": { "description": "string | undefined" } },
+    "stack": { "type": { "description": "string" } },
     "stackOffset": {
-      "type": { "description": "StackOffsetType | undefined" },
+      "type": {
+        "description": "\"none\" | \"expand\" | \"diverging\" | \"silhouette\" | \"wiggle\""
+      },
       "default": "'none'"
     },
-    "stackOrder": { "type": { "description": "StackOrderType | undefined" }, "default": "'none'" },
-    "strictStepCurve": { "type": { "description": "boolean | undefined" } },
-    "type": { "type": { "description": "\"line\" | undefined" } },
-    "valueFormatter": {
-      "type": { "description": "SeriesValueFormatter&lt;number | null&gt; | undefined" }
+    "stackOrder": {
+      "type": {
+        "description": "\"appearance\" | \"none\" | \"reverse\" | \"ascending\" | \"descending\" | \"insideOut\""
+      },
+      "default": "'none'"
     },
-    "xAxisId": { "type": { "description": "AxisId | undefined" } },
-    "yAxisId": { "type": { "description": "AxisId | undefined" } }
+    "strictStepCurve": { "type": { "description": "boolean" } },
+    "type": { "type": { "description": "\"line\"" } },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;number | null&gt;" } },
+    "xAxisId": { "type": { "description": "string | number" } },
+    "yAxisId": { "type": { "description": "string | number" } }
   }
 }

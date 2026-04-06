@@ -9,6 +9,6 @@
   "properties": {
     "columns": { "type": { "description": "GridColDef[]" }, "required": true },
     "id": { "type": { "description": "GridRowId" }, "required": true },
-    "row": { "type": { "description": "R" }, "required": true }
+    "row": { "type": { "description": "GridValidRowModel" }, "required": true }
   }
 }

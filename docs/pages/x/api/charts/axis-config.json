@@ -7,104 +7,77 @@
   ],
   "properties": {
     "id": { "type": { "description": "AxisId" }, "required": true },
-    "classes": { "type": { "description": "Partial&lt;AxisProps&gt;[\"classes\"] | undefined" } },
-    "className": {
-      "type": { "description": "Partial&lt;AxisProps&gt;[\"className\"] | undefined" }
-    },
+    "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
+    "className": { "type": { "description": "string" } },
     "colorMap": {
       "type": {
-        "description": "Omit&lt;AxisScaleConfig[S], \"scale\"&gt;[\"colorMap\"] | undefined"
+        "description": "ContinuousColorConfig&lt;number | Date&gt; | PiecewiseColorConfig&lt;number | Date&gt; | OrdinalColorConfig&lt;string | number | Date&gt;"
       }
     },
-    "data": { "type": { "description": "readonly V[] | undefined" } },
-    "dataKey": { "type": { "description": "string | undefined" } },
-    "disableLine": {
-      "type": { "description": "Partial&lt;AxisProps&gt;[\"disableLine\"] | undefined" },
-      "default": "false"
-    },
-    "disableTicks": {
-      "type": { "description": "Partial&lt;AxisProps&gt;[\"disableTicks\"] | undefined" },
-      "default": "false"
-    },
+    "data": { "type": { "description": "readonly V[]" } },
+    "dataKey": { "type": { "description": "string" } },
+    "disableLine": { "type": { "description": "boolean" }, "default": "false" },
+    "disableTicks": { "type": { "description": "boolean" }, "default": "false" },
     "domainLimit": {
       "type": {
-        "description": "\"nice\" | \"strict\" | ((min: NumberValue, max: NumberValue) =&gt; { min: NumberValue; max: NumberValue; }) | undefined"
+        "description": "\"nice\" | \"strict\" | ((min: NumberValue, max: NumberValue) =&gt; { min: NumberValue; max: NumberValue; })"
       }
     },
     "height": {
-      "type": { "description": "number | \"auto\" | undefined" },
+      "type": { "description": "number | \"auto\"" },
       "default": "45 if an axis label is provided, 25 otherwise."
     },
-    "hideTooltip": { "type": { "description": "boolean | undefined" } },
-    "ignoreTooltip": { "type": { "description": "boolean | undefined" } },
-    "label": { "type": { "description": "Partial&lt;AxisProps&gt;[\"label\"] | undefined" } },
-    "labelStyle": {
-      "type": { "description": "Partial&lt;AxisProps&gt;[\"labelStyle\"] | undefined" }
-    },
-    "offset": { "type": { "description": "number | undefined" }, "default": "0" },
-    "position": { "type": { "description": "\"bottom\" | \"top\" | \"none\" | undefined" } },
-    "reverse": { "type": { "description": "boolean | undefined" } },
+    "hideTooltip": { "type": { "description": "boolean" } },
+    "ignoreTooltip": { "type": { "description": "boolean" } },
+    "label": { "type": { "description": "string" } },
+    "labelStyle": { "type": { "description": "ChartsTextStyle" } },
+    "offset": { "type": { "description": "number" }, "default": "0" },
+    "position": { "type": { "description": "\"bottom\" | \"top\" | \"none\"" } },
+    "reverse": { "type": { "description": "boolean" } },
     "scaleType": {
       "type": {
-        "description": "Omit&lt;AxisScaleConfig[S], \"scale\"&gt;[\"scaleType\"] | undefined"
+        "description": "\"time\" | \"log\" | \"band\" | \"point\" | \"symlog\" | \"pow\" | \"sqrt\" | \"utc\" | \"linear\""
       }
     },
     "slotProps": {
-      "type": { "description": "Partial&lt;AxisProps&gt;[\"slotProps\"] | undefined" },
+      "type": { "description": "Partial&lt;ChartsAxisSlotProps&gt;" },
       "default": "{}"
     },
-    "slots": {
-      "type": { "description": "Partial&lt;AxisProps&gt;[\"slots\"] | undefined" },
-      "default": "{}"
+    "slots": { "type": { "description": "Partial&lt;ChartsAxisSlots&gt;" }, "default": "{}" },
+    "sx": {
+      "type": {
+        "description": "SystemCssProperties&lt;{}&gt; | CSSPseudoSelectorProps&lt;{}&gt; | CSSSelectorObjectOrCssVariables&lt;{}&gt; | ((theme: {}) =&gt; SystemStyleObject&lt;{}&gt;) | readonly (boolean | SystemStyleObject&lt;{}&gt; | ((theme: {}) =&gt; SystemStyleObject&lt;{}&gt;))[]"
+      }
     },
-    "sx": { "type": { "description": "Partial&lt;AxisProps&gt;[\"sx\"] | undefined" } },
     "tickInterval": {
       "type": {
-        "description": "(Partial&lt;AxisProps&gt;[\"tickInterval\"] & (any[] | \"auto\" | ((value: any, index: number) =&gt; boolean))) | undefined"
+        "description": "any[] | \"auto\" | ((value: any, index: number) =&gt; boolean) | (\"auto\" & any[]) | (((value: any, index: number) =&gt; boolean) & any[]) | (any[] & \"auto\") | (((value: any, index: number) =&gt; boolean) & \"auto\") | (any[] & ((value: any, index: number) =&gt; boolean)) | (\"auto\" & ((value: any, index: number) =&gt; boolean))"
       },
       "default": "'auto'"
     },
     "tickLabelInterval": {
-      "type": { "description": "Partial&lt;AxisProps&gt;[\"tickLabelInterval\"] | undefined" },
+      "type": { "description": "\"auto\" | ((value: any, index: number) =&gt; boolean)" },
       "default": "'auto'"
     },
     "tickLabelPlacement": {
-      "type": {
-        "description": "(Partial&lt;AxisProps&gt;[\"tickLabelPlacement\"] & (\"middle\" | \"tick\")) | undefined"
-      },
+      "type": { "description": "\"middle\" | \"tick\"" },
       "default": "'middle'"
     },
-    "tickLabelStyle": {
-      "type": { "description": "Partial&lt;AxisProps&gt;[\"tickLabelStyle\"] | undefined" }
-    },
-    "tickMaxStep": {
-      "type": { "description": "(Partial&lt;AxisProps&gt;[\"tickMaxStep\"] & number) | undefined" }
-    },
-    "tickMinStep": {
-      "type": { "description": "(Partial&lt;AxisProps&gt;[\"tickMinStep\"] & number) | undefined" }
-    },
-    "tickNumber": {
-      "type": { "description": "(Partial&lt;AxisProps&gt;[\"tickNumber\"] & number) | undefined" }
-    },
+    "tickLabelStyle": { "type": { "description": "ChartsTextStyle" } },
+    "tickMaxStep": { "type": { "description": "number" } },
+    "tickMinStep": { "type": { "description": "number" } },
+    "tickNumber": { "type": { "description": "number" } },
     "tickPlacement": {
-      "type": {
-        "description": "(Partial&lt;AxisProps&gt;[\"tickPlacement\"] & (\"start\" | \"end\" | \"middle\" | \"extremities\")) | undefined"
-      },
+      "type": { "description": "\"start\" | \"end\" | \"middle\" | \"extremities\"" },
       "default": "'extremities'"
     },
-    "tickSize": {
-      "type": { "description": "Partial&lt;AxisProps&gt;[\"tickSize\"] | undefined" },
-      "default": "6"
-    },
-    "tickSpacing": {
-      "type": { "description": "(Partial&lt;AxisProps&gt;[\"tickSpacing\"] & number) | undefined" },
-      "default": "0"
-    },
+    "tickSize": { "type": { "description": "number" }, "default": "6" },
+    "tickSpacing": { "type": { "description": "number" }, "default": "0" },
     "valueFormatter": {
       "type": {
-        "description": "(&lt;TScaleName extends S&gt;(value: V, context: AxisValueFormatterContext&lt;TScaleName&gt;) =&gt; string) | undefined"
+        "description": "&lt;TScaleName extends S&gt;(value: V, context: AxisValueFormatterContext&lt;TScaleName&gt;) =&gt; string"
       }
     },
-    "zoom": { "type": { "description": "boolean | ZoomOptions | undefined" }, "isProPlan": true }
+    "zoom": { "type": { "description": "boolean | ZoomOptions" }, "isProPlan": true }
   }
 }

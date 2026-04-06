@@ -9,17 +9,14 @@
   "properties": {
     "items": { "type": { "description": "GridFilterItem[]" }, "default": "[]", "required": true },
     "logicOperator": {
-      "type": { "description": "GridLogicOperator | undefined" },
+      "type": { "description": "GridLogicOperator" },
       "default": "GridLogicOperator.And"
     },
-    "quickFilterExcludeHiddenColumns": {
-      "type": { "description": "boolean | undefined" },
-      "default": "true"
-    },
+    "quickFilterExcludeHiddenColumns": { "type": { "description": "boolean" }, "default": "true" },
     "quickFilterLogicOperator": {
-      "type": { "description": "GridLogicOperator | undefined" },
+      "type": { "description": "GridLogicOperator" },
       "default": "GridLogicOperator.And"
     },
-    "quickFilterValues": { "type": { "description": "any[] | undefined" }, "default": "[]" }
+    "quickFilterValues": { "type": { "description": "any[]" }, "default": "[]" }
   }
 }

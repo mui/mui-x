@@ -14,7 +14,7 @@
       },
       "required": true
     },
-    "id": { "type": { "description": "string | number | undefined" } },
+    "id": { "type": { "description": "string | number" } },
     "value": { "type": { "description": "any" } }
   }
 }

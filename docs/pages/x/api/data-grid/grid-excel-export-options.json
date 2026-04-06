@@ -3,41 +3,35 @@
   "imports": ["import { GridExcelExportOptions } from '@mui/x-data-grid-premium';"],
   "demos": "  - [Excel export](/x/react-data-grid/export/#excel-export)",
   "properties": {
-    "allColumns": { "type": { "description": "boolean | undefined" }, "default": "false" },
-    "columnsStyles": {
-      "type": { "description": "ColumnsStylesInterface | undefined" },
-      "isPremiumPlan": true
-    },
-    "escapeFormulas": { "type": { "description": "boolean | undefined" }, "default": "true" },
+    "allColumns": { "type": { "description": "boolean" }, "default": "false" },
+    "columnsStyles": { "type": { "description": "ColumnsStylesInterface" }, "isPremiumPlan": true },
+    "escapeFormulas": { "type": { "description": "boolean" }, "default": "true" },
     "exceljsPostProcess": {
       "type": {
-        "description": "((processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;) | undefined"
+        "description": "(processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;"
       },
       "isPremiumPlan": true
     },
     "exceljsPreProcess": {
       "type": {
-        "description": "((processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;) | undefined"
+        "description": "(processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;"
       },
       "isPremiumPlan": true
     },
-    "fields": { "type": { "description": "string[] | undefined" } },
-    "fileName": { "type": { "description": "string | undefined" }, "default": "document.title" },
+    "fields": { "type": { "description": "string[]" } },
+    "fileName": { "type": { "description": "string" }, "default": "document.title" },
     "getRowsToExport": {
       "type": {
-        "description": "((params: GridGetRowsToExportParams&lt;GridApiCommunity&gt;) =&gt; GridRowId[]) | undefined"
+        "description": "(params: GridGetRowsToExportParams&lt;GridApiCommunity&gt;) =&gt; GridRowId[]"
       }
     },
     "includeColumnGroupsHeaders": {
-      "type": { "description": "boolean | undefined" },
+      "type": { "description": "boolean" },
       "default": "true",
       "isPremiumPlan": true
     },
-    "includeHeaders": { "type": { "description": "boolean | undefined" }, "default": "true" },
-    "valueOptionsSheetName": {
-      "type": { "description": "string | undefined" },
-      "isPremiumPlan": true
-    },
-    "worker": { "type": { "description": "(() =&gt; Worker) | undefined" }, "isPremiumPlan": true }
+    "includeHeaders": { "type": { "description": "boolean" }, "default": "true" },
+    "valueOptionsSheetName": { "type": { "description": "string" }, "isPremiumPlan": true },
+    "worker": { "type": { "description": "() =&gt; Worker" }, "isPremiumPlan": true }
   }
 }

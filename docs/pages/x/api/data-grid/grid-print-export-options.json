@@ -7,22 +7,19 @@
   ],
   "demos": "  - [Print export](/x/react-data-grid/export/#print-export)",
   "properties": {
-    "allColumns": { "type": { "description": "boolean | undefined" }, "default": "false" },
-    "bodyClassName": { "type": { "description": "string | undefined" } },
-    "copyStyles": { "type": { "description": "boolean | undefined" }, "default": "true" },
-    "fields": { "type": { "description": "string[] | undefined" } },
-    "fileName": {
-      "type": { "description": "string | undefined" },
-      "default": "The title of the page."
-    },
+    "allColumns": { "type": { "description": "boolean" }, "default": "false" },
+    "bodyClassName": { "type": { "description": "string" } },
+    "copyStyles": { "type": { "description": "boolean" }, "default": "true" },
+    "fields": { "type": { "description": "string[]" } },
+    "fileName": { "type": { "description": "string" }, "default": "The title of the page." },
     "getRowsToExport": {
       "type": {
-        "description": "((params: GridPrintGetRowsToExportParams&lt;GridApiCommunity&gt;) =&gt; GridRowId[]) | undefined"
+        "description": "(params: GridPrintGetRowsToExportParams&lt;GridApiCommunity&gt;) =&gt; GridRowId[]"
       }
     },
-    "hideFooter": { "type": { "description": "boolean | undefined" }, "default": "false" },
-    "hideToolbar": { "type": { "description": "boolean | undefined" }, "default": "false" },
-    "includeCheckboxes": { "type": { "description": "boolean | undefined" }, "default": "false" },
-    "pageStyle": { "type": { "description": "string | (() =&gt; string) | undefined" } }
+    "hideFooter": { "type": { "description": "boolean" }, "default": "false" },
+    "hideToolbar": { "type": { "description": "boolean" }, "default": "false" },
+    "includeCheckboxes": { "type": { "description": "boolean" }, "default": "false" },
+    "pageStyle": { "type": { "description": "string | (() =&gt; string)" } }
   }
 }
