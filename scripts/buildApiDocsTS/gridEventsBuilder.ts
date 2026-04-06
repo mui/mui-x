@@ -3,114 +3,204 @@
  */
 import * as ts from 'typescript';
 import * as path from 'path';
-import { CWD, debug } from './config';
+import { kebabCase } from 'es-toolkit/string';
+import { CWD, debug, getInterfacesToDocument } from './config';
 import { extractJsDoc } from './jsDocUtils';
+import { escapeHtml } from './interfaceBuilder';
 import type { FileWrite } from './types';
+
+// Build a lookup of documented interface names → their URL folder
+const interfaceLookup = new Map<string, string>();
+for (const entry of getInterfacesToDocument()) {
+  for (const name of entry.documentedInterfaces) {
+    interfaceLookup.set(name, entry.folder);
+  }
+}
+
+/** Convert [[InterfaceName]] to an <a> link if the interface has a docs page, otherwise bare name */
+function linkifyInterface(name: string): string {
+  const folder = interfaceLookup.get(name);
+  if (folder) {
+    const slug = kebabCase(name);
+    return `<a href="/x/api/${folder}/${slug}/">${name}</a>`;
+  }
+  return name;
+}
+
+/** Normalize source type text: re-indent to 2 spaces and remove semicolons */
+function normalizeTypeText(text: string): string {
+  const lines = text.split('\n');
+  if (lines.length === 1) {
+    return text.trim();
+  }
+  return lines
+    .map((line) => {
+      const trimmed = line.trimStart();
+      if (trimmed === '{' || trimmed === '}') {
+        return trimmed;
+      }
+      const stripped = trimmed.replace(/;$/, '');
+      return trimmed.length === line.length ? stripped : `  ${stripped}`;
+    })
+    .join('\n');
+}
 
 export function buildGridEventsDocumentation(
   checker: ts.TypeChecker,
   program: ts.Program,
 ): FileWrite[] {
   const files: FileWrite[] = [];
-  const gridProjects = ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'];
+  const gridProjects = ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'] as const;
 
-  const events: Record<string, any> = {};
+  // Use the premium entry point (most complete) to see all events at once
+  const premiumEntry = path.resolve(CWD, 'packages/x-data-grid-premium/src/index.ts');
+  const premiumSf = program.getSourceFile(premiumEntry);
+  if (!premiumSf) {
+    return files;
+  }
+  const premiumMod = checker.getSymbolAtLocation(premiumSf);
+  if (!premiumMod) {
+    return files;
+  }
+  const premiumExports = checker.getExportsOfModule(premiumMod);
+  const eventLookup = premiumExports.find((s) => s.name === 'GridEventLookup');
+  if (!eventLookup) {
+    return files;
+  }
+  let resolvedLookup = eventLookup;
+  // eslint-disable-next-line no-bitwise
+  if (resolvedLookup.flags & ts.SymbolFlags.Alias) {
+    resolvedLookup = checker.getAliasedSymbol(resolvedLookup);
+  }
 
+  // Build a per-package export set so we can determine which packages export each event
+  const packageExports = new Map<string, Set<string>>();
   for (const pkg of gridProjects) {
     const entryPath = path.resolve(CWD, `packages/${pkg}/src/index.ts`);
     const sf = program.getSourceFile(entryPath);
     if (!sf) {
       continue;
     }
-
-    const modSymbol = checker.getSymbolAtLocation(sf);
-    if (!modSymbol) {
+    const mod = checker.getSymbolAtLocation(sf);
+    if (!mod) {
+      continue;
+    }
+    const exports = checker.getExportsOfModule(mod);
+    const lookupSym = exports.find((s) => s.name === 'GridEventLookup');
+    if (!lookupSym) {
       continue;
     }
 
-    const exports = checker.getExportsOfModule(modSymbol);
-    const eventLookup = exports.find((exportSymbol) => exportSymbol.name === 'GridEventLookup');
-    if (!eventLookup) {
-      continue;
-    }
-
-    let resolved = eventLookup;
+    let resolved = lookupSym;
     // eslint-disable-next-line no-bitwise
     if (resolved.flags & ts.SymbolFlags.Alias) {
       resolved = checker.getAliasedSymbol(resolved);
     }
-
-    const eventType = checker.getDeclaredTypeOfSymbol(resolved);
-    for (const prop of eventType.getProperties()) {
-      const jsDoc = extractJsDoc(prop, checker);
-      if (jsDoc.ignore) {
-        continue;
-      }
-
-      if (events[prop.name]) {
-        events[prop.name].projects.push(pkg);
-        continue;
-      }
-
-      const propType = checker.getTypeOfSymbol(prop);
-      const members = propType.getProperties();
-
-      let paramsStr = '';
-      let eventStr = 'MuiEvent<{}>';
-
-      for (const member of members) {
-        if (member.name === 'params') {
-          const memberType = checker.getTypeOfSymbol(member);
-          paramsStr = checker.typeToString(memberType, undefined, ts.TypeFormatFlags.NoTruncation);
-        } else if (member.name === 'event') {
-          const memberType = checker.getTypeOfSymbol(member);
-          const evtStr = checker.typeToString(
-            memberType,
-            undefined,
-            ts.TypeFormatFlags.NoTruncation,
-          );
-          eventStr = `MuiEvent<${evtStr}>`;
-        }
-      }
-
-      events[prop.name] = {
-        projects: [pkg],
-        name: prop.name,
-        description: jsDoc.description,
-        params: paramsStr,
-        event: eventStr,
-      };
-    }
+    const lookupType = checker.getDeclaredTypeOfSymbol(resolved);
+    packageExports.set(pkg, new Set(lookupType.getProperties().map((p) => p.name)));
   }
 
-  // Match events to component props
-  const premiumEntry = path.resolve(CWD, 'packages/x-data-grid-premium/src/index.ts');
-  const sf = program.getSourceFile(premiumEntry);
-  if (sf) {
-    const modSymbol = checker.getSymbolAtLocation(sf);
-    if (modSymbol) {
-      const exports = checker.getExportsOfModule(modSymbol);
-      const dgProps = exports.find((exportSymbol) => exportSymbol.name === 'DataGridPremiumProps');
-      if (dgProps) {
-        let resolved = dgProps;
-        // eslint-disable-next-line no-bitwise
-        if (resolved.flags & ts.SymbolFlags.Alias) {
-          resolved = checker.getAliasedSymbol(resolved);
+  const events: Record<string, any> = {};
+  const eventType = checker.getDeclaredTypeOfSymbol(resolvedLookup);
+
+  for (const prop of eventType.getProperties()) {
+    const jsDoc = extractJsDoc(prop, checker);
+    if (jsDoc.ignore) {
+      continue;
+    }
+
+    // Determine which packages own this event by checking where it's declared.
+    // Module augmentations make events visible in all packages, but ownership
+    // is determined by the declaring package.
+    const declarations = prop.getDeclarations() || [];
+    const declaringPackages = new Set<string>();
+    for (const decl of declarations) {
+      const fileName = decl.getSourceFile().fileName;
+      for (const pkg of gridProjects) {
+        if (fileName.includes(`/${pkg}/`)) {
+          declaringPackages.add(pkg);
         }
-        const propsType = checker.getDeclaredTypeOfSymbol(resolved);
-        for (const prop of propsType.getProperties()) {
-          const propType = checker.getTypeOfSymbol(prop);
-          const typeStr = checker.typeToString(
-            propType,
-            undefined,
-            ts.TypeFormatFlags.NoTruncation,
-          );
-          // Check for GridEventListener type
-          const eventNameMatch = typeStr.match(/GridEventListener<'(\w+)'>/);
-          if (eventNameMatch && events[eventNameMatch[1]]) {
-            events[eventNameMatch[1]].componentProp = prop.name;
-          }
-        }
+      }
+    }
+    // If declared in a specific package, only include that package and its re-exporters
+    // e.g. declared in premium → ['x-data-grid-premium']
+    // e.g. declared in pro → ['x-data-grid-pro', 'x-data-grid-premium']
+    // e.g. declared in community → all three
+    let projects: string[];
+    if (declaringPackages.size > 0) {
+      const lowestIdx = Math.min(
+        ...Array.from(declaringPackages).map((pkg) => gridProjects.indexOf(pkg as any)),
+      );
+      projects = gridProjects.slice(lowestIdx);
+    } else {
+      projects = gridProjects.filter((pkg) => packageExports.get(pkg)?.has(prop.name));
+    }
+
+    const propType = checker.getTypeOfSymbol(prop);
+    const members = propType.getProperties();
+
+    let paramsStr = '';
+    let eventStr = 'MuiEvent<{}>';
+
+    for (const member of members) {
+      const memberDecls = member.getDeclarations() || [];
+      const srcDecl = memberDecls.find((d) => ts.isPropertySignature(d) && d.type) as
+        | ts.PropertySignature
+        | undefined;
+
+      if (member.name === 'params') {
+        paramsStr = srcDecl?.type
+          ? normalizeTypeText(srcDecl.type.getText())
+          : checker.typeToString(
+              checker.getTypeOfSymbol(member),
+              undefined,
+              ts.TypeFormatFlags.NoTruncation,
+            );
+      } else if (member.name === 'event') {
+        const evtText = srcDecl?.type
+          ? normalizeTypeText(srcDecl.type.getText())
+          : checker.typeToString(
+              checker.getTypeOfSymbol(member),
+              undefined,
+              ts.TypeFormatFlags.NoTruncation,
+            );
+        eventStr = `MuiEvent<${evtText}>`;
+      }
+    }
+
+    const description = escapeHtml(jsDoc.description)
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\n/g, ' ')
+      .replace(/\[\[(\w+)\]\]/g, (_match, name) => linkifyInterface(name))
+      .replace(/'/g, '&#39;');
+
+    events[prop.name] = {
+      projects,
+      name: prop.name,
+      description,
+      params: paramsStr,
+      event: eventStr,
+    };
+  }
+
+  // Match events to component props by reading GridEventListener<'eventName'>
+  // from the source declaration text of DataGridPremiumProps
+  const dgProps = premiumExports.find((s) => s.name === 'DataGridPremiumProps');
+  if (dgProps) {
+    const resolvedProps =
+      // eslint-disable-next-line no-bitwise
+      dgProps.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(dgProps) : dgProps;
+    const propsType = checker.getDeclaredTypeOfSymbol(resolvedProps);
+    for (const prop of propsType.getProperties()) {
+      const propDecls = prop.getDeclarations() || [];
+      const srcType = propDecls
+        .filter((d): d is ts.PropertySignature => ts.isPropertySignature(d) && !!d.type)
+        .map((d) => d.type!.getText())
+        .join('');
+      const eventNameMatch = srcType.match(/GridEventListener<'(\w+)'>/);
+      // stateChange is excluded to match the old system's behavior
+      if (eventNameMatch && eventNameMatch[1] !== 'stateChange' && events[eventNameMatch[1]]) {
+        events[eventNameMatch[1]].componentProp = prop.name;
       }
     }
   }
