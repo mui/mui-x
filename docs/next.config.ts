@@ -13,7 +13,6 @@ import generateReleaseInfo from '../scripts/generateReleaseInfo.mjs';
 
 declare global {
   interface MUIEnv {
-    SHOW_SCHEDULER?: '1';
     DOCS_STATS_ENABLED?: string;
     PULL_REQUEST?: string;
     PICKERS_ADAPTERS_DEPS?: string;
@@ -25,6 +24,7 @@ declare global {
     DATE_PICKERS_VERSION?: string;
     CHARTS_VERSION?: string;
     TREE_VIEW_VERSION?: string;
+    SCHEDULER_VERSION?: string;
   }
 }
 
@@ -50,6 +50,7 @@ const dataGridPkg = loadPkg('./packages/x-data-grid');
 const datePickersPkg = loadPkg('./packages/x-date-pickers');
 const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');
+const schedulerPkg = loadPkg('./packages/x-scheduler');
 
 const pickersAdaptersDeps = getPickerAdapterDeps();
 
@@ -88,10 +89,10 @@ export default withDeploymentConfig({
     DATE_PICKERS_VERSION: datePickersPkg.version,
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
+    SCHEDULER_VERSION: schedulerPkg.version,
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
     MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
     MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
-    ...(process.env.DEPLOY_ENV === 'production' ? {} : { SHOW_SCHEDULER: '1' }),
   },
   // @ts-ignore
   webpack: (config, options) => {
