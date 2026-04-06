@@ -9,7 +9,7 @@ import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { EventCalendarState as State } from '@mui/x-scheduler-headless/use-event-calendar';
+import type { EventCalendarState as State } from '@mui/x-scheduler-headless/use-event-calendar';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';

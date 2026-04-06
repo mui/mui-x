@@ -14,7 +14,7 @@ import {
   SchedulerStore,
   SchedulerInstanceName,
 } from '../internals/utils/SchedulerStore';
-import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
+import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
