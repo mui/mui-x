@@ -13,8 +13,11 @@ import { schedulerNowSelectors } from '../../scheduler-selectors';
 import type { EventCalendarState } from '../../use-event-calendar';
 
 const selectorIsCurrentDate = createSelector(
-  (state: EventCalendarState, date: TemporalSupportedObject, skipDataCurrent: boolean | undefined) =>
-    !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, date),
+  (
+    state: EventCalendarState,
+    date: TemporalSupportedObject,
+    skipDataCurrent: boolean | undefined,
+  ) => !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, date),
 );
 
 export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHeaderCell(
