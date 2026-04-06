@@ -79,31 +79,28 @@ function EditCountry(props) {
       fullWidth
       open
       disableClearable
-      renderOption={(optionProps, option) => {
-        console.log(option.code);
-        return (
-          <Box
-            component="li"
-            sx={{
-              '& > img': {
-                mr: 1.5,
-                flexShrink: 0,
-              },
-            }}
-            {...optionProps}
-            key={option.code}
-          >
-            <img
-              loading="lazy"
-              width="20"
-              src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-              srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-              alt=""
-            />
-            {option.label}
-          </Box>
-        );
-      }}
+      renderOption={(optionProps, option) => (
+        <Box
+          component="li"
+          sx={{
+            '& > img': {
+              mr: 1.5,
+              flexShrink: 0,
+            },
+          }}
+          {...optionProps}
+          key={option.code}
+        >
+          <img
+            loading="lazy"
+            width="20"
+            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+            alt=""
+          />
+          {option.label}
+        </Box>
+      )}
       renderInput={(params) => {
         const { ref, ...htmlInputProps } = params.slotProps.htmlInput;
         return (
