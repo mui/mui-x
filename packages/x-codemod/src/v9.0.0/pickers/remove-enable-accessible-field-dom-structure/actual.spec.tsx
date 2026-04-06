@@ -4,6 +4,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
  
 const MyCustomTextField = () => <input />;
+const someVar = true;
 
 function App() {
   return (
@@ -18,6 +19,10 @@ function App() {
       <DateField />
       {/* Multi-prop component */}
       <DateField enableAccessibleFieldDOMStructure={false} format="MM/DD/YYYY" />
+      {/* DateField with variable expression */}
+      <DateField enableAccessibleFieldDOMStructure={someVar} format="MM/DD/YYYY" />
+      {/* DateField with shorthand boolean */}
+      <DateField enableAccessibleFieldDOMStructure />
     </div>
   );
 }

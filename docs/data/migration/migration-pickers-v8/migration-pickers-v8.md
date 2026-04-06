@@ -47,6 +47,30 @@ npx @mui/x-codemod@next v9.0.0/preset-safe <path>
 If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-pickers-v900) for more details.
 :::
 
+## Accessible DOM structure is now the default
+
+The `enableAccessibleFieldDOMStructure` prop has been removed from all Picker and Field components.
+The accessible DOM structure (section-based `PickersTextField`) introduced in v7 is now the only supported mode.
+The legacy `<input>` based fallback is no longer available.
+
+The `preset-safe` codemod will remove the prop from your code automatically.
+
+:::warning
+If you were using `enableAccessibleFieldDOMStructure={false}`, your components were relying on the legacy input-based DOM structure.
+After upgrading, any custom `textField` slot must be compatible with `PickersTextField` (which renders a `PickersSectionList` internally) rather than a plain `<input />`.
+
+If you have a custom `textField` slot that renders a standard `<input />` element, you need to update it to work with the new section-based structure.
+See the [Fields documentation](/x/react-date-pickers/fields/) for more details.
+:::
+
+```diff
+-<DatePicker enableAccessibleFieldDOMStructure label="Start date" />
++<DatePicker label="Start date" />
+
+-DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: CustomTextField }} />
++<DatePicker slots={{ textField: CustomPickerTextField }} />
+```
+
 ## Slots breaking changes
 
 ### Dialog slot
@@ -118,6 +142,11 @@ const fieldRef = React.useRef<FieldRef<PickerValue>>(null);
 fieldRef.current?.clearValue();
 ```
 
+### `textField` slot type change
+
+The `textField` slot prop on Picker and Field components now only accepts `PickersTextFieldProps`.
+It no longer accepts `TextFieldProps` from `@mui/material`.
+
 ## Removed types
 
 ### `UseDateManagerParameters` and `UseDateTimeManagerParameters`
@@ -129,4 +158,14 @@ The `useDateManager` and `useDateTimeManager` hooks no longer accept any paramet
 ```diff
 -import { UseDateManagerParameters } from '@mui/x-date-pickers/managers';
 -import { UseDateTimeManagerParameters } from '@mui/x-date-pickers/managers';
+```
+
+### `PickerManager` generic change
+
+The `PickerManager` interface now has 4 type parameters instead of 5.
+The `TEnableAccessibleFieldDOMStructure` type parameter has been removed.
+
+```diff
+-PickerManager<TValue, TError, TValidationProps, TEnableAccessibleFieldDOMStructure, TFieldInternalProps>
++PickerManager<TValue, TError, TValidationProps, TFieldInternalProps>
 ```
