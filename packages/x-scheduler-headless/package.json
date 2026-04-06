@@ -75,6 +75,7 @@
     "@floating-ui/react-dom": "^2.1.6",
     "@floating-ui/utils": "^0.2.10",
     "@mui/x-internals": "workspace:*",
+    "date-fns": "catalog:",
     "prop-types": "catalog:",
     "use-sync-external-store": "catalog:"
   },
@@ -87,7 +88,6 @@
     "@mui/internal-test-utils": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
-    "date-fns": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
