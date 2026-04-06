@@ -119,7 +119,7 @@ export type CheckboxProps = CommonProps & {
   size?: 'small' | 'medium';
   density?: 'standard' | 'compact';
   slotProps?: {
-    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
   };
   style?: React.CSSProperties;
   tabIndex?: number;
@@ -142,7 +142,7 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   edge?: 'start' | 'end' | false;
 };
 
-export type ToggleButtonProps = CommonProps & {
+export type ToggleButtonProps = Omit<CommonProps, 'onChange'> & {
   selected?: boolean;
   value: string;
 };

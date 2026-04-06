@@ -166,7 +166,7 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
   marginLeft: 'calc(var(--unit-count) * var(--unit-width) * var(--x-position))',
   width: 0,
   zIndex: 2,
-  borderLeft: `2px solid ${theme.palette.primary.main}`,
+  borderLeft: `2px solid ${(theme.vars || theme).palette.primary.main}`,
   pointerEvents: 'none',
 }));
 
@@ -181,7 +181,7 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
   width: 8,
   height: 8,
   borderRadius: '50%',
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: (theme.vars || theme).palette.primary.main,
   zIndex: 1,
 }));
 

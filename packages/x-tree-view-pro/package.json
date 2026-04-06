@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view-pro",
-  "version": "9.0.0-alpha.4",
+  "version": "9.0.0-beta.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Tree View components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui/utils": "^0.2.3",
+    "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
@@ -54,8 +54,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
-    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/material": "^7.3.0 || ^9.0.0-beta.1",
+    "@mui/system": "^7.3.0 || ^9.0.0-beta.1",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },

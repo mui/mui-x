@@ -37,7 +37,7 @@ export type ChartCorePluginSignatures<SeriesType extends ChartSeriesType = Chart
   UseChartElementRefSignature,
   UseChartIdSignature,
   UseChartSeriesConfigSignature<SeriesType>,
-  UseChartExperimentalFeaturesSignature,
+  UseChartExperimentalFeaturesSignature<SeriesType>,
   UseChartDimensionsSignature,
   UseChartSeriesSignature<SeriesType>,
   UseChartAnimationSignature,

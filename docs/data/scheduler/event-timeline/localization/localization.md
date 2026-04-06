@@ -9,7 +9,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">The Event Timeline's localization features provide the appropriate translations for users around the world.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 The default locale of MUI X is English (United States).
 To use other locales, follow the instructions below.
@@ -134,10 +134,7 @@ import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-pr
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-scheduler/src/locales) in the GitHub repository.
 
-| Locale                  | BCP 47 language tag | Import name |
-| :---------------------- | :------------------ | :---------- |
-| English (United States) | en-US               | `enUS`      |
-| French                  | fr-FR               | `frFR`      |
+{{"demo": "SchedulerLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the Scheduler component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.

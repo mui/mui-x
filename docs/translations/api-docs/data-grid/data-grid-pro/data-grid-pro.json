@@ -725,7 +725,10 @@
           "description": "With all properties from [[GridRowScrollEndParams]]."
         },
         "event": { "name": "event", "description": "The event object." },
-        "details": { "name": "details", "description": "Additional details for this callback." }
+        "details": {
+          "name": "details",
+          "description": "Additional details for this callback. Prefer to use {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} unless it doesn&#39;t fulfill your needs."
+        }
       }
     },
     "onSortModelChange": {
