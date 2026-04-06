@@ -431,7 +431,7 @@ function ModelSelector() {
     <React.Fragment>
       <Button
         size="small"
-        onClick={(e) => setMainAnchor(e.currentTarget)}
+        onClick={(event) => setMainAnchor(event.currentTarget)}
         endIcon={<KeyboardArrowDownIcon sx={{ fontSize: 14 }} />}
         sx={{
           textTransform: 'none',
@@ -458,9 +458,9 @@ function ModelSelector() {
           <MenuItem
             key={p.id}
             dense
-            onMouseEnter={(e) => {
+            onMouseEnter={(event) => {
               if (p.models.length > 0) {
-                setSubAnchor(e.currentTarget);
+                setSubAnchor(event.currentTarget);
               } else {
                 setSubAnchor(null);
               }
@@ -504,7 +504,7 @@ function EffortSelector() {
     <React.Fragment>
       <Button
         size="small"
-        onClick={(e) => setAnchor(e.currentTarget)}
+        onClick={(event) => setAnchor(event.currentTarget)}
         endIcon={<KeyboardArrowDownIcon sx={{ fontSize: 14 }} />}
         sx={{
           textTransform: 'none',

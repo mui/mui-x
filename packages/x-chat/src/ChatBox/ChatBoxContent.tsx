@@ -72,7 +72,6 @@ function DefaultMessageItem({
   id,
   slots,
   slotProps,
-  features,
 }: {
   id: string;
   slots?: Partial<ChatBoxSlots>;

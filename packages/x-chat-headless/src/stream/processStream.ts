@@ -128,27 +128,6 @@ export async function processStream<Cursor = string>(
 
   let startAuthor: ChatMessage['author'];
 
-  const ensureAssistantMessage = () => {
-    if (!targetMessageId) {
-      throw failStream('Stream processing requires a target assistant message id.');
-    }
-
-    const message = getOrCreateMessage(
-      storeUnknown,
-      targetMessageId,
-      options.conversationId,
-      startAuthor,
-    );
-
-    if (!didStartMessage) {
-      didStartMessage = true;
-      store.setStreaming(true);
-      store.setError(null);
-    }
-
-    return message;
-  };
-
   const finalizeMessage = (status: ProcessStreamResult['status']) => {
     if (!targetMessageId) {
       return;
@@ -180,6 +159,27 @@ export async function processStream<Cursor = string>(
     store.setError(chatError);
 
     return new ChatStreamError(chatError);
+  };
+
+  const ensureAssistantMessage = () => {
+    if (!targetMessageId) {
+      throw failStream('Stream processing requires a target assistant message id.');
+    }
+
+    const message = getOrCreateMessage(
+      storeUnknown,
+      targetMessageId,
+      options.conversationId,
+      startAuthor,
+    );
+
+    if (!didStartMessage) {
+      didStartMessage = true;
+      store.setStreaming(true);
+      store.setError(null);
+    }
+
+    return message;
   };
 
   const handleAbort = (): Promise<ProcessStreamResult> => {

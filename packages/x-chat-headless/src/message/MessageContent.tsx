@@ -34,7 +34,8 @@ export interface TextPartExternalProps {
    * Custom renderer for text message parts.
    * When provided, this overrides the default plain-text rendering and
    * receives the raw text string (e.g. for markdown-to-JSX conversion).
-   * @param text
+   * @param {string} text The raw text content of the message part.
+   * @returns {React.ReactNode} The rendered text content.
    */
   renderText?: (text: string) => React.ReactNode;
 }

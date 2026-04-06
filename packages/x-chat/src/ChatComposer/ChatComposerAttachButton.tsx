@@ -7,7 +7,7 @@ import { ComposerAttachButton, type ComposerAttachButtonProps } from '@mui/x-cha
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatComposer');
+const useThemeProps = createUseThemeProps('MuiChatComposerAttachButton');
 
 export interface ChatComposerAttachButtonProps extends ComposerAttachButtonProps {
   className?: string;
@@ -60,7 +60,7 @@ const ChatComposerAttachButtonStyled = styled('button', {
 
 const ChatComposerAttachButton = React.forwardRef<HTMLButtonElement, ChatComposerAttachButtonProps>(
   function ChatComposerAttachButton(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposerAttachButton' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
     const classes = useChatComposerUtilityClasses(classesProp);
 

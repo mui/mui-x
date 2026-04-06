@@ -45,16 +45,6 @@ export const MessageAuthorLabel = React.forwardRef(function MessageAuthorLabel(
 
   const ownerState = useMessageContext();
 
-  // Only render in compact variant and when this is the first message in a group
-  if (ownerState.variant !== 'compact' || ownerState.isGrouped) {
-    return null;
-  }
-
-  const authorLabel = getAuthorLabel(ownerState);
-  if (!authorLabel) {
-    return null;
-  }
-
   const AuthorLabel = slots?.authorLabel ?? 'span';
   const authorLabelProps = useSlotProps({
     elementType: AuthorLabel,
@@ -65,6 +55,16 @@ export const MessageAuthorLabel = React.forwardRef(function MessageAuthorLabel(
       ref,
     },
   });
+
+  // Only render in compact variant and when this is the first message in a group
+  if (ownerState.variant !== 'compact' || ownerState.isGrouped) {
+    return null;
+  }
+
+  const authorLabel = getAuthorLabel(ownerState);
+  if (!authorLabel) {
+    return null;
+  }
 
   return <AuthorLabel {...authorLabelProps}>{authorLabel}</AuthorLabel>;
 }) as MessageAuthorLabelComponent;

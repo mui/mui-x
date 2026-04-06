@@ -87,13 +87,6 @@ function TaskStatusIcon({ status }) {
     ),
   };
 
-  const colors = {
-    pending: 'text.disabled',
-    done: 'success.main',
-    error: 'error.main',
-    skipped: 'text.disabled',
-  };
-
   return (
     <span
       style={{ display: 'inline-flex', flexShrink: 0, color: 'inherit' }}
@@ -103,12 +96,15 @@ function TaskStatusIcon({ status }) {
       <span
         style={{
           display: 'inline-flex',
-          color:
-            status === 'done'
-              ? 'var(--mui-palette-success-main, #2e7d32)'
-              : status === 'error'
-                ? 'var(--mui-palette-error-main, #d32f2f)'
-                : 'var(--mui-palette-text-disabled, rgba(0,0,0,0.38))',
+          color: (() => {
+            if (status === 'done') {
+              return 'var(--mui-palette-success-main, #2e7d32)';
+            }
+            if (status === 'error') {
+              return 'var(--mui-palette-error-main, #d32f2f)';
+            }
+            return 'var(--mui-palette-text-disabled, rgba(0,0,0,0.38))';
+          })(),
         }}
       >
         {icons[status]}
@@ -141,22 +137,28 @@ function TaskList({ tasks }) {
     }
   }, [anyRunning, allTerminal]);
 
-  const countLabel = hasError
-    ? 'error'
-    : allTerminal
-      ? 'done'
-      : `${doneCount} / ${total}`;
+  let countLabel;
+  if (hasError) {
+    countLabel = 'error';
+  } else if (allTerminal) {
+    countLabel = 'done';
+  } else {
+    countLabel = `${doneCount} / ${total}`;
+  }
 
-  const countColor = hasError
-    ? 'var(--mui-palette-error-main, #d32f2f)'
-    : allTerminal
-      ? 'var(--mui-palette-success-main, #2e7d32)'
-      : 'var(--mui-palette-primary-main, #1976d2)';
+  let countColor;
+  if (hasError) {
+    countColor = 'var(--mui-palette-error-main, #d32f2f)';
+  } else if (allTerminal) {
+    countColor = 'var(--mui-palette-success-main, #2e7d32)';
+  } else {
+    countColor = 'var(--mui-palette-primary-main, #1976d2)';
+  }
 
   return (
     <details
       open={open}
-      onToggle={(e) => setOpen(e.currentTarget.open)}
+      onToggle={(event) => setOpen(event.currentTarget.open)}
       style={{ margin: '4px 0' }}
     >
       <summary
@@ -318,10 +320,17 @@ export default function PlanTask() {
       // Mark as running
       setTimeout(() => {
         setTasks(
-          PLAN_STEPS.map((step, i) => ({
-            ...step,
-            status: i < index ? 'done' : i === index ? 'running' : 'pending',
-          })),
+          PLAN_STEPS.map((step, i) => {
+            let status;
+            if (i < index) {
+              status = 'done';
+            } else if (i === index) {
+              status = 'running';
+            } else {
+              status = 'pending';
+            }
+            return { ...step, status };
+          }),
         );
       }, STEP_DELAY_MS * index);
 

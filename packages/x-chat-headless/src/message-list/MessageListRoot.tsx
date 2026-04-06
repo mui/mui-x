@@ -317,11 +317,15 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
   const isStreaming = isAdapterStreaming || isAnyMessageStreaming;
 
   const autoScrollEnabled = autoScroll !== false;
-  const autoScrollBuffer = autoScrollEnabled
-    ? typeof autoScroll === 'object'
-      ? (autoScroll.buffer ?? DEFAULT_AUTO_SCROLL_BUFFER)
-      : DEFAULT_AUTO_SCROLL_BUFFER
-    : estimatedItemSize; // fall back to estimatedItemSize so isAtBottom tracking still works
+  let autoScrollBuffer: number;
+  if (!autoScrollEnabled) {
+    // fall back to estimatedItemSize so isAtBottom tracking still works
+    autoScrollBuffer = estimatedItemSize;
+  } else if (typeof autoScroll === 'object') {
+    autoScrollBuffer = autoScroll.buffer ?? DEFAULT_AUTO_SCROLL_BUFFER;
+  } else {
+    autoScrollBuffer = DEFAULT_AUTO_SCROLL_BUFFER;
+  }
 
   const behavior = useMessageListBehavior({
     itemIds,

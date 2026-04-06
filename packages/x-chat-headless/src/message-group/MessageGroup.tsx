@@ -6,8 +6,6 @@ import { useMessage, useMessageIds } from '../hooks/useMessage';
 import type { ChatMessage } from '../types/chat-entities';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
 import { useChatDensity } from '../chat/internals/ChatDensityContext';
-import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
-import { useIsHydrated } from '../chat/internals/useIsHydrated';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { MessageAvatar } from '../message/MessageAvatar';
 import { MessageContent } from '../message/MessageContent';
@@ -19,6 +17,8 @@ import { type MessageGroupOwnerState } from './messageGroup.types';
  * A function that maps a message to a group key.
  * Messages that resolve to the same key are visually grouped together
  * (shared avatar, author name, etc.).
+ * @param {ChatMessage} message The message to derive a group key from.
+ * @returns {string | number} The group key for the message.
  */
 export type GroupKeyFn = (message: ChatMessage) => string | number;
 
@@ -122,9 +122,6 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   const nextMessage = useMessage(nextMessageId ?? '');
   const variant = useChatVariant();
   const density = useChatDensity();
-  const localeText = useChatLocaleText();
-  const isHydrated = useIsHydrated();
-
   const prevKey = previousMessage ? groupKey(previousMessage) : null;
   const currentKey = message ? groupKey(message) : null;
   const nextKey = nextMessage ? groupKey(nextMessage) : null;
@@ -147,7 +144,6 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   );
   const Group = slots?.group ?? 'div';
   const AuthorName = slots?.authorName ?? 'div';
-  const GroupTimestamp = slots?.groupTimestamp ?? 'span';
   const groupProps = useSlotProps({
     elementType: Group,
     externalSlotProps: slotProps?.group,
@@ -165,11 +161,6 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   const authorNameProps = useSlotProps({
     elementType: AuthorName,
     externalSlotProps: slotProps?.authorName,
-    ownerState,
-  });
-  const groupTimestampProps = useSlotProps({
-    elementType: GroupTimestamp,
-    externalSlotProps: slotProps?.groupTimestamp,
     ownerState,
   });
   const authorLabel = getAuthorLabel(message);

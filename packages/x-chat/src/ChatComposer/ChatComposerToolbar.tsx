@@ -7,7 +7,7 @@ import { ComposerToolbar, type ComposerToolbarProps } from '@mui/x-chat-headless
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatComposer');
+const useThemeProps = createUseThemeProps('MuiChatComposerToolbar');
 
 export interface ChatComposerToolbarProps extends ComposerToolbarProps {
   className?: string;
@@ -28,7 +28,7 @@ const ChatComposerToolbarStyled = styled('div', {
 
 const ChatComposerToolbar = React.forwardRef<HTMLDivElement, ChatComposerToolbarProps>(
   function ChatComposerToolbar(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposerToolbar' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
     const classes = useChatComposerUtilityClasses(classesProp);
 

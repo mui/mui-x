@@ -7,7 +7,7 @@ import { ComposerLabel, type ComposerLabelProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatComposer');
+const useThemeProps = createUseThemeProps('MuiChatComposerLabel');
 
 export interface ChatComposerLabelProps extends ComposerLabelProps {
   className?: string;
@@ -30,7 +30,7 @@ const ChatComposerLabelStyled = styled('label', {
 
 const ChatComposerLabel = React.forwardRef<HTMLLabelElement, ChatComposerLabelProps>(
   function ChatComposerLabel(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposerLabel' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
     const classes = useChatComposerUtilityClasses(classesProp);
 

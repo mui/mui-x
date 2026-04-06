@@ -16,9 +16,8 @@ import {
   ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { useMessageIds } from '@mui/x-chat-headless';
+import { useMessageIds, ChatRoot } from '@mui/x-chat-headless';
 import type { ChatAdapter } from '@mui/x-chat-headless';
-import { ChatRoot } from '@mui/x-chat-headless';
 import {
   createChunkStream,
   createTextResponseChunks,
@@ -89,9 +88,9 @@ function MessagePane() {
   const messageIds = useMessageIds();
 
   const renderItem = React.useCallback(
-    ({ id }: { id: string }) => (
-      <ChatMessageGroup key={id} messageId={id}>
-        <ChatMessage messageId={id}>
+    (params: { id: string }) => (
+      <ChatMessageGroup key={params.id} messageId={params.id}>
+        <ChatMessage messageId={params.id}>
           <ChatMessageAvatar />
           <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>

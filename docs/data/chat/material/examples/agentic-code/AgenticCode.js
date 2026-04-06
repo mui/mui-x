@@ -364,6 +364,7 @@ function createAgenticChunks(messageId) {
     { path: 'src/api.ts' },
     {
       content:
+        // eslint-disable-next-line no-template-curly-in-string
         'import axios from "axios";\nconst BASE = "http://localhost";\nexport async function fetchUser(id: string) {\n  return axios.get(`${BASE}/users/${id}`);\n}',
     },
   );

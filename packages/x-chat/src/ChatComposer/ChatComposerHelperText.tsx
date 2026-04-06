@@ -11,7 +11,7 @@ import {
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatComposer');
+const useThemeProps = createUseThemeProps('MuiChatComposerHelperText');
 
 export interface ChatComposerHelperTextProps extends ComposerHelperTextProps {
   className?: string;
@@ -39,7 +39,7 @@ const ChatComposerHelperTextStyled = styled('p', {
 
 const ChatComposerHelperText = React.forwardRef<HTMLParagraphElement, ChatComposerHelperTextProps>(
   function ChatComposerHelperText(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposerHelperText' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
     const classes = useChatComposerUtilityClasses(classesProp);
 

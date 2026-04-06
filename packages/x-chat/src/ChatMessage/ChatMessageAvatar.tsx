@@ -6,7 +6,7 @@ import { MessageAvatar, type MessageAvatarProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatMessage');
+const useThemeProps = createUseThemeProps('MuiChatMessageAvatar');
 
 export interface ChatMessageAvatarProps extends MessageAvatarProps {
   className?: string;
@@ -47,7 +47,7 @@ const ChatMessageAvatarStyled = styled('div', {
 
 const ChatMessageAvatar = React.forwardRef<HTMLDivElement, ChatMessageAvatarProps>(
   function ChatMessageAvatar(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatMessageAvatar' });
     const { slots, slotProps, className, classes: classesProp, ...other } = props;
     const classes = useChatMessageUtilityClasses(classesProp);
 

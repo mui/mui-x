@@ -195,8 +195,8 @@ describe('useChatControllerHelpers', () => {
         initialMessages: [userMessage, assistantMessage1, assistantMessage2],
       });
       // Remove the first assistant message from the lookup but leave the ID
-      const { a1: _, ...messagesById } = store.state.messagesById;
-      void _;
+      const { a1: removedA1, ...messagesById } = store.state.messagesById;
+      void removedA1;
       store.setState({
         ...store.state,
         messagesById,

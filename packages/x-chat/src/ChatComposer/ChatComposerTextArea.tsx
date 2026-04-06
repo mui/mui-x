@@ -7,7 +7,7 @@ import { ComposerTextArea, type ComposerTextAreaProps } from '@mui/x-chat-headle
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatComposer');
+const useThemeProps = createUseThemeProps('MuiChatComposerTextArea');
 
 export interface ChatComposerTextAreaProps extends ComposerTextAreaProps {
   className?: string;
@@ -52,7 +52,7 @@ const ChatComposerTextAreaStyled = styled('textarea', {
 
 const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerTextAreaProps>(
   function ChatComposerTextArea(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposerTextArea' });
     const { slots, slotProps, className, classes: classesProp, sx, maxRows, ...other } = props;
     const classes = useChatComposerUtilityClasses(classesProp);
 

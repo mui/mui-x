@@ -40,12 +40,13 @@ describe('ChatScrollToBottomAffordance', () => {
   });
 
   it('renders without crashing inside a message list overlay', () => {
-    render(
+    const { container } = render(
       <ChatRoot adapter={createAdapter()}>
         <MessageListRoot renderItem={() => null} overlay={<ChatScrollToBottomAffordance />} />
       </ChatRoot>,
     );
     // In jsdom, isAtBottom=true so the affordance returns null — just verify no crash
+    expect(container).toBeTruthy();
   });
 
   it.skipIf(isJSDOM)(

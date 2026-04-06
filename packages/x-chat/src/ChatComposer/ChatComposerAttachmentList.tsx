@@ -13,7 +13,7 @@ import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatC
 import DefaultCloseIcon from '../icons/DefaultCloseIcon';
 import DefaultFileIcon from '../icons/DefaultFileIcon';
 
-const useThemeProps = createUseThemeProps('MuiChatComposer');
+const useThemeProps = createUseThemeProps('MuiChatComposerAttachmentList');
 
 export interface ChatComposerAttachmentListProps extends ComposerAttachmentListProps {
   className?: string;
@@ -153,7 +153,7 @@ const ChatComposerAttachmentList = React.forwardRef<
   HTMLDivElement,
   ChatComposerAttachmentListProps
 >(function ChatComposerAttachmentList(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+  const props = useThemeProps({ props: inProps, name: 'MuiChatComposerAttachmentList' });
   const { slots, slotProps, className, classes: classesProp, sx, children, ...other } = props;
   const classes = useChatComposerUtilityClasses(classesProp);
 

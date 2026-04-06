@@ -6,7 +6,7 @@ import { MessageListDateDivider, type MessageListDateDividerProps } from '@mui/x
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatMessage');
+const useThemeProps = createUseThemeProps('MuiChatDateDivider');
 
 export interface ChatDateDividerProps extends MessageListDateDividerProps {
   className?: string;
@@ -48,7 +48,7 @@ const ChatDateDividerLabelStyled = styled('div', {
 
 const ChatDateDivider = React.forwardRef<HTMLDivElement, ChatDateDividerProps>(
   function ChatDateDivider(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatDateDivider' });
     const { slots, slotProps, className, classes: classesProp, ...other } = props;
     const classes = useChatMessageUtilityClasses(classesProp);
 

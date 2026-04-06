@@ -30,7 +30,7 @@ export default function AutoScrollConfig() {
         initialActiveConversationId={minimalConversation.id}
         initialConversations={[minimalConversation]}
         initialMessages={minimalMessages}
-        features={{ autoScroll: autoScroll ? true : false }}
+        features={{ autoScroll }}
         sx={{
           height: 400,
           border: '1px solid',

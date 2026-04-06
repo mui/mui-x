@@ -22,6 +22,10 @@ export interface ConversationListUnreadBadgeProps extends React.HTMLAttributes<H
   slotProps?: ConversationListUnreadBadgeSlotProps;
 }
 
+function formatUnreadCount(count: number): string | number {
+  return count > 99 ? '99+' : count;
+}
+
 type ConversationListUnreadBadgeComponent = ((
   props: ConversationListUnreadBadgeProps & React.RefAttributes<HTMLSpanElement>,
 ) => React.JSX.Element | null) & { propTypes?: any };
@@ -74,7 +78,7 @@ export const ConversationListUnreadBadge = React.forwardRef(function Conversatio
     }
     return (
       <Root {...rootProps}>
-        {unreadCount != null ? (unreadCount > 99 ? '99+' : unreadCount) : ''}
+        {unreadCount != null ? formatUnreadCount(unreadCount) : ''}
       </Root>
     );
   }

@@ -8,7 +8,7 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 import { renderMarkdown } from './renderMarkdown';
 
-const useThemeProps = createUseThemeProps('MuiChatMessage');
+const useThemeProps = createUseThemeProps('MuiChatMessageContent');
 
 export interface ChatMessageContentProps extends MessageContentProps {
   className?: string;
@@ -188,8 +188,8 @@ function ChatToolPartRoot({
       {...(rest as React.ComponentPropsWithRef<typeof ChatToolPartDetailsStyled>)}
       ownerState={ownerState}
       open={open}
-      onToggle={(e: React.SyntheticEvent<HTMLDetailsElement>) => {
-        setOpen((e.currentTarget as HTMLDetailsElement).open);
+      onToggle={(event: React.SyntheticEvent<HTMLDetailsElement>) => {
+        setOpen((event.currentTarget as HTMLDetailsElement).open);
       }}
     />
   );
@@ -690,7 +690,7 @@ const sourceDocumentPartSlots = {
 
 const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentProps>(
   function ChatMessageContent(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatMessageContent' });
     const {
       slots,
       slotProps,

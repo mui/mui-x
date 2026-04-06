@@ -54,7 +54,6 @@ describe('createSendMessageActions', () => {
 
       await sendMessage(userMessageInput);
 
-      const messageIds = store.state.messageIds;
       // The user message should be in the store (with a generated id)
       const userMsg = Object.values(store.state.messagesById).find((m) => m.role === 'user');
       expect(userMsg).toBeDefined();

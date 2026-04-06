@@ -186,7 +186,7 @@ export function useChatController<Cursor = string>({
         );
       }
     },
-    [setRuntimeError, store],
+    [setRuntimeError, store, storeUnknown],
   );
 
   const { handleRealtimeEvent } = React.useMemo(

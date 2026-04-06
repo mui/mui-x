@@ -17,7 +17,7 @@ import { ChatMessageContent } from './ChatMessageContent';
 import { ChatMessageMeta } from './ChatMessageMeta';
 import { ChatMessageInlineMeta } from './ChatMessageInlineMeta';
 
-const useThemeProps = createUseThemeProps('MuiChatMessage');
+const useThemeProps = createUseThemeProps('MuiChatMessageGroup');
 
 export interface ChatMessageGroupProps extends MessageGroupProps {
   className?: string;
@@ -129,7 +129,7 @@ function ChatMessageGroupDefaultContent({ messageId }: { messageId: string }) {
 
 const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>(
   function ChatMessageGroup(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatMessageGroup' });
     const {
       slots,
       slotProps,
@@ -191,7 +191,7 @@ ChatMessageGroup.propTypes = {
    * A function that maps a message to a group key.
    * Messages that resolve to the same key are visually grouped (shared avatar, author name, etc.).
    * Use `createTimeWindowGroupKey(windowMs)` to replicate time-window-based grouping.
-   * @default (message) => message.author?.id ?? message.role
+   * @default (message) => message.author?.id ?? message.role ?? ''
    */
   groupKey: PropTypes.func,
   index: PropTypes.number,

@@ -6,7 +6,7 @@ import { MessageAuthorLabel, type MessageAuthorLabelProps } from '@mui/x-chat-he
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatMessage');
+const useThemeProps = createUseThemeProps('MuiChatMessageAuthorLabel');
 
 export interface ChatMessageAuthorLabelProps extends MessageAuthorLabelProps {
   className?: string;
@@ -28,7 +28,7 @@ const ChatMessageAuthorLabelStyled = styled('span', {
 
 const ChatMessageAuthorLabel = React.forwardRef<HTMLSpanElement, ChatMessageAuthorLabelProps>(
   function ChatMessageAuthorLabel(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatMessageAuthorLabel' });
     const { slots, slotProps, className, classes: classesProp, ...other } = props;
     const classes = useChatMessageUtilityClasses(classesProp);
 

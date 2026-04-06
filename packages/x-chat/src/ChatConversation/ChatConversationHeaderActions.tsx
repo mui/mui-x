@@ -13,7 +13,7 @@ import {
   type ChatConversationClasses,
 } from './chatConversationClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatConversation');
+const useThemeProps = createUseThemeProps('MuiChatConversationHeaderActions');
 
 export interface ChatConversationHeaderActionsProps extends ConversationHeaderActionsProps {
   className?: string;
@@ -36,7 +36,7 @@ const ChatConversationHeaderActions = React.forwardRef<
   HTMLDivElement,
   ChatConversationHeaderActionsProps
 >(function ChatConversationHeaderActions(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatConversation' });
+  const props = useThemeProps({ props: inProps, name: 'MuiChatConversationHeaderActions' });
   const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
   const classes = useChatConversationUtilityClasses(classesProp);
 

@@ -6,8 +6,8 @@ import {
   Message,
   MessageGroup,
   MessageList,
+  useChatComposer,
 } from '@mui/x-chat-headless';
-import { useChatComposer } from '@mui/x-chat-headless';
 
 import {
   createTextResponseChunks,

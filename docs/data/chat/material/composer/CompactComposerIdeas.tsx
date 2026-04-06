@@ -183,7 +183,7 @@ function CompactIdea({ idea }: { idea: (typeof ideas)[number] }) {
   const theme = idea.createTheme(baseTheme);
 
   return (
-    <Box>
+    <div>
       <Typography variant="subtitle1" fontWeight={700} gutterBottom>
         {idea.label}
       </Typography>
@@ -206,7 +206,7 @@ function CompactIdea({ idea }: { idea: (typeof ideas)[number] }) {
           }}
         />
       </ThemeProvider>
-    </Box>
+    </div>
   );
 }
 

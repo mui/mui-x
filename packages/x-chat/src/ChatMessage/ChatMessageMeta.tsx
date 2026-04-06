@@ -9,7 +9,7 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatMessage');
+const useThemeProps = createUseThemeProps('MuiChatMessageMeta');
 
 export interface ChatMessageMetaProps extends MessageMetaProps {
   className?: string;
@@ -85,7 +85,7 @@ const ChatMessageStatusSlot = React.forwardRef<HTMLSpanElement, any>(function Ch
 
 const ChatMessageMeta = React.forwardRef<HTMLDivElement, ChatMessageMetaProps>(
   function ChatMessageMeta(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatMessageMeta' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
     const classes = useChatMessageUtilityClasses(classesProp);
 

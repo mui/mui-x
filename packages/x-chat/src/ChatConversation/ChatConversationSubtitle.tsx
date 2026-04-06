@@ -10,7 +10,7 @@ import {
   type ChatConversationClasses,
 } from './chatConversationClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatConversation');
+const useThemeProps = createUseThemeProps('MuiChatConversationSubtitle');
 
 export interface ChatConversationSubtitleProps extends ConversationSubtitleProps {
   className?: string;
@@ -36,7 +36,7 @@ const ChatConversationSubtitle = React.forwardRef<
   HTMLParagraphElement,
   ChatConversationSubtitleProps
 >(function ChatConversationSubtitle(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatConversation' });
+  const props = useThemeProps({ props: inProps, name: 'MuiChatConversationSubtitle' });
   const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
   const classes = useChatConversationUtilityClasses(classesProp);
 

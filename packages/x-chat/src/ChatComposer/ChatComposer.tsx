@@ -165,7 +165,9 @@ const DefaultComposerContent = React.memo(function DefaultComposerContent({
   );
 });
 
-(DefaultComposerContent as any).propTypes = {
+// @ts-expect-error React.memo typing doesn't include propTypes
+
+DefaultComposerContent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -181,7 +183,7 @@ const DefaultComposerContent = React.memo(function DefaultComposerContent({
       PropTypes.bool,
     ]),
   }),
-};
+} as any;
 
 const CompactComposerContent = React.memo(function CompactComposerContent({
   features,
@@ -206,7 +208,9 @@ const CompactComposerContent = React.memo(function CompactComposerContent({
   );
 });
 
-(CompactComposerContent as any).propTypes = {
+// @ts-expect-error React.memo typing doesn't include propTypes
+
+CompactComposerContent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -222,7 +226,7 @@ const CompactComposerContent = React.memo(function CompactComposerContent({
       PropTypes.bool,
     ]),
   }),
-};
+} as any;
 
 const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
   function ChatComposer(inProps, ref) {
@@ -287,6 +291,16 @@ ChatComposer.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Configuration for attachment validation constraints.
+   * When provided, file attachments are validated against these rules.
+   */
+  attachmentConfig: PropTypes.shape({
+    acceptedMimeTypes: PropTypes.arrayOf(PropTypes.string),
+    maxFileCount: PropTypes.number,
+    maxFileSize: PropTypes.number,
+    onAttachmentReject: PropTypes.func,
+  }),
   classes: PropTypes.object,
   className: PropTypes.string,
   disabled: PropTypes.bool,

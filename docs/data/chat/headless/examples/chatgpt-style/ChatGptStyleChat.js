@@ -10,7 +10,6 @@ import ManageSearchRoundedIcon from '@mui/icons-material/ManageSearchRounded';
 import MicNoneRoundedIcon from '@mui/icons-material/MicNoneRounded';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
-
 import {
   Chat,
   Conversation,
@@ -230,6 +229,7 @@ function ConversationMenu({ anchorEl, onClose }) {
   return (
     <React.Fragment>
       {/* Backdrop */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
         onClick={onClose}
         style={{
@@ -272,11 +272,11 @@ function ConversationMenu({ anchorEl, onClose }) {
               textAlign: 'left',
               fontFamily: 'inherit',
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#424242';
+            onMouseEnter={(event) => {
+              event.currentTarget.style.background = '#424242';
             }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'none';
+            onMouseLeave={(event) => {
+              event.currentTarget.style.background = 'none';
             }}
           >
             <span
@@ -330,11 +330,15 @@ const GptConversationItem = React.forwardRef(
             gap: 8,
             padding: '6px 8px',
             borderRadius: 8,
-            background: ownerState?.selected
-              ? gpt.sidebarSelected
-              : hovered
-                ? gpt.sidebarHover
-                : 'transparent',
+            background: (() => {
+              if (ownerState?.selected) {
+                return gpt.sidebarSelected;
+              }
+              if (hovered) {
+                return gpt.sidebarHover;
+              }
+              return 'transparent';
+            })(),
             color: gpt.text,
             fontSize: 14,
             cursor: 'pointer',
@@ -361,9 +365,9 @@ const GptConversationItem = React.forwardRef(
           {hovered ? (
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setMenuAnchor(e.currentTarget);
+              onClick={(event) => {
+                event.stopPropagation();
+                setMenuAnchor(event.currentTarget);
               }}
               style={{
                 position: 'absolute',
@@ -382,11 +386,11 @@ const GptConversationItem = React.forwardRef(
                 justifyContent: 'center',
                 padding: 0,
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#424242';
+              onMouseEnter={(event) => {
+                event.currentTarget.style.background = '#424242';
               }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'transparent';
+              onMouseLeave={(event) => {
+                event.currentTarget.style.background = 'transparent';
               }}
             >
               <MoreHorizRoundedIcon style={{ fontSize: 16 }} />
@@ -509,12 +513,7 @@ const GptMessageRoot = React.forwardRef(function GptMessageRoot(props, ref) {
 
 // Avatar: show only for assistant (ChatGPT sparkle icon), hide for user
 const GptAvatar = React.forwardRef(function GptAvatar(props, ref) {
-  const {
-    ownerState: _ownerState,
-    children: _children,
-    style: _style,
-    ...other
-  } = props;
+  const { ownerState, children, style, ...other } = props;
 
   return <div ref={ref} style={{ display: 'none' }} {...other} />;
 });
@@ -562,7 +561,7 @@ const GptMeta = React.forwardRef(function GptMeta(props, ref) {
 // Slot components — Reasoning (thinking block)
 // ---------------------------------------------------------------------------
 const GptReasoningRoot = React.forwardRef(function GptReasoningRoot(props, ref) {
-  const { ownerState: _ownerState, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
   return (
     <details
       ref={ref}
@@ -583,7 +582,7 @@ const GptReasoningRoot = React.forwardRef(function GptReasoningRoot(props, ref) 
 
 const GptReasoningSummary = React.forwardRef(
   function GptReasoningSummary(props, ref) {
-    const { ownerState: _ownerState, children, style, ...other } = props;
+    const { ownerState, children, style, ...other } = props;
     return (
       <summary
         ref={ref}
@@ -610,7 +609,7 @@ const GptReasoningSummary = React.forwardRef(
 
 const GptReasoningContent = React.forwardRef(
   function GptReasoningContent(props, ref) {
-    const { ownerState: _ownerState, style, ...other } = props;
+    const { ownerState, style, ...other } = props;
     return (
       <div
         ref={ref}
@@ -634,7 +633,7 @@ const GptReasoningContent = React.forwardRef(
 // Slot components — Tool call block
 // ---------------------------------------------------------------------------
 const GptToolRoot = React.forwardRef(function GptToolRoot(props, ref) {
-  const { ownerState: _ownerState, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
   return (
     <div
       ref={ref}
@@ -653,7 +652,7 @@ const GptToolRoot = React.forwardRef(function GptToolRoot(props, ref) {
 });
 
 const GptToolHeader = React.forwardRef(function GptToolHeader(props, ref) {
-  const { ownerState: _ownerState, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
   return (
     <div
       ref={ref}
@@ -671,7 +670,7 @@ const GptToolHeader = React.forwardRef(function GptToolHeader(props, ref) {
 });
 
 const GptToolTitle = React.forwardRef(function GptToolTitle(props, ref) {
-  const { ownerState: _ownerState, children, style, ...other } = props;
+  const { ownerState, children, style, ...other } = props;
   return (
     <div
       ref={ref}
@@ -714,7 +713,7 @@ const GptToolState = React.forwardRef(function GptToolState(props, ref) {
 });
 
 const GptToolSection = React.forwardRef(function GptToolSection(props, ref) {
-  const { ownerState: _ownerState, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
   return (
     <div
       ref={ref}
@@ -730,7 +729,7 @@ const GptToolSection = React.forwardRef(function GptToolSection(props, ref) {
 
 const GptToolSectionContent = React.forwardRef(
   function GptToolSectionContent(props, ref) {
-    const { ownerState: _ownerState, style, ...other } = props;
+    const { ownerState, style, ...other } = props;
     return (
       <pre
         ref={ref}

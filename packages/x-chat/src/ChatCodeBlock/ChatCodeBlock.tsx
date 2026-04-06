@@ -17,6 +17,9 @@ export interface ChatCodeBlockProps {
   /**
    * Optional syntax highlighter. Receives the code string and a language identifier,
    * and should return highlighted React nodes. When omitted, raw code is displayed.
+   * @param {string} code - The code string to highlight.
+   * @param {string} language - The language identifier for syntax highlighting.
+   * @returns {React.ReactNode} The highlighted React nodes.
    */
   highlighter?: (code: string, language: string) => React.ReactNode;
   className?: string;
@@ -216,6 +219,9 @@ ChatCodeBlock.propTypes = {
   /**
    * Optional syntax highlighter. Receives the code string and a language identifier,
    * and should return highlighted React nodes. When omitted, raw code is displayed.
+   * @param {string} code - The code string to highlight.
+   * @param {string} language - The language identifier for syntax highlighting.
+   * @returns {React.ReactNode} The highlighted React nodes.
    */
   highlighter: PropTypes.func,
   /**

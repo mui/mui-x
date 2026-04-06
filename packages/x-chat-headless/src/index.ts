@@ -1,3 +1,32 @@
+// Local imports for the namespace convenience objects below.
+import { ChatLayout, ChatRoot } from './chat';
+import {
+  ConversationHeader,
+  ConversationHeaderActions,
+  ConversationRoot,
+  ConversationSubtitle,
+  ConversationTitle,
+} from './conversation';
+import {
+  ComposerAttachButton,
+  ComposerAttachmentList,
+  ComposerHelperText,
+  ComposerRoot,
+  ComposerSendButton,
+  ComposerTextArea,
+  ComposerToolbar,
+} from './composer';
+import { ConversationListRoot } from './conversation-list';
+import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
+import {
+  MessageActions,
+  MessageAvatar,
+  MessageContent,
+  MessageMeta,
+  MessageRoot,
+} from './message';
+import { MessageListDateDivider, MessageListRoot } from './message-list';
+
 // Core logic exports
 export { ChatProvider } from './ChatProvider';
 
@@ -167,35 +196,6 @@ export { getDefaultMessagePartRenderer } from './message/defaultMessagePartRende
 export { MessageGroup, createTimeWindowGroupKey } from './message-group';
 export { SuggestionItem, SuggestionsRoot } from './suggestions';
 export { MessageListDateDivider, MessageListRoot, useMessageListContext } from './message-list';
-
-// Local imports for the namespace convenience objects below.
-import { ChatLayout, ChatRoot } from './chat';
-import {
-  ConversationHeader,
-  ConversationHeaderActions,
-  ConversationRoot,
-  ConversationSubtitle,
-  ConversationTitle,
-} from './conversation';
-import {
-  ComposerAttachButton,
-  ComposerAttachmentList,
-  ComposerHelperText,
-  ComposerRoot,
-  ComposerSendButton,
-  ComposerTextArea,
-  ComposerToolbar,
-} from './composer';
-import { ConversationListRoot } from './conversation-list';
-import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
-import {
-  MessageActions,
-  MessageAvatar,
-  MessageContent,
-  MessageMeta,
-  MessageRoot,
-} from './message';
-import { MessageListDateDivider, MessageListRoot } from './message-list';
 
 export type {
   ChatLayoutProps,

@@ -7,7 +7,7 @@ import { ComposerSendButton, type ComposerSendButtonProps } from '@mui/x-chat-he
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
-const useThemeProps = createUseThemeProps('MuiChatComposer');
+const useThemeProps = createUseThemeProps('MuiChatComposerSendButton');
 
 export interface ChatComposerSendButtonProps extends ComposerSendButtonProps {
   className?: string;
@@ -62,7 +62,7 @@ const ChatComposerSendButtonStyled = styled('button', {
 
 const ChatComposerSendButton = React.forwardRef<HTMLButtonElement, ChatComposerSendButtonProps>(
   function ChatComposerSendButton(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatComposer' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatComposerSendButton' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
     const classes = useChatComposerUtilityClasses(classesProp);
 

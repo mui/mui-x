@@ -35,7 +35,7 @@ describe('createTextDeltaBuffer', () => {
 
   describe('resolveTextLikePartIndex', () => {
     it('returns the mapped index when the map entry exists and matches part type', () => {
-      const { store, buffer } = setupBuffer([{ type: 'text', text: 'Hello', state: 'streaming' }]);
+      const { buffer } = setupBuffer([{ type: 'text', text: 'Hello', state: 'streaming' }]);
 
       // First call creates the mapping
       const index1 = buffer.resolveTextLikePartIndex(
@@ -83,7 +83,7 @@ describe('createTextDeltaBuffer', () => {
     });
 
     it('falls back to findLastStreamingPartIndex when map entry does not match current parts', () => {
-      const { store, buffer } = setupBuffer([{ type: 'text', text: 'First', state: 'streaming' }]);
+      const { buffer } = setupBuffer([{ type: 'text', text: 'First', state: 'streaming' }]);
 
       // Artificially set a stale map entry pointing to index 99
       buffer.textPartIndexesByStreamId.set('stream-1', 99);
@@ -130,7 +130,6 @@ describe('createTextDeltaBuffer', () => {
 
       // Force a mapping to index 0, but then try to apply a 'reasoning' delta
       buffer.reasoningPartIndexesByStreamId.set('stream-1', 0);
-      const stateBefore = store.state;
 
       buffer.applyTextLikeDelta('reasoning', 'stream-1', ' world');
 
