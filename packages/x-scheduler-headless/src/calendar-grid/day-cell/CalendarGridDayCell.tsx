@@ -16,6 +16,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     value,
     addPropertiesToDroppedEvent,
@@ -36,8 +37,6 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     resourceId: null,
   }));
 
-  const props = { role: 'gridcell' };
-
   const contextValue: CalendarGridDayCellContext = React.useMemo(
     () => ({
       index,
@@ -47,7 +46,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef, dropTargetRef, listItemRef],
-    props: [props, eventCreationProps, elementProps],
+    props: [elementProps, { role: 'gridcell' }, eventCreationProps],
   });
 
   return (

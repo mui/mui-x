@@ -4,9 +4,9 @@ import Typography from '@mui/material/Typography';
 
 export default function SankeyNodeAlignment() {
   return (
-    <Stack spacing={2} width={'100%'}>
-      <Stack flex={1} direction={['column', 'column', 'row']} spacing={2}>
-        <Stack width={'100%'}>
+    <Stack spacing={2} sx={{ width: '100%' }}>
+      <Stack direction={['column', 'column', 'row']} spacing={2} sx={{ flex: 1 }}>
+        <Stack sx={{ width: '100%' }}>
           <Typography>Left</Typography>
           <SankeyChart
             height={200}
@@ -19,7 +19,7 @@ export default function SankeyNodeAlignment() {
             }}
           />
         </Stack>
-        <Stack width={'100%'}>
+        <Stack sx={{ width: '100%' }}>
           <Typography>Right</Typography>
           <SankeyChart
             height={200}
@@ -33,8 +33,8 @@ export default function SankeyNodeAlignment() {
           />
         </Stack>
       </Stack>
-      <Stack flex={1} direction={['column', 'column', 'row']} spacing={2}>
-        <Stack width={'100%'}>
+      <Stack direction={['column', 'column', 'row']} spacing={2} sx={{ flex: 1 }}>
+        <Stack sx={{ width: '100%' }}>
           <Typography>Justify</Typography>
           <SankeyChart
             height={200}
@@ -47,7 +47,7 @@ export default function SankeyNodeAlignment() {
             }}
           />
         </Stack>
-        <Stack width={'100%'}>
+        <Stack sx={{ width: '100%' }}>
           <Typography>Center</Typography>
           <SankeyChart
             height={200}

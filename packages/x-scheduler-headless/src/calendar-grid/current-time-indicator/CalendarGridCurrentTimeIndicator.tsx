@@ -23,6 +23,7 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       // Rendering props
       className,
       render,
+      style,
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;
@@ -48,23 +49,20 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       collectionEnd: columnEnd,
     });
 
-    const style = React.useMemo(
-      () =>
-        ({
-          [CalendarGridCurrentTimeIndicatorCssVars.yPosition]: `${position * 100}%`,
-        }) as React.CSSProperties,
-      [position],
-    );
-
-    const props = { style };
-
     const isOutOfRange =
       adapter.isBefore(nowForColumn.value, columnStart) ||
       adapter.isAfter(nowForColumn.value, columnEnd);
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],
-      props: [props, elementProps],
+      props: [
+        elementProps,
+        {
+          style: {
+            [CalendarGridCurrentTimeIndicatorCssVars.yPosition]: `${position * 100}%`,
+          } as React.CSSProperties,
+        },
+      ],
       enabled: !isOutOfRange,
     });
   },

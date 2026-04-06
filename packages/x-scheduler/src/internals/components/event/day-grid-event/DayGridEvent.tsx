@@ -9,7 +9,7 @@ import {
   SchedulerEventSide,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
-import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
+import type { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
@@ -33,7 +33,7 @@ const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
   borderRadius: theme.shape.borderRadius * 0.75,
   minWidth: 18,
-  height: 'auto',
+  height: 18,
   cursor: 'pointer',
   position: 'relative',
   zIndex: 1,
@@ -43,7 +43,7 @@ const DayGridEventBaseStyles = (theme: any) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
-  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * 2 * ${theme.spacing(0.5)})`,
+  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * (2 * ${theme.spacing(0.5)} + 1px))`,
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
@@ -56,6 +56,10 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
 })<{ 'data-variant'?: 'filled' | 'invisible' | 'compact' | 'placeholder'; palette?: PaletteName }>(
   ({ theme }) => ({
     ...(DayGridEventBaseStyles(theme) as any),
+    '&:focus-visible': {
+      outline: '2px solid var(--event-surface-accent)',
+      outlineOffset: 1,
+    },
     '&[data-variant="filled"]': {
       backgroundColor: 'var(--event-surface-bold)',
       '&:active': {},
@@ -85,6 +89,10 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       },
       '&[data-starting-before-edge][data-ending-after-edge]': {
         clipPath: BOTH_ARROWS_CLIP,
+      },
+      '&[data-starting-before-edge]:focus-visible, &[data-ending-after-edge]:focus-visible': {
+        clipPath: 'none',
+        borderRadius: (theme.shape.borderRadius as number) * 0.75,
       },
     },
     '&[data-variant="invisible"]': {

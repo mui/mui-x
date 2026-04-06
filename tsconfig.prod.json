@@ -12,11 +12,10 @@
       "@mui/x-charts-pro/*": ["./packages/x-charts-pro/src/*"],
       "@mui/x-charts-premium": ["./packages/x-charts-premium/src"],
       "@mui/x-charts-premium/*": ["./packages/x-charts-premium/src/*"],
-      // There is no root import on these packages
-      // "@mui/x-scheduler": ["./packages/x-scheduler/src"],
-      // "@mui/x-scheduler-premium": ["./packages/x-scheduler-premium/src"],
-      // "@mui/x-scheduler-headless": ["./packages/x-scheduler-headless/src"],
-      // "@mui/x-scheduler-headless-premium": ["./packages/x-scheduler-headless-premium/src"],
+      "@mui/x-scheduler": ["./packages/x-scheduler/src"],
+      "@mui/x-scheduler-premium": ["./packages/x-scheduler-premium/src"],
+      "@mui/x-scheduler-headless": ["./packages/x-scheduler-headless/src"],
+      "@mui/x-scheduler-headless-premium": ["./packages/x-scheduler-headless-premium/src"],
       "@mui/x-scheduler/*": ["./packages/x-scheduler/*"],
       "@mui/x-scheduler-premium/*": ["./packages/x-scheduler-premium/*"],
       "@mui/x-scheduler-headless/*": ["./packages/x-scheduler-headless/*"],
@@ -34,8 +33,10 @@
       "@mui/x-telemetry/*": ["./packages/x-telemetry/src/*"],
       "@mui/x-virtualizer": ["./packages/x-virtualizer/src"],
       "@mui/x-virtualizer/*": ["./packages/x-virtualizer/src/*"],
-      "@mui/docs": ["./node_modules/@mui/monorepo/packages/mui-docs/src"],
-      "@mui/docs/*": ["./node_modules/@mui/monorepo/packages/mui-docs/src/*"],
+      "@mui/internal-core-docs": ["./node_modules/@mui/monorepo/packages-internal/core-docs/src"],
+      "@mui/internal-core-docs/*": [
+        "./node_modules/@mui/monorepo/packages-internal/core-docs/src/*"
+      ],
       "@mui-internal/api-docs-builder": ["./node_modules/@mui/monorepo/packages/api-docs-builder"],
       "@mui-internal/api-docs-builder/*": [
         "./node_modules/@mui/monorepo/packages/api-docs-builder/*"

@@ -14,7 +14,6 @@ import generateReleaseInfo from '../scripts/generateReleaseInfo.mjs';
 
 declare global {
   interface MUIEnv {
-    SHOW_SCHEDULER?: '1';
     DOCS_STATS_ENABLED?: string;
     PULL_REQUEST?: string;
     PICKERS_ADAPTERS_DEPS?: string;
@@ -26,6 +25,7 @@ declare global {
     DATE_PICKERS_VERSION?: string;
     CHARTS_VERSION?: string;
     TREE_VIEW_VERSION?: string;
+    SCHEDULER_VERSION?: string;
   }
 }
 
@@ -38,7 +38,7 @@ const require = createRequire(import.meta.url);
 const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
 const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
 const MONOREPO_ALIASES = {
-  '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
+  '@mui/internal-core-docs': path.resolve(MONOREPO_PATH, './packages-internal/core-docs/src'),
 };
 
 function loadPkg(pkgPath: string): { version: string } {
@@ -51,6 +51,7 @@ const dataGridPkg = loadPkg('./packages/x-data-grid');
 const datePickersPkg = loadPkg('./packages/x-date-pickers');
 const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');
+const schedulerPkg = loadPkg('./packages/x-scheduler');
 
 const pickersAdaptersDeps = getPickerAdapterDeps();
 
@@ -73,8 +74,8 @@ export default withDeploymentConfig({
   },
   transpilePackages: [
     // TODO, those shouldn't be needed in the first place
-    '@mui/monorepo', // Migrate everything to @mui/docs until the @mui/monorepo dependency becomes obsolete
-    '@mui/docs', // needed to fix slashes in the generated links (https://github.com/mui/mui-x/pull/13713#issuecomment-2205591461, )
+    '@mui/monorepo', // Migrate everything to @mui/internal-core-docs until the @mui/monorepo dependency becomes obsolete
+    '@mui/internal-core-docs', // needed to fix slashes in the generated links (https://github.com/mui/mui-x/pull/13713#issuecomment-2205591461, )
   ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
@@ -90,10 +91,10 @@ export default withDeploymentConfig({
     DATE_PICKERS_VERSION: datePickersPkg.version,
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
+    SCHEDULER_VERSION: schedulerPkg.version,
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
     MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
     MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
-    ...(process.env.DEPLOY_ENV === 'production' ? {} : { SHOW_SCHEDULER: '1' }),
   },
   // @ts-ignore
   webpack: (config, options) => {
