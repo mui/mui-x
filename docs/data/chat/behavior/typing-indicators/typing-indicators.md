@@ -10,7 +10,7 @@ components: ChatTypingIndicator
 
 <p class="description">Display real-time typing feedback so users know when other participants are composing a message.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 Typing indicators show labels like "Alice is typing" or "Alice, Bob are typing" in the chat UI.
 The feature connects the adapter's `setTyping()` method (outbound) with realtime `typing` events (inbound) to provide a complete typing awareness loop.
@@ -74,7 +74,7 @@ It renders a polite live region (`aria-live="polite"`) and shows labels such as:
 Place the indicator in the thread header or just above the composer:
 
 ```tsx
-import { Indicators } from '@mui/x-chat/headless';
+import { Indicators } from '@mui/x-chat-headless';
 
 <Indicators.TypingIndicator />;
 ```
@@ -121,7 +121,7 @@ The `TypingIndicator` primitive exposes a `root` slot for custom rendering.
 The slot receives owner state including the resolved typing users and count:
 
 ```tsx
-import { Indicators } from '@mui/x-chat/headless';
+import { Indicators } from '@mui/x-chat-headless';
 
 <Indicators.TypingIndicator
   slots={{
@@ -154,7 +154,7 @@ When building a custom layout with `ChatRoot`, place the `TypingIndicator` anywh
 
 ```tsx
 import { ChatRoot } from '@mui/x-chat';
-import { Indicators } from '@mui/x-chat/headless';
+import { Indicators } from '@mui/x-chat-headless';
 
 <ChatRoot adapter={adapter}>
   {/* Your custom message list */}

@@ -10,7 +10,7 @@ components: ChatMessageList, ChatScrollToBottomAffordance
 
 <p class="description">Auto-scroll behavior, scroll-to-bottom affordance, imperative scroll API, and history loading on scroll-up.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The message list automatically manages scroll position so that new messages and streaming content stay visible without user intervention, while still allowing the user to read earlier messages undisturbed.
 
@@ -69,7 +69,7 @@ The `ChatMessageList` component exposes a ref handle for programmatic scroll con
 
 ```tsx
 import { ChatMessageList } from '@mui/x-chat';
-import type { MessageListRootHandle } from '@mui/x-chat/headless';
+import type { MessageListRootHandle } from '@mui/x-chat-headless';
 
 const listRef = React.useRef<MessageListRootHandle>(null);
 
@@ -84,7 +84,7 @@ listRef.current?.scrollToBottom({ behavior: 'smooth' });
 Child components inside the message list can access scroll state via context:
 
 ```tsx
-import { useMessageListContext } from '@mui/x-chat/headless';
+import { useMessageListContext } from '@mui/x-chat-headless';
 
 function CustomScrollIndicator() {
   const { isAtBottom, unseenMessageCount, scrollToBottom } = useMessageListContext();

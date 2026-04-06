@@ -10,6 +10,6 @@
   "muiName": "MuiComposerSendButton",
   "filename": "/packages/x-chat-headless/src/composer/ComposerSendButton.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/composer/\">Unstyled composer</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/composer/\">Chat - Headless composer</a></li>\n<li><a href=\"/x/react-chat/material/composer/\">Chat - Composer</a></li></ul>",
   "cssComponent": false
 }

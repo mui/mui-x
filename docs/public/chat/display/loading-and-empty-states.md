@@ -136,7 +136,7 @@ import {
   ChatMessageGroup,
   ChatComposer,
 } from '@mui/x-chat';
-import { ChatProvider, useChat } from '@mui/x-chat/headless';
+import { ChatProvider, useChat } from '@mui/x-chat-headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import { minimalConversation } from 'docsx/data/chat/material/examples/shared/demoData';
 
@@ -153,8 +153,11 @@ function EmptyStateContent() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
         gap: 2,
         py: 4,
+        pointerEvents: 'auto',
       }}
     >
       <Typography variant="h6">How can I help you today?</Typography>
@@ -200,6 +203,7 @@ export default function CustomEmptyState() {
       <Box
         sx={{
           height: 500,
+          width: '100%',
           border: '1px solid',
           borderColor: 'divider',
           borderRadius: 1,
@@ -210,11 +214,11 @@ export default function CustomEmptyState() {
         <ChatConversation sx={{ height: '100%' }}>
           <ChatConversationHeader />
           <ChatMessageList
+            overlay={<EmptyStateContent />}
             renderItem={({ id, index }) => (
               <ChatMessageGroup index={index} messageId={id} />
             )}
           />
-          <EmptyStateContent />
           <ChatComposer />
         </ChatConversation>
       </Box>

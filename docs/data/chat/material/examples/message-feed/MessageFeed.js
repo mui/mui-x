@@ -12,9 +12,9 @@ import {
   ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { useChat, useMessageIds } from '@mui/x-chat/headless';
+import { useChat, useMessageIds } from '@mui/x-chat-headless';
 
-import { ChatRoot } from '@mui/x-chat/headless';
+import { ChatRoot } from '@mui/x-chat-headless';
 import {
   createChunkStream,
   createTextResponseChunks,

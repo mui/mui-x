@@ -112,8 +112,8 @@ The demo below sets the window to 1 minute (60,000 ms) — notice how messages m
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createTimeWindowGroupKey } from '@mui/x-chat/headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import { createTimeWindowGroupKey } from '@mui/x-chat-headless';
 import {
   createEchoAdapter,
   randomId,
@@ -207,7 +207,7 @@ Customize the date format through `slotProps`:
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 import {
   createEchoAdapter,
   randomId,
@@ -359,7 +359,7 @@ import {
   ChatMessageInlineMeta,
   ChatConversation,
 } from '@mui/x-chat';
-import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
+import { ChatProvider, useMessageIds } from '@mui/x-chat-headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,

@@ -13,6 +13,6 @@
   "muiName": "MuiUnreadMarker",
   "filename": "/packages/x-chat-headless/src/indicators/UnreadMarker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/indicators/\">Unstyled indicators</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/indicators/\">Chat - Headless indicators</a></li></ul>",
   "cssComponent": false
 }

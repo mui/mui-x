@@ -1,453 +1,563 @@
 import * as React from 'react';
-import type {
-  ChatConversation,
-  ChatMessage,
-  ChatMessagePart,
-} from '@mui/x-chat/headless';
+import { ScrollArea } from '@base-ui/react/scroll-area';
+import { Indicators } from '@mui/x-chat-headless';
+import { useChatComposer, useChatStatus } from '@mui/x-chat-headless';
+import { formatBytes, formatConversationTime, formatMessageTime } from './demoUtils';
 
-const styles = {
-  frame: {
-    border: '1px solid #d7dee7',
-    borderRadius: 16,
-    overflow: 'hidden',
-    fontFamily:
-      '"IBM Plex Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif',
-    background:
-      'linear-gradient(180deg, rgba(250,252,255,1) 0%, rgba(245,248,252,1) 100%)',
-  } satisfies React.CSSProperties,
-  split: {
-    display: 'grid',
-    gridTemplateColumns: '240px minmax(0, 1fr)',
-    minHeight: 520,
-  } satisfies React.CSSProperties,
-  sidebar: {
-    borderRight: '1px solid #d7dee7',
-    padding: 16,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 12,
-    background: '#f7fafc',
-  } satisfies React.CSSProperties,
-  main: {
-    padding: 16,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 12,
-    minWidth: 0,
-  } satisfies React.CSSProperties,
-  title: {
-    margin: 0,
-    fontSize: 18,
-    fontWeight: 700,
-    color: '#132238',
-  } satisfies React.CSSProperties,
-  description: {
-    margin: 0,
-    fontSize: 13,
-    color: '#5c6b7c',
-  } satisfies React.CSSProperties,
-  sectionLabel: {
-    margin: 0,
-    fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: '0.08em',
-    textTransform: 'uppercase',
-    color: '#66788a',
-  } satisfies React.CSSProperties,
-  list: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-  } satisfies React.CSSProperties,
-  conversationButton: {
-    width: '100%',
-    border: '1px solid #d7dee7',
-    borderRadius: 12,
-    background: '#fff',
-    padding: 12,
-    textAlign: 'left',
-    cursor: 'pointer',
-    font: 'inherit',
-  } satisfies React.CSSProperties,
-  activeConversationButton: {
-    borderColor: '#0b6bcb',
-    boxShadow: '0 0 0 1px #0b6bcb',
-    background: '#eef6ff',
-  } satisfies React.CSSProperties,
-  messageList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 10,
-    minHeight: 160,
-    maxHeight: 320,
-    overflow: 'auto',
-    padding: 4,
-  } satisfies React.CSSProperties,
-  messageBubble: {
-    borderRadius: 14,
-    padding: 12,
-    maxWidth: '85%',
-    border: '1px solid #d7dee7',
-    background: '#fff',
-  } satisfies React.CSSProperties,
-  userBubble: {
-    marginLeft: 'auto',
-    background: '#0b6bcb',
-    color: '#fff',
-    borderColor: '#0b6bcb',
-  } satisfies React.CSSProperties,
-  meta: {
-    display: 'flex',
-    gap: 8,
-    alignItems: 'center',
-    marginBottom: 6,
-    fontSize: 12,
-    color: '#5c6b7c',
-  } satisfies React.CSSProperties,
-  userMeta: {
-    color: 'rgba(255,255,255,0.82)',
-  } satisfies React.CSSProperties,
-  toolbar: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: 8,
-    alignItems: 'center',
-  } satisfies React.CSSProperties,
-  button: {
-    border: '1px solid #c4d0dd',
-    borderRadius: 999,
-    background: '#fff',
-    color: '#132238',
-    padding: '8px 12px',
-    cursor: 'pointer',
-    font: 'inherit',
-    whiteSpace: 'nowrap',
-    fontSize: 13,
-  } satisfies React.CSSProperties,
-  buttonDisabled: {
-    opacity: 0.45,
-    cursor: 'not-allowed',
-  } satisfies React.CSSProperties,
-  textarea: {
-    width: '100%',
-    minHeight: 84,
-    borderRadius: 12,
-    border: '1px solid #c4d0dd',
-    padding: 12,
-    font: 'inherit',
-    resize: 'vertical',
-    background: '#fff',
-    boxSizing: 'border-box',
-  } satisfies React.CSSProperties,
-  input: {
-    flex: 1,
-    minWidth: 0,
-    borderRadius: 999,
-    border: '1px solid #c4d0dd',
-    padding: '10px 14px',
-    font: 'inherit',
-    background: '#fff',
-    boxSizing: 'border-box',
-  } satisfies React.CSSProperties,
-  statsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-    gap: 8,
-  } satisfies React.CSSProperties,
-  statCard: {
-    border: '1px solid #d7dee7',
-    borderRadius: 12,
-    padding: 10,
-    background: '#fff',
-  } satisfies React.CSSProperties,
-  tag: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    borderRadius: 999,
-    padding: '3px 8px',
-    background: '#edf2f8',
-    color: '#334a62',
-    fontSize: 12,
-    fontWeight: 600,
-    whiteSpace: 'nowrap',
-  } satisfies React.CSSProperties,
-  codeBlock: {
-    margin: 0,
-    padding: 12,
-    borderRadius: 12,
-    background: '#132238',
-    color: '#eff7ff',
-    overflow: 'auto',
-    fontSize: 12,
-    whiteSpace: 'pre-wrap',
-    wordBreak: 'break-word',
-  } satisfies React.CSSProperties,
+export const demoLocaleText = {
+  messageTimestampLabel: formatMessageTime,
+  conversationTimestampLabel: formatConversationTime,
+};
+
+export const palette = {
+  background: '#f5f5f5',
+  surface: '#ffffff',
+  surfaceAlt: '#fafafa',
+  border: '#e0e0e0',
+  borderStrong: '#bdbdbd',
+  text: '#111111',
+  muted: '#666666',
+  accent: '#111111',
+  accentSoft: '#f5f5f5',
+  success: '#2e7d32',
+  warm: '#c62828',
 } as const;
 
-export function DemoFrame({ children }: React.PropsWithChildren) {
-  return <div style={styles.frame}>{children}</div>;
-}
+export function DemoFrame(
+  props: React.PropsWithChildren<{ style?: React.CSSProperties }>,
+) {
+  const { children, style } = props;
 
-export function DemoSplitLayout({
-  sidebar,
-  children,
-}: React.PropsWithChildren<{ sidebar: React.ReactNode }>) {
-  return (
-    <div style={styles.split}>
-      <aside style={styles.sidebar}>{sidebar}</aside>
-      <section style={styles.main}>{children}</section>
-    </div>
-  );
-}
-
-export function DemoHeading({
-  title,
-  description,
-  actions,
-}: {
-  title: React.ReactNode;
-  description?: React.ReactNode;
-  actions?: React.ReactNode;
-}) {
   return (
     <div
       style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        gap: 12,
-        alignItems: 'start',
+        background: palette.background,
+        padding: 16,
+        ...style,
       }}
     >
-      <div style={{ minWidth: 0 }}>
-        <h3 style={styles.title}>{title}</h3>
-        {description ? <p style={styles.description}>{description}</p> : null}
-      </div>
-      {actions ? (
-        <div style={{ ...styles.toolbar, flexShrink: 0 }}>{actions}</div>
-      ) : null}
+      {children}
     </div>
   );
 }
 
-export function DemoSectionLabel({ children }: React.PropsWithChildren) {
-  return <p style={styles.sectionLabel}>{children}</p>;
-}
-
-export function DemoButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  const { style, disabled, ...other } = props;
+export function DemoToolbarButton(
+  props: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    tone?: 'default' | 'accent';
+  },
+) {
+  const { tone = 'default', style, ...other } = props;
 
   return (
     <button
-      type="button"
-      disabled={disabled}
+      {...other}
       style={{
-        ...styles.button,
-        ...(disabled ? styles.buttonDisabled : null),
+        border: `1px solid ${tone === 'accent' ? palette.accent : palette.borderStrong}`,
+        background: tone === 'accent' ? palette.accent : palette.surface,
+        color: tone === 'accent' ? '#ffffff' : palette.text,
+        padding: '6px 12px',
+        fontSize: 12,
+        fontWeight: 600,
+        cursor: other.disabled ? 'not-allowed' : 'pointer',
+        opacity: other.disabled ? 0.5 : 1,
         ...style,
       }}
-      {...other}
+      type="button"
     />
   );
 }
 
-export function DemoInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  const { style, ...other } = props;
-
-  return <input style={{ ...styles.input, ...style }} {...other} />;
-}
-
-export function DemoTextarea(
-  props: React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+export function DemoScrollArea(
+  props: React.PropsWithChildren<{ style?: React.CSSProperties }>,
 ) {
-  const { style, ...other } = props;
+  const { children, style } = props;
 
-  return <textarea style={{ ...styles.textarea, ...style }} {...other} />;
-}
-
-export function DemoTag({ children }: React.PropsWithChildren) {
-  return <span style={styles.tag}>{children}</span>;
-}
-
-export function DemoConversationList({
-  conversations,
-  activeConversationId,
-  onSelect,
-}: {
-  conversations: ChatConversation[];
-  activeConversationId?: string;
-  onSelect?: (id: string) => void;
-}) {
   return (
-    <div style={styles.list}>
-      {conversations.map((conversation) => (
-        <button
-          type="button"
-          key={conversation.id}
-          onClick={() => onSelect?.(conversation.id)}
+    <ScrollArea.Root style={{ ...style, overflow: 'hidden' }}>
+      <ScrollArea.Viewport
+        style={{
+          overscrollBehavior: 'contain',
+        }}
+      >
+        <ScrollArea.Content>{children}</ScrollArea.Content>
+      </ScrollArea.Viewport>
+      <ScrollArea.Scrollbar
+        orientation="vertical"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          width: 8,
+          paddingBlock: 2,
+          boxSizing: 'border-box',
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          right: 0,
+        }}
+      >
+        <ScrollArea.Thumb
           style={{
-            ...styles.conversationButton,
-            ...(conversation.id === activeConversationId
-              ? styles.activeConversationButton
-              : null),
+            background: palette.borderStrong,
+            borderRadius: 20,
+            flex: 1,
+          }}
+        />
+      </ScrollArea.Scrollbar>
+    </ScrollArea.Root>
+  );
+}
+
+export function DemoScrollToBottomOverlay() {
+  return (
+    <div style={{ pointerEvents: 'auto' }}>
+      <Indicators.ScrollToBottomAffordance
+        slotProps={{
+          root: {
+            style: {
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              border: `1px solid ${palette.borderStrong}`,
+              background: palette.surface,
+              color: palette.text,
+              padding: '6px 12px',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+            },
+          },
+          badge: {
+            style: {
+              minWidth: 18,
+              height: 18,
+              display: 'inline-grid',
+              placeItems: 'center',
+              background: palette.accent,
+              color: '#ffffff',
+              fontSize: 11,
+              fontWeight: 700,
+            },
+          },
+        }}
+      />
+    </div>
+  );
+}
+
+export const demoMessageListSlotProps = {
+  messageListOverlay: {
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      paddingBottom: 12,
+    },
+  },
+} satisfies Record<string, { style: React.CSSProperties }>;
+
+export function AttachmentPreviewList() {
+  const composer = useChatComposer();
+  const status = useChatStatus();
+
+  if (composer.attachments.length === 0) {
+    return null;
+  }
+
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gap: 8,
+        padding: 12,
+        background: palette.surfaceAlt,
+        border: `1px solid ${palette.border}`,
+      }}
+    >
+      {composer.attachments.map((attachment) => (
+        <div
+          key={attachment.localId}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            justifyContent: 'space-between',
           }}
         >
-          <div style={{ fontWeight: 700 }}>
-            {conversation.title ?? conversation.id}
-          </div>
-          {conversation.subtitle ? (
-            <div style={{ marginTop: 4, fontSize: 12, color: '#5c6b7c' }}>
-              {conversation.subtitle}
-            </div>
-          ) : null}
-          <div style={{ marginTop: 8, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            {conversation.unreadCount ? (
-              <DemoTag>{conversation.unreadCount} unread</DemoTag>
-            ) : null}
-            {conversation.readState ? (
-              <DemoTag>{conversation.readState}</DemoTag>
-            ) : null}
-          </div>
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function renderDefaultPart(part: ChatMessagePart) {
-  if (part.type === 'text' || part.type === 'reasoning') {
-    return <div>{part.text}</div>;
-  }
-
-  if (part.type === 'tool' || part.type === 'dynamic-tool') {
-    return (
-      <div>
-        <strong>{part.toolInvocation.toolName}</strong>: {part.toolInvocation.state}
-      </div>
-    );
-  }
-
-  if (part.type === 'file') {
-    return (
-      <a href={part.url} target="_blank" rel="noreferrer">
-        {part.filename ?? part.url}
-      </a>
-    );
-  }
-
-  if (part.type === 'source-url') {
-    return (
-      <a href={part.url} target="_blank" rel="noreferrer">
-        {part.title ?? part.url}
-      </a>
-    );
-  }
-
-  if (part.type === 'source-document') {
-    return <div>{part.title ?? part.text ?? 'Source document'}</div>;
-  }
-
-  if (part.type === 'step-start') {
-    return <div>Step started</div>;
-  }
-
-  if (part.type.startsWith('data-') && 'data' in part) {
-    return <pre style={{ margin: 0 }}>{JSON.stringify(part.data, null, 2)}</pre>;
-  }
-
-  return <pre style={{ margin: 0 }}>{JSON.stringify(part, null, 2)}</pre>;
-}
-
-export function DemoMessageList({
-  messages,
-  renderPart,
-  emptyLabel = 'No messages yet.',
-}: {
-  messages: ChatMessage[];
-  renderPart?: (
-    part: ChatMessagePart,
-    message: ChatMessage,
-    index: number,
-  ) => React.ReactNode | null | undefined;
-  emptyLabel?: string;
-}) {
-  if (messages.length === 0) {
-    return (
-      <div
-        style={{ ...styles.messageList, justifyContent: 'center', color: '#5c6b7c' }}
-      >
-        {emptyLabel}
-      </div>
-    );
-  }
-
-  return (
-    <div style={styles.messageList}>
-      {messages.map((message) => {
-        const isUser = message.role === 'user';
-
-        return (
           <div
-            key={message.id}
-            style={{
-              ...styles.messageBubble,
-              ...(isUser ? styles.userBubble : null),
-            }}
+            style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}
           >
-            <div style={{ ...styles.meta, ...(isUser ? styles.userMeta : null) }}>
-              <strong>{message.author?.displayName ?? message.role}</strong>
-              {message.status ? <span>{message.status}</span> : null}
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {message.parts.map((part, index) => (
-                <div key={`${message.id}-${part.type}-${index}`}>
-                  {renderPart?.(part, message, index) ?? renderDefaultPart(part)}
-                </div>
-              ))}
+            {attachment.previewUrl ? (
+              <img
+                alt={attachment.file.name}
+                src={attachment.previewUrl}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: 'cover',
+                  background: palette.surface,
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  background: palette.surface,
+                  border: `1px solid ${palette.border}`,
+                  display: 'grid',
+                  placeItems: 'center',
+                  color: palette.muted,
+                  fontSize: 11,
+                  fontWeight: 600,
+                }}
+              >
+                FILE
+              </div>
+            )}
+            <div style={{ minWidth: 0 }}>
+              <div
+                style={{
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: palette.text,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {attachment.file.name}
+              </div>
+              <div style={{ color: palette.muted, fontSize: 12 }}>
+                {formatBytes(attachment.file.size)} · {attachment.status}
+              </div>
             </div>
           </div>
-        );
-      })}
-    </div>
-  );
-}
-
-export function DemoStats({
-  items,
-}: {
-  items: Array<{ label: string; value: React.ReactNode }>;
-}) {
-  return (
-    <div style={styles.statsGrid}>
-      {items.map((item) => (
-        <div key={item.label} style={styles.statCard}>
-          <div
+          <button
+            onClick={() => composer.removeAttachment(attachment.localId)}
             style={{
-              fontSize: 11,
-              textTransform: 'uppercase',
-              color: '#66788a',
-              whiteSpace: 'nowrap',
+              border: 'none',
+              background: 'transparent',
+              color: status.isStreaming ? palette.borderStrong : palette.warm,
+              fontWeight: 600,
+              cursor: status.isStreaming ? 'not-allowed' : 'pointer',
             }}
+            type="button"
           >
-            {item.label}
-          </div>
-          <div
-            style={{
-              marginTop: 6,
-              fontSize: 16,
-              fontWeight: 700,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {item.value}
-          </div>
+            Remove
+          </button>
         </div>
       ))}
     </div>
   );
 }
 
-export function DemoCodeBlock({ children }: React.PropsWithChildren) {
-  return <pre style={styles.codeBlock}>{children}</pre>;
-}
+// ---------------------------------------------------------------------------
+// Shared slot props — identical across all headless demos
+// ---------------------------------------------------------------------------
+
+export const demoSlotProps = {
+  messageRoot: (ownerState: { role: string }) => ({
+    style: {
+      display: 'grid',
+      gridTemplateColumns:
+        ownerState.role === 'user' ? 'minmax(0, 1fr) 32px' : '32px minmax(0, 1fr)',
+      gridTemplateRows: 'auto auto',
+      gap: '4px 10px',
+      alignItems: 'start',
+    },
+  }),
+  messageAvatar: (ownerState: { role: string }) => ({
+    style: {
+      width: 32,
+      height: 32,
+      background: palette.accent,
+      flexShrink: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gridColumn: ownerState.role === 'user' ? 2 : 1,
+      gridRow: '1 / 3',
+      alignSelf: 'start',
+    },
+  }),
+  messageAvatarImage: {
+    style: { width: 20, height: 20, filter: 'grayscale(1) invert(1)' },
+  },
+  messageContent: {
+    style: { display: 'contents' },
+  },
+  messageBubble: (ownerState: { role: string }) => ({
+    style: {
+      display: 'grid',
+      gap: 8,
+      padding: '10px 14px',
+      border: `1px solid ${ownerState.role === 'user' ? palette.accent : palette.border}`,
+      background: ownerState.role === 'user' ? palette.accent : palette.surface,
+      color: ownerState.role === 'user' ? '#ffffff' : palette.text,
+      gridColumn: ownerState.role === 'user' ? 1 : 2,
+      gridRow: 1,
+      justifySelf: ownerState.role === 'user' ? 'end' : 'start',
+      width: 'fit-content',
+      maxWidth: '90%',
+    },
+  }),
+  messageMeta: (ownerState: { role: string }) => ({
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      fontSize: 11,
+      color: palette.muted,
+      gridColumn: ownerState.role === 'user' ? 1 : 2,
+      gridRow: 2,
+      justifySelf: ownerState.role === 'user' ? 'end' : 'start',
+    },
+  }),
+  messageGroupRoot: (ownerState: { isFirst: boolean; isLast: boolean }) => ({
+    style: {
+      display: 'grid',
+      gap: 4,
+      marginTop: ownerState.isFirst ? 16 : 4,
+      marginBottom: ownerState.isLast ? 4 : 0,
+    },
+  }),
+  messageGroupAuthorName: (ownerState: { authorRole: string }) => ({
+    style: {
+      color: palette.muted,
+      fontSize: 11,
+      fontWeight: 700,
+      letterSpacing: '0.04em',
+      textTransform: 'uppercase' as const,
+      marginLeft: ownerState.authorRole === 'user' ? 0 : 42,
+      textAlign: (ownerState.authorRole === 'user' ? 'right' : 'left') as
+        | 'right'
+        | 'left',
+      marginRight: ownerState.authorRole === 'user' ? 42 : 0,
+    },
+  }),
+  conversationHeader: {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+      justifyContent: 'space-between',
+      paddingBottom: 12,
+      borderBottom: `1px solid ${palette.border}`,
+    },
+  },
+  conversationTitle: {
+    fontSize: 18,
+    fontWeight: 800,
+  } satisfies React.CSSProperties,
+  conversationSubtitle: {
+    color: palette.muted,
+    fontSize: 13,
+    marginTop: 4,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  } satisfies React.CSSProperties,
+  composerRoot: {
+    style: {
+      display: 'grid',
+      gap: 10,
+      paddingTop: 12,
+      borderTop: `1px solid ${palette.border}`,
+    },
+  },
+  composerTextArea: {
+    style: {
+      width: '100%',
+      minHeight: 48,
+      maxHeight: 180,
+      resize: 'none',
+      border: `1px solid ${palette.border}`,
+      background: palette.surfaceAlt,
+      color: palette.text,
+      padding: '10px 12px',
+      fontFamily: 'inherit',
+      fontSize: 14,
+      lineHeight: 1.5,
+      outline: 'none',
+      boxSizing: 'border-box',
+    },
+  },
+  composerSendButton: (ownerState: { disabled: boolean }) => ({
+    style: {
+      border: `1px solid ${palette.accent}`,
+      background: palette.accent,
+      color: '#ffffff',
+      padding: '8px 20px',
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: ownerState.disabled ? 'not-allowed' : 'pointer',
+      opacity: ownerState.disabled ? 0.4 : 1,
+      fontFamily: 'inherit',
+    },
+  }),
+  conversationListItem: (ownerState: { selected: boolean }) => ({
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '36px minmax(0, 1fr) auto',
+      gridTemplateRows: 'auto auto',
+      gap: '2px 10px',
+      alignItems: 'center',
+      padding: '10px 12px',
+      background: ownerState.selected ? palette.accentSoft : palette.surface,
+      borderLeft: ownerState.selected
+        ? `2px solid ${palette.accent}`
+        : '2px solid transparent',
+      borderBottom: `1px solid ${palette.border}`,
+      cursor: 'pointer',
+    },
+  }),
+  conversationListItemAvatar: {
+    style: {
+      width: 36,
+      height: 36,
+      background: palette.accent,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+      alignSelf: 'center',
+    },
+    slotProps: {
+      image: {
+        style: { width: 22, height: 22, filter: 'grayscale(1) invert(1)' },
+      },
+    },
+  },
+  conversationListItemContent: {
+    style: {
+      gridColumn: 2,
+      gridRow: '1 / 3',
+      display: 'flex',
+      flexDirection: 'column' as const,
+      justifyContent: 'center',
+      minWidth: 0,
+      gap: 2,
+    },
+  },
+  conversationListTitle: (ownerState: { unread: boolean }) => ({
+    style: {
+      fontWeight: ownerState.unread ? 700 : 500,
+      color: palette.text,
+      minWidth: 0,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      fontSize: 14,
+    },
+  }),
+  conversationListPreview: {
+    style: {
+      fontSize: 12,
+      color: palette.muted,
+      minWidth: 0,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
+  },
+  conversationListTimestamp: {
+    style: {
+      fontSize: 11,
+      color: palette.muted,
+      textAlign: 'end' as const,
+      gridColumn: 3,
+      gridRow: 1,
+      alignSelf: 'end',
+    },
+  },
+  conversationListUnreadBadge: {
+    style: {
+      display: 'inline-block',
+      minWidth: 18,
+      padding: '1px 5px',
+      background: palette.accent,
+      color: '#ffffff',
+      fontWeight: 600,
+      fontSize: 11,
+      textAlign: 'center' as const,
+      gridColumn: 3,
+      gridRow: 2,
+      justifySelf: 'end',
+      alignSelf: 'start',
+    },
+  },
+  dateDividerRoot: {
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      margin: '14px 0',
+    },
+  },
+  dateDividerLabel: {
+    style: {
+      background: palette.accentSoft,
+      color: palette.muted,
+      padding: '3px 10px',
+      fontSize: 11,
+      fontWeight: 600,
+    },
+  },
+  unreadMarkerRoot: {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      margin: '10px 0',
+    },
+  },
+  unreadMarkerLabel: {
+    style: {
+      background: '#fce4ec',
+      color: palette.warm,
+      padding: '3px 10px',
+      fontSize: 11,
+      fontWeight: 700,
+    },
+  },
+};
+
+export const demoSurfaceStyles = {
+  chatRoot: {
+    display: 'grid',
+    gap: 0,
+    margin: '-12px',
+    background: palette.surface,
+    color: palette.text,
+  } satisfies React.CSSProperties,
+  layout: {
+    height: 560,
+    overflow: 'hidden',
+  } satisfies React.CSSProperties,
+  conversationsPane: {
+    width: 280,
+    paddingRight: 16,
+    borderRight: `1px solid ${palette.border}`,
+    display: 'grid',
+    gap: 12,
+  } satisfies React.CSSProperties,
+  threadPane: {
+    paddingLeft: 16,
+    display: 'grid',
+    gridTemplateRows: 'minmax(0, 1fr)',
+    gap: 14,
+  } satisfies React.CSSProperties,
+  conversationList: {
+    display: 'grid',
+    gap: 0,
+    alignContent: 'start',
+    minHeight: 0,
+    overflow: 'auto',
+    overscrollBehavior: 'contain',
+  } satisfies React.CSSProperties,
+  threadRoot: {
+    minWidth: 0,
+    minHeight: 0,
+    display: 'grid',
+    gridTemplateRows: 'auto minmax(0, 1fr) auto',
+    gap: 14,
+  } satisfies React.CSSProperties,
+} as const;

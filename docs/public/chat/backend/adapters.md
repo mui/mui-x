@@ -21,7 +21,7 @@ The full interface is generic over your pagination cursor type.
 The default cursor type is `string`, which covers the majority of REST and cursor-based APIs:
 
 ```ts
-import type { ChatAdapter } from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat-headless';
 
 interface ChatAdapter<Cursor = string> {
   // Required

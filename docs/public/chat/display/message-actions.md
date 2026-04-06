@@ -61,7 +61,6 @@ The `MessageActions` primitive renders a `<div>` (or custom slot element) that y
 ```tsx
 'use client';
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
@@ -73,9 +72,9 @@ import {
   minimalMessages,
 } from 'docsx/data/chat/material/examples/shared/demoData';
 
-function MyMessageActions(props: React.HTMLAttributes<HTMLDivElement>) {
+function MyMessageActions() {
   return (
-    <Box {...props} sx={{ display: 'flex', gap: 0.5 }}>
+    <React.Fragment>
       <IconButton size="small" aria-label="Copy">
         <ContentCopyIcon fontSize="small" />
       </IconButton>
@@ -85,7 +84,7 @@ function MyMessageActions(props: React.HTMLAttributes<HTMLDivElement>) {
       <IconButton size="small" aria-label="Delete">
         <DeleteIcon fontSize="small" />
       </IconButton>
-    </Box>
+    </React.Fragment>
   );
 }
 
@@ -118,28 +117,24 @@ Inside a custom actions component, use the `ownerState` prop to access the curre
 ```tsx
 'use client';
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { ChatBox } from '@mui/x-chat';
+import { useMessage } from '@mui/x-chat-headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
 } from 'docsx/data/chat/material/examples/shared/demoData';
 
-function RoleBasedActions({
-  ownerState,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement> & {
-  ownerState?: { role?: string };
-}) {
-  const role = ownerState?.role;
+function RoleBasedActions({ messageId }: { messageId: string }) {
+  const message = useMessage(messageId);
+  const role = message?.role;
 
   return (
-    <Box {...props} sx={{ display: 'flex', gap: 0.5 }}>
+    <React.Fragment>
       <IconButton size="small" aria-label="Copy">
         <ContentCopyIcon fontSize="small" />
       </IconButton>
@@ -153,7 +148,7 @@ function RoleBasedActions({
           <EditIcon fontSize="small" />
         </IconButton>
       )}
-    </Box>
+    </React.Fragment>
   );
 }
 

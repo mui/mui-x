@@ -12,6 +12,6 @@
   "muiName": "MuiConversationRoot",
   "filename": "/packages/x-chat-headless/src/conversation/ConversationRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/thread/\">Unstyled thread</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/thread/\">Chat - Headless thread</a></li>\n<li><a href=\"/x/react-chat/material/thread/\">Chat - Thread</a></li></ul>",
   "cssComponent": false
 }

@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">A step-by-step tutorial for implementing a custom <code>ChatAdapter</code> that connects your chat UI to any backend.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 This page walks you through building a `ChatAdapter` from scratch.
 You will start with the minimum viable adapter (`sendMessage` only), then progressively add history loading and conversation management.
@@ -21,7 +21,7 @@ It receives the user's message and must return a `ReadableStream` of typed chunk
 
 ```tsx
 import { ChatBox } from '@mui/x-chat';
-import type { ChatAdapter } from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat-headless';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message, signal }) {
@@ -219,7 +219,7 @@ Return `null` if the interrupted message cannot be resumed.
 Here is a complete adapter that combines all the steps:
 
 ```tsx
-import type { ChatAdapter } from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat-headless';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message, signal }) {

@@ -10,7 +10,7 @@ components: ChatRoot
 
 <p class="description">Customize all user-facing strings in the chat UI using the <code>localeText</code> prop on <code>ChatRoot</code> or the <code>useChatLocaleText()</code> hook.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 Every user-facing string in the chat UI — placeholders, button labels, status messages, timestamps — is defined in a locale text object.
 You can override any string by passing a partial `localeText` object to `ChatBox`.
@@ -49,7 +49,7 @@ Unspecified keys fall back to the defaults:
 Inside any descendant of `ChatBox`, use the `useChatLocaleText()` hook to read the current locale text:
 
 ```tsx
-import { useChatLocaleText } from '@mui/x-chat/headless';
+import { useChatLocaleText } from '@mui/x-chat-headless';
 
 function CustomSendButton() {
   const localeText = useChatLocaleText();

@@ -35,6 +35,14 @@
     "groupTimestamp": {
       "description": "Class applied to the group timestamp element (compact variant only)."
     },
+    "inlineMeta": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the inline meta container element (default variant)"
+    },
+    "inlineMetaSpacer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the inline meta spacer element (default variant)"
+    },
     "meta": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the message meta element"

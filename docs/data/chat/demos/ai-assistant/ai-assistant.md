@@ -10,7 +10,7 @@ components: ChatBox
 
 <p class="description">A full ChatGPT-style AI assistant with streaming responses, tool calling, and rich content rendering.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Agentic code assistant
 

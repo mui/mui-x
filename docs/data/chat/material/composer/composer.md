@@ -10,7 +10,7 @@ components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachBu
 
 <p class="description">The text input area where users draft and send messages, with support for attachments, toolbar actions, and helper text.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The composer is the input region at the bottom of the chat surface.
 `ChatComposer` provides Material UI styling — border, padding, and theme tokens are applied automatically.

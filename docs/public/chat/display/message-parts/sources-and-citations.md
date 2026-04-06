@@ -3,7 +3,7 @@ productId: x-chat
 title: Sources & Citations
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatMessageContent
+components: ChatMessageContent, ChatMessageSource, ChatMessageSources
 ---
 
 # Chat - Sources & Citations

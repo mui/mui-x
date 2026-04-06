@@ -10,7 +10,7 @@ components: ChatMessageList, ChatMessageGroup
 
 <p class="description">Understand the ChatMessage data model and how messages render in a scrollable, grouped list.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## The ChatMessage data model
 

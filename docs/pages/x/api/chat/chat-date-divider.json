@@ -67,6 +67,18 @@
       "isGlobal": false
     },
     {
+      "key": "inlineMeta",
+      "className": "MuiChatDateDivider-inlineMeta",
+      "description": "Styles applied to the inline meta container element (default variant).",
+      "isGlobal": false
+    },
+    {
+      "key": "inlineMetaSpacer",
+      "className": "MuiChatDateDivider-inlineMetaSpacer",
+      "description": "Styles applied to the inline meta spacer element (default variant).",
+      "isGlobal": false
+    },
+    {
       "key": "meta",
       "className": "MuiChatDateDivider-meta",
       "description": "Styles applied to the message meta element.",

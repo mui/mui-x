@@ -1,5 +1,10 @@
 {
-  "props": {},
+  "props": {
+    "groupKey": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.id ?? message.role"
+    }
+  },
   "name": "ChatMessageGroup",
   "imports": [
     "import { ChatMessageGroup } from '@mui/x-chat/ChatMessage';",
@@ -64,6 +69,18 @@
       "key": "groupTimestamp",
       "className": "MuiChatMessageGroup-groupTimestamp",
       "description": "Class applied to the group timestamp element (compact variant only).",
+      "isGlobal": false
+    },
+    {
+      "key": "inlineMeta",
+      "className": "MuiChatMessageGroup-inlineMeta",
+      "description": "Styles applied to the inline meta container element (default variant).",
+      "isGlobal": false
+    },
+    {
+      "key": "inlineMetaSpacer",
+      "className": "MuiChatMessageGroup-inlineMetaSpacer",
+      "description": "Styles applied to the inline meta spacer element (default variant).",
       "isGlobal": false
     },
     {

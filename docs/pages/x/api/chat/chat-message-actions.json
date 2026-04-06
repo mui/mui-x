@@ -67,6 +67,18 @@
       "isGlobal": false
     },
     {
+      "key": "inlineMeta",
+      "className": "MuiChatMessageActions-inlineMeta",
+      "description": "Styles applied to the inline meta container element (default variant).",
+      "isGlobal": false
+    },
+    {
+      "key": "inlineMetaSpacer",
+      "className": "MuiChatMessageActions-inlineMetaSpacer",
+      "description": "Styles applied to the inline meta spacer element (default variant).",
+      "isGlobal": false
+    },
+    {
       "key": "meta",
       "className": "MuiChatMessageActions-meta",
       "description": "Styles applied to the message meta element.",

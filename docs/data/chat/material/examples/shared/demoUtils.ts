@@ -5,7 +5,7 @@ import type {
   ChatMessageChunk,
   ChatStreamEnvelope,
   ChatUser,
-} from '@mui/x-chat/headless';
+} from '@mui/x-chat-headless';
 
 let counter = 0;
 

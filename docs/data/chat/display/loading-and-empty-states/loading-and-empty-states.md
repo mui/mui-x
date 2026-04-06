@@ -10,7 +10,7 @@ components: ChatMessageSkeleton
 
 <p class="description">Display loading skeletons while messages load and empty state content when a conversation has no messages.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Loading state with ChatMessageSkeleton
 

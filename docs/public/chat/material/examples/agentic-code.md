@@ -19,7 +19,7 @@ import type {
   ChatMessage,
   ChatMessageChunk,
   ChatMessagePart,
-} from '@mui/x-chat/headless';
+} from '@mui/x-chat-headless';
 import {
   createChunkStream,
   randomId,
@@ -638,7 +638,7 @@ import type {
   ChatMessage,
   ChatMessageChunk,
   ChatMessagePart,
-} from '@mui/x-chat/headless';
+} from '@mui/x-chat-headless';
 import {
   createChunkStream,
   randomId,
@@ -1231,8 +1231,8 @@ import type {
   ChatMessage,
   ChatMessageChunk,
   ChatMessagePart,
-} from '@mui/x-chat/headless';
-import type { ToolPartSlotProps } from '@mui/x-chat/headless';
+} from '@mui/x-chat-headless';
+import type { ToolPartSlotProps } from '@mui/x-chat-headless';
 import {
   createChunkStream,
   randomId,
@@ -1868,7 +1868,7 @@ import type {
   ChatMessage,
   ChatMessageChunk,
   ChatMessagePart,
-} from '@mui/x-chat/headless';
+} from '@mui/x-chat-headless';
 import {
   createChunkStream,
   randomId,

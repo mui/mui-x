@@ -80,9 +80,7 @@ const ChatMessageStyled = styled('div', {
     display: 'grid',
     gridTemplateColumns: isGrouped ? 'var(--MuiChatMessage-avatarSize) 1fr' : 'auto 1fr',
     gridTemplateRows: 'auto auto',
-    gridTemplateAreas: isGrouped
-      ? '". content" ". actions"'
-      : '"avatar content" ". actions"',
+    gridTemplateAreas: isGrouped ? '". content" ". actions"' : '"avatar content" ". actions"',
     columnGap: theme.spacing(0.5),
     width: '100%',
     boxSizing: 'border-box',
@@ -99,9 +97,7 @@ const ChatMessageStyled = styled('div', {
     fontFamily: theme.typography.fontFamily,
     ...(isUser && {
       gridTemplateColumns: isGrouped ? '1fr var(--MuiChatMessage-avatarSize)' : '1fr auto',
-      gridTemplateAreas: isGrouped
-        ? '"content ." "actions ."'
-        : '"content avatar" "actions ."',
+      gridTemplateAreas: isGrouped ? '"content ." "actions ."' : '"content avatar" "actions ."',
       paddingInlineStart: `calc(${theme.spacing(2)} + var(--MuiChatMessage-avatarSize))`,
       paddingInlineEnd: theme.spacing(2),
     }),

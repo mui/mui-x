@@ -10,7 +10,7 @@ components: ChatMessageActions
 
 <p class="description">Add hover-triggered action buttons to messages for copy, edit, delete, and custom operations.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 `ChatMessageActions` renders an action bar that appears when the user hovers over a message or focuses within it. The actions area is positioned in the message grid and transitions from hidden to visible using an opacity animation.
 

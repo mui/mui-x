@@ -10,7 +10,7 @@ components: ChatBox
 
 <p class="description">Strategies for efficient rendering, streaming tuning, and handling large message lists in the chat UI.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The chat runtime is designed for efficient real-time updates.
 This page covers the key patterns and configuration options for maintaining smooth performance as your chat UI scales.

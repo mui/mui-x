@@ -10,7 +10,7 @@ components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 
 <p class="description">Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The message list is the scrollable region that renders conversation history.
 `ChatMessageList` provides Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.

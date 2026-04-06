@@ -19,6 +19,12 @@
       "isGlobal": false
     },
     {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "Styles applied to the root element when disabled.",
+      "isGlobal": true
+    },
+    {
       "key": "helperText",
       "className": "MuiChatComposerAttachButton-helperText",
       "description": "Styles applied to the helper text element.",

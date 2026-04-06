@@ -64,7 +64,7 @@ import * as React from 'react';
 import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import { ChatBox } from '@mui/x-chat';
-import { useChatStatus } from '@mui/x-chat/headless';
+import { useChatStatus } from '@mui/x-chat-headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -186,7 +186,7 @@ import {
   ChatMessageGroup,
   ChatComposer,
 } from '@mui/x-chat';
-import { ChatProvider, useChatStatus } from '@mui/x-chat/headless';
+import { ChatProvider, useChatStatus } from '@mui/x-chat-headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -272,7 +272,7 @@ import {
   ChatMessageGroup,
   ChatComposer,
 } from '@mui/x-chat';
-import { ChatProvider, useConversations, useChat } from '@mui/x-chat/headless';
+import { ChatProvider, useConversations, useChat } from '@mui/x-chat-headless';
 import {
   createEchoAdapter,
   syncConversationPreview,
@@ -284,7 +284,7 @@ import {
 import type {
   ChatConversation as ChatConversationType,
   ChatMessage,
-} from '@mui/x-chat/headless';
+} from '@mui/x-chat-headless';
 
 function CustomSidebar() {
   const conversations = useConversations();
@@ -421,7 +421,7 @@ import {
   useMessageIds,
   useMessage,
   useChatComposer,
-} from '@mui/x-chat/headless';
+} from '@mui/x-chat-headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -557,7 +557,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { ChatBox } from '@mui/x-chat';
-import { useChatComposer } from '@mui/x-chat/headless';
+import { useChatComposer } from '@mui/x-chat-headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,

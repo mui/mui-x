@@ -10,7 +10,7 @@ components: ChatMessageContent
 
 <p class="description">Stream tool invocations from the LLM, track their lifecycle through well-defined states, and render custom tool UIs using the part renderer registry.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 Tool calling lets an AI assistant invoke external functions during a conversation. The runtime handles the full tool lifecycle: streaming tool input, making the input available, executing the tool, and displaying the output — all through the streaming chunk protocol.
 

@@ -3,7 +3,7 @@ productId: x-chat
 title: Message Appearance
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatMessageGroup, ChatMessageAvatar, ChatMessageMeta, ChatDateDivider
+components: ChatMessageGroup, ChatMessageAvatar, ChatMessageAuthorLabel, ChatMessageMeta, ChatMessageInlineMeta, ChatDateDivider
 ---
 
 # Chat - Message Appearance
@@ -24,8 +24,8 @@ The grouping window defaults to 5 minutes (300,000 ms). Messages from the same a
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createTimeWindowGroupKey } from '@mui/x-chat/headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import { createTimeWindowGroupKey } from '@mui/x-chat-headless';
 import {
   createEchoAdapter,
   randomId,
@@ -124,7 +124,7 @@ Customize the date format through `slotProps`:
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 import {
   createEchoAdapter,
   randomId,
@@ -240,7 +240,7 @@ Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layou
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 import {
   createEchoAdapter,
   randomId,
@@ -346,7 +346,7 @@ The `density` prop controls the vertical spacing between messages. Three values 
 'use client';
 import * as React from 'react';
 import { ChatBox, type ChatDensity } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Stack from '@mui/material/Stack';

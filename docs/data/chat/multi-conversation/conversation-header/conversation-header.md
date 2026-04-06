@@ -3,14 +3,14 @@ productId: x-chat
 title: Conversation Header
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatConversationHeader, ChatConversationTitle, ChatConversationSubtitle
+components: ChatConversation, ChatConversationHeader, ChatConversationTitle, ChatConversationSubtitle, ChatConversationHeaderActions, ChatConversationHeaderInfo
 ---
 
 # Chat - Conversation Header
 
 <p class="description">Display the active conversation's title, subtitle, participants, and action buttons using the themed header components.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 `ChatConversationHeader` is a `<header>` element with divider styling. It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
 

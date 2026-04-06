@@ -98,9 +98,15 @@ export type { ChatMessageChunk, ChatStreamEnvelope } from './types/chat-stream';
 
 export { ChatStreamError } from './stream/ChatStreamError';
 
-// Headless UI component exports (formerly @mui/x-chat-unstyled)
-import { ChatLayout, ChatRoot, useChatLocaleText } from './chat';
-import {
+
+// Headless component exports (structural primitives without styling)
+// Using direct re-exports so the API docs builder can resolve component symbols correctly.
+export {
+  ChatLayout,
+  ChatRoot,
+  useChatLocaleText,
+} from './chat';
+export {
   ConversationHeader,
   ConversationHeaderActions,
   ConversationHeaderInfo,
@@ -108,7 +114,7 @@ import {
   ConversationSubtitle,
   ConversationTitle,
 } from './conversation';
-import {
+export {
   ComposerAttachButton,
   ComposerAttachmentList,
   ComposerHelperText,
@@ -119,7 +125,7 @@ import {
   ComposerToolbar,
   useComposerContext,
 } from './composer';
-import {
+export {
   ConversationListItem,
   ConversationListItemActions,
   ConversationListItemAvatar,
@@ -130,8 +136,8 @@ import {
   ConversationListTitle,
   ConversationListUnreadBadge,
 } from './conversation-list';
-import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
-import {
+export { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
+export {
   FilePart,
   MessageActions,
   MessageActionsMenu,
@@ -157,75 +163,39 @@ import {
   createSourceUrlPartRenderer,
   createToolPartRenderer,
 } from './message';
-import { getDefaultMessagePartRenderer } from './message/defaultMessagePartRenderers';
-import { SuggestionItem, SuggestionsRoot } from './suggestions';
-import { MessageGroup, createTimeWindowGroupKey } from './message-group';
-import { MessageListDateDivider, MessageListRoot, useMessageListContext } from './message-list';
+export { getDefaultMessagePartRenderer } from './message/defaultMessagePartRenderers';
+export { MessageGroup, createTimeWindowGroupKey } from './message-group';
+export { SuggestionItem, SuggestionsRoot } from './suggestions';
+export { MessageListDateDivider, MessageListRoot, useMessageListContext } from './message-list';
 
-export {
-  ChatLayout,
-  ChatRoot,
-  useChatLocaleText,
+// Local imports for the namespace convenience objects below.
+import { ChatLayout, ChatRoot } from './chat';
+import {
   ConversationHeader,
   ConversationHeaderActions,
-  ConversationHeaderInfo,
   ConversationRoot,
   ConversationSubtitle,
   ConversationTitle,
+} from './conversation';
+import {
   ComposerAttachButton,
   ComposerAttachmentList,
   ComposerHelperText,
-  ComposerLabel,
   ComposerRoot,
   ComposerSendButton,
   ComposerTextArea,
   ComposerToolbar,
-  useComposerContext,
-  ConversationListItem,
-  ConversationListItemActions,
-  ConversationListItemAvatar,
-  ConversationListItemContent,
-  ConversationListPreview,
-  ConversationListRoot,
-  ConversationListTimestamp,
-  ConversationListTitle,
-  ConversationListUnreadBadge,
-  ScrollToBottomAffordance,
-  TypingIndicator,
-  UnreadMarker,
-  FilePart,
+} from './composer';
+import { ConversationListRoot } from './conversation-list';
+import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
+import {
   MessageActions,
-  MessageActionsMenu,
-  MessageActionsMenuGroup,
-  MessageActionsMenuGroupLabel,
-  MessageActionsMenuItem,
-  MessageActionsMenuPopup,
-  MessageActionsMenuPositioner,
-  MessageActionsMenuRoot,
-  MessageActionsMenuTrigger,
-  MessageAuthorLabel,
   MessageAvatar,
   MessageContent,
   MessageMeta,
   MessageRoot,
-  ReasoningPart,
-  SourceDocumentPart,
-  SourceUrlPart,
-  ToolPart,
-  createFilePartRenderer,
-  createReasoningPartRenderer,
-  createSourceDocumentPartRenderer,
-  createSourceUrlPartRenderer,
-  createToolPartRenderer,
-  getDefaultMessagePartRenderer,
-  SuggestionItem,
-  SuggestionsRoot,
-  MessageGroup,
-  createTimeWindowGroupKey,
-  MessageListDateDivider,
-  MessageListRoot,
-  useMessageListContext,
-};
+} from './message';
+import { MessageListDateDivider, MessageListRoot } from './message-list';
 
 export type {
   ChatLayoutProps,

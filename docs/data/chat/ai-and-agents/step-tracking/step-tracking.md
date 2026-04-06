@@ -10,7 +10,7 @@ components: ChatMessageContent
 
 <p class="description">Track multi-step agent progress using <code>start-step</code> and <code>finish-step</code> stream chunks that create visual delimiters in the message.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 Agentic AI workflows often involve multiple processing steps — reasoning, tool calls, intermediate results, and a final answer. Step tracking lets you visually delimit these phases in the message stream so users can follow the agent's progress.
 

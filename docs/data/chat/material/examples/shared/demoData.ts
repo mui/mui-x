@@ -1,4 +1,4 @@
-import type { ChatConversation, ChatMessage, ChatUser } from '@mui/x-chat/headless';
+import type { ChatConversation, ChatMessage, ChatUser } from '@mui/x-chat-headless';
 import { randomId } from './demoUtils';
 
 function createAvatarDataUrl(label: string, background: string, foreground = '#ffffff') {

@@ -3,7 +3,7 @@ productId: x-chat
 title: Conversation Header
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatConversationHeader, ChatConversationTitle, ChatConversationSubtitle
+components: ChatConversation, ChatConversationHeader, ChatConversationTitle, ChatConversationSubtitle, ChatConversationHeaderActions, ChatConversationHeaderInfo
 ---
 
 # Chat - Conversation Header

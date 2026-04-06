@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createTimeWindowGroupKey } from '@mui/x-chat/headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import { createTimeWindowGroupKey } from '@mui/x-chat-headless';
 import {
   createEchoAdapter,
   randomId,

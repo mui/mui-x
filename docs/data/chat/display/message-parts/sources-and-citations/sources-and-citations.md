@@ -3,14 +3,14 @@ productId: x-chat
 title: Sources & Citations
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatMessageContent
+components: ChatMessageContent, ChatMessageSource, ChatMessageSources
 ---
 
 # Chat - Sources & Citations
 
 <p class="description">Display reference links and document excerpts for retrieval-augmented generation (RAG) applications using source parts.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 Source parts allow AI assistants to cite their sources. Two part types cover the common citation patterns: URL references and document excerpts.
 

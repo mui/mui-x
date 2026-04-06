@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">The <code>ChatAdapter</code> interface is the single contract between your backend and the chat runtime. This page is the full interface reference.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 `ChatBox` renders a fully styled chat surface, but it knows nothing about your backend on its own.
 The adapter is the single object that bridges them.
@@ -21,7 +21,7 @@ The full interface is generic over your pagination cursor type.
 The default cursor type is `string`, which covers the majority of REST and cursor-based APIs:
 
 ```ts
-import type { ChatAdapter } from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat-headless';
 
 interface ChatAdapter<Cursor = string> {
   // Required

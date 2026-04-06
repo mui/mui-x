@@ -10,7 +10,7 @@ components: ChatBox
 
 <p class="description">How errors are captured, surfaced, and recovered from across the chat runtime.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The chat runtime captures errors from adapters, streams, and history loading, and surfaces them through a unified error model.
 You do not need to catch errors inside adapter methods — the runtime handles them for you.
@@ -85,7 +85,7 @@ Handle errors at the application level using the `onError` prop on `ChatBox`:
 The `useChat()` hook exposes the current error:
 
 ```tsx
-import { useChat } from '@mui/x-chat/headless';
+import { useChat } from '@mui/x-chat-headless';
 
 function ErrorBanner() {
   const { error, setError } = useChat();
@@ -108,7 +108,7 @@ When `sendMessage()` fails, the user's message is still displayed in the thread 
 The `useChat()` hook provides a `retry` method that re-sends the message associated with a given message ID:
 
 ```tsx
-import { useChat } from '@mui/x-chat/headless';
+import { useChat } from '@mui/x-chat-headless';
 
 function RetryButton({ messageId }: { messageId: string }) {
   const { retry } = useChat();

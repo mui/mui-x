@@ -82,9 +82,23 @@ export default chatApiPages;
       'message/parts/ReasoningPart.tsx',
       'message/parts/SourceDocumentPart.tsx',
       'message/parts/SourceUrlPart.tsx',
+      'message/MessageActionsMenu.tsx',
       // Unstyled internal components without demos
       'conversation/ConversationHeaderInfo.tsx',
+      'conversation-list/ConversationListItemActions.tsx',
       'conversation-list/ConversationListItemContent.tsx',
+      // Suggestions are consumed through the styled ChatBox examples, not documented as standalone headless API pages.
+      'suggestions/SuggestionItem.tsx',
+      'suggestions/SuggestionsRoot.tsx',
+      // Internal implementation detail of ChatBox, not exported from the package index.
+      'ChatBox/ChatBoxContent.tsx',
+      // Internal default icon components, not intended as public API.
+      'icons/DefaultAttachIcon.tsx',
+      'icons/DefaultCloseIcon.tsx',
+      'icons/DefaultFileIcon.tsx',
+      'icons/DefaultNewChatIcon.tsx',
+      'icons/DefaultSendIcon.tsx',
+      'icons/DefaultSettingsIcon.tsx',
     ];
     if (compoundFiles.some((f) => filename.includes(f))) {
       return true;

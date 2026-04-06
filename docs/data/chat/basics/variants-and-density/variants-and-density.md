@@ -10,7 +10,7 @@ components: ChatBox
 
 <p class="description">Switch between the default bubble layout and a compact messenger-style layout, and control vertical spacing with the density prop.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Variants
 

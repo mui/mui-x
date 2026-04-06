@@ -10,6 +10,8 @@ components: ChatRoot, ChatLayout
 
 <p class="description">Install <code>@mui/x-chat</code> and render a fully styled, theme-aware chat interface in minutes.</p>
 
+
+
 ## Installation
 
 Install the package using your preferred package manager:
@@ -133,38 +135,38 @@ const theme = createTheme({
 
 ## Package model
 
-`@mui/x-chat` is the Material UI styling layer of a three-tier package family:
+`@mui/x-chat` is the Material UI styling layer of a three-tier architecture, all within two npm packages:
 
 ```text
-@mui/x-chat
-  -> @mui/x-chat/headless
-       -> @mui/x-chat/headless
+@mui/x-chat                         ← Material UI styles
+  -> @mui/x-chat-headless           ← headless structural components
+       -> @mui/x-chat-headless/core ← runtime, hooks, adapters
 ```
 
 Each layer builds on the one below it:
 
-- **Material UI** adds visual styles via Material UI `styled()` on top of the unstyled primitives.
-- **Unstyled** adds structural DOM wiring, slots, and accessibility on top of the headless runtime.
-- **Headless** owns state, streaming, adapters, and hooks with no DOM output.
+- **Material UI** adds visual styles via Material UI `styled()` on top of the headless primitives.
+- **Headless** adds structural DOM wiring, slots, and accessibility on top of the core runtime.
+- **Core** owns state, streaming, adapters, and hooks with no DOM output.
 
 ### Choosing a layer
 
-| If you want…                                                                   | Use                    |
-| :----------------------------------------------------------------------------- | :--------------------- |
-| A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`          |
-| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat/headless` |
-| Complete control over DOM structure with only React state and hooks            | `@mui/x-chat/headless` |
+| If you want…                                                                   | Use                            |
+| :----------------------------------------------------------------------------- | :----------------------------- |
+| A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`                  |
+| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat-headless`         |
+| Complete control over DOM structure with only React state and hooks            | `@mui/x-chat-headless/core`    |
 
 ### Package boundary
 
-`@mui/x-chat` re-exports `@mui/x-chat/headless` and `@mui/x-chat/headless` through dedicated entry points:
+Both the headless components and the core runtime live in `@mui/x-chat-headless`:
 
 ```tsx
-// Headless hooks and types
-import { useChat, useChatComposer } from '@mui/x-chat/headless';
+// Core hooks and types
+import { useChat, useChatComposer } from '@mui/x-chat-headless/core';
 
-// Unstyled structural primitives
-import { Chat, MessageList } from '@mui/x-chat/headless';
+// Headless structural primitives
+import { Chat, MessageList } from '@mui/x-chat-headless';
 ```
 
 This means you can mix the styled layer with lower-level primitives in the same application.
@@ -174,8 +176,8 @@ This means you can mix the styled layer with lower-level primitives in the same 
 - [Overview](/x/react-chat/) — learn about the package architecture and capabilities
 - [Customization](/x/react-chat/material/customization/) — theme overrides, sx, slots, and CSS class names
 - [Examples](/x/react-chat/material/examples/) — end-to-end patterns
-- [Headless layer](/x/react-chat/headless/) — adapters, hooks, and runtime contracts
-- [Unstyled layer](/x/react-chat/unstyled/) — structural composition primitives
+- [Core layer](/x/react-chat/core/) — adapters, hooks, and runtime contracts
+- [Headless layer](/x/react-chat/headless/) — structural composition primitives
 
 ## API
 

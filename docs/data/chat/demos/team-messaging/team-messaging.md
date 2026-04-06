@@ -10,7 +10,7 @@ components: ChatBox
 
 <p class="description">A two-pane inbox layout with a conversation sidebar, thread switching, and per-conversation message state.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Multi-conversation inbox
 

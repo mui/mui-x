@@ -44,7 +44,7 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 import {
   createEchoAdapter,
   randomId,
@@ -159,7 +159,7 @@ Use the toggle in the demo below to compare the three density levels:
 'use client';
 import * as React from 'react';
 import { ChatBox, type ChatDensity } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Stack from '@mui/material/Stack';

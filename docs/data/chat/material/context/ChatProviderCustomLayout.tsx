@@ -14,7 +14,7 @@ import {
   ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
+import { ChatProvider, useMessageIds } from '@mui/x-chat-headless';
 import {
   createEchoAdapter,
   randomId,

@@ -1,6 +1,10 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "attachmentConfig": {
+      "description": "Configuration for attachment validation constraints. When provided, file attachments are validated against these rules."
+    }
+  },
   "classDescriptions": {},
   "slotDescriptions": { "root": "" }
 }

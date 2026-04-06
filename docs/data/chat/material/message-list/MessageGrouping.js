@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 
-import { createTimeWindowGroupKey } from '@mui/x-chat/headless';
+import { createTimeWindowGroupKey } from '@mui/x-chat-headless';
 import {
   createEchoAdapter,
   randomId,

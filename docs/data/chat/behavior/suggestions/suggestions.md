@@ -10,7 +10,7 @@ components: ChatSuggestions
 
 <p class="description">Display prompt suggestions in the empty state to help users get started with a conversation.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 Suggestions are clickable prompts that appear when the message list is empty.
 Clicking a suggestion pre-fills the composer with the suggestion text, giving users a starting point for the conversation.
@@ -100,7 +100,7 @@ When building a custom layout, use `ChatSuggestions` directly inside a `ChatRoot
 
 ```tsx
 import { ChatSuggestions } from '@mui/x-chat';
-import { ChatRoot } from '@mui/x-chat/headless';
+import { ChatRoot } from '@mui/x-chat-headless';
 
 <ChatRoot adapter={adapter}>
   <ChatSuggestions suggestions={['Option A', 'Option B']} autoSubmit={false} />

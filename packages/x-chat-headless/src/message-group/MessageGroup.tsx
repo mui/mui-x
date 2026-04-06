@@ -86,7 +86,7 @@ export interface MessageGroupProps extends Omit<React.HTMLAttributes<HTMLDivElem
    * A function that maps a message to a group key.
    * Messages that resolve to the same key are visually grouped (shared avatar, author name, etc.).
    * Use `createTimeWindowGroupKey(windowMs)` to replicate time-window-based grouping.
-   * @default (message) => message.author?.id ?? message.role
+   * @default (message) => message.author?.id ?? message.role ?? ''
    */
   groupKey?: GroupKeyFn;
   slots?: Partial<MessageGroupSlots>;

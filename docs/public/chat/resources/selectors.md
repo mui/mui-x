@@ -15,7 +15,7 @@ Subscribe to exactly the store slices you need with memoized selectors for effic
 They power the built-in hooks and can also be used directly with `useChatStore()` for advanced subscriptions.
 
 ```tsx
-import { chatSelectors, useChatStore } from '@mui/x-chat/headless';
+import { chatSelectors, useChatStore } from '@mui/x-chat-headless';
 ```
 
 ## Direct state selectors
@@ -61,7 +61,7 @@ The hooks `useMessageIds()`, `useMessage(id)`, and others are convenience wrappe
 When you need a custom derived value, use the store directly:
 
 ```tsx
-import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
+import { useChatStore, chatSelectors } from '@mui/x-chat-headless';
 import { useStore } from '@mui/x-internals/store';
 
 function MessageCounter() {

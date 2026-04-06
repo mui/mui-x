@@ -17,7 +17,8 @@
     { "name": "title", "description": "", "class": null },
     { "name": "preview", "description": "", "class": null },
     { "name": "timestamp", "description": "", "class": null },
-    { "name": "unreadBadge", "description": "", "class": null }
+    { "name": "unreadBadge", "description": "", "class": null },
+    { "name": "itemActions", "description": "", "class": null }
   ],
   "classes": [],
   "spread": true,
@@ -25,6 +26,6 @@
   "muiName": "MuiConversationListRoot",
   "filename": "/packages/x-chat-headless/src/conversation-list/ConversationListRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/conversation-list/\">Unstyled conversation list</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/conversation-list/\">Chat - Headless conversation list</a></li>\n<li><a href=\"/x/react-chat/material/conversation-list/\">Chat - Conversation list</a></li></ul>",
   "cssComponent": false
 }

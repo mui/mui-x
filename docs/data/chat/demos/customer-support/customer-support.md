@@ -10,7 +10,7 @@ components: ChatBox
 
 <p class="description">A compact, embedded chat widget suited for customer support overlays and space-constrained layouts.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Compact chat widget
 

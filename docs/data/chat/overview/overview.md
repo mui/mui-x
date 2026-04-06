@@ -12,7 +12,7 @@ components: ChatRoot, ChatLayout
 
 <p class="description">A fully styled, theme-aware chat interface built on a three-tier package architecture.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 {{"component": "modules/components/overview/chat/mainDemo/MainDemo.tsx"}}
 {{"component": "modules/components/overview/chat/ChatFeaturesHighlight.tsx"}}

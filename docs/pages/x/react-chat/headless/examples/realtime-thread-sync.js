@@ -1,6 +1,0 @@
-import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import * as pageProps from 'docsx/data/chat/headless/examples/realtime-thread-sync/realtime-thread-sync.md?muiMarkdown';
-
-export default function Page() {
-  return <MarkdownDocs {...pageProps} />;
-}

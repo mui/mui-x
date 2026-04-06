@@ -10,7 +10,7 @@ components: ChatBox, ChatLayout
 
 <p class="description">Understand the two-pane layout structure, thread-only mode, and how to recompose the chat surface.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Overview
 
@@ -118,7 +118,7 @@ function CustomThread() {
 }
 ```
 
-Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter.
+Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat-headless` to wire runtime state to your adapter.
 
 The layout supports split configurations where the conversation list and thread are rendered side by side.
 

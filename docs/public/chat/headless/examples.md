@@ -1,49 +1,66 @@
 ---
 title: Chat - Headless examples
 productId: x-chat
-packageName: '@mui/x-chat/headless'
+packageName: '@mui/x-chat-headless'
 githubLabel: 'scope: chat'
 ---
 
 # Chat - Headless examples
 
-<p class="description">Demo-first patterns for building custom chat UIs with <code>@mui/x-chat/headless</code> and plain React markup.</p>
+<p class="description">Demo-first patterns for building chat interfaces with <code>@mui/x-chat-headless</code> structural primitives.</p>
 
-These demos stay strictly within the headless layer.
-They use the runtime, hooks, selectors, callbacks, and adapter contract without relying on unstyled or Material UI primitives.
+These demos focus on end-to-end composition patterns rather than isolated component references.
+Each demo stays inside the headless layer: the runtime comes from `@mui/x-chat-headless`, but the learning surface is the structural component model exposed by `@mui/x-chat-headless`.
 
-Each demo includes explanatory prose, inline code snippets for the key patterns, and a runnable demo.
-For the concept-level reference behind these demos, see the dedicated documentation pages:
+The section is meant to answer real product questions, not just API questions.
+Each page shows where a pattern fits in an actual chat surface and why a team would choose it over a simpler or lower-level approach.
 
-- [State and store](/x/react-chat/headless/state/) for `ChatProvider` props, controlled/uncontrolled state, and the error model
-- [Hooks](/x/react-chat/headless/hooks/) for all nine hooks with signatures and when-to-use guidance
-- [Selectors](/x/react-chat/headless/selectors/) for the full selector API and store subscription patterns
-- [Adapters](/x/react-chat/headless/adapters/) for the adapter interface, writing guide, and backend patterns
-- [Streaming](/x/react-chat/headless/streaming/) for the chunk protocol and stream construction
-- [Realtime](/x/react-chat/headless/realtime/) for event types, subscription lifecycle, and store effects
-- [Type augmentation](/x/react-chat/headless/types/) for the six registry interfaces and module augmentation
+## How to use this section
+
+Use these demos when you want to answer practical composition questions such as:
+
+- what the smallest complete headless shell looks like
+- how the default split-pane inbox is assembled
+- where grouping, date dividers, and indicators belong in the render tree
+- how far slot replacement can go before a surface should drop down to headless primitives
+
+Start with the smallest shell, then move deeper into the areas you need to customize.
+
+## Real-world applicability
+
+These demos map well to common product surfaces such as:
+
+- support and operations inboxes
+- embedded copilots inside dashboards and admin tools
+- customer-facing assistants with custom branding
+- collaboration panels with long-running conversation history
+- internal tools that need strong structure and accessibility without adopting a full styled component set
 
 ## Start here
 
-- [Minimal headless chat](/x/react-chat/headless/examples/minimal-chat/) for the smallest working `ChatProvider` + `useChat()` setup
-- [Controlled state](/x/react-chat/headless/examples/controlled-state/) for the array-first controlled model pattern
-- [Selector-driven thread](/x/react-chat/headless/examples/selector-driven-thread/) for row-level subscriptions with selector hooks
+- [Minimal headless shell](/x/react-chat/headless/examples/minimal-shell/) for the smallest complete chat surface
+- [Two-pane inbox](/x/react-chat/headless/examples/two-pane-inbox/) for the default split-pane application layout
 
-## Runtime demos
+## Message and thread patterns
 
-- [Conversation history](/x/react-chat/headless/examples/conversation-history/) covers `listConversations()`, `listMessages()`, `setActiveConversation()`, and `loadMoreHistory()`
-- [Composer](/x/react-chat/headless/examples/composer/) covers `useChatComposer()`, attachments, preview URLs, and IME-safe submit
-- [Message parts](/x/react-chat/headless/examples/message-parts/) shows how to render reasoning, sources, files, and `data-*` parts with plain React
-- [Streaming lifecycle](/x/react-chat/headless/examples/streaming-lifecycle/) covers `stopStreaming()`, `retry()`, and the runtime callbacks
-- [Realtime](/x/react-chat/headless/examples/realtime/) covers provider-owned subscriptions, typing, presence, and read-state updates
-- [Realtime thread sync](/x/react-chat/headless/examples/realtime-thread-sync/) covers realtime add, update, and remove events for conversations and messages
+- [Grouped message timeline](/x/react-chat/headless/examples/grouped-message-timeline/) for author grouping and custom timeline presentation
+- [Indicators in context](/x/react-chat/headless/examples/indicators-in-context/) for typing, unread, and scroll affordances in a realistic thread
+- [Custom message part rendering](/x/react-chat/headless/examples/custom-message-part-rendering/) for selective replacement of default part rendering
 
-## Advanced extension points
+## Composer and customization patterns
 
-- [Tool call events](/x/react-chat/headless/examples/tool-call-events/) covers `onToolCall` and callback-driven side effects outside the store
-- [Type augmentation](/x/react-chat/headless/examples/type-augmentation/) covers module augmentation for metadata, typed tools, typed `data-*` parts, and custom message parts
-- [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) covers `addToolApprovalResponse()`, `partRenderers`, and `useChatPartRenderer()`
-- [Advanced store access](/x/react-chat/headless/examples/advanced-store-access/) covers `useChatStore()`, `chatSelectors`, and low-level selector subscriptions
+- [Composer with attachments](/x/react-chat/headless/examples/composer-with-attachments/) for the full draft toolbar pattern
+- [Slot customization](/x/react-chat/headless/examples/slot-customization/) for owner-state-driven slot replacement across multiple primitive groups
+
+## Recommended progression
+
+1. Start with [Minimal headless shell](/x/react-chat/headless/examples/minimal-shell/) to learn the canonical component stack.
+2. Move to [Two-pane inbox](/x/react-chat/headless/examples/two-pane-inbox/) to understand the most common application layout.
+3. Choose a specialization:
+   - [Grouped message timeline](/x/react-chat/headless/examples/grouped-message-timeline/) for message presentation
+   - [Composer with attachments](/x/react-chat/headless/examples/composer-with-attachments/) for draft interactions
+   - [Indicators in context](/x/react-chat/headless/examples/indicators-in-context/) for unread and typing affordances
+4. Finish with [Custom message part rendering](/x/react-chat/headless/examples/custom-message-part-rendering/) and [Slot customization](/x/react-chat/headless/examples/slot-customization/) when the default structure is no longer enough.
 
 ## API
 

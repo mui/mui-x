@@ -3,14 +3,14 @@ productId: x-chat
 title: Message Appearance
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatMessageGroup, ChatMessageAvatar, ChatMessageMeta, ChatDateDivider
+components: ChatMessageGroup, ChatMessageAvatar, ChatMessageAuthorLabel, ChatMessageMeta, ChatMessageInlineMeta, ChatDateDivider
 ---
 
 # Chat - Message Appearance
 
 <p class="description">Control the visual presentation of messages — grouping, date dividers, avatars, timestamps, and layout variants.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 This page covers the visual aspects of how messages are displayed in the message list. For message content rendering (text, files, code blocks), see the [Message Parts](/x/react-chat/display/message-parts/text-and-markdown/) section.
 

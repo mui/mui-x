@@ -10,7 +10,7 @@ components: ChatBox
 
 <p class="description">Install the MUI X Chat package and start building your React chat interface.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Installation
 

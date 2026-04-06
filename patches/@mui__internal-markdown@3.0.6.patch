@@ -4,10 +4,21 @@ index 5a68a3fb78e23ddb98a87750acd0ecd94be77171..1f979e818da87ad9681a0b43ef74940c
 +++ b/loader.mjs
 @@ -660,7 +660,7 @@ export default async function demoLoader() {
    );
- 
+
    componentNames.forEach((componentName) => {
 -    const moduleID = componentName.startsWith('@mui/docs/')
 +    const moduleID = componentName.startsWith('@mui/internal-core-docs/')
        ? componentName
        : path.join(this.rootContext, 'src', componentName).replace(/\\/g, '/');
- 
+
+diff --git a/prepareMarkdown.mjs b/prepareMarkdown.mjs
+--- a/prepareMarkdown.mjs
++++ b/prepareMarkdown.mjs
+@@ -44,6 +44,9 @@ function resolveComponentApiUrl(productId, componentPkg, component) {
+   if (productId === 'x-scheduler') {
+     return `/x/api/scheduler/${kebabCase(component)}/`;
+   }
++  if (productId === 'x-chat') {
++    return `/x/api/chat/${kebabCase(component)}/`;
++  }
+   if (componentPkg === 'mui-base' || BaseUIReexportedComponents.includes(component)) {

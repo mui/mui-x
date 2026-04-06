@@ -3,9 +3,19 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import { MessageGroup, type MessageGroupProps } from '@mui/x-chat-headless';
+import {
+  MessageGroup,
+  type MessageGroupProps,
+  useChatVariant,
+  useMessage,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { ChatMessage } from './ChatMessage';
+import { ChatMessageAvatar } from './ChatMessageAvatar';
+import { ChatMessageContent } from './ChatMessageContent';
+import { ChatMessageMeta } from './ChatMessageMeta';
+import { ChatMessageInlineMeta } from './ChatMessageInlineMeta';
 
 const useThemeProps = createUseThemeProps('MuiChatMessage');
 
@@ -91,15 +101,62 @@ const ChatMessageGroupTimestampStyled = styled('span', {
   flexShrink: 0,
 }));
 
+/**
+ * Default content rendered inside ChatMessageGroup when no children are provided.
+ * Uses the variant-aware styled components (avatar, content bubble, meta).
+ */
+function ChatMessageGroupDefaultContent({ messageId }: { messageId: string }) {
+  const variant = useChatVariant();
+  const isCompact = variant === 'compact';
+  const message = useMessage(messageId);
+  const isStreaming = message?.status === 'streaming';
+  const hasMeta =
+    Boolean(message?.createdAt) || Boolean(message?.editedAt) || Boolean(message?.status);
+  // In the default variant, meta is rendered inline inside the bubble.
+  // Skip it during streaming — there is no timestamp yet, and the streaming state
+  // is already communicated via the MuiChatMessage-streaming CSS class.
+  const afterContent =
+    !isCompact && !isStreaming && hasMeta ? <ChatMessageInlineMeta /> : undefined;
+
+  return (
+    <React.Fragment>
+      <ChatMessageAvatar />
+      <ChatMessageContent afterContent={afterContent} />
+      {isCompact && <ChatMessageMeta />}
+    </React.Fragment>
+  );
+}
+
 const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>(
   function ChatMessageGroup(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
-    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
+    const {
+      slots,
+      slotProps,
+      className,
+      classes: classesProp,
+      sx,
+      children,
+      messageId,
+      ...other
+    } = props;
     const classes = useChatMessageUtilityClasses(classesProp);
+
+    // When no children are provided, render the default styled message layout.
+    // This ensures ChatMessageGroup works as a standalone component with proper
+    // styling for both default and compact variants.
+    const resolvedChildren =
+      children ??
+      (messageId ? (
+        <ChatMessage messageId={messageId}>
+          <ChatMessageGroupDefaultContent messageId={messageId} />
+        </ChatMessage>
+      ) : null);
 
     return (
       <MessageGroup
         ref={ref}
+        messageId={messageId}
         {...other}
         slots={{
           group: slots?.group ?? ChatMessageGroupStyled,
@@ -115,7 +172,9 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
             ...(slotProps?.group as object),
           } as any,
         }}
-      />
+      >
+        {resolvedChildren}
+      </MessageGroup>
     );
   },
 );
@@ -128,6 +187,12 @@ ChatMessageGroup.propTypes = {
   children: PropTypes.node,
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * A function that maps a message to a group key.
+   * Messages that resolve to the same key are visually grouped (shared avatar, author name, etc.).
+   * Use `createTimeWindowGroupKey(windowMs)` to replicate time-window-based grouping.
+   * @default (message) => message.author?.id ?? message.role
+   */
   groupKey: PropTypes.func,
   index: PropTypes.number,
   items: PropTypes.arrayOf(PropTypes.string),

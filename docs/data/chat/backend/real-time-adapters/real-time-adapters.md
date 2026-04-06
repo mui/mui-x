@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">Push typing indicators, presence updates, read receipts, and collection changes into the runtime through the adapter's <code>subscribe()</code> method.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The adapter's `subscribe()` method enables push-based updates from the backend.
 The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
@@ -209,7 +209,7 @@ Use `useConversation(id)` to reflect read status in the UI.
 A complete adapter with WebSocket-based real-time events:
 
 ```tsx
-import type { ChatAdapter } from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat-headless';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message, signal }) {

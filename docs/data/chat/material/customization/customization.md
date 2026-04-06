@@ -10,7 +10,7 @@ components: ChatRoot
 
 <p class="description">Override styles, replace sub-components, and pass props to any chat element using the Material UI customization system.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The following demo shows a custom-themed chat surface:
 

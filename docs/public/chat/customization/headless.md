@@ -1,132 +1,132 @@
 ---
 productId: x-chat
-title: Headless Hooks
-packageName: '@mui/x-chat'
+title: Headless Components
+packageName: '@mui/x-chat-headless'
 githubLabel: 'scope: chat'
+components: ChatRoot
 ---
 
-# Chat - Headless Hooks
+# Chat - Headless Components
 
-Build fully custom chat UIs using the headless runtime, adapter contract, hooks, selectors, and stream processing.
+Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.
 
 
 
-`@mui/x-chat/headless` is the runtime-focused layer in the chat package family.
-It gives you chat state, streaming, adapters, selectors, and composer logic without imposing any rendered UI.
+`@mui/x-chat-headless` builds on the core runtime.
+It combines core state with structural components such as lists, threads, messages, composers, and indicators.
 
-## Where headless fits
+## When to use the headless layer
 
-Use `@mui/x-chat/headless` when you want chat behavior but you want to own the markup, layout, styling, and interaction model yourself.
+Use the headless layer when you want:
 
-## Mental model
+- a canonical chat component model
+- accessibility and interaction behavior already wired
+- slot-based customization instead of rebuilding every subtree
+- full control over visual design and styling
 
-The runtime is easiest to understand as a pipeline:
+Use the core layer when you want to own all DOM structure yourself.
 
-1. `ChatProvider` creates the store and runtime actions.
-2. Your `ChatAdapter` talks to the backend and returns streams.
-3. `processStream` turns chunks into normalized message updates.
-4. Hooks and selectors read the store at the granularity your UI needs.
-5. Your components render plain React, unstyled primitives, or your own design system.
+## Package surface
 
-```tsx
-<ChatProvider adapter={adapter}>
-  <YourCustomChatUI />
-</ChatProvider>
-```
+The headless package is organized into structural namespaces:
 
-The main public surface is:
+- `Chat`
+- `ConversationList`
+- `Conversation`
+- `MessageList`
+- `MessageGroup`
+- `Message`
+- `Composer`
+- `Indicators`
+
+It also exports helpers for default message-part rendering.
+
+## What the headless layer owns
+
+- structural React primitives such as `Chat.Root`, `ConversationList.Root`, `Conversation.Root`, and `Composer.Root`
+- semantics such as `listbox`, `option`, `log`, and `separator`
+- keyboard and focus behavior for conversation navigation
+- scroll behavior, unseen-message tracking, and history-loading hooks in the message list
+- message grouping, date boundaries, and default message-part renderers
+- slot and `slotProps` customization with owner state
+
+## What the headless layer does not own
+
+- Material UI theming or styling
+- Visual design or colors
+- Runtime contracts, adapters, or store semantics (those belong in [Core](/x/react-chat/customization/core/))
+
+## Namespaces and direct imports
+
+The package exports both namespaced and direct primitives:
 
 ```tsx
 import {
-  ChatProvider,
-  chatSelectors,
-  useChat,
-  useChatComposer,
-  useChatPartRenderer,
-  useChatStatus,
-  useChatStore,
-  useConversation,
-  useConversations,
-  useMessage,
-  useMessageIds,
-} from '@mui/x-chat/headless';
+  Chat,
+  ConversationList,
+  Conversation,
+  MessageList,
+  MessageGroup,
+  Message,
+  Composer,
+  Indicators,
+} from '@mui/x-chat-headless';
 ```
 
-## What headless owns
+You can also import individual components such as `ChatRoot`, `MessageListRoot`, or `ComposerTextArea` when you prefer explicit component names in your codebase.
 
-- the normalized chat store
-- controlled and uncontrolled state models
-- adapter-driven message sending and history loading
-- stream processing and runtime callbacks
-- realtime subscriptions and presence/read updates
-- selector-friendly hooks for render-sensitive trees
-- composer state, attachments, and submit behavior
-- typed message-part and stream contracts
+Use namespaced imports when you want the API to read like a component family.
+Use direct imports when a codebase prefers local, explicit symbols or when only one or two primitives are needed in a file.
 
-## What headless does not own
+## Typical composition shape
 
-- semantic DOM structure
-- default rendering for message parts
-- visual slots or compound components
-- Material UI theming or styling
+Most headless apps compose the surface like this:
 
-Those concerns belong to [Unstyled Components](/x/react-chat/customization/unstyled/).
+```tsx
+import {
+  Chat,
+  Composer,
+  ConversationList,
+  MessageGroup,
+  MessageList,
+  Conversation,
+} from '@mui/x-chat-headless';
 
-## State and store
+function Inbox(props: ChatRootProps) {
+  return (
+    <Chat.Root {...props}>
+      <Chat.Layout>
+        <ConversationList.Root />
+        <Conversation.Root>
+          <Conversation.Header>
+            <Conversation.Title />
+            <Conversation.Subtitle />
+          </Conversation.Header>
+          <MessageList.Root
+            renderItem={({ id, index }) => (
+              <MessageGroup index={index} messageId={id} />
+            )}
+          />
+          <Composer.Root>
+            <Composer.TextArea />
+            <Composer.Toolbar>
+              <Composer.AttachButton />
+              <Composer.SendButton />
+            </Composer.Toolbar>
+          </Composer.Root>
+        </Conversation.Root>
+      </Chat.Layout>
+    </Chat.Root>
+  );
+}
+```
 
-`ChatProvider` supports both controlled and uncontrolled state for messages, conversations, active conversation ID, and composer value.
-Internally the store normalizes data into ID arrays and record maps, making streaming updates efficient and selector subscriptions granular.
-
-See [Controlled State](/x/react-chat/backend/controlled-state/) for the full `ChatProvider` props reference, the controlled/uncontrolled model, and store internals.
-
-## Hooks
-
-Nine public hooks cover the full spectrum from all-in-one orchestration (`useChat()`) to row-level subscriptions (`useMessageIds()` + `useMessage(id)`).
-
-Narrower hooks like `useChatComposer()`, `useChatStatus()`, and `useChatPartRenderer()` handle specific concerns without subscribing to unrelated state.
-
-See [Hooks Reference](/x/react-chat/resources/hooks/) for signatures, return types, and when-to-use guidance for every hook.
-
-## Selectors
-
-`chatSelectors` provides memoized selectors for the normalized store.
-Use them directly with `useChatStore()` for custom derived values and advanced subscriptions.
-
-See [Selectors Reference](/x/react-chat/resources/selectors/) for the full selector table and usage patterns.
-
-## Adapter contract
-
-`ChatAdapter` is the transport boundary between the runtime and your backend.
-Only `sendMessage()` is required — everything else is optional and incrementally adopted.
-The adapter works with HTTP, SSE, WebSocket, or AI SDK-style streaming backends.
-
-See [Adapters](/x/react-chat/backend/adapters/) for the full interface reference, a step-by-step writing guide, and backend pattern guidance.
-
-## Streaming
-
-The adapter returns a `ReadableStream` of typed chunks.
-The runtime processes text, reasoning, tool, source, file, data, step, and metadata chunks into normalized message parts.
-`streamFlushInterval` batches rapid deltas for efficient store updates.
-
-See [Streaming](/x/react-chat/behavior/streaming/) for the chunk protocol reference, envelope format, and stream construction patterns.
-
-## Realtime
-
-The adapter's `subscribe()` method enables push-based updates for messages, conversations, typing indicators, presence, and read state.
-The runtime manages the subscription lifecycle on mount and unmount.
-
-See [Real-Time Adapters](/x/react-chat/backend/real-time-adapters/) for event types, store effects, and consumption patterns.
-
-## Scope boundary
-
-- Stay on headless when you want runtime primitives and complete control over UI.
-- Move to [Unstyled Components](/x/react-chat/customization/unstyled/) when you want structure and composition primitives.
+This gives you a complete structural shell while keeping the visual treatment in your own CSS, slots, or design-system components.
 
 ## See also
 
-- [Adapters](/x/react-chat/backend/adapters/) for the full adapter interface.
-- [Hooks Reference](/x/react-chat/resources/hooks/) for the hook API reference.
-- [Selectors Reference](/x/react-chat/resources/selectors/) for the selector API reference.
-- [Controlled State](/x/react-chat/backend/controlled-state/) for state management patterns.
+- [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling headless primitives with Tailwind utility classes.
+- [Core](/x/react-chat/customization/core/) for the core runtime that the headless layer builds on.
+- [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization on the styled layer.
 
 ## API

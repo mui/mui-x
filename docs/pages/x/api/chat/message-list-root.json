@@ -19,6 +19,6 @@
   "muiName": "MuiMessageListRoot",
   "filename": "/packages/x-chat-headless/src/message-list/MessageListRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/message-list/\">Unstyled message list</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/message-list/\">Chat - Headless message list</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li></ul>",
   "cssComponent": false
 }

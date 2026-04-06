@@ -10,7 +10,7 @@ components: ChatBox
 
 <p class="description">The all-in-one component that renders a complete chat surface with a single import.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Overview
 

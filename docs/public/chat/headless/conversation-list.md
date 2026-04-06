@@ -1,0 +1,349 @@
+---
+productId: x-chat
+title: Chat - Headless conversation list
+packageName: '@mui/x-chat-headless'
+components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
+githubLabel: 'scope: chat'
+---
+
+# Chat - Headless conversation list
+
+Render and navigate the conversation rail with structural list primitives, built-in selection behavior, and roving focus.
+
+
+
+```tsx
+import * as React from 'react';
+import {
+  Chat,
+  Conversation,
+  Composer,
+  ConversationList,
+  Message,
+  MessageGroup,
+  MessageList,
+} from '@mui/x-chat-headless';
+import {
+  createEchoAdapter,
+  cloneConversations,
+  cloneThreadMap,
+  syncConversationPreview,
+} from 'docsx/data/chat/headless/examples/shared/demoUtils';
+import {
+  demoUsers,
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/headless/examples/shared/demoData';
+import {
+  demoLocaleText,
+  demoSlotProps,
+  DemoToolbarButton,
+  demoSurfaceStyles,
+} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+
+export default function TwoPaneInbox() {
+  const [activeConversationId, setActiveConversationId] = React.useState('triage');
+  const [conversations, setConversations] = React.useState(() =>
+    cloneConversations(inboxConversations),
+  );
+  const [threads, setThreads] = React.useState(() => cloneThreadMap(inboxThreads));
+
+  const adapter = React.useMemo(
+    () =>
+      createEchoAdapter({
+        agent: demoUsers.agent,
+        respond: (text) =>
+          `Inbox reply: ${text}. This thread keeps the default two-pane composition while each pane stays independently customizable.`,
+      }),
+    [],
+  );
+
+  const activeMessages = threads[activeConversationId] ?? [];
+
+  return (
+    <Chat.Root
+      activeConversationId={activeConversationId}
+      adapter={adapter}
+      conversations={conversations}
+      messages={activeMessages}
+      onActiveConversationChange={(nextConversationId) => {
+        if (nextConversationId) {
+          setActiveConversationId(nextConversationId);
+        }
+      }}
+      onMessagesChange={(nextMessages) => {
+        setThreads((previous) => ({
+          ...previous,
+          [activeConversationId]: nextMessages,
+        }));
+        setConversations((previous) =>
+          syncConversationPreview(previous, activeConversationId, nextMessages),
+        );
+      }}
+      localeText={demoLocaleText}
+      slotProps={{ root: { style: demoSurfaceStyles.chatRoot } }}
+    >
+      <Chat.Layout
+        style={{ display: 'grid', gridTemplateColumns: 'auto 1fr' }}
+        slotProps={{
+          root: { style: demoSurfaceStyles.layout },
+          conversationsPane: { style: demoSurfaceStyles.conversationsPane },
+          threadPane: {
+            style: {
+              ...demoSurfaceStyles.threadPane,
+              gridTemplateRows: 'minmax(0, 1fr)',
+            },
+          },
+        }}
+      >
+        <div
+          style={{
+            display: 'grid',
+            gap: 12,
+            minHeight: 0,
+            gridTemplateRows: 'auto minmax(0, 1fr)',
+          }}
+        >
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: '#111111' }}>
+              Inbox
+            </div>
+            <div style={{ fontSize: 13, color: '#666666', marginTop: 4 }}>
+              Conversation selection, keyboard navigation, and focus restore all stay
+              inside the headless list.
+            </div>
+          </div>
+          <ConversationList.Root
+            aria-label="Inbox threads"
+            slotProps={{
+              root: { style: demoSurfaceStyles.conversationList },
+              item: demoSlotProps.conversationListItem,
+              itemAvatar: demoSlotProps.conversationListItemAvatar,
+              itemContent: demoSlotProps.conversationListItemContent,
+              title: demoSlotProps.conversationListTitle,
+              preview: demoSlotProps.conversationListPreview,
+              timestamp: demoSlotProps.conversationListTimestamp,
+              unreadBadge: demoSlotProps.conversationListUnreadBadge,
+            }}
+          />
+        </div>
+        <Conversation.Root
+          slotProps={{ root: { style: demoSurfaceStyles.threadRoot } }}
+        >
+          <Conversation.Header
+            slotProps={{
+              root: demoSlotProps.conversationHeader,
+            }}
+          >
+            <div style={{ minWidth: 0 }}>
+              <Conversation.Title style={demoSlotProps.conversationTitle} />
+              <Conversation.Subtitle style={demoSlotProps.conversationSubtitle} />
+            </div>
+            <Conversation.HeaderActions style={{ display: 'flex', gap: 8 }}>
+              <DemoToolbarButton
+                onClick={() =>
+                  setConversations((previous) =>
+                    previous.map((conversation) =>
+                      conversation.id === activeConversationId
+                        ? { ...conversation, unreadCount: 0, readState: 'read' }
+                        : conversation,
+                    ),
+                  )
+                }
+              >
+                Mark read
+              </DemoToolbarButton>
+              <DemoToolbarButton tone="accent">Escalate</DemoToolbarButton>
+            </Conversation.HeaderActions>
+          </Conversation.Header>
+          <MessageList.Root
+            estimatedItemSize={96}
+            renderItem={({ id, index }) => (
+              <MessageGroup
+                index={index}
+                key={id}
+                messageId={id}
+                slotProps={{
+                  root: demoSlotProps.messageGroupRoot,
+                  authorName: demoSlotProps.messageGroupAuthorName,
+                }}
+              >
+                <Message.Root
+                  messageId={id}
+                  slotProps={{
+                    root: demoSlotProps.messageRoot,
+                  }}
+                >
+                  <Message.Avatar
+                    slotProps={{
+                      avatar: demoSlotProps.messageAvatar,
+                      image: demoSlotProps.messageAvatarImage,
+                    }}
+                  />
+                  <Message.Content
+                    slotProps={{
+                      bubble: demoSlotProps.messageBubble,
+                    }}
+                  />
+                  <Message.Meta
+                    slotProps={{
+                      meta: demoSlotProps.messageMeta,
+                    }}
+                  />
+                </Message.Root>
+              </MessageGroup>
+            )}
+          />
+          <Composer.Root
+            slotProps={{
+              root: demoSlotProps.composerRoot,
+            }}
+          >
+            <Composer.TextArea
+              aria-label="Reply"
+              placeholder="Reply in the active thread"
+              slotProps={{
+                input: demoSlotProps.composerTextArea,
+              }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Composer.SendButton
+                data-variant="primary"
+                slotProps={{
+                  sendButton: demoSlotProps.composerSendButton,
+                }}
+              >
+                Send reply
+              </Composer.SendButton>
+            </div>
+          </Composer.Root>
+        </Conversation.Root>
+      </Chat.Layout>
+    </Chat.Root>
+  );
+}
+
+```
+
+## Primitive set
+
+The conversation list surface is built from:
+
+- `ConversationList.Root`
+- `ConversationList.Item`
+- `ConversationList.ItemAvatar`
+- `ConversationList.ItemContent`
+- `ConversationList.Title`
+- `ConversationList.Preview`
+- `ConversationList.Timestamp`
+- `ConversationList.UnreadBadge`
+
+## `ConversationList.Root`
+
+`ConversationList.Root` reads the current conversation collection from chat state and renders a `listbox` with one `option` per conversation.
+
+It handles:
+
+- active-conversation selection
+- click-to-select behavior
+- roving focus across items
+- `ArrowUp`, `ArrowDown`, `Home`, and `End`
+- Enter-to-select for the focused item
+- focus restoration when the list remounts
+
+This makes it the main structural entry point for inbox, sidebar, and thread-switching UIs.
+
+The root is also the conversation-pane marker recognized by `Chat.Layout`, so it can be dropped directly into the canonical shell without extra wiring.
+
+## Item composition
+
+Each rendered row is composed from:
+
+- `ItemAvatar` for participant identity
+- `ItemContent` wrapper that groups title and preview
+- `Title` for the conversation name
+- `Preview` for the last message subtitle
+- `Timestamp` for the last-message time
+- `UnreadBadge` for the unread count
+
+Replace the row or any subpart through `slots` and `slotProps` when a product surface needs a different row layout.
+
+The default structure is useful for inbox-like sidebars, but the slot model makes it easy to adapt to denser support tools, mobile previews, or more visual conversation cards.
+
+```tsx
+<ConversationList.Root
+  slots={{
+    item: MyConversationRow,
+    itemAvatar: MyAvatar,
+    itemContent: MyItemContent,
+    title: MyTitle,
+    preview: MyPreview,
+    timestamp: MyTimestamp,
+    unreadBadge: MyBadge,
+  }}
+/>
+```
+
+Use full row replacement when the overall item structure changes.
+Replace only one subpart when the default structure is correct and only a small region needs a custom presentation.
+
+## Owner state
+
+Conversation list item slots receive owner-state flags such as:
+
+- `selected`
+- `unread`
+- `focused`
+- `conversation`
+
+These flags are the main styling hook for active rows, unread emphasis, and focused keyboard states.
+
+Because `conversation` is included in owner state, custom slots can also react to conversation-specific fields such as titles, subtitles, participants, and unread counts.
+
+## Accessibility semantics
+
+The root uses `role="listbox"`.
+Each row uses `role="option"` plus `aria-selected`.
+This preserves screen-reader semantics while still allowing the list to be visually customized.
+
+The roving-focus model keeps only the focused row tabbable, which matches the keyboard behavior users expect from inbox and picker interfaces.
+
+## Typical placement
+
+The most common composition is:
+
+```tsx
+<Chat.Layout>
+  <ConversationList.Root aria-label="Conversations" />
+  <Conversation.Root>{/* thread content */}</Conversation.Root>
+</Chat.Layout>
+```
+
+That gives you:
+
+- active thread selection on click
+- keyboard navigation inside the rail
+- a structural conversation pane that can be styled as a sidebar, navigation rail, or stacked list
+
+## When to replace slots
+
+Replace slots when you want to:
+
+- change row markup
+- add badges or metadata regions
+- use custom avatar or preview layouts
+
+Rebuild the conversation rail from headless selectors only when the built-in keyboard and selection model no longer matches the desired interaction.
+
+For the broader page shell, continue with [Layout](/x/react-chat/headless/layout/).
+For end-to-end inbox patterns, continue with [Two-pane inbox](/x/react-chat/headless/examples/two-pane-inbox/).
+
+## API
+
+- [ConversationListRoot](/x/api/chat/conversation-list-root/)
+- [ConversationListItem](/x/api/chat/conversation-list-item/)
+- [ConversationListItemAvatar](/x/api/chat/conversation-list-item-avatar/)
+- [ConversationListTitle](/x/api/chat/conversation-list-title/)
+- [ConversationListPreview](/x/api/chat/conversation-list-preview/)
+- [ConversationListTimestamp](/x/api/chat/conversation-list-timestamp/)
+- [ConversationListUnreadBadge](/x/api/chat/conversation-list-unread-badge/)

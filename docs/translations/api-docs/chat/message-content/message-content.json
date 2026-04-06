@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "afterContent": {
+      "description": "Content rendered inside the bubble after the message parts. Useful for placing inline metadata (e.g. timestamp, status) inside the bubble."
+    },
     "partProps": {
       "description": "Props forwarded to the built-in unstyled part renderer components. Use this to pass <code>slots</code> and <code>slotProps</code> to individual part type renderers."
     }

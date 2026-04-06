@@ -10,7 +10,7 @@ components: ChatMessageContent
 
 <p class="description">Display file attachments and inline image previews using the <code>ChatFileMessagePart</code> type.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 File parts represent file attachments within a message. When the file is an image, an inline preview is rendered. For other file types, a compact chip with a document icon and filename is displayed.
 

@@ -3,7 +3,7 @@
   "propDescriptions": {
     "children": { "description": "The code string to display." },
     "highlighter": {
-      "description": "Optional syntax highlighter. Receives (code, language) and should return highlighted React nodes. When omitted, raw code is displayed."
+      "description": "Optional syntax highlighter. Receives the code string and a language identifier, and should return highlighted React nodes. When omitted, raw code is displayed."
     },
     "language": {
       "description": "Language identifier shown in the header (e.g. &quot;typescript&quot;, &quot;python&quot;)."
