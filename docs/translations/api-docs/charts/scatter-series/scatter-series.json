@@ -1,6 +1,7 @@
 {
   "interfaceDescription": "",
   "propertiesDescriptions": {
+    "type": { "description": "" },
     "color": {
       "description": "Color to use when displaying the series.\nIf `colorGetter` is provided, it will be used to get the color for each data point instead.\nOtherwise, this color will be used for all data points in the series."
     },
@@ -21,7 +22,6 @@
     },
     "markerSize": { "description": "Size of the markers in the scatter plot, in pixels." },
     "preview": { "description": "" },
-    "type": { "description": "" },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     },

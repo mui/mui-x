@@ -4,6 +4,7 @@
     "id": {
       "description": "ID used to identify the axis.\n\nThe ID must be unique across all axes in this chart."
     },
+    "scaleType": { "description": "" },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "className": { "description": "A CSS class name applied to the root element." },
     "colorMap": { "description": "" },
@@ -30,7 +31,6 @@
       "description": "Position of the axis.\n\nWhen set, the space for the axis is reserved, even if the axis is not displayed due to missing data.\n\nSet to 'none' to hide the axis.\n\nThe first axis in the list will always have a default position."
     },
     "reverse": { "description": "If `true`, Reverse the axis scaleBand." },
-    "scaleType": { "description": "" },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "sx": { "description": "" },

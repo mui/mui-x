@@ -8,6 +8,11 @@
   "demos": "  - [Column definition](/x/react-data-grid/column-definition/)",
   "properties": {
     "field": { "type": { "description": "string" }, "required": true },
+    "type": {
+      "type": { "description": "GridColType | 'actions' | 'singleSelect'" },
+      "default": "'singleSelect'",
+      "required": true
+    },
     "aggregable": {
       "type": { "description": "boolean" },
       "default": "true",
@@ -93,10 +98,6 @@
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
     "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
-    "type": {
-      "type": { "description": "GridColType | 'actions' | 'singleSelect'" },
-      "default": "'singleSelect'"
-    },
     "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F, never&gt;" } },
     "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F, never&gt;" } },
     "valueParser": { "type": { "description": "GridValueParser&lt;R, V, F&gt;" } },

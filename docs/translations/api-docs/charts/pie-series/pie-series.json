@@ -2,6 +2,7 @@
   "interfaceDescription": "",
   "propertiesDescriptions": {
     "data": { "description": "" },
+    "type": { "description": "" },
     "arcLabel": { "description": "The label displayed into the arc." },
     "arcLabelMinAngle": { "description": "The minimal angle required to display the arc label." },
     "arcLabelRadius": {
@@ -41,7 +42,6 @@
       "description": "The sorting strategy used to order pie slices.\nCan be 'none', 'asc', 'desc', or a sorting function."
     },
     "startAngle": { "description": "The start angle (deg) of the first item." },
-    "type": { "description": "" },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     }

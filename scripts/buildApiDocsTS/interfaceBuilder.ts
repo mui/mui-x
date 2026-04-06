@@ -102,7 +102,8 @@ export function buildInterfacePages(
       if (jsDoc.defaultValue !== undefined) {
         propInfo.default = jsDoc.defaultValue;
       }
-      if (!(prop.flags & ts.SymbolFlags.Optional)) {
+      // Check required from declarations (merged symbol flags can be wrong)
+      if (!isOptionalProperty(prop)) {
         propInfo.required = true;
       }
 
@@ -284,6 +285,22 @@ export function linkifyTranslations(
       }
     }
   }
+}
+
+/**
+ * Check if a property is optional by looking at its declarations.
+ * The merged symbol flag can be wrong for properties across discriminated union members.
+ */
+function isOptionalProperty(prop: ts.Symbol): boolean {
+  const declarations = prop.getDeclarations();
+  if (!declarations || declarations.length === 0) {
+    return !!(prop.flags & ts.SymbolFlags.Optional);
+  }
+  // If ALL declarations have a question token, it's optional.
+  // If ANY declaration is required, the property is required.
+  return declarations.every(
+    (d) => ts.isPropertySignature(d) && !!d.questionToken,
+  );
 }
 
 export function escapeHtml(s: string): string {

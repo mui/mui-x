@@ -2,6 +2,7 @@
   "interfaceDescription": "",
   "propertiesDescriptions": {
     "data": { "description": "" },
+    "type": { "description": "" },
     "color": {
       "description": "Color to use when displaying the series.\nIf `colorGetter` is provided, it will be used to get the color for each data point instead.\nOtherwise, this color will be used for all data points in the series."
     },
@@ -18,7 +19,6 @@
     "labelMarkType": {
       "description": "Defines the mark type for the series.\n\nThere is a default mark type for each series type."
     },
-    "type": { "description": "" },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     }

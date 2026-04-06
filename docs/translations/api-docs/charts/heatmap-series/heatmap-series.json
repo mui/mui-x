@@ -1,6 +1,7 @@
 {
   "interfaceDescription": "",
   "propertiesDescriptions": {
+    "type": { "description": "" },
     "data": {
       "description": "Data associated to each cell in the heatmap.\nEach entry is a tuple [xIndex, yIndex, value]."
     },
@@ -13,7 +14,6 @@
     "labelMarkType": {
       "description": "Defines the mark type for the series.\n\nThere is a default mark type for each series type."
     },
-    "type": { "description": "" },
     "valueFormatter": {
       "description": "Function that formats values to be displayed in a tooltip."
     },

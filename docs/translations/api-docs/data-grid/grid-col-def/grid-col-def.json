@@ -4,6 +4,7 @@
     "field": {
       "description": "The unique identifier of the column. Used to map with [[GridRowModel]] values."
     },
+    "type": { "description": "The type of the column." },
     "aggregable": { "description": "If `true`, the cells of the column can be aggregated based." },
     "align": { "description": "Align cell content." },
     "availableAggregationFunctions": {
@@ -81,7 +82,6 @@
     "sortable": { "description": "If `false`, disables sorting for this column." },
     "sortComparator": { "description": "A comparator function used to sort rows." },
     "sortingOrder": { "description": "The order of the sorting sequence." },
-    "type": { "description": "The type of the column." },
     "valueFormatter": { "description": "Formats the cell value before rendering." },
     "valueGetter": {
       "description": "Function that returns specific data to render in the cell instead of using the field value."

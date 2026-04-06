@@ -5,6 +5,7 @@
     "import { HeatmapSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
+    "type": { "type": { "description": "\"heatmap\"" }, "required": true, "isProPlan": true },
     "data": { "type": { "description": "readonly HeatmapValueType[]" }, "isProPlan": true },
     "dataKey": { "type": { "description": "string" }, "isProPlan": true },
     "highlightScope": { "type": { "description": "CommonHighlightScope" } },
@@ -14,7 +15,6 @@
       "isProPlan": true
     },
     "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
-    "type": { "type": { "description": "\"heatmap\"" }, "isProPlan": true },
     "valueFormatter": {
       "type": {
         "description": "(value: number | null, context: { xIndex: number; yIndex: number; }) =&gt; string | null"

@@ -1,6 +1,7 @@
 {
   "interfaceDescription": "",
   "propertiesDescriptions": {
+    "type": { "description": "" },
     "area": { "description": "If `true`, the series is rendered as an area instead of a line." },
     "baseline": {
       "description": "The value of the line at the base of the series area.\n\n- `'min'` the area will fill the space **under** the line.\n- `'max'` the area will fill the space **above** the line.\n- `number` the area will fill the space between this value and the line"
@@ -46,7 +47,6 @@
     "strictStepCurve": {
       "description": "If `true`, step curve starts and end at the first and last point.\nBy default the line is extended to fill the space before and after."
     },
-    "type": { "description": "" },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     },

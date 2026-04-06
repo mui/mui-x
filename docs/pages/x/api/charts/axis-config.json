@@ -7,6 +7,12 @@
   ],
   "properties": {
     "id": { "type": { "description": "AxisId" }, "required": true },
+    "scaleType": {
+      "type": {
+        "description": "\"time\" | \"log\" | \"band\" | \"point\" | \"symlog\" | \"pow\" | \"sqrt\" | \"utc\" | \"linear\""
+      },
+      "required": true
+    },
     "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
     "className": { "type": { "description": "string" } },
     "colorMap": {
@@ -32,11 +38,6 @@
     "offset": { "type": { "description": "number" }, "default": "0" },
     "position": { "type": { "description": "\"bottom\" | \"top\" | \"none\"" } },
     "reverse": { "type": { "description": "boolean" } },
-    "scaleType": {
-      "type": {
-        "description": "\"time\" | \"log\" | \"band\" | \"point\" | \"symlog\" | \"pow\" | \"sqrt\" | \"utc\" | \"linear\""
-      }
-    },
     "slotProps": {
       "type": { "description": "Partial&lt;ChartsAxisSlotProps&gt;" },
       "default": "{}"

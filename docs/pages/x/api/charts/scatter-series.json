@@ -6,6 +6,7 @@
     "import { ScatterSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
+    "type": { "type": { "description": "\"scatter\"" }, "required": true },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": {
@@ -26,7 +27,6 @@
     "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
     "markerSize": { "type": { "description": "number" } },
     "preview": { "type": { "description": "{ markerSize?: number | undefined; }" } },
-    "type": { "type": { "description": "\"scatter\"" } },
     "valueFormatter": {
       "type": { "description": "SeriesValueFormatter&lt;ScatterValueType | null&gt;" }
     },

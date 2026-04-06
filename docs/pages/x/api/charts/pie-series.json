@@ -10,6 +10,7 @@
       "type": { "description": "readonly MakeOptional&lt;PieValueType, \"id\"&gt;[]" },
       "required": true
     },
+    "type": { "type": { "description": "\"pie\"" }, "required": true },
     "arcLabel": {
       "type": {
         "description": " | 'formattedValue' | 'label' | 'value' | ((item: Omit&lt;DefaultizedPieValueType, 'label'&gt; & { label?: string }) =&gt; string)"
@@ -48,7 +49,6 @@
     "paddingAngle": { "type": { "description": "number" }, "default": "0" },
     "sortingValues": { "type": { "description": "ChartsPieSorting" }, "default": "'none'" },
     "startAngle": { "type": { "description": "number" }, "default": "0" },
-    "type": { "type": { "description": "\"pie\"" } },
     "valueFormatter": {
       "type": {
         "description": "SeriesValueFormatter&lt;MakeOptional&lt;PieValueType, \"id\"&gt;&gt;"

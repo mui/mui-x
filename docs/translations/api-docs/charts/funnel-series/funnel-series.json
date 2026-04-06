@@ -2,6 +2,7 @@
   "interfaceDescription": "",
   "propertiesDescriptions": {
     "data": { "description": "Data associated to the funnel section." },
+    "type": { "description": "" },
     "borderRadius": {
       "description": "The radius, in pixels, of the corners of the funnel sections."
     },
@@ -23,7 +24,6 @@
     "sectionLabel": {
       "description": "The label configuration for the funnel plot.\nAllows to customize the position and margin of the label that is displayed on the funnel sections.\n\nIf set to `false`, the label will not be displayed."
     },
-    "type": { "description": "" },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     },

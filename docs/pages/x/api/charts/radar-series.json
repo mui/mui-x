@@ -7,6 +7,7 @@
   ],
   "properties": {
     "data": { "type": { "description": "number[]" }, "required": true },
+    "type": { "type": { "description": "\"radar\"" }, "required": true },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": { "description": "(data: ColorCallbackValue&lt;number&gt;) =&gt; string" }
@@ -19,7 +20,6 @@
       "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" }
     },
     "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
-    "type": { "type": { "description": "\"radar\"" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;number&gt;" } }
   }
 }

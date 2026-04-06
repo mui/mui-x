@@ -9,10 +9,10 @@
     "color": { "type": { "description": "string" }, "required": true },
     "label": { "type": { "description": "string" }, "required": true },
     "markType": { "type": { "description": "ChartsLabelMarkType | undefined" }, "required": true },
+    "maxValue": { "type": { "description": "number | Date" }, "required": true },
+    "minValue": { "type": { "description": "number | Date" }, "required": true },
+    "seriesId": { "type": { "description": "string" }, "required": true },
     "type": { "type": { "description": "ChartSeriesType" }, "required": true },
-    "dataIndex": { "type": { "description": "number" } },
-    "maxValue": { "type": { "description": "number | Date" } },
-    "minValue": { "type": { "description": "number | Date" } },
-    "seriesId": { "type": { "description": "string" } }
+    "dataIndex": { "type": { "description": "number" } }
   }
 }

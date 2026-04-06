@@ -6,6 +6,7 @@
     "import { LineSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
+    "type": { "type": { "description": "\"line\"" }, "required": true },
     "area": { "type": { "description": "boolean" } },
     "baseline": { "type": { "description": "number | \"max\" | \"min\"" }, "default": "0" },
     "color": { "type": { "description": "string" } },
@@ -29,7 +30,6 @@
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "strictStepCurve": { "type": { "description": "boolean" } },
-    "type": { "type": { "description": "\"line\"" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;number | null&gt;" } },
     "xAxisId": { "type": { "description": "AxisId" } },
     "yAxisId": { "type": { "description": "AxisId" } }
