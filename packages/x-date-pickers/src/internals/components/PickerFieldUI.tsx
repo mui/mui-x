@@ -6,7 +6,6 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { SvgIconProps } from '@mui/material/SvgIcon';
-import { major as materialMajor } from '@mui/material/version';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { FieldOwnerState } from '../../models';
@@ -283,13 +282,12 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
       };
 
   // We need to resolve the `inputProps` since we are messing with those props in this component.
-  textFieldProps.inputProps =
-    materialMajor >= 6 && (textFieldProps as any)?.slotProps?.htmlInput
-      ? resolveComponentProps((textFieldProps as any).slotProps!.htmlInput as any, ownerState)
-      : textFieldProps.inputProps;
+  textFieldProps.inputProps = (textFieldProps as any)?.slotProps?.htmlInput
+    ? resolveComponentProps((textFieldProps as any).slotProps!.htmlInput as any, ownerState)
+    : textFieldProps.inputProps;
 
   // Remove the `input` slotProps to avoid them overriding the manually resolved `InputProps`.
-  // Relevant on `materialMajor >= 6` since `slotProps` would take precedence.
+  // `slotProps` would take precedence over `InputProps`.
   delete (textFieldProps as any)?.slotProps?.input;
   // Remove the `slotProps` on `PickersTextField` as they are not supported.
   delete (textFieldProps as any)?.slotProps;
