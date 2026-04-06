@@ -179,6 +179,9 @@ function useClickAwayListener(
   // Only special HTML elements have these default behaviors.
   const handleClickAway = useEventCallback((event: MouseEvent | TouchEvent) => {
     if (!activatedRef.current) {
+      // Reset syntheticEventRef to avoid stale state when a programmatic click
+      // (e.g., ButtonBase Enter key handler) sets it without a preceding mousedown.
+      syntheticEventRef.current = false;
       return;
     }
 

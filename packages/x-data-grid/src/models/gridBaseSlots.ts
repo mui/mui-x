@@ -119,7 +119,7 @@ export type CheckboxProps = CommonProps & {
   size?: 'small' | 'medium';
   density?: 'standard' | 'compact';
   slotProps?: {
-    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
   };
   style?: React.CSSProperties;
   tabIndex?: number;

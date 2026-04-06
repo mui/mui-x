@@ -67,7 +67,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operátorok',
   filterPanelOperatorAnd: 'És',
   filterPanelOperatorOr: 'Vagy',
-  filterPanelColumns: 'Oszlopok',
+  filterPanelColumn: 'Oszlopok',
   filterPanelInputLabel: 'Érték',
   filterPanelInputPlaceholder: 'Érték szűrése',
 

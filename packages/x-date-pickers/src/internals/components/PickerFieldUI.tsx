@@ -7,6 +7,7 @@ import MuiTextField, { TextFieldProps } from '@mui/material/TextField';
 import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { SvgIconProps } from '@mui/material/SvgIcon';
+import { major as materialMajor } from '@mui/material/version';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { FieldOwnerState } from '../../models';
@@ -29,7 +30,9 @@ export const cleanFieldResponse = <
   ...fieldResponse
 }: TFieldResponse): ExportedPickerFieldUIProps & {
   openPickerAriaLabel: string;
-  textFieldProps: TextFieldProps | PickersTextFieldProps;
+  textFieldProps:
+    | (TextFieldProps & { inputProps?: Record<string, any>; InputProps?: Record<string, any> })
+    | PickersTextFieldProps;
 } => {
   if (enableAccessibleFieldDOMStructure) {
     const {
@@ -345,6 +348,21 @@ export function PickerFieldUI<
         ownerState,
       )
     : textFieldProps.inputProps;
+
+  /**
+   * On Material UI v9, deprecated `inputProps` and `InputProps` are removed.
+   * They should be passed through `slotProps`.
+   */
+  if (materialMajor >= 9 && TextField === MuiTextField) {
+    if (!(textFieldProps as TextFieldProps).slotProps) {
+      (textFieldProps as TextFieldProps).slotProps = {};
+    }
+    (textFieldProps as Required<TextFieldProps>).slotProps.input = resolvedTextFieldInputProps;
+    (textFieldProps as Required<TextFieldProps>).slotProps.htmlInput = textFieldProps.inputProps;
+    delete textFieldProps.inputProps;
+    delete textFieldProps.InputProps;
+    return <TextField {...textFieldProps} />;
+  }
 
   // Remove the `input` slotProps to avoid them overriding the manually resolved `InputProps`.
   // `slotProps` would take precedence over `InputProps`.
