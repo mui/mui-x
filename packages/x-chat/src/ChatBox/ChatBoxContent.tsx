@@ -30,6 +30,7 @@ import { ChatMessageContent } from '../ChatMessage/ChatMessageContent';
 import { ChatMessageMeta } from '../ChatMessage/ChatMessageMeta';
 import { ChatMessageAvatar } from '../ChatMessage/ChatMessageAvatar';
 import { ChatMessage } from '../ChatMessage/ChatMessage';
+import { ChatMessageActions } from '../ChatMessage/ChatMessageActions';
 import { ChatMessageInlineMeta } from '../ChatMessage/ChatMessageInlineMeta';
 import { ChatScrollToBottomAffordance } from '../ChatIndicators/ChatScrollToBottomAffordance';
 import { ChatSuggestions } from '../ChatSuggestions/ChatSuggestions';
@@ -88,6 +89,7 @@ function DefaultMessageItem({
     ChatMessageContent) as typeof ChatMessageContent;
   const MessageMetaComponent = (slots?.messageMeta ?? ChatMessageMeta) as typeof ChatMessageMeta;
   const MessageRootComponent = (slots?.messageRoot ?? ChatMessage) as typeof ChatMessage;
+  const MessageActionsSlot = slots?.messageActions;
 
   const isDefault = variant !== 'compact';
   const isStreaming = message?.status === 'streaming';
@@ -109,6 +111,11 @@ function DefaultMessageItem({
         <MessageContentComponent {...(slotProps?.messageContent ?? {})} afterContent={inlineMeta} />
         {/* External meta is only used in the compact variant */}
         {!isDefault && <MessageMetaComponent {...(slotProps?.messageMeta ?? {})} />}
+        {MessageActionsSlot && (
+          <ChatMessageActions {...(slotProps?.messageActions ?? {})}>
+            <MessageActionsSlot messageId={id} />
+          </ChatMessageActions>
+        )}
       </MessageRootComponent>
     </MessageGroupComponent>
   );
@@ -332,7 +339,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
           autoScroll={autoScrollProp}
           overlay={
             <React.Fragment>
-              {messageIds.length === 0 && (
+              {messageIds.length === 0 && !showSuggestions && (
                 <ChatBoxEmptyState>{localeText.threadNoMessagesLabel}</ChatBoxEmptyState>
               )}
               {showSuggestions && messageIds.length === 0 && (

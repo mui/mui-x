@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 
+import { createTimeWindowGroupKey } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   randomId,
@@ -58,7 +59,7 @@ const messages = [
     role: 'assistant',
     author: demoUsers.agent,
     createdAt: '2026-03-15T10:05:00.000Z',
-    text: 'With groupingWindowMs set to 60 000 (1 minute), consecutive messages from the same author are grouped only when they are less than 1 minute apart. The avatar appears only on the first message in each group.',
+    text: 'With createTimeWindowGroupKey(60 000), consecutive messages from the same author are grouped only when they are less than 1 minute apart. The avatar appears only on the first message in each group.',
   }),
 ];
 
@@ -70,7 +71,7 @@ export default function MessageGrouping() {
       initialConversations={[conversation]}
       initialMessages={messages}
       slotProps={{
-        messageGroup: { groupingWindowMs: 60000 },
+        messageGroup: { groupKey: createTimeWindowGroupKey(60_000) },
       }}
       sx={{
         height: 400,

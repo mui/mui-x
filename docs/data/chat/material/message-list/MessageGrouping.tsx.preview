@@ -4,7 +4,7 @@
   initialConversations={[conversation]}
   initialMessages={messages}
   slotProps={{
-    messageGroup: { groupingWindowMs: 60000 },
+    messageGroup: { groupKey: createTimeWindowGroupKey(60_000) },
   }}
   sx={{
     height: 400,

@@ -107,19 +107,20 @@ export const SuggestionsRoot = React.forwardRef(function SuggestionsRoot(
     return null;
   }
 
-  const ItemComponent = slots?.item ?? SuggestionItem;
+  const itemSlots = slots?.item ? { root: slots.item } : undefined;
 
   return (
     <SuggestionsContext.Provider value={contextValue}>
       <Root {...rootProps}>
         {children ??
           normalized.map((suggestion, index) => (
-            <ItemComponent
+            <SuggestionItem
               key={suggestion.value}
               value={suggestion.value}
               label={suggestion.label}
               index={index}
-              {...slotProps?.item}
+              slots={itemSlots}
+              slotProps={{ root: slotProps?.item as any }}
             />
           ))}
       </Root>

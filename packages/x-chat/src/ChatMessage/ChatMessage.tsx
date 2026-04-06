@@ -19,7 +19,11 @@ export interface ChatMessageProps extends MessageRootProps {
 const ChatMessageStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
+  overridesResolver: (props, styles) => [
+    styles.root,
+    props.ownerState?.role === 'user' && styles.roleUser,
+    props.ownerState?.role === 'assistant' && styles.roleAssistant,
+  ],
 })<{
   ownerState?: {
     role?: string;
@@ -69,13 +73,17 @@ const ChatMessageStyled = styled('div', {
 
   const isGrouped = ownerState?.isGrouped;
 
-  // Default variant: single-row grid (no external meta row — meta is rendered
-  // inline inside the bubble via ChatMessageInlineMeta).
+  // Default variant: two-row grid. First row holds avatar + content bubble,
+  // second row holds message actions below the bubble, aligned to the avatar side.
+  // Meta is rendered inline inside the bubble via ChatMessageInlineMeta.
   return {
     display: 'grid',
-    gridTemplateColumns: isGrouped ? 'var(--MuiChatMessage-avatarSize) 1fr auto' : 'auto 1fr auto',
-    gridTemplateAreas: isGrouped ? '". content actions"' : '"avatar content actions"',
-    gap: theme.spacing(0.5),
+    gridTemplateColumns: isGrouped ? 'var(--MuiChatMessage-avatarSize) 1fr' : 'auto 1fr',
+    gridTemplateRows: 'auto auto',
+    gridTemplateAreas: isGrouped
+      ? '". content" ". actions"'
+      : '"avatar content" ". actions"',
+    columnGap: theme.spacing(0.5),
     width: '100%',
     boxSizing: 'border-box',
     paddingInline: theme.spacing(2),
@@ -83,12 +91,17 @@ const ChatMessageStyled = styled('div', {
     // assistant and user bubbles always share the same horizontal content lane.
     paddingInlineEnd: `calc(${theme.spacing(2)} + var(--MuiChatMessage-avatarSize))`,
     paddingBlock: `0 ${paddingBottom}`,
+    // When actions are present, their row already provides visual spacing,
+    // so reduce the bottom padding to avoid double spacing between messages.
+    '&:has(.MuiChatMessage-actions)': {
+      paddingBlockEnd: theme.spacing(0.25),
+    },
     fontFamily: theme.typography.fontFamily,
     ...(isUser && {
-      gridTemplateAreas: isGrouped ? '"actions content ."' : '"actions content avatar"',
-      gridTemplateColumns: isGrouped
-        ? 'auto 1fr var(--MuiChatMessage-avatarSize)'
-        : 'auto 1fr auto',
+      gridTemplateColumns: isGrouped ? '1fr var(--MuiChatMessage-avatarSize)' : '1fr auto',
+      gridTemplateAreas: isGrouped
+        ? '"content ." "actions ."'
+        : '"content avatar" "actions ."',
       paddingInlineStart: `calc(${theme.spacing(2)} + var(--MuiChatMessage-avatarSize))`,
       paddingInlineEnd: theme.spacing(2),
     }),

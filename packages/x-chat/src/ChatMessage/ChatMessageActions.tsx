@@ -19,10 +19,10 @@ const ChatMessageActionsStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Actions',
   overridesResolver: (_, styles) => styles.actions,
-})(({ theme }) => ({
+})<{ ownerState?: { role?: string } }>(({ theme, ownerState }) => ({
   gridArea: 'actions',
-  display: 'flex',
-  alignItems: 'flex-end',
+  display: 'inline-flex',
+  alignItems: 'center',
   gap: theme.spacing(0.25),
   opacity: 0,
   transition: theme.transitions.create('opacity', {
@@ -33,6 +33,19 @@ const ChatMessageActionsStyled = styled('div', {
   },
   '.MuiChatMessage-root:hover &, .MuiChatMessage-root:focus-within &': {
     opacity: 1,
+  },
+  ...(ownerState?.role === 'user' && {
+    justifySelf: 'end',
+  }),
+  backgroundColor: (theme.vars || theme).palette.background.paper,
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: (theme.vars || theme).shadows[1],
+  padding: theme.spacing(0.25),
+  '& .MuiIconButton-root': {
+    padding: theme.spacing(0.5),
+  },
+  '& .MuiSvgIcon-root': {
+    fontSize: theme.typography.pxToRem(16),
   },
 }));
 

@@ -5,7 +5,6 @@ import type { ChatAdapter } from '../adapters/chatAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import { ChatRoot } from '../chat/ChatRoot';
 import { SuggestionItem } from './SuggestionItem';
-import type { SuggestionItemProps } from './SuggestionItem';
 import { SuggestionsRoot } from './SuggestionsRoot';
 
 const { render } = createRenderer();
@@ -123,19 +122,17 @@ describe('SuggestionsRoot', () => {
   });
 
   it('supports custom item slot', () => {
-    function CustomItem(props: SuggestionItemProps & { ownerState?: any }) {
-      const { ownerState, slots, slotProps, value, label, index, ...other } = props;
+    // slots.item is the root visual element of SuggestionItem; it receives ownerState
+    // containing value/label/index, and children (label text) are passed by SuggestionItem.
+    function CustomItemRoot(props: React.ButtonHTMLAttributes<HTMLButtonElement> & { ownerState?: any }) {
+      const { ownerState, ...other } = props;
 
-      return (
-        <button data-testid={`custom-item-${index}`} type="button" {...other}>
-          {label ?? value}
-        </button>
-      );
+      return <button data-testid={`custom-item-${ownerState?.index}`} type="button" {...other} />;
     }
 
     render(
       <ChatRoot adapter={createAdapter()}>
-        <SuggestionsRoot slots={{ item: CustomItem }} suggestions={['A', 'B']} />
+        <SuggestionsRoot slots={{ item: CustomItemRoot }} suggestions={['A', 'B']} />
       </ChatRoot>,
     );
 

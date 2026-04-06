@@ -88,11 +88,11 @@ describe('ChatBox', () => {
           {null}
         </ChatBox>,
       );
-      // The styled suggestion items render as <button value="..."> elements
+      // The styled suggestion items render as buttons with their label as text content
       const suggestionButtons = document.querySelectorAll('.MuiChatSuggestions-item');
       expect(suggestionButtons.length).toBe(2);
-      expect(suggestionButtons[0].getAttribute('value')).toBe('Tell me a joke');
-      expect(suggestionButtons[1].getAttribute('value')).toBe('What is AI?');
+      expect(suggestionButtons[0].textContent).toBe('Tell me a joke');
+      expect(suggestionButtons[1].textContent).toBe('What is AI?');
     });
 
     it('hides suggestions when features.suggestions=false', () => {
@@ -106,6 +106,17 @@ describe('ChatBox', () => {
         </ChatBox>,
       );
       expect(document.querySelector('.MuiChatSuggestions-root')).toBe(null);
+    });
+
+    it('hides the "no messages" empty state when suggestions are shown', () => {
+      render(
+        <ChatBox adapter={createAdapter()} suggestions={['Tell me a joke']}>
+          {null}
+        </ChatBox>,
+      );
+      // Suggestions take over the empty state; the "no messages" label must not appear
+      expect(document.querySelector('.MuiChatBox-emptyState')).toBe(null);
+      expect(document.querySelector('.MuiChatSuggestions-root')).not.toBe(null);
     });
 
     it('does not show suggestions when messages exist', () => {

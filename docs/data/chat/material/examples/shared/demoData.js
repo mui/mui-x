@@ -185,7 +185,7 @@ export const inboxThreads = {
     createTextMessage({
       id: randomId(),
       conversationId: slotHelpConvId,
-      role: 'assistant',
+      role: 'user',
       author: demoUsers.priya,
       createdAt: '2026-03-14T17:50:00.000Z',
       text: 'Use slots.composerSendButton to replace the send button with any React component.',
