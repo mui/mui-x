@@ -23,6 +23,12 @@ function App() {
       <DateField enableAccessibleFieldDOMStructure={someVar} format="MM/DD/YYYY" />
       {/* DateField with shorthand boolean */}
       <DateField enableAccessibleFieldDOMStructure />
+      {/* slotProps.field with only enableAccessibleFieldDOMStructure */}
+      <DatePicker slotProps={{ field: { enableAccessibleFieldDOMStructure: false } }} />
+      {/* slotProps.field with other props */}
+      <DatePicker slotProps={{ field: { enableAccessibleFieldDOMStructure: false, format: 'MM/DD/YYYY' } }} />
+      {/* slotProps with other siblings */}
+      <DatePicker slotProps={{ field: { enableAccessibleFieldDOMStructure: true }, toolbar: { hidden: true } }} />
     </div>
   );
 }

@@ -370,6 +370,8 @@ npx @mui/x-codemod@next v9.0.0/pickers/remove-enable-accessible-field-dom-struct
 +<DateField />
 -<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: MyCustomTextField }} />
 +<DatePicker slots={{ textField: MyCustomTextField }} />
+-<DatePicker slotProps={{ field: { enableAccessibleFieldDOMStructure: false } }} />
++<DatePicker />
 ```
 
 #### `remove-picker-day-2`

@@ -53,21 +53,41 @@ The `enableAccessibleFieldDOMStructure` prop has been removed from all Picker an
 The accessible DOM structure (section-based `PickersTextField`) introduced in v7 is now the only supported mode.
 The legacy `<input>` based fallback is no longer available.
 
-The `preset-safe` codemod will remove the prop from your code automatically.
+The `preset-safe` codemod will remove the prop from your code automatically—both as a direct prop and inside `slotProps.field`.
+
+:::info
+The codemod cannot handle cases where `enableAccessibleFieldDOMStructure` is passed via spread syntax or through a variable reference.
+These cases must be updated manually:
+
+```tsx
+// Not handled by the codemod — remove enableAccessibleFieldDOMStructure manually
+const fieldProps = { enableAccessibleFieldDOMStructure: false };
+<DatePicker {...fieldProps} />;
+
+const slotProps = { field: { enableAccessibleFieldDOMStructure: false } };
+<DatePicker slotProps={slotProps} />;
+```
+
+:::
 
 :::warning
-If you were using `enableAccessibleFieldDOMStructure={false}`, your components were relying on the legacy input-based DOM structure.
-After upgrading, any custom `textField` slot must be compatible with `PickersTextField` (which renders a `PickersSectionList` internally) rather than a plain `<input />`.
+**Action required if you used a custom `textField` slot with `enableAccessibleFieldDOMStructure={false}`**
 
-If you have a custom `textField` slot that renders a standard `<input />` element, you need to update it to work with the new section-based structure.
-See the [Fields documentation](/x/react-date-pickers/fields/) for more details.
+If you were using `enableAccessibleFieldDOMStructure={false}` with a custom `textField` slot that renders a standard `<input />` element, your component will **crash at runtime** after upgrading.
+The field now always uses the accessible DOM structure, which passes section-based props (like `elements` and `contentEditable`) that a plain `<input />` cannot handle.
+
+You must update your custom `textField` slot to be compatible with `PickersTextField`, which renders a `PickersSectionList` internally.
+See the [custom field documentation](/x/react-date-pickers/custom-field/) for implementation guidance.
+
+If you were **not** using a custom `textField` slot, simply removing the prop is sufficient—no other changes are needed.
 :::
 
 ```diff
 -<DatePicker enableAccessibleFieldDOMStructure label="Start date" />
 +<DatePicker label="Start date" />
 
--DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: CustomTextField }} />
+-<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: CustomTextField }} />
+ // CustomTextField must now be compatible with PickersTextField props
 +<DatePicker slots={{ textField: CustomPickerTextField }} />
 ```
 
@@ -305,6 +325,28 @@ The `TEnableAccessibleFieldDOMStructure` type parameter has been removed.
 ```diff
 -PickerManager<TValue, TError, TValidationProps, TEnableAccessibleFieldDOMStructure, TFieldInternalProps>
 +PickerManager<TValue, TError, TValidationProps, TFieldInternalProps>
+```
+
+### Picker and Field component type parameters
+
+All Picker and Field component prop types no longer have the `TEnableAccessibleFieldDOMStructure` generic parameter.
+If you were passing this type parameter explicitly, remove it:
+
+```diff
+-type MyPickerProps = DatePickerProps<true>;
++type MyPickerProps = DatePickerProps;
+
+-type MyFieldProps = DateFieldProps<true>;
++type MyFieldProps = DateFieldProps;
+```
+
+This applies to all Picker component prop types (`DatePickerProps`, `DateTimePickerProps`, `TimePickerProps`, `DateRangePickerProps`, etc.), all Field component prop types (`DateFieldProps`, `TimeFieldProps`, etc.), and their `Desktop`/`Mobile`/`Static` variants.
+
+The field hooks also no longer accept this type parameter:
+
+```diff
+-const response = useDateField<true, typeof props>(props);
++const response = useDateField<typeof props>(props);
 ```
 
 ## Codemods

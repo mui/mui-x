@@ -83,6 +83,15 @@ function DisableMarginUsage() {
   );
 }
 
+// remove-enable-accessible-field-dom-structure inside slotProps.field
+function SlotPropsFieldUsage() {
+  return (
+    <DatePicker slotProps={{ field: {
+      format: 'MM/DD/YYYY',
+    } }} />
+  );
+}
+
 function App() {
   const fieldRef = React.useRef(null);
   return (

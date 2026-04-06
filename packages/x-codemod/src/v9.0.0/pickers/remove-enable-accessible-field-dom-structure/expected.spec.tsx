@@ -23,6 +23,16 @@ function App() {
       <DateField format="MM/DD/YYYY" />
       {/* DateField with shorthand boolean */}
       <DateField />
+      {/* slotProps.field with only enableAccessibleFieldDOMStructure */}
+      <DatePicker />
+      {/* slotProps.field with other props */}
+      <DatePicker slotProps={{ field: {
+        format: 'MM/DD/YYYY',
+      } }} />
+      {/* slotProps with other siblings */}
+      <DatePicker slotProps={{
+        toolbar: { hidden: true },
+      }} />
     </div>
   );
 }
