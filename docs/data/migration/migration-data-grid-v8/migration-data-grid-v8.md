@@ -54,6 +54,17 @@ You can use this codemod to automatically remove the `charts` property from `exp
 npx @mui/x-codemod@next v9.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
+### Locale text changes
+
+- The `filterPanelColumns` locale text key has been renamed to `filterPanelColumn` and the default value changed from "Columns" to "Column".
+
+  If you have tests relying on this label, you may need to update them accordingly.
+
+  ```diff
+  -screen.getByRole('combobox', { name: 'Columns' });
+  +screen.getByRole('combobox', { name: 'Column' });
+  ```
+
 ### Behavioral changes
 
 - Pagination numbers are formatted by default.
