@@ -25,6 +25,7 @@
     "isFirstVisibleCell": { "type": { "name": "bool" }, "default": "false" },
     "isLastVisibleCell": { "type": { "name": "bool" }, "default": "false" },
     "isVisuallySelected": { "type": { "name": "bool" } },
+    "nativeButton": { "type": { "name": "bool" } },
     "onBlur": {
       "type": { "name": "func" },
       "default": "() => {}",

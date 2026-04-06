@@ -74,7 +74,7 @@ const caESGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operadors',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'O',
-  filterPanelColumns: 'Columnes',
+  filterPanelColumn: 'Columnes',
   filterPanelInputLabel: 'Valor',
   filterPanelInputPlaceholder: 'Valor del filtre',
 
