@@ -386,11 +386,11 @@ export function extractSlots(
     const slot: SlotInfo = {
       name: prop.name,
       description: jsDoc.description,
-      class: null,
     };
     if (jsDoc.defaultValue) {
       slot.default = jsDoc.defaultValue;
     }
+    slot.class = null;
     slots.push(slot);
   }
 

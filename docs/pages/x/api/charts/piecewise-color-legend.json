@@ -31,7 +31,7 @@
     "markType": {
       "type": {
         "name": "union",
-        "description": "'circle'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'line+mark'<br>&#124;&nbsp;{ propTypes?: any, contextType?: func, defaultProps?: object, displayName?: string, getDerivedStateFromProps?: func, getDerivedStateFromError?: func }<br>&#124;&nbsp;func"
+        "description": "'circle'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'line+mark'<br>&#124;&nbsp;{ propTypes?: any, contextType?: func, defaultProps?: { className?: string, color?: string }, displayName?: string, getDerivedStateFromProps?: func, getDerivedStateFromError?: func }<br>&#124;&nbsp;func"
       }
     },
     "onItemClick": {

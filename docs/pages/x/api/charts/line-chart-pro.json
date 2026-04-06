@@ -39,7 +39,10 @@
     },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object<br>&#124;&nbsp;object&gt;" }
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ type: 'line', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'line', seriesId: string, dataIndex?: number }&gt;"
+      }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedAxis": {
@@ -56,7 +59,10 @@
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object<br>&#124;&nbsp;object&gt;" }
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ type: 'line', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'line', seriesId: string, dataIndex?: number }&gt;"
+      }
     },
     "initialZoom": {
       "type": {
@@ -179,7 +185,7 @@
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ data?: Array&lt;any&gt;, max?: number, min?: number, dataKey?: string, colorMap?: object<br>&#124;&nbsp;object<br>&#124;&nbsp;object, id?: string }&gt;"
+        "description": "Array&lt;{ data?: Array&lt;any&gt;, max?: number, min?: number, dataKey?: string, colorMap?: { type: 'continuous', min?: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, color: any<br>&#124;&nbsp;any }<br>&#124;&nbsp;{ type: 'piecewise', thresholds: Array&lt;any&gt;, colors: Array&lt;any&gt; }<br>&#124;&nbsp;{ type: 'ordinal', values?: Array&lt;any&gt;, colors: Array&lt;any&gt;, unknownColor?: string }, id?: string }&gt;"
       }
     },
     "zoomData": {
@@ -191,7 +197,7 @@
     "zoomInteractionConfig": {
       "type": {
         "name": "shape",
-        "description": "{ zoom?: Array&lt;'wheel'<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'doubleTapReset'<br>&#124;&nbsp;'brush'&gt;, pan?: Array&lt;'drag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;'pressAndDrag'&gt; }"
+        "description": "{ zoom?: Array&lt;'wheel'<br>&#124;&nbsp;{ type: 'wheel', pointerMode?: any, requiredKeys?: Array&lt;any&gt; }<br>&#124;&nbsp;{ type: 'pinch', pointerMode?: any, requiredKeys?: Array&lt;any&gt; }<br>&#124;&nbsp;{ type: 'tapAndDrag', pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt; }<br>&#124;&nbsp;{ type: 'doubleTapReset', pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt; }<br>&#124;&nbsp;{ type: 'brush', pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt; }<br>&#124;&nbsp;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'doubleTapReset'<br>&#124;&nbsp;'brush'&gt;, pan?: Array&lt;'drag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ type: 'drag', pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt; }<br>&#124;&nbsp;{ type: 'pressAndDrag', pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt; }<br>&#124;&nbsp;{ type: 'wheel', allowedDirection?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any, pointerMode?: any, requiredKeys?: Array&lt;any&gt; }<br>&#124;&nbsp;'pressAndDrag'&gt; }"
       }
     }
   },

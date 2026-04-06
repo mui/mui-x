@@ -36,7 +36,10 @@
     },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object<br>&#124;&nbsp;object&gt;" }
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ type: 'bar', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'bar', seriesId: string, dataIndex?: number }&gt;"
+      }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedAxis": {
@@ -53,7 +56,10 @@
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object<br>&#124;&nbsp;object&gt;" }
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ type: 'bar', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'bar', seriesId: string, dataIndex?: number }&gt;"
+      }
     },
     "layout": {
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },

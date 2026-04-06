@@ -86,7 +86,7 @@ export interface SlotInfo {
   name: string;
   description: string;
   default?: string;
-  class: string | null;
+  class?: string | null;
 }
 
 export interface ClassInfo {

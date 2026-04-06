@@ -49,7 +49,10 @@
     },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object<br>&#124;&nbsp;object&gt;" }
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ type: 'scatter', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'scatter', seriesId: string, dataIndex?: number }&gt;"
+      }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
@@ -61,7 +64,10 @@
     "hitAreaRadius": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;'item'" } },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object<br>&#124;&nbsp;object&gt;" }
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ type: 'scatter', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'scatter', seriesId: string, dataIndex?: number }&gt;"
+      }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
@@ -148,7 +154,7 @@
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ data?: Array&lt;any&gt;, max?: number, min?: number, dataKey?: string, colorMap?: object<br>&#124;&nbsp;object<br>&#124;&nbsp;object, id?: string }&gt;"
+        "description": "Array&lt;{ data?: Array&lt;any&gt;, max?: number, min?: number, dataKey?: string, colorMap?: { type: 'continuous', min?: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, color: any<br>&#124;&nbsp;any }<br>&#124;&nbsp;{ type: 'piecewise', thresholds: Array&lt;any&gt;, colors: Array&lt;any&gt; }<br>&#124;&nbsp;{ type: 'ordinal', values?: Array&lt;any&gt;, colors: Array&lt;any&gt;, unknownColor?: string }, id?: string }&gt;"
       }
     }
   },

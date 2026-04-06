@@ -242,7 +242,7 @@ function formatObjectType(type: ts.Type, checker: ts.TypeChecker, depth: number)
   const properties = type.getProperties();
 
   // No properties, too deep, or too many properties → just "object"
-  if (properties.length === 0 || depth >= 2 || properties.length > 30) {
+  if (properties.length === 0 || depth >= 4 || properties.length > 30) {
     return { name: 'object' };
   }
 
@@ -353,7 +353,7 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
   // Object/shape
   if (type.flags & ts.TypeFlags.Object || type.isIntersection()) {
     const properties = type.getProperties();
-    if (properties.length === 0 || depth >= 2 || properties.length > 30) {
+    if (properties.length === 0 || depth >= 4 || properties.length > 30) {
       return 'object';
     }
 
