@@ -9,7 +9,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Configure how events are created and edited.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Event creation
 
@@ -33,12 +33,12 @@ Pass a custom value to `eventCreation.duration` to change the default duration o
 
 {{"demo": "EventCreationDuration.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Create event on click
+### Create event on double click
 
-Set `eventCreation.interaction` to `"click"` to open the creation form when clicking a cell instead of double-clicking:
+Set `eventCreation.interaction` to `"double-click"` to open the creation form when double-clicking a cell instead of clicking:
 
 ```tsx
-<EventCalendar eventCreation={{ interaction: 'click' }} />
+<EventCalendar eventCreation={{ interaction: 'double-click' }} />
 ```
 
 {{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}

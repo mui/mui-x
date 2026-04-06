@@ -9,7 +9,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Import and export events from the Event Calendar.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## ICS import / export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
 

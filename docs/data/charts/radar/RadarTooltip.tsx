@@ -6,10 +6,8 @@ import Typography from '@mui/material/Typography';
 export default function RadarTooltip() {
   return (
     <Stack
-      sx={{ width: '100%' }}
       direction="row"
-      flexWrap="wrap"
-      justifyContent="space-around"
+      sx={{ flexWrap: 'wrap', justifyContent: 'space-around', width: '100%' }}
     >
       <Box sx={{ maxWidth: 300, flexGrow: 1 }}>
         <Typography sx={{ textAlign: 'center' }}>Axis</Typography>
