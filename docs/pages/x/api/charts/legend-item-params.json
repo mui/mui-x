@@ -8,11 +8,21 @@
   "properties": {
     "color": { "type": { "description": "string" }, "required": true },
     "label": { "type": { "description": "string" }, "required": true },
-    "markType": { "type": { "description": "ChartsLabelMarkType | undefined" }, "required": true },
+    "markType": {
+      "type": {
+        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+      },
+      "required": true
+    },
     "maxValue": { "type": { "description": "number | Date" }, "required": true },
     "minValue": { "type": { "description": "number | Date" }, "required": true },
     "seriesId": { "type": { "description": "string" }, "required": true },
-    "type": { "type": { "description": "ChartSeriesType" }, "required": true },
+    "type": {
+      "type": {
+        "description": "\"line\" | \"bar\" | \"scatter\" | \"pie\" | \"radar\" | \"heatmap\" | \"funnel\" | \"sankey\" | \"rangeBar\" | \"ohlc\""
+      },
+      "required": true
+    },
     "dataIndex": { "type": { "description": "number" } }
   }
 }

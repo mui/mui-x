@@ -3,9 +3,7 @@
   "description": "The excel export API interface that is available in the grid [[apiRef]].",
   "properties": {
     "getDataAsExcel": {
-      "type": {
-        "description": "(options?: GridExcelExportOptions) =&gt; Promise&lt;Excel.Workbook&gt; | null"
-      }
+      "type": { "description": "(options?: GridExcelExportOptions) =&gt; Promise&lt;Workbook&gt;" }
     },
     "exportDataAsExcel": {
       "type": { "description": "(options?: GridExcelExportOptions) =&gt; Promise&lt;void&gt;" }

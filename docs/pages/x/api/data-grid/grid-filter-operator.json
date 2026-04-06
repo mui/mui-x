@@ -11,15 +11,14 @@
       "type": { "description": "GetApplyFilterFn&lt;R, V, F&gt;" },
       "required": true
     },
-    "value": {
-      "type": {
-        "description": "(string & {}) | \"endsWith\" | \"startsWith\" | \"is\" | \"contains\" | \"doesNotContain\" | \"equals\" | \"doesNotEqual\" | \"=\" | \"!=\" | \"&gt;\" | \"&gt;=\" | \"&lt;\" | \"&lt;=\" | \"not\" | \"after\" | \"onOrAfter\" | \"before\" | \"onOrBefore\" | \"isEmpty\" | \"isNotEmpty\" | \"isAnyOf\""
-      },
-      "required": true
-    },
+    "value": { "type": { "description": "GridFilterItem['operator']" }, "required": true },
     "getValueAsString": { "type": { "description": "(value: any) =&gt; string" } },
     "headerLabel": { "type": { "description": "string" } },
-    "InputComponent": { "type": { "description": "React.JSXElementConstructor&lt;I&gt;" } },
+    "InputComponent": {
+      "type": {
+        "description": "(props: I) =&gt; string | number | bigint | boolean | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | Iterable&lt;ReactNode&gt; | ReactPortal | Promise&lt;AwaitedReactNode&gt; | Promise&lt;ReactNode&gt; | new (props: I, context: any) =&gt; Component&lt;any, any, any&gt;"
+      }
+    },
     "InputComponentProps": { "type": { "description": "Partial&lt;I&gt;" } },
     "label": { "type": { "description": "string" } },
     "requiresFilterValue": { "type": { "description": "boolean" }, "default": "true" }

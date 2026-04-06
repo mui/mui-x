@@ -12,17 +12,19 @@
     "upsertFilterItems": { "type": { "description": "(items: GridFilterItem[]) =&gt; void" } },
     "deleteFilterItem": { "type": { "description": "(item: GridFilterItem) =&gt; void" } },
     "setFilterLogicOperator": {
-      "type": { "description": "(operator: GridLogicOperator) =&gt; void" }
+      "type": { "description": "(operator: \"and\" | \"or\") =&gt; void" }
     },
     "setFilterModel": {
       "type": {
-        "description": "(model: GridFilterModel, reason?: \"upsertFilterItem\" | \"upsertFilterItems\" | \"deleteFilterItem\" | \"changeLogicOperator\" | \"restoreState\" | \"removeAllFilterItems\" | undefined) =&gt; void"
+        "description": "(model: { items: GridFilterItem[], logicOperator?: \"and\" | \"or\", quickFilterValues?: any[], quickFilterLogicOperator?: \"and\" | \"or\", quickFilterExcludeHiddenColumns?: boolean }, reason?: \"upsertFilterItem\" | \"upsertFilterItems\" | \"deleteFilterItem\" | \"changeLogicOperator\" | \"restoreState\" | \"removeAllFilterItems\") =&gt; void"
       }
     },
     "setQuickFilterValues": { "type": { "description": "(values: any[]) =&gt; void" } },
     "ignoreDiacritics": { "type": { "description": "boolean" } },
     "getFilterState": {
-      "type": { "description": "(filterModel: GridFilterModel) =&gt; GridFilterState" }
+      "type": {
+        "description": "(filterModel: { items: GridFilterItem[], logicOperator?: \"and\" | \"or\", quickFilterValues?: any[], quickFilterLogicOperator?: \"and\" | \"or\", quickFilterExcludeHiddenColumns?: boolean }) =&gt; { filterModel: { items: GridFilterItem[], logicOperator?: \"and\" | \"or\", quickFilterValues?: any[], quickFilterLogicOperator?: \"and\" | \"or\", quickFilterExcludeHiddenColumns?: boolean }, filteredRowsLookup: Record&lt;GridRowId, false&gt;, filteredChildrenCountLookup: Record&lt;GridRowId, number&gt;, filteredDescendantCountLookup: Record&lt;GridRowId, number&gt; }"
+      }
     }
   }
 }

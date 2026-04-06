@@ -298,117 +298,190 @@ function isOptionalProperty(prop: ts.Symbol): boolean {
   }
   // If ALL declarations have a question token, it's optional.
   // If ANY declaration is required, the property is required.
-  return declarations.every(
-    (d) => ts.isPropertySignature(d) && !!d.questionToken,
-  );
+  return declarations.every((d) => ts.isPropertySignature(d) && !!d.questionToken);
+}
+
+// Types whose internals should NOT be expanded (keep the alias name)
+const OPAQUE_TYPE_NAMES = new Set([
+  // React
+  'ReactNode',
+  'ReactElement',
+  'ComponentType',
+  'ComponentClass',
+  'FunctionComponent',
+  'FC',
+  'JSXElementConstructor',
+  'Component',
+  'RefObject',
+  'MutableRefObject',
+  'CSSProperties',
+  // MUI
+  'SxProps',
+  'Theme',
+  // DOM
+  'HTMLElement',
+  'SVGElement',
+  'MouseEvent',
+  'Event',
+  // Collections
+  'Array',
+  'ReadonlyArray',
+  'Map',
+  'Set',
+  'Promise',
+]);
+
+/**
+ * Recursively expand a TypeScript type to a human-readable string.
+ * Resolves type aliases to their definitions but stops at React/DOM/opaque types.
+ */
+function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number = 0): string {
+  if (depth > 3) {
+    return checkerRef.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation);
+  }
+
+  // Strip undefined/null from unions
+  if (type.isUnion()) {
+    const members = type.types.filter(
+      (t) => !(t.flags & (ts.TypeFlags.Undefined | ts.TypeFlags.Null)),
+    );
+    if (members.length === 0) {
+      return 'never';
+    }
+    // Detect boolean (true | false union)
+    if (members.length === 2 && members.every((m) => !!(m.flags & ts.TypeFlags.BooleanLiteral))) {
+      return 'boolean';
+    }
+    if (members.length === 1) {
+      return expandTypeDeep(members[0], checkerRef, depth);
+    }
+    // Deduplicate expanded members
+    const expanded = members.map((m) => expandTypeDeep(m, checkerRef, depth));
+    return [...new Set(expanded)].join(' | ');
+  }
+
+  // Primitives & literals
+  if (type.flags & ts.TypeFlags.String) {
+    return 'string';
+  }
+  if (type.flags & ts.TypeFlags.Number) {
+    return 'number';
+  }
+  if (type.flags & (ts.TypeFlags.Boolean | ts.TypeFlags.BooleanLiteral)) {
+    return 'boolean';
+  }
+  if (type.flags & ts.TypeFlags.Null) {
+    return 'null';
+  }
+  if (type.flags & (ts.TypeFlags.Any | ts.TypeFlags.Unknown)) {
+    return 'any';
+  }
+  if (type.isStringLiteral()) {
+    return JSON.stringify(type.value);
+  }
+  if (type.isNumberLiteral()) {
+    return String(type.value);
+  }
+
+  // Check symbol name — stop expansion for opaque types
+  const symbol = type.getSymbol() || type.aliasSymbol;
+  const symbolName = symbol?.name || '';
+  if (OPAQUE_TYPE_NAMES.has(symbolName)) {
+    return checkerRef.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation);
+  }
+
+  // Functions — expand signature
+  const callSigs = type.getCallSignatures();
+  if (callSigs.length > 0) {
+    const sig = callSigs[0];
+    const params = sig.parameters.map((p) => {
+      const pt = checkerRef.getTypeOfSymbol(p);
+      // Detect optional parameters from their declaration
+      const isOptional = p.declarations?.some((d) => ts.isParameter(d) && !!d.questionToken);
+      const opt = isOptional ? '?' : '';
+      return `${p.name}${opt}: ${expandTypeDeep(pt, checkerRef, depth + 1)}`;
+    });
+    const ret = checkerRef.getReturnTypeOfSignature(sig);
+    return `(${params.join(', ')}) => ${expandTypeDeep(ret, checkerRef, depth + 1)}`;
+  }
+
+  // Arrays
+  if (checkerRef.isArrayType(type)) {
+    const typeArgs = (type as ts.TypeReference).typeArguments;
+    if (typeArgs && typeArgs.length > 0) {
+      return `${expandTypeDeep(typeArgs[0], checkerRef, depth + 1)}[]`;
+    }
+    return 'any[]';
+  }
+  const ref = type as ts.TypeReference;
+  if (ref.target?.getSymbol()?.name === 'ReadonlyArray') {
+    const typeArgs = ref.typeArguments;
+    if (typeArgs && typeArgs.length > 0) {
+      return `readonly ${expandTypeDeep(typeArgs[0], checkerRef, depth + 1)}[]`;
+    }
+  }
+
+  // Object types with a manageable number of properties — expand
+  if (type.flags & ts.TypeFlags.Object) {
+    const props = type.getProperties();
+    if (props.length > 0 && props.length <= 10 && callSigs.length === 0) {
+      // Skip if it looks like a React/DOM/class type
+      if (symbolName && /^[A-Z]/.test(symbolName) && !symbolName.includes('__')) {
+        const fileName = symbol?.declarations?.[0]?.getSourceFile().fileName || '';
+        if (fileName.includes('node_modules') && !fileName.includes('@mui/x-')) {
+          return checkerRef.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation);
+        }
+      }
+      const parts = props.map((p) => {
+        const pt = checkerRef.getTypeOfSymbol(p);
+        const opt = p.flags & ts.SymbolFlags.Optional ? '?' : '';
+        return `${p.name}${opt}: ${expandTypeDeep(pt, checkerRef, depth + 1)}`;
+      });
+      return `{ ${parts.join(', ')} }`;
+    }
+  }
+
+  return checkerRef.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation);
 }
 
 export function escapeHtml(s: string): string {
   return s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-
 /**
- * Resolve a property's type to a clean string for interface docs.
- *
- * Reads the type annotation directly from source declarations to preserve
- * alias names (SxProps, ContinuousColorConfig). When a property has multiple
- * declarations (e.g. discriminated union members), collects all types into a union.
- * Falls back to the type checker for indexed access types.
+ * Resolve a property's type to a fully expanded human-readable string.
+ * Recursively expands type aliases while keeping React/DOM/opaque types as-is.
  */
 function resolvePropertyType(prop: ts.Symbol, checker: ts.TypeChecker): string {
-  const declarations = prop.getDeclarations() || [];
-
-  // Collect source-level type annotations from all declarations.
-  // When a property appears in multiple declarations (e.g. discriminated union members
-  // of the same interface), each declaration contributes its type to the union.
-  // We split compound types (A | B) so we can deduplicate individual members.
-  const sourceMembers = new Set<string>();
-  let hasIndexedAccess = false;
-  for (const decl of declarations) {
-    if (ts.isPropertySignature(decl) && decl.type) {
-      const text = decl.type.getText();
-      if (text.includes('["') || text.includes("['")) {
-        hasIndexedAccess = true;
-      } else {
-        // Split "A | B" into individual members for deduplication
-        for (const member of text.split('|').map((s) => s.trim())) {
-          sourceMembers.add(member);
-        }
-      }
-    }
-  }
-
-  // Also get the checker-resolved type (strips undefined, resolves indexed access)
-  const checkerType = resolveViaChecker(prop, checker);
-
-  if (sourceMembers.size > 0 && !hasIndexedAccess) {
-    const sourceResult = [...sourceMembers].join(' | ');
-
-    // Detect unresolved type parameters in source text (e.g. TValue, S, V)
-    // These are single uppercase letters or T-prefixed identifiers used as generic params.
-    const hasUnresolvedGeneric = /\b[A-Z]\b|\bT[A-Z]\w*\b/.test(sourceResult);
-
-    // Detect if checker over-expands (e.g. SxProps → SystemCssProperties | ...)
-    const checkerIsOverExpanded =
-      checkerType.includes('SystemCssProperties') ||
-      checkerType.includes('CSSPseudoSelector') ||
-      checkerType.includes('CSSSelectorObject') ||
-      checkerType.split('|').length > sourceMembers.size * 2;
-
-    // Prefer checker when:
-    // - Source has unresolved generics (checker instantiates them)
-    // - Checker is shorter or equal (resolves aliases to primitives)
-    // But not when checker over-expands internal types.
-    if (!checkerIsOverExpanded && (hasUnresolvedGeneric || checkerType.length <= sourceResult.length)) {
-      return checkerType;
-    }
-    return sourceResult;
-  }
-
-  return checkerType;
-}
-
-/** Resolve a property type using the checker, handling optional types and indexed access. */
-function resolveViaChecker(prop: ts.Symbol, checker: ts.TypeChecker): string {
   let propType = checker.getTypeOfSymbol(prop);
 
-  // Strip undefined/null for optional properties
-  if (prop.flags & ts.SymbolFlags.Optional && propType.isUnion()) {
-    const filtered = propType.types.filter(
-      (t) => !(t.flags & (ts.TypeFlags.Undefined | ts.TypeFlags.Null)),
-    );
-    if (filtered.length === 1) {
-      propType = filtered[0];
-    } else if (filtered.length > 1) {
-      propType = (
-        checker as unknown as { getUnionType(types: ts.Type[]): ts.Type }
-      ).getUnionType(filtered);
-    }
-  }
-
-  const typeStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
-
-  // Resolve indexed access types via base constraint
-  if (typeStr.includes('["') || typeStr.includes("['")) {
+  // Check if the raw type string contains indexed access types (Partial<X>["prop"]).
+  // If so, resolve via base constraint first, since expandTypeDeep can't handle these.
+  const rawStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
+  if (rawStr.includes('["') || rawStr.includes("['")) {
     const baseConstraint = checker.getBaseConstraintOfType(propType);
     if (baseConstraint) {
-      let resolved = baseConstraint;
-      if (resolved.isUnion()) {
-        const filtered = resolved.types.filter(
-          (t) => !(t.flags & (ts.TypeFlags.Undefined | ts.TypeFlags.Null)),
-        );
-        if (filtered.length === 1) {
-          resolved = filtered[0];
-        } else if (filtered.length > 1) {
-          resolved = (
-            checker as unknown as { getUnionType(types: ts.Type[]): ts.Type }
-          ).getUnionType(filtered);
-        }
-      }
-      return checker.typeToString(resolved, undefined, ts.TypeFormatFlags.NoTruncation);
+      propType = baseConstraint;
     }
   }
 
-  return typeStr;
+  const expanded = expandTypeDeep(propType, checker);
+
+  // If expansion produced an unreasonable result, fall back to source declaration text
+  if (
+    expanded.includes('SystemCssProperties') ||
+    expanded.includes('CSSPseudoSelector') ||
+    expanded.includes('CSSSelectorObject') ||
+    expanded.includes(' & ') ||
+    expanded.length > 1000
+  ) {
+    const declarations = prop.getDeclarations() || [];
+    for (const decl of declarations) {
+      if (ts.isPropertySignature(decl) && decl.type) {
+        return decl.type.getText();
+      }
+    }
+  }
+
+  return expanded;
 }

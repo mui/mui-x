@@ -2,7 +2,15 @@
   "name": "GridCsvExportApi",
   "description": "The CSV export API interface that is available in the grid [[apiRef]].",
   "properties": {
-    "getDataAsCsv": { "type": { "description": "(options?: GridCsvExportOptions) =&gt; string" } },
-    "exportDataAsCsv": { "type": { "description": "(options?: GridCsvExportOptions) =&gt; void" } }
+    "getDataAsCsv": {
+      "type": {
+        "description": "(options?: { delimiter?: string, fileName?: string, utf8WithBom?: boolean, includeHeaders?: boolean, includeColumnGroupsHeaders?: boolean, getRowsToExport?: (params: { apiRef: RefObject&lt;GridApiCommunity&gt; }) =&gt; GridRowId[], shouldAppendQuotes?: boolean, escapeFormulas?: boolean, fields?: string[], allColumns?: boolean }) =&gt; string"
+      }
+    },
+    "exportDataAsCsv": {
+      "type": {
+        "description": "(options?: { delimiter?: string, fileName?: string, utf8WithBom?: boolean, includeHeaders?: boolean, includeColumnGroupsHeaders?: boolean, getRowsToExport?: (params: { apiRef: RefObject&lt;GridApiCommunity&gt; }) =&gt; GridRowId[], shouldAppendQuotes?: boolean, escapeFormulas?: boolean, fields?: string[], allColumns?: boolean }) =&gt; void"
+      }
+    }
   }
 }

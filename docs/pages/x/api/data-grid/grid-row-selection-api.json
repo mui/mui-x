@@ -4,15 +4,17 @@
   "properties": {
     "selectRow": {
       "type": {
-        "description": "(id: GridRowId, isSelected?: boolean, resetSelection?: boolean) =&gt; void"
+        "description": "(id: string | number, isSelected?: boolean, resetSelection?: boolean) =&gt; void"
       }
     },
-    "isRowSelected": { "type": { "description": "(id: GridRowId) =&gt; boolean" } },
-    "isRowSelectable": { "type": { "description": "(id: GridRowId) =&gt; boolean" } },
-    "getSelectedRows": { "type": { "description": "() =&gt; Map&lt;GridRowId, GridRowModel&gt;" } },
+    "isRowSelected": { "type": { "description": "(id: string | number) =&gt; boolean" } },
+    "isRowSelectable": { "type": { "description": "(id: string | number) =&gt; boolean" } },
+    "getSelectedRows": {
+      "type": { "description": "() =&gt; Map&lt;GridRowId, GridValidRowModel&gt;" }
+    },
     "setRowSelectionModel": {
       "type": {
-        "description": "(rowSelectionModel: GridRowSelectionModel, reason?: \"singleRowSelection\" | \"multipleRowsSelection\" | undefined) =&gt; void"
+        "description": "(rowSelectionModel: { type: \"include\" | \"exclude\", ids: Set&lt;GridRowId&gt; }, reason?: \"singleRowSelection\" | \"multipleRowsSelection\") =&gt; void"
       }
     }
   }

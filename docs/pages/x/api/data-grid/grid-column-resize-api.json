@@ -3,7 +3,9 @@
   "description": "The Resize API interface that is available in the grid `apiRef`.",
   "properties": {
     "autosizeColumns": {
-      "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" }
+      "type": {
+        "description": "(options?: { columns?: string[], includeHeaders?: boolean, includeHeaderFilters?: boolean, includeOutliers?: boolean, outliersFactor?: number, expand?: boolean, disableColumnVirtualization?: boolean }) =&gt; Promise&lt;void&gt;"
+      }
     }
   }
 }

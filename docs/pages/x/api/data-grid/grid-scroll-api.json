@@ -2,10 +2,18 @@
   "name": "GridScrollApi",
   "description": "The scroll API interface that is available in the grid [[apiRef]].",
   "properties": {
-    "scroll": { "type": { "description": "(params: Partial&lt;GridScrollParams&gt;) =&gt; void" } },
-    "getScrollPosition": { "type": { "description": "() =&gt; GridScrollParams" } },
+    "scroll": {
+      "type": {
+        "description": "(params: { left?: number, top?: number, renderContext?: { firstRowIndex: number, lastRowIndex: number, firstColumnIndex: number, lastColumnIndex: number } }) =&gt; void"
+      }
+    },
+    "getScrollPosition": {
+      "type": {
+        "description": "() =&gt; { left: number, top: number, renderContext?: { firstRowIndex: number, lastRowIndex: number, firstColumnIndex: number, lastColumnIndex: number } }"
+      }
+    },
     "scrollToIndexes": {
-      "type": { "description": "(params: Partial&lt;GridCellIndexCoordinates&gt;) =&gt; boolean" }
+      "type": { "description": "(params: { colIndex?: number, rowIndex?: number }) =&gt; boolean" }
     }
   }
 }

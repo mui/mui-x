@@ -3,15 +3,17 @@
   "description": "The column pinning API interface that is available in the grid [[apiRef]].",
   "properties": {
     "pinColumn": {
-      "type": { "description": "(field: string, side: GridPinnedColumnPosition) =&gt; void" }
+      "type": { "description": "(field: string, side: \"left\" | \"right\") =&gt; void" }
     },
     "unpinColumn": { "type": { "description": "(field: string) =&gt; void" } },
-    "getPinnedColumns": { "type": { "description": "() =&gt; GridPinnedColumnFields" } },
+    "getPinnedColumns": {
+      "type": { "description": "() =&gt; { left?: string[], right?: string[] }" }
+    },
     "setPinnedColumns": {
-      "type": { "description": "(pinnedColumns: GridPinnedColumnFields) =&gt; void" }
+      "type": { "description": "(pinnedColumns: { left?: string[], right?: string[] }) =&gt; void" }
     },
     "isColumnPinned": {
-      "type": { "description": "(field: string) =&gt; false | GridPinnedColumnPosition" }
+      "type": { "description": "(field: string) =&gt; boolean | \"left\" | \"right\"" }
     }
   }
 }

@@ -13,11 +13,13 @@
     "fields": { "type": { "description": "string[]" } },
     "fileName": { "type": { "description": "string" }, "default": "The title of the page." },
     "getRowsToExport": {
-      "type": { "description": "(params: GridPrintGetRowsToExportParams) =&gt; GridRowId[]" }
+      "type": {
+        "description": "(params: { apiRef: RefObject&lt;GridApiCommunity&gt; }) =&gt; GridRowId[]"
+      }
     },
     "hideFooter": { "type": { "description": "boolean" }, "default": "false" },
     "hideToolbar": { "type": { "description": "boolean" }, "default": "false" },
     "includeCheckboxes": { "type": { "description": "boolean" }, "default": "false" },
-    "pageStyle": { "type": { "description": "string | (() =&gt; string)" } }
+    "pageStyle": { "type": { "description": "string | () =&gt; string" } }
   }
 }

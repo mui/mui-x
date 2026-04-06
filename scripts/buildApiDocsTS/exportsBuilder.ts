@@ -7,7 +7,10 @@ import * as path from 'path';
 import { CWD } from './config';
 import type { FileWrite } from './types';
 
-export function buildExportsDocumentation(checker: ts.TypeChecker, program: ts.Program): FileWrite[] {
+export function buildExportsDocumentation(
+  checker: ts.TypeChecker,
+  program: ts.Program,
+): FileWrite[] {
   const files: FileWrite[] = [];
   const packages = [
     'x-license',

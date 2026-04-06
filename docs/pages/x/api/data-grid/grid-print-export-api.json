@@ -3,7 +3,9 @@
   "description": "The Print export API interface that is available in the grid [[apiRef]].",
   "properties": {
     "exportDataAsPrint": {
-      "type": { "description": "(options?: GridPrintExportOptions) =&gt; void" }
+      "type": {
+        "description": "(options?: { fileName?: string, hideToolbar?: boolean, hideFooter?: boolean, includeCheckboxes?: boolean, copyStyles?: boolean, bodyClassName?: string, pageStyle?: string | () =&gt; string, getRowsToExport?: (params: { apiRef: RefObject&lt;GridApiCommunity&gt; }) =&gt; GridRowId[], fields?: string[], allColumns?: boolean }) =&gt; void"
+      }
     }
   }
 }

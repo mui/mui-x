@@ -13,7 +13,9 @@
     "type": { "type": { "description": "\"funnel\"" }, "required": true, "isProPlan": true },
     "borderRadius": { "type": { "description": "number" }, "default": "8", "isProPlan": true },
     "curve": {
-      "type": { "description": "FunnelCurveType" },
+      "type": {
+        "description": "\"step\" | \"linear\" | \"linear-sharp\" | \"bump\" | \"pyramid\" | \"step-pyramid\""
+      },
       "default": "'linear'",
       "isProPlan": true
     },
@@ -22,13 +24,21 @@
       "default": "'auto'",
       "isProPlan": true
     },
-    "highlightScope": { "type": { "description": "CommonHighlightScope" } },
+    "highlightScope": {
+      "type": {
+        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
+      }
+    },
     "id": { "type": { "description": "string" } },
     "label": {
-      "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" },
+      "type": { "description": "string | (location: \"legend\" | \"tooltip\") =&gt; string" },
       "isProPlan": true
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
+    "labelMarkType": {
+      "type": {
+        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+      }
+    },
     "layout": {
       "type": { "description": "\"horizontal\" | \"vertical\"" },
       "default": "'vertical'",
@@ -36,18 +46,22 @@
     },
     "sectionLabel": {
       "type": {
-        "description": "false | FunnelLabelOptions | ((item: FunnelItem) =&gt; false | FunnelLabelOptions)"
+        "description": "boolean | { position?: { vertical?: \"bottom\" | \"top\" | \"middle\", horizontal?: \"center\" | \"start\" | \"end\" }, textAnchor?: \"start\" | \"end\" | \"middle\", dominantBaseline?: \"auto\" | \"baseline\" | \"hanging\" | \"middle\" | \"text-before-edge\" | \"central\" | \"text-after-edge\", offset?: number | { x?: number, y?: number } } | (item: { seriesId: string, dataIndex: number, value: number }) =&gt; boolean | { position?: { vertical?: \"bottom\" | \"top\" | \"middle\", horizontal?: \"center\" | \"start\" | \"end\" }, textAnchor?: \"start\" | \"end\" | \"middle\", dominantBaseline?: \"auto\" | \"baseline\" | \"hanging\" | \"middle\" | \"text-before-edge\" | \"central\" | \"text-after-edge\", offset?: number | { x?: number, y?: number } }"
       },
       "default": "{ vertical: 'middle', horizontal: 'center' }",
       "isProPlan": true
     },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;FunnelValueType&gt;" } },
+    "valueFormatter": {
+      "type": {
+        "description": "(value: { id?: string | number, value: number, label?: string | (location: \"legend\" | \"section\" | \"tooltip\") =&gt; string, color?: string, labelMarkType?: \"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt; }, context: { dataIndex: number }) =&gt; string"
+      }
+    },
     "variant": {
       "type": { "description": "\"filled\" | \"outlined\"" },
       "default": "'filled'",
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "AxisId" } },
-    "yAxisId": { "type": { "description": "AxisId" } }
+    "xAxisId": { "type": { "description": "string | number" } },
+    "yAxisId": { "type": { "description": "string | number" } }
   }
 }

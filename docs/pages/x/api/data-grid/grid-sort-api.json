@@ -7,11 +7,11 @@
     "setSortModel": { "type": { "description": "(model: GridSortModel) =&gt; void" } },
     "sortColumn": {
       "type": {
-        "description": "(field: string, direction?: GridSortDirection, allowMultipleSorting?: boolean | undefined) =&gt; void"
+        "description": "(field: string, direction?: \"asc\" | \"desc\", allowMultipleSorting?: boolean) =&gt; void"
       }
     },
-    "getSortedRows": { "type": { "description": "() =&gt; GridRowModel[]" } },
+    "getSortedRows": { "type": { "description": "() =&gt; GridValidRowModel[]" } },
     "getSortedRowIds": { "type": { "description": "() =&gt; GridRowId[]" } },
-    "getRowIdFromRowIndex": { "type": { "description": "(index: number) =&gt; GridRowId" } }
+    "getRowIdFromRowIndex": { "type": { "description": "(index: number) =&gt; string | number" } }
   }
 }

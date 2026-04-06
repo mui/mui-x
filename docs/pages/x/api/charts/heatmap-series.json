@@ -8,20 +8,28 @@
     "type": { "type": { "description": "\"heatmap\"" }, "required": true, "isProPlan": true },
     "data": { "type": { "description": "readonly HeatmapValueType[]" }, "isProPlan": true },
     "dataKey": { "type": { "description": "string" }, "isProPlan": true },
-    "highlightScope": { "type": { "description": "CommonHighlightScope" } },
+    "highlightScope": {
+      "type": {
+        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
+      }
+    },
     "id": { "type": { "description": "string" } },
     "label": {
-      "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" },
+      "type": { "description": "string | (location: \"legend\" | \"tooltip\") =&gt; string" },
       "isProPlan": true
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
+    "labelMarkType": {
+      "type": {
+        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+      }
+    },
     "valueFormatter": {
       "type": {
-        "description": "(value: number | null, context: { xIndex: number; yIndex: number; }) =&gt; string | null"
+        "description": "(value: number, context: { xIndex: number, yIndex: number }) =&gt; string"
       },
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "AxisId" } },
-    "yAxisId": { "type": { "description": "AxisId" } }
+    "xAxisId": { "type": { "description": "string | number" } },
+    "yAxisId": { "type": { "description": "string | number" } }
   }
 }

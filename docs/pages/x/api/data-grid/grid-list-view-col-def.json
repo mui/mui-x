@@ -8,12 +8,16 @@
   "demos": "  - [List view](/x/react-data-grid/list-view/)",
   "properties": {
     "field": { "type": { "description": "string" }, "required": true },
-    "align": { "type": { "description": "GridAlignment" } },
-    "cellClassName": { "type": { "description": "string | GridCellClassFn&lt;R, V&gt;" } },
+    "align": { "type": { "description": "\"left\" | \"right\" | \"center\"" } },
+    "cellClassName": {
+      "type": {
+        "description": "string | (params: GridCellParams&lt;R, V, V, GridTreeNode&gt;) =&gt; string"
+      }
+    },
     "display": { "type": { "description": "\"flex\" | \"text\"" } },
     "renderCell": {
       "type": {
-        "description": "(params: GridRenderCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; ReactNode"
+        "description": "(params: GridRenderCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; string | number | bigint | boolean | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | Iterable&lt;ReactNode&gt; | ReactPortal | Promise&lt;AwaitedReactNode&gt;"
       }
     }
   }

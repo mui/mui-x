@@ -3,29 +3,41 @@
   "description": "The editing API interface that is available in the grid `apiRef`.",
   "properties": {
     "getCellMode": {
-      "type": { "description": "(id: GridRowId, field: string) =&gt; GridCellMode" }
+      "type": { "description": "(id: string | number, field: string) =&gt; \"view\" | \"edit\"" }
     },
     "startCellEditMode": {
-      "type": { "description": "(params: GridStartCellEditModeParams) =&gt; void" }
+      "type": {
+        "description": "(params: { id: string | number, field: string, deleteValue?: boolean, initialValue?: any }) =&gt; void"
+      }
     },
     "stopCellEditMode": {
-      "type": { "description": "(params: GridStopCellEditModeParams) =&gt; void" }
+      "type": {
+        "description": "(params: { id: string | number, field: string, ignoreModifications?: boolean, cellToFocusAfter?: \"left\" | \"right\" | \"none\" | \"below\" }) =&gt; void"
+      }
     },
-    "isCellEditable": { "type": { "description": "(params: GridCellParams) =&gt; boolean" } },
+    "isCellEditable": {
+      "type": {
+        "description": "(params: GridCellParams&lt;any, unknown, unknown, GridTreeNode&gt;) =&gt; boolean"
+      }
+    },
     "setEditCellValue": {
       "type": {
-        "description": "(params: GridEditCellValueParams, event?: MuiBaseEvent | undefined) =&gt; void | Promise&lt;boolean&gt;"
+        "description": "(params: { id: string | number, field: string, value: any, debounceMs?: number, unstable_skipValueParser?: boolean }, event?: {} | SyntheticEvent&lt;HTMLElement, Event&gt; | ErrorEvent | Event | UIEvent | AnimationEvent | PointerEvent | MouseEvent | InputEvent | ToggleEvent | FocusEvent | CompositionEvent | ClipboardEvent | DragEvent | FormDataEvent | KeyboardEvent | ProgressEvent&lt;EventTarget&gt; | SecurityPolicyViolationEvent | SubmitEvent | TouchEvent | TransitionEvent | WheelEvent) =&gt; void | Promise&lt;boolean&gt;"
       }
     },
     "getRowWithUpdatedValues": {
-      "type": { "description": "(id: GridRowId, field: string) =&gt; GridRowModel" }
+      "type": { "description": "(id: string | number, field: string) =&gt; GridValidRowModel" }
     },
-    "getRowMode": { "type": { "description": "(id: GridRowId) =&gt; GridRowMode" } },
+    "getRowMode": { "type": { "description": "(id: string | number) =&gt; \"view\" | \"edit\"" } },
     "startRowEditMode": {
-      "type": { "description": "(params: GridStartRowEditModeParams) =&gt; void" }
+      "type": {
+        "description": "(params: { id: string | number, fieldToFocus?: string, deleteValue?: boolean, initialValue?: string }) =&gt; void"
+      }
     },
     "stopRowEditMode": {
-      "type": { "description": "(params: GridStopRowEditModeParams) =&gt; void" }
+      "type": {
+        "description": "(params: { id: string | number, ignoreModifications?: boolean, field?: string, cellToFocusAfter?: \"left\" | \"right\" | \"none\" | \"below\" }) =&gt; void"
+      }
     }
   }
 }

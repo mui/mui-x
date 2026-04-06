@@ -56,7 +56,8 @@ export function extractComponentApi(
   if (moduleSymbol) {
     const exports = checker.getExportsOfModule(moduleSymbol);
     const compSymbol = exports.find(
-      (exportSymbol) => exportSymbol.name === comp.name || exportSymbol.name === `Unstable_${comp.name}`,
+      (exportSymbol) =>
+        exportSymbol.name === comp.name || exportSymbol.name === `Unstable_${comp.name}`,
     );
     if (compSymbol) {
       componentDescription = ts.displayPartsToString(compSymbol.getDocumentationComment(checker));
@@ -305,7 +306,8 @@ export function findComponentPropsType(
 
   const exports = checker.getExportsOfModule(moduleSymbol);
   const compSymbol = exports.find(
-    (exportSymbol) => exportSymbol.name === componentName || exportSymbol.name === `Unstable_${componentName}`,
+    (exportSymbol) =>
+      exportSymbol.name === componentName || exportSymbol.name === `Unstable_${componentName}`,
   );
   if (!compSymbol) {
     return null;
@@ -384,11 +386,11 @@ export function extractSlots(
     const slot: SlotInfo = {
       name: prop.name,
       description: jsDoc.description,
+      class: null,
     };
     if (jsDoc.defaultValue) {
       slot.default = jsDoc.defaultValue;
     }
-    slot.class = null;
     slots.push(slot);
   }
 
@@ -595,9 +597,7 @@ export function extractPropTypesNames(filePath: string): Set<string> {
 
 export function hasIgnoreOnDefinition(sourceText: string, componentName: string): boolean {
   // Find the component definition (const X =, function X, export default function X, etc.)
-  const defPattern = new RegExp(
-    `(?:const|let|var|function)\\s+${componentName}\\b`,
-  );
+  const defPattern = new RegExp(`(?:const|let|var|function)\\s+${componentName}\\b`);
   const defMatch = defPattern.exec(sourceText);
   if (!defMatch) {
     return false;

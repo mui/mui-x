@@ -5,7 +5,7 @@
   "properties": {
     "apply": {
       "type": {
-        "description": "(params: GridAggregationParams&lt;V&gt;, api?: GridApiPremium | undefined) =&gt; AV | null | undefined"
+        "description": "(params: { values: (V | undefined)[], groupId: string | number, field: string }, api?: GridApiPremium) =&gt; AV"
       },
       "required": true,
       "isPremiumPlan": true
@@ -17,7 +17,7 @@
     },
     "columnTypes": { "type": { "description": "string[]" }, "isPremiumPlan": true },
     "getCellValue": {
-      "type": { "description": "(params: GridAggregationGetCellValueParams) =&gt; V" },
+      "type": { "description": "(params: { row: GridValidRowModel, field: string }) =&gt; V" },
       "isPremiumPlan": true
     },
     "hasCellUnit": {
@@ -30,6 +30,11 @@
       "default": "apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})",
       "isPremiumPlan": true
     },
-    "valueFormatter": { "type": { "description": "GridValueFormatter" }, "isPremiumPlan": true }
+    "valueFormatter": {
+      "type": {
+        "description": "(value: never, row: GridValidRowModel, column: GridBaseColDef&lt;GridValidRowModel, any, any&gt; | GridActionsColDef&lt;GridValidRowModel, any, any&gt; | GridSingleSelectColDef&lt;GridValidRowModel, any, any&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; any"
+      },
+      "isPremiumPlan": true
+    }
   }
 }

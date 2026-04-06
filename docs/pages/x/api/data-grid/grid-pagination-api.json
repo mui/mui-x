@@ -4,10 +4,12 @@
   "properties": {
     "setPage": { "type": { "description": "(page: number) =&gt; void" } },
     "setPageSize": { "type": { "description": "(pageSize: number) =&gt; void" } },
-    "setPaginationModel": { "type": { "description": "(model: GridPaginationModel) =&gt; void" } },
+    "setPaginationModel": {
+      "type": { "description": "(model: { pageSize: number, page: number }) =&gt; void" }
+    },
     "setRowCount": { "type": { "description": "(rowCount: number) =&gt; void" } },
     "setPaginationMeta": {
-      "type": { "description": "(paginationMeta: GridPaginationMeta) =&gt; void" }
+      "type": { "description": "(paginationMeta: { hasNextPage?: boolean }) =&gt; void" }
     }
   }
 }

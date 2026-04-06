@@ -10,28 +10,36 @@
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": {
-        "description": "(data: ColorCallbackValue&lt;ScatterValueType | null&gt;) =&gt; string"
+        "description": "(data: { value: { x: number, y: number, z?: any, id?: string | number }, dataIndex: number }) =&gt; string"
       }
     },
     "data": { "type": { "description": "readonly ScatterValueType[]" } },
     "datasetKeys": {
+      "type": { "description": "{ x: string, y: string, z?: string, id?: string }" }
+    },
+    "highlightScope": {
       "type": {
-        "description": "{\n    /**\n     * The key used to retrieve data from the dataset for the X axis.\n     */\n    x: string;\n    /**\n     * The key used to retrieve data from the dataset for the Y axis.\n     */\n    y: string;\n    /**\n     * The key used to retrieve data from the dataset for the Z axis.\n     */\n    z?: string;\n    /**\n     * The key used to retrieve data from the dataset for the id.\n     */\n    id?: string;\n  }"
+        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
       }
     },
-    "highlightScope": { "type": { "description": "CommonHighlightScope" } },
     "id": { "type": { "description": "string" } },
     "label": {
-      "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" }
+      "type": { "description": "string | (location: \"legend\" | \"tooltip\") =&gt; string" }
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
+    "labelMarkType": {
+      "type": {
+        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+      }
+    },
     "markerSize": { "type": { "description": "number" } },
-    "preview": { "type": { "description": "{ markerSize?: number | undefined; }" } },
+    "preview": { "type": { "description": "{ markerSize?: number }" } },
     "valueFormatter": {
-      "type": { "description": "SeriesValueFormatter&lt;ScatterValueType | null&gt;" }
+      "type": {
+        "description": "(value: { x: number, y: number, z?: any, id?: string | number }, context: { dataIndex: number }) =&gt; string"
+      }
     },
-    "xAxisId": { "type": { "description": "AxisId" } },
-    "yAxisId": { "type": { "description": "AxisId" } },
+    "xAxisId": { "type": { "description": "string | number" } },
+    "yAxisId": { "type": { "description": "string | number" } },
     "zAxisId": { "type": { "description": "string" } }
   }
 }

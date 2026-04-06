@@ -11,27 +11,60 @@
     "baseline": { "type": { "description": "number | \"max\" | \"min\"" }, "default": "0" },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": { "description": "(data: ColorCallbackValue&lt;number | null&gt;) =&gt; string" }
+      "type": { "description": "(data: { value: number, dataIndex: number }) =&gt; string" }
     },
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
-    "curve": { "type": { "description": "CurveType" }, "default": "'monotoneX'" },
+    "curve": {
+      "type": {
+        "description": "\"step\" | \"linear\" | \"catmullRom\" | \"monotoneX\" | \"monotoneY\" | \"natural\" | \"stepBefore\" | \"stepAfter\" | \"bumpY\" | \"bumpX\""
+      },
+      "default": "'monotoneX'"
+    },
     "data": { "type": { "description": "readonly (number | null)[]" } },
     "dataKey": { "type": { "description": "string" } },
     "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },
-    "highlightScope": { "type": { "description": "CommonHighlightScope" } },
+    "highlightScope": {
+      "type": {
+        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
+      }
+    },
     "id": { "type": { "description": "string" } },
     "label": {
-      "type": { "description": "string | ((location: \"legend\" | \"tooltip\") =&gt; string)" }
+      "type": { "description": "string | (location: \"legend\" | \"tooltip\") =&gt; string" }
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
-    "shape": { "type": { "description": "MarkShape" } },
-    "showMark": { "type": { "description": "boolean | ((params: ShowMarkParams) =&gt; boolean)" } },
+    "labelMarkType": {
+      "type": {
+        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+      }
+    },
+    "shape": {
+      "type": {
+        "description": "\"circle\" | \"square\" | \"cross\" | \"diamond\" | \"star\" | \"triangle\" | \"wye\""
+      }
+    },
+    "showMark": {
+      "type": {
+        "description": "boolean | (params: { index: number, x: number, y: number, position: number | Date, value: number }) =&gt; boolean"
+      }
+    },
     "stack": { "type": { "description": "string" } },
-    "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },
-    "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
+    "stackOffset": {
+      "type": {
+        "description": "\"none\" | \"expand\" | \"diverging\" | \"silhouette\" | \"wiggle\""
+      },
+      "default": "'none'"
+    },
+    "stackOrder": {
+      "type": {
+        "description": "\"appearance\" | \"none\" | \"reverse\" | \"ascending\" | \"descending\" | \"insideOut\""
+      },
+      "default": "'none'"
+    },
     "strictStepCurve": { "type": { "description": "boolean" } },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;number | null&gt;" } },
-    "xAxisId": { "type": { "description": "AxisId" } },
-    "yAxisId": { "type": { "description": "AxisId" } }
+    "valueFormatter": {
+      "type": { "description": "(value: number, context: { dataIndex: number }) =&gt; string" }
+    },
+    "xAxisId": { "type": { "description": "string | number" } },
+    "yAxisId": { "type": { "description": "string | number" } }
   }
 }

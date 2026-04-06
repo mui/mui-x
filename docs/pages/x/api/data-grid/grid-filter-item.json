@@ -10,7 +10,7 @@
     "field": { "type": { "description": "string" }, "required": true },
     "operator": {
       "type": {
-        "description": "(string & {}) | \"endsWith\" | \"startsWith\" | \"is\" | \"contains\" | \"doesNotContain\" | \"equals\" | \"doesNotEqual\" | \"=\" | \"!=\" | \"&gt;\" | \"&gt;=\" | \"&lt;\" | \"&lt;=\" | \"not\" | \"after\" | \"onOrAfter\" | \"before\" | \"onOrBefore\" | \"isEmpty\" | \"isNotEmpty\" | \"isAnyOf\""
+        "description": "| 'contains'\n    | 'doesNotContain'\n    | 'equals'\n    | 'doesNotEqual'\n    | 'startsWith'\n    | 'endsWith'\n    | '='\n    | '!='\n    | '&gt;'\n    | '&gt;='\n    | '&lt;'\n    | '&lt;='\n    | 'is'\n    | 'not'\n    | 'after'\n    | 'onOrAfter'\n    | 'before'\n    | 'onOrBefore'\n    | 'isEmpty'\n    | 'isNotEmpty'\n    | 'isAnyOf'\n    | (string & {})"
       },
       "required": true
     },

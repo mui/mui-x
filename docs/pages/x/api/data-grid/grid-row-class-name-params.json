@@ -8,7 +8,7 @@
   "demos": "  - [Styling rows](/x/react-data-grid/style/#styling-rows)",
   "properties": {
     "columns": { "type": { "description": "GridColDef[]" }, "required": true },
-    "id": { "type": { "description": "GridRowId" }, "required": true },
+    "id": { "type": { "description": "string | number" }, "required": true },
     "indexRelativeToCurrentPage": { "type": { "description": "number" }, "required": true },
     "isFirstVisible": { "type": { "description": "boolean" }, "required": true },
     "isLastVisible": { "type": { "description": "boolean" }, "required": true },

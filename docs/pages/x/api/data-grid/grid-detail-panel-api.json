@@ -2,7 +2,7 @@
   "name": "GridDetailPanelApi",
   "description": "The master/detail API interface that is available in the grid [[apiRef]].",
   "properties": {
-    "toggleDetailPanel": { "type": { "description": "(id: GridRowId) =&gt; void" } },
+    "toggleDetailPanel": { "type": { "description": "(id: string | number) =&gt; void" } },
     "getExpandedDetailPanels": { "type": { "description": "() =&gt; Set&lt;GridRowId&gt;" } },
     "setExpandedDetailPanels": {
       "type": { "description": "(ids: Set&lt;GridRowId&gt;) =&gt; void" }

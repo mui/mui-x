@@ -8,20 +8,22 @@
     "escapeFormulas": { "type": { "description": "boolean" }, "default": "true" },
     "exceljsPostProcess": {
       "type": {
-        "description": "(processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;"
+        "description": "(processInput: { workbook: Workbook, worksheet: Worksheet }) =&gt; Promise&lt;void&gt;"
       },
       "isPremiumPlan": true
     },
     "exceljsPreProcess": {
       "type": {
-        "description": "(processInput: GridExceljsProcessInput) =&gt; Promise&lt;void&gt;"
+        "description": "(processInput: { workbook: Workbook, worksheet: Worksheet }) =&gt; Promise&lt;void&gt;"
       },
       "isPremiumPlan": true
     },
     "fields": { "type": { "description": "string[]" } },
     "fileName": { "type": { "description": "string" }, "default": "document.title" },
     "getRowsToExport": {
-      "type": { "description": "(params: GridGetRowsToExportParams&lt;Api&gt;) =&gt; GridRowId[]" }
+      "type": {
+        "description": "(params: { apiRef: RefObject&lt;GridApiCommunity&gt; }) =&gt; GridRowId[]"
+      }
     },
     "includeColumnGroupsHeaders": {
       "type": { "description": "boolean" },

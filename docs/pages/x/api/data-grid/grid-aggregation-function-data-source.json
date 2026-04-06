@@ -19,6 +19,11 @@
       "default": "apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})",
       "isPremiumPlan": true
     },
-    "valueFormatter": { "type": { "description": "GridValueFormatter" }, "isPremiumPlan": true }
+    "valueFormatter": {
+      "type": {
+        "description": "(value: never, row: GridValidRowModel, column: GridBaseColDef&lt;GridValidRowModel, any, any&gt; | GridActionsColDef&lt;GridValidRowModel, any, any&gt; | GridSingleSelectColDef&lt;GridValidRowModel, any, any&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; any"
+      },
+      "isPremiumPlan": true
+    }
   }
 }

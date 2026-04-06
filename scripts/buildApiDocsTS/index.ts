@@ -10,12 +10,22 @@ import * as path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { createTSProgram } from './createProgram';
-import { CWD, getPackageConfigs, getInterfacesToDocument, getJsonOnlyInterfaces, debug } from './config';
+import {
+  CWD,
+  getPackageConfigs,
+  getInterfacesToDocument,
+  getJsonOnlyInterfaces,
+  debug,
+} from './config';
 import { discoverComponents } from './componentDiscovery';
 import { loadDemos } from './demoLoader';
 import { extractComponentApi } from './componentExtractor';
 import { generateComponentFiles, generateManifest } from './outputGenerator';
-import { buildInterfacePages, buildJsonOnlyInterfaces, linkifyTranslations } from './interfaceBuilder';
+import {
+  buildInterfacePages,
+  buildJsonOnlyInterfaces,
+  linkifyTranslations,
+} from './interfaceBuilder';
 import { buildGridEventsDocumentation } from './gridEventsBuilder';
 import { buildGridSelectorsDocumentation } from './gridSelectorsBuilder';
 import { buildExportsDocumentation } from './exportsBuilder';

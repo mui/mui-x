@@ -6,7 +6,7 @@
     "import { AxisConfig } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "id": { "type": { "description": "AxisId" }, "required": true },
+    "id": { "type": { "description": "string | number" }, "required": true },
     "scaleType": {
       "type": {
         "description": "\"time\" | \"log\" | \"band\" | \"point\" | \"symlog\" | \"pow\" | \"sqrt\" | \"utc\" | \"linear\""
@@ -16,7 +16,9 @@
     "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
     "className": { "type": { "description": "string" } },
     "colorMap": {
-      "type": { "description": "ContinuousColorConfig | PiecewiseColorConfig | OrdinalColorConfig" }
+      "type": {
+        "description": "{ type: \"continuous\", min?: number | Date, max?: number | Date, color: readonly [string, string] | (t: number) =&gt; string } | { type: \"piecewise\", thresholds: (number | Date)[], colors: string[] } | { type: \"ordinal\", values?: readonly (string | number | Date)[], colors: string[], unknownColor?: string }"
+      }
     },
     "data": { "type": { "description": "readonly V[]" } },
     "dataKey": { "type": { "description": "string" } },
@@ -24,7 +26,7 @@
     "disableTicks": { "type": { "description": "boolean" }, "default": "false" },
     "domainLimit": {
       "type": {
-        "description": "\"nice\" | \"strict\" | ((min: NumberValue, max: NumberValue) =&gt; { min: NumberValue; max: NumberValue; })"
+        "description": "\"nice\" | \"strict\" | (min: number | { valueOf: () =&gt; number }, max: number | { valueOf: () =&gt; number }) =&gt; { min: number | { valueOf: () =&gt; number }, max: number | { valueOf: () =&gt; number } }"
       }
     },
     "height": {
@@ -39,7 +41,9 @@
     "position": { "type": { "description": "\"bottom\" | \"top\" | \"none\"" } },
     "reverse": { "type": { "description": "boolean" } },
     "slotProps": {
-      "type": { "description": "Partial&lt;ChartsAxisSlotProps&gt;" },
+      "type": {
+        "description": "{ axisLine?: Partial&lt;SVGAttributes&lt;SVGPathElement&gt;&gt;, axisTick?: Partial&lt;SVGAttributes&lt;SVGPathElement&gt;&gt;, axisTickLabel?: Partial&lt;ChartsTextProps&gt;, axisLabel?: Partial&lt;ChartsTextProps&gt;, xAxis?: Partial&lt;ChartsXAxisProps&gt;, yAxis?: Partial&lt;ChartsYAxisProps&gt; }"
+      },
       "default": "{}"
     },
     "slots": { "type": { "description": "Partial&lt;ChartsAxisSlots&gt;" }, "default": "{}" },
@@ -49,7 +53,7 @@
       "default": "'auto'"
     },
     "tickLabelInterval": {
-      "type": { "description": "\"auto\" | ((value: any, index: number) =&gt; boolean)" },
+      "type": { "description": "\"auto\" | (value: any, index: number) =&gt; boolean" },
       "default": "'auto'"
     },
     "tickLabelPlacement": {
@@ -68,9 +72,14 @@
     "tickSpacing": { "type": { "description": "number" }, "default": "0" },
     "valueFormatter": {
       "type": {
-        "description": "&lt;TScaleName extends S&gt;(value: V, context: AxisValueFormatterContext&lt;TScaleName&gt;) =&gt; string"
+        "description": "(value: V, context: { location: \"legend\" } | { location: \"tooltip\" | \"zoom-slider-tooltip\", scale: (value: number | { valueOf: () =&gt; number } | Date) =&gt; number } | { location: \"tick\", scale: (value: number | { valueOf: () =&gt; number } | Date) =&gt; number, defaultTickLabel: string, tickNumber?: number }) =&gt; string"
       }
     },
-    "zoom": { "type": { "description": "boolean | ZoomOptions" }, "isProPlan": true }
+    "zoom": {
+      "type": {
+        "description": "boolean | { minStart?: number, maxEnd?: number, step?: number, minSpan?: number, maxSpan?: number, panning?: boolean, filterMode?: \"keep\" | \"discard\", slider?: { enabled?: boolean, size?: number, showTooltip?: \"always\" | \"hover\" | \"never\", preview?: boolean | { seriesIds?: string[] } } }"
+      },
+      "isProPlan": true
+    }
   }
 }

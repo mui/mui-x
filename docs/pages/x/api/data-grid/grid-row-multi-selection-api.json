@@ -9,12 +9,12 @@
     },
     "selectRowRange": {
       "type": {
-        "description": "(\n    range: { startId: GridRowId; endId: GridRowId },\n    isSelected?: boolean,\n    resetSelection?: boolean,\n  ) =&gt; void"
+        "description": "(range: { startId: string | number, endId: string | number }, isSelected?: boolean, resetSelection?: boolean) =&gt; void"
       }
     },
     "getPropagatedRowSelectionModel": {
       "type": {
-        "description": "(inputSelectionModel: GridRowSelectionModel) =&gt; GridRowSelectionModel"
+        "description": "(inputSelectionModel: { type: \"include\" | \"exclude\", ids: Set&lt;GridRowId&gt; }) =&gt; { type: \"include\" | \"exclude\", ids: Set&lt;GridRowId&gt; }"
       }
     }
   }

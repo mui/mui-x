@@ -2,14 +2,16 @@
   "name": "GridCellSelectionApi",
   "description": "The cell selection API interface that is available in the grid [[apiRef]].",
   "properties": {
-    "isCellSelected": { "type": { "description": "(id: GridRowId, field: string) =&gt; boolean" } },
+    "isCellSelected": {
+      "type": { "description": "(id: string | number, field: string) =&gt; boolean" }
+    },
     "getCellSelectionModel": { "type": { "description": "() =&gt; GridCellSelectionModel" } },
     "setCellSelectionModel": {
       "type": { "description": "(newModel: GridCellSelectionModel) =&gt; void" }
     },
     "selectCellRange": {
       "type": {
-        "description": "(start: GridCellCoordinates, end: GridCellCoordinates, keepOtherSelected?: boolean | undefined) =&gt; void"
+        "description": "(start: { id: string | number, field: string }, end: { id: string | number, field: string }, keepOtherSelected?: boolean) =&gt; void"
       }
     },
     "getSelectedCellsAsArray": { "type": { "description": "() =&gt; GridCellCoordinates[]" } }
