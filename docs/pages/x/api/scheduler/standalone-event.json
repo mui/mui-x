@@ -16,7 +16,8 @@
   "name": "StandaloneEvent",
   "imports": [
     "import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';",
-    "import { StandaloneEvent } from '@mui/x-scheduler';"
+    "import { StandaloneEvent } from '@mui/x-scheduler';",
+    "import { StandaloneEvent } from '@mui/x-scheduler-premium';"
   ],
   "classes": [],
   "spread": true,

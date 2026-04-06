@@ -97,7 +97,8 @@
   "name": "StandaloneWeekView",
   "imports": [
     "import { StandaloneWeekView } from '@mui/x-scheduler/week-view';",
-    "import { StandaloneWeekView } from '@mui/x-scheduler';"
+    "import { StandaloneWeekView } from '@mui/x-scheduler';",
+    "import { StandaloneWeekView } from '@mui/x-scheduler-premium';"
   ],
   "classes": [],
   "spread": true,
