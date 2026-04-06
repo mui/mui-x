@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProgressIndicator, ProgressRoot, ProgressTrack } from './ProgressSlots';
 import { ScrollRoot, ScrollScrollbar, ScrollThumb, ScrollViewport } from './ScrollAreaSlots';
 
@@ -73,6 +73,22 @@ describe('ProgressSlots', () => {
 });
 
 describe('ScrollAreaSlots', () => {
+  // Base UI's ScrollArea performs internal state updates on mount that trigger
+  // React "not wrapped in act()" warnings in JSDOM.
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  beforeEach(() => {
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation((...args: any[]) => {
+      if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) {
+        return;
+      }
+      // eslint-disable-next-line no-console
+      console.info(...args);
+    });
+  });
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
   it('ScrollRoot strips ownerState and forwards ref', () => {
     const ref = React.createRef<HTMLDivElement>();
 
@@ -112,7 +128,11 @@ describe('ScrollAreaSlots', () => {
         <AnyScrollViewport>
           <div>Content</div>
         </AnyScrollViewport>
-        <AnyScrollScrollbar data-testid="scroll-scrollbar" ownerState={{ foo: 'bar' }} />
+        <AnyScrollScrollbar
+          data-testid="scroll-scrollbar"
+          keepMounted
+          ownerState={{ foo: 'bar' }}
+        />
       </AnyScrollRoot>,
     );
 
@@ -128,7 +148,7 @@ describe('ScrollAreaSlots', () => {
         <AnyScrollViewport>
           <div>Content</div>
         </AnyScrollViewport>
-        <AnyScrollScrollbar>
+        <AnyScrollScrollbar keepMounted>
           <AnyScrollThumb data-testid="scroll-thumb" ownerState={{ foo: 'bar' }} />
         </AnyScrollScrollbar>
       </AnyScrollRoot>,

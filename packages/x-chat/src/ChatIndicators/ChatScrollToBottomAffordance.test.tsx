@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatRoot, MessageListRoot } from '@mui/x-chat-headless';
 import { ChatScrollToBottomAffordance } from './ChatScrollToBottomAffordance';
@@ -23,6 +23,22 @@ function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
 }
 
 describe('ChatScrollToBottomAffordance', () => {
+  // Base UI's ScrollArea performs internal state updates on mount that trigger
+  // React "not wrapped in act()" warnings in JSDOM.
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  beforeEach(() => {
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation((...args: any[]) => {
+      if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) {
+        return;
+      }
+      // eslint-disable-next-line no-console
+      console.info(...args);
+    });
+  });
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
   it('renders without crashing inside a message list overlay', () => {
     render(
       <ChatRoot adapter={createAdapter()}>

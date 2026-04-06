@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters/chatAdapter';
 import { useChat } from '../hooks/useChat';
 import { ChatLayout } from '../chat/ChatLayout';
@@ -156,6 +156,22 @@ function CustomItemAvatar(props: ConversationListItemAvatarProps) {
 }
 
 describe('ConversationListRoot', () => {
+  // Base UI's ScrollArea performs internal state updates on mount that trigger
+  // React "not wrapped in act()" warnings in JSDOM.
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  beforeEach(() => {
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation((...args: any[]) => {
+      if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) {
+        return;
+      }
+      // eslint-disable-next-line no-console
+      console.info(...args);
+    });
+  });
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
   it('renders conversations from chat state and marks the active one as selected', () => {
     render(
       <ChatRoot

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters/chatAdapter';
 import { useChat } from '../hooks/useChat';
 import { ChatLayout } from '../chat/ChatLayout';
@@ -279,26 +279,46 @@ describe('ConversationRoot', () => {
     expect(screen.getByTestId('thread-subtitle')).to.have.text('');
   });
 
-  it('is recognized by ChatLayout as the thread pane', () => {
-    render(
-      <ChatRoot
-        adapter={createAdapter()}
-        initialActiveConversationId="c1"
-        initialConversations={[{ id: 'c1', title: 'Alpha conversation' }]}
-      >
-        <ChatLayout data-testid="layout-root">
-          <ConversationRoot data-testid="thread-root">
-            <ConversationTitle />
-          </ConversationRoot>
-          <ConversationListRoot data-testid="conversation-list" />
-        </ChatLayout>
-      </ChatRoot>,
-    );
+  // Nested describe so the console.error mock is cleaned up in afterEach,
+  // which runs before vitest-fail-on-console's afterEach check.
+  describe('with ConversationListRoot (ScrollArea)', () => {
+    // Base UI's ScrollArea performs internal state updates on mount that trigger
+    // React "not wrapped in act()" warnings in JSDOM.
+    let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+    beforeEach(() => {
+      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation((...args: any[]) => {
+        if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) {
+          return;
+        }
+        // eslint-disable-next-line no-console
+        console.info(...args);
+      });
+    });
+    afterEach(() => {
+      consoleErrorSpy.mockRestore();
+    });
 
-    const root = screen.getByTestId('layout-root');
+    it('is recognized by ChatLayout as the thread pane', () => {
+      render(
+        <ChatRoot
+          adapter={createAdapter()}
+          initialActiveConversationId="c1"
+          initialConversations={[{ id: 'c1', title: 'Alpha conversation' }]}
+        >
+          <ChatLayout data-testid="layout-root">
+            <ConversationRoot data-testid="thread-root">
+              <ConversationTitle />
+            </ConversationRoot>
+            <ConversationListRoot data-testid="conversation-list" />
+          </ChatLayout>
+        </ChatRoot>,
+      );
 
-    expect(root.children).to.have.length(2);
-    expect(root.children[0]).to.contain(screen.getByTestId('conversation-list'));
-    expect(root.children[1]).to.contain(screen.getByTestId('thread-root'));
+      const root = screen.getByTestId('layout-root');
+
+      expect(root.children).to.have.length(2);
+      expect(root.children[0]).to.contain(screen.getByTestId('conversation-list'));
+      expect(root.children[1]).to.contain(screen.getByTestId('thread-root'));
+    });
   });
 });

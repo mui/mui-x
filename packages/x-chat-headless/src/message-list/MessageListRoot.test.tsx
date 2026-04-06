@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters/chatAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import { ChatRoot } from '../chat/ChatRoot';
@@ -230,6 +230,22 @@ function ControlledMessageList(props: { slots?: MessageListRootProps['slots'] })
 }
 
 describe('MessageListRoot', () => {
+  // Base UI's ScrollArea performs internal state updates on mount that trigger
+  // React "not wrapped in act()" warnings in JSDOM.
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  beforeEach(() => {
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation((...args: any[]) => {
+      if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) {
+        return;
+      }
+      // eslint-disable-next-line no-console
+      console.info(...args);
+    });
+  });
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
   it('defaults items from useMessageIds when no items prop is provided', () => {
     render(
       <ChatRoot
