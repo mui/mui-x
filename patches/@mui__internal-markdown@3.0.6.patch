@@ -12,6 +12,7 @@ index 5a68a3fb78e23ddb98a87750acd0ecd94be77171..1f979e818da87ad9681a0b43ef74940c
        : path.join(this.rootContext, 'src', componentName).replace(/\\/g, '/');
 
 diff --git a/prepareMarkdown.mjs b/prepareMarkdown.mjs
+index 2b2118bac260a00b8b33681a8a1c9dfda10dccd7..f5e34251b84db61848498f186cf8d2d7d1c565f0 100644
 --- a/prepareMarkdown.mjs
 +++ b/prepareMarkdown.mjs
 @@ -44,6 +44,9 @@ function resolveComponentApiUrl(productId, componentPkg, component) {
@@ -22,3 +23,5 @@ diff --git a/prepareMarkdown.mjs b/prepareMarkdown.mjs
 +    return `/x/api/chat/${kebabCase(component)}/`;
 +  }
    if (componentPkg === 'mui-base' || BaseUIReexportedComponents.includes(component)) {
+     return `/base-ui/react-${kebabCase(component)}/components-api/#${kebabCase(component)}`;
+   }
