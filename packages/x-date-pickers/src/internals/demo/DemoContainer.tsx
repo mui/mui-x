@@ -63,22 +63,20 @@ const getSupportedSectionFromChildName = (childName: string): PickersSupportedSe
 interface DemoItemProps extends Omit<StackProps, 'component'> {
   label?: React.ReactNode;
   component?: string;
-  alignItems?: React.CSSProperties['alignItems'];
 }
 /**
  * WARNING: This is an internal component used in documentation to achieve a desired layout.
  * Please do not use it in your application.
  */
 export function DemoItem(props: DemoItemProps) {
-  const { label, children, component, sx: sxProp, alignItems = 'stretch' } = props;
+  const { label, children, component, sx: sxProp } = props;
 
   let spacing: StackProps['spacing'];
-  let sx = sxProp;
+  let sx: SxProps<Theme> = {};
 
   if (component && getChildTypeFromChildName(component) === 'multi-input-range-field') {
     spacing = 1.5;
     sx = {
-      ...sx,
       [`& .${textFieldClasses.root}`]: {
         flexGrow: 1,
       },
@@ -91,7 +89,7 @@ export function DemoItem(props: DemoItemProps) {
     <Stack
       direction="column"
       spacing={spacing}
-      sx={[{ alignItems }, ...(Array.isArray(sx) ? sx : [sx])]}
+      sx={[...(Array.isArray(sxProp) ? sxProp : [sxProp]), sx]}
     >
       {label && <Typography variant="body2">{label}</Typography>}
       {children}
@@ -203,7 +201,12 @@ export function DemoContainer(props: DemoGridProps) {
         if (React.isValidElement(child) && isDemoItem(child)) {
           // Inject sx styles to the `DemoItem` if it is a direct child of `DemoContainer`.
           // @ts-ignore
-          return React.cloneElement(child, { sx: { ...extraSx, ...demoItemSx } });
+          return React.cloneElement(child, {
+            sx: [
+              { ...extraSx, ...demoItemSx },
+              ...(Array.isArray(child.props.sx) ? child.props.sx : [child.props.sx]),
+            ],
+          });
         }
         return child;
       })}

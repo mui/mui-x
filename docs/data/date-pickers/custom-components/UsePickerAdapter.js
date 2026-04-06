@@ -65,14 +65,14 @@ export default function UsePickerAdapter() {
     <Stack spacing={2} direction="row" sx={{ flexWrap: 'wrap' }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DateCalendar']}>
-          <DemoItem label="AdapterDayjs" alignItems="center">
+          <DemoItem label="AdapterDayjs" sx={{ alignItems: 'center' }}>
             <DateCalendar slots={{ calendarHeader: CustomCalendarHeader }} />
           </DemoItem>
         </DemoContainer>
       </LocalizationProvider>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DemoContainer components={['DateCalendar']}>
-          <DemoItem label="AdapterDateFns" alignItems="center">
+          <DemoItem label="AdapterDateFns" sx={{ alignItems: 'center' }}>
             <DateCalendar slots={{ calendarHeader: CustomCalendarHeader }} />
           </DemoItem>
         </DemoContainer>
