@@ -359,19 +359,21 @@ npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path|folder>
 Removes the `enableAccessibleFieldDOMStructure` prop from all Picker and Field components.
 The accessible DOM structure is now the only supported option and this prop has no effect.
 
+```diff
+-<DateField enableAccessibleFieldDOMStructure={false} />
++<DateField />
+
+-<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: MyCustomTextField }} />
++<DatePicker slots={{ textField: MyCustomTextField }} />
+
+-<DatePicker slotProps={{ field: { enableAccessibleFieldDOMStructure: false } }} />
++<DatePicker />
+```
+
 <!-- #npm-tag-reference -->
 
 ```bash
 npx @mui/x-codemod@next v9.0.0/pickers/remove-enable-accessible-field-dom-structure <path|folder>
-```
-
-```diff
--<DateField enableAccessibleFieldDOMStructure={false} />
-+<DateField />
--<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: MyCustomTextField }} />
-+<DatePicker slots={{ textField: MyCustomTextField }} />
--<DatePicker slotProps={{ field: { enableAccessibleFieldDOMStructure: false } }} />
-+<DatePicker />
 ```
 
 #### `remove-picker-day-2`
