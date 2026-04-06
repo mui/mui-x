@@ -49,4 +49,8 @@ export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
   getDateSectionsFromValue: (sections) => sections,
   updateDateInValue: (value, activeSection, activeDate) => activeDate,
   clearDateSections: (sections) => sections.map((section) => ({ ...section, value: '' })),
+  getIsPartiallyFilled: (sections) => {
+    const filled = sections.filter((section) => section.value !== '').length;
+    return filled > 0 && filled < sections.length;
+  },
 };

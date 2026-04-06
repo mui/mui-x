@@ -34,7 +34,7 @@ export const validateDateTimeRange: Validator<
   PickerRangeValue,
   DateTimeRangeValidationError,
   ValidateDateTimeRangeProps
-> = ({ adapter, value, timezone, props }) => {
+> = ({ adapter, value, timezone, props, isPartiallyFilled }) => {
   const [start, end] = value;
 
   const { shouldDisableDate, ...otherProps } = props;
@@ -48,6 +48,7 @@ export const validateDateTimeRange: Validator<
         ...otherProps,
         shouldDisableDate: (day) => !!shouldDisableDate?.(day, 'start'),
       },
+      isPartiallyFilled: isPartiallyFilled?.[0] ?? false,
     }),
     validateDateTime({
       adapter,
@@ -57,6 +58,7 @@ export const validateDateTimeRange: Validator<
         ...otherProps,
         shouldDisableDate: (day) => !!shouldDisableDate?.(day, 'end'),
       },
+      isPartiallyFilled: isPartiallyFilled?.[1] ?? false,
     }),
   ];
 

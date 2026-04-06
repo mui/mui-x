@@ -8,7 +8,7 @@ import {
   stubMatchMedia,
 } from 'test/utils/pickers';
 import { pickerPopperClasses } from '@mui/x-date-pickers/internals';
-import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
+import { MultiInputDateRangeField } from '../../MultiInputDateRangeField';
 
 describe('<DateRangePicker />', () => {
   const { render } = createPickerRenderer();

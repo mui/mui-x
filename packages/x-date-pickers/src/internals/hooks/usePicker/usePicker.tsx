@@ -100,11 +100,44 @@ export const usePicker = <
   const rootRefObject = React.useRef<HTMLDivElement>(null);
   const rootRef = useForkRef(ref, rootRefObject);
 
+  const partiallyFilledMapRef = React.useRef(new Map<string, boolean>());
+  const [isPartiallyFilled, setIsPartiallyFilledState] = React.useState<
+    boolean | [boolean, boolean]
+  >(false);
+
+  const setIsPartiallyFilled = useEventCallback((fieldId: string, isPartial: boolean | [boolean, boolean]) => {
+    // partiallyFilledMapRef.current.set(fieldId, isPartial);
+    //
+    // const values = Array.from(partiallyFilledMapRef.current.values());
+    //
+    // if (values.length === 2) {
+    //   setIsPartiallyFilledState([values[0], values[1]]);
+    // } else {
+    //   setIsPartiallyFilledState(values[0] ?? false);
+    // }
+
+    if (Array.isArray(isPartial)) {
+      setIsPartiallyFilledState(isPartial);
+      return;
+    }
+
+    // Для одиночных полей (DateField) используем старую логику с Map
+    partiallyFilledMapRef.current.set(fieldId, isPartial);
+    const values = Array.from(partiallyFilledMapRef.current.values());
+
+    if (values.length === 2) {
+      setIsPartiallyFilledState([values[0], values[1]]);
+    } else {
+      setIsPartiallyFilledState(values[0] ?? false);
+    }
+  });
+
   const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
     useValueAndOpenStates<TValue, TView, TExternalProps>({
       props,
       valueManager,
       validator,
+      isPartiallyFilled,
     });
 
   const {
@@ -361,6 +394,8 @@ export const usePicker = <
       viewContainerRole,
       defaultActionBarActions,
       onPopperExited,
+      isPartiallyFilled,
+      setIsPartiallyFilled,
     }),
     [
       dismissViews,
@@ -372,6 +407,8 @@ export const usePicker = <
       viewContainerRole,
       defaultActionBarActions,
       onPopperExited,
+      isPartiallyFilled,
+      setIsPartiallyFilled,
     ],
   );
 
@@ -398,6 +435,7 @@ export const usePicker = <
       value: testedValue,
       timezone,
       props,
+      isPartiallyFilled,
     });
 
     return !valueManager.hasError(error);

@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { MuiPickersAdapter, OnErrorProps, PickersTimezone } from '../models';
-import type { PickerValueManager } from '../internals/models';
-import { PickerValidValue } from '../internals/models';
-import { usePickerAdapter } from '../hooks';
+import {MuiPickersAdapter, OnErrorProps, PickersTimezone} from '../models';
+import type {PickerValueManager} from '../internals/models';
+import {PickerValidValue} from '../internals/models';
+import {usePickerAdapter} from '../hooks';
 
 export type Validator<TValue extends PickerValidValue, TError, TValidationProps> = {
   (params: {
@@ -12,6 +12,7 @@ export type Validator<TValue extends PickerValidValue, TError, TValidationProps>
     value: TValue;
     timezone: PickersTimezone;
     props: TValidationProps;
+    isPartiallyFilled: boolean | [boolean, boolean];
   }): TError;
   valueManager: PickerValueManager<TValue, any>;
 };
@@ -41,6 +42,7 @@ interface UseValidationOptions<
    * For example, the `validateTime` function supports `minTime`, `maxTime`, etc.
    */
   props: TValidationProps;
+  isPartiallyFilled: boolean | [boolean, boolean];
 }
 
 export interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
@@ -59,9 +61,13 @@ export interface UseValidationReturnValue<TValue extends PickerValidValue, TErro
    * This can be used to validate the value in a change handler before updating the state.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} newValue The value to validate.
+   * @param {boolean | [boolean, boolean]} newIsPartiallyFilled Whether the new value is partially filled.
    * @returns {TError} The validation error associated to the new value.
    */
-  getValidationErrorForNewValue: (newValue: TValue) => TError;
+  getValidationErrorForNewValue: (
+    newValue: TValue,
+    newIsPartiallyFilled: boolean | [boolean, boolean],
+  ) => TError;
 }
 
 /**
@@ -74,18 +80,19 @@ export interface UseValidationReturnValue<TValue extends PickerValidValue, TErro
  * @param {Validator<TValue, TError, TValidationProps>} options.validator The validator function to use.
  * @param {TValidationProps} options.props The validation props, they differ depending on the component.
  * @param {(error: TError, value: TValue) => void} options.onError Callback fired when the error associated with the current value changes.
+ * @param {boolean | [boolean, boolean]} options.isPartiallyFilled Whether the value is partially filled.
  */
 export function useValidation<TValue extends PickerValidValue, TError, TValidationProps extends {}>(
   options: UseValidationOptions<TValue, TError, TValidationProps>,
 ): UseValidationReturnValue<TValue, TError> {
-  const { props, validator, value, timezone, onError } = options;
+  const { props, validator, value, timezone, onError, isPartiallyFilled } = options;
 
   const adapter = usePickerAdapter();
   const previousValidationErrorRef = React.useRef<TError | null>(
     validator.valueManager.defaultErrorState,
   );
 
-  const validationError = validator({ adapter, value, timezone, props });
+  const validationError = validator({ adapter, value, timezone, props, isPartiallyFilled });
   const hasValidationError = validator.valueManager.hasError(validationError);
 
   React.useEffect(() => {
@@ -99,9 +106,17 @@ export function useValidation<TValue extends PickerValidValue, TError, TValidati
     previousValidationErrorRef.current = validationError;
   }, [validator, onError, validationError, value]);
 
-  const getValidationErrorForNewValue = useEventCallback((newValue: TValue) => {
-    return validator({ adapter, value: newValue, timezone, props });
-  });
+  const getValidationErrorForNewValue = useEventCallback(
+    (newValue: TValue, newIsPartiallyFilled: boolean | [boolean, boolean]) => {
+      return validator({
+        adapter,
+        value: newValue,
+        timezone,
+        props,
+        isPartiallyFilled: newIsPartiallyFilled,
+      });
+    },
+  );
 
   return { validationError, hasValidationError, getValidationErrorForNewValue };
 }

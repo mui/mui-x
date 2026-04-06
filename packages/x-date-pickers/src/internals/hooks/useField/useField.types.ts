@@ -325,6 +325,8 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
     sections: InferFieldSection<TValue>[],
     section: InferFieldSection<TValue>,
   ) => InferFieldSection<TValue>[];
+
+  getIsPartiallyFilled: (sections: InferFieldSection<TValue>[]) => boolean | [boolean, boolean];
 }
 
 export interface UseFieldState<TValue extends PickerValidValue> {

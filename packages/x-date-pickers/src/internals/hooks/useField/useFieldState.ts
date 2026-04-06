@@ -4,6 +4,7 @@ import useControlled from '@mui/utils/useControlled';
 import useTimeout from '@mui/utils/useTimeout';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
 import {
   UseFieldInternalProps,
@@ -39,6 +40,7 @@ import {
   getSectionTypeGranularity,
 } from '../../utils/getDefaultReferenceDate';
 import { PickerValidValue } from '../../models';
+import { usePickerPrivateContext } from '../../../internals/hooks/usePickerPrivateContext';
 
 const QUERY_LIFE_DURATION_MS = 5000;
 
@@ -99,20 +101,7 @@ export const useFieldState = <
     valueRef.current = value;
   }, [value]);
 
-  const { hasValidationError } = useValidation({
-    props: internalPropsWithDefaults,
-    validator,
-    timezone,
-    value,
-    onError: internalPropsWithDefaults.onError,
-  });
-
   const localizedDigits = React.useMemo(() => getLocalizedDigits(adapter), [adapter]);
-
-  const sectionsValueBoundaries = React.useMemo(
-    () => getSectionsBoundaries(adapter, localizedDigits, timezone),
-    [adapter, localizedDigits, timezone],
-  );
 
   const getSectionsFromValue = React.useCallback(
     (valueToAnalyze: TValue) =>
@@ -170,6 +159,25 @@ export const useFieldState = <
     };
   });
 
+  const isPartiallyFilled = React.useMemo(
+    () => fieldValueManager.getIsPartiallyFilled(state.sections),
+    [fieldValueManager, state.sections],
+  );
+
+  const { hasValidationError } = useValidation({
+    props: internalPropsWithDefaults,
+    validator,
+    timezone,
+    value,
+    isPartiallyFilled,
+    onError: internalPropsWithDefaults.onError,
+  });
+
+  const sectionsValueBoundaries = React.useMemo(
+    () => getSectionsBoundaries(adapter, localizedDigits, timezone),
+    [adapter, localizedDigits, timezone],
+  );
+
   const [selectedSections, innerSetSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
     default: null,
@@ -199,6 +207,14 @@ export const useFieldState = <
     [state.sections],
   );
 
+  const fieldId = React.useId();
+  const { setIsPartiallyFilled } = usePickerPrivateContext();
+
+  useEnhancedEffect(() => {
+    setIsPartiallyFilled(fieldId, isPartiallyFilled);
+    return () => setIsPartiallyFilled(fieldId, false);
+  }, [fieldId, isPartiallyFilled, setIsPartiallyFilled]);
+
   // When the field loses focus (no active section), consider partially filled sections as invalid.
   // This enforces that the field must be entirely filled or entirely empty on blur.
   const hasPartiallyFilledSectionsOnBlur = React.useMemo(() => {
@@ -225,6 +241,7 @@ export const useFieldState = <
         value: newValue,
         timezone,
         props: internalPropsWithDefaults,
+        isPartiallyFilled,
       }),
     };
 

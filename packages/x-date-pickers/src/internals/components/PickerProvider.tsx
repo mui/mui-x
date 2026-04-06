@@ -45,6 +45,8 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
   viewContainerRole: null,
   defaultActionBarActions: [],
   onPopperExited: undefined,
+  isPartiallyFilled: false,
+  setIsPartiallyFilled: () => {},
 });
 
 /**
@@ -383,4 +385,10 @@ export interface PickerPrivateContextValue {
    * The function to call when the Popper is closing animation is finished.
    */
   onPopperExited: (() => void) | undefined;
+  /**
+   * Whether the field is partially filled.
+   * Set by the field, read by the picker to pass into validation.
+   */
+  isPartiallyFilled: boolean | [boolean, boolean];
+  setIsPartiallyFilled: (fieldId: string, value: boolean | [boolean, boolean]) => void;
 }

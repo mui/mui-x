@@ -17,7 +17,7 @@ export function useValueAndOpenStates<
 >(parameters: UsePickerDateStateParameters<TValue, TView, TExternalProps>) {
   type TError = InferError<TExternalProps>;
 
-  const { props, valueManager, validator } = parameters;
+  const { props, valueManager, validator, isPartiallyFilled } = parameters;
   const {
     value: valueProp,
     defaultValue: defaultValueProp,
@@ -101,6 +101,7 @@ export function useValueAndOpenStates<
     validator,
     timezone,
     value,
+    isPartiallyFilled,
     onError: props.onError,
   });
 
@@ -165,7 +166,9 @@ export function useValueAndOpenStates<
         }
         cachedContext = {
           validationError:
-            validationError == null ? getValidationErrorForNewValue(newValue) : validationError,
+            validationError == null
+              ? getValidationErrorForNewValue(newValue, isPartiallyFilled)
+              : validationError,
           source: inferredSource,
         };
 
@@ -253,4 +256,5 @@ interface UsePickerDateStateParameters<
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
   validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
+  isPartiallyFilled: boolean | [boolean, boolean];
 }

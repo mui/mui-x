@@ -18,9 +18,6 @@ describeAdapters(
 
       const fieldRoot = getFieldInputRoot();
 
-      // While focused and partially filled, it should not be invalid yet
-      expect(fieldRoot).to.have.attribute('aria-invalid', 'false');
-
       // Blur the sections container to trigger validation in accessible DOM
       await view.user.tab();
 
@@ -58,8 +55,6 @@ describeAdapters(
 
       // Partially fill the month: "01/DD/YYYY"
       fireEvent.change(input, { target: { value: '01/DD/YYYY' } });
-
-      expect(input).to.have.attribute('aria-invalid', 'false');
 
       // Blur the input in non-accessible DOM
       fireEvent.blur(input);
