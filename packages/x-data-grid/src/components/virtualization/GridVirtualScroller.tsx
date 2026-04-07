@@ -127,8 +127,6 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const virtualizer = useGridVirtualizer();
   const layoutMode = virtualizer.store.use(Virtualization.selectors.layoutMode);
 
-  const hasContentFiller = layoutMode === 'uncontrolled';
-
   const {
     getContainerProps,
     getScrollerProps,
@@ -146,6 +144,8 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const rows = getRows(undefined, gridRowTreeSelector(apiRef));
 
   const containerVerticalProps = getContainerVerticalProps();
+
+  const hasContentFiller = layoutMode === 'uncontrolled' && rows.length !== 0;
 
   return (
     <Container
