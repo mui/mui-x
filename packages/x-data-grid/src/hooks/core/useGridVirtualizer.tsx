@@ -8,7 +8,7 @@ import { useStoreEffect } from '@mui/x-internals/store';
 import {
   useVirtualizer,
   Dimensions,
-  LayoutDataGridLegacy,
+  LayoutDataGrid,
   type VirtualizerParams,
   Virtualization,
   EMPTY_RENDER_CONTEXT,
@@ -171,7 +171,7 @@ export function useGridVirtualizer() {
 
   const layout = useLazyRef(
     () =>
-      new LayoutDataGridLegacy({
+      new LayoutDataGrid({
         container: apiRef.current.mainElementRef,
         scroller: apiRef.current.virtualScrollerRef,
         scrollbarVertical: apiRef.current.virtualScrollbarVerticalRef,
