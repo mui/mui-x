@@ -3,8 +3,6 @@ import {
   gridRowTreeSelector,
   gridExpandedSortedRowIdsSelector,
   gridRowNodeSelector,
-  useGridSelector,
-  gridRowMaximumTreeDepthSelector,
   gridExpandedSortedRowIndexLookupSelector,
   type GridRowProApi,
 } from '@mui/x-data-grid';
@@ -19,14 +17,12 @@ export const useGridRowsOverridableMethods = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'processRowUpdate' | 'onProcessRowUpdateError' | 'setTreeDataPath'
+    'processRowUpdate' | 'onProcessRowUpdateError' | 'setTreeDataPath' | 'treeData'
   >,
 ) => {
-  const { processRowUpdate, onProcessRowUpdateError, setTreeDataPath } = props;
+  const { processRowUpdate, onProcessRowUpdateError, setTreeDataPath, treeData } = props;
   const { setRowIndex: setRowIndexFlat, setRowPosition: setRowPositionFlat } =
     useGridRowsOverridableMethodsCommunity(apiRef);
-
-  const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
   const setRowPosition = React.useCallback<GridRowProApi['setRowPosition']>(
     async (sourceRowId, targetRowId, position) => {
@@ -83,7 +79,7 @@ export const useGridRowsOverridableMethods = (
   }, []);
 
   return {
-    setRowIndex: flatTree ? setRowIndexFlat : setRowIndex,
-    setRowPosition: flatTree ? setRowPositionFlat : setRowPosition,
+    setRowIndex: treeData ? setRowIndex : setRowIndexFlat,
+    setRowPosition: treeData ? setRowPosition : setRowPositionFlat,
   };
 };
