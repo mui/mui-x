@@ -1087,7 +1087,7 @@ describe('<DataGrid /> - Rows', () => {
             rowBufferPx={0}
           />,
         );
-        const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone');
+        const element = document.querySelector('.MuiDataGrid-contentFiller');
         const expectedHeight =
           measuredRowHeight +
           border + // Measured rows also include the border
@@ -1114,7 +1114,7 @@ describe('<DataGrid /> - Rows', () => {
             disableVirtualization
           />,
         );
-        const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone');
+        const element = document.querySelector('.MuiDataGrid-contentFiller');
         const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;

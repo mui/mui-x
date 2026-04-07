@@ -182,7 +182,9 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
               {<rootProps.slots.detailPanels />}
             </RenderZone>
 
-            {hasContentFiller && <div {...getContentProps()} />}
+            {hasContentFiller && (
+              <div className={gridClasses['contentFiller']} {...getContentProps()} />
+            )}
 
             {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
 

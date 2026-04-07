@@ -340,6 +340,11 @@ export interface GridClasses {
    */
   columnsManagementEmptyText: string;
   /**
+   * Styles applied to the content filler.
+   * @ignore - do not document.
+   */
+  contentFiller: string;
+  /**
    * Styles applied to the top container.
    */
   'container--top': string;
@@ -1144,6 +1149,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnsManagementFooter',
   'columnsManagementScrollArea',
   'columnsManagementEmptyText',
+  'contentFiller',
   'detailPanel',
   'footerCell',
   'panel',
