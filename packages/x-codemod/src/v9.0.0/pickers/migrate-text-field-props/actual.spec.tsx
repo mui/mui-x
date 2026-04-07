@@ -7,6 +7,7 @@ import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 function App() {
   return (
     <div>
+      {/* prettier-ignore */}
       <DateField
         InputProps={{ name: 'birthday' }}
         inputProps={{ 'data-testid': 'html-input' }}
@@ -24,6 +25,7 @@ function App() {
           },
         }}
       />
+      {/* prettier-ignore */}
       <PickersTextField
         InputProps={{ name: 'pickers-text-field' }}
         slotProps={{ input: { startAdornment: null } }}

@@ -24,9 +24,7 @@ export const addItemToObject = (path, value, object, j) => {
       existingProperty.value.type === 'ObjectExpression' &&
       value.type === 'ObjectExpression'
     ) {
-      const newKeys = new Set(
-        value.properties.map((p) => p.key?.name ?? p.key?.value),
-      );
+      const newKeys = new Set(value.properties.map((p) => p.key?.name ?? p.key?.value));
       const mergedValue = j.objectExpression([
         ...existingProperty.value.properties.filter(
           (p) => !newKeys.has(p.key?.name ?? p.key?.value),
