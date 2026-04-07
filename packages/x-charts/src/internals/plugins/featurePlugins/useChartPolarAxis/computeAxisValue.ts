@@ -193,13 +193,15 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
     }
 
     // Use degrees to display more ticks by default
-    const ratio = axisDirection === 'rotation' ? 180 / 3 : 1
+    const ratio = axisDirection === 'rotation' ? 180 / 3 : 1;
 
-    const tickNumber = axis.tickNumber ?? getTickNumber(
-      axis,
-      axisExtremums,
-      getDefaultTickNumber(ratio * Math.abs(range[1] - range[0])),
-    );
+    const tickNumber =
+      axis.tickNumber ??
+      getTickNumber(
+        axis,
+        axisExtremums,
+        getDefaultTickNumber(ratio * Math.abs(range[1] - range[0])),
+      );
 
     const scale = getScale(scaleType, axisExtremums, range);
     const finalScale = domainLimit === 'nice' ? scale.nice(tickNumber) : scale;
