@@ -1,4 +1,4 @@
-import { EventCalendarState } from '../use-event-calendar';
+import type { EventCalendarState } from '../use-event-calendar';
 import type { TemporalSupportedObject } from '../base-ui-copy/types';
 import { SchedulerProcessedDate } from './event';
 

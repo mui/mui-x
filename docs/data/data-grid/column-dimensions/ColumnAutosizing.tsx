@@ -79,10 +79,12 @@ export default function ColumnAutosizing() {
       <Stack
         spacing={1}
         direction="row"
-        alignItems="center"
-        sx={{ mb: 1 }}
         useFlexGap
-        flexWrap="wrap"
+        sx={{
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          mb: 1,
+        }}
       >
         <Button
           variant="outlined"

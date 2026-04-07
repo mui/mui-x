@@ -437,6 +437,10 @@ then you can look at the page to see all the examples improved and updated to us
 
 #### Do not forward the `enableAccessibleFieldDOMStructure` prop to the DOM
 
+:::info
+The `enableAccessibleFieldDOMStructure` prop has been removed in v9. The accessible DOM structure is now the only supported option.
+:::
+
 The headless field hooks (for example `useDateField`) now return a new prop called `enableAccessibleFieldDOMStructure`.
 This is used to know if the current UI expected is built using the accessible DOM structure or not.
 

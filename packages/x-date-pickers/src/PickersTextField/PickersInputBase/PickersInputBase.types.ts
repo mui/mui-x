@@ -20,19 +20,45 @@ export interface PickersInputPropsUsedByField extends Pick<
   onInput: React.FormEventHandler<HTMLDivElement>;
   onPaste: React.ClipboardEventHandler<HTMLDivElement>;
 
+  /**
+   * End `InputAdornment` for this component.
+   */
   endAdornment?: React.ReactNode;
+  /**
+   * Start `InputAdornment` for this component.
+   */
   startAdornment?: React.ReactNode;
 
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 
+  /**
+   * The label content.
+   */
   label?: React.ReactNode;
+  /**
+   * The id of the `input` element.
+   */
   id?: string;
+  /**
+   * If `true`, the input will take up the full width of its container.
+   * @default false
+   */
   fullWidth?: boolean;
   readOnly?: boolean;
+  /**
+   * Name attribute of the `input` element.
+   */
   name?: string;
 
+  /**
+   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
+   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
+   */
   inputProps?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
+  /**
+   * Pass a ref to the `input` element.
+   */
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
