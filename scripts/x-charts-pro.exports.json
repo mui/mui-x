@@ -72,7 +72,7 @@
   { "name": "brushOverlayClasses", "kind": "Variable" },
   { "name": "BrushOverlayClasses", "kind": "Interface" },
   { "name": "BrushOverlayClassKey", "kind": "TypeAlias" },
-  { "name": "CartesianChartSeriesType", "kind": "TypeAlias" },
+  { "name": "CartesianSeriesType", "kind": "TypeAlias" },
   { "name": "CategoryAxis", "kind": "TypeAlias" },
   { "name": "ChartApi", "kind": "TypeAlias" },
   { "name": "chartAxisZoomSliderThumbClasses", "kind": "Variable" },
