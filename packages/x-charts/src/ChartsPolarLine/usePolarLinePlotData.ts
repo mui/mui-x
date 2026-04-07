@@ -38,8 +38,6 @@ export function usePolarLinePlotData() {
 
         const points: { x: number; y: number }[] = [];
 
-
-
         for (let dataIndex = 0; dataIndex < data.length; dataIndex += 1) {
           if (data[dataIndex] == null) {
             continue;
@@ -53,10 +51,7 @@ export function usePolarLinePlotData() {
         }
 
         // Build a closed polygon path.
-        const d =
-          points.length > 0
-            ? `M ${points.map((p) => `${p.x} ${p.y}`).join(' L ')} Z`
-            : '';
+        const d = points.length > 0 ? `M ${points.map((p) => `${p.x} ${p.y}`).join(' L ')} Z` : '';
 
         plotData.push({
           color: series[seriesId].color,
