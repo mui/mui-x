@@ -31,6 +31,6 @@ export const AGENDA_MAX_HORIZON_DAYS = 180;
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
 export const DEFAULT_EVENT_CREATION_CONFIG: SchedulerEventCreationConfig = {
-  interaction: 'double-click',
+  interaction: 'click',
   duration: 30,
 };

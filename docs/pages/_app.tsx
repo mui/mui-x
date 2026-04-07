@@ -1,18 +1,18 @@
 import 'docsx/src/bootstrap';
 // --- Post bootstrap -----
 import * as React from 'react';
-import type { DocsAppProps } from '@mui/docs/DocsApp';
+import type { DocsAppProps } from '@mui/internal-core-docs/DocsApp';
 import {
   DocsApp,
   createGetInitialProps,
   printConsoleBanner,
   reportWebVitals,
-} from '@mui/docs/DocsApp';
-import { ThemeProvider } from '@mui/docs/ThemeContext';
-import findActivePage from '@mui/docs/findActivePage';
-import getProductInfoFromUrl from '@mui/docs/getProductInfoFromUrl';
-import { pathnameToLanguage } from '@mui/docs/helpers';
-import { Translations } from '@mui/docs/i18n';
+} from '@mui/internal-core-docs/DocsApp';
+import { ThemeProvider } from '@mui/internal-core-docs/ThemeContext';
+import findActivePage from '@mui/internal-core-docs/findActivePage';
+import getProductInfoFromUrl from '@mui/internal-core-docs/getProductInfoFromUrl';
+import { pathnameToLanguage } from '@mui/internal-core-docs/helpers';
+import { Translations } from '@mui/internal-core-docs/i18n';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import xPages from 'docsx/data/pages'; // DO NOT REMOVE
@@ -22,7 +22,7 @@ import { useRouter } from 'next/router';
 
 import * as config from '../config';
 
-export { fontClasses } from '@mui/docs/nextFonts';
+export { fontClasses } from '@mui/internal-core-docs/nextFonts';
 
 // Enable telemetry for internal purposes
 muiXTelemetrySettings.enableTelemetry();
@@ -54,6 +54,8 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
     productId = 'x-date-pickers';
   } else if (canonicalAs.startsWith('/x/api/charts/')) {
     productId = 'x-charts';
+  } else if (canonicalAs.startsWith('/x/api/scheduler/')) {
+    productId = 'x-scheduler';
   }
 
   return React.useMemo(() => {
@@ -68,6 +70,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
       },
       'x-charts': { subpath: '/x/react-charts', version: process.env.CHARTS_VERSION },
       'x-tree-view': { subpath: '/x/react-tree-view', version: process.env.TREE_VIEW_VERSION },
+      'x-scheduler': { subpath: '/x/react-scheduler', version: process.env.SCHEDULER_VERSION },
     };
 
     const getVersionOptions = (id: string, versions: string[]) =>
@@ -151,6 +154,12 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
           },
         ],
       };
+    } else if (productId === 'x-scheduler') {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Scheduler',
+        versions: getVersionOptions('x-scheduler', [process.env.SCHEDULER_VERSION!]),
+      };
     }
 
     return {
@@ -194,6 +203,13 @@ const CSB_CONFIG = {
       '@mui/x-charts-premium': getMuiPackageVersion('x-charts-premium', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
+      '@mui/x-scheduler': getMuiPackageVersion('x-scheduler', muiCommitRef),
+      '@mui/x-scheduler-premium': getMuiPackageVersion('x-scheduler-premium', muiCommitRef),
+      '@mui/x-scheduler-headless': getMuiPackageVersion('x-scheduler-headless', muiCommitRef),
+      '@mui/x-scheduler-headless-premium': getMuiPackageVersion(
+        'x-scheduler-headless-premium',
+        muiCommitRef,
+      ),
       '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
       '@mui/x-internal-gestures': getMuiPackageVersion('x-internal-gestures', muiCommitRef),
       exceljs: 'latest',

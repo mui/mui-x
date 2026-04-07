@@ -36,7 +36,7 @@
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
     "disableHighlightToday": {
-      "description": "If <code>true</code>, today's date is rendering without highlighting with circle."
+      "description": "If <code>true</code>, today's day is not highlighted."
     },
     "disableOpenPicker": {
       "description": "If <code>true</code>, the button to open the Picker will not be rendered (it will only render the field)."
@@ -47,7 +47,6 @@
     "displayWeekNumber": {
       "description": "If <code>true</code>, the week number will be display in the calendar."
     },
-    "enableAccessibleFieldDOMStructure": { "description": "" },
     "fixedWeekNumber": {
       "description": "The day view will show as many weeks as needed after the end of the current month to match this value.\nPut it to 6 to have a fixed number of weeks in Gregorian calendars"
     },
@@ -169,7 +168,7 @@
     "calendarHeader": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
     "clearButton": "Button to clear the value.",
     "clearIcon": "Icon to display in the button used to clean the value.",
-    "day": "Custom component for day in range pickers.\nCheck the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.",
+    "day": "Custom component for day in range pickers.\nCheck the [DateRangePickerDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "field": "Component used to enter the date with the keyboard.",
     "inputAdornment": "Component displayed on the start or end input adornment used to open the Picker.",

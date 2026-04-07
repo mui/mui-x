@@ -32,7 +32,6 @@
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },
-    "enableAccessibleFieldDOMStructure": { "description": "" },
     "format": {
       "description": "Format of the date when rendered in the input(s).\nDefaults to localized format based on the used <code>views</code>."
     },

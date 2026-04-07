@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "areAllSectionsEmpty": {
+      "description": "Is <code>true</code> if the current values equals the empty value.\nFor a single item value, it means that <code>value === null</code>\nFor a range value, it means that <code>value === [null, null]</code>"
+    },
     "autoFocus": {
       "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount."
     },
@@ -22,7 +25,10 @@
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },
-    "enableAccessibleFieldDOMStructure": { "description": "" },
+    "endAdornment": { "description": "End <code>InputAdornment</code> for this component." },
+    "error": {
+      "description": "If <code>true</code>, the <code>input</code> will indicate an error."
+    },
     "fieldRef": { "description": "The ref object used to imperatively interact with the field." },
     "focused": {
       "description": "If <code>true</code>, the component is displayed in focused state."
@@ -38,9 +44,7 @@
       "description": "If <code>true</code>, the input will take up the full width of its container."
     },
     "helperText": { "description": "The helper text content." },
-    "id": {
-      "description": "The id of the <code>input</code> element.\nUse this prop to make <code>label</code> and <code>helperText</code> accessible for screen readers."
-    },
+    "id": { "description": "The id of the <code>input</code> element." },
     "InputLabelProps": {
       "description": "Props applied to the [<code>InputLabel</code>](https://mui.com/material-ui/api/input-label/) element.\nPointer events like <code>onClick</code> are enabled if and only if <code>shrink</code> is <code>true</code>."
     },
@@ -48,7 +52,7 @@
       "description": "[Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the <code>input</code> element."
     },
     "InputProps": {
-      "description": "Props applied to the Input element.\nIt will be a [<code>FilledInput</code>](https://mui.com/material-ui/api/filled-input/),\n[<code>OutlinedInput</code>](https://mui.com/material-ui/api/outlined-input/) or [<code>Input</code>](https://mui.com/material-ui/api/input/)\ncomponent depending on the <code>variant</code> prop value.\nProps applied to the Input element.\nIt will be a [<code>FilledInput</code>](/material-ui/api/filled-input/),\n[<code>OutlinedInput</code>](/material-ui/api/outlined-input/) or [<code>Input</code>](/material-ui/api/input/)\ncomponent depending on the <code>variant</code> prop value."
+      "description": "Props applied to the Input element.\nIt will be a [<code>FilledInput</code>](https://mui.com/material-ui/api/filled-input/),\n[<code>OutlinedInput</code>](https://mui.com/material-ui/api/outlined-input/) or [<code>Input</code>](https://mui.com/material-ui/api/input/)\ncomponent depending on the <code>variant</code> prop value."
     },
     "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
     "label": { "description": "The label content." },
@@ -117,6 +121,7 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "startAdornment": { "description": "Start <code>InputAdornment</code> for this component." },
     "timezone": {
       "description": "Choose which timezone to use for the value.\nExample: \"default\", \"system\", \"UTC\", \"America/New_York\".\nIf you pass values from other timezones to some props, they will be converted to this timezone before being used.",
       "seeMoreText": "See {{link}} for more details."

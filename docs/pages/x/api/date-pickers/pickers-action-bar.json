@@ -3,7 +3,7 @@
     "actions": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'clear'<br>&#124;&nbsp;'cancel'<br>&#124;&nbsp;'next'<br>&#124;&nbsp;'today'<br>&#124;&nbsp;'accept'<br>&#124;&nbsp;'nextOrAccept'&gt;"
+        "description": "Array&lt;'clear'<br>&#124;&nbsp;'cancel'<br>&#124;&nbsp;'next'<br>&#124;&nbsp;'accept'<br>&#124;&nbsp;'nextOrAccept'<br>&#124;&nbsp;'today'&gt;"
       },
       "default": "- `[]` for Pickers with one selection step which `closeOnSelect`.\n- `['cancel', 'nextOrAccept']` for all other Pickers."
     }

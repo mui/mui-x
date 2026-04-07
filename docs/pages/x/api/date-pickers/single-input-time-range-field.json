@@ -1,6 +1,7 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
+    "areAllSectionsEmpty": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
     "clearButtonPosition": {
@@ -13,7 +14,8 @@
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
-    "enableAccessibleFieldDOMStructure": { "type": { "name": "any" }, "default": "true" },
+    "endAdornment": { "type": { "name": "node" } },
+    "error": { "type": { "name": "bool" }, "default": "false" },
     "fieldRef": { "type": { "name": "object" } },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
@@ -22,35 +24,44 @@
       "default": "\"dense\""
     },
     "FormHelperTextProps": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "deprecated": true,
       "deprecationInfo": "Use <code>slotProps.formHelperText</code> instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details."
     },
-    "fullWidth": { "type": { "name": "any" }, "default": "false" },
-    "helperText": { "type": { "name": "any" } },
-    "id": { "type": { "name": "any" } },
+    "fullWidth": { "type": { "name": "bool" }, "default": "false" },
+    "helperText": { "type": { "name": "node" } },
+    "id": { "type": { "name": "string" } },
     "InputLabelProps": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "deprecated": true,
       "deprecationInfo": "Use <code>slotProps.inputLabel</code> instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details."
     },
     "inputProps": {
-      "type": { "name": "any" },
+      "type": { "name": "custom", "description": "ref" },
       "deprecated": true,
       "deprecationInfo": "Use <code>slotProps.htmlInput</code> instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details."
     },
     "InputProps": {
-      "type": { "name": "any" },
+      "type": {
+        "name": "union",
+        "description": "object<br>&#124;&nbsp;object<br>&#124;&nbsp;object"
+      },
       "deprecated": true,
       "deprecationInfo": "Use <code>slotProps.input</code> instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details."
     },
-    "inputRef": { "type": { "name": "any" } },
-    "label": { "type": { "name": "any" } },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
+    "label": { "type": { "name": "node" } },
     "maxTime": { "type": { "name": "object" } },
     "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
-    "name": { "type": { "name": "any" } },
-    "onBlur": { "type": { "name": "any" } },
+    "name": { "type": { "name": "string" } },
+    "onBlur": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: FocusEvent<HTMLDivElement, Element>) => void",
+        "describedArgs": []
+      }
+    },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
@@ -65,7 +76,13 @@
         "describedArgs": []
       }
     },
-    "onClick": { "type": { "name": "any" } },
+    "onClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent<HTMLDivElement, MouseEvent>) => void",
+        "describedArgs": []
+      }
+    },
     "onError": {
       "type": { "name": "func" },
       "signature": {
@@ -73,10 +90,34 @@
         "describedArgs": ["error", "value"]
       }
     },
-    "onFocus": { "type": { "name": "any" } },
-    "onInput": { "type": { "name": "any" } },
-    "onKeyDown": { "type": { "name": "any" } },
-    "onPaste": { "type": { "name": "any" } },
+    "onFocus": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: FocusEvent<HTMLDivElement, Element>) => void",
+        "describedArgs": []
+      }
+    },
+    "onInput": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: FormEvent<HTMLDivElement>) => void",
+        "describedArgs": []
+      }
+    },
+    "onKeyDown": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MuiEvent<KeyboardEvent<HTMLDivElement>>) => void",
+        "describedArgs": []
+      }
+    },
+    "onPaste": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: ClipboardEvent<HTMLDivElement>) => void",
+        "describedArgs": []
+      }
+    },
     "onSelectedSectionsChange": {
       "type": { "name": "func" },
       "signature": {
@@ -110,6 +151,7 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "startAdornment": { "type": { "name": "node" } },
     "timezone": {
       "type": { "name": "string" },
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
@@ -119,7 +161,13 @@
       }
     },
     "value": { "type": { "name": "object" } },
-    "variant": { "type": { "name": "any" }, "default": "'outlined'" }
+    "variant": {
+      "type": {
+        "name": "enum",
+        "description": "'standard'<br>&#124;&nbsp;'filled'<br>&#124;&nbsp;'outlined'"
+      },
+      "default": "'outlined'"
+    }
   },
   "name": "SingleInputTimeRangeField",
   "imports": [
@@ -148,7 +196,7 @@
     {
       "name": "textField",
       "description": "Form control with an input to render the value.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     }
   ],

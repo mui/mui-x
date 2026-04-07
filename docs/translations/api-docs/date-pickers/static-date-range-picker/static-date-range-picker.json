@@ -34,7 +34,7 @@
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
     "disableHighlightToday": {
-      "description": "If <code>true</code>, today's date is rendering without highlighting with circle."
+      "description": "If <code>true</code>, today's day is not highlighted."
     },
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
@@ -137,7 +137,7 @@
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
     "calendarHeader": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
-    "day": "Custom component for day in range pickers.\nCheck the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.",
+    "day": "Custom component for day in range pickers.\nCheck the [DateRangePickerDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.",
     "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "nextIconButton": "Button allowing to switch to the right view.",

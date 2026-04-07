@@ -19,7 +19,6 @@
       "deprecationInfo": "Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead."
     },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
-    "enableAccessibleFieldDOMStructure": { "type": { "name": "any" }, "default": "true" },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
@@ -288,7 +287,7 @@
     {
       "name": "textField",
       "description": "Form control with an input to render the value.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     },
     {

@@ -1,7 +1,23 @@
 {
-  "componentDescription": "Demos:\n\n- [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)\n\nAPI:\n\n- [DateRangePickerDay API](https://mui.com/x/api/date-pickers/date-range-picker-day/)",
+  "componentDescription": "Demos:\n- [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)\n\nAPI:\n- [DateRangePickerDay API](https://mui.com/x/api/date-pickers/date-range-picker-day/)",
   "propDescriptions": {
     "day": { "description": "The date to show." },
+    "onDaySelect": {
+      "description": "Callback fired when the day is selected.",
+      "typeDescriptions": { "day": { "name": "day", "description": "The day to select." } }
+    },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "disabled": { "description": "If <code>true</code>, the day is disabled." },
+    "disableHighlightToday": {
+      "description": "If <code>true</code>, today's day is not highlighted."
+    },
+    "draggable": {
+      "description": "If <code>true</code>, the day can be dragged to change the current date range."
+    },
+    "isAnimating": { "description": "If <code>true</code>, the day is being animated." },
+    "isDayFillerCell": {
+      "description": "If <code>true</code>, the day is a filler day (its content is hidden)."
+    },
     "isEndOfHighlighting": {
       "description": "Set to <code>true</code> if the <code>day</code> is the end of a highlighted date range."
     },
@@ -9,13 +25,13 @@
       "description": "Set to <code>true</code> if the <code>day</code> is the end of a previewing date range."
     },
     "isFirstVisibleCell": {
-      "description": "If <code>true</code>, day is the first visible cell of the month.\nEither the first day of the month or the first day of the week depending on <code>showDaysOutsideCurrentMonth</code>."
+      "description": "If <code>true</code>, the day is the first visible cell of the month."
     },
     "isHighlighting": {
       "description": "Set to <code>true</code> if the <code>day</code> is in a highlighted date range."
     },
     "isLastVisibleCell": {
-      "description": "If <code>true</code>, day is the last visible cell of the month.\nEither the last day of the month or the last day of the week depending on <code>showDaysOutsideCurrentMonth</code>."
+      "description": "If <code>true</code>, the day is the last visible cell of the month."
     },
     "isPreviewing": {
       "description": "Set to <code>true</code> if the <code>day</code> is in a preview date range."
@@ -26,95 +42,127 @@
     "isStartOfPreviewing": {
       "description": "Set to <code>true</code> if the <code>day</code> is the start of a previewing date range."
     },
-    "onDaySelect": { "description": "" },
-    "outsideCurrentMonth": {
-      "description": "If <code>true</code>, day is outside of month and will be hidden."
-    },
-    "classes": { "description": "Override or extend the styles applied to the component." },
-    "disabled": { "description": "If <code>true</code>, renders as disabled." },
-    "disableHighlightToday": {
-      "description": "If <code>true</code>, today's date is rendering without highlighting with circle."
-    },
-    "disableMargin": {
-      "description": "If <code>true</code>, days are rendering without margin. Useful for displaying linked range of days."
-    },
-    "draggable": {
-      "description": "If <code>true</code>, the day can be dragged to change the current date range."
-    },
-    "isAnimating": { "description": "" },
     "isVisuallySelected": { "description": "Indicates if the day should be visually selected." },
-    "onMouseEnter": { "description": "" },
+    "onBlur": {
+      "description": "Callback fired when the component is blurred.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event object." },
+        "day": { "name": "day", "description": "The day." }
+      }
+    },
+    "onClick": {
+      "description": "Callback fired when the component is clicked.",
+      "typeDescriptions": { "event": { "name": "event", "description": "The event object." } }
+    },
+    "onFocus": {
+      "description": "Callback fired when the component is focused.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event object." },
+        "day": { "name": "day", "description": "The day." }
+      }
+    },
+    "onKeyDown": {
+      "description": "Callback fired when a key is pressed.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event object." },
+        "day": { "name": "day", "description": "The day." }
+      }
+    },
+    "onMouseDown": {
+      "description": "Callback fired when the mouse button is pressed.",
+      "typeDescriptions": { "event": { "name": "event", "description": "The event object." } }
+    },
+    "onMouseEnter": {
+      "description": "Callback fired when the mouse enters the component.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event object." },
+        "day": { "name": "day", "description": "The day." }
+      }
+    },
+    "outsideCurrentMonth": {
+      "description": "If <code>true</code>, the day is outside the current month."
+    },
     "selected": { "description": "If <code>true</code>, renders as selected." },
     "showDaysOutsideCurrentMonth": {
       "description": "If <code>true</code>, days outside the current month are rendered:<br><br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br><br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br><br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."
     },
-    "today": { "description": "If <code>true</code>, renders as today date." }
+    "today": { "description": "If <code>true</code>, today's day is highlighted." }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
-    "rangeIntervalDayHighlight": {
+    "dayOutsideMonth": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `isHighlighting=true`"
+      "nodeName": "the root element if `isDayOutsideMonth=true` and `showDaysOutsideCurrentMonth=true`"
     },
-    "rangeIntervalDayHighlightStart": {
+    "fillerCell": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `isStartOfHighlighting=true`"
+      "nodeName": "the root element if `isDayOutsideMonth=true` and `showDaysOutsideCurrentMonth=false`"
     },
-    "rangeIntervalDayHighlightEnd": {
+    "today": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `isEndOfHighlighting=true`"
+      "nodeName": "the root element if `disableHighlightToday=false` and `isDayCurrent=true`"
     },
-    "rangeIntervalPreview": {
+    "disabled": {
+      "description": "State class applied to the root element if `isDayDisabled=true`."
+    },
+    "selected": {
+      "description": "State class applied to the root element if `isDaySelected=true`."
+    },
+    "previewStart": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the preview element"
+      "nodeName": "the root element if `isDayPreviewStart=true`"
     },
-    "rangeIntervalDayPreview": {
+    "previewEnd": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `isPreviewing=true`"
+      "nodeName": "the root element if `isDayPreviewEnd=true`"
     },
-    "rangeIntervalDayPreviewStart": {
+    "insidePreviewing": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `isStartOfPreviewing=true`"
+      "nodeName": "the root element if `isDayInsidePreview=true`"
     },
-    "rangeIntervalDayPreviewEnd": {
+    "selectionStart": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `isEndOfPreviewing=true`"
+      "nodeName": "the root element if `isDaySelectionStart=true`"
     },
-    "outsideCurrentMonth": {
-      "description": "Styles applied to the root element if `outsideCurrentMonth=true`"
+    "selectionEnd": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element if `isDaySelectionEnd=true`"
+    },
+    "insideSelection": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element if `isDayInsideSelection=true`"
+    },
+    "startOfWeek": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element if `isDayStartOfWeek=true`"
+    },
+    "endOfWeek": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element if `isDayEndOfWeek=true`"
     },
     "startOfMonth": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `day` is the start of the month"
+      "nodeName": "the root element if `isDayStartOfMonth=true`"
     },
     "endOfMonth": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `day` is the end of the month"
+      "nodeName": "the root element if `isDayEndOfMonth=true`"
     },
     "firstVisibleCell": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `day` is the first visible cell of the month"
+      "nodeName": "the root element if `isDayFirstVisibleCell=true`"
     },
     "lastVisibleCell": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `day` is the last visible cell of the month"
+      "nodeName": "the root element if `isDayLastVisibleCell=true`"
     },
-    "hiddenDayFiller": {
+    "previewed": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if it is an empty cell used to fill the week"
+      "nodeName": "the root element if `isDayPreviewed=true`"
     },
-    "day": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the day element" },
-    "dayOutsideRangeInterval": {
+    "draggable": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the day element if `isHighlighting=false`"
-    },
-    "dayInsideRangeInterval": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the day element if `selected=false` and `isHighlighting=true`"
-    },
-    "notSelectedDate": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the day element if `selected=false`"
+      "nodeName": "the root element if `isDayDraggable=true`"
     }
   },
   "slotDescriptions": {}

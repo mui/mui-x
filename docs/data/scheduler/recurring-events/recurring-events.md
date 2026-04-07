@@ -9,7 +9,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Define recurring events.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 You can use the `rrule` property on your event model to define its repeating pattern using the [RFC 5545 RRULE](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10) string format:
 

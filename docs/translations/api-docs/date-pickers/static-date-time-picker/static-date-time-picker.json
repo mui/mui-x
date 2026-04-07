@@ -27,7 +27,7 @@
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
     "disableHighlightToday": {
-      "description": "If <code>true</code>, today's date is rendering without highlighting with circle."
+      "description": "If <code>true</code>, today's day is not highlighted."
     },
     "disableIgnoringDatePartForTimeValidation": {
       "description": "Do not ignore date part when validating min/max time."
@@ -179,7 +179,7 @@
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
     "calendarHeader": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
-    "day": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
+    "day": "Custom component for day.\nCheck the [PickerDay](https://mui.com/x/api/date-pickers/picker-day/) component.",
     "digitalClockItem": "Component responsible for rendering a single digital clock item.",
     "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item.",
     "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",

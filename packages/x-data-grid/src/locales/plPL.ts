@@ -73,7 +73,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Lub',
-  filterPanelColumns: 'Kolumny',
+  filterPanelColumn: 'Kolumny',
   filterPanelInputLabel: 'Wartość',
   filterPanelInputPlaceholder: 'Filtrowana wartość',
 

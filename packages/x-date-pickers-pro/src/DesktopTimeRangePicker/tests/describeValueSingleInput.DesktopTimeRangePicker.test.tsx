@@ -3,7 +3,7 @@ import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-picke
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
@@ -48,7 +48,7 @@ describe('<DesktopTimeRangePicker /> - Describe Value Single Input', () => {
 
       const expectedValueStr = `${expectedStartValueStr} – ${expectedEndValueStr}`;
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
     setNewValue: (
       value,

@@ -141,7 +141,7 @@ export function generateManifest(section: string, components: ComponentApi[]): F
   };
   const varName = sectionToVarName[section] || 'treeViewApiPages';
 
-  const content = `import type { MuiPage } from '@mui/docs/MuiPage';
+  const content = `import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
 const ${varName}: MuiPage[] = ${JSON.stringify(unique, null, 2)};
 export default ${varName};

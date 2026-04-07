@@ -24,7 +24,7 @@
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
     "disableHighlightToday": {
-      "description": "If <code>true</code>, today's date is rendering without highlighting with circle."
+      "description": "If <code>true</code>, today's day is not highlighted."
     },
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
@@ -134,7 +134,7 @@
   },
   "slotDescriptions": {
     "calendarHeader": "Custom component for calendar header.\nCheck the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.",
-    "day": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
+    "day": "Custom component for day.\nCheck the [PickerDay](https://mui.com/x/api/date-pickers/picker-day/) component.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "monthButton": "Button displayed to render a single month in the `month` view.",
     "nextIconButton": "Button allowing to switch to the right view.",

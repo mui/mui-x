@@ -9,16 +9,6 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
 
   const propsToOpen = variant === 'static' ? {} : { open: true };
 
-  it.skipIf(fieldType === 'multi-input' || variant === 'static')(
-    'should forward the `inputRef` prop to the text field (<input /> textfield DOM structure only)',
-    () => {
-      const inputRef = React.createRef<HTMLInputElement>();
-      render(<ElementToTest inputRef={inputRef} enableAccessibleFieldDOMStructure={false} />);
-
-      expect(inputRef.current).to.have.tagName('input');
-    },
-  );
-
   describe('Localization', () => {
     it.skipIf(Boolean(hasNoView))('should respect the `localeText` prop', () => {
       render(

@@ -22,7 +22,6 @@
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },
-    "enableAccessibleFieldDOMStructure": { "description": "" },
     "endFieldRef": {
       "description": "The ref object used to interact with the end field imperatively."
     },

@@ -1,34 +1,75 @@
 {
   "props": {
     "day": { "type": { "name": "object" }, "required": true },
-    "isEndOfHighlighting": { "type": { "name": "bool" }, "required": true },
-    "isEndOfPreviewing": { "type": { "name": "bool" }, "required": true },
-    "isFirstVisibleCell": { "type": { "name": "bool" }, "required": true },
-    "isHighlighting": { "type": { "name": "bool" }, "required": true },
-    "isLastVisibleCell": { "type": { "name": "bool" }, "required": true },
-    "isPreviewing": { "type": { "name": "bool" }, "required": true },
-    "isStartOfHighlighting": { "type": { "name": "bool" }, "required": true },
-    "isStartOfPreviewing": { "type": { "name": "bool" }, "required": true },
     "onDaySelect": {
       "type": { "name": "func" },
       "required": true,
-      "signature": { "type": "function(day: any) => void", "describedArgs": [] }
+      "signature": { "type": "function(day: PickerValidDate) => void", "describedArgs": ["day"] }
     },
-    "outsideCurrentMonth": { "type": { "name": "bool" }, "required": true },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
-    "disableMargin": { "type": { "name": "bool" }, "default": "false" },
     "draggable": { "type": { "name": "bool" }, "default": "false" },
-    "isAnimating": { "type": { "name": "bool" } },
+    "isAnimating": { "type": { "name": "bool" }, "default": "false" },
+    "isDayFillerCell": { "type": { "name": "bool" }, "default": "false" },
+    "isEndOfHighlighting": { "type": { "name": "bool" } },
+    "isEndOfPreviewing": { "type": { "name": "bool" } },
+    "isFirstVisibleCell": { "type": { "name": "bool" }, "default": "false" },
+    "isHighlighting": { "type": { "name": "bool" } },
+    "isLastVisibleCell": { "type": { "name": "bool" }, "default": "false" },
+    "isPreviewing": { "type": { "name": "bool" } },
+    "isStartOfHighlighting": { "type": { "name": "bool" } },
+    "isStartOfPreviewing": { "type": { "name": "bool" } },
     "isVisuallySelected": { "type": { "name": "bool" } },
-    "onMouseEnter": {
+    "onBlur": {
       "type": { "name": "func" },
+      "default": "() => {}",
       "signature": {
-        "type": "function(event: MouseEvent<HTMLButtonElement, MouseEvent>, day: any) => void",
-        "describedArgs": []
+        "type": "function(event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
       }
     },
+    "onClick": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => void",
+        "describedArgs": ["event"]
+      }
+    },
+    "onFocus": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
+      }
+    },
+    "onKeyDown": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.KeyboardEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
+      }
+    },
+    "onMouseDown": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.MouseEvent<HTMLButtonElement>) => void",
+        "describedArgs": ["event"]
+      }
+    },
+    "onMouseEnter": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.MouseEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
+      }
+    },
+    "outsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "selected": { "type": { "name": "bool" }, "default": "false" },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "today": { "type": { "name": "bool" }, "default": "false" }
@@ -47,114 +88,126 @@
       "isGlobal": false
     },
     {
-      "key": "rangeIntervalDayHighlight",
-      "className": "MuiDateRangePickerDay-rangeIntervalDayHighlight",
-      "description": "Styles applied to the root element if `isHighlighting=true`.",
+      "key": "dayOutsideMonth",
+      "className": "MuiDateRangePickerDay-dayOutsideMonth",
+      "description": "Styles applied to the root element if `isDayOutsideMonth=true` and `showDaysOutsideCurrentMonth=true`.",
       "isGlobal": false
     },
     {
-      "key": "rangeIntervalDayHighlightStart",
-      "className": "MuiDateRangePickerDay-rangeIntervalDayHighlightStart",
-      "description": "Styles applied to the root element if `isStartOfHighlighting=true`.",
+      "key": "fillerCell",
+      "className": "MuiDateRangePickerDay-fillerCell",
+      "description": "Styles applied to the root element if `isDayOutsideMonth=true` and `showDaysOutsideCurrentMonth=false`.",
       "isGlobal": false
     },
     {
-      "key": "rangeIntervalDayHighlightEnd",
-      "className": "MuiDateRangePickerDay-rangeIntervalDayHighlightEnd",
-      "description": "Styles applied to the root element if `isEndOfHighlighting=true`.",
+      "key": "today",
+      "className": "MuiDateRangePickerDay-today",
+      "description": "Styles applied to the root element if `disableHighlightToday=false` and `isDayCurrent=true`.",
       "isGlobal": false
     },
     {
-      "key": "rangeIntervalPreview",
-      "className": "MuiDateRangePickerDay-rangeIntervalPreview",
-      "description": "Styles applied to the preview element.",
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `isDayDisabled=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "selected",
+      "className": "Mui-selected",
+      "description": "State class applied to the root element if `isDaySelected=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "previewStart",
+      "className": "MuiDateRangePickerDay-previewStart",
+      "description": "Styles applied to the root element if `isDayPreviewStart=true`.",
       "isGlobal": false
     },
     {
-      "key": "rangeIntervalDayPreview",
-      "className": "MuiDateRangePickerDay-rangeIntervalDayPreview",
-      "description": "Styles applied to the root element if `isPreviewing=true`.",
+      "key": "previewEnd",
+      "className": "MuiDateRangePickerDay-previewEnd",
+      "description": "Styles applied to the root element if `isDayPreviewEnd=true`.",
       "isGlobal": false
     },
     {
-      "key": "rangeIntervalDayPreviewStart",
-      "className": "MuiDateRangePickerDay-rangeIntervalDayPreviewStart",
-      "description": "Styles applied to the root element if `isStartOfPreviewing=true`.",
+      "key": "insidePreviewing",
+      "className": "MuiDateRangePickerDay-insidePreviewing",
+      "description": "Styles applied to the root element if `isDayInsidePreview=true`.",
       "isGlobal": false
     },
     {
-      "key": "rangeIntervalDayPreviewEnd",
-      "className": "MuiDateRangePickerDay-rangeIntervalDayPreviewEnd",
-      "description": "Styles applied to the root element if `isEndOfPreviewing=true`.",
+      "key": "selectionStart",
+      "className": "MuiDateRangePickerDay-selectionStart",
+      "description": "Styles applied to the root element if `isDaySelectionStart=true`.",
       "isGlobal": false
     },
     {
-      "key": "outsideCurrentMonth",
-      "className": "MuiDateRangePickerDay-outsideCurrentMonth",
-      "description": "Styles applied to the root element if `outsideCurrentMonth=true`",
+      "key": "selectionEnd",
+      "className": "MuiDateRangePickerDay-selectionEnd",
+      "description": "Styles applied to the root element if `isDaySelectionEnd=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "insideSelection",
+      "className": "MuiDateRangePickerDay-insideSelection",
+      "description": "Styles applied to the root element if `isDayInsideSelection=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "startOfWeek",
+      "className": "MuiDateRangePickerDay-startOfWeek",
+      "description": "Styles applied to the root element if `isDayStartOfWeek=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "endOfWeek",
+      "className": "MuiDateRangePickerDay-endOfWeek",
+      "description": "Styles applied to the root element if `isDayEndOfWeek=true`.",
       "isGlobal": false
     },
     {
       "key": "startOfMonth",
       "className": "MuiDateRangePickerDay-startOfMonth",
-      "description": "Styles applied to the root element if `day` is the start of the month.",
+      "description": "Styles applied to the root element if `isDayStartOfMonth=true`.",
       "isGlobal": false
     },
     {
       "key": "endOfMonth",
       "className": "MuiDateRangePickerDay-endOfMonth",
-      "description": "Styles applied to the root element if `day` is the end of the month.",
+      "description": "Styles applied to the root element if `isDayEndOfMonth=true`.",
       "isGlobal": false
     },
     {
       "key": "firstVisibleCell",
       "className": "MuiDateRangePickerDay-firstVisibleCell",
-      "description": "Styles applied to the root element if `day` is the first visible cell of the month.",
+      "description": "Styles applied to the root element if `isDayFirstVisibleCell=true`.",
       "isGlobal": false
     },
     {
       "key": "lastVisibleCell",
       "className": "MuiDateRangePickerDay-lastVisibleCell",
-      "description": "Styles applied to the root element if `day` is the last visible cell of the month.",
+      "description": "Styles applied to the root element if `isDayLastVisibleCell=true`.",
       "isGlobal": false
     },
     {
-      "key": "hiddenDayFiller",
-      "className": "MuiDateRangePickerDay-hiddenDayFiller",
-      "description": "Styles applied to the root element if it is an empty cell used to fill the week.",
+      "key": "previewed",
+      "className": "MuiDateRangePickerDay-previewed",
+      "description": "Styles applied to the root element if `isDayPreviewed=true`.",
       "isGlobal": false
     },
     {
-      "key": "day",
-      "className": "MuiDateRangePickerDay-day",
-      "description": "Styles applied to the day element.",
-      "isGlobal": false
-    },
-    {
-      "key": "dayOutsideRangeInterval",
-      "className": "MuiDateRangePickerDay-dayOutsideRangeInterval",
-      "description": "Styles applied to the day element if `isHighlighting=false`.",
-      "isGlobal": false
-    },
-    {
-      "key": "dayInsideRangeInterval",
-      "className": "MuiDateRangePickerDay-dayInsideRangeInterval",
-      "description": "Styles applied to the day element if `selected=false` and `isHighlighting=true`.",
-      "isGlobal": false
-    },
-    {
-      "key": "notSelectedDate",
-      "className": "MuiDateRangePickerDay-notSelectedDate",
-      "description": "Styles applied to the day element if `selected=false`.",
+      "key": "draggable",
+      "className": "MuiDateRangePickerDay-draggable",
+      "description": "Styles applied to the root element if `isDayDraggable=true`.",
       "isGlobal": false
     }
   ],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiDateRangePickerDay",
   "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePickerDay/DateRangePickerDay.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-date-pickers/playground/\">Customization playground</a></li></ul>",
   "cssComponent": false
 }

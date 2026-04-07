@@ -61,13 +61,15 @@ export default function NpmSparkLine() {
       role="button"
       aria-label="Showing weekly downloads"
       tabIndex={0}
-      width="100%"
-      height="100%"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
     >
-      <Stack direction="column" width={300}>
+      <Stack direction="column" sx={{ width: 300 }}>
         <Typography
           sx={{
             color: 'rgb(117, 117, 117)',
@@ -86,9 +88,11 @@ export default function NpmSparkLine() {
         </Typography>
         <Stack
           direction="row"
-          justifyContent="space-between"
-          alignItems="flex-end"
-          sx={{ borderBottom: 'solid 2px rgba(137, 86, 255, 0.2)' }}
+          sx={{
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            borderBottom: 'solid 2px rgba(137, 86, 255, 0.2)',
+          }}
         >
           <Typography sx={{ fontSize: '1.25rem', fontWeight: 500 }}>
             {downloads[weekIndex ?? downloads.length - 1].toLocaleString()}

@@ -10,7 +10,7 @@
       },
       "required": true
     },
-    "error": { "type": { "name": "bool" }, "required": true },
+    "error": { "type": { "name": "bool" }, "default": "false", "required": true },
     "onBlur": {
       "type": { "name": "func" },
       "required": true,
@@ -70,17 +70,31 @@
     "sectionListRef": { "type": { "name": "custom", "description": "ref" }, "required": true },
     "value": { "type": { "name": "object" }, "required": true },
     "endAdornment": { "type": { "name": "node" } },
-    "FormHelperTextProps": { "type": { "name": "object" } },
-    "fullWidth": { "type": { "name": "bool" } },
+    "FormHelperTextProps": {
+      "type": { "name": "object" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>slotProps.formHelperText</code> instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details."
+    },
+    "fullWidth": { "type": { "name": "bool" }, "default": "false" },
     "helperText": { "type": { "name": "node" } },
     "id": { "type": { "name": "string" } },
-    "InputLabelProps": { "type": { "name": "object" } },
-    "inputProps": { "type": { "name": "custom", "description": "ref" } },
+    "InputLabelProps": {
+      "type": { "name": "object" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>slotProps.inputLabel</code> instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details."
+    },
+    "inputProps": {
+      "type": { "name": "custom", "description": "ref" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>slotProps.htmlInput</code> instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details."
+    },
     "InputProps": {
       "type": {
         "name": "union",
         "description": "object<br>&#124;&nbsp;object<br>&#124;&nbsp;object"
-      }
+      },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>slotProps.input</code> instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details."
     },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },

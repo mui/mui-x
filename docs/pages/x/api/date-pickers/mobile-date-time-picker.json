@@ -26,7 +26,6 @@
     },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
-    "enableAccessibleFieldDOMStructure": { "type": { "name": "any" }, "default": "true" },
     "fixedWeekNumber": { "type": { "name": "number" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
@@ -252,8 +251,8 @@
     },
     {
       "name": "day",
-      "description": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
-      "default": "PickersDay",
+      "description": "Custom component for day.\nCheck the [PickerDay](https://mui.com/x/api/date-pickers/picker-day/) component.",
+      "default": "PickerDay",
       "class": null
     },
     {
@@ -370,7 +369,7 @@
     {
       "name": "textField",
       "description": "Form control with an input to render the value.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     },
     {
