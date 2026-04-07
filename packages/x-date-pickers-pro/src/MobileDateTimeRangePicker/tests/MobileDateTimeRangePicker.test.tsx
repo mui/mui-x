@@ -3,7 +3,7 @@ import {
   createPickerRenderer,
   openPickerAsync,
   getFieldSectionsContainer,
-  expectFieldValueV7,
+  expectFieldValue,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 import { vi } from 'vitest';
@@ -44,7 +44,7 @@ describe('<MobileDateTimeRangePicker />', () => {
       const meridiem = screen.getByRole('option', { name: 'AM' });
       expect(meridiem).toHaveFocus();
       const sectionsContainer = getFieldSectionsContainer();
-      expectFieldValueV7(sectionsContainer, '01/10/2018 12:00 AM – MM/DD/YYYY hh:mm aa');
+      expectFieldValue(sectionsContainer, '01/10/2018 12:00 AM – MM/DD/YYYY hh:mm aa');
     });
   });
 });

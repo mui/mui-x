@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
@@ -35,13 +35,13 @@ describe('<DesktopDateRangePicker /> - Describe Value', () => {
       const expectedStartValueStr = expectedValues[0]
         ? adapterToUse.format(expectedValues[0], 'keyboardDate')
         : 'MM/DD/YYYY';
-      expectFieldValueV7(startSectionsContainer, expectedStartValueStr);
+      expectFieldValue(startSectionsContainer, expectedStartValueStr);
 
       const endSectionsContainer = getFieldSectionsContainer(1);
       const expectedEndValueStr = expectedValues[1]
         ? adapterToUse.format(expectedValues[1], 'keyboardDate')
         : 'MM/DD/YYYY';
-      expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
+      expectFieldValue(endSectionsContainer, expectedEndValueStr);
     },
     setNewValue: (
       value,
