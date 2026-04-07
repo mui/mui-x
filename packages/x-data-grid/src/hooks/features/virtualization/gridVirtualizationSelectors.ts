@@ -43,6 +43,16 @@ export const gridVirtualizationRowEnabledSelector = createSelector(
 );
 
 /**
+ * Get the layout mode
+ * @category Virtualization
+ * @ignore - do not document.
+ */
+export const gridVirtualizationLayoutModeSelector = createSelector(
+  gridVirtualizationSelector,
+  (state) => state.layoutMode,
+);
+
+/**
  * Get the render context
  * @category Virtualization
  * @ignore - do not document.
