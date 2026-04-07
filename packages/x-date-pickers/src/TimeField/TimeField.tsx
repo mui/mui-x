@@ -35,7 +35,7 @@ const TimeField = React.forwardRef(function TimeField(
     name: 'MuiTimeField',
   });
 
-  const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
+  const { slots, slotProps, ...other } = themeProps;
 
   const textFieldProps = useFieldTextFieldProps<TimeFieldProps>({
     slotProps,
@@ -146,11 +146,6 @@ TimeField.propTypes = {
    */
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
-   * Props applied to the [`FormHelperText`](https://mui.com/material-ui/api/form-helper-text/) element.
-   * @deprecated Use `slotProps.formHelperText` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  FormHelperTextProps: PropTypes.object,
-  /**
    * If `true`, the input will take up the full width of its container.
    * @default false
    */
@@ -170,25 +165,6 @@ TimeField.propTypes = {
    * The id of the `input` element.
    */
   id: PropTypes.string,
-  /**
-   * Props applied to the [`InputLabel`](https://mui.com/material-ui/api/input-label/) element.
-   * Pointer events like `onClick` are enabled if and only if `shrink` is `true`.
-   * @deprecated Use `slotProps.inputLabel` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  InputLabelProps: PropTypes.object,
-  /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps: PropTypes.object,
-  /**
-   * Props applied to the Input element.
-   * It will be a [`FilledInput`](https://mui.com/material-ui/api/filled-input/),
-   * [`OutlinedInput`](https://mui.com/material-ui/api/outlined-input/) or [`Input`](https://mui.com/material-ui/api/input/)
-   * component depending on the `variant` prop value.
-   * @deprecated Use `slotProps.input` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  InputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
    */
@@ -334,7 +310,7 @@ TimeField.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overridable component slots.
+   * The components used for each slot inside.
    * @default {}
    */
   slots: PropTypes.object,
