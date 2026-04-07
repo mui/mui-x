@@ -385,6 +385,8 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
 }
 
 const alwaysTrue = () => true;
+// Avoid ticks on more than 360° for rotation axis.
+const isInsideRotation = (scale: D3Scale) => (rotation: number) => (Math.abs(scale.range()[0] - rotation) < Math.PI * 2 - 0.01)
 
 export function useTicks(
   options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' | 'rotation' | 'radius' },
@@ -401,9 +403,8 @@ export function useTicks(
     ordinalTimeTicks,
   } = options;
   const { instance } = useChartsContext();
-  const isInside =
-    // eslint-disable-next-line no-nested-ternary
-    direction === 'x' ? instance.isXInside : direction === 'y' ? instance.isYInside : alwaysTrue;
+  // eslint-disable-next-line no-nested-ternary
+  const isInside = direction === 'x' ? instance.isXInside : direction === 'y' ? instance.isYInside : direction === 'rotation' ? isInsideRotation(scale) : alwaysTrue;
 
   return React.useMemo(
     () =>

@@ -15,7 +15,7 @@ import {
   type PolarChartSeriesType,
 } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
-import { getDefaultTickNumber, getTickNumber, scaleTickNumberByRange } from '../../../ticks';
+import { getDefaultTickNumber, getTickNumber } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { getAxisExtremum } from './getAxisExtremum';
@@ -192,15 +192,17 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
       axisExtremums[1] = max;
     }
 
-    const rawTickNumber = getTickNumber(
+    // Use degrees to display more ticks by default
+    const ratio = axisDirection === 'rotation' ? 180 / 3 : 1
+
+    const tickNumber = axis.tickNumber ?? getTickNumber(
       axis,
       axisExtremums,
-      getDefaultTickNumber(Math.abs(range[1] - range[0])),
+      getDefaultTickNumber(ratio * Math.abs(range[1] - range[0])),
     );
-    const tickNumber = scaleTickNumberByRange(rawTickNumber, range);
 
     const scale = getScale(scaleType, axisExtremums, range);
-    const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
+    const finalScale = domainLimit === 'nice' ? scale.nice(tickNumber) : scale;
     const [minDomain, maxDomain] = finalScale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
