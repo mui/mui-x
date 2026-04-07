@@ -89,4 +89,4 @@
 - [DayCalendarSkeleton](/x/api/date-pickers/day-calendar-skeleton/)
 - [LocalizationProvider](/x/api/date-pickers/localization-provider/)
 - [PickersCalendarHeader](/x/api/date-pickers/pickers-calendar-header/)
-- [PickerDay](/x/api/date-pickers/picker-day/)
+- [PickersDay](/x/api/date-pickers/pickers-day/)

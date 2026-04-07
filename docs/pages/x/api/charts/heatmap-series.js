@@ -1,6 +1,5 @@
 import * as React from 'react';
 import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
 import jsonPageContent from './heatmap-series.json';
 

@@ -162,15 +162,19 @@ export function buildInterfacePages(
     });
 
     // JS page wrapper
+    const isDataGrid = entry.folder === 'data-grid';
+    const layoutImport = isDataGrid
+      ? "import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';\n"
+      : '';
+    const layoutProp = isDataGrid ? '{...layoutConfig} ' : '';
     const jsContent = `import * as React from 'react';
 import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+${layoutImport}import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
 import jsonPageContent from './${slug}.json';
 
 export default function Page(props) {
   const { descriptions } = props;
-  return <InterfaceApiPage ${entry.folder === 'data-grid' ? '{...layoutConfig} ' : ''}descriptions={descriptions} pageContent={jsonPageContent} />;
+  return <InterfaceApiPage ${layoutProp}descriptions={descriptions} pageContent={jsonPageContent} />;
 }
 
 export async function getStaticProps() {

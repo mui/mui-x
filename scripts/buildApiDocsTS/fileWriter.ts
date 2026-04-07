@@ -28,6 +28,10 @@ export function cleanupStaleFiles(fileWrites: FileWrite[]): void {
       if (!file.endsWith('.json') && !file.endsWith('.js')) {
         continue;
       }
+      // Preserve hand-written index files
+      if (file.startsWith('index.')) {
+        continue;
+      }
       const absFile = path.join(absDir, file);
       if (!generatedPaths.has(absFile)) {
         fs.unlinkSync(absFile);
