@@ -1111,7 +1111,6 @@ describe('<DataGrid /> - Rows', () => {
             getEstimatedRowHeight={() => estimatedRowHeight}
             getRowHeight={() => 'auto'}
             rowBufferPx={0}
-            disableVirtualization
           />,
         );
         const element = document.querySelector('.MuiDataGrid-contentFiller');
