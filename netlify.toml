@@ -8,7 +8,7 @@
 [build.environment]
   NODE_VERSION = "22.18"
   PNPM_FLAGS = "--frozen-lockfile"
-  NODE_OPTIONS = "--max-old-space-size=6144"
+  NODE_OPTIONS = "--max-old-space-size=4096"
 
 # disabled because of https://github.com/mui/mui-public/issues/809
 # TODO: Re-enable after either:
