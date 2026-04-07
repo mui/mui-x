@@ -108,7 +108,7 @@ Same changes as in `@mui/x-tree-view@9.0.0-rc.0`, plus:
 - [scheduler] Fix licensing confusion in docs (#21939) @rita-codes
 - [scheduler] Fix preferences menu width shift when toggling options + Improve preferences menu accessibility (#21902) @rita-codes
 - [scheduler] Prepare for the alpha launch (#21859) @rita-codes
-- [scheduler] Sync Base UI internals and apply good practices (#21946) @flaviendelangle
+- [scheduler] Sync Base UI internals and apply good practices (#21946) @flaviendelangle
 - [scheduler] Update close modal aria label translation (#21940) @rita-codes
 
 #### `@mui/x-scheduler-premium@9.0.0-rc.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
