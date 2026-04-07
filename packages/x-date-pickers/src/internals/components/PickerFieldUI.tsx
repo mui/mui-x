@@ -16,8 +16,6 @@ import { useNullablePickerContext } from '../hooks/useNullablePickerContext';
 import type { UseFieldReturnValue, UseFieldProps } from '../hooks/useField';
 import { PickersTextField, PickersTextFieldProps } from '../../PickersTextField';
 
-const noop = () => {};
-
 export const cleanFieldResponse = <
   TFieldResponse extends MakeOptional<
     UseFieldReturnValue<ExportedPickerFieldUIProps & { [key: string]: any }>,
@@ -27,16 +25,9 @@ export const cleanFieldResponse = <
   fieldResponse: TFieldResponse,
 ): ExportedPickerFieldUIProps & {
   openPickerAriaLabel: string;
-  textFieldProps: Partial<PickersTextFieldProps> &
-    // TODO: Remove v9 - temporary workaround
-    {
-      inputProps?: Record<string, any>;
-      InputProps?: Record<string, any>;
-      slotProps?: { input?: Record<string, any>; htmlInput?: Record<string, any> };
-    };
+  textFieldProps: Partial<PickersTextFieldProps>;
 } => {
   const {
-    InputProps,
     readOnly,
     onClear,
     clearable,
@@ -46,9 +37,6 @@ export const cleanFieldResponse = <
     ...other
   } = fieldResponse;
 
-  const mergedInputProps = other?.slotProps?.input
-    ? mergeSlotProps(other?.slotProps?.input, InputProps)
-    : noop;
   return {
     clearable,
     onClear,
@@ -57,19 +45,10 @@ export const cleanFieldResponse = <
     openPickerAriaLabel,
     textFieldProps: {
       ...other,
-      ...(other?.slotProps?.input || other?.slotProps?.htmlInput
-        ? {
-            slotProps: {
-              ...other?.slotProps,
-              input: (ownerState: FieldOwnerState) => ({
-                ...resolveComponentProps(mergedInputProps, ownerState),
-                readOnly,
-              }),
-            },
-          }
-        : {
-            InputProps: { ...(InputProps ?? {}), readOnly },
-          }),
+      slotProps: {
+        ...other?.slotProps,
+        input: { ...other?.slotProps?.input, readOnly },
+      },
     },
   };
 };
@@ -190,23 +169,18 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
 
   textFieldProps.ref = useForkRef(textFieldProps.ref, pickerContext?.rootRef);
 
-  const additionalTextFieldInputProps: PickersTextFieldProps['InputProps'] = {};
-  const textFieldInputProps = resolveComponentProps(
-    (textFieldProps?.slotProps?.input ?? textFieldProps.InputProps) as
-      | PickersTextFieldProps['InputProps']
-      | undefined,
-    ownerState,
-  );
+  const externalInputSlotProps = textFieldProps.slotProps?.input;
+  const additionalInputSlotProps: NonNullable<PickersTextFieldProps['slotProps']>['input'] = {};
 
   if (pickerContext) {
-    additionalTextFieldInputProps.ref = pickerContext.triggerRef;
+    additionalInputSlotProps.ref = pickerContext.triggerRef;
   }
 
   if (
-    !textFieldInputProps?.startAdornment &&
+    !externalInputSlotProps?.startAdornment &&
     (clearButtonPosition === 'start' || openPickerButtonPosition === 'start')
   ) {
-    additionalTextFieldInputProps.startAdornment = (
+    additionalInputSlotProps.startAdornment = (
       <InputAdornment {...startInputAdornmentProps}>
         {openPickerButtonPosition === 'start' && (
           <OpenPickerButton {...openPickerButtonProps}>
@@ -223,10 +197,10 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
   }
 
   if (
-    !textFieldInputProps?.endAdornment &&
+    !externalInputSlotProps?.endAdornment &&
     (clearButtonPosition === 'end' || openPickerButtonPosition === 'end')
   ) {
-    additionalTextFieldInputProps.endAdornment = (
+    additionalInputSlotProps.endAdornment = (
       <InputAdornment {...endInputAdornmentProps}>
         {clearButtonPosition === 'end' && (
           <ClearButton {...clearButtonProps}>
@@ -243,11 +217,11 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
   }
   // handle the case of showing custom `inputAdornment` for Field components
   if (
-    !additionalTextFieldInputProps?.endAdornment &&
-    !additionalTextFieldInputProps?.startAdornment &&
+    !additionalInputSlotProps.endAdornment &&
+    !additionalInputSlotProps.startAdornment &&
     pickerFieldUIContext.slots.inputAdornment
   ) {
-    additionalTextFieldInputProps.endAdornment = <InputAdornment {...endInputAdornmentProps} />;
+    additionalInputSlotProps.endAdornment = <InputAdornment {...endInputAdornmentProps} />;
   }
 
   if (clearButtonPosition != null) {
@@ -271,28 +245,12 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
     ];
   }
 
-  const resolvedTextFieldInputProps = textFieldProps?.slotProps?.input
-    ? resolveComponentProps(
-        mergeSlotProps(textFieldInputProps, additionalTextFieldInputProps),
-        ownerState,
-      )
-    : {
-        ...textFieldInputProps,
-        ...additionalTextFieldInputProps,
-      };
+  textFieldProps.slotProps = {
+    ...textFieldProps.slotProps,
+    input: { ...externalInputSlotProps, ...additionalInputSlotProps },
+  };
 
-  // We need to resolve the `inputProps` since we are messing with those props in this component.
-  textFieldProps.inputProps = (textFieldProps as any)?.slotProps?.htmlInput
-    ? resolveComponentProps((textFieldProps as any).slotProps!.htmlInput as any, ownerState)
-    : textFieldProps.inputProps;
-
-  // Remove the `input` slotProps to avoid them overriding the manually resolved `InputProps`.
-  // `slotProps` would take precedence over `InputProps`.
-  delete (textFieldProps as any)?.slotProps?.input;
-  // Remove the `slotProps` on `PickersTextField` as they are not supported.
-  delete (textFieldProps as any)?.slotProps;
-
-  return <TextField {...textFieldProps} InputProps={resolvedTextFieldInputProps} />;
+  return <TextField {...textFieldProps} />;
 }
 
 export interface ExportedPickerFieldUIProps {
@@ -366,18 +324,7 @@ export interface PickerFieldUISlotsFromContext extends PickerFieldUISlots {
 }
 
 export interface PickerFieldUISlotProps {
-  textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps & {
-      // Temporary solution until we update the PickersTextField props to accept the `slotProps` as in `@mui/material` v9.
-      // TODO v9: Refactor
-      slotProps?: {
-        input?: Record<string, any>;
-        htmlInput?: Record<string, any>;
-      };
-    },
-    {},
-    FieldOwnerState
-  >;
+  textField?: SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState>;
   inputAdornment?: SlotComponentPropsFromProps<
     InputAdornmentProps,
     {},
@@ -427,15 +374,13 @@ export function mergeSlotProps<TProps extends {}, TOwnerState extends FieldOwner
  * Once the non-accessible DOM structure will be removed, we will be able to remove the `textField` slot and clean this logic.
  * TODO: Address with the needed support for the `textField` slotProps given the change of minimum version of MUI.
  */
-export function useFieldTextFieldProps<
-  TProps extends UseFieldOwnerStateParameters & { inputProps?: {}; InputProps?: {} },
->(parameters: UseFieldTextFieldPropsParameters) {
+export function useFieldTextFieldProps<TProps extends UseFieldOwnerStateParameters>(
+  parameters: UseFieldTextFieldPropsParameters,
+) {
   const { ref, externalForwardedProps, slotProps } = parameters;
   const pickerFieldUIContext = React.useContext(PickerFieldUIContext);
   const pickerContext = useNullablePickerContext();
   const ownerState = useFieldOwnerState(externalForwardedProps);
-
-  const { InputProps, inputProps, ...otherExternalForwardedProps } = externalForwardedProps;
 
   const textFieldProps = useSlotProps({
     elementType: PickersTextField,
@@ -443,7 +388,7 @@ export function useFieldTextFieldProps<
       pickerFieldUIContext.slotProps.textField as any,
       slotProps?.textField as any,
     ),
-    externalForwardedProps: otherExternalForwardedProps,
+    externalForwardedProps,
     additionalProps: {
       ref,
       sx: pickerContext?.rootSx,
@@ -501,10 +446,6 @@ export function useFieldTextFieldProps<
       }
     };
   }
-
-  // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
-  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   return textFieldProps;
 }
