@@ -62,6 +62,9 @@ Use the `virtualizerLayoutMode` key inside `experimentalFeatures` to opt in to t
 <DataGrid experimentalFeatures={{ virtualizerLayoutMode: 'controlled' }} />
 ```
 
+The demo below lets you switch between modes and scroll quickly to see the difference.
+If you don't see the difference, consider setting [CPU Throttling in Chrome Dev Tools](https://developer.chrome.com/docs/devtools/settings/throttling) to simulate a lower-end device.
+
 {{"demo": "VirtualizerLayoutMode.js", "bg": "inline"}}
 
 ## Disable virtualization
