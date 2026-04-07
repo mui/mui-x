@@ -231,6 +231,8 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
     disableUnderline = false,
     hiddenLabel = false,
     classes: classesProp,
+    slots: incomingSlots,
+    slotProps: incomingSlotProps,
     ...other
   } = props;
 
@@ -243,9 +245,17 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
 
   return (
     <PickersInputBase
-      slots={{ root: PickersFilledInputRoot, input: PickersFilledSectionsContainer }}
-      slotProps={{ root: { disableUnderline }, input: { hiddenLabel } }}
       {...other}
+      slots={{
+        root: PickersFilledInputRoot,
+        input: PickersFilledSectionsContainer,
+        ...incomingSlots,
+      }}
+      slotProps={{
+        ...incomingSlotProps,
+        root: { disableUnderline, ...incomingSlotProps?.root },
+        input: { hiddenLabel, ...incomingSlotProps?.input },
+      }}
       label={label}
       classes={classes}
       ref={ref as any}
@@ -300,11 +310,6 @@ PickersFilledInput.propTypes = {
    * The id of the `input` element.
    */
   id: PropTypes.string,
-  /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
    */

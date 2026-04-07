@@ -121,6 +121,8 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
     ownerState: ownerStateProp,
     classes: classesProp,
     notched,
+    slots: incomingSlots,
+    slotProps: incomingSlotProps,
     ...other
   } = props;
 
@@ -129,7 +131,17 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
 
   return (
     <PickersInputBase
-      slots={{ root: PickersOutlinedInputRoot, input: PickersOutlinedInputSectionsContainer }}
+      {...other}
+      slots={{
+        root: PickersOutlinedInputRoot,
+        input: PickersOutlinedInputSectionsContainer,
+        ...incomingSlots,
+      }}
+      slotProps={{
+        ...incomingSlotProps,
+        root: { ...incomingSlotProps?.root },
+        input: { ...incomingSlotProps?.input },
+      }}
       renderSuffix={(state) => (
         <Outline
           shrink={Boolean(notched || state.adornedStart || state.focused || state.filled)}
@@ -147,7 +159,6 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
           }
         />
       )}
-      {...other}
       label={label}
       classes={classes}
       ref={ref as any}
@@ -199,11 +210,6 @@ PickersOutlinedInput.propTypes = {
    * The id of the `input` element.
    */
   id: PropTypes.string,
-  /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
    */

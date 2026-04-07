@@ -153,6 +153,8 @@ const PickersInput = React.forwardRef(function PickersInput(
     disableUnderline = false,
     ownerState: ownerStateProp,
     classes: classesProp,
+    slots: incomingSlots,
+    slotProps: incomingSlotProps,
     ...other
   } = props;
 
@@ -165,9 +167,12 @@ const PickersInput = React.forwardRef(function PickersInput(
 
   return (
     <PickersInputBase
-      slots={{ root: PickersInputRoot }}
-      slotProps={{ root: { disableUnderline } }}
       {...other}
+      slots={{ root: PickersInputRoot, ...incomingSlots }}
+      slotProps={{
+        ...incomingSlotProps,
+        root: { disableUnderline, ...incomingSlotProps?.root },
+      }}
       ownerState={ownerState}
       label={label}
       classes={classes}
@@ -221,11 +226,6 @@ PickersInput.propTypes = {
    * The id of the `input` element.
    */
   id: PropTypes.string,
-  /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
    */

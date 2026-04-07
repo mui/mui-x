@@ -8,6 +8,56 @@ import type { PickersInputProps } from './PickersInput';
 import type { PickersOutlinedInputProps } from './PickersOutlinedInput';
 import type { PickersFilledInputProps } from './PickersFilledInput';
 
+export interface PickersTextFieldSlots {
+  /**
+   * The component used for the root slot.
+   * @default FormControl
+   */
+  root: React.ElementType;
+  /**
+   * The component used for the input slot.
+   * Defaults to one of `PickersInput`, `PickersFilledInput`, `PickersOutlinedInput` based on `variant`.
+   */
+  input: React.ElementType;
+  /**
+   * The component used for the input label slot.
+   * @default InputLabel
+   */
+  inputLabel: React.ElementType;
+  /**
+   * The component used for the html input slot.
+   */
+  htmlInput: React.ElementType;
+  /**
+   * The component used for the form helper text slot.
+   * @default FormHelperText
+   */
+  formHelperText: React.ElementType;
+}
+
+export interface PickersTextFieldSlotProps<InputPropsType> {
+  root?: Partial<FormControlProps>;
+  input?: Partial<InputPropsType>;
+  inputLabel?: Partial<InputLabelProps>;
+  htmlInput?: React.InputHTMLAttributes<HTMLInputElement> & {
+    ref?: React.Ref<HTMLInputElement>;
+  };
+  formHelperText?: Partial<FormHelperTextProps>;
+}
+
+export interface PickersTextFieldSlotsAndSlotProps<InputPropsType> {
+  /**
+   * The components used for each slot inside.
+   * @default {}
+   */
+  slots?: Partial<PickersTextFieldSlots>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: PickersTextFieldSlotProps<InputPropsType>;
+}
+
 interface PickersTextFieldPropsUsedByField {
   onFocus: React.FocusEventHandler<HTMLDivElement>;
   onBlur: React.FocusEventHandler<HTMLDivElement>;
@@ -25,69 +75,42 @@ export interface PickersBaseTextFieldProps
     PickersTextFieldPropsUsedByField,
     Omit<
       FormControlProps,
-      keyof PickersInputPropsUsedByField | keyof PickersTextFieldPropsUsedByField
+      | keyof PickersInputPropsUsedByField
+      | keyof PickersTextFieldPropsUsedByField
+      | 'slots'
+      | 'slotProps'
     > {
-  /**
-   * Props applied to the [`FormHelperText`](https://mui.com/material-ui/api/form-helper-text/) element.
-   * @deprecated Use `slotProps.formHelperText` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  FormHelperTextProps?: Partial<FormHelperTextProps>;
-  /**
-   * Props applied to the [`InputLabel`](https://mui.com/material-ui/api/input-label/) element.
-   * Pointer events like `onClick` are enabled if and only if `shrink` is `true`.
-   * @deprecated Use `slotProps.inputLabel` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  InputLabelProps?: Partial<InputLabelProps>;
   /**
    * The helper text content.
    */
   helperText?: React.ReactNode;
 }
 
-export interface PickersStandardTextFieldProps extends PickersBaseTextFieldProps {
+export interface PickersStandardTextFieldProps
+  extends PickersBaseTextFieldProps, PickersTextFieldSlotsAndSlotProps<PickersInputProps> {
   /**
    * The variant to use.
    * @default 'outlined'
    */
   variant?: 'standard';
-  /**
-   * Props applied to the Input element.
-   * It will be a [`FilledInput`](https://mui.com/material-ui/api/filled-input/),
-   * [`OutlinedInput`](https://mui.com/material-ui/api/outlined-input/) or [`Input`](https://mui.com/material-ui/api/input/)
-   * component depending on the `variant` prop value.
-   * @deprecated Use `slotProps.input` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  InputProps?: Partial<PickersInputProps>;
 }
-export interface PickersOutlinedTextFieldProps extends PickersBaseTextFieldProps {
+
+export interface PickersOutlinedTextFieldProps
+  extends PickersBaseTextFieldProps, PickersTextFieldSlotsAndSlotProps<PickersOutlinedInputProps> {
   /**
    * The variant to use.
    * @default 'outlined'
    */
   variant?: 'outlined';
-  /**
-   * Props applied to the Input element.
-   * It will be a [`FilledInput`](https://mui.com/material-ui/api/filled-input/),
-   * [`OutlinedInput`](https://mui.com/material-ui/api/outlined-input/) or [`Input`](https://mui.com/material-ui/api/input/)
-   * component depending on the `variant` prop value.
-   * @deprecated Use `slotProps.input` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  InputProps?: Partial<PickersOutlinedInputProps>;
 }
-export interface PickersFilledTextFieldProps extends PickersBaseTextFieldProps {
+
+export interface PickersFilledTextFieldProps
+  extends PickersBaseTextFieldProps, PickersTextFieldSlotsAndSlotProps<PickersFilledInputProps> {
   /**
    * The variant to use.
    * @default 'outlined'
    */
   variant?: 'filled';
-  /**
-   * Props applied to the Input element.
-   * It will be a [`FilledInput`](https://mui.com/material-ui/api/filled-input/),
-   * [`OutlinedInput`](https://mui.com/material-ui/api/outlined-input/) or [`Input`](https://mui.com/material-ui/api/input/)
-   * component depending on the `variant` prop value.
-   * @deprecated Use `slotProps.input` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  InputProps?: Partial<PickersFilledInputProps>;
 }
 
 export type PickersTextFieldProps<Variant extends TextFieldVariants = TextFieldVariants> =

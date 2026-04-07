@@ -75,8 +75,6 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     required = false,
     hiddenLabel = false,
     // Props used by PickersInput
-    InputProps,
-    inputProps,
     inputRef,
     sectionListRef,
     elements,
@@ -98,10 +96,11 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     name,
     // Props used by FormHelperText
     helperText,
-    FormHelperTextProps,
     // Props used by InputLabel
     label,
-    InputLabelProps,
+    // Slot system
+    slots,
+    slotProps,
     // @ts-ignore
     'data-active-range-position': dataActiveRangePosition,
     ...other
@@ -114,10 +113,13 @@ const PickersTextField = React.forwardRef(function PickersTextField(
   const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
   const inputLabelId = label && id ? `${id}-label` : undefined;
 
+  const inputSlotProps = slotProps?.input;
+  const inputLabelSlotProps = slotProps?.inputLabel;
+
   const fieldOwnerState = useFieldOwnerState({
     disabled: props.disabled,
     required: props.required,
-    readOnly: InputProps?.readOnly,
+    readOnly: inputSlotProps?.readOnly,
   });
   const ownerState = React.useMemo<PickerTextFieldOwnerState>(
     () => ({
@@ -128,10 +130,10 @@ const PickersTextField = React.forwardRef(function PickersTextField(
       inputSize: props.size ?? 'medium',
       inputColor: color ?? 'primary',
       isInputInFullWidth: fullWidth ?? false,
-      hasStartAdornment: Boolean(startAdornment ?? InputProps?.startAdornment),
-      hasEndAdornment: Boolean(endAdornment ?? InputProps?.endAdornment),
+      hasStartAdornment: Boolean(startAdornment ?? inputSlotProps?.startAdornment),
+      hasEndAdornment: Boolean(endAdornment ?? inputSlotProps?.endAdornment),
       inputHasLabel: !!label,
-      isLabelShrunk: Boolean(InputLabelProps?.shrink),
+      isLabelShrunk: Boolean(inputLabelSlotProps?.shrink),
     }),
     [
       fieldOwnerState,
@@ -143,20 +145,23 @@ const PickersTextField = React.forwardRef(function PickersTextField(
       fullWidth,
       startAdornment,
       endAdornment,
-      InputProps?.startAdornment,
-      InputProps?.endAdornment,
+      inputSlotProps?.startAdornment,
+      inputSlotProps?.endAdornment,
       label,
-      InputLabelProps?.shrink,
+      inputLabelSlotProps?.shrink,
     ],
   );
   const classes = useUtilityClasses(classesProp, ownerState);
 
-  const PickersInputComponent = VARIANT_COMPONENT[variant];
+  const PickersInputComponent = slots?.input ?? VARIANT_COMPONENT[variant];
+  const RootComponent = slots?.root ?? PickersTextFieldRoot;
+  const InputLabelComponent = slots?.inputLabel ?? InputLabel;
+  const FormHelperTextComponent = slots?.formHelperText ?? FormHelperText;
 
   const inputAdditionalProps: Record<string, any> = {};
   if (variant === 'outlined') {
-    if (InputLabelProps && typeof InputLabelProps.shrink !== 'undefined') {
-      inputAdditionalProps.notched = InputLabelProps.shrink;
+    if (inputLabelSlotProps && typeof inputLabelSlotProps.shrink !== 'undefined') {
+      inputAdditionalProps.notched = inputLabelSlotProps.shrink;
     }
     inputAdditionalProps.label = label;
   } else if (variant === 'filled') {
@@ -165,7 +170,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
 
   return (
     <PickerTextFieldOwnerStateContext.Provider value={ownerState}>
-      <PickersTextFieldRoot
+      <RootComponent
         className={clsx(classes.root, className)}
         ref={handleRootRef}
         focused={focused}
@@ -177,11 +182,12 @@ const PickersTextField = React.forwardRef(function PickersTextField(
         required={required}
         ownerState={ownerState}
         {...other}
+        {...slotProps?.root}
       >
         {label != null && label !== '' && (
-          <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
+          <InputLabelComponent htmlFor={id} id={inputLabelId} {...inputLabelSlotProps}>
             {label}
-          </InputLabel>
+          </InputLabelComponent>
         )}
         <PickersInputComponent
           elements={elements}
@@ -201,7 +207,6 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           onChange={onChange}
           id={id}
           fullWidth={fullWidth}
-          inputProps={inputProps}
           inputRef={inputRef}
           sectionListRef={sectionListRef}
           label={label}
@@ -212,14 +217,16 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           aria-live={helperTextId ? 'polite' : undefined}
           data-active-range-position={dataActiveRangePosition}
           {...inputAdditionalProps}
-          {...InputProps}
+          {...inputSlotProps}
+          slots={{ htmlInput: slots?.htmlInput }}
+          slotProps={{ htmlInput: slotProps?.htmlInput }}
         />
         {helperText && (
-          <FormHelperText id={helperTextId} {...FormHelperTextProps}>
+          <FormHelperTextComponent id={helperTextId} {...slotProps?.formHelperText}>
             {helperText}
-          </FormHelperText>
+          </FormHelperTextComponent>
         )}
-      </PickersTextFieldRoot>
+      </RootComponent>
     </PickerTextFieldOwnerStateContext.Provider>
   );
 });

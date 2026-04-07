@@ -306,7 +306,6 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     fullWidth,
     name,
     readOnly,
-    inputProps,
     inputRef,
     sectionListRef,
     onFocus,
@@ -321,7 +320,6 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const activeBarRef = React.useRef<HTMLDivElement>(null);
   const sectionOffsetsRef = React.useRef<number[]>([]);
   const handleRootRef = useForkRef(ref, rootRef);
-  const handleInputRef = useForkRef(inputProps?.ref, inputRef);
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
     throw new Error(
@@ -399,6 +397,14 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
 
+  const HtmlInputComponent = slots?.htmlInput || PickersInputBaseInput;
+  const { ref: resolvedHtmlInputRef, ...htmlInputProps } = useSlotProps({
+    elementType: HtmlInputComponent,
+    externalSlotProps: slotProps?.htmlInput,
+    ownerState,
+  }) as React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
+  const handleInputRef = useForkRef(resolvedHtmlInputRef, inputRef);
+
   const isSingleInputRange = elements.some(
     (element) => element.content['data-range-position'] !== undefined,
   );
@@ -453,7 +459,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
             ...muiFormControl,
           })
         : null}
-      <PickersInputBaseInput
+      <HtmlInputComponent
         name={name}
         className={classes.input}
         value={value}
@@ -467,7 +473,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         // Hidden input element cannot be focused, trigger the root focus instead
         // This allows to maintain the ability to do `inputRef.current.focus()` to focus the field
         onFocus={handleHiddenInputFocus}
-        {...inputProps}
+        {...htmlInputProps}
         ref={handleInputRef}
       />
       {isSingleInputRange && (
@@ -525,11 +531,6 @@ PickersInputBase.propTypes = {
    * The id of the `input` element.
    */
   id: PropTypes.string,
-  /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
    */

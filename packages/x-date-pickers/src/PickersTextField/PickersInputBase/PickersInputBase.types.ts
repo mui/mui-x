@@ -52,14 +52,21 @@ export interface PickersInputPropsUsedByField extends Pick<
   name?: string;
 
   /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
-  /**
    * Pass a ref to the `input` element.
    */
   inputRef?: React.Ref<HTMLInputElement>;
+}
+
+export interface PickersInputBaseSlots {
+  root?: React.ElementType;
+  input?: React.ElementType;
+  htmlInput?: React.ElementType;
+}
+
+export interface PickersInputBaseSlotProps {
+  root?: any;
+  input?: any;
+  htmlInput?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
 }
 
 export interface PickersInputBaseProps
@@ -81,17 +88,11 @@ export interface PickersInputBaseProps
    *
    * @default {}
    */
-  slots?: {
-    root?: React.ElementType;
-    input?: React.ElementType;
-  };
+  slots?: PickersInputBaseSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: {
-    root?: any;
-    input?: any;
-  };
+  slotProps?: PickersInputBaseSlotProps;
   'data-multi-input'?: string;
 }
