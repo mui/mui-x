@@ -22,7 +22,7 @@ const rows = Array.from({ length: 100 }, (_, i) => ({
 }));
 
 export default function VirtualizerLayoutMode() {
-  const [layoutMode, setLayoutMode] = React.useState('uncontrolled');
+  const [layoutMode, setLayoutMode] = React.useState('controlled');
 
   return (
     <Stack spacing={1} sx={{ width: '100%' }}>

@@ -24,7 +24,7 @@ const rows = Array.from({ length: 100 }, (_, i) => ({
 type LayoutMode = 'uncontrolled' | 'controlled';
 
 export default function VirtualizerLayoutMode() {
-  const [layoutMode, setLayoutMode] = React.useState<LayoutMode>('uncontrolled');
+  const [layoutMode, setLayoutMode] = React.useState<LayoutMode>('controlled');
 
   return (
     <Stack spacing={1} sx={{ width: '100%' }}>
