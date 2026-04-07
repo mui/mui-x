@@ -172,7 +172,7 @@ function RealtimeInner({ emit }: { emit: (event: ChatRealtimeEvent) => void }) {
           borderColor: 'divider',
         }}
       >
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           Realtime presence and typing
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -209,8 +209,8 @@ function RealtimeInner({ emit }: { emit: (event: ChatRealtimeEvent) => void }) {
             </Typography>
             <Typography
               variant="body1"
-              fontWeight={700}
               sx={{
+                fontWeight: 700,
                 mt: 0.5,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -372,6 +372,7 @@ export default function RealtimeHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

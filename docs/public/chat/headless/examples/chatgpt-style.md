@@ -18,7 +18,7 @@ This demo shows how the same headless primitives can be customized to produce a 
 - No sender names or timestamps — clean, minimal message display
 - Centered content column with a maximum width and a pill-shaped composer
 
-````tsx
+```tsx
 import * as React from 'react';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
@@ -31,11 +31,6 @@ import ManageSearchRoundedIcon from '@mui/icons-material/ManageSearchRounded';
 import MicNoneRoundedIcon from '@mui/icons-material/MicNoneRounded';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
-import type {
-  ReasoningPartOwnerState,
-  ToolPartOwnerState,
-  ToolPartSectionOwnerState,
-} from '@mui/x-chat-headless';
 import {
   Chat,
   Conversation,
@@ -45,7 +40,13 @@ import {
   MessageGroup,
   MessageList,
 } from '@mui/x-chat-headless';
-import type { ChatMessage, ChatUser } from '@mui/x-chat-headless';
+import type {
+  ChatMessage,
+  ChatUser,
+  ReasoningPartOwnerState,
+  ToolPartOwnerState,
+  ToolPartSectionOwnerState,
+} from '@mui/x-chat-headless';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -261,6 +262,7 @@ function ConversationMenu({
   return (
     <React.Fragment>
       {/* Backdrop */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
         onClick={onClose}
         style={{
@@ -303,11 +305,11 @@ function ConversationMenu({
               textAlign: 'left',
               fontFamily: 'inherit',
             }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = '#424242';
+            onMouseEnter={(event) => {
+              (event.currentTarget as HTMLElement).style.background = '#424242';
             }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = 'none';
+            onMouseLeave={(event) => {
+              (event.currentTarget as HTMLElement).style.background = 'none';
             }}
           >
             <span
@@ -369,11 +371,15 @@ const GptConversationItem = React.forwardRef(function GptConversationItem(
           gap: 8,
           padding: '6px 8px',
           borderRadius: 8,
-          background: ownerState?.selected
-            ? gpt.sidebarSelected
-            : hovered
-              ? gpt.sidebarHover
-              : 'transparent',
+          background: (() => {
+            if (ownerState?.selected) {
+              return gpt.sidebarSelected;
+            }
+            if (hovered) {
+              return gpt.sidebarHover;
+            }
+            return 'transparent';
+          })(),
           color: gpt.text,
           fontSize: 14,
           cursor: 'pointer',
@@ -400,9 +406,9 @@ const GptConversationItem = React.forwardRef(function GptConversationItem(
         {hovered ? (
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setMenuAnchor(e.currentTarget);
+            onClick={(event) => {
+              event.stopPropagation();
+              setMenuAnchor(event.currentTarget);
             }}
             style={{
               position: 'absolute',
@@ -421,11 +427,11 @@ const GptConversationItem = React.forwardRef(function GptConversationItem(
               justifyContent: 'center',
               padding: 0,
             }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = '#424242';
+            onMouseEnter={(event) => {
+              (event.currentTarget as HTMLElement).style.background = '#424242';
             }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = 'transparent';
+            onMouseLeave={(event) => {
+              (event.currentTarget as HTMLElement).style.background = 'transparent';
             }}
           >
             <MoreHorizRoundedIcon style={{ fontSize: 16 }} />
@@ -601,12 +607,7 @@ const GptAvatar = React.forwardRef(function GptAvatar(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    ownerState: _ownerState,
-    children: _children,
-    style: _style,
-    ...other
-  } = props;
+  const { ownerState, children, style, ...other } = props;
 
   return <div ref={ref} style={{ display: 'none' }} {...other} />;
 });
@@ -672,7 +673,7 @@ const GptReasoningRoot = React.forwardRef(function GptReasoningRoot(
   },
   ref: React.Ref<HTMLDetailsElement>,
 ) {
-  const { ownerState: _ownerState, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
   return (
     <details
       ref={ref}
@@ -697,7 +698,7 @@ const GptReasoningSummary = React.forwardRef(function GptReasoningSummary(
   },
   ref: React.Ref<HTMLElement>,
 ) {
-  const { ownerState: _ownerState, children, style, ...other } = props;
+  const { ownerState, children, style, ...other } = props;
   return (
     <summary
       ref={ref}
@@ -727,7 +728,7 @@ const GptReasoningContent = React.forwardRef(function GptReasoningContent(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { ownerState: _ownerState, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
   return (
     <div
       ref={ref}
@@ -753,7 +754,7 @@ const GptToolRoot = React.forwardRef(function GptToolRoot(
   props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: ToolPartOwnerState },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { ownerState: _ownerState, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
   return (
     <div
       ref={ref}
@@ -775,7 +776,7 @@ const GptToolHeader = React.forwardRef(function GptToolHeader(
   props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: ToolPartOwnerState },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { ownerState: _ownerState, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
   return (
     <div
       ref={ref}
@@ -796,7 +797,7 @@ const GptToolTitle = React.forwardRef(function GptToolTitle(
   props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: ToolPartOwnerState },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { ownerState: _ownerState, children, style, ...other } = props;
+  const { ownerState, children, style, ...other } = props;
   return (
     <div
       ref={ref}
@@ -847,7 +848,7 @@ const GptToolSection = React.forwardRef(function GptToolSection(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { ownerState: _ownerState, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
   return (
     <div
       ref={ref}
@@ -867,7 +868,7 @@ const GptToolSectionContent = React.forwardRef(function GptToolSectionContent(
   },
   ref: React.Ref<HTMLPreElement>,
 ) {
-  const { ownerState: _ownerState, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
   return (
     <pre
       ref={ref}
@@ -1292,7 +1293,8 @@ export default function ChatGptStyleChat() {
     </Chat.Root>
   );
 }
-````
+
+```
 
 ## Key techniques
 

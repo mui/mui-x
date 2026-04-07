@@ -28,9 +28,8 @@ import {
   ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { useMessageIds } from '@mui/x-chat-headless';
+import { useMessageIds, ChatRoot } from '@mui/x-chat-headless';
 import type { ChatAdapter } from '@mui/x-chat-headless';
-import { ChatRoot } from '@mui/x-chat-headless';
 import {
   createChunkStream,
   createTextResponseChunks,
@@ -41,7 +40,7 @@ import {
   demoUsers,
 } from 'docsx/data/chat/material/examples/shared/demoData';
 
-const CONVERSATION_ID = randomId();
+const CONVERSATION_ID = 'split-conv';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {
@@ -57,7 +56,7 @@ const adapter: ChatAdapter = {
 
 const initialMessages = [
   createTextMessage({
-    id: randomId(),
+    id: 'sl-msg-1',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -65,7 +64,7 @@ const initialMessages = [
     text: 'The message list (left) and the composer (right) are siblings in the DOM — neither is nested inside the other.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'sl-msg-2',
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -73,7 +72,7 @@ const initialMessages = [
     text: 'What connects them?',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'sl-msg-3',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -101,9 +100,9 @@ function MessagePane() {
   const messageIds = useMessageIds();
 
   const renderItem = React.useCallback(
-    ({ id }: { id: string }) => (
-      <ChatMessageGroup key={id} messageId={id}>
-        <ChatMessage messageId={id}>
+    (params: { id: string }) => (
+      <ChatMessageGroup key={params.id} messageId={params.id}>
+        <ChatMessage messageId={params.id}>
           <ChatMessageAvatar />
           <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
@@ -133,7 +132,7 @@ function InputPane() {
         gap: 1,
       }}
     >
-      <Typography variant="caption" color="text.secondary" fontWeight={600}>
+      <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
         Composer
       </Typography>
       <Typography variant="caption" color="text.disabled">
@@ -184,6 +183,7 @@ export default function SplitLayout() {
     </ChatRoot>
   );
 }
+
 ```
 
 ## How it works

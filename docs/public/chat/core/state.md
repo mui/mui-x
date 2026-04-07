@@ -74,7 +74,7 @@ function ControlledStateChat({
           borderColor: 'divider',
         }}
       >
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           Controlled headless state
         </Typography>
         <Chip
@@ -126,7 +126,7 @@ function ControlledStateChat({
             <Typography variant="caption" color="text.secondary">
               {stat.label}
             </Typography>
-            <Typography variant="body2" fontWeight={700} noWrap>
+            <Typography variant="body2" noWrap sx={{ fontWeight: 700 }}>
               {stat.value}
             </Typography>
           </Paper>
@@ -299,6 +299,7 @@ export default function ControlledStateHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## `ChatProvider` props

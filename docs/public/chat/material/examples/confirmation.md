@@ -36,7 +36,7 @@ const CONVERSATION_ID = minimalConversation.id;
 
 const INITIAL_MESSAGES = [
   createTextMessage({
-    id: randomId(),
+    id: 'confirm-msg-1',
     conversationId: CONVERSATION_ID,
     role: 'user',
     text: 'Delete all temporary files in the project.',
@@ -44,7 +44,7 @@ const INITIAL_MESSAGES = [
     author: demoUsers.you,
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'confirm-msg-2',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     text: 'I found 47 temporary files totalling 2.3 GB. Please confirm before I proceed — this action cannot be undone.',
@@ -134,6 +134,7 @@ export default function Confirmation() {
     </Box>
   );
 }
+
 ```
 
 ## Basic usage

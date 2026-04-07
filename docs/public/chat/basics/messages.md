@@ -10,6 +10,8 @@ components: ChatMessageList, ChatMessageGroup
 
 Understand the ChatMessage data model and how messages render in a scrollable, grouped list.
 
+
+
 ## The ChatMessage data model
 
 Every message in the chat system is represented by the `ChatMessage` interface:
@@ -103,237 +105,19 @@ Scroll behavior, overflow, padding, and thin scrollbar are handled out of the bo
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
 Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-The grouping window defaults to 5 minutes (300,000 ms). Customize it through `slotProps`.
-The demo below sets the window to 1 minute (60,000 ms) — notice how messages more than 1 minute apart start a new group with a fresh avatar:
-
-```tsx
-'use client';
-import * as React from 'react';
-import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import { createTimeWindowGroupKey } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
-import {
-  createTextMessage,
-  demoUsers,
-} from 'docsx/data/chat/material/examples/shared/demoData';
-
-const adapter = createEchoAdapter();
-
-const CONV_ID = randomId();
-
-const conversation: ChatConversation = {
-  id: CONV_ID,
-  title: 'Message grouping demo',
-  subtitle: 'Custom grouping window',
-  participants: [demoUsers.you, demoUsers.agent],
-  readState: 'read',
-  unreadCount: 0,
-  lastMessageAt: '2026-03-15T10:05:00.000Z',
-};
-
-// Messages from the same author spaced 30 seconds apart — well within a
-// 1-minute grouping window but outside a very short one.
-const messages: ChatMessage[] = [
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'user',
-    author: demoUsers.you,
-    createdAt: '2026-03-15T10:00:00.000Z',
-    text: 'First message from the user.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'user',
-    author: demoUsers.you,
-    createdAt: '2026-03-15T10:00:30.000Z',
-    text: 'Second message, sent 30 seconds later. Same group because the window is 1 minute.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'user',
-    author: demoUsers.you,
-    createdAt: '2026-03-15T10:02:00.000Z',
-    text: 'Third message, sent 2 minutes after the first. This starts a new group.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'assistant',
-    author: demoUsers.agent,
-    createdAt: '2026-03-15T10:05:00.000Z',
-    text: 'With createTimeWindowGroupKey(60 000), consecutive messages from the same author are grouped only when they are less than 1 minute apart. The avatar appears only on the first message in each group.',
-  }),
-];
-
-export default function MessageGrouping() {
-  return (
-    <ChatBox
-      adapter={adapter}
-      initialActiveConversationId={conversation.id}
-      initialConversations={[conversation]}
-      initialMessages={messages}
-      slotProps={{
-        messageGroup: { groupKey: createTimeWindowGroupKey(60_000) },
-      }}
-      sx={{
-        height: 400,
-        border: '1px solid',
-        borderColor: 'divider',
-        borderRadius: 1,
-      }}
-    />
-  );
-}
-```
+See [Message Appearance](/x/react-chat/display/message-appearance/) for grouping configuration and demos.
 
 ### Date dividers
 
 When consecutive messages span different calendar dates, the message list renders a date divider automatically between them.
-The divider shows a localized date string and is styled as a centered label with horizontal rules.
 
-Customize the date format through `slotProps`:
-
-```tsx
-'use client';
-import * as React from 'react';
-import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
-import {
-  createTextMessage,
-  demoUsers,
-} from 'docsx/data/chat/material/examples/shared/demoData';
-
-const adapter = createEchoAdapter();
-
-const CONV_ID = randomId();
-
-const conversation: ChatConversation = {
-  id: CONV_ID,
-  title: 'Date divider demo',
-  subtitle: 'Custom date formatting',
-  participants: [demoUsers.you, demoUsers.agent],
-  readState: 'read',
-  unreadCount: 0,
-  lastMessageAt: '2026-03-16T10:00:00.000Z',
-};
-
-const messages: ChatMessage[] = [
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'assistant',
-    author: demoUsers.agent,
-    createdAt: '2026-03-14T15:00:00.000Z',
-    text: 'Here is a message from two days ago.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'user',
-    author: demoUsers.you,
-    createdAt: '2026-03-15T09:30:00.000Z',
-    text: 'And this one is from yesterday.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'assistant',
-    author: demoUsers.agent,
-    createdAt: '2026-03-16T10:00:00.000Z',
-    text: 'This message is from today. Notice the short date format in the dividers above.',
-  }),
-];
-
-export default function DateDividerFormat() {
-  return (
-    <ChatBox
-      adapter={adapter}
-      initialActiveConversationId={conversation.id}
-      initialConversations={[conversation]}
-      initialMessages={messages}
-      slotProps={{
-        dateDivider: {
-          formatDate: (date: Date) =>
-            date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        },
-      }}
-      sx={{
-        height: 400,
-        border: '1px solid',
-        borderColor: 'divider',
-        borderRadius: 1,
-      }}
-    />
-  );
-}
-```
+See [Message Appearance](/x/react-chat/display/message-appearance/) for date divider customization.
 
 ### Auto-scrolling
 
-The message list automatically scrolls to the bottom when:
+The message list automatically scrolls to the bottom when the user sends a new message, when new assistant messages arrive, and during streaming.
 
-- The user sends a new message (always active).
-- New messages arrive from the assistant while the user is near the bottom.
-- Streaming content grows (token-by-token updates).
-
-The auto-scroll behavior is gated by a buffer — if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
-
-```tsx
-'use client';
-import * as React from 'react';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import {
-  minimalConversation,
-  minimalMessages,
-} from 'docsx/data/chat/material/examples/shared/demoData';
-
-const adapter = createEchoAdapter();
-
-export default function AutoScrollConfig() {
-  const [autoScroll, setAutoScroll] = React.useState(true);
-
-  return (
-    <div>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={autoScroll}
-            onChange={(event) => setAutoScroll(event.target.checked)}
-          />
-        }
-        label="Auto-scroll"
-      />
-      <ChatBox
-        adapter={adapter}
-        initialActiveConversationId={minimalConversation.id}
-        initialConversations={[minimalConversation]}
-        initialMessages={minimalMessages}
-        features={{ autoScroll: autoScroll ? true : false }}
-        sx={{
-          height: 400,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-        }}
-      />
-    </div>
-  );
-}
-```
+See [Scrolling](/x/react-chat/behavior/scrolling/) for buffer configuration and scroll-to-bottom affordance.
 
 ## Standalone usage
 
@@ -367,9 +151,9 @@ function CustomLayout() {
   const messageIds = useMessageIds();
 
   const renderItem = React.useCallback(
-    ({ id }: { id: string }) => (
-      <ChatMessageGroup key={id} messageId={id}>
-        <ChatMessage messageId={id}>
+    (params: { id: string }) => (
+      <ChatMessageGroup key={params.id} messageId={params.id}>
+        <ChatMessage messageId={params.id}>
           <ChatMessageAvatar />
           <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
@@ -414,9 +198,5 @@ export default function StandaloneMessageList() {
     </ChatProvider>
   );
 }
+
 ```
-
-## API
-
-- [`ChatMessageList`](/x/api/chat/chat-message-list/)
-- [`ChatMessageGroup`](/x/api/chat/chat-message-group/)

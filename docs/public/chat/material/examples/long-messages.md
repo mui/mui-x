@@ -21,17 +21,14 @@ This demo tests how the ChatBox handles various edge cases in message content.
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
 } from 'docsx/data/chat/material/examples/shared/demoData';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 
-const LONG_CONV_ID = randomId();
+const LONG_CONV_ID = 'long-msg-conv';
 
 const adapter = createEchoAdapter({
   respond: () =>
@@ -70,42 +67,42 @@ const longConversation: ChatConversation = {
 
 const longMessages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'lm-msg-1',
     conversationId: LONG_CONV_ID,
     role: 'user',
     createdAt: '2026-03-15T09:55:00.000Z',
     text: 'This is a short message.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'lm-msg-2',
     conversationId: LONG_CONV_ID,
     role: 'assistant',
     createdAt: '2026-03-15T09:56:00.000Z',
     text: 'Short reply.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'lm-msg-3',
     conversationId: LONG_CONV_ID,
     role: 'user',
     createdAt: '2026-03-15T09:57:00.000Z',
     text: 'Now here is a very long message to test how the ChatBox handles text wrapping. This message contains multiple sentences to verify that the bubble grows vertically without causing horizontal overflow. The width should be constrained to the maximum bubble width while the text wraps naturally. Additional text to ensure the message is sufficiently long for testing purposes. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'lm-msg-4',
     conversationId: LONG_CONV_ID,
     role: 'assistant',
     createdAt: '2026-03-15T09:58:00.000Z',
     text: 'A single word: Acknowledged.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'lm-msg-5',
     conversationId: LONG_CONV_ID,
     role: 'user',
     createdAt: '2026-03-15T09:59:00.000Z',
     text: 'Superlongwordwithoutanyspacestotestwordbreakbehaviorinthebubblelayoutwhencontentcannotwrapnaturally',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'lm-msg-6',
     conversationId: LONG_CONV_ID,
     role: 'assistant',
     createdAt: '2026-03-15T10:00:00.000Z',
@@ -129,6 +126,7 @@ export default function LongMessages() {
     />
   );
 }
+
 ```
 
 ## API

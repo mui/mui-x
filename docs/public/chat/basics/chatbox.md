@@ -10,6 +10,8 @@ components: ChatBox
 
 The all-in-one component that renders a complete chat surface with a single import.
 
+
+
 ## Overview
 
 `ChatBox` is the fastest way to add a chat interface to your application.
@@ -52,6 +54,7 @@ export default function BasicAiChat() {
     />
   );
 }
+
 ```
 
 ## ChatBox vs. ChatProvider
@@ -103,6 +106,7 @@ export default function ChatBoxWithHooks() {
     </ChatBox>
   );
 }
+
 ```
 
 ### ChatProvider (custom layout)
@@ -127,22 +131,19 @@ import {
   ChatMessageList,
 } from '@mui/x-chat';
 import { ChatProvider, useMessageIds } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
 } from 'docsx/data/chat/material/examples/shared/demoData';
 
-const CONVERSATION_ID = randomId();
+const CONVERSATION_ID = 'custom-layout-conv';
 
 const adapter = createEchoAdapter();
 
 const initialMessages = [
   createTextMessage({
-    id: randomId(),
+    id: 'cl-msg-1',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -150,7 +151,7 @@ const initialMessages = [
     text: 'This layout is built with ChatProvider directly. The message list and composer are composed manually.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cl-msg-2',
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -158,7 +159,7 @@ const initialMessages = [
     text: 'So I get full control over what is rendered?',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cl-msg-3',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -185,9 +186,9 @@ function CustomChat() {
   const messageIds = useMessageIds();
 
   const renderItem = React.useCallback(
-    ({ id }: { id: string }) => (
-      <ChatMessageGroup key={id} messageId={id}>
-        <ChatMessage messageId={id}>
+    (params: { id: string }) => (
+      <ChatMessageGroup key={params.id} messageId={params.id}>
+        <ChatMessage messageId={params.id}>
           <ChatMessageAvatar />
           <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
@@ -236,6 +237,7 @@ export default function ChatProviderCustomLayout() {
     </ChatProvider>
   );
 }
+
 ```
 
 :::warning
@@ -384,8 +386,5 @@ export default function MultipleInstances() {
     </Box>
   );
 }
+
 ```
-
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)

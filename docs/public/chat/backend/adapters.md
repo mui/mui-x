@@ -9,6 +9,8 @@ githubLabel: 'scope: chat'
 
 <p class="description">The <code>ChatAdapter</code> interface is the single contract between your backend and the chat runtime. This page is the full interface reference.</p>
 
+
+
 `ChatBox` renders a fully styled chat surface, but it knows nothing about your backend on its own.
 The adapter is the single object that bridges them.
 It receives user messages, communicates with your server, and returns a streaming response that the runtime turns into live UI updates.

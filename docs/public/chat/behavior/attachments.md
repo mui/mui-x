@@ -10,6 +10,8 @@ components: ChatComposerAttachButton
 
 Enable file attachments in the composer, with support for MIME type filtering, file size limits, upload progress tracking, and rejection callbacks.
 
+
+
 The attach button opens the browser file picker.
 Selected files are queued as draft attachments and previewed in the composer area before the message is sent.
 
@@ -51,6 +53,7 @@ export default function ComposerHiddenAttachButton() {
     />
   );
 }
+
 ```
 
 ## Attachment validation
@@ -175,10 +178,6 @@ async sendMessage({ message, attachments, signal }) {
   return res.body!;
 },
 ```
-
-## API
-
-- [`ChatComposerAttachButton`](/x/api/chat/chat-composer-attach-button/)
 
 ## See also
 

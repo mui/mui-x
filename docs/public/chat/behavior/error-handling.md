@@ -10,6 +10,8 @@ components: ChatBox
 
 How errors are captured, surfaced, and recovered from across the chat runtime.
 
+
+
 The chat runtime captures errors from adapters, streams, and history loading, and surfaces them through a unified error model.
 You do not need to catch errors inside adapter methods — the runtime handles them for you.
 
@@ -140,6 +142,7 @@ export default function ErrorState() {
     </div>
   );
 }
+
 ```
 
 ## Accessing the error state
@@ -245,7 +248,3 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 
 - [Streaming](/x/react-chat/behavior/streaming/) for stream lifecycle and disconnect handling.
 - [Adapter](/x/react-chat/backend/adapters/) for the adapter interface and error propagation details.
-
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)

@@ -10,6 +10,8 @@ components: ChatComposerTextArea, ChatComposerSendButton, ChatComposerAttachment
 
 The text input area where users draft and send messages, with auto-resize, keyboard shortcuts, and a send button.
 
+
+
 ## Overview
 
 The composer is the input region at the bottom of the chat surface.
@@ -51,7 +53,7 @@ ChatComposer                  ← <form> element, border-top divider
 ## Text area
 
 `ChatComposerTextArea` is an auto-resizing `<textarea>` that grows with content.
-It submits on **Enter** and inserts a newline on **Shift+Enter**.
+It submits on <kbd class="key">Enter</kbd> and inserts a newline on <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Enter</kbd></kbd>.
 
 ### Placeholder text
 
@@ -88,6 +90,7 @@ export default function ComposerCustomPlaceholder() {
     />
   );
 }
+
 ```
 
 ### IME composition
@@ -144,6 +147,7 @@ export default function ComposerHiddenAttachButton() {
     />
   );
 }
+
 ```
 
 For full details on attachment configuration — accepted MIME types, file size limits, and upload lifecycle — see [Attachments](/x/react-chat/behavior/attachments/).
@@ -204,6 +208,7 @@ export default function ComposerControlled() {
     </Box>
   );
 }
+
 ```
 
 ## `useChatComposer()` hook
@@ -275,6 +280,7 @@ export default function ComposerDisabled() {
     />
   );
 }
+
 ```
 
 ## Localization
@@ -287,8 +293,3 @@ The composer uses these locale text keys (customizable via `localeText` on `Chat
 | `composerInputAriaLabel`    | `"Message"`        | TextArea aria-label, Label fallback |
 | `composerSendButtonLabel`   | `"Send message"`   | SendButton aria-label               |
 | `composerAttachButtonLabel` | `"Add attachment"` | AttachButton aria-label             |
-
-## API
-
-- [`ChatComposerTextArea`](/x/api/chat/chat-composer-text-area/)
-- [`ChatComposerSendButton`](/x/api/chat/chat-composer-send-button/)

@@ -116,7 +116,7 @@ const MessageRow = React.memo(function MessageRow({ id }: { id: string }) {
       <Typography variant="caption" color="text.secondary">
         {message.id} &middot; renders {renders.current}
       </Typography>
-      <Typography variant="body2" fontWeight={700} sx={{ mt: 0.5 }}>
+      <Typography variant="body2" sx={{ fontWeight: 700, mt: 0.5 }}>
         {message.author?.displayName ?? message.role}
       </Typography>
       <Typography variant="body2" sx={{ mt: 0.5 }}>
@@ -142,7 +142,7 @@ function SelectorThread() {
           borderColor: 'divider',
         }}
       >
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           {conversation?.title ?? 'Selector lab'}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -270,6 +270,7 @@ export default function SelectorDrivenThread() {
     </Stack>
   );
 }
+
 ```
 
 ## Key takeaways

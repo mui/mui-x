@@ -10,6 +10,8 @@ components: ChatConfirmation
 
 <p class="description">Add human-in-the-loop checkpoints before the agent executes tool calls, using the approval lifecycle and the <code>ChatConfirmation</code> UI component.</p>
 
+
+
 Tool approval lets you pause the agent when it requests a potentially dangerous action, present the user with an approve/deny interface, and resume or cancel the tool execution based on the user's decision.
 
 ## Approval workflow
@@ -221,7 +223,3 @@ const renderers: ChatPartRendererMap = {
 - [Adapter](/x/react-chat/backend/adapters/) for the `addToolApprovalResponse()` method reference.
 - [Streaming](/x/react-chat/behavior/streaming/) for the `tool-approval-request` chunk type.
 - [Reasoning](/x/react-chat/ai-and-agents/reasoning/) for displaying LLM thinking alongside tool calls.
-
-## API
-
-- [`ChatConfirmation`](/x/api/chat/chat-confirmation/)

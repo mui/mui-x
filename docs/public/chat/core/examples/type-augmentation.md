@@ -248,8 +248,8 @@ const initialMessages: ChatMessage[] = [
 const partRenderers: ChatPartRendererMap = {
   'ticket-summary': ({ part }) => (
     <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
-      <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
-        <Typography variant="body2" fontWeight={700}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 0.5 }}>
+        <Typography variant="body2" sx={{ fontWeight: 700 }}>
           {part.ticketId}
         </Typography>
         <Chip
@@ -400,7 +400,7 @@ function renderPart(
 
     return (
       <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
-        <Typography variant="body2" fontWeight={700}>
+        <Typography variant="body2" sx={{ fontWeight: 700 }}>
           {toolInvocation.toolName} &middot; {toolInvocation.state}
         </Typography>
         {ticketLookup?.input ? (
@@ -421,7 +421,7 @@ function renderPart(
   if (part.type === 'data-ticket-status') {
     return (
       <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
-        <Typography variant="body2" fontWeight={700}>
+        <Typography variant="body2" sx={{ fontWeight: 700 }}>
           data-ticket-status
         </Typography>
         <Typography variant="body2" sx={{ mt: 0.5 }}>
@@ -459,7 +459,7 @@ function TypeAugmentationInner() {
           borderColor: 'divider',
         }}
       >
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           Type augmentation
         </Typography>
         <Button
@@ -511,7 +511,7 @@ function TypeAugmentationInner() {
             <Typography variant="caption" color="text.secondary">
               {stat.label}
             </Typography>
-            <Typography variant="body2" fontWeight={700} noWrap>
+            <Typography variant="body2" noWrap sx={{ fontWeight: 700 }}>
               {stat.value}
             </Typography>
           </Paper>
@@ -605,6 +605,7 @@ export default function TypeAugmentationHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

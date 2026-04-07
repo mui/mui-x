@@ -10,6 +10,8 @@ components: ChatBox
 
 How the streaming protocol works end-to-end, from adapter response to live UI updates.
 
+
+
 The Chat component streams assistant responses token-by-token.
 The adapter's `sendMessage()` method returns a `ReadableStream<ChatMessageChunk | ChatStreamEnvelope>`.
 The runtime reads this stream, processes each chunk, and updates the normalized store so that UI components re-render incrementally.
@@ -260,10 +262,6 @@ The message's `status` field also updates through the stream:
 - `'sent'` — set when `finish` arrives
 - `'cancelled'` — set when `abort` arrives
 - `'error'` — set when the stream fails
-
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)
 
 ## See also
 

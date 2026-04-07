@@ -817,6 +817,7 @@ export default function SlotCustomization() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Customization model

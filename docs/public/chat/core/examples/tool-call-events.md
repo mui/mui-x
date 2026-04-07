@@ -137,7 +137,7 @@ function ToolCallEventsInner() {
           borderColor: 'divider',
         }}
       >
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           Tool call callback log
         </Typography>
         <Button
@@ -270,7 +270,7 @@ export default function ToolCallEventsHeadlessChat() {
               <Typography variant="caption" color="text.secondary">
                 {stat.label}
               </Typography>
-              <Typography variant="body2" fontWeight={700} noWrap>
+              <Typography variant="body2" noWrap sx={{ fontWeight: 700 }}>
                 {stat.value}
               </Typography>
             </Paper>
@@ -300,6 +300,7 @@ export default function ToolCallEventsHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

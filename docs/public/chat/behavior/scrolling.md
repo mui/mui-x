@@ -10,6 +10,8 @@ components: ChatMessageList, ChatScrollToBottomAffordance
 
 Auto-scroll behavior, scroll-to-bottom affordance, imperative scroll API, and history loading on scroll-up.
 
+
+
 The message list automatically manages scroll position so that new messages and streaming content stay visible without user intervention, while still allowing the user to read earlier messages undisturbed.
 
 ## Auto-scrolling
@@ -74,7 +76,7 @@ export default function AutoScrollConfig() {
         initialActiveConversationId={minimalConversation.id}
         initialConversations={[minimalConversation]}
         initialMessages={minimalMessages}
-        features={{ autoScroll: autoScroll ? true : false }}
+        features={{ autoScroll }}
         sx={{
           height: 400,
           border: '1px solid',
@@ -85,6 +87,7 @@ export default function AutoScrollConfig() {
     </div>
   );
 }
+
 ```
 
 :::info
@@ -178,8 +181,3 @@ await loadMoreHistory();
 - [Message list](/x/react-chat/basics/messages/) for the full component reference including date dividers, grouping, and density.
 - [Streaming](/x/react-chat/behavior/streaming/) for how auto-scroll follows streaming content.
 - [Adapter](/x/react-chat/backend/adapters/) for the `listMessages` method that powers history loading.
-
-## API
-
-- [`ChatMessageList`](/x/api/chat/chat-message-list/)
-- [`ChatScrollToBottomAffordance`](/x/api/chat/chat-scroll-to-bottom-affordance/)

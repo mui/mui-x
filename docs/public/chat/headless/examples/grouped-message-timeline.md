@@ -250,6 +250,7 @@ export default function GroupedMessageTimeline() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Key primitives

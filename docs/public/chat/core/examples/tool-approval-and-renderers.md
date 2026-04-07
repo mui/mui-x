@@ -278,7 +278,7 @@ function ToolAndRendererInner() {
         }}
       >
         <div>
-          <Typography variant="subtitle1" fontWeight={700}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
             Tool approval and custom renderers
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -421,7 +421,7 @@ const partRenderers: ChatPartRendererMap = {
   poll: ({ part }) => (
     <div>
       <Divider sx={{ my: 1 }} />
-      <Typography variant="body2" fontWeight={700} sx={{ mb: 1 }}>
+      <Typography variant="body2" sx={{ fontWeight: 700, mb: 1 }}>
         {part.question}
       </Typography>
       <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
@@ -446,6 +446,7 @@ export default function ToolApprovalAndRenderersHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

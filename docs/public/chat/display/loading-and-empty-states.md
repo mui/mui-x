@@ -10,6 +10,8 @@ components: ChatMessageSkeleton
 
 Display loading skeletons while messages load and empty state content when a conversation has no messages.
 
+
+
 ## Loading state with ChatMessageSkeleton
 
 `ChatMessageSkeleton` renders animated shimmer lines that serve as a placeholder while message content is loading. Use it during initial data fetching or when loading older messages via history pagination.
@@ -70,10 +72,7 @@ When a conversation exists but has no messages yet, `ChatBox` renders an empty m
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import { demoUsers } from 'docsx/data/chat/material/examples/shared/demoData';
 
 const demoMembers = [demoUsers.you, demoUsers.agent];
@@ -81,13 +80,13 @@ const demoMembers = [demoUsers.you, demoUsers.agent];
 const adapter = createEchoAdapter();
 
 const emptyConversation = {
-  id: randomId(),
+  id: 'empty-conv',
   title: 'New conversation',
   subtitle: 'Start a new conversation',
   participants: [],
   readState: 'read' as const,
   unreadCount: 0,
-  lastMessageAt: new Date().toISOString(),
+  lastMessageAt: '2026-03-15T10:00:00.000Z',
 };
 
 export default function EmptyState() {
@@ -107,6 +106,7 @@ export default function EmptyState() {
     />
   );
 }
+
 ```
 
 Key characteristics of the empty state:
@@ -222,6 +222,7 @@ export default function CustomEmptyState() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Streaming indicator
@@ -248,7 +249,3 @@ function TypingIndicator({ message }) {
 - [Message Appearance](/x/react-chat/display/message-appearance/) for the overall message layout
 - [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for streaming text display
 - [Message list](/x/react-chat/basics/messages/) for auto-scroll behavior during streaming
-
-## API
-
-- [`ChatMessageSkeleton`](/x/api/chat/chat-message-skeleton/)

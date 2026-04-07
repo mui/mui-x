@@ -10,6 +10,8 @@ githubLabel: 'scope: chat'
 
 Compose thread rows from message grouping primitives, message subparts, and default message-part renderers.
 
+
+
 ```tsx
 import * as React from 'react';
 import {
@@ -239,6 +241,7 @@ export default function GroupedMessageTimeline() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Primitive set

@@ -10,6 +10,8 @@ components: ChatCodeBlock
 
 <p class="description">Display code with a language label and copy-to-clipboard button using the <code>ChatCodeBlock</code> component.</p>
 
+
+
 `ChatCodeBlock` renders fenced code blocks with a header bar showing the language label and a one-click copy button.
 
 ## Import
@@ -69,7 +71,7 @@ It works by iterating over each item — if the item is itself a list it recurse
 
 const INITIAL_MESSAGES = [
   createTextMessage({
-    id: randomId(),
+    id: 'cb-msg-1',
     conversationId: CONVERSATION_ID,
     role: 'user',
     text: 'Write me a Python function to flatten a nested list.',
@@ -77,7 +79,7 @@ const INITIAL_MESSAGES = [
     author: demoUsers.you,
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cb-msg-2',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     text: ASSISTANT_REPLY,
@@ -167,6 +169,7 @@ export default function CodeBlock() {
     </Box>
   );
 }
+
 ```
 
 ## Standalone usage
@@ -255,7 +258,3 @@ To customize how code fences render inside `ChatBox`, override `partProps.text.r
 
 - [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text part data model and markdown rendering
 - [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers
-
-## API
-
-- [`ChatCodeBlock`](/x/api/chat/chat-code-block/)

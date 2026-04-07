@@ -264,6 +264,7 @@ export default function TailwindChatDemo({ window }: { window?: () => Window }) 
     </div>
   );
 }
+
 ```
 
 ## API

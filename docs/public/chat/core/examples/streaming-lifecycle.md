@@ -213,7 +213,7 @@ function StreamingLifecycleWithLogs() {
           borderColor: 'divider',
         }}
       >
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           Streaming lifecycle
         </Typography>
         <Button
@@ -385,6 +385,7 @@ function StreamingLifecycleWithLogs() {
     </Paper>
   );
 }
+
 ```
 
 ## Key takeaways

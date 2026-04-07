@@ -252,6 +252,7 @@ export default function CustomMessagePartRendering() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Key primitives

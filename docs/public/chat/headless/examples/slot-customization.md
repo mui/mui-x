@@ -826,6 +826,7 @@ export default function SlotCustomization() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Key primitives

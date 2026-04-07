@@ -10,6 +10,8 @@ components: ChatMessageContent, ChatMessageSource, ChatMessageSources
 
 Display reference links and document excerpts for retrieval-augmented generation (RAG) applications using source parts.
 
+
+
 Source parts allow AI assistants to cite their sources. Two part types cover the common citation patterns: URL references and document excerpts.
 
 ## Source URL parts
@@ -152,7 +154,3 @@ For fully custom source rendering, register a custom renderer through `partRende
 
 - [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text content that references sources
 - [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building fully custom citation UI
-
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

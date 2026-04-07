@@ -10,6 +10,8 @@ components: ChatBox
 
 <p class="description">Respond to streaming lifecycle events, tool calls, data chunks, and errors using callback props on <code>ChatProvider</code> and <code>ChatBox</code>.</p>
 
+
+
 `ChatProvider` (and by extension `ChatBox`) exposes four callback props that fire at key moments in the chat lifecycle.
 Use them for logging, analytics, side effects, and error handling without modifying the adapter.
 
@@ -224,5 +226,3 @@ All callbacks are registered as props on `ChatBox` or `ChatProvider`:
 - [Adapters](/x/react-chat/backend/adapters/) for the adapter interface that produces these events.
 - [Controlled State](/x/react-chat/backend/controlled-state/) for the full `ChatProvider` props reference.
 - [Hooks Reference](/x/react-chat/resources/hooks/) for `useChatStatus()` and reading error state in components.
-
-## API

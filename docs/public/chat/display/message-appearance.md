@@ -10,6 +10,8 @@ components: ChatMessageGroup, ChatMessageAvatar, ChatMessageAuthorLabel, ChatMes
 
 Control the visual presentation of messages — grouping, date dividers, avatars, timestamps, and layout variants.
 
+
+
 This page covers the visual aspects of how messages are displayed in the message list. For message content rendering (text, files, code blocks), see the [Message Parts](/x/react-chat/display/message-parts/text-and-markdown/) section.
 
 ## Message groups
@@ -24,10 +26,7 @@ import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 import { createTimeWindowGroupKey } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -35,7 +34,7 @@ import {
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = randomId();
+const CONV_ID = 'grouping-conv';
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -51,7 +50,7 @@ const conversation: ChatConversation = {
 // 1-minute grouping window but outside a very short one.
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'mg-msg-1',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -59,7 +58,7 @@ const messages: ChatMessage[] = [
     text: 'First message from the user.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'mg-msg-2',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -67,7 +66,7 @@ const messages: ChatMessage[] = [
     text: 'Second message, sent 30 seconds later. Same group because the window is 1 minute.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'mg-msg-3',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -75,7 +74,7 @@ const messages: ChatMessage[] = [
     text: 'Third message, sent 2 minutes after the first. This starts a new group.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'mg-msg-4',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -103,6 +102,7 @@ export default function MessageGrouping() {
     />
   );
 }
+
 ```
 
 Grouping is based on:
@@ -122,10 +122,7 @@ Customize the date format through `slotProps`:
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -133,7 +130,7 @@ import {
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = randomId();
+const CONV_ID = 'date-divider-conv';
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -147,7 +144,7 @@ const conversation: ChatConversation = {
 
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'dd-msg-1',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -155,7 +152,7 @@ const messages: ChatMessage[] = [
     text: 'Here is a message from two days ago.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dd-msg-2',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -163,7 +160,7 @@ const messages: ChatMessage[] = [
     text: 'And this one is from yesterday.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dd-msg-3',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -194,6 +191,7 @@ export default function DateDividerFormat() {
     />
   );
 }
+
 ```
 
 ## Avatars
@@ -225,243 +223,15 @@ ChatMessageList                     ← scrollable container
 
 ## Compact variant
 
-Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layout:
+Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layout with no bubbles, left-aligned messages, and group header timestamps.
 
-- **No bubbles** — messages render as plain text without background colors or padding.
-- **Left-aligned** — all messages are left-aligned regardless of role.
-- **Group header timestamps** — the timestamp moves from below each message to the group header, displayed next to the author name.
-- **Avatars preserved** — avatars remain visible for the first message in each group.
-
-```tsx
-'use client';
-import * as React from 'react';
-import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
-import {
-  createTextMessage,
-  demoUsers,
-} from 'docsx/data/chat/material/examples/shared/demoData';
-
-const adapter = createEchoAdapter();
-
-const CONV_ID = randomId();
-
-const conversation: ChatConversation = {
-  id: CONV_ID,
-  title: 'Team standup',
-  subtitle: 'Daily sync',
-  participants: [demoUsers.you, demoUsers.agent],
-  readState: 'read',
-  unreadCount: 0,
-  lastMessageAt: '2026-03-15T10:05:00.000Z',
-};
-
-const messages: ChatMessage[] = [
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'assistant',
-    author: demoUsers.agent,
-    createdAt: '2026-03-15T09:55:00.000Z',
-    text: 'Good morning! Here is the agenda for today.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'assistant',
-    author: demoUsers.agent,
-    createdAt: '2026-03-15T09:55:10.000Z',
-    text: 'We need to review the sprint progress and plan next steps.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'user',
-    author: demoUsers.you,
-    createdAt: '2026-03-15T10:00:00.000Z',
-    text: 'Sounds good. I finished the variant feature yesterday.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'user',
-    author: demoUsers.you,
-    createdAt: '2026-03-15T10:00:15.000Z',
-    text: 'The compact layout is ready for review.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'assistant',
-    author: demoUsers.agent,
-    createdAt: '2026-03-15T10:02:00.000Z',
-    text: 'Great work! The compact variant removes message bubbles and aligns everything to the left — perfect for dense message feeds.',
-  }),
-];
-
-export default function CompactVariant() {
-  return (
-    <ChatBox
-      variant="compact"
-      adapter={adapter}
-      initialActiveConversationId={conversation.id}
-      initialConversations={[conversation]}
-      initialMessages={messages}
-      sx={{
-        height: 460,
-        border: '1px solid',
-        borderColor: 'divider',
-      }}
-    />
-  );
-}
-```
-
-```tsx
-<ChatBox variant="compact" adapter={adapter} />
-```
-
-When set on `ChatBox`, the variant automatically applies to the conversation list as well.
+See [Variants & Density](/x/react-chat/basics/variants-and-density/) for full details, a comparison table, and interactive demos.
 
 ## Density
 
-The `density` prop controls the vertical spacing between messages. Three values are available:
+The `density` prop controls the vertical spacing between messages independently of the variant. Three values are available: `compact`, `standard` (default), and `comfortable`.
 
-| Value         | Description                           |
-| :------------ | :------------------------------------ |
-| `compact`     | Tight spacing, minimal gaps           |
-| `standard`    | Default spacing                       |
-| `comfortable` | Generous spacing, more breathing room |
-
-```tsx
-'use client';
-import * as React from 'react';
-import { ChatBox, type ChatDensity } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
-import Stack from '@mui/material/Stack';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
-import {
-  createTextMessage,
-  demoUsers,
-} from 'docsx/data/chat/material/examples/shared/demoData';
-
-const adapter = createEchoAdapter();
-
-const CONV_ID = randomId();
-
-const conversation: ChatConversation = {
-  id: CONV_ID,
-  title: 'Design review',
-  subtitle: 'UI team',
-  participants: [demoUsers.you, demoUsers.agent],
-  readState: 'read',
-  unreadCount: 0,
-  lastMessageAt: '2026-03-15T14:10:00.000Z',
-};
-
-const messages: ChatMessage[] = [
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'assistant',
-    author: demoUsers.agent,
-    createdAt: '2026-03-15T14:00:00.000Z',
-    text: 'Hey! I just pushed the updated mockups for the settings page.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'assistant',
-    author: demoUsers.agent,
-    createdAt: '2026-03-15T14:00:10.000Z',
-    text: 'Let me know what you think about the new spacing.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'user',
-    author: demoUsers.you,
-    createdAt: '2026-03-15T14:02:00.000Z',
-    text: 'Looks great! The layout feels much more balanced now.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'user',
-    author: demoUsers.you,
-    createdAt: '2026-03-15T14:02:15.000Z',
-    text: 'One thing: can we increase the gap between the sections?',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'assistant',
-    author: demoUsers.agent,
-    createdAt: '2026-03-15T14:05:00.000Z',
-    text: 'Sure, I will add more vertical breathing room. Give me 10 minutes.',
-  }),
-  createTextMessage({
-    id: randomId(),
-    conversationId: CONV_ID,
-    role: 'user',
-    author: demoUsers.you,
-    createdAt: '2026-03-15T14:10:00.000Z',
-    text: 'Perfect, take your time!',
-  }),
-];
-
-export default function DensityProp() {
-  const [density, setDensity] = React.useState<ChatDensity>('standard');
-
-  return (
-    <Stack spacing={2}>
-      <ToggleButtonGroup
-        value={density}
-        exclusive
-        onChange={(_, value) => {
-          if (value !== null) {
-            setDensity(value as ChatDensity);
-          }
-        }}
-        size="small"
-      >
-        <ToggleButton value="compact">Compact</ToggleButton>
-        <ToggleButton value="standard">Standard</ToggleButton>
-        <ToggleButton value="comfortable">Comfortable</ToggleButton>
-      </ToggleButtonGroup>
-      <ChatBox
-        density={density}
-        adapter={adapter}
-        initialActiveConversationId={conversation.id}
-        initialConversations={[conversation]}
-        initialMessages={messages}
-        sx={{
-          height: 400,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-        }}
-      />
-    </Stack>
-  );
-}
-```
-
-```tsx
-<ChatBox density="compact" adapter={adapter} />
-<ChatBox density="comfortable" adapter={adapter} />
-```
-
-The `density` prop is independent of `variant` — you can combine `variant="compact"` with any density value.
+See [Variants & Density](/x/react-chat/basics/variants-and-density/) for interactive density demos and guidance on combining variant and density.
 
 ## Slots
 
@@ -483,10 +253,3 @@ The following slots are available for customization through `ChatBox`:
 - [Message list](/x/react-chat/basics/messages/) for scrolling behavior, auto-scroll configuration, and history loading
 - [Message Actions](/x/react-chat/display/message-actions/) for the hover action menu on messages
 - [Loading & Empty States](/x/react-chat/display/loading-and-empty-states/) for skeleton and empty state display
-
-## API
-
-- [`ChatMessageGroup`](/x/api/chat/chat-message-group/)
-- [`ChatMessageAvatar`](/x/api/chat/chat-message-avatar/)
-- [`ChatMessageMeta`](/x/api/chat/chat-message-meta/)
-- [`ChatDateDivider`](/x/api/chat/chat-date-divider/)

@@ -10,6 +10,8 @@ components: ConversationListRoot, ConversationListItem, ConversationListItemAvat
 
 Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components.
 
+
+
 The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
 
 The following demo shows a multi-conversation layout with the conversation list in action:
@@ -77,6 +79,7 @@ export default function MultiConversation() {
     />
   );
 }
+
 ```
 
 ## Component anatomy
@@ -245,6 +248,7 @@ export default function ThemedAvatar() {
     />
   );
 }
+
 ```
 
 The `ownerState` prop arrives directly on the component because the Material UI layer passes it through `slotProps` using a function form. Destructure it before spreading `...props` to avoid forwarding a non-standard attribute to the DOM.
@@ -297,9 +301,8 @@ const RichItemContentSlot = React.forwardRef<
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
         <Typography
           variant="body2"
-          fontWeight={unread ? 'fontWeightBold' : 'fontWeightMedium'}
           noWrap
-          sx={{ flex: 1 }}
+          sx={{ fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium', flex: 1 }}
         >
           {conversation?.title}
         </Typography>
@@ -376,6 +379,7 @@ export default function RichItemContent() {
     />
   );
 }
+
 ```
 
 When you replace `itemContent`, the `title` and `preview` slots are no longer rendered (they are children of the default `itemContent`). Render any equivalent content directly inside your custom component.
@@ -447,9 +451,8 @@ const CompactRowSlot = React.forwardRef<
       />
       <Typography
         variant="body2"
-        fontWeight={unread ? 'fontWeightBold' : 'fontWeightRegular'}
         noWrap
-        sx={{ flex: 1 }}
+        sx={{ fontWeight: unread ? 'fontWeightBold' : 'fontWeightRegular', flex: 1 }}
       >
         {conversation?.title ?? 'Untitled'}
       </Typography>
@@ -508,6 +511,7 @@ export default function CompactRow() {
     />
   );
 }
+
 ```
 
 The `role="option"` and `aria-selected` attributes are set automatically before the slot renders, so they are present on the element even without the default styled item. Spread `...props` to pass them through.
@@ -670,9 +674,11 @@ const FullCustomRowSlot = React.forwardRef<
         >
           <Typography
             variant="body2"
-            fontWeight={unread ? 'fontWeightBold' : 'fontWeightMedium'}
             noWrap
-            sx={{ flex: 1 }}
+            sx={{
+              flex: 1,
+              fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium',
+            }}
           >
             {title}
           </Typography>
@@ -684,7 +690,12 @@ const FullCustomRowSlot = React.forwardRef<
             {formatRelativeTime(conversation?.lastMessageAt)}
           </Typography>
         </Box>
-        <Typography variant="caption" color="text.secondary" noWrap display="block">
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          noWrap
+          sx={{ display: 'block' }}
+        >
           {conversation?.subtitle ?? 'No messages yet'}
         </Typography>
       </Box>
@@ -743,6 +754,7 @@ export default function FullCustomRow() {
     />
   );
 }
+
 ```
 
 ## Accessibility notes

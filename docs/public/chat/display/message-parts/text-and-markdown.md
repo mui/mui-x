@@ -10,6 +10,8 @@ components: ChatMessageContent
 
 <p class="description">Render plain text and markdown content in chat messages using the <code>ChatTextMessagePart</code> type and the built-in markdown renderer.</p>
 
+
+
 Text parts are the most common message part type. Every message with written content — whether from a human user or an AI assistant — uses one or more `text` parts to carry that content.
 
 ## The text part data model
@@ -118,7 +120,3 @@ The message list auto-scrolls to follow new streaming content as long as the use
 
 - [Code Blocks](/x/react-chat/display/message-parts/code-blocks/) for syntax-highlighted code fence rendering
 - [Message Appearance](/x/react-chat/display/message-appearance/) for visual presentation of the message list
-
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

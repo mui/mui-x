@@ -10,6 +10,8 @@ components: ChatMessageList
 
 <p class="description">Load older messages on demand using cursor-based pagination through the adapter's <code>listMessages</code> method.</p>
 
+
+
 When working with multi-conversation layouts, each conversation typically has a message history stored on the server. The `listMessages` adapter method lets you load that history page by page using cursor-based pagination.
 
 ## The `listMessages` adapter method
@@ -121,7 +123,3 @@ If `listMessages` throws, the runtime records a `ChatError` with `source: 'histo
 - [Adapter](/x/react-chat/backend/adapters/) for the full adapter interface reference.
 - [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that triggers conversation switches.
 - [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing new messages through subscriptions.
-
-## API
-
-- [`ChatMessageList`](/x/api/chat/chat-message-list/)

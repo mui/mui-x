@@ -29,8 +29,8 @@ import {
   Message,
   MessageGroup,
   MessageList,
+  useChatComposer,
 } from '@mui/x-chat-headless';
-import { useChatComposer } from '@mui/x-chat-headless';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import {
   createTextResponseChunks,
@@ -306,6 +306,7 @@ export default function ComposerWithAttachments() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Key primitives

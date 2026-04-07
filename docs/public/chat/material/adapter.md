@@ -43,6 +43,7 @@ export default function BasicAiChat() {
     />
   );
 }
+
 ```
 
 You author the adapter once and pass it directly to `ChatBox`:

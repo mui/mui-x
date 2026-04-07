@@ -10,6 +10,8 @@ components: ChatBox
 
 Switch between the default bubble layout and a compact messenger-style layout, and control vertical spacing with the density prop.
 
+
+
 ## Variants
 
 `ChatBox` supports two visual variants that control how messages are laid out: **default** and **compact**.
@@ -43,10 +45,7 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -54,7 +53,7 @@ import {
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = randomId();
+const CONV_ID = 'compact-conv';
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -68,7 +67,7 @@ const conversation: ChatConversation = {
 
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-1',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -76,7 +75,7 @@ const messages: ChatMessage[] = [
     text: 'Good morning! Here is the agenda for today.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-2',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -84,7 +83,7 @@ const messages: ChatMessage[] = [
     text: 'We need to review the sprint progress and plan next steps.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-3',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -92,7 +91,7 @@ const messages: ChatMessage[] = [
     text: 'Sounds good. I finished the variant feature yesterday.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-4',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -100,7 +99,7 @@ const messages: ChatMessage[] = [
     text: 'The compact layout is ready for review.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-5',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -125,6 +124,7 @@ export default function CompactVariant() {
     />
   );
 }
+
 ```
 
 ### When to use each variant
@@ -160,10 +160,7 @@ import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Stack from '@mui/material/Stack';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -171,7 +168,7 @@ import {
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = randomId();
+const CONV_ID = 'density-conv';
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -185,7 +182,7 @@ const conversation: ChatConversation = {
 
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-1',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -193,7 +190,7 @@ const messages: ChatMessage[] = [
     text: 'Hey! I just pushed the updated mockups for the settings page.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-2',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -201,7 +198,7 @@ const messages: ChatMessage[] = [
     text: 'Let me know what you think about the new spacing.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-3',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -209,7 +206,7 @@ const messages: ChatMessage[] = [
     text: 'Looks great! The layout feels much more balanced now.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-4',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -217,7 +214,7 @@ const messages: ChatMessage[] = [
     text: 'One thing: can we increase the gap between the sections?',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-5',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -225,7 +222,7 @@ const messages: ChatMessage[] = [
     text: 'Sure, I will add more vertical breathing room. Give me 10 minutes.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-6',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -269,6 +266,7 @@ export default function DensityProp() {
     </Stack>
   );
 }
+
 ```
 
 ### Density effects
@@ -296,7 +294,3 @@ The `density` prop is independent of `variant` — you can combine `variant="com
 ```
 
 This independence gives you fine-grained control over both the visual style (bubbles vs. plain text) and the spatial rhythm (tight vs. relaxed) of the chat surface.
-
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)

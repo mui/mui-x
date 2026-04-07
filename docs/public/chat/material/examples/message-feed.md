@@ -24,9 +24,8 @@ import {
   ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { useChat, useMessageIds } from '@mui/x-chat-headless';
+import { useChat, useMessageIds, ChatRoot } from '@mui/x-chat-headless';
 import type { ChatAdapter } from '@mui/x-chat-headless';
-import { ChatRoot } from '@mui/x-chat-headless';
 import {
   createChunkStream,
   createTextResponseChunks,
@@ -37,7 +36,7 @@ import {
   demoUsers,
 } from 'docsx/data/chat/material/examples/shared/demoData';
 
-const CONVERSATION_ID = randomId();
+const CONVERSATION_ID = 'feed-conv';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {
@@ -53,7 +52,7 @@ const adapter: ChatAdapter = {
 
 const initialMessages = [
   createTextMessage({
-    id: randomId(),
+    id: 'feed-msg-1',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -61,7 +60,7 @@ const initialMessages = [
     text: 'This is a read-only message feed — no ChatComposer is rendered anywhere on the page.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'feed-msg-2',
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -69,7 +68,7 @@ const initialMessages = [
     text: 'So how do new messages appear if there is no input?',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'feed-msg-3',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -84,9 +83,9 @@ function Feed() {
   const messageIds = useMessageIds();
 
   const renderItem = React.useCallback(
-    ({ id }: { id: string }) => (
-      <ChatMessageGroup key={id} messageId={id}>
-        <ChatMessage messageId={id}>
+    (params: { id: string }) => (
+      <ChatMessageGroup key={params.id} messageId={params.id}>
+        <ChatMessage messageId={params.id}>
           <ChatMessageAvatar />
           <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
@@ -151,6 +150,7 @@ export default function MessageFeed() {
     </ChatRoot>
   );
 }
+
 ```
 
 ## When to use this pattern

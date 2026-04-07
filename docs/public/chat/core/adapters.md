@@ -88,7 +88,7 @@ function MinimalChatInner() {
           borderColor: 'divider',
         }}
       >
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           Minimal headless chat
         </Typography>
         <Chip
@@ -205,6 +205,7 @@ export default function MinimalHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Minimal adapter

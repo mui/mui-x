@@ -566,6 +566,7 @@ export default function IntercomStyleChat() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Key techniques

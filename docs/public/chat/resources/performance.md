@@ -10,6 +10,8 @@ components: ChatBox
 
 Strategies for efficient rendering, streaming tuning, and handling large message lists in the chat UI.
 
+
+
 The chat runtime is designed for efficient real-time updates.
 This page covers the key patterns and configuration options for maintaining smooth performance as your chat UI scales.
 
@@ -171,8 +173,6 @@ The chat UI handles various edge cases in message content:
 1. **React DevTools Profiler** — Record a profiling session while streaming a response. Look for components that re-render on every delta but should not.
 2. **Highlight updates** — Enable "Highlight updates when components render" in React DevTools to visually see which components re-render during streaming.
 3. **Check subscription granularity** — If a component uses `useChat()` but only reads `isStreaming`, switch to `useChatStatus()` to avoid unnecessary message-triggered re-renders.
-
-## API
 
 ## See also
 

@@ -10,6 +10,8 @@ githubLabel: 'scope: chat'
 
 Assemble the draft surface from structural primitives that already handle submission, IME-safe Enter, attachments, helper text, and disabled states.
 
+
+
 ```tsx
 import * as React from 'react';
 import {
@@ -19,8 +21,8 @@ import {
   Message,
   MessageGroup,
   MessageList,
+  useChatComposer,
 } from '@mui/x-chat-headless';
-import { useChatComposer } from '@mui/x-chat-headless';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import {
   createTextResponseChunks,
@@ -296,6 +298,7 @@ export default function ComposerWithAttachments() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Primitive set

@@ -6,8 +6,14 @@ githubLabel: 'scope: chat'
 components: ChatRoot, ChatLayout
 ---
 
+
+
 # MUI X Chat
 
-A fully styled, theme-aware chat interface built on a three-tier package architecture.
+Build real-time chat interfaces with streaming, multi-conversation support, and full theme integration.
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
+
+
+
+

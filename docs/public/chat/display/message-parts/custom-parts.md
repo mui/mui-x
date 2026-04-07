@@ -10,6 +10,8 @@ components: ChatMessageContent
 
 <p class="description">Extend the message part system with app-specific content types using <code>ChatDataMessagePart</code>, the type registry, and custom renderers.</p>
 
+
+
 The built-in part types (text, file, source-url, source-document, tool) cover common chat patterns. When your application needs domain-specific content — ticket cards, approval forms, charts, or product previews — use the extensibility points described on this page.
 
 ## Data parts
@@ -144,7 +146,3 @@ No runtime code changes are needed. The augmentation is purely compile-time.
 ## See also
 
 - [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers
-
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

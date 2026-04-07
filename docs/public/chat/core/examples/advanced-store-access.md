@@ -126,7 +126,7 @@ function AdvancedMetrics() {
     <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           Store escape hatch
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -162,8 +162,8 @@ function AdvancedMetrics() {
               </Typography>
               <Typography
                 variant="body1"
-                fontWeight={700}
                 sx={{
+                  fontWeight: 700,
                   mt: 0.5,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -325,6 +325,7 @@ export default function AdvancedStoreAccessHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

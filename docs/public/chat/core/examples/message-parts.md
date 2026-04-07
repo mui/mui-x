@@ -188,7 +188,7 @@ function renderPart(part: ChatMessagePart, _message: ChatMessage, index: number)
     return (
       <Paper variant="outlined" sx={{ p: 1.5 }}>
         <Chip label="Source document" size="small" sx={{ mb: 1 }} />
-        <Typography variant="body2" fontWeight={700}>
+        <Typography variant="body2" sx={{ fontWeight: 700 }}>
           {part.title ?? 'Document excerpt'}
         </Typography>
         <Typography variant="body2" sx={{ mt: 0.5 }}>
@@ -265,7 +265,7 @@ function MessagePartsInner() {
         }}
       >
         <div>
-          <Typography variant="subtitle1" fontWeight={700}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
             Assistant message parts
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -370,6 +370,7 @@ export default function MessagePartsHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

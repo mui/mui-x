@@ -10,6 +10,8 @@ components: ChatTypingIndicator
 
 Display real-time typing feedback so users know when other participants are composing a message.
 
+
+
 Typing indicators show labels like "Alice is typing" or "Alice, Bob are typing" in the chat UI.
 The feature connects the adapter's `setTyping()` method (outbound) with realtime `typing` events (inbound) to provide a complete typing awareness loop.
 
@@ -164,7 +166,3 @@ import { Indicators } from '@mui/x-chat-headless';
 ## See also
 
 - [Adapter](/x/react-chat/backend/adapters/) for the `setTyping()` and `subscribe()` methods.
-
-## API
-
-- [`ChatTypingIndicator`](/x/api/chat/chat-typing-indicator/)

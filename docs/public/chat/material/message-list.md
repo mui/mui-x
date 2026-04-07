@@ -10,6 +10,8 @@ components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 
 Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators.
 
+
+
 The message list is the scrollable region that renders conversation history.
 `ChatMessageList` provides Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
 
@@ -88,7 +90,7 @@ export default function AutoScrollConfig() {
         initialActiveConversationId={minimalConversation.id}
         initialConversations={[minimalConversation]}
         initialMessages={minimalMessages}
-        features={{ autoScroll: autoScroll ? true : false }}
+        features={{ autoScroll }}
         sx={{
           height: 400,
           border: '1px solid',
@@ -99,6 +101,7 @@ export default function AutoScrollConfig() {
     </div>
   );
 }
+
 ```
 
 ### Scroll-to-bottom affordance
@@ -130,10 +133,7 @@ Customize the date format through `slotProps`. The demo below uses a short month
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -141,7 +141,7 @@ import {
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = randomId();
+const CONV_ID = 'date-divider-conv';
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -155,7 +155,7 @@ const conversation: ChatConversation = {
 
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'dd-msg-1',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -163,7 +163,7 @@ const messages: ChatMessage[] = [
     text: 'Here is a message from two days ago.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dd-msg-2',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -171,7 +171,7 @@ const messages: ChatMessage[] = [
     text: 'And this one is from yesterday.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dd-msg-3',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -202,6 +202,7 @@ export default function DateDividerFormat() {
     />
   );
 }
+
 ```
 
 ## Message groups
@@ -218,10 +219,7 @@ import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 import { createTimeWindowGroupKey } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -229,7 +227,7 @@ import {
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = randomId();
+const CONV_ID = 'grouping-conv';
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -245,7 +243,7 @@ const conversation: ChatConversation = {
 // 1-minute grouping window but outside a very short one.
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'mg-msg-1',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -253,7 +251,7 @@ const messages: ChatMessage[] = [
     text: 'First message from the user.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'mg-msg-2',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -261,7 +259,7 @@ const messages: ChatMessage[] = [
     text: 'Second message, sent 30 seconds later. Same group because the window is 1 minute.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'mg-msg-3',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -269,7 +267,7 @@ const messages: ChatMessage[] = [
     text: 'Third message, sent 2 minutes after the first. This starts a new group.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'mg-msg-4',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -297,6 +295,7 @@ export default function MessageGrouping() {
     />
   );
 }
+
 ```
 
 ## Compact variant
@@ -316,10 +315,7 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -327,7 +323,7 @@ import {
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = randomId();
+const CONV_ID = 'compact-conv';
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -341,7 +337,7 @@ const conversation: ChatConversation = {
 
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-1',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -349,7 +345,7 @@ const messages: ChatMessage[] = [
     text: 'Good morning! Here is the agenda for today.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-2',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -357,7 +353,7 @@ const messages: ChatMessage[] = [
     text: 'We need to review the sprint progress and plan next steps.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-3',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -365,7 +361,7 @@ const messages: ChatMessage[] = [
     text: 'Sounds good. I finished the variant feature yesterday.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-4',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -373,7 +369,7 @@ const messages: ChatMessage[] = [
     text: 'The compact layout is ready for review.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-5',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -398,6 +394,7 @@ export default function CompactVariant() {
     />
   );
 }
+
 ```
 
 ```tsx
@@ -419,10 +416,7 @@ import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Stack from '@mui/material/Stack';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -430,7 +424,7 @@ import {
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = randomId();
+const CONV_ID = 'density-conv';
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -444,7 +438,7 @@ const conversation: ChatConversation = {
 
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-1',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -452,7 +446,7 @@ const messages: ChatMessage[] = [
     text: 'Hey! I just pushed the updated mockups for the settings page.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-2',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -460,7 +454,7 @@ const messages: ChatMessage[] = [
     text: 'Let me know what you think about the new spacing.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-3',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -468,7 +462,7 @@ const messages: ChatMessage[] = [
     text: 'Looks great! The layout feels much more balanced now.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-4',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -476,7 +470,7 @@ const messages: ChatMessage[] = [
     text: 'One thing: can we increase the gap between the sections?',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-5',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -484,7 +478,7 @@ const messages: ChatMessage[] = [
     text: 'Sure, I will add more vertical breathing room. Give me 10 minutes.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-6',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -528,6 +522,7 @@ export default function DensityProp() {
     </Stack>
   );
 }
+
 ```
 
 ```tsx
@@ -574,9 +569,9 @@ function CustomLayout() {
   const messageIds = useMessageIds();
 
   const renderItem = React.useCallback(
-    ({ id }: { id: string }) => (
-      <ChatMessageGroup key={id} messageId={id}>
-        <ChatMessage messageId={id}>
+    (params: { id: string }) => (
+      <ChatMessageGroup key={params.id} messageId={params.id}>
+        <ChatMessage messageId={params.id}>
           <ChatMessageAvatar />
           <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
         </ChatMessage>
@@ -621,6 +616,7 @@ export default function StandaloneMessageList() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Imperative scrolling
