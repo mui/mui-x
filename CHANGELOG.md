@@ -21,6 +21,7 @@ The following team members contributed to this release:
 - [DataGrid] Rename filter panel `Columns` label to singular `Column` (#21935) @youjin-hong
 - [DataGrid] Export `GridColumnUnsortedIconProps` for custom column icon slots (#21658) @mixelburg
 - [DataGrid] Remove `x-virtualizer`'s `virtualScroller` from public API (#21936) @romgrk
+- [DataGrid][virtualizer] Scrolling without render gaps (#21616) @romgrk
 
 #### `@mui/x-data-grid-pro@9.0.0-rc.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
