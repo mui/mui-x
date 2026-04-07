@@ -313,7 +313,7 @@ Replaces the deprecated `isBarSeries()` and `isDefaultizedBarSeries()` helper fu
 
 ### Pickers codemods
 
-#### 🚀 `preset-safe` for Pickers v9.0.0
+#### 🚀 `preset-safe` for Pickers v9.0.0 <a id="preset-safe-for-pickers-v900"></a>
 
 The `preset-safe` codemods for Pickers.
 
@@ -326,6 +326,7 @@ npx @mui/x-codemod@next v9.0.0/pickers/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-field-ref`](#rename-field-ref)
+- [`remove-enable-accessible-field-dom-structure`](#remove-enable-accessible-field-dom-structure)
 - [`remove-picker-day-2`](#remove-picker-day-2)
 - [`rename-picker-day-2`](#rename-picker-day-2)
 - [`rename-pickers-day`](#rename-pickers-day)
@@ -334,7 +335,7 @@ The list includes these transformers
 
 #### `rename-field-ref`
 
-Renames unstable field ref props to their stable equivalents.
+Renames the `unstableFieldRef` prop to `fieldRef` on all Picker and Field components.
 
 ```diff
 -<DateField unstableFieldRef={fieldRef} />
@@ -350,7 +351,29 @@ Renames unstable field ref props to their stable equivalents.
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path>
+npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path|folder>
+```
+
+#### `remove-enable-accessible-field-dom-structure`
+
+Removes the `enableAccessibleFieldDOMStructure` prop from all Picker and Field components.
+The accessible DOM structure is now the only supported option and this prop has no effect.
+
+```diff
+-<DateField enableAccessibleFieldDOMStructure={false} />
++<DateField />
+
+-<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: MyCustomTextField }} />
++<DatePicker slots={{ textField: MyCustomTextField }} />
+
+-<DatePicker slotProps={{ field: { enableAccessibleFieldDOMStructure: false } }} />
++<DatePicker />
+```
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/remove-enable-accessible-field-dom-structure <path|folder>
 ```
 
 #### `remove-picker-day-2`

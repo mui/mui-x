@@ -19,7 +19,7 @@ export default function ImperativeClear() {
   const endFieldRef = React.useRef<FieldRef<PickerValue>>(null);
 
   const CustomMultiInputDateRangeField = React.useCallback(
-    (props: MultiInputDateRangeFieldProps<true>) => (
+    (props: MultiInputDateRangeFieldProps) => (
       <MultiInputDateRangeField
         {...props}
         startFieldRef={startFieldRef}

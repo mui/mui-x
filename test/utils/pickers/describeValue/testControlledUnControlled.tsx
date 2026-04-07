@@ -37,23 +37,22 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
   describe('Controlled / uncontrolled value', () => {
     describe('Value props (value, defaultValue, onChange', () => {
       it('should render an empty value when no controlled value and no default value are defined', () => {
-        renderWithProps({ enableAccessibleFieldDOMStructure: true });
+        renderWithProps({});
         assertRenderedValue(emptyValue);
       });
 
       it('should use the  controlled value when defined', () => {
-        renderWithProps({ enableAccessibleFieldDOMStructure: true, value: values[0] });
+        renderWithProps({ value: values[0] });
         assertRenderedValue(values[0]);
       });
 
       it('should use the default value when defined', () => {
-        renderWithProps({ enableAccessibleFieldDOMStructure: true, defaultValue: values[0] });
+        renderWithProps({ defaultValue: values[0] });
         assertRenderedValue(values[0]);
       });
 
       it('should use the controlled value instead of the default value when both are defined', () => {
         renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           defaultValue: values[0],
           value: values[1],
         });
@@ -62,7 +61,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
       it('should use the controlled value instead of the default value when both are defined and the controlled value is null', () => {
         renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           defaultValue: values[0],
           value: emptyValue,
         });
@@ -70,15 +68,12 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       });
 
       it('should render an empty value if neither the controlled value or the default value are defined', () => {
-        renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
-        });
+        renderWithProps({});
         assertRenderedValue(emptyValue);
       });
 
       it('should react to controlled value update (from non null to another non null)', () => {
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           value: values[0],
         });
         assertRenderedValue(values[0]);
@@ -91,7 +86,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
       it('should react to a controlled value update (from non null to null)', () => {
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           value: values[0],
         });
         assertRenderedValue(values[0]);
@@ -104,7 +98,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
       it('should react to a controlled value update (from null to non null)', () => {
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           value: emptyValue,
         });
         assertRenderedValue(emptyValue);
@@ -118,14 +111,13 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
         const onChange = spy();
 
-        const v7Response = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
+        const response = renderWithProps({
           defaultValue: values[0],
           onChange,
         });
         const newValue = setNewValue(values[0], {
-          selectSection: v7Response.selectSection,
-          pressKey: v7Response.pressKey,
+          selectSection: response.selectSection,
+          pressKey: response.pressKey,
           closeMobilePicker: true,
         });
 
@@ -156,13 +148,13 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           return { value, onChange: handleChange };
         };
 
-        const v7Response = renderWithProps(
-          { enableAccessibleFieldDOMStructure: true, value: values[0], onChange },
+        const response = renderWithProps(
+          { value: values[0], onChange },
           { hook: useControlledElement },
         );
         const newValue = setNewValue(values[0], {
-          selectSection: v7Response.selectSection,
-          pressKey: v7Response.pressKey,
+          selectSection: response.selectSection,
+          pressKey: response.pressKey,
           closeMobilePicker: true,
         });
 
@@ -184,7 +176,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         }
 
         renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           value: values[0],
           disabled: true,
         });
@@ -200,7 +191,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         }
 
         renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           value: values[0],
           readOnly: true,
         });
@@ -219,13 +209,12 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
         const handleChange = spy();
 
-        const v7Response = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
+        const response = renderWithProps({
           onChange: handleChange,
           defaultValue: values[0],
         });
-        v7Response.selectSection(undefined);
-        fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+        response.selectSection(undefined);
+        fireUserEvent.keyPress(response.getActiveSection(0), { key: 'ArrowUp' });
         expect(handleChange.callCount).to.equal(isPickerSingleInput(params) ? 1 : 0);
       });
 
@@ -235,7 +224,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         }
 
         renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           open: true,
           slotProps: { toolbar: { hidden: false } },
           localeText: { toolbarTitle: 'Test toolbar' },
@@ -254,7 +242,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         }
 
         renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           open: true,
           slotProps: { toolbar: { hidden: true } },
           ...(isPickerSingleInput(params)
@@ -305,7 +292,6 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           }
 
           renderWithProps({
-            enableAccessibleFieldDOMStructure: true,
             slotProps: { textField: { error: true } },
           });
 
