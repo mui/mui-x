@@ -17,7 +17,8 @@ function App() {
               formHelperText: { id: 'helper' },
             },
           },
-        }} />
+        }}
+      />
       <DatePicker
         slotProps={{
           textField: {
@@ -35,8 +36,12 @@ function App() {
       />
       <PickersTextField
         slotProps={{
-          input: { name: 'pickers-text-field' },
-        }} />
+          input: {
+            startAdornment: null,
+            name: 'pickers-text-field',
+          },
+        }}
+      />
     </div>
   );
 }

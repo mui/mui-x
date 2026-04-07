@@ -9,11 +9,40 @@ export const addItemToObject = (path, value, object, j) => {
 
   // Final case where we have to add the property to the object.
   if (splittedPath.length === 1) {
-    const propertyToAdd = j.objectProperty(j.identifier(path), value);
     if (object === null) {
+      const propertyToAdd = j.objectProperty(j.identifier(path), value);
       return j.objectExpression([propertyToAdd]);
     }
 
+    // When both the existing and new values are ObjectExpressions, merge their properties
+    // (new properties win on key conflicts) instead of replacing the entire object.
+    const existingProperty = (object.properties ?? []).find(
+      (property) => property.key?.name === path || property.key?.value === path,
+    );
+    if (
+      existingProperty &&
+      existingProperty.value.type === 'ObjectExpression' &&
+      value.type === 'ObjectExpression'
+    ) {
+      const newKeys = new Set(
+        value.properties.map((p) => p.key?.name ?? p.key?.value),
+      );
+      const mergedValue = j.objectExpression([
+        ...existingProperty.value.properties.filter(
+          (p) => !newKeys.has(p.key?.name ?? p.key?.value),
+        ),
+        ...value.properties,
+      ]);
+      const mergedProperty = j.objectProperty(j.identifier(path), mergedValue);
+      return j.objectExpression([
+        ...(object.properties ?? []).filter(
+          (property) => (property.key?.name ?? property.key?.value) !== path,
+        ),
+        mergedProperty,
+      ]);
+    }
+
+    const propertyToAdd = j.objectProperty(j.identifier(path), value);
     return j.objectExpression([
       ...(object.properties ?? []).filter((property) => property.key.name !== path),
       propertyToAdd,
