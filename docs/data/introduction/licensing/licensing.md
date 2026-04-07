@@ -125,7 +125,7 @@ When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
 
 :::warning
-If you're upgrading from v8 to v9, you'll need to generate a new license key from your [MUI Store account](https://mui.com/store/account/orders/).
+If you're upgrading from v8 to v9, you'll need to generate a new license key from your [MUI Store account](https://mui.com/store/account/orders/).
 The new v9 key will have the same expiration date as your existing v8 key.
 
 Upon renewal, you'll need to choose which license key to renew.
