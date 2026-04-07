@@ -13,9 +13,8 @@ import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeFi
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
 import { FieldType } from '../models';
 
-type DateRangeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: SingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DateRangeFieldComponent = ((
+  props: SingleInputDateTimeRangeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: FieldType };
 
 /**
@@ -28,10 +27,8 @@ type DateRangeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends bool
  *
  * - [SingleInputDateTimeRangeField API](https://mui.com/x/api/single-input-date-time-range-field/)
  */
-const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateTimeRangeField<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: SingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
+const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateTimeRangeField(
+  inProps: SingleInputDateTimeRangeFieldProps,
   inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -41,18 +38,13 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
 
   const { slots, slotProps, ...other } = themeProps;
 
-  const textFieldProps = useFieldTextFieldProps<
-    SingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>
-  >({
+  const textFieldProps = useFieldTextFieldProps<SingleInputDateTimeRangeFieldProps>({
     slotProps,
     ref: inRef,
     externalForwardedProps: other,
   });
 
-  const fieldResponse = useSingleInputDateTimeRangeField<
-    TEnableAccessibleFieldDOMStructure,
-    typeof textFieldProps
-  >(textFieldProps);
+  const fieldResponse = useSingleInputDateTimeRangeField<typeof textFieldProps>(textFieldProps);
 
   return (
     <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={other.inputRef}>
@@ -73,6 +65,12 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
+  /**
+   * Is `true` if the current values equals the empty value.
+   * For a single item value, it means that `value === null`
+   * For a range value, it means that `value === [null, null]`
+   */
+  areAllSectionsEmpty: PropTypes.bool,
   /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
@@ -129,9 +127,14 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default true
+   * End `InputAdornment` for this component.
    */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
+  endAdornment: PropTypes.node,
+  /**
+   * If `true`, the `input` will indicate an error.
+   * @default false
+   */
+  error: PropTypes.bool,
   /**
    * The ref object used to imperatively interact with the field.
    */
@@ -173,7 +176,6 @@ SingleInputDateTimeRangeField.propTypes = {
   hiddenLabel: PropTypes.bool,
   /**
    * The id of the `input` element.
-   * Use this prop to make `label` and `helperText` accessible for screen readers.
    */
   id: PropTypes.string,
   /**
@@ -258,6 +260,7 @@ SingleInputDateTimeRangeField.propTypes = {
    * Callback fired when the clear button is clicked.
    */
   onClear: PropTypes.func,
+  onClick: PropTypes.func,
   /**
    * Callback fired when the error associated with the current value changes.
    * When a validation error is detected, the `error` parameter contains a non-null value.
@@ -269,6 +272,9 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   onError: PropTypes.func,
   onFocus: PropTypes.func,
+  onInput: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  onPaste: PropTypes.func,
   /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
@@ -287,7 +293,7 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   referenceDate: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
   /**
-   * If `true`, the label is displayed as required and the `input` element is required.
+   * If `true`, the label will indicate that the `input` is required.
    * @default false
    */
   required: PropTypes.bool,
@@ -362,6 +368,10 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Start `InputAdornment` for this component.
+   */
+  startAdornment: PropTypes.node,
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

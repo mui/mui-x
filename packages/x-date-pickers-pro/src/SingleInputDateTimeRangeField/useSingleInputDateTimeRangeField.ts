@@ -4,8 +4,7 @@ import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRang
 import { useDateTimeRangeManager } from '../managers';
 
 export const useSingleInputDateTimeRangeField = <
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TProps extends UseSingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
+  TProps extends UseSingleInputDateTimeRangeFieldProps,
 >(
   props: TProps,
 ) => {

@@ -25,14 +25,14 @@ export interface DesktopTimePickerSlots
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
-export interface DesktopTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface DesktopTimePickerSlotProps
   extends
     BaseTimePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    ExportedUseDesktopPickerSlotProps,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 
-export interface DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+export interface DesktopTimePickerProps
   extends
     BaseTimePickerProps<TimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
@@ -50,5 +50,5 @@ export interface DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure exten
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopTimePickerSlotProps;
 }
