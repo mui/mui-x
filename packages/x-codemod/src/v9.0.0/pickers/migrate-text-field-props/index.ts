@@ -1,0 +1,191 @@
+import path from 'path';
+import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import readFile from '../../../util/readFile';
+// @ts-ignore - JS file without types
+import { transformNestedProp, addItemToObject } from '../../../util/addComponentsSlots';
+import removeProps from '../../../util/removeProps';
+
+/**
+ * Maps a legacy text-field prop name to the corresponding key inside `slotProps`.
+ */
+const PROP_TO_SLOT: Record<string, string> = {
+  InputProps: 'input',
+  inputProps: 'htmlInput',
+  InputLabelProps: 'inputLabel',
+  FormHelperTextProps: 'formHelperText',
+};
+
+const LEGACY_PROP_NAMES = Object.keys(PROP_TO_SLOT);
+
+const FIELD_AND_PICKER_NAMES = [
+  // Fields
+  'DateField',
+  'DateTimeField',
+  'TimeField',
+  'DateRangeField',
+  'DateTimeRangeField',
+  'TimeRangeField',
+  'MultiInputDateRangeField',
+  'MultiInputDateTimeRangeField',
+  'MultiInputTimeRangeField',
+  'SingleInputDateRangeField',
+  'SingleInputDateTimeRangeField',
+  'SingleInputTimeRangeField',
+  // Pickers
+  'DatePicker',
+  'DesktopDatePicker',
+  'MobileDatePicker',
+  'StaticDatePicker',
+  'DateTimePicker',
+  'DesktopDateTimePicker',
+  'MobileDateTimePicker',
+  'StaticDateTimePicker',
+  'TimePicker',
+  'DesktopTimePicker',
+  'MobileTimePicker',
+  'StaticTimePicker',
+  'DateRangePicker',
+  'DesktopDateRangePicker',
+  'MobileDateRangePicker',
+  'StaticDateRangePicker',
+  'DateTimeRangePicker',
+  'DesktopDateTimeRangePicker',
+  'MobileDateTimeRangePicker',
+  'TimeRangePicker',
+  'DesktopTimeRangePicker',
+  'MobileTimeRangePicker',
+];
+
+const ALL_TARGET_NAMES = [...FIELD_AND_PICKER_NAMES, 'PickersTextField'];
+
+const getKeyName = (key: any): string | undefined => {
+  if (!key) {
+    return undefined;
+  }
+  if (key.type === 'Identifier') {
+    return key.name;
+  }
+  if (key.type === 'Literal' || key.type === 'StringLiteral') {
+    return String(key.value);
+  }
+  return undefined;
+};
+
+export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
+  const j = api.jscodeshift;
+  const root = j(file.source);
+
+  const printOptions = options.printOptions || {
+    quote: 'single',
+    trailingComma: true,
+  };
+
+  // 1. Rewrite legacy props passed directly as JSX attributes on field / picker components.
+  root
+    .find(j.JSXElement)
+    .filter((elementPath) => {
+      const nameNode: any = elementPath.value.openingElement.name;
+      return (
+        nameNode && nameNode.type === 'JSXIdentifier' && ALL_TARGET_NAMES.includes(nameNode.name)
+      );
+    })
+    .forEach((elementPath) => {
+      const nameNode: any = elementPath.value.openingElement.name;
+      // For PickersTextField the new keys live directly on `slotProps`.
+      // For every other component they live on a nested `textField.slotProps` object.
+      const pathPrefix = nameNode.name === 'PickersTextField' ? '' : 'textField.slotProps.';
+
+      const attributesToTransform = j(elementPath)
+        .find(j.JSXAttribute)
+        .filter((attribute) => {
+          const attributeParent = attribute.parentPath.parentPath;
+          if (
+            attributeParent.value.type !== 'JSXOpeningElement' ||
+            attributeParent.value.name.name !== nameNode.name
+          ) {
+            return false;
+          }
+          return LEGACY_PROP_NAMES.includes(attribute.value.name.name as string);
+        });
+
+      attributesToTransform.forEach((attribute) => {
+        const attributeName = attribute.value.name.name as string;
+        const value =
+          attribute.value.value?.type === 'JSXExpressionContainer'
+            ? attribute.value.value.expression
+            : attribute.value.value || j.booleanLiteral(true);
+        transformNestedProp(
+          elementPath,
+          'slotProps',
+          `${pathPrefix}${PROP_TO_SLOT[attributeName]}`,
+          value,
+          j,
+        );
+      });
+    });
+
+  // Drop the now-orphaned legacy attributes from the targeted components.
+  removeProps({ root, componentNames: ALL_TARGET_NAMES, props: LEGACY_PROP_NAMES, j });
+
+  // 2. Rewrite legacy props found inside `slotProps={{ field: { ... } }}` and
+  //    `slotProps={{ textField: { ... } }}` regardless of which component they appear on.
+  root.find(j.JSXAttribute, { name: { name: 'slotProps' } }).forEach((attrPath) => {
+    const attrValue = attrPath.value.value;
+    if (!attrValue || attrValue.type !== 'JSXExpressionContainer') {
+      return;
+    }
+    const expression = attrValue.expression;
+    if (expression.type !== 'ObjectExpression') {
+      return;
+    }
+    expression.properties.forEach((prop: any) => {
+      if (prop.type !== 'Property' && prop.type !== 'ObjectProperty') {
+        return;
+      }
+      const keyName = getKeyName(prop.key);
+      if (
+        (keyName !== 'field' && keyName !== 'textField') ||
+        prop.value.type !== 'ObjectExpression'
+      ) {
+        return;
+      }
+      let target = prop.value;
+      const remaining: any[] = [];
+      const collected: { newKey: string; value: any }[] = [];
+      target.properties.forEach((innerProp: any) => {
+        if (innerProp.type !== 'Property' && innerProp.type !== 'ObjectProperty') {
+          remaining.push(innerProp);
+          return;
+        }
+        const innerKey = getKeyName(innerProp.key);
+        if (innerKey && LEGACY_PROP_NAMES.includes(innerKey)) {
+          collected.push({ newKey: PROP_TO_SLOT[innerKey], value: innerProp.value });
+          return;
+        }
+        remaining.push(innerProp);
+      });
+      if (collected.length === 0) {
+        return;
+      }
+      target.properties = remaining;
+      // Use the same recursive merge helper used by `transformNestedProp`.
+      collected.forEach(({ newKey, value }) => {
+        target = addItemToObject(`slotProps.${newKey}`, value, target, j);
+      });
+      prop.value = target;
+    });
+  });
+
+  return root.toSource(printOptions);
+}
+
+export const testConfig = () => ({
+  name: 'migrate-text-field-props',
+  specFiles: [
+    {
+      name: 'migrate legacy text field props to slotProps',
+      actual: readFile(path.join(import.meta.dirname, 'actual.spec.tsx')),
+      expected: readFile(path.join(import.meta.dirname, 'expected.spec.tsx')),
+    },
+  ],
+});

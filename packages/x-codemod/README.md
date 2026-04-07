@@ -332,6 +332,7 @@ The list includes these transformers
 - [`rename-pickers-day`](#rename-pickers-day)
 - [`rename-picker-classes`](#rename-picker-classes)
 - [`remove-disable-margin`](#remove-disable-margin)
+- [`migrate-text-field-props`](#migrate-text-field-props)
 
 #### `rename-field-ref`
 
@@ -485,6 +486,36 @@ When `disableMargin={false}`, the prop is simply removed without adding the CSS 
 
 ```bash
 npx @mui/x-codemod@next v9.0.0/pickers/remove-disable-margin <path>
+```
+
+#### `migrate-text-field-props`
+
+Rewrites the legacy `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props on Picker, Field and `PickersTextField` components into the new `slotProps.{input,htmlInput,inputLabel,formHelperText}` shape. On Picker and Field components the new keys are nested inside `slotProps.textField.slotProps`; on `PickersTextField` they live directly under `slotProps`.
+
+```diff
+-<DateField
+-  InputProps={{ name: 'birthday' }}
+-  inputProps={{ 'data-testid': 'html-input' }}
+-/>
++<DateField
++  slotProps={{
++    textField: {
++      slotProps: {
++        input: { name: 'birthday' },
++        htmlInput: { 'data-testid': 'html-input' },
++      },
++    },
++  }}
++/>
+
+-<DatePicker slotProps={{ textField: { InputProps: { name: 'date' } } }} />
++<DatePicker slotProps={{ textField: { slotProps: { input: { name: 'date' } } } }} />
+```
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/migrate-text-field-props <path>
 ```
 
 ## v8.0.0
