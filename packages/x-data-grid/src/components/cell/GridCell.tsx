@@ -456,6 +456,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     title = valueString;
   }
 
+  // Wrap text in a span so ellipsis works with the flex cell layout
+  if (typeof children === 'string') {
+    children = <span>{children}</span>;
+  }
+
   const draggableEventHandlers = disableDragEvents
     ? null
     : {
