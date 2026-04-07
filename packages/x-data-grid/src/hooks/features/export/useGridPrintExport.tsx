@@ -165,6 +165,8 @@ export const useGridPrintExport = (
       )!;
       renderZone.style.position = 'static';
       renderZone.style.transform = '';
+      const contentFiller = gridClone.querySelector<HTMLElement>(`.${gridClasses.contentFiller}`)!;
+      contentFiller.style.display = 'none';
 
       virtualScrollerContent.style.flexBasis = 'auto';
 
