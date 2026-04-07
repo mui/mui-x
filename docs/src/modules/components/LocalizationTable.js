@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { Link } from '@mui/docs/Link';
-import { MarkdownElement } from '@mui/docs/MarkdownElement';
+import { Link } from '@mui/internal-core-docs/Link';
+import { MarkdownElement } from '@mui/internal-core-docs/MarkdownElement';
 
 const Root = styled('div')(({ theme }) => ({
   position: 'relative',

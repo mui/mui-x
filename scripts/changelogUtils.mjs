@@ -23,7 +23,7 @@ const REPO = 'mui-x';
  * @type {string[]}
  * Labels to exclude from the changelog
  */
-const excludeLabels = ['dependencies', 'scope: scheduler'];
+const excludeLabels = ['dependencies'];
 
 /**
  * @type {string[]}
@@ -241,7 +241,7 @@ async function generateChangelog({
   const treeViewCommits = [];
   const treeViewProCommits = [];
   const schedulerCommits = [];
-  const schedulerProCommits = [];
+  const schedulerPremiumCommits = [];
   const internalCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -299,8 +299,8 @@ async function generateChangelog({
         case 'scheduler':
           schedulerCommits.push(commitItem);
           break;
-        case 'scheduler-pro':
-          schedulerProCommits.push(commitItem);
+        case 'scheduler-premium':
+          schedulerPremiumCommits.push(commitItem);
           break;
         case 'docs':
           docsCommits.push(commitItem);
@@ -540,6 +540,14 @@ ${logProductSection({
   baseCommits: treeViewCommits,
   proCommits: treeViewProCommits,
   changelogKey: 'TreeView',
+})}
+
+${logProductSection({
+  productName: 'Scheduler',
+  packageName: 'x-scheduler',
+  baseCommits: schedulerCommits,
+  premiumCommits: schedulerPremiumCommits,
+  changelogKey: 'scheduler',
 })}
 
 ${logProductSection({

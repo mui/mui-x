@@ -226,8 +226,12 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
       return undefined;
     }
     return {
-      backIconButtonProps: { disabled: true },
-      nextIconButtonProps: { disabled: true },
+      slotProps: {
+        actions: {
+          previousButton: { disabled: true },
+          nextButton: { disabled: true },
+        },
+      },
     };
   }, [disabled]);
 
@@ -265,11 +269,16 @@ const BaseBadge = forwardRef<any, P['baseBadge']>(function BaseBadge(props, ref)
 });
 
 const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(props, ref) {
-  const { autoFocus, label, fullWidth, slotProps, className, material, ...other } = props;
+  const { autoFocus, label, fullWidth, slotProps, className, material, inputRef, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
   const rippleRef = React.useRef<any>(null);
+  const combinedInputRef = useForkRef(
+    inputRef,
+    slotProps?.htmlInput?.ref,
+    (material?.slotProps?.input as any)?.ref,
+  );
 
   React.useEffect(() => {
     if (autoFocus) {
@@ -282,13 +291,25 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
     }
   }, [autoFocus]);
 
+  const checkboxSlotProps = React.useMemo(
+    () => ({
+      ...material?.slotProps,
+      input: {
+        ...material?.slotProps?.input,
+        ...slotProps?.htmlInput,
+        ref: combinedInputRef,
+      },
+    }),
+    [material?.slotProps, slotProps?.htmlInput, combinedInputRef],
+  );
+
   if (!label) {
     return (
       <Checkbox
         {...other}
         {...material}
         className={clsx(className, material?.className)}
-        slotProps={{ input: slotProps?.htmlInput }}
+        slotProps={checkboxSlotProps}
         ref={handleRef}
         touchRippleRef={rippleRef}
       />
@@ -302,7 +323,7 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
         <Checkbox
           {...other}
           {...material}
-          slotProps={{ input: slotProps?.htmlInput }}
+          slotProps={checkboxSlotProps}
           ref={handleRef}
           touchRippleRef={rippleRef}
         />
@@ -471,7 +492,7 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
         })
       }
       renderInput={(params) => {
-        const { inputProps: htmlInputProps, InputProps, InputLabelProps, ...inputRest } = params;
+        const { slotProps: autocompleteSlotProps, ...inputRest } = params;
         const { slotProps: textFieldSlotProps, ...textFieldRest } = slotProps?.textField ?? {};
         const { slotProps: baseTextFieldSlotProps, ...baseTextFieldRest } =
           rootProps.slotProps?.baseTextField ?? {};
@@ -484,18 +505,18 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
             {...baseTextFieldRest}
             slotProps={{
               htmlInput: {
-                ...htmlInputProps,
+                ...autocompleteSlotProps.htmlInput,
                 ...textFieldSlotProps?.htmlInput,
                 ...baseTextFieldSlotProps?.htmlInput,
               },
               input: {
-                ...transformInputProps(InputProps as any, false),
+                ...transformInputProps(autocompleteSlotProps.input as any, false),
                 ...textFieldSlotProps?.input,
                 ...baseTextFieldSlotProps?.input,
               },
               inputLabel: {
                 shrink: true,
-                ...InputLabelProps,
+                ...autocompleteSlotProps.inputLabel,
                 ...textFieldSlotProps?.inputLabel,
                 ...baseTextFieldSlotProps?.inputLabel,
               },

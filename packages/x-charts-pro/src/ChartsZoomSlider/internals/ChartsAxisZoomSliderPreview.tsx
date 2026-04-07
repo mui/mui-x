@@ -6,6 +6,7 @@ import {
   type SeriesId,
   useStore,
 } from '@mui/x-charts/internals';
+import { alpha } from '@mui/system';
 import useId from '@mui/utils/useId';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
 import { ChartsAxisZoomSliderPreviewContent } from './ChartsAxisZoomSliderPreviewContent';
@@ -17,7 +18,7 @@ const PreviewBackgroundRect = styled('rect', {
   rx: 4,
   ry: 4,
   stroke: (theme.vars || theme).palette.grey[700],
-  fill: theme.alpha((theme.vars || theme).palette.grey[700], 0.4),
+  fill: alpha(theme.palette.grey[700], 0.4),
 }));
 
 interface ChartsAxisZoomSliderPreviewProps {

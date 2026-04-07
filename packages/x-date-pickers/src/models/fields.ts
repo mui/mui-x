@@ -209,7 +209,16 @@ export type BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure extend
         | 'select'
         | 'SelectProps'
         | 'type'
-      >
+      > & {
+        /**
+         * @deprecated Use `slotProps.input` instead.
+         */
+        InputProps?: Record<string, any>;
+        /**
+         * @deprecated Use `slotProps.htmlInput` instead.
+         */
+        inputProps?: Record<string, any>;
+      }
     : Partial<Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps>>;
 
 export interface PickerTextFieldOwnerState extends FieldOwnerState {
