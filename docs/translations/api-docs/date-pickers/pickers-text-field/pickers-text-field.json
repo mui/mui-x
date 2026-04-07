@@ -13,23 +13,44 @@
     "elements": {
       "description": "The elements to render. Each element contains the prop to edit a section of the value."
     },
+    "endAdornment": { "description": "End <code>InputAdornment</code> for this component." },
+    "error": {
+      "description": "If <code>true</code>, the <code>input</code> will indicate an error."
+    },
     "focused": {
       "description": "If <code>true</code>, the component is displayed in focused state."
+    },
+    "FormHelperTextProps": {
+      "description": "Props applied to the <a href=\"https://mui.com/material-ui/api/form-helper-text/\"><code>FormHelperText</code></a> element."
+    },
+    "fullWidth": {
+      "description": "If <code>true</code>, the input will take up the full width of its container."
     },
     "helperText": { "description": "The helper text content." },
     "hiddenLabel": {
       "description": "If <code>true</code>, the label is hidden. This is used to increase density for a <code>FilledInput</code>. Be sure to add <code>aria-label</code> to the <code>input</code> element."
     },
-    "InputProps": {
-      "description": "Props applied to the Input element. It will be a <a href=\"/material-ui/api/filled-input/\"><code>FilledInput</code></a>, <a href=\"/material-ui/api/outlined-input/\"><code>OutlinedInput</code></a> or <a href=\"/material-ui/api/input/\"><code>Input</code></a> component depending on the <code>variant</code> prop value."
+    "id": { "description": "The id of the <code>input</code> element." },
+    "InputLabelProps": {
+      "description": "Props applied to the <a href=\"https://mui.com/material-ui/api/input-label/\"><code>InputLabel</code></a> element. Pointer events like <code>onClick</code> are enabled if and only if <code>shrink</code> is <code>true</code>."
     },
+    "inputProps": {
+      "description": "<a href=\"https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes\">Attributes</a> applied to the <code>input</code> element."
+    },
+    "InputProps": {
+      "description": "Props applied to the Input element. It will be a <a href=\"https://mui.com/material-ui/api/filled-input/\"><code>FilledInput</code></a>, <a href=\"https://mui.com/material-ui/api/outlined-input/\"><code>OutlinedInput</code></a> or <a href=\"https://mui.com/material-ui/api/input/\"><code>Input</code></a> component depending on the <code>variant</code> prop value."
+    },
+    "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
+    "label": { "description": "The label content." },
     "margin": {
       "description": "If <code>dense</code> or <code>normal</code>, will adjust vertical spacing of this and contained components."
     },
+    "name": { "description": "Name attribute of the <code>input</code> element." },
     "required": {
       "description": "If <code>true</code>, the label will indicate that the <code>input</code> is required."
     },
     "size": { "description": "The size of the component." },
+    "startAdornment": { "description": "Start <code>InputAdornment</code> for this component." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },

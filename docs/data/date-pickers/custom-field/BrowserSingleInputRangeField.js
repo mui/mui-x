@@ -1,12 +1,12 @@
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
-import { CalendarIcon, ClearIcon } from '@mui/x-date-pickers/icons';
+import { ClearIcon, DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
+import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -38,12 +38,10 @@ const BrowserIconButton = styled('button', {
   },
 });
 
-function BrowserDateField(props) {
-  const fieldResponse = useDateField(props);
+function BrowserSingleInputDateRangeField(props) {
+  const fieldResponse = useSingleInputDateRangeField(props);
 
   const {
-    // Should be ignored
-    enableAccessibleFieldDOMStructure,
     // Should be passed to the PickersSectionList component
     elements,
     sectionListRef,
@@ -76,7 +74,13 @@ function BrowserDateField(props) {
   const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
 
   return (
-    <BrowserFieldRoot {...other} ref={handleRef}>
+    <BrowserFieldRoot
+      {...other}
+      ref={handleRef}
+      style={{
+        minWidth: 300,
+      }}
+    >
       <BrowserFieldContent>
         <PickersSectionList
           elements={elements}
@@ -103,25 +107,30 @@ function BrowserDateField(props) {
       )}
       <BrowserIconButton
         onClick={() => pickerContext.setOpen((prev) => !prev)}
-        sx={{ marginLeft: 1 }}
         aria-label={openPickerAriaLabel}
+        sx={{ marginLeft: 1 }}
       >
-        <CalendarIcon />
+        <DateRangeIcon />
       </BrowserIconButton>
     </BrowserFieldRoot>
   );
 }
 
-function BrowserDatePicker(props) {
+BrowserSingleInputDateRangeField.fieldType = 'single-input';
+
+function BrowserSingleInputDateRangePicker(props) {
   return (
-    <DatePicker {...props} slots={{ field: BrowserDateField, ...props.slots }} />
+    <DateRangePicker
+      {...props}
+      slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
+    />
   );
 }
 
-export default function BrowserV7Field() {
+export default function BrowserSingleInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <BrowserDatePicker
+      <BrowserSingleInputDateRangePicker
         slotProps={{
           field: { clearable: true },
         }}
