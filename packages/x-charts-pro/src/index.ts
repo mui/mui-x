@@ -25,6 +25,7 @@ export * from '@mui/x-charts/ChartDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
 export * from '@mui/x-charts/ChartsOverlay';
 export * from '@mui/x-charts/ChartsWrapper';
+export * from '@mui/x-charts/ChartsBrushOverlay';
 
 // Pro utilities
 export * from './constants';
