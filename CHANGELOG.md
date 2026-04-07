@@ -37,6 +37,11 @@ Same changes as in `@mui/x-data-grid-pro@9.0.0-rc.0`, plus:
 
 ### Date and Time Pickers
 
+#### Breaking changes
+
+- Accessible DOM structure is now the only default. [Read more](https://next.mui.com/x/migration/migration-pickers-v8/#accessible-dom-structure-is-now-the-default)
+- The `PickerDay2` and `DateRangePickerDay2` components were propagated to stable while removing the previous defaults. [Read more](https://next.mui.com/x/migration/migration-pickers-v8/#day-slot)
+
 #### `@mui/x-date-pickers@9.0.0-rc.0`
 
 - [pickers] Remove `PickersDay` and `DateRangePickerDay` and promote their `2` versions as replacements (#21739) @michelengelen
