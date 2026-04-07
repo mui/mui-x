@@ -363,11 +363,6 @@ export const GridRootStyles = styled('div', {
       zIndex: 40, // Should be above the column separator
       background: vars.header.background.base,
     },
-    [`& .${c['virtualizer--layoutControlled']} .${c['columnHeader--pinnedLeft']},
-      & .${c['virtualizer--layoutControlled']} .${c['columnHeader--pinnedRight']}`]: {
-      position: 'absolute',
-      height: 'var(--height)',
-    },
     [`& .${c.columnSeparator}`]: {
       position: 'absolute',
       overflow: 'hidden',
@@ -664,10 +659,6 @@ export const GridRootStyles = styled('div', {
         backgroundColor: pinnedSelectedBackground,
       },
     },
-    [`& .${c['virtualizer--layoutControlled']} .${c['cell--pinnedLeft']},
-      & .${c['virtualizer--layoutControlled']} .${c['cell--pinnedRight']}`]: {
-      position: 'absolute',
-    },
     [`& .${c.row}`]: {
       '&:hover': pinnedHoverStyles,
       '&.Mui-selected': pinnedSelectedStyles,
@@ -784,6 +775,15 @@ export const GridRootStyles = styled('div', {
     },
 
     /* Controlled layout overrides (absolute positioning for pinned elements) */
+    [`& .${c['virtualizer--layoutControlled']} .${c['columnHeader--pinnedLeft']},
+      & .${c['virtualizer--layoutControlled']} .${c['columnHeader--pinnedRight']}`]: {
+      position: 'absolute',
+      height: 'var(--height)',
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c['cell--pinnedLeft']},
+      & .${c['virtualizer--layoutControlled']} .${c['cell--pinnedRight']}`]: {
+      position: 'absolute',
+    },
     [`& .${c['virtualizer--layoutControlled']} .${c.row}`]: {
       position: 'static',
     },
