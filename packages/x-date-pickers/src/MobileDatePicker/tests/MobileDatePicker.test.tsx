@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
+import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   buildFieldInteractions,
   openPicker,
 } from 'test/utils/pickers';
@@ -119,7 +119,7 @@ describe('<MobileDatePicker />', () => {
           open
           defaultValue={adapterToUse.date('2018-01-01')}
           slots={{
-            day: (props) => <PickersDay {...props} data-testid="test-day" />,
+            day: (props) => <PickerDay {...props} data-testid="test-day" />,
           }}
         />,
       );
@@ -150,23 +150,22 @@ describe('<MobileDatePicker />', () => {
 
     it('should update internal state when controlled value is updated', async () => {
       const view = renderWithProps({
-        enableAccessibleFieldDOMStructure: true as const,
         value: adapterToUse.date('2019-01-01'),
       });
 
       // Set a date
-      expectFieldValueV7(view.getSectionsContainer(), '01/01/2019');
+      expectFieldValue(view.getSectionsContainer(), '01/01/2019');
 
       // Clean value using external control
       view.setProps({ value: null });
-      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       // Open and Dismiss the picker
       openPicker({ type: 'date' });
       await view.user.keyboard('[Escape]');
 
       // Verify it's still a clean value
-      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+      expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
     });
   });
 });

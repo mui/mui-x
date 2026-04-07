@@ -3,13 +3,14 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
+components: EventTimelinePremium
 ---
 
 # Event Timeline - Events
 
 <p class="description">Define events for your Event Timeline.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Event properties
 

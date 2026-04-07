@@ -104,10 +104,7 @@ export class EventTimelinePremiumStore<
     const views = this.state.views;
     if (!views.includes(view)) {
       throw new Error(
-        [
-          `MUI: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
-          'Please ensure that the requested view is included in the views array.',
-        ].join('\n'),
+        `MUI: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.\nPlease ensure that the requested view is included in the views array.`,
       );
     }
   }
