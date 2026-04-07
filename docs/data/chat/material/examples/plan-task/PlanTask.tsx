@@ -104,7 +104,6 @@ function TaskStatusIcon({ status }: { status: TaskStatus }) {
     ),
   };
 
-
   return (
     <span
       style={{ display: 'inline-flex', flexShrink: 0, color: 'inherit' }}

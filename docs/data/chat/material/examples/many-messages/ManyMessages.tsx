@@ -1,10 +1,7 @@
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -13,7 +10,7 @@ import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 
 const adapter = createEchoAdapter();
 
-const MANY_CONV_ID = randomId();
+const MANY_CONV_ID = 'many-msg-conv';
 
 const conversation: ChatConversation = {
   id: MANY_CONV_ID,
@@ -35,7 +32,7 @@ function generateMessages(count: number): ChatMessage[] {
 
     messages.push(
       createTextMessage({
-        id: randomId(),
+        id: `many-msg-${i + 1}`,
         conversationId: MANY_CONV_ID,
         role: isUser ? 'user' : 'assistant',
         author: isUser ? demoUsers.you : demoUsers.agent,

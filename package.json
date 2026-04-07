@@ -155,15 +155,6 @@
           "stylis": "4.2.0"
         }
       }
-    },
-    "onlyBuiltDependencies": [
-      "@mui/x-telemetry",
-      "@swc/core",
-      "@vvago/vale",
-      "esbuild",
-      "nx",
-      "sharp",
-      "unrs-resolver"
-    ]
+    }
   }
 }

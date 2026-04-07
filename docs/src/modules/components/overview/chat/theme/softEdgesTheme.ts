@@ -93,17 +93,22 @@ export const getSoftEdgesTheme = (mode: 'light' | 'dark'): Theme => {
           bubble: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
           }),
-          roleUser: ({ theme }) => ({
-            '& .MuiChatMessage-bubble': {
-              backgroundColor: theme.palette.primary.main,
-              color: theme.palette.primary.contrastText,
-            },
+          roleUser: ({ theme, ownerState }: { theme: Theme; ownerState: any }) => ({
+            ...(ownerState?.variant !== 'compact' && {
+              '& .MuiChatMessage-bubble': {
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.primary.contrastText,
+              },
+            }),
           }),
-          roleAssistant: ({ theme }) => ({
-            '& .MuiChatMessage-bubble': {
-              backgroundColor: mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[200],
-              color: theme.palette.text.primary,
-            },
+          roleAssistant: ({ theme, ownerState }: { theme: Theme; ownerState: any }) => ({
+            ...(ownerState?.variant !== 'compact' && {
+              '& .MuiChatMessage-bubble': {
+                backgroundColor:
+                  mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[200],
+                color: theme.palette.text.primary,
+              },
+            }),
           }),
         },
       },

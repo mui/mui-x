@@ -26,7 +26,7 @@ import {
   demoUsers,
 } from 'docsx/data/chat/material/examples/shared/demoData';
 
-const CONVERSATION_ID = randomId();
+const CONVERSATION_ID = 'no-history-conv';
 
 // Adapter has only `sendMessage` — no `listConversations` or `listMessages`.
 // ChatBox cannot fetch conversation history, and no `conversations` prop is passed,
@@ -45,7 +45,7 @@ const adapter = {
 
 const initialMessages = [
   createTextMessage({
-    id: randomId(),
+    id: 'nh-msg-1',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -53,7 +53,7 @@ const initialMessages = [
     text: 'Hello! This thread is composed directly from individual components — no ChatBox, no header, no sidebar.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'nh-msg-2',
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -61,7 +61,7 @@ const initialMessages = [
     text: 'Got it. So I can pick exactly which parts to include?',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'nh-msg-3',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,

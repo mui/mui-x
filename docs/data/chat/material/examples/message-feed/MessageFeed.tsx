@@ -24,7 +24,7 @@ import {
   demoUsers,
 } from 'docsx/data/chat/material/examples/shared/demoData';
 
-const CONVERSATION_ID = randomId();
+const CONVERSATION_ID = 'feed-conv';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {
@@ -40,7 +40,7 @@ const adapter: ChatAdapter = {
 
 const initialMessages = [
   createTextMessage({
-    id: randomId(),
+    id: 'feed-msg-1',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -48,7 +48,7 @@ const initialMessages = [
     text: 'This is a read-only message feed — no ChatComposer is rendered anywhere on the page.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'feed-msg-2',
     conversationId: CONVERSATION_ID,
     role: 'user',
     author: demoUsers.you,
@@ -56,7 +56,7 @@ const initialMessages = [
     text: 'So how do new messages appear if there is no input?',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'feed-msg-3',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: demoUsers.agent,

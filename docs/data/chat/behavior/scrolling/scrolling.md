@@ -136,8 +136,3 @@ await loadMoreHistory();
 - [Message list](/x/react-chat/basics/messages/) for the full component reference including date dividers, grouping, and density.
 - [Streaming](/x/react-chat/behavior/streaming/) for how auto-scroll follows streaming content.
 - [Adapter](/x/react-chat/backend/adapters/) for the `listMessages` method that powers history loading.
-
-## API
-
-- [`ChatMessageList`](/x/api/chat/chat-message-list/)
-- [`ChatScrollToBottomAffordance`](/x/api/chat/chat-scroll-to-bottom-affordance/)

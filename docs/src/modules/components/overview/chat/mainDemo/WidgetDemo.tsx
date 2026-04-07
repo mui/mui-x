@@ -304,7 +304,7 @@ function MetricCard({
         },
       })}
     >
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography
           variant="caption"
           color="text.secondary"
@@ -327,15 +327,15 @@ function ActivityRow({ name, action, time }: { name: string; action: string; tim
   return (
     <Stack
       direction="row"
-      alignItems="center"
-      justifyContent="space-between"
       sx={{
+        alignItems: 'center',
+        justifyContent: 'space-between',
         px: 1.5,
         py: 1,
         '&:not(:last-child)': { borderBottom: '1px solid', borderColor: 'divider' },
       }}
     >
-      <Stack direction="row" alignItems="center" spacing={1.5}>
+      <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
         <Box
           sx={(theme) => ({
             width: 28,
@@ -407,8 +407,12 @@ function WidgetHomeHeader({ onClose }: { onClose: () => void }) {
         },
       })}
     >
-      <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
-        <Stack direction="row" alignItems="center" spacing={1}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+      >
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', width: '100%' }}>
           <Box
             sx={{
               width: 8,
@@ -752,8 +756,8 @@ export default function WidgetDemo() {
       {/* ---------- Mock SaaS dashboard background ---------- */}
       <Box sx={{ p: 3, height: '100%' }}>
         {/* Top bar */}
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Stack direction="row" alignItems="center" spacing={1.5}>
+        <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
             <Box
               sx={(theme) => ({
                 width: 32,
@@ -878,7 +882,7 @@ export default function WidgetDemo() {
                 />
               ))}
             </Box>
-            <Stack direction="row" justifyContent="space-between" sx={{ mt: 0.75 }}>
+            <Stack direction="row" sx={{ justifyContent: 'space-between', mt: 0.75 }}>
               {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
                 <Typography
                   key={i}

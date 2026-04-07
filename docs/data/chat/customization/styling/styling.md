@@ -129,5 +129,3 @@ Pass `sx` overrides to any internal sub-component using `slotProps` without repl
 
 - [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing sub-components entirely.
 - [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling with utility classes.
-
-## API

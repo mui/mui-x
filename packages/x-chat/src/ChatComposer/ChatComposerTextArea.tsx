@@ -9,6 +9,8 @@ import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatC
 
 const useThemeProps = createUseThemeProps('MuiChatComposerTextArea');
 
+const MAX_ROWS_STYLE = { minHeight: 'unset', margin: 'auto 0px', height: '28px' } as const;
+
 export interface ChatComposerTextAreaProps extends ComposerTextAreaProps {
   className?: string;
   sx?: SxProps<Theme>;
@@ -71,11 +73,7 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
             sx,
             ...(maxRows != null
               ? {
-                  style: {
-                    minHeight: 'unset',
-                    margin: 'auto 0px',
-                    height: '28px',
-                  },
+                  style: MAX_ROWS_STYLE,
                   rows: 1,
                 }
               : {}),

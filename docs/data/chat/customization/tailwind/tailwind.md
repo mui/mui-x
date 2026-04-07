@@ -139,5 +139,3 @@ Use the `slots` and `slotProps` props to replace inner elements while keeping be
 
 - [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization.
 - [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing sub-components entirely.
-
-## API

@@ -260,7 +260,3 @@ The runtime calls `setTyping` when the composer value changes from empty to non-
 - [Read Receipts](/x/react-chat/multi-conversation/read-receipts/) for the `markRead()` adapter method and unread badge display.
 - [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that reflects realtime conversation updates.
 - [Adapter](/x/react-chat/backend/adapters/) for the full `subscribe()` and `setTyping()` method reference.
-
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)

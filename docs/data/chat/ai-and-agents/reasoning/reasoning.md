@@ -168,10 +168,6 @@ Reasoning chunks can appear before, between, or after tool invocations in the sa
 
 This produces a message with five parts in order: reasoning, tool, reasoning, tool (updated), text.
 
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)
-
 ## See also
 
 - [Tool Calling](/x/react-chat/ai-and-agents/tool-calling/) for the tool invocation lifecycle.

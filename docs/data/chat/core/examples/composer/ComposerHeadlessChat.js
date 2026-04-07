@@ -58,7 +58,7 @@ function ComposerInner() {
           borderColor: 'divider',
         }}
       >
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           Composer with attachments
         </Typography>
         <Chip
@@ -200,7 +200,7 @@ function ComposerInner() {
                 />
               ) : null}
               <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Typography variant="body2" fontWeight={700} noWrap>
+                <Typography variant="body2" noWrap sx={{ fontWeight: 700 }}>
                   {attachment.file.name}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">

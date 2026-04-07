@@ -82,9 +82,9 @@ function makeAssistantMessage(
 
 // ── Conversation IDs ──────────────────────────────────────────────────────────
 
-const fixTestsId = randomId();
-const addFeatureId = randomId();
-const dangerousCmdId = randomId();
+const fixTestsId = 'tsb-fix-tests';
+const addFeatureId = 'tsb-add-feature';
+const dangerousCmdId = 'tsb-dangerous-cmd';
 
 // ── Pre-populated conversations ───────────────────────────────────────────────
 
@@ -123,12 +123,12 @@ const initialConversations: ChatConversation[] = [
 const initialThreads: Record<string, ChatMessage[]> = {
   [fixTestsId]: [
     makeUserMessage(
-      randomId(),
+      'tsb-ft-msg-1',
       fixTestsId,
       'The unit tests are failing after the recent refactor. Can you fix them?',
       '2026-03-21T09:20:00.000Z',
     ),
-    makeAssistantMessage(randomId(), fixTestsId, '2026-03-21T09:21:00.000Z', [
+    makeAssistantMessage('tsb-ft-msg-2', fixTestsId, '2026-03-21T09:21:00.000Z', [
       { type: 'step-start' },
       {
         type: 'reasoning',
@@ -143,7 +143,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsb-ft-tc-1',
           toolName: 'glob',
           state: 'output-available',
           input: { pattern: 'src/**/*.test.ts' },
@@ -160,7 +160,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsb-ft-tc-2',
           toolName: 'read_file',
           state: 'output-available',
           input: { path: 'src/Button.test.ts' },
@@ -173,7 +173,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsb-ft-tc-3',
           toolName: 'edit_file',
           state: 'output-available',
           input: {
@@ -187,7 +187,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsb-ft-tc-4',
           toolName: 'bash',
           state: 'output-available',
           input: { command: 'pnpm test --run' },
@@ -208,12 +208,12 @@ const initialThreads: Record<string, ChatMessage[]> = {
 
   [addFeatureId]: [
     makeUserMessage(
-      randomId(),
+      'tsb-af-msg-1',
       addFeatureId,
       'Add a dark mode toggle button to the header',
       '2026-03-21T08:00:00.000Z',
     ),
-    makeAssistantMessage(randomId(), addFeatureId, '2026-03-21T08:01:00.000Z', [
+    makeAssistantMessage('tsb-af-msg-2', addFeatureId, '2026-03-21T08:01:00.000Z', [
       { type: 'step-start' },
       {
         type: 'reasoning',
@@ -228,7 +228,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsb-af-tc-1',
           toolName: 'read_file',
           state: 'output-available',
           input: { path: 'src/components/Header.tsx' },
@@ -246,7 +246,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsb-af-tc-2',
           toolName: 'write_file',
           state: 'output-available',
           input: {
@@ -260,7 +260,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsb-af-tc-3',
           toolName: 'bash',
           state: 'output-available',
           input: { command: 'pnpm build' },
@@ -280,13 +280,13 @@ const initialThreads: Record<string, ChatMessage[]> = {
 
   [dangerousCmdId]: [
     makeUserMessage(
-      randomId(),
+      'tsb-dc-msg-1',
       dangerousCmdId,
       'Clean up all build artifacts and reset to a clean state',
       '2026-03-21T10:00:00.000Z',
     ),
     makeAssistantMessage(
-      randomId(),
+      'tsb-dc-msg-2',
       dangerousCmdId,
       '2026-03-21T10:01:00.000Z',
       [
@@ -299,7 +299,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
         {
           type: 'dynamic-tool',
           toolInvocation: {
-            toolCallId: randomId(),
+            toolCallId: 'tsb-dc-tc-1',
             toolName: 'bash',
             state: 'approval-requested',
             input: { command: 'rm -rf ./dist ./coverage && git clean -fd' },

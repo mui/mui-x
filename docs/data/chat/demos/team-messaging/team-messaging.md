@@ -17,7 +17,3 @@ components: ChatBox
 A full team messaging surface with multiple conversations. The sidebar renders automatically when more than one conversation is provided, allowing users to switch between threads while each conversation maintains its own message history.
 
 {{"demo": "../../material/examples/multi-conversation/MultiConversation.js", "defaultCodeOpen": false, "bg": "inline"}}
-
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)

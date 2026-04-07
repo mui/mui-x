@@ -2,10 +2,7 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -13,7 +10,7 @@ import {
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = randomId();
+const CONV_ID = 'compact-conv';
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -27,7 +24,7 @@ const conversation: ChatConversation = {
 
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-1',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -35,7 +32,7 @@ const messages: ChatMessage[] = [
     text: 'Good morning! Here is the agenda for today.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-2',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -43,7 +40,7 @@ const messages: ChatMessage[] = [
     text: 'We need to review the sprint progress and plan next steps.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-3',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -51,7 +48,7 @@ const messages: ChatMessage[] = [
     text: 'Sounds good. I finished the variant feature yesterday.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-4',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -59,7 +56,7 @@ const messages: ChatMessage[] = [
     text: 'The compact layout is ready for review.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cv-msg-5',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,

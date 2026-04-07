@@ -209,5 +209,3 @@ You can use both together — for example, swap the message content component vi
 ## See also
 
 - [Styling](/x/react-chat/customization/styling/) for `sx` prop, theme overrides, and dark mode.
-
-## API

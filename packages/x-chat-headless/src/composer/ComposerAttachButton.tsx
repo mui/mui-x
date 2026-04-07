@@ -63,6 +63,7 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
     externalSlotProps: slotProps?.attachInput,
     ownerState,
     additionalProps: {
+      'aria-label': localeText.composerAttachInputLabel,
       hidden: true,
       multiple: true,
       ref: inputRef,

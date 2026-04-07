@@ -107,7 +107,3 @@ function TypingIndicator({ message }) {
 - [Message Appearance](/x/react-chat/display/message-appearance/) for the overall message layout
 - [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for streaming text display
 - [Message list](/x/react-chat/basics/messages/) for auto-scroll behavior during streaming
-
-## API
-
-- [`ChatMessageSkeleton`](/x/api/chat/chat-message-skeleton/)

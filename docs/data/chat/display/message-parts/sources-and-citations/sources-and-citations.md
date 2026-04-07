@@ -154,7 +154,3 @@ For fully custom source rendering, register a custom renderer through `partRende
 
 - [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text content that references sources
 - [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building fully custom citation UI
-
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

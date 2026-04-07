@@ -5,10 +5,7 @@ import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Stack from '@mui/material/Stack';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -16,7 +13,7 @@ import {
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = randomId();
+const CONV_ID = 'density-conv';
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -30,7 +27,7 @@ const conversation: ChatConversation = {
 
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-1',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -38,7 +35,7 @@ const messages: ChatMessage[] = [
     text: 'Hey! I just pushed the updated mockups for the settings page.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-2',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -46,7 +43,7 @@ const messages: ChatMessage[] = [
     text: 'Let me know what you think about the new spacing.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-3',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -54,7 +51,7 @@ const messages: ChatMessage[] = [
     text: 'Looks great! The layout feels much more balanced now.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-4',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -62,7 +59,7 @@ const messages: ChatMessage[] = [
     text: 'One thing: can we increase the gap between the sections?',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-5',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -70,7 +67,7 @@ const messages: ChatMessage[] = [
     text: 'Sure, I will add more vertical breathing room. Give me 10 minutes.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dp-msg-6',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,

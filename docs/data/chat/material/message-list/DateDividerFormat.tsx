@@ -2,10 +2,7 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import {
-  createEchoAdapter,
-  randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
@@ -13,7 +10,7 @@ import {
 
 const adapter = createEchoAdapter();
 
-const CONV_ID = randomId();
+const CONV_ID = 'date-divider-conv';
 
 const conversation: ChatConversation = {
   id: CONV_ID,
@@ -27,7 +24,7 @@ const conversation: ChatConversation = {
 
 const messages: ChatMessage[] = [
   createTextMessage({
-    id: randomId(),
+    id: 'dd-msg-1',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,
@@ -35,7 +32,7 @@ const messages: ChatMessage[] = [
     text: 'Here is a message from two days ago.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dd-msg-2',
     conversationId: CONV_ID,
     role: 'user',
     author: demoUsers.you,
@@ -43,7 +40,7 @@ const messages: ChatMessage[] = [
     text: 'And this one is from yesterday.',
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'dd-msg-3',
     conversationId: CONV_ID,
     role: 'assistant',
     author: demoUsers.agent,

@@ -65,6 +65,9 @@ const ChatConversationListScrollerStyled = styled('div', {
   height: '100%',
   overflow: 'hidden',
   flexShrink: 0,
+  '@container (max-width: 599.95px)': {
+    display: 'none',
+  },
 }));
 
 // Plain-div viewport: the scroller above is a regular div (not ScrollArea.Root),

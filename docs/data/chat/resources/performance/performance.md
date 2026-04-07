@@ -174,8 +174,6 @@ The chat UI handles various edge cases in message content:
 2. **Highlight updates** — Enable "Highlight updates when components render" in React DevTools to visually see which components re-render during streaming.
 3. **Check subscription granularity** — If a component uses `useChat()` but only reads `isStreaming`, switch to `useChatStatus()` to avoid unnecessary message-triggered re-renders.
 
-## API
-
 ## See also
 
 - [Hooks Reference](/x/react-chat/resources/hooks/) for the `useMessageIds()` + `useMessage(id)` pattern.

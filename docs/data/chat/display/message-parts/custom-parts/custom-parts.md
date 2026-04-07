@@ -146,7 +146,3 @@ No runtime code changes are needed. The augmentation is purely compile-time.
 ## See also
 
 - [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers
-
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

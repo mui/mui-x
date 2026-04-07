@@ -92,9 +92,11 @@ const FullCustomRowSlot = React.forwardRef(function FullCustomRowSlot(
         >
           <Typography
             variant="body2"
-            fontWeight={unread ? 'fontWeightBold' : 'fontWeightMedium'}
             noWrap
-            sx={{ flex: 1 }}
+            sx={{
+              flex: 1,
+              fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium',
+            }}
           >
             {title}
           </Typography>
@@ -106,7 +108,12 @@ const FullCustomRowSlot = React.forwardRef(function FullCustomRowSlot(
             {formatRelativeTime(conversation?.lastMessageAt)}
           </Typography>
         </Box>
-        <Typography variant="caption" color="text.secondary" noWrap display="block">
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          noWrap
+          sx={{ display: 'block' }}
+        >
           {conversation?.subtitle ?? 'No messages yet'}
         </Typography>
       </Box>

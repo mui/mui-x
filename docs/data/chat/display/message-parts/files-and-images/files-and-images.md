@@ -131,7 +131,3 @@ The `FilePart` component computes an owner state that slot components can use fo
 - [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the most common part type
 - [Sources & Citations](/x/react-chat/display/message-parts/sources-and-citations/) for reference links in RAG applications
 - [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom file viewers
-
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

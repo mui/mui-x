@@ -18,7 +18,7 @@ export interface ChatConversationTitleProps extends ConversationTitleProps {
   classes?: Partial<ChatConversationClasses>;
 }
 
-const ChatConversationTitleStyled = styled('h2', {
+const ChatConversationTitleStyled = styled('div', {
   name: 'MuiChatConversation',
   slot: 'Title',
   overridesResolver: (_, styles) => styles.title,
@@ -33,7 +33,7 @@ const ChatConversationTitleStyled = styled('h2', {
   whiteSpace: 'nowrap',
 }));
 
-const ChatConversationTitle = React.forwardRef<HTMLHeadingElement, ChatConversationTitleProps>(
+const ChatConversationTitle = React.forwardRef<HTMLDivElement, ChatConversationTitleProps>(
   function ChatConversationTitle(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatConversationTitle' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;

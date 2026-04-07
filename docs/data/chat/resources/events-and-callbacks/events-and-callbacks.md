@@ -222,5 +222,3 @@ All callbacks are registered as props on `ChatBox` or `ChatProvider`:
 - [Adapters](/x/react-chat/backend/adapters/) for the adapter interface that produces these events.
 - [Controlled State](/x/react-chat/backend/controlled-state/) for the full `ChatProvider` props reference.
 - [Hooks Reference](/x/react-chat/resources/hooks/) for `useChatStatus()` and reading error state in components.
-
-## API

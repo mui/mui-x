@@ -439,9 +439,7 @@ function MessengerConversationSidebar(
     >
       <Stack
         direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ px: 2, pt: 2, pb: 1.5 }}
+        sx={{ alignItems: 'center', justifyContent: 'space-between', px: 2, pt: 2, pb: 1.5 }}
       >
         <Typography sx={{ fontSize: 18, fontWeight: 700 }}>Messages</Typography>
         <Stack direction="row" spacing={0.5}>

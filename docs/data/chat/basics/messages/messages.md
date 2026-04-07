@@ -105,31 +105,19 @@ Scroll behavior, overflow, padding, and thin scrollbar are handled out of the bo
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
 Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-The grouping window defaults to 5 minutes (300,000 ms). Customize it through `slotProps`.
-The demo below sets the window to 1 minute (60,000 ms) — notice how messages more than 1 minute apart start a new group with a fresh avatar:
-
-{{"demo": "../../material/message-list/MessageGrouping.js", "defaultCodeOpen": false, "bg": "inline"}}
+See [Message Appearance](/x/react-chat/display/message-appearance/) for grouping configuration and demos.
 
 ### Date dividers
 
 When consecutive messages span different calendar dates, the message list renders a date divider automatically between them.
-The divider shows a localized date string and is styled as a centered label with horizontal rules.
 
-Customize the date format through `slotProps`:
-
-{{"demo": "../../material/message-list/DateDividerFormat.js", "defaultCodeOpen": false, "bg": "inline"}}
+See [Message Appearance](/x/react-chat/display/message-appearance/) for date divider customization.
 
 ### Auto-scrolling
 
-The message list automatically scrolls to the bottom when:
+The message list automatically scrolls to the bottom when the user sends a new message, when new assistant messages arrive, and during streaming.
 
-- The user sends a new message (always active).
-- New messages arrive from the assistant while the user is near the bottom.
-- Streaming content grows (token-by-token updates).
-
-The auto-scroll behavior is gated by a buffer — if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
-
-{{"demo": "../../material/message-list/AutoScrollConfig.js", "defaultCodeOpen": false, "bg": "inline"}}
+See [Scrolling](/x/react-chat/behavior/scrolling/) for buffer configuration and scroll-to-bottom affordance.
 
 ## Standalone usage
 
@@ -137,8 +125,3 @@ When building a custom layout outside of `ChatBox`, use `ChatMessageList` direct
 The demo below renders only the message list with a placeholder for a custom composer:
 
 {{"demo": "../../material/message-list/StandaloneMessageList.js", "defaultCodeOpen": false, "bg": "inline"}}
-
-## API
-
-- [`ChatMessageList`](/x/api/chat/chat-message-list/)
-- [`ChatMessageGroup`](/x/api/chat/chat-message-group/)

@@ -238,10 +238,6 @@ controller.enqueue({
 controller.enqueue({ type: 'finish-step' });
 ```
 
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)
-
 ## See also
 
 - [Tool Calling](/x/react-chat/ai-and-agents/tool-calling/) for the tool invocation lifecycle within steps.

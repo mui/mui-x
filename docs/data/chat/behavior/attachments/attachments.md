@@ -149,10 +149,6 @@ async sendMessage({ message, attachments, signal }) {
 },
 ```
 
-## API
-
-- [`ChatComposerAttachButton`](/x/api/chat/chat-composer-attach-button/)
-
 ## See also
 
 - [Composer](/x/react-chat/basics/composer/) for the full composer component reference.

@@ -166,5 +166,3 @@ const frenchLocale = {
 
 - [Styling](/x/react-chat/customization/styling/) for visual customization.
 - [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing components that render localized text.
-
-## API

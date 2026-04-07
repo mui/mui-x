@@ -314,14 +314,6 @@ function CaptionList() {
           <ChatMessage
             messageId={item.id}
             sx={{
-              '& .MuiChatMessageContent-root': {
-                bgcolor: 'transparent',
-                color: 'text.primary',
-                p: 0,
-                fontSize: 14,
-                lineHeight: 1.5,
-                '& p': { margin: 0 },
-              },
               '& .MuiChatMessageAvatar-root': {
                 width: 24,
                 height: 24,
@@ -464,15 +456,13 @@ export default function CaptionsDemo() {
       {/* Top bar — meeting title + participants */}
       <Stack
         direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ px: 2, py: 1, minHeight: 44 }}
+        sx={{ alignItems: 'center', justifyContent: 'space-between', px: 2, py: 1, minHeight: 44 }}
       >
-        <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <Typography sx={{ fontSize: 14, fontWeight: 500 }}>Monthly Meeting</Typography>
           <InfoOutlinedIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
         </Stack>
-        <Stack direction="row" alignItems="center" spacing={0.5}>
+        <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
           {meetParticipants.map((p) => (
             <Avatar
               key={p.id}
@@ -499,11 +489,16 @@ export default function CaptionsDemo() {
         {/* Language bar */}
         <Stack
           direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ px: 2, py: 0.5, minHeight: 28, flexShrink: 0 }}
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            px: 2,
+            py: 0.5,
+            minHeight: 28,
+            flexShrink: 0,
+          }}
         >
-          <Stack direction="row" alignItems="center" spacing={0.5}>
+          <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
             <Typography sx={{ color: 'text.secondary', fontSize: 11 }}>
               Meeting language:
             </Typography>
@@ -511,7 +506,7 @@ export default function CaptionsDemo() {
               English ▾
             </Typography>
           </Stack>
-          <Stack direction="row" alignItems="center" spacing={0.5}>
+          <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
             <Typography sx={{ color: 'primary.main', fontSize: 11, cursor: 'pointer' }}>
               Translated captions ▾
             </Typography>
@@ -550,9 +545,7 @@ export default function CaptionsDemo() {
       {/* Bottom toolbar */}
       <Stack
         direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ px: 2, py: 1, minHeight: 52 }}
+        sx={{ alignItems: 'center', justifyContent: 'space-between', px: 2, py: 1, minHeight: 52 }}
       >
         {/* Left: meeting time + info */}
         <Typography sx={{ color: 'text.secondary', fontSize: 13, fontWeight: 500, minWidth: 80 }}>
@@ -560,7 +553,7 @@ export default function CaptionsDemo() {
         </Typography>
 
         {/* Center: meeting controls */}
-        <Stack direction="row" alignItems="center" spacing={0.75}>
+        <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
           <ToolbarButton variant="active">
             <MicIcon fontSize="small" />
           </ToolbarButton>
@@ -587,9 +580,8 @@ export default function CaptionsDemo() {
         {/* Right: grid view */}
         <Stack
           direction="row"
-          alignItems="center"
           spacing={0.5}
-          sx={{ minWidth: 80, justifyContent: 'flex-end' }}
+          sx={{ alignItems: 'center', minWidth: 80, justifyContent: 'flex-end' }}
         >
           <IconButton size="small" sx={{ color: 'text.secondary', width: 32, height: 32 }}>
             <GridViewOutlinedIcon fontSize="small" />

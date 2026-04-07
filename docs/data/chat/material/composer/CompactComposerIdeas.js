@@ -184,7 +184,7 @@ function CompactIdea({ idea }) {
 
   return (
     <div>
-      <Typography variant="subtitle1" fontWeight={700} gutterBottom>
+      <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 700 }}>
         {idea.label}
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>

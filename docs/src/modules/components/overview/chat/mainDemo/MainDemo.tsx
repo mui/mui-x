@@ -79,10 +79,7 @@ export default function MainDemo() {
       {/* Toolbar: view toggle + theme selector */}
       <Stack
         direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        flexWrap="wrap"
-        gap={1}
+        sx={{ alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}
       >
         <ViewToggleGroup selected={selectedView} onToggleChange={setSelectedView} />
         <Select

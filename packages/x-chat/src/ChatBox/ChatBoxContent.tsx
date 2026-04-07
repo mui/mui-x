@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useMessage, useMessageIds, useConversations } from '@mui/x-chat-headless';
+import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import {
@@ -38,8 +39,37 @@ import { ChatSuggestions } from '../ChatSuggestions/ChatSuggestions';
 import type { ChatBoxSlots, ChatBoxSlotProps, ChatBoxFeatures } from './ChatBox.types';
 import DefaultSendIcon from '../icons/DefaultSendIcon';
 import DefaultAttachIcon from '../icons/DefaultAttachIcon';
-import DefaultNewChatIcon from '../icons/DefaultNewChatIcon';
-import DefaultSettingsIcon from '../icons/DefaultSettingsIcon';
+import DefaultMenuIcon from '../icons/DefaultMenuIcon';
+
+const NARROW_BREAKPOINT = 600;
+
+/**
+ * Observes the ChatBox root element's inline size and returns `true`
+ * when it is narrower than the breakpoint. This mirrors the
+ * `@container (max-width: 599.95px)` rule used in CSS so the JS
+ * side can show/hide the drawer and menu button in sync.
+ */
+function useContainerNarrow(ref: React.RefObject<HTMLElement | null>): boolean {
+  const [narrow, setNarrow] = React.useState(false);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) {
+      return undefined;
+    }
+
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const width = entry.contentBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
+        setNarrow(width < NARROW_BREAKPOINT);
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
+
+  return narrow;
+}
 
 const ChatBoxEmptyState = styled('div', {
   name: 'MuiChatBox',
@@ -48,13 +78,42 @@ const ChatBoxEmptyState = styled('div', {
   position: 'absolute',
   inset: 0,
   display: 'flex',
+  flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
+  gap: theme.spacing(1),
   color: (theme.vars || theme).palette.text.secondary,
-  ...theme.typography.body2,
   padding: theme.spacing(4),
   userSelect: 'none',
   pointerEvents: 'none',
+}));
+
+const ChatBoxEmptyStateIcon = styled('svg', {
+  name: 'MuiChatBox',
+  slot: 'EmptyStateIcon',
+})(({ theme }) => ({
+  width: 48,
+  height: 48,
+  color: (theme.vars || theme).palette.action.disabled,
+  marginBottom: theme.spacing(1),
+}));
+
+const ChatBoxEmptyStateTitle = styled('p', {
+  name: 'MuiChatBox',
+  slot: 'EmptyStateTitle',
+})(({ theme }) => ({
+  margin: 0,
+  ...theme.typography.subtitle1,
+  color: (theme.vars || theme).palette.text.secondary,
+}));
+
+const ChatBoxEmptyStateHelper = styled('p', {
+  name: 'MuiChatBox',
+  slot: 'EmptyStateHelper',
+})(({ theme }) => ({
+  margin: 0,
+  ...theme.typography.body2,
+  color: (theme.vars || theme).palette.text.disabled,
 }));
 
 interface ChatBoxContentProps {
@@ -62,6 +121,7 @@ interface ChatBoxContentProps {
   slots?: Partial<ChatBoxSlots>;
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
+  rootRef: React.RefObject<HTMLElement | null>;
   layoutClassName?: string;
   conversationsPaneClassName?: string;
   threadPaneClassName?: string;
@@ -125,10 +185,14 @@ function DefaultConversationHeader({
   slots,
   slotProps,
   features,
+  onMenuClick,
+  showMenuButton,
 }: {
   slots?: Partial<ChatBoxSlots>;
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
+  onMenuClick?: () => void;
+  showMenuButton?: boolean;
 }) {
   const localeText = useChatLocaleText();
 
@@ -148,22 +212,23 @@ function DefaultConversationHeader({
 
   return (
     <ConversationHeaderComponent {...(slotProps?.conversationHeader ?? {})}>
+      {showMenuButton && (
+        <Tooltip title={localeText.conversationHeaderMenuLabel}>
+          <IconButton
+            size="small"
+            aria-label={localeText.conversationHeaderMenuLabel}
+            onClick={onMenuClick}
+            sx={{ mr: 1 }}
+          >
+            <DefaultMenuIcon />
+          </IconButton>
+        </Tooltip>
+      )}
       <ConversationHeaderInfoComponent {...(slotProps?.conversationHeaderInfo ?? {})}>
         <ConversationTitleComponent {...(slotProps?.conversationTitle ?? {})} />
         <ConversationSubtitleComponent {...(slotProps?.conversationSubtitle ?? {})} />
       </ConversationHeaderInfoComponent>
-      <ConversationHeaderActionsComponent {...(slotProps?.conversationHeaderActions ?? {})}>
-        <Tooltip title={localeText.conversationHeaderNewChatLabel}>
-          <IconButton size="small" aria-label={localeText.conversationHeaderNewChatLabel}>
-            <DefaultNewChatIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={localeText.conversationHeaderSettingsLabel}>
-          <IconButton size="small" aria-label={localeText.conversationHeaderSettingsLabel}>
-            <DefaultSettingsIcon />
-          </IconButton>
-        </Tooltip>
-      </ConversationHeaderActionsComponent>
+      <ConversationHeaderActionsComponent {...(slotProps?.conversationHeaderActions ?? {})} />
     </ConversationHeaderComponent>
   );
 }
@@ -267,6 +332,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     slots,
     slotProps,
     features,
+    rootRef,
     layoutClassName,
     conversationsPaneClassName,
     threadPaneClassName,
@@ -279,10 +345,21 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
 
   const autoScrollProp = features?.autoScroll ?? true;
 
+  const isNarrow = useContainerNarrow(rootRef);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
   const messageIds = useMessageIds();
   const conversations = useConversations();
   const localeText = useChatLocaleText();
   const hasConversationList = conversations.length > 0;
+
+  const handleMenuClick = React.useCallback(() => {
+    setDrawerOpen(true);
+  }, []);
+
+  const handleDrawerClose = React.useCallback(() => {
+    setDrawerOpen(false);
+  }, []);
   const ScrollToBottomComponent = (slots?.scrollToBottom ??
     ChatScrollToBottomAffordance) as typeof ChatScrollToBottomAffordance;
   const ConversationListComponent = (slots?.conversationList ??
@@ -319,7 +396,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       slotProps={{
         conversationsPane: {
           ...(conversationsPaneClassName ? { className: conversationsPaneClassName } : {}),
-          style: { flexShrink: 0 },
+          style: {},
         },
         threadPane: {
           ...(threadPaneClassName ? { className: threadPaneClassName } : {}),
@@ -337,8 +414,51 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
         <ConversationListComponent variant={variant} {...(slotProps?.conversationList ?? {})} />
       )}
 
+      {hasConversationList && isNarrow && (
+        <Drawer
+          open={drawerOpen}
+          onClose={handleDrawerClose}
+          slotProps={{
+            paper: {
+              sx: {
+                width: 'var(--ChatBox-conversationListWidth, 260px)',
+                maxWidth: '80vw',
+              },
+            },
+          }}
+        >
+          <ConversationListComponent
+            variant={variant}
+            {...(slotProps?.conversationList ?? {})}
+            slotProps={{
+              ...slotProps?.conversationList?.slotProps,
+              item: (params: any) => {
+                const externalSlotProps = slotProps?.conversationList?.slotProps?.item;
+                const externalProps =
+                  typeof externalSlotProps === 'function'
+                    ? externalSlotProps(params)
+                    : externalSlotProps;
+                return {
+                  ...externalProps,
+                  onClick: (event: React.MouseEvent) => {
+                    (externalProps as any)?.onClick?.(event);
+                    handleDrawerClose();
+                  },
+                };
+              },
+            }}
+          />
+        </Drawer>
+      )}
+
       <ChatConversation>
-        <DefaultConversationHeader slots={slots} slotProps={slotProps} features={features} />
+        <DefaultConversationHeader
+          slots={slots}
+          slotProps={slotProps}
+          features={features}
+          onMenuClick={handleMenuClick}
+          showMenuButton={hasConversationList && isNarrow}
+        />
         <MessageListComponent
           renderItem={renderItem}
           items={messageIds}
@@ -346,7 +466,26 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
           overlay={
             <React.Fragment>
               {messageIds.length === 0 && !showSuggestions && (
-                <ChatBoxEmptyState>{localeText.threadNoMessagesLabel}</ChatBoxEmptyState>
+                <ChatBoxEmptyState>
+                  <ChatBoxEmptyStateIcon
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </ChatBoxEmptyStateIcon>
+                  <ChatBoxEmptyStateTitle>
+                    {localeText.threadNoMessagesLabel}
+                  </ChatBoxEmptyStateTitle>
+                  <ChatBoxEmptyStateHelper>
+                    {localeText.threadNoMessagesHelperText}
+                  </ChatBoxEmptyStateHelper>
+                </ChatBoxEmptyState>
               )}
               {showSuggestions && messageIds.length === 0 && (
                 <SuggestionsComponent

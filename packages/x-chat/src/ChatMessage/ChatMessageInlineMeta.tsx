@@ -20,6 +20,8 @@ const ChatMessageInlineMetaSpacer = styled('span', {
   height: '1.2em',
   verticalAlign: 'bottom',
   pointerEvents: 'none',
+  // Prevent the timestamp from crowding short messages (e.g. "OK", "Thanks")
+  marginInlineStart: 8,
 });
 
 /**

@@ -35,7 +35,7 @@ It works by iterating over each item — if the item is itself a list it recurse
 
 const INITIAL_MESSAGES = [
   createTextMessage({
-    id: randomId(),
+    id: 'cb-msg-1',
     conversationId: CONVERSATION_ID,
     role: 'user',
     text: 'Write me a Python function to flatten a nested list.',
@@ -43,7 +43,7 @@ const INITIAL_MESSAGES = [
     author: demoUsers.you,
   }),
   createTextMessage({
-    id: randomId(),
+    id: 'cb-msg-2',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
     text: ASSISTANT_REPLY,

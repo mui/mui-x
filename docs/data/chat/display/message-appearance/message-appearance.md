@@ -65,39 +65,15 @@ ChatMessageList                     ← scrollable container
 
 ## Compact variant
 
-Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layout:
+Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layout with no bubbles, left-aligned messages, and group header timestamps.
 
-- **No bubbles** — messages render as plain text without background colors or padding.
-- **Left-aligned** — all messages are left-aligned regardless of role.
-- **Group header timestamps** — the timestamp moves from below each message to the group header, displayed next to the author name.
-- **Avatars preserved** — avatars remain visible for the first message in each group.
-
-{{"demo": "../../material/message-list/CompactVariant.js", "defaultCodeOpen": false, "bg": "inline"}}
-
-```tsx
-<ChatBox variant="compact" adapter={adapter} />
-```
-
-When set on `ChatBox`, the variant automatically applies to the conversation list as well.
+See [Variants & Density](/x/react-chat/basics/variants-and-density/) for full details, a comparison table, and interactive demos.
 
 ## Density
 
-The `density` prop controls the vertical spacing between messages. Three values are available:
+The `density` prop controls the vertical spacing between messages independently of the variant. Three values are available: `compact`, `standard` (default), and `comfortable`.
 
-| Value         | Description                           |
-| :------------ | :------------------------------------ |
-| `compact`     | Tight spacing, minimal gaps           |
-| `standard`    | Default spacing                       |
-| `comfortable` | Generous spacing, more breathing room |
-
-{{"demo": "../../material/message-list/DensityProp.js", "defaultCodeOpen": false, "bg": "inline"}}
-
-```tsx
-<ChatBox density="compact" adapter={adapter} />
-<ChatBox density="comfortable" adapter={adapter} />
-```
-
-The `density` prop is independent of `variant` — you can combine `variant="compact"` with any density value.
+See [Variants & Density](/x/react-chat/basics/variants-and-density/) for interactive density demos and guidance on combining variant and density.
 
 ## Slots
 
@@ -119,10 +95,3 @@ The following slots are available for customization through `ChatBox`:
 - [Message list](/x/react-chat/basics/messages/) for scrolling behavior, auto-scroll configuration, and history loading
 - [Message Actions](/x/react-chat/display/message-actions/) for the hover action menu on messages
 - [Loading & Empty States](/x/react-chat/display/loading-and-empty-states/) for skeleton and empty state display
-
-## API
-
-- [`ChatMessageGroup`](/x/api/chat/chat-message-group/)
-- [`ChatMessageAvatar`](/x/api/chat/chat-message-avatar/)
-- [`ChatMessageMeta`](/x/api/chat/chat-message-meta/)
-- [`ChatDateDivider`](/x/api/chat/chat-date-divider/)

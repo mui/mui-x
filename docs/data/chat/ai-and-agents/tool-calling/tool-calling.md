@@ -239,7 +239,3 @@ function MessagePart({ part, message, index }) {
 - [Tool Approval](/x/react-chat/ai-and-agents/tool-approval/) for human-in-the-loop approval of tool calls.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full stream chunk protocol reference.
 - [Step Tracking](/x/react-chat/ai-and-agents/step-tracking/) for multi-step agent progress tracking.
-
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

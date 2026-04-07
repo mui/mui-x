@@ -7,7 +7,7 @@ export default function ChatCommunityOrPro() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack direction="column" spacing={{ xs: 1, md: 2 }} py={8} alignItems="center">
+      <Stack direction="column" spacing={{ xs: 1, md: 2 }} sx={{ py: 8, alignItems: 'center' }}>
         <CommunityOrPro
           caption={'Community'}
           title={'Free and open source'}

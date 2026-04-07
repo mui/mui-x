@@ -859,7 +859,7 @@ const pages: MuiPage[] = [
   ...schedulerPages,
   {
     pathname: '/x/react-chat-group',
-    title: 'Chatbox',
+    title: 'Chat',
     unstable: true,
     children: [
       { pathname: '/x/react-chat', title: 'Overview' },

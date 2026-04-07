@@ -54,39 +54,32 @@ export const getNeutralVibesTheme = (mode: 'light' | 'dark'): Theme => {
       // Chat components
       MuiChatMessage: {
         styleOverrides: {
-          bubble: ({ theme }) => ({
-            backgroundColor: theme.palette.background.paper,
-            border: '1px solid',
-            borderColor: theme.palette.divider,
-            borderRadius: theme.shape.borderRadius,
+          bubble: ({ theme, ownerState }: { theme: Theme; ownerState: any }) => ({
             color: theme.palette.text.primary,
-          }),
-          roleUser: ({ theme }) => ({
-            '& .MuiChatMessage-bubble': {
+            ...(ownerState?.variant !== 'compact' && {
               backgroundColor: theme.palette.background.paper,
+              border: '1px solid',
               borderColor: theme.palette.divider,
-              color: theme.palette.text.primary,
-              position: 'relative',
-              paddingLeft: theme.spacing(2.5),
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                left: 8,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                backgroundColor: theme.palette.primary.main,
+              borderRadius: theme.shape.borderRadius,
+            }),
+          }),
+          roleUser: ({ theme, ownerState }: { theme: Theme; ownerState: any }) => ({
+            ...(ownerState?.variant !== 'compact' && {
+              '& .MuiChatMessage-bubble': {
+                backgroundColor: theme.palette.background.paper,
+                borderColor: theme.palette.divider,
+                color: theme.palette.text.primary,
               },
-            },
+            }),
           }),
-          roleAssistant: ({ theme }) => ({
-            '& .MuiChatMessage-bubble': {
-              backgroundColor: theme.palette.background.paper,
-              borderColor: theme.palette.divider,
-              color: theme.palette.text.primary,
-            },
+          roleAssistant: ({ theme, ownerState }: { theme: Theme; ownerState: any }) => ({
+            ...(ownerState?.variant !== 'compact' && {
+              '& .MuiChatMessage-bubble': {
+                backgroundColor: theme.palette.background.paper,
+                borderColor: theme.palette.divider,
+                color: theme.palette.text.primary,
+              },
+            }),
           }),
         },
       },

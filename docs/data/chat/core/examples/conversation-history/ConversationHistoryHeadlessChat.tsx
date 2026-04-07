@@ -163,7 +163,7 @@ function ConversationHistoryInner() {
           borderColor: 'divider',
         }}
       >
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           {activeTitle}
         </Typography>
         {hasMoreHistory ? (

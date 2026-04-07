@@ -94,7 +94,3 @@ The `density` prop is independent of `variant` — you can combine `variant="com
 ```
 
 This independence gives you fine-grained control over both the visual style (bubbles vs. plain text) and the spatial rhythm (tight vs. relaxed) of the chat surface.
-
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)

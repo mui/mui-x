@@ -21,6 +21,7 @@ const ChatBoxStyled = styled('div', {
   width: '100%',
   height: '100%',
   minHeight: 0,
+  containerType: 'inline-size',
   fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
   color: (theme.vars || theme).palette.text.primary,
@@ -81,6 +82,17 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   } = props;
 
   const classes = useChatBoxUtilityClasses(classesProp);
+  const innerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = React.useMemo(() => {
+    return (node: HTMLDivElement | null) => {
+      (innerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      if (typeof ref === 'function') {
+        ref(node);
+      } else if (ref) {
+        (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      }
+    };
+  }, [ref]);
 
   return (
     <ChatRoot
@@ -111,12 +123,18 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     >
       <ChatVariantProvider variant={variant}>
         <ChatDensityProvider density={density}>
-          <ChatBoxStyled ref={ref} className={clsx(classes.root, className)} sx={sx} {...other}>
+          <ChatBoxStyled
+            ref={handleRef}
+            className={clsx(classes.root, className)}
+            sx={sx}
+            {...other}
+          >
             <ChatBoxContent
               variant={variant}
               slots={slots}
               slotProps={slotProps}
               features={features}
+              rootRef={innerRef}
               suggestions={suggestions}
               suggestionsAutoSubmit={suggestionsAutoSubmit}
               layoutClassName={classes.layout}

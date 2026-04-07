@@ -165,7 +165,7 @@ function RealtimeThreadSyncInner({
           borderColor: 'divider',
         }}
       >
-        <Typography variant="subtitle1" fontWeight={700}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
           Realtime collection sync
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -220,7 +220,7 @@ function RealtimeThreadSyncInner({
             <Typography variant="caption" color="text.secondary">
               {stat.label}
             </Typography>
-            <Typography variant="body2" fontWeight={700} noWrap>
+            <Typography variant="body2" noWrap sx={{ fontWeight: 700 }}>
               {stat.value}
             </Typography>
           </Paper>

@@ -469,7 +469,9 @@ function ModelSelector() {
             <Box component="span" sx={{ flex: 1 }}>
               {p.label}
             </Box>
-            {p.models.length > 0 && <ChevronRightIcon sx={{ fontSize: 16, color: 'text.secondary' }} />}
+            {p.models.length > 0 && (
+              <ChevronRightIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+            )}
           </MenuItem>
         ))}
       </Menu>

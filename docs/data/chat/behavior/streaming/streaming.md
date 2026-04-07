@@ -263,10 +263,6 @@ The message's `status` field also updates through the stream:
 - `'cancelled'` — set when `abort` arrives
 - `'error'` — set when the stream fails
 
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)
-
 ## See also
 
 - [Adapter](/x/react-chat/backend/adapters/) for the adapter interface that produces streams.

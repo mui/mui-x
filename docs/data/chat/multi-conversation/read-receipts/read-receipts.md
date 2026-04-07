@@ -227,10 +227,6 @@ Or provide initial conversations directly:
 />
 ```
 
-## API
-
-- [`ChatUnreadMarker`](/x/api/chat/chat-unread-marker/)
-
 ## See also
 
 - [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that displays the unread badge.

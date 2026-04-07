@@ -121,7 +121,3 @@ Each suggestion renders as a `<button>` element.
 
 - [Composer](/x/react-chat/basics/composer/) for how the pre-filled value flows into the text area.
 - [Adapter](/x/react-chat/backend/adapters/) for how submitted suggestions reach your backend.
-
-## API
-
-- [`ChatSuggestions`](/x/api/chat/chat-suggestions/)

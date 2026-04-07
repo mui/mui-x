@@ -8,6 +8,7 @@ export interface ChatLocaleText {
   composerInputAriaLabel: string;
   composerSendButtonLabel: string;
   composerAttachButtonLabel: string;
+  composerAttachInputLabel: string;
   messageCopyButtonLabel: string;
   messageCopyCodeButtonLabel: string;
   messageCopiedCodeButtonLabel: string;
@@ -26,6 +27,7 @@ export interface ChatLocaleText {
   reconnectButtonLabel: string;
   scrollToBottomLabel: string;
   threadNoMessagesLabel: string;
+  threadNoMessagesHelperText: string;
   genericErrorLabel: string;
   loadingLabel: string;
   messageStatusLabel(status: ChatMessageStatus): string;
@@ -37,6 +39,9 @@ export interface ChatLocaleText {
   suggestionsLabel: string;
   messageListLabel: string;
   messageLabel: string;
+  conversationHeaderMenuLabel: string;
+  conversationHeaderNewChatLabel: string;
+  conversationHeaderSettingsLabel: string;
 }
 
 function getUserLabel(user: ChatLocaleTypingUser) {
@@ -93,6 +98,7 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   composerInputAriaLabel: 'Message',
   composerSendButtonLabel: 'Send message',
   composerAttachButtonLabel: 'Add attachment',
+  composerAttachInputLabel: 'Upload file',
   messageCopyButtonLabel: 'Copy',
   messageCopyCodeButtonLabel: 'Copy code',
   messageCopiedCodeButtonLabel: 'Copied',
@@ -111,6 +117,7 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   reconnectButtonLabel: 'Reconnect',
   scrollToBottomLabel: 'Scroll to bottom',
   threadNoMessagesLabel: 'No messages yet',
+  threadNoMessagesHelperText: 'Type a message to get started',
   genericErrorLabel: 'Something went wrong',
   loadingLabel: 'Loading...',
   messageStatusLabel: (status) => messageStatusLabels[status],
@@ -130,4 +137,7 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   suggestionsLabel: 'Suggested prompts',
   messageListLabel: 'Message log',
   messageLabel: 'Message',
+  conversationHeaderMenuLabel: 'Open conversations',
+  conversationHeaderNewChatLabel: 'New chat',
+  conversationHeaderSettingsLabel: 'Settings',
 };

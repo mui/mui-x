@@ -183,7 +183,3 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 
 - [Streaming](/x/react-chat/behavior/streaming/) for stream lifecycle and disconnect handling.
 - [Adapter](/x/react-chat/backend/adapters/) for the adapter interface and error propagation details.
-
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)

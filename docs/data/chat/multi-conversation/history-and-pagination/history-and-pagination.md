@@ -123,7 +123,3 @@ If `listMessages` throws, the runtime records a `ChatError` with `source: 'histo
 - [Adapter](/x/react-chat/backend/adapters/) for the full adapter interface reference.
 - [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that triggers conversation switches.
 - [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing new messages through subscriptions.
-
-## API
-
-- [`ChatMessageList`](/x/api/chat/chat-message-list/)

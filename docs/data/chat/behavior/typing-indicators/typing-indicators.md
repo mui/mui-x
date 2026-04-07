@@ -166,7 +166,3 @@ import { Indicators } from '@mui/x-chat-headless';
 ## See also
 
 - [Adapter](/x/react-chat/backend/adapters/) for the `setTyping()` and `subscribe()` methods.
-
-## API
-
-- [`ChatTypingIndicator`](/x/api/chat/chat-typing-indicator/)

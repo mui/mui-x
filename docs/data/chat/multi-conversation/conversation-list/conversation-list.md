@@ -161,9 +161,8 @@ const RichItemContent = React.forwardRef(function RichItemContent(
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
         <Typography
           variant="body2"
-          fontWeight={unread ? 'fontWeightBold' : 'fontWeightMedium'}
           noWrap
-          sx={{ flex: 1 }}
+          sx={{ fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium', flex: 1 }}
         >
           {conversation?.title}
         </Typography>
@@ -231,9 +230,8 @@ const CompactRow = React.forwardRef(function CompactRow(
       />
       <Typography
         variant="body2"
-        fontWeight={unread ? 'fontWeightBold' : 'fontWeightRegular'}
         noWrap
-        sx={{ flex: 1 }}
+        sx={{ fontWeight: unread ? 'fontWeightBold' : 'fontWeightRegular', flex: 1 }}
       >
         {conversation?.title ?? 'Untitled'}
       </Typography>
@@ -326,9 +324,8 @@ const FullCustomRow = React.forwardRef(function FullCustomRow(
         >
           <Typography
             variant="body2"
-            fontWeight={unread ? 'fontWeightBold' : 'fontWeightMedium'}
             noWrap
-            sx={{ flex: 1 }}
+            sx={{ fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium', flex: 1 }}
           >
             {title}
           </Typography>
@@ -340,7 +337,7 @@ const FullCustomRow = React.forwardRef(function FullCustomRow(
             {formatRelativeTime(conversation?.lastMessageAt)}
           </Typography>
         </Box>
-        <Typography variant="caption" color="text.secondary" noWrap display="block">
+        <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block' }}>
           {conversation?.subtitle ?? 'No messages yet'}
         </Typography>
       </Box>
@@ -429,7 +426,3 @@ Pass `aria-label` to the root through `slotProps`:
 - [Conversation Header](/x/react-chat/multi-conversation/conversation-header/) for the header bar that accompanies the active thread.
 - [Multi-conversation demo](/x/react-chat/demos/team-messaging/) for a two-pane inbox layout using controlled state.
 - [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing conversation updates through subscriptions.
-
-## API
-
-- [`ChatConversationList`](/x/api/chat/chat-conversation-list/)

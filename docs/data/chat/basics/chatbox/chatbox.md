@@ -135,7 +135,3 @@ Each `ChatBox` creates its own isolated store.
 To render multiple independent chat surfaces side by side, use separate `ChatBox` instances:
 
 {{"demo": "../../material/context/MultipleInstances.js", "defaultCodeOpen": false, "bg": "inline"}}
-
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)

@@ -120,7 +120,3 @@ The message list auto-scrolls to follow new streaming content as long as the use
 
 - [Code Blocks](/x/react-chat/display/message-parts/code-blocks/) for syntax-highlighted code fence rendering
 - [Message Appearance](/x/react-chat/display/message-appearance/) for visual presentation of the message list
-
-## API
-
-- [`ChatMessageContent`](/x/api/chat/chat-message-content/)

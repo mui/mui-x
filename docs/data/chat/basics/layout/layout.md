@@ -122,19 +122,21 @@ Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat-headless` to wire ru
 
 The layout supports split configurations where the conversation list and thread are rendered side by side.
 
-## Responsive considerations
+## Responsive layout
 
-`ChatBox` is designed to fill its container.
+`ChatBox` uses a CSS container query to adapt its layout based on its own width — not the viewport.
+When the container is narrower than `600px`, the conversation list collapses automatically and a menu button appears in the conversation header.
+Tapping the menu button opens the conversation list in a drawer overlay.
+
+Drag the slider below to resize the container and see the transition in action:
+
+{{"demo": "../../material/examples/responsive-drawer/ResponsiveDrawer.js", "bg": "inline", "defaultCodeOpen": false}}
+
+This behavior is built in — no extra configuration is needed.
+It works identically whether the `ChatBox` fills the full viewport on a mobile device or is embedded in a narrow sidebar on desktop.
+
 Set explicit dimensions on the parent element or use the `sx` prop:
 
 ```tsx
 <ChatBox adapter={adapter} sx={{ height: 500 }} />
 ```
-
-The two-pane layout uses CSS flexbox internally.
-On narrow containers, consider switching to thread-only mode and managing conversation selection externally, or using the conversation list as a separate component in a responsive drawer.
-
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)
-- [`ChatLayout`](/x/api/chat/chat-layout/)

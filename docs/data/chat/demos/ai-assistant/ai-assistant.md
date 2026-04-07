@@ -25,7 +25,3 @@ Send a message in any conversation to watch the scripted agentic stream play out
 The simplest working `ChatBox` setup: a single adapter, one conversation, and an initial message. This demo shows the minimum required props to render a styled, interactive chat surface with streaming responses.
 
 {{"demo": "../../material/examples/basic-ai-chat/BasicAiChat.js", "defaultCodeOpen": false, "bg": "inline"}}
-
-## API
-
-- [`ChatBox`](/x/api/chat/chat-box/)

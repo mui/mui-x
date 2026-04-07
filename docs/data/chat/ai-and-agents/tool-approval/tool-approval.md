@@ -223,7 +223,3 @@ const renderers: ChatPartRendererMap = {
 - [Adapter](/x/react-chat/backend/adapters/) for the `addToolApprovalResponse()` method reference.
 - [Streaming](/x/react-chat/behavior/streaming/) for the `tool-approval-request` chunk type.
 - [Reasoning](/x/react-chat/ai-and-agents/reasoning/) for displaying LLM thinking alongside tool calls.
-
-## API
-
-- [`ChatConfirmation`](/x/api/chat/chat-confirmation/)

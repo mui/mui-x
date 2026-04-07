@@ -10,7 +10,7 @@ components: ChatRoot, ChatLayout
 
 # MUI X Chat
 
-<p class="description">A fully styled, theme-aware chat interface built on a three-tier package architecture.</p>
+<p class="description">Build real-time chat interfaces with streaming, multi-conversation support, and full theme integration.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 

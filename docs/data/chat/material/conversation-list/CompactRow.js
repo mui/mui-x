@@ -53,9 +53,8 @@ const CompactRowSlot = React.forwardRef(function CompactRowSlot(
       />
       <Typography
         variant="body2"
-        fontWeight={unread ? 'fontWeightBold' : 'fontWeightRegular'}
         noWrap
-        sx={{ flex: 1 }}
+        sx={{ fontWeight: unread ? 'fontWeightBold' : 'fontWeightRegular', flex: 1 }}
       >
         {conversation?.title ?? 'Untitled'}
       </Typography>

@@ -108,12 +108,16 @@ const ChatMessageBubbleStyled = styled('div', {
       overflow: 'auto',
       padding: theme.spacing(1),
       fontSize: theme.typography.caption.fontSize,
-      background: isUser ? 'rgba(255,255,255,0.15)' : (theme.vars || theme).palette.action.hover,
+      background: isUser
+        ? alpha(theme.palette.common.white, 0.15)
+        : (theme.vars || theme).palette.action.hover,
     },
     '& code': {
       fontFamily: 'monospace',
       fontSize: '0.875em',
-      background: isUser ? 'rgba(255,255,255,0.15)' : (theme.vars || theme).palette.action.hover,
+      background: isUser
+        ? alpha(theme.palette.common.white, 0.15)
+        : (theme.vars || theme).palette.action.hover,
       padding: '0.1em 0.3em',
     },
     '& pre code': {

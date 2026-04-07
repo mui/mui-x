@@ -87,7 +87,3 @@ The `MessageActions` component receives the message context as owner state, whic
 ## See also
 
 - [Message Appearance](/x/react-chat/display/message-appearance/) for the overall message layout and visual presentation
-
-## API
-
-- [`ChatMessageActions`](/x/api/chat/chat-message-actions/)

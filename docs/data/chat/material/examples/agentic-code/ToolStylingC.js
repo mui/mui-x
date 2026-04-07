@@ -66,9 +66,9 @@ function makeAssistantMessage(
 
 // ── Conversation IDs ──────────────────────────────────────────────────────────
 
-const fixTestsId = randomId();
-const addFeatureId = randomId();
-const dangerousCmdId = randomId();
+const fixTestsId = 'tsc-fix-tests';
+const addFeatureId = 'tsc-add-feature';
+const dangerousCmdId = 'tsc-dangerous-cmd';
 
 // ── Pre-populated conversations ───────────────────────────────────────────────
 
@@ -107,12 +107,12 @@ const initialConversations = [
 const initialThreads = {
   [fixTestsId]: [
     makeUserMessage(
-      randomId(),
+      'tsc-ft-msg-1',
       fixTestsId,
       'The unit tests are failing after the recent refactor. Can you fix them?',
       '2026-03-21T09:20:00.000Z',
     ),
-    makeAssistantMessage(randomId(), fixTestsId, '2026-03-21T09:21:00.000Z', [
+    makeAssistantMessage('tsc-ft-msg-2', fixTestsId, '2026-03-21T09:21:00.000Z', [
       { type: 'step-start' },
       {
         type: 'reasoning',
@@ -127,7 +127,7 @@ const initialThreads = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsc-ft-tc-1',
           toolName: 'glob',
           state: 'output-available',
           input: { pattern: 'src/**/*.test.ts' },
@@ -144,7 +144,7 @@ const initialThreads = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsc-ft-tc-2',
           toolName: 'read_file',
           state: 'output-available',
           input: { path: 'src/Button.test.ts' },
@@ -157,7 +157,7 @@ const initialThreads = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsc-ft-tc-3',
           toolName: 'edit_file',
           state: 'output-available',
           input: {
@@ -171,7 +171,7 @@ const initialThreads = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsc-ft-tc-4',
           toolName: 'bash',
           state: 'output-available',
           input: { command: 'pnpm test --run' },
@@ -191,12 +191,12 @@ const initialThreads = {
   ],
   [addFeatureId]: [
     makeUserMessage(
-      randomId(),
+      'tsc-af-msg-1',
       addFeatureId,
       'Add a dark mode toggle button to the header',
       '2026-03-21T08:00:00.000Z',
     ),
-    makeAssistantMessage(randomId(), addFeatureId, '2026-03-21T08:01:00.000Z', [
+    makeAssistantMessage('tsc-af-msg-2', addFeatureId, '2026-03-21T08:01:00.000Z', [
       { type: 'step-start' },
       {
         type: 'reasoning',
@@ -211,7 +211,7 @@ const initialThreads = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsc-af-tc-1',
           toolName: 'read_file',
           state: 'output-available',
           input: { path: 'src/components/Header.tsx' },
@@ -229,7 +229,7 @@ const initialThreads = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsc-af-tc-2',
           toolName: 'write_file',
           state: 'output-available',
           input: {
@@ -243,7 +243,7 @@ const initialThreads = {
       {
         type: 'dynamic-tool',
         toolInvocation: {
-          toolCallId: randomId(),
+          toolCallId: 'tsc-af-tc-3',
           toolName: 'bash',
           state: 'output-available',
           input: { command: 'pnpm build' },
@@ -262,13 +262,13 @@ const initialThreads = {
   ],
   [dangerousCmdId]: [
     makeUserMessage(
-      randomId(),
+      'tsc-dc-msg-1',
       dangerousCmdId,
       'Clean up all build artifacts and reset to a clean state',
       '2026-03-21T10:00:00.000Z',
     ),
     makeAssistantMessage(
-      randomId(),
+      'tsc-dc-msg-2',
       dangerousCmdId,
       '2026-03-21T10:01:00.000Z',
       [
@@ -281,7 +281,7 @@ const initialThreads = {
         {
           type: 'dynamic-tool',
           toolInvocation: {
-            toolCallId: randomId(),
+            toolCallId: 'tsc-dc-tc-1',
             toolName: 'bash',
             state: 'approval-requested',
             input: { command: 'rm -rf ./dist ./coverage && git clean -fd' },
