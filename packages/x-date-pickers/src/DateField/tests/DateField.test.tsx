@@ -7,6 +7,16 @@ describe('<DateField />', () => {
   const { render } = createPickerRenderer();
 
   describe('slotProps behavior', () => {
+    it('should respect the `slotProps.textField.slotProps.input`', () => {
+      render(
+        <DateField slotProps={{ textField: { slotProps: { input: { name: 'test-field' } } } }} />,
+      );
+
+      expect(screen.getByRole('textbox', { hidden: true }))
+        .attribute('name')
+        .to.equal('test-field');
+    });
+
     it('should respect the `slotProps.textField`', () => {
       render(<DateField slotProps={{ textField: { helperText: 'field-helper' } }} />);
 
