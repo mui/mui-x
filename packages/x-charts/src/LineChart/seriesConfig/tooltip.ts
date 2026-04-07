@@ -26,8 +26,11 @@ const tooltipGetter: TooltipGetter<'line'> = (params) => {
   };
 };
 
-export const axisTooltipGetter: AxisTooltipGetter<'line', 'x' | 'y'> = (series) => {
-  return Object.values(series).map((s) => ({ direction: 'x', axisId: s.xAxisId }));
+export const axisTooltipGetter: AxisTooltipGetter<'line', 'x' | 'y' | 'rotation'> = (series) => {
+  return Object.values(series).flatMap((s) => [
+    { direction: 'x' as const, axisId: s.xAxisId },
+    { direction: 'rotation' as const, axisId: s.rotationAxisId },
+  ]);
 };
 
 export default tooltipGetter;

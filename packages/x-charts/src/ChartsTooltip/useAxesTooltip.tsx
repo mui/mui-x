@@ -156,7 +156,9 @@ export function useAxesTooltip<
     });
   }
 
-  Object.keys(series)
+  const isCartesianCoordinate = defaultXAxis !== undefined && defaultYAxis !== undefined;
+  const isPolarCoordinate = defaultRotationAxis !== undefined;
+  (isCartesianCoordinate ? Object.keys(series) : ([] as SeriesType[]))
     .filter((seriesType): seriesType is ComposableCartesianChartSeriesType =>
       composableCartesianSeriesTypes.has(seriesType as ComposableCartesianChartSeriesType),
     )
@@ -232,7 +234,7 @@ export function useAxesTooltip<
       });
     });
 
-  Object.keys(series)
+  (isPolarCoordinate ? Object.keys(series) : ([] as SeriesType[]))
     .filter(isPolarSeriesType)
     .forEach(<Type extends PolarChartSeriesType>(seriesType: Type) => {
       const seriesOfType = series[seriesType];

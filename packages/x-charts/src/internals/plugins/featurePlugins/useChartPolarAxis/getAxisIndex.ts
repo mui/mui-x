@@ -23,9 +23,10 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
       if (distance < closestDistance) {
         closestDistance = distance;
         closestIndex = i;
-      } else { break }
+      } else {
+        break;
+      }
     }
-
 
     let closestRevertDistance = Infinity;
     for (let i = 1; i < axisData.length; i += 1) {
@@ -35,12 +36,14 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
         if (distance < closestDistance) {
           closestIndex = axisData.length - i;
         }
-      } else { break }
+      } else {
+        break;
+      }
     }
 
     if (
-      (closestIndex === 0 || closestIndex === axisData.length - 1)
-      && getAngleDistance(scale(axisData[0])!, scale(axisData[axisData.length - 1])!) < 0.01
+      (closestIndex === 0 || closestIndex === axisData.length - 1) &&
+      getAngleDistance(scale(axisData[0])!, scale(axisData[axisData.length - 1])!) < 0.01
     ) {
       const forwardPoint = scale(axisData[0])! + 0.1;
       const backwardPoint = forwardPoint - 0.2;
