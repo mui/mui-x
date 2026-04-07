@@ -103,16 +103,16 @@ The `density` prop is independent of `variant` — you can combine `variant="com
 
 The following slots are available for customization through `ChatBox`:
 
-| Slot             | Component            | Description               |
-| :--------------- | :------------------- | :------------------------ |
-| `messageList`    | `ChatMessageList`    | The scrollable container  |
-| `messageRoot`    | `ChatMessage`        | Individual message row    |
-| `messageAvatar`  | `ChatMessageAvatar`  | Author avatar             |
-| `messageContent` | `ChatMessageContent` | Message bubble            |
+| Slot             | Component            | Description                                         |
+| :--------------- | :------------------- | :-------------------------------------------------- |
+| `messageList`    | `ChatMessageList`    | The scrollable container                            |
+| `messageRoot`    | `ChatMessage`        | Individual message row                              |
+| `messageAvatar`  | `ChatMessageAvatar`  | Author avatar                                       |
+| `messageContent` | `ChatMessageContent` | Message bubble                                      |
 | `messageMeta`    | `ChatMessageMeta`    | Timestamp, status, streaming progress, edited label |
-| `messageActions` | `ChatMessageActions` | Hover action menu         |
-| `messageGroup`   | `ChatMessageGroup`   | Same-author message group |
-| `dateDivider`    | `ChatDateDivider`    | Date separator            |
+| `messageActions` | `ChatMessageActions` | Hover action menu                                   |
+| `messageGroup`   | `ChatMessageGroup`   | Same-author message group                           |
+| `dateDivider`    | `ChatDateDivider`    | Date separator                                      |
 
 ## See also
 

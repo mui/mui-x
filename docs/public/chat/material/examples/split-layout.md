@@ -184,7 +184,6 @@ export default function SplitLayout() {
     </ChatRoot>
   );
 }
-
 ```
 
 ## How it works

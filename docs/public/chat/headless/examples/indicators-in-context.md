@@ -297,7 +297,6 @@ export default function IndicatorsInContext() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Key primitives

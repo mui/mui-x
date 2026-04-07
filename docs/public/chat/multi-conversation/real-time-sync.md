@@ -10,8 +10,6 @@ components: ChatBox
 
 <p class="description">Push typing, presence, and collection changes into the runtime via the adapter's <code>subscribe()</code> method for live synchronization.</p>
 
-
-
 The adapter's `subscribe()` method enables push-based updates from the backend. The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
 
 ## Subscription lifecycle
@@ -51,19 +49,19 @@ The `onEvent` callback receives `ChatRealtimeEvent` objects. There are nine even
 
 ### Conversation events
 
-| Event type             | Payload              | Store effect                                                |
-| :--------------------- | :------------------- | :---------------------------------------------------------- |
-| `conversation-added`   | `{ conversation }`   | Adds the conversation to the store                          |
+| Event type             | Payload              | Store effect                                                           |
+| :--------------------- | :------------------- | :--------------------------------------------------------------------- |
+| `conversation-added`   | `{ conversation }`   | Adds the conversation to the store                                     |
 | `conversation-updated` | `{ conversation }`   | Upserts the conversation record (replaces if present, adds if missing) |
-| `conversation-removed` | `{ conversationId }` | Removes the conversation and resets active ID if it matched |
+| `conversation-removed` | `{ conversationId }` | Removes the conversation and resets active ID if it matched            |
 
 ### Message events
 
-| Event type        | Payload                          | Store effect                       |
-| :---------------- | :------------------------------- | :--------------------------------- |
-| `message-added`   | `{ message }`                    | Adds the message to the store      |
+| Event type        | Payload                          | Store effect                                                      |
+| :---------------- | :------------------------------- | :---------------------------------------------------------------- |
+| `message-added`   | `{ message }`                    | Adds the message to the store                                     |
 | `message-updated` | `{ message }`                    | Upserts the message record (replaces if present, adds if missing) |
-| `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store |
+| `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store                                |
 
 ### Typing events
 

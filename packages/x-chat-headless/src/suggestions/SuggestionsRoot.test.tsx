@@ -124,7 +124,9 @@ describe('SuggestionsRoot', () => {
   it('supports custom item slot', () => {
     // slots.item is the root visual element of SuggestionItem; it receives ownerState
     // containing value/label/index, and children (label text) are passed by SuggestionItem.
-    function CustomItemRoot(props: React.ButtonHTMLAttributes<HTMLButtonElement> & { ownerState?: any }) {
+    function CustomItemRoot(
+      props: React.ButtonHTMLAttributes<HTMLButtonElement> & { ownerState?: any },
+    ) {
       const { ownerState, ...other } = props;
 
       return <button data-testid={`custom-item-${ownerState?.index}`} type="button" {...other} />;

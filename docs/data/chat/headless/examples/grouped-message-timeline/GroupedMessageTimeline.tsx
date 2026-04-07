@@ -21,7 +21,10 @@ import {
 
 export default function GroupedMessageTimeline() {
   const [windowMs, setWindowMs] = React.useState(5 * 60_000);
-  const groupKey = React.useMemo<GroupKeyFn>(() => createTimeWindowGroupKey(windowMs), [windowMs]);
+  const groupKey = React.useMemo<GroupKeyFn>(
+    () => createTimeWindowGroupKey(windowMs),
+    [windowMs],
+  );
   const adapter = React.useMemo(
     () => createEchoAdapter({ agent: demoUsers.agent }),
     [],

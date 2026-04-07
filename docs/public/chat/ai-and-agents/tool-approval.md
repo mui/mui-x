@@ -10,8 +10,6 @@ components: ChatConfirmation
 
 <p class="description">Add human-in-the-loop checkpoints before the agent executes tool calls, using the approval lifecycle and the <code>ChatConfirmation</code> UI component.</p>
 
-
-
 Tool approval lets you pause the agent when it requests a potentially dangerous action, present the user with an approve/deny interface, and resume or cancel the tool execution based on the user's decision.
 
 ## Approval workflow
@@ -157,7 +155,7 @@ const adapter = React.useMemo(
       }}
       onCancel={() => setPendingConfirmation(false)}
     />
-  )
+  );
 }
 ```
 

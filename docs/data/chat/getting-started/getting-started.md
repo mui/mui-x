@@ -151,11 +151,11 @@ Each layer builds on the one below it:
 
 ### Choosing a layer
 
-| If you want…                                                                   | Use                            |
-| :----------------------------------------------------------------------------- | :----------------------------- |
-| A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`                  |
-| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat-headless`         |
-| Complete control over DOM structure with only React state and hooks            | `@mui/x-chat-headless/core`    |
+| If you want…                                                                   | Use                         |
+| :----------------------------------------------------------------------------- | :-------------------------- |
+| A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`               |
+| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat-headless`      |
+| Complete control over DOM structure with only React state and hooks            | `@mui/x-chat-headless/core` |
 
 ### Package boundary
 

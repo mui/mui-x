@@ -10,8 +10,6 @@ githubLabel: 'scope: chat'
 
 Use shared structural affordances for typing, unread boundaries, and scroll-to-bottom behavior.
 
-
-
 ```tsx
 import * as React from 'react';
 import type { ChatAdapter, ChatRealtimeEvent } from '@mui/x-chat-headless';
@@ -289,7 +287,6 @@ export default function IndicatorsInContext() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Primitive set

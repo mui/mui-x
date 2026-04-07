@@ -10,8 +10,6 @@ components: ChatBox
 
 How the streaming protocol works end-to-end, from adapter response to live UI updates.
 
-
-
 The Chat component streams assistant responses token-by-token.
 The adapter's `sendMessage()` method returns a `ReadableStream<ChatMessageChunk | ChatStreamEnvelope>`.
 The runtime reads this stream, processes each chunk, and updates the normalized store so that UI components re-render incrementally.

@@ -76,11 +76,7 @@ export const ConversationListUnreadBadge = React.forwardRef(function Conversatio
     if (!unread) {
       return null;
     }
-    return (
-      <Root {...rootProps}>
-        {unreadCount != null ? formatUnreadCount(unreadCount) : ''}
-      </Root>
-    );
+    return <Root {...rootProps}>{unreadCount != null ? formatUnreadCount(unreadCount) : ''}</Root>;
   }
 
   if (!unreadCount) {

@@ -109,13 +109,13 @@ Use Tailwind's attribute selectors to style state variations without JavaScript:
 
 ### Common data attributes
 
-| Component               | Attribute           | Values                                                                   | Description                         |
-| :---------------------- | :------------------ | :----------------------------------------------------------------------- | :---------------------------------- |
-| `Message.Root`          | `data-role`         | `"user"`, `"assistant"`                                                  | Message sender role                 |
-| `Message.Root`          | `data-status`       | `"pending"`, `"sending"`, `"streaming"`, `"sent"`, `"read"`, `"error"`, `"cancelled"` | Message delivery status |
-| `Composer.SendButton`   | `data-disabled`     | present / absent                                                         | Composer has the `disabled` prop    |
-| `Composer.Root`         | `data-is-streaming` | present / absent                                                         | Response in progress                |
-| `ConversationList.Item` | `data-selected`     | present / absent                                                         | Currently selected conversation     |
+| Component               | Attribute           | Values                                                                                | Description                      |
+| :---------------------- | :------------------ | :------------------------------------------------------------------------------------ | :------------------------------- |
+| `Message.Root`          | `data-role`         | `"user"`, `"assistant"`                                                               | Message sender role              |
+| `Message.Root`          | `data-status`       | `"pending"`, `"sending"`, `"streaming"`, `"sent"`, `"read"`, `"error"`, `"cancelled"` | Message delivery status          |
+| `Composer.SendButton`   | `data-disabled`     | present / absent                                                                      | Composer has the `disabled` prop |
+| `Composer.Root`         | `data-is-streaming` | present / absent                                                                      | Response in progress             |
+| `ConversationList.Item` | `data-selected`     | present / absent                                                                      | Currently selected conversation  |
 
 ## Slot props for custom elements
 

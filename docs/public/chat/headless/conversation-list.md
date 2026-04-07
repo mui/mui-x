@@ -10,8 +10,6 @@ githubLabel: 'scope: chat'
 
 Render and navigate the conversation rail with structural list primitives, built-in selection behavior, and roving focus.
 
-
-
 ```tsx
 import * as React from 'react';
 import {
@@ -222,7 +220,6 @@ export default function TwoPaneInbox() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Primitive set

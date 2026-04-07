@@ -18,13 +18,7 @@ import {
 } from './composer';
 import { ConversationListRoot } from './conversation-list';
 import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
-import {
-  MessageActions,
-  MessageAvatar,
-  MessageContent,
-  MessageMeta,
-  MessageRoot,
-} from './message';
+import { MessageActions, MessageAvatar, MessageContent, MessageMeta, MessageRoot } from './message';
 import { MessageListDateDivider, MessageListRoot } from './message-list';
 
 // Core logic exports
@@ -127,14 +121,9 @@ export type { ChatMessageChunk, ChatStreamEnvelope } from './types/chat-stream';
 
 export { ChatStreamError } from './stream/ChatStreamError';
 
-
 // Headless component exports (structural primitives without styling)
 // Using direct re-exports so the API docs builder can resolve component symbols correctly.
-export {
-  ChatLayout,
-  ChatRoot,
-  useChatLocaleText,
-} from './chat';
+export { ChatLayout, ChatRoot, useChatLocaleText } from './chat';
 export {
   ConversationHeader,
   ConversationHeaderActions,
@@ -355,7 +344,12 @@ export type {
   SuggestionsRootSlotProps,
   SuggestionsRootSlots,
 } from './suggestions';
-export type { GroupKeyFn, MessageGroupProps, MessageGroupSlotProps, MessageGroupSlots } from './message-group';
+export type {
+  GroupKeyFn,
+  MessageGroupProps,
+  MessageGroupSlotProps,
+  MessageGroupSlots,
+} from './message-group';
 export type {
   MessageListDateDividerProps,
   MessageListDateDividerSlotProps,

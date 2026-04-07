@@ -9,8 +9,6 @@ githubLabel: 'scope: chat'
 
 Subscribe to exactly the store slices you need with memoized selectors for efficient, granular rendering.
 
-
-
 `chatSelectors` is a collection of memoized selectors that read from the normalized chat store.
 They power the built-in hooks and can also be used directly with `useChatStore()` for advanced subscriptions.
 

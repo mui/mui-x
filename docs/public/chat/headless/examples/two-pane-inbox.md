@@ -229,7 +229,6 @@ export default function TwoPaneInbox() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Key primitives

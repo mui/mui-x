@@ -160,7 +160,6 @@ export default function MinimalUnstyledShell() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Why start here

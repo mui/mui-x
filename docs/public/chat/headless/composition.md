@@ -10,8 +10,6 @@ githubLabel: 'scope: chat'
 
 Compose a complete chat UI from the headless namespaces while keeping styling decisions in your own code.
 
-
-
 ```tsx
 import * as React from 'react';
 import {
@@ -151,7 +149,6 @@ export default function MinimalUnstyledShell() {
     </Chat.Root>
   );
 }
-
 ```
 
 The canonical headless shell combines a provider-backed root, a pane layout, a conversation rail, a thread view, a message list, and a composer.
