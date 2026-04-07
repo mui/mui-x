@@ -331,7 +331,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
       hasTransformedTheNestedData = true;
       return rows.map((row, index) => {
-        if (index === 1) {
+        if (index === 0) {
           return { ...row, id: testRowId, name: `${row.name}-updated` };
         }
         return row;
