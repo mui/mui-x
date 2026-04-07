@@ -1254,7 +1254,7 @@ describe('<DataGrid /> - Rows', () => {
           await user.click(screen.getByRole('button', { name: /next page/i }));
 
           await waitFor(() => {
-            expect(gridOffsetTop()).to.equal(0);
+            expect(gridOffsetTop()).to.equal(columnHeaderHeight);
           });
         },
       );
@@ -1280,9 +1280,9 @@ describe('<DataGrid /> - Rows', () => {
             {...data}
           />,
         );
-        expect(gridOffsetTop()).to.equal(0);
+        expect(gridOffsetTop()).to.equal(columnHeaderHeight);
         await act(async () => apiRefPage.current?.setPageSize(5));
-        expect(gridOffsetTop()).to.equal(0);
+        expect(gridOffsetTop()).to.equal(columnHeaderHeight);
       });
 
       // In Chrome non-headless and Edge this test is flaky
@@ -1314,7 +1314,7 @@ describe('<DataGrid /> - Rows', () => {
             />,
           );
 
-          expect(gridOffsetTop()).to.equal(0);
+          expect(gridOffsetTop()).to.equal(columnHeaderHeight);
 
           const virtualScroller = grid('virtualScroller')!;
           // Scroll to measure all cells
@@ -1330,7 +1330,7 @@ describe('<DataGrid /> - Rows', () => {
           await user.click(screen.getByRole('button', { name: /next page/i }));
 
           await waitFor(() => {
-            expect(gridOffsetTop()).to.equal(0);
+            expect(gridOffsetTop()).to.equal(columnHeaderHeight);
           });
         },
       );
