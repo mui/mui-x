@@ -40,6 +40,7 @@ Same changes as in `@mui/x-data-grid-pro@9.0.0-rc.0`, plus:
 #### `@mui/x-date-pickers@9.0.0-rc.0`
 
 - [pickers] Remove `PickersDay` and `DateRangePickerDay` and promote their `2` versions as replacements (#21739) @michelengelen
+- [pickers] Remove `enableAccessibleFieldDOMStructure` behavior (#21966) @LukasTy
 
 #### `@mui/x-date-pickers-pro@9.0.0-rc.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -86,7 +87,7 @@ Same changes as in `@mui/x-tree-view@9.0.0-rc.0`, plus:
 
 ### Scheduler
 
-#### `@mui/x-scheduler@9.0.0-rc.0`
+#### `@mui/x-scheduler@9.0.0-alpha.0`
 
 - [scheduler] Add locale files, adapt l10n scripts, and add localization table to docs (#21870) @rita-codes
 - [scheduler] Add planned features to the docs (#21705) @rita-codes
@@ -109,9 +110,9 @@ Same changes as in `@mui/x-tree-view@9.0.0-rc.0`, plus:
 - [scheduler] Improve French (fr-FR) locale (#21941) @rita-codes
 - [scheduler] Improve Romanian (ro-RO) locale (#21942) @rita-codes
 
-#### `@mui/x-scheduler-premium@9.0.0-rc.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-scheduler-premium@9.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-scheduler-pro@9.0.0-rc.0`.
+Same changes as in `@mui/x-scheduler@9.0.0-alpha.0`.
 
 ### Codemod
 
@@ -138,7 +139,7 @@ Internal changes.
 
 ### Miscellaneous
 
-- [core] Bump @mui/material to v9.0.0-beta.1 (#21858) @siriwatknp
+- [core] Bump `@mui/material` to v9.0.0-beta.1 (#21858) @siriwatknp
 - [core] Update browserslistrc (#21974) @siriwatknp
 - [deps] Bump minimum core packages to 7.3.0 to adopt theme color manipulator (#21892) @siriwatknp
 - [telemetry] Prefer upstream remote over origin for `projectId` (#21882) @aemartos
