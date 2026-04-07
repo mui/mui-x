@@ -340,6 +340,11 @@ export interface GridClasses {
    */
   columnsManagementEmptyText: string;
   /**
+   * Styles applied to the content filler.
+   * @ignore - do not document.
+   */
+  contentFiller: string;
+  /**
    * Styles applied to the top container.
    */
   'container--top': string;
@@ -411,6 +416,11 @@ export interface GridClasses {
    * @ignore - do not document.
    */
   'filler--pinnedRight': string;
+  /**
+   * Styles applied to the horizontal filler element.
+   * @ignore - do not document.
+   */
+  'filler--horizontal': string;
   /**
    * Styles applied to the root of the filter form component.
    */
@@ -607,6 +617,11 @@ export interface GridClasses {
    * @ignore - do not document.
    */
   'root--noToolbar': string;
+  /**
+   * Styles applied to the root element when layout mode is "controlled".
+   * @ignore - do not document.
+   */
+  'virtualizer--layoutControlled': string;
   /**
    * Styles applied to the row element if the row is editable.
    */
@@ -1134,6 +1149,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnsManagementFooter',
   'columnsManagementScrollArea',
   'columnsManagementEmptyText',
+  'contentFiller',
   'detailPanel',
   'footerCell',
   'panel',
@@ -1161,6 +1177,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'filterFormColumnInput',
   'filterFormOperatorInput',
   'filterFormValueInput',
+  'filler--horizontal',
   'footerContainer',
   'iconButtonContainer',
   'main',
@@ -1170,6 +1187,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'overlay',
   'overlayWrapper',
   'root',
+  'virtualizer--layoutControlled',
   'rowCount',
   'rowReorderIcon',
   'scrollArea--left',
