@@ -5,21 +5,10 @@ import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
-import {
-  DateRangePicker,
-  DateRangePickerFieldProps,
-  DateRangePickerProps,
-} from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
-import {
-  unstable_useMultiInputRangeField as useMultiInputRangeField,
-  UseMultiInputRangeFieldTextFieldProps,
-} from '@mui/x-date-pickers-pro/hooks';
+import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mui/x-date-pickers-pro/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
-import {
-  MultiInputFieldSlotTextFieldProps,
-  MultiInputFieldRefs,
-} from '@mui/x-date-pickers-pro/models';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -36,18 +25,8 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-interface BrowserTextFieldProps extends UseMultiInputRangeFieldTextFieldProps<
-  true,
-  React.HTMLAttributes<HTMLDivElement>
-> {
-  triggerRef?: React.Ref<HTMLDivElement>;
-}
-
-function BrowserTextField(props: BrowserTextFieldProps) {
+function BrowserTextField(props) {
   const {
-    // Should be ignored
-    enableAccessibleFieldDOMStructure,
-
     // Should be passed to the PickersSectionList component
     elements,
     sectionListRef,
@@ -58,20 +37,16 @@ function BrowserTextField(props: BrowserTextFieldProps) {
     onInput,
     onPaste,
     onKeyDown,
-
     // Can be passed to a hidden <input /> element
     onChange,
     value,
-
     // Can be used to style the component
     areAllSectionsEmpty,
     disabled,
     readOnly,
     focused,
     error,
-
     triggerRef,
-
     // The rest can be passed to the root element
     ...other
   } = props;
@@ -95,18 +70,7 @@ function BrowserTextField(props: BrowserTextFieldProps) {
   );
 }
 
-interface BrowserMultiInputDateRangeFieldProps
-  extends
-    Omit<DateRangePickerFieldProps, 'fieldRef' | 'clearable' | 'onClear'>,
-    MultiInputFieldRefs {
-  slotProps: {
-    textField: any;
-  };
-}
-
-function BrowserMultiInputDateRangeField(
-  props: BrowserMultiInputDateRangeFieldProps,
-) {
+function BrowserMultiInputDateRangeField(props) {
   const manager = useDateRangeManager();
   const pickerContext = usePickerContext();
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
@@ -115,14 +79,14 @@ function BrowserMultiInputDateRangeField(
   const startTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
-    ownerState: { position: 'start' } as any,
-  }) as MultiInputFieldSlotTextFieldProps;
+    ownerState: { position: 'start' },
+  });
 
   const endTextFieldProps = useSlotProps({
     elementType: 'input',
     externalSlotProps: slotProps?.textField,
-    ownerState: { position: 'end' } as any,
-  }) as MultiInputFieldSlotTextFieldProps;
+    ownerState: { position: 'end' },
+  });
 
   const fieldResponse = useMultiInputRangeField({
     manager,
@@ -132,7 +96,7 @@ function BrowserMultiInputDateRangeField(
     rootProps: {
       ref: pickerContext.rootRef,
       spacing: 2,
-      direction: 'row' as const,
+      direction: 'row',
       overflow: 'auto',
       ...otherForwardedProps,
     },
@@ -152,7 +116,7 @@ function BrowserMultiInputDateRangeField(
 
 BrowserMultiInputDateRangeField.fieldType = 'multi-input';
 
-function BrowserDateRangePicker(props: DateRangePickerProps) {
+function BrowserDateRangePicker(props) {
   return (
     <DateRangePicker
       {...props}
@@ -161,7 +125,7 @@ function BrowserDateRangePicker(props: DateRangePickerProps) {
   );
 }
 
-export default function BrowserV7MultiInputRangeField() {
+export default function BrowserMultiInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserDateRangePicker />
