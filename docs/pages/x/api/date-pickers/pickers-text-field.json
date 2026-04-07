@@ -66,6 +66,36 @@
     "import { PickersTextField } from '@mui/x-date-pickers';",
     "import { PickersTextField } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [
+    {
+      "name": "formHelperText",
+      "description": "The component used for the form helper text slot.",
+      "default": "FormHelperText",
+      "class": null
+    },
+    {
+      "name": "htmlInput",
+      "description": "The component used for the html input slot.",
+      "class": null
+    },
+    {
+      "name": "input",
+      "description": "The component used for the input slot.\nDefaults to one of `PickersInput`, `PickersFilledInput`, `PickersOutlinedInput` based on `variant`.",
+      "class": null
+    },
+    {
+      "name": "inputLabel",
+      "description": "The component used for the input label slot.",
+      "default": "InputLabel",
+      "class": null
+    },
+    {
+      "name": "root",
+      "description": "The component used for the root slot.",
+      "default": "FormControl",
+      "class": "MuiPickersTextField-root"
+    }
+  ],
   "classes": [
     {
       "key": "fullWidth",
@@ -83,12 +113,6 @@
       "key": "marginNormal",
       "className": "MuiPickersTextField-marginNormal",
       "description": "Styles applied to the root element if `margin=\"normal\"`.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiPickersTextField-root",
-      "description": "Styles applied to the root element.",
       "isGlobal": false
     }
   ],

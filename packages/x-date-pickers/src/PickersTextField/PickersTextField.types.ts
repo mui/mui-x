@@ -13,26 +13,26 @@ export interface PickersTextFieldSlots {
    * The component used for the root slot.
    * @default FormControl
    */
-  root: React.ElementType;
+  root?: React.ElementType;
   /**
    * The component used for the input slot.
    * Defaults to one of `PickersInput`, `PickersFilledInput`, `PickersOutlinedInput` based on `variant`.
    */
-  input: React.ElementType;
+  input?: React.ElementType;
   /**
    * The component used for the input label slot.
    * @default InputLabel
    */
-  inputLabel: React.ElementType;
+  inputLabel?: React.ElementType;
   /**
    * The component used for the html input slot.
    */
-  htmlInput: React.ElementType;
+  htmlInput?: React.ElementType;
   /**
    * The component used for the form helper text slot.
    * @default FormHelperText
    */
-  formHelperText: React.ElementType;
+  formHelperText?: React.ElementType;
 }
 
 export interface PickersTextFieldSlotProps<InputPropsType> {
@@ -50,7 +50,7 @@ export interface PickersTextFieldSlotsAndSlotProps<InputPropsType> {
    * The components used for each slot inside.
    * @default {}
    */
-  slots?: Partial<PickersTextFieldSlots>;
+  slots?: PickersTextFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
