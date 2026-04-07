@@ -31,11 +31,6 @@ StandaloneEvent.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * CSS class applied to the element, or a function that
-   * returns a class based on the component's state.
-   */
-  className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   data: PropTypes.oneOfType([
     PropTypes.shape({
       allDay: PropTypes.bool,
@@ -271,28 +266,9 @@ StandaloneEvent.propTypes = {
     }),
   ]).isRequired,
   /**
-   * Whether the component renders a native `<button>` element when replacing it
-   * via the `render` prop.
-   * Set to `true` if the rendered element is a native button.
-   * @default false
-   */
-  nativeButton: PropTypes.bool,
-  /**
    * Callback fired when the event is dropped into the Event Calendar.
    */
   onEventDrop: PropTypes.func,
-  /**
-   * Allows you to replace the component's HTML element
-   * with a different tag, or compose it with another component.
-   *
-   * Accepts a `ReactElement` or a function that returns the element to render.
-   */
-  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
-  /**
-   * Style applied to the element, or a function that
-   * returns a style object based on the component's state.
-   */
-  style: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useEventResizeHandler } from '@mui/x-scheduler-headless/internals';
 import { SchedulerEventSide } from '@mui/x-scheduler-headless/models';
 import { useTimelineGridEventContext } from '../event/TimelineGridEventContext';

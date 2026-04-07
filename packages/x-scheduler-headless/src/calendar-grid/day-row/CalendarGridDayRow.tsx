@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { CompositeList } from '../../base-ui-copy/composite/list/CompositeList';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { CompositeList } from '@base-ui/react/internals/composite';
 import { CalendarGridDayRowContext } from './CalendarGridDayRowContext';
 import { TemporalSupportedObject } from '../../models';
 

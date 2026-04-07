@@ -2,12 +2,9 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
-import {
-  useButton,
-  useRenderElement,
-  BaseUIComponentProps,
-  NonNativeButtonProps,
-} from '@mui/x-scheduler-headless/base-ui-copy';
+import { useButton } from '@base-ui/react/internals/use-button';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import {
   SchedulerEventId,
   SchedulerEventOccurrence,

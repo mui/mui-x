@@ -1,5 +1,5 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
-import { TemporalTimezone, TemporalSupportedObject } from '../../../base-ui-copy/types';
+import { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import {
   SchedulerProcessedEvent,
   SchedulerEventId,
