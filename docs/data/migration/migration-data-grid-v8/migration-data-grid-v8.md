@@ -87,3 +87,8 @@ npx @mui/x-codemod@next v9.0.0/data-grid/remove-stabilized-experimentalFeatures 
   +  }}
    />
   ```
+
+### DOM changes
+
+- The `.MuiDataGrid-virtualScrollerContent` node has been moved to be a direct child of `.MuiDataGrid-virtualScroller`.
+- A new `div` node has been added as a direct child of `.MuiDataGrid-virtualScrollerContent`, for internal purposes.
