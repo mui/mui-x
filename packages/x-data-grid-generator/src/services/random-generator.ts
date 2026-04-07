@@ -18,7 +18,7 @@ let chanceGuid: Chance.Chance;
 // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle
 declare const __DISABLE_CHANCE_RANDOM__: any;
 
-if (typeof __DISABLE_CHANCE_RANDOM__ !== 'undefined' && __DISABLE_CHANCE_RANDOM__) {
+if (true) {
   chance = new Chance(() => 0.5);
   chanceGuid = new Chance(42);
 } else {
