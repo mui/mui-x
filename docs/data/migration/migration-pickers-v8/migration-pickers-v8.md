@@ -307,9 +307,9 @@ The `data-testid` attributes on several components have been updated, which may 
 ### Drop deprecated `PickersTextField` props
 
 The legacy `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props have been removed from `PickersTextField` and from every Picker / Field component.
-They were the last remnants of the old Material UI `TextField` API.
+They were the last remnants of the old Material UI `TextField` API.
 
-The replacement is the new `slotProps` shape, which mirrors the Material UI v9 `TextField` API:
+The replacement is the new `slotProps` shape, which mirrors the Material UI v9 `TextField` API:
 
 | Removed prop          | New location               |
 | :-------------------- | :------------------------- |
