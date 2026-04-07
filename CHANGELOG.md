@@ -105,6 +105,9 @@ Same changes as in `@mui/x-tree-view@9.0.0-rc.0`, plus:
 - [scheduler] Prepare for the alpha launch (#21859) @rita-codes
 - [scheduler] Sync Base UI internals and apply good practices (#21946) @flaviendelangle
 - [scheduler] Update close modal aria label translation (#21940) @rita-codes
+- [scheduler] Add Spanish (es-ES) locale (#21900) @rita-codes
+- [scheduler] Improve French (fr-FR) locale (#21941) @rita-codes
+- [scheduler] Improve Romanian (ro-RO) locale (#21942) @rita-codes
 
 #### `@mui/x-scheduler-premium@9.0.0-rc.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -138,9 +141,6 @@ Internal changes.
 - [core] Bump @mui/material to v9.0.0-beta.1 (#21858) @siriwatknp
 - [core] Update browserslistrc (#21974) @siriwatknp
 - [deps] Bump minimum core packages to 7.3.0 to adopt theme color manipulator (#21892) @siriwatknp
-- [l10n][scheduler] Add Spanish (es-ES) locale (#21900) @rita-codes
-- [l10n][scheduler] Improve French (fr-FR) locale (#21941) @rita-codes
-- [l10n][scheduler] Improve Romanian (ro-RO) locale (#21942) @rita-codes
 - [telemetry] Prefer upstream remote over origin for `projectId` (#21882) @aemartos
 - [telemetry] Send `repoHash`, `[x]packageNameHash`, and `rootPathHash` alongside `projectId` (#21896) @aemartos
 - [test] Exclude flaky `DataGrid` argos test (#21977) @MBilalShafi
