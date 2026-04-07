@@ -91,7 +91,7 @@ Same changes as in `@mui/x-tree-view@9.0.0-rc.0`, plus:
 
 ### Scheduler
 
-#### `@mui/x-scheduler@9.0.0-rc.0`
+#### `@mui/x-scheduler@9.0.0-alpha.0`
 
 - [scheduler] Add locale files, adapt l10n scripts, and add localization table to docs (#21870) @rita-codes
 - [scheduler] Add planned features to the docs (#21705) @rita-codes
@@ -114,9 +114,9 @@ Same changes as in `@mui/x-tree-view@9.0.0-rc.0`, plus:
 - [scheduler] Improve French (fr-FR) locale (#21941) @rita-codes
 - [scheduler] Improve Romanian (ro-RO) locale (#21942) @rita-codes
 
-#### `@mui/x-scheduler-premium@9.0.0-rc.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-scheduler-premium@9.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-scheduler-pro@9.0.0-rc.0`.
+Same changes as in `@mui/x-scheduler@9.0.0-alpha.0`.
 
 ### Codemod
 
