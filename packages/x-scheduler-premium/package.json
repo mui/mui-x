@@ -1,7 +1,6 @@
 {
   "name": "@mui/x-scheduler-premium",
   "version": "0.0.1-alpha.0",
-  "private": true,
   "description": "The Premium plan edition of the scheduler components (MUI X).",
   "license": "SEE LICENSE IN LICENSE",
   "author": "MUI Team",
@@ -54,9 +53,11 @@
     "@mui/x-scheduler": "workspace:*",
     "@mui/x-scheduler-headless": "workspace:*",
     "@mui/x-scheduler-headless-premium": "workspace:*",
+    "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "clsx": "catalog:"
+    "clsx": "catalog:",
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",

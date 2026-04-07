@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   formatFullTimeValue,
   getFieldInputRoot,
@@ -31,7 +31,7 @@ describe('<DesktopTimePicker /> - Describe Value', () => {
         expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
       }
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
