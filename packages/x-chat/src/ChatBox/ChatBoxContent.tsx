@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useMessage, useMessageIds, useConversations } from '@mui/x-chat-headless';
 import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import {
   ChatLayout,
   useChatLocaleText,
@@ -49,8 +50,8 @@ const ChatBoxEmptyState = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  color: (theme.vars || theme).palette.text.disabled,
-  fontSize: theme.typography.body2.fontSize,
+  color: (theme.vars || theme).palette.text.secondary,
+  ...theme.typography.body2,
   padding: theme.spacing(4),
   userSelect: 'none',
   pointerEvents: 'none',
@@ -129,6 +130,8 @@ function DefaultConversationHeader({
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
 }) {
+  const localeText = useChatLocaleText();
+
   if (features?.conversationHeader === false) {
     return null;
   }
@@ -150,12 +153,16 @@ function DefaultConversationHeader({
         <ConversationSubtitleComponent {...(slotProps?.conversationSubtitle ?? {})} />
       </ConversationHeaderInfoComponent>
       <ConversationHeaderActionsComponent {...(slotProps?.conversationHeaderActions ?? {})}>
-        <IconButton size="small" aria-label="New chat">
-          <DefaultNewChatIcon />
-        </IconButton>
-        <IconButton size="small" aria-label="Settings">
-          <DefaultSettingsIcon />
-        </IconButton>
+        <Tooltip title={localeText.conversationHeaderNewChatLabel}>
+          <IconButton size="small" aria-label={localeText.conversationHeaderNewChatLabel}>
+            <DefaultNewChatIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={localeText.conversationHeaderSettingsLabel}>
+          <IconButton size="small" aria-label={localeText.conversationHeaderSettingsLabel}>
+            <DefaultSettingsIcon />
+          </IconButton>
+        </Tooltip>
       </ConversationHeaderActionsComponent>
     </ConversationHeaderComponent>
   );

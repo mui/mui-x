@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 
-export default function DefaultSendIcon() {
+const DefaultSendIcon = React.memo(function DefaultSendIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,4 +13,6 @@ export default function DefaultSendIcon() {
       <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
     </svg>
   );
-}
+});
+
+export default DefaultSendIcon;
