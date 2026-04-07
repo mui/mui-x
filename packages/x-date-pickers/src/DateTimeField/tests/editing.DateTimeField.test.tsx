@@ -5,7 +5,7 @@ import {
   adapterToUse,
   buildFieldInteractions,
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
 } from 'test/utils/pickers';
 
 describe('<DateTimeField /> - Editing', () => {
@@ -24,7 +24,6 @@ describe('<DateTimeField /> - Editing', () => {
       const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
       const view = renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
         format: adapterToUse.formats.month,
@@ -43,7 +42,6 @@ describe('<DateTimeField /> - Editing', () => {
       const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
       const view = renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
         value,
@@ -63,7 +61,6 @@ describe('<DateTimeField /> - Editing', () => {
       const referenceDate = adapterToUse.date('2012-05-03T14:30:00');
 
       const view = renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
         onChange,
         referenceDate,
         defaultValue,
@@ -82,7 +79,6 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
 
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.month,
         });
@@ -97,7 +93,6 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
 
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.dayOfMonth,
         });
@@ -112,7 +107,6 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
 
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           format: adapterToUse.formats.fullTime24h,
         });
@@ -136,7 +130,6 @@ describe('<DateTimeField /> - Editing', () => {
         const minDate = adapterToUse.date('2030-05-05T18:30:00');
 
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           minDate,
           format: adapterToUse.formats.month,
@@ -154,7 +147,6 @@ describe('<DateTimeField /> - Editing', () => {
         const minDate = adapterToUse.date('2007-05-05T18:30:00');
 
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           minDate,
           format: adapterToUse.formats.month,
@@ -172,7 +164,6 @@ describe('<DateTimeField /> - Editing', () => {
         const maxDate = adapterToUse.date('2007-05-05T18:30:00');
 
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           maxDate,
           format: adapterToUse.formats.month,
@@ -190,7 +181,6 @@ describe('<DateTimeField /> - Editing', () => {
         const maxDate = adapterToUse.date('2030-05-05T18:30:00');
 
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           maxDate,
           format: adapterToUse.formats.month,
@@ -207,16 +197,15 @@ describe('<DateTimeField /> - Editing', () => {
 
   it('should correctly update `value` when both `format` and `value` are changed', () => {
     const view = renderWithProps({
-      enableAccessibleFieldDOMStructure: true,
       value: null,
       format: 'P',
     });
-    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+    expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
 
     view.setProps({
       format: 'Pp',
       value: adapterToUse.date('2012-05-03T14:30:00'),
     });
-    expectFieldValueV7(view.getSectionsContainer(), '05/03/2012, 02:30 PM');
+    expectFieldValue(view.getSectionsContainer(), '05/03/2012, 02:30 PM');
   });
 });
