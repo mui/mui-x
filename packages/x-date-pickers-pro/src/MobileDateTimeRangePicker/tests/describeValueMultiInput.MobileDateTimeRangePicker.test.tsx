@@ -3,7 +3,7 @@ import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-picke
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   getFieldSectionsContainer,
   openPicker,
@@ -42,7 +42,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
             hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
           )
         : expectedPlaceholder;
-      expectFieldValueV7(startSectionsContainer, expectedStartValueStr);
+      expectFieldValue(startSectionsContainer, expectedStartValueStr);
 
       const endSectionsContainer = getFieldSectionsContainer(1);
       const expectedEndValueStr = expectedValues[1]
@@ -51,7 +51,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
             hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
           )
         : expectedPlaceholder;
-      expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
+      expectFieldValue(endSectionsContainer, expectedEndValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {

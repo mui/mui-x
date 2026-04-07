@@ -11,10 +11,27 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangePickerDay2';
 import { createTheme } from '@mui/material/styles';
 
+// Use this space to add tests that touch multiple codemods in the preset-safe package
+// It is important to ensure that the codemods don't conflict with each other
+// For example, if one codemod changes a prop name, another codemod modifying its value should work too.
+// Don't hesitate to add props on existing components.
+
 // rename-field-ref
 function FieldRefUsage() {
   const fieldRef = React.useRef(null);
-  return <DateField unstableFieldRef={fieldRef} />;
+  return (
+    <div>
+      <DateField unstableFieldRef={fieldRef} />
+      <DatePicker
+        slotProps={{ field: { unstableFieldRef: fieldRef } }}
+        enableAccessibleFieldDOMStructure={false}
+      />
+      <DateRangePicker
+        slotProps={{ field: { unstableFieldRef: fieldRef } }}
+        enableAccessibleFieldDOMStructure={false}
+      />
+    </div>
+  );
 }
 
 // rename-pickers-day + theme component name
@@ -67,6 +84,13 @@ function DisableMarginUsage() {
       disableMargin
       day={new Date()}
     />
+  );
+}
+
+// remove-enable-accessible-field-dom-structure inside slotProps.field
+function SlotPropsFieldUsage() {
+  return (
+    <DatePicker slotProps={{ field: { enableAccessibleFieldDOMStructure: false, format: 'MM/DD/YYYY' } }} />
   );
 }
 
