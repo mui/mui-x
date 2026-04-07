@@ -310,7 +310,7 @@ TimeField.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * The components used for each slot inside.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
