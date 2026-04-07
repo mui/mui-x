@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "9.0.0-beta.0",
+  "version": "9.0.0-rc.0",
   "author": "MUI Team",
   "description": "The Community plan edition of the MUI X Data Grid components.",
   "license": "MIT",
@@ -54,7 +54,7 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^7.3.0 || ^9.0.0-beta.1",
+    "@mui/material": "^7.3.0 || ^9.0.0-beta.0 || ^9.0.0",
     "@mui/system": "^7.3.0 || ^9.0.0-beta.1",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
