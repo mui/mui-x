@@ -79,6 +79,7 @@ const selectors = (() => {
   const scrollPositionSelector = createSelector(
     (state: BaseState) => state.virtualization.scrollPosition,
   );
+  const layoutModeSelector = createSelector((state: BaseState) => state.virtualization.layoutMode);
 
   return {
     store: createSelector((state: BaseState) => state.virtualization),
@@ -86,15 +87,19 @@ const selectors = (() => {
     enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
     enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
     offsetTop: createSelector(
+      layoutModeSelector,
       Dimensions.selectors.dimensions,
       Dimensions.selectors.rowPositions,
       firstRowIndexSelector,
-      (dimensions, rowPositions, firstRowIndex) => {
-        return dimensions.topContainerHeight + (rowPositions[firstRowIndex] ?? 0);
+      (layoutMode, dimensions, rowPositions, firstRowIndex) => {
+        return (
+          (layoutMode === 'uncontrolled' ? dimensions.topContainerHeight : 0) +
+          (rowPositions[firstRowIndex] ?? 0)
+        );
       },
     ),
     context: createSelector((state: BaseState) => state.virtualization.context),
-    layoutMode: createSelector((state: BaseState) => state.virtualization.layoutMode),
+    layoutMode: layoutModeSelector,
     scrollPosition: scrollPositionSelector,
     pinnedLeftOffsetSelector: createSelector(
       scrollPositionSelector,
