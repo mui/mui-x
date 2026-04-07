@@ -169,6 +169,7 @@ export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
+export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
 
 export type * as BaseSlots from '../models/gridBaseSlots';
 

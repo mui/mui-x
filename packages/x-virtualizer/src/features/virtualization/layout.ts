@@ -110,6 +110,60 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       }),
     ),
 
+    scrollerContentProps: createSelectorMemoized(
+      Virtualization.selectors.layoutMode,
+      Dimensions.selectors.dimensions,
+      Dimensions.selectors.needsVerticalScrollbar,
+      Dimensions.selectors.needsHorizontalScrollbar,
+      (layoutMode, dimensions, needsVerticalScrollbar, needsHorizontalScrollbar) => {
+        let style: React.CSSProperties | undefined;
+        if (layoutMode === 'controlled') {
+          const {
+            contentSize,
+            scrollbarSize,
+            topContainerHeight,
+            bottomContainerHeight,
+            minimalContentHeight,
+            columnsTotalWidth,
+          } = dimensions;
+
+          const verticalScrollbarSize = needsVerticalScrollbar ? scrollbarSize : 0;
+          const horizontalScrollbarSize = needsHorizontalScrollbar ? scrollbarSize : 0;
+
+          const contentHeight =
+            contentSize.height === 0 ? minimalContentHeight : contentSize.height;
+
+          const width = needsHorizontalScrollbar
+            ? verticalScrollbarSize + columnsTotalWidth
+            : 'auto';
+
+          const height = cssAdd(
+            cssAdd(cssAdd(contentHeight, topContainerHeight), bottomContainerHeight),
+            horizontalScrollbarSize,
+          );
+
+          style = {
+            width,
+            height,
+            flex: '0 0 auto',
+          } as React.CSSProperties;
+        }
+
+        return {
+          style,
+          role: 'presentation',
+        };
+      },
+    ),
+
+    viewportProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
+      style: {
+        width: dimensions.viewportOuterSize.width,
+        height: dimensions.viewportOuterSize.height,
+      },
+      role: 'presentation',
+    })),
+
     contentProps: createSelectorMemoized(
       Dimensions.selectors.contentHeight,
       Dimensions.selectors.minimalContentHeight,
@@ -118,18 +172,39 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       (contentHeight, minimalContentHeight, columnsTotalWidth, needsHorizontalScrollbar) => ({
         style: {
           width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-          flexBasis: contentHeight === 0 ? minimalContentHeight : contentHeight,
-          flexShrink: 0,
+          height: contentHeight === 0 ? minimalContentHeight : contentHeight,
+          flex: '0 0 auto',
         } as React.CSSProperties,
         role: 'presentation',
       }),
     ),
 
-    positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
-      style: {
-        transform: `translate3d(0, ${offsetTop}px, 0)`,
-      },
-    })),
+    positionerProps: createSelectorMemoized(
+      Virtualization.selectors.layoutMode,
+      Virtualization.selectors.offsetTop,
+      Virtualization.selectors.scrollPosition,
+      (layoutMode, offsetTop, scrollPosition) => ({
+        style: {
+          transform:
+            layoutMode === 'uncontrolled'
+              ? `translate3d(0, ${offsetTop}px, 0)`
+              : `translate3d(${-scrollPosition.current.left}px, ${offsetTop - scrollPosition.current.top}px, 0)`,
+        },
+      }),
+    ),
+
+    containerVerticalProps: createSelectorMemoized(
+      Virtualization.selectors.layoutMode,
+      Virtualization.selectors.scrollPosition,
+      (layoutMode, scrollPosition) =>
+        layoutMode === 'uncontrolled'
+          ? undefined
+          : {
+              style: {
+                transform: `translate3d(${-scrollPosition.current.left}px, 0, 0)`,
+              },
+            },
+    ),
 
     scrollbarHorizontalProps: createSelectorMemoized(
       Virtualization.selectors.context,
@@ -198,20 +273,18 @@ export class LayoutList extends Layout<ListElements> {
       }),
     ),
 
-    contentProps: createSelectorMemoized(Dimensions.selectors.contentHeight, (contentHeight) => {
-      return {
-        style: {
-          position: 'absolute',
-          display: 'inline-block',
-          width: '100%',
-          height: contentHeight,
-          top: 0,
-          left: 0,
-          zIndex: -1,
-        } as React.CSSProperties,
-        role: 'presentation',
-      };
-    }),
+    contentProps: createSelectorMemoized(Dimensions.selectors.contentHeight, (contentHeight) => ({
+      style: {
+        position: 'absolute',
+        display: 'inline-block',
+        width: '100%',
+        height: contentHeight,
+        top: 0,
+        left: 0,
+        zIndex: -1,
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
 
     positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
       style: {
@@ -287,4 +360,21 @@ function useScrollbarRefCallback(
       scrollbar.removeEventListener('scroll', onScrollbarScroll);
     };
   });
+}
+
+function cssAdd(a: string | number | undefined, b: string | number | undefined) {
+  if (typeof a === 'number' && typeof b === 'number') {
+    return a + b;
+  }
+  return `calc(${valueToCSSString(a)} + ${valueToCSSString(b)})`;
+}
+
+function valueToCSSString(value: string | number | undefined) {
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (typeof value === 'undefined') {
+    return '0';
+  }
+  return `${value}px`;
 }
