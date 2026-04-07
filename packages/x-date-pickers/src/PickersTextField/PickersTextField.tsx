@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import useForkRef from '@mui/utils/useForkRef';
+import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import InputLabel from '@mui/material/InputLabel';
@@ -168,22 +168,27 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     inputAdditionalProps.hiddenLabel = hiddenLabel;
   }
 
+  const rootSlotProps = useSlotProps({
+    elementType: RootComponent,
+    externalSlotProps: slotProps?.root,
+    externalForwardedProps: { ...other, className },
+    additionalProps: {
+      ref: handleRootRef,
+      focused,
+      disabled,
+      variant,
+      error,
+      color,
+      fullWidth,
+      required,
+    },
+    className: classes.root,
+    ownerState,
+  });
+
   return (
     <PickerTextFieldOwnerStateContext.Provider value={ownerState}>
-      <RootComponent
-        className={clsx(classes.root, className)}
-        ref={handleRootRef}
-        focused={focused}
-        disabled={disabled}
-        variant={variant}
-        error={error}
-        color={color}
-        fullWidth={fullWidth}
-        required={required}
-        ownerState={ownerState}
-        {...other}
-        {...slotProps?.root}
-      >
+      <RootComponent {...rootSlotProps}>
         {label != null && label !== '' && (
           <InputLabelComponent htmlFor={id} id={inputLabelId} {...inputLabelSlotProps}>
             {label}
@@ -218,8 +223,14 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           data-active-range-position={dataActiveRangePosition}
           {...inputAdditionalProps}
           {...inputSlotProps}
-          slots={{ ...inputSlotProps?.slots, htmlInput: slots?.htmlInput }}
-          slotProps={{ ...inputSlotProps?.slotProps, htmlInput: slotProps?.htmlInput }}
+          slots={{
+            ...inputSlotProps?.slots,
+            ...(slots?.htmlInput !== undefined && { htmlInput: slots.htmlInput }),
+          }}
+          slotProps={{
+            ...inputSlotProps?.slotProps,
+            ...(slotProps?.htmlInput !== undefined && { htmlInput: slotProps.htmlInput }),
+          }}
         />
         {helperText && (
           <FormHelperTextComponent id={helperTextId} {...slotProps?.formHelperText}>
