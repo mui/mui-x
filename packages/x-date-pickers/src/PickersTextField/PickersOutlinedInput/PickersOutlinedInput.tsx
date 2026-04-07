@@ -137,11 +137,7 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
         input: PickersOutlinedInputSectionsContainer,
         ...incomingSlots,
       }}
-      slotProps={{
-        ...incomingSlotProps,
-        root: { ...incomingSlotProps?.root },
-        input: { ...incomingSlotProps?.input },
-      }}
+      slotProps={incomingSlotProps}
       renderSuffix={(state) => (
         <Outline
           shrink={Boolean(notched || state.adornedStart || state.focused || state.filled)}
@@ -177,8 +173,8 @@ PickersOutlinedInput.propTypes = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  classes: PropTypes.object,
   className: PropTypes.string,
-  component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
@@ -258,7 +254,6 @@ PickersOutlinedInput.propTypes = {
    * Start `InputAdornment` for this component.
    */
   startAdornment: PropTypes.node,
-  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

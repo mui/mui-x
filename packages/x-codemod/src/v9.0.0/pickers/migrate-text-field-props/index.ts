@@ -130,6 +130,15 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   // 2. Rewrite legacy props found inside `slotProps={{ field: { ... } }}` and
   //    `slotProps={{ textField: { ... } }}` regardless of which component they appear on.
   root.find(j.JSXAttribute, { name: { name: 'slotProps' } }).forEach((attrPath) => {
+    const openingElement: any = attrPath.parentPath?.parentPath?.value;
+    if (
+      !openingElement ||
+      openingElement.type !== 'JSXOpeningElement' ||
+      openingElement.name?.type !== 'JSXIdentifier' ||
+      !FIELD_AND_PICKER_NAMES.includes(openingElement.name.name)
+    ) {
+      return;
+    }
     const attrValue = attrPath.value.value;
     if (!attrValue || attrValue.type !== 'JSXExpressionContainer') {
       return;

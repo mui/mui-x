@@ -218,8 +218,8 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           data-active-range-position={dataActiveRangePosition}
           {...inputAdditionalProps}
           {...inputSlotProps}
-          slots={{ htmlInput: slots?.htmlInput }}
-          slotProps={{ htmlInput: slotProps?.htmlInput }}
+          slots={{ ...inputSlotProps?.slots, htmlInput: slots?.htmlInput }}
+          slotProps={{ ...inputSlotProps?.slotProps, htmlInput: slotProps?.htmlInput }}
         />
         {helperText && (
           <FormHelperTextComponent id={helperTextId} {...slotProps?.formHelperText}>

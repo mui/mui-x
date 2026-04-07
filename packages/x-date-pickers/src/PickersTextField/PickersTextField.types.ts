@@ -40,9 +40,7 @@ export interface PickersTextFieldSlotProps<InputPropsType> {
   root?: Partial<FormControlProps>;
   input?: Partial<InputPropsType>;
   inputLabel?: Partial<InputLabelProps>;
-  htmlInput?: React.InputHTMLAttributes<HTMLInputElement> & {
-    ref?: React.Ref<HTMLInputElement>;
-  };
+  htmlInput?: React.ComponentPropsWithRef<'input'>;
   formHelperText?: Partial<FormHelperTextProps>;
 }
 
