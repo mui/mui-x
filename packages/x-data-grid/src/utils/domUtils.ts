@@ -285,7 +285,8 @@ export function findGridCells(api: GridPrivateApiCommunity, field: string) {
 function queryRows(api: GridPrivateApiCommunity) {
   return api.virtualScrollerRef.current!.querySelectorAll(
     // Use > to ignore rows from nested Data Grids (for example in detail panel)
-    `:scope > div > div > .${gridClasses.row}`,
+    `:scope > div > div > div > .${gridClasses.row},
+     :scope > div > div > div > div > .${gridClasses.row}`,
   );
 }
 
