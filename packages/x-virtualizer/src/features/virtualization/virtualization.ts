@@ -86,9 +86,12 @@ const selectors = (() => {
     enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
     enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
     offsetTop: createSelector(
+      Dimensions.selectors.dimensions,
       Dimensions.selectors.rowPositions,
       firstRowIndexSelector,
-      (rowPositions, firstRowIndex) => rowPositions[firstRowIndex] ?? 0,
+      (dimensions, rowPositions, firstRowIndex) => {
+        return dimensions.topContainerHeight + (rowPositions[firstRowIndex] ?? 0);
+      },
     ),
     context: createSelector((state: BaseState) => state.virtualization.context),
     layoutMode: createSelector((state: BaseState) => state.virtualization.layoutMode),
