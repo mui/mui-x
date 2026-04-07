@@ -27,6 +27,70 @@ Since `v9` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v8` to `v9`.
 
+## Run codemods
+
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v9. You can run `v9.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v9.0.0/preset-safe` to target the other packages as well.
+
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
+
+<!-- #npm-tag-reference -->
+
+```bash
+# Date and Time Pickers specific
+npx @mui/x-codemod@next v9.0.0/pickers/preset-safe <path>
+
+# Target the other packages as well
+npx @mui/x-codemod@next v9.0.0/preset-safe <path>
+```
+
+:::info
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-pickers-v900) for more details.
+:::
+
+## Accessible DOM structure is now the default
+
+The `enableAccessibleFieldDOMStructure` prop has been removed from all Picker and Field components.
+The accessible DOM structure (section-based `PickersTextField`) introduced in v7 is now the only supported mode.
+The legacy `<input>` based fallback is no longer available.
+
+The `preset-safe` codemod will remove the prop from your code automatically—both as a direct prop and inside `slotProps.field`.
+
+:::info
+The codemod cannot handle cases where `enableAccessibleFieldDOMStructure` is passed via spread syntax or through a variable reference.
+These cases must be updated manually:
+
+```tsx
+// Not handled by the codemod — remove enableAccessibleFieldDOMStructure manually
+const fieldProps = { enableAccessibleFieldDOMStructure: false };
+<DatePicker {...fieldProps} />;
+
+const slotProps = { field: { enableAccessibleFieldDOMStructure: false } };
+<DatePicker slotProps={slotProps} />;
+```
+
+:::
+
+:::warning
+**Action required if you used a custom `textField` slot with `enableAccessibleFieldDOMStructure={false}`**
+
+If you were using `enableAccessibleFieldDOMStructure={false}` with a custom `textField` slot that renders a standard `<input />` element, your component will **crash at runtime** after upgrading.
+The field now always uses the accessible DOM structure, which passes section-based props (like `elements` and `contentEditable`) that a plain `<input />` cannot handle.
+
+You must update your custom `textField` slot to be compatible with `PickersTextField`, which renders a `PickersSectionList` internally.
+See the [custom field documentation](/x/react-date-pickers/custom-field/) for implementation guidance.
+
+If you were **not** using a custom `textField` slot, simply removing the prop is sufficient—no other changes are needed.
+:::
+
+```diff
+-<DatePicker enableAccessibleFieldDOMStructure label="Start date" />
++<DatePicker label="Start date" />
+
+-<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: CustomTextField }} />
+ // CustomTextField must now be compatible with PickersTextField props
++<DatePicker slots={{ textField: CustomPickerTextField }} />
+```
+
 ## Slots breaking changes
 
 ### Dialog slot
@@ -97,6 +161,11 @@ const fieldRef = React.useRef<FieldRef<PickerValue>>(null);
 
 fieldRef.current?.clearValue();
 ```
+
+### `textField` slot type change
+
+The `textField` slot prop on Picker and Field components now only accepts `PickersTextFieldProps`.
+It no longer accepts `TextFieldProps` from `@mui/material`.
 
 ## Components breaking changes
 
@@ -234,6 +303,51 @@ The `data-testid` attributes on several components have been updated, which may 
   - Tests querying for a nested button inside `DateRangeHighlight` will break as `DateRangePickerDay` is now a single element.
 - The `DateRangePreview` test ID has been removed entirely.
 - `PickerDay` (formerly `PickersDay`) now respects a custom `data-testid` prop if provided, falling back to its default value `"day"`.
+
+## Removed types
+
+### `UseDateManagerParameters` and `UseDateTimeManagerParameters`
+
+The `UseDateManagerParameters` and `UseDateTimeManagerParameters` interfaces have been removed.
+They only contained the `enableAccessibleFieldDOMStructure` prop, which has been removed in v9.
+The `useDateManager` and `useDateTimeManager` hooks no longer accept any parameters.
+
+```diff
+-import { UseDateManagerParameters } from '@mui/x-date-pickers/managers';
+-import { UseDateTimeManagerParameters } from '@mui/x-date-pickers/managers';
+```
+
+### `PickerManager` generic change
+
+The `PickerManager` interface now has 4 type parameters instead of 5.
+The `TEnableAccessibleFieldDOMStructure` type parameter has been removed.
+
+```diff
+-PickerManager<TValue, TError, TValidationProps, TEnableAccessibleFieldDOMStructure, TFieldInternalProps>
++PickerManager<TValue, TError, TValidationProps, TFieldInternalProps>
+```
+
+### Picker and Field component type parameters
+
+All Picker and Field component prop types no longer have the `TEnableAccessibleFieldDOMStructure` generic parameter.
+If you were passing this type parameter explicitly, remove it:
+
+```diff
+-type MyPickerProps = DatePickerProps<true>;
++type MyPickerProps = DatePickerProps;
+
+-type MyFieldProps = DateFieldProps<true>;
++type MyFieldProps = DateFieldProps;
+```
+
+This applies to all Picker component prop types (`DatePickerProps`, `DateTimePickerProps`, `TimePickerProps`, `DateRangePickerProps`, etc.), all Field component prop types (`DateFieldProps`, `TimeFieldProps`, etc.), and their `Desktop`/`Mobile`/`Static` variants.
+
+The field hooks also no longer accept this type parameter:
+
+```diff
+-const response = useDateField<true, typeof props>(props);
++const response = useDateField<typeof props>(props);
+```
 
 ## Codemods
 

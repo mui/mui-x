@@ -512,13 +512,36 @@ PickersInputBase.propTypes = {
       content: PropTypes.object.isRequired,
     }),
   ).isRequired,
+  /**
+   * End `InputAdornment` for this component.
+   */
   endAdornment: PropTypes.node,
+  /**
+   * If `true`, the input will take up the full width of its container.
+   * @default false
+   */
   fullWidth: PropTypes.bool,
+  /**
+   * The id of the `input` element.
+   */
   id: PropTypes.string,
+  /**
+   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
+   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
+   */
   inputProps: PropTypes.object,
+  /**
+   * Pass a ref to the `input` element.
+   */
   inputRef: refType,
+  /**
+   * The label content.
+   */
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  /**
+   * Name attribute of the `input` element.
+   */
   name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
@@ -550,6 +573,9 @@ PickersInputBase.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Start `InputAdornment` for this component.
+   */
   startAdornment: PropTypes.node,
   style: PropTypes.object,
   /**

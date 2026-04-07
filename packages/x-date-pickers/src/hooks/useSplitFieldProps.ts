@@ -22,7 +22,6 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'fieldRef',
   'startFieldRef',
   'endFieldRef',
-  'enableAccessibleFieldDOMStructure',
   'disabled',
   'readOnly',
   'dateSeparator',

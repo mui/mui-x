@@ -23,7 +23,6 @@ import type { PickerValueType } from './common';
  */
 export interface PickerManager<
   TValue extends PickerValidValue,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TValidationProps extends {},
   TFieldInternalProps extends {},
@@ -61,12 +60,6 @@ export interface PickerManager<
    */
   internal_fieldValueManager: FieldValueManager<TValue>;
   /**
-   * `true` if the field is using the accessible DOM structure.
-   * `false` if the field is using the non-accessible DOM structure.
-   * This property is not part of the public API and should not be used directly.
-   */
-  internal_enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure;
-  /**
    * Applies the default values to the field internal props.
    * This usually includes:
    * - a default format to display the value in the field
@@ -77,7 +70,7 @@ export interface PickerManager<
    */
   internal_useApplyDefaultValuesToFieldInternalProps: (
     internalProps: TFieldInternalProps,
-  ) => UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError> & TValidationProps;
+  ) => UseFieldInternalProps<TValue, TError> & TValidationProps;
   /**
    * Returns a hook that creates the aria-label to apply on the button that opens the Picker.
    * @param {TValue} value The value of the Picker.
