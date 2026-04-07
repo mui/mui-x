@@ -31,6 +31,7 @@ const VirtualScrollerContentRoot = styled('div', {
     ];
   },
 })<{ ownerState: OwnerState }>({
+  flex: '1 0 auto',
   display: 'flex',
   flexDirection: 'column',
 });
