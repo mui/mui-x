@@ -36,7 +36,11 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 export type MarkShape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
 
 export interface LineSeriesType
-  extends CommonSeriesType<number | null, 'line'>, CartesianSeriesType, PolarSeriesType, StackableSeriesType {
+  extends
+    CommonSeriesType<number | null, 'line'>,
+    CartesianSeriesType,
+    PolarSeriesType,
+    StackableSeriesType {
   type: 'line';
   /**
    * Data associated to the line.
