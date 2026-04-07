@@ -9,7 +9,7 @@ _Apr 7, 2026_
 We'd like to extend a big thank you to the 18 contributors who made this release possible.
 
 Special thanks go out to these community members for their valuable contributions:
-@Copilot, @mixelburg, @sibananda485, @youjin-hong
+@mixelburg, @sibananda485, @youjin-hong
 
 The following team members contributed to this release:
 @aemartos, @alexfauquette, @brijeshb42, @flaviendelangle, @JCQuintas, @LukasTy, @mapache-salvaje, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @siriwatknp, @ZeeshanTamboli
@@ -49,10 +49,6 @@ Same changes as in `@mui/x-date-pickers@9.0.0-rc.0`.
 
 #### `@mui/x-charts@9.0.0-rc.0.0`
 
-- [charts] Add `dataset` support to Candlestick chart (#21872) @JCQuintas
-- [charts] Add candlestick page to sidebar navigation (#21834) @JCQuintas
-- [charts] Add seriesIds filter to zoom slider preview (#21933) @JCQuintas
-- [charts] Fix zoom slider preview with discard filter mode (#21883) @JCQuintas
 - [charts] Make line visibility toggle start from the baseline (#21893) @alexfauquette
 - [charts] Remove the container overflow (#21955) @alexfauquette
 - [charts] Revert `theme.alpha` for non-channel token (#21965) @siriwatknp
@@ -67,6 +63,8 @@ Same changes as in `@mui/x-date-pickers@9.0.0-rc.0`.
 Same changes as in `@mui/x-charts@9.0.0-rc.0.0`, plus:
 
 - [charts-pro] Zoom slider touch improvements (#21832) @JCQuintas
+- [charts-pro] Add `seriesIds` filter to zoom slider preview (#21933) @JCQuintas
+- [charts-pro] Fix zoom slider preview with discard filter mode (#21883) @JCQuintas
 
 #### `@mui/x-charts-premium@9.0.0-rc.0.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -76,6 +74,8 @@ Same changes as in `@mui/x-charts-pro@9.0.0-rc.0.0`, plus:
 - [charts-premium] Add zoom slider preview support for candlestick charts (#21914) @JCQuintas
 - [charts-premium] Allow color customization in Candlestick chart (#21838) @JCQuintas
 - [charts-premium] Support hide/show for OHLC (candlestick) series (#21807) @Copilot
+- [charts-premium] Add `dataset` support to Candlestick chart (#21872) @JCQuintas
+- [charts-premium] Add candlestick page to sidebar navigation (#21834) @JCQuintas
 
 ### Tree View
 
