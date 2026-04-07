@@ -98,6 +98,8 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
         <IconButton
           className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
+          aria-expanded={isSidePanelOpen}
+          aria-controls="event-calendar-side-panel"
           onClick={(event) =>
             store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
           }
