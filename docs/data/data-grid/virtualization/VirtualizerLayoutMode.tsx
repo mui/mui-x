@@ -27,8 +27,8 @@ export default function VirtualizerLayoutMode() {
   const [layoutMode, setLayoutMode] = React.useState<LayoutMode>('uncontrolled');
 
   return (
-    <Stack spacing={1} width="100%">
-      <Stack direction="row" spacing={2} alignItems="center">
+    <Stack spacing={1} sx={{ width: '100%' }}>
+      <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
         <Typography variant="body2">Layout mode:</Typography>
         <ToggleButtonGroup
           size="small"
