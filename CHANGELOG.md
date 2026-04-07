@@ -12,7 +12,7 @@ Special thanks go out to these community members for their valuable contribution
 @mixelburg, @sibananda485, @youjin-hong
 
 The following team members contributed to this release:
-@aemartos, @alexfauquette, @brijeshb42, @flaviendelangle, @JCQuintas, @LukasTy, @mapache-salvaje, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @siriwatknp, @ZeeshanTamboli
+@aemartos, @alexfauquette, @arminmeh, @brijeshb42, @flaviendelangle, @JCQuintas, @LukasTy, @mapache-salvaje, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @siriwatknp, @ZeeshanTamboli
 
 ### Data Grid
 
@@ -72,9 +72,9 @@ Same changes as in `@mui/x-charts-pro@9.0.0-rc.0.0`, plus:
 
 - [charts-premium] Add series `valueFormatter` to candlestick chart (#21905) @JCQuintas
 - [charts-premium] Add zoom slider preview support for candlestick charts (#21914) @JCQuintas
-- [charts-premium] Allow color customization in Candlestick chart (#21838) @JCQuintas
+- [charts-premium] Allow color customization in `Candlestick` chart (#21838) @JCQuintas
 - [charts-premium] Support hide/show for OHLC (candlestick) series (#21807) @Copilot
-- [charts-premium] Add `dataset` support to Candlestick chart (#21872) @JCQuintas
+- [charts-premium] Add `dataset` support to `Candlestick` chart (#21872) @JCQuintas
 - [charts-premium] Add candlestick page to sidebar navigation (#21834) @JCQuintas
 
 ### Tree View
@@ -137,15 +137,16 @@ Internal changes.
 
 - [core] Bump @mui/material to v9.0.0-beta.1 (#21858) @siriwatknp
 - [core] Update browserslistrc (#21974) @siriwatknp
-- [deps] bump minimum core packages to 7.3.0 to adopt theme color manipulator (#21892) @siriwatknp
+- [deps] Bump minimum core packages to 7.3.0 to adopt theme color manipulator (#21892) @siriwatknp
 - [l10n][scheduler] Add Spanish (es-ES) locale (#21900) @rita-codes
 - [l10n][scheduler] Improve French (fr-FR) locale (#21941) @rita-codes
 - [l10n][scheduler] Improve Romanian (ro-RO) locale (#21942) @rita-codes
-- [telemetry] prefer upstream remote over origin for projectId (#21882) @aemartos
-- [telemetry] send `repoHash`, `[x]packageNameHash`, and `rootPathHash` alongside `projectId` (#21896) @aemartos
-- [test] Exclude flaky DataGrid argos test (#21977) @MBilalShafi
+- [telemetry] Prefer upstream remote over origin for `projectId` (#21882) @aemartos
+- [telemetry] Send `repoHash`, `[x]packageNameHash`, and `rootPathHash` alongside `projectId` (#21896) @aemartos
+- [test] Exclude flaky `DataGrid` argos test (#21977) @MBilalShafi
+- [test] Fix flaky `DataGrid` test (#22000) @arminmeh
 - [test] Remove `componentsProp` test from `describeConformance` (#21897) @ZeeshanTamboli
-- [x-license] change orderId type from number to string (#21885) @aemartos
+- [x-license] Change `orderId` type from `number` to `string` (#21885) @aemartos
 
 ## 9.0.0-beta.0
 
