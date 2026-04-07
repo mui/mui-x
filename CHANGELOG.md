@@ -467,7 +467,7 @@ Same changes as in `@mui/x-charts-pro@9.0.0-alpha.3`, plus:
 - Remove deprecated CSS state classes from `treeItemClasses`: `expanded`, `selected`, `focused`, `disabled`, `editable`, `editing` (use `[data-expanded]`, `[data-selected]`, etc.)
 - The `<RichTreeViewPro />` component has now virtualization enabled by default.
 - The items used inside the `<RichTreeViewPro />` now have a default height of `32px`.
-- The events of the `<RichTreeViewPro />` are now rendered as a flat list instead of a nested tree.
+- The items of the `<RichTreeViewPro />` are now rendered as a flat list instead of a nested tree.
 
 #### `@mui/x-tree-view@9.0.0-alpha.3`
 

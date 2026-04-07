@@ -347,7 +347,7 @@ export const getDateFromDateSections = (
   return adapter.parse(dateWithoutSeparatorStr, formatWithoutSeparator)!;
 };
 
-export const createDateStrForV7HiddenInputFromSections = (sections: FieldSection[]) =>
+export const createDateStrForHiddenInputFromSections = (sections: FieldSection[]) =>
   sections
     .map((section) => {
       return `${section.startSeparator}${section.value || section.placeholder}${
@@ -355,35 +355,6 @@ export const createDateStrForV7HiddenInputFromSections = (sections: FieldSection
       }`;
     })
     .join('');
-
-export const createDateStrForV6InputFromSections = (
-  sections: FieldSection[],
-  localizedDigits: string[],
-  isRtl: boolean,
-) => {
-  const formattedSections = sections.map((section) => {
-    const dateValue = getSectionVisibleValue(
-      section,
-      isRtl ? 'input-rtl' : 'input-ltr',
-      localizedDigits,
-    );
-
-    return `${section.startSeparator}${dateValue}${section.endSeparator}`;
-  });
-
-  const dateStr = formattedSections.join('');
-
-  if (!isRtl) {
-    return dateStr;
-  }
-
-  // \u2066: start left-to-right isolation
-  // \u2067: start right-to-left isolation
-  // \u2068: start first strong character isolation
-  // \u2069: pop isolation
-  // wrap into an isolated group such that separators can split the string in smaller ones by adding \u2069\u2068
-  return `\u2066${dateStr}\u2069`;
-};
 
 export const getSectionsBoundaries = (
   adapter: MuiPickersAdapter,
@@ -610,59 +581,14 @@ export const mergeDateIntoReferenceDate = (
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
-// TODO v9: Remove
-export const getSectionOrder = (
-  sections: FieldSection[],
-  shouldApplyRTL: boolean,
-): SectionOrdering => {
+export const getSectionOrder = (sections: FieldSection[]): SectionOrdering => {
   const neighbors: SectionNeighbors = {};
-  if (!shouldApplyRTL) {
-    sections.forEach((_, index) => {
-      const leftIndex = index === 0 ? null : index - 1;
-      const rightIndex = index === sections.length - 1 ? null : index + 1;
-      neighbors[index] = { leftIndex, rightIndex };
-    });
-    return { neighbors, startIndex: 0, endIndex: sections.length - 1 };
-  }
-
-  type PositionMapping = { [from: number]: number };
-  const rtl2ltr: PositionMapping = {};
-  const ltr2rtl: PositionMapping = {};
-
-  let groupedSectionsStart = 0;
-  let groupedSectionsEnd = 0;
-  let RTLIndex = sections.length - 1;
-
-  while (RTLIndex >= 0) {
-    groupedSectionsEnd = sections.findIndex(
-      // eslint-disable-next-line @typescript-eslint/no-loop-func
-      (section, index) =>
-        index >= groupedSectionsStart &&
-        section.endSeparator?.includes(' ') &&
-        // Special case where the spaces were not there in the initial input
-        section.endSeparator !== ' / ',
-    );
-    if (groupedSectionsEnd === -1) {
-      groupedSectionsEnd = sections.length - 1;
-    }
-
-    for (let i = groupedSectionsEnd; i >= groupedSectionsStart; i -= 1) {
-      ltr2rtl[i] = RTLIndex;
-      rtl2ltr[RTLIndex] = i;
-      RTLIndex -= 1;
-    }
-    groupedSectionsStart = groupedSectionsEnd + 1;
-  }
-
   sections.forEach((_, index) => {
-    const rtlIndex = ltr2rtl[index];
-    const leftIndex = rtlIndex === 0 ? null : rtl2ltr[rtlIndex - 1];
-    const rightIndex = rtlIndex === sections.length - 1 ? null : rtl2ltr[rtlIndex + 1];
-
+    const leftIndex = index === 0 ? null : index - 1;
+    const rightIndex = index === sections.length - 1 ? null : index + 1;
     neighbors[index] = { leftIndex, rightIndex };
   });
-
-  return { neighbors, startIndex: rtl2ltr[0], endIndex: rtl2ltr[sections.length - 1] };
+  return { neighbors, startIndex: 0, endIndex: sections.length - 1 };
 };
 
 export const parseSelectedSections = (

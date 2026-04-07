@@ -503,7 +503,10 @@ describe('<DataGridPro /> - Rows', () => {
       const scrollbarSize = apiRef.current?.state.dimensions.scrollbarSize || 0;
       const renderingZone = grid('virtualScrollerRenderZone')!;
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
-      expect(gridOffsetTop()).to.equal(distanceToFirstRow, 'gridOffsetTop should be correct');
+      expect(gridOffsetTop()).to.equal(
+        headerHeight + distanceToFirstRow,
+        'gridOffsetTop should be correct',
+      );
       expect(virtualScroller.scrollHeight - scrollbarSize - headerHeight).to.equal(
         nbRows * rowHeight,
         'scrollHeight should be correct',

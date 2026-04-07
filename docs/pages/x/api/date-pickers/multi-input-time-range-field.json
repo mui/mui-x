@@ -120,7 +120,7 @@
     {
       "name": "textField",
       "description": "Form control with an input to render a date.\nIt is rendered twice: once for the start date and once for the end date.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     }
   ],
