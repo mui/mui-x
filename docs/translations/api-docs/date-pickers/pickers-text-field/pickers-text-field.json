@@ -65,8 +65,8 @@
   },
   "slotDescriptions": {
     "formHelperText": "The component used for the form helper text slot.",
-    "htmlInput": "The component used for the html input slot.",
-    "input": "The component used for the hidden input slot.",
+    "htmlInput": "The component rendered as the underlying hidden <code>&lt;input&gt;</code> element.",
+    "input": "The component used for the input slot. Defaults to one of <code>PickersInput</code>, <code>PickersFilledInput</code>, <code>PickersOutlinedInput</code> based on <code>variant</code>.",
     "inputLabel": "The component used for the input label slot.",
     "root": "The component used for the root slot."
   }
