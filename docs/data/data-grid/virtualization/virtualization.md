@@ -48,7 +48,9 @@ The virtualizer supports two layout modes that differ in how scrolling and row p
 
 In the default **uncontrolled** mode, the browser drives scrolling natively and the grid uses CSS `sticky` positioning to keep headers and pinned rows in place. Rendered rows are positioned inside a filler element that stretches the scroll container to the correct total height. Because the browser and JavaScript run asynchronously, fast scrolling can outpace rendering and produce brief white areas in the viewport.
 
-In **controlled** mode, the grid takes over. All visible elements are positioned with CSS `position: absolute` and updated together in a single JavaScript pass whenever the scroll position changes. This removes the filler element and ensures that headers, pinned rows, and data rows always move as one unit—eliminating the white-area gaps that can appear under fast scrolling.
+In **controlled** mode, the grid takes over the scrolling.
+All visible elements are positioned with CSS `position: absolute` and updated together in a single JavaScript pass whenever the scroll position changes.
+This removes the filler element and ensures that headers, pinned rows, and data rows always move as one unit—eliminating the white-area gaps that can appear under fast scrolling.
 
 Use the `virtualizerLayoutMode` key inside `experimentalFeatures` to opt in to the controlled mode:
 
