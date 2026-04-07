@@ -214,6 +214,8 @@ catalogs:
       specifier: ^18.0.0
       version: 18.0.0
 
+packageExtensionsChecksum: sha256-xcqL5VbVnaCShIjgfMrZGGn+pt9T0w4WPKlaxwDwhss=
+
 patchedDependencies:
   '@mui/internal-markdown@3.0.6':
     hash: 2d4b4543477f1152b0af76034f76f08e891348da192a95685b8163c6b7cb98f4
@@ -15205,6 +15207,7 @@ snapshots:
       '@vitest/eslint-plugin': 1.6.14(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
       babel-plugin-transform-import-meta: 2.3.3(@babel/core@7.29.0)
       execa: 9.6.1
+      stylis: 4.2.0
     transitivePeerDependencies:
       - '@babel/core'
       - '@types/express'
