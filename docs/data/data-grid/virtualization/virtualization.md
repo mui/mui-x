@@ -54,14 +54,13 @@ Because the browser and JavaScript run asynchronously, fast scrolling can outpac
 In **controlled** mode, the grid takes over the scrolling.
 All visible elements are positioned with CSS `position: absolute` and updated together in a single JavaScript pass whenever the scroll position changes.
 This removes the filler element and ensures that headers, pinned rows, and data rows always move as one unit—eliminating the white-area gaps that can appear under fast scrolling.
+However, this mode may have a perceivable performance cost on some devices and browsers, as the browser can't use native scrolling.
 
 Use the `virtualizerLayoutMode` key inside `experimentalFeatures` to opt in to the controlled mode:
 
 ```tsx
 <DataGrid experimentalFeatures={{ virtualizerLayoutMode: 'controlled' }} />
 ```
-
-The demo below lets you switch between modes and scroll quickly to see the difference:
 
 {{"demo": "VirtualizerLayoutMode.js", "bg": "inline"}}
 
