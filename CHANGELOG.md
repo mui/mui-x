@@ -52,11 +52,6 @@ Same changes as in `@mui/x-date-pickers@9.0.0-rc.0`.
 - [charts] Make line visibility toggle start from the baseline (#21893) @alexfauquette
 - [charts] Remove the container overflow (#21955) @alexfauquette
 - [charts] Revert `theme.alpha` for non-channel token (#21965) @siriwatknp
-- [charts][docs] Revise the Funnel doc (#21677) @mapache-salvaje
-- [charts][docs] Revise the Line chart docs (#21554) @mapache-salvaje
-- [charts][docs] Revise the Radar doc (#21674) @mapache-salvaje
-- [charts][docs] Revise the Sankey doc (#21678) @mapache-salvaje
-- [charts][docs] Revise the Scatter chart docs (#21564) @mapache-salvaje
 
 #### `@mui/x-charts-pro@9.0.0-rc.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -127,6 +122,11 @@ Internal changes.
 - [docs] Remove Joy UI references and dependency (#21937) @siriwatknp
 - [docs] Remove none generated files (#21886) @alexfauquette
 - [docs] Remove unused interactive demo code (#21945) @LukasTy
+- [docs] Revise the Funnel doc (#21677) @mapache-salvaje
+- [docs] Revise the Line chart docs (#21554) @mapache-salvaje
+- [docs] Revise the Radar doc (#21674) @mapache-salvaje
+- [docs] Revise the Sankey doc (#21678) @mapache-salvaje
+- [docs] Revise the Scatter chart docs (#21564) @mapache-salvaje
 
 ### Core
 
