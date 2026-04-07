@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ScrollArea } from '@base-ui/react/scroll-area';
 import { Indicators, useChatComposer, useChatStatus } from '@mui/x-chat-headless';
 import { formatBytes, formatConversationTime, formatMessageTime } from './demoUtils';
 
@@ -64,37 +63,15 @@ export function DemoScrollArea(props) {
   const { children, style } = props;
 
   return (
-    <ScrollArea.Root style={{ ...style, overflow: 'hidden' }}>
-      <ScrollArea.Viewport
-        style={{
-          overscrollBehavior: 'contain',
-        }}
-      >
-        <ScrollArea.Content>{children}</ScrollArea.Content>
-      </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar
-        orientation="vertical"
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          width: 8,
-          paddingBlock: 2,
-          boxSizing: 'border-box',
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          right: 0,
-        }}
-      >
-        <ScrollArea.Thumb
-          style={{
-            background: palette.borderStrong,
-            borderRadius: 20,
-            flex: 1,
-          }}
-        />
-      </ScrollArea.Scrollbar>
-    </ScrollArea.Root>
+    <div
+      style={{
+        ...style,
+        overflow: 'auto',
+        overscrollBehavior: 'contain',
+      }}
+    >
+      {children}
+    </div>
   );
 }
 
