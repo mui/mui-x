@@ -15,8 +15,8 @@ export interface PickersTextFieldSlots {
    */
   root?: React.ElementType;
   /**
-   * The component used for the input slot.
-   * Defaults to one of `PickersInput`, `PickersFilledInput`, `PickersOutlinedInput` based on `variant`.
+   * The component used for the hidden input slot.
+   * @default PickersOutlinedInput
    */
   input?: React.ElementType;
   /**
@@ -26,6 +26,7 @@ export interface PickersTextFieldSlots {
   inputLabel?: React.ElementType;
   /**
    * The component used for the html input slot.
+   * @default PickersInputBaseInput
    */
   htmlInput?: React.ElementType;
   /**
