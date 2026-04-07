@@ -10,8 +10,6 @@ githubLabel: 'scope: chat'
 
 Build the active conversation surface from thread primitives that derive their state from the selected conversation.
 
-
-
 ```tsx
 import * as React from 'react';
 import {
@@ -222,7 +220,6 @@ export default function TwoPaneInbox() {
     </Chat.Root>
   );
 }
-
 ```
 
 ```tsx

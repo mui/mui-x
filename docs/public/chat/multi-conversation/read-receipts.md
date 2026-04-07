@@ -10,8 +10,6 @@ components: ChatUnreadMarker
 
 <p class="description">Track and display read/unread state for conversations using the <code>markRead</code> adapter method and the conversation list's unread badge.</p>
 
-
-
 Read receipts let users see which conversations have unread messages and mark them as read when opened. The system uses three pieces working together: the `readState` and `unreadCount` fields on `ChatConversation`, the `markRead()` adapter method, and the `read` realtime event.
 
 ## Read/unread state on `ChatConversation`
@@ -154,7 +152,7 @@ const adapter = React.useMemo(
       adapter.markRead({ conversationId: id });
     }
   }}
-/>
+/>;
 ```
 
 ### Triggering `markRead` when the user scrolls to the bottom
@@ -179,7 +177,7 @@ const activeConversationIdRef = React.useRef<string | undefined>(undefined);
       },
     },
   }}
-/>
+/>;
 ```
 
 ## Real-time read events

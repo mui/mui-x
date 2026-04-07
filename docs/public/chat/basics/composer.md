@@ -10,8 +10,6 @@ components: ChatComposerTextArea, ChatComposerSendButton, ChatComposerAttachment
 
 The text input area where users draft and send messages, with auto-resize, keyboard shortcuts, and a send button.
 
-
-
 ## Overview
 
 The composer is the input region at the bottom of the chat surface.
@@ -90,7 +88,6 @@ export default function ComposerCustomPlaceholder() {
     />
   );
 }
-
 ```
 
 ### IME composition
@@ -147,7 +144,6 @@ export default function ComposerHiddenAttachButton() {
     />
   );
 }
-
 ```
 
 For full details on attachment configuration — accepted MIME types, file size limits, and upload lifecycle — see [Attachments](/x/react-chat/behavior/attachments/).
@@ -208,7 +204,6 @@ export default function ComposerControlled() {
     </Box>
   );
 }
-
 ```
 
 ## `useChatComposer()` hook
@@ -280,7 +275,6 @@ export default function ComposerDisabled() {
     />
   );
 }
-
 ```
 
 ## Localization

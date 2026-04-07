@@ -61,17 +61,8 @@ const CustomRoot = React.forwardRef(function CustomRoot(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    children,
-    groupKey,
-    index,
-    items,
-    messageId,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, groupKey, index, items, messageId, ownerState, slotProps, slots, ...other } =
+    props;
   void groupKey;
   void index;
   void items;

@@ -306,7 +306,6 @@ export default function ComposerWithAttachments() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Key primitives

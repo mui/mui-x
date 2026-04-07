@@ -161,8 +161,7 @@ function DefaultMessageItem({
   // no edited label, no delivery status) so the spacer does not add dead space.
   const hasMeta =
     Boolean(message?.createdAt) || Boolean(message?.editedAt) || Boolean(message?.status);
-  const inlineMeta =
-    isDefault && !isStreaming && hasMeta ? <ChatMessageInlineMeta /> : undefined;
+  const inlineMeta = isDefault && !isStreaming && hasMeta ? <ChatMessageInlineMeta /> : undefined;
 
   return (
     <MessageGroupComponent messageId={id} {...(slotProps?.messageGroup ?? {})}>

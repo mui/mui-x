@@ -10,8 +10,6 @@ components: ChatMessageList
 
 <p class="description">Load older messages on demand using cursor-based pagination through the adapter's <code>listMessages</code> method.</p>
 
-
-
 When working with multi-conversation layouts, each conversation typically has a message history stored on the server. The `listMessages` adapter method lets you load that history page by page using cursor-based pagination.
 
 ## The `listMessages` adapter method

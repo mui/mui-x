@@ -10,8 +10,6 @@ components: ChatMessageGroup, ChatMessageAvatar, ChatMessageAuthorLabel, ChatMes
 
 Control the visual presentation of messages — grouping, date dividers, avatars, timestamps, and layout variants.
 
-
-
 This page covers the visual aspects of how messages are displayed in the message list. For message content rendering (text, files, code blocks), see the [Message Parts](/x/react-chat/display/message-parts/text-and-markdown/) section.
 
 ## Message groups
@@ -105,7 +103,6 @@ export default function MessageGrouping() {
     />
   );
 }
-
 ```
 
 Grouping is based on:
@@ -197,7 +194,6 @@ export default function DateDividerFormat() {
     />
   );
 }
-
 ```
 
 ## Avatars
@@ -323,7 +319,6 @@ export default function CompactVariant() {
     />
   );
 }
-
 ```
 
 ```tsx
@@ -459,7 +454,6 @@ export default function DensityProp() {
     </Stack>
   );
 }
-
 ```
 
 ```tsx
@@ -473,16 +467,16 @@ The `density` prop is independent of `variant` — you can combine `variant="com
 
 The following slots are available for customization through `ChatBox`:
 
-| Slot             | Component            | Description               |
-| :--------------- | :------------------- | :------------------------ |
-| `messageList`    | `ChatMessageList`    | The scrollable container  |
-| `messageRoot`    | `ChatMessage`        | Individual message row    |
-| `messageAvatar`  | `ChatMessageAvatar`  | Author avatar             |
-| `messageContent` | `ChatMessageContent` | Message bubble            |
+| Slot             | Component            | Description                                         |
+| :--------------- | :------------------- | :-------------------------------------------------- |
+| `messageList`    | `ChatMessageList`    | The scrollable container                            |
+| `messageRoot`    | `ChatMessage`        | Individual message row                              |
+| `messageAvatar`  | `ChatMessageAvatar`  | Author avatar                                       |
+| `messageContent` | `ChatMessageContent` | Message bubble                                      |
 | `messageMeta`    | `ChatMessageMeta`    | Timestamp, status, streaming progress, edited label |
-| `messageActions` | `ChatMessageActions` | Hover action menu         |
-| `messageGroup`   | `ChatMessageGroup`   | Same-author message group |
-| `dateDivider`    | `ChatDateDivider`    | Date separator            |
+| `messageActions` | `ChatMessageActions` | Hover action menu                                   |
+| `messageGroup`   | `ChatMessageGroup`   | Same-author message group                           |
+| `dateDivider`    | `ChatDateDivider`    | Date separator                                      |
 
 ## See also
 

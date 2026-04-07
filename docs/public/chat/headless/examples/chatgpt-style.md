@@ -18,7 +18,7 @@ This demo shows how the same headless primitives can be customized to produce a 
 - No sender names or timestamps — clean, minimal message display
 - Centered content column with a maximum width and a pill-shaped composer
 
-```tsx
+````tsx
 import * as React from 'react';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
@@ -1292,8 +1292,7 @@ export default function ChatGptStyleChat() {
     </Chat.Root>
   );
 }
-
-```
+````
 
 ## Key techniques
 

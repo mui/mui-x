@@ -10,8 +10,6 @@ components: ChatBox
 
 The all-in-one component that renders a complete chat surface with a single import.
 
-
-
 ## Overview
 
 `ChatBox` is the fastest way to add a chat interface to your application.
@@ -54,7 +52,6 @@ export default function BasicAiChat() {
     />
   );
 }
-
 ```
 
 ## ChatBox vs. ChatProvider
@@ -106,7 +103,6 @@ export default function ChatBoxWithHooks() {
     </ChatBox>
   );
 }
-
 ```
 
 ### ChatProvider (custom layout)
@@ -240,7 +236,6 @@ export default function ChatProviderCustomLayout() {
     </ChatProvider>
   );
 }
-
 ```
 
 :::warning
@@ -389,7 +384,6 @@ export default function MultipleInstances() {
     </Box>
   );
 }
-
 ```
 
 ## API

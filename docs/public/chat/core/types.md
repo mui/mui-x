@@ -531,7 +531,6 @@ export default function TypeAugmentationHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## The six registry interfaces

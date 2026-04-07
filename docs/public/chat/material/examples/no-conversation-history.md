@@ -156,7 +156,6 @@ export default function NoConversationHistory() {
     </ChatRoot>
   );
 }
-
 ```
 
 ## How it works

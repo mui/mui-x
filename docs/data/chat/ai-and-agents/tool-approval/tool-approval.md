@@ -157,7 +157,7 @@ const adapter = React.useMemo(
       }}
       onCancel={() => setPendingConfirmation(false)}
     />
-  )
+  );
 }
 ```
 

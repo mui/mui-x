@@ -154,7 +154,7 @@ const adapter = React.useMemo(
       adapter.markRead({ conversationId: id });
     }
   }}
-/>
+/>;
 ```
 
 ### Triggering `markRead` when the user scrolls to the bottom
@@ -179,7 +179,7 @@ const activeConversationIdRef = React.useRef<string | undefined>(undefined);
       },
     },
   }}
-/>
+/>;
 ```
 
 ## Real-time read events

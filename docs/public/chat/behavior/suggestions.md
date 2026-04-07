@@ -10,8 +10,6 @@ components: ChatSuggestions
 
 Display prompt suggestions in the empty state to help users get started with a conversation.
 
-
-
 Suggestions are clickable prompts that appear when the message list is empty.
 Clicking a suggestion pre-fills the composer with the suggestion text, giving users a starting point for the conversation.
 
@@ -76,7 +74,6 @@ export default function SuggestionsWithLabels() {
     />
   );
 }
-
 ```
 
 ### `ChatSuggestion` type
@@ -120,7 +117,6 @@ export default function AutoSubmitSuggestions() {
     />
   );
 }
-
 ```
 
 ## Disabling suggestions

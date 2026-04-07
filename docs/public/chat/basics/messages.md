@@ -10,8 +10,6 @@ components: ChatMessageList, ChatMessageGroup
 
 Understand the ChatMessage data model and how messages render in a scrollable, grouped list.
 
-
-
 ## The ChatMessage data model
 
 Every message in the chat system is represented by the `ChatMessage` interface:
@@ -193,7 +191,6 @@ export default function MessageGrouping() {
     />
   );
 }
-
 ```
 
 ### Date dividers
@@ -280,7 +277,6 @@ export default function DateDividerFormat() {
     />
   );
 }
-
 ```
 
 ### Auto-scrolling
@@ -337,7 +333,6 @@ export default function AutoScrollConfig() {
     </div>
   );
 }
-
 ```
 
 ## Standalone usage
@@ -419,7 +414,6 @@ export default function StandaloneMessageList() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## API

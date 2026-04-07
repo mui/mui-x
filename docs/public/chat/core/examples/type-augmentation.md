@@ -605,7 +605,6 @@ export default function TypeAugmentationHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Key takeaways
