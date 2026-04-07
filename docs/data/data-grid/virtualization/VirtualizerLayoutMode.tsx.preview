@@ -1,0 +1,7 @@
+<div style={{ height: 400 }}>
+  <DataGrid
+    rows={rows}
+    columns={columns}
+    experimentalFeatures={{ virtualizerLayoutMode: 'controlled' }}
+  />
+</div>

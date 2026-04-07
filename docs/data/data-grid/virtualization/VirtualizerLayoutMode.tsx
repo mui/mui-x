@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Stack from '@mui/material/Stack';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Typography from '@mui/material/Typography';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -21,34 +18,14 @@ const rows = Array.from({ length: 100 }, (_, i) => ({
   email: `user${i + 1}@example.com`,
 }));
 
-type LayoutMode = 'uncontrolled' | 'controlled';
-
 export default function VirtualizerLayoutMode() {
-  const [layoutMode, setLayoutMode] = React.useState<LayoutMode>('controlled');
-
   return (
     <Stack spacing={1} sx={{ width: '100%' }}>
-      <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-        <Typography variant="body2">Layout mode:</Typography>
-        <ToggleButtonGroup
-          size="small"
-          value={layoutMode}
-          exclusive
-          onChange={(_, value: LayoutMode) => {
-            if (value !== null) {
-              setLayoutMode(value);
-            }
-          }}
-        >
-          <ToggleButton value="uncontrolled">Uncontrolled</ToggleButton>
-          <ToggleButton value="controlled">Controlled</ToggleButton>
-        </ToggleButtonGroup>
-      </Stack>
       <div style={{ height: 400 }}>
         <DataGrid
           rows={rows}
           columns={columns}
-          experimentalFeatures={{ virtualizerLayoutMode: layoutMode }}
+          experimentalFeatures={{ virtualizerLayoutMode: 'controlled' }}
         />
       </div>
     </Stack>
