@@ -13,7 +13,8 @@
         "date": {
           "name": "date",
           "description": "The date of the day of week provided by the adapter."
-        }
+        },
+        "string": { "name": "string", "description": "The name to display." }
       }
     },
     "defaultValue": {
@@ -130,22 +131,43 @@
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."
     },
     "renderLoading": {
-      "description": "Component displaying when passed <code>loading</code> true."
+      "description": "Component displaying when passed <code>loading</code> true.",
+      "typeDescriptions": {
+        "ReactNode": { "name": "ReactNode", "description": "The node to render when loading." }
+      }
     },
     "selectedSections": {
       "description": "The currently selected sections.\nThis prop accepts four formats:\n1. If a number is provided, the section at this index will be selected.\n2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected.\n3. If <code>\"all\"</code> is provided, all the sections will be selected.\n4. If <code>null</code> is provided, no section will be selected.\nIf not provided, the selected sections will be handled internally."
     },
     "shouldDisableDate": {
       "description": "Disable specific date.<br><br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
-      "typeDescriptions": { "day": { "name": "day", "description": "The date to test." } }
+      "typeDescriptions": {
+        "day": { "name": "day", "description": "The date to test." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code> the date will be disabled."
+        }
+      }
     },
     "shouldDisableMonth": {
       "description": "Disable specific month.",
-      "typeDescriptions": { "month": { "name": "month", "description": "The month to test." } }
+      "typeDescriptions": {
+        "month": { "name": "month", "description": "The month to test." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code>, the month will be disabled."
+        }
+      }
     },
     "shouldDisableYear": {
       "description": "Disable specific year.",
-      "typeDescriptions": { "year": { "name": "year", "description": "The year to test." } }
+      "typeDescriptions": {
+        "year": { "name": "year", "description": "The year to test." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code>, the year will be disabled."
+        }
+      }
     },
     "showDaysOutsideCurrentMonth": {
       "description": "If <code>true</code>, days outside the current month are rendered:<br><br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br><br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br><br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers."

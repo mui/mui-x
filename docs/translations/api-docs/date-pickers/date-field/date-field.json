@@ -106,15 +106,33 @@
     },
     "shouldDisableDate": {
       "description": "Disable specific date.<br><br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
-      "typeDescriptions": { "day": { "name": "day", "description": "The date to test." } }
+      "typeDescriptions": {
+        "day": { "name": "day", "description": "The date to test." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code> the date will be disabled."
+        }
+      }
     },
     "shouldDisableMonth": {
       "description": "Disable specific month.",
-      "typeDescriptions": { "month": { "name": "month", "description": "The month to test." } }
+      "typeDescriptions": {
+        "month": { "name": "month", "description": "The month to test." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code>, the month will be disabled."
+        }
+      }
     },
     "shouldDisableYear": {
       "description": "Disable specific year.",
-      "typeDescriptions": { "year": { "name": "year", "description": "The year to test." } }
+      "typeDescriptions": {
+        "year": { "name": "year", "description": "The year to test." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code>, the year will be disabled."
+        }
+      }
     },
     "shouldRespectLeadingZeros": {
       "description": "If <code>true</code>, the format will respect the leading zeroes (for example on dayjs, the format <code>M/D/YYYY</code> will render <code>8/16/2018</code>)\nIf <code>false</code>, the format will always add leading zeroes (for example on dayjs, the format <code>M/D/YYYY</code> will render <code>08/16/2018</code>)<br><br>Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (for example \"DD\"), so <code>shouldRespectLeadingZeros={true}</code> might lead to inconsistencies when using <code>AdapterLuxon</code>.<br><br>Warning n°2: When <code>shouldRespectLeadingZeros={true}</code>, the field will add an invisible character on the sections containing a single digit to make sure <code>onChange</code> is fired.\nIf you need to get the clean value from the input, you can remove this character using <code>input.value.replace(/\\u200e/g, '')</code>.<br><br>Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.\nThis mean that when using <code>shouldRespectLeadingZeros={false}</code>, if you retrieve the value directly from the input (not listening to <code>onChange</code>) and your format contains tokens without leading zeros, the value will not be parsed by your library."

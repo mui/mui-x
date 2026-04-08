@@ -34,7 +34,8 @@
     "filterColumns": {
       "description": "Allows to filter the columns displayed in the filter form.",
       "typeDescriptions": {
-        "args": { "name": "args", "description": "The columns of the grid and name of field." }
+        "args": { "name": "args", "description": "The columns of the grid and name of field." },
+        "Array<string>": { "name": "Array<string>", "description": "The filtered fields array." }
       }
     },
     "focusElementRef": {

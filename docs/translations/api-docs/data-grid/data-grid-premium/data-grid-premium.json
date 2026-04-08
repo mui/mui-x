@@ -147,25 +147,35 @@
     "getAggregationPosition": {
       "description": "Determines the position of an aggregated value.",
       "typeDescriptions": {
-        "groupNode": { "name": "groupNode", "description": "The current group." }
+        "groupNode": { "name": "groupNode", "description": "The current group." },
+        "GridAggregationPosition | null": {
+          "name": "GridAggregationPosition | null",
+          "description": "Position of the aggregated value (if <code>null</code>, the group isn't aggregated)."
+        }
       }
     },
     "getCellClassName": {
       "description": "Function that applies CSS classes dynamically on cells.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "With all properties from GridCellParams." }
+        "params": { "name": "params", "description": "With all properties from GridCellParams." },
+        "string": { "name": "string", "description": "The CSS class to apply to the cell." }
       }
     },
     "getDetailPanelContent": {
       "description": "Function that returns the element to render in row detail.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "With all properties from GridRowParams." }
+        "params": { "name": "params", "description": "With all properties from GridRowParams." },
+        "ReactNode": { "name": "ReactNode", "description": "The row detail element." }
       }
     },
     "getDetailPanelHeight": {
       "description": "Function that returns the height of the row detail panel.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "With all properties from GridRowParams." }
+        "params": { "name": "params", "description": "With all properties from GridRowParams." },
+        "number | \"auto\"": {
+          "name": "number | \"auto\"",
+          "description": "The height in pixels or \"auto\" to use the content height."
+        }
       }
     },
     "getEstimatedRowHeight": {
@@ -174,6 +184,10 @@
         "params": {
           "name": "params",
           "description": "With all properties from GridRowHeightParams."
+        },
+        "number | null": {
+          "name": "number | null",
+          "description": "The estimated row height value. If <code>null</code> or <code>undefined</code> then the default row height, based on the density, is applied."
         }
       }
     },
@@ -187,6 +201,10 @@
         "getLocaleText": {
           "name": "getLocaleText",
           "description": "The function to get the locale text."
+        },
+        "Array<GridColDef> | undefined": {
+          "name": "Array<GridColDef> | undefined",
+          "description": "The derived columns."
         }
       }
     },
@@ -196,7 +214,8 @@
         "params": {
           "name": "params",
           "description": "With all properties from GridRowClassNameParams."
-        }
+        },
+        "string": { "name": "string", "description": "The CSS class to apply to the row." }
       }
     },
     "getRowHeight": {
@@ -205,6 +224,10 @@
         "params": {
           "name": "params",
           "description": "With all properties from GridRowHeightParams."
+        },
+        "GridRowHeightReturnValue": {
+          "name": "GridRowHeightReturnValue",
+          "description": "The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied. If \"auto\" then the row height is calculated based on the content."
         }
       }
     },
@@ -217,13 +240,18 @@
         "params": {
           "name": "params",
           "description": "With all properties from GridRowSpacingParams."
-        }
+        },
+        "GridRowSpacing": { "name": "GridRowSpacing", "description": "The row spacing values." }
       }
     },
     "getTreeDataPath": {
       "description": "Determines the path of a row in the tree data.\nFor instance, a row with the path [\"A\", \"B\"] is the child of the row with the path [\"A\"].\nNote that all paths must contain at least one element.",
       "typeDescriptions": {
-        "row": { "name": "row", "description": "The row from which we want the path." }
+        "row": { "name": "row", "description": "The row from which we want the path." },
+        "readonly Array<string>": {
+          "name": "readonly Array<string>",
+          "description": "The path to the row."
+        }
       }
     },
     "groupingColDef": { "description": "The grouping column used by the tree data." },
@@ -260,25 +288,41 @@
     "isCellEditable": {
       "description": "Callback fired when a cell is rendered, returns true if the cell is editable.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "With all properties from GridCellParams." }
+        "params": { "name": "params", "description": "With all properties from GridCellParams." },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the cell is editable."
+        }
       }
     },
     "isGroupExpandedByDefault": {
       "description": "Determines if a group should be expanded after its creation.\nThis prop takes priority over the <code>defaultGroupingExpansionDepth</code> prop.",
       "typeDescriptions": {
-        "node": { "name": "node", "description": "The node of the group to test." }
+        "node": { "name": "node", "description": "The node of the group to test." },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the group is expanded."
+        }
       }
     },
     "isRowReorderable": {
       "description": "Indicates whether a row is reorderable.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "With all properties from the row." }
+        "params": { "name": "params", "description": "With all properties from the row." },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the row is reorderable."
+        }
       }
     },
     "isRowSelectable": {
       "description": "Determines if a row can be selected.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "With all properties from GridRowParams." }
+        "params": { "name": "params", "description": "With all properties from GridRowParams." },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the row is selectable."
+        }
       }
     },
     "isValidRowReorder": {
@@ -287,6 +331,10 @@
         "context": {
           "name": "context",
           "description": "The context object containing all information about the reorder operation."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the reorder operation should go through."
         }
       }
     },
@@ -359,7 +407,11 @@
     "onBeforeClipboardPasteStart": {
       "description": "Callback fired before the clipboard paste operation starts.\nUse it to confirm or cancel the paste operation.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "Params passed to the callback." }
+        "params": { "name": "params", "description": "Params passed to the callback." },
+        "Promise<any>": {
+          "name": "Promise<any>",
+          "description": "A promise that resolves to confirm the paste operation, and rejects to cancel it."
+        }
       }
     },
     "onCellClick": {
@@ -689,6 +741,10 @@
         "conversationId": {
           "name": "conversationId",
           "description": "The id of the conversation the prompt is part of. If not passed, prompt response will return a new conversation id that can be used to continue the newly started conversation."
+        },
+        "Promise<PromptResponse>": {
+          "name": "Promise<PromptResponse>",
+          "description": "The prompt response."
         }
       }
     },
@@ -854,7 +910,11 @@
       "typeDescriptions": {
         "newRow": { "name": "newRow", "description": "Row object with the new values." },
         "oldRow": { "name": "oldRow", "description": "Row object with the old values." },
-        "params": { "name": "params", "description": "Additional parameters." }
+        "params": { "name": "params", "description": "Additional parameters." },
+        "R | Promise<R>": {
+          "name": "R | Promise<R>",
+          "description": "The final values to update the row."
+        }
       }
     },
     "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
@@ -894,7 +954,8 @@
       "description": "Updates the tree path in a row model.\nUsed when reordering rows across different parents in tree data.",
       "typeDescriptions": {
         "path": { "name": "path", "description": "The new path for the row." },
-        "row": { "name": "row", "description": "The row model to update." }
+        "row": { "name": "row", "description": "The row model to update." },
+        "R": { "name": "R", "description": "The updated row model with the new path." }
       }
     },
     "showCellVerticalBorder": {
@@ -920,6 +981,10 @@
         "delimiter": {
           "name": "delimiter",
           "description": "The delimiter used to split the text. Default is the tab character and can be set with the <code>clipboardCopyCellDelimiter</code> prop."
+        },
+        "Array<Array<string>> | null": {
+          "name": "Array<Array<string>> | null",
+          "description": "A 2D array of strings. The first dimension is the rows, the second dimension is the columns."
         }
       }
     },

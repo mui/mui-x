@@ -73,7 +73,11 @@
       "description": "Disable specific time.",
       "typeDescriptions": {
         "value": { "name": "value", "description": "The value to check." },
-        "view": { "name": "view", "description": "The clock type of the timeValue." }
+        "view": { "name": "view", "description": "The clock type of the timeValue." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code> the time will be disabled."
+        }
       }
     },
     "showViewSwitcher": { "description": "" },

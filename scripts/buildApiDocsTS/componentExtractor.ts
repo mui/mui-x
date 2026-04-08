@@ -168,12 +168,19 @@ export function extractComponentApi(
     if (jsDoc.seeMoreLink) {
       desc.seeMoreText = 'See {{link}} for more details.';
     }
-    if (isFunc && jsDoc.params.size > 0) {
+    if (isFunc && (jsDoc.params.size > 0 || jsDoc.returnDescription)) {
       const typeDescriptions: Record<string, { name: string; description: string }> = {};
       for (const [paramName, paramDesc] of jsDoc.params) {
         typeDescriptions[paramName] = {
           name: paramName,
           description: htmlEncode(paramDesc),
+        };
+      }
+      // Add return type description (keyed by the return type name from the signature)
+      if (propInfo.signature?.returned && jsDoc.returnDescription) {
+        typeDescriptions[propInfo.signature.returned] = {
+          name: propInfo.signature.returned,
+          description: htmlEncode(jsDoc.returnDescription),
         };
       }
       desc.typeDescriptions = typeDescriptions;

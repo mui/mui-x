@@ -30,27 +30,51 @@
     },
     "getItemChildren": {
       "description": "Used to determine the children of a given item.",
-      "typeDescriptions": { "item": { "name": "item", "description": "The item to check." } }
+      "typeDescriptions": {
+        "item": { "name": "item", "description": "The item to check." },
+        "Array<R> | undefined": {
+          "name": "Array<R> | undefined",
+          "description": "The children of the item."
+        }
+      }
     },
     "getItemId": {
       "description": "Used to determine the id of a given item.",
-      "typeDescriptions": { "item": { "name": "item", "description": "The item to check." } }
+      "typeDescriptions": {
+        "item": { "name": "item", "description": "The item to check." },
+        "string": { "name": "string", "description": "The id of the item." }
+      }
     },
     "getItemLabel": {
       "description": "Used to determine the string label for a given item.",
-      "typeDescriptions": { "item": { "name": "item", "description": "The item to check." } }
+      "typeDescriptions": {
+        "item": { "name": "item", "description": "The item to check." },
+        "string": { "name": "string", "description": "The label of the item." }
+      }
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic.\nIf you don't provide this prop. It falls back to a randomly generated id."
     },
     "isItemDisabled": {
       "description": "Used to determine if a given item should be disabled.",
-      "typeDescriptions": { "item": { "name": "item", "description": "The item to check." } }
+      "typeDescriptions": {
+        "item": { "name": "item", "description": "The item to check." },
+        "boolean": {
+          "name": "boolean",
+          "description": "<code>true</code> if the item should be disabled."
+        }
+      }
     },
     "isItemEditable": { "description": "Determine if a given item can be edited." },
     "isItemSelectionDisabled": {
       "description": "Used to determine if a given item should have selection disabled.",
-      "typeDescriptions": { "item": { "name": "item", "description": "The item to check." } }
+      "typeDescriptions": {
+        "item": { "name": "item", "description": "The item to check." },
+        "boolean": {
+          "name": "boolean",
+          "description": "<code>true</code> if the item should have selection disabled."
+        }
+      }
     },
     "itemChildrenIndentation": {
       "description": "Horizontal indentation between an item and its children.\nExamples: 24, \"24px\", \"2rem\", \"2em\"."

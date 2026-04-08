@@ -99,13 +99,15 @@
     "getCellClassName": {
       "description": "Function that applies CSS classes dynamically on cells.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "With all properties from GridCellParams." }
+        "params": { "name": "params", "description": "With all properties from GridCellParams." },
+        "string": { "name": "string", "description": "The CSS class to apply to the cell." }
       }
     },
     "getDetailPanelContent": {
       "description": "Function that returns the element to render in row detail.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "With all properties from GridRowParams." }
+        "params": { "name": "params", "description": "With all properties from GridRowParams." },
+        "ReactNode": { "name": "ReactNode", "description": "The row detail element." }
       }
     },
     "getEstimatedRowHeight": {
@@ -114,6 +116,10 @@
         "params": {
           "name": "params",
           "description": "With all properties from GridRowHeightParams."
+        },
+        "number | null": {
+          "name": "number | null",
+          "description": "The estimated row height value. If <code>null</code> or <code>undefined</code> then the default row height, based on the density, is applied."
         }
       }
     },
@@ -123,7 +129,8 @@
         "params": {
           "name": "params",
           "description": "With all properties from GridRowClassNameParams."
-        }
+        },
+        "string": { "name": "string", "description": "The CSS class to apply to the row." }
       }
     },
     "getRowHeight": {
@@ -132,6 +139,10 @@
         "params": {
           "name": "params",
           "description": "With all properties from GridRowHeightParams."
+        },
+        "GridRowHeightReturnValue": {
+          "name": "GridRowHeightReturnValue",
+          "description": "The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied. If \"auto\" then the row height is calculated based on the content."
         }
       }
     },
@@ -144,7 +155,8 @@
         "params": {
           "name": "params",
           "description": "With all properties from GridRowSpacingParams."
-        }
+        },
+        "GridRowSpacing": { "name": "GridRowSpacing", "description": "The row spacing values." }
       }
     },
     "hideFooter": { "description": "If <code>true</code>, the footer component is hidden." },
@@ -166,13 +178,21 @@
     "isCellEditable": {
       "description": "Callback fired when a cell is rendered, returns true if the cell is editable.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "With all properties from GridCellParams." }
+        "params": { "name": "params", "description": "With all properties from GridCellParams." },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the cell is editable."
+        }
       }
     },
     "isRowSelectable": {
       "description": "Determines if a row can be selected.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "With all properties from GridRowParams." }
+        "params": { "name": "params", "description": "With all properties from GridRowParams." },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the row is selectable."
+        }
       }
     },
     "keepNonExistentRowsSelected": {
@@ -522,7 +542,11 @@
       "typeDescriptions": {
         "newRow": { "name": "newRow", "description": "Row object with the new values." },
         "oldRow": { "name": "oldRow", "description": "Row object with the old values." },
-        "params": { "name": "params", "description": "Additional parameters." }
+        "params": { "name": "params", "description": "Additional parameters." },
+        "R | Promise<R>": {
+          "name": "R | Promise<R>",
+          "description": "The final values to update the row."
+        }
       }
     },
     "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },

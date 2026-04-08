@@ -12,7 +12,11 @@
     "labelFormatter": {
       "description": "Format the legend labels.",
       "typeDescriptions": {
-        "params": { "name": "params", "description": "The bound of the piece to format." }
+        "params": { "name": "params", "description": "The bound of the piece to format." },
+        "string | null": {
+          "name": "string | null",
+          "description": "The displayed label, <code>''</code> to skip the label but show the color mark, or <code>null</code> to skip it entirely."
+        }
       }
     },
     "labelPosition": { "description": "Where to position the labels relative to the color marks." },

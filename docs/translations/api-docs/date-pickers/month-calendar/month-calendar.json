@@ -38,7 +38,13 @@
     },
     "shouldDisableMonth": {
       "description": "Disable specific month.",
-      "typeDescriptions": { "month": { "name": "month", "description": "The month to test." } }
+      "typeDescriptions": {
+        "month": { "name": "month", "description": "The month to test." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code>, the month will be disabled."
+        }
+      }
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },

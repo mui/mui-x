@@ -144,7 +144,10 @@
     "tooltipItem": { "description": "The tooltip item.\nUsed when the tooltip is controlled." },
     "valueFormatter": {
       "description": "Formatter used by the tooltip.",
-      "typeDescriptions": { "value": { "name": "value", "description": "The value to format." } }
+      "typeDescriptions": {
+        "value": { "name": "value", "description": "The value to format." },
+        "string": { "name": "string", "description": "the formatted value." }
+      }
     },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."

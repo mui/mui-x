@@ -66,7 +66,11 @@
       "description": "Disable specific date.<br><br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "typeDescriptions": {
         "day": { "name": "day", "description": "The date to test." },
-        "position": { "name": "position", "description": "The date to test, 'start' or 'end'." }
+        "position": { "name": "position", "description": "The date to test, 'start' or 'end'." },
+        "boolean": {
+          "name": "boolean",
+          "description": "Returns <code>true</code> if the date should be disabled."
+        }
       }
     },
     "shouldRespectLeadingZeros": {

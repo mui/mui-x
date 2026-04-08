@@ -11,7 +11,8 @@
         "values": {
           "name": "values",
           "description": "The new values passed to the quick filter model"
-        }
+        },
+        "string": { "name": "string", "description": "The string to display in the text field" }
       }
     },
     "onExpandedChange": {
@@ -26,7 +27,11 @@
     "parser": {
       "description": "Function responsible for parsing text input in an array of independent values for quick filtering.",
       "typeDescriptions": {
-        "input": { "name": "input", "description": "The value entered by the user" }
+        "input": { "name": "input", "description": "The value entered by the user" },
+        "Array<any>": {
+          "name": "Array<any>",
+          "description": "The array of value on which quick filter is applied"
+        }
       }
     },
     "render": { "description": "A function to customize rendering of the component." }
