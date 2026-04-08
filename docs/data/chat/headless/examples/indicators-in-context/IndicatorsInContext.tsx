@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { ChatAdapter, ChatRealtimeEvent } from '@mui/x-chat-headless';
+import type { ChatAdapter, ChatRealtimeEvent } from '@mui/x-chat/headless';
 import {
   Chat,
   Conversation,
@@ -8,7 +8,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneMessages,

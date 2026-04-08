@@ -7,8 +7,8 @@ import {
   MessageGroup,
   MessageList,
   createTimeWindowGroupKey,
-} from '@mui/x-chat-headless';
-import type { GroupKeyFn } from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
+import type { GroupKeyFn } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 import {
   demoUsers,

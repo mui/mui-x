@@ -1,7 +1,7 @@
 ---
 title: Chat - Tool approval and renderers
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -89,7 +89,7 @@ import {
   type ChatMessage,
   type ChatRealtimeEvent,
   type ChatPartRendererMap,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -100,7 +100,7 @@ import Typography from '@mui/material/Typography';
 import { demoUsers } from 'docsx/data/chat/core/examples/shared/demoData';
 import { createChunkStream } from 'docsx/data/chat/core/examples/shared/demoUtils';
 
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatCustomMessagePartMap {
     poll: {
       type: 'poll';

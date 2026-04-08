@@ -8,7 +8,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneMessages,
@@ -137,7 +137,7 @@ export default function IndicatorsInContext() {
       >
         <Conversation.Header
           slotProps={{
-            root: demoSlotProps.conversationHeader,
+            header: demoSlotProps.conversationHeader,
           }}
         >
           <div style={{ display: 'grid', gap: 6, minWidth: 0 }}>
@@ -204,7 +204,7 @@ export default function IndicatorsInContext() {
                 index={index}
                 messageId={id}
                 slotProps={{
-                  root: demoSlotProps.dateDividerRoot,
+                  divider: demoSlotProps.dateDividerRoot,
                   label: demoSlotProps.dateDividerLabel,
                 }}
               />
@@ -212,7 +212,7 @@ export default function IndicatorsInContext() {
                 index={index}
                 messageId={id}
                 slotProps={{
-                  root: demoSlotProps.messageGroupRoot,
+                  group: demoSlotProps.messageGroupRoot,
                   authorName: demoSlotProps.messageGroupAuthorName,
                 }}
               >

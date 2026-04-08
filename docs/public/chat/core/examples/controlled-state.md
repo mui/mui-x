@@ -1,7 +1,7 @@
 ---
 title: Chat - Controlled state
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -65,7 +65,7 @@ import {
   type ChatAdapter,
   type ChatConversation,
   type ChatMessage,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';

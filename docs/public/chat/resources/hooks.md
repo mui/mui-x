@@ -30,7 +30,7 @@ import {
   useChatOnToolCall,
   useChatPartRenderer,
   useChatStore,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 ```
 
 ## Provider requirement
@@ -376,7 +376,7 @@ const store: ChatStore<Cursor> = useChatStore();
 Use the store's built-in `use()` method to create a reactive subscription with a custom selector:
 
 ```tsx
-import { useChatStore, chatSelectors } from '@mui/x-chat-headless';
+import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
 
 function MessageCounter() {
   const store = useChatStore();

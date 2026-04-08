@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Headless composition
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 components: ChatRoot, ChatLayout
 githubLabel: 'scope: chat'
 ---
@@ -20,7 +20,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -161,7 +161,7 @@ import {
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 
 function ChatSurface(props: ChatRootProps) {
   return (

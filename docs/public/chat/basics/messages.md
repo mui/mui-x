@@ -136,7 +136,7 @@ import {
   ChatMessageInlineMeta,
   ChatConversation,
 } from '@mui/x-chat';
-import { ChatProvider, useMessageIds } from '@mui/x-chat-headless';
+import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,

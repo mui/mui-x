@@ -5,7 +5,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { ChatBox } from '@mui/x-chat';
-import { useMessage } from '@mui/x-chat-headless';
+import { useMessage } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,

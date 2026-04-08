@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Headless layout
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -19,7 +19,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 import {
   minimalConversation,

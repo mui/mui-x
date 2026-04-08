@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Headless indicators
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 components: TypingIndicator, UnreadMarker, ScrollToBottomAffordance
 githubLabel: 'scope: chat'
 ---
@@ -40,7 +40,7 @@ It renders a polite live region and shows labels such as:
 ### Typical placement
 
 ```tsx
-import { Indicators, Conversation } from '@mui/x-chat-headless';
+import { Indicators, Conversation } from '@mui/x-chat/headless';
 
 <Conversation.Header>
   <Conversation.Title />

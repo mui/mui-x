@@ -27,7 +27,10 @@ const AdaptiveSendButtonSlot = React.forwardRef(function AdaptiveSendButtonSlot(
 
 function CustomSendButton(props) {
   return (
-    <ChatComposerSendButton {...props} slots={{ root: AdaptiveSendButtonSlot }} />
+    <ChatComposerSendButton
+      {...props}
+      slots={{ sendButton: AdaptiveSendButtonSlot }}
+    />
   );
 }
 

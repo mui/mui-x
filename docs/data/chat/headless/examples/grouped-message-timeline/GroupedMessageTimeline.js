@@ -7,7 +7,8 @@ import {
   MessageGroup,
   MessageList,
   createTimeWindowGroupKey,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
+
 import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 import {
   demoUsers,
@@ -68,7 +69,7 @@ export default function GroupedMessageTimeline() {
       >
         <Conversation.Header
           slotProps={{
-            root: demoSlotProps.conversationHeader,
+            header: demoSlotProps.conversationHeader,
           }}
         >
           <div style={{ minWidth: 0 }}>
@@ -103,7 +104,7 @@ export default function GroupedMessageTimeline() {
                 key={id}
                 messageId={id}
                 slotProps={{
-                  root: demoSlotProps.messageGroupRoot,
+                  group: demoSlotProps.messageGroupRoot,
                   authorName: demoSlotProps.messageGroupAuthorName,
                 }}
               >

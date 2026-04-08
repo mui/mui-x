@@ -14,8 +14,8 @@ import {
   ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { useMessageIds, ChatRoot } from '@mui/x-chat-headless';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import { useMessageIds, ChatRoot } from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 import {
   createChunkStream,
   createTextResponseChunks,

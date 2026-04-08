@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Headless
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 components: ChatProvider
 githubLabel: 'scope: chat'
 ---
@@ -10,7 +10,7 @@ githubLabel: 'scope: chat'
 
 Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.
 
-`@mui/x-chat-headless` builds on the core runtime.
+`@mui/x-chat/headless` builds on the core runtime.
 It combines core state with structural components such as lists, threads, messages, composers, and indicators.
 
 ## When to use the headless layer
@@ -61,7 +61,7 @@ import {
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 
 function Inbox(props: ChatRootProps) {
   return (
@@ -121,7 +121,7 @@ import {
   Message,
   Composer,
   Indicators,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 ```
 
 You can also import individual components such as `ChatRoot`, `MessageListRoot`, or `ComposerTextArea` when you prefer explicit component names in your codebase.

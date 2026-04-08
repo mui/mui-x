@@ -172,7 +172,7 @@ function CustomThread() {
 }
 ```
 
-Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat-headless` to wire runtime state to your adapter.
+Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter.
 
 The layout supports split configurations where the conversation list and thread are rendered side by side.
 
@@ -199,7 +199,7 @@ import {
   inboxConversations,
   inboxThreads,
 } from 'docsx/data/chat/material/examples/shared/demoData';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 const adapter = createEchoAdapter({
   respond: (text) => `Received: "${text}". Try resizing the container!`,

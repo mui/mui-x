@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Headless message list
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 components: MessageListRoot
 githubLabel: 'scope: chat'
 ---

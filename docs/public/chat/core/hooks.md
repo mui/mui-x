@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Core hooks
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -23,7 +23,7 @@ import {
   useConversation,
   useChatStore,
   useChatPartRenderer,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 ```
 
 All hooks must be called inside a `<ChatProvider>`.
@@ -32,7 +32,7 @@ The following demo shows hooks in action inside a minimal custom chat:
 
 ```tsx
 import * as React from 'react';
-import { ChatProvider, useChat, type ChatAdapter } from '@mui/x-chat-headless';
+import { ChatProvider, useChat, type ChatAdapter } from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -435,7 +435,7 @@ Returns the underlying `ChatStore<Cursor>` instance.
 This is the escape hatch for advanced use cases that need direct store access — custom selectors, store subscriptions outside React render, or integration with external state management.
 
 ```tsx
-import { useChatStore, chatSelectors } from '@mui/x-chat-headless';
+import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
 import { useStore } from '@mui/x-internals/store';
 
 function MessageCounter() {

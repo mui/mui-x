@@ -35,7 +35,7 @@ import * as React from 'react';
 import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import { ChatBox } from '@mui/x-chat';
-import { useChatStatus } from '@mui/x-chat-headless';
+import { useChatStatus } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -94,7 +94,7 @@ import {
   ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { ChatProvider, useMessageIds } from '@mui/x-chat-headless';
+import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,

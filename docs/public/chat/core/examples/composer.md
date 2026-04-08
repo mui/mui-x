@@ -1,7 +1,7 @@
 ---
 title: Chat - Composer
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -96,7 +96,7 @@ import {
   useChatComposer,
   useChatStore,
   type ChatAdapter,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';

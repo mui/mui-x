@@ -100,7 +100,7 @@ When building a custom layout, use `ChatSuggestions` directly inside a `ChatRoot
 
 ```tsx
 import { ChatSuggestions } from '@mui/x-chat';
-import { ChatRoot } from '@mui/x-chat-headless';
+import { ChatRoot } from '@mui/x-chat/headless';
 
 <ChatRoot adapter={adapter}>
   <ChatSuggestions suggestions={['Option A', 'Option B']} autoSubmit={false} />

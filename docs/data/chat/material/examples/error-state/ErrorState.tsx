@@ -6,7 +6,7 @@ import {
   minimalMessages,
   demoUsers,
 } from 'docsx/data/chat/material/examples/shared/demoData';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const demoMembers = [demoUsers.you, demoUsers.agent];
 

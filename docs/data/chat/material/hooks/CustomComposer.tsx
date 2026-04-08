@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { ChatBox } from '@mui/x-chat';
-import { useChatComposer } from '@mui/x-chat-headless';
+import { useChatComposer } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,

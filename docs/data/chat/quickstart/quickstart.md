@@ -147,8 +147,8 @@ const theme = createTheme({
 
 ```text
 @mui/x-chat                         ← Material UI styles
-  -> @mui/x-chat-headless           ← headless structural components
-       -> @mui/x-chat-headless/core ← runtime, hooks, adapters
+  -> @mui/x-chat/headless           ← headless structural components
+       -> @mui/x-chat/core ← runtime, hooks, adapters
 ```
 
 Each layer builds on the one below it:
@@ -162,8 +162,8 @@ Each layer builds on the one below it:
 | If you want…                                                                   | Use                         |
 | :----------------------------------------------------------------------------- | :-------------------------- |
 | A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`               |
-| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat-headless`      |
-| Complete control over DOM structure with only React state and hooks            | `@mui/x-chat-headless/core` |
+| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat/headless`      |
+| Complete control over DOM structure with only React state and hooks            | `@mui/x-chat/core` |
 
 ## Using this documentation
 

@@ -3,7 +3,7 @@
   "name": "ChatProvider",
   "imports": [
     "import { ChatProvider } from '/packages/x-chat-headless/src/ChatProvider.tsx';",
-    "import { ChatProvider } from '@mui/x-chat-headless';"
+    "import { ChatProvider } from '@mui/x-chat/headless';"
   ],
   "classes": [],
   "spread": true,

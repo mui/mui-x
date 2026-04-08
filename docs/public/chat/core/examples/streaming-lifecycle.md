@@ -1,7 +1,7 @@
 ---
 title: Chat - Streaming lifecycle
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -62,7 +62,7 @@ import {
   useChat,
   type ChatAdapter,
   type ChatDataMessagePart,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';

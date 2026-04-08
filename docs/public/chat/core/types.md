@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Type augmentation
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -26,7 +26,7 @@ import {
   type ChatMessage,
   type ChatPartRendererMap,
   type ChatUser,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -36,7 +36,7 @@ import Typography from '@mui/material/Typography';
 import { demoUsers } from 'docsx/data/chat/core/examples/shared/demoData';
 import { createChunkStream } from 'docsx/data/chat/core/examples/shared/demoUtils';
 
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatUserMetadata {
     team: 'support' | 'ops';
     shift: 'day' | 'night';
@@ -535,7 +535,7 @@ export default function TypeAugmentationHeadlessChat() {
 
 ## The six registry interfaces
 
-All augmentable interfaces live under `@mui/x-chat-headless/types`:
+All augmentable interfaces live under `@mui/x-chat/types`:
 
 | Interface                  | Affects                                  | Description                           |
 | :------------------------- | :--------------------------------------- | :------------------------------------ |
@@ -553,7 +553,7 @@ All augmentable interfaces live under `@mui/x-chat-headless/types`:
 Create a type declaration file (e.g. `chat-types.d.ts`) or use `declare module` in any `.ts` file:
 
 ```ts
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatMessageMetadata {
     model?: 'gpt-4.1' | 'gpt-5';
     confidence?: 'low' | 'medium' | 'high';
@@ -566,7 +566,7 @@ declare module '@mui/x-chat-headless/types' {
 Add entries to `ChatToolDefinitionMap` to get typed `input` and `output` on tool invocations:
 
 ```ts
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatToolDefinitionMap {
     'ticket.lookup': {
       input: { ticketId: string };
@@ -587,7 +587,7 @@ Once registered, `ChatToolInvocation<'weather'>` has typed `input` and `output` 
 Add entries to `ChatDataPartMap` to type `data-*` stream chunks and message parts:
 
 ```ts
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatDataPartMap {
     'data-citations': {
       citations: Array<{ url: string; title: string }>;
@@ -602,7 +602,7 @@ declare module '@mui/x-chat-headless/types' {
 Add entries to `ChatCustomMessagePartMap` for entirely new part types:
 
 ```ts
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatCustomMessagePartMap {
     'ticket-summary': {
       type: 'ticket-summary';
@@ -621,7 +621,7 @@ Here is a complete augmentation that combines metadata, a typed tool, a typed da
 
 ```ts
 // chat-types.d.ts
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatUserMetadata {
     department?: string;
   }
@@ -692,20 +692,20 @@ If the declaration is in a `types/` directory, add it to the `include` array:
 
 ### Avoid circular references
 
-Do not import from `@mui/x-chat-headless` inside a `declare module` block.
+Do not import from `@mui/x-chat/headless` inside a `declare module` block.
 Use inline types or import types outside the declaration:
 
 ```ts
 // Good
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatMessageMetadata {
     model?: string;
   }
 }
 
 // Bad — may cause circular resolution
-declare module '@mui/x-chat-headless/types' {
-  import { ChatUser } from '@mui/x-chat-headless'; // avoid this
+declare module '@mui/x-chat/types' {
+  import { ChatUser } from '@mui/x-chat/headless'; // avoid this
   interface ChatMessageMetadata {
     reviewer?: ChatUser;
   }

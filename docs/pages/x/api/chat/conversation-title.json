@@ -2,8 +2,8 @@
   "props": {},
   "name": "ConversationTitle",
   "imports": [
-    "import { ConversationTitle } from '@mui/x-chat-headless/conversation';",
-    "import { ConversationTitle } from '@mui/x-chat-headless';"
+    "import { ConversationTitle } from '@mui/x-chat/headless';",
+    "import { ConversationTitle } from '@mui/x-chat/headless';"
   ],
   "slots": [{ "name": "title", "description": "", "class": null }],
   "classes": [],

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChatProvider, useChat, useChatPartRenderer } from '@mui/x-chat-headless';
+import { ChatProvider, useChat, useChatPartRenderer } from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';

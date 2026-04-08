@@ -1,7 +1,7 @@
 ---
 title: Chat - Minimal core chat
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 

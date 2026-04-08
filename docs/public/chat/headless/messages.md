@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Headless messages
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 components: MessageRoot, MessageAvatar, MessageAuthorLabel, MessageContent, MessageMeta, MessageActions, MessageGroup, MessageListDateDivider
 githubLabel: 'scope: chat'
 ---
@@ -20,7 +20,7 @@ import {
   MessageGroup,
   MessageList,
   createTimeWindowGroupKey,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 import {
   demoUsers,

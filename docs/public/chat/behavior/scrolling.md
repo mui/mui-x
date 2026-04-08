@@ -111,7 +111,7 @@ The `ChatMessageList` component exposes a ref handle for programmatic scroll con
 
 ```tsx
 import { ChatMessageList } from '@mui/x-chat';
-import type { MessageListRootHandle } from '@mui/x-chat-headless';
+import type { MessageListRootHandle } from '@mui/x-chat/headless';
 
 const listRef = React.useRef<MessageListRootHandle>(null);
 
@@ -126,7 +126,7 @@ listRef.current?.scrollToBottom({ behavior: 'smooth' });
 Child components inside the message list can access scroll state via context:
 
 ```tsx
-import { useMessageListContext } from '@mui/x-chat-headless';
+import { useMessageListContext } from '@mui/x-chat/headless';
 
 function CustomScrollIndicator() {
   const { isAtBottom, unseenMessageCount, scrollToBottom } = useMessageListContext();

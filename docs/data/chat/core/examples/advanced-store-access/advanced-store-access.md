@@ -1,7 +1,7 @@
 ---
 title: Chat - Advanced store access
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -23,7 +23,7 @@ It demonstrates how to bypass the convenience hooks and work directly with the n
 `useChatStore()` returns the `ChatStore<Cursor>` instance created by `ChatProvider`:
 
 ```tsx
-import { useChatStore, chatSelectors } from '@mui/x-chat-headless';
+import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
 import { useStore } from '@mui/x-internals/store';
 
 function Dashboard() {

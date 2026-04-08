@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Headless thread
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 components: ConversationRoot, ConversationHeader, ConversationTitle, ConversationSubtitle, ConversationHeaderActions
 githubLabel: 'scope: chat'
 ---
@@ -20,7 +20,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -228,7 +228,7 @@ import {
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 
 <Conversation.Root>
   <Conversation.Header>

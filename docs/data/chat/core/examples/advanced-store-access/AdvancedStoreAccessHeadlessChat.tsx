@@ -7,7 +7,7 @@ import {
   useChatComposer,
   useChatStore,
   type ChatAdapter,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';

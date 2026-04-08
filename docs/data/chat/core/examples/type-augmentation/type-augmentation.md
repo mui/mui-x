@@ -1,7 +1,7 @@
 ---
 title: Chat - Type augmentation
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -10,7 +10,7 @@ githubLabel: 'scope: chat'
 <p class="description">Use TypeScript module augmentation to add app-specific metadata, typed tools, typed <code>data-*</code> parts, and custom message parts to the core runtime.</p>
 
 The core layer does not use provider props for type overrides.
-Instead, extend `@mui/x-chat-headless/types` with [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
+Instead, extend `@mui/x-chat/types` with [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
 
 This demo keeps the setup intentionally small while showing how one augmentation affects the whole stack:
 
@@ -23,10 +23,10 @@ This demo keeps the setup intentionally small while showing how one augmentation
 
 ### Declaring custom types
 
-Create a `declare module` block targeting `@mui/x-chat-headless/types`:
+Create a `declare module` block targeting `@mui/x-chat/types`:
 
 ```ts
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatMessageMetadata {
     model?: 'gpt-4.1' | 'gpt-5';
     confidence?: 'medium' | 'high';

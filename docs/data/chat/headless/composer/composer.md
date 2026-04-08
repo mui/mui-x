@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Headless composer
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachButton, ComposerAttachmentList, ComposerLabel, ComposerToolbar, ComposerHelperText
 githubLabel: 'scope: chat'
 ---
@@ -28,7 +28,7 @@ The composer surface is built from:
 ## Canonical composition
 
 ```tsx
-import { Composer } from '@mui/x-chat-headless';
+import { Composer } from '@mui/x-chat/headless';
 
 function ThreadComposer() {
   return (

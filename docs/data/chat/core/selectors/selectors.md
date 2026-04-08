@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Core selectors
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -13,7 +13,7 @@ githubLabel: 'scope: chat'
 They power the built-in hooks and can also be used directly with `useChatStore()` for advanced subscriptions.
 
 ```tsx
-import { chatSelectors, useChatStore } from '@mui/x-chat-headless';
+import { chatSelectors, useChatStore } from '@mui/x-chat/headless';
 ```
 
 The following demo uses selectors for efficient rendering:
@@ -65,7 +65,7 @@ The hooks `useMessageIds()`, `useMessage(id)`, and others are convenience wrappe
 When you need a custom derived value, use the store directly:
 
 ```tsx
-import { useChatStore, chatSelectors } from '@mui/x-chat-headless';
+import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
 import { useStore } from '@mui/x-internals/store';
 
 function MessageCounter() {

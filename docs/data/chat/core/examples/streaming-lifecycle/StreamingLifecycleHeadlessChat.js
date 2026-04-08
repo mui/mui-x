@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChatProvider, useChat } from '@mui/x-chat-headless';
+import { ChatProvider, useChat } from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';

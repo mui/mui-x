@@ -7,7 +7,7 @@ import type {
   ChatMessage,
   ChatMessageChunk,
   ChatMessagePart,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import {
   createChunkStream,
   randomId,

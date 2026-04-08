@@ -22,8 +22,8 @@ The grouping window defaults to 5 minutes (300,000 ms). Messages from the same a
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import { createTimeWindowGroupKey } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import { createTimeWindowGroupKey } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
@@ -118,7 +118,7 @@ Customize the date format through `slotProps`:
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,

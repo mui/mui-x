@@ -10,7 +10,7 @@ import {
   ChatMessageGroup,
   ChatComposer,
 } from '@mui/x-chat';
-import { ChatProvider, useConversations, useChat } from '@mui/x-chat-headless';
+import { ChatProvider, useConversations, useChat } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   syncConversationPreview,
@@ -22,7 +22,7 @@ import {
 import type {
   ChatConversation as ChatConversationType,
   ChatMessage,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 
 function CustomSidebar() {
   const conversations = useConversations();

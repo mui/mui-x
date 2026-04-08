@@ -13,7 +13,7 @@ import {
   inboxThreads,
   demoUsers,
 } from 'docsx/data/chat/material/examples/shared/demoData';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 const RichItemContentSlot = React.forwardRef<
   HTMLDivElement,

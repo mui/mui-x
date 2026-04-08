@@ -49,7 +49,7 @@ Unspecified keys fall back to the defaults:
 Inside any descendant of `ChatBox`, use the `useChatLocaleText()` hook to read the current locale text:
 
 ```tsx
-import { useChatLocaleText } from '@mui/x-chat-headless';
+import { useChatLocaleText } from '@mui/x-chat/headless';
 
 function CustomSendButton() {
   const localeText = useChatLocaleText();

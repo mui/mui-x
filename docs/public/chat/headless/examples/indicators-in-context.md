@@ -1,7 +1,7 @@
 ---
 title: Chat - Indicators in context
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -22,7 +22,7 @@ That is why this page keeps them inside a realistic thread rather than presentin
 
 ```tsx
 import * as React from 'react';
-import type { ChatAdapter, ChatRealtimeEvent } from '@mui/x-chat-headless';
+import type { ChatAdapter, ChatRealtimeEvent } from '@mui/x-chat/headless';
 import {
   Chat,
   Conversation,
@@ -31,7 +31,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneMessages,

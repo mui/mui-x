@@ -1,4 +1,4 @@
-import type { ChatConversation, ChatMessage, ChatUser } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage, ChatUser } from '@mui/x-chat/headless';
 
 function createAvatarDataUrl(label: string, background: string, foreground = '#ffffff') {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="${background}"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="${foreground}">${label}</text></svg>`;

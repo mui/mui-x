@@ -2,8 +2,8 @@
   "props": {},
   "name": "ConversationListItem",
   "imports": [
-    "import { ConversationListItem } from '@mui/x-chat-headless/conversation-list';",
-    "import { ConversationListItem } from '@mui/x-chat-headless';"
+    "import { ConversationListItem } from '@mui/x-chat/headless';",
+    "import { ConversationListItem } from '@mui/x-chat/headless';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],

@@ -10,7 +10,7 @@ import {
   ChatMessageGroup,
   ChatComposer,
 } from '@mui/x-chat';
-import { ChatProvider, useConversations, useChat } from '@mui/x-chat-headless';
+import { ChatProvider, useConversations, useChat } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   syncConversationPreview,

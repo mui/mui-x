@@ -2,8 +2,8 @@
   "props": {},
   "name": "MessageGroup",
   "imports": [
-    "import { MessageGroup } from '@mui/x-chat-headless/message-group';",
-    "import { MessageGroup } from '@mui/x-chat-headless';"
+    "import { MessageGroup } from '@mui/x-chat/headless';",
+    "import { MessageGroup } from '@mui/x-chat/headless';"
   ],
   "slots": [
     { "name": "group", "description": "", "class": null },

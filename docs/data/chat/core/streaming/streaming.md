@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Core streaming
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 

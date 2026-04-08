@@ -137,8 +137,8 @@ const theme = createTheme({
 
 ```text
 @mui/x-chat                         ← Material UI styles
-  -> @mui/x-chat-headless           ← headless structural components
-       -> @mui/x-chat-headless/core ← runtime, hooks, adapters
+  -> @mui/x-chat/headless           ← headless structural components
+       -> @mui/x-chat/core ← runtime, hooks, adapters
 ```
 
 Each layer builds on the one below it:
@@ -152,19 +152,19 @@ Each layer builds on the one below it:
 | If you want…                                                                   | Use                         |
 | :----------------------------------------------------------------------------- | :-------------------------- |
 | A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`               |
-| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat-headless`      |
-| Complete control over DOM structure with only React state and hooks            | `@mui/x-chat-headless/core` |
+| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat/headless`      |
+| Complete control over DOM structure with only React state and hooks            | `@mui/x-chat/core` |
 
 ### Package boundary
 
-Both the headless components and the core runtime live in `@mui/x-chat-headless`:
+Both the headless components and the core runtime live in `@mui/x-chat/headless`:
 
 ```tsx
 // Core hooks and types
-import { useChat, useChatComposer } from '@mui/x-chat-headless/core';
+import { useChat, useChatComposer } from '@mui/x-chat/core';
 
 // Headless structural primitives
-import { Chat, MessageList } from '@mui/x-chat-headless';
+import { Chat, MessageList } from '@mui/x-chat/headless';
 ```
 
 This means you can mix the styled layer with lower-level primitives in the same application.

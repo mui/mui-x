@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Headless customization
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -13,7 +13,7 @@ githubLabel: 'scope: chat'
 
 ## Customization model
 
-`@mui/x-chat-headless` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
+`@mui/x-chat/headless` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
 
 The main tools are:
 

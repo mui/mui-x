@@ -1,7 +1,7 @@
 ---
 title: Chat - Composer with attachments
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -30,8 +30,8 @@ import {
   MessageGroup,
   MessageList,
   useChatComposer,
-} from '@mui/x-chat-headless';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 import {
   createTextResponseChunks,
   createChunkStream,

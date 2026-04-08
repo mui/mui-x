@@ -85,7 +85,7 @@ Handle errors at the application level using the `onError` prop on `ChatBox`:
 The `useChat()` hook exposes the current error:
 
 ```tsx
-import { useChat } from '@mui/x-chat-headless';
+import { useChat } from '@mui/x-chat/headless';
 
 function ErrorBanner() {
   const { error, setError } = useChat();
@@ -108,7 +108,7 @@ When `sendMessage()` fails, the user's message is still displayed in the thread 
 The `useChat()` hook provides a `retry` method that re-sends the message associated with a given message ID:
 
 ```tsx
-import { useChat } from '@mui/x-chat-headless';
+import { useChat } from '@mui/x-chat/headless';
 
 function RetryButton({ messageId }: { messageId: string }) {
   const { retry } = useChat();

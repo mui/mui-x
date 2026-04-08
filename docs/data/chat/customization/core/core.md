@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Core
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -11,7 +11,7 @@ githubLabel: 'scope: chat'
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`@mui/x-chat-headless` is the runtime-focused layer in the chat package family.
+`@mui/x-chat/headless` is the runtime-focused layer in the chat package family.
 It gives you chat state, streaming, adapters, selectors, and composer logic without imposing any rendered UI.
 
 ## Where core fits
@@ -49,7 +49,7 @@ import {
   useConversations,
   useMessage,
   useMessageIds,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 ```
 
 ## What core owns

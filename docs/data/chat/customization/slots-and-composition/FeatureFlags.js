@@ -17,7 +17,7 @@ export default function FeatureFlags() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       features={{
-        conversations: false,
+        conversationHeader: false,
         attachments: false,
       }}
       sx={{

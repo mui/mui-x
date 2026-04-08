@@ -2,8 +2,8 @@
   "props": {},
   "name": "MessageMeta",
   "imports": [
-    "import { MessageMeta } from '@mui/x-chat-headless/message';",
-    "import { MessageMeta } from '@mui/x-chat-headless';"
+    "import { MessageMeta } from '@mui/x-chat/headless';",
+    "import { MessageMeta } from '@mui/x-chat/headless';"
   ],
   "slots": [
     { "name": "meta", "description": "", "class": null },

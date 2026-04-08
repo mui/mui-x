@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Core adapters
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
@@ -14,7 +14,7 @@ Only one method is required: `sendMessage()`.
 Everything else is optional and incrementally adopted.
 
 ```tsx
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 ```
 
 The following demo shows a minimal adapter in action:

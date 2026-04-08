@@ -19,7 +19,7 @@ It receives the user's message and must return a `ReadableStream` of typed chunk
 
 ```tsx
 import { ChatBox } from '@mui/x-chat';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message, signal }) {
@@ -217,7 +217,7 @@ Return `null` if the interrupted message cannot be resumed.
 Here is a complete adapter that combines all the steps:
 
 ```tsx
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message, signal }) {

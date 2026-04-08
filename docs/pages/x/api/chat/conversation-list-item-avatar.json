@@ -2,8 +2,8 @@
   "props": {},
   "name": "ConversationListItemAvatar",
   "imports": [
-    "import { ConversationListItemAvatar } from '@mui/x-chat-headless/conversation-list';",
-    "import { ConversationListItemAvatar } from '@mui/x-chat-headless';"
+    "import { ConversationListItemAvatar } from '@mui/x-chat/headless';",
+    "import { ConversationListItemAvatar } from '@mui/x-chat/headless';"
   ],
   "slots": [
     { "name": "root", "description": "", "class": null },

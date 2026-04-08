@@ -6,7 +6,7 @@ import {
   useChat,
   useChatComposer,
   useChatStore,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
@@ -43,7 +43,9 @@ function AdvancedMetrics() {
   const conversationCount = useStore(store, chatSelectors.conversationCount);
   const activeConversation = useStore(store, chatSelectors.activeConversation);
   const composerValue = useStore(store, chatSelectors.composerValue);
-  const typingUserIds = useStore(store, chatSelectors.typingUserIds);
+  const typingUserIds = useStore(store, (state) =>
+    chatSelectors.typingUserIds(state, undefined),
+  );
   const { messages, sendMessage, setActiveConversation } = useChat();
   const composer = useChatComposer();
 

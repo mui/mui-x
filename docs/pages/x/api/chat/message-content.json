@@ -2,8 +2,8 @@
   "props": {},
   "name": "MessageContent",
   "imports": [
-    "import { MessageContent } from '@mui/x-chat-headless/message';",
-    "import { MessageContent } from '@mui/x-chat-headless';"
+    "import { MessageContent } from '@mui/x-chat/headless';",
+    "import { MessageContent } from '@mui/x-chat/headless';"
   ],
   "slots": [
     { "name": "content", "description": "", "class": null },

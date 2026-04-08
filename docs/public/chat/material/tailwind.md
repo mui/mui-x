@@ -146,7 +146,7 @@ import {
   Message,
   MessageList,
   Indicators,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,

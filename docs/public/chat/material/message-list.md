@@ -129,7 +129,7 @@ Customize the date format through `slotProps`. The demo below uses a short month
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
@@ -213,8 +213,8 @@ The demo below sets the window to 1 minute (60,000 ms) — notice how messages m
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
-import { createTimeWindowGroupKey } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import { createTimeWindowGroupKey } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
@@ -309,7 +309,7 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
@@ -406,7 +406,7 @@ Use the toggle in the demo below to compare the three density levels:
 'use client';
 import * as React from 'react';
 import { ChatBox, type ChatDensity } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Stack from '@mui/material/Stack';
@@ -549,7 +549,7 @@ import {
   ChatMessageInlineMeta,
   ChatConversation,
 } from '@mui/x-chat';
-import { ChatProvider, useMessageIds } from '@mui/x-chat-headless';
+import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,

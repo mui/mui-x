@@ -2,8 +2,8 @@
   "props": {},
   "name": "ConversationSubtitle",
   "imports": [
-    "import { ConversationSubtitle } from '@mui/x-chat-headless/conversation';",
-    "import { ConversationSubtitle } from '@mui/x-chat-headless';"
+    "import { ConversationSubtitle } from '@mui/x-chat/headless';",
+    "import { ConversationSubtitle } from '@mui/x-chat/headless';"
   ],
   "slots": [{ "name": "subtitle", "description": "", "class": null }],
   "classes": [],

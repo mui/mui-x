@@ -2,8 +2,8 @@
   "props": {},
   "name": "MessageAvatar",
   "imports": [
-    "import { MessageAvatar } from '@mui/x-chat-headless/message';",
-    "import { MessageAvatar } from '@mui/x-chat-headless';"
+    "import { MessageAvatar } from '@mui/x-chat/headless';",
+    "import { MessageAvatar } from '@mui/x-chat/headless';"
   ],
   "slots": [
     { "name": "avatar", "description": "", "class": null },

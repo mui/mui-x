@@ -14,7 +14,7 @@ import {
   ChatComposerToolbar,
   ChatComposerSendButton,
 } from '@mui/x-chat';
-import { ChatProvider } from '@mui/x-chat-headless';
+import { ChatProvider } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,

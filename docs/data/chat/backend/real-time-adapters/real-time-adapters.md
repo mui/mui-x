@@ -209,7 +209,7 @@ Use `useConversation(id)` to reflect read status in the UI.
 A complete adapter with WebSocket-based real-time events:
 
 ```tsx
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message, signal }) {

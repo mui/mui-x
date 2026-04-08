@@ -2,8 +2,8 @@
   "props": {},
   "name": "ComposerTextArea",
   "imports": [
-    "import { ComposerTextArea } from '@mui/x-chat-headless/composer';",
-    "import { ComposerTextArea } from '@mui/x-chat-headless';"
+    "import { ComposerTextArea } from '@mui/x-chat/headless';",
+    "import { ComposerTextArea } from '@mui/x-chat/headless';"
   ],
   "slots": [{ "name": "input", "description": "", "class": null }],
   "classes": [],

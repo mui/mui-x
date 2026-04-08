@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { ChatBox, type ChatDensity } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Stack from '@mui/material/Stack';

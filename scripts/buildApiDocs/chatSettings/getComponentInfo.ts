@@ -69,15 +69,28 @@ export function getComponentInfo(filename: string): ComponentInfo {
 export function getComponentImports(name: string, filename: string) {
   const githubPath = toGitHubPath(filename);
 
-  const rootImportPath = githubPath.replace(
+  let rootImportPath = githubPath.replace(
     /\/packages\/(.+?)?\/src\/.*/,
     (match, pkg) => `@mui/${pkg}`,
   );
 
-  const subdirectoryImportPath = githubPath.replace(
+  let subdirectoryImportPath = githubPath.replace(
     /\/packages\/(.+?)?\/src\/([^\\/]+)\/.*/,
     (match, pkg, directory) => `@mui/${pkg}/${directory}`,
   );
+
+  // Consolidate x-chat-headless imports into x-chat equivalents
+  if (rootImportPath === '@mui/x-chat-headless') {
+    rootImportPath = '@mui/x-chat/headless';
+  }
+  if (subdirectoryImportPath.startsWith('@mui/x-chat-headless/')) {
+    const subpath = subdirectoryImportPath.replace('@mui/x-chat-headless/', '');
+    if (subpath === 'core' || subpath === 'types') {
+      subdirectoryImportPath = `@mui/x-chat/${subpath}`;
+    } else {
+      subdirectoryImportPath = '@mui/x-chat/headless';
+    }
+  }
 
   return [
     `import { ${name} } from '${subdirectoryImportPath}';`,

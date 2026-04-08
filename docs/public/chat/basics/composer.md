@@ -211,7 +211,7 @@ export default function ComposerControlled() {
 For deeper control, the `useChatComposer()` hook provides direct access to the composer state:
 
 ```tsx
-import { useChatComposer } from '@mui/x-chat-headless';
+import { useChatComposer } from '@mui/x-chat/headless';
 
 function ComposerInfo() {
   const composer = useChatComposer();

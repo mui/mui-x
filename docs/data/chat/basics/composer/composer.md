@@ -114,7 +114,7 @@ The demo below mirrors the current composer value above the chat surface:
 For deeper control, the `useChatComposer()` hook provides direct access to the composer state:
 
 ```tsx
-import { useChatComposer } from '@mui/x-chat-headless';
+import { useChatComposer } from '@mui/x-chat/headless';
 
 function ComposerInfo() {
   const composer = useChatComposer();

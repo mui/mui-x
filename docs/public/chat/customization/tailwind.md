@@ -46,7 +46,7 @@ import {
   Conversation,
   ConversationList,
   Indicators,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 
 // Usage
 <Chat.Root>
