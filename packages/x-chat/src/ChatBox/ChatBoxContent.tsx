@@ -54,11 +54,11 @@ function useContainerNarrow(ref: React.RefObject<HTMLElement | null>): boolean {
 
   React.useEffect(() => {
     const el = ref.current;
-    if (!el) {
+    if (!el || typeof globalThis.ResizeObserver === 'undefined') {
       return undefined;
     }
 
-    const ro = new ResizeObserver((entries) => {
+    const ro = new globalThis.ResizeObserver((entries) => {
       for (const entry of entries) {
         const width = entry.contentBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
         setNarrow(width < NARROW_BREAKPOINT);

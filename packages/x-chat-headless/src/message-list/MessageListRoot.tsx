@@ -123,12 +123,12 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
   }, [id, registerRowElement]);
 
   React.useEffect(() => {
-    if (!rowRef.current || typeof ResizeObserver === 'undefined') {
+    if (!rowRef.current || typeof globalThis.ResizeObserver === 'undefined') {
       return undefined;
     }
 
     let frameId = 0;
-    const observer = new ResizeObserver(() => {
+    const observer = new globalThis.ResizeObserver(() => {
       cancelAnimationFrame(frameId);
       frameId = requestAnimationFrame(() => {
         onRowResize();
