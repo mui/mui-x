@@ -13,14 +13,14 @@ This is a reference guide for upgrading `@mui/x-tree-view` from v8 to v9.
 
 ## Start using the new release
 
-In `package.json`, change the version of the Tree View package to `next`.
+In `package.json`, change the version of the Tree View package to `^9.0.0`.
 
 ```diff
 -"@mui/x-tree-view": "8.x.x",
-+"@mui/x-tree-view": "next",
++"@mui/x-tree-view": "^9.0.0",
 
 -"@mui/x-tree-view-pro": "8.x.x",
-+"@mui/x-tree-view-pro": "next",
++"@mui/x-tree-view-pro": "^9.0.0",
 ```
 
 The `v9` major release contains changes that affect the public API.
