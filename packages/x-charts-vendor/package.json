@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-vendor",
-  "version": "9.0.0-rc.0",
+  "version": "9.0.0",
   "author": "MUI Team",
   "description": "Vendored dependencies for MUI X Charts.",
   "license": "MIT AND ISC",
