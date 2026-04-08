@@ -10,12 +10,12 @@ index 5a68a3fb78e23ddb98a87750acd0ecd94be77171..1f979e818da87ad9681a0b43ef74940c
 +    const moduleID = componentName.startsWith('@mui/internal-core-docs/')
        ? componentName
        : path.join(this.rootContext, 'src', componentName).replace(/\\/g, '/');
-
+ 
 diff --git a/prepareMarkdown.mjs b/prepareMarkdown.mjs
-index 2b2118bac260a00b8b33681a8a1c9dfda10dccd7..f5e34251b84db61848498f186cf8d2d7d1c565f0 100644
+index 2b2118bac260a00b8b33681a8a1c9dfda10dccd7..8628e2d384c06aaff13bc8bafb80b2c3aee89172 100644
 --- a/prepareMarkdown.mjs
 +++ b/prepareMarkdown.mjs
-@@ -44,6 +44,9 @@ function resolveComponentApiUrl(productId, componentPkg, component) {
+@@ -44,6 +44,10 @@ function resolveComponentApiUrl(productId, componentPkg, component) {
    if (productId === 'x-scheduler') {
      return `/x/api/scheduler/${kebabCase(component)}/`;
    }
