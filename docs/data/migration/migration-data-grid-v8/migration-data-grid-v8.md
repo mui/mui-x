@@ -17,17 +17,17 @@ This guide is also available in <a href="https://raw.githubusercontent.com/mui/m
 
 ## Start using the new release
 
-In `package.json`, change the version of the Data Grid package to `next`.
+In `package.json`, change the version of the Data Grid package to `^9.0.0`.
 
 ```diff
 -"@mui/x-data-grid": "^8.x.x",
-+"@mui/x-data-grid": "next",
++"@mui/x-data-grid": "^9.0.0",
 
 -"@mui/x-data-grid-pro": "^8.x.x",
-+"@mui/x-data-grid-pro": "next",
++"@mui/x-data-grid-pro": "^9.0.0",
 
 -"@mui/x-data-grid-premium": "^8.x.x",
-+"@mui/x-data-grid-premium": "next",
++"@mui/x-data-grid-premium": "^9.0.0",
 ```
 
 ## Breaking changes

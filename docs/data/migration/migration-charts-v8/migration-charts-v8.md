@@ -152,17 +152,17 @@ This codemod does not handle:
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `next`.
+In `package.json`, change the version of the charts package to `^9.0.0`.
 
 ```diff
 -"@mui/x-charts": "^8.x.x",
-+"@mui/x-charts": "next",
++"@mui/x-charts": "^9.0.0",
 
 -"@mui/x-charts-pro": "^8.x.x",
-+"@mui/x-charts-pro": "next",
++"@mui/x-charts-pro": "^9.0.0",
 
 -"@mui/x-charts-premium": "^8.x.x",
-+"@mui/x-charts-premium": "next",
++"@mui/x-charts-premium": "^9.0.0",
 ```
 
 Since `v9` is a major release, it contains changes that affect the public API.
