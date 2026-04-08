@@ -94,7 +94,7 @@ Internal changes.
 
 #### `@mui/x-scheduler-premium@9.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-scheduler-pro@9.0.0-alpha.0`.
+Same changes as in `@mui/x-scheduler@9.0.0-alpha.0`.
 
 ### Codemod
 
