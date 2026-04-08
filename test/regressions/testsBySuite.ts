@@ -46,6 +46,9 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/charts/references/ReferenceArea', // sub-component for demo purpose
     '!docsx/data/charts/references/ReferencePoint', // sub-component for demo purpose
 
+    // Exclude shared utility files that don't have a default export
+    '!docsx/data/**/shared/*',
+
     // Exclude codesandbox embedded demos since they're not using packages built from the branch anyway.
     '!docsx/data/migration/migration-pickers-v5/MobileKeyboardView',
     '!docsx/data/migration/migration-data-grid-v4/CoreV5WithCoreV4',
