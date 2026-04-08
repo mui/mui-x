@@ -62,6 +62,30 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     name: 'MuiPickersTextField',
   });
 
+  if (process.env.NODE_ENV !== 'production') {
+    const legacyProps = inProps as {
+      InputProps?: unknown;
+      inputProps?: unknown;
+      InputLabelProps?: unknown;
+      FormHelperTextProps?: unknown;
+    };
+    if (
+      legacyProps.InputProps ||
+      legacyProps.inputProps ||
+      legacyProps.InputLabelProps ||
+      legacyProps.FormHelperTextProps
+    ) {
+      console.warn(
+        [
+          'MUI X: `PickersTextField` no longer supports the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
+          'They are silently dropped, which can hide configuration bugs in JavaScript codebases that do not benefit from TypeScript checks.',
+          'Use `slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel` and `slotProps.formHelperText` instead.',
+          'You can run the `migrate-text-field-props` codemod to migrate automatically.',
+        ].join('\n'),
+      );
+    }
+  }
+
   const {
     // Props used by FormControl
     onFocus,

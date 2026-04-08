@@ -24,11 +24,16 @@ export const addItemToObject = (path, value, object, j) => {
       existingProperty.value.type === 'ObjectExpression' &&
       value.type === 'ObjectExpression'
     ) {
-      const newKeys = new Set(value.properties.map((p) => p.key?.name ?? p.key?.value));
+      // Spread elements (e.g. `{ ...rest }`) have no `key`, so guard against `undefined`
+      // sneaking into the dedup set — otherwise existing spreads would be filtered out.
+      const newKeys = new Set(
+        value.properties.map((p) => p.key?.name ?? p.key?.value).filter((key) => key !== undefined),
+      );
       const mergedValue = j.objectExpression([
-        ...existingProperty.value.properties.filter(
-          (p) => !newKeys.has(p.key?.name ?? p.key?.value),
-        ),
+        ...existingProperty.value.properties.filter((p) => {
+          const key = p.key?.name ?? p.key?.value;
+          return key === undefined || !newKeys.has(key);
+        }),
         ...value.properties,
       ]);
       const mergedProperty = j.objectProperty(j.identifier(path), mergedValue);

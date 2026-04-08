@@ -34,8 +34,38 @@ export const cleanFieldResponse = <
     clearButtonPosition,
     openPickerButtonPosition,
     openPickerAriaLabel,
+    // Explicitly discard legacy props that are no longer supported on `PickersTextField`.
+    // Without this, any leftover values would silently leak into `...other` and end up spread
+    // as unknown attributes on the underlying form control.
+    InputProps: legacyInputProps,
+    inputProps: legacyHtmlInputProps,
+    InputLabelProps: legacyInputLabelProps,
+    FormHelperTextProps: legacyFormHelperTextProps,
     ...other
-  } = fieldResponse;
+  } = fieldResponse as TFieldResponse & {
+    InputProps?: unknown;
+    inputProps?: unknown;
+    InputLabelProps?: unknown;
+    FormHelperTextProps?: unknown;
+  };
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (
+      legacyInputProps ||
+      legacyHtmlInputProps ||
+      legacyInputLabelProps ||
+      legacyFormHelperTextProps
+    ) {
+      console.warn(
+        [
+          'MUI X: The `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props are no longer supported on Picker / Field components.',
+          'They have been silently dropped because they would otherwise be forwarded as unknown attributes on the underlying form control.',
+          'Use the `slotProps` shape instead (`slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel`, `slotProps.formHelperText`).',
+          'See https://mui.com/x/migration/migration-pickers-v8/#textfield-props for migration details.',
+        ].join('\n'),
+      );
+    }
+  }
 
   return {
     clearable,
@@ -172,8 +202,9 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
   const externalInputSlotProps = textFieldProps.slotProps?.input;
   const additionalInputSlotProps: NonNullable<PickersTextFieldProps['slotProps']>['input'] = {};
 
+  const forkedInputRef = useForkRef(externalInputSlotProps?.ref, pickerContext?.triggerRef);
   if (pickerContext) {
-    additionalInputSlotProps.ref = pickerContext.triggerRef;
+    additionalInputSlotProps.ref = forkedInputRef;
   }
 
   if (
@@ -382,13 +413,41 @@ export function useFieldTextFieldProps<TProps extends UseFieldOwnerStateParamete
   const pickerContext = useNullablePickerContext();
   const ownerState = useFieldOwnerState(externalForwardedProps);
 
+  // Strip the legacy `InputProps` / `inputProps` / `InputLabelProps` / `FormHelperTextProps`
+  // before they reach `PickersTextField`, which would silently ignore them. JS users without
+  // TypeScript checks would otherwise see their configuration vanish.
+  const {
+    InputProps: legacyInputProps,
+    inputProps: legacyHtmlInputProps,
+    InputLabelProps: legacyInputLabelProps,
+    FormHelperTextProps: legacyFormHelperTextProps,
+    ...sanitizedExternalForwardedProps
+  } = (externalForwardedProps ?? {}) as Record<string, unknown>;
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (
+      legacyInputProps ||
+      legacyHtmlInputProps ||
+      legacyInputLabelProps ||
+      legacyFormHelperTextProps
+    ) {
+      console.warn(
+        [
+          'MUI X: Field components no longer accept the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
+          'They have been dropped to avoid leaking unknown attributes onto the underlying form control.',
+          'Use the nested `slotProps.textField.slotProps.{input,htmlInput,inputLabel,formHelperText}` shape instead.',
+        ].join('\n'),
+      );
+    }
+  }
+
   const textFieldProps = useSlotProps({
     elementType: PickersTextField,
     externalSlotProps: mergeSlotProps(
       pickerFieldUIContext.slotProps.textField as any,
       slotProps?.textField as any,
     ),
-    externalForwardedProps,
+    externalForwardedProps: sanitizedExternalForwardedProps,
     additionalProps: {
       ref,
       sx: pickerContext?.rootSx,
