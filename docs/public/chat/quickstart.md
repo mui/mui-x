@@ -139,30 +139,6 @@ const theme = createTheme({
 });
 ```
 
-## Package model
-
-`@mui/x-chat` is the Material UI styling layer of a three-tier architecture, all within two npm packages:
-
-```text
-@mui/x-chat                         ← Material UI styles
-  -> @mui/x-chat/headless           ← headless structural components
-       -> @mui/x-chat/core ← runtime, hooks, adapters
-```
-
-Each layer builds on the one below it:
-
-- **Material UI** adds visual styles via Material UI `styled()` on top of the headless primitives.
-- **Headless** adds structural DOM wiring, slots, and accessibility on top of the core runtime.
-- **Core** owns state, streaming, adapters, and hooks with no DOM output.
-
-### Choosing a layer
-
-| If you want…                                                                   | Use                    |
-| :----------------------------------------------------------------------------- | :--------------------- |
-| A styled chat surface that inherits your MUI theme with minimal setup          | `@mui/x-chat`          |
-| Full control over visual design using your own CSS, Tailwind, or design system | `@mui/x-chat/headless` |
-| Complete control over DOM structure with only React state and hooks            | `@mui/x-chat/core`     |
-
 ## Using this documentation
 
 ### Feature availability
