@@ -71,7 +71,7 @@ function getMuiPackageVersion(packageName, commitRef) {
     // #npm-tag-reference
     // Use the "next" tag for the master git branch after we start working on the next major version
     // Once the major release is finished we can go back to "latest"
-    return 'latest';
+    return '^8.0.0';
   }
   return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
@@ -229,6 +229,13 @@ function AppWrapper(props) {
             href: `${languagePrefix}${productIdMap[id].subpath}/`,
           };
         }
+        // #default-branch-switch - update to next major when it's released as stable
+        if (version === 'v9') {
+          return {
+            text: version,
+            href: `https://mui.com${languagePrefix}${productIdMap[id].subpath}/`,
+          };
+        }
         return {
           text: version,
           href: `https://${version}.mui.com${languagePrefix}${productIdMap[id].subpath}/`,
@@ -239,11 +246,7 @@ function AppWrapper(props) {
       metadata: '',
       name: 'MUI X',
       versions: [
-        {
-          text: `next`,
-          href: `https://next.mui.com${languagePrefix}/x/introduction/`,
-        },
-        ...getVersionOptions('introduction', [process.env.LIB_VERSION, 'v7', 'v6', 'v5']),
+        ...getVersionOptions('introduction', ['v9', process.env.LIB_VERSION, 'v7', 'v6', 'v5']),
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
     };
@@ -253,11 +256,13 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Data Grid',
         versions: [
-          {
-            text: `next`,
-            href: `https://next.mui.com${languagePrefix}/x/introduction/`,
-          },
-          ...getVersionOptions('x-data-grid', [process.env.DATA_GRID_VERSION, 'v7', 'v6', 'v5']),
+          ...getVersionOptions('x-data-grid', [
+            'v9',
+            process.env.DATA_GRID_VERSION,
+            'v7',
+            'v6',
+            'v5',
+          ]),
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
@@ -266,11 +271,12 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Date Pickers',
         versions: [
-          {
-            text: `next`,
-            href: `https://next.mui.com${languagePrefix}/x/introduction/`,
-          },
-          ...getVersionOptions('x-date-pickers', [process.env.DATE_PICKERS_VERSION, 'v7', 'v6']),
+          ...getVersionOptions('x-date-pickers', [
+            'v9',
+            process.env.DATE_PICKERS_VERSION,
+            'v7',
+            'v6',
+          ]),
           {
             text: 'v5',
             href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
@@ -282,11 +288,7 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Charts',
         versions: [
-          {
-            text: `next`,
-            href: `https://next.mui.com${languagePrefix}/x/introduction/`,
-          },
-          ...getVersionOptions('x-charts', [process.env.CHARTS_VERSION, 'v7', 'v6']),
+          ...getVersionOptions('x-charts', ['v9', process.env.CHARTS_VERSION, 'v7', 'v6']),
         ],
       };
     } else if (productId === 'x-tree-view') {
@@ -294,11 +296,7 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Tree View',
         versions: [
-          {
-            text: `next`,
-            href: `https://next.mui.com${languagePrefix}/x/introduction/`,
-          },
-          ...getVersionOptions('x-tree-view', [process.env.TREE_VIEW_VERSION, 'v7']),
+          ...getVersionOptions('x-tree-view', ['v9', process.env.TREE_VIEW_VERSION, 'v7']),
           {
             text: 'v6',
             href: `https://v6.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
@@ -325,14 +323,15 @@ function AppWrapper(props) {
       // getRootIndex: omitted - uses default Material UI template from CreateReactApp.ts
       csb: {
         primaryPackage: '@mui/material',
-        fallbackDependency: { name: '@mui/material', version: 'latest' },
+        fallbackDependency: { name: '@mui/material', version: '^7' },
         // Moved from globalThis.muiDocConfig.csbIncludePeerDependencies
         includePeerDependencies: (deps, { versions }) => {
           const newDeps = { ...deps };
-          newDeps['@mui/material'] =
-            versions['@mui/material'] !== 'next' ? versions['@mui/material'] : 'latest';
+          newDeps['@mui/material'] = ['next', 'latest'].includes(versions['@mui/material'])
+            ? '^7'
+            : versions['@mui/material'];
           if (newDeps['@mui/x-data-grid-generator']) {
-            newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
+            newDeps['@mui/icons-material'] = '^7';
           }
           return newDeps;
         },
