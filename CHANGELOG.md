@@ -1,5 +1,98 @@
 # Changelog
 
+## 9.0.1
+
+<!-- generated comparing v9.0.0..master -->
+
+_Apr 8, 2026_
+
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- Docs updates 📚
+- Chat release 🥳
+
+Special thanks go out to community member @mixelburg for their valuable contribution.
+
+The following team members contributed to this release:
+@alexfauquette, @cherniavskii, @hasdfa, @Janpot, @LukasTy, @MBilalShafi, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.0.1`
+
+- [DataGrid] Fix `processRowUpdate` invoked when cancelling edit for non-existent rows (#21990) @mixelburg
+- [DataGrid] Remove flaky argos tests (#22034) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@9.0.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.0.1`.
+
+#### `@mui/x-data-grid-premium@9.0.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.0.1`.
+
+### Charts
+
+#### `@mui/x-charts@9.0.1`
+
+- [charts] Small code cleanup (#22031) @alexfauquette
+
+#### `@mui/x-charts-pro@9.0.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.0.1`.
+
+#### `@mui/x-charts-premium@9.0.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.0.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.0.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.0.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.1`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-alpha.1`
+
+Internal changes.
+
+#### `@mui/x-scheduler-premium@9.0.0-alpha.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-alpha.1`.
+
+### Chat
+
+#### `@mui/x-chat@9.0.0-alpha.0`
+
+- [chat] Add x-chat package family (#21666) @hasdfa
+
+#### `@mui/x-chat-headless@9.0.0-alpha.0`
+
+- [chat] Add x-chat package family (#21666) @hasdfa
+
+### Docs
+
+- [docs] Add charts a11y page in the menu (#22028) @alexfauquette
+- [docs] Signal BC severity in v8 to v9 pickers migration guide (#22026) @LukasTy
+- [docs] Use the same heading level data grid packages (#22024) @cherniavskii
+
+### Core
+
+- [code-infra] Fix changelog generator for Premium-without-Pro products (#22029) @LukasTy
+- [code-infra] Remove `@mui/x-charts-vendor` check in ci (#22030) @alexfauquette
+- [code-infra] Remove push to remote fallback in release script (#22021) @Janpot
+
+### Miscellaneous
+
+- [code] Fix few typos in JSDocs and error messages (#22032) @alexfauquette
+- [core] Post stable release changes (#22033) @LukasTy
+- [core-infra] Update monorepo hash and remove temporary patch (#22038) @rita-codes
+
 ## 9.0.0
 
 <!-- generated comparing v9.0.0-rc.0..master -->
