@@ -24,7 +24,7 @@ export function getChatLayoutPaneKind(element: React.ReactNode): ChatLayoutPaneK
 
   // Primary: symbol-based detection (works for direct unstyled components)
   const symbolKind = (element.type as ChatLayoutPaneMarkedType)[chatLayoutPaneKind];
-  if (symbolKind) {
+  if (symbolKind === 'conversations' || symbolKind === 'thread') {
     return symbolKind;
   }
 
