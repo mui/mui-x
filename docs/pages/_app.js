@@ -323,12 +323,13 @@ function AppWrapper(props) {
       // getRootIndex: omitted - uses default Material UI template from CreateReactApp.ts
       csb: {
         primaryPackage: '@mui/material',
-        fallbackDependency: { name: '@mui/material', version: 'latest' },
+        fallbackDependency: { name: '@mui/material', version: '^7.0.0' },
         // Moved from globalThis.muiDocConfig.csbIncludePeerDependencies
         includePeerDependencies: (deps, { versions }) => {
           const newDeps = { ...deps };
-          newDeps['@mui/material'] =
-            versions['@mui/material'] !== 'next' ? versions['@mui/material'] : 'latest';
+          newDeps['@mui/material'] = ['next', 'latest'].includes(versions['@mui/material'])
+            ? '^7.0.0'
+            : versions['@mui/material'];
           if (newDeps['@mui/x-data-grid-generator']) {
             newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
           }
