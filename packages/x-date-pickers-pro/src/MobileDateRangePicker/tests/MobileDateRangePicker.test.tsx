@@ -18,23 +18,8 @@ describe('<MobileDateRangePicker />', () => {
 
   describe('Field slot: SingleInputDateRangeField', () => {
     it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
-      // Test with accessible DOM structure
-      const { unmount } = render(
-        <MobileDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />,
-      );
+      render(<MobileDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />);
       expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
-
-      unmount();
-
-      // Test with non-accessible DOM structure
-      render(
-        <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure={false}
-          name="test"
-          slots={{ field: SingleInputDateRangeField }}
-        />,
-      );
-      expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
     });
   });
 

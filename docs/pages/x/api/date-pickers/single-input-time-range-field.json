@@ -1,6 +1,7 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
+    "areAllSectionsEmpty": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
     "clearButtonPosition": {
@@ -20,6 +21,8 @@
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
+    "endAdornment": { "type": { "name": "node" } },
+    "error": { "type": { "name": "bool" }, "default": "false" },
     "fieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
@@ -27,30 +30,10 @@
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "FormHelperTextProps": {
-      "type": { "name": "object" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>slotProps.formHelperText</code> instead. This prop will be removed in a future major release. See <a href=\"https://mui.com/material-ui/migration/migrating-from-deprecated-apis/\">Migrating from deprecated APIs</a> for more details."
-    },
     "fullWidth": { "type": { "name": "bool" }, "default": "false" },
     "helperText": { "type": { "name": "node" } },
     "hiddenLabel": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
-    "InputLabelProps": {
-      "type": { "name": "object" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>slotProps.inputLabel</code> instead. This prop will be removed in a future major release. See <a href=\"https://mui.com/material-ui/migration/migrating-from-deprecated-apis/\">Migrating from deprecated APIs</a> for more details."
-    },
-    "inputProps": {
-      "type": { "name": "object" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>slotProps.htmlInput</code> instead. This prop will be removed in a future major release. See <a href=\"https://mui.com/material-ui/migration/migrating-from-deprecated-apis/\">Migrating from deprecated APIs</a> for more details."
-    },
-    "InputProps": {
-      "type": { "name": "object" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>slotProps.input</code> instead. This prop will be removed in a future major release. See <a href=\"https://mui.com/material-ui/migration/migrating-from-deprecated-apis/\">Migrating from deprecated APIs</a> for more details."
-    },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "margin": {
@@ -117,6 +100,7 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "startAdornment": { "type": { "name": "node" } },
     "sx": {
       "type": {
         "name": "union",
@@ -168,11 +152,29 @@
     {
       "name": "textField",
       "description": "Form control with an input to render the value.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     }
   ],
   "classes": [
+    {
+      "key": "fullWidth",
+      "className": "MuiSingleInputTimeRangeField-fullWidth",
+      "description": "Styles applied to the root element if `fullWidth={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "marginDense",
+      "className": "MuiSingleInputTimeRangeField-marginDense",
+      "description": "Styles applied to the root element if `margin=\"dense\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "marginNormal",
+      "className": "MuiSingleInputTimeRangeField-marginNormal",
+      "description": "Styles applied to the root element if `margin=\"normal\"`.",
+      "isGlobal": false
+    },
     {
       "key": "root",
       "className": "MuiSingleInputTimeRangeField-root",

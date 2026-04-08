@@ -9,7 +9,7 @@ import {
   SchedulerEventSide,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
-import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
+import type { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,

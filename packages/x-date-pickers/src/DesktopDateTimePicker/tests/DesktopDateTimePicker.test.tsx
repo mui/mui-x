@@ -7,7 +7,7 @@ import {
   openPicker,
   openPickerAsync,
   getFieldSectionsContainer,
-  expectFieldValueV7,
+  expectFieldValue,
 } from 'test/utils/pickers';
 
 describe('<DesktopDateTimePicker />', () => {
@@ -142,7 +142,7 @@ describe('<DesktopDateTimePicker />', () => {
     const meridiem = screen.getByRole('option', { name: 'AM' });
     expect(meridiem).toHaveFocus();
     const sectionsContainer = getFieldSectionsContainer();
-    expectFieldValueV7(sectionsContainer, '01/10/2018 12:00 AM');
+    expectFieldValue(sectionsContainer, '01/10/2018 12:00 AM');
   });
 
   describe('prop: timeSteps', () => {

@@ -2,8 +2,7 @@ import {
   PickerValueManager,
   replaceInvalidDateByNull,
   FieldValueManager,
-  createDateStrForV7HiddenInputFromSections,
-  createDateStrForV6InputFromSections,
+  createDateStrForHiddenInputFromSections,
   areDatesEqual,
   getTodayDate,
   getDefaultReferenceDate,
@@ -118,20 +117,12 @@ export const getRangeFieldValueManager = ({
 
     return [...getSections(start, 'start'), ...getSections(end, 'end')];
   },
-  getV7HiddenInputValueFromSections: (sections) => {
+  getHiddenInputValueFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    return createDateStrForV7HiddenInputFromSections([
+    return createDateStrForHiddenInputFromSections([
       ...dateRangeSections.startDate,
       ...dateRangeSections.endDate,
     ]);
-  },
-  getV6InputValueFromSections: (sections, localizedDigits, isRtl) => {
-    const dateRangeSections = splitDateRangeSections(sections);
-    return createDateStrForV6InputFromSections(
-      [...dateRangeSections.startDate, ...dateRangeSections.endDate],
-      localizedDigits,
-      isRtl,
-    );
   },
   parseValueStr: (valueStr, referenceValue, parseDate) => {
     // TODO: Improve because it would not work if some section have the same separator as the dateSeparator.

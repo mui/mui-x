@@ -38,7 +38,6 @@ export function ToolbarSortItem(props) {
           <SwapVertIcon fontSize="small" />
         </Badge>
       </ToolbarButton>
-
       <Drawer
         anchor={listView ? 'bottom' : 'right'}
         open={open}
@@ -46,7 +45,13 @@ export function ToolbarSortItem(props) {
         onClose={() => setOpen(false)}
       >
         <DrawerHeader>
-          <Typography fontWeight={500}>Sort by</Typography>
+          <Typography
+            sx={{
+              fontWeight: 500,
+            }}
+          >
+            Sort by
+          </Typography>
         </DrawerHeader>
 
         <List>

@@ -17,6 +17,59 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
+    title: 'MUI X v9',
+    description:
+      'A new major with accessibility-first charts, Data Grid AI assistant, candlestick and range bar charts, and new Scheduler and Chat packages.',
+    date: new Date(2026, 3, 8),
+    url: 'https://mui.com/blog/introducing-mui-v9/',
+    highlightList: [
+      {
+        title: 'Data Grid – Charts integration [Premium]',
+        url: '/x/react-data-grid/charts-integration/',
+      },
+      {
+        title: 'Data Grid – AI Assistant [Premium]',
+        url: '/x/react-data-grid/ai-assistant/',
+      },
+      {
+        title: 'Data Grid – Undo and redo [Premium]',
+        url: '/x/react-data-grid/undo-redo/',
+      },
+      {
+        title: 'Data Grid – Drag fill [Premium]',
+        url: '/x/react-data-grid/clipboard/#drag-to-fill',
+      },
+      {
+        title: 'Data Grid – longText column type',
+        url: '/x/react-data-grid/column-definition/#column-types',
+      },
+      {
+        title: 'Charts – Interaction and accessibility',
+        url: '/x/react-charts/accessibility/',
+      },
+      {
+        title: 'Charts – Candlestick [Premium]',
+        url: '/x/react-charts/candlestick/',
+      },
+      {
+        title: 'Charts – Range bar charts [Premium]',
+        url: '/x/react-charts/range-bar/',
+      },
+      {
+        title: 'Charts – WebGL Heatmap renderer [Premium]',
+        url: '/x/react-charts/heatmap/#webgl-renderer',
+      },
+      {
+        title: 'Tree View – Virtualization [Pro]',
+        url: '/x/react-tree-view/rich-tree-view/virtualization/',
+      },
+      {
+        title: 'Scheduler [Alpha]',
+        url: '/x/react-scheduler/',
+      },
+    ],
+  },
+  {
     title: 'MUI X v8.2',
     description: 'A roundup of all new features beyond v8.0.0.',
     date: new Date(2025, 12, 1),
@@ -518,9 +571,11 @@ function BlogCard({ entry }) {
         <div>
           <Typography
             variant="body2"
-            color="text.tertiary"
             gutterBottom
-            sx={{ display: { xs: 'auto', sm: 'none' } }}
+            sx={{
+              color: 'text.tertiary',
+              display: { xs: 'auto', sm: 'none' },
+            }}
           >
             {entry.date.toLocaleDateString('en-US', {
               year: 'numeric',
@@ -528,10 +583,23 @@ function BlogCard({ entry }) {
               day: 'numeric',
             })}
           </Typography>
-          <Typography component="div" color="text.primary" fontWeight="bold" mb={0.2}>
+          <Typography
+            component="div"
+            sx={{
+              color: 'text.primary',
+              fontWeight: 'bold',
+              mb: 0.2,
+            }}
+          >
             {entry.title}
           </Typography>
-          <Typography component="div" color="text.secondary" variant="body2">
+          <Typography
+            component="div"
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             {entry.description}
           </Typography>
         </div>
@@ -617,8 +685,8 @@ export default function WhatsNewLayout() {
           <TimelineItem key={entry.date.toISOString()}>
             <TimelineOppositeContent
               variant="body2"
-              color="text.tertiary"
               sx={{
+                color: 'text.tertiary',
                 display: { xs: 'none', sm: 'flex' },
                 flex: 'none',
                 px: 0,
