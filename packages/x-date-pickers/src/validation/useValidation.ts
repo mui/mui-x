@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import {MuiPickersAdapter, OnErrorProps, PickersTimezone} from '../models';
-import type {PickerValueManager} from '../internals/models';
-import {PickerValidValue} from '../internals/models';
-import {usePickerAdapter} from '../hooks';
+import { MuiPickersAdapter, OnErrorProps, PickersTimezone } from '../models';
+import type { PickerValueManager } from '../internals/models';
+import { PickerValidValue } from '../internals/models';
+import { usePickerAdapter } from '../hooks';
 
 export type Validator<TValue extends PickerValidValue, TError, TValidationProps> = {
   (params: {
@@ -12,7 +12,7 @@ export type Validator<TValue extends PickerValidValue, TError, TValidationProps>
     value: TValue;
     timezone: PickersTimezone;
     props: TValidationProps;
-    isPartiallyFilled: boolean | [boolean, boolean];
+    isPartiallyFilled?: boolean | [boolean, boolean];
   }): TError;
   valueManager: PickerValueManager<TValue, any>;
 };
@@ -42,7 +42,7 @@ interface UseValidationOptions<
    * For example, the `validateTime` function supports `minTime`, `maxTime`, etc.
    */
   props: TValidationProps;
-  isPartiallyFilled: boolean | [boolean, boolean];
+  isPartiallyFilled?: boolean | [boolean, boolean];
 }
 
 export interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
@@ -66,7 +66,7 @@ export interface UseValidationReturnValue<TValue extends PickerValidValue, TErro
    */
   getValidationErrorForNewValue: (
     newValue: TValue,
-    newIsPartiallyFilled: boolean | [boolean, boolean],
+    newIsPartiallyFilled?: boolean | [boolean, boolean],
   ) => TError;
 }
 
@@ -85,7 +85,7 @@ export interface UseValidationReturnValue<TValue extends PickerValidValue, TErro
 export function useValidation<TValue extends PickerValidValue, TError, TValidationProps extends {}>(
   options: UseValidationOptions<TValue, TError, TValidationProps>,
 ): UseValidationReturnValue<TValue, TError> {
-  const { props, validator, value, timezone, onError, isPartiallyFilled } = options;
+  const { props, validator, value, timezone, onError, isPartiallyFilled = false } = options;
 
   const adapter = usePickerAdapter();
   const previousValidationErrorRef = React.useRef<TError | null>(
@@ -107,13 +107,13 @@ export function useValidation<TValue extends PickerValidValue, TError, TValidati
   }, [validator, onError, validationError, value]);
 
   const getValidationErrorForNewValue = useEventCallback(
-    (newValue: TValue, newIsPartiallyFilled: boolean | [boolean, boolean]) => {
+    (newValue: TValue, newIsPartiallyFilled?: boolean | [boolean, boolean]) => {
       return validator({
         adapter,
         value: newValue,
         timezone,
         props,
-        isPartiallyFilled: newIsPartiallyFilled,
+        isPartiallyFilled: newIsPartiallyFilled ?? false,
       });
     },
   );

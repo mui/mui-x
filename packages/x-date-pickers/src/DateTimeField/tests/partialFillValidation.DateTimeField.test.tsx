@@ -5,7 +5,7 @@ import { spy } from 'sinon';
 describeAdapters(
   'DateTimeField - partiallyFilledDate validation',
   DateTimeField,
-  ({renderWithProps }) => {
+  ({ renderWithProps }) => {
     it('should call onError with partiallyFilledDate when date is partially filled', async () => {
       const onError = spy();
       const view = renderWithProps({

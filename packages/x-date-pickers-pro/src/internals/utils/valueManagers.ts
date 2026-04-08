@@ -175,8 +175,12 @@ export const getRangeFieldValueManager = ({
     ];
   },
   getIsPartiallyFilled: (sections) => {
-    const startSections = sections.filter((section) => (section as FieldRangeSection).dateName === 'start');
-    const endSections = sections.filter((section) => (section as FieldRangeSection).dateName === 'end');
+    const startSections = sections.filter(
+      (section) => (section as FieldRangeSection).dateName === 'start',
+    );
+    const endSections = sections.filter(
+      (section) => (section as FieldRangeSection).dateName === 'end',
+    );
 
     const startFilled = startSections.filter((section) => section.value !== '').length;
     const endFilled = endSections.filter((section) => section.value !== '').length;

@@ -105,32 +105,23 @@ export const usePicker = <
     boolean | [boolean, boolean]
   >(false);
 
-  const setIsPartiallyFilled = useEventCallback((fieldId: string, isPartial: boolean | [boolean, boolean]) => {
-    // partiallyFilledMapRef.current.set(fieldId, isPartial);
-    //
-    // const values = Array.from(partiallyFilledMapRef.current.values());
-    //
-    // if (values.length === 2) {
-    //   setIsPartiallyFilledState([values[0], values[1]]);
-    // } else {
-    //   setIsPartiallyFilledState(values[0] ?? false);
-    // }
+  const setIsPartiallyFilled = useEventCallback(
+    (fieldId: string, isPartial: boolean | [boolean, boolean]) => {
+      if (Array.isArray(isPartial)) {
+        setIsPartiallyFilledState(isPartial);
+        return;
+      }
 
-    if (Array.isArray(isPartial)) {
-      setIsPartiallyFilledState(isPartial);
-      return;
-    }
+      partiallyFilledMapRef.current.set(fieldId, isPartial);
+      const values = Array.from(partiallyFilledMapRef.current.values());
 
-    // Для одиночных полей (DateField) используем старую логику с Map
-    partiallyFilledMapRef.current.set(fieldId, isPartial);
-    const values = Array.from(partiallyFilledMapRef.current.values());
-
-    if (values.length === 2) {
-      setIsPartiallyFilledState([values[0], values[1]]);
-    } else {
-      setIsPartiallyFilledState(values[0] ?? false);
-    }
-  });
+      if (values.length === 2) {
+        setIsPartiallyFilledState([values[0], values[1]]);
+      } else {
+        setIsPartiallyFilledState(values[0] ?? false);
+      }
+    },
+  );
 
   const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
     useValueAndOpenStates<TValue, TView, TExternalProps>({

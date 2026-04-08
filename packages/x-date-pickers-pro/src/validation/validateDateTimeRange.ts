@@ -39,6 +39,10 @@ export const validateDateTimeRange: Validator<
 
   const { shouldDisableDate, ...otherProps } = props;
 
+  const isPartiallyFilledArray: [boolean, boolean] = Array.isArray(isPartiallyFilled)
+    ? isPartiallyFilled
+    : [isPartiallyFilled ?? false, isPartiallyFilled ?? false];
+
   const dateTimeValidations: DateTimeRangeValidationError = [
     validateDateTime({
       adapter,
@@ -48,7 +52,7 @@ export const validateDateTimeRange: Validator<
         ...otherProps,
         shouldDisableDate: (day) => !!shouldDisableDate?.(day, 'start'),
       },
-      isPartiallyFilled: isPartiallyFilled?.[0] ?? false,
+      isPartiallyFilled: isPartiallyFilledArray[0],
     }),
     validateDateTime({
       adapter,
@@ -58,7 +62,7 @@ export const validateDateTimeRange: Validator<
         ...otherProps,
         shouldDisableDate: (day) => !!shouldDisableDate?.(day, 'end'),
       },
-      isPartiallyFilled: isPartiallyFilled?.[1] ?? false,
+      isPartiallyFilled: isPartiallyFilledArray[1],
     }),
   ];
 
