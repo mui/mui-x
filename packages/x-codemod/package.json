@@ -32,7 +32,7 @@
     "@babel/core": "catalog:",
     "@babel/runtime": "catalog:",
     "@babel/traverse": "catalog:",
-    "@mui/x-internals": "workspace:*",
+    "@mui/x-internals": "workspace:^",
     "jscodeshift": "catalog:",
     "yargs": "catalog:"
   },
