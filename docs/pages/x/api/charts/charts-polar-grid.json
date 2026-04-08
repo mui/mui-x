@@ -1,0 +1,46 @@
+{
+  "props": {
+    "circular": { "type": { "name": "bool" }, "default": "true" },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "divisions": { "type": { "name": "number" }, "default": "5" },
+    "radial": { "type": { "name": "bool" }, "default": "true" }
+  },
+  "name": "ChartsPolarGrid",
+  "imports": [
+    "import { ChartsPolarGrid } from '@mui/x-charts/ChartsPolarGrid';",
+    "import { ChartsPolarGrid } from '@mui/x-charts';",
+    "import { ChartsPolarGrid } from '@mui/x-charts-pro';",
+    "import { ChartsPolarGrid } from '@mui/x-charts-premium';"
+  ],
+  "classes": [
+    {
+      "key": "circularLine",
+      "className": "MuiChartsPolarGrid-circularLine",
+      "description": "Styles applied to circular grid rings.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiChartsPolarGrid-line",
+      "description": "Styles applied to every line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "radialLine",
+      "className": "MuiChartsPolarGrid-radialLine",
+      "description": "Styles applied to radial lines (from center to edge).",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChartsPolarGrid-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChartsPolarGrid",
+  "filename": "/packages/x-charts/src/ChartsPolarGrid/ChartsPolarGrid.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,0 +1,39 @@
+{
+  "props": {
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, lineItemIdentifier: LineItemIdentifier) => void",
+        "describedArgs": ["event", "lineItemIdentifier"]
+      }
+    },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "RadialLinePlot",
+  "imports": [
+    "import { RadialLinePlot } from '@mui/x-charts/RadialLineChart';",
+    "import { RadialLinePlot } from '@mui/x-charts';",
+    "import { RadialLinePlot } from '@mui/x-charts-pro';",
+    "import { RadialLinePlot } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    {
+      "name": "line",
+      "description": "The component that renders the line.",
+      "default": "LineElementPath",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiRadialLinePlot",
+  "filename": "/packages/x-charts/src/RadialLineChart/RadialLinePlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
+  "cssComponent": false
+}

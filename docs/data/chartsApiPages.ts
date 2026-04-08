@@ -118,6 +118,14 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLocalizationProvider',
   },
   {
+    pathname: '/x/api/charts/charts-polar-data-provider',
+    title: 'ChartsPolarDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-polar-grid',
+    title: 'ChartsPolarGrid',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },
@@ -362,6 +370,14 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/radar-series-plot',
     title: 'RadarSeriesPlot',
+  },
+  {
+    pathname: '/x/api/charts/radial-line-chart',
+    title: 'RadialLineChart',
+  },
+  {
+    pathname: '/x/api/charts/radial-line-plot',
+    title: 'RadialLinePlot',
   },
   {
     pathname: '/x/api/charts/range-bar-plot',
