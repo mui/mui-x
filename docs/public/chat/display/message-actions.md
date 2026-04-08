@@ -10,8 +10,6 @@ components: ChatMessageActions
 
 Add hover-triggered action buttons to messages for copy, edit, delete, and custom operations.
 
-
-
 `ChatMessageActions` renders an action bar that appears when the user hovers over a message or focuses within it. The actions area is positioned in the message grid and transitions from hidden to visible using an opacity animation.
 
 ## Import
@@ -107,7 +105,6 @@ export default function BasicMessageActions() {
     />
   );
 }
-
 ```
 
 ### Accessing message context
@@ -171,7 +168,6 @@ export default function RoleBasedMessageActions() {
     />
   );
 }
-
 ```
 
 ## Owner state

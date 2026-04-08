@@ -10,8 +10,6 @@ components: ChatBox
 
 <p class="description">Replace individual subcomponents inside ChatBox with your own implementations using the <code>slots</code> and <code>slotProps</code> API.</p>
 
-
-
 `ChatBox` composes many themed subcomponents internally — message bubbles, the composer, the conversation list, date dividers, and more.
 The `slots` prop lets you swap any of them with your own component, while `slotProps` passes extra props to those components without replacing them.
 
@@ -132,7 +130,7 @@ export default function FeatureFlags() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       features={{
-        conversationHeader: false,
+        conversations: false,
         attachments: false,
       }}
       sx={{
@@ -144,7 +142,6 @@ export default function FeatureFlags() {
     />
   );
 }
-
 ```
 
 ## Feature flags and slot rendering

@@ -10,8 +10,6 @@ components: ChatMessageContent
 
 <p class="description">Render plain text and markdown content in chat messages using the <code>ChatTextMessagePart</code> type and the built-in markdown renderer.</p>
 
-
-
 Text parts are the most common message part type. Every message with written content — whether from a human user or an AI assistant — uses one or more `text` parts to carry that content.
 
 ## The text part data model

@@ -591,7 +591,7 @@ const BrandComposerButton = React.forwardRef(function BrandComposerButton(
   ref: React.Ref<HTMLButtonElement>,
 ) {
   const { ownerState, style, children, disabled, ...other } = props;
-  const isPrimary = (other as any)['data-variant'] === 'primary';
+  const isPrimary = other['data-variant'] === 'primary';
 
   return (
     <button
@@ -647,16 +647,13 @@ export default function SlotCustomization() {
         }
       }}
       onMessagesChange={(nextMessages) => {
-        setThreads((previous: any) => ({
+        setThreads((previous) => ({
           ...previous,
           [activeConversationId]: nextMessages,
         }));
-        setConversations(((previous: any) =>
-          syncConversationPreview(
-            previous,
-            activeConversationId,
-            nextMessages,
-          )) as any);
+        setConversations((previous) =>
+          syncConversationPreview(previous, activeConversationId, nextMessages),
+        );
       }}
       slotProps={{
         root: {
@@ -794,7 +791,7 @@ export default function SlotCustomization() {
                 index={index}
                 key={id}
                 messageId={id}
-                slots={{ authorName: BrandMessageAuthor, group: BrandMessageGroup }}
+                slots={{ authorName: BrandMessageAuthor, root: BrandMessageGroup }}
               >
                 <Message.Root messageId={id} slots={{ root: BrandMessageRoot }}>
                   <Message.Avatar slots={{ avatar: BrandMessageAvatar }} />
@@ -808,17 +805,17 @@ export default function SlotCustomization() {
             <Composer.TextArea
               aria-label="Brand message"
               placeholder="Reply using the product-specific markup"
-              slots={{ input: BrandComposerInput }}
+              slots={{ root: BrandComposerInput }}
             />
             <div
               style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}
             >
-              <Composer.AttachButton slots={{ attachButton: BrandComposerButton }}>
+              <Composer.AttachButton slots={{ root: BrandComposerButton }}>
                 Attach
               </Composer.AttachButton>
               <Composer.SendButton
                 data-variant="primary"
-                slots={{ sendButton: BrandComposerButton }}
+                slots={{ root: BrandComposerButton }}
               >
                 Send
               </Composer.SendButton>
@@ -829,7 +826,6 @@ export default function SlotCustomization() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Key primitives

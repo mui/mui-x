@@ -32,7 +32,7 @@ const LONG_CONV_ID = 'long-msg-conv';
 
 const adapter = createEchoAdapter({
   respond: () =>
-    `This is a very long response to test text wrapping and overflow behavior in the ChatBox component. The Material UI styled bubbles should properly wrap long text without horizontal scrolling or layout issues.
+    `This is a very long response to test text wrapping and overflow behavior in the ChatBox component. The Material UI styled bubbles should properly wrap long text without horizontal scrolling or layout issues.
 
 Here is a code block to test code formatting:
 
@@ -126,7 +126,6 @@ export default function LongMessages() {
     />
   );
 }
-
 ```
 
 ## API

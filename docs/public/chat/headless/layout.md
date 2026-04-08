@@ -74,7 +74,7 @@ export default function MinimalUnstyledShell() {
         >
           <Conversation.Header
             slotProps={{
-              header: demoSlotProps.conversationHeader,
+              root: demoSlotProps.conversationHeader,
             }}
           >
             <div style={{ minWidth: 0 }}>
@@ -90,7 +90,7 @@ export default function MinimalUnstyledShell() {
                 key={id}
                 messageId={id}
                 slotProps={{
-                  group: demoSlotProps.messageGroupRoot,
+                  root: demoSlotProps.messageGroupRoot,
                   authorName: demoSlotProps.messageGroupAuthorName,
                 }}
               >
@@ -148,7 +148,6 @@ export default function MinimalUnstyledShell() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## `Chat.Root`

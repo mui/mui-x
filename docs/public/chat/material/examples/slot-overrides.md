@@ -108,7 +108,6 @@ export default function SlotOverrides() {
     />
   );
 }
-
 ```
 
 ## The wrapping pattern

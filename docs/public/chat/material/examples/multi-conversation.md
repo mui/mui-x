@@ -80,7 +80,6 @@ export default function MultiConversation() {
     />
   );
 }
-
 ```
 
 ## Controlled vs. uncontrolled conversations

@@ -36,7 +36,7 @@ import Typography from '@mui/material/Typography';
 import { demoUsers } from 'docsx/data/chat/core/examples/shared/demoData';
 import { createChunkStream } from 'docsx/data/chat/core/examples/shared/demoUtils';
 
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatUserMetadata {
     team: 'support' | 'ops';
     shift: 'day' | 'night';
@@ -531,7 +531,6 @@ export default function TypeAugmentationHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## The six registry interfaces

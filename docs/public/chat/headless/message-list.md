@@ -10,8 +10,6 @@ githubLabel: 'scope: chat'
 
 Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking.
 
-
-
 ## Primitive set
 
 The message list surface is built from:

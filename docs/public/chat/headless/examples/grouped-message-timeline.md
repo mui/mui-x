@@ -32,7 +32,6 @@ import {
   MessageList,
   createTimeWindowGroupKey,
 } from '@mui/x-chat/headless';
-import type { GroupKeyFn } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 import {
   demoUsers,
@@ -93,7 +92,7 @@ export default function GroupedMessageTimeline() {
       >
         <Conversation.Header
           slotProps={{
-            header: demoSlotProps.conversationHeader,
+            root: demoSlotProps.conversationHeader,
           }}
         >
           <div style={{ minWidth: 0 }}>
@@ -128,7 +127,7 @@ export default function GroupedMessageTimeline() {
                 key={id}
                 messageId={id}
                 slotProps={{
-                  group: demoSlotProps.messageGroupRoot,
+                  root: demoSlotProps.messageGroupRoot,
                   authorName: demoSlotProps.messageGroupAuthorName,
                 }}
               >
@@ -152,13 +151,13 @@ export default function GroupedMessageTimeline() {
                   {isUser ? (
                     <Message.Meta
                       slotProps={{
-                        meta: ((ownerState: any) => ({
+                        meta: (ownerState: { role: string }) => ({
                           ...demoSlotProps.messageMeta(ownerState),
                           style: {
                             ...demoSlotProps.messageMeta(ownerState).style,
                             marginBottom: 4,
                           },
-                        })) as any,
+                        }),
                       }}
                     />
                   ) : (
@@ -251,7 +250,6 @@ export default function GroupedMessageTimeline() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Key primitives

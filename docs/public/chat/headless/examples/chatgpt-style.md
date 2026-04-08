@@ -18,7 +18,7 @@ This demo shows how the same headless primitives can be customized to produce a 
 - No sender names or timestamps — clean, minimal message display
 - Centered content column with a maximum width and a pill-shaped composer
 
-```tsx
+````tsx
 import * as React from 'react';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
@@ -1026,12 +1026,13 @@ export default function ChatGptStyleChat() {
         }
       }}
       onMessagesChange={(nextMessages) => {
-        setThreads((prev: any) => ({
+        setThreads((prev) => ({
           ...prev,
           [activeConversationId]: nextMessages,
         }));
-        setConvos(((prev: any) =>
-          syncConversationPreview(prev, activeConversationId, nextMessages)) as any);
+        setConvos((prev) =>
+          syncConversationPreview(prev, activeConversationId, nextMessages),
+        );
       }}
       slotProps={{
         root: {
@@ -1179,7 +1180,7 @@ export default function ChatGptStyleChat() {
                 messageId={id}
                 slots={{
                   authorName: GptAuthorName,
-                  group: GptMessageGroup,
+                  root: GptMessageGroup,
                 }}
               >
                 <Message.Root messageId={id} slots={{ root: GptMessageRoot }}>
@@ -1214,7 +1215,7 @@ export default function ChatGptStyleChat() {
               </MessageGroup>
             )}
             slotProps={{
-              messageList: {
+              root: {
                 style: { paddingRight: 0 },
               },
               messageListScroller: {
@@ -1292,8 +1293,7 @@ export default function ChatGptStyleChat() {
     </Chat.Root>
   );
 }
-
-```
+````
 
 ## Key techniques
 

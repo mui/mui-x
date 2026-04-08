@@ -10,8 +10,6 @@ components: ChatMessageContent
 
 <p class="description">Display file attachments and inline image previews using the <code>ChatFileMessagePart</code> type.</p>
 
-
-
 File parts represent file attachments within a message. When the file is an image, an inline preview is rendered. For other file types, a compact chip with a document icon and filename is displayed.
 
 ## The file part data model

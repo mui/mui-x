@@ -150,7 +150,6 @@ export default function CodeBlock() {
     </Box>
   );
 }
-
 ```
 
 ## Basic usage

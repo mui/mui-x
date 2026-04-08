@@ -97,7 +97,7 @@ function ComposerDemoBody() {
     >
       <Conversation.Header
         slotProps={{
-          header: demoSlotProps.conversationHeader,
+          root: demoSlotProps.conversationHeader,
         }}
       >
         <div style={{ minWidth: 0 }}>
@@ -113,7 +113,7 @@ function ComposerDemoBody() {
             key={id}
             messageId={id}
             slotProps={{
-              group: demoSlotProps.messageGroupRoot,
+              root: demoSlotProps.messageGroupRoot,
               authorName: demoSlotProps.messageGroupAuthorName,
             }}
           >
@@ -306,7 +306,6 @@ export default function ComposerWithAttachments() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Key primitives

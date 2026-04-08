@@ -10,8 +10,6 @@ components: ChatRoot
 
 Override styles, replace subcomponents, and pass props to any chat element using the Material UI customization system.
 
-
-
 The following demo shows a custom-themed chat surface:
 
 ```tsx
@@ -70,7 +68,6 @@ export default function CustomTheme() {
     </ThemeProvider>
   );
 }
-
 ```
 
 ## sx prop

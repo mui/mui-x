@@ -100,7 +100,7 @@ import Typography from '@mui/material/Typography';
 import { demoUsers } from 'docsx/data/chat/core/examples/shared/demoData';
 import { createChunkStream } from 'docsx/data/chat/core/examples/shared/demoUtils';
 
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/types' {
   interface ChatCustomMessagePartMap {
     poll: {
       type: 'poll';
@@ -446,7 +446,6 @@ export default function ToolApprovalAndRenderersHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Key takeaways

@@ -10,8 +10,6 @@ components: ChatRoot
 
 Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.
 
-
-
 `@mui/x-chat/headless` builds on the core runtime.
 It combines core state with structural components such as lists, threads, messages, composers, and indicators.
 

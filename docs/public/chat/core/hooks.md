@@ -216,7 +216,6 @@ export default function MinimalHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## `useChat()`

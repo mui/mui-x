@@ -80,7 +80,7 @@ export default function IndicatorsInContext() {
     subtitle: 'Typing, unread boundaries, and scroll state',
     participants: [demoUsers.you, demoUsers.alice, demoUsers.agent],
     unreadCount: 3,
-    readState: 'unread' as 'read' | 'unread',
+    readState: 'unread' as const,
   });
 
   const triggerTyping = React.useCallback(() => {
@@ -134,7 +134,7 @@ export default function IndicatorsInContext() {
       conversations={[conversation]}
       initialActiveConversationId="indicators"
       messages={messages}
-      onMessagesChange={setMessages as any}
+      onMessagesChange={setMessages}
       localeText={demoLocaleText}
       slotProps={{
         root: {
@@ -160,7 +160,7 @@ export default function IndicatorsInContext() {
       >
         <Conversation.Header
           slotProps={{
-            header: demoSlotProps.conversationHeader as any,
+            root: demoSlotProps.conversationHeader,
           }}
         >
           <div style={{ display: 'grid', gap: 6, minWidth: 0 }}>
@@ -194,14 +194,11 @@ export default function IndicatorsInContext() {
             <DemoToolbarButton
               tone="accent"
               onClick={() =>
-                setConversation(
-                  (previous) =>
-                    ({
-                      ...previous,
-                      unreadCount: 0,
-                      readState: 'read',
-                    }) as any,
-                )
+                setConversation((previous) => ({
+                  ...previous,
+                  unreadCount: 0,
+                  readState: 'read',
+                }))
               }
             >
               Mark read
@@ -230,7 +227,7 @@ export default function IndicatorsInContext() {
                 index={index}
                 messageId={id}
                 slotProps={{
-                  divider: demoSlotProps.dateDividerRoot as any,
+                  root: demoSlotProps.dateDividerRoot,
                   label: demoSlotProps.dateDividerLabel,
                 }}
               />
@@ -238,30 +235,30 @@ export default function IndicatorsInContext() {
                 index={index}
                 messageId={id}
                 slotProps={{
-                  group: demoSlotProps.messageGroupRoot as any,
-                  authorName: demoSlotProps.messageGroupAuthorName as any,
+                  root: demoSlotProps.messageGroupRoot,
+                  authorName: demoSlotProps.messageGroupAuthorName,
                 }}
               >
                 <Message.Root
                   messageId={id}
                   slotProps={{
-                    root: demoSlotProps.messageRoot as any,
+                    root: demoSlotProps.messageRoot,
                   }}
                 >
                   <Message.Avatar
                     slotProps={{
-                      avatar: demoSlotProps.messageAvatar as any,
+                      avatar: demoSlotProps.messageAvatar,
                       image: demoSlotProps.messageAvatarImage,
                     }}
                   />
                   <Message.Content
                     slotProps={{
-                      bubble: demoSlotProps.messageBubble as any,
+                      bubble: demoSlotProps.messageBubble,
                     }}
                   />
                   <Message.Meta
                     slotProps={{
-                      meta: demoSlotProps.messageMeta as any,
+                      meta: demoSlotProps.messageMeta,
                     }}
                   />
                 </Message.Root>
@@ -282,7 +279,7 @@ export default function IndicatorsInContext() {
             aria-label="Message"
             placeholder="Type a message"
             slotProps={{
-              input: demoSlotProps.composerTextArea as any,
+              input: demoSlotProps.composerTextArea,
             }}
           />
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -300,7 +297,6 @@ export default function IndicatorsInContext() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Key primitives
