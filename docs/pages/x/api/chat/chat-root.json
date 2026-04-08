@@ -12,6 +12,6 @@
   "muiName": "MuiChatRoot",
   "filename": "/packages/x-chat-headless/src/chat/ChatRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/customization/headless/\">Chat - Headless Components</a></li>\n<li><a href=\"/x/react-chat/customization/localization/\">Chat - Localization</a></li>\n<li><a href=\"/x/react-chat/customization/tailwind/\">Chat - Tailwind CSS</a></li>\n<li><a href=\"/x/react-chat/quickstart/\">Getting started</a></li>\n<li><a href=\"/x/react-chat/headless/composition/\">Chat - Headless composition</a></li>\n<li><a href=\"/x/react-chat/material/customization/\">Chat - Customization</a></li>\n<li><a href=\"/x/react-chat/material/slot-overrides/\">Chat - Slot overrides</a></li>\n<li><a href=\"/x/react-chat/overview/\">MUI X Chat</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/customization/headless/\">Chat - Headless Components</a></li>\n<li><a href=\"/x/react-chat/customization/localization/\">Chat - Localization</a></li>\n<li><a href=\"/x/react-chat/customization/tailwind/\">Chat - Tailwind CSS</a></li>\n<li><a href=\"/x/react-chat/headless/composition/\">Chat - Headless composition</a></li>\n<li><a href=\"/x/react-chat/material/customization/\">Chat - Customization</a></li>\n<li><a href=\"/x/react-chat/material/slot-overrides/\">Chat - Slot overrides</a></li>\n<li><a href=\"/x/react-chat/\">MUI X Chat</a></li></ul>",
   "cssComponent": false
 }

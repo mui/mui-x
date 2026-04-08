@@ -45,10 +45,15 @@ export function getComponentInfo(filename: string): ComponentInfo {
       return allMarkdowns
         .filter((page) => page.pathname.startsWith('/chat') && page.components.includes(name))
         .map((page) => {
+          const rawPathname = page.pathname.replace('/chat', '/x/react-chat');
+          // The overview page is mapped to /x/react-chat (not /x/react-chat/overview)
+          const demoPathname = rawPathname.endsWith('/overview')
+            ? `${rawPathname.replace('/overview', '')}/`
+            : `${rawPathname}/`;
           return {
             filePath: page.filename,
             demoPageTitle: renderMarkdown(getTitle(page.markdownContent)),
-            demoPathname: `${page.pathname.replace('/chat', '/x/react-chat')}/`,
+            demoPathname,
           };
         });
     },
