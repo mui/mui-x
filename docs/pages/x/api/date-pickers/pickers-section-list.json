@@ -4,7 +4,7 @@
     "elements": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ container: object, content: object, before: object, after: object }&gt;"
+        "description": "Array&lt;{ after: object, before: object, container: object, content: object }&gt;"
       },
       "required": true
     },

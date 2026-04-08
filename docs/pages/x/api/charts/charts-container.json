@@ -4,7 +4,7 @@
     "brushConfig": {
       "type": {
         "name": "shape",
-        "description": "{ enabled?: bool, preventTooltip?: bool, preventHighlight?: bool }"
+        "description": "{ enabled?: bool, preventHighlight?: bool, preventTooltip?: bool }"
       }
     },
     "colors": {
@@ -21,7 +21,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;any<br>&#124;&nbsp;{ type?: any, seriesId: any }&gt;"
+        "description": "Array&lt;any<br>&#124;&nbsp;{ seriesId: any, type?: any }&gt;"
       }
     },
     "highlightedAxis": {
@@ -36,14 +36,14 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;any<br>&#124;&nbsp;{ type?: any, seriesId: any }&gt;"
+        "description": "Array&lt;any<br>&#124;&nbsp;{ seriesId: any, type?: any }&gt;"
       }
     },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
     "onAxisClick": {
@@ -132,7 +132,7 @@
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ data?: Array&lt;any&gt;, max?: number, min?: number, dataKey?: string, colorMap?: { type: 'continuous', min?: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, color: any<br>&#124;&nbsp;any }<br>&#124;&nbsp;{ type: 'piecewise', thresholds: Array&lt;any&gt;, colors: Array&lt;any&gt; }<br>&#124;&nbsp;{ type: 'ordinal', values?: Array&lt;any&gt;, colors: Array&lt;any&gt;, unknownColor?: string }, id?: string }&gt;"
+        "description": "Array&lt;{ colorMap?: { color: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;any&gt; }, data?: Array&lt;any&gt;, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
       }
     }
   },

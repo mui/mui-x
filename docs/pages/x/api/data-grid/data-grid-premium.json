@@ -19,7 +19,7 @@
     "aiAssistantConversations": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ id?: string, title?: string, prompts: Array&lt;{ value: string, createdAt: object, response?: object, variant?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any, helperText?: string }&gt; }&gt;"
+        "description": "Array&lt;{ id?: string, prompts: Array&lt;{ createdAt: object, helperText?: string, response?: object, value: string, variant?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any }&gt;, title?: string }&gt;"
       }
     },
     "aiAssistantSuggestions": {
@@ -34,7 +34,7 @@
     "autosizeOptions": {
       "type": {
         "name": "shape",
-        "description": "{ columns?: Array&lt;string&gt;, includeHeaders?: bool, includeHeaderFilters?: bool, includeOutliers?: bool, outliersFactor?: number, expand?: bool, disableColumnVirtualization?: bool }"
+        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaderFilters?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
@@ -56,11 +56,11 @@
     "dataSource": {
       "type": {
         "name": "shape",
-        "description": "{ getRows: func, getAggregatedValue?: func, updateRow?: func, getGroupKey?: func, getChildrenCount?: func }"
+        "description": "{ getAggregatedValue?: func, getChildrenCount?: func, getGroupKey?: func, getRows: func, updateRow?: func }"
       }
     },
     "dataSourceCache": {
-      "type": { "name": "shape", "description": "{ set: func, get: func, clear: func }" }
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
     },
     "dataSourceRevalidateMs": { "type": { "name": "number" }, "default": "0" },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
@@ -74,7 +74,7 @@
     "detailPanelExpandedRowIds": {
       "type": {
         "name": "shape",
-        "description": "{ add: func, clear: func, delete: func, forEach: func, has: func, size: number, entries: func, keys: func, values: func, union: func, intersection: func, difference: func, symmetricDifference: func, isSubsetOf: func, isSupersetOf: func, isDisjointFrom: func }"
+        "description": "{ add: func, clear: func, delete: func, difference: func, entries: func, forEach: func, has: func, intersection: func, isDisjointFrom: func, isSubsetOf: func, isSupersetOf: func, keys: func, size: number, symmetricDifference: func, union: func, values: func }"
       }
     },
     "disableAggregation": { "type": { "name": "bool" }, "default": "false" },
@@ -110,7 +110,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ warnIfFocusStateIsNotSynced?: bool, virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled' }"
+        "description": "{ virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
@@ -121,7 +121,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ id?: string<br>&#124;&nbsp;number, field: string, value?: any, operator: 'contains'<br>&#124;&nbsp;'doesNotContain'<br>&#124;&nbsp;'equals'<br>&#124;&nbsp;'doesNotEqual'<br>&#124;&nbsp;'startsWith'<br>&#124;&nbsp;'endsWith'<br>&#124;&nbsp;'='<br>&#124;&nbsp;'!='<br>&#124;&nbsp;'>'<br>&#124;&nbsp;'>='<br>&#124;&nbsp;'<'<br>&#124;&nbsp;'<='<br>&#124;&nbsp;'is'<br>&#124;&nbsp;'not'<br>&#124;&nbsp;'after'<br>&#124;&nbsp;'onOrAfter'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'onOrBefore'<br>&#124;&nbsp;'isEmpty'<br>&#124;&nbsp;'isNotEmpty'<br>&#124;&nbsp;'isAnyOf'<br>&#124;&nbsp;object }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: Array&lt;any&gt;, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool }"
+        "description": "{ items: Array&lt;{ field: string, id?: string<br>&#124;&nbsp;number, operator: 'contains'<br>&#124;&nbsp;'doesNotContain'<br>&#124;&nbsp;'equals'<br>&#124;&nbsp;'doesNotEqual'<br>&#124;&nbsp;'startsWith'<br>&#124;&nbsp;'endsWith'<br>&#124;&nbsp;'='<br>&#124;&nbsp;'!='<br>&#124;&nbsp;'>'<br>&#124;&nbsp;'>='<br>&#124;&nbsp;'<'<br>&#124;&nbsp;'<='<br>&#124;&nbsp;'is'<br>&#124;&nbsp;'not'<br>&#124;&nbsp;'after'<br>&#124;&nbsp;'onOrAfter'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'onOrBefore'<br>&#124;&nbsp;'isEmpty'<br>&#124;&nbsp;'isNotEmpty'<br>&#124;&nbsp;'isAnyOf'<br>&#124;&nbsp;object, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: Array&lt;any&gt; }"
       }
     },
     "getAggregationPosition": {
@@ -234,7 +234,7 @@
     "ignoreValueFormatterDuringExport": {
       "type": {
         "name": "union",
-        "description": "bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;{ csvExport?: bool, clipboardExport?: bool }"
+        "description": "bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;{ clipboardExport?: bool, csvExport?: bool }"
       },
       "default": "false"
     },
@@ -288,7 +288,7 @@
     "listViewColumn": {
       "type": {
         "name": "shape",
-        "description": "{ field: string, display?: 'flex'<br>&#124;&nbsp;'text', align?: 'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'center', cellClassName?: string<br>&#124;&nbsp;func, renderCell?: func }"
+        "description": "{ align?: 'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'center', cellClassName?: string<br>&#124;&nbsp;func, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -296,7 +296,7 @@
     "logger": {
       "type": {
         "name": "shape",
-        "description": "{ debug: func, info: func, warn: func, error: func }"
+        "description": "{ debug: func, error: func, info: func, warn: func }"
       },
       "default": "console"
     },
@@ -735,7 +735,7 @@
     "pageSizeOptions": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;number<br>&#124;&nbsp;{ value: number, label: string }&gt;"
+        "description": "Array&lt;number<br>&#124;&nbsp;{ label: string, value: number }&gt;"
       },
       "default": "[25, 50, 100]"
     },
@@ -746,7 +746,7 @@
       "default": "\"client\""
     },
     "paginationModel": {
-      "type": { "name": "shape", "description": "{ pageSize: number, page: number }" }
+      "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
     "pinnedColumns": { "type": { "name": "object" } },
     "pinnedColumnsSectionSeparator": {
@@ -759,7 +759,7 @@
     "pinnedRows": {
       "type": {
         "name": "shape",
-        "description": "{ top?: Array&lt;any&gt;, bottom?: Array&lt;any&gt; }"
+        "description": "{ bottom?: Array&lt;any&gt;, top?: Array&lt;any&gt; }"
       }
     },
     "pinnedRowsSectionSeparator": {
@@ -770,14 +770,14 @@
     "pivotingColDef": {
       "type": {
         "name": "union",
-        "description": "{ sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, field?: string, display?: 'flex'<br>&#124;&nbsp;'text', maxWidth?: number, minWidth?: number, width?: number, flex?: number, headerName?: string, description?: string, resizable?: bool, align?: 'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'center', cellClassName?: string<br>&#124;&nbsp;func, headerClassName?: string<br>&#124;&nbsp;func, headerAlign?: 'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'center' }<br>&#124;&nbsp;func"
+        "description": "{ align?: 'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'center', cellClassName?: string<br>&#124;&nbsp;func, description?: string, display?: 'flex'<br>&#124;&nbsp;'text', field?: string, flex?: number, headerAlign?: 'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'center', headerClassName?: string<br>&#124;&nbsp;func, headerName?: string, maxWidth?: number, minWidth?: number, resizable?: bool, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, width?: number }<br>&#124;&nbsp;func"
       },
       "default": "undefined"
     },
     "pivotModel": {
       "type": {
         "name": "shape",
-        "description": "{ columns: Array&lt;{ field: string, sort?: 'asc'<br>&#124;&nbsp;'desc', hidden?: bool }&gt;, rows: Array&lt;{ field: string, hidden?: bool }&gt;, values: Array&lt;{ field: string, aggFunc: string, hidden?: bool }&gt; }"
+        "description": "{ columns: Array&lt;{ field: string, hidden?: bool, sort?: 'asc'<br>&#124;&nbsp;'desc' }&gt;, rows: Array&lt;{ field: string, hidden?: bool }&gt;, values: Array&lt;{ aggFunc: string, field: string, hidden?: bool }&gt; }"
       }
     },
     "pivotPanelOpen": {
@@ -810,7 +810,7 @@
     "rowSelectionModel": {
       "type": {
         "name": "shape",
-        "description": "{ type: 'include'<br>&#124;&nbsp;'exclude', ids: { add: func, clear: func, delete: func, forEach: func, has: func, size: number, entries: func, keys: func, values: func, union: func, intersection: func, difference: func, symmetricDifference: func, isSubsetOf: func, isSupersetOf: func, isDisjointFrom: func } }"
+        "description": "{ ids: { add: func, clear: func, delete: func, difference: func, entries: func, forEach: func, has: func, intersection: func, isDisjointFrom: func, isSubsetOf: func, isSupersetOf: func, keys: func, size: number, symmetricDifference: func, union: func, values: func }, type: 'include'<br>&#124;&nbsp;'exclude' }"
       }
     },
     "rowSelectionPropagation": {

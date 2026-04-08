@@ -194,7 +194,7 @@
     "viewRenderers": {
       "type": {
         "name": "shape",
-        "description": "{ day?: func, hours?: func, minutes?: func, seconds?: func, meridiem?: func }"
+        "description": "{ day?: func, hours?: func, meridiem?: func, minutes?: func, seconds?: func }"
       }
     },
     "views": {

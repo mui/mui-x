@@ -6,7 +6,7 @@
     "filterFormProps": {
       "type": {
         "name": "shape",
-        "description": "{ filterColumns?: func, columnsSort?: 'asc'<br>&#124;&nbsp;'desc', deleteIconProps?: any, logicOperatorInputProps?: any, operatorInputProps?: any, columnInputProps?: any, valueInputProps?: any }"
+        "description": "{ columnInputProps?: any, columnsSort?: 'asc'<br>&#124;&nbsp;'desc', deleteIconProps?: any, filterColumns?: func, logicOperatorInputProps?: any, operatorInputProps?: any, valueInputProps?: any }"
       }
     },
     "getColumnForNewFilter": {

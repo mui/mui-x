@@ -173,7 +173,7 @@
       }
     },
     "viewRenderers": {
-      "type": { "name": "shape", "description": "{ month?: func, year?: func, day?: func }" }
+      "type": { "name": "shape", "description": "{ day?: func, month?: func, year?: func }" }
     },
     "views": {
       "type": {

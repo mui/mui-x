@@ -17,7 +17,7 @@
     "margin": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
     "outerRadius": {

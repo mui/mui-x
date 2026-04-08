@@ -7,7 +7,7 @@
     "items": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ label: string, getValue: func, id?: string }&gt;"
+        "description": "Array&lt;{ getValue: func, id?: string, label: string }&gt;"
       },
       "default": "[]"
     }

@@ -3,7 +3,7 @@
     "data": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ id?: string<br>&#124;&nbsp;number, value: number, label?: string<br>&#124;&nbsp;func, color: string, labelMarkType?: 'circle'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'line+mark'<br>&#124;&nbsp;{ propTypes?: any, contextType?: func, defaultProps?: object, displayName?: string, getDerivedStateFromProps?: func, getDerivedStateFromError?: func }<br>&#124;&nbsp;func, startAngle: number, endAngle: number, index: number, padAngle: number, formattedValue: string, hidden: bool }&gt;"
+        "description": "Array&lt;{ color: string, endAngle: number, formattedValue: string, hidden: bool, id?: string<br>&#124;&nbsp;number, index: number, label?: string<br>&#124;&nbsp;func, labelMarkType?: 'circle'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'line+mark'<br>&#124;&nbsp;{ contextType?: func, defaultProps?: object, displayName?: string, getDerivedStateFromError?: func, getDerivedStateFromProps?: func, propTypes?: any }<br>&#124;&nbsp;func, padAngle: number, startAngle: number, value: number }&gt;"
       },
       "required": true
     },
@@ -24,14 +24,14 @@
     "faded": {
       "type": {
         "name": "shape",
-        "description": "{ additionalRadius?: number, innerRadius?: number, outerRadius?: number, cornerRadius?: number, paddingAngle?: number, arcLabelRadius?: number, color?: string }"
+        "description": "{ additionalRadius?: number, arcLabelRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
       },
       "default": "{ additionalRadius: -5 }"
     },
     "highlighted": {
       "type": {
         "name": "shape",
-        "description": "{ additionalRadius?: number, innerRadius?: number, outerRadius?: number, cornerRadius?: number, paddingAngle?: number, arcLabelRadius?: number, color?: string }"
+        "description": "{ additionalRadius?: number, arcLabelRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
       }
     },
     "innerRadius": { "type": { "name": "number" }, "default": "0" },

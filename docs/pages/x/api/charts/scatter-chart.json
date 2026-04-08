@@ -19,7 +19,7 @@
     "brushConfig": {
       "type": {
         "name": "shape",
-        "description": "{ enabled?: bool, preventTooltip?: bool, preventHighlight?: bool }"
+        "description": "{ enabled?: bool, preventHighlight?: bool, preventTooltip?: bool }"
       }
     },
     "colors": {
@@ -51,14 +51,14 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ type: 'scatter', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'scatter', seriesId: string, dataIndex?: number }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ type: 'scatter', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ seriesId: string, dataIndex?: number }"
+        "description": "{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
       }
     },
     "hitAreaRadius": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;'item'" } },
@@ -66,7 +66,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ type: 'scatter', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'scatter', seriesId: string, dataIndex?: number }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -74,7 +74,7 @@
     "margin": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
     "onAxisClick": {
@@ -136,7 +136,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ type: 'scatter', seriesId: string, dataIndex: number }<br>&#124;&nbsp;{ seriesId: string, dataIndex: number }"
+        "description": "{ dataIndex: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
       }
     },
     "width": { "type": { "name": "number" } },
@@ -155,7 +155,7 @@
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ data?: Array&lt;any&gt;, max?: number, min?: number, dataKey?: string, colorMap?: { type: 'continuous', min?: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, color: any<br>&#124;&nbsp;any }<br>&#124;&nbsp;{ type: 'piecewise', thresholds: Array&lt;any&gt;, colors: Array&lt;any&gt; }<br>&#124;&nbsp;{ type: 'ordinal', values?: Array&lt;any&gt;, colors: Array&lt;any&gt;, unknownColor?: string }, id?: string }&gt;"
+        "description": "Array&lt;{ colorMap?: { color: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;any&gt; }, data?: Array&lt;any&gt;, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
       }
     }
   },

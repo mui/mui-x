@@ -13,7 +13,7 @@
     "autosizeOptions": {
       "type": {
         "name": "shape",
-        "description": "{ columns?: Array&lt;string&gt;, includeHeaders?: bool, includeHeaderFilters?: bool, includeOutliers?: bool, outliersFactor?: number, expand?: bool, disableColumnVirtualization?: bool }"
+        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaderFilters?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
@@ -31,7 +31,7 @@
       "type": { "name": "shape", "description": "{ getRows: func, updateRow?: func }" }
     },
     "dataSourceCache": {
-      "type": { "name": "shape", "description": "{ set: func, get: func, clear: func }" }
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
     },
     "dataSourceRevalidateMs": { "type": { "name": "number" }, "default": "0" },
     "density": {
@@ -64,7 +64,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ warnIfFocusStateIsNotSynced?: bool, virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled' }"
+        "description": "{ virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
@@ -75,7 +75,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ id?: string<br>&#124;&nbsp;number, field: string, value?: any, operator: 'contains'<br>&#124;&nbsp;'doesNotContain'<br>&#124;&nbsp;'equals'<br>&#124;&nbsp;'doesNotEqual'<br>&#124;&nbsp;'startsWith'<br>&#124;&nbsp;'endsWith'<br>&#124;&nbsp;'='<br>&#124;&nbsp;'!='<br>&#124;&nbsp;'>'<br>&#124;&nbsp;'>='<br>&#124;&nbsp;'<'<br>&#124;&nbsp;'<='<br>&#124;&nbsp;'is'<br>&#124;&nbsp;'not'<br>&#124;&nbsp;'after'<br>&#124;&nbsp;'onOrAfter'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'onOrBefore'<br>&#124;&nbsp;'isEmpty'<br>&#124;&nbsp;'isNotEmpty'<br>&#124;&nbsp;'isAnyOf'<br>&#124;&nbsp;object }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: Array&lt;any&gt;, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool }"
+        "description": "{ items: Array&lt;{ field: string, id?: string<br>&#124;&nbsp;number, operator: 'contains'<br>&#124;&nbsp;'doesNotContain'<br>&#124;&nbsp;'equals'<br>&#124;&nbsp;'doesNotEqual'<br>&#124;&nbsp;'startsWith'<br>&#124;&nbsp;'endsWith'<br>&#124;&nbsp;'='<br>&#124;&nbsp;'!='<br>&#124;&nbsp;'>'<br>&#124;&nbsp;'>='<br>&#124;&nbsp;'<'<br>&#124;&nbsp;'<='<br>&#124;&nbsp;'is'<br>&#124;&nbsp;'not'<br>&#124;&nbsp;'after'<br>&#124;&nbsp;'onOrAfter'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'onOrBefore'<br>&#124;&nbsp;'isEmpty'<br>&#124;&nbsp;'isNotEmpty'<br>&#124;&nbsp;'isAnyOf'<br>&#124;&nbsp;object, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: Array&lt;any&gt; }"
       }
     },
     "getCellClassName": {
@@ -137,7 +137,7 @@
     "ignoreValueFormatterDuringExport": {
       "type": {
         "name": "union",
-        "description": "bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;{ csvExport?: bool, clipboardExport?: bool }"
+        "description": "bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;{ clipboardExport?: bool, csvExport?: bool }"
       },
       "default": "false"
     },
@@ -165,7 +165,7 @@
     "logger": {
       "type": {
         "name": "shape",
-        "description": "{ debug: func, info: func, warn: func, error: func }"
+        "description": "{ debug: func, error: func, info: func, warn: func }"
       },
       "default": "console"
     },
@@ -433,7 +433,7 @@
     "pageSizeOptions": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;number<br>&#124;&nbsp;{ value: number, label: string }&gt;"
+        "description": "Array&lt;number<br>&#124;&nbsp;{ label: string, value: number }&gt;"
       },
       "default": "[25, 50, 100]"
     },
@@ -444,7 +444,7 @@
       "default": "\"client\""
     },
     "paginationModel": {
-      "type": { "name": "shape", "description": "{ pageSize: number, page: number }" }
+      "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
     "processRowUpdate": {
       "type": { "name": "func" },
@@ -464,7 +464,7 @@
     "rowSelectionModel": {
       "type": {
         "name": "shape",
-        "description": "{ type: 'include'<br>&#124;&nbsp;'exclude', ids: { add: func, clear: func, delete: func, forEach: func, has: func, size: number, entries: func, keys: func, values: func, union: func, intersection: func, difference: func, symmetricDifference: func, isSubsetOf: func, isSupersetOf: func, isDisjointFrom: func } }"
+        "description": "{ ids: { add: func, clear: func, delete: func, difference: func, entries: func, forEach: func, has: func, intersection: func, isDisjointFrom: func, isSubsetOf: func, isSupersetOf: func, keys: func, size: number, symmetricDifference: func, union: func, values: func }, type: 'include'<br>&#124;&nbsp;'exclude' }"
       }
     },
     "rowSpacingType": {

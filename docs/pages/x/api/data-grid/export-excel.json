@@ -6,7 +6,7 @@
     "options": {
       "type": {
         "name": "shape",
-        "description": "{ worker?: func, valueOptionsSheetName?: string, exceljsPreProcess?: func, exceljsPostProcess?: func, columnsStyles?: object, includeColumnGroupsHeaders?: bool, fileName?: string, includeHeaders?: bool, getRowsToExport?: func, escapeFormulas?: bool, fields?: Array&lt;string&gt;, allColumns?: bool }"
+        "description": "{ allColumns?: bool, columnsStyles?: object, escapeFormulas?: bool, exceljsPostProcess?: func, exceljsPreProcess?: func, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, includeColumnGroupsHeaders?: bool, includeHeaders?: bool, valueOptionsSheetName?: string, worker?: func }"
       }
     },
     "render": { "type": { "name": "element" } },

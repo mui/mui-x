@@ -19,7 +19,7 @@
     "brushConfig": {
       "type": {
         "name": "shape",
-        "description": "{ enabled?: bool, preventTooltip?: bool, preventHighlight?: bool }"
+        "description": "{ enabled?: bool, preventHighlight?: bool, preventTooltip?: bool }"
       }
     },
     "colors": {
@@ -41,7 +41,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ type: 'line', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'line', seriesId: string, dataIndex?: number }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -54,14 +54,14 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ type: 'line', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ seriesId: string, dataIndex?: number }"
+        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
       }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ type: 'line', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'line', seriesId: string, dataIndex?: number }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -69,7 +69,7 @@
     "margin": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
     "onAreaClick": {
@@ -154,7 +154,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ type: 'line', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ seriesId: string, dataIndex?: number }"
+        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
       }
     },
     "width": { "type": { "name": "number" } },

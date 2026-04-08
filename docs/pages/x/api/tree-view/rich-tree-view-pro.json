@@ -4,7 +4,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current: { updateItemChildren?: func, setEditedItem?: func, updateItemLabel?: func, setItemSelection?: func, isItemExpanded?: func, setItemExpansion?: func, focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, setIsItemDisabled?: func } }"
+        "description": "{ current: { focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, isItemExpanded?: func, setEditedItem?: func, setIsItemDisabled?: func, setItemExpansion?: func, setItemSelection?: func, updateItemChildren?: func, updateItemLabel?: func } }"
       }
     },
     "canMoveItemToNewPosition": {
@@ -21,7 +21,7 @@
       "type": { "name": "shape", "description": "{ getChildrenCount: func, getTreeItems: func }" }
     },
     "dataSourceCache": {
-      "type": { "name": "shape", "description": "{ set: func, get: func, clear: func }" }
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
     },
     "defaultExpandedItems": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },

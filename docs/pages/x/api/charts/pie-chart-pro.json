@@ -16,21 +16,21 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ type: 'pie', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'pie', seriesId: string, dataIndex?: number }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ type: 'pie', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ seriesId: string, dataIndex?: number }"
+        "description": "{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
       }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ type: 'pie', seriesId: string, dataIndex?: number }<br>&#124;&nbsp;{ type?: 'pie', seriesId: string, dataIndex?: number }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -38,7 +38,7 @@
     "margin": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;{ left?: number, top?: number, bottom?: number, right?: number }"
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
     "onHiddenItemsChange": {
@@ -83,7 +83,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ type: 'pie', seriesId: string, dataIndex: number }<br>&#124;&nbsp;{ seriesId: string, dataIndex: number }"
+        "description": "{ dataIndex: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
       }
     },
     "width": { "type": { "name": "number" } }

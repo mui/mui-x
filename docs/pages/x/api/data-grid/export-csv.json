@@ -6,7 +6,7 @@
     "options": {
       "type": {
         "name": "shape",
-        "description": "{ delimiter?: string, fileName?: string, utf8WithBom?: bool, includeHeaders?: bool, includeColumnGroupsHeaders?: bool, getRowsToExport?: func, shouldAppendQuotes?: bool, escapeFormulas?: bool, fields?: Array&lt;string&gt;, allColumns?: bool }"
+        "description": "{ allColumns?: bool, delimiter?: string, escapeFormulas?: bool, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, includeColumnGroupsHeaders?: bool, includeHeaders?: bool, shouldAppendQuotes?: bool, utf8WithBom?: bool }"
       }
     },
     "render": { "type": { "name": "element" } },

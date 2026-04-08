@@ -3,7 +3,7 @@
     "imageExportOptions": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ nonce?: string, quality?: number, fileName?: string, onBeforeExport?: func, copyStyles?: bool, type: string }&gt;"
+        "description": "Array&lt;{ copyStyles?: bool, fileName?: string, nonce?: string, onBeforeExport?: func, quality?: number, type: string }&gt;"
       }
     },
     "printOptions": { "type": { "name": "object" } }

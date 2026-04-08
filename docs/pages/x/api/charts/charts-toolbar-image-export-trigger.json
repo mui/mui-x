@@ -5,7 +5,7 @@
     "options": {
       "type": {
         "name": "shape",
-        "description": "{ nonce?: string, quality?: number, fileName?: string, onBeforeExport?: func, copyStyles?: bool, type: string }"
+        "description": "{ copyStyles?: bool, fileName?: string, nonce?: string, onBeforeExport?: func, quality?: number, type: string }"
       }
     },
     "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
