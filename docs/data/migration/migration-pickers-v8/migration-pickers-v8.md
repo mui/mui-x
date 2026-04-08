@@ -304,6 +304,65 @@ The `data-testid` attributes on several components have been updated, which may 
 - The `DateRangePreview` test ID has been removed entirely.
 - `PickerDay` (formerly `PickersDay`) now respects a custom `data-testid` prop if provided, falling back to its default value `"day"`.
 
+### Drop deprecated `PickersTextField` props
+
+The legacy `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props have been removed from `PickersTextField` and from every Picker / Field component.
+They were the last remnants of the old Material UI `TextField` API.
+
+The replacement is the new `slotProps` shape, which mirrors the Material UI v9 `TextField` API:
+
+| Removed prop          | New location               |
+| :-------------------- | :------------------------- |
+| `InputProps`          | `slotProps.input`          |
+| `inputProps`          | `slotProps.htmlInput`      |
+| `InputLabelProps`     | `slotProps.inputLabel`     |
+| `FormHelperTextProps` | `slotProps.formHelperText` |
+
+On `PickersTextField` the new keys live directly under `slotProps`:
+
+```diff
+ <PickersTextField
+-  InputProps={{ startAdornment: <CakeIcon /> }}
+-  inputProps={{ 'data-testid': 'input' }}
++  slotProps={{
++    input: { startAdornment: <CakeIcon /> },
++    htmlInput: { 'data-testid': 'input' },
++  }}
+ />
+```
+
+On Picker and Field components they are nested inside `slotProps.textField.slotProps`:
+
+```diff
+ <DateField
+-  InputProps={{ name: 'birthday' }}
+-  inputProps={{ 'data-testid': 'input' }}
++  slotProps={{
++    textField: {
++      slotProps: {
++        input: { name: 'birthday' },
++        htmlInput: { 'data-testid': 'input' },
++      },
++    },
++  }}
+ />
+
+ <DatePicker
+-  slotProps={{ textField: { InputProps: { name: 'date' } } }}
++  slotProps={{ textField: { slotProps: { input: { name: 'date' } } } }}
+ />
+```
+
+The `preset-safe` codemod (or the standalone `migrate-text-field-props` codemod) performs this rewrite automatically:
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/migrate-text-field-props <path>
+```
+
+:::info
+The codemod cannot handle cases where the legacy props are passed via spread syntax or assigned through a variable reference. These usages must be migrated manually.
+:::
+
 ## `LocalizationProvider` breaking changes
 
 ### `utils` field removed from the adapter context value
