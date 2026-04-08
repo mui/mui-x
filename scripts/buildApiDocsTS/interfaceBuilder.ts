@@ -362,7 +362,7 @@ function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number
     }
     // Deduplicate expanded members
     const expanded = members.map((m) => expandTypeDeep(m, checkerRef, depth));
-    return [...new Set(expanded)].join(' | ');
+    return [...new Set(expanded)].sort().join(' | ');
   }
 
   // Primitives & literals

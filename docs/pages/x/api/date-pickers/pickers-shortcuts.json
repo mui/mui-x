@@ -1,7 +1,7 @@
 {
   "props": {
     "changeImportance": {
-      "type": { "name": "enum", "description": "'set'<br>&#124;&nbsp;'accept'" },
+      "type": { "name": "enum", "description": "'accept'<br>&#124;&nbsp;'set'" },
       "default": "\"accept\""
     },
     "items": {

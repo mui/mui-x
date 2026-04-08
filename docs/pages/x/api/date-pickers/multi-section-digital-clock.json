@@ -11,7 +11,7 @@
     "focusedView": {
       "type": {
         "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'meridiem'"
+        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       }
     },
     "maxTime": { "type": { "name": "object" } },
@@ -38,7 +38,7 @@
     "openTo": {
       "type": {
         "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'meridiem'"
+        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       }
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
@@ -80,13 +80,13 @@
     "view": {
       "type": {
         "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'meridiem'"
+        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       }
     },
     "views": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'meridiem'&gt;"
+        "description": "Array&lt;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
       },
       "default": "['hours', 'minutes']"
     }

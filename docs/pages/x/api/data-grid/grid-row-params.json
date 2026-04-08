@@ -8,7 +8,7 @@
   "demos": "  - [Master-detail row panels](/x/react-data-grid/master-detail/)",
   "properties": {
     "columns": { "type": { "description": "GridColDef[]" }, "required": true },
-    "id": { "type": { "description": "string | number" }, "required": true },
+    "id": { "type": { "description": "number | string" }, "required": true },
     "row": { "type": { "description": "R" }, "required": true }
   }
 }

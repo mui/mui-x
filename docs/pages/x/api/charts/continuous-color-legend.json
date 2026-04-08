@@ -5,7 +5,7 @@
       "default": "'z'"
     },
     "axisId": {
-      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "The first axis item."
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
@@ -17,16 +17,16 @@
     "labelPosition": {
       "type": {
         "name": "enum",
-        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'extremes'"
+        "description": "'end'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'start'"
       },
       "default": "'end'"
     },
     "maxLabel": {
-      "type": { "name": "union", "description": "string<br>&#124;&nbsp;func" },
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
       "default": "formattedValue"
     },
     "minLabel": {
-      "type": { "name": "union", "description": "string<br>&#124;&nbsp;func" },
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
       "default": "formattedValue"
     },
     "reverse": { "type": { "name": "bool" }, "default": "false" },

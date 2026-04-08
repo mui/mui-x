@@ -1,7 +1,7 @@
 {
   "props": {
     "axisId": {
-      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "The `id` of the first defined axis."
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
@@ -9,7 +9,7 @@
     "labelAlign": {
       "type": {
         "name": "enum",
-        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'middle'"
+        "description": "'end'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start'"
       },
       "default": "'middle'"
     },
@@ -25,13 +25,13 @@
     "x": {
       "type": {
         "name": "union",
-        "description": "string<br>&#124;&nbsp;number<br>&#124;&nbsp;object"
+        "description": "number<br>&#124;&nbsp;object<br>&#124;&nbsp;string"
       }
     },
     "y": {
       "type": {
         "name": "union",
-        "description": "string<br>&#124;&nbsp;number<br>&#124;&nbsp;object"
+        "description": "number<br>&#124;&nbsp;object<br>&#124;&nbsp;string"
       }
     }
   },

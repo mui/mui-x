@@ -5,7 +5,7 @@
   "properties": {
     "apply": {
       "type": {
-        "description": "(params: { values: (V | undefined)[], groupId: string | number, field: string }, api?: GridApiPremium) =&gt; AV"
+        "description": "(params: { values: (V | undefined)[], groupId: number | string, field: string }, api?: GridApiPremium) =&gt; AV"
       },
       "required": true,
       "isPremiumPlan": true
@@ -32,7 +32,7 @@
     },
     "valueFormatter": {
       "type": {
-        "description": "(value: never, row: GridValidRowModel, column: GridBaseColDef&lt;GridValidRowModel, any, any&gt; | GridActionsColDef&lt;GridValidRowModel, any, any&gt; | GridSingleSelectColDef&lt;GridValidRowModel, any, any&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; any"
+        "description": "(value: never, row: GridValidRowModel, column: GridActionsColDef&lt;GridValidRowModel, any, any&gt; | GridBaseColDef&lt;GridValidRowModel, any, any&gt; | GridSingleSelectColDef&lt;GridValidRowModel, any, any&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; any"
       },
       "isPremiumPlan": true
     }

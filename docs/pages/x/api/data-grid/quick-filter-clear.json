@@ -1,6 +1,6 @@
 {
   "props": {
-    "className": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;func" } },
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
     "color": {
       "type": {
         "name": "enum",
@@ -9,17 +9,17 @@
     },
     "disabled": { "type": { "name": "bool" } },
     "edge": {
-      "type": { "name": "union", "description": "bool<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'end'" }
+      "type": { "name": "union", "description": "'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;bool" }
     },
     "id": { "type": { "name": "string" } },
     "label": { "type": { "name": "string" } },
     "material": { "type": { "name": "object" } },
-    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
     "role": { "type": { "name": "string" } },
     "size": {
       "type": {
         "name": "enum",
-        "description": "'small'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'large'"
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
       }
     },
     "style": { "type": { "name": "object" } },

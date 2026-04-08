@@ -21,7 +21,7 @@
     "focusedView": {
       "type": {
         "name": "enum",
-        "description": "'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'"
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -63,7 +63,7 @@
     "openTo": {
       "type": {
         "name": "enum",
-        "description": "'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'"
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
       }
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
@@ -134,13 +134,13 @@
     "view": {
       "type": {
         "name": "enum",
-        "description": "'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'"
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
       }
     },
     "views": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'&gt;"
+        "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
       }
     },
     "yearsOrder": {

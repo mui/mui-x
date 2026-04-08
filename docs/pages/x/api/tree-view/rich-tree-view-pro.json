@@ -98,7 +98,7 @@
       }
     },
     "itemChildrenIndentation": {
-      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"
     },
     "itemHeight": { "type": { "name": "number" }, "default": "32" },

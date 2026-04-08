@@ -10,7 +10,7 @@
     {
       "name": "getRowIdFromRowIndex",
       "description": "Gets the `GridRowId` of a row at a specific index.\nThe index is based on the sorted but unfiltered row list.",
-      "type": "(index: number) => string | number"
+      "type": "(index: number) => number | string"
     },
     {
       "name": "getSortedRowIds",

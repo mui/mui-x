@@ -12,7 +12,7 @@
     "legendPosition": {
       "type": {
         "name": "shape",
-        "description": "{ horizontal?: 'center'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'end', vertical?: 'bottom'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'middle' }"
+        "description": "{ horizontal?: 'center'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'start', vertical?: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }"
       },
       "default": "{ horizontal: 'center', vertical: 'bottom' }"
     }

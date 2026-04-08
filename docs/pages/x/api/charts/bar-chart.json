@@ -8,7 +8,7 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ x?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band', y?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band' }"
+        "description": "{ x?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', y?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
       },
       "seeMoreLink": {
         "url": "https://mui.com/x/react-charts/highlighting/",
@@ -45,13 +45,13 @@
     "highlightedAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, dataIndex: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'bar' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -123,7 +123,7 @@
       }
     },
     "renderer": {
-      "type": { "name": "enum", "description": "'svg-single'<br>&#124;&nbsp;'svg-batch'" },
+      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
       "default": "'svg-single'"
     },
     "seriesConfig": { "type": { "name": "object" } },
@@ -139,13 +139,13 @@
     "tooltipAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, dataIndex: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'bar' }"
       }
     },
     "width": { "type": { "name": "number" } },

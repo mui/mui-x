@@ -1,6 +1,6 @@
 {
   "props": {
-    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } }
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "Toolbar",
   "imports": [

@@ -4,7 +4,7 @@
     "autoFocus": { "type": { "name": "bool" } },
     "closeOnSelect": { "type": { "name": "bool" }, "default": "false" },
     "defaultRangePosition": {
-      "type": { "name": "enum", "description": "'start'<br>&#124;&nbsp;'end'" },
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
     "defaultValue": { "type": { "name": "object" } },
@@ -85,7 +85,7 @@
         "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       }
     },
-    "rangePosition": { "type": { "name": "enum", "description": "'start'<br>&#124;&nbsp;'end'" } },
+    "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },
@@ -98,7 +98,7 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;'all'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'empty'"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
       }
     },
     "shouldDisableTime": {
@@ -136,7 +136,7 @@
     "view": {
       "type": {
         "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'meridiem'"
+        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       }
     },
     "viewRenderers": {

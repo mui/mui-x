@@ -209,12 +209,12 @@ function formatUnionType(type: ts.UnionType, checker: ts.TypeChecker, depth: num
       }
       return String((m as ts.NumberLiteralType).value);
     });
-    return { name: 'enum', description: parts.join(UNION_SEP) };
+    return { name: 'enum', description: parts.sort().join(UNION_SEP) };
   }
 
   // Mixed union
   const parts = members.map((m) => toShort(m, checker, depth + 1));
-  return { name: 'union', description: parts.join(UNION_SEP) };
+  return { name: 'union', description: parts.sort().join(UNION_SEP) };
 }
 
 // ---------------------------------------------------------------------------
@@ -333,7 +333,7 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
     if (members.length === 1) {
       return toShort(members[0], checker, depth);
     }
-    return members.map((m) => toShort(m, checker, depth + 1)).join(UNION_SEP);
+    return members.map((m) => toShort(m, checker, depth + 1)).sort().join(UNION_SEP);
   }
 
   // Array

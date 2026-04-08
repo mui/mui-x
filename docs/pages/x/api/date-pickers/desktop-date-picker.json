@@ -96,11 +96,11 @@
     "openTo": {
       "type": {
         "name": "enum",
-        "description": "'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'"
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
       }
     },
     "orientation": {
-      "type": { "name": "enum", "description": "'portrait'<br>&#124;&nbsp;'landscape'" }
+      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
@@ -123,7 +123,7 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;'all'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'empty'"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
       }
     },
     "shouldDisableDate": {
@@ -169,7 +169,7 @@
     "view": {
       "type": {
         "name": "enum",
-        "description": "'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'"
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
       }
     },
     "viewRenderers": {
@@ -178,7 +178,7 @@
     "views": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'&gt;"
+        "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
       }
     },
     "yearsOrder": {

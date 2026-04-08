@@ -87,7 +87,7 @@
     "variant": {
       "type": {
         "name": "enum",
-        "description": "'standard'<br>&#124;&nbsp;'filled'<br>&#124;&nbsp;'outlined'"
+        "description": "'filled'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'standard'"
       },
       "default": "'outlined'"
     }

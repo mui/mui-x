@@ -1,7 +1,7 @@
 {
   "props": {
     "calendars": {
-      "type": { "name": "enum", "description": "2<br>&#124;&nbsp;1<br>&#124;&nbsp;3" },
+      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "required": true
     },
     "currentMonth": { "type": { "name": "object" }, "required": true },
@@ -19,14 +19,14 @@
     "view": {
       "type": {
         "name": "enum",
-        "description": "'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'"
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
       },
       "required": true
     },
     "views": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'month'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;'day'&gt;"
+        "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
       },
       "required": true
     },

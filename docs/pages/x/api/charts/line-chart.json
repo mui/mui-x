@@ -8,7 +8,7 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ x?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band', y?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band' }"
+        "description": "{ x?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', y?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
       },
       "default": "{ x: 'line' }",
       "seeMoreLink": {
@@ -48,13 +48,13 @@
     "highlightedAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, dataIndex: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -148,13 +148,13 @@
     "tooltipAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, dataIndex: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }"
       }
     },
     "width": { "type": { "name": "number" } },

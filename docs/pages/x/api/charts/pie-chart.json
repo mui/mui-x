@@ -23,7 +23,7 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -83,7 +83,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'pie' }"
       }
     },
     "width": { "type": { "name": "number" } }

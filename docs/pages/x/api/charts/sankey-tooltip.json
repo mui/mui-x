@@ -3,7 +3,7 @@
     "anchor": {
       "type": {
         "name": "enum",
-        "description": "'node'<br>&#124;&nbsp;'pointer'<br>&#124;&nbsp;'chart'"
+        "description": "'chart'<br>&#124;&nbsp;'node'<br>&#124;&nbsp;'pointer'"
       },
       "default": "'pointer'"
     },
@@ -21,7 +21,7 @@
       "additionalInfo": { "slotsApi": true }
     },
     "trigger": {
-      "type": { "name": "enum", "description": "'none'<br>&#124;&nbsp;'item'" },
+      "type": { "name": "enum", "description": "'item'<br>&#124;&nbsp;'none'" },
       "default": "'item'"
     }
   },

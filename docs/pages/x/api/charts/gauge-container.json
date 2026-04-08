@@ -1,17 +1,17 @@
 {
   "props": {
     "cornerRadius": {
-      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "0"
     },
-    "cx": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" } },
-    "cy": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" } },
+    "cx": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
+    "cy": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "desc": { "type": { "name": "string" } },
     "endAngle": { "type": { "name": "number" }, "default": "360" },
     "height": { "type": { "name": "number" } },
     "id": { "type": { "name": "string" } },
     "innerRadius": {
-      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "'80%'"
     },
     "margin": {
@@ -21,7 +21,7 @@
       }
     },
     "outerRadius": {
-      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "'100%'"
     },
     "skipAnimation": { "type": { "name": "bool" } },

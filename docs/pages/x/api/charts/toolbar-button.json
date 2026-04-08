@@ -2,11 +2,11 @@
   "props": {
     "disabled": { "type": { "name": "bool" } },
     "id": { "type": { "name": "string" } },
-    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
     "size": {
       "type": {
         "name": "enum",
-        "description": "'small'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'large'"
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
       }
     },
     "style": { "type": { "name": "object" } },

@@ -3,7 +3,7 @@
     "action": {
       "type": {
         "name": "enum",
-        "description": "'reorder-above'<br>&#124;&nbsp;'reorder-below'<br>&#124;&nbsp;'make-child'<br>&#124;&nbsp;'move-to-parent'"
+        "description": "'make-child'<br>&#124;&nbsp;'move-to-parent'<br>&#124;&nbsp;'reorder-above'<br>&#124;&nbsp;'reorder-below'"
       }
     },
     "style": { "type": { "name": "object" } }

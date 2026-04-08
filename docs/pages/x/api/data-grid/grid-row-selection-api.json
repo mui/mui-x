@@ -10,22 +10,22 @@
     {
       "name": "isRowSelectable",
       "description": "Determines if a row can be selected or not.",
-      "type": "(id: string | number) => boolean"
+      "type": "(id: number | string) => boolean"
     },
     {
       "name": "isRowSelected",
       "description": "Determines if a row is selected or not.",
-      "type": "(id: string | number) => boolean"
+      "type": "(id: number | string) => boolean"
     },
     {
       "name": "selectRow",
       "description": "Change the selection state of a row.",
-      "type": "(id: string | number, isSelected?: boolean, resetSelection?: boolean) => void"
+      "type": "(id: number | string, isSelected?: boolean, resetSelection?: boolean) => void"
     },
     {
       "name": "setRowSelectionModel",
       "description": "Sets the new row selection model.\n\n⚠️ Caution: `setRowSelectionModel` doesn't apply the selection propagation automatically.\nPass model returned by API method `getPropagatedRowSelectionModel` instead to apply the selection propagation.",
-      "type": "(rowSelectionModel: { type: \"include\" | \"exclude\", ids: Set<GridRowId> }, reason?: \"singleRowSelection\" | \"multipleRowsSelection\") => void"
+      "type": "(rowSelectionModel: { type: \"exclude\" | \"include\", ids: Set<GridRowId> }, reason?: \"multipleRowsSelection\" | \"singleRowSelection\") => void"
     }
   ]
 }

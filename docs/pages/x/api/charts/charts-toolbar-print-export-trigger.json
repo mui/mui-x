@@ -8,7 +8,7 @@
         "description": "{ copyStyles?: bool, fileName?: string, nonce?: string, onBeforeExport?: func }"
       }
     },
-    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
     "style": { "type": { "name": "object" } },
     "tabIndex": { "type": { "name": "number" } }
   },

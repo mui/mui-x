@@ -25,14 +25,14 @@
     "highlight": {
       "type": {
         "name": "enum",
-        "description": "'none'<br>&#124;&nbsp;'series'<br>&#124;&nbsp;'axis'"
+        "description": "'axis'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'series'"
       },
       "default": "'axis'"
     },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -95,7 +95,7 @@
     "plugins": { "type": { "name": "object" } },
     "seriesConfig": { "type": { "name": "object" } },
     "shape": {
-      "type": { "name": "enum", "description": "'sharp'<br>&#124;&nbsp;'circular'" },
+      "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
       "default": "'sharp'"
     },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
@@ -119,7 +119,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }"
       }
     },
     "width": { "type": { "name": "number" } }

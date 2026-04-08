@@ -5,17 +5,17 @@
     {
       "name": "getCellMode",
       "description": "Gets the mode of a cell.",
-      "type": "(id: string | number, field: string) => \"view\" | \"edit\""
+      "type": "(id: number | string, field: string) => \"edit\" | \"view\""
     },
     {
       "name": "getRowMode",
       "description": "Gets the mode of a row.",
-      "type": "(id: string | number) => \"view\" | \"edit\""
+      "type": "(id: number | string) => \"edit\" | \"view\""
     },
     {
       "name": "getRowWithUpdatedValues",
       "description": "Returns the row with the values that were set by editing the cells.\nIn row editing, `field` is ignored and all fields are considered.",
-      "type": "(id: string | number, field: string) => GridValidRowModel"
+      "type": "(id: number | string, field: string) => GridValidRowModel"
     },
     {
       "name": "isCellEditable",
@@ -25,27 +25,27 @@
     {
       "name": "setEditCellValue",
       "description": "Sets the value of the edit cell.\nCommonly used inside the edit cell component.",
-      "type": "(params: { id: string | number, field: string, value: any, debounceMs?: number, unstable_skipValueParser?: boolean }, event?: {} | SyntheticEvent<HTMLElement, Event> | ErrorEvent | Event | UIEvent | AnimationEvent | PointerEvent | MouseEvent | InputEvent | ToggleEvent | FocusEvent | CompositionEvent | ClipboardEvent | DragEvent | FormDataEvent | KeyboardEvent | ProgressEvent<EventTarget> | SecurityPolicyViolationEvent | SubmitEvent | TouchEvent | TransitionEvent | WheelEvent) => void | Promise<boolean>"
+      "type": "(params: { id: number | string, field: string, value: any, debounceMs?: number, unstable_skipValueParser?: boolean }, event?: AnimationEvent | ClipboardEvent | CompositionEvent | DragEvent | ErrorEvent | Event | FocusEvent | FormDataEvent | InputEvent | KeyboardEvent | MouseEvent | PointerEvent | ProgressEvent<EventTarget> | SecurityPolicyViolationEvent | SubmitEvent | SyntheticEvent<HTMLElement, Event> | ToggleEvent | TouchEvent | TransitionEvent | UIEvent | WheelEvent | {}) => Promise<boolean> | void"
     },
     {
       "name": "startCellEditMode",
       "description": "Puts the cell corresponding to the given row id and field into edit mode.",
-      "type": "(params: { id: string | number, field: string, deleteValue?: boolean, initialValue?: any }) => void"
+      "type": "(params: { id: number | string, field: string, deleteValue?: boolean, initialValue?: any }) => void"
     },
     {
       "name": "startRowEditMode",
       "description": "Puts the row corresponding to the given id into edit mode.",
-      "type": "(params: { id: string | number, fieldToFocus?: string, deleteValue?: boolean, initialValue?: string }) => void"
+      "type": "(params: { id: number | string, fieldToFocus?: string, deleteValue?: boolean, initialValue?: string }) => void"
     },
     {
       "name": "stopCellEditMode",
       "description": "Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.\nIf `params.ignoreModifications` is `true` it will discard the modifications made.",
-      "type": "(params: { id: string | number, field: string, ignoreModifications?: boolean, cellToFocusAfter?: \"none\" | \"left\" | \"right\" | \"below\" }) => void"
+      "type": "(params: { id: number | string, field: string, ignoreModifications?: boolean, cellToFocusAfter?: \"below\" | \"left\" | \"none\" | \"right\" }) => void"
     },
     {
       "name": "stopRowEditMode",
       "description": "Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.\nIf `params.ignoreModifications` is `true` it will discard the modifications made.",
-      "type": "(params: { id: string | number, ignoreModifications?: boolean, field?: string, cellToFocusAfter?: \"none\" | \"left\" | \"right\" | \"below\" }) => void"
+      "type": "(params: { id: number | string, ignoreModifications?: boolean, field?: string, cellToFocusAfter?: \"below\" | \"left\" | \"none\" | \"right\" }) => void"
     }
   ]
 }

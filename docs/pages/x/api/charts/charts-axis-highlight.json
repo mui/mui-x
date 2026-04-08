@@ -3,13 +3,13 @@
     "x": {
       "type": {
         "name": "enum",
-        "description": "'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band'"
+        "description": "'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none'"
       }
     },
     "y": {
       "type": {
         "name": "enum",
-        "description": "'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band'"
+        "description": "'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none'"
       }
     }
   },

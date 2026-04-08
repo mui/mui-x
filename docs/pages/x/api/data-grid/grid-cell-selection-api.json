@@ -15,12 +15,12 @@
     {
       "name": "isCellSelected",
       "description": "Determines if a cell is selected or not.",
-      "type": "(id: string | number, field: string) => boolean"
+      "type": "(id: number | string, field: string) => boolean"
     },
     {
       "name": "selectCellRange",
       "description": "Selects all cells that are inside the range given by `start` and `end` coordinates.",
-      "type": "(start: { id: string | number, field: string }, end: { id: string | number, field: string }, keepOtherSelected?: boolean) => void"
+      "type": "(start: { id: number | string, field: string }, end: { id: number | string, field: string }, keepOtherSelected?: boolean) => void"
     },
     {
       "name": "setCellSelectionModel",

@@ -7,7 +7,7 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ x?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band', y?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band' }"
+        "description": "{ x?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', y?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
       },
       "seeMoreLink": {
         "url": "https://mui.com/x/react-charts/highlighting/",
@@ -17,7 +17,7 @@
     "categoryAxis": {
       "type": {
         "name": "union",
-        "description": "{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: string<br>&#124;&nbsp;number, position?: 'none'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'time', size?: number<br>&#124;&nbsp;'auto', tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: string<br>&#124;&nbsp;number, position?: 'none'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'log', size?: number<br>&#124;&nbsp;'auto', tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: string<br>&#124;&nbsp;number, position?: 'none'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band', size?: number<br>&#124;&nbsp;'auto', tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: string<br>&#124;&nbsp;number, position?: 'none'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'symlog', size?: number<br>&#124;&nbsp;'auto', tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: string<br>&#124;&nbsp;number, position?: 'none'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'pow', size?: number<br>&#124;&nbsp;'auto', tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: string<br>&#124;&nbsp;number, position?: 'none'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'sqrt', size?: number<br>&#124;&nbsp;'auto', tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: string<br>&#124;&nbsp;number, position?: 'none'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'utc', size?: number<br>&#124;&nbsp;'auto', tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: string<br>&#124;&nbsp;number, position?: 'none'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'linear', size?: number<br>&#124;&nbsp;'auto', tickLabelStyle?: object, tickSize?: number }"
+        "description": "{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'linear', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'log', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'pow', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'sqrt', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'symlog', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'time', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'utc', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }"
       },
       "default": "{ position: 'none' }"
     },
@@ -41,7 +41,7 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -106,7 +106,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'funnel' }"
       }
     },
     "width": { "type": { "name": "number" } }

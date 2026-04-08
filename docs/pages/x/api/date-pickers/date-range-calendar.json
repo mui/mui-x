@@ -2,16 +2,16 @@
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
     "availableRangePositions": {
-      "type": { "name": "arrayOf", "description": "Array&lt;'start'<br>&#124;&nbsp;'end'&gt;" },
+      "type": { "name": "arrayOf", "description": "Array&lt;'end'<br>&#124;&nbsp;'start'&gt;" },
       "default": "['start', 'end']"
     },
     "calendars": {
-      "type": { "name": "enum", "description": "2<br>&#124;&nbsp;1<br>&#124;&nbsp;3" },
+      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "currentMonthCalendarPosition": {
-      "type": { "name": "enum", "description": "2<br>&#124;&nbsp;1<br>&#124;&nbsp;3" },
+      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1"
     },
     "dayOfWeekFormatter": {
@@ -24,7 +24,7 @@
       }
     },
     "defaultRangePosition": {
-      "type": { "name": "enum", "description": "'start'<br>&#124;&nbsp;'end'" },
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
     "defaultValue": { "type": { "name": "object" } },
@@ -73,7 +73,7 @@
       "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
     },
     "openTo": { "type": { "name": "enum", "description": "'day'" } },
-    "rangePosition": { "type": { "name": "enum", "description": "'start'<br>&#124;&nbsp;'end'" } },
+    "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },

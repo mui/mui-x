@@ -14,29 +14,29 @@
     "borderRadius": { "type": { "description": "number" }, "default": "8", "isProPlan": true },
     "curve": {
       "type": {
-        "description": "\"step\" | \"linear\" | \"linear-sharp\" | \"bump\" | \"pyramid\" | \"step-pyramid\""
+        "description": "\"bump\" | \"linear\" | \"linear-sharp\" | \"pyramid\" | \"step\" | \"step-pyramid\""
       },
       "default": "'linear'",
       "isProPlan": true
     },
     "funnelDirection": {
-      "type": { "description": "\"auto\" | \"increasing\" | \"decreasing\"" },
+      "type": { "description": "\"auto\" | \"decreasing\" | \"increasing\"" },
       "default": "'auto'",
       "isProPlan": true
     },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: \"none\" | \"item\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
+        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"global\" | \"none\" | \"series\" }"
       }
     },
     "id": { "type": { "description": "string" } },
     "label": {
-      "type": { "description": "string | (location: \"legend\" | \"tooltip\") =&gt; string" },
+      "type": { "description": "(location: \"legend\" | \"tooltip\") =&gt; string | string" },
       "isProPlan": true
     },
     "labelMarkType": {
       "type": {
-        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+        "description": "\"circle\" | \"line\" | \"line+mark\" | \"square\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
       }
     },
     "layout": {
@@ -46,14 +46,14 @@
     },
     "sectionLabel": {
       "type": {
-        "description": "boolean | { position?: { vertical?: \"bottom\" | \"top\" | \"middle\", horizontal?: \"center\" | \"start\" | \"end\" }, textAnchor?: \"start\" | \"end\" | \"middle\", dominantBaseline?: \"auto\" | \"baseline\" | \"hanging\" | \"middle\" | \"text-before-edge\" | \"central\" | \"text-after-edge\", offset?: number | { x?: number, y?: number } } | (item: { seriesId: string, dataIndex: number, value: number }) =&gt; boolean | { position?: { vertical?: \"bottom\" | \"top\" | \"middle\", horizontal?: \"center\" | \"start\" | \"end\" }, textAnchor?: \"start\" | \"end\" | \"middle\", dominantBaseline?: \"auto\" | \"baseline\" | \"hanging\" | \"middle\" | \"text-before-edge\" | \"central\" | \"text-after-edge\", offset?: number | { x?: number, y?: number } }"
+        "description": "(item: { seriesId: string, dataIndex: number, value: number }) =&gt; boolean | { position?: { vertical?: \"bottom\" | \"middle\" | \"top\", horizontal?: \"center\" | \"end\" | \"start\" }, textAnchor?: \"end\" | \"middle\" | \"start\", dominantBaseline?: \"auto\" | \"baseline\" | \"central\" | \"hanging\" | \"middle\" | \"text-after-edge\" | \"text-before-edge\", offset?: number | { x?: number, y?: number } } | boolean | { position?: { vertical?: \"bottom\" | \"middle\" | \"top\", horizontal?: \"center\" | \"end\" | \"start\" }, textAnchor?: \"end\" | \"middle\" | \"start\", dominantBaseline?: \"auto\" | \"baseline\" | \"central\" | \"hanging\" | \"middle\" | \"text-after-edge\" | \"text-before-edge\", offset?: number | { x?: number, y?: number } }"
       },
       "default": "{ vertical: 'middle', horizontal: 'center' }",
       "isProPlan": true
     },
     "valueFormatter": {
       "type": {
-        "description": "(value: { id?: string | number, value: number, label?: string | (location: \"legend\" | \"section\" | \"tooltip\") =&gt; string, color?: string, labelMarkType?: \"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt; }, context: { dataIndex: number }) =&gt; string"
+        "description": "(value: { id?: number | string, value: number, label?: (location: \"legend\" | \"section\" | \"tooltip\") =&gt; string | string, color?: string, labelMarkType?: \"circle\" | \"line\" | \"line+mark\" | \"square\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt; }, context: { dataIndex: number }) =&gt; string"
       }
     },
     "variant": {
@@ -61,7 +61,7 @@
       "default": "'filled'",
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "string | number" } },
-    "yAxisId": { "type": { "description": "string | number" } }
+    "xAxisId": { "type": { "description": "number | string" } },
+    "yAxisId": { "type": { "description": "number | string" } }
   }
 }

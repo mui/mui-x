@@ -8,13 +8,13 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ x?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band', y?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band' }"
+        "description": "{ x?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', y?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
       }
     },
     "baseline": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;'max'<br>&#124;&nbsp;'min'"
+        "description": "'max'<br>&#124;&nbsp;'min'<br>&#124;&nbsp;number"
       },
       "default": "0"
     },
@@ -32,13 +32,13 @@
       "default": "{ top: 1, right: 1, bottom: 1, left: 1 }"
     },
     "color": {
-      "type": { "name": "union", "description": "string<br>&#124;&nbsp;func" },
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
       "default": "rainbowSurgePalette[0]"
     },
     "curve": {
       "type": {
         "name": "enum",
-        "description": "'step'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'catmullRom'<br>&#124;&nbsp;'monotoneX'<br>&#124;&nbsp;'monotoneY'<br>&#124;&nbsp;'natural'<br>&#124;&nbsp;'stepBefore'<br>&#124;&nbsp;'stepAfter'<br>&#124;&nbsp;'bumpY'<br>&#124;&nbsp;'bumpX'"
+        "description": "'bumpX'<br>&#124;&nbsp;'bumpY'<br>&#124;&nbsp;'catmullRom'<br>&#124;&nbsp;'linear'<br>&#124;&nbsp;'monotoneX'<br>&#124;&nbsp;'monotoneY'<br>&#124;&nbsp;'natural'<br>&#124;&nbsp;'step'<br>&#124;&nbsp;'stepAfter'<br>&#124;&nbsp;'stepBefore'"
       },
       "default": "'linear'"
     },
@@ -55,27 +55,27 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ seriesId: string, type: 'heatmap', xIndex?: number, yIndex?: number }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ nodeId?: string<br>&#124;&nbsp;number, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId?: string<br>&#124;&nbsp;number, subType: 'link', targetId?: string<br>&#124;&nbsp;number, type: 'sankey' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'ohlc' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }<br>&#124;&nbsp;{ seriesId: string, type?: 'heatmap', xIndex?: number, yIndex?: number }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'funnel' }<br>&#124;&nbsp;{ nodeId?: string<br>&#124;&nbsp;number, seriesId: string, subType?: 'node', type?: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId?: string<br>&#124;&nbsp;number, subType?: 'link', targetId?: string<br>&#124;&nbsp;number, type?: 'sankey' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'ohlc' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'ohlc' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'ohlc' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }<br>&#124;&nbsp;{ nodeId?: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ nodeId?: number<br>&#124;&nbsp;string, seriesId: string, subType?: 'node', type?: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId?: number<br>&#124;&nbsp;string, subType: 'link', targetId?: number<br>&#124;&nbsp;string, type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId?: number<br>&#124;&nbsp;string, subType?: 'link', targetId?: number<br>&#124;&nbsp;string, type?: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, type: 'heatmap', xIndex?: number, yIndex?: number }<br>&#124;&nbsp;{ seriesId: string, type?: 'heatmap', xIndex?: number, yIndex?: number }&gt;"
       }
     },
     "highlightedAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, dataIndex: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ nodeId: string<br>&#124;&nbsp;number, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: string<br>&#124;&nbsp;number, subType: 'link', targetId: string<br>&#124;&nbsp;number, type: 'sankey' }<br>&#124;&nbsp;{ nodeId: string<br>&#124;&nbsp;number, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ seriesId: string, sourceId: string<br>&#124;&nbsp;number, subType: 'link', targetId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'ohlc' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'ohlc' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }"
       }
     },
-    "hitAreaRadius": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;'item'" } },
+    "hitAreaRadius": { "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" } },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ seriesId: string, type: 'heatmap', xIndex?: number, yIndex?: number }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ nodeId?: string<br>&#124;&nbsp;number, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId?: string<br>&#124;&nbsp;number, subType: 'link', targetId?: string<br>&#124;&nbsp;number, type: 'sankey' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'ohlc' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }<br>&#124;&nbsp;{ seriesId: string, type?: 'heatmap', xIndex?: number, yIndex?: number }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'funnel' }<br>&#124;&nbsp;{ nodeId?: string<br>&#124;&nbsp;number, seriesId: string, subType?: 'node', type?: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId?: string<br>&#124;&nbsp;number, subType?: 'link', targetId?: string<br>&#124;&nbsp;number, type?: 'sankey' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'ohlc' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'ohlc' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'funnel' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'ohlc' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }<br>&#124;&nbsp;{ nodeId?: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ nodeId?: number<br>&#124;&nbsp;string, seriesId: string, subType?: 'node', type?: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId?: number<br>&#124;&nbsp;string, subType: 'link', targetId?: number<br>&#124;&nbsp;string, type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId?: number<br>&#124;&nbsp;string, subType?: 'link', targetId?: number<br>&#124;&nbsp;string, type?: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, type: 'heatmap', xIndex?: number, yIndex?: number }<br>&#124;&nbsp;{ seriesId: string, type?: 'heatmap', xIndex?: number, yIndex?: number }&gt;"
       }
     },
     "localeText": { "type": { "name": "object" } },
@@ -136,7 +136,7 @@
       }
     },
     "plotType": {
-      "type": { "name": "enum", "description": "'line'<br>&#124;&nbsp;'bar'" },
+      "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
       "default": "'line'"
     },
     "seriesConfig": { "type": { "name": "object" } },
@@ -153,13 +153,13 @@
     "tooltipAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, dataIndex: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ nodeId: string<br>&#124;&nbsp;number, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: string<br>&#124;&nbsp;number, subType: 'link', targetId: string<br>&#124;&nbsp;number, type: 'sankey' }<br>&#124;&nbsp;{ nodeId: string<br>&#124;&nbsp;number, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ seriesId: string, sourceId: string<br>&#124;&nbsp;number, subType: 'link', targetId: string<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'ohlc' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'funnel' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'ohlc' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'rangeBar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }"
       }
     },
     "valueFormatter": {

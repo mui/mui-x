@@ -18,7 +18,7 @@
     },
     "arcLabelMinAngle": { "type": { "description": "number" }, "default": "0" },
     "arcLabelRadius": {
-      "type": { "description": "string | number" },
+      "type": { "description": "number | string" },
       "default": "(innerRadius - outerRadius) / 2"
     },
     "color": { "type": { "description": "string" } },
@@ -28,8 +28,8 @@
       }
     },
     "cornerRadius": { "type": { "description": "number" }, "default": "0" },
-    "cx": { "type": { "description": "string | number" }, "default": "'50%'" },
-    "cy": { "type": { "description": "string | number" }, "default": "'50%'" },
+    "cx": { "type": { "description": "number | string" }, "default": "'50%'" },
+    "cy": { "type": { "description": "number | string" }, "default": "'50%'" },
     "endAngle": { "type": { "description": "number" }, "default": "360" },
     "faded": {
       "type": {
@@ -43,17 +43,17 @@
     },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: \"none\" | \"item\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
+        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"global\" | \"none\" | \"series\" }"
       }
     },
     "id": { "type": { "description": "string" } },
-    "innerRadius": { "type": { "description": "string | number" }, "default": "0" },
+    "innerRadius": { "type": { "description": "number | string" }, "default": "0" },
     "labelMarkType": {
       "type": {
-        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+        "description": "\"circle\" | \"line\" | \"line+mark\" | \"square\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
       }
     },
-    "outerRadius": { "type": { "description": "string | number" }, "default": "'100%'" },
+    "outerRadius": { "type": { "description": "number | string" }, "default": "'100%'" },
     "paddingAngle": { "type": { "description": "number" }, "default": "0" },
     "sortingValues": {
       "type": {

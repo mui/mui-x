@@ -4,7 +4,7 @@
     "renderer": {
       "type": {
         "name": "union",
-        "description": "{ contextType?: func, defaultProps?: { chartType?: string, configuration?: object, dimensions?: Array&lt;object&gt;, onRender?: func, values?: Array&lt;object&gt; }, displayName?: string, getDerivedStateFromError?: func, getDerivedStateFromProps?: func, propTypes?: any }<br>&#124;&nbsp;func"
+        "description": "func<br>&#124;&nbsp;{ contextType?: func, defaultProps?: { chartType?: string, configuration?: object, dimensions?: Array&lt;object&gt;, onRender?: func, values?: Array&lt;object&gt; }, displayName?: string, getDerivedStateFromError?: func, getDerivedStateFromProps?: func, propTypes?: any }"
       },
       "required": true
     },

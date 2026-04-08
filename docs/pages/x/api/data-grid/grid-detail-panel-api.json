@@ -15,7 +15,7 @@
     {
       "name": "toggleDetailPanel",
       "description": "Expands or collapses the detail panel of a row.",
-      "type": "(id: string | number) => void"
+      "type": "(id: number | string) => void"
     }
   ]
 }

@@ -41,7 +41,7 @@
     "density": {
       "type": {
         "name": "enum",
-        "description": "'compact'<br>&#124;&nbsp;'standard'<br>&#124;&nbsp;'comfortable'"
+        "description": "'comfortable'<br>&#124;&nbsp;'compact'<br>&#124;&nbsp;'standard'"
       },
       "default": "\"standard\""
     },
@@ -91,7 +91,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ field: string, id?: string<br>&#124;&nbsp;number, operator: 'contains'<br>&#124;&nbsp;'doesNotContain'<br>&#124;&nbsp;'equals'<br>&#124;&nbsp;'doesNotEqual'<br>&#124;&nbsp;'startsWith'<br>&#124;&nbsp;'endsWith'<br>&#124;&nbsp;'='<br>&#124;&nbsp;'!='<br>&#124;&nbsp;'>'<br>&#124;&nbsp;'>='<br>&#124;&nbsp;'<'<br>&#124;&nbsp;'<='<br>&#124;&nbsp;'is'<br>&#124;&nbsp;'not'<br>&#124;&nbsp;'after'<br>&#124;&nbsp;'onOrAfter'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'onOrBefore'<br>&#124;&nbsp;'isEmpty'<br>&#124;&nbsp;'isNotEmpty'<br>&#124;&nbsp;'isAnyOf'<br>&#124;&nbsp;object, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: Array&lt;any&gt; }"
+        "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: '!='<br>&#124;&nbsp;'<'<br>&#124;&nbsp;'<='<br>&#124;&nbsp;'='<br>&#124;&nbsp;'>'<br>&#124;&nbsp;'>='<br>&#124;&nbsp;'after'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'contains'<br>&#124;&nbsp;'doesNotContain'<br>&#124;&nbsp;'doesNotEqual'<br>&#124;&nbsp;'endsWith'<br>&#124;&nbsp;'equals'<br>&#124;&nbsp;'is'<br>&#124;&nbsp;'isAnyOf'<br>&#124;&nbsp;'isEmpty'<br>&#124;&nbsp;'isNotEmpty'<br>&#124;&nbsp;'not'<br>&#124;&nbsp;'onOrAfter'<br>&#124;&nbsp;'onOrBefore'<br>&#124;&nbsp;'startsWith'<br>&#124;&nbsp;object, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: Array&lt;any&gt; }"
       }
     },
     "getCellClassName": {
@@ -228,7 +228,7 @@
     "listViewColumn": {
       "type": {
         "name": "shape",
-        "description": "{ align?: 'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'center', cellClassName?: string<br>&#124;&nbsp;func, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
+        "description": "{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -243,12 +243,12 @@
     "logLevel": {
       "type": {
         "name": "union",
-        "description": "bool<br>&#124;&nbsp;'debug'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'warn'<br>&#124;&nbsp;'error'"
+        "description": "'debug'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'warn'<br>&#124;&nbsp;bool"
       },
       "default": "\"error\" (\"warn\" in dev mode)"
     },
     "multipleColumnsSortingMode": {
-      "type": { "name": "enum", "description": "'withModifierKey'<br>&#124;&nbsp;'always'" },
+      "type": { "name": "enum", "description": "'always'<br>&#124;&nbsp;'withModifierKey'" },
       "default": "\"withModifierKey\""
     },
     "nonce": { "type": { "name": "string" } },
@@ -562,7 +562,7 @@
     "pinnedColumnsSectionSeparator": {
       "type": {
         "name": "enum",
-        "description": "'border'<br>&#124;&nbsp;'shadow'<br>&#124;&nbsp;'border-and-shadow'"
+        "description": "'border'<br>&#124;&nbsp;'border-and-shadow'<br>&#124;&nbsp;'shadow'"
       },
       "default": "'border-and-shadow'"
     },
@@ -595,7 +595,7 @@
     "rowSelectionModel": {
       "type": {
         "name": "shape",
-        "description": "{ ids: { add: func, clear: func, delete: func, difference: func, entries: func, forEach: func, has: func, intersection: func, isDisjointFrom: func, isSubsetOf: func, isSupersetOf: func, keys: func, size: number, symmetricDifference: func, union: func, values: func }, type: 'include'<br>&#124;&nbsp;'exclude' }"
+        "description": "{ ids: { add: func, clear: func, delete: func, difference: func, entries: func, forEach: func, has: func, intersection: func, isDisjointFrom: func, isSubsetOf: func, isSupersetOf: func, keys: func, size: number, symmetricDifference: func, union: func, values: func }, type: 'exclude'<br>&#124;&nbsp;'include' }"
       }
     },
     "rowSelectionPropagation": {
@@ -609,7 +609,7 @@
       "deprecationInfo": "Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead."
     },
     "rowSpacingType": {
-      "type": { "name": "enum", "description": "'margin'<br>&#124;&nbsp;'border'" },
+      "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
     "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
@@ -653,7 +653,7 @@
     "tabNavigation": {
       "type": {
         "name": "enum",
-        "description": "'none'<br>&#124;&nbsp;'content'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'all'"
+        "description": "'all'<br>&#124;&nbsp;'content'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'none'"
       },
       "default": "\"none\""
     },

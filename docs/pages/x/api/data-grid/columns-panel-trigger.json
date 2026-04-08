@@ -1,15 +1,15 @@
 {
   "props": {
-    "className": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;func" } },
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
     "disabled": { "type": { "name": "bool" } },
     "id": { "type": { "name": "string" } },
     "material": { "type": { "name": "object" } },
-    "render": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;element" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
     "role": { "type": { "name": "string" } },
     "size": {
       "type": {
         "name": "enum",
-        "description": "'small'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'large'"
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
       }
     },
     "startIcon": { "type": { "name": "node" } },

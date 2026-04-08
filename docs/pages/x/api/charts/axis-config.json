@@ -6,10 +6,10 @@
     "import { AxisConfig } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "id": { "type": { "description": "string | number" }, "required": true },
+    "id": { "type": { "description": "number | string" }, "required": true },
     "scaleType": {
       "type": {
-        "description": "\"time\" | \"log\" | \"band\" | \"point\" | \"symlog\" | \"pow\" | \"sqrt\" | \"utc\" | \"linear\""
+        "description": "\"band\" | \"linear\" | \"log\" | \"point\" | \"pow\" | \"sqrt\" | \"symlog\" | \"time\" | \"utc\""
       },
       "required": true
     },
@@ -17,7 +17,7 @@
     "className": { "type": { "description": "string" } },
     "colorMap": {
       "type": {
-        "description": "{ type: \"continuous\", min?: number | Date, max?: number | Date, color: readonly [string, string] | (t: number) =&gt; string } | { type: \"piecewise\", thresholds: (number | Date)[], colors: string[] } | { type: \"ordinal\", values?: readonly (string | number | Date)[], colors: string[], unknownColor?: string }"
+        "description": "{ type: \"continuous\", min?: Date | number, max?: Date | number, color: (t: number) =&gt; string | readonly [string, string] } | { type: \"ordinal\", values?: readonly (string | number | Date)[], colors: string[], unknownColor?: string } | { type: \"piecewise\", thresholds: (number | Date)[], colors: string[] }"
       }
     },
     "data": { "type": { "description": "readonly V[]" } },
@@ -30,7 +30,7 @@
       }
     },
     "height": {
-      "type": { "description": "number | \"auto\"" },
+      "type": { "description": "\"auto\" | number" },
       "default": "45 if an axis label is provided, 25 otherwise."
     },
     "hideTooltip": { "type": { "description": "boolean" } },
@@ -38,7 +38,7 @@
     "label": { "type": { "description": "string" } },
     "labelStyle": { "type": { "description": "ChartsTextStyle" } },
     "offset": { "type": { "description": "number" }, "default": "0" },
-    "position": { "type": { "description": "\"none\" | \"bottom\" | \"top\"" } },
+    "position": { "type": { "description": "\"bottom\" | \"none\" | \"top\"" } },
     "reverse": { "type": { "description": "boolean" } },
     "slotProps": {
       "type": {
@@ -65,19 +65,19 @@
     "tickMinStep": { "type": { "description": "number" } },
     "tickNumber": { "type": { "description": "number" } },
     "tickPlacement": {
-      "type": { "description": "\"start\" | \"end\" | \"middle\" | \"extremities\"" },
+      "type": { "description": "\"end\" | \"extremities\" | \"middle\" | \"start\"" },
       "default": "'extremities'"
     },
     "tickSize": { "type": { "description": "number" }, "default": "6" },
     "tickSpacing": { "type": { "description": "number" }, "default": "0" },
     "valueFormatter": {
       "type": {
-        "description": "(value: V, context: { location: \"legend\" } | { location: \"tooltip\" | \"zoom-slider-tooltip\", scale: (value: number | Date | { valueOf: () =&gt; number }) =&gt; number } | { location: \"tick\", scale: (value: number | Date | { valueOf: () =&gt; number }) =&gt; number, defaultTickLabel: string, tickNumber?: number }) =&gt; string"
+        "description": "(value: V, context: { location: \"legend\" } | { location: \"tick\", scale: (value: Date | number | { valueOf: () =&gt; number }) =&gt; number, defaultTickLabel: string, tickNumber?: number } | { location: \"tooltip\" | \"zoom-slider-tooltip\", scale: (value: Date | number | { valueOf: () =&gt; number }) =&gt; number }) =&gt; string"
       }
     },
     "zoom": {
       "type": {
-        "description": "boolean | { minStart?: number, maxEnd?: number, step?: number, minSpan?: number, maxSpan?: number, panning?: boolean, filterMode?: \"keep\" | \"discard\", slider?: { enabled?: boolean, size?: number, showTooltip?: \"always\" | \"hover\" | \"never\", preview?: boolean | { seriesIds?: string[] } } }"
+        "description": "boolean | { minStart?: number, maxEnd?: number, step?: number, minSpan?: number, maxSpan?: number, panning?: boolean, filterMode?: \"discard\" | \"keep\", slider?: { enabled?: boolean, size?: number, showTooltip?: \"always\" | \"hover\" | \"never\", preview?: boolean | { seriesIds?: string[] } } }"
       },
       "isProPlan": true
     }

@@ -15,7 +15,7 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ nodeId: string<br>&#124;&nbsp;number, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: string<br>&#124;&nbsp;number, subType: 'link', targetId: string<br>&#124;&nbsp;number, type: 'sankey' }<br>&#124;&nbsp;{ nodeId: string<br>&#124;&nbsp;number, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ seriesId: string, sourceId: string<br>&#124;&nbsp;number, subType: 'link', targetId: string<br>&#124;&nbsp;number }"
+        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -45,7 +45,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ nodeId: string<br>&#124;&nbsp;number, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: string<br>&#124;&nbsp;number, subType: 'link', targetId: string<br>&#124;&nbsp;number, type: 'sankey' }<br>&#124;&nbsp;{ nodeId: string<br>&#124;&nbsp;number, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ seriesId: string, sourceId: string<br>&#124;&nbsp;number, subType: 'link', targetId: string<br>&#124;&nbsp;number }"
+        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }"
       }
     },
     "width": { "type": { "name": "number" } }

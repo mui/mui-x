@@ -26,7 +26,7 @@
     {
       "name": "setFilterModel",
       "description": "Sets the filter model to the one given by `model`.",
-      "type": "(model: { items: GridFilterItem[], logicOperator?: \"and\" | \"or\", quickFilterValues?: any[], quickFilterLogicOperator?: \"and\" | \"or\", quickFilterExcludeHiddenColumns?: boolean }, reason?: \"upsertFilterItem\" | \"upsertFilterItems\" | \"deleteFilterItem\" | \"changeLogicOperator\" | \"restoreState\" | \"removeAllFilterItems\") => void"
+      "type": "(model: { items: GridFilterItem[], logicOperator?: \"and\" | \"or\", quickFilterValues?: any[], quickFilterLogicOperator?: \"and\" | \"or\", quickFilterExcludeHiddenColumns?: boolean }, reason?: \"changeLogicOperator\" | \"deleteFilterItem\" | \"removeAllFilterItems\" | \"restoreState\" | \"upsertFilterItem\" | \"upsertFilterItems\") => void"
     },
     {
       "name": "setQuickFilterValues",

@@ -8,7 +8,7 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ x?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band', y?: 'none'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'band' }"
+        "description": "{ x?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', y?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
       },
       "default": "{ x: 'none', y: 'none' }",
       "seeMoreLink": {
@@ -58,10 +58,10 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'scatter' }"
       }
     },
-    "hitAreaRadius": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;'item'" } },
+    "hitAreaRadius": { "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" } },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
@@ -114,7 +114,7 @@
       }
     },
     "renderer": {
-      "type": { "name": "enum", "description": "'svg-single'<br>&#124;&nbsp;'svg-batch'" },
+      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
       "default": "'svg-single'"
     },
     "seriesConfig": { "type": { "name": "object" } },
@@ -130,13 +130,13 @@
     "tooltipAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, dataIndex: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'scatter' }"
       }
     },
     "width": { "type": { "name": "number" } },

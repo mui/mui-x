@@ -10,7 +10,7 @@
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": {
-        "description": "(data: { value: { x: number, y: number, z?: any, id?: string | number }, dataIndex: number }) =&gt; string"
+        "description": "(data: { value: { x: number, y: number, z?: any, id?: number | string }, dataIndex: number }) =&gt; string"
       }
     },
     "data": { "type": { "description": "readonly ScatterValueType[]" } },
@@ -19,27 +19,27 @@
     },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: \"none\" | \"item\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
+        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"global\" | \"none\" | \"series\" }"
       }
     },
     "id": { "type": { "description": "string" } },
     "label": {
-      "type": { "description": "string | (location: \"legend\" | \"tooltip\") =&gt; string" }
+      "type": { "description": "(location: \"legend\" | \"tooltip\") =&gt; string | string" }
     },
     "labelMarkType": {
       "type": {
-        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+        "description": "\"circle\" | \"line\" | \"line+mark\" | \"square\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
       }
     },
     "markerSize": { "type": { "description": "number" } },
     "preview": { "type": { "description": "{ markerSize?: number }" } },
     "valueFormatter": {
       "type": {
-        "description": "(value: { x: number, y: number, z?: any, id?: string | number }, context: { dataIndex: number }) =&gt; string"
+        "description": "(value: { x: number, y: number, z?: any, id?: number | string }, context: { dataIndex: number }) =&gt; string"
       }
     },
-    "xAxisId": { "type": { "description": "string | number" } },
-    "yAxisId": { "type": { "description": "string | number" } },
+    "xAxisId": { "type": { "description": "number | string" } },
+    "yAxisId": { "type": { "description": "number | string" } },
     "zAxisId": { "type": { "description": "string" } }
   }
 }

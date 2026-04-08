@@ -40,7 +40,7 @@
     "initialZoom": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, end: number, start: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -107,7 +107,7 @@
     "tooltipAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, dataIndex: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
     "tooltipItem": {
@@ -126,13 +126,13 @@
     "zoomData": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, end: number, start: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
       }
     },
     "zoomInteractionConfig": {
       "type": {
         "name": "shape",
-        "description": "{ pan?: Array&lt;'drag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt;, type: 'drag' }<br>&#124;&nbsp;{ pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt;, type: 'pressAndDrag' }<br>&#124;&nbsp;{ allowedDirection?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any, pointerMode?: any, requiredKeys?: Array&lt;any&gt;, type: 'wheel' }<br>&#124;&nbsp;'pressAndDrag'&gt;, zoom?: Array&lt;'wheel'<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: Array&lt;any&gt;, type: 'wheel' }<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: Array&lt;any&gt;, type: 'pinch' }<br>&#124;&nbsp;{ pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt;, type: 'tapAndDrag' }<br>&#124;&nbsp;{ pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt;, type: 'doubleTapReset' }<br>&#124;&nbsp;{ pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt;, type: 'brush' }<br>&#124;&nbsp;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'doubleTapReset'<br>&#124;&nbsp;'brush'&gt; }"
+        "description": "{ pan?: Array&lt;'drag'<br>&#124;&nbsp;'pressAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ allowedDirection?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any, pointerMode?: any, requiredKeys?: Array&lt;any&gt;, type: 'wheel' }<br>&#124;&nbsp;{ pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt;, type: 'drag' }<br>&#124;&nbsp;{ pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt;, type: 'pressAndDrag' }&gt;, zoom?: Array&lt;'brush'<br>&#124;&nbsp;'doubleTapReset'<br>&#124;&nbsp;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: Array&lt;any&gt;, type: 'pinch' }<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: Array&lt;any&gt;, type: 'wheel' }<br>&#124;&nbsp;{ pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt;, type: 'brush' }<br>&#124;&nbsp;{ pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt;, type: 'doubleTapReset' }<br>&#124;&nbsp;{ pointerMode?: any<br>&#124;&nbsp;any, requiredKeys?: Array&lt;any&gt;, type: 'tapAndDrag' }&gt; }"
       }
     }
   },

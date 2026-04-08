@@ -8,7 +8,7 @@
     },
     "disabled": { "type": { "name": "bool" } },
     "edge": {
-      "type": { "name": "union", "description": "bool<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'end'" }
+      "type": { "name": "union", "description": "'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;bool" }
     },
     "id": { "type": { "name": "string" } },
     "label": { "type": { "name": "string" } },
@@ -18,7 +18,7 @@
     "size": {
       "type": {
         "name": "enum",
-        "description": "'small'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'large'"
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
       }
     },
     "style": { "type": { "name": "object" } },

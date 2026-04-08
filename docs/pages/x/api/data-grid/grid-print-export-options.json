@@ -20,6 +20,6 @@
     "hideFooter": { "type": { "description": "boolean" }, "default": "false" },
     "hideToolbar": { "type": { "description": "boolean" }, "default": "false" },
     "includeCheckboxes": { "type": { "description": "boolean" }, "default": "false" },
-    "pageStyle": { "type": { "description": "string | () =&gt; string" } }
+    "pageStyle": { "type": { "description": "() =&gt; string | string" } }
   }
 }

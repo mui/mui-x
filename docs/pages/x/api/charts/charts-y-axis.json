@@ -1,7 +1,7 @@
 {
   "props": {
     "axis": { "type": { "name": "object" } },
-    "axisId": { "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" } },
+    "axisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disableLine": { "type": { "name": "bool" }, "default": "false" },
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
@@ -16,7 +16,7 @@
     "tickInterval": {
       "type": {
         "name": "union",
-        "description": "Array&lt;any&gt;<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;func"
+        "description": "'auto'<br>&#124;&nbsp;Array&lt;any&gt;<br>&#124;&nbsp;func"
       },
       "default": "'auto'",
       "seeMoreLink": {
@@ -39,7 +39,7 @@
     "tickPlacement": {
       "type": {
         "name": "enum",
-        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'extremities'"
+        "description": "'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start'"
       },
       "default": "'extremities'"
     },

@@ -27,11 +27,11 @@
     "highlightedAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, dataIndex: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
     "highlightedItem": { "type": { "name": "union", "description": "any<br>&#124;&nbsp;any" } },
-    "hitAreaRadius": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;'item'" } },
+    "hitAreaRadius": { "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" } },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
@@ -112,7 +112,7 @@
     "tooltipAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: string<br>&#124;&nbsp;number, dataIndex: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
     "tooltipItem": { "type": { "name": "union", "description": "any<br>&#124;&nbsp;any" } },

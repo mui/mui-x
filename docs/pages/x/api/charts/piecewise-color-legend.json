@@ -5,7 +5,7 @@
       "default": "'z'"
     },
     "axisId": {
-      "type": { "name": "union", "description": "string<br>&#124;&nbsp;number" },
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "The first axis item."
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
@@ -24,7 +24,7 @@
     "labelPosition": {
       "type": {
         "name": "enum",
-        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'inline-start'<br>&#124;&nbsp;'inline-end'"
+        "description": "'end'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'inline-end'<br>&#124;&nbsp;'inline-start'<br>&#124;&nbsp;'start'"
       },
       "default": "'extremes'"
     },

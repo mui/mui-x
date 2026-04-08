@@ -10,7 +10,7 @@
     "field": { "type": { "description": "string" }, "required": true },
     "type": {
       "type": {
-        "description": "\"string\" | \"number\" | \"boolean\" | \"date\" | \"dateTime\" | \"singleSelect\" | \"actions\" | \"custom\" | \"longText\""
+        "description": "\"actions\" | \"boolean\" | \"custom\" | \"date\" | \"dateTime\" | \"longText\" | \"number\" | \"singleSelect\" | \"string\""
       },
       "default": "'singleSelect'",
       "required": true
@@ -20,20 +20,20 @@
       "default": "true",
       "isPremiumPlan": true
     },
-    "align": { "type": { "description": "\"left\" | \"right\" | \"center\"" } },
+    "align": { "type": { "description": "\"center\" | \"left\" | \"right\"" } },
     "availableAggregationFunctions": {
       "type": { "description": "string[]" },
       "isPremiumPlan": true
     },
     "cellClassName": {
       "type": {
-        "description": "string | (params: GridCellParams&lt;R, V, V, GridTreeNode&gt;) =&gt; string"
+        "description": "(params: GridCellParams&lt;R, V, V, GridTreeNode&gt;) =&gt; string | string"
       }
     },
     "chartable": { "type": { "description": "boolean" }, "default": "true", "isPremiumPlan": true },
     "colSpan": {
       "type": {
-        "description": "number | (value: V, row: R, column: GridBaseColDef&lt;R, V, F&gt; | GridActionsColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; number"
+        "description": "(value: V, row: R, column: GridActionsColDef&lt;R, V, F&gt; | GridBaseColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; number | number"
       },
       "default": "1"
     },
@@ -58,17 +58,17 @@
     "groupable": { "type": { "description": "boolean" }, "default": "true" },
     "groupingValueGetter": {
       "type": {
-        "description": "(value: never, row: R, column: GridBaseColDef&lt;R, any, any&gt; | GridActionsColDef&lt;R, any, any&gt; | GridSingleSelectColDef&lt;R, any, any&gt;, apiRef: RefObject&lt;GridApiPremium&gt;) =&gt; string | number | boolean"
+        "description": "(value: never, row: R, column: GridActionsColDef&lt;R, any, any&gt; | GridBaseColDef&lt;R, any, any&gt; | GridSingleSelectColDef&lt;R, any, any&gt;, apiRef: RefObject&lt;GridApiPremium&gt;) =&gt; boolean | number | string"
       },
       "isPremiumPlan": true
     },
     "groupingValueSetter": {
       "type": {
-        "description": "(groupingValue: string | number | boolean, row: R, column: GridBaseColDef&lt;R, any, any&gt; | GridActionsColDef&lt;R, any, any&gt; | GridSingleSelectColDef&lt;R, any, any&gt;, apiRef: RefObject&lt;GridApiPremium&gt;) =&gt; R"
+        "description": "(groupingValue: boolean | number | string, row: R, column: GridActionsColDef&lt;R, any, any&gt; | GridBaseColDef&lt;R, any, any&gt; | GridSingleSelectColDef&lt;R, any, any&gt;, apiRef: RefObject&lt;GridApiPremium&gt;) =&gt; R"
       },
       "isPremiumPlan": true
     },
-    "headerAlign": { "type": { "description": "\"left\" | \"right\" | \"center\"" } },
+    "headerAlign": { "type": { "description": "\"center\" | \"left\" | \"right\"" } },
     "headerClassName": { "type": { "description": "GridColumnHeaderClassNamePropType" } },
     "headerName": { "type": { "description": "string" } },
     "hideable": { "type": { "description": "boolean" }, "default": "true" },
@@ -77,7 +77,7 @@
     "minWidth": { "type": { "description": "number" }, "default": "50" },
     "pastedValueParser": {
       "type": {
-        "description": "(value: string, row: R, column: GridBaseColDef&lt;R, V, F&gt; | GridActionsColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiPremium&gt;) =&gt; V"
+        "description": "(value: string, row: R, column: GridActionsColDef&lt;R, V, F&gt; | GridBaseColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiPremium&gt;) =&gt; V"
       },
       "isPremiumPlan": true
     },
@@ -85,17 +85,17 @@
     "pivotable": { "type": { "description": "boolean" }, "default": "true", "isPremiumPlan": true },
     "preProcessEditCellProps": {
       "type": {
-        "description": "(params: { id: string | number, row: any, props: { value?: any, isValidating?: boolean, isProcessingProps?: boolean, changeReason?: \"debouncedSetEditCellValue\" | \"setEditCellValue\" }, hasChanged?: boolean, otherFieldsProps?: Record&lt;string, GridEditCellProps&lt;any&gt;&gt; }) =&gt; { value?: any, isValidating?: boolean, isProcessingProps?: boolean, changeReason?: \"debouncedSetEditCellValue\" | \"setEditCellValue\" } | Promise&lt;GridEditCellProps&lt;any&gt;&gt;"
+        "description": "(params: { id: number | string, row: any, props: { value?: any, isValidating?: boolean, isProcessingProps?: boolean, changeReason?: \"debouncedSetEditCellValue\" | \"setEditCellValue\" }, hasChanged?: boolean, otherFieldsProps?: Record&lt;string, GridEditCellProps&lt;any&gt;&gt; }) =&gt; Promise&lt;GridEditCellProps&lt;any&gt;&gt; | { value?: any, isValidating?: boolean, isProcessingProps?: boolean, changeReason?: \"debouncedSetEditCellValue\" | \"setEditCellValue\" }"
       }
     },
     "renderCell": {
       "type": {
-        "description": "(params: GridRenderCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; string | number | bigint | boolean | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | Iterable&lt;ReactNode&gt; | ReactPortal | Promise&lt;AwaitedReactNode&gt;"
+        "description": "(params: GridRenderCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; Iterable&lt;ReactNode&gt; | Promise&lt;AwaitedReactNode&gt; | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | ReactPortal | bigint | boolean | number | string"
       }
     },
     "renderEditCell": {
       "type": {
-        "description": "(params: GridRenderEditCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; string | number | bigint | boolean | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | Iterable&lt;ReactNode&gt; | ReactPortal | Promise&lt;AwaitedReactNode&gt;"
+        "description": "(params: GridRenderEditCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; Iterable&lt;ReactNode&gt; | Promise&lt;AwaitedReactNode&gt; | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | ReactPortal | bigint | boolean | number | string"
       }
     },
     "renderHeader": {
@@ -105,14 +105,14 @@
     },
     "renderHeaderFilter": {
       "type": {
-        "description": "(params: GridRenderHeaderFilterProps) =&gt; string | number | bigint | boolean | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | Iterable&lt;ReactNode&gt; | ReactPortal | Promise&lt;AwaitedReactNode&gt;"
+        "description": "(params: GridRenderHeaderFilterProps) =&gt; Iterable&lt;ReactNode&gt; | Promise&lt;AwaitedReactNode&gt; | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | ReactPortal | bigint | boolean | number | string"
       },
       "isProPlan": true
     },
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
     "rowSpanValueGetter": {
       "type": {
-        "description": "(value: never, row: R, column: GridBaseColDef&lt;R, V, F&gt; | GridActionsColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; V"
+        "description": "(value: never, row: R, column: GridActionsColDef&lt;R, V, F&gt; | GridBaseColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; V"
       }
     },
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
@@ -120,22 +120,22 @@
     "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
     "valueFormatter": {
       "type": {
-        "description": "(value: never, row: R, column: GridBaseColDef&lt;R, V, F&gt; | GridActionsColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; F"
+        "description": "(value: never, row: R, column: GridActionsColDef&lt;R, V, F&gt; | GridBaseColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; F"
       }
     },
     "valueGetter": {
       "type": {
-        "description": "(value: never, row: R, column: GridBaseColDef&lt;R, V, F&gt; | GridActionsColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; V"
+        "description": "(value: never, row: R, column: GridActionsColDef&lt;R, V, F&gt; | GridBaseColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; V"
       }
     },
     "valueParser": {
       "type": {
-        "description": "(value: F, row: R, column: GridBaseColDef&lt;R, V, F&gt; | GridActionsColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; V"
+        "description": "(value: F, row: R, column: GridActionsColDef&lt;R, V, F&gt; | GridBaseColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; V"
       }
     },
     "valueSetter": {
       "type": {
-        "description": "(value: V, row: R, column: GridBaseColDef&lt;R, V, F&gt; | GridActionsColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; R"
+        "description": "(value: V, row: R, column: GridActionsColDef&lt;R, V, F&gt; | GridBaseColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; R"
       }
     },
     "width": { "type": { "description": "number" }, "default": "100" }

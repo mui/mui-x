@@ -67,7 +67,7 @@
     "density": {
       "type": {
         "name": "enum",
-        "description": "'compact'<br>&#124;&nbsp;'standard'<br>&#124;&nbsp;'comfortable'"
+        "description": "'comfortable'<br>&#124;&nbsp;'compact'<br>&#124;&nbsp;'standard'"
       },
       "default": "\"standard\""
     },
@@ -121,7 +121,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ field: string, id?: string<br>&#124;&nbsp;number, operator: 'contains'<br>&#124;&nbsp;'doesNotContain'<br>&#124;&nbsp;'equals'<br>&#124;&nbsp;'doesNotEqual'<br>&#124;&nbsp;'startsWith'<br>&#124;&nbsp;'endsWith'<br>&#124;&nbsp;'='<br>&#124;&nbsp;'!='<br>&#124;&nbsp;'>'<br>&#124;&nbsp;'>='<br>&#124;&nbsp;'<'<br>&#124;&nbsp;'<='<br>&#124;&nbsp;'is'<br>&#124;&nbsp;'not'<br>&#124;&nbsp;'after'<br>&#124;&nbsp;'onOrAfter'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'onOrBefore'<br>&#124;&nbsp;'isEmpty'<br>&#124;&nbsp;'isNotEmpty'<br>&#124;&nbsp;'isAnyOf'<br>&#124;&nbsp;object, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: Array&lt;any&gt; }"
+        "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: '!='<br>&#124;&nbsp;'<'<br>&#124;&nbsp;'<='<br>&#124;&nbsp;'='<br>&#124;&nbsp;'>'<br>&#124;&nbsp;'>='<br>&#124;&nbsp;'after'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'contains'<br>&#124;&nbsp;'doesNotContain'<br>&#124;&nbsp;'doesNotEqual'<br>&#124;&nbsp;'endsWith'<br>&#124;&nbsp;'equals'<br>&#124;&nbsp;'is'<br>&#124;&nbsp;'isAnyOf'<br>&#124;&nbsp;'isEmpty'<br>&#124;&nbsp;'isNotEmpty'<br>&#124;&nbsp;'not'<br>&#124;&nbsp;'onOrAfter'<br>&#124;&nbsp;'onOrBefore'<br>&#124;&nbsp;'startsWith'<br>&#124;&nbsp;object, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: Array&lt;any&gt; }"
       }
     },
     "getAggregationPosition": {
@@ -226,7 +226,7 @@
     "historyValidationEvents": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'cellEditStart'<br>&#124;&nbsp;'cellEditStop'<br>&#124;&nbsp;'rowEditStart'<br>&#124;&nbsp;'rowEditStop'<br>&#124;&nbsp;'cellClick'<br>&#124;&nbsp;'cellDoubleClick'<br>&#124;&nbsp;'cellKeyDown'<br>&#124;&nbsp;'columnHeaderClick'<br>&#124;&nbsp;'columnHeaderContextMenu'<br>&#124;&nbsp;'columnHeaderDoubleClick'<br>&#124;&nbsp;'columnHeaderOver'<br>&#124;&nbsp;'columnHeaderOut'<br>&#124;&nbsp;'columnHeaderEnter'<br>&#124;&nbsp;'columnHeaderLeave'<br>&#124;&nbsp;'columnOrderChange'<br>&#124;&nbsp;'rowClick'<br>&#124;&nbsp;'rowDoubleClick'<br>&#124;&nbsp;'debouncedResize'<br>&#124;&nbsp;'preferencePanelClose'<br>&#124;&nbsp;'preferencePanelOpen'<br>&#124;&nbsp;'menuOpen'<br>&#124;&nbsp;'menuClose'<br>&#124;&nbsp;'resize'<br>&#124;&nbsp;'clipboardCopy'<br>&#124;&nbsp;'columnResize'<br>&#124;&nbsp;'columnWidthChange'<br>&#124;&nbsp;'rowsScrollEnd'<br>&#124;&nbsp;'rowOrderChange'<br>&#124;&nbsp;'fetchRows'<br>&#124;&nbsp;'rootMount'<br>&#124;&nbsp;'unmount'<br>&#124;&nbsp;'stateChange'<br>&#124;&nbsp;'viewportInnerSizeChange'<br>&#124;&nbsp;'activeStrategyProcessorChange'<br>&#124;&nbsp;'strategyAvailabilityChange'<br>&#124;&nbsp;'columnsChange'<br>&#124;&nbsp;'columnResizeStart'<br>&#124;&nbsp;'columnResizeStop'<br>&#124;&nbsp;'rowsSet'<br>&#124;&nbsp;'filteredRowsSet'<br>&#124;&nbsp;'sortedRowsSet'<br>&#124;&nbsp;'aggregationLookupSet'<br>&#124;&nbsp;'rowExpansionChange'<br>&#124;&nbsp;'renderedRowsIntervalChange'<br>&#124;&nbsp;'cellModeChange'<br>&#124;&nbsp;'cellModesModelChange'<br>&#124;&nbsp;'rowModesModelChange'<br>&#124;&nbsp;'cellFocusIn'<br>&#124;&nbsp;'cellFocusOut'<br>&#124;&nbsp;'scrollPositionChange'<br>&#124;&nbsp;'virtualScrollerContentSizeChange'<br>&#124;&nbsp;'virtualScrollerWheel'<br>&#124;&nbsp;'virtualScrollerTouchMove'<br>&#124;&nbsp;'rowsScrollEndIntersection'<br>&#124;&nbsp;'headerSelectionCheckboxChange'<br>&#124;&nbsp;'rowSelectionCheckboxChange'<br>&#124;&nbsp;'rowMouseEnter'<br>&#124;&nbsp;'rowMouseLeave'<br>&#124;&nbsp;'rowMouseOut'<br>&#124;&nbsp;'rowMouseOver'<br>&#124;&nbsp;'rowDragStart'<br>&#124;&nbsp;'rowDragOver'<br>&#124;&nbsp;'rowDragEnd'<br>&#124;&nbsp;'columnHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderFocus'<br>&#124;&nbsp;'columnHeaderBlur'<br>&#124;&nbsp;'columnHeaderDragStart'<br>&#124;&nbsp;'columnHeaderDragEnter'<br>&#124;&nbsp;'columnHeaderDragOver'<br>&#124;&nbsp;'columnHeaderDragEnd'<br>&#124;&nbsp;'columnHeaderDragEndNative'<br>&#124;&nbsp;'columnSeparatorDoubleClick'<br>&#124;&nbsp;'columnSeparatorMouseDown'<br>&#124;&nbsp;'columnIndexChange'<br>&#124;&nbsp;'headerFilterClick'<br>&#124;&nbsp;'headerFilterKeyDown'<br>&#124;&nbsp;'headerFilterMouseDown'<br>&#124;&nbsp;'headerFilterBlur'<br>&#124;&nbsp;'columnGroupHeaderKeyDown'<br>&#124;&nbsp;'columnGroupHeaderFocus'<br>&#124;&nbsp;'columnGroupHeaderBlur'<br>&#124;&nbsp;'cellMouseDown'<br>&#124;&nbsp;'cellMouseUp'<br>&#124;&nbsp;'cellMouseOver'<br>&#124;&nbsp;'cellKeyUp'<br>&#124;&nbsp;'cellDragEnter'<br>&#124;&nbsp;'cellDragOver'<br>&#124;&nbsp;'paginationModelChange'<br>&#124;&nbsp;'filterModelChange'<br>&#124;&nbsp;'sortModelChange'<br>&#124;&nbsp;'rowSelectionChange'<br>&#124;&nbsp;'columnVisibilityModelChange'<br>&#124;&nbsp;'rowCountChange'<br>&#124;&nbsp;'densityChange'<br>&#124;&nbsp;'paginationMetaChange'<br>&#124;&nbsp;'detailPanelsExpandedRowIdsChange'<br>&#124;&nbsp;'pinnedColumnsChange'<br>&#124;&nbsp;'aggregationModelChange'<br>&#124;&nbsp;'rowGroupingModelChange'<br>&#124;&nbsp;'cellSelectionChange'<br>&#124;&nbsp;'excelExportStateChange'<br>&#124;&nbsp;'pivotModelChange'<br>&#124;&nbsp;'pivotModeChange'<br>&#124;&nbsp;'pivotPanelOpenChange'<br>&#124;&nbsp;'aiAssistantConversationsChange'<br>&#124;&nbsp;'aiAssistantActiveConversationIndexChange'<br>&#124;&nbsp;'activeChartIdChange'<br>&#124;&nbsp;'clipboardPasteStart'<br>&#124;&nbsp;'clipboardPasteEnd'<br>&#124;&nbsp;'sidebarOpen'<br>&#124;&nbsp;'sidebarClose'<br>&#124;&nbsp;'chartSynchronizationStateChange'<br>&#124;&nbsp;'undo'<br>&#124;&nbsp;'redo'&gt;"
+        "description": "Array&lt;'activeChartIdChange'<br>&#124;&nbsp;'activeStrategyProcessorChange'<br>&#124;&nbsp;'aggregationLookupSet'<br>&#124;&nbsp;'aggregationModelChange'<br>&#124;&nbsp;'aiAssistantActiveConversationIndexChange'<br>&#124;&nbsp;'aiAssistantConversationsChange'<br>&#124;&nbsp;'cellClick'<br>&#124;&nbsp;'cellDoubleClick'<br>&#124;&nbsp;'cellDragEnter'<br>&#124;&nbsp;'cellDragOver'<br>&#124;&nbsp;'cellEditStart'<br>&#124;&nbsp;'cellEditStop'<br>&#124;&nbsp;'cellFocusIn'<br>&#124;&nbsp;'cellFocusOut'<br>&#124;&nbsp;'cellKeyDown'<br>&#124;&nbsp;'cellKeyUp'<br>&#124;&nbsp;'cellModeChange'<br>&#124;&nbsp;'cellModesModelChange'<br>&#124;&nbsp;'cellMouseDown'<br>&#124;&nbsp;'cellMouseOver'<br>&#124;&nbsp;'cellMouseUp'<br>&#124;&nbsp;'cellSelectionChange'<br>&#124;&nbsp;'chartSynchronizationStateChange'<br>&#124;&nbsp;'clipboardCopy'<br>&#124;&nbsp;'clipboardPasteEnd'<br>&#124;&nbsp;'clipboardPasteStart'<br>&#124;&nbsp;'columnGroupHeaderBlur'<br>&#124;&nbsp;'columnGroupHeaderFocus'<br>&#124;&nbsp;'columnGroupHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderBlur'<br>&#124;&nbsp;'columnHeaderClick'<br>&#124;&nbsp;'columnHeaderContextMenu'<br>&#124;&nbsp;'columnHeaderDoubleClick'<br>&#124;&nbsp;'columnHeaderDragEnd'<br>&#124;&nbsp;'columnHeaderDragEndNative'<br>&#124;&nbsp;'columnHeaderDragEnter'<br>&#124;&nbsp;'columnHeaderDragOver'<br>&#124;&nbsp;'columnHeaderDragStart'<br>&#124;&nbsp;'columnHeaderEnter'<br>&#124;&nbsp;'columnHeaderFocus'<br>&#124;&nbsp;'columnHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderLeave'<br>&#124;&nbsp;'columnHeaderOut'<br>&#124;&nbsp;'columnHeaderOver'<br>&#124;&nbsp;'columnIndexChange'<br>&#124;&nbsp;'columnOrderChange'<br>&#124;&nbsp;'columnResize'<br>&#124;&nbsp;'columnResizeStart'<br>&#124;&nbsp;'columnResizeStop'<br>&#124;&nbsp;'columnSeparatorDoubleClick'<br>&#124;&nbsp;'columnSeparatorMouseDown'<br>&#124;&nbsp;'columnVisibilityModelChange'<br>&#124;&nbsp;'columnWidthChange'<br>&#124;&nbsp;'columnsChange'<br>&#124;&nbsp;'debouncedResize'<br>&#124;&nbsp;'densityChange'<br>&#124;&nbsp;'detailPanelsExpandedRowIdsChange'<br>&#124;&nbsp;'excelExportStateChange'<br>&#124;&nbsp;'fetchRows'<br>&#124;&nbsp;'filterModelChange'<br>&#124;&nbsp;'filteredRowsSet'<br>&#124;&nbsp;'headerFilterBlur'<br>&#124;&nbsp;'headerFilterClick'<br>&#124;&nbsp;'headerFilterKeyDown'<br>&#124;&nbsp;'headerFilterMouseDown'<br>&#124;&nbsp;'headerSelectionCheckboxChange'<br>&#124;&nbsp;'menuClose'<br>&#124;&nbsp;'menuOpen'<br>&#124;&nbsp;'paginationMetaChange'<br>&#124;&nbsp;'paginationModelChange'<br>&#124;&nbsp;'pinnedColumnsChange'<br>&#124;&nbsp;'pivotModeChange'<br>&#124;&nbsp;'pivotModelChange'<br>&#124;&nbsp;'pivotPanelOpenChange'<br>&#124;&nbsp;'preferencePanelClose'<br>&#124;&nbsp;'preferencePanelOpen'<br>&#124;&nbsp;'redo'<br>&#124;&nbsp;'renderedRowsIntervalChange'<br>&#124;&nbsp;'resize'<br>&#124;&nbsp;'rootMount'<br>&#124;&nbsp;'rowClick'<br>&#124;&nbsp;'rowCountChange'<br>&#124;&nbsp;'rowDoubleClick'<br>&#124;&nbsp;'rowDragEnd'<br>&#124;&nbsp;'rowDragOver'<br>&#124;&nbsp;'rowDragStart'<br>&#124;&nbsp;'rowEditStart'<br>&#124;&nbsp;'rowEditStop'<br>&#124;&nbsp;'rowExpansionChange'<br>&#124;&nbsp;'rowGroupingModelChange'<br>&#124;&nbsp;'rowModesModelChange'<br>&#124;&nbsp;'rowMouseEnter'<br>&#124;&nbsp;'rowMouseLeave'<br>&#124;&nbsp;'rowMouseOut'<br>&#124;&nbsp;'rowMouseOver'<br>&#124;&nbsp;'rowOrderChange'<br>&#124;&nbsp;'rowSelectionChange'<br>&#124;&nbsp;'rowSelectionCheckboxChange'<br>&#124;&nbsp;'rowsScrollEnd'<br>&#124;&nbsp;'rowsScrollEndIntersection'<br>&#124;&nbsp;'rowsSet'<br>&#124;&nbsp;'scrollPositionChange'<br>&#124;&nbsp;'sidebarClose'<br>&#124;&nbsp;'sidebarOpen'<br>&#124;&nbsp;'sortModelChange'<br>&#124;&nbsp;'sortedRowsSet'<br>&#124;&nbsp;'stateChange'<br>&#124;&nbsp;'strategyAvailabilityChange'<br>&#124;&nbsp;'undo'<br>&#124;&nbsp;'unmount'<br>&#124;&nbsp;'viewportInnerSizeChange'<br>&#124;&nbsp;'virtualScrollerContentSizeChange'<br>&#124;&nbsp;'virtualScrollerTouchMove'<br>&#124;&nbsp;'virtualScrollerWheel'&gt;"
       },
       "default": "['columnsChange', 'rowsSet', 'sortedRowsSet', 'filteredRowsSet', 'paginationModelChange']"
     },
@@ -288,7 +288,7 @@
     "listViewColumn": {
       "type": {
         "name": "shape",
-        "description": "{ align?: 'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'center', cellClassName?: string<br>&#124;&nbsp;func, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
+        "description": "{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -303,12 +303,12 @@
     "logLevel": {
       "type": {
         "name": "union",
-        "description": "bool<br>&#124;&nbsp;'debug'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'warn'<br>&#124;&nbsp;'error'"
+        "description": "'debug'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'warn'<br>&#124;&nbsp;bool"
       },
       "default": "\"error\" (\"warn\" in dev mode)"
     },
     "multipleColumnsSortingMode": {
-      "type": { "name": "enum", "description": "'withModifierKey'<br>&#124;&nbsp;'always'" },
+      "type": { "name": "enum", "description": "'always'<br>&#124;&nbsp;'withModifierKey'" },
       "default": "\"withModifierKey\""
     },
     "nonce": { "type": { "name": "string" } },
@@ -752,7 +752,7 @@
     "pinnedColumnsSectionSeparator": {
       "type": {
         "name": "enum",
-        "description": "'border'<br>&#124;&nbsp;'shadow'<br>&#124;&nbsp;'border-and-shadow'"
+        "description": "'border'<br>&#124;&nbsp;'border-and-shadow'<br>&#124;&nbsp;'shadow'"
       },
       "default": "'border-and-shadow'"
     },
@@ -770,7 +770,7 @@
     "pivotingColDef": {
       "type": {
         "name": "union",
-        "description": "{ align?: 'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'center', cellClassName?: string<br>&#124;&nbsp;func, description?: string, display?: 'flex'<br>&#124;&nbsp;'text', field?: string, flex?: number, headerAlign?: 'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'center', headerClassName?: string<br>&#124;&nbsp;func, headerName?: string, maxWidth?: number, minWidth?: number, resizable?: bool, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, width?: number }<br>&#124;&nbsp;func"
+        "description": "func<br>&#124;&nbsp;{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, description?: string, display?: 'flex'<br>&#124;&nbsp;'text', field?: string, flex?: number, headerAlign?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', headerClassName?: func<br>&#124;&nbsp;string, headerName?: string, maxWidth?: number, minWidth?: number, resizable?: bool, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, width?: number }"
       },
       "default": "undefined"
     },
@@ -798,7 +798,7 @@
     "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
     "rowGroupingColumnMode": {
-      "type": { "name": "enum", "description": "'single'<br>&#124;&nbsp;'multiple'" },
+      "type": { "name": "enum", "description": "'multiple'<br>&#124;&nbsp;'single'" },
       "default": "'single'"
     },
     "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
@@ -810,7 +810,7 @@
     "rowSelectionModel": {
       "type": {
         "name": "shape",
-        "description": "{ ids: { add: func, clear: func, delete: func, difference: func, entries: func, forEach: func, has: func, intersection: func, isDisjointFrom: func, isSubsetOf: func, isSupersetOf: func, keys: func, size: number, symmetricDifference: func, union: func, values: func }, type: 'include'<br>&#124;&nbsp;'exclude' }"
+        "description": "{ ids: { add: func, clear: func, delete: func, difference: func, entries: func, forEach: func, has: func, intersection: func, isDisjointFrom: func, isSubsetOf: func, isSupersetOf: func, keys: func, size: number, symmetricDifference: func, union: func, values: func }, type: 'exclude'<br>&#124;&nbsp;'include' }"
       }
     },
     "rowSelectionPropagation": {
@@ -824,7 +824,7 @@
       "deprecationInfo": "Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead."
     },
     "rowSpacingType": {
-      "type": { "name": "enum", "description": "'margin'<br>&#124;&nbsp;'border'" },
+      "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
     "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
@@ -870,7 +870,7 @@
     "tabNavigation": {
       "type": {
         "name": "enum",
-        "description": "'none'<br>&#124;&nbsp;'content'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'all'"
+        "description": "'all'<br>&#124;&nbsp;'content'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'none'"
       },
       "default": "\"none\""
     },

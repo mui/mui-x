@@ -3,7 +3,7 @@
     "anchor": {
       "type": {
         "name": "enum",
-        "description": "'node'<br>&#124;&nbsp;'pointer'<br>&#124;&nbsp;'chart'"
+        "description": "'chart'<br>&#124;&nbsp;'node'<br>&#124;&nbsp;'pointer'"
       },
       "default": "'pointer'"
     },
@@ -30,7 +30,7 @@
     "trigger": {
       "type": {
         "name": "enum",
-        "description": "'none'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'axis'"
+        "description": "'axis'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'none'"
       },
       "default": "'axis'"
     }

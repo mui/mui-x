@@ -7,13 +7,13 @@
   "demos": "  - [Flat row reordering](/x/react-data-grid/row-ordering/#implementing-row-reordering)\n  - [Tree data reordering](/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering)\n  - [Row grouping reordering](/x/react-data-grid/row-grouping/#drag-and-drop-group-reordering)",
   "properties": {
     "newParent": {
-      "type": { "description": "string | number" },
+      "type": { "description": "number | string" },
       "required": true,
       "isProPlan": true
     },
     "oldIndex": { "type": { "description": "number" }, "required": true, "isProPlan": true },
     "oldParent": {
-      "type": { "description": "string | number" },
+      "type": { "description": "number | string" },
       "required": true,
       "isProPlan": true
     },

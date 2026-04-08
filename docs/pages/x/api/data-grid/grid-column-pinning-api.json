@@ -10,7 +10,7 @@
     {
       "name": "isColumnPinned",
       "description": "Returns which side a column is pinned to.",
-      "type": "(field: string) => boolean | \"left\" | \"right\""
+      "type": "(field: string) => \"left\" | \"right\" | boolean"
     },
     {
       "name": "pinColumn",

@@ -2,11 +2,11 @@
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
     "calendars": {
-      "type": { "name": "enum", "description": "2<br>&#124;&nbsp;1<br>&#124;&nbsp;3" },
+      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1 if `displayStaticWrapperAs === 'mobile'`, 2 otherwise."
     },
     "currentMonthCalendarPosition": {
-      "type": { "name": "enum", "description": "2<br>&#124;&nbsp;1<br>&#124;&nbsp;3" },
+      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1"
     },
     "dayOfWeekFormatter": {
@@ -19,7 +19,7 @@
       }
     },
     "defaultRangePosition": {
-      "type": { "name": "enum", "description": "'start'<br>&#124;&nbsp;'end'" },
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
     "defaultValue": { "type": { "name": "object" } },
@@ -80,7 +80,7 @@
         "describedArgs": ["rangePosition"]
       }
     },
-    "rangePosition": { "type": { "name": "enum", "description": "'start'<br>&#124;&nbsp;'end'" } },
+    "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },

@@ -10,16 +10,16 @@
     "label": { "type": { "description": "string" }, "required": true },
     "markType": {
       "type": {
-        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+        "description": "\"circle\" | \"line\" | \"line+mark\" | \"square\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
       },
       "required": true
     },
-    "maxValue": { "type": { "description": "number | Date" }, "required": true },
-    "minValue": { "type": { "description": "number | Date" }, "required": true },
+    "maxValue": { "type": { "description": "Date | number" }, "required": true },
+    "minValue": { "type": { "description": "Date | number" }, "required": true },
     "seriesId": { "type": { "description": "string" }, "required": true },
     "type": {
       "type": {
-        "description": "\"line\" | \"bar\" | \"scatter\" | \"pie\" | \"radar\" | \"heatmap\" | \"funnel\" | \"sankey\" | \"rangeBar\" | \"ohlc\""
+        "description": "\"bar\" | \"funnel\" | \"heatmap\" | \"line\" | \"ohlc\" | \"pie\" | \"radar\" | \"rangeBar\" | \"sankey\" | \"scatter\""
       },
       "required": true
     },

@@ -8,7 +8,7 @@
   "properties": {
     "type": { "type": { "description": "\"line\"" }, "required": true },
     "area": { "type": { "description": "boolean" } },
-    "baseline": { "type": { "description": "number | \"max\" | \"min\"" }, "default": "0" },
+    "baseline": { "type": { "description": "\"max\" | \"min\" | number" }, "default": "0" },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": { "description": "(data: { value: number, dataIndex: number }) =&gt; string" }
@@ -16,7 +16,7 @@
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
     "curve": {
       "type": {
-        "description": "\"step\" | \"linear\" | \"catmullRom\" | \"monotoneX\" | \"monotoneY\" | \"natural\" | \"stepBefore\" | \"stepAfter\" | \"bumpY\" | \"bumpX\""
+        "description": "\"bumpX\" | \"bumpY\" | \"catmullRom\" | \"linear\" | \"monotoneX\" | \"monotoneY\" | \"natural\" | \"step\" | \"stepAfter\" | \"stepBefore\""
       },
       "default": "'monotoneX'"
     },
@@ -25,38 +25,38 @@
     "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: \"none\" | \"item\" | \"series\", fade?: \"none\" | \"series\" | \"global\" }"
+        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"global\" | \"none\" | \"series\" }"
       }
     },
     "id": { "type": { "description": "string" } },
     "label": {
-      "type": { "description": "string | (location: \"legend\" | \"tooltip\") =&gt; string" }
+      "type": { "description": "(location: \"legend\" | \"tooltip\") =&gt; string | string" }
     },
     "labelMarkType": {
       "type": {
-        "description": "\"circle\" | \"line\" | \"square\" | \"line+mark\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+        "description": "\"circle\" | \"line\" | \"line+mark\" | \"square\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
       }
     },
     "shape": {
       "type": {
-        "description": "\"circle\" | \"square\" | \"cross\" | \"diamond\" | \"star\" | \"triangle\" | \"wye\""
+        "description": "\"circle\" | \"cross\" | \"diamond\" | \"square\" | \"star\" | \"triangle\" | \"wye\""
       }
     },
     "showMark": {
       "type": {
-        "description": "boolean | (params: { index: number, x: number, y: number, position: number | Date, value: number }) =&gt; boolean"
+        "description": "(params: { index: number, x: number, y: number, position: Date | number, value: number }) =&gt; boolean | boolean"
       }
     },
     "stack": { "type": { "description": "string" } },
     "stackOffset": {
       "type": {
-        "description": "\"none\" | \"expand\" | \"diverging\" | \"silhouette\" | \"wiggle\""
+        "description": "\"diverging\" | \"expand\" | \"none\" | \"silhouette\" | \"wiggle\""
       },
       "default": "'none'"
     },
     "stackOrder": {
       "type": {
-        "description": "\"none\" | \"appearance\" | \"reverse\" | \"ascending\" | \"descending\" | \"insideOut\""
+        "description": "\"appearance\" | \"ascending\" | \"descending\" | \"insideOut\" | \"none\" | \"reverse\""
       },
       "default": "'none'"
     },
@@ -64,7 +64,7 @@
     "valueFormatter": {
       "type": { "description": "(value: number, context: { dataIndex: number }) =&gt; string" }
     },
-    "xAxisId": { "type": { "description": "string | number" } },
-    "yAxisId": { "type": { "description": "string | number" } }
+    "xAxisId": { "type": { "description": "number | string" } },
+    "yAxisId": { "type": { "description": "number | string" } }
   }
 }
