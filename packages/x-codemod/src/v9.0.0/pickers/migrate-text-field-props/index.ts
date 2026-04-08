@@ -154,14 +154,26 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     //   `textField.slotProps.<newKey>` instead.
     const fieldCollected: { newKey: string; value: any }[] = [];
     expression.properties.forEach((prop: any) => {
+      if (prop.type === 'SpreadElement' || prop.type === 'ExperimentalSpreadProperty') {
+        console.warn(
+          `[migrate-text-field-props] ${file.path}: encountered a spread inside slotProps; ` +
+            `cannot inspect for legacy text field props. Migrate manually if needed.`,
+        );
+        return;
+      }
       if (prop.type !== 'Property' && prop.type !== 'ObjectProperty') {
         return;
       }
       const keyName = getKeyName(prop.key);
-      if (
-        (keyName !== 'field' && keyName !== 'textField') ||
-        prop.value.type !== 'ObjectExpression'
-      ) {
+      if (keyName !== 'field' && keyName !== 'textField') {
+        return;
+      }
+      if (prop.value.type !== 'ObjectExpression') {
+        console.warn(
+          `[migrate-text-field-props] ${file.path}: \`slotProps.${keyName}\` is set to a ` +
+            `non-literal value (e.g. a variable or a function); cannot migrate legacy ` +
+            `text field props automatically. Migrate manually if needed.`,
+        );
         return;
       }
       let target = prop.value;

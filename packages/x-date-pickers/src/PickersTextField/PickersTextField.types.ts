@@ -3,7 +3,10 @@ import { FormControlProps } from '@mui/material/FormControl';
 import { FormHelperTextProps } from '@mui/material/FormHelperText';
 import { InputLabelProps } from '@mui/material/InputLabel';
 import { TextFieldVariants } from '@mui/material/TextField';
-import { PickersInputPropsUsedByField } from './PickersInputBase/PickersInputBase.types';
+import {
+  PickersInputBaseProps,
+  PickersInputPropsUsedByField,
+} from './PickersInputBase/PickersInputBase.types';
 import type { PickersInputProps } from './PickersInput';
 import type { PickersOutlinedInputProps } from './PickersOutlinedInput';
 import type { PickersFilledInputProps } from './PickersFilledInput';
@@ -37,7 +40,7 @@ export interface PickersTextFieldSlots {
   formHelperText?: React.ElementType;
 }
 
-export interface PickersTextFieldSlotProps<InputPropsType> {
+export interface PickersTextFieldSlotProps<InputPropsType extends PickersInputBaseProps> {
   root?: Partial<FormControlProps>;
   input?: Partial<InputPropsType>;
   inputLabel?: Partial<InputLabelProps>;
@@ -45,7 +48,7 @@ export interface PickersTextFieldSlotProps<InputPropsType> {
   formHelperText?: Partial<FormHelperTextProps>;
 }
 
-export interface PickersTextFieldSlotsAndSlotProps<InputPropsType> {
+export interface PickersTextFieldSlotsAndSlotProps<InputPropsType extends PickersInputBaseProps> {
   /**
    * The components used for each slot inside.
    * @default {}
