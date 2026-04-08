@@ -17,6 +17,59 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
+    title: 'MUI X v9',
+    description:
+      'A new major with accessibility-first charts, Data Grid AI assistant, candlestick and range bar charts, and new Scheduler and Chat packages.',
+    date: new Date(2026, 3, 8),
+    url: 'https://mui.com/blog/introducing-mui-v9/',
+    highlightList: [
+      {
+        title: 'Data Grid – Charts integration [Premium]',
+        url: '/x/react-data-grid/charts-integration/',
+      },
+      {
+        title: 'Data Grid – AI Assistant [Premium]',
+        url: '/x/react-data-grid/ai-assistant/',
+      },
+      {
+        title: 'Data Grid – Undo and redo [Premium]',
+        url: '/x/react-data-grid/undo-redo/',
+      },
+      {
+        title: 'Data Grid – longText column type',
+        url: '/x/react-data-grid/column-definition/#column-types',
+      },
+      {
+        title: 'Charts – Interaction and accessibility',
+        url: '/x/react-charts/accessibility/',
+      },
+      {
+        title: 'Charts – Candlestick [Premium]',
+        url: '/x/react-charts/candlestick/',
+      },
+      {
+        title: 'Charts – Range bar charts [Premium]',
+        url: '/x/react-charts/range-bar/',
+      },
+      {
+        title: 'Charts – WebGL Heatmap renderer [Premium]',
+        url: '/x/react-charts/heatmap/#webgl-renderer',
+      },
+      {
+        title: 'Tree View – Virtualization [Pro]',
+        url: '/x/react-tree-view/rich-tree-view/virtualization/',
+      },
+      {
+        title: 'Scheduler [Alpha]',
+        url: '/x/react-scheduler/',
+      },
+      {
+        title: 'Chat [Alpha]',
+        url: '/x/react-chat/',
+      },
+    ],
+  },
+  {
     title: 'MUI X v8.2',
     description: 'A roundup of all new features beyond v8.0.0.',
     date: new Date(2025, 12, 1),
