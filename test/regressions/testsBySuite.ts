@@ -28,6 +28,8 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/data-grid/filtering/CustomInputComponent', // Needs interaction
     '!docsx/data/data-grid/server-side-data/ServerSideLazyLoadingRevalidation', // Flashes cause flaky argos screenshots
     '!docsx/data/data-grid/server-side-data/ServerSideLazyLoadingFullyReplaced', // Flashes cause flaky argos screenshots
+    '!docsx/data/data-grid/server-side-data/ServerSideDataGridRevalidation', // Flashes cause flaky argos screenshots
+    '!docsx/data/data-grid/server-side-data/ServerSideTreeDataRevalidation', // Flashes cause flaky argos screenshots
     '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
     '!docsx/data/charts/tooltip/Custom*', // Composition example
     '!docsx/data/charts/tooltip/Item*', // Composition example

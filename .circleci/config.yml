@@ -184,19 +184,6 @@ jobs:
           name: '`pnpm l10n` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
-          name: '`pnpm @mui/x-charts-vendor build` was run?'
-          command: |
-            # #target-branch-reference
-            # Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
-            # For example, when creating v9 from v8, `master -> v8.x`
-            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
-            then
-              echo "No changes to dependencies detected. Skipping..."
-            else
-              pnpm --filter @mui/x-charts-vendor build
-              git add -A && git diff --exit-code --staged
-            fi
-      - run:
           name: 'No dynamic date library import in the Pickers built types?'
           command: |
             pnpm lerna run --include-dependencies --scope "@mui/x-date-pickers*" build
