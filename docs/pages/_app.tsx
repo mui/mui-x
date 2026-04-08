@@ -56,6 +56,8 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
     productId = 'x-charts';
   } else if (canonicalAs.startsWith('/x/api/scheduler/')) {
     productId = 'x-scheduler';
+  } else if (canonicalAs.startsWith('/x/api/chat-')) {
+    productId = 'x-chat';
   }
 
   return React.useMemo(() => {
@@ -71,6 +73,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
       'x-charts': { subpath: '/x/react-charts', version: process.env.CHARTS_VERSION },
       'x-tree-view': { subpath: '/x/react-tree-view', version: process.env.TREE_VIEW_VERSION },
       'x-scheduler': { subpath: '/x/react-scheduler', version: process.env.SCHEDULER_VERSION },
+      'x-chat': { subpath: '/x/react-chat', version: process.env.CHAT_VERSION },
     };
 
     const getVersionOptions = (id: string, versions: string[]) =>
@@ -159,6 +162,12 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
         metadata: 'MUI X',
         name: 'Scheduler',
         versions: getVersionOptions('x-scheduler', [process.env.SCHEDULER_VERSION!]),
+      };
+    } else if (productId === 'x-chat') {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Chat',
+        versions: getVersionOptions('x-chat', [process.env.CHAT_VERSION!]),
       };
     }
 
