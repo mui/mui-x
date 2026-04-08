@@ -23,7 +23,7 @@ import {
   type MarkPlotSlotProps,
   type MarkPlotSlots,
 } from './MarkPlot';
-import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
+import { ChartsAxis } from '../ChartsAxis/ChartsAxis';
 import { type LineSeriesType } from '../models/seriesType/line';
 import { ChartsTooltip } from '../ChartsTooltip';
 import {
@@ -84,7 +84,6 @@ export type LineSeries = MakeOptional<LineSeriesType, 'type'>;
 export interface LineChartProps
   extends
     Omit<ChartsContainerProps<'line', LineChartPluginSignatures>, 'series' | 'plugins' | 'zAxis'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the line chart.
