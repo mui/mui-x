@@ -2,7 +2,7 @@
   "props": {
     "groupKey": {
       "type": { "name": "func" },
-      "default": "(message) => message.author?.id ?? message.role"
+      "default": "(message) => message.author?.id ?? message.role ?? ''"
     }
   },
   "name": "ChatMessageGroup",

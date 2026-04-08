@@ -1,7 +1,14 @@
 {
   "props": {
     "children": { "type": { "name": "string" }, "required": true },
-    "highlighter": { "type": { "name": "func" } },
+    "highlighter": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(code: string, language: string) => React.ReactNode",
+        "describedArgs": ["code", "language"],
+        "returned": "React.ReactNode"
+      }
+    },
     "language": { "type": { "name": "string" } }
   },
   "name": "ChatCodeBlock",

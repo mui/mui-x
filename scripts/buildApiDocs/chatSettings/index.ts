@@ -99,6 +99,7 @@ export default chatApiPages;
       'icons/DefaultNewChatIcon.tsx',
       'icons/DefaultSendIcon.tsx',
       'icons/DefaultSettingsIcon.tsx',
+      'icons/DefaultMenuIcon.tsx',
     ];
     if (compoundFiles.some((f) => filename.includes(f))) {
       return true;
