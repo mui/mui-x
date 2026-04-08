@@ -6,7 +6,7 @@
 
 _Apr 8, 2026_
 
-🥳 We're excited to announce the stable release of MUI X v9!
+🥳 We're excited to announce the stable release of MUI X v9!
 This major release includes many new features and improvements. Here are some highlights ✨:
 
 - Data Grid – [Charts integration](https://mui.com/x/react-data-grid/charts-integration/) [Premium]
