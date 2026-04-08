@@ -45,8 +45,8 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-internals": "workspace:*",
-    "@mui/x-virtualizer": "workspace:*",
+    "@mui/x-internals": "workspace:^",
+    "@mui/x-virtualizer": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:",
     "use-sync-external-store": "catalog:"
@@ -54,8 +54,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^7.3.0 || ^9.0.0-beta.0 || ^9.0.0",
-    "@mui/system": "^7.3.0 || ^9.0.0-beta.1",
+    "@mui/material": "^7.3.0 || ^9.0.0",
+    "@mui/system": "^7.3.0 || ^9.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
@@ -72,7 +72,7 @@
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
-    "@mui/types": "7.4.12",
+    "@mui/types": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
