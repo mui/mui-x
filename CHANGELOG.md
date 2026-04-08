@@ -69,11 +69,11 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.1`.
 
 #### `@mui/x-chat@9.0.0-alpha.0`
 
-Internal changes.
+- [chat] Add x-chat package family (#21666) @hasdfa
 
 #### `@mui/x-chat-headless@9.0.0-alpha.0`
 
-Internal changes.
+- [chat] Add x-chat package family (#21666) @hasdfa
 
 ### Docs
 
@@ -89,7 +89,6 @@ Internal changes.
 
 ### Miscellaneous
 
-- [chat] Add x-chat package family (#21666) @hasdfa
 - [code] Fix few typos in JSDocs and error messages (#22032) @alexfauquette
 - [core] Post stable release changes (#22033) @LukasTy
 - [core-infra] Update monorepo hash and remove temporary patch (#22038) @rita-codes
