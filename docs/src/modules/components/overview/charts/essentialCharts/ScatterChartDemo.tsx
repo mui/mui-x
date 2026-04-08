@@ -78,12 +78,12 @@ function CustomTooltip() {
 
 function Scatter() {
   return (
-    <Stack height="100%">
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center">Processor density (in transistor/mm²)</Typography>
       <ScatterChart
         series={series}
         grid={{ horizontal: true, vertical: true }}
-        voronoiMaxRadius={20}
+        hitAreaRadius={20}
         slots={{ tooltip: CustomTooltip }}
         {...chartSetting}
       />

@@ -46,9 +46,7 @@ import type {
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
-  charts?: boolean;
-}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing extends Pick<
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
@@ -160,6 +158,13 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default false
    */
   chartsIntegration: boolean;
+  /**
+   * If `true`, a fill handle is shown at the bottom-right corner of the cell selection.
+   * Dragging the fill handle fills target cells with the values from selected cells.
+   * Requires `cellSelection` to be enabled.
+   * @default false
+   */
+  cellSelectionFillHandle: boolean;
   /**
    * The maximum size of the history stack.
    * Set to 0 to disable the undo/redo feature.

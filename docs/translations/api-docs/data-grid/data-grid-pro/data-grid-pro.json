@@ -727,7 +727,10 @@
           "description": "With all properties from GridRowScrollEndParams."
         },
         "event": { "name": "event", "description": "The event object." },
-        "details": { "name": "details", "description": "Additional details for this callback." }
+        "details": {
+          "name": "details",
+          "description": "Additional details for this callback. Prefer to use {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} unless it doesn&#39;t fulfill your needs."
+        }
       }
     },
     "onSortModelChange": {
@@ -950,6 +953,31 @@
       "nodeName": "the cell element",
       "conditions": "the cell is in edit mode"
     },
+    "cell--fillPreview": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is in the fill preview range"
+    },
+    "cell--fillPreviewBottom": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the bottom edge of the fill preview range"
+    },
+    "cell--fillPreviewLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the left edge of the fill preview range"
+    },
+    "cell--fillPreviewRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the right edge of the fill preview range"
+    },
+    "cell--fillPreviewTop": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the top edge of the fill preview range"
+    },
     "cell--flex": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell element in flex display mode"
@@ -1003,6 +1031,11 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "<code>align=\"right\"</code>"
+    },
+    "cell--withFillHandle": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it displays the fill handle"
     },
     "cell--withLeftBorder": {
       "description": "Styles applied the cell if <code>showColumnVerticalBorder={true}</code>."
@@ -1803,6 +1836,7 @@
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "redoIcon": "Icon displayed on the redo button in the toolbar.",
     "row": "Component rendered for each row.",
+    "rowCheckbox": "Component rendered for each row selection checkbox.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",

@@ -12,11 +12,7 @@ import {
   MultiInputDateTimeRangeFieldClasses,
 } from './multiInputDateTimeRangeFieldClasses';
 
-export interface MultiInputDateTimeRangeFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MultiInputRangeFieldProps<
-  UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-> {
+export interface MultiInputDateTimeRangeFieldProps extends MultiInputRangeFieldProps<UseDateTimeRangeManagerReturnValue> {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
   /**
    * Override or extend the styles applied to the component.
@@ -24,11 +20,8 @@ export interface MultiInputDateTimeRangeFieldProps<
   classes?: Partial<MultiInputDateTimeRangeFieldClasses>;
 }
 
-type MultiInputDateTimeRangeFieldComponent = (<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MultiInputDateTimeRangeFieldComponent = ((
+  props: MultiInputDateTimeRangeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -113,9 +106,9 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   divider: PropTypes.node,
   /**
-   * @default true
+   * The ref object used to interact with the end field imperatively.
    */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
+  endFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -270,6 +263,10 @@ MultiInputDateTimeRangeField.propTypes = {
     PropTypes.object,
     PropTypes.string,
   ]),
+  /**
+   * The ref object used to interact with the start field imperatively.
+   */
+  startFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   style: PropTypes.object,
   /**
    * The system prop, which allows defining system overrides as well as additional CSS styles.
@@ -287,8 +284,6 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
-  unstableEndFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  unstableStartFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * If `true`, the CSS flexbox `gap` is used instead of applying `margin` to children.
    *

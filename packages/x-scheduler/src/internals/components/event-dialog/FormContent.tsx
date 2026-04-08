@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import MuiDialogContent from '@mui/material/DialogContent';
 import Divider from '@mui/material/Divider';
+import { inputBaseClasses } from '@mui/material/InputBase';
 import TextField from '@mui/material/TextField';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -17,7 +18,7 @@ import {
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
@@ -57,7 +58,7 @@ const EventDialogTitleTextField = styled(TextField, {
   slot: 'TitleTextField',
 })(({ theme }) => ({
   flex: 1,
-  ['& .MuiInputBase-root']: {
+  [`& .${inputBaseClasses.root}`]: {
     fontSize: theme.typography.h6.fontSize,
     lineHeight: theme.typography.h6.lineHeight,
     fontWeight: theme.typography.h6.fontWeight,
@@ -98,7 +99,7 @@ export function FormContent(props: FormContentProps) {
   const { occurrence, onClose, dragHandlerRef } = props;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 
@@ -122,6 +123,8 @@ export function FormContent(props: FormContentProps) {
   );
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+
+  const titleInputRef = React.useCallback((input: HTMLInputElement | null) => input?.focus(), []);
 
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
@@ -245,6 +248,7 @@ export function FormContent(props: FormContentProps) {
             name="title"
             defaultValue={occurrence.title}
             required
+            inputRef={titleInputRef}
             slotProps={{
               input: {
                 readOnly: isPropertyReadOnly('title'),
@@ -261,11 +265,13 @@ export function FormContent(props: FormContentProps) {
           <EventDialogTabsContainer className={classes.eventDialogTabsContainer}>
             <EventDialogTabs value={tabValue} onChange={handleTabChange}>
               <Tab
+                id="general-tab"
                 className={classes.eventDialogTab}
                 label={localeText.generalTabLabel}
                 value="general"
               />
               <Tab
+                id="recurrence-tab"
                 className={classes.eventDialogTab}
                 label={localeText.recurrenceTabLabel}
                 value="recurrence"

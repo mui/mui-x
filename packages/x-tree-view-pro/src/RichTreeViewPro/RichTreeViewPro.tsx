@@ -67,7 +67,7 @@ type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undef
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
-  version: (process.env as any).MUI_VERSION,
+  version: process.env.MUI_VERSION!,
   name: 'x-tree-view-pro' as const,
 };
 
@@ -388,6 +388,15 @@ RichTreeViewPro.propTypes = {
    * @param {boolean} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
+  /**
+   * Callback fired when the children of an item are loaded from the data source.
+   * Only relevant for lazy-loaded tree views.
+   * @param {object} parameters The parameters of the callback.
+   * @param {R[]} parameters.items The items that were loaded.
+   * @param {TreeViewItemId | null} parameters.parentId The id of the parent item whose children were loaded. `null` if the root items were loaded.
+   * @param {boolean} parameters.isCacheHit `true` if the items were loaded from the cache, `false` if they were fetched from the data source.
+   */
+  onItemsLazyLoaded: PropTypes.func,
   /**
    * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.

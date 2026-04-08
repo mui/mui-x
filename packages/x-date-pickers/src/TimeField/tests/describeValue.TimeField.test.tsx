@@ -1,7 +1,7 @@
 import {
   adapterToUse,
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   formatFullTimeValue,
   getFieldInputRoot,
@@ -28,7 +28,7 @@ describe('<TimeField /> - Describe Value', () => {
         expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
       }
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addHours(value!, 1);

@@ -13,7 +13,7 @@ import {
   schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import EventDialogHeader from './EventDialogHeader';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { getRecurrenceLabel, hasProp } from './utils';
@@ -124,7 +124,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
   const { occurrence, onClose, dragHandlerRef } = props;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 
@@ -222,8 +222,10 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             <Typography
               className={classes.eventDialogRecurrenceLabel}
               variant="body2"
-              color="text.secondary"
               component="em"
+              sx={{
+                color: 'text.secondary',
+              }}
             >
               {recurrenceLabel}
             </Typography>

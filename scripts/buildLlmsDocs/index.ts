@@ -78,8 +78,8 @@ import { ComponentInfo, ProjectSettings } from '@mui-internal/api-docs-builder';
 import { getHeaders } from '@mui/internal-markdown';
 import findComponents from '@mui-internal/api-docs-builder/utils/findComponents';
 import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
-import { pageToTitleI18n } from 'docs/src/modules/utils/helpers';
-import type { MuiPage } from 'docs/src/MuiPage';
+import { pageToTitleI18n } from '@mui/internal-core-docs/helpers';
+import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 import pages from 'docsx/data/pages';
 
 function processApiFile(filePath: string): string {
@@ -550,6 +550,7 @@ function findProjectPagesSection(projectKey: string): MuiPage | null {
     'data-grid': '/x/react-data-grid-group',
     'date-pickers': '/x/react-date-pickers-group',
     charts: '/x/react-charts-group',
+    scheduler: '/x/react-scheduler-group',
     'tree-view': '/x/react-tree-view-group',
   };
 

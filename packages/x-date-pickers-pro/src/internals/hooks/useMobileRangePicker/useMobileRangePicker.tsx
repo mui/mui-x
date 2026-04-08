@@ -24,21 +24,15 @@ import { createRangePickerStepNavigation } from '../../utils/createRangePickerSt
 
 export const useMobileRangePicker = <
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TExternalProps extends UseMobileRangePickerProps<
-    TView,
-    TEnableAccessibleFieldDOMStructure,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseMobileRangePickerProps<TView, any, TExternalProps>,
 >({
   props,
   steps,
   ...pickerParams
-}: UseMobileRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+}: UseMobileRangePickerParams<TView, TExternalProps>) => {
   useLicenseVerifier({
     releaseDate: '__RELEASE_INFO__',
-    version: (process.env as any).MUI_VERSION,
+    version: process.env.MUI_VERSION!,
     name: 'x-date-pickers-pro',
   });
 

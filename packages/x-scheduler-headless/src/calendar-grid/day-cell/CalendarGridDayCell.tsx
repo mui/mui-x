@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
-import { useAdapter } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useDayCellDropTarget } from './useDayCellDropTarget';
 import { CalendarGridDayCellContext } from './CalendarGridDayCellContext';
@@ -16,6 +16,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     value,
     addPropertiesToDroppedEvent,
@@ -24,7 +25,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     ...elementProps
   } = componentProps;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
 
@@ -36,8 +37,6 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     resourceId: null,
   }));
 
-  const props = { role: 'gridcell' };
-
   const contextValue: CalendarGridDayCellContext = React.useMemo(
     () => ({
       index,
@@ -47,7 +46,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef, dropTargetRef, listItemRef],
-    props: [props, eventCreationProps, elementProps],
+    props: [elementProps, { role: 'gridcell' }, eventCreationProps],
   });
 
   return (

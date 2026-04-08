@@ -28,7 +28,7 @@ pnpm generate:exports # when editing code in `packages/x-charts*`
 
 ## Testing
 
-### Run unit tests in JSDOM
+### Run unit tests in jsdom
 
 ```bash
 # Filter by project name (glob patterns supported)
@@ -118,6 +118,10 @@ Run `pnpm extract-error-codes` to update `docs/public/static/error-codes.json`.
 
 **Important:** If the update created a new error code, but the new and original message have the same number of arguments and semantics haven't changed, update the original error in `error-codes.json` instead of creating a new code.
 
+## Dependencies
+
+- Examples (`examples/`) are standalone projects — never use `catalog:` for their dependencies. Always use explicit version ranges.
+
 ## Other scripts
 
 Refer to `package.json` for other available scripts.
@@ -132,6 +136,9 @@ To generate `.js` files, run `pnpm docs:typescript:formatted`.
 ## Codemods
 
 Codemods are run by consumers of the MUI X libraries to migrate to newer versions of the libraries.
+
+When adding a new codemod, make sure to also document it in the `packages/x-codemod/README.md` following existing examples.
+You also need to create or expand the `preset-safe` preset to include the new codemod, document the preset in the `README.md` and also include the newly added changes to the `preset-safe` test.
 
 ### Versioning
 

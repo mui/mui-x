@@ -1,5 +1,6 @@
 {
   "props": {
+    "areAllSectionsEmpty": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
     "clearButtonPosition": {
@@ -17,6 +18,9 @@
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
+    "endAdornment": { "type": { "name": "node" } },
+    "error": { "type": { "name": "bool" }, "default": "false" },
+    "fieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
@@ -132,6 +136,7 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "startAdornment": { "type": { "name": "node" } },
     "sx": {
       "type": {
         "name": "union",
@@ -146,9 +151,6 @@
         "url": "https://mui.com/x/react-date-pickers/timezone/",
         "text": "timezones documentation"
       }
-    },
-    "unstableFieldRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
     },
     "value": { "type": { "name": "object" } },
     "variant": {
@@ -187,11 +189,29 @@
     {
       "name": "textField",
       "description": "Form control with an input to render the value.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     }
   ],
   "classes": [
+    {
+      "key": "fullWidth",
+      "className": "MuiDateField-fullWidth",
+      "description": "Styles applied to the root element if `fullWidth={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "marginDense",
+      "className": "MuiDateField-marginDense",
+      "description": "Styles applied to the root element if `margin=\"dense\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "marginNormal",
+      "className": "MuiDateField-marginNormal",
+      "description": "Styles applied to the root element if `margin=\"normal\"`.",
+      "isGlobal": false
+    },
     {
       "key": "root",
       "className": "MuiDateField-root",

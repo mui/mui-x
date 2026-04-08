@@ -32,6 +32,39 @@ In `package.json`, change the version of the Data Grid package to `next`.
 
 ## Breaking changes
 
+### Stabilized `experimentalFeatures`
+
+The `charts` experimental feature flag has been removed. The charts integration is now controlled solely by the `chartsIntegration` prop on `DataGridPremium`.
+
+If you were using `experimentalFeatures={{ charts: true }}`, you can remove it.
+
+```diff
+ <DataGridPremium
+-  experimentalFeatures={{ charts: true }}
+   chartsIntegration
+   slots={{ chartsPanel: GridChartsPanel }}
+ />
+```
+
+You can use this codemod to automatically remove the `charts` property from `experimentalFeatures`:
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+```
+
+### Locale text changes
+
+- The `filterPanelColumns` locale text key has been renamed to `filterPanelColumn` and the default value changed from "Columns" to "Column".
+
+  If you have tests relying on this label, you may need to update them accordingly.
+
+  ```diff
+  -screen.getByRole('combobox', { name: 'Columns' });
+  +screen.getByRole('combobox', { name: 'Column' });
+  ```
+
 ### Behavioral changes
 
 - Pagination numbers are formatted by default.
@@ -54,3 +87,9 @@ In `package.json`, change the version of the Data Grid package to `next`.
   +  }}
    />
   ```
+
+### DOM changes
+
+- The `.MuiDataGrid-virtualScrollerContent` node has been moved to be a direct child of `.MuiDataGrid-virtualScroller`. If you were using it to target the rows container, you can switch to `.MuiDataGrid-virtualScrollerRenderZone`.
+- A new `div` node has been added as a direct child of `.MuiDataGrid-virtualScrollerContent`, for internal purposes.
+- A new `div` node has been added to fill the scroll container's dimension, for internal purposes.

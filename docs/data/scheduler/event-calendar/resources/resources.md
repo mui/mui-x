@@ -3,13 +3,14 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
+components: EventCalendar, EventCalendarPremium
 ---
 
 # Event Calendar - Resources
 
 <p class="description">Define the properties of your events.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Define resources
 
@@ -53,10 +54,6 @@ const resources = [
 ```
 
 {{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
-
-:::success
-Nested resources are not yet supported in the resource visibility UI in the sidebar. Only top level resource can be toggled.
-:::
 
 ## Visible resources
 

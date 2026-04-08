@@ -5,7 +5,7 @@
   height={200}
   hideLegend
   sx={{
-    [`& .${pieArcLabelClasses.root}.${pieArcLabelClasses.animate}`]: {
+    [`& .${pieClasses.arcLabel}.${pieClasses.animate}`]: {
       animationDuration: '2s',
     },
   }}

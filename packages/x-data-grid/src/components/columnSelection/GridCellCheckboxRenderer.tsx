@@ -110,7 +110,8 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
     );
 
     return (
-      <rootProps.slots.baseCheckbox
+      <rootProps.slots.rowCheckbox
+        rowId={id}
         tabIndex={disabled ? -1 : tabIndex}
         checked={isChecked && !isIndeterminate}
         onChange={handleChange}
@@ -118,9 +119,6 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
         onMouseDown={handleMouseDown}
         className={clsx(classes.root, disabled && 'Mui-disabled')}
         disabled={disabled}
-        material={{
-          disableRipple: disabled,
-        }}
         slotProps={{
           htmlInput: {
             'aria-disabled': disabled || undefined,
@@ -130,7 +128,7 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
         }}
         onKeyDown={handleKeyDown}
         indeterminate={isIndeterminate}
-        {...rootProps.slotProps?.baseCheckbox}
+        {...rootProps.slotProps?.rowCheckbox}
         {...other}
         ref={ref as any}
       />

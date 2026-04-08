@@ -38,13 +38,10 @@ export default function KeyboardNavigation() {
   const handleChange = (event) => setChartType(event.target.value);
 
   return (
-    <Stack width="100%" sx={{ display: 'block' }}>
+    <Stack sx={{ width: '100%', display: 'block' }}>
       <Stack
-        width="100%"
         direction="row"
-        gap={2}
-        justifyContent="center"
-        sx={{ mb: 1 }}
+        sx={{ width: '100%', gap: 2, justifyContent: 'center', mb: 1 }}
       >
         <FormControl sx={{ minWidth: 200 }}>
           <InputLabel id="chart-type-label">Chart Type</InputLabel>
@@ -61,7 +58,13 @@ export default function KeyboardNavigation() {
             <MenuItem value="pie">Pie</MenuItem>
           </Select>
         </FormControl>
-        <Button onClick={() => chartRef.current?.focus()} variant="contained">
+        <Button
+          onClick={() => {
+            const element = chartRef.current?.querySelector('[tabindex="0"]');
+            element?.focus();
+          }}
+          variant="contained"
+        >
           Focus chart
         </Button>
       </Stack>

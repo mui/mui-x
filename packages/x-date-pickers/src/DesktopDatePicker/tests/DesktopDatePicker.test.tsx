@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import { act, screen } from '@mui/internal-test-utils';
+import { act, screen, waitFor } from '@mui/internal-test-utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPickerAsync } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -107,6 +107,24 @@ describe('<DesktopDatePicker />', () => {
 
       await user.click(screen.getByText('2020'));
       expect(document.activeElement).to.have.text('5');
+    });
+
+    it('should close the Picker and move focus to the text field when clicking it', async () => {
+      const { user } = render(
+        <React.Fragment>
+          <input aria-label="decoy" />
+          <DesktopDatePicker />
+        </React.Fragment>,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Choose date' }));
+
+      const decoyInput = screen.getByRole('textbox', { name: 'decoy' });
+      await user.click(decoyInput);
+
+      await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
+      // the input should be focused—the new active element
+      expect(document.activeElement!).to.equal(decoyInput);
     });
 
     it('should go to the relevant `view` when `view` prop changes', async () => {
@@ -439,12 +457,9 @@ describe('<DesktopDatePicker />', () => {
   });
 
   describe('InputProps and slotProps behavior', () => {
-    it('should respect the `slotProps.textField.InputProps` on accessible DOM structure', () => {
+    it('should respect the `slotProps.textField.InputProps`', () => {
       render(
-        <DesktopDatePicker
-          enableAccessibleFieldDOMStructure
-          slotProps={{ textField: { InputProps: { name: 'test-field' } } }}
-        />,
+        <DesktopDatePicker slotProps={{ textField: { InputProps: { name: 'test-field' } } }} />,
       );
 
       expect(screen.getByRole('textbox', { hidden: true }))
@@ -452,21 +467,9 @@ describe('<DesktopDatePicker />', () => {
         .to.equal('test-field');
     });
 
-    it('should respect the `slotProps.textField.InputProps` on non-accessible DOM structure', () => {
+    it('should respect the `slotProps.textField.slotProps.input`', () => {
       render(
         <DesktopDatePicker
-          enableAccessibleFieldDOMStructure={false}
-          slotProps={{ textField: { InputProps: { name: 'test-field' } } }}
-        />,
-      );
-
-      expect(screen.getByRole('textbox')).attribute('name').to.equal('test-field');
-    });
-
-    it('should respect the `slotProps.textField.slotProps.input` on accessible DOM structure', () => {
-      render(
-        <DesktopDatePicker
-          enableAccessibleFieldDOMStructure
           slotProps={{ textField: { slotProps: { input: { name: 'test-field' } } } }}
         />,
       );
@@ -476,34 +479,9 @@ describe('<DesktopDatePicker />', () => {
         .to.equal('test-field');
     });
 
-    it('should respect the `slotProps.textField.slotProps.input` on non-accessible DOM structure', () => {
+    it('should respect the `slotProps.textField.slotProps.htmlInput`', () => {
       render(
         <DesktopDatePicker
-          enableAccessibleFieldDOMStructure={false}
-          slotProps={{ textField: { slotProps: { input: { name: 'test-field' } } } }}
-        />,
-      );
-
-      expect(screen.getByRole('textbox')).attribute('name').to.equal('test-field');
-    });
-
-    it('should respect the `slotProps.textField.slotProps.htmlInput` on accessible DOM structure', () => {
-      render(
-        <DesktopDatePicker
-          enableAccessibleFieldDOMStructure
-          slotProps={{
-            textField: { slotProps: { htmlInput: { 'data-testid': 'test-html-input' } } },
-          }}
-        />,
-      );
-
-      expect(screen.getByTestId('test-html-input')).not.to.equal(null);
-    });
-
-    it('should respect the `slotProps.textField.slotProps.htmlInput` on non-accessible DOM structure', () => {
-      render(
-        <DesktopDatePicker
-          enableAccessibleFieldDOMStructure={false}
           slotProps={{
             textField: { slotProps: { htmlInput: { 'data-testid': 'test-html-input' } } },
           }}
@@ -525,22 +503,9 @@ describe('<DesktopDatePicker />', () => {
       );
     }
 
-    it('should respect the `slots.inputAdornment` on accessible DOM structure', () => {
+    it('should respect the `slots.inputAdornment`', () => {
       render(
         <DesktopDatePicker
-          enableAccessibleFieldDOMStructure
-          slots={{ inputAdornment: CustomInputAdornment }}
-          slotProps={{ inputAdornment: { 'aria-label': 'test-adornment-icon', role: 'figure' } }}
-        />,
-      );
-
-      expect(screen.getByRole('figure', { name: 'test-adornment-icon' })).to.have.text('x');
-    });
-
-    it('should respect the `slots.inputAdornment` on non-accessible DOM structure', () => {
-      render(
-        <DesktopDatePicker
-          enableAccessibleFieldDOMStructure={false}
           slots={{ inputAdornment: CustomInputAdornment }}
           slotProps={{ inputAdornment: { 'aria-label': 'test-adornment-icon', role: 'figure' } }}
         />,

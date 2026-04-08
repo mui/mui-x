@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
   type AxisId,
@@ -7,12 +8,11 @@ import {
   invertScale,
   selectorChartAxis,
   selectorChartAxisZoomOptionsLookup,
-  useChartContext,
+  useChartsContext,
   useDrawingArea,
   useStore,
   type ZoomData,
 } from '@mui/x-charts/internals';
-import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import { shouldForwardProp } from '@mui/system';
@@ -23,8 +23,23 @@ import {
 import { ChartsAxisZoomSliderThumb } from './ChartsAxisZoomSliderThumb';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';
 import { calculateZoomEnd, calculateZoomFromPoint, calculateZoomStart } from './zoom-utils';
-import { ZOOM_SLIDER_THUMB_HEIGHT, ZOOM_SLIDER_THUMB_WIDTH } from './constants';
+import {
+  ZOOM_SLIDER_THUMB_HEIGHT,
+  ZOOM_SLIDER_THUMB_WIDTH,
+  ZOOM_SLIDER_TOUCH_TARGET,
+} from './constants';
 import { useUtilityClasses } from './chartsAxisZoomSliderTrackClasses';
+
+/**
+ * Invisible touch target that is only active on coarse pointer devices (touch).
+ * On fine pointer devices (mouse), it disables pointer events so it doesn't
+ * interfere with precise interactions on small zoom ranges.
+ */
+const TouchTarget = styled('rect')({
+  '@media (pointer: fine)': {
+    pointerEvents: 'none',
+  },
+});
 
 const ZoomSliderActiveTrackRect = styled('rect', {
   slot: 'internal',
@@ -46,7 +61,7 @@ const ZoomSliderActiveTrackRect = styled('rect', {
         }),
         rx: 4,
         ry: 4,
-        stroke: theme.palette.grey[500],
+        stroke: (theme.vars || theme).palette.grey[500],
       },
     },
   ],
@@ -63,6 +78,8 @@ export interface ChartsAxisZoomSliderActiveTrackProps {
   showTooltip: boolean;
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
+  onInteractionStart?: () => void;
+  onInteractionEnd?: () => void;
 }
 
 export function ChartsAxisZoomSliderActiveTrack({
@@ -76,13 +93,16 @@ export function ChartsAxisZoomSliderActiveTrack({
   showTooltip,
   onPointerEnter,
   onPointerLeave,
+  onInteractionStart,
+  onInteractionEnd,
 }: ChartsAxisZoomSliderActiveTrackProps) {
-  const { instance } = useChartContext<[UseChartProZoomSignature]>();
+  const { instance } = useChartsContext<[UseChartProZoomSignature]>();
   const { chartsLayerContainerRef } = instance;
   const store = useStore<[UseChartProZoomSignature]>();
   const axis = store.use(selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();
-  const activePreviewRectRef = React.useRef<SVGRectElement>(null);
+  const activeTrackGroupRef = React.useRef<SVGGElement>(null);
+  const touchTargetRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);
   const [endThumbEl, setEndThumbEl] = React.useState<SVGRectElement | null>(null);
   const { tooltipStart, tooltipEnd } = getZoomSliderTooltipsText(axis, drawingArea);
@@ -94,9 +114,10 @@ export function ChartsAxisZoomSliderActiveTrack({
     axisDirection === 'x' ? ZOOM_SLIDER_THUMB_HEIGHT : ZOOM_SLIDER_THUMB_WIDTH;
 
   React.useEffect(() => {
-    const activePreviewRect = activePreviewRectRef.current;
+    const group = activeTrackGroupRef.current;
+    const touchTarget = touchTargetRef.current;
 
-    if (!activePreviewRect) {
+    if (!group || !touchTarget) {
       return;
     }
 
@@ -123,14 +144,18 @@ export function ChartsAxisZoomSliderActiveTrack({
     });
 
     const onPointerUp = () => {
-      activePreviewRect.removeEventListener('pointermove', onPointerMove);
+      group.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
+      onInteractionEnd?.();
     };
 
     const onPointerDown = (event: PointerEvent) => {
       // Prevent text selection when dragging
       event.preventDefault();
-      activePreviewRect.setPointerCapture(event.pointerId);
+      // Use the touch target rect for pointer capture as setPointerCapture
+      // does not work reliably on SVG <g> elements on touch devices.
+      touchTarget.setPointerCapture(event.pointerId);
+      onInteractionStart?.();
 
       const axisZoomData = selectorChartAxisZoomData(store.state, axisId);
       const element = chartsLayerContainerRef.current;
@@ -149,17 +174,27 @@ export function ChartsAxisZoomSliderActiveTrack({
       prevPointerZoom = pointerDownZoom;
 
       document.addEventListener('pointerup', onPointerUp);
-      activePreviewRect.addEventListener('pointermove', onPointerMove);
+      group.addEventListener('pointermove', onPointerMove);
     };
 
-    activePreviewRect.addEventListener('pointerdown', onPointerDown);
+    // Listen on the group so events from both the visible rect and touch target are captured
+    group.addEventListener('pointerdown', onPointerDown);
 
     // eslint-disable-next-line consistent-return
     return () => {
-      activePreviewRect.removeEventListener('pointerdown', onPointerDown);
+      group.removeEventListener('pointerdown', onPointerDown);
       onPointerMove.clear();
     };
-  }, [axisDirection, axisId, instance, reverse, store, chartsLayerContainerRef]);
+  }, [
+    axisDirection,
+    axisId,
+    instance,
+    reverse,
+    store,
+    chartsLayerContainerRef,
+    onInteractionStart,
+    onInteractionEnd,
+  ]);
 
   const onStartThumbMove = (event: PointerEvent) => {
     const element = chartsLayerContainerRef.current;
@@ -281,19 +316,44 @@ export function ChartsAxisZoomSliderActiveTrack({
 
   const previewOffset = ZOOM_SLIDER_THUMB_HEIGHT > size ? (ZOOM_SLIDER_THUMB_HEIGHT - size) / 2 : 0;
 
+  const activeTrackX = previewX + (axisDirection === 'x' ? 0 : previewOffset);
+  const activeTrackY = previewY + (axisDirection === 'x' ? previewOffset : 0);
+
+  // Compute a larger invisible touch target centered on the visible active track
+  const touchWidth =
+    axisDirection === 'y' ? Math.max(previewWidth, ZOOM_SLIDER_TOUCH_TARGET) : previewWidth;
+  const touchHeight =
+    axisDirection === 'x' ? Math.max(previewHeight, ZOOM_SLIDER_TOUCH_TARGET) : previewHeight;
+  const touchX = activeTrackX - (touchWidth - previewWidth) / 2;
+  const touchY = activeTrackY - (touchHeight - previewHeight) / 2;
+
   return (
     <React.Fragment>
-      <ZoomSliderActiveTrackRect
-        ref={activePreviewRectRef}
-        x={previewX + (axisDirection === 'x' ? 0 : previewOffset)}
-        y={previewY + (axisDirection === 'x' ? previewOffset : 0)}
-        preview={preview}
-        width={previewWidth}
-        height={previewHeight}
-        onPointerEnter={onPointerEnter}
-        onPointerLeave={onPointerLeave}
-        className={classes.active}
-      />
+      <g ref={activeTrackGroupRef}>
+        <ZoomSliderActiveTrackRect
+          x={activeTrackX}
+          y={activeTrackY}
+          preview={preview}
+          width={previewWidth}
+          height={previewHeight}
+          onPointerEnter={onPointerEnter}
+          onPointerLeave={onPointerLeave}
+          className={classes.active}
+        />
+        {/* Invisible touch target rendered on top for easier interaction on touch devices */}
+        <TouchTarget
+          ref={touchTargetRef}
+          x={touchX}
+          y={touchY}
+          width={touchWidth}
+          height={touchHeight}
+          fill="transparent"
+          stroke="none"
+          cursor="grab"
+          onPointerEnter={onPointerEnter}
+          onPointerLeave={onPointerLeave}
+        />
+      </g>
       <ChartsAxisZoomSliderThumb
         ref={setStartThumbEl}
         x={startThumbX}
@@ -304,6 +364,8 @@ export function ChartsAxisZoomSliderActiveTrack({
         onMove={onStartThumbMove}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
+        onInteractionStart={onInteractionStart}
+        onInteractionEnd={onInteractionEnd}
         placement="start"
       />
       <ChartsAxisZoomSliderThumb
@@ -316,6 +378,8 @@ export function ChartsAxisZoomSliderActiveTrack({
         onMove={onEndThumbMove}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
+        onInteractionStart={onInteractionStart}
+        onInteractionEnd={onInteractionEnd}
         placement="end"
       />
       <ChartsTooltipZoomSliderValue
