@@ -24,7 +24,7 @@ catalog:
   '@mui/material': 9.0.0-beta.1
   '@mui/stylis-plugin-rtl': 9.0.0-beta.0
   '@mui/system': 9.0.0-beta.1
-  '@mui/types': 7.4.12
+  '@mui/types': 9.0.0
   '@mui/utils': 9.0.0-beta.1
   '@mui/x-internal-exceljs-fork': 4.4.5
   '@playwright/test': ^1.58.2
