@@ -50,14 +50,14 @@ Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
               if (process.env.NODE_ENV !== 'production') {
                 if (start !== null) {
                   warnOnce([
-                    `MUI X Charts: Your dataset key "start" is used for plotting an range bar, but contains nonnumerical elements.`,
+                    `MUI X Charts: Your dataset key "start" is used for plotting a range bar, but contains non-numerical elements.`,
                     'Range bars only support numbers.',
                   ]);
                 }
 
                 if (end !== null) {
                   warnOnce([
-                    `MUI X Charts: Your dataset key "end" is used for plotting an range bar, but contains nonnumerical elements.`,
+                    `MUI X Charts: Your dataset key "end" is used for plotting a range bar, but contains non-numerical elements.`,
                     'Range bars only support numbers.',
                   ]);
                 }
