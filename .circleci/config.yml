@@ -46,7 +46,7 @@ default-parameters: &default-parameters
 default-job: &default-job
   parameters:
     <<: *default-parameters
-  environment:
+  environment: &default-environment
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
@@ -140,6 +140,9 @@ jobs:
           path: test-results
   test_lint:
     <<: *default-job
+    environment:
+      <<: *default-environment
+      NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - checkout
       - install-deps
