@@ -36,11 +36,6 @@
       "groupName": "fingerprintjs",
       "matchPackageNames": ["@fingerprintjs/fingerprintjs"],
       "allowedVersions": "< 4.0.0"
-    },
-    {
-      "groupName": "conf",
-      "matchPackageNames": ["conf"],
-      "allowedVersions": "< 12.0.0"
     }
   ]
 }
