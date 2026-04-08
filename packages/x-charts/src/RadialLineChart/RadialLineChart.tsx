@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type MakeOptional } from '@mui/x-internals/types';
 import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
 import {
   ChartsPolarDataProvider,
@@ -24,8 +23,7 @@ import {
   type ChartsOverlaySlots,
   type ChartsOverlaySlotProps,
 } from '../ChartsOverlay';
-import { type LinePlotSlots, type LinePlotSlotProps } from '../LineChart';
-import { type LineSeriesType } from '../models/seriesType';
+import type { LinePlotSlots, LinePlotSlotProps, LineSeries } from '../LineChart';
 import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
 import { type ChartsSlots, type ChartsSlotProps } from '../internals/material';
 import { useRadialLineChartProps } from './useRadialLineChartProps';
@@ -48,7 +46,6 @@ export interface RadialLineChartSlotProps
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
-export type LineSeries = MakeOptional<LineSeriesType, 'type'>;
 export interface RadialLineChartProps
   extends
     Omit<
