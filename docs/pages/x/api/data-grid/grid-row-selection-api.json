@@ -1,21 +1,31 @@
 {
   "name": "GridRowSelectionApi",
   "description": "The selection API interface that is available in the grid [[apiRef]].",
-  "properties": {
-    "selectRow": {
-      "type": {
-        "description": "(id: string | number, isSelected?: boolean, resetSelection?: boolean) =&gt; void"
-      }
+  "properties": [
+    {
+      "name": "getSelectedRows",
+      "description": "Returns an array of the selected rows.",
+      "type": "() => Map<GridRowId, GridValidRowModel>"
     },
-    "isRowSelected": { "type": { "description": "(id: string | number) =&gt; boolean" } },
-    "isRowSelectable": { "type": { "description": "(id: string | number) =&gt; boolean" } },
-    "getSelectedRows": {
-      "type": { "description": "() =&gt; Map&lt;GridRowId, GridValidRowModel&gt;" }
+    {
+      "name": "isRowSelectable",
+      "description": "Determines if a row can be selected or not.",
+      "type": "(id: string | number) => boolean"
     },
-    "setRowSelectionModel": {
-      "type": {
-        "description": "(rowSelectionModel: { type: \"include\" | \"exclude\", ids: Set&lt;GridRowId&gt; }, reason?: \"singleRowSelection\" | \"multipleRowsSelection\") =&gt; void"
-      }
+    {
+      "name": "isRowSelected",
+      "description": "Determines if a row is selected or not.",
+      "type": "(id: string | number) => boolean"
+    },
+    {
+      "name": "selectRow",
+      "description": "Change the selection state of a row.",
+      "type": "(id: string | number, isSelected?: boolean, resetSelection?: boolean) => void"
+    },
+    {
+      "name": "setRowSelectionModel",
+      "description": "Sets the new row selection model.\n\n⚠️ Caution: `setRowSelectionModel` doesn't apply the selection propagation automatically.\nPass model returned by API method `getPropagatedRowSelectionModel` instead to apply the selection propagation.",
+      "type": "(rowSelectionModel: { type: \"include\" | \"exclude\", ids: Set<GridRowId> }, reason?: \"singleRowSelection\" | \"multipleRowsSelection\") => void"
     }
-  }
+  ]
 }

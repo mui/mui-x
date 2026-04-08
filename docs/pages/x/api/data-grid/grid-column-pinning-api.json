@@ -1,19 +1,27 @@
 {
   "name": "GridColumnPinningApi",
   "description": "The column pinning API interface that is available in the grid [[apiRef]].",
-  "properties": {
-    "pinColumn": {
-      "type": { "description": "(field: string, side: \"left\" | \"right\") =&gt; void" }
+  "properties": [
+    {
+      "name": "getPinnedColumns",
+      "description": "Returns which columns are pinned.",
+      "type": "() => { left?: string[], right?: string[] }"
     },
-    "unpinColumn": { "type": { "description": "(field: string) =&gt; void" } },
-    "getPinnedColumns": {
-      "type": { "description": "() =&gt; { left?: string[], right?: string[] }" }
+    {
+      "name": "isColumnPinned",
+      "description": "Returns which side a column is pinned to.",
+      "type": "(field: string) => boolean | \"left\" | \"right\""
     },
-    "setPinnedColumns": {
-      "type": { "description": "(pinnedColumns: { left?: string[], right?: string[] }) =&gt; void" }
+    {
+      "name": "pinColumn",
+      "description": "Pins a column to the left or right side of the grid.",
+      "type": "(field: string, side: \"left\" | \"right\") => void"
     },
-    "isColumnPinned": {
-      "type": { "description": "(field: string) =&gt; boolean | \"left\" | \"right\"" }
-    }
-  }
+    {
+      "name": "setPinnedColumns",
+      "description": "Changes the pinned columns.",
+      "type": "(pinnedColumns: { left?: string[], right?: string[] }) => void"
+    },
+    { "name": "unpinColumn", "description": "Unpins a column.", "type": "(field: string) => void" }
+  ]
 }

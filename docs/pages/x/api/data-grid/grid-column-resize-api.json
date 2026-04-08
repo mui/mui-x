@@ -1,11 +1,11 @@
 {
   "name": "GridColumnResizeApi",
   "description": "The Resize API interface that is available in the grid `apiRef`.",
-  "properties": {
-    "autosizeColumns": {
-      "type": {
-        "description": "(options?: { columns?: string[], includeHeaders?: boolean, includeHeaderFilters?: boolean, includeOutliers?: boolean, outliersFactor?: number, expand?: boolean, disableColumnVirtualization?: boolean }) =&gt; Promise&lt;void&gt;"
-      }
+  "properties": [
+    {
+      "name": "autosizeColumns",
+      "description": "Auto-size the columns of the grid based on the cells' content and the space available.",
+      "type": "(options?: { columns?: string[], includeHeaders?: boolean, includeHeaderFilters?: boolean, includeOutliers?: boolean, outliersFactor?: number, expand?: boolean, disableColumnVirtualization?: boolean }) => Promise<void>"
     }
-  }
+  ]
 }

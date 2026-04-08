@@ -232,19 +232,20 @@ export function buildJsonOnlyInterfaces(
     const interfaceType = checker.getDeclaredTypeOfSymbol(resolved);
     const description = ts.displayPartsToString(resolved.getDocumentationComment(checker));
 
-    const properties: Record<string, any> = {};
+    const properties: { name: string; description: string; type: string }[] = [];
     for (const prop of interfaceType.getProperties()) {
       const jsDoc = extractJsDoc(prop, checker);
       if (jsDoc.ignore) {
         continue;
       }
 
-      const typeStr = resolvePropertyType(prop, checker);
-
-      properties[prop.name] = {
-        type: { description: escapeHtml(typeStr) },
-      };
+      properties.push({
+        name: prop.name,
+        description: jsDoc.description,
+        type: resolvePropertyType(prop, checker),
+      });
     }
+    properties.sort((a, b) => a.name.localeCompare(b.name));
 
     const slug = kebabCase(interfaceName);
     files.push({

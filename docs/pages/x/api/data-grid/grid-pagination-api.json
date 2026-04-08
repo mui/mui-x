@@ -1,15 +1,31 @@
 {
   "name": "GridPaginationApi",
   "description": "The pagination API interface that is available in the grid `apiRef`.",
-  "properties": {
-    "setPage": { "type": { "description": "(page: number) =&gt; void" } },
-    "setPageSize": { "type": { "description": "(pageSize: number) =&gt; void" } },
-    "setPaginationModel": {
-      "type": { "description": "(model: { pageSize: number, page: number }) =&gt; void" }
+  "properties": [
+    {
+      "name": "setPage",
+      "description": "Sets the displayed page to the value given by `page`.",
+      "type": "(page: number) => void"
     },
-    "setRowCount": { "type": { "description": "(rowCount: number) =&gt; void" } },
-    "setPaginationMeta": {
-      "type": { "description": "(paginationMeta: { hasNextPage?: boolean }) =&gt; void" }
+    {
+      "name": "setPageSize",
+      "description": "Sets the number of displayed rows to the value given by `pageSize`.",
+      "type": "(pageSize: number) => void"
+    },
+    {
+      "name": "setPaginationMeta",
+      "description": "Sets the `paginationMeta` to a new value.",
+      "type": "(paginationMeta: { hasNextPage?: boolean }) => void"
+    },
+    {
+      "name": "setPaginationModel",
+      "description": "Sets the `paginationModel` to a new value.",
+      "type": "(model: { pageSize: number, page: number }) => void"
+    },
+    {
+      "name": "setRowCount",
+      "description": "Sets the `rowCount` to a new value.",
+      "type": "(rowCount: number) => void"
     }
-  }
+  ]
 }

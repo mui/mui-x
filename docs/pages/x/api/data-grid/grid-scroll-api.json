@@ -1,19 +1,21 @@
 {
   "name": "GridScrollApi",
   "description": "The scroll API interface that is available in the grid [[apiRef]].",
-  "properties": {
-    "scroll": {
-      "type": {
-        "description": "(params: { left?: number, top?: number, renderContext?: { firstRowIndex: number, lastRowIndex: number, firstColumnIndex: number, lastColumnIndex: number } }) =&gt; void"
-      }
+  "properties": [
+    {
+      "name": "getScrollPosition",
+      "description": "Returns the current scroll position.",
+      "type": "() => { left: number, top: number, renderContext?: { firstRowIndex: number, lastRowIndex: number, firstColumnIndex: number, lastColumnIndex: number } }"
     },
-    "getScrollPosition": {
-      "type": {
-        "description": "() =&gt; { left: number, top: number, renderContext?: { firstRowIndex: number, lastRowIndex: number, firstColumnIndex: number, lastColumnIndex: number } }"
-      }
+    {
+      "name": "scroll",
+      "description": "Triggers the viewport to scroll to the given positions (in pixels).",
+      "type": "(params: { left?: number, top?: number, renderContext?: { firstRowIndex: number, lastRowIndex: number, firstColumnIndex: number, lastColumnIndex: number } }) => void"
     },
-    "scrollToIndexes": {
-      "type": { "description": "(params: { colIndex?: number, rowIndex?: number }) =&gt; boolean" }
+    {
+      "name": "scrollToIndexes",
+      "description": "Triggers the viewport to scroll to the cell at indexes given by `params`.\nReturns `true` if the grid had to scroll to reach the target.",
+      "type": "(params: { colIndex?: number, rowIndex?: number }) => boolean"
     }
-  }
+  ]
 }

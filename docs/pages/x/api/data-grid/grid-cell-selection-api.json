@@ -1,19 +1,31 @@
 {
   "name": "GridCellSelectionApi",
   "description": "The cell selection API interface that is available in the grid [[apiRef]].",
-  "properties": {
-    "isCellSelected": {
-      "type": { "description": "(id: string | number, field: string) =&gt; boolean" }
+  "properties": [
+    {
+      "name": "getCellSelectionModel",
+      "description": "Returns an object containing the selection state of the cells.\nThe keys of the object correspond to the row IDs.\nThe value of each key is also an object, which has a column field for a key and a boolean value for its selection state.",
+      "type": "() => GridCellSelectionModel"
     },
-    "getCellSelectionModel": { "type": { "description": "() =&gt; GridCellSelectionModel" } },
-    "setCellSelectionModel": {
-      "type": { "description": "(newModel: GridCellSelectionModel) =&gt; void" }
+    {
+      "name": "getSelectedCellsAsArray",
+      "description": "Returns an array containing only the selected cells.\nEach item is an object with the ID and field of the cell.",
+      "type": "() => GridCellCoordinates[]"
     },
-    "selectCellRange": {
-      "type": {
-        "description": "(start: { id: string | number, field: string }, end: { id: string | number, field: string }, keepOtherSelected?: boolean) =&gt; void"
-      }
+    {
+      "name": "isCellSelected",
+      "description": "Determines if a cell is selected or not.",
+      "type": "(id: string | number, field: string) => boolean"
     },
-    "getSelectedCellsAsArray": { "type": { "description": "() =&gt; GridCellCoordinates[]" } }
-  }
+    {
+      "name": "selectCellRange",
+      "description": "Selects all cells that are inside the range given by `start` and `end` coordinates.",
+      "type": "(start: { id: string | number, field: string }, end: { id: string | number, field: string }, keepOtherSelected?: boolean) => void"
+    },
+    {
+      "name": "setCellSelectionModel",
+      "description": "Updates the cell selection model according to the value passed to the `newModel` argument.\nAny cell already selected will be unselected.",
+      "type": "(newModel: GridCellSelectionModel) => void"
+    }
+  ]
 }
