@@ -46,8 +46,8 @@ default-parameters: &default-parameters
 default-job: &default-job
   parameters:
     <<: *default-parameters
-  environment: &default-environment
-    # expose it globally otherwise we have to thread it from each job to the install command
+  environment:
+    &default-environment # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
     # Used by the code-infra orb to diff against the correct base branch for dedupe and prettier checks
