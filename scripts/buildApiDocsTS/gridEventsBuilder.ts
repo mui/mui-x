@@ -52,29 +52,10 @@ export function buildGridEventsDocumentation(
   const files: FileWrite[] = [];
   const gridProjects = ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'] as const;
 
-  // Use the premium entry point (most complete) to see all events at once
-  const premiumEntry = path.resolve(CWD, 'packages/x-data-grid-premium/src/index.ts');
-  const premiumSf = program.getSourceFile(premiumEntry);
-  if (!premiumSf) {
-    return files;
-  }
-  const premiumMod = checker.getSymbolAtLocation(premiumSf);
-  if (!premiumMod) {
-    return files;
-  }
-  const premiumExports = checker.getExportsOfModule(premiumMod);
-  const eventLookup = premiumExports.find((s) => s.name === 'GridEventLookup');
-  if (!eventLookup) {
-    return files;
-  }
-  let resolvedLookup = eventLookup;
-  // eslint-disable-next-line no-bitwise
-  if (resolvedLookup.flags & ts.SymbolFlags.Alias) {
-    resolvedLookup = checker.getAliasedSymbol(resolvedLookup);
-  }
+  // Collect GridEventLookup properties from ALL packages, since module augmentations
+  // make some events visible only from specific entry points.
+  const allEventProps = new Map<string, { prop: ts.Symbol; visibleIn: Set<string> }>();
 
-  // Build a per-package export set so we can determine which packages export each event
-  const packageExports = new Map<string, Set<string>>();
   for (const pkg of gridProjects) {
     const entryPath = path.resolve(CWD, `packages/${pkg}/src/index.ts`);
     const sf = program.getSourceFile(entryPath);
@@ -90,20 +71,25 @@ export function buildGridEventsDocumentation(
     if (!lookupSym) {
       continue;
     }
-
-    let resolved = lookupSym;
     // eslint-disable-next-line no-bitwise
+    let resolved = lookupSym;
     if (resolved.flags & ts.SymbolFlags.Alias) {
       resolved = checker.getAliasedSymbol(resolved);
     }
     const lookupType = checker.getDeclaredTypeOfSymbol(resolved);
-    packageExports.set(pkg, new Set(lookupType.getProperties().map((p) => p.name)));
+    for (const prop of lookupType.getProperties()) {
+      const existing = allEventProps.get(prop.name);
+      if (existing) {
+        existing.visibleIn.add(pkg);
+      } else {
+        allEventProps.set(prop.name, { prop, visibleIn: new Set([pkg]) });
+      }
+    }
   }
 
   const events: Record<string, any> = {};
-  const eventType = checker.getDeclaredTypeOfSymbol(resolvedLookup);
 
-  for (const prop of eventType.getProperties()) {
+  for (const [, { prop, visibleIn }] of allEventProps) {
     const jsDoc = extractJsDoc(prop, checker);
     if (jsDoc.ignore) {
       continue;
@@ -133,7 +119,7 @@ export function buildGridEventsDocumentation(
       );
       projects = gridProjects.slice(lowestIdx);
     } else {
-      projects = gridProjects.filter((pkg) => packageExports.get(pkg)?.has(prop.name));
+      projects = gridProjects.filter((pkg) => visibleIn.has(pkg));
     }
 
     const propType = checker.getTypeOfSymbol(prop);
@@ -185,6 +171,10 @@ export function buildGridEventsDocumentation(
 
   // Match events to component props by reading GridEventListener<'eventName'>
   // from the source declaration text of DataGridPremiumProps
+  const premiumEntry = path.resolve(CWD, 'packages/x-data-grid-premium/src/index.ts');
+  const premiumSf = program.getSourceFile(premiumEntry);
+  const premiumMod = premiumSf ? checker.getSymbolAtLocation(premiumSf) : undefined;
+  const premiumExports = premiumMod ? checker.getExportsOfModule(premiumMod) : [];
   const dgProps = premiumExports.find((s) => s.name === 'DataGridPremiumProps');
   if (dgProps) {
     const resolvedProps =

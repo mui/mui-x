@@ -110,12 +110,35 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "chartSynchronizationStateChange",
+    "description": "Fired when the chart synchronization state changes.",
+    "params": "{ chartId: string; synced: boolean }",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "clipboardCopy",
     "description": "Fired when the data is copied to the clipboard.",
     "params": "string",
     "event": "MuiEvent<{}>",
     "componentProp": "onClipboardCopy"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "clipboardPasteEnd",
+    "description": "Fired when the clipboard paste operation ends.",
+    "params": "{\n  oldRows: Map<GridRowId, GridValidRowModel>\n  newRows: Map<GridRowId, GridValidRowModel>\n}",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onClipboardPasteEnd"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "clipboardPasteStart",
+    "description": "Fired when the clipboard paste operation starts.",
+    "params": "{ data: string[][] }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onClipboardPasteStart"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -230,6 +253,14 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "projects": ["x-data-grid-pro", "x-data-grid-premium"],
+    "name": "fetchRows",
+    "description": "Fired when a new batch of rows is requested to be loaded. Called with a GridFetchRowsParams object. Used to trigger <code>onFetchRows</code>.",
+    "params": "GridFetchRowsParams",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onFetchRows"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "filterModelChange",
     "description": "Fired when the filter model changes.",
@@ -309,6 +340,14 @@
     "params": "GridPreferencePanelParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onPreferencePanelOpen"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "redo",
+    "description": "Fired when a redo operation is executed.",
+    "params": "{ eventName: keyof GridEventLookup; data: any }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onRedo"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -406,6 +445,14 @@
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
+    "projects": ["x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowOrderChange",
+    "description": "Fired when the user ends reordering a row.",
+    "params": "GridRowOrderChangeParams",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onRowOrderChange"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowSelectionChange",
     "description": "Fired when the selection state of one or multiple rows changes.",
@@ -420,11 +467,35 @@
     "event": "MuiEvent<React.ChangeEvent<HTMLElement>>"
   },
   {
+    "projects": ["x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowsScrollEnd",
+    "description": "Fired when scrolling to the bottom of the grid viewport.",
+    "params": "GridRowScrollEndParams",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onRowsScrollEnd"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "scrollPositionChange",
     "description": "Fired during the scroll of the grid viewport.",
     "params": "GridScrollParams",
     "event": "MuiEvent<React.UIEvent | MuiBaseEvent>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "sidebarClose",
+    "description": "Fired when the sidebar is closed.",
+    "params": "{ value: GridSidebarValue }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onSidebarClose"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "sidebarOpen",
+    "description": "Fired when the sidebar is opened.",
+    "params": "{ value: GridSidebarValue }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onSidebarOpen"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -439,6 +510,14 @@
     "description": "Fired when the state of the grid is updated.",
     "params": "any",
     "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "undo",
+    "description": "Fired when an undo operation is executed.",
+    "params": "{ eventName: keyof GridEventLookup; data: any }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onUndo"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
