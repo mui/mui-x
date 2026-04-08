@@ -43,14 +43,14 @@ export function buildInterfacePages(
       const found = exports.find((exportSymbol) => exportSymbol.name === interfaceName);
       if (found) {
         projects.push(pkg);
-        if (!interfaceSymbol) {
-          let resolved = found;
-          if (resolved.flags & ts.SymbolFlags.Alias) {
-            resolved = checker.getAliasedSymbol(resolved);
-          }
-          interfaceSymbol = resolved;
-          interfaceType = checker.getDeclaredTypeOfSymbol(resolved);
+        // Always update to the current package's symbol — the last (most complete)
+        // package in the list will have all properties including augmentations
+        let resolved = found;
+        if (resolved.flags & ts.SymbolFlags.Alias) {
+          resolved = checker.getAliasedSymbol(resolved);
         }
+        interfaceSymbol = resolved;
+        interfaceType = checker.getDeclaredTypeOfSymbol(resolved);
       }
     }
 
