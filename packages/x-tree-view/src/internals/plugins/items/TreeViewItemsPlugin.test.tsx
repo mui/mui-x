@@ -22,8 +22,10 @@ Alternatively, you can use the \`getItemId\` prop to specify a custom id for eac
 Two items were provided with the same id in the \`items\` prop: "1"`,
           reactMajor >= 19 &&
             'Alternatively, you can use the `getItemId` prop to specify a custom id for each item',
-          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem2)> component`,
-          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem2)> component`,
+          // `ForwardRef(TreeItem)` on newer `@vitejs/plugin-react`, `ForwardRef(TreeItem2)` on older ones.
+          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem`,
+          // `ForwardRef(TreeItem)` on newer `@vitejs/plugin-react`, `ForwardRef(TreeItem2)` on older ones.
+          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem`,
         ]);
       } else {
         // eslint-disable-next-line vitest/no-conditional-expect
@@ -32,8 +34,8 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         ).toErrorDev([
           reactMajor >= 19 &&
             `MUI X Tree View: All items must have a unique \`id\` property. The id "1" is used by multiple items. Use the \`getItemId\` prop to specify a custom id for each item if needed.`,
-          reactMajor < 19 &&
-            `The above error occurred in the <ForwardRef(${treeViewComponentName}2)> component`,
+          // `ForwardRef(${treeViewComponentName})` on newer `@vitejs/plugin-react`, `ForwardRef(${treeViewComponentName}2)` on older ones.
+          reactMajor < 19 && `The above error occurred in the <ForwardRef(${treeViewComponentName}`,
         ]);
       }
     });
