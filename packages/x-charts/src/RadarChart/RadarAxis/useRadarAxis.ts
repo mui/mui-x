@@ -49,7 +49,7 @@ export function useRadarAxis(params: UseRadarAxisParams) {
 
   if (!existingMetrics.includes(metric)) {
     warnOnce([
-      `MUI X Charts: You radar axis try displaying values for the metric "${metric}" which does nto exist.`,
+      `MUI X Charts: You radar axis try displaying values for the metric "${metric}" which does not exist.`,
       `either add this metric to your radar, or pick one from the existing metrics: ${existingMetrics.join(', ')}`,
     ]);
   }
