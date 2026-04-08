@@ -79,8 +79,6 @@ Text and reasoning parts have an optional `state` field:
 
 Use this to show a typing indicator or pulsing cursor while content is arriving.
 
-{{"demo": "MessagePartsHeadlessChat.js"}}
-
 ## Key takeaways
 
 - Message parts are typed data — you own the rendering completely
