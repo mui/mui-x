@@ -1,0 +1,12 @@
+<ChatBox
+  adapter={adapter}
+  initialActiveConversationId={conversation.id}
+  initialConversations={[conversation]}
+  initialMessages={manyMessages}
+  sx={{
+    height: 500,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>
