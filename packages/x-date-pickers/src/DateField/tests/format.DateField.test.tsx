@@ -4,7 +4,6 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
   const { start: startChar, end: endChar } = adapter.escapedCharacters;
   it('should support escaped characters in start separator', () => {
-    // Test with accessible DOM structure
     const view = renderWithProps({
       // For Day.js: "[Escaped] YYYY"
       format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
@@ -19,7 +18,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
   });
 
   it('should support escaped characters between sections separator', () => {
-    // Test with accessible DOM structure
     const view = renderWithProps({
       // For Day.js: "MMMM [Escaped] YYYY"
       format: `${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`,
@@ -37,7 +35,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
   // If your start character and end character are equal
   // Then you can't have nested escaped characters
   it.skipIf(startChar === endChar)('should support nested escaped characters', () => {
-    // Test with accessible DOM structure
     const view = renderWithProps({
       // For Day.js: "MMMM [Escaped[] YYYY"
       format: `${adapter.formats.month} ${startChar}Escaped ${startChar}${endChar} ${adapter.formats.year}`,
@@ -53,7 +50,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
   });
 
   it('should support several escaped parts', () => {
-    // Test with accessible DOM structure
     const view = renderWithProps({
       // For Day.js: "[Escaped] MMMM [Escaped] YYYY"
       format: `${startChar}Escaped${endChar} ${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`,
@@ -69,7 +65,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
   });
 
   it('should support format with only escaped parts', () => {
-    // Test with accessible DOM structure
     const view = renderWithProps({
       // For Day.js: "[Escaped] [Escaped]"
       format: `${startChar}Escaped${endChar} ${startChar}Escaped${endChar}`,
@@ -90,7 +85,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
   });
 
   it('should add spaces around `/` when `formatDensity = "spacious"`', () => {
-    // Test with accessible DOM structure
     const view = renderWithProps({
       formatDensity: `spacious`,
       value: null,
@@ -105,7 +99,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
   });
 
   it('should add spaces around `.` when `formatDensity = "spacious"`', () => {
-    // Test with accessible DOM structure
     const view = renderWithProps({
       formatDensity: `spacious`,
       format: adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '.'),
@@ -121,7 +114,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
   });
 
   it('should add spaces around `-` when `formatDensity = "spacious"`', () => {
-    // Test with accessible DOM structure
     const view = renderWithProps({
       formatDensity: `spacious`,
       format: adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '-'),

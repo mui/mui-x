@@ -489,7 +489,6 @@ describe('<TimeField /> - Editing', () => {
     });
 
     it('should go to the next section when pressing `2` in a 12-hours format', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: adapter.formats.fullTime12h,
       });
@@ -504,7 +503,6 @@ describe('<TimeField /> - Editing', () => {
     });
 
     it('should go to the next section when pressing `1` then `3` in a 12-hours format', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: adapter.formats.fullTime12h,
       });
@@ -593,7 +591,6 @@ describe('<TimeField /> - Editing', () => {
     TimeField,
     ({ adapter, renderWithProps }) => {
       it('should not loose date information when a value is provided', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({
@@ -610,7 +607,6 @@ describe('<TimeField /> - Editing', () => {
       });
 
       it('should not loose date information when cleaning the date then filling it again', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({
@@ -639,7 +635,6 @@ describe('<TimeField /> - Editing', () => {
       });
 
       it('should not loose time information when using the hour format and value is provided', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({

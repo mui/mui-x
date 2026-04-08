@@ -9,7 +9,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     SingleInputDateRangeField,
     ({ adapter, renderWithProps }) => {
       it('should not render any value when no value and no default value are defined', () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({});
 
         expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY – MM/DD/YYYY');
@@ -18,7 +17,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should use the default value when defined', () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           defaultValue: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
         });
@@ -29,7 +27,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should use the controlled value instead of the default value when both are defined', () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           value: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
           defaultValue: [adapter.date('2023-06-04'), adapter.date('2023-06-05')],
@@ -41,7 +38,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should use the controlled value instead of the default value when both are defined and the controlled value has null dates', () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           value: [adapter.date('2022-06-04'), null],
           defaultValue: [adapter.date('2023-06-04'), adapter.date('2023-06-05')],
@@ -53,7 +49,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should react to controlled value update (from a non null date to another non null date)', () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           value: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
         });
@@ -69,7 +64,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should react to controlled value update (from a non null date to a null date)', () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           value: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
         });
@@ -85,7 +79,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should react to controlled value update (from a null date to a non null date)', () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           value: [null, adapter.date('2022-06-05')],
         });
@@ -101,7 +94,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
         const view = renderWithProps({
           value: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
@@ -121,7 +113,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
         const view = renderWithProps({
           defaultValue: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
@@ -141,7 +132,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should not call the onChange callback before filling the last section of the active date when starting from a null value', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
         const view = renderWithProps({
           value: [null, null],
@@ -171,7 +161,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
   describeAdapters(`key: Delete`, SingleInputDateRangeField, ({ adapter, renderWithProps }) => {
     it('should clear all the sections when all sections are selected and all sections are completed', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -193,7 +182,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     });
 
     it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
@@ -218,7 +206,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     });
 
     it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       const view = renderWithProps({
@@ -242,7 +229,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     });
 
     it('should call `onChange` when clearing the first section of each date', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       const view = renderWithProps({
@@ -285,7 +271,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     });
 
     it('should not call `onChange` if the section is already empty', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       const view = renderWithProps({
@@ -311,7 +296,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     SingleInputDateRangeField,
     ({ adapter, renderWithProps }) => {
       it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', async () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -333,7 +317,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', async () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
@@ -358,7 +341,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({
@@ -382,7 +364,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should call `onChange` when clearing the first section of each date (Backspace)', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({
@@ -427,7 +408,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should not call `onChange` if the section is already empty (Backspace)', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({

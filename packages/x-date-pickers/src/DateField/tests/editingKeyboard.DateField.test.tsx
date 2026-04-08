@@ -207,7 +207,6 @@ describe('<DateField /> - Editing Keyboard', () => {
 
   describeAdapters('key: Delete', DateField, ({ adapter, testFieldKeyPress, renderWithProps }) => {
     it('should clear the selected section when only this section is completed', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
@@ -234,7 +233,6 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     it('should clear all the sections when all sections are selected and all sections are completed', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(),
@@ -256,7 +254,6 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
@@ -281,7 +278,6 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     it('should not keep query after typing again on a cleared section', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: adapter.formats.year,
       });
@@ -311,7 +307,6 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       const view = renderWithProps({
@@ -335,7 +330,6 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     it('should call `onChange` when clearing the first section', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       const view = renderWithProps({
@@ -358,7 +352,6 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     it('should not call `onChange` if the section is already empty', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       const view = renderWithProps({

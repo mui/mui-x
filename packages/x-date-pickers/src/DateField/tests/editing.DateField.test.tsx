@@ -10,7 +10,6 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps }) => {
       it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
         const view = renderWithProps({
           value: adapter.date('2022-06-04'),
@@ -29,7 +28,6 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
         const view = renderWithProps({
           defaultValue: adapter.date('2022-06-04'),
@@ -48,7 +46,6 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should not call the onChange callback before filling the last section when starting from a null value', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
         const view = renderWithProps({
           value: null,
@@ -77,7 +74,6 @@ describe('<DateField /> - Editing', () => {
 
   describeAdapters('Disabled field', DateField, ({ renderWithProps }) => {
     it('should not allow key editing on disabled field', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
       const view = renderWithProps({
         onChange: onChangeV7,
@@ -270,7 +266,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should allow to type the date 29th of February for leap years', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: adapter.formats.keyboardDate,
       });
@@ -319,7 +314,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should reset the select "all" state when typing a digit', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
 
       await view.selectSectionAsync('month');
@@ -338,7 +332,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should be editable after reenabling field', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         disabled: true,
       });
@@ -444,7 +437,6 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should reset the select "all" state when typing a letter', async () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({});
 
         await view.selectSectionAsync('month');
@@ -469,7 +461,6 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps, testFieldChange }) => {
       it('should clear the selected section when only this section is completed (Backspace)', async () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
@@ -485,7 +476,6 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should clear the selected section when all sections are completed (Backspace)', async () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: adapter.date(),
@@ -500,7 +490,6 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', async () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: adapter.date(),
@@ -522,7 +511,6 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', async () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
@@ -577,7 +565,6 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should call `onChange` when clearing the first section (Backspace)', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({
@@ -641,7 +628,6 @@ describe('<DateField /> - Editing', () => {
     };
 
     it('should set the date when all sections are selected, the pasted value is valid and a value is provided', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
       const view = renderWithProps({
         defaultValue: adapter.date(),
@@ -665,7 +651,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should set the date when all sections are selected, the pasted value is valid and no value is provided', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
       const view = renderWithProps({
         onChange: onChangeV7,
@@ -687,7 +672,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not set the date when all sections are selected and the pasted value is not valid', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
       const view = renderWithProps({
         onChange: onChangeV7,
@@ -709,7 +693,6 @@ describe('<DateField /> - Editing', () => {
     it('should set the date when all sections are selected and the format contains escaped characters', async () => {
       const { start: startChar, end: endChar } = adapter.escapedCharacters;
 
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
       const view = renderWithProps({
         onChange: onChangeV7,
@@ -732,7 +715,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not set the date when all sections are selected and props.readOnly = true', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       const view = renderWithProps({
@@ -756,7 +738,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should set the section when one section is selected, the pasted value has the correct type and no value is provided', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       const view = renderWithProps({
@@ -775,7 +756,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should set the section when one section is selected, the pasted value has the correct type and value is provided', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       const view = renderWithProps({
@@ -795,7 +775,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not update the section when one section is selected and the pasted value has incorrect type', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       const view = renderWithProps({
@@ -814,7 +793,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should reset sections internal state when pasting', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         defaultValue: adapter.date('2018-12-05'),
       });
@@ -857,7 +835,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not allow pasting on disabled field', async () => {
-      // Test with accessible DOM structure
       const onChangeV7 = spy();
       const view = renderWithProps({
         onChange: onChangeV7,
@@ -886,7 +863,6 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps }) => {
       it('should not loose time information when a value is provided', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
@@ -900,7 +876,6 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should not loose time information when cleaning the date then filling it again', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({
@@ -935,7 +910,6 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should not loose date information when using the year format and value is provided', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({
@@ -953,7 +927,6 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should not loose date information when using the month format and value is provided', async () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({
@@ -976,7 +949,6 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps }) => {
       it('should set the date when the change value is valid and no value is provided', () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
         const view = renderWithProps({
           onChange: onChangeV7,
@@ -990,7 +962,6 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should set the date when the change value is valid and a value is provided', () => {
-        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         const view = renderWithProps({
@@ -1010,7 +981,6 @@ describe('<DateField /> - Editing', () => {
 
   describeAdapters('Editing from the outside', DateField, ({ adapter, renderWithProps }) => {
     it('should be able to reset the value from the outside', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         value: adapter.date('2022-11-23'),
       });
@@ -1027,7 +997,6 @@ describe('<DateField /> - Editing', () => {
     it.skipIf(adapter.lib !== 'dayjs')(
       'should reset the input query state on an unfocused field',
       async () => {
-        // Test with accessible DOM structure
         const view = renderWithProps({ value: null });
 
         await view.selectSectionAsync('month');
@@ -1066,7 +1035,6 @@ describe('<DateField /> - Editing', () => {
 
   describeAdapters('Select all', DateField, ({ renderWithProps }) => {
     it('should edit the 1st section when all sections are selected', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
       await view.selectSectionAsync('month');
 
