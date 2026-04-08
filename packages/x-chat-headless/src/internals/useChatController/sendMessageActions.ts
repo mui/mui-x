@@ -34,11 +34,17 @@ export function createSendMessageActions<Cursor = string>(params: {
   const { store, storeUnknown, runtimeRef, setRuntimeError, assistantMessageIdByUserMessageIdRef } =
     params;
 
+  // Synchronous flag to guard against double-invocation in React 18 Strict Mode.
+  // `store.state.isStreaming` is updated synchronously, but React 18 may re-trigger
+  // effects before the store subscription causes a re-render that makes the guard
+  // effective. This flag is set immediately before any async work.
+  let isSending = false;
+
   async function sendExistingMessage(
     message: ChatMessage,
     attachments?: ChatDraftAttachment[],
   ): Promise<void> {
-    if (store.state.isStreaming) {
+    if (isSending || store.state.isStreaming) {
       return;
     }
 
@@ -50,6 +56,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       status: 'sending',
     };
 
+    isSending = true;
     store.addMessage(nextMessage);
     store.setStreaming(true);
     store.setError(null);
@@ -122,6 +129,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       );
       store.setStreaming(false);
     } finally {
+      isSending = false;
       if (store.state.activeStreamAbortController === abortController) {
         store.setActiveStreamAbortController(null);
       }

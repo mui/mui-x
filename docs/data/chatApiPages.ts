@@ -1,4 +1,4 @@
-import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
+import type { MuiPage } from 'docs/src/MuiPage';
 
 const chatApiPages: MuiPage[] = [
   {
