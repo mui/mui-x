@@ -53,6 +53,7 @@ export {
   selectComposerValue,
   selectComposerAttachments,
   selectTypingUserIds,
+  selectTypingUserIdsForActiveConversation,
 } from './selectors/chatSelectors';
 
 export type { ChatProviderProps } from './ChatProvider';

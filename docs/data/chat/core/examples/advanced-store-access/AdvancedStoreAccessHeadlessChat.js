@@ -43,9 +43,7 @@ function AdvancedMetrics() {
   const conversationCount = useStore(store, chatSelectors.conversationCount);
   const activeConversation = useStore(store, chatSelectors.activeConversation);
   const composerValue = useStore(store, chatSelectors.composerValue);
-  const typingUserIds = useStore(store, (state) =>
-    chatSelectors.typingUserIds(state, undefined),
-  );
+  const typingUserIds = useStore(store, chatSelectors.typingUserIdsForActiveConversation);
   const { messages, sendMessage, setActiveConversation } = useChat();
   const composer = useChatComposer();
 

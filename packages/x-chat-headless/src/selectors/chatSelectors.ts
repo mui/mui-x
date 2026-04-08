@@ -67,6 +67,25 @@ export const chatSelectors = {
       return Object.keys(byUser).filter((userId) => byUser[userId]);
     },
   ),
+  /**
+   * Returns the IDs of users currently typing in the active conversation.
+   * Use this instead of `typingUserIds(state, undefined)` to avoid creating an inline wrapper
+   * function that would defeat memoization.
+   */
+  typingUserIdsForActiveConversation: createSelectorMemoized(
+    (state: State) => state.typingByConversation,
+    (state: State) => state.activeConversationId,
+    (typingByConversation, activeConversationId): string[] => {
+      if (!activeConversationId) {
+        return [];
+      }
+      const byUser = typingByConversation[activeConversationId];
+      if (!byUser) {
+        return [];
+      }
+      return Object.keys(byUser).filter((userId) => byUser[userId]);
+    },
+  ),
 } as const;
 
 export const selectMessageIds = chatSelectors.messageIds;
@@ -87,3 +106,5 @@ export const selectConversationCount = chatSelectors.conversationCount;
 export const selectComposerValue = chatSelectors.composerValue;
 export const selectComposerAttachments = chatSelectors.composerAttachments;
 export const selectTypingUserIds = chatSelectors.typingUserIds;
+export const selectTypingUserIdsForActiveConversation =
+  chatSelectors.typingUserIdsForActiveConversation;

@@ -55,9 +55,10 @@ const message = useStore(store, chatSelectors.message, 'msg-42');
 const conversation = useStore(store, chatSelectors.conversation, 'support');
 
 // Typing users in a specific conversation
-const typingUserIds = useStore(store, (state) =>
-  chatSelectors.typingUserIds(state, 'support'),
-);
+const typingUserIds = useStore(store, chatSelectors.typingUserIds, 'support');
+
+// Typing users in the active conversation (no conversationId needed)
+const activeTypingUserIds = useStore(store, chatSelectors.typingUserIdsForActiveConversation);
 ```
 
 ### When to use direct store access
