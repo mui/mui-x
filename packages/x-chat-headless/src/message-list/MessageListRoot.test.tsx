@@ -136,7 +136,10 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
   );
 });
 
-function ControlledMessageList(props: { slots?: MessageListRootProps['slots']; autoScroll?: MessageListRootProps['autoScroll'] }) {
+function ControlledMessageList(props: {
+  slots?: MessageListRootProps['slots'];
+  autoScroll?: MessageListRootProps['autoScroll'];
+}) {
   const { slots, autoScroll = { buffer: 10 } } = props;
   const [messages, setMessages] = React.useState([
     createMessage('m1', 'assistant'),
