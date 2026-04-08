@@ -550,7 +550,7 @@ function WidgetThreadHeader({
   onBack: () => void;
 }) {
   return (
-    <ChatConversationHeader {...{ sx: { alignItems: 'center', width: '100%', px: 1 } } as any}>
+    <ChatConversationHeader {...({ sx: { alignItems: 'center', width: '100%', px: 1 } } as any)}>
       <IconButton size="small" onClick={onBack} sx={{ ml: 1, borderRadius: '50%' }}>
         <ArrowBackIcon fontSize="small" />
       </IconButton>

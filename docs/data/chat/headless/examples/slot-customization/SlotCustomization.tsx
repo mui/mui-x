@@ -631,8 +631,11 @@ export default function SlotCustomization() {
           [activeConversationId]: nextMessages,
         }));
         setConversations(((previous: any) =>
-          syncConversationPreview(previous, activeConversationId, nextMessages)) as any,
-        );
+          syncConversationPreview(
+            previous,
+            activeConversationId,
+            nextMessages,
+          )) as any);
       }}
       slotProps={{
         root: {

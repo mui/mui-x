@@ -171,11 +171,14 @@ export default function IndicatorsInContext() {
             <DemoToolbarButton
               tone="accent"
               onClick={() =>
-                setConversation((previous) => ({
-                  ...previous,
-                  unreadCount: 0,
-                  readState: 'read',
-                }) as any)
+                setConversation(
+                  (previous) =>
+                    ({
+                      ...previous,
+                      unreadCount: 0,
+                      readState: 'read',
+                    }) as any,
+                )
               }
             >
               Mark read

@@ -62,8 +62,11 @@ export default function TwoPaneInbox() {
           [activeConversationId]: nextMessages,
         }));
         setConversations(((previous: any) =>
-          syncConversationPreview(previous, activeConversationId, nextMessages)) as any,
-        );
+          syncConversationPreview(
+            previous,
+            activeConversationId,
+            nextMessages,
+          )) as any);
       }}
       localeText={demoLocaleText}
       slotProps={{ root: { style: demoSurfaceStyles.chatRoot } }}

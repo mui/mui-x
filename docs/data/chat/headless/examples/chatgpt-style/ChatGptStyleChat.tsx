@@ -1010,8 +1010,7 @@ export default function ChatGptStyleChat() {
           [activeConversationId]: nextMessages,
         }));
         setConvos(((prev: any) =>
-          syncConversationPreview(prev, activeConversationId, nextMessages)) as any,
-        );
+          syncConversationPreview(prev, activeConversationId, nextMessages)) as any);
       }}
       slotProps={{
         root: {

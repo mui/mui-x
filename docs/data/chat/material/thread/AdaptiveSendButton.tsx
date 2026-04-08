@@ -31,7 +31,10 @@ function CustomSendButton(
   props: React.ComponentProps<typeof ChatComposerSendButton>,
 ) {
   return (
-    <ChatComposerSendButton {...props} slots={{ sendButton: AdaptiveSendButtonSlot }} />
+    <ChatComposerSendButton
+      {...props}
+      slots={{ sendButton: AdaptiveSendButtonSlot }}
+    />
   );
 }
 

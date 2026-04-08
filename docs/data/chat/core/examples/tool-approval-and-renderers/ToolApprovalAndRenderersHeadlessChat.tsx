@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import { demoUsers } from 'docsx/data/chat/core/examples/shared/demoData';
 import { createChunkStream } from 'docsx/data/chat/core/examples/shared/demoUtils';
 
-declare module '@mui/x-chat/types' {
+declare module '@mui/x-chat-headless/types' {
   interface ChatCustomMessagePartMap {
     poll: {
       type: 'poll';

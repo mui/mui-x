@@ -45,7 +45,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
   const router = useRouter();
   const { productId: productIdRaw, productCategoryId } = getProductInfoFromUrl(router.asPath);
   const { canonicalAs } = pathnameToLanguage(router.asPath);
-  let productId = productIdRaw;
+  let productId = productIdRaw as typeof productIdRaw | 'x-chat';
 
   // Not respecting URL convention, ad-hoc workaround
   if (canonicalAs.startsWith('/x/api/data-grid/')) {
