@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BoxProps } from '@mui/material/Box';
+import { SxProps, Theme } from '@mui/material/styles';
 import { MuiEvent } from '@mui/x-internals/types';
 import { PickersSectionListProps } from '../../PickersSectionList';
 import { PickerTextFieldOwnerState } from '../../models/fields';
@@ -52,19 +52,50 @@ export interface PickersInputPropsUsedByField extends Pick<
   name?: string;
 
   /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
-  /**
    * Pass a ref to the `input` element.
    */
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
-export interface PickersInputBaseProps
-  extends Omit<BoxProps, keyof PickersInputPropsUsedByField>, PickersInputPropsUsedByField {
+export interface PickersInputBaseSlots {
+  root?: React.ElementType;
+  input?: React.ElementType;
+  htmlInput?: React.ElementType;
+}
+
+export interface PickersInputBaseRootSlotProps extends React.ComponentPropsWithRef<'div'> {
+  /**
+   * Variant-specific. Forwarded by `PickersFilledInput` / `PickersInput` to render an underline.
+   */
+  disableUnderline?: boolean;
   ownerState?: PickerTextFieldOwnerState;
+}
+
+export interface PickersInputBaseInputSlotProps extends React.ComponentPropsWithRef<'div'> {
+  /**
+   * Variant-specific. Forwarded by `PickersFilledInput` to hide the label.
+   */
+  hiddenLabel?: boolean;
+  ownerState?: PickerTextFieldOwnerState;
+}
+
+export interface PickersInputBaseSlotProps {
+  root?: PickersInputBaseRootSlotProps;
+  input?: PickersInputBaseInputSlotProps;
+  htmlInput?: React.ComponentPropsWithRef<'input'>;
+}
+
+export interface PickersInputBaseProps
+  extends
+    Omit<React.HTMLAttributes<HTMLDivElement>, keyof PickersInputPropsUsedByField>,
+    PickersInputPropsUsedByField {
+  ownerState?: PickerTextFieldOwnerState;
+  className?: string;
+  classes?: Record<string, string>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   margin?: 'dense' | 'none' | 'normal';
   renderSuffix?: (state: {
     disabled?: boolean;
@@ -81,17 +112,11 @@ export interface PickersInputBaseProps
    *
    * @default {}
    */
-  slots?: {
-    root?: React.ElementType;
-    input?: React.ElementType;
-  };
+  slots?: PickersInputBaseSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: {
-    root?: any;
-    input?: any;
-  };
+  slotProps?: PickersInputBaseSlotProps;
   'data-multi-input'?: string;
 }
