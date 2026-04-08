@@ -11,15 +11,15 @@ import {
 } from '../LineChart/LineElement';
 import { type LineItemIdentifier } from '../models/seriesType/line';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
-import { usePolarLinePlotData } from './usePolarLinePlotData';
+import { useRadialLinePlotData } from './useRadialLinePlotData';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { lineClasses, useUtilityClasses } from '../LineChart/lineClasses';
 
-export interface PolarLinePlotSlots extends LineElementSlots {}
+export interface RadialLinePlotSlots extends LineElementSlots {}
 
-export interface PolarLinePlotSlotProps extends LineElementSlotProps {}
+export interface RadialLinePlotSlotProps extends LineElementSlotProps {}
 
-export interface PolarLinePlotProps
+export interface RadialLinePlotProps
   extends
     React.SVGAttributes<SVGSVGElement>,
     Pick<LineElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
@@ -34,8 +34,8 @@ export interface PolarLinePlotProps
   ) => void;
 }
 
-const PolarLinePlotRoot = styled('g', {
-  name: 'MuiPolarLinePlot',
+const RadialLinePlotRoot = styled('g', {
+  name: 'MuiRadialLinePlot',
   slot: 'Root',
 })({
   [`& .${lineClasses.line}`]: {
@@ -54,9 +54,9 @@ const PolarLinePlotRoot = styled('g', {
  *
  * API:
  *
- * - [PolarLinePlot API](https://mui.com/x/api/charts/polar-line-plot/)
+ * - [RadialLinePlot API](https://mui.com/x/api/charts/polar-line-plot/)
  */
-function PolarLinePlot(props: PolarLinePlotProps) {
+function RadialLinePlot(props: RadialLinePlotProps) {
   const {
     slots,
     slotProps,
@@ -67,11 +67,11 @@ function PolarLinePlot(props: PolarLinePlotProps) {
   } = props;
   const skipAnimation = useSkipAnimation(inSkipAnimation);
 
-  const completedData = usePolarLinePlotData();
+  const completedData = useRadialLinePlotData();
   const classes = useUtilityClasses();
 
   return (
-    <PolarLinePlotRoot className={clsx(classes.linePlot, className)} {...other}>
+    <RadialLinePlotRoot className={clsx(classes.linePlot, className)} {...other}>
       {completedData.map(({ d, seriesId, color, hidden }) => {
         return (
           <LineElement
@@ -87,11 +87,11 @@ function PolarLinePlot(props: PolarLinePlotProps) {
           />
         );
       })}
-    </PolarLinePlotRoot>
+    </RadialLinePlotRoot>
   );
 }
 
-PolarLinePlot.propTypes = {
+RadialLinePlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -119,4 +119,4 @@ PolarLinePlot.propTypes = {
   slots: PropTypes.object,
 } as any;
 
-export { PolarLinePlot };
+export { RadialLinePlot };

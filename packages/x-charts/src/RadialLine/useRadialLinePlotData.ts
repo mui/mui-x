@@ -5,14 +5,14 @@ import { type UseChartPolarAxisSignature } from '../internals/plugins/featurePlu
 import { useChartsContext } from '../context/ChartsProvider/useChartsContext';
 import { type SeriesId } from '../models/seriesType/common';
 
-interface PolarLinePlotDataPoint {
+interface RadialLinePlotDataPoint {
   d: string;
   seriesId: SeriesId;
   color: string;
   hidden: boolean;
 }
 
-export function usePolarLinePlotData() {
+export function useRadialLinePlotData() {
   const { instance } = useChartsContext<[UseChartPolarAxisSignature]>();
   const { radiusAxis: radiusAxisMap, radiusAxisIds } = useRadiusAxes();
   const { rotationAxis: rotationAxisMap, rotationAxisIds } = useRotationAxes();
@@ -24,7 +24,7 @@ export function usePolarLinePlotData() {
     }
 
     const { series, stackingGroups } = seriesData;
-    const plotData: PolarLinePlotDataPoint[] = [];
+    const plotData: RadialLinePlotDataPoint[] = [];
 
     for (const stackingGroup of stackingGroups) {
       for (const seriesId of stackingGroup.ids) {
