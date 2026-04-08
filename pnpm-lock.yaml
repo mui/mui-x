@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    '@atlaskit/pragmatic-drag-and-drop':
+      specifier: ^1.7.7
+      version: 1.7.7
     '@babel/cli':
       specifier: ^7.28.6
       version: 7.28.6
@@ -24,6 +27,9 @@ catalogs:
     '@babel/traverse':
       specifier: ^7.29.0
       version: 7.29.0
+    '@base-ui/react':
+      specifier: ^1.3.0
+      version: 1.3.0
     '@base-ui/utils':
       specifier: ^0.2.6
       version: 0.2.6
@@ -40,23 +46,26 @@ catalogs:
       specifier: ^11.14.1
       version: 11.14.1
     '@mui/icons-material':
-      specifier: 9.0.0-beta.1
-      version: 9.0.0-beta.1
+      specifier: 9.0.0
+      version: 9.0.0
     '@mui/internal-test-utils':
       specifier: 2.0.18-canary.18
       version: 2.0.18-canary.18
     '@mui/material':
-      specifier: 9.0.0-beta.1
-      version: 9.0.0-beta.1
+      specifier: 9.0.0
+      version: 9.0.0
     '@mui/stylis-plugin-rtl':
-      specifier: 9.0.0-beta.0
-      version: 9.0.0-beta.0
+      specifier: 9.0.0
+      version: 9.0.0
     '@mui/system':
-      specifier: 9.0.0-beta.1
-      version: 9.0.0-beta.1
+      specifier: 9.0.0
+      version: 9.0.0
+    '@mui/types':
+      specifier: 9.0.0
+      version: 9.0.0
     '@mui/utils':
-      specifier: 9.0.0-beta.1
-      version: 9.0.0-beta.1
+      specifier: 9.0.0
+      version: 9.0.0
     '@mui/x-internal-exceljs-fork':
       specifier: 4.4.5
       version: 4.4.5
@@ -144,9 +153,15 @@ catalogs:
     es-toolkit:
       specifier: ^1.45.1
       version: 1.45.1
+    execa:
+      specifier: 9.6.1
+      version: 9.6.1
     jscodeshift:
       specifier: 17.3.0
       version: 17.3.0
+    jsdom:
+      specifier: 26.1.0
+      version: 26.1.0
     luxon:
       specifier: ^3.7.2
       version: 3.7.2
@@ -270,13 +285,13 @@ importers:
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@7.3.1(@types/node@22.19.3)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/monorepo':
         specifier: github:mui/material-ui#3f1a6109bc249ce7c7ad4ae8531bbfb289afc42d
         version: https://codeload.github.com/mui/material-ui/tar.gz/3f1a6109bc249ce7c7ad4ae8531bbfb289afc42d(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@next/eslint-plugin-next':
         specifier: 16.2.1
         version: 16.2.1
@@ -295,9 +310,6 @@ importers:
       '@types/babel__traverse':
         specifier: 7.28.0
         version: 7.28.0
-      '@types/chai-dom':
-        specifier: 1.11.3
-        version: 1.11.3
       '@types/node':
         specifier: 22.19.3
         version: 22.19.3
@@ -337,9 +349,6 @@ importers:
       babel-plugin-transform-replace-expressions:
         specifier: 0.2.0
         version: 0.2.0(@babel/core@7.29.0)
-      chai-dom:
-        specifier: 1.12.1
-        version: 1.12.1(chai@6.2.1)
       concurrently:
         specifier: 9.2.1
         version: 9.2.1
@@ -374,13 +383,13 @@ importers:
         specifier: workspace:^
         version: link:packages/eslint-plugin-mui-x
       execa:
-        specifier: 9.6.1
+        specifier: 'catalog:'
         version: 9.6.1
       globby:
         specifier: 16.1.1
         version: 16.1.1
       jsdom:
-        specifier: 26.1.0
+        specifier: 'catalog:'
         version: 26.1.0
       lerna:
         specifier: 9.0.4
@@ -458,7 +467,7 @@ importers:
   docs:
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop':
-        specifier: ^1.7.7
+        specifier: 'catalog:'
         version: 1.7.7
       '@babel/core':
         specifier: 'catalog:'
@@ -489,75 +498,75 @@ importers:
         version: 5.0.0-beta.70(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/icons-material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/internal-docs-infra':
         specifier: ^0.7.1-canary.1
         version: 0.7.1-canary.1(@types/react@19.2.14)(next@16.2.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(prettier@3.8.1)(react@19.2.4)(typescript@5.9.3)
       '@mui/lab':
-        specifier: ^9.0.0-beta.1
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: ^9.0.0-beta.2
+        version: 9.0.0-beta.2(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/material-nextjs':
-        specifier: ^9.0.0-beta.0
-        version: 9.0.0-beta.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/server@11.11.0)(@types/react@19.2.14)(next@16.2.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+        specifier: ^9.0.0
+        version: 9.0.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/server@11.11.0)(@types/react@19.2.14)(next@16.2.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       '@mui/stylis-plugin-rtl':
         specifier: 'catalog:'
-        version: 9.0.0-beta.0(stylis@4.3.6)
+        version: 9.0.0(stylis@4.3.6)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-charts':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-charts/build
       '@mui/x-charts-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-charts-premium/build
       '@mui/x-charts-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-charts-vendor/build
       '@mui/x-data-grid':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-data-grid/build
       '@mui/x-data-grid-generator':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-data-grid-generator/build
       '@mui/x-data-grid-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-data-grid-premium/build
       '@mui/x-data-grid-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-data-grid-pro/build
       '@mui/x-date-pickers':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-date-pickers/build
       '@mui/x-date-pickers-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-date-pickers-pro/build
       '@mui/x-scheduler':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-scheduler/build
       '@mui/x-scheduler-headless':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-scheduler-headless/build
       '@mui/x-scheduler-headless-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-scheduler-headless-premium/build
       '@mui/x-scheduler-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-scheduler-premium/build
       '@mui/x-tree-view':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-tree-view/build
       '@mui/x-tree-view-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-tree-view-pro/build
       '@react-spring/web':
         specifier: 'catalog:'
@@ -770,15 +779,15 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-charts-vendor':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-charts-vendor/build
       '@mui/x-internal-gestures':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internal-gestures/build
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       bezier-easing:
         specifier: ^2.1.0
@@ -801,10 +810,10 @@ importers:
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.2(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -838,21 +847,21 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-charts':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-charts/build
       '@mui/x-charts-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-charts-pro/build
       '@mui/x-charts-vendor':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-charts-vendor/build
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-license':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-license/build
       clsx:
         specifier: 'catalog:'
@@ -863,10 +872,10 @@ importers:
     devDependencies:
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -901,21 +910,21 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-charts':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-charts/build
       '@mui/x-charts-vendor':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-charts-vendor/build
       '@mui/x-internal-gestures':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internal-gestures/build
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-license':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-license/build
       clsx:
         specifier: 'catalog:'
@@ -926,10 +935,10 @@ importers:
     devDependencies:
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1036,7 +1045,7 @@ importers:
         specifier: 5.0.2
         version: 5.0.2
       execa:
-        specifier: 9.6.1
+        specifier: 'catalog:'
         version: 9.6.1
       rimraf:
         specifier: 'catalog:'
@@ -1055,7 +1064,7 @@ importers:
         specifier: 'catalog:'
         version: 7.29.0
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       jscodeshift:
         specifier: 'catalog:'
@@ -1091,12 +1100,12 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-virtualizer':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-virtualizer/build
       clsx:
         specifier: 'catalog:'
@@ -1110,19 +1119,19 @@ importers:
     devDependencies:
       '@mui/icons-material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.2(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/types':
-        specifier: 7.4.12
-        version: 7.4.12(@types/react@19.2.14)
+        specifier: 'catalog:'
+        version: 9.0.0(@types/react@19.2.14)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1152,16 +1161,16 @@ importers:
         specifier: ^11.8.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-data-grid':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-data-grid/build
       '@mui/x-data-grid-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-data-grid-premium/build
       '@mui/x-data-grid-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-data-grid-pro/build
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       chance:
         specifier: 'catalog:'
@@ -1175,10 +1184,10 @@ importers:
     devDependencies:
       '@mui/icons-material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@types/chance':
         specifier: 'catalog:'
         version: 1.1.7
@@ -1206,21 +1215,21 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-data-grid':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-data-grid/build
       '@mui/x-data-grid-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-data-grid-pro/build
       '@mui/x-internal-exceljs-fork':
         specifier: 'catalog:'
         version: 4.4.5
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-license':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-license/build
       clsx:
         specifier: 'catalog:'
@@ -1234,10 +1243,10 @@ importers:
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.2(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1274,15 +1283,15 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-data-grid':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-data-grid/build
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-license':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-license/build
       clsx:
         specifier: 'catalog:'
@@ -1296,10 +1305,10 @@ importers:
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.2(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1333,9 +1342,9 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@types/react-transition-group':
         specifier: 'catalog:'
@@ -1355,10 +1364,10 @@ importers:
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.2(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/luxon':
         specifier: 'catalog:'
         version: 3.7.1
@@ -1419,15 +1428,15 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-date-pickers':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-date-pickers/build
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-license':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-license/build
       clsx:
         specifier: 'catalog:'
@@ -1450,10 +1459,10 @@ importers:
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.2(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/luxon':
         specifier: 'catalog:'
         version: 3.7.1
@@ -1500,7 +1509,7 @@ importers:
         version: 7.29.2
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       reselect:
         specifier: 'catalog:'
         version: 5.1.1
@@ -1532,12 +1541,12 @@ importers:
         version: 7.29.2
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-telemetry':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-telemetry/build
     devDependencies:
       '@mui/internal-test-utils':
@@ -1560,7 +1569,7 @@ importers:
         specifier: 'catalog:'
         version: 7.29.2
       '@base-ui/react':
-        specifier: ^1.3.0
+        specifier: 'catalog:'
         version: 1.3.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@base-ui/utils':
         specifier: 'catalog:'
@@ -1573,12 +1582,12 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-scheduler-headless':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-scheduler-headless/build
       clsx:
         specifier: 'catalog:'
@@ -1589,16 +1598,16 @@ importers:
     devDependencies:
       '@mui/icons-material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.2(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1619,7 +1628,7 @@ importers:
   packages/x-scheduler-headless:
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop':
-        specifier: ^1.7.7
+        specifier: 'catalog:'
         version: 1.7.7
       '@atlaskit/pragmatic-drag-and-drop-auto-scroll':
         specifier: ^2.1.2
@@ -1628,7 +1637,7 @@ importers:
         specifier: 'catalog:'
         version: 7.29.2
       '@base-ui/react':
-        specifier: ^1.3.0
+        specifier: 'catalog:'
         version: 1.3.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@base-ui/utils':
         specifier: 'catalog:'
@@ -1646,7 +1655,7 @@ importers:
         specifier: ^0.2.10
         version: 0.2.11
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       date-fns:
         specifier: 'catalog:'
@@ -1684,16 +1693,16 @@ importers:
         specifier: 'catalog:'
         version: 7.29.2
       '@base-ui/react':
-        specifier: ^1.3.0
+        specifier: 'catalog:'
         version: 1.3.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.2.6(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-scheduler-headless':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-scheduler-headless/build
       prop-types:
         specifier: 'catalog:'
@@ -1731,7 +1740,7 @@ importers:
         specifier: 'catalog:'
         version: 7.29.2
       '@base-ui/react':
-        specifier: ^1.3.0
+        specifier: 'catalog:'
         version: 1.3.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@base-ui/utils':
         specifier: 'catalog:'
@@ -1744,21 +1753,21 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-license':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-license/build
       '@mui/x-scheduler':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-scheduler/build
       '@mui/x-scheduler-headless':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-scheduler-headless/build
       '@mui/x-scheduler-headless-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-scheduler-headless-premium/build
       clsx:
         specifier: 'catalog:'
@@ -1772,10 +1781,10 @@ importers:
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.2(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1838,9 +1847,9 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@types/react-transition-group':
         specifier: 'catalog:'
@@ -1860,10 +1869,10 @@ importers:
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.2(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1894,18 +1903,18 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-license':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-license/build
       '@mui/x-tree-view':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-tree-view/build
       '@mui/x-virtualizer':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-virtualizer/build
       '@types/react-transition-group':
         specifier: 'catalog:'
@@ -1931,10 +1940,10 @@ importers:
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.2(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/system':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1959,17 +1968,17 @@ importers:
         version: 7.29.2
       '@mui/utils':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-internals':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../x-internals/build
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.18-canary.18(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.2(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
       '@mui/types':
-        specifier: 7.4.12
-        version: 7.4.12(@types/react@19.2.14)
+        specifier: 'catalog:'
+        version: 9.0.0(@types/react@19.2.14)
       react:
         specifier: 'catalog:'
         version: 19.2.4
@@ -1997,48 +2006,48 @@ importers:
         version: 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/stylis-plugin-rtl':
         specifier: 'catalog:'
-        version: 9.0.0-beta.0(stylis@4.3.6)
+        version: 9.0.0(stylis@4.3.6)
       '@mui/x-charts':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-charts/build
       '@mui/x-charts-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-charts-premium/build
       '@mui/x-charts-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-charts-vendor/build
       '@mui/x-data-grid':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-data-grid/build
       '@mui/x-data-grid-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-data-grid-pro/build
       '@mui/x-date-pickers':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-date-pickers/build
       '@mui/x-date-pickers-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-date-pickers-pro/build
       '@mui/x-license':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-license/build
       '@mui/x-scheduler':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-scheduler/build
       '@mui/x-scheduler-headless':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-scheduler-headless/build
       '@mui/x-scheduler-headless-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-scheduler-headless-premium/build
       '@mui/x-scheduler-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../packages/x-scheduler-premium/build
       '@react-spring/web':
         specifier: 'catalog:'
@@ -2101,34 +2110,34 @@ importers:
   test/bundle-size:
     dependencies:
       '@mui/x-charts':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts/build
       '@mui/x-charts-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts-premium/build
       '@mui/x-charts-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts-pro/build
       '@mui/x-data-grid':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-data-grid/build
       '@mui/x-data-grid-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-data-grid-premium/build
       '@mui/x-data-grid-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-data-grid-pro/build
       '@mui/x-date-pickers':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-date-pickers/build
       '@mui/x-date-pickers-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-date-pickers-pro/build
       '@mui/x-tree-view':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-tree-view/build
       '@mui/x-tree-view-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-tree-view-pro/build
 
   test/e2e:
@@ -2137,19 +2146,19 @@ importers:
         specifier: 'catalog:'
         version: 7.29.2
       '@mui/x-charts':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts/build
       '@mui/x-charts-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts-premium/build
       '@mui/x-charts-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts-vendor/build
       '@mui/x-data-grid':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-data-grid/build
       '@mui/x-data-grid-generator':
         specifier: workspace:^
@@ -2158,19 +2167,19 @@ importers:
         specifier: workspace:^
         version: link:../../packages/x-data-grid-premium/build
       '@mui/x-data-grid-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-data-grid-pro/build
       '@mui/x-date-pickers':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-date-pickers/build
       '@mui/x-date-pickers-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-date-pickers-pro/build
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../../packages/x-internals/build
       '@mui/x-license':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-license/build
       '@types/moment-jalaali':
         specifier: 'catalog:'
@@ -2212,13 +2221,13 @@ importers:
         specifier: 'catalog:'
         version: 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-charts':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts/build
       '@mui/x-charts-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts-premium/build
       '@mui/x-charts-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts-pro/build
       '@testing-library/react':
         specifier: 16.3.2
@@ -2239,7 +2248,7 @@ importers:
         specifier: 'catalog:'
         version: 4.0.18(vitest@4.0.18)
       jsdom:
-        specifier: 26.1.0
+        specifier: 'catalog:'
         version: 26.1.0
       react:
         specifier: 'catalog:'
@@ -2258,21 +2267,21 @@ importers:
         version: 7.29.2
       '@mui/icons-material':
         specifier: 'catalog:'
-        version: 9.0.0-beta.1(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+        version: 9.0.0(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@mui/x-charts':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts/build
       '@mui/x-charts-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts-premium/build
       '@mui/x-charts-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-charts-vendor/build
       '@mui/x-data-grid':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-data-grid/build
       '@mui/x-data-grid-generator':
         specifier: workspace:^
@@ -2281,37 +2290,37 @@ importers:
         specifier: workspace:^
         version: link:../../packages/x-data-grid-premium/build
       '@mui/x-data-grid-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-data-grid-pro/build
       '@mui/x-date-pickers':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-date-pickers/build
       '@mui/x-date-pickers-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-date-pickers-pro/build
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../../packages/x-internals/build
       '@mui/x-license':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-license/build
       '@mui/x-scheduler':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-scheduler/build
       '@mui/x-scheduler-headless':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-scheduler-headless/build
       '@mui/x-scheduler-headless-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-scheduler-headless-premium/build
       '@mui/x-scheduler-premium':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-scheduler-premium/build
       '@mui/x-tree-view':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-tree-view/build
       '@mui/x-tree-view-pro':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../packages/x-tree-view-pro/build
       '@types/moment-jalaali':
         specifier: 'catalog:'
@@ -4270,14 +4279,14 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/core-downloads-tracker@9.0.0-beta.1':
-    resolution: {integrity: sha512-3GQUChaw9FVdtOZc2EOMwwP7oaRpuCusXu/tv1wBTj+od0P0mnmW38u02iSmC7R+bBJqMdTTgdzYCwH0K+q5Xg==}
+  '@mui/core-downloads-tracker@9.0.0':
+    resolution: {integrity: sha512-uwQNGkhv0lf7ufxw6QXev77BW6pWbW+7uxYjU5+rfp4lBkFtMEgJCsarTM3Tn+i0lGx6+Ol2u88JdGXr0GDskA==}
 
-  '@mui/icons-material@9.0.0-beta.1':
-    resolution: {integrity: sha512-Yc8zbEmZkYrRWbgKt8KW9to2wVlDflOJ+nBVm5L3W6Af5rm7X+zkB0xgQ/QuwUPGkdXtDrEW5ScpwOWJM4YHIg==}
+  '@mui/icons-material@9.0.0':
+    resolution: {integrity: sha512-oDwyvI6LgjWRC9MBcSGvLkPud9S9ELgSBQFYxa1rYcZn6Br55dn22SyvsPDMsn0G8OndFk53iMT45W5mNqrogw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
-      '@mui/material': 9.0.0-beta.1
+      '@mui/material': ^9.0.0
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
@@ -4365,14 +4374,14 @@ packages:
       '@emotion/react':
         optional: true
 
-  '@mui/lab@9.0.0-beta.1':
-    resolution: {integrity: sha512-exsaVz+mP9g8n4x06oFyjJNOk3IVdyvnQooHXcvCMFDtWhuOzk3fDNLlfPdBQv7CI3HmsSRsiLGgGQkM1XBvUg==}
+  '@mui/lab@9.0.0-beta.2':
+    resolution: {integrity: sha512-UqykXQCn7HNSExyYBvrFpaaEEmUwHbEgjFDBApEkawVPcBILyYNFhpXoqkwkafiZy+WsvcxIeRF0z4tCgisTRg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/react': ^11.5.0
       '@emotion/styled': ^11.3.0
-      '@mui/material': 9.0.0-beta.1
-      '@mui/material-pigment-css': ^9.0.0-beta.1
+      '@mui/material': ^9.0.0
+      '@mui/material-pigment-css': ^9.0.0
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4386,8 +4395,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/material-nextjs@9.0.0-beta.0':
-    resolution: {integrity: sha512-2o1r419yehj0Ds1Bkcg7pwJ3bpYifMB1XfQ4BihCedSBkU0QUb7U4nIeGpfnvPnDq6jidV6MM7DjAiPUPIPSSQ==}
+  '@mui/material-nextjs@9.0.0':
+    resolution: {integrity: sha512-HBVg7zkKh9isbENwmWnJAKmUVH+h18ZYqX8HJIDMTejXzs1+3qmZE3z1KpQFnYRDanq7dwOlWWUfQq6z5sXtng==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/cache': ^11.11.0
@@ -4404,13 +4413,13 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/material@9.0.0-beta.1':
-    resolution: {integrity: sha512-NGu6aixE88oBBx4DhjaQ03cPa3wW0sDxYMYdnhOVwzsDieE/RBQ7srmwlvF1RBrqRR5X4cX4CYCJudqe8D9gng==}
+  '@mui/material@9.0.0':
+    resolution: {integrity: sha512-+VP/oQCDhDR87NQQgXnNBG8dwy6GNuQLnenS1pZvkbn2dKFSxRSRMybTpH9xUxXP+316mlYDy5CSbYtusnCWtw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/react': ^11.5.0
       '@emotion/styled': ^11.3.0
-      '@mui/material-pigment-css': 9.0.0-beta.1
+      '@mui/material-pigment-css': ^9.0.0
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4429,8 +4438,8 @@ packages:
     version: 9.0.0-beta.1
     engines: {node: '>=22.18.0', pnpm: 10.33.0}
 
-  '@mui/private-theming@9.0.0-beta.1':
-    resolution: {integrity: sha512-yqVrPt4w8rlq5v7yOchYP7xlRkg+JjwtcvRVEXyr7lwaui/He+UOZxlJ1U7+FpWPifrkJarNszlu8+OYfmDBOA==}
+  '@mui/private-theming@9.0.0':
+    resolution: {integrity: sha512-JtuZoaiCqwD6vjgYu6Xp3T7DZkrxJlgtDz5yESzhI34fEX5hHMh2VJUbuL9UOg8xrfIFMrq6dcYoH/7Zi4G0RA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4439,8 +4448,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/styled-engine@9.0.0-beta.0':
-    resolution: {integrity: sha512-+tgvoGMgyFCbjH0iZFT6Y4zBWyq+v2fkB9V/i0MpK39tcelovM7w4c+xX7tgVD2IDkYhRX+7lV+m+bcC8oui2A==}
+  '@mui/styled-engine@9.0.0':
+    resolution: {integrity: sha512-9RLGdX4Jg0aQPRuvqh/OLzYSPlgd5zyEw5/1HIRfdavSiOd03WtUaGZH9/w1RoTYuRKwpgy0hpIFaMHIqPVIWg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/react': ^11.4.1
@@ -4452,14 +4461,14 @@ packages:
       '@emotion/styled':
         optional: true
 
-  '@mui/stylis-plugin-rtl@9.0.0-beta.0':
-    resolution: {integrity: sha512-7/wEIdgLPCKqMLthYhkd+R7d8pRZtFhcNx8MVbyJuwaxT5tDFRczcupmXH6CyBnVy7UWUxmjwORaqffszE6u+Q==}
+  '@mui/stylis-plugin-rtl@9.0.0':
+    resolution: {integrity: sha512-KmjpUWBQJuTQAn9YD8exORkH01378no2KI6GjR3wtriCqApOaYeWU6VQ/T+DQbpD1XkJ8XjGFSraamtzpO63KQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       stylis: 4.x
 
-  '@mui/system@9.0.0-beta.1':
-    resolution: {integrity: sha512-KIAkZ/3mIzyfL5fcne9tbBiO04lrX0T76OjvbgvDlWI8NEi0uJsRX5++sBbK9dm65FL/ntoIocwx6RdWCTYNXA==}
+  '@mui/system@9.0.0':
+    resolution: {integrity: sha512-YnC5Zg6j04IxiLc/boAKs0464jfZlLFVa7mf5E8lF0XOtZVUvG6R6gJK50lgUYdaaLdyLfxF6xR7LaPuEpeT/g==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/react': ^11.5.0
@@ -4482,16 +4491,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/types@7.4.12':
-    resolution: {integrity: sha512-iKNAF2u9PzSIj40CjvKJWxFXJo122jXVdrmdh0hMYd+FR+NuJMkr/L88XwWLCRiJ5P1j+uyac25+Kp6YC4hu6w==}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
-  '@mui/types@9.0.0-beta.0':
-    resolution: {integrity: sha512-3+rcrmHKtHfv+DWnY6EgsQj9f6EWFmn9U8p1EqcJj4inew++wzaLmx60J/l5yD4UqQqW57zcekx+LqcCCCXDkg==}
+  '@mui/types@9.0.0':
+    resolution: {integrity: sha512-i1cuFCAWN44b3AJWO7mh7tuh1sqbQSeVr/94oG0TX5uXivac8XalgE4/6fQZcmGZigzbQ35IXxj/4jLpRIBYZg==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
@@ -4508,8 +4509,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/utils@9.0.0-beta.1':
-    resolution: {integrity: sha512-kKm1qSUq5x/HSsRQPwPuCbXZ+7ZLmdR9DHlKhwwGlwsO+3kNcz7QOwLiWUgxAxXbHi8xULGZzibe3UaqDCiWIA==}
+  '@mui/utils@9.0.0':
+    resolution: {integrity: sha512-bQcqyg/gjULUqTuyUjSAFr6LQGLvtkNtDbJerAtoUn9kGZ0hg5QJiN1PLHMLbeFpe3te1831uq7GFl2ITokGdg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -14764,12 +14765,12 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.14
 
-  '@mui/core-downloads-tracker@9.0.0-beta.1': {}
+  '@mui/core-downloads-tracker@9.0.0': {}
 
-  '@mui/icons-material@9.0.0-beta.1(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)':
+  '@mui/icons-material@9.0.0(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
-      '@mui/material': 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@mui/material': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4
     optionalDependencies:
       '@types/react': 19.2.14
@@ -15038,13 +15039,13 @@ snapshots:
       - vite
       - vitest
 
-  '@mui/lab@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@mui/lab@9.0.0-beta.2(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
-      '@mui/material': 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@mui/system': 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
-      '@mui/types': 9.0.0-beta.0(@types/react@19.2.14)
-      '@mui/utils': 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+      '@mui/material': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@mui/system': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+      '@mui/types': 9.0.0(@types/react@19.2.14)
+      '@mui/utils': 9.0.0(@types/react@19.2.14)(react@19.2.4)
       clsx: 2.1.1
       prop-types: 15.8.1
       react: 19.2.4
@@ -15054,7 +15055,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/react': 19.2.14
 
-  '@mui/material-nextjs@9.0.0-beta.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/server@11.11.0)(@types/react@19.2.14)(next@16.2.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)':
+  '@mui/material-nextjs@9.0.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/server@11.11.0)(@types/react@19.2.14)(next@16.2.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
@@ -15065,13 +15066,13 @@ snapshots:
       '@emotion/server': 11.11.0
       '@types/react': 19.2.14
 
-  '@mui/material@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
-      '@mui/core-downloads-tracker': 9.0.0-beta.1
-      '@mui/system': 9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
-      '@mui/types': 9.0.0-beta.0(@types/react@19.2.14)
-      '@mui/utils': 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+      '@mui/core-downloads-tracker': 9.0.0
+      '@mui/system': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+      '@mui/types': 9.0.0(@types/react@19.2.14)
+      '@mui/utils': 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@popperjs/core': 2.11.8
       '@types/react-transition-group': 4.4.12(@types/react@19.2.14)
       clsx: 2.1.1
@@ -15105,16 +15106,16 @@ snapshots:
       - utf-8-validate
       - vitest
 
-  '@mui/private-theming@9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)':
+  '@mui/private-theming@9.0.0(@types/react@19.2.14)(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
-      '@mui/utils': 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+      '@mui/utils': 9.0.0(@types/react@19.2.14)(react@19.2.4)
       prop-types: 15.8.1
       react: 19.2.4
     optionalDependencies:
       '@types/react': 19.2.14
 
-  '@mui/styled-engine@9.0.0-beta.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)':
+  '@mui/styled-engine@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@emotion/cache': 11.14.0
@@ -15127,19 +15128,19 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
 
-  '@mui/stylis-plugin-rtl@9.0.0-beta.0(stylis@4.3.6)':
+  '@mui/stylis-plugin-rtl@9.0.0(stylis@4.3.6)':
     dependencies:
       '@babel/runtime': 7.29.2
       cssjanus: 2.3.0
       stylis: 4.3.6
 
-  '@mui/system@9.0.0-beta.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)':
+  '@mui/system@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
-      '@mui/private-theming': 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
-      '@mui/styled-engine': 9.0.0-beta.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)
-      '@mui/types': 9.0.0-beta.0(@types/react@19.2.14)
-      '@mui/utils': 9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)
+      '@mui/private-theming': 9.0.0(@types/react@19.2.14)(react@19.2.4)
+      '@mui/styled-engine': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)
+      '@mui/types': 9.0.0(@types/react@19.2.14)
+      '@mui/utils': 9.0.0(@types/react@19.2.14)(react@19.2.4)
       clsx: 2.1.1
       csstype: 3.2.3
       prop-types: 15.8.1
@@ -15153,13 +15154,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.14
 
-  '@mui/types@7.4.12(@types/react@19.2.14)':
-    dependencies:
-      '@babel/runtime': 7.29.2
-    optionalDependencies:
-      '@types/react': 19.2.14
-
-  '@mui/types@9.0.0-beta.0(@types/react@19.2.14)':
+  '@mui/types@9.0.0(@types/react@19.2.14)':
     dependencies:
       '@babel/runtime': 7.29.2
     optionalDependencies:
@@ -15177,10 +15172,10 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.14
 
-  '@mui/utils@9.0.0-beta.1(@types/react@19.2.14)(react@19.2.4)':
+  '@mui/utils@9.0.0(@types/react@19.2.14)(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
-      '@mui/types': 9.0.0-beta.0(@types/react@19.2.14)
+      '@mui/types': 9.0.0(@types/react@19.2.14)
       '@types/prop-types': 15.7.15
       clsx: 2.1.1
       prop-types: 15.8.1

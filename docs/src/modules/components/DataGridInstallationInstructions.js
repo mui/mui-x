@@ -6,9 +6,9 @@ import InstallationInstructions from './InstallationInstructions';
 // For the version branches (e.g., v8.x, v7.x) we should use the version "@^8.0.0" for v8.x, "@^7.0.0" for v7.x, etc.
 
 const packages = {
-  Community: '@mui/x-data-grid@next',
-  Pro: '@mui/x-data-grid-pro@next',
-  Premium: '@mui/x-data-grid-premium@next',
+  Community: '@mui/x-data-grid',
+  Pro: '@mui/x-data-grid-pro',
+  Premium: '@mui/x-data-grid-premium',
 };
 
 export default function DataGridInstallationInstructions() {

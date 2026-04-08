@@ -13,14 +13,14 @@ This is a reference guide for upgrading `@mui/x-date-pickers` from v8 to v9.
 
 ## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `next`.
+In `package.json`, change the version of the date pickers package to `^9.0.0`.
 
 ```diff
 -"@mui/x-date-pickers": "8.x.x",
-+"@mui/x-date-pickers": "next",
++"@mui/x-date-pickers": "^9.0.0",
 
 -"@mui/x-date-pickers-pro": "8.x.x",
-+"@mui/x-date-pickers-pro": "next",
++"@mui/x-date-pickers-pro": "^9.0.0",
 ```
 
 Since `v9` is a major release, it contains changes that affect the public API.
@@ -37,10 +37,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 # Date and Time Pickers specific
-npx @mui/x-codemod@next v9.0.0/pickers/preset-safe <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/preset-safe <path>
 
 # Target the other packages as well
-npx @mui/x-codemod@next v9.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v9.0.0/preset-safe <path>
 ```
 
 :::info
@@ -304,6 +304,37 @@ The `data-testid` attributes on several components have been updated, which may 
 - The `DateRangePreview` test ID has been removed entirely.
 - `PickerDay` (formerly `PickersDay`) now respects a custom `data-testid` prop if provided, falling back to its default value `"day"`.
 
+## `LocalizationProvider` breaking changes
+
+### `utils` field removed from the adapter context value
+
+The deprecated `utils` field has been removed from the `PickersAdapterContextValue` interface (the value exposed by the internal pickers adapter context).
+Use the `adapter` field instead — it holds the exact same reference.
+
+The recommended way to access the adapter remains the `usePickerAdapter` hook.
+
+```diff
+ import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
+
+ const adapter = usePickerAdapter();
+-// Previously, you could also read `utils` from the internal context value.
+```
+
+### `MuiPickersAdapterContext` export removed
+
+The deprecated `MuiPickersAdapterContext` named export has been removed from `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
+Use the `usePickerAdapter` hook to access the adapter instead of reading the context directly.
+
+```diff
+-import { MuiPickersAdapterContext } from '@mui/x-date-pickers/LocalizationProvider';
+-import * as React from 'react';
+-
+-const adapter = React.useContext(MuiPickersAdapterContext)?.adapter;
++import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
++
++const adapter = usePickerAdapter();
+```
+
 ## Removed types
 
 ### `UseDateManagerParameters` and `UseDateTimeManagerParameters`
@@ -358,7 +389,7 @@ The following codemods can be used to automatically apply these changes to your 
 Renames `PickerDay` and `DateRangePickerDay` class keys.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-classes <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-picker-classes <path>
 ```
 
 ### `rename-field-ref`
@@ -366,7 +397,7 @@ npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-classes <path>
 Renames `unstable field refs` to stable ones.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-field-ref <path>
 ```
 
 ### `rename-picker-day-2`
@@ -375,7 +406,7 @@ Renames `PickerDay2` and `DateRangePickerDay2` components and their related type
 Also renames theme component names (`MuiPickerDay2` → `MuiPickerDay`, `MuiDateRangePickerDay2` → `MuiDateRangePickerDay`) in `createTheme` calls, string literals, and template literals.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-day-2 <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-picker-day-2 <path>
 ```
 
 ### `remove-picker-day-2`
@@ -388,7 +419,7 @@ In this case, it will remove the property from the object, but might leave the e
 :::
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/remove-picker-day-2 <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/remove-picker-day-2 <path>
 ```
 
 ### `rename-pickers-day`
@@ -396,7 +427,7 @@ npx @mui/x-codemod@next v9.0.0/pickers/remove-picker-day-2 <path>
 Renames `PickersDay` to `PickerDay` and all related types and theme components.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-pickers-day <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-pickers-day <path>
 ```
 
 ### `remove-disable-margin`
@@ -404,5 +435,5 @@ npx @mui/x-codemod@next v9.0.0/pickers/rename-pickers-day <path>
 Removes the `disableMargin` prop from `PickerDay` (and legacy `PickersDay`) components and replaces it with the `--PickerDay-horizontalMargin` CSS variable set to `0` via the `sx` prop.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/remove-disable-margin <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/remove-disable-margin <path>
 ```
