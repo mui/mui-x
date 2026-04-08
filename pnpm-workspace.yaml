@@ -97,7 +97,3 @@ onlyBuiltDependencies:
   - nx
   - sharp
   - unrs-resolver
-
-patchedDependencies:
-  # Temporary fix till next release of @mui/internal-markdown
-  '@mui/internal-markdown@3.0.6': patches/@mui__internal-markdown@3.0.6.patch
