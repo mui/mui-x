@@ -33,7 +33,7 @@ describe('<DateField /> - Selection', () => {
       view.unmount();
     });
 
-    it('should not select 1st section (v7) on mount (`autoFocus = true` and `disabled = true`)', () => {
+    it('should not select 1st section on mount (`autoFocus = true` and `disabled = true`)', () => {
       const view = renderWithProps({
         autoFocus: true,
         disabled: true,

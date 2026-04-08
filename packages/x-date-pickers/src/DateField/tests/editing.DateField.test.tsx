@@ -10,10 +10,10 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps }) => {
       it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', async () => {
-        const onChangeV7 = spy();
+        const onChange = spy();
         const view = renderWithProps({
           value: adapter.date('2022-06-04'),
-          onChange: onChangeV7,
+          onChange,
         });
 
         await view.selectSectionAsync('year');
@@ -21,17 +21,17 @@ describe('<DateField /> - Editing', () => {
         view.pressKey(2, 'ArrowUp');
         expectFieldValue(view.getSectionsContainer(), '06/04/2022');
 
-        expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
 
         view.unmount();
       });
 
       it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', async () => {
-        const onChangeV7 = spy();
+        const onChange = spy();
         const view = renderWithProps({
           defaultValue: adapter.date('2022-06-04'),
-          onChange: onChangeV7,
+          onChange,
         });
 
         await view.selectSectionAsync('year');
@@ -39,30 +39,30 @@ describe('<DateField /> - Editing', () => {
         view.pressKey(2, 'ArrowUp');
         expectFieldValue(view.getSectionsContainer(), '06/04/2023');
 
-        expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
 
         view.unmount();
       });
 
       it('should not call the onChange callback before filling the last section when starting from a null value', async () => {
-        const onChangeV7 = spy();
+        const onChange = spy();
         const view = renderWithProps({
           value: null,
-          onChange: onChangeV7,
+          onChange,
           format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
         });
 
         await view.selectSectionAsync('day');
 
         view.pressKey(0, '4');
-        expect(onChangeV7.callCount).to.equal(0);
+        expect(onChange.callCount).to.equal(0);
         expectFieldValue(view.getSectionsContainer(), '04 MMMM');
 
         view.pressKey(1, 'S');
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
-        expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
         await waitFor(() => {
           expectFieldValue(view.getSectionsContainer(), 'DD MMMM');
         });
@@ -74,9 +74,9 @@ describe('<DateField /> - Editing', () => {
 
   describeAdapters('Disabled field', DateField, ({ renderWithProps }) => {
     it('should not allow key editing on disabled field', async () => {
-      const onChangeV7 = spy();
+      const onChange = spy();
       const view = renderWithProps({
-        onChange: onChangeV7,
+        onChange,
         disabled: true,
       });
 
@@ -97,7 +97,7 @@ describe('<DateField /> - Editing', () => {
       keys.forEach((key) => {
         view.pressKey(0, key);
         expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
-        expect(onChangeV7.callCount).to.equal(0);
+        expect(onChange.callCount).to.equal(0);
       });
 
       // digit key press
@@ -565,22 +565,22 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should call `onChange` when clearing the first section (Backspace)', async () => {
-        const onChangeV7 = spy();
+        const onChange = spy();
 
         const view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           defaultValue: adapter.date(),
-          onChange: onChangeV7,
+          onChange,
         });
 
         await view.selectSectionAsync('month');
         view.pressKey(0, '');
-        expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).to.equal(null);
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.firstArg).to.equal(null);
 
         await view.selectSectionAsync('year');
         view.pressKey(1, '');
-        expect(onChangeV7.callCount).to.equal(1);
+        expect(onChange.callCount).to.equal(1);
 
         view.unmount();
       });
@@ -604,7 +604,7 @@ describe('<DateField /> - Editing', () => {
   );
 
   describeAdapters('Pasting', DateField, ({ adapter, renderWithProps }) => {
-    const firePasteEventV7 = async (element: HTMLElement, pastedValue: string) => {
+    const firePasteEvent = async (element: HTMLElement, pastedValue: string) => {
       const clipboardEvent = new window.Event('paste', {
         bubbles: true,
         cancelable: true,
@@ -628,10 +628,10 @@ describe('<DateField /> - Editing', () => {
     };
 
     it('should set the date when all sections are selected, the pasted value is valid and a value is provided', async () => {
-      const onChangeV7 = spy();
+      const onChange = spy();
       const view = renderWithProps({
         defaultValue: adapter.date(),
-        onChange: onChangeV7,
+        onChange,
       });
       await view.selectSectionAsync('month');
 
@@ -642,18 +642,18 @@ describe('<DateField /> - Editing', () => {
         ctrlKey: true,
       });
 
-      await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
+      await firePasteEvent(view.getSectionsContainer(), '09/16/2022');
 
-      expect(onChangeV7.callCount).to.equal(1);
-      expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
 
       view.unmount();
     });
 
     it('should set the date when all sections are selected, the pasted value is valid and no value is provided', async () => {
-      const onChangeV7 = spy();
+      const onChange = spy();
       const view = renderWithProps({
-        onChange: onChangeV7,
+        onChange,
       });
       await view.selectSectionAsync('month');
 
@@ -664,17 +664,17 @@ describe('<DateField /> - Editing', () => {
         ctrlKey: true,
       });
 
-      await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
+      await firePasteEvent(view.getSectionsContainer(), '09/16/2022');
 
-      expect(onChangeV7.callCount).to.equal(1);
-      expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
       view.unmount();
     });
 
     it('should not set the date when all sections are selected and the pasted value is not valid', async () => {
-      const onChangeV7 = spy();
+      const onChange = spy();
       const view = renderWithProps({
-        onChange: onChangeV7,
+        onChange,
       });
       await view.selectSectionAsync('month');
 
@@ -685,7 +685,7 @@ describe('<DateField /> - Editing', () => {
         ctrlKey: true,
       });
 
-      await firePasteEventV7(view.getSectionsContainer(), 'Some invalid content');
+      await firePasteEvent(view.getSectionsContainer(), 'Some invalid content');
       expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
       view.unmount();
     });
@@ -693,9 +693,9 @@ describe('<DateField /> - Editing', () => {
     it('should set the date when all sections are selected and the format contains escaped characters', async () => {
       const { start: startChar, end: endChar } = adapter.escapedCharacters;
 
-      const onChangeV7 = spy();
+      const onChange = spy();
       const view = renderWithProps({
-        onChange: onChangeV7,
+        onChange,
         format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
       });
 
@@ -708,17 +708,17 @@ describe('<DateField /> - Editing', () => {
         ctrlKey: true,
       });
 
-      await firePasteEventV7(view.getSectionsContainer(), `Escaped 2014`);
-      expect(onChangeV7.callCount).to.equal(1);
-      expect(adapter.getYear(onChangeV7.lastCall.firstArg)).to.equal(2014);
+      await firePasteEvent(view.getSectionsContainer(), `Escaped 2014`);
+      expect(onChange.callCount).to.equal(1);
+      expect(adapter.getYear(onChange.lastCall.firstArg)).to.equal(2014);
       view.unmount();
     });
 
     it('should not set the date when all sections are selected and props.readOnly = true', async () => {
-      const onChangeV7 = spy();
+      const onChange = spy();
 
       const view = renderWithProps({
-        onChange: onChangeV7,
+        onChange,
         readOnly: true,
       });
 
@@ -731,63 +731,63 @@ describe('<DateField /> - Editing', () => {
         ctrlKey: true,
       });
 
-      await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
-      expect(onChangeV7.callCount).to.equal(0);
+      await firePasteEvent(view.getSectionsContainer(), '09/16/2022');
+      expect(onChange.callCount).to.equal(0);
 
       view.unmount();
     });
 
     it('should set the section when one section is selected, the pasted value has the correct type and no value is provided', async () => {
-      const onChangeV7 = spy();
+      const onChange = spy();
 
       const view = renderWithProps({
-        onChange: onChangeV7,
+        onChange,
       });
 
       await view.selectSectionAsync('month');
 
       expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
-      await firePasteEventV7(view.getActiveSection(0), '12');
+      await firePasteEvent(view.getActiveSection(0), '12');
 
-      expect(onChangeV7.callCount).to.equal(0);
+      expect(onChange.callCount).to.equal(0);
       expectFieldValue(view.getSectionsContainer(), '12/DD/YYYY');
 
       view.unmount();
     });
 
     it('should set the section when one section is selected, the pasted value has the correct type and value is provided', async () => {
-      const onChangeV7 = spy();
+      const onChange = spy();
 
       const view = renderWithProps({
         defaultValue: adapter.date('2018-01-13'),
-        onChange: onChangeV7,
+        onChange,
       });
 
       await view.selectSectionAsync('month');
 
       expectFieldValue(view.getSectionsContainer(), '01/13/2018');
-      await firePasteEventV7(view.getActiveSection(0), '12');
+      await firePasteEvent(view.getActiveSection(0), '12');
       expectFieldValue(view.getSectionsContainer(), '12/13/2018');
-      expect(onChangeV7.callCount).to.equal(1);
-      expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
 
       view.unmount();
     });
 
     it('should not update the section when one section is selected and the pasted value has incorrect type', async () => {
-      const onChangeV7 = spy();
+      const onChange = spy();
 
       const view = renderWithProps({
         defaultValue: adapter.date('2018-01-13'),
-        onChange: onChangeV7,
+        onChange,
       });
 
       await view.selectSectionAsync('month');
 
       expectFieldValue(view.getSectionsContainer(), '01/13/2018');
-      await firePasteEventV7(view.getActiveSection(0), 'Jun');
+      await firePasteEvent(view.getActiveSection(0), 'Jun');
       expectFieldValue(view.getSectionsContainer(), '01/13/2018');
-      expect(onChangeV7.callCount).to.equal(0);
+      expect(onChange.callCount).to.equal(0);
 
       view.unmount();
     });
@@ -805,7 +805,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(1), { key: 'a', keyCode: 65, ctrlKey: true });
 
-      await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
+      await firePasteEvent(view.getSectionsContainer(), '09/16/2022');
       expectFieldValue(view.getSectionsContainer(), '09/16/2022');
 
       await view.selectSectionAsync('day');
@@ -826,7 +826,7 @@ describe('<DateField /> - Editing', () => {
       view.pressKey(0, '1'); // Press 1
       expectFieldValue(view.getSectionsContainer(), '01/05/2018');
 
-      await firePasteEventV7(view.getActiveSection(0), '05');
+      await firePasteEvent(view.getActiveSection(0), '05');
       expectFieldValue(view.getSectionsContainer(), '05/05/2018');
 
       await view.selectSectionAsync('month'); // move back to month section
@@ -835,9 +835,9 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not allow pasting on disabled field', async () => {
-      const onChangeV7 = spy();
+      const onChange = spy();
       const view = renderWithProps({
-        onChange: onChangeV7,
+        onChange,
         disabled: true,
       });
 
@@ -850,8 +850,8 @@ describe('<DateField /> - Editing', () => {
         ctrlKey: true,
       });
 
-      await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
-      expect(onChangeV7.callCount).to.equal(0);
+      await firePasteEvent(view.getSectionsContainer(), '09/16/2022');
+      expect(onChange.callCount).to.equal(0);
       expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       view.unmount();
@@ -863,24 +863,24 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps }) => {
       it('should not loose time information when a value is provided', async () => {
-        const onChangeV7 = spy();
+        const onChange = spy();
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
-          onChange: onChangeV7,
+          onChange,
         });
         await view.selectSectionAsync('year');
         await view.user.keyboard('{ArrowDown}');
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
 
         view.unmount();
       });
 
       it('should not loose time information when cleaning the date then filling it again', async () => {
-        const onChangeV7 = spy();
+        const onChange = spy();
 
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
-          onChange: onChangeV7,
+          onChange,
         });
 
         await view.selectSectionAsync('month');
@@ -904,40 +904,40 @@ describe('<DateField /> - Editing', () => {
 
         await view.user.keyboard('2009');
         expectFieldValue(view.getSectionsContainer(), '11/25/2009');
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2009, 10, 25, 3, 3, 3));
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 10, 25, 3, 3, 3));
 
         view.unmount();
       });
 
       it('should not loose date information when using the year format and value is provided', async () => {
-        const onChangeV7 = spy();
+        const onChange = spy();
 
         const view = renderWithProps({
           format: adapter.formats.year,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
-          onChange: onChangeV7,
+          onChange,
         });
 
         await view.selectSectionAsync('year');
         await view.user.keyboard('{ArrowDown}');
 
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
 
         view.unmount();
       });
 
       it('should not loose date information when using the month format and value is provided', async () => {
-        const onChangeV7 = spy();
+        const onChange = spy();
 
         const view = renderWithProps({
           format: adapter.formats.month,
           defaultValue: adapter.date('2010-04-03T03:03:03'),
-          onChange: onChangeV7,
+          onChange,
         });
 
         await view.selectSectionAsync('month');
         await view.user.keyboard('{ArrowDown}');
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
 
         view.unmount();
       });
@@ -949,30 +949,30 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps }) => {
       it('should set the date when the change value is valid and no value is provided', () => {
-        const onChangeV7 = spy();
+        const onChange = spy();
         const view = renderWithProps({
-          onChange: onChangeV7,
+          onChange,
         });
         fireEvent.change(view.getHiddenInput(), { target: { value: '09/16/2022' } });
 
-        expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
 
         view.unmount();
       });
 
       it('should set the date when the change value is valid and a value is provided', () => {
-        const onChangeV7 = spy();
+        const onChange = spy();
 
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
-          onChange: onChangeV7,
+          onChange,
         });
 
         fireEvent.change(view.getHiddenInput(), { target: { value: '09/16/2022' } });
 
-        expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
 
         view.unmount();
       });
