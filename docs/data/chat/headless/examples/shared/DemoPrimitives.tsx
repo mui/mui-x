@@ -231,7 +231,7 @@ export function AttachmentPreviewList() {
 // ---------------------------------------------------------------------------
 
 export const demoSlotProps = {
-  messageRoot: (ownerState: { role: string }) => ({
+  messageRoot: ((ownerState: { role: string }) => ({
     style: {
       display: 'grid',
       gridTemplateColumns:
@@ -240,8 +240,8 @@ export const demoSlotProps = {
       gap: '4px 10px',
       alignItems: 'start',
     },
-  }),
-  messageAvatar: (ownerState: { role: string }) => ({
+  })) as any,
+  messageAvatar: ((ownerState: { role: string }) => ({
     style: {
       width: 32,
       height: 32,
@@ -254,14 +254,14 @@ export const demoSlotProps = {
       gridRow: '1 / 3',
       alignSelf: 'start',
     },
-  }),
+  })) as any,
   messageAvatarImage: {
     style: { width: 20, height: 20, filter: 'grayscale(1) invert(1)' },
   },
   messageContent: {
     style: { display: 'contents' },
   },
-  messageBubble: (ownerState: { role: string }) => ({
+  messageBubble: ((ownerState: { role: string }) => ({
     style: {
       display: 'grid',
       gap: 8,
@@ -275,8 +275,8 @@ export const demoSlotProps = {
       width: 'fit-content',
       maxWidth: '90%',
     },
-  }),
-  messageMeta: (ownerState: { role: string }) => ({
+  })) as any,
+  messageMeta: ((ownerState: { role: string }) => ({
     style: {
       display: 'flex',
       alignItems: 'center',
@@ -287,16 +287,16 @@ export const demoSlotProps = {
       gridRow: 2,
       justifySelf: ownerState.role === 'user' ? 'end' : 'start',
     },
-  }),
-  messageGroupRoot: (ownerState: { isFirst: boolean; isLast: boolean }) => ({
+  })) as any,
+  messageGroupRoot: ((ownerState: { isFirst: boolean; isLast: boolean }) => ({
     style: {
       display: 'grid',
       gap: 4,
       marginTop: ownerState.isFirst ? 16 : 4,
       marginBottom: ownerState.isLast ? 4 : 0,
     },
-  }),
-  messageGroupAuthorName: (ownerState: { authorRole: string }) => ({
+  })) as any,
+  messageGroupAuthorName: ((ownerState: { authorRole: string }) => ({
     style: {
       color: palette.muted,
       fontSize: 11,
@@ -309,7 +309,7 @@ export const demoSlotProps = {
         | 'left',
       marginRight: ownerState.authorRole === 'user' ? 42 : 0,
     },
-  }),
+  })) as any,
   conversationHeader: {
     style: {
       display: 'flex',
@@ -345,7 +345,7 @@ export const demoSlotProps = {
       width: '100%',
       minHeight: 48,
       maxHeight: 180,
-      resize: 'none',
+      resize: 'none' as const,
       border: `1px solid ${palette.border}`,
       background: palette.surfaceAlt,
       color: palette.text,
@@ -354,10 +354,10 @@ export const demoSlotProps = {
       fontSize: 14,
       lineHeight: 1.5,
       outline: 'none',
-      boxSizing: 'border-box',
+      boxSizing: 'border-box' as const,
     },
-  },
-  composerSendButton: (ownerState: { disabled: boolean }) => ({
+  } as any,
+  composerSendButton: ((ownerState: { disabled: boolean }) => ({
     style: {
       border: `1px solid ${palette.accent}`,
       background: palette.accent,
@@ -369,8 +369,8 @@ export const demoSlotProps = {
       opacity: ownerState.disabled ? 0.4 : 1,
       fontFamily: 'inherit',
     },
-  }),
-  conversationListItem: (ownerState: { selected: boolean }) => ({
+  })) as any,
+  conversationListItem: ((ownerState: { selected: boolean }) => ({
     style: {
       display: 'grid',
       gridTemplateColumns: '36px minmax(0, 1fr) auto',
@@ -385,7 +385,7 @@ export const demoSlotProps = {
       borderBottom: `1px solid ${palette.border}`,
       cursor: 'pointer',
     },
-  }),
+  })) as any,
   conversationListItemAvatar: {
     style: {
       width: 36,
@@ -414,7 +414,7 @@ export const demoSlotProps = {
       gap: 2,
     },
   },
-  conversationListTitle: (ownerState: { unread: boolean }) => ({
+  conversationListTitle: ((ownerState: { unread: boolean }) => ({
     style: {
       fontWeight: ownerState.unread ? 700 : 500,
       color: palette.text,
@@ -424,7 +424,7 @@ export const demoSlotProps = {
       whiteSpace: 'nowrap',
       fontSize: 14,
     },
-  }),
+  })) as any,
   conversationListPreview: {
     style: {
       fontSize: 12,

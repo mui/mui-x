@@ -7,7 +7,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -62,7 +62,7 @@ export default function MinimalUnstyledShell() {
         >
           <Conversation.Header
             slotProps={{
-              root: demoSlotProps.conversationHeader,
+              header: demoSlotProps.conversationHeader,
             }}
           >
             <div style={{ minWidth: 0 }}>
@@ -78,7 +78,7 @@ export default function MinimalUnstyledShell() {
                 key={id}
                 messageId={id}
                 slotProps={{
-                  root: demoSlotProps.messageGroupRoot,
+                  group: demoSlotProps.messageGroupRoot,
                   authorName: demoSlotProps.messageGroupAuthorName,
                 }}
               >

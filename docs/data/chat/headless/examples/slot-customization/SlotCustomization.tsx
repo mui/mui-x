@@ -7,7 +7,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -570,7 +570,7 @@ const BrandComposerButton = React.forwardRef(function BrandComposerButton(
   ref: React.Ref<HTMLButtonElement>,
 ) {
   const { ownerState, style, children, disabled, ...other } = props;
-  const isPrimary = other['data-variant'] === 'primary';
+  const isPrimary = (other as any)['data-variant'] === 'primary';
 
   return (
     <button
@@ -626,12 +626,12 @@ export default function SlotCustomization() {
         }
       }}
       onMessagesChange={(nextMessages) => {
-        setThreads((previous) => ({
+        setThreads((previous: any) => ({
           ...previous,
           [activeConversationId]: nextMessages,
         }));
-        setConversations((previous) =>
-          syncConversationPreview(previous, activeConversationId, nextMessages),
+        setConversations(((previous: any) =>
+          syncConversationPreview(previous, activeConversationId, nextMessages)) as any,
         );
       }}
       slotProps={{
@@ -770,7 +770,7 @@ export default function SlotCustomization() {
                 index={index}
                 key={id}
                 messageId={id}
-                slots={{ authorName: BrandMessageAuthor, root: BrandMessageGroup }}
+                slots={{ authorName: BrandMessageAuthor, group: BrandMessageGroup }}
               >
                 <Message.Root messageId={id} slots={{ root: BrandMessageRoot }}>
                   <Message.Avatar slots={{ avatar: BrandMessageAvatar }} />
@@ -784,17 +784,17 @@ export default function SlotCustomization() {
             <Composer.TextArea
               aria-label="Brand message"
               placeholder="Reply using the product-specific markup"
-              slots={{ root: BrandComposerInput }}
+              slots={{ input: BrandComposerInput }}
             />
             <div
               style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}
             >
-              <Composer.AttachButton slots={{ root: BrandComposerButton }}>
+              <Composer.AttachButton slots={{ attachButton: BrandComposerButton }}>
                 Attach
               </Composer.AttachButton>
               <Composer.SendButton
                 data-variant="primary"
-                slots={{ root: BrandComposerButton }}
+                slots={{ sendButton: BrandComposerButton }}
               >
                 Send
               </Composer.SendButton>

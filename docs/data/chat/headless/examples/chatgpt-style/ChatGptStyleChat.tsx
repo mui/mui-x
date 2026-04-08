@@ -18,14 +18,14 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import type {
   ChatMessage,
   ChatUser,
   ReasoningPartOwnerState,
   ToolPartOwnerState,
   ToolPartSectionOwnerState,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -1005,12 +1005,12 @@ export default function ChatGptStyleChat() {
         }
       }}
       onMessagesChange={(nextMessages) => {
-        setThreads((prev) => ({
+        setThreads((prev: any) => ({
           ...prev,
           [activeConversationId]: nextMessages,
         }));
-        setConvos((prev) =>
-          syncConversationPreview(prev, activeConversationId, nextMessages),
+        setConvos(((prev: any) =>
+          syncConversationPreview(prev, activeConversationId, nextMessages)) as any,
         );
       }}
       slotProps={{
@@ -1159,7 +1159,7 @@ export default function ChatGptStyleChat() {
                 messageId={id}
                 slots={{
                   authorName: GptAuthorName,
-                  root: GptMessageGroup,
+                  group: GptMessageGroup,
                 }}
               >
                 <Message.Root messageId={id} slots={{ root: GptMessageRoot }}>
@@ -1194,7 +1194,7 @@ export default function ChatGptStyleChat() {
               </MessageGroup>
             )}
             slotProps={{
-              root: {
+              messageList: {
                 style: { paddingRight: 0 },
               },
               messageListScroller: {

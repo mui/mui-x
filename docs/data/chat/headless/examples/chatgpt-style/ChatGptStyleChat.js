@@ -18,7 +18,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 
 import {
   createEchoAdapter,
@@ -1027,7 +1027,7 @@ export default function ChatGptStyleChat() {
                 messageId={id}
                 slots={{
                   authorName: GptAuthorName,
-                  root: GptMessageGroup,
+                  group: GptMessageGroup,
                 }}
               >
                 <Message.Root messageId={id} slots={{ root: GptMessageRoot }}>
@@ -1062,7 +1062,7 @@ export default function ChatGptStyleChat() {
               </MessageGroup>
             )}
             slotProps={{
-              root: {
+              messageList: {
                 style: { paddingRight: 0 },
               },
               messageListScroller: {

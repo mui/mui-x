@@ -7,7 +7,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -57,12 +57,12 @@ export default function TwoPaneInbox() {
         }
       }}
       onMessagesChange={(nextMessages) => {
-        setThreads((previous) => ({
+        setThreads((previous: any) => ({
           ...previous,
           [activeConversationId]: nextMessages,
         }));
-        setConversations((previous) =>
-          syncConversationPreview(previous, activeConversationId, nextMessages),
+        setConversations(((previous: any) =>
+          syncConversationPreview(previous, activeConversationId, nextMessages)) as any,
         );
       }}
       localeText={demoLocaleText}
@@ -117,7 +117,7 @@ export default function TwoPaneInbox() {
         >
           <Conversation.Header
             slotProps={{
-              root: demoSlotProps.conversationHeader,
+              header: demoSlotProps.conversationHeader,
             }}
           >
             <div style={{ minWidth: 0 }}>
@@ -149,7 +149,7 @@ export default function TwoPaneInbox() {
                 key={id}
                 messageId={id}
                 slotProps={{
-                  root: demoSlotProps.messageGroupRoot,
+                  group: demoSlotProps.messageGroupRoot,
                   authorName: demoSlotProps.messageGroupAuthorName,
                 }}
               >

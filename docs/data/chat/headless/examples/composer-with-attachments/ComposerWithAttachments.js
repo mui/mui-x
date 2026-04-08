@@ -7,7 +7,7 @@ import {
   MessageGroup,
   MessageList,
   useChatComposer,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 
 import {
   createTextResponseChunks,
@@ -71,7 +71,7 @@ function ComposerDemoBody() {
     >
       <Conversation.Header
         slotProps={{
-          root: demoSlotProps.conversationHeader,
+          header: demoSlotProps.conversationHeader,
         }}
       >
         <div style={{ minWidth: 0 }}>
@@ -87,7 +87,7 @@ function ComposerDemoBody() {
             key={id}
             messageId={id}
             slotProps={{
-              root: demoSlotProps.messageGroupRoot,
+              group: demoSlotProps.messageGroupRoot,
               authorName: demoSlotProps.messageGroupAuthorName,
             }}
           >
