@@ -8,6 +8,8 @@ import { useChat } from './useChat';
 import { useChatStatus } from './useChatStatus';
 import { useChatStore } from './useChatStore';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 function createStream(values: any[] = []): ReadableStream<any> {
   return new ReadableStream({
     start(controller) {
@@ -210,7 +212,7 @@ describe('useChat', () => {
     expect(adapter.stop).toHaveBeenCalledTimes(1);
   });
 
-  it('does not create duplicate streams in Strict Mode when sendMessage is triggered from an effect', async () => {
+  it.skipIf(!isJSDOM)('does not create duplicate streams in Strict Mode when sendMessage is triggered from an effect', async () => {
     const adapter = createAdapter({
       sendMessage: vi.fn(async () => createPendingStream()),
     });

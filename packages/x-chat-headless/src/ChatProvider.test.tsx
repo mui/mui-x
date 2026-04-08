@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { vi } from 'vitest';
 import { act, renderHook } from '@mui/internal-test-utils';
 import { useStore } from '@mui/x-internals/store';
 import { clearWarningsCache } from '@mui/x-internals/warning';
@@ -82,9 +83,12 @@ describe('ChatProvider', () => {
     const { result } = renderHook(() => useChatStoreContext(true));
 
     expect(result.current).toBe(null);
+
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(() => renderHook(() => useChatStoreContext())).toThrow(
       'MUI X Chat: useChatStoreContext must be used within a <ChatProvider> component',
     );
+    consoleErrorSpy.mockRestore();
   });
 
   it('returns the store from useChatStore and preserves the provider instance across rerenders', () => {
@@ -109,9 +113,11 @@ describe('ChatProvider', () => {
   });
 
   it('throws from useChatStore outside the provider', () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(() => renderHook(() => useChatStore())).toThrow(
       'MUI X Chat: useChatStore must be used within a <ChatProvider> component',
     );
+    consoleErrorSpy.mockRestore();
   });
 
   it('supports pairing useChatStore with useStore and chatSelectors', () => {

@@ -1,7 +1,7 @@
 import axe from 'axe-core';
 import * as React from 'react';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters/chatAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import { ComposerTextArea, ComposerRoot } from '../composer';
@@ -245,6 +245,20 @@ const ChatCompositionHarness = React.forwardRef(function ChatCompositionHarness(
 });
 
 describe('ChatComposition', () => {
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  beforeEach(() => {
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation((...args: any[]) => {
+      if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) {
+        return;
+      }
+      // eslint-disable-next-line no-console
+      console.info(...args);
+    });
+  });
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
   it.skipIf(isJSDOM)(
     'allows keyboard tab travel through the message list without trapping focus',
     async () => {

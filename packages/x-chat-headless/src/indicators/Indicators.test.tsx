@@ -162,6 +162,7 @@ function ControlledMessageListWithAffordance() {
         append assistant
       </button>
       <MessageListRoot
+        autoScroll={{ buffer: 10 }}
         estimatedItemSize={40}
         renderItem={({ id }) => (
           <div data-testid={`message-${id}`} style={{ boxSizing: 'border-box', height: 40 }}>

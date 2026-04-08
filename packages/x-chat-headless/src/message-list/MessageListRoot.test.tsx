@@ -136,8 +136,8 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
   );
 });
 
-function ControlledMessageList(props: { slots?: MessageListRootProps['slots'] }) {
-  const { slots } = props;
+function ControlledMessageList(props: { slots?: MessageListRootProps['slots']; autoScroll?: MessageListRootProps['autoScroll'] }) {
+  const { slots, autoScroll = { buffer: 10 } } = props;
   const [messages, setMessages] = React.useState([
     createMessage('m1', 'assistant'),
     createMessage('m2', 'assistant'),
@@ -203,6 +203,7 @@ function ControlledMessageList(props: { slots?: MessageListRootProps['slots'] })
         expand first
       </button>
       <MessageListRoot
+        autoScroll={autoScroll}
         estimatedItemSize={40}
         renderItem={({ id }) => {
           const message = messages.find((item) => item.id === id)!;
@@ -413,6 +414,7 @@ describe('MessageListRoot', () => {
   });
 
   it.skipIf(isJSDOM)('preserves the viewport anchor when history is prepended', async () => {
+    render(<ControlledMessageList />);
     const log = screen.getByRole('log');
 
     await waitFor(() => {
@@ -430,6 +432,7 @@ describe('MessageListRoot', () => {
   });
 
   it.skipIf(isJSDOM)('auto-scrolls on append when already near the bottom', async () => {
+    render(<ControlledMessageList />);
     const log = screen.getByRole('log');
 
     await waitFor(() => {
@@ -447,6 +450,7 @@ describe('MessageListRoot', () => {
   });
 
   it.skipIf(isJSDOM)('auto-scrolls on user append even when away from the bottom', async () => {
+    render(<ControlledMessageList />);
     const log = screen.getByRole('log');
 
     await waitFor(() => {
@@ -466,6 +470,7 @@ describe('MessageListRoot', () => {
   it.skipIf(isJSDOM)(
     'does not auto-scroll for assistant appends when away from the bottom',
     async () => {
+      render(<ControlledMessageList />);
       const log = screen.getByRole('log');
 
       await waitFor(() => {
@@ -513,6 +518,7 @@ describe('MessageListRoot', () => {
   );
 
   it.skipIf(isJSDOM)('restores the anchor when a row above the viewport grows', async () => {
+    render(<ControlledMessageList />);
     const log = screen.getByRole('log');
 
     await waitFor(() => {
@@ -543,6 +549,7 @@ describe('MessageListRoot', () => {
         ]}
       >
         <MessageListRoot
+          autoScroll={{ buffer: 10 }}
           estimatedItemSize={40}
           renderItem={({ id }) => (
             <div data-testid={`message-${id}`} style={{ boxSizing: 'border-box', height: 40 }}>
