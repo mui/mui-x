@@ -1,5 +1,5 @@
 import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import * as pageProps from 'docsx/data/migration/migration-tree-view-v8/migration-tree-view-v8.md?muiMarkdown';
+import * as pageProps from 'docsx/data/migration/upgrade-data-grid-to-v9/upgrade-data-grid-to-v9.md?muiMarkdown';
 
 export default function Page() {
   return <MarkdownDocs {...pageProps} />;

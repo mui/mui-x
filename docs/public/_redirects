@@ -79,4 +79,8 @@
 /x/api/charts/chart-data-provider/ /x/api/charts/charts-data-provider/ 301
 /x/api/charts/chart-data-provider-pro/ /x/api/charts/charts-data-provider-pro/ 301
 /x/api/charts/chart-data-provider-premium/ /x/api/charts/charts-data-provider-premium/ 301
+/x/migration/migration-data-grid-v8 /x/migration/upgrade-data-grid-to-v9/ 301
+/x/migration/migration-pickers-v8 /x/migration/upgrade-pickers-to-v9/ 301
+/x/migration/migration-charts-v8 /x/migration/upgrade-charts-to-v9/ 301
+/x/migration/migration-tree-view-v8 /x/migration/upgrade-tree-view-to-v9/ 301
 # Proxies

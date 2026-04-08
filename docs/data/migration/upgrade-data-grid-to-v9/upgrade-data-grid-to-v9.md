@@ -12,7 +12,7 @@ productId: x-data-grid
 This is a reference guide for upgrading `@mui/x-data-grid` from v8 to v9.
 
 :::success
-This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-data-grid-v8/migration-data-grid-v8.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/upgrade-data-grid-to-v9/upgrade-data-grid-to-v9.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
 :::
 
 ## Start using the new release

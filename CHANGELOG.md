@@ -40,8 +40,8 @@ Same changes as in `@mui/x-data-grid-pro@9.0.0-rc.0`, plus:
 
 #### Breaking changes
 
-- Accessible DOM structure is now the only default. [Read more](https://mui.com/x/migration/migration-pickers-v8/#accessible-dom-structure-is-now-the-default)
-- The `PickerDay2` and `DateRangePickerDay2` components were propagated to stable while removing the previous defaults. [Read more](https://mui.com/x/migration/migration-pickers-v8/#day-slot)
+- Accessible DOM structure is now the only default. [Read more](https://mui.com/x/migration/upgrade-pickers-to-v9/#accessible-dom-structure-is-now-the-default)
+- The `PickerDay2` and `DateRangePickerDay2` components were propagated to stable while removing the previous defaults. [Read more](https://mui.com/x/migration/upgrade-pickers-to-v9/#day-slot)
 
 #### `@mui/x-date-pickers@9.0.0-rc.0`
 
