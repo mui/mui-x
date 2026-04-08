@@ -708,10 +708,10 @@ export type YAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleNam
   ? MakeOptional<AxisConfig<S, V, ChartsYAxisProps>, 'id'>
   : never;
 export type RotationAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
-  ? AxisConfig<S, V, ChartsRotationAxisProps>
+  ? MakeOptional<AxisConfig<S, V, ChartsRotationAxisProps>, 'id'>
   : never;
 export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'linear'
-  ? AxisConfig<S, V, ChartsRadiusAxisProps>
+  ? MakeOptional<AxisConfig<S, V, ChartsRadiusAxisProps>, 'id'>
   : never;
 
 /**
