@@ -10,6 +10,8 @@ components: ChatMessageGroup, ChatMessageAvatar, ChatMessageAuthorLabel, ChatMes
 
 Control the visual presentation of messages — grouping, date dividers, avatars, timestamps, and layout variants.
 
+
+
 This page covers the visual aspects of how messages are displayed in the message list. For message content rendering (text, files, code blocks), see the [Message Parts](/x/react-chat/display/message-parts/text-and-markdown/) section.
 
 ## Message groups
@@ -100,6 +102,7 @@ export default function MessageGrouping() {
     />
   );
 }
+
 ```
 
 Grouping is based on:
@@ -188,6 +191,7 @@ export default function DateDividerFormat() {
     />
   );
 }
+
 ```
 
 ## Avatars

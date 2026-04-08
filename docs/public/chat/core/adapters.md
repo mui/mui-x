@@ -205,6 +205,7 @@ export default function MinimalHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Minimal adapter

@@ -10,6 +10,8 @@ components: ChatMessageContent, ChatMessageSource, ChatMessageSources
 
 Display reference links and document excerpts for retrieval-augmented generation (RAG) applications using source parts.
 
+
+
 Source parts allow AI assistants to cite their sources. Two part types cover the common citation patterns: URL references and document excerpts.
 
 ## Source URL parts

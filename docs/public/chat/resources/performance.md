@@ -10,6 +10,8 @@ components: ChatBox
 
 Strategies for efficient rendering, streaming tuning, and handling large message lists in the chat UI.
 
+
+
 The chat runtime is designed for efficient real-time updates.
 This page covers the key patterns and configuration options for maintaining smooth performance as your chat UI scales.
 

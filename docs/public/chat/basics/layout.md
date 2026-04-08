@@ -10,6 +10,8 @@ components: ChatBox, ChatLayout
 
 Understand the two-pane layout structure, thread-only mode, and how to recompose the chat surface.
 
+
+
 ## Overview
 
 `ChatBox` renders a two-pane layout by default: a **conversation list** on the left and a **thread pane** on the right.
@@ -43,6 +45,7 @@ export default function BasicAiChat() {
     />
   );
 }
+
 ```
 
 ## Component anatomy
@@ -106,6 +109,7 @@ export default function ThreadOnly() {
     />
   );
 }
+
 ```
 
 In thread-only mode `ChatBox` does not render the conversation list sidebar, and the thread pane fills the entire width of the `ChatBox` container.
@@ -283,6 +287,7 @@ export default function ResponsiveDrawer() {
     </Box>
   );
 }
+
 ```
 
 This behavior is built in — no extra configuration is needed.

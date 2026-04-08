@@ -155,7 +155,7 @@ import {
 
 const adapter = createEchoAdapter({
   respond: (text) =>
-    `Received: "${text}". This response is styled with Tailwind CSS utility classes.`,
+    `Received: "${text}". This response is styled with Tailwind CSS utility classes.`,
 });
 
 function TailwindMessage({ id }: { id: string }) {
@@ -264,6 +264,7 @@ export default function TailwindChatDemo({ window }: { window?: () => Window }) 
     </div>
   );
 }
+
 ```
 
 ## API

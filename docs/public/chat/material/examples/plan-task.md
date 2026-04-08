@@ -325,7 +325,7 @@ function createResponseChunks(
     toolName: 'run_tasks',
     input: { tasks: PLAN_STEPS },
     dynamic: true,
-  });
+  } as any);
 
   chunks.push({ type: 'finish', messageId, finishReason: 'stop' });
   return chunks;
@@ -420,6 +420,7 @@ export default function PlanTask() {
     />
   );
 }
+
 ```
 
 ## How it works

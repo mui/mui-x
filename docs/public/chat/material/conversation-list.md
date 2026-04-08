@@ -10,6 +10,8 @@ components: ConversationListRoot, ConversationListItem, ConversationListItemAvat
 
 Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components.
 
+
+
 The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
 
 The following demo shows a multi-conversation layout with the conversation list in action:
@@ -77,6 +79,7 @@ export default function MultiConversation() {
     />
   );
 }
+
 ```
 
 ## Component anatomy
@@ -245,6 +248,7 @@ export default function ThemedAvatar() {
     />
   );
 }
+
 ```
 
 The `ownerState` prop arrives directly on the component because the Material UI layer passes it through `slotProps` using a function form. Destructure it before spreading `...props` to avoid forwarding a non-standard attribute to the DOM.
@@ -378,6 +382,7 @@ export default function RichItemContent() {
     />
   );
 }
+
 ```
 
 When you replace `itemContent`, the `title` and `preview` slots are no longer rendered (they are children of the default `itemContent`). Render any equivalent content directly inside your custom component.
@@ -509,6 +514,7 @@ export default function CompactRow() {
     />
   );
 }
+
 ```
 
 The `role="option"` and `aria-selected` attributes are set automatically before the slot renders, so they are present on the element even without the default styled item. Spread `...props` to pass them through.
@@ -751,6 +757,7 @@ export default function FullCustomRow() {
     />
   );
 }
+
 ```
 
 ## Accessibility notes

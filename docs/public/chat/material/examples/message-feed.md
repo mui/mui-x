@@ -150,6 +150,7 @@ export default function MessageFeed() {
     </ChatRoot>
   );
 }
+
 ```
 
 ## When to use this pattern

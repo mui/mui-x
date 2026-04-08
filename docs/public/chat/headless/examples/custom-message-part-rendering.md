@@ -164,7 +164,7 @@ export default function CustomMessagePartRendering() {
       >
         <Conversation.Header
           slotProps={{
-            root: demoSlotProps.conversationHeader,
+            header: demoSlotProps.conversationHeader,
           }}
         >
           <div style={{ minWidth: 0 }}>
@@ -186,7 +186,7 @@ export default function CustomMessagePartRendering() {
                 index={index}
                 messageId={id}
                 slotProps={{
-                  root: demoSlotProps.dateDividerRoot,
+                  divider: demoSlotProps.dateDividerRoot,
                   label: demoSlotProps.dateDividerLabel,
                 }}
               />
@@ -194,7 +194,7 @@ export default function CustomMessagePartRendering() {
                 index={index}
                 messageId={id}
                 slotProps={{
-                  root: demoSlotProps.messageGroupRoot,
+                  group: demoSlotProps.messageGroupRoot,
                   authorName: demoSlotProps.messageGroupAuthorName,
                 }}
               >
@@ -252,6 +252,7 @@ export default function CustomMessagePartRendering() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Key primitives

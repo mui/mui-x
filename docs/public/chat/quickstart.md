@@ -10,6 +10,8 @@ components: ChatBox
 
 Install the MUI X Chat package and start building your React chat interface.
 
+
+
 ## Installation
 
 Install the package using your preferred package manager:

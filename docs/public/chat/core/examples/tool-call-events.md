@@ -300,6 +300,7 @@ export default function ToolCallEventsHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

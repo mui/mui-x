@@ -10,6 +10,8 @@ components: ChatMessageList, ChatScrollToBottomAffordance
 
 Auto-scroll behavior, scroll-to-bottom affordance, imperative scroll API, and history loading on scroll-up.
 
+
+
 The message list automatically manages scroll position so that new messages and streaming content stay visible without user intervention, while still allowing the user to read earlier messages undisturbed.
 
 ## Auto-scrolling
@@ -85,6 +87,7 @@ export default function AutoScrollConfig() {
     </div>
   );
 }
+
 ```
 
 :::info

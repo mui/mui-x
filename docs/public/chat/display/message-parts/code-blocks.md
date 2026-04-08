@@ -10,6 +10,8 @@ components: ChatCodeBlock
 
 <p class="description">Display code with a language label and copy-to-clipboard button using the <code>ChatCodeBlock</code> component.</p>
 
+
+
 `ChatCodeBlock` renders fenced code blocks with a header bar showing the language label and a one-click copy button.
 
 ## Import
@@ -167,6 +169,7 @@ export default function CodeBlock() {
     </Box>
   );
 }
+
 ```
 
 ## Standalone usage

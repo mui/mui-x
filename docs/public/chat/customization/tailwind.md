@@ -10,6 +10,8 @@ components: ChatRoot
 
 <p class="description">Style chat components using Tailwind CSS utility classes with the structural primitives from <code>@mui/x-chat</code>.</p>
 
+
+
 The chat primitives ship structural components with zero built-in styles.
 Each component renders semantic HTML elements with `data-*` attributes that reflect component state, making them a natural fit for Tailwind CSS utility classes.
 

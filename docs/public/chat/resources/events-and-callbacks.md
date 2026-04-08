@@ -10,6 +10,8 @@ components: ChatBox
 
 <p class="description">Respond to streaming lifecycle events, tool calls, data chunks, and errors using callback props on <code>ChatProvider</code> and <code>ChatBox</code>.</p>
 
+
+
 `ChatProvider` (and by extension `ChatBox`) exposes four callback props that fire at key moments in the chat lifecycle.
 Use them for logging, analytics, side effects, and error handling without modifying the adapter.
 

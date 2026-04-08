@@ -390,6 +390,7 @@ export default function ComposerHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Key takeaways

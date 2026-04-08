@@ -357,7 +357,7 @@ function pushTool(
     toolName,
     input,
     dynamic: true,
-  });
+  } as any);
   chunks.push({ type: 'tool-output-available', toolCallId, output });
 }
 
@@ -544,6 +544,7 @@ export default function AgenticCode() {
     />
   );
 }
+
 ```
 
 ## How it works
@@ -976,7 +977,7 @@ function pushTool(
     toolName,
     input,
     dynamic: true,
-  });
+  } as any);
   chunks.push({ type: 'tool-output-available', toolCallId, output });
 }
 
@@ -1209,6 +1210,7 @@ export default function ToolStylingA() {
     />
   );
 }
+
 ```
 
 ### Block themes
@@ -1570,7 +1572,7 @@ function pushTool(
     toolName,
     input,
     dynamic: true,
-  });
+  } as any);
   chunks.push({ type: 'tool-output-available', toolCallId, output });
 }
 
@@ -1849,6 +1851,7 @@ export default function ToolStylingB() {
     />
   );
 }
+
 ```
 
 ### Custom renderer
@@ -2206,7 +2209,7 @@ function pushTool(
     toolName,
     input,
     dynamic: true,
-  });
+  } as any);
   chunks.push({ type: 'tool-output-available', toolCallId, output });
 }
 
@@ -2530,6 +2533,7 @@ export default function ToolStylingC() {
     />
   );
 }
+
 ```
 
 ## See also

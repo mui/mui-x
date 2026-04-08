@@ -76,6 +76,7 @@ export default function CompactVariant() {
     />
   );
 }
+
 ```
 
 ## What changes in compact mode

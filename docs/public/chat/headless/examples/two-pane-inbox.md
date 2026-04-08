@@ -79,13 +79,16 @@ export default function TwoPaneInbox() {
         }
       }}
       onMessagesChange={(nextMessages) => {
-        setThreads((previous) => ({
+        setThreads((previous: any) => ({
           ...previous,
           [activeConversationId]: nextMessages,
         }));
-        setConversations((previous) =>
-          syncConversationPreview(previous, activeConversationId, nextMessages),
-        );
+        setConversations(((previous: any) =>
+          syncConversationPreview(
+            previous,
+            activeConversationId,
+            nextMessages,
+          )) as any);
       }}
       localeText={demoLocaleText}
       slotProps={{ root: { style: demoSurfaceStyles.chatRoot } }}
@@ -139,7 +142,7 @@ export default function TwoPaneInbox() {
         >
           <Conversation.Header
             slotProps={{
-              root: demoSlotProps.conversationHeader,
+              header: demoSlotProps.conversationHeader,
             }}
           >
             <div style={{ minWidth: 0 }}>
@@ -171,7 +174,7 @@ export default function TwoPaneInbox() {
                 key={id}
                 messageId={id}
                 slotProps={{
-                  root: demoSlotProps.messageGroupRoot,
+                  group: demoSlotProps.messageGroupRoot,
                   authorName: demoSlotProps.messageGroupAuthorName,
                 }}
               >
@@ -229,6 +232,7 @@ export default function TwoPaneInbox() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Key primitives

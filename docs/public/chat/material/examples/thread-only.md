@@ -43,6 +43,7 @@ export default function ThreadOnly() {
     />
   );
 }
+
 ```
 
 ## When to use this layout

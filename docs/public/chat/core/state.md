@@ -299,6 +299,7 @@ export default function ControlledStateHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## `ChatProvider` props

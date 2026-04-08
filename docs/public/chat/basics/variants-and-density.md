@@ -10,6 +10,8 @@ components: ChatBox
 
 Switch between the default bubble layout and a compact messenger-style layout, and control vertical spacing with the density prop.
 
+
+
 ## Variants
 
 `ChatBox` supports two visual variants that control how messages are laid out: **default** and **compact**.
@@ -122,6 +124,7 @@ export default function CompactVariant() {
     />
   );
 }
+
 ```
 
 ### When to use each variant
@@ -263,6 +266,7 @@ export default function DensityProp() {
     </Stack>
   );
 }
+
 ```
 
 ### Density effects

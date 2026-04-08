@@ -484,7 +484,7 @@ export default function IntercomStyleChat() {
               messageId={id}
               slots={{
                 authorName: IntercomAuthorName,
-                root: IntercomMessageGroup,
+                group: IntercomMessageGroup,
               }}
             >
               <Message.Root messageId={id} slots={{ root: IntercomMessageRoot }}>
@@ -495,7 +495,7 @@ export default function IntercomStyleChat() {
             </MessageGroup>
           )}
           slotProps={{
-            root: {
+            messageList: {
               style: { paddingRight: 0 },
             },
             messageListScroller: {
@@ -510,7 +510,7 @@ export default function IntercomStyleChat() {
         <Composer.TextArea
           aria-label="Message"
           placeholder="Message..."
-          slots={{ root: IntercomTextArea }}
+          slots={{ input: IntercomTextArea }}
         />
         <div
           style={{
@@ -548,7 +548,7 @@ export default function IntercomStyleChat() {
               GIF
             </span>
           </div>
-          <Composer.SendButton slots={{ root: IntercomSendButton }} />
+          <Composer.SendButton slots={{ sendButton: IntercomSendButton }} />
         </div>
       </Composer.Root>
 
@@ -566,6 +566,7 @@ export default function IntercomStyleChat() {
     </Chat.Root>
   );
 }
+
 ```
 
 ## Key techniques

@@ -100,6 +100,7 @@ export default function ChatBoxWithHooks() {
     </ChatBox>
   );
 }
+
 ```
 
 ## State hooks
@@ -243,6 +244,7 @@ export default function StatusFooter() {
     </ChatProvider>
   );
 }
+
 ```
 
 Prefer `useChatStatus()` over `useChat()` whenever you only need streaming or error state.
@@ -363,6 +365,7 @@ export default function ConversationSidebar() {
     </ChatProvider>
   );
 }
+
 ```
 
 ### `useConversation(id)`
@@ -514,6 +517,7 @@ export default function EfficientThread() {
     </ChatProvider>
   );
 }
+
 ```
 
 This pattern scales to threads with hundreds of messages because no unnecessary re-renders propagate up the tree.
@@ -617,6 +621,7 @@ export default function CustomComposer() {
     />
   );
 }
+
 ```
 
 ## Config hooks

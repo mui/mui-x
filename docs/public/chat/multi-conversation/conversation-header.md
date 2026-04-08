@@ -10,6 +10,8 @@ components: ChatConversation, ChatConversationHeader, ChatConversationTitle, Cha
 
 Display the active conversation's title, subtitle, participants, and action buttons using the themed header components.
 
+
+
 `ChatConversationHeader` is a `<header>` element with divider styling. It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
 
 ```tsx

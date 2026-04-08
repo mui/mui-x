@@ -73,6 +73,7 @@ export default function ModelSelector() {
     />
   );
 }
+
 ```
 
 ## The pattern

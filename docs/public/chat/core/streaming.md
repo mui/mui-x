@@ -345,6 +345,7 @@ function StreamingLifecycleWithLogs() {
     </Paper>
   );
 }
+
 ```
 
 ## Chunk categories

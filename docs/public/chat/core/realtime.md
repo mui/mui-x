@@ -299,6 +299,7 @@ export default function RealtimeHeadlessChat() {
     </ChatProvider>
   );
 }
+
 ```
 
 ## Subscription lifecycle
