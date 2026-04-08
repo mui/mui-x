@@ -36,7 +36,7 @@ function getMuiPackageVersion(packageName: string, commitRef?: string) {
     // #npm-tag-reference
     // Use the "next" tag for the master git branch after we start working on the next major version
     // Once the major release is finished we can go back to "latest"
-    return 'next';
+    return 'latest';
   }
   return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
@@ -80,13 +80,6 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
             current: true,
             text: `v${version}`,
             href: `${languagePrefix}${productIdMap[id].subpath}/`,
-          };
-        }
-        // TODO: remove this once we have a v8.mui.com subdomain
-        if (version === 'v8') {
-          return {
-            text: version,
-            href: `https://mui.com${languagePrefix}${productIdMap[id].subpath}/`,
           };
         }
         return {

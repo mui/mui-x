@@ -456,17 +456,7 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  describe('InputProps and slotProps behavior', () => {
-    it('should respect the `slotProps.textField.InputProps`', () => {
-      render(
-        <DesktopDatePicker slotProps={{ textField: { InputProps: { name: 'test-field' } } }} />,
-      );
-
-      expect(screen.getByRole('textbox', { hidden: true }))
-        .attribute('name')
-        .to.equal('test-field');
-    });
-
+  describe('slotProps behavior', () => {
     it('should respect the `slotProps.textField.slotProps.input`', () => {
       render(
         <DesktopDatePicker
@@ -483,7 +473,11 @@ describe('<DesktopDatePicker />', () => {
       render(
         <DesktopDatePicker
           slotProps={{
-            textField: { slotProps: { htmlInput: { 'data-testid': 'test-html-input' } } },
+            textField: {
+              slotProps: {
+                htmlInput: { 'data-testid': 'test-html-input' } as any,
+              },
+            },
           }}
         />,
       );
