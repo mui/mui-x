@@ -1058,4 +1058,3 @@ Same changes as in `@mui/x-tree-view@9.0.0-alpha.0`, plus:
 - Bump next to ^15.5.11 (#21171) @Copilot
 - [core] Fix CI (#21223) @flaviendelangle
 - [PoC] Headless data grid (#20645) @cherniavskii
-
