@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license",
-  "version": "9.0.0-rc.0",
+  "version": "9.0.0",
   "author": "MUI Team",
   "description": "MUI X License verification.",
   "license": "SEE LICENSE IN LICENSE",
