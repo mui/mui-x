@@ -229,6 +229,7 @@ function AppWrapper(props) {
             href: `${languagePrefix}${productIdMap[id].subpath}/`,
           };
         }
+        // #default-branch-switch - update to next major when it's released as stable
         if (version === 'v9') {
           return {
             text: version,
