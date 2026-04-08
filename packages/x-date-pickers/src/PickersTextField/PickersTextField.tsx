@@ -62,6 +62,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     name: 'MuiPickersTextField',
   });
 
+  // TODO v10: remove
   if (process.env.NODE_ENV !== 'production') {
     const legacyProps = inProps as {
       InputProps?: unknown;

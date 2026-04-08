@@ -34,6 +34,7 @@ export const cleanFieldResponse = <
     clearButtonPosition,
     openPickerButtonPosition,
     openPickerAriaLabel,
+    // TODO v10: remove
     // Explicitly discard legacy props that are no longer supported on `PickersTextField`.
     // Without this, any leftover values would silently leak into `...other` and end up spread
     // as unknown attributes on the underlying form control.
@@ -413,6 +414,7 @@ export function useFieldTextFieldProps<TProps extends UseFieldOwnerStateParamete
   const pickerContext = useNullablePickerContext();
   const ownerState = useFieldOwnerState(externalForwardedProps);
 
+  // TODO v10: remove
   // Strip the legacy `InputProps` / `inputProps` / `InputLabelProps` / `FormHelperTextProps`
   // before they reach `PickersTextField`, which would silently ignore them. JS users without
   // TypeScript checks would otherwise see their configuration vanish.
