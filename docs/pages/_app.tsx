@@ -271,7 +271,7 @@ export default function MyApp(
       pageList={xPages}
       productIdentifier={productIdentifier}
       productCategoryId={productCategoryId}
-      productId={productId}
+      productId={productId as any}
       demoDisplayName="MUI X"
       csbConfig={CSB_CONFIG}
       ThemeWrapper={ThemeWrapper}

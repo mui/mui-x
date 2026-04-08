@@ -345,7 +345,7 @@ function pushTool(
     toolName,
     input,
     dynamic: true,
-  });
+  } as any);
   chunks.push({ type: 'tool-output-available', toolCallId, output });
 }
 

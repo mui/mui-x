@@ -19,6 +19,7 @@ index 2b2118bac260a00b8b33681a8a1c9dfda10dccd7..f5e34251b84db61848498f186cf8d2d7
    if (productId === 'x-scheduler') {
      return `/x/api/scheduler/${kebabCase(component)}/`;
    }
++  // Once mui/material-ui#48209 will be merged we need to remove it
 +  if (productId === 'x-chat') {
 +    return `/x/api/chat/${kebabCase(component)}/`;
 +  }
