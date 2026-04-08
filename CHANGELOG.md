@@ -45,8 +45,17 @@ Same changes as in `@mui/x-data-grid-pro@9.0.0`, plus:
 
 ### Date and Time Pickers
 
+#### Breaking changes
+
+- Removed the legacy Pickers and Field TextField props (for example: `InputProps`) in favor of the nested `slotProps`. [Read more](https://mui.com/x/migration/migration-pickers-v8/#drop-deprecated-pickerstextfield-props)
+- The `utils` field in `PickersAdapterContextValue` has been removed in favor of the `adapter` field.
+  This should no longer affect you, as the context export has also been removed.
+- `MuiPickersAdapterContext` export has been removed.
+  Prefer using the `usePickerAdapter` hook. [Read more](https://mui.com/x/migration/migration-pickers-v8/#localizationprovider-breaking-changes).
+
 #### `@mui/x-date-pickers@9.0.0`
 
+- [pickers] Refactor `PickersTextField` to use `slotProps` approach (#22002) @LukasTy
 - [pickers] Remove deprecated LocalizationProvider legacy API (#22010) @LukasTy
 
 #### `@mui/x-date-pickers-pro@9.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
