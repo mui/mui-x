@@ -1,5 +1,108 @@
 # Changelog
 
+## 9.0.0
+
+<!-- generated comparing v9.0.0-rc.0..master -->
+
+_Apr 8, 2026_
+
+🥳 We're excited to announce the stable release of MUI X v9!
+This major release includes many new features and improvements. Here are some highlights ✨:
+
+- Data Grid – [Charts integration](https://mui.com/x/react-data-grid/charts-integration/) [Premium]
+- Data Grid – [AI Assistant](https://mui.com/x/react-data-grid/ai-assistant/) [Premium]
+- Data Grid – [Undo and redo](https://mui.com/x/react-data-grid/undo-redo/) [Premium]
+- Data Grid – [Drag fill](https://mui.com/x/react-data-grid/clipboard/#drag-to-fill) [Premium]
+- Data Grid – [longText column type](https://mui.com/x/react-data-grid/column-definition/#column-types)
+- Charts – [Interaction and accessibility](https://mui.com/x/react-charts/accessibility/)
+- Charts – [Candlestick](https://mui.com/x/react-charts/candlestick/) [Premium]
+- Charts – [Range bar charts](https://mui.com/x/react-charts/range-bar/) [Premium]
+- Charts – [WebGL Heatmap renderer](https://mui.com/x/react-charts/heatmap/#webgl-renderer) [Premium]
+- Tree View – [Virtualization](https://mui.com/x/react-tree-view/rich-tree-view/virtualization/) [Pro]
+- New [Scheduler](https://mui.com/x/react-scheduler/) packages [Alpha]
+
+We'd like to extend a big thank you to the 5 contributors who made this release possible.
+The following team members contributed to this release:
+@DanailH, @LukasTy, @MBilalShafi, @oliviertassinari, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.0.0`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@9.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.0.0`, plus:
+
+- [DataGridPro] Preserve parent selection for non-selectable children (#21132) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@9.0.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.0.0`, plus:
+
+- [DataGridPremium] Drag fill (#21717) @MBilalShafi
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.0.0`
+
+- [pickers] Remove deprecated LocalizationProvider legacy API (#22010) @LukasTy
+
+#### `@mui/x-date-pickers-pro@9.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.0.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.0.0`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@9.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.0.0`.
+
+#### `@mui/x-charts-premium@9.0.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.0.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.0.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-alpha.0`
+
+Internal changes.
+
+#### `@mui/x-scheduler-premium@9.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler-pro@9.0.0-alpha.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.0.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add explanation for v8 -> v9 license migration (#22004) @DanailH
+
+### Core
+
+- [code-infra] Optimize dependency definition (#22006) @LukasTy
+- [internal] Prepare v9 stable (#22018) @siriwatknp
+- [internal] Remove 'conf' from codebase (#21989) @oliviertassinari
+
 ## 9.0.0-rc.0
 
 <!-- generated comparing v9.0.0-beta.0..master -->
