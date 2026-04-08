@@ -27,8 +27,8 @@ import { type LinePlotSlots, type LinePlotSlotProps } from '../LineChart';
 import { type LineSeriesType } from '../models/seriesType';
 import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
 import { type ChartsSlots, type ChartsSlotProps } from '../internals/material';
-import { useChartsPolarDataProviderProps } from '../ChartsPolarDataProvider/useChartsPolarDataProviderProps';
 import { useRadialLineChartProps } from './useRadialLineChartProps';
+import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
 
 export interface RadialLineChartSlots
   extends
@@ -120,14 +120,16 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
     legendProps,
     children,
   } = useRadialLineChartProps(props);
-  const { chartsProviderProps, chartsSurfaceProps } =
-    useChartsPolarDataProviderProps(chartsContainerProps);
+  const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps<
+    'line',
+    RadialLineChartPluginSignatures
+  >(chartsContainerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartsPolarDataProvider<'line', RadialLineChartPluginSignatures> {...chartsProviderProps}>
+    <ChartsPolarDataProvider<'line', RadialLineChartPluginSignatures> {...chartsDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -146,3 +148,5 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
     </ChartsPolarDataProvider>
   );
 });
+
+export { RadialLineChart };

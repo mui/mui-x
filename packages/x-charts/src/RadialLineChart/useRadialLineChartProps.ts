@@ -9,7 +9,10 @@ import { type LinePlotProps } from '../LineChart/LinePlot';
 import { type ChartsPolarDataProviderProps } from '../ChartsPolarDataProvider';
 import type { RadialLineChartProps } from './RadialLineChart';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import { LINE_CHART_PLUGINS, type RadialLineChartPluginSignatures } from './RadialLineChart.plugins';
+import {
+  LINE_CHART_PLUGINS,
+  type RadialLineChartPluginSignatures,
+} from './RadialLineChart.plugins';
 import { DEFAULT_ROTATION_AXIS_KEY } from '../constants';
 
 /**
