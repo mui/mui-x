@@ -63,10 +63,6 @@ const entries = [
         title: 'Scheduler [Alpha]',
         url: '/x/react-scheduler/',
       },
-      {
-        title: 'Chat [Alpha]',
-        url: '/x/react-chat/',
-      },
     ],
   },
   {
