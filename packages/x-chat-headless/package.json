@@ -53,6 +53,9 @@
   "engines": {
     "node": ">=14.0.0"
   },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./core": "./src/core/index.ts",
