@@ -71,7 +71,7 @@ function getMuiPackageVersion(packageName, commitRef) {
     // #npm-tag-reference
     // Use the "next" tag for the master git branch after we start working on the next major version
     // Once the major release is finished we can go back to "latest"
-    return 'latest';
+    return '^8.0.0';
   }
   return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
