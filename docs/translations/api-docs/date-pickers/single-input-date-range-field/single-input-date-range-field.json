@@ -38,23 +38,11 @@
     "formatDensity": {
       "description": "Density of the format when rendered in the input.\nSetting <code>formatDensity</code> to <code>\"spacious\"</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
     },
-    "FormHelperTextProps": {
-      "description": "Props applied to the [<code>FormHelperText</code>](https://mui.com/material-ui/api/form-helper-text/) element."
-    },
     "fullWidth": {
       "description": "If <code>true</code>, the input will take up the full width of its container."
     },
     "helperText": { "description": "The helper text content." },
     "id": { "description": "The id of the <code>input</code> element." },
-    "InputLabelProps": {
-      "description": "Props applied to the [<code>InputLabel</code>](https://mui.com/material-ui/api/input-label/) element.\nPointer events like <code>onClick</code> are enabled if and only if <code>shrink</code> is <code>true</code>."
-    },
-    "inputProps": {
-      "description": "[Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the <code>input</code> element."
-    },
-    "InputProps": {
-      "description": "Props applied to the Input element.\nIt will be a [<code>FilledInput</code>](https://mui.com/material-ui/api/filled-input/),\n[<code>OutlinedInput</code>](https://mui.com/material-ui/api/outlined-input/) or [<code>Input</code>](https://mui.com/material-ui/api/input/)\ncomponent depending on the <code>variant</code> prop value."
-    },
     "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
     "label": { "description": "The label content." },
     "maxDate": { "description": "Maximal selectable date." },

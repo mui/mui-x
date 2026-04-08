@@ -33,6 +33,9 @@
     "autosizeOptions": { "description": "The options for autosize when user-initiated." },
     "cellModesModel": { "description": "Controls the modes of the cells." },
     "cellSelection": { "description": "If <code>true</code>, the cell selection mode is enabled." },
+    "cellSelectionFillHandle": {
+      "description": "If <code>true</code>, a fill handle is shown at the bottom-right corner of the cell selection.\nDragging the fill handle fills target cells with the values from selected cells.\nRequires <code>cellSelection</code> to be enabled."
+    },
     "cellSelectionModel": { "description": "Set the cell selection model of the grid." },
     "chartsIntegration": {
       "description": "If <code>true</code>, the charts integration feature is enabled."

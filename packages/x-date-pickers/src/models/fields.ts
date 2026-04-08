@@ -190,7 +190,7 @@ export type BaseSingleInputPickersTextFieldProps = Omit<
  * Props the built-in text field component can receive.
  */
 export type BuiltInFieldTextFieldProps = Partial<
-  Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps>
+  Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps | 'slots' | 'slotProps'>
 >;
 
 export interface PickerTextFieldOwnerState extends FieldOwnerState {
