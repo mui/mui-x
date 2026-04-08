@@ -1187,7 +1187,7 @@ importers:
         specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-virtualizer':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../x-virtualizer/build
       clsx:
         specifier: 'catalog:'
@@ -1996,7 +1996,7 @@ importers:
         specifier: workspace:^
         version: link:../x-tree-view/build
       '@mui/x-virtualizer':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../x-virtualizer/build
       '@types/react-transition-group':
         specifier: 'catalog:'
@@ -4363,7 +4363,6 @@ packages:
   '@lerna/create@9.0.4':
     resolution: {integrity: sha512-WxedGD98G8/a6HztCXNWquaM0x17oSvfvuqDsLxNNX1qXGyrzmMUmd1mQikF/47uy80X6qyWdaRtaAHlwkvEUA==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
-    deprecated: This package is an implementation detail of Lerna and is no longer published separately.
 
   '@mdn/browser-compat-data@5.7.6':
     resolution: {integrity: sha512-7xdrMX0Wk7grrTZQwAoy1GkvPMFoizStUoL+VmtUkAxegbCCec+3FKwOM6yc/uGU5+BEczQHXAlWiqvM8JeENg==}
