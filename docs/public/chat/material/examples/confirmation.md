@@ -134,7 +134,6 @@ export default function Confirmation() {
     </Box>
   );
 }
-
 ```
 
 ## Basic usage

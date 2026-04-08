@@ -10,8 +10,6 @@ components: ChatConversationList
 
 Render a sidebar that lists all available conversations, supports switching between them, and is fully customizable through slots and theme overrides.
 
-
-
 The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
 
 ```tsx
@@ -77,7 +75,6 @@ export default function MultiConversation() {
     />
   );
 }
-
 ```
 
 ## Component anatomy
@@ -226,7 +223,10 @@ const RichItemContent = React.forwardRef(function RichItemContent(
         <Typography
           variant="body2"
           noWrap
-          sx={{ fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium', flex: 1 }}
+          sx={{
+            fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium',
+            flex: 1,
+          }}
         >
           {conversation?.title}
         </Typography>
@@ -389,7 +389,10 @@ const FullCustomRow = React.forwardRef(function FullCustomRow(
           <Typography
             variant="body2"
             noWrap
-            sx={{ fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium', flex: 1 }}
+            sx={{
+              fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium',
+              flex: 1,
+            }}
           >
             {title}
           </Typography>
@@ -401,7 +404,12 @@ const FullCustomRow = React.forwardRef(function FullCustomRow(
             {formatRelativeTime(conversation?.lastMessageAt)}
           </Typography>
         </Box>
-        <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block' }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          noWrap
+          sx={{ display: 'block' }}
+        >
           {conversation?.subtitle ?? 'No messages yet'}
         </Typography>
       </Box>

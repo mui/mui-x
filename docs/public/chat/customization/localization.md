@@ -10,8 +10,6 @@ components: ChatRoot
 
 <p class="description">Customize all user-facing strings in the chat UI using the <code>localeText</code> prop on <code>ChatRoot</code> or the <code>useChatLocaleText()</code> hook.</p>
 
-
-
 Every user-facing string in the chat UI — placeholders, button labels, status messages, timestamps — is defined in a locale text object.
 You can override any string by passing a partial `localeText` object to `ChatBox`.
 

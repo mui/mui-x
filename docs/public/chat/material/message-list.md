@@ -10,8 +10,6 @@ components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 
 Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators.
 
-
-
 The message list is the scrollable region that renders conversation history.
 `ChatMessageList` provides Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
 
@@ -101,7 +99,6 @@ export default function AutoScrollConfig() {
     </div>
   );
 }
-
 ```
 
 ### Scroll-to-bottom affordance
@@ -202,7 +199,6 @@ export default function DateDividerFormat() {
     />
   );
 }
-
 ```
 
 ## Message groups
@@ -295,7 +291,6 @@ export default function MessageGrouping() {
     />
   );
 }
-
 ```
 
 ## Compact variant
@@ -394,7 +389,6 @@ export default function CompactVariant() {
     />
   );
 }
-
 ```
 
 ```tsx
@@ -522,7 +516,6 @@ export default function DensityProp() {
     </Stack>
   );
 }
-
 ```
 
 ```tsx
@@ -616,7 +609,6 @@ export default function StandaloneMessageList() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Imperative scrolling

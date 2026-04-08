@@ -42,7 +42,10 @@ const RichItemContentSlot = React.forwardRef<
         <Typography
           variant="body2"
           noWrap
-          sx={{ fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium', flex: 1 }}
+          sx={{
+            fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium',
+            flex: 1,
+          }}
         >
           {conversation?.title}
         </Typography>

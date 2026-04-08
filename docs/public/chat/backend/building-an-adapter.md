@@ -9,8 +9,6 @@ githubLabel: 'scope: chat'
 
 <p class="description">A step-by-step tutorial for implementing a custom <code>ChatAdapter</code> that connects your chat UI to any backend.</p>
 
-
-
 This page walks you through building a `ChatAdapter` from scratch.
 You will start with the minimum viable adapter (`sendMessage` only), then progressively add history loading and conversation management.
 

@@ -10,8 +10,6 @@ components: ChatBox
 
 <p class="description">Push typing, presence, and collection changes into the runtime via the adapter's <code>subscribe()</code> method for live synchronization.</p>
 
-
-
 The adapter's `subscribe()` method enables push-based updates from the backend. The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
 
 ## Subscription lifecycle

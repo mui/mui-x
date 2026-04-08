@@ -10,8 +10,6 @@ components: ChatBox
 
 <p class="description">Own messages, conversations, active conversation, and composer value externally using the controlled/uncontrolled pattern on <code>ChatProvider</code>.</p>
 
-
-
 Every chat component reads its data — messages, conversations, composer state, streaming status — from a shared store provided by `ChatProvider`.
 `ChatBox` renders a `ChatProvider` internally, so in the simplest case you never interact with the provider directly.
 

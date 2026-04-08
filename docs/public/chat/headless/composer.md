@@ -10,8 +10,6 @@ githubLabel: 'scope: chat'
 
 Assemble the draft surface from structural primitives that already handle submission, IME-safe Enter, attachments, helper text, and disabled states.
 
-
-
 ```tsx
 import * as React from 'react';
 import {
@@ -298,7 +296,6 @@ export default function ComposerWithAttachments() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Primitive set

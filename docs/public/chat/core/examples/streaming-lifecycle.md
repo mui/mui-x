@@ -385,7 +385,6 @@ function StreamingLifecycleWithLogs() {
     </Paper>
   );
 }
-
 ```
 
 ## Key takeaways

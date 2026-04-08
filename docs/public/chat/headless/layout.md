@@ -148,7 +148,6 @@ export default function MinimalUnstyledShell() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## `Chat.Root`

@@ -162,7 +162,10 @@ const RichItemContent = React.forwardRef(function RichItemContent(
         <Typography
           variant="body2"
           noWrap
-          sx={{ fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium', flex: 1 }}
+          sx={{
+            fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium',
+            flex: 1,
+          }}
         >
           {conversation?.title}
         </Typography>
@@ -325,7 +328,10 @@ const FullCustomRow = React.forwardRef(function FullCustomRow(
           <Typography
             variant="body2"
             noWrap
-            sx={{ fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium', flex: 1 }}
+            sx={{
+              fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium',
+              flex: 1,
+            }}
           >
             {title}
           </Typography>
@@ -337,7 +343,12 @@ const FullCustomRow = React.forwardRef(function FullCustomRow(
             {formatRelativeTime(conversation?.lastMessageAt)}
           </Typography>
         </Box>
-        <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block' }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          noWrap
+          sx={{ display: 'block' }}
+        >
           {conversation?.subtitle ?? 'No messages yet'}
         </Typography>
       </Box>

@@ -10,8 +10,6 @@ components: ChatMessageSkeleton
 
 Display loading skeletons while messages load and empty state content when a conversation has no messages.
 
-
-
 ## Loading state with ChatMessageSkeleton
 
 `ChatMessageSkeleton` renders animated shimmer lines that serve as a placeholder while message content is loading. Use it during initial data fetching or when loading older messages via history pagination.
@@ -106,7 +104,6 @@ export default function EmptyState() {
     />
   );
 }
-
 ```
 
 Key characteristics of the empty state:
@@ -222,7 +219,6 @@ export default function CustomEmptyState() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Streaming indicator

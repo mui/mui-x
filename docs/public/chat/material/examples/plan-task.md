@@ -420,7 +420,6 @@ export default function PlanTask() {
     />
   );
 }
-
 ```
 
 ## How it works

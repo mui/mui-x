@@ -10,8 +10,6 @@ components: ConversationRoot, ConversationHeader, ConversationTitle, Conversatio
 
 Compose the active conversation surface from themed thread components, override individual slots, and recompose the layout using context hooks.
 
-
-
 The thread pane is the single-conversation view in a chat interface. It combines a header area, a scrollable message log, and a composer into one cohesive surface. `@mui/x-chat` ships each region as a themed component built with `styled()` and Material UI theme tokens.
 
 The following demo shows the thread in action:
@@ -44,7 +42,6 @@ export default function BasicAiChat() {
     />
   );
 }
-
 ```
 
 ## Component anatomy
@@ -145,7 +142,6 @@ export default function GradientHeader() {
     />
   );
 }
-
 ```
 
 ### Using ownerState in a custom title
@@ -316,7 +312,6 @@ export default function PaperBubble() {
     />
   );
 }
-
 ```
 
 Forward `ref` and spread `...props` before your overrides so the wrapping pattern does not silently discard required props.
@@ -444,7 +439,6 @@ export default function AdaptiveSendButton() {
     />
   );
 }
-
 ```
 
 ## Accessing message state in custom children
@@ -524,7 +518,6 @@ export default function BubbleWithStatus() {
     />
   );
 }
-
 ```
 
 The `ownerState` includes `role`, `status`, `streaming`, `error`, `isGrouped`, and `showAvatar` — the same fields listed in the `ChatMessage` ownerState table above.
@@ -619,7 +612,6 @@ export default function ThreadRecomposition() {
     </ChatProvider>
   );
 }
-
 ```
 
 Wrap your custom thread with a `ChatProvider` from `@mui/x-chat` to wire runtime state to your adapter.

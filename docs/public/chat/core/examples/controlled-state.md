@@ -341,7 +341,6 @@ export default function ControlledStateHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Key takeaways

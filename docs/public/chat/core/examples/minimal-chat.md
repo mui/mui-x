@@ -245,7 +245,6 @@ export default function MinimalHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Key takeaways

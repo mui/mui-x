@@ -10,8 +10,6 @@ components: ChatBox
 
 How errors are captured, surfaced, and recovered from across the chat runtime.
 
-
-
 The chat runtime captures errors from adapters, streams, and history loading, and surfaces them through a unified error model.
 You do not need to catch errors inside adapter methods — the runtime handles them for you.
 
@@ -142,7 +140,6 @@ export default function ErrorState() {
     </div>
   );
 }
-
 ```
 
 ## Accessing the error state
