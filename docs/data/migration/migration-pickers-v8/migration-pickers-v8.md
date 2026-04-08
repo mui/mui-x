@@ -37,10 +37,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 # Date and Time Pickers specific
-npx @mui/x-codemod@next v9.0.0/pickers/preset-safe <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/preset-safe <path>
 
 # Target the other packages as well
-npx @mui/x-codemod@next v9.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v9.0.0/preset-safe <path>
 ```
 
 :::info
@@ -358,7 +358,7 @@ The following codemods can be used to automatically apply these changes to your 
 Renames `PickerDay` and `DateRangePickerDay` class keys.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-classes <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-picker-classes <path>
 ```
 
 ### `rename-field-ref`
@@ -366,7 +366,7 @@ npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-classes <path>
 Renames `unstable field refs` to stable ones.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-field-ref <path>
 ```
 
 ### `rename-picker-day-2`
@@ -375,7 +375,7 @@ Renames `PickerDay2` and `DateRangePickerDay2` components and their related type
 Also renames theme component names (`MuiPickerDay2` → `MuiPickerDay`, `MuiDateRangePickerDay2` → `MuiDateRangePickerDay`) in `createTheme` calls, string literals, and template literals.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-day-2 <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-picker-day-2 <path>
 ```
 
 ### `remove-picker-day-2`
@@ -388,7 +388,7 @@ In this case, it will remove the property from the object, but might leave the e
 :::
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/remove-picker-day-2 <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/remove-picker-day-2 <path>
 ```
 
 ### `rename-pickers-day`
@@ -396,7 +396,7 @@ npx @mui/x-codemod@next v9.0.0/pickers/remove-picker-day-2 <path>
 Renames `PickersDay` to `PickerDay` and all related types and theme components.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-pickers-day <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-pickers-day <path>
 ```
 
 ### `remove-disable-margin`
@@ -404,5 +404,5 @@ npx @mui/x-codemod@next v9.0.0/pickers/rename-pickers-day <path>
 Removes the `disableMargin` prop from `PickerDay` (and legacy `PickersDay`) components and replaces it with the `--PickerDay-horizontalMargin` CSS variable set to `0` via the `sx` prop.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/remove-disable-margin <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/remove-disable-margin <path>
 ```

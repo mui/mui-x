@@ -51,7 +51,7 @@ You can use this codemod to automatically remove the `charts` property from `exp
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+npx @mui/x-codemod@latest v9.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
 ### Locale text changes

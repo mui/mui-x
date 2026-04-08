@@ -80,7 +80,7 @@ Here is the table of the classes renamed.
 Run the following command to do the renaming.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/charts/rename-classes <path|folder>
+npx @mui/x-codemod@latest v9.0.0/charts/rename-classes <path|folder>
 ```
 
 After running the codemod, make sure the type check are passing.
@@ -179,10 +179,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 # Charts-specific
-npx @mui/x-codemod@next v9.0.0/charts/preset-safe <path>
+npx @mui/x-codemod@latest v9.0.0/charts/preset-safe <path>
 
 # Target the other packages as well
-npx @mui/x-codemod@next v9.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v9.0.0/preset-safe <path>
 ```
 
 :::info
@@ -354,7 +354,7 @@ The hook now always returns an array of tooltip data (one entry per active axis)
 Run the following command to do the renaming.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/charts/rename-axis-tooltip-hook <path|folder>
+npx @mui/x-codemod@latest v9.0.0/charts/rename-axis-tooltip-hook <path|folder>
 ```
 
 After running the codemod make sure to adapt the hook returned value to your needs.
