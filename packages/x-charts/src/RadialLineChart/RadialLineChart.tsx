@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { type MakeOptional } from '@mui/x-internals/types';
 import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
@@ -27,6 +28,7 @@ import { type LineSeriesType } from '../models/seriesType';
 import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
 import { type ChartsSlots, type ChartsSlotProps } from '../internals/material';
 import { useChartsPolarDataProviderProps } from '../ChartsPolarDataProvider/useChartsPolarDataProviderProps';
+import { useRadialLineChartProps } from './useRadialLineChartProps';
 
 export interface RadialLineChartSlots
   extends
@@ -113,32 +115,26 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
     gridProps,
     clipPathProps,
     clipPathGroupProps,
-    areaPlotProps,
     linePlotProps,
-    markPlotProps,
     overlayProps,
-    chartsAxisProps,
-    axisHighlightProps,
-    lineHighlightPlotProps,
     legendProps,
     children,
   } = useRadialLineChartProps(props);
-  const { chartsDataProviderProps, chartsSurfaceProps } =
+  const { chartsProviderProps, chartsSurfaceProps } =
     useChartsPolarDataProviderProps(chartsContainerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartsPolarDataProvider<'line', RadialLineChartPluginSignatures> {...chartsDataProviderProps}>
+    <ChartsPolarDataProvider<'line', RadialLineChartPluginSignatures> {...chartsProviderProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          <ChartsPolarGrid />
+          <ChartsPolarGrid {...gridProps} />
           <g {...clipPathGroupProps}>
-            <RadialLinePlot />
-
+            <RadialLinePlot {...linePlotProps} />
             <ChartsOverlay {...overlayProps} />
           </g>
 

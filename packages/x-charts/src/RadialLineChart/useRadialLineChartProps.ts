@@ -1,39 +1,34 @@
 'use client';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import { type ChartsAxisProps } from '../ChartsAxis';
-import { type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { type ChartsClipPathProps } from '../ChartsClipPath';
-import { type ChartsGridProps } from '../ChartsGrid';
+import { type ChartsPolarGridProps } from '../ChartsPolarGrid';
 import { type ChartsLegendSlotExtension } from '../ChartsLegend';
 import { type ChartsOverlayProps } from '../ChartsOverlay';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { type ChartsContainerProps } from '../ChartsContainer';
+import { type LinePlotProps } from '../LineChart/LinePlot';
+import { type ChartsPolarDataProviderProps } from '../ChartsPolarDataProvider';
+import type { RadialLineChartProps } from './RadialLineChart';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import { LINE_CHART_PLUGINS, type LineChartPluginSignatures } from './RadialLineChart.plugins';
+import { LINE_CHART_PLUGINS, type RadialLineChartPluginSignatures } from './RadialLineChart.plugins';
+import { DEFAULT_ROTATION_AXIS_KEY } from '../constants';
 
 /**
- * A helper function that extracts LineChartProps from the input props
- * and returns an object with props for the children components of LineChart.
+ * A helper function that extracts RadialLineChartProps from the input props
+ * and returns an object with props for the children components of RadialLineChart.
  *
- * @param props The input props for LineChart
- * @returns An object with props for the children components of LineChart
+ * @param props The input props for RadialLineChart
+ * @returns An object with props for the children components of RadialLineChart
  */
-export const useRadialLineChartProps = (props: LineChartProps) => {
+export const useRadialLineChartProps = (props: RadialLineChartProps) => {
   const {
-    xAxis,
-    yAxis,
+    rotationAxis,
+    radiusAxis,
     series,
     width,
     height,
     margin,
     colors,
     dataset,
-    sx,
-    onAreaClick,
-    onLineClick,
-    onMarkClick,
-    axisHighlight,
     disableLineItemHighlight,
     hideLegend,
     grid,
@@ -42,11 +37,7 @@ export const useRadialLineChartProps = (props: LineChartProps) => {
     slotProps,
     skipAnimation,
     loading,
-    highlightedItem,
-    onHighlightChange,
-    className,
     showToolbar,
-    brushConfig,
     ...other
   } = props;
 
@@ -62,7 +53,11 @@ export const useRadialLineChartProps = (props: LineChartProps) => {
       })),
     [disableLineItemHighlight, series],
   );
-  const chartsContainerProps: ChartsContainerProps<'line', LineChartPluginSignatures> = {
+
+  const chartsContainerProps: ChartsPolarDataProviderProps<
+    'line',
+    RadialLineChartPluginSignatures
+  > = {
     ...other,
     series: seriesWithDefault,
     width,
@@ -70,9 +65,9 @@ export const useRadialLineChartProps = (props: LineChartProps) => {
     margin,
     colors,
     dataset,
-    xAxis: xAxis ?? [
+    rotationAxis: rotationAxis ?? [
       {
-        id: DEFAULT_X_AXIS_KEY,
+        id: DEFAULT_ROTATION_AXIS_KEY,
         scaleType: 'point',
         data: Array.from(
           { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
@@ -80,22 +75,12 @@ export const useRadialLineChartProps = (props: LineChartProps) => {
         ),
       },
     ],
-    yAxis,
-    highlightedItem,
-    onHighlightChange,
-    disableAxisListener:
-      slotProps?.tooltip?.trigger !== 'axis' &&
-      axisHighlight?.x === 'none' &&
-      axisHighlight?.y === 'none',
+    radiusAxis,
     skipAnimation,
-    brushConfig,
     plugins: LINE_CHART_PLUGINS,
   };
 
-  const gridProps: ChartsGridProps = {
-    vertical: grid?.vertical,
-    horizontal: grid?.horizontal,
-  };
+  const gridProps: ChartsPolarGridProps | undefined = grid;
 
   const clipPathGroupProps = {
     clipPath: `url(#${clipPathId})`,
@@ -105,42 +90,13 @@ export const useRadialLineChartProps = (props: LineChartProps) => {
     id: clipPathId,
   };
 
-  const areaPlotProps: AreaPlotProps = {
-    slots,
-    slotProps,
-    onItemClick: onAreaClick,
-  };
-
-  const linePlotProps: LinePlotProps = {
-    slots,
-    slotProps,
-    onItemClick: onLineClick,
-  };
-
-  const markPlotProps: MarkPlotProps = {
-    slots,
-    slotProps,
-    onItemClick: onMarkClick,
-    skipAnimation,
-  };
-
   const overlayProps: ChartsOverlayProps = {
     slots,
     slotProps,
     loading,
   };
 
-  const chartsAxisProps: ChartsAxisProps = {
-    slots,
-    slotProps,
-  };
-
-  const axisHighlightProps: ChartsAxisHighlightProps = {
-    x: 'line' as const,
-    ...axisHighlight,
-  };
-
-  const lineHighlightPlotProps: LineHighlightPlotProps = {
+  const linePlotProps: LinePlotProps = {
     slots,
     slotProps,
   };
@@ -151,11 +107,9 @@ export const useRadialLineChartProps = (props: LineChartProps) => {
   };
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
-    sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
     hideLegend: props.hideLegend ?? false,
-    className,
   };
 
   return {
@@ -164,13 +118,8 @@ export const useRadialLineChartProps = (props: LineChartProps) => {
     gridProps,
     clipPathProps,
     clipPathGroupProps,
-    areaPlotProps,
     linePlotProps,
-    markPlotProps,
     overlayProps,
-    chartsAxisProps,
-    axisHighlightProps,
-    lineHighlightPlotProps,
     legendProps,
     children,
   };

@@ -19,7 +19,6 @@ const POLAR_SERIES_CONFIG: ChartSeriesConfig<'line'> = {
 
 export const useChartsPolarDataProviderProps = <
   SeriesType extends PolarChartSeriesType = PolarChartSeriesType,
-
   TSignatures extends readonly ChartAnyPluginSignature[] = PolarPluginSignatures<SeriesType>,
 >(
   inProps: ChartsPolarDataProviderProps<SeriesType, TSignatures> & ChartsLocalizationProviderProps,
