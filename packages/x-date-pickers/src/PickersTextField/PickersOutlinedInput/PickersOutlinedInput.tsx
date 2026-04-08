@@ -121,8 +121,8 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
     ownerState: ownerStateProp,
     classes: classesProp,
     notched,
-    slots: incomingSlots,
-    slotProps: incomingSlotProps,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ...other
   } = props;
 
@@ -135,9 +135,9 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
       slots={{
         root: PickersOutlinedInputRoot,
         input: PickersOutlinedInputSectionsContainer,
-        ...incomingSlots,
+        ...inSlots,
       }}
-      slotProps={incomingSlotProps}
+      slotProps={inSlotProps}
       renderSuffix={(state) => (
         <Outline
           shrink={Boolean(notched || state.adornedStart || state.focused || state.filled)}

@@ -153,8 +153,8 @@ const PickersInput = React.forwardRef(function PickersInput(
     disableUnderline = false,
     ownerState: ownerStateProp,
     classes: classesProp,
-    slots: incomingSlots,
-    slotProps: incomingSlotProps,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ...other
   } = props;
 
@@ -168,10 +168,10 @@ const PickersInput = React.forwardRef(function PickersInput(
   return (
     <PickersInputBase
       {...other}
-      slots={{ root: PickersInputRoot, ...incomingSlots }}
+      slots={{ root: PickersInputRoot, ...inSlots }}
       slotProps={{
-        ...incomingSlotProps,
-        root: { disableUnderline, ...incomingSlotProps?.root },
+        ...inSlotProps,
+        root: { disableUnderline, ...inSlotProps?.root },
       }}
       ownerState={ownerState}
       label={label}

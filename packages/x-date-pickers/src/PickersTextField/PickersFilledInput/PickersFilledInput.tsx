@@ -231,8 +231,8 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
     disableUnderline = false,
     hiddenLabel = false,
     classes: classesProp,
-    slots: incomingSlots,
-    slotProps: incomingSlotProps,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ...other
   } = props;
 
@@ -249,12 +249,12 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
       slots={{
         root: PickersFilledInputRoot,
         input: PickersFilledSectionsContainer,
-        ...incomingSlots,
+        ...inSlots,
       }}
       slotProps={{
-        ...incomingSlotProps,
-        root: { disableUnderline, ...incomingSlotProps?.root },
-        input: { hiddenLabel, ...incomingSlotProps?.input },
+        ...inSlotProps,
+        root: { disableUnderline, ...inSlotProps?.root },
+        input: { hiddenLabel, ...inSlotProps?.input },
       }}
       label={label}
       classes={classes}
