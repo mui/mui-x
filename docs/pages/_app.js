@@ -256,7 +256,13 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Data Grid',
         versions: [
-          ...getVersionOptions('x-data-grid', ['v9', process.env.DATA_GRID_VERSION, 'v7', 'v6', 'v5']),
+          ...getVersionOptions('x-data-grid', [
+            'v9',
+            process.env.DATA_GRID_VERSION,
+            'v7',
+            'v6',
+            'v5',
+          ]),
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
@@ -265,7 +271,12 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Date Pickers',
         versions: [
-          ...getVersionOptions('x-date-pickers', ['v9', process.env.DATE_PICKERS_VERSION, 'v7', 'v6']),
+          ...getVersionOptions('x-date-pickers', [
+            'v9',
+            process.env.DATE_PICKERS_VERSION,
+            'v7',
+            'v6',
+          ]),
           {
             text: 'v5',
             href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
