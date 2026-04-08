@@ -354,7 +354,7 @@ function CaptionList() {
                 gap: 0,
               },
             },
-          },
+          } as any,
         }}
       />
     </ChatConversation>

@@ -514,20 +514,20 @@ function WidgetConversationHome({ onStartConversation }: { onStartConversation: 
                 borderRight: 'none',
                 bgcolor: 'transparent',
               },
-            },
+            } as any,
             viewport: {
               sx: {
                 px: 1,
                 pt: 0.5,
                 pb: 1,
               },
-            },
+            } as any,
             root: {
               'aria-label': 'Conversations',
               sx: {
                 p: 0,
               },
-            },
+            } as any,
           }}
         />
       </Box>
@@ -550,7 +550,7 @@ function WidgetThreadHeader({
   onBack: () => void;
 }) {
   return (
-    <ChatConversationHeader sx={{ alignItems: 'center', width: '100%', px: 1 }}>
+    <ChatConversationHeader {...{ sx: { alignItems: 'center', width: '100%', px: 1 } } as any}>
       <IconButton size="small" onClick={onBack} sx={{ ml: 1, borderRadius: '50%' }}>
         <ArrowBackIcon fontSize="small" />
       </IconButton>
@@ -604,7 +604,7 @@ function FloatingSupportThread({
             sx: {
               py: 1.5,
             },
-          },
+          } as any,
         }}
       />
       <ChatComposer variant="compact" sx={{ mx: 1.5, mb: 1.5, mt: 0 }} />
@@ -684,7 +684,7 @@ function FloatingSupportWidget({
         >
           {activeConversation != null && (
             <FloatingSupportThread
-              title={activeConversation.title}
+              title={activeConversation.title ?? ''}
               subtitle={activeConversation.subtitle}
               onBack={onBack}
             />
@@ -924,7 +924,7 @@ export default function WidgetDemo() {
             activeConversationId={activeConversationId}
             conversations={conversations}
             messages={messages}
-            onActiveConversationChange={setActiveConversationId}
+            onActiveConversationChange={setActiveConversationId as any}
             onMessagesChange={(nextMessages) => {
               if (activeConversation == null) {
                 return;

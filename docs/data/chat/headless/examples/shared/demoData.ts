@@ -300,14 +300,14 @@ export const partRenderingMessages: ChatMessage[] = [
         title: 'Messages API reference',
       },
       {
-        type: 'data-summary',
+        type: 'data-summary' as const,
         id: 'parts-summary-1',
         data: {
-          regressions: 0,
-          openQuestions: 1,
+          citations: 0,
+          files: 1,
           confidence: 'high',
         },
-      },
+      } as any,
     ],
   },
 ];

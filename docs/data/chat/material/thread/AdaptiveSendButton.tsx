@@ -19,7 +19,7 @@ const AdaptiveSendButtonSlot = React.forwardRef<
   return (
     <IconButton
       ref={ref}
-      {...props}
+      {...(props as any)}
       aria-label={ownerState?.isStreaming ? 'Stop' : 'Send'}
     >
       {ownerState?.isStreaming ? <StopIcon /> : <SendIcon />}
@@ -31,7 +31,7 @@ function CustomSendButton(
   props: React.ComponentProps<typeof ChatComposerSendButton>,
 ) {
   return (
-    <ChatComposerSendButton {...props} slots={{ root: AdaptiveSendButtonSlot }} />
+    <ChatComposerSendButton {...props} slots={{ sendButton: AdaptiveSendButtonSlot }} />
   );
 }
 

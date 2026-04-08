@@ -197,7 +197,7 @@ function CompactIdea({ idea }: { idea: (typeof ideas)[number] }) {
           initialActiveConversationId={minimalConversation.id}
           initialConversations={[minimalConversation]}
           initialMessages={minimalMessages}
-          features={{ conversationList: false }}
+          features={{ conversationHeader: false }}
           sx={{
             height: 300,
             border: '1px solid',

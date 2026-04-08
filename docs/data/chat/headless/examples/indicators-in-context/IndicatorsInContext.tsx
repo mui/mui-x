@@ -57,7 +57,7 @@ export default function IndicatorsInContext() {
     subtitle: 'Typing, unread boundaries, and scroll state',
     participants: [demoUsers.you, demoUsers.alice, demoUsers.agent],
     unreadCount: 3,
-    readState: 'unread' as const,
+    readState: 'unread' as 'read' | 'unread',
   });
 
   const triggerTyping = React.useCallback(() => {
@@ -111,7 +111,7 @@ export default function IndicatorsInContext() {
       conversations={[conversation]}
       initialActiveConversationId="indicators"
       messages={messages}
-      onMessagesChange={setMessages}
+      onMessagesChange={setMessages as any}
       localeText={demoLocaleText}
       slotProps={{
         root: {
@@ -137,7 +137,7 @@ export default function IndicatorsInContext() {
       >
         <Conversation.Header
           slotProps={{
-            root: demoSlotProps.conversationHeader,
+            header: demoSlotProps.conversationHeader as any,
           }}
         >
           <div style={{ display: 'grid', gap: 6, minWidth: 0 }}>
@@ -175,7 +175,7 @@ export default function IndicatorsInContext() {
                   ...previous,
                   unreadCount: 0,
                   readState: 'read',
-                }))
+                }) as any)
               }
             >
               Mark read
@@ -204,7 +204,7 @@ export default function IndicatorsInContext() {
                 index={index}
                 messageId={id}
                 slotProps={{
-                  root: demoSlotProps.dateDividerRoot,
+                  divider: demoSlotProps.dateDividerRoot as any,
                   label: demoSlotProps.dateDividerLabel,
                 }}
               />
@@ -212,30 +212,30 @@ export default function IndicatorsInContext() {
                 index={index}
                 messageId={id}
                 slotProps={{
-                  root: demoSlotProps.messageGroupRoot,
-                  authorName: demoSlotProps.messageGroupAuthorName,
+                  group: demoSlotProps.messageGroupRoot as any,
+                  authorName: demoSlotProps.messageGroupAuthorName as any,
                 }}
               >
                 <Message.Root
                   messageId={id}
                   slotProps={{
-                    root: demoSlotProps.messageRoot,
+                    root: demoSlotProps.messageRoot as any,
                   }}
                 >
                   <Message.Avatar
                     slotProps={{
-                      avatar: demoSlotProps.messageAvatar,
+                      avatar: demoSlotProps.messageAvatar as any,
                       image: demoSlotProps.messageAvatarImage,
                     }}
                   />
                   <Message.Content
                     slotProps={{
-                      bubble: demoSlotProps.messageBubble,
+                      bubble: demoSlotProps.messageBubble as any,
                     }}
                   />
                   <Message.Meta
                     slotProps={{
-                      meta: demoSlotProps.messageMeta,
+                      meta: demoSlotProps.messageMeta as any,
                     }}
                   />
                 </Message.Root>
@@ -256,7 +256,7 @@ export default function IndicatorsInContext() {
             aria-label="Message"
             placeholder="Type a message"
             slotProps={{
-              input: demoSlotProps.composerTextArea,
+              input: demoSlotProps.composerTextArea as any,
             }}
           />
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

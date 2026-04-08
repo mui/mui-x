@@ -398,12 +398,13 @@ const respondents: Record<string, ChatUser> = {
 
 const adapter: ChatAdapter = {
   async sendMessage({ conversationId }) {
-    const pool = replies[conversationId] ?? ['Got it!'];
-    const idx = replyCounters[conversationId] ?? 0;
-    replyCounters[conversationId] = idx + 1;
+    const convId = conversationId ?? '';
+    const pool = replies[convId] ?? ['Got it!'];
+    const idx = replyCounters[convId] ?? 0;
+    replyCounters[convId] = idx + 1;
 
     const text = pool[idx % pool.length];
-    const author = respondents[conversationId] ?? alice;
+    const author = respondents[convId] ?? alice;
 
     return createChunkStream(createTextResponseChunks(randomId(), text, { author }), {
       delayMs: 140,
@@ -522,7 +523,7 @@ function MessengerConversationSidebar(
                 bgcolor: 'transparent',
                 ...(conversationListProps.slotProps?.scroller as { sx?: object })?.sx,
               },
-            },
+            } as any,
             viewport: {
               ...conversationListProps.slotProps?.viewport,
               sx: {
@@ -530,7 +531,7 @@ function MessengerConversationSidebar(
                 pb: 1,
                 ...(conversationListProps.slotProps?.viewport as { sx?: object })?.sx,
               },
-            },
+            } as any,
             item: {
               ...conversationListProps.slotProps?.item,
               sx: {
@@ -544,28 +545,28 @@ function MessengerConversationSidebar(
                 },
                 ...(conversationListProps.slotProps?.item as { sx?: object })?.sx,
               },
-            },
+            } as any,
             title: {
               ...conversationListProps.slotProps?.title,
               sx: {
                 color: 'text.primary',
                 ...(conversationListProps.slotProps?.title as { sx?: object })?.sx,
               },
-            },
+            } as any,
             preview: {
               ...conversationListProps.slotProps?.preview,
               sx: {
                 color: 'text.secondary',
                 ...(conversationListProps.slotProps?.preview as { sx?: object })?.sx,
               },
-            },
+            } as any,
             timestamp: {
               ...conversationListProps.slotProps?.timestamp,
               sx: {
                 color: 'text.disabled',
                 ...(conversationListProps.slotProps?.timestamp as { sx?: object })?.sx,
               },
-            },
+            } as any,
           }}
         />
       </Box>
@@ -593,7 +594,7 @@ export default function MessengerDemo() {
   const filteredConversations = conversations.filter((conversation) => {
     const matchesSearch =
       normalizedSearch.length === 0 ||
-      conversation.title.toLowerCase().includes(normalizedSearch) ||
+      (conversation.title ?? '').toLowerCase().includes(normalizedSearch) ||
       conversation.subtitle?.toLowerCase().includes(normalizedSearch);
 
     if (!matchesSearch) {
