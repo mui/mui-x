@@ -1,0 +1,13 @@
+<RadialLineChart
+  height={300}
+  series={series}
+  rotationAxis={[{ data: months, scaleType: 'point' }]}
+  radiusAxis={[
+    {
+      domainLimit: (min, max) => ({
+        min: Math.floor(min.valueOf()),
+        max: Math.ceil(max.valueOf()),
+      }),
+    },
+  ]}
+/>
