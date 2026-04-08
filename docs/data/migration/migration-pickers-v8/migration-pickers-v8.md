@@ -304,6 +304,37 @@ The `data-testid` attributes on several components have been updated, which may 
 - The `DateRangePreview` test ID has been removed entirely.
 - `PickerDay` (formerly `PickersDay`) now respects a custom `data-testid` prop if provided, falling back to its default value `"day"`.
 
+## `LocalizationProvider` breaking changes
+
+### `utils` field removed from the adapter context value
+
+The deprecated `utils` field has been removed from the `PickersAdapterContextValue` interface (the value exposed by the internal pickers adapter context).
+Use the `adapter` field instead — it holds the exact same reference.
+
+The recommended way to access the adapter remains the `usePickerAdapter` hook.
+
+```diff
+ import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
+
+ const adapter = usePickerAdapter();
+-// Previously, you could also read `utils` from the internal context value.
+```
+
+### `MuiPickersAdapterContext` export removed
+
+The deprecated `MuiPickersAdapterContext` named export has been removed from `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
+Use the `usePickerAdapter` hook to access the adapter instead of reading the context directly.
+
+```diff
+-import { MuiPickersAdapterContext } from '@mui/x-date-pickers/LocalizationProvider';
+-import * as React from 'react';
+-
+-const adapter = React.useContext(MuiPickersAdapterContext)?.adapter;
++import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
++
++const adapter = usePickerAdapter();
+```
+
 ## Removed types
 
 ### `UseDateManagerParameters` and `UseDateTimeManagerParameters`
