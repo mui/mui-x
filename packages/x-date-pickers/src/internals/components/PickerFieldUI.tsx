@@ -62,7 +62,7 @@ export const cleanFieldResponse = <
         'MUI X: The `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props are no longer supported on Picker / Field components.',
         'They have been silently dropped because they would otherwise be forwarded as unknown attributes on the underlying form control.',
         'Use the `slotProps` shape instead (`slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel`, `slotProps.formHelperText`).',
-        'See https://mui.com/x/migration/migration-pickers-v8/#textfield-props for migration details.',
+        'See https://mui.com/x/migration/upgrade-pickers-to-v9/#textfield-props for migration details.',
       ]);
     }
   }

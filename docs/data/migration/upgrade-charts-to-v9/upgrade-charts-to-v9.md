@@ -14,7 +14,7 @@ This is a reference guide for upgrading `@mui/x-charts` from v8 to v9.
 <!-- Overall theme of this major, fixing API inconsistencies, improving customization, etc -->
 
 :::success
-This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-charts-v8/migration-charts-v8.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
+This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/upgrade-charts-to-v9/upgrade-charts-to-v9.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
 :::
 
 ## Prepare for the migration

@@ -227,7 +227,7 @@ This change brings several benefits:
 However, this might affect your custom styles if you were targeting the nested elements.
 For example, in `DateRangePickerDay`, the `day` class has been removed because there is no longer a separate element for the day content.
 
-For more details on how to adapt your custom styles, check the [Day slot migration guide](/x/migration/migration-pickers-v8/#day-slot).
+For more details on how to adapt your custom styles, check the [Day slot migration guide](/x/migration/upgrade-pickers-to-v9/#day-slot).
 
 ### Examples
 

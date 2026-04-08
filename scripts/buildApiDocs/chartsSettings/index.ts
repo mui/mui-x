@@ -137,8 +137,7 @@ export default chartsApiPages;
   isGlobalClassName: isGlobalState,
   nonComponentFolders: [
     ...getNonComponentFolders(),
-    'migration/migration-charts-v9',
-    'migration/migration-charts-v8',
+    'migration/upgrade-charts-to-v9',
     'migration/migration-charts-v7',
     'migration/migration-charts-v6',
   ],
