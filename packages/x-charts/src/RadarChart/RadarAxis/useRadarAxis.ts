@@ -30,7 +30,7 @@ export interface UseRadarAxisParams {
 }
 
 /**
- * Returns an array with on item par metrics with the different point to label.
+ * Returns an array with one item per metric with the different points to label.
  */
 export function useRadarAxis(params: UseRadarAxisParams) {
   const { metric, angle, divisions = 1 } = params;
@@ -49,8 +49,8 @@ export function useRadarAxis(params: UseRadarAxisParams) {
 
   if (!existingMetrics.includes(metric)) {
     warnOnce([
-      `MUI X Charts: You radar axis try displaying values for the metric "${metric}" which does not exist.`,
-      `either add this metric to your radar, or pick one from the existing metrics: ${existingMetrics.join(', ')}`,
+      `MUI X Charts: Your radar axis tries to display values for the metric "${metric}" which does not exist.`,
+      `Either add this metric to your radar, or pick one from the existing metrics: ${existingMetrics.join(', ')}`,
     ]);
   }
 
