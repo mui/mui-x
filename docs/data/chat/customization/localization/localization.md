@@ -98,14 +98,14 @@ This is useful when building custom slot components that need to access localize
 
 These keys accept parameters and return formatted strings:
 
-| Key                            | Signature                                    | Default behavior                                        |
-| :----------------------------- | :------------------------------------------- | :------------------------------------------------------ |
-| `messageStatusLabel`           | `(status: ChatMessageStatus) => string`      | Maps status to human-readable label                     |
-| `toolStateLabel`               | `(state: ChatToolInvocationState) => string` | Maps tool state to label (e.g., "Running...", "Failed") |
-| `messageTimestampLabel`        | `(dateTime: string) => string`               | Formats to `HH:MM` using `toLocaleTimeString`           |
-| `conversationTimestampLabel`   | `(dateTime: string) => string`               | Time for today, `MMM DD` for older dates                |
-| `typingIndicatorLabel`         | `(users: ChatLocaleTypingUser[]) => string`  | `"Alice is typing"` or `"Alice, Bob are typing"`        |
-| `scrollToBottomWithCountLabel` | `(unseenCount: number) => string`            | `"Scroll to bottom, N new messages"`                    |
+| Key                            | Signature                                    | Default behavior                                               |
+| :----------------------------- | :------------------------------------------- | :------------------------------------------------------------- |
+| `messageStatusLabel`           | `(status: ChatMessageStatus) => string`      | Maps status to human-readable label                            |
+| `toolStateLabel`               | `(state: ChatToolInvocationState) => string` | Maps tool state to label (for example, "Running...", "Failed") |
+| `messageTimestampLabel`        | `(dateTime: string) => string`               | Formats to `HH:MM` using `toLocaleTimeString`                  |
+| `conversationTimestampLabel`   | `(dateTime: string) => string`               | Time for today, `MMM DD` for older dates                       |
+| `typingIndicatorLabel`         | `(users: ChatLocaleTypingUser[]) => string`  | `"Alice is typing"` or `"Alice, Bob are typing"`               |
+| `scrollToBottomWithCountLabel` | `(unseenCount: number) => string`            | `"Scroll to bottom, N new messages"`                           |
 
 ### Message status labels
 

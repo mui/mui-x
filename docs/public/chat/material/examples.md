@@ -1,11 +1,11 @@
 ---
-title: Chat - Material UI examples
+title: Chat - Material UI examples
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Material UI examples
+# Chat - Material UI examples
 
 <p class="description">Demo-first examples for building chat interfaces with <code>@mui/x-chat</code>.</p>
 
@@ -38,7 +38,7 @@ Replace it with your real adapter to connect to a backend.
 
 - [Compact variant](/x/react-chat/material/examples/compact-variant/) for a messenger-style layout with no bubbles, left-aligned messages, and author names as group headers
 - [Custom theme](/x/react-chat/material/examples/custom-theme/) for changing palette, shape, and typography via `ThemeProvider`
-- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for replacing inner sub-components with custom implementations
+- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for replacing inner subcomponents with custom implementations
 - [Model selector](/x/react-chat/material/examples/model-selector/) for adding a model picker to the conversation header via `slots.conversationHeaderActions`
 
 ## Recommended progression

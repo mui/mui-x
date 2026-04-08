@@ -1,16 +1,16 @@
 ---
 productId: x-chat
-title: Chat - Tailwind CSS
+title: Chat - Tailwind CSS
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Tailwind CSS
+# Chat - Tailwind CSS
 
-<p class="description">Style chat components using Tailwind CSS utility classes with the structural primitives from <code>@mui/x-chat</code>.</p>
+<p class="description">Style chat components using Tailwind CSS utility classes with the structural primitives from <code>@mui/x-chat</code>.</p>
 
 `@mui/x-chat` ships structural chat primitives with zero built-in styles.
-Each component renders semantic HTML elements with `data-*` attributes that reflect component state, making them a natural fit for Tailwind CSS utility classes.
+Each component renders semantic HTML elements with `data-*` attributes that reflect component state, making them a natural fit for Tailwind CSS utility classes.
 
 ## Installation
 
@@ -134,7 +134,7 @@ Use the `slots` and `slotProps` props to replace inner elements while keeping be
 
 ## Complete demo: chat shell
 
-The following interactive demo shows a fully functional chat styled entirely with Tailwind CSS utility classes, using the structural primitives from `@mui/x-chat`:
+The following interactive demo shows a fully functional chat styled entirely with Tailwind CSS utility classes, using the structural primitives from `@mui/x-chat`:
 
 ```tsx
 import * as React from 'react';
@@ -155,7 +155,7 @@ import {
 
 const adapter = createEchoAdapter({
   respond: (text) =>
-    `Received: "${text}". This response is styled with Tailwind CSS utility classes.`,
+    `Received: "${text}". This response is styled with Tailwind CSS utility classes.`,
 });
 
 function TailwindMessage({ id }: { id: string }) {

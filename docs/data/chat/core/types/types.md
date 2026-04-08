@@ -33,7 +33,7 @@ All augmentable interfaces live under `@mui/x-chat/types`:
 
 ### Step 1: Declare the module
 
-Create a type declaration file (e.g. `chat-types.d.ts`) or use `declare module` in any `.ts` file:
+Create a type declaration file (for example, `chat-types.d.ts`) or use `declare module` in any `.ts` file:
 
 ```ts
 declare module '@mui/x-chat/types' {

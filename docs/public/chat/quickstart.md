@@ -8,7 +8,7 @@ components: ChatBox
 
 # Chat - Quickstart
 
-Install the MUI X Chat package and start building your React chat interface.
+Install the MUI X Chat package and start building your React chat interface.
 
 ## Installation
 
@@ -32,7 +32,7 @@ yarn add @mui/x-chat
 
 ### Peer dependencies
 
-#### Material UI
+#### Material UI
 
 The Chat package has a peer dependency on `@mui/material`.
 If it is not already in your project, install it now:
@@ -98,7 +98,7 @@ export default function App() {
 ```
 
 `ChatBox` renders a full chat surface — conversation list, thread header, message log, and composer — in a single component.
-All visual styles are derived from your active Material UI theme.
+All visual styles are derived from your active Material UI theme.
 
 Only `adapter` is required — it must implement `sendMessage`.
 `initialConversations` and `initialActiveConversationId` are optional conveniences that pre-populate the conversation list on first render.
@@ -144,7 +144,7 @@ const theme = createTheme({
 ### Feature availability
 
 :::info
-MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
+MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
 See [Licensing](/x/introduction/licensing/) for details.
 :::
 

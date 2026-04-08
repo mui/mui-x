@@ -47,7 +47,7 @@ const message: ChatMessage = {
 
 ## Markdown rendering
 
-When using `ChatBox` with the Material UI layer (`@mui/x-chat`), text parts are rendered through a built-in markdown parser that converts common markdown syntax into React elements. This happens automatically — no configuration is needed.
+When using `ChatBox` with the Material UI layer (`@mui/x-chat`), text parts are rendered through a built-in markdown parser that converts common markdown syntax into React elements. This happens automatically — no configuration is needed.
 
 The built-in parser supports:
 

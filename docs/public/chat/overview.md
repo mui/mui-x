@@ -6,7 +6,7 @@ githubLabel: 'scope: chat'
 components: ChatRoot, ChatLayout
 ---
 
-# MUI X Chat
+# MUI X Chat
 
 Build real-time chat interfaces with streaming, multi-conversation support, and full theme integration.
 

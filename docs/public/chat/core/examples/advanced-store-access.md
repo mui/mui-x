@@ -68,7 +68,7 @@ const activeTypingUserIds = useStore(
 
 Use `useChatStore()` + `chatSelectors` when:
 
-- you need a derived value that no built-in hook provides (e.g., message count, active conversation title)
+- you need a derived value that no built-in hook provides (for example, message count, active conversation title)
 - you are building a metrics dashboard or debug panel
 - you need to subscribe to store changes outside the React render cycle
 - you want to combine multiple selectors into a single subscription

@@ -924,7 +924,7 @@ The headless docs stay design-system agnostic on purpose.
 Typical styling approaches include:
 
 - utility classes
-- CSS modules
+- CSS Modules
 - CSS-in-JS wrappers
 - custom design-system components passed through slots
 

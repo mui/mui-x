@@ -8,7 +8,7 @@ components: ChatRoot, ChatLayout
 
 {{"component": "modules/components/overview/XLogo.tsx"}}
 
-# MUI X Chat
+# MUI X Chat
 
 <p class="description">Build real-time chat interfaces with streaming, multi-conversation support, and full theme integration.</p>
 

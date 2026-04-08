@@ -10,7 +10,7 @@ components: ConversationRoot, ConversationHeader, ConversationTitle, Conversatio
 
 Compose the active conversation surface from themed thread components, override individual slots, and recompose the layout using context hooks.
 
-The thread pane is the single-conversation view in a chat interface. It combines a header area, a scrollable message log, and a composer into one cohesive surface. `@mui/x-chat` ships each region as a themed component built with `styled()` and Material UI theme tokens.
+The thread pane is the single-conversation view in a chat interface. It combines a header area, a scrollable message log, and a composer into one cohesive surface. `@mui/x-chat` ships each region as a themed component built with `styled()` and Material UI theme tokens.
 
 The following demo shows the thread in action:
 
@@ -526,7 +526,7 @@ For conversation-level state (the active conversation title, participants, etc.)
 
 ## Full recomposition example
 
-When `ChatBox` slots are not enough — for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header instead of above the composer — you can assemble the thread from individual Material UI components directly.
+When `ChatBox` slots are not enough — for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header instead of above the composer — you can assemble the thread from individual Material UI components directly.
 
 The following example shows a fully assembled thread pane without relying on `ChatBox` layout defaults. It inserts a custom warning banner between the header and the message list:
 

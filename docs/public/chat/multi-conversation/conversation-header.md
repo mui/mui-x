@@ -170,7 +170,7 @@ function CustomConversationTitle(props) {
 
 ## Full recomposition
 
-When you need to insert additional content inside the header — for example a typing indicator or a custom divider — assemble the header from individual Material UI components directly:
+When you need to insert additional content inside the header — for example a typing indicator or a custom divider — assemble the header from individual Material UI components directly:
 
 ```tsx
 import {

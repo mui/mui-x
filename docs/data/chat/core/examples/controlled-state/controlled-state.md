@@ -52,7 +52,7 @@ Use controlled state when you need to:
 - sync chat state with a global store (Redux, Zustand, etc.)
 - persist messages across navigation or page reloads
 - drive the conversation list from an external data source
-- coordinate the composer value with external UI (e.g. slash commands)
+- coordinate the composer value with external UI (for example, slash commands)
 
 Start with `default*` props for prototyping and switch to controlled when the need arises — no other changes are required.
 

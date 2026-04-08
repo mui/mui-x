@@ -112,7 +112,7 @@ In thread-only mode `ChatBox` does not render the conversation list sidebar, and
 
 ## Full recomposition
 
-When `ChatBox` slots are not enough — for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header — you can assemble the thread from individual Material UI components directly.
+When `ChatBox` slots are not enough — for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header — you can assemble the thread from individual Material UI components directly.
 
 The following example shows a fully assembled thread pane without relying on `ChatBox` layout defaults:
 

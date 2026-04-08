@@ -31,7 +31,7 @@ def greet(name):
 ```
 ````
 
-The language specified after the opening backticks (e.g. `python`) appears in the header bar.
+The language specified after the opening backticks (for example, `python`) appears in the header bar.
 
 {{"demo": "../../../material/examples/code-block/CodeBlock.js", "defaultCodeOpen": false, "bg": "inline"}}
 

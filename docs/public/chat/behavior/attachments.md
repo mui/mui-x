@@ -77,12 +77,12 @@ Pass a configuration object to the `attachments` feature flag to control which f
 
 ### `ChatAttachmentsConfig`
 
-| Property             | Type                                              | Default     | Description                                                                                                                                                        |
-| :------------------- | :------------------------------------------------ | :---------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `acceptedMimeTypes`  | `string[]`                                        | `undefined` | Allowed MIME types. Supports exact types (`'application/pdf'`) and wildcard subtypes (`'image/*'`). File extension patterns (e.g. `'.pdf'`) are **not** supported. |
-| `maxFileCount`       | `number`                                          | `undefined` | Maximum number of files per message.                                                                                                                               |
-| `maxFileSize`        | `number`                                          | `undefined` | Maximum size of each file in bytes.                                                                                                                                |
-| `onAttachmentReject` | `(rejections: ChatAttachmentRejection[]) => void` | `undefined` | Callback invoked when one or more files are rejected.                                                                                                              |
+| Property             | Type                                              | Default     | Description                                                                                                                                                                |
+| :------------------- | :------------------------------------------------ | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `acceptedMimeTypes`  | `string[]`                                        | `undefined` | Allowed MIME types. Supports exact types (`'application/pdf'`) and wildcard subtypes (`'image/*'`). File extension patterns (for example, `'.pdf'`) are **not** supported. |
+| `maxFileCount`       | `number`                                          | `undefined` | Maximum number of files per message.                                                                                                                                       |
+| `maxFileSize`        | `number`                                          | `undefined` | Maximum size of each file in bytes.                                                                                                                                        |
+| `onAttachmentReject` | `(rejections: ChatAttachmentRejection[]) => void` | `undefined` | Callback invoked when one or more files are rejected.                                                                                                                      |
 
 ### Rejection reasons
 

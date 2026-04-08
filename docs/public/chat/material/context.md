@@ -19,7 +19,7 @@ When you need more control — sharing state with components outside `ChatBox`, 
 ### ChatBox (all-in-one)
 
 `ChatBox` is the fastest way to render a complete chat surface.
-It creates a `ChatProvider` internally and composes all the themed sub-components:
+It creates a `ChatProvider` internally and composes all the themed subcomponents:
 
 ```tsx
 import { ChatBox } from '@mui/x-chat';

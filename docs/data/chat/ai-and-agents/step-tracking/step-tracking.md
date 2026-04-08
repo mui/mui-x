@@ -67,7 +67,7 @@ const adapter: ChatAdapter = {
           type: 'tool-input-available',
           toolCallId: 'call-1',
           toolName: 'search',
-          input: { query: 'MUI X Chat documentation' },
+          input: { query: 'MUI X Chat documentation' },
         });
         controller.enqueue({
           type: 'tool-output-available',
@@ -153,9 +153,9 @@ const renderers: ChatPartRendererMap = {
 </ChatProvider>;
 ```
 
-### Step progress with Material UI
+### Step progress with Material UI
 
-For a more polished UI, use Material UI components to show step progress:
+For a more polished UI, use Material UI components to show step progress:
 
 ```tsx
 import Divider from '@mui/material/Divider';

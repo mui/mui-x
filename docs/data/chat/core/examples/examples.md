@@ -10,7 +10,7 @@ githubLabel: 'scope: chat'
 <p class="description">Demo-first patterns for building custom chat UIs with <code>@mui/x-chat/headless</code> and plain React markup.</p>
 
 These demos stay strictly within the core layer.
-They use the runtime, hooks, selectors, callbacks, and adapter contract without relying on headless components or Material UI primitives.
+They use the runtime, hooks, selectors, callbacks, and adapter contract without relying on headless components or Material UI primitives.
 
 Each demo includes explanatory prose, inline code snippets for the key patterns, and a runnable demo.
 For the concept-level reference behind these demos, see the dedicated documentation pages:

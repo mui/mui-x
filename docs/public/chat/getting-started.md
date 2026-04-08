@@ -1,6 +1,6 @@
 ---
 productId: x-chat
-title: Getting started with MUI X Chat
+title: Getting started with MUI X Chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatRoot, ChatLayout
@@ -32,7 +32,7 @@ yarn add @mui/x-chat
 
 ### Peer dependencies
 
-`@mui/x-chat` requires Material UI and Emotion. If they are not already in your project, install them:
+`@mui/x-chat` requires Material UI and Emotion. If they are not already in your project, install them:
 
 <codeblock storageKey="package-manager">
 
@@ -93,7 +93,7 @@ export default function App() {
 ```
 
 `ChatBox` renders a full chat surface — conversation list, thread header, message log, and composer — in a single component.
-All visual styles are derived from your active Material UI theme.
+All visual styles are derived from your active Material UI theme.
 
 See [Basic AI chat](/x/react-chat/material/examples/basic-ai-chat/) for a fully runnable demo with a local echo adapter.
 

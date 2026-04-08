@@ -1,7 +1,7 @@
-# MUI X Chat
+# MUI X Chat
 
 This package is the Community plan edition of the Chat components.
-It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
+It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
 
 > [!WARNING]
 > **This package is unstable.** The API is under active development and **will change** before reaching a stable release.

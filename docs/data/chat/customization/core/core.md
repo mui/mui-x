@@ -68,7 +68,7 @@ import {
 - semantic DOM structure
 - default rendering for message parts
 - visual slots or compound components
-- Material UI theming or styling
+- Material UI theming or styling
 
 Those concerns belong to [Headless Components](/x/react-chat/customization/headless/).
 

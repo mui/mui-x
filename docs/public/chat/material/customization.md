@@ -1,6 +1,6 @@
 ---
 productId: x-chat
-title: Chat - Material UI customization
+title: Chat - Material UI customization
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatRoot
@@ -8,7 +8,7 @@ components: ChatRoot
 
 # Chat - Customization
 
-Override styles, replace sub-components, and pass props to any chat element using the Material UI customization system.
+Override styles, replace subcomponents, and pass props to any chat element using the Material UI customization system.
 
 The following demo shows a custom-themed chat surface:
 
@@ -160,7 +160,7 @@ Inject custom class names onto the root and layout elements using the `classes` 
 
 ## slotProps
 
-Pass props directly to any internal sub-component using `slotProps`.
+Pass props directly to any internal subcomponent using `slotProps`.
 This is useful for setting `aria-label` attributes, `sx` overrides, or other component-specific props without replacing the component:
 
 ```tsx
@@ -205,7 +205,7 @@ This is useful for setting `aria-label` attributes, `sx` overrides, or other com
 
 ## slots
 
-Replace any sub-component entirely using the `slots` prop.
+Replace any subcomponent entirely using the `slots` prop.
 The replacement component must accept the same props as the default.
 See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for a runnable demo using a `Paper`-based bubble.
 

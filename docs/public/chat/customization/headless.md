@@ -50,7 +50,7 @@ It also exports helpers for default message-part rendering.
 
 ## What the headless layer does not own
 
-- Material UI theming or styling
+- Material UI theming or styling
 - Visual design or colors
 - Runtime contracts, adapters, or store semantics (those belong in [Core](/x/react-chat/customization/core/))
 
@@ -123,8 +123,8 @@ This gives you a complete structural shell while keeping the visual treatment in
 
 ## See also
 
-- [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling headless primitives with Tailwind utility classes.
+- [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling headless primitives with Tailwind utility classes.
 - [Core](/x/react-chat/customization/core/) for the core runtime that the headless layer builds on.
-- [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization on the styled layer.
+- [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization on the styled layer.
 
 ## API

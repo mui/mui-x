@@ -184,7 +184,7 @@ const adapter: ChatAdapter = {
 
 Use this pattern when:
 
-- Your backend has no conversation history API (e.g., a stateless AI endpoint).
+- Your backend has no conversation history API (for example, a stateless AI endpoint).
 - The product intentionally gives users a fresh thread each session.
 - You are building an embedded copilot or assistant that lives inside another page and doesn't need a sidebar.
 

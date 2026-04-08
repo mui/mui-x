@@ -29,7 +29,7 @@ def greet(name):
 ```
 ````
 
-The language specified after the opening backticks (e.g. `python`) appears in the header bar.
+The language specified after the opening backticks (for example, `python`) appears in the header bar.
 
 ```tsx
 'use client';

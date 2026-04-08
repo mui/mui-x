@@ -13,7 +13,7 @@ components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The message list is the scrollable region that renders conversation history.
-`ChatMessageList` provides Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
+`ChatMessageList` provides Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
 
 ## Import
 

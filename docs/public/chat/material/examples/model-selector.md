@@ -149,7 +149,7 @@ export default function App() {
 
 ## See also
 
-- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for replacing deeper sub-components
+- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for replacing deeper subcomponents
 - [Customization](/x/react-chat/material/customization/) for the full slot key reference
 
 ## API

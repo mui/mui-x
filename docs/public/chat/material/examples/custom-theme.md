@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">Retheme the entire chat surface by wrapping <code>ChatBox</code> in a <code>ThemeProvider</code> with custom palette and shape values.</p>
 
-`ChatBox` inherits its visual design from the active Material UI theme.
+`ChatBox` inherits its visual design from the active Material UI theme.
 This demo shows how a single `createTheme` call changes bubble colors, border radius, and typography across the entire surface.
 
 - `ThemeProvider` with a custom `palette.primary` (teal) applied to user message bubbles
@@ -96,7 +96,7 @@ export default function CustomTheme() {
 
 ## See also
 
-- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) to replace individual sub-components rather than styling through the theme
+- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) to replace individual subcomponents rather than styling through the theme
 - [Customization](/x/react-chat/material/customization/) for the full reference of style override keys
 
 ## API

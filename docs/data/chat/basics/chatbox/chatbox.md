@@ -15,7 +15,7 @@ components: ChatBox
 ## Overview
 
 `ChatBox` is the fastest way to add a chat interface to your application.
-It creates a `ChatProvider` internally and composes every themed sub-component — conversation list, thread header, message list, and composer — into a ready-to-use surface:
+It creates a `ChatProvider` internally and composes every themed subcomponent — conversation list, thread header, message list, and composer — into a ready-to-use surface:
 
 ```tsx
 import { ChatBox } from '@mui/x-chat';
@@ -23,7 +23,7 @@ import { ChatBox } from '@mui/x-chat';
 <ChatBox adapter={adapter} sx={{ height: 500 }} />;
 ```
 
-All visual styles are derived from your active Material UI theme.
+All visual styles are derived from your active Material UI theme.
 No additional configuration is needed — `ChatBox` reads `palette`, `typography`, `shape`, and `spacing` from the closest `ThemeProvider`.
 
 {{"demo": "../../material/examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false}}

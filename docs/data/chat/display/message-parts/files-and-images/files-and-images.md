@@ -27,12 +27,12 @@ interface ChatFileMessagePart {
 }
 ```
 
-| Field       | Type     | Description                                                     |
-| :---------- | :------- | :-------------------------------------------------------------- |
-| `type`      | `'file'` | Discriminant for the part type union                            |
-| `mediaType` | `string` | MIME type of the file (e.g. `'image/png'`, `'application/pdf'`) |
-| `url`       | `string` | URL to the file resource                                        |
-| `filename`  | `string` | Optional display name for the file                              |
+| Field       | Type     | Description                                                             |
+| :---------- | :------- | :---------------------------------------------------------------------- |
+| `type`      | `'file'` | Discriminant for the part type union                                    |
+| `mediaType` | `string` | MIME type of the file (for example, `'image/png'`, `'application/pdf'`) |
+| `url`       | `string` | URL to the file resource                                                |
+| `filename`  | `string` | Optional display name for the file                                      |
 
 ### Example data
 

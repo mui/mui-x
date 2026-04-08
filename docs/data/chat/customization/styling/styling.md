@@ -8,7 +8,7 @@ components: ChatBox
 
 # Chat - Styling
 
-<p class="description">Override styles using the <code>sx</code> prop, Material UI theme component overrides, dark mode, and CSS class injection.</p>
+<p class="description">Override styles using the <code>sx</code> prop, Material UI theme component overrides, dark mode, and CSS class injection.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -113,7 +113,7 @@ import { chatBoxClasses } from '@mui/x-chat';
 
 ## slotProps for targeted styling
 
-Pass `sx` overrides to any internal sub-component using `slotProps` without replacing the component:
+Pass `sx` overrides to any internal subcomponent using `slotProps` without replacing the component:
 
 ```tsx
 <ChatBox
@@ -127,5 +127,5 @@ Pass `sx` overrides to any internal sub-component using `slotProps` without repl
 
 ## See also
 
-- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing sub-components entirely.
-- [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling with utility classes.
+- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing subcomponents entirely.
+- [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling with utility classes.

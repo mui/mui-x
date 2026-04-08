@@ -49,7 +49,7 @@ const message: ChatMessage = {
       type: 'source-url',
       sourceId: 'src-1',
       url: 'https://mui.com/x/react-chat/',
-      title: 'MUI X Chat Documentation',
+      title: 'MUI X Chat Documentation',
     },
   ],
 };

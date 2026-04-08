@@ -13,7 +13,7 @@ The text input area where users draft and send messages, with auto-resize, keybo
 ## Overview
 
 The composer is the input region at the bottom of the chat surface.
-`ChatComposer` provides Material UI styling — border, padding, and theme tokens are applied automatically.
+`ChatComposer` provides Material UI styling — border, padding, and theme tokens are applied automatically.
 
 ## Import
 
@@ -93,7 +93,7 @@ export default function ComposerCustomPlaceholder() {
 ### IME composition
 
 The composer correctly handles IME (Input Method Editor) composition for CJK languages.
-While the user is composing characters (e.g., selecting Kanji), pressing Enter confirms the character selection instead of submitting the message.
+While the user is composing characters (for example, selecting Kanji), pressing Enter confirms the character selection instead of submitting the message.
 Submission is blocked until composition ends.
 
 ## Send button

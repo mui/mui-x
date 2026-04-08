@@ -1,19 +1,19 @@
 ---
 productId: x-chat
-title: Tailwind CSS
+title: Tailwind CSS
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatRoot
 ---
 
-# Chat - Tailwind CSS
+# Chat - Tailwind CSS
 
-<p class="description">Style chat components using Tailwind CSS utility classes with the structural primitives from <code>@mui/x-chat</code>.</p>
+<p class="description">Style chat components using Tailwind CSS utility classes with the structural primitives from <code>@mui/x-chat</code>.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The chat primitives ship structural components with zero built-in styles.
-Each component renders semantic HTML elements with `data-*` attributes that reflect component state, making them a natural fit for Tailwind CSS utility classes.
+Each component renders semantic HTML elements with `data-*` attributes that reflect component state, making them a natural fit for Tailwind CSS utility classes.
 
 ## Installation
 
@@ -137,5 +137,5 @@ Use the `slots` and `slotProps` props to replace inner elements while keeping be
 
 ## See also
 
-- [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization.
-- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing sub-components entirely.
+- [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization.
+- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing subcomponents entirely.

@@ -8,7 +8,7 @@ components: ConversationListRoot, ConversationListItem, ConversationListItemAvat
 
 # Chat - Conversation list
 
-<p class="description">Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components.</p>
+<p class="description">Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -34,7 +34,7 @@ ChatConversationList              ← scrolling listbox (role="listbox")
     unreadBadge                   ← count badge (primary.main background)
 ```
 
-All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose sub-components manually — instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
+All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually — instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
 
 ## Slot reference
 
@@ -53,7 +53,7 @@ All visual slots are owned by a single `ChatConversationList` instance. You do n
 | `timestamp`      | `ConversationListTimestamp` wrapper   | Timestamp text                                       |
 | `unreadBadge`    | `ConversationListUnreadBadge` wrapper | Unread count pill                                    |
 
-Because the Material UI layer fills all slot defaults at instantiation, overriding a single slot only affects that region without disturbing the others.
+Because the Material UI layer fills all slot defaults at instantiation, overriding a single slot only affects that region without disturbing the others.
 
 ## ownerState and how state flows
 
@@ -85,7 +85,7 @@ Replace the avatar slot with a custom component to render initials or a status r
 
 {{"demo": "ThemedAvatar.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-The `ownerState` prop arrives directly on the component because the Material UI layer passes it through `slotProps` using a function form. Destructure it before spreading `...props` to avoid forwarding a non-standard attribute to the DOM.
+The `ownerState` prop arrives directly on the component because the Material UI layer passes it through `slotProps` using a function form. Destructure it before spreading `...props` to avoid forwarding a non-standard attribute to the DOM.
 
 ## Overriding the item content layout
 
