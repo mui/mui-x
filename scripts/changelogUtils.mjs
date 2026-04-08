@@ -424,9 +424,7 @@ async function generateChangelog({
 
       // Reference the Pro tier if it exists, otherwise fall back to the base
       // package. Products like Scheduler ship Premium without a Pro tier.
-      const previousTierPackage = hasProVersion
-        ? `@mui/${packageName}-pro`
-        : `@mui/${packageName}`;
+      const previousTierPackage = hasProVersion ? `@mui/${packageName}-pro` : `@mui/${packageName}`;
 
       if (premiumCommits?.length > 0) {
         lines.push(`Same changes as in \`${previousTierPackage}@${packageVersion}\`, plus:`);
