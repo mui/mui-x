@@ -47,7 +47,9 @@ export const addItemToObject = (path, value, object, j) => {
 
     const propertyToAdd = j.objectProperty(j.identifier(path), value);
     return j.objectExpression([
-      ...(object.properties ?? []).filter((property) => property.key.name !== path),
+      ...(object.properties ?? []).filter(
+        (property) => (property.key?.name ?? property.key?.value) !== path,
+      ),
       propertyToAdd,
     ]);
   }
@@ -65,8 +67,9 @@ export const addItemToObject = (path, value, object, j) => {
   }
 
   // Look if the object we got already contains the property we have to use.
+  // `property.key` is missing on spread / rest elements, so guard the access.
   const correspondingObject = (object.properties ?? []).find(
-    (property) => property.key.name === targetKey,
+    (property) => (property.key?.name ?? property.key?.value) === targetKey,
   );
 
   const propertyToAdd = j.objectProperty(
@@ -76,7 +79,9 @@ export const addItemToObject = (path, value, object, j) => {
   );
 
   return j.objectExpression([
-    ...(object.properties ?? []).filter((property) => property.key.name !== targetKey),
+    ...(object.properties ?? []).filter(
+      (property) => (property.key?.name ?? property.key?.value) !== targetKey,
+    ),
     propertyToAdd,
   ]);
 };

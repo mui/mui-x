@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { warnOnce } from '@mui/x-internals/warning';
 import { styled, useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import useForkRef from '@mui/utils/useForkRef';
@@ -76,14 +77,12 @@ const PickersTextField = React.forwardRef(function PickersTextField(
       legacyProps.InputLabelProps ||
       legacyProps.FormHelperTextProps
     ) {
-      console.warn(
-        [
-          'MUI X: `PickersTextField` no longer supports the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
-          'They are silently dropped, which can hide configuration bugs in JavaScript codebases that do not benefit from TypeScript checks.',
-          'Use `slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel` and `slotProps.formHelperText` instead.',
-          'You can run the `migrate-text-field-props` codemod to migrate automatically.',
-        ].join('\n'),
-      );
+      warnOnce([
+        'MUI X: `PickersTextField` no longer supports the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
+        'They are silently dropped, which can hide configuration bugs in JavaScript codebases that do not benefit from TypeScript checks.',
+        'Use `slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel` and `slotProps.formHelperText` instead.',
+        'You can run the `migrate-text-field-props` codemod to migrate automatically.',
+      ]);
     }
   }
 

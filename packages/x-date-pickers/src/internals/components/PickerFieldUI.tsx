@@ -7,6 +7,7 @@ import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import useSlotProps from '@mui/utils/useSlotProps';
+import { warnOnce } from '@mui/x-internals/warning';
 import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { FieldOwnerState } from '../../models';
 import { useFieldOwnerState, UseFieldOwnerStateParameters } from '../hooks/useFieldOwnerState';
@@ -57,14 +58,12 @@ export const cleanFieldResponse = <
       legacyInputLabelProps ||
       legacyFormHelperTextProps
     ) {
-      console.warn(
-        [
-          'MUI X: The `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props are no longer supported on Picker / Field components.',
-          'They have been silently dropped because they would otherwise be forwarded as unknown attributes on the underlying form control.',
-          'Use the `slotProps` shape instead (`slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel`, `slotProps.formHelperText`).',
-          'See https://mui.com/x/migration/migration-pickers-v8/#textfield-props for migration details.',
-        ].join('\n'),
-      );
+      warnOnce([
+        'MUI X: The `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props are no longer supported on Picker / Field components.',
+        'They have been silently dropped because they would otherwise be forwarded as unknown attributes on the underlying form control.',
+        'Use the `slotProps` shape instead (`slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel`, `slotProps.formHelperText`).',
+        'See https://mui.com/x/migration/migration-pickers-v8/#textfield-props for migration details.',
+      ]);
     }
   }
 
@@ -433,13 +432,11 @@ export function useFieldTextFieldProps<TProps extends UseFieldOwnerStateParamete
       legacyInputLabelProps ||
       legacyFormHelperTextProps
     ) {
-      console.warn(
-        [
-          'MUI X: Field components no longer accept the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
-          'They have been dropped to avoid leaking unknown attributes onto the underlying form control.',
-          'Use the nested `slotProps.textField.slotProps.{input,htmlInput,inputLabel,formHelperText}` shape instead.',
-        ].join('\n'),
-      );
+      warnOnce([
+        'MUI X: Field components no longer accept the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
+        'They have been dropped to avoid leaking unknown attributes onto the underlying form control.',
+        'Use the nested `slotProps.textField.slotProps.{input,htmlInput,inputLabel,formHelperText}` shape instead.',
+      ]);
     }
   }
 
