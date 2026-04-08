@@ -69,8 +69,6 @@ const { setActiveConversation } = useChat();
 <ConversationList onSelect={(id) => setActiveConversation(id)} />;
 ```
 
-{{"demo": "ConversationHistoryHeadlessChat.js"}}
-
 ## Key takeaways
 
 - `listConversations()` and `listMessages()` are optional adapter methods — the runtime skips them if not implemented

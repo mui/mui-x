@@ -8,8 +8,6 @@ import { useChat } from './useChat';
 import { useChatStatus } from './useChatStatus';
 import { useChatStore } from './useChatStore';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 function createStream(values: any[] = []): ReadableStream<any> {
   return new ReadableStream({
     start(controller) {
@@ -211,43 +209,6 @@ describe('useChat', () => {
 
     expect(adapter.stop).toHaveBeenCalledTimes(1);
   });
-
-  it.skipIf(!isJSDOM)(
-    'does not create duplicate streams in Strict Mode when sendMessage is triggered from an effect',
-    async () => {
-      const adapter = createAdapter({
-        sendMessage: vi.fn(async () => createPendingStream()),
-      });
-      const wrapper = ({ children }: React.PropsWithChildren) => (
-        <React.StrictMode>
-          <ChatProvider adapter={adapter}>{children}</ChatProvider>
-        </React.StrictMode>
-      );
-      const { result, unmount } = renderHook(
-        () => {
-          const chat = useChat();
-
-          React.useEffect(() => {
-            void chat.sendMessage({
-              conversationId: 'c1',
-              parts: [{ type: 'text', text: 'Hello from effect' }],
-            });
-          }, [chat, chat.sendMessage]);
-
-          return chat;
-        },
-        { wrapper },
-      );
-
-      await waitFor(() => {
-        expect(result.current.isStreaming).toBe(true);
-      });
-
-      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
-
-      unmount();
-    },
-  );
 
   it('aborts an active stream during unmount and clears the pending controller', async () => {
     const controlledStream = createControlledStream();

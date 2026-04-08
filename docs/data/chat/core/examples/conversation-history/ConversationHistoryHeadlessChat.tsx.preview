@@ -1,3 +1,0 @@
-<ChatProvider adapter={adapter} initialActiveConversationId="support">
-  <ConversationHistoryInner />
-</ChatProvider>
