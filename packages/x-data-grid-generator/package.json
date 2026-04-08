@@ -28,10 +28,10 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@mui/x-data-grid": "workspace:*",
-    "@mui/x-data-grid-premium": "workspace:*",
-    "@mui/x-data-grid-pro": "workspace:*",
-    "@mui/x-internals": "workspace:*",
+    "@mui/x-data-grid": "workspace:^",
+    "@mui/x-data-grid-premium": "workspace:^",
+    "@mui/x-data-grid-pro": "workspace:^",
+    "@mui/x-internals": "workspace:^",
     "chance": "catalog:",
     "clsx": "catalog:",
     "lru-cache": "^11.2.2"

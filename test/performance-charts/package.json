@@ -11,9 +11,9 @@
   "devDependencies": {
     "@codspeed/vitest-plugin": "5.2.0",
     "@emotion/react": "catalog:",
-    "@mui/x-charts": "workspace:*",
-    "@mui/x-charts-pro": "workspace:*",
-    "@mui/x-charts-premium": "workspace:*",
+    "@mui/x-charts": "workspace:^",
+    "@mui/x-charts-pro": "workspace:^",
+    "@mui/x-charts-premium": "workspace:^",
     "@testing-library/react": "16.3.2",
     "@testing-library/user-event": "14.6.1",
     "@vitejs/plugin-react": "catalog:",

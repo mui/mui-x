@@ -37,9 +37,9 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-charts-vendor": "workspace:*",
-    "@mui/x-internal-gestures": "workspace:*",
-    "@mui/x-internals": "workspace:*",
+    "@mui/x-charts-vendor": "workspace:^",
+    "@mui/x-internal-gestures": "workspace:^",
+    "@mui/x-internals": "workspace:^",
     "bezier-easing": "^2.1.0",
     "clsx": "catalog:",
     "prop-types": "catalog:",

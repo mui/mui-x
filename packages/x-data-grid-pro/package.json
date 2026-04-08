@@ -41,9 +41,9 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-data-grid": "workspace:*",
-    "@mui/x-internals": "workspace:*",
-    "@mui/x-license": "workspace:*",
+    "@mui/x-data-grid": "workspace:^",
+    "@mui/x-internals": "workspace:^",
+    "@mui/x-license": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },

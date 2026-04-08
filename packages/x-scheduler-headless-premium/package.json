@@ -50,8 +50,8 @@
     "@babel/runtime": "catalog:",
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",
-    "@mui/x-internals": "workspace:*",
-    "@mui/x-scheduler-headless": "workspace:*",
+    "@mui/x-internals": "workspace:^",
+    "@mui/x-scheduler-headless": "workspace:^",
     "prop-types": "catalog:"
   },
   "peerDependencies": {

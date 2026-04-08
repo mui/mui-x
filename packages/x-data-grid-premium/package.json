@@ -41,11 +41,11 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-data-grid": "workspace:*",
-    "@mui/x-data-grid-pro": "workspace:*",
+    "@mui/x-data-grid": "workspace:^",
+    "@mui/x-data-grid-pro": "workspace:^",
     "@mui/x-internal-exceljs-fork": "catalog:",
-    "@mui/x-internals": "workspace:*",
-    "@mui/x-license": "workspace:*",
+    "@mui/x-internals": "workspace:^",
+    "@mui/x-license": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },

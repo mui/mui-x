@@ -45,8 +45,8 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-internals": "workspace:*",
-    "@mui/x-virtualizer": "workspace:*",
+    "@mui/x-internals": "workspace:^",
+    "@mui/x-virtualizer": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:",
     "use-sync-external-store": "catalog:"
