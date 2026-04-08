@@ -15,16 +15,18 @@ import {
 } from '../ChartsLocalizationProvider';
 import { useChartsPolarDataProviderProps } from './useChartsPolarDataProviderProps';
 import { type PolarPluginSignatures } from './ChartsPolarDataProvider.plugins';
+import { type PolarChartSeriesType } from '../models/seriesType/config';
 
 export interface ChartsPolarDataProviderSlots extends ChartsSlots {}
 
 export interface ChartsPolarDataProviderSlotProps extends ChartsSlotProps {}
 
 export type ChartsPolarDataProviderProps<
-  TSignatures extends readonly ChartAnyPluginSignature[] = PolarPluginSignatures,
+  SeriesType extends PolarChartSeriesType = PolarChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = PolarPluginSignatures<SeriesType>,
 > = React.PropsWithChildren<
-  ChartsProviderProps<'line', TSignatures>['pluginParams'] &
-    Pick<ChartsProviderProps<'line', TSignatures>, 'plugins'>
+  ChartsProviderProps<SeriesType, TSignatures>['pluginParams'] &
+    Pick<ChartsProviderProps<SeriesType, TSignatures>, 'plugins'>
 > &
   ChartsLocalizationProviderProps & {
     /**
@@ -52,13 +54,14 @@ export type ChartsPolarDataProviderProps<
  * - [ChartsPolarDataProvider API](https://mui.com/x/api/charts/charts-polar-data-provider/)
  */
 function ChartsPolarDataProvider<
-  TSignatures extends readonly ChartAnyPluginSignature[] = PolarPluginSignatures,
->(props: ChartsPolarDataProviderProps<TSignatures>) {
+  SeriesType extends PolarChartSeriesType = PolarChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = PolarPluginSignatures<SeriesType>,
+>(props: ChartsPolarDataProviderProps<SeriesType, TSignatures>) {
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartsPolarDataProviderProps(props);
 
   return (
-    <ChartsProvider<'line', TSignatures> {...chartProviderProps}>
+    <ChartsProvider<SeriesType, TSignatures> {...chartProviderProps}>
       <ChartsLocalizationProvider localeText={localeText}>
         <ChartsSlotsProvider
           slots={slots}

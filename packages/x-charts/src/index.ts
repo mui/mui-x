@@ -11,7 +11,7 @@ export * from './ChartsXAxis';
 export * from './ChartsYAxis';
 export * from './ChartsGrid';
 export * from './ChartsPolarGrid';
-export * from './RadialLine';
+export * from './RadialLineChart';
 export * from './ChartsText';
 export * from './ChartsTooltip';
 export * from './ChartsLabel';

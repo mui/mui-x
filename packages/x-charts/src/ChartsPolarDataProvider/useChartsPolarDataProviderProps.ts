@@ -11,15 +11,18 @@ import { type PolarPluginSignatures, POLAR_PLUGINS } from './ChartsPolarDataProv
 import { type ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 import { lineSeriesConfig } from '../LineChart/seriesConfig';
 import { type ChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import { type PolarChartSeriesType } from '../models/seriesType/config';
 
 const POLAR_SERIES_CONFIG: ChartSeriesConfig<'line'> = {
   line: lineSeriesConfig,
 };
 
 export const useChartsPolarDataProviderProps = <
-  TSignatures extends readonly ChartAnyPluginSignature[] = PolarPluginSignatures,
+  SeriesType extends PolarChartSeriesType = PolarChartSeriesType,
+
+  TSignatures extends readonly ChartAnyPluginSignature[] = PolarPluginSignatures<SeriesType>,
 >(
-  inProps: ChartsPolarDataProviderProps<TSignatures> & ChartsLocalizationProviderProps,
+  inProps: ChartsPolarDataProviderProps<SeriesType, TSignatures> & ChartsLocalizationProviderProps,
 ) => {
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiChartsPolarDataProvider' });
@@ -36,13 +39,13 @@ export const useChartsPolarDataProviderProps = <
 
   const theme = useTheme();
 
-  const chartProviderProps: ChartsProviderProps<'line', TSignatures> = {
-    plugins: plugins as ChartsProviderProps<'line', TSignatures>['plugins'],
+  const chartProviderProps: ChartsProviderProps<SeriesType, TSignatures> = {
+    plugins: plugins as ChartsProviderProps<SeriesType, TSignatures>['plugins'],
     pluginParams: {
       theme: theme.palette.mode,
       seriesConfig,
       ...other,
-    } as MergeSignaturesProperty<[...ChartCorePluginSignatures<'line'>, ...TSignatures], 'params'>,
+    } as MergeSignaturesProperty<[...ChartCorePluginSignatures<SeriesType>, ...TSignatures], 'params'>,
   };
 
   return {

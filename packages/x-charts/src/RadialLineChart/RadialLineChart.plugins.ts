@@ -1,4 +1,8 @@
 import {
+  useChartZAxis,
+  type UseChartZAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartZAxis';
+import {
   useChartPolarAxis,
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
@@ -18,26 +22,28 @@ import {
   useChartKeyboardNavigation,
   type UseChartKeyboardNavigationSignature,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
+import { type ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
 import {
   useChartVisibilityManager,
   type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
-import type { PolarChartSeriesType } from '../models/seriesType/config';
 
-export const POLAR_PLUGINS = [
+export type RadialLineChartPluginSignatures = [
+  UseChartZAxisSignature,
+  UseChartTooltipSignature<'line'>,
+  UseChartInteractionSignature,
+  UseChartPolarAxisSignature<'line'>,
+  UseChartHighlightSignature<'line'>,
+  UseChartVisibilityManagerSignature<'line'>,
+  UseChartKeyboardNavigationSignature,
+];
+
+export const LINE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<RadialLineChartPluginSignatures> = [
+  useChartZAxis,
   useChartTooltip,
   useChartInteraction,
   useChartPolarAxis,
   useChartHighlight,
-  useChartKeyboardNavigation,
   useChartVisibilityManager,
-] as const;
-
-export type PolarPluginSignatures<SeriesType extends PolarChartSeriesType = 'line'> = [
-  UseChartTooltipSignature<SeriesType>,
-  UseChartInteractionSignature,
-  UseChartPolarAxisSignature,
-  UseChartHighlightSignature<SeriesType>,
-  UseChartKeyboardNavigationSignature,
-  UseChartVisibilityManagerSignature<SeriesType>,
+  useChartKeyboardNavigation,
 ];
