@@ -24,6 +24,8 @@
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
     "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
+    "radiusAxisId": { "type": { "description": "AxisId" } },
+    "rotationAxisId": { "type": { "description": "AxisId" } },
     "shape": { "type": { "description": "MarkShape" } },
     "showMark": { "type": { "description": "boolean | ((params: ShowMarkParams) =&gt; boolean)" } },
     "stack": { "type": { "description": "string" } },
