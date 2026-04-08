@@ -234,6 +234,8 @@ const CSB_CONFIG = {
         'x-scheduler-headless-premium',
         muiCommitRef,
       ),
+      '@mui/x-chat': getMuiPackageVersion('x-chat', muiCommitRef),
+      '@mui/x-chat-headless': getMuiPackageVersion('x-chat-headless', muiCommitRef),
       '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
       '@mui/x-internal-gestures': getMuiPackageVersion('x-internal-gestures', muiCommitRef),
       exceljs: 'latest',
