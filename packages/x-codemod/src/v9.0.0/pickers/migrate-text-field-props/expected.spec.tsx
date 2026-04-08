@@ -23,13 +23,11 @@ function App() {
         slotProps={{
           textField: {
             slotProps: {
-              input: { name: 'date' },
               htmlInput: { 'data-testid': 'html-input' },
-            },
-          },
-          field: {
-            slotProps: {
-              input: { name: 'field-input' },
+
+              input: {
+                name: 'field-input',
+              },
             },
           },
         }}

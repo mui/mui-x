@@ -147,6 +147,12 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     if (expression.type !== 'ObjectExpression') {
       return;
     }
+    // Collect legacy props found inside `field` / `textField` slot objects.
+    // - `textField` legacy props are migrated in-place under `textField.slotProps.<newKey>`.
+    // - `field` legacy props cannot be nested under `field.slotProps.textField.slotProps.<newKey>`
+    //   because the `field` slotProps type does not allow it. Hoist them to the sibling
+    //   `textField.slotProps.<newKey>` instead.
+    const fieldCollected: { newKey: string; value: any }[] = [];
     expression.properties.forEach((prop: any) => {
       if (prop.type !== 'Property' && prop.type !== 'ObjectProperty') {
         return;
@@ -176,6 +182,12 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       if (collected.length === 0) {
         return;
       }
+      if (keyName === 'field') {
+        // Defer: hoist these to the sibling `textField` slot below.
+        target.properties = remaining;
+        fieldCollected.push(...collected);
+        return;
+      }
       target.properties = remaining;
       // Use the same recursive merge helper used by `transformNestedProp`.
       collected.forEach(({ newKey, value }) => {
@@ -183,6 +195,25 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       });
       prop.value = target;
     });
+
+    if (fieldCollected.length > 0) {
+      // Drop `field` if it became empty.
+      expression.properties = expression.properties.filter((prop: any) => {
+        if (prop.type !== 'Property' && prop.type !== 'ObjectProperty') {
+          return true;
+        }
+        if (getKeyName(prop.key) !== 'field') {
+          return true;
+        }
+        return prop.value.type !== 'ObjectExpression' || prop.value.properties.length > 0;
+      });
+      // Hoist the collected legacy props to `textField.slotProps.<newKey>`.
+      let merged: any = expression;
+      fieldCollected.forEach(({ newKey, value }) => {
+        merged = addItemToObject(`textField.slotProps.${newKey}`, value, merged, j);
+      });
+      expression.properties = merged.properties;
+    }
   });
 
   return root.toSource(printOptions);
