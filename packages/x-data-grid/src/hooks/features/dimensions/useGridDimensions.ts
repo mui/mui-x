@@ -210,6 +210,10 @@ function setCSSVariables(root: HTMLElement, dimensions: GridDimensions) {
   set('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
   set('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
   set('--DataGrid-bottomContainerHeight', `${dimensions.bottomContainerHeight}px`);
+  set(
+    '--DataGrid-horizontalFiller',
+    `${Math.max(0, dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth)}px`,
+  );
   set('--height', `${dimensions.rowHeight}px`);
 }
 

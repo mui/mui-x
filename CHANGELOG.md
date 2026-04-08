@@ -1,5 +1,159 @@
 # Changelog
 
+## 9.0.0-rc.0
+
+<!-- generated comparing v9.0.0-beta.0..master -->
+
+_Apr 7, 2026_
+
+We'd like to extend a big thank you to the 18 contributors who made this release possible.
+
+Special thanks go out to these community members for their valuable contributions:
+@mixelburg, @sibananda485, @youjin-hong
+
+The following team members contributed to this release:
+@aemartos, @alexfauquette, @arminmeh, @brijeshb42, @flaviendelangle, @JCQuintas, @LukasTy, @mapache-salvaje, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @siriwatknp, @ZeeshanTamboli
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.0.0-rc.0`
+
+- [DataGrid] Rename filter panel `Columns` label to singular `Column` (#21935) @youjin-hong
+- [DataGrid] Export `GridColumnUnsortedIconProps` for custom column icon slots (#21658) @mixelburg
+- [DataGrid] Remove `x-virtualizer`'s `virtualScroller` from public API (#21936) @romgrk
+- [DataGrid][virtualizer] Scrolling without render gaps (#21616) @romgrk
+
+#### `@mui/x-data-grid-pro@9.0.0-rc.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.0.0-rc.0`, plus:
+
+- [DataGridPro] Improve trigger for nested row reordering (#21642) @MBilalShafi
+- [DataGridPro] Undeprecate `onRowsScrollEnd` prop (#21912) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@9.0.0-rc.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.0.0-rc.0`, plus:
+
+- [DataGridPremium] Fix clipboard paste issue in portal (#21931) @sibananda485
+
+### Date and Time Pickers
+
+#### Breaking changes
+
+- Accessible DOM structure is now the only default. [Read more](https://mui.com/x/migration/migration-pickers-v8/#accessible-dom-structure-is-now-the-default)
+- The `PickerDay2` and `DateRangePickerDay2` components were propagated to stable while removing the previous defaults. [Read more](https://mui.com/x/migration/migration-pickers-v8/#day-slot)
+
+#### `@mui/x-date-pickers@9.0.0-rc.0`
+
+- [pickers] Remove `PickersDay` and `DateRangePickerDay` and promote their `2` versions as replacements (#21739) @michelengelen
+
+#### `@mui/x-date-pickers-pro@9.0.0-rc.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.0.0-rc.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.0.0-rc.0.0`
+
+- [charts] Make line visibility toggle start from the baseline (#21893) @alexfauquette
+- [charts] Remove the container overflow (#21955) @alexfauquette
+- [charts] Revert `theme.alpha` for non-channel token (#21965) @siriwatknp
+
+#### `@mui/x-charts-pro@9.0.0-rc.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.0.0-rc.0.0`, plus:
+
+- [charts-pro] Zoom slider touch improvements (#21832) @JCQuintas
+- [charts-pro] Add `seriesIds` filter to zoom slider preview (#21933) @JCQuintas
+- [charts-pro] Fix zoom slider preview with discard filter mode (#21883) @JCQuintas
+
+#### `@mui/x-charts-premium@9.0.0-rc.0.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.0.0-rc.0.0`, plus:
+
+- [charts-premium] Add series `valueFormatter` to candlestick chart (#21905) @JCQuintas
+- [charts-premium] Add zoom slider preview support for candlestick charts (#21914) @JCQuintas
+- [charts-premium] Allow color customization in `Candlestick` chart (#21838) @JCQuintas
+- [charts-premium] Support hide/show for OHLC (candlestick) series (#21807) @Copilot
+- [charts-premium] Add `dataset` support to `Candlestick` chart (#21872) @JCQuintas
+- [charts-premium] Add candlestick page to sidebar navigation (#21834) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@9.0.0-rc.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.0.0-rc.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.0-rc.0`, plus:
+
+- [RichTreeViewPro] Allow to auto-expand lazy loaded items (#21759) @flaviendelangle
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-alpha.0`
+
+- [scheduler] Add locale files, adapt l10n scripts, and add localization table to docs (#21870) @rita-codes
+- [scheduler] Add planned features to the docs (#21705) @rita-codes
+- [scheduler] Add scheduler to docs introduction (#21845) @rita-codes
+- [scheduler] Add wide docs to scheduler (#21860) @noraleonte
+- [scheduler] All day event bugfixes (#21884) @noraleonte
+- [scheduler] Autofocus title field (#21947) @noraleonte
+- [scheduler] Change default event creation trigger to single click (#21979) @rita-codes
+- [scheduler] Change order of the views on the view selector (#21904) @rita-codes
+- [scheduler] Disabled border color for the repeat day picker in dark mode (#21987) @rita-codes
+- [scheduler] Drop unused dependency (#21956) @flaviendelangle
+- [scheduler] Fix all-day event shifting to previous day in negative UTC offsets (#21994) @rita-codes
+- [scheduler] Fix dark theme localization demos (#21992) @noraleonte
+- [scheduler] Fix licensing confusion in docs (#21939) @rita-codes
+- [scheduler] Fix preferences menu width shift when toggling options + Improve preferences menu accessibility (#21902) @rita-codes
+- [scheduler] Prepare for the alpha launch (#21859) @rita-codes
+- [scheduler] Sync Base UI internals and apply good practices (#21946) @flaviendelangle
+- [scheduler] Update close modal aria label translation (#21940) @rita-codes
+- [scheduler] Add Spanish (es-ES) locale (#21900) @rita-codes
+- [scheduler] Improve French (fr-FR) locale (#21941) @rita-codes
+- [scheduler] Improve Romanian (ro-RO) locale (#21942) @rita-codes
+
+#### `@mui/x-scheduler-premium@9.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-alpha.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.0.0-rc.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix JSDOM → jsdom casing (#21907) @JCQuintas
+- [docs] Remove Joy UI references and dependency (#21937) @siriwatknp
+- [docs] Remove none generated files (#21886) @alexfauquette
+- [docs] Remove unused interactive demo code (#21945) @LukasTy
+- [docs] Revise the Funnel doc (#21677) @mapache-salvaje
+- [docs] Revise the Line chart docs (#21554) @mapache-salvaje
+- [docs] Revise the Radar doc (#21674) @mapache-salvaje
+- [docs] Revise the Sankey doc (#21678) @mapache-salvaje
+- [docs] Revise the Scatter chart docs (#21564) @mapache-salvaje
+
+### Core
+
+- [docs-infra] Update to the latest monorepo (#21971) @brijeshb42
+- [internal] Remove checks for `materialVersion >= 6` (#21975) @LukasTy
+
+### Miscellaneous
+
+- [core] Bump @mui/material to v9.0.0-beta.1 (#21858) @siriwatknp
+- [core] Update browserslistrc (#21974) @siriwatknp
+- [deps] Bump minimum core packages to 7.3.0 to adopt theme color manipulator (#21892) @siriwatknp
+- [telemetry] Prefer upstream remote over origin for `projectId` (#21882) @aemartos
+- [telemetry] Send `repoHash`, `[x]packageNameHash`, and `rootPathHash` alongside `projectId` (#21896) @aemartos
+- [test] Exclude flaky `DataGrid` argos test (#21977) @MBilalShafi
+- [test] Fix flaky `DataGrid` test (#22000) @arminmeh
+- [test] Remove `componentsProp` test from `describeConformance` (#21897) @ZeeshanTamboli
+- [x-license] Change `orderId` type from `number` to `string` (#21885) @aemartos
+
 ## 9.0.0-beta.0
 
 <!-- generated comparing v9.0.0-alpha.4..master -->

@@ -238,7 +238,6 @@
   { "name": "MonthCalendarSlotProps", "kind": "Interface" },
   { "name": "MonthCalendarSlots", "kind": "Interface" },
   { "name": "MuiPickersAdapter", "kind": "Interface" },
-  { "name": "MuiPickersAdapterContext", "kind": "Variable" },
   { "name": "MultiInputDateRangeField", "kind": "Variable" },
   { "name": "multiInputDateRangeFieldClasses", "kind": "Variable" },
   { "name": "MultiInputDateRangeFieldClasses", "kind": "Interface" },
