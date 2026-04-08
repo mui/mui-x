@@ -7,10 +7,12 @@ import { styled } from '@mui/material/styles';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import type { RefObject } from '@mui/x-internals/types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { LayoutDataGrid } from '@mui/x-virtualizer';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridVirtualizerContext } from '../hooks/utils/useGridVirtualizerContext';
 import { useGridEvent } from '../hooks/utils/useGridEvent';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import {
@@ -30,7 +32,6 @@ const SLOP = 1.5;
 
 interface ScrollAreaProps {
   scrollDirection: 'left' | 'right' | 'up' | 'down';
-  scrollPosition: RefObject<GridScrollParams>;
 }
 
 type OwnerState = DataGridProcessedProps & Pick<ScrollAreaProps, 'scrollDirection'>;
@@ -99,6 +100,8 @@ const offsetSelector = createSelector(
 
 function GridScrollAreaWrapper(props: ScrollAreaProps) {
   const apiRef = useGridApiContext();
+  const virtualizer = useGridVirtualizerContext();
+  const { scrollPosition } = virtualizer.store.use(LayoutDataGrid.selectors.scrollAreaProps);
   const [dragDirection, setDragDirection] = React.useState<'horizontal' | 'vertical' | 'none'>(
     'none',
   );
@@ -114,13 +117,17 @@ function GridScrollAreaWrapper(props: ScrollAreaProps) {
   }
 
   if (dragDirection === 'horizontal') {
-    return <GridHorizontalScrollAreaContent {...props} />;
+    return <GridHorizontalScrollAreaContent {...props} scrollPosition={scrollPosition} />;
   }
 
-  return <GridVerticalScrollAreaContent {...props} />;
+  return <GridVerticalScrollAreaContent {...props} scrollPosition={scrollPosition} />;
 }
 
-function GridHorizontalScrollAreaContent(props: ScrollAreaProps) {
+interface ScrollAreaPropsWithPosition extends ScrollAreaProps {
+  scrollPosition: RefObject<GridScrollParams>;
+}
+
+function GridHorizontalScrollAreaContent(props: ScrollAreaPropsWithPosition) {
   const { scrollDirection, scrollPosition } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
@@ -192,7 +199,7 @@ function GridHorizontalScrollAreaContent(props: ScrollAreaProps) {
   );
 }
 
-function GridVerticalScrollAreaContent(props: ScrollAreaProps) {
+function GridVerticalScrollAreaContent(props: ScrollAreaPropsWithPosition) {
   const { scrollDirection, scrollPosition } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
@@ -263,7 +270,7 @@ function GridVerticalScrollAreaContent(props: ScrollAreaProps) {
   );
 }
 
-interface GridScrollAreaContentProps extends ScrollAreaProps {
+interface GridScrollAreaContentProps extends ScrollAreaPropsWithPosition {
   getCanScrollMore: () => boolean;
   style: React.CSSProperties;
   handleDragOver: (event: React.DragEvent<HTMLDivElement>) => void;

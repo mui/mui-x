@@ -1,10 +1,13 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
+import { LayoutDataGrid } from '@mui/x-virtualizer';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
+import { useGridVirtualizerContext } from '../../hooks/utils/useGridVirtualizerContext';
 import type {
   GridOverlayType,
   GridLoadingOverlayVariant,
@@ -58,6 +61,9 @@ export const GridMainContainer = forwardRef<
   const rootProps = useGridRootProps();
   const configuration = useGridConfiguration();
   const ariaAttributes = configuration.hooks.useGridAriaAttributes();
+  const virtualizer = useGridVirtualizerContext();
+  const { ref: containerRef } = virtualizer.store.use(LayoutDataGrid.selectors.containerProps);
+  const mergedRef = useForkRef(ref, containerRef);
 
   return (
     <Element
@@ -66,7 +72,7 @@ export const GridMainContainer = forwardRef<
       tabIndex={-1}
       {...ariaAttributes}
       {...rootProps.slotProps?.main}
-      ref={ref}
+      ref={mergedRef}
     >
       <GridPanelAnchor role="presentation" data-id="gridPanelAnchor" />
       {props.children}

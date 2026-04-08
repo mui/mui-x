@@ -3,8 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled, type SxProps, type Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
+import { LayoutDataGrid } from '@mui/x-virtualizer';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridVirtualizerContext } from '../../hooks/utils/useGridVirtualizerContext';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
@@ -44,10 +46,16 @@ const GridVirtualScrollerContent = forwardRef<
   const overflowedContent = !rootProps.autoHeight && props.style?.minHeight === 'auto';
   const classes = useUtilityClasses(rootProps, overflowedContent);
   const ownerState = { classes: rootProps.classes, overflowedContent };
+  const virtualizer = useGridVirtualizerContext();
+  const { style: scrollerContentStyle, role } = virtualizer.store.use(
+    LayoutDataGrid.selectors.scrollerContentProps,
+  );
 
   return (
     <VirtualScrollerContentRoot
+      role={role}
       {...props}
+      style={{ ...scrollerContentStyle, ...props.style }}
       ownerState={ownerState}
       className={clsx(classes.root, props.className)}
       ref={ref}
