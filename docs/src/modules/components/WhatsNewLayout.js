@@ -36,6 +36,10 @@ const entries = [
         url: '/x/react-data-grid/undo-redo/',
       },
       {
+        title: 'Data Grid – Drag fill [Premium]',
+        url: '/x/react-data-grid/clipboard/#drag-to-fill',
+      },
+      {
         title: 'Data Grid – longText column type',
         url: '/x/react-data-grid/column-definition/#column-types',
       },
