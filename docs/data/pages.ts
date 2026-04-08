@@ -700,6 +700,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/main-features',
             subheader: 'Main features',
             children: [
+              { pathname: '/x/react-charts/accessibility' },
               { pathname: '/x/react-charts/animation' },
               { pathname: '/x/react-charts/axis' },
               { pathname: '/x/react-charts/brush' },
