@@ -36,6 +36,9 @@ function assignPaneChild(
   kind: ChatLayoutPaneKind,
   child: React.ReactNode,
 ) {
+  if (!paneChildren[kind]) {
+    paneChildren[kind] = [];
+  }
   paneChildren[kind].push(child);
 }
 
