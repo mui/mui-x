@@ -98,6 +98,11 @@ onlyBuiltDependencies:
   - sharp
   - unrs-resolver
 
+overrides:
+  # Pin the version otherwise emotion uses its own version resulting in docs build error
+  # @TODO: Debug a fix separately and remove the override
+  stylis: ^4.3.6
+
 patchedDependencies:
   # Temporary fix till next release of @mui/internal-markdown
   '@mui/internal-markdown@3.0.6': patches/@mui__internal-markdown@3.0.6.patch
