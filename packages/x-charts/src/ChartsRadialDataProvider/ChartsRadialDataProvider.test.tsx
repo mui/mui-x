@@ -60,7 +60,7 @@ describe('<ChartsRadialDataProvider />', () => {
       </ChartsRadialDataProvider>,
     );
 
-    const { slots, slotProps } = handleSlotsChange.mock.lastCall?.[0];
+    const { slots, slotProps } = handleSlotsChange.mock.lastCall![0];
     expect(slots.baseButton).to.equal(CustomButton);
     expect(slotProps.baseButton).to.deep.equal({ disabled: true });
   });
@@ -91,7 +91,7 @@ describe('<ChartsRadialDataProvider />', () => {
       </ChartsRadialDataProvider>,
     );
 
-    const { polarAxis, cartesianAxis } = handleStoreChange.mock.lastCall?.[0];
+    const { polarAxis, cartesianAxis } = handleStoreChange.mock.lastCall![0];
 
     // Polar axes should be defined
     expect(polarAxis).to.not.equal(undefined);
