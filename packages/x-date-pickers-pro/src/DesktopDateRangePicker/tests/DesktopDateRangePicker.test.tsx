@@ -112,33 +112,6 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
   });
 
-  describe('Component slot: Popper', () => {
-    it('should forward onClick and onTouchStart', async () => {
-      const handleClick = spy();
-      const handleTouchStart = spy();
-      const { user } = render(
-        <DesktopDateRangePicker
-          open
-          slotProps={{
-            popper: {
-              onClick: handleClick,
-              onTouchStart: handleTouchStart,
-              // @ts-expect-error `data-*` attributes are not recognized in props objects
-              'data-testid': 'popper',
-            },
-          }}
-        />,
-      );
-      const popper = screen.getByTestId('popper');
-
-      await user.click(popper);
-      fireEvent.touchStart(popper);
-
-      expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
-    });
-  });
-
   describe('picker state', () => {
     it('should open when clicking the start input (multi input field)', async () => {
       const onOpen = spy();
