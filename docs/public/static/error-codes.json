@@ -247,5 +247,12 @@
   "246": "MUI: `TimelineGridEventContext` is missing. TimelineGrid Event parts must be placed within <TimelineGrid.Event />.",
   "247": "MUI: `TimelineGridEventRowContext` is missing. <TimelineGrid.Event /> part must be placed within <TimelineGrid.EventRow />.",
   "248": "MUI X: useEventTimelinePremiumStyledContext must be used within EventTimelinePremiumStyledContext.Provider",
-  "249": "MUI X: The `sectionListRef` prop has not been initialized by `PickersSectionList`\nYou probably tried to pass a component to the `textField` slot that contains an `<input />` element instead of a `PickersSectionList`.\n\nLearn more about the field accessible DOM structure on the MUI documentation: https://mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element"
+  "249": "MUI X: The `sectionListRef` prop has not been initialized by `PickersSectionList`\nYou probably tried to pass a component to the `textField` slot that contains an `<input />` element instead of a `PickersSectionList`.\n\nLearn more about the field accessible DOM structure on the MUI documentation: https://mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element",
+  "250": "MUI X Chat: reloadConversations is not yet implemented.\nThis method is a planned API stub. Remove the call until it is implemented.",
+  "251": "MUI X Chat: reloadMessages is not yet implemented.\nThis method is a planned API stub. Remove the call until it is implemented.",
+  "252": "MUI X Chat: reconnectRealtime is not yet implemented.\nThis method is a planned API stub. Remove the call until it is implemented.",
+  "253": "MUI X Chat: useChatStore must be used within a <ChatProvider> component",
+  "254": "Stream processing failed.",
+  "255": "MUI X Chat: useChatRuntimeContext must be used within a <ChatProvider> component",
+  "256": "MUI X Chat: useChatStoreContext must be used within a <ChatProvider> component"
 }

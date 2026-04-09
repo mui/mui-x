@@ -1,0 +1,106 @@
+{
+  "props": {
+    "variant": {
+      "type": { "name": "enum", "description": "'compact'<br>&#124;&nbsp;'default'" },
+      "default": "'default'"
+    }
+  },
+  "name": "ChatConversationList",
+  "imports": [
+    "import { ChatConversationList } from '@mui/x-chat/ChatConversationList';",
+    "import { ChatConversationList } from '@mui/x-chat';"
+  ],
+  "classes": [
+    {
+      "key": "compact",
+      "className": "MuiChatConversationList-compact",
+      "description": "Applied when variant=\"compact\"",
+      "isGlobal": false
+    },
+    {
+      "key": "item",
+      "className": "MuiChatConversationList-item",
+      "description": "Styles applied to the list item element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemActions",
+      "className": "MuiChatConversationList-itemActions",
+      "description": "Styles applied to the item actions element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemAvatar",
+      "className": "MuiChatConversationList-itemAvatar",
+      "description": "Styles applied to the item avatar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemContent",
+      "className": "MuiChatConversationList-itemContent",
+      "description": "Styles applied to the item content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemFocused",
+      "className": "MuiChatConversationList-itemFocused",
+      "description": "Applied to a focused conversation item",
+      "isGlobal": false
+    },
+    {
+      "key": "itemPreview",
+      "className": "MuiChatConversationList-itemPreview",
+      "description": "Styles applied to the item preview element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemSelected",
+      "className": "MuiChatConversationList-itemSelected",
+      "description": "Applied to a selected conversation item",
+      "isGlobal": false
+    },
+    {
+      "key": "itemTimestamp",
+      "className": "MuiChatConversationList-itemTimestamp",
+      "description": "Styles applied to the item timestamp element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemTitle",
+      "className": "MuiChatConversationList-itemTitle",
+      "description": "Styles applied to the item title element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemUnread",
+      "className": "MuiChatConversationList-itemUnread",
+      "description": "Applied to an unread conversation item",
+      "isGlobal": false
+    },
+    {
+      "key": "itemUnreadBadge",
+      "className": "MuiChatConversationList-itemUnreadBadge",
+      "description": "Styles applied to the item unread badge element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChatConversationList-root",
+      "description": "Styles applied to the conversation list root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scroller",
+      "className": "MuiChatConversationList-scroller",
+      "description": "Styles applied to the scroller element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatConversationList",
+  "filename": "/packages/x-chat/src/ChatConversationList/ChatConversationList.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/multi-conversation/conversation-list/\">Chat - Conversation List</a></li></ul>",
+  "cssComponent": false
+}

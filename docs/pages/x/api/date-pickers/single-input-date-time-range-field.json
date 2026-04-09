@@ -106,6 +106,10 @@
         "describedArgs": ["newValue"]
       }
     },
+    "openPickerButtonPosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'end'"
+    },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
       "type": { "name": "object" },
