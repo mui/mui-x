@@ -66,14 +66,8 @@ describe('<MobileTimePicker /> - Describe Value', () => {
       if (!isOpened) {
         await user.keyboard('{Escape}');
       } else {
-        // Return to the hours view in case we'd like to repeat the selection
-        // process. The "Open previous view" button becomes disabled after we
-        // land back on the first view, which traps focus on a disabled
-        // element and swallows follow-up keyboard events. Click the dialog
-        // body to move focus to a live element so callers can press Escape
-        // to dismiss the picker.
+        // return to the hours view in case we'd like to repeat the selection process
         await user.click(screen.getByRole('button', { name: 'Open previous view' }));
-        await user.click(screen.getByRole('dialog'));
       }
 
       return newValue;

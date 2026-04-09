@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
@@ -108,6 +109,14 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     label: previousLabel,
   };
 
+  // Keep refs to the buttons so we can redirect focus when a button
+  // transitions from enabled to disabled while it's the active element.
+  // Without this, the now-disabled button stays in `document.activeElement`,
+  // which swallows follow-up keyboard events (notably the picker's Escape
+  // dismiss handler).
+  const previousButtonRef = React.useRef<HTMLButtonElement>(null);
+  const nextButtonRef = React.useRef<HTMLButtonElement>(null);
+
   const PreviousIconButton = slots?.previousIconButton ?? PickersArrowSwitcherButton;
   const previousIconButtonProps = useSlotProps({
     elementType: PreviousIconButton,
@@ -123,6 +132,10 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     ownerState: { ...ownerState, isButtonHidden: previousProps.isHidden ?? false },
     className: clsx(classes.button, classes.previousIconButton),
   });
+  const handlePreviousButtonRef = useForkRef<HTMLButtonElement>(
+    previousButtonRef,
+    (previousIconButtonProps as { ref?: React.Ref<HTMLButtonElement> }).ref,
+  );
 
   const NextIconButton = slots?.nextIconButton ?? PickersArrowSwitcherButton;
   const nextIconButtonProps = useSlotProps({
@@ -139,6 +152,47 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     ownerState: { ...ownerState, isButtonHidden: nextProps.isHidden ?? false },
     className: clsx(classes.button, classes.nextIconButton),
   });
+  const handleNextButtonRef = useForkRef<HTMLButtonElement>(
+    nextButtonRef,
+    (nextIconButtonProps as { ref?: React.Ref<HTMLButtonElement> }).ref,
+  );
+
+  // When a button becomes disabled while focused, move focus to its
+  // still-enabled sibling so keyboard interactions (e.g. Escape to dismiss
+  // the containing picker) aren't trapped on the disabled element. Falls
+  // back to blurring when both buttons are disabled.
+  const wasPreviousDisabledRef = React.useRef(previousProps.isDisabled);
+  const wasNextDisabledRef = React.useRef(nextProps.isDisabled);
+  React.useEffect(() => {
+    const previousButton = previousButtonRef.current;
+    const nextButton = nextButtonRef.current;
+    if (
+      previousProps.isDisabled &&
+      !wasPreviousDisabledRef.current &&
+      previousButton != null &&
+      document.activeElement === previousButton
+    ) {
+      if (!nextProps.isDisabled && nextButton != null) {
+        nextButton.focus();
+      } else {
+        previousButton.blur();
+      }
+    }
+    if (
+      nextProps.isDisabled &&
+      !wasNextDisabledRef.current &&
+      nextButton != null &&
+      document.activeElement === nextButton
+    ) {
+      if (!previousProps.isDisabled && previousButton != null) {
+        previousButton.focus();
+      } else {
+        nextButton.blur();
+      }
+    }
+    wasPreviousDisabledRef.current = previousProps.isDisabled;
+    wasNextDisabledRef.current = nextProps.isDisabled;
+  }, [previousProps.isDisabled, nextProps.isDisabled]);
 
   const LeftArrowIcon = slots?.leftArrowIcon ?? ArrowLeftIcon;
   // The spread is here to avoid this bug mui/material-ui#34056
@@ -171,7 +225,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ownerState={ownerState}
       {...other}
     >
-      <PreviousIconButton {...previousIconButtonProps}>
+      <PreviousIconButton {...previousIconButtonProps} ref={handlePreviousButtonRef}>
         {isRtl ? (
           <RightArrowIcon {...rightArrowIconProps} />
         ) : (
@@ -185,7 +239,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ) : (
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
-      <NextIconButton {...nextIconButtonProps}>
+      <NextIconButton {...nextIconButtonProps} ref={handleNextButtonRef}>
         {isRtl ? (
           <LeftArrowIcon {...leftArrowIconProps} />
         ) : (
