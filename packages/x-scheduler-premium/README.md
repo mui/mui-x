@@ -1,14 +1,29 @@
-# MUI X Scheduler Premium
+# MUI X Scheduler Premium
 
 This package is the Premium plan edition of the scheduler components.
-It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
+It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
 
 ## Installation
 
-⚠️ This package is not published on npm yet, and its source is not stable enough to be used for now.
+Install the package in your project directory with:
+
+```bash
+npm install @mui/x-scheduler-premium
+```
+
+This component has the following peer dependencies that you need to install as well.
+
+```json
+"peerDependencies": {
+  "@emotion/react": "^11.9.0",
+  "@emotion/styled": "^11.8.1",
+  "@mui/material": "^7.3.0 || ^9.0.0",
+  "@mui/system": "^7.3.0 || ^9.0.0",
+  "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+},
+```
 
 ## Documentation
 
 Visit [https://mui.com/x/react-scheduler/](https://mui.com/x/react-scheduler/) to view the full documentation.
-
-⚠️ The documentation is very unstable for now, all the APIs might change by the time the package is officially released.
