@@ -549,7 +549,7 @@ describe('<DateRangeCalendar />', () => {
   });
 
   describe('Performance', () => {
-    it('should only render the new start day when selecting a start day without a previously selected start day', async () => {
+    it('should only render the new start day when selecting a start day without a previously selected start day', () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
       render(
@@ -567,7 +567,7 @@ describe('<DateRangeCalendar />', () => {
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
-    it('should only render the day inside range when selecting the end day', async () => {
+    it('should only render the day inside range when selecting the end day', () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
       render(
