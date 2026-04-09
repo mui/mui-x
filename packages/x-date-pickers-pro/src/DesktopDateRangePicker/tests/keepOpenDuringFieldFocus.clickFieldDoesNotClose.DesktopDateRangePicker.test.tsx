@@ -4,7 +4,7 @@ import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDate
 import {
   createPickerRenderer,
   getFieldSectionsContainer,
-  openPickerAsync,
+  openPicker,
 } from 'test/utils/pickers';
 
 describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field should not close', () => {
@@ -13,7 +13,7 @@ describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field shoul
   it('keeps popper open when clicking back into the field (single input)', async () => {
     const { user } = render(<DesktopDateRangePicker keepOpenDuringFieldFocus />);
 
-    await openPickerAsync(user, {
+    await openPicker(user, {
       type: 'date-range',
       fieldType: 'single-input',
       initialFocus: 'start',
@@ -35,7 +35,7 @@ describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field shoul
       />,
     );
 
-    await openPickerAsync(user, {
+    await openPicker(user, {
       type: 'date-range',
       fieldType: 'multi-input',
       initialFocus: 'start',
@@ -52,7 +52,7 @@ describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field shoul
   it('after selecting a start date (single input), clicking the field focuses it and keeps popper open', async () => {
     const { user } = render(<DesktopDateRangePicker keepOpenDuringFieldFocus />);
 
-    await openPickerAsync(user, {
+    await openPicker(user, {
       type: 'date-range',
       fieldType: 'single-input',
       initialFocus: 'start',

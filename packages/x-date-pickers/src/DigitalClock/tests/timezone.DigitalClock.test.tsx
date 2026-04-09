@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { getDateOffset, describeAdapters } from 'test/utils/pickers';
 
@@ -16,11 +16,11 @@ const get24HourFromDigitalClock = () => {
 describe('<DigitalClock /> - Timezone', () => {
   describeAdapters('Timezone prop', DigitalClock, ({ adapter, render }) => {
     describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
-      it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
+      it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', async () => {
         const onChange = spy();
-        render(<DigitalClock onChange={onChange} />);
+        const { user } = render(<DigitalClock onChange={onChange} />);
 
-        fireEvent.click(screen.getByRole('option', { name: '08:00 AM' }));
+        await user.click(screen.getByRole('option', { name: '08:00 AM' }));
 
         const expectedDate = adapter.setHours(adapter.date(), 8);
 
@@ -105,11 +105,11 @@ describe('<DigitalClock /> - Timezone', () => {
 
       TIMEZONE_TO_TEST.forEach((timezone) => {
         describe(`Timezone: ${timezone}`, () => {
-          it('should use timezone prop for onChange when no value is provided', () => {
+          it('should use timezone prop for onChange when no value is provided', async () => {
             const onChange = spy();
-            render(<DigitalClock onChange={onChange} timezone={timezone} />);
+            const { user } = render(<DigitalClock onChange={onChange} timezone={timezone} />);
 
-            fireEvent.click(screen.getByRole('option', { name: '08:00 AM' }));
+            await user.click(screen.getByRole('option', { name: '08:00 AM' }));
 
             const expectedDate = adapter.setHours(
               adapter.startOfDay(adapter.date(undefined, timezone)),
@@ -122,11 +122,11 @@ describe('<DigitalClock /> - Timezone', () => {
             expect(actualDate).toEqualDateTime(expectedDate);
           });
 
-          it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
+          it('should use timezone prop for rendering and value timezone for onChange when a value is provided', async () => {
             const onChange = spy();
             const value = adapter.date('2022-04-17T04:30', timezone);
 
-            render(
+            const { user } = render(
               <DigitalClock defaultValue={value} onChange={onChange} timezone="America/Chicago" />,
             );
 
@@ -140,7 +140,7 @@ describe('<DigitalClock /> - Timezone', () => {
               (adapter.getHours(value) + offsetDiff / 60 + 24) % 24,
             );
 
-            fireEvent.click(screen.getByRole('option', { name: '08:30 PM' }));
+            await user.click(screen.getByRole('option', { name: '08:30 PM' }));
 
             const actualDate = onChange.lastCall.firstArg;
 

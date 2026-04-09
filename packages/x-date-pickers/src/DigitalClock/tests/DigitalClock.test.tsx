@@ -1,4 +1,4 @@
-/* eslint-disable mui/disallow-active-element-as-key-event-target */
+ 
 import { spy } from 'sinon';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import {
@@ -7,17 +7,19 @@ import {
   digitalClockHandler,
   formatFullTimeValue,
 } from 'test/utils/pickers';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 
 describe('<DigitalClock />', () => {
   const { render } = createPickerRenderer();
 
   describe('Reference date', () => {
-    it('should use `referenceDate` when no value defined', () => {
+    it('should use `referenceDate` when no value defined', async () => {
       const onChange = spy();
       const referenceDate = '2018-01-01T12:30:00';
 
-      render(<DigitalClock onChange={onChange} referenceDate={adapterToUse.date(referenceDate)} />);
+      const { user } = render(
+        <DigitalClock onChange={onChange} referenceDate={adapterToUse.date(referenceDate)} />,
+      );
 
       // the first item should not be initially focusable when `referenceDate` is defined
       expect(
@@ -32,7 +34,8 @@ describe('<DigitalClock />', () => {
         }),
       ).to.have.attribute('tabindex', '0');
 
-      digitalClockHandler.setViewValue(
+      await digitalClockHandler.setViewValue(
+        user,
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
@@ -52,10 +55,10 @@ describe('<DigitalClock />', () => {
       ).to.have.attribute('tabindex', '0');
     });
 
-    it('should not use `referenceDate` when a value is defined', () => {
+    it('should not use `referenceDate` when a value is defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DigitalClock
           onChange={onChange}
           value={adapterToUse.date('2019-01-01T12:30:00')}
@@ -63,7 +66,8 @@ describe('<DigitalClock />', () => {
         />,
       );
 
-      digitalClockHandler.setViewValue(
+      await digitalClockHandler.setViewValue(
+        user,
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
@@ -71,10 +75,10 @@ describe('<DigitalClock />', () => {
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
     });
 
-    it('should not use `referenceDate` when a defaultValue is defined', () => {
+    it('should not use `referenceDate` when a defaultValue is defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DigitalClock
           onChange={onChange}
           defaultValue={adapterToUse.date('2019-01-01T12:30:00')}
@@ -82,7 +86,8 @@ describe('<DigitalClock />', () => {
         />,
       );
 
-      digitalClockHandler.setViewValue(
+      await digitalClockHandler.setViewValue(
+        user,
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
@@ -92,68 +97,64 @@ describe('<DigitalClock />', () => {
   });
 
   describe('Keyboard support', () => {
-    it('should move focus up by 5 on PageUp press', () => {
+    it('should move focus up by 5 on PageUp press', async () => {
       const handleChange = spy();
-      render(<DigitalClock autoFocus onChange={handleChange} />);
+      const { user } = render(<DigitalClock autoFocus onChange={handleChange} />);
       const options = screen.getAllByRole('option');
       const lastOptionIndex = options.length - 1;
 
-      fireEvent.keyDown(document.activeElement!, { key: 'End' }); // moves focus to last element
-      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      await user.keyboard('{End}'); // moves focus to last element
+      await user.keyboard('{PageUp}');
 
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(options[lastOptionIndex - 5]);
 
-      fireEvent.keyDown(options[lastOptionIndex - 5], { key: 'PageUp' });
+      await user.keyboard('{PageUp}');
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(options[lastOptionIndex - 10]);
     });
 
-    it('should move focus to first item on PageUp press when current focused item index is among the first 5 items', () => {
+    it('should move focus to first item on PageUp press when current focused item index is among the first 5 items', async () => {
       const handleChange = spy();
-      render(<DigitalClock autoFocus onChange={handleChange} />);
+      const { user } = render(<DigitalClock autoFocus onChange={handleChange} />);
       const options = screen.getAllByRole('option');
 
       // moves focus to 4th element using arrow down
-      [0, 1, 2].forEach((index) => {
-        fireEvent.keyDown(options[index], { key: 'ArrowDown' });
-      });
+      await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
 
-      fireEvent.keyDown(options[3], { key: 'PageUp' });
+      await user.keyboard('{PageUp}');
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(options[0]);
     });
 
-    it('should move focus down by 5 on PageDown press', () => {
+    it('should move focus down by 5 on PageDown press', async () => {
       const handleChange = spy();
-      render(<DigitalClock autoFocus onChange={handleChange} />);
+      const { user } = render(<DigitalClock autoFocus onChange={handleChange} />);
       const options = screen.getAllByRole('option');
 
-      fireEvent.keyDown(options[0], { key: 'PageDown' });
+      await user.keyboard('{PageDown}');
 
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(options[5]);
 
-      fireEvent.keyDown(options[5], { key: 'PageDown' });
+      await user.keyboard('{PageDown}');
 
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(options[10]);
     });
 
-    it('should move focus to last item on PageDown press when current focused item index is among the last 5 items', () => {
+    it('should move focus to last item on PageDown press when current focused item index is among the last 5 items', async () => {
       const handleChange = spy();
-      render(<DigitalClock autoFocus onChange={handleChange} />);
+      const { user } = render(<DigitalClock autoFocus onChange={handleChange} />);
       const options = screen.getAllByRole('option');
       const lastOptionIndex = options.length - 1;
 
       const lastElement = options[lastOptionIndex];
 
-      fireEvent.keyDown(document.activeElement!, { key: 'End' }); // moves focus to last element
+      await user.keyboard('{End}'); // moves focus to last element
       // moves focus 4 steps above last item using arrow up
-      [0, 1, 2].forEach((index) => {
-        fireEvent.keyDown(options[lastOptionIndex - index], { key: 'ArrowUp' });
-      });
-      fireEvent.keyDown(options[lastOptionIndex - 3], { key: 'PageDown' });
+      await user.keyboard('{ArrowUp}{ArrowUp}{ArrowUp}');
+      await user.keyboard('{PageDown}');
 
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(lastElement);

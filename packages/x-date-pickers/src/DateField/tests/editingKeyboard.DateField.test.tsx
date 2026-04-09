@@ -1,21 +1,19 @@
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { fireEvent } from '@mui/internal-test-utils';
 import { expectFieldValue, describeAdapters } from 'test/utils/pickers';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DateField /> - Editing Keyboard', () => {
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {
-    it("should set the year to today's value when no value is provided (ArrowDown)", () => {
-      testFieldKeyPress({
+    it("should set the year to today's value when no value is provided (ArrowDown)", async () => {
+      await testFieldKeyPress({
         format: adapter.formats.year,
         key: 'ArrowDown',
         expectedValue: '2022',
       });
     });
 
-    it('should decrement the year when a value is provided', () => {
-      testFieldKeyPress({
+    it('should decrement the year when a value is provided', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.year,
         defaultValue: adapter.date(),
         key: 'ArrowDown',
@@ -23,16 +21,16 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should set the month to December when no value is provided', () => {
-      testFieldKeyPress({
+    it('should set the month to December when no value is provided', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.month,
         key: 'ArrowDown',
         expectedValue: 'December',
       });
     });
 
-    it('should decrement the month when a value is provided', () => {
-      testFieldKeyPress({
+    it('should decrement the month when a value is provided', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.month,
         defaultValue: adapter.date(),
         key: 'ArrowDown',
@@ -40,8 +38,8 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should go to the last month of the current year when a value in January is provided', () => {
-      testFieldKeyPress({
+    it('should go to the last month of the current year when a value in January is provided', async () => {
+      await testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date('2022-01-15'),
         key: 'ArrowDown',
@@ -49,16 +47,16 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should set the day to 31 when no value is provided', () => {
-      testFieldKeyPress({
+    it('should set the day to 31 when no value is provided', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
         key: 'ArrowDown',
         expectedValue: '31',
       });
     });
 
-    it('should decrement the day when a value is provided', () => {
-      testFieldKeyPress({
+    it('should decrement the day when a value is provided', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date(),
         key: 'ArrowDown',
@@ -66,8 +64,8 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should decrement the month and keep the day when the new month has fewer days', () => {
-      testFieldKeyPress({
+    it('should decrement the month and keep the day when the new month has fewer days', async () => {
+      await testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date('2022-05-31'),
         key: 'ArrowDown',
@@ -75,8 +73,8 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should go to the last day of the current month when a value in the first day of the month is provided', () => {
-      testFieldKeyPress({
+    it('should go to the last day of the current month when a value in the first day of the month is provided', async () => {
+      await testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date('2022-06-01'),
         key: 'ArrowDown',
@@ -85,8 +83,8 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should not edit the value when props.readOnly = true and no value is provided (ArrowDown)', () => {
-      testFieldKeyPress({
+    it('should not edit the value when props.readOnly = true and no value is provided (ArrowDown)', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.year,
         readOnly: true,
         key: 'ArrowDown',
@@ -94,8 +92,8 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should not edit the value when props.readOnly = true and a value is provided (ArrowDown)', () => {
-      testFieldKeyPress({
+    it('should not edit the value when props.readOnly = true and a value is provided (ArrowDown)', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.year,
         defaultValue: adapter.date(),
         readOnly: true,
@@ -106,16 +104,16 @@ describe('<DateField /> - Editing Keyboard', () => {
   });
 
   describeAdapters('key: ArrowUp', DateField, ({ adapter, testFieldKeyPress }) => {
-    it("should set the year to today's value when no value is provided (ArrowUp)", () => {
-      testFieldKeyPress({
+    it("should set the year to today's value when no value is provided (ArrowUp)", async () => {
+      await testFieldKeyPress({
         format: adapter.formats.year,
         key: 'ArrowUp',
         expectedValue: '2022',
       });
     });
 
-    it('should increment the year when a value is provided', () => {
-      testFieldKeyPress({
+    it('should increment the year when a value is provided', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.year,
         defaultValue: adapter.date(),
         key: 'ArrowUp',
@@ -123,16 +121,16 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should set the month to January when no value is provided', () => {
-      testFieldKeyPress({
+    it('should set the month to January when no value is provided', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.month,
         key: 'ArrowUp',
         expectedValue: 'January',
       });
     });
 
-    it('should increment the month when a value is provided', () => {
-      testFieldKeyPress({
+    it('should increment the month when a value is provided', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.month,
         defaultValue: adapter.date(),
         key: 'ArrowUp',
@@ -140,8 +138,8 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should go to the first month of the current year when a value in December is provided', () => {
-      testFieldKeyPress({
+    it('should go to the first month of the current year when a value in December is provided', async () => {
+      await testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date('2022-12-15'),
         key: 'ArrowUp',
@@ -149,16 +147,16 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should set the day 1 when no value is provided', () => {
-      testFieldKeyPress({
+    it('should set the day 1 when no value is provided', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
         key: 'ArrowUp',
         expectedValue: '01',
       });
     });
 
-    it('should increment the day when a value is provided', () => {
-      testFieldKeyPress({
+    it('should increment the day when a value is provided', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date(),
         key: 'ArrowUp',
@@ -166,8 +164,8 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should increment the month and keep the day when the new month has fewer days', () => {
-      testFieldKeyPress({
+    it('should increment the month and keep the day when the new month has fewer days', async () => {
+      await testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date('2022-05-31'),
         key: 'ArrowUp',
@@ -175,8 +173,8 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should go to the first day of the current month when a value in the last day of the month is provided', () => {
-      testFieldKeyPress({
+    it('should go to the first day of the current month when a value in the last day of the month is provided', async () => {
+      await testFieldKeyPress({
         format: `${adapter.formats.month} ${adapter.formats.dayOfMonth}`,
         defaultValue: adapter.date('2022-06-30'),
         key: 'ArrowUp',
@@ -185,8 +183,8 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should not edit the value when props.readOnly = true and no value is provided (ArrowUp)', () => {
-      testFieldKeyPress({
+    it('should not edit the value when props.readOnly = true and no value is provided (ArrowUp)', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.year,
         readOnly: true,
         key: 'ArrowUp',
@@ -194,8 +192,8 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
     });
 
-    it('should not edit the value when props.readOnly = true and a value is provided (ArrowUp)', () => {
-      testFieldKeyPress({
+    it('should not edit the value when props.readOnly = true and a value is provided (ArrowUp)', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.year,
         defaultValue: adapter.date(),
         readOnly: true,
@@ -205,185 +203,177 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
   });
 
-  describeAdapters('key: Delete', DateField, ({ adapter, testFieldKeyPress, renderWithProps }) => {
-    it('should clear the selected section when only this section is completed', async () => {
-      const view = renderWithProps({
-        format: `${adapter.formats.month} ${adapter.formats.year}`,
+  describeAdapters(
+    'key: Delete',
+    DateField,
+    ({ adapter, testFieldKeyPress, renderWithProps }) => {
+      it('should clear the selected section when only this section is completed', async () => {
+        const view = renderWithProps({
+          format: `${adapter.formats.month} ${adapter.formats.year}`,
+        });
+
+        await view.selectSection('month');
+
+        // Set a value for the "month" section
+        await view.pressKey('j');
+        expectFieldValue(view.getSectionsContainer(), 'January YYYY');
+
+        await view.user.keyboard('{Delete}');
+        expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
+
+        view.unmount();
       });
 
-      await view.selectSectionAsync('month');
-
-      // Set a value for the "month" section
-      view.pressKey(0, 'j');
-      expectFieldValue(view.getSectionsContainer(), 'January YYYY');
-
-      fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
-      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
-
-      view.unmount();
-    });
-
-    it('should clear the selected section when all sections are completed', () => {
-      testFieldKeyPress({
-        format: `${adapter.formats.month} ${adapter.formats.year}`,
-        defaultValue: adapter.date(),
-        key: 'Delete',
-        expectedValue: 'MMMM 2022',
-      });
-    });
-
-    it('should clear all the sections when all sections are selected and all sections are completed', async () => {
-      const view = renderWithProps({
-        format: `${adapter.formats.month} ${adapter.formats.year}`,
-        defaultValue: adapter.date(),
+      it('should clear the selected section when all sections are completed', async () => {
+        await testFieldKeyPress({
+          format: `${adapter.formats.month} ${adapter.formats.year}`,
+          defaultValue: adapter.date(),
+          key: 'Delete',
+          expectedValue: 'MMMM 2022',
+        });
       });
 
-      await view.selectSectionAsync('month');
+      it('should clear all the sections when all sections are selected and all sections are completed', async () => {
+        const view = renderWithProps({
+          format: `${adapter.formats.month} ${adapter.formats.year}`,
+          defaultValue: adapter.date(),
+        });
 
-      // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), {
-        key: 'a',
-        keyCode: 65,
-        ctrlKey: true,
+        await view.selectSection('month');
+
+        // Select all sections
+        await view.user.keyboard('{Control>}a{/Control}');
+
+        await view.user.keyboard('{Delete}');
+        expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
+
+        view.unmount();
       });
 
-      fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
-      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
+      it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
+        const view = renderWithProps({
+          format: `${adapter.formats.month} ${adapter.formats.year}`,
+        });
 
-      view.unmount();
-    });
+        await view.selectSection('month');
 
-    it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
-      const view = renderWithProps({
-        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        // Set a value for the "month" section
+        await view.pressKey('j');
+        expectFieldValue(view.getSectionsContainer(), 'January YYYY');
+
+        // Select all sections
+        await view.user.keyboard('{Control>}a{/Control}');
+
+        await view.user.keyboard('{Delete}');
+        expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
+
+        view.unmount();
       });
 
-      await view.selectSectionAsync('month');
+      it('should not keep query after typing again on a cleared section', async () => {
+        const view = renderWithProps({
+          format: adapter.formats.year,
+        });
 
-      // Set a value for the "month" section
-      view.pressKey(0, 'j');
-      expectFieldValue(view.getSectionsContainer(), 'January YYYY');
+        await view.selectSection('year');
 
-      // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), {
-        key: 'a',
-        keyCode: 65,
-        ctrlKey: true,
+        await view.pressKey('2');
+        expectFieldValue(view.getSectionsContainer(), '0002');
+
+        await view.user.keyboard('[Delete]');
+        expectFieldValue(view.getSectionsContainer(), 'YYYY');
+
+        await view.pressKey('2');
+        expectFieldValue(view.getSectionsContainer(), '0002');
+
+        view.unmount();
       });
 
-      fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
-      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
-
-      view.unmount();
-    });
-
-    it('should not keep query after typing again on a cleared section', async () => {
-      const view = renderWithProps({
-        format: adapter.formats.year,
+      it('should not clear the sections when props.readOnly = true', async () => {
+        await testFieldKeyPress({
+          format: adapter.formats.year,
+          defaultValue: adapter.date(),
+          readOnly: true,
+          key: 'Delete',
+          expectedValue: '2022',
+        });
       });
 
-      await view.selectSectionAsync('year');
+      it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
+        const onChange = spy();
 
-      view.pressKey(0, '2');
-      expectFieldValue(view.getSectionsContainer(), '0002');
+        const view = renderWithProps({
+          format: `${adapter.formats.month} ${adapter.formats.year}`,
+          onChange,
+        });
 
-      await view.user.keyboard('[Delete]');
-      expectFieldValue(view.getSectionsContainer(), 'YYYY');
+        await view.selectSection('month');
 
-      view.pressKey(0, '2');
-      expectFieldValue(view.getSectionsContainer(), '0002');
+        // Select all sections
+        await view.user.keyboard('{Control>}a{/Control}');
 
-      view.unmount();
-    });
+        await view.user.keyboard('{Delete}');
+        expect(onChange.callCount).to.equal(0);
 
-    it('should not clear the sections when props.readOnly = true', () => {
-      testFieldKeyPress({
-        format: adapter.formats.year,
-        defaultValue: adapter.date(),
-        readOnly: true,
-        key: 'Delete',
-        expectedValue: '2022',
-      });
-    });
-
-    it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
-      const onChange = spy();
-
-      const view = renderWithProps({
-        format: `${adapter.formats.month} ${adapter.formats.year}`,
-        onChange,
+        view.unmount();
       });
 
-      await view.selectSectionAsync('month');
+      it('should call `onChange` when clearing the first section', async () => {
+        const onChange = spy();
 
-      // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), {
-        key: 'a',
-        keyCode: 65,
-        ctrlKey: true,
+        const view = renderWithProps({
+          format: `${adapter.formats.month} ${adapter.formats.year}`,
+          defaultValue: adapter.date(),
+          onChange,
+        });
+
+        await view.selectSection('month');
+
+        await view.user.keyboard('[Delete]');
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.firstArg).to.equal(null);
+
+        await view.user.keyboard('[ArrowRight][Delete]');
+
+        expect(onChange.callCount).to.equal(1);
+
+        view.unmount();
       });
 
-      fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
-      expect(onChange.callCount).to.equal(0);
+      it('should not call `onChange` if the section is already empty', async () => {
+        const onChange = spy();
 
-      view.unmount();
-    });
+        const view = renderWithProps({
+          format: `${adapter.formats.month} ${adapter.formats.year}`,
+          defaultValue: adapter.date(),
+          onChange,
+        });
 
-    it('should call `onChange` when clearing the first section', async () => {
-      const onChange = spy();
+        await view.selectSection('month');
 
-      const view = renderWithProps({
-        format: `${adapter.formats.month} ${adapter.formats.year}`,
-        defaultValue: adapter.date(),
-        onChange,
+        await view.user.keyboard('[Delete]');
+        expect(onChange.callCount).to.equal(1);
+
+        await view.user.keyboard('[Delete]');
+        expect(onChange.callCount).to.equal(1);
+
+        view.unmount();
       });
-
-      await view.selectSectionAsync('month');
-
-      await view.user.keyboard('[Delete]');
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).to.equal(null);
-
-      await view.user.keyboard('[ArrowRight][Delete]');
-
-      expect(onChange.callCount).to.equal(1);
-
-      view.unmount();
-    });
-
-    it('should not call `onChange` if the section is already empty', async () => {
-      const onChange = spy();
-
-      const view = renderWithProps({
-        format: `${adapter.formats.month} ${adapter.formats.year}`,
-        defaultValue: adapter.date(),
-        onChange,
-      });
-
-      await view.selectSectionAsync('month');
-
-      await view.user.keyboard('[Delete]');
-      expect(onChange.callCount).to.equal(1);
-
-      await view.user.keyboard('[Delete]');
-      expect(onChange.callCount).to.equal(1);
-
-      view.unmount();
-    });
-  });
+    },
+  );
 
   describeAdapters('key: PageUp', DateField, ({ adapter, testFieldKeyPress }) => {
     describe('day section (PageUp)', () => {
-      it('should set day to minimal when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set day to minimal when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           key: 'PageUp',
           expectedValue: '01',
         });
       });
 
-      it('should increment day by 5 when value is provided', () => {
-        testFieldKeyPress({
+      it('should increment day by 5 when value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           defaultValue: adapter.date('2022-01-15'),
           key: 'PageUp',
@@ -391,8 +381,8 @@ describe('<DateField /> - Editing Keyboard', () => {
         });
       });
 
-      it('should flip day field when value is higher than 27', () => {
-        testFieldKeyPress({
+      it('should flip day field when value is higher than 27', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           defaultValue: adapter.date('2022-01-28'),
           key: 'PageUp',
@@ -402,16 +392,16 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     describe('weekday section (PageUp)', () => {
-      it('should set weekday to Sunday when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set weekday to Sunday when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.weekday,
           key: 'PageUp',
           expectedValue: 'Sunday',
         });
       });
 
-      it('should increment weekday by 5 when value is provided', () => {
-        testFieldKeyPress({
+      it('should increment weekday by 5 when value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.weekday,
           defaultValue: adapter.date('2024-06-03'),
           key: 'PageUp',
@@ -419,8 +409,8 @@ describe('<DateField /> - Editing Keyboard', () => {
         });
       });
 
-      it('should flip weekday field when value is higher than 3', () => {
-        testFieldKeyPress({
+      it('should flip weekday field when value is higher than 3', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.weekday,
           defaultValue: adapter.date('2024-06-07'),
           key: 'PageUp',
@@ -430,16 +420,16 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     describe('month section (PageUp)', () => {
-      it('should set month to January when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set month to January when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.month,
           key: 'PageUp',
           expectedValue: 'January',
         });
       });
 
-      it('should increment month by 5 when value is provided', () => {
-        testFieldKeyPress({
+      it('should increment month by 5 when value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.month,
           defaultValue: adapter.date('2022-01-15'),
           key: 'PageUp',
@@ -447,8 +437,8 @@ describe('<DateField /> - Editing Keyboard', () => {
         });
       });
 
-      it('should flip month field when value is higher than 7', () => {
-        testFieldKeyPress({
+      it('should flip month field when value is higher than 7', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.month,
           defaultValue: adapter.date('2022-08-15'),
           key: 'PageUp',
@@ -458,16 +448,16 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     describe('year section (PageUp)', () => {
-      it('should set year to current year when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set year to current year when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.year,
           key: 'PageUp',
           expectedValue: new Date().getFullYear().toString(),
         });
       });
 
-      it('should increment year by 5 when value is provided', () => {
-        testFieldKeyPress({
+      it('should increment year by 5 when value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.year,
           defaultValue: adapter.date('2022-01-15'),
           key: 'PageUp',
@@ -475,8 +465,8 @@ describe('<DateField /> - Editing Keyboard', () => {
         });
       });
 
-      it('should flip year field when value is higher than 9995', () => {
-        testFieldKeyPress({
+      it('should flip year field when value is higher than 9995', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.year,
           defaultValue: adapter.date('9996-01-15'),
           key: 'PageUp',
@@ -488,16 +478,16 @@ describe('<DateField /> - Editing Keyboard', () => {
 
   describeAdapters('key: PageDown', DateField, ({ adapter, testFieldKeyPress }) => {
     describe('day section (PageDown)', () => {
-      it('should set day to maximal when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set day to maximal when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           key: 'PageDown',
           expectedValue: '31',
         });
       });
 
-      it('should decrement day by 5 when value is provided', () => {
-        testFieldKeyPress({
+      it('should decrement day by 5 when value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           defaultValue: adapter.date('2022-01-15'),
           key: 'PageDown',
@@ -505,8 +495,8 @@ describe('<DateField /> - Editing Keyboard', () => {
         });
       });
 
-      it('should flip day field when value is lower than 5', () => {
-        testFieldKeyPress({
+      it('should flip day field when value is lower than 5', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.dayOfMonth,
           defaultValue: adapter.date('2022-01-04'),
           key: 'PageDown',
@@ -516,16 +506,16 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     describe('weekday section (PageDown)', () => {
-      it('should set weekday to Saturday when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set weekday to Saturday when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.weekday,
           key: 'PageDown',
           expectedValue: 'Saturday',
         });
       });
 
-      it('should decrement weekday by 5 when value is provided', () => {
-        testFieldKeyPress({
+      it('should decrement weekday by 5 when value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.weekday,
           defaultValue: adapter.date('2024-06-22'),
           key: 'PageDown',
@@ -533,8 +523,8 @@ describe('<DateField /> - Editing Keyboard', () => {
         });
       });
 
-      it('should flip weekday field when value is lower than 5', () => {
-        testFieldKeyPress({
+      it('should flip weekday field when value is lower than 5', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.weekday,
           defaultValue: adapter.date('2024-06-23'),
           key: 'PageDown',
@@ -544,16 +534,16 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     describe('month section (PageDown)', () => {
-      it('should set month to December when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set month to December when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.month,
           key: 'PageDown',
           expectedValue: 'December',
         });
       });
 
-      it('should decrement month by 5 when value is provided', () => {
-        testFieldKeyPress({
+      it('should decrement month by 5 when value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.month,
           defaultValue: adapter.date('2022-10-15'),
           key: 'PageDown',
@@ -561,8 +551,8 @@ describe('<DateField /> - Editing Keyboard', () => {
         });
       });
 
-      it('should flip month field when value is lower than 5', () => {
-        testFieldKeyPress({
+      it('should flip month field when value is lower than 5', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.month,
           defaultValue: adapter.date('2022-04-15'),
           key: 'PageDown',
@@ -572,16 +562,16 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     describe('year section (PageDown)', () => {
-      it('should set year to current year when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set year to current year when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.year,
           key: 'PageDown',
           expectedValue: new Date().getFullYear().toString(),
         });
       });
 
-      it('should decrement year by 5 when value is provided', () => {
-        testFieldKeyPress({
+      it('should decrement year by 5 when value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.year,
           defaultValue: adapter.date('2022-01-15'),
           key: 'PageDown',
@@ -589,8 +579,8 @@ describe('<DateField /> - Editing Keyboard', () => {
         });
       });
 
-      it('should flip year field when value is lower than 5', () => {
-        testFieldKeyPress({
+      it('should flip year field when value is lower than 5', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.year,
           defaultValue: adapter.date('0003-01-15'),
           key: 'PageDown',

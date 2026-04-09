@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { vi } from 'vitest';
@@ -7,9 +7,11 @@ import { vi } from 'vitest';
 describe('<MonthCalendar />', () => {
   const { render } = createPickerRenderer();
 
-  it('should allow to pick month standalone by click, `Enter` and `Space`', () => {
+  it('should allow to pick month standalone by click, `Enter` and `Space`', async () => {
     const onChange = spy();
-    render(<MonthCalendar value={adapterToUse.date('2019-02-02')} onChange={onChange} />);
+    const { user } = render(
+      <MonthCalendar value={adapterToUse.date('2019-02-02')} onChange={onChange} />,
+    );
     const targetMonth = screen.getByRole('radio', { name: 'February' });
 
     // A native button implies Enter and Space keydown behavior
@@ -19,7 +21,7 @@ describe('<MonthCalendar />', () => {
     // - fireEvent.keyUp(targetDay, { key: 'Space' })
     expect(targetMonth.tagName).to.equal('BUTTON');
 
-    fireEvent.click(targetMonth);
+    await user.click(targetMonth);
 
     expect(onChange.callCount).to.equal(1);
     expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 2));
@@ -34,11 +36,11 @@ describe('<MonthCalendar />', () => {
       vi.useRealTimers();
     });
 
-    it('should select start of month without time when no initial value is present', () => {
+    it('should select start of month without time when no initial value is present', async () => {
       const onChange = spy();
-      render(<MonthCalendar onChange={onChange} />);
+      const { user } = render(<MonthCalendar onChange={onChange} />);
 
-      fireEvent.click(screen.getByRole('radio', { name: 'February' }));
+      await user.click(screen.getByRole('radio', { name: 'February' }));
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
@@ -79,51 +81,53 @@ describe('<MonthCalendar />', () => {
     expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
   });
 
-  it('does not allow to pick months if readOnly prop is passed', () => {
+  it('does not allow to pick months if readOnly prop is passed', async () => {
     const onChangeMock = spy();
-    render(
+    const { user } = render(
       <MonthCalendar value={adapterToUse.date('2019-02-02')} onChange={onChangeMock} readOnly />,
     );
 
-    fireEvent.click(screen.getByText('Mar', { selector: 'button' }));
+    await user.click(screen.getByText('Mar', { selector: 'button' }));
     expect(onChangeMock.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByText('Apr', { selector: 'button' }));
+    await user.click(screen.getByText('Apr', { selector: 'button' }));
     expect(onChangeMock.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByText('Jul', { selector: 'button' }));
+    await user.click(screen.getByText('Jul', { selector: 'button' }));
     expect(onChangeMock.callCount).to.equal(0);
   });
 
-  it('clicking on a month button should not trigger the form submit', () => {
+  it('clicking on a month button should not trigger the form submit', async () => {
     const onSubmitMock = spy();
-    render(
+    const { user } = render(
       <form onSubmit={onSubmitMock}>
         <MonthCalendar defaultValue={adapterToUse.date('2018-02-02')} />
       </form>,
     );
 
-    fireEvent.click(screen.getByText('Mar', { selector: 'button' }));
+    await user.click(screen.getByText('Mar', { selector: 'button' }));
     expect(onSubmitMock.callCount).to.equal(0);
   });
 
   describe('Disabled', () => {
-    it('should disable all months if props.disabled = true', () => {
+    it('should disable all months if props.disabled = true', async () => {
       const onChange = spy();
-      render(
+      const { user } = render(
         <MonthCalendar value={adapterToUse.date('2019-02-15')} onChange={onChange} disabled />,
       );
 
-      screen.getAllByRole('radio').forEach((monthButton) => {
+      const monthButtons = screen.getAllByRole('radio');
+      for (const monthButton of monthButtons) {
         expect(monthButton).to.have.attribute('disabled');
-        fireEvent.click(monthButton);
+        // eslint-disable-next-line no-await-in-loop
+        await user.setup({ pointerEventsCheck: 0 }).click(monthButton);
         expect(onChange.callCount).to.equal(0);
-      });
+      }
     });
 
-    it('should disable months before props.minDate but not the month in which props.minDate is', () => {
+    it('should disable months before props.minDate but not the month in which props.minDate is', async () => {
       const onChange = spy();
-      render(
+      const { user } = render(
         <MonthCalendar
           value={adapterToUse.date('2019-02-15')}
           onChange={onChange}
@@ -137,16 +141,16 @@ describe('<MonthCalendar />', () => {
       expect(january).to.have.attribute('disabled');
       expect(february).not.to.have.attribute('disabled');
 
-      fireEvent.click(january);
+      await user.setup({ pointerEventsCheck: 0 }).click(january);
       expect(onChange.callCount).to.equal(0);
 
-      fireEvent.click(february);
+      await user.click(february);
       expect(onChange.callCount).to.equal(1);
     });
 
-    it('should disable months after props.maxDate but not the month in which props.maxDate is', () => {
+    it('should disable months after props.maxDate but not the month in which props.maxDate is', async () => {
       const onChange = spy();
-      render(
+      const { user } = render(
         <MonthCalendar
           value={adapterToUse.date('2019-02-15')}
           onChange={onChange}
@@ -160,16 +164,16 @@ describe('<MonthCalendar />', () => {
       expect(may).to.have.attribute('disabled');
       expect(april).not.to.have.attribute('disabled');
 
-      fireEvent.click(may);
+      await user.setup({ pointerEventsCheck: 0 }).click(may);
       expect(onChange.callCount).to.equal(0);
 
-      fireEvent.click(april);
+      await user.click(april);
       expect(onChange.callCount).to.equal(1);
     });
 
-    it('should disable months if props.shouldDisableMonth returns true', () => {
+    it('should disable months if props.shouldDisableMonth returns true', async () => {
       const onChange = spy();
-      render(
+      const { user } = render(
         <MonthCalendar
           value={adapterToUse.date('2019-02-02')}
           onChange={onChange}
@@ -183,10 +187,10 @@ describe('<MonthCalendar />', () => {
       expect(april).to.have.attribute('disabled');
       expect(jun).not.to.have.attribute('disabled');
 
-      fireEvent.click(april);
+      await user.setup({ pointerEventsCheck: 0 }).click(april);
       expect(onChange.callCount).to.equal(0);
 
-      fireEvent.click(jun);
+      await user.click(jun);
       expect(onChange.callCount).to.equal(1);
     });
 

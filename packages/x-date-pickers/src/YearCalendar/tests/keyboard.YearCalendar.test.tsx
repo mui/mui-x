@@ -3,7 +3,6 @@ import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-/* eslint-disable mui/disallow-active-element-as-key-event-target */
 describe('<YearCalendar /> - Keyboard', () => {
   const { render } = createPickerRenderer();
 
@@ -11,8 +10,8 @@ describe('<YearCalendar /> - Keyboard', () => {
     direction: 'rtl',
   });
 
-  function changeYear(
-    keyPressed: string,
+  async function changeYear(
+    userEventKey: string,
     expectedValue: string,
     yearsOrder: 'asc' | 'desc' = 'asc',
     direction: 'ltr' | 'rtl' = 'ltr',
@@ -33,42 +32,45 @@ describe('<YearCalendar /> - Keyboard', () => {
         yearCalendar
       );
 
-    render(elementsToRender);
+    const { user } = render(elementsToRender);
     const startYear = screen.getByRole('radio', { checked: true });
+    // `fireEvent.focus` wraps the focus call in `act()` so the component's
+    // internal focus-state update (via `useControlled`) doesn't leak a React
+    // warning about unwrapped state updates.
     fireEvent.focus(startYear);
-    fireEvent.keyDown(document.activeElement!, { key: keyPressed });
+    await user.keyboard(userEventKey);
     expect(document.activeElement?.textContent).to.equal(expectedValue);
   }
 
-  it('should increase the year when pressing right and yearsOrder is asc (default)', () => {
-    changeYear('ArrowRight', '2001');
+  it('should increase the year when pressing right and yearsOrder is asc (default)', async () => {
+    await changeYear('{ArrowRight}', '2001');
   });
 
-  it('should decrease the year when pressing left and yearsOrder is asc (default)', () => {
-    changeYear('ArrowLeft', '1999');
+  it('should decrease the year when pressing left and yearsOrder is asc (default)', async () => {
+    await changeYear('{ArrowLeft}', '1999');
   });
 
-  it('should decrease the year when pressing right and yearsOrder is desc', () => {
-    changeYear('ArrowRight', '1999', 'desc');
+  it('should decrease the year when pressing right and yearsOrder is desc', async () => {
+    await changeYear('{ArrowRight}', '1999', 'desc');
   });
 
-  it('should increase the year when pressing left and yearsOrder is desc', () => {
-    changeYear('ArrowLeft', '2001', 'desc');
+  it('should increase the year when pressing left and yearsOrder is desc', async () => {
+    await changeYear('{ArrowLeft}', '2001', 'desc');
   });
 
-  it('should decrease the year when pressing right and yearsOrder is asc (default) and theme is RTL', () => {
-    changeYear('ArrowRight', '1999', 'asc', 'rtl');
+  it('should decrease the year when pressing right and yearsOrder is asc (default) and theme is RTL', async () => {
+    await changeYear('{ArrowRight}', '1999', 'asc', 'rtl');
   });
 
-  it('should increase the year when pressing left and yearsOrder is asc (default) and theme is RTL', () => {
-    changeYear('ArrowLeft', '2001', 'asc', 'rtl');
+  it('should increase the year when pressing left and yearsOrder is asc (default) and theme is RTL', async () => {
+    await changeYear('{ArrowLeft}', '2001', 'asc', 'rtl');
   });
 
-  it('should increase the year when pressing right and yearsOrder is desc and theme is RTL', () => {
-    changeYear('ArrowRight', '2001', 'desc', 'rtl');
+  it('should increase the year when pressing right and yearsOrder is desc and theme is RTL', async () => {
+    await changeYear('{ArrowRight}', '2001', 'desc', 'rtl');
   });
 
-  it('should decrease the year when pressing left and yearsOrder is desc and theme is RTL', () => {
-    changeYear('ArrowLeft', '1999', 'desc', 'rtl');
+  it('should decrease the year when pressing left and yearsOrder is desc and theme is RTL', async () => {
+    await changeYear('{ArrowLeft}', '1999', 'desc', 'rtl');
   });
 });

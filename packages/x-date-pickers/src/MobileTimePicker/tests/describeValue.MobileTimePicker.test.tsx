@@ -1,4 +1,4 @@
-import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import { screen, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -35,9 +35,9 @@ describe('<MobileTimePicker /> - Describe Value', () => {
 
       expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, { isOpened, applySameValue, user }) => {
       if (!isOpened) {
-        openPicker({ type: 'time' });
+        await openPicker(user, { type: 'time' });
       }
 
       const newValue = applySameValue
@@ -59,16 +59,21 @@ describe('<MobileTimePicker /> - Describe Value', () => {
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        fireEvent.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
+        await user.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
       }
 
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        await user.keyboard('{Escape}');
       } else {
-        // return to the hours view in case we'd like to repeat the selection process
-        fireEvent.click(screen.getByRole('button', { name: 'Open previous view' }));
+        // Return to the hours view in case we'd like to repeat the selection
+        // process. The "Open previous view" button becomes disabled after we
+        // land back on the first view, which traps focus on a disabled
+        // element and swallows follow-up keyboard events. Click the dialog
+        // body to move focus to a live element so callers can press Escape
+        // to dismiss the picker.
+        await user.click(screen.getByRole('button', { name: 'Open previous view' }));
+        await user.click(screen.getByRole('dialog'));
       }
 
       return newValue;

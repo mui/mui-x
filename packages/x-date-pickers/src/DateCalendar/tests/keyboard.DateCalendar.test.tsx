@@ -1,4 +1,4 @@
-import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 
@@ -13,20 +13,18 @@ describe('<DateCalendar /> keyboard interactions', () => {
     });
 
     [
-      { key: 'End', expectFocusedDay: '15' },
-      { key: 'Home', expectFocusedDay: '9' },
-      { key: 'ArrowLeft', expectFocusedDay: '12' },
-      { key: 'ArrowUp', expectFocusedDay: '6' },
-      { key: 'ArrowRight', expectFocusedDay: '14' },
-      { key: 'ArrowDown', expectFocusedDay: '20' },
-    ].forEach(({ key, expectFocusedDay }) => {
+      { key: 'End', userEventKey: '{End}', expectFocusedDay: '15' },
+      { key: 'Home', userEventKey: '{Home}', expectFocusedDay: '9' },
+      { key: 'ArrowLeft', userEventKey: '{ArrowLeft}', expectFocusedDay: '12' },
+      { key: 'ArrowUp', userEventKey: '{ArrowUp}', expectFocusedDay: '6' },
+      { key: 'ArrowRight', userEventKey: '{ArrowRight}', expectFocusedDay: '14' },
+      { key: 'ArrowDown', userEventKey: '{ArrowDown}', expectFocusedDay: '20' },
+    ].forEach(({ key, userEventKey, expectFocusedDay }) => {
       it(`${key}`, async () => {
-        render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
+        const { user } = render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
 
         await act(async () => screen.getByText('13').focus());
-        // Don't care about what's focused.
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+        await user.keyboard(userEventKey);
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
@@ -35,44 +33,43 @@ describe('<DateCalendar /> keyboard interactions', () => {
     });
 
     it('should manage a sequence of keyboard interactions', async () => {
-      render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
+      const { user } = render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
 
       await act(async () => screen.getByText('13').focus());
       const interactions = [
-        { key: 'End', expectFocusedDay: '15' },
-        { key: 'ArrowLeft', expectFocusedDay: '14' },
-        { key: 'ArrowUp', expectFocusedDay: '7' },
-        { key: 'Home', expectFocusedDay: '2' },
-        { key: 'ArrowDown', expectFocusedDay: '9' },
+        { userEventKey: '{End}', expectFocusedDay: '15' },
+        { userEventKey: '{ArrowLeft}', expectFocusedDay: '14' },
+        { userEventKey: '{ArrowUp}', expectFocusedDay: '7' },
+        { userEventKey: '{Home}', expectFocusedDay: '2' },
+        { userEventKey: '{ArrowDown}', expectFocusedDay: '9' },
       ];
-      interactions.forEach(({ key, expectFocusedDay }) => {
-        // Don't care about what's focused.
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+      for (const { userEventKey, expectFocusedDay } of interactions) {
+        // eslint-disable-next-line no-await-in-loop
+        await user.keyboard(userEventKey);
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
-      });
+      }
     });
 
     [
       // Switch between months
-      { initialDay: '01', key: 'ArrowLeft', expectFocusedDay: '31' },
-      { initialDay: '05', key: 'ArrowUp', expectFocusedDay: '29' },
-      { initialDay: '31', key: 'ArrowRight', expectFocusedDay: '1' },
-      { initialDay: '30', key: 'ArrowDown', expectFocusedDay: '6' },
+      { initialDay: '01', key: 'ArrowLeft', userEventKey: '{ArrowLeft}', expectFocusedDay: '31' },
+      { initialDay: '05', key: 'ArrowUp', userEventKey: '{ArrowUp}', expectFocusedDay: '29' },
+      { initialDay: '31', key: 'ArrowRight', userEventKey: '{ArrowRight}', expectFocusedDay: '1' },
+      { initialDay: '30', key: 'ArrowDown', userEventKey: '{ArrowDown}', expectFocusedDay: '6' },
       // Switch between weeks
-      { initialDay: '10', key: 'ArrowLeft', expectFocusedDay: '9' },
-      { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10' },
-    ].forEach(({ initialDay, key, expectFocusedDay }) => {
+      { initialDay: '10', key: 'ArrowLeft', userEventKey: '{ArrowLeft}', expectFocusedDay: '9' },
+      { initialDay: '09', key: 'ArrowRight', userEventKey: '{ArrowRight}', expectFocusedDay: '10' },
+    ].forEach(({ initialDay, key, userEventKey, expectFocusedDay }) => {
       it(`${key}`, async () => {
-        render(<DateCalendar defaultValue={adapterToUse.date(`2020-08-${initialDay}`)} />);
+        const { user } = render(
+          <DateCalendar defaultValue={adapterToUse.date(`2020-08-${initialDay}`)} />,
+        );
 
         await act(async () => screen.getByText(`${Number(initialDay)}`).focus());
-        // Don't care about what's focused.
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+        await user.keyboard(userEventKey);
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
@@ -91,14 +88,14 @@ describe('<DateCalendar /> keyboard interactions', () => {
         adapterToUse.date('2020-02-01'),
       ];
       [
-        { initialDay: '11', key: 'ArrowLeft', expectFocusedDay: '9' },
-        { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '11' },
+        { initialDay: '11', key: 'ArrowLeft', userEventKey: '{ArrowLeft}', expectFocusedDay: '9' },
+        { initialDay: '09', key: 'ArrowRight', userEventKey: '{ArrowRight}', expectFocusedDay: '11' },
         // Switch between months
-        { initialDay: '03', key: 'ArrowLeft', expectFocusedDay: '30' },
-        { initialDay: '30', key: 'ArrowRight', expectFocusedDay: '2' },
-      ].forEach(({ initialDay, key, expectFocusedDay }) => {
+        { initialDay: '03', key: 'ArrowLeft', userEventKey: '{ArrowLeft}', expectFocusedDay: '30' },
+        { initialDay: '30', key: 'ArrowRight', userEventKey: '{ArrowRight}', expectFocusedDay: '2' },
+      ].forEach(({ initialDay, key, userEventKey, expectFocusedDay }) => {
         it(`${key}`, async () => {
-          render(
+          const { user } = render(
             <DateCalendar
               defaultValue={adapterToUse.date(`2020-01-${initialDay}`)}
               shouldDisableDate={(date) =>
@@ -108,9 +105,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
           );
 
           await act(async () => screen.getByText(`${Number(initialDay)}`).focus());
-          // Don't care about what's focused.
-          // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-          fireEvent.keyDown(document.activeElement!, { key });
+          await user.keyboard(userEventKey);
 
           // Based on column header, screen reader should pronounce <Day Number> <Week Day>
           // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
@@ -121,13 +116,11 @@ describe('<DateCalendar /> keyboard interactions', () => {
 
     describe('navigate months', () => {
       it('should keep focus on arrow when switching month', async () => {
-        render(<DateCalendar />);
+        const { user } = render(<DateCalendar />);
 
         const nextMonthButton = screen.getByRole('button', { name: 'Next month' });
         await act(async () => nextMonthButton.focus());
-        // Don't care about what's focused.
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+        await user.keyboard('{Enter}');
 
         expect(document.activeElement).toHaveAccessibleName('Next month');
       });

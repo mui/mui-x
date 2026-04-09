@@ -3,7 +3,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
   getFieldSectionsContainer,
-  openPickerAsync,
+  openPicker,
 } from 'test/utils/pickers';
 
 describe('DesktopDatePicker keepOpenDuringFieldFocus - clicking field should not close', () => {
@@ -12,7 +12,7 @@ describe('DesktopDatePicker keepOpenDuringFieldFocus - clicking field should not
   it('keeps popper open when clicking back into the field while open', async () => {
     const { user } = render(<DesktopDatePicker keepOpenDuringFieldFocus />);
 
-    await openPickerAsync(user, { type: 'date' });
+    await openPicker(user, { type: 'date' });
 
     // Click the textbox (field input)
     const textbox = getFieldSectionsContainer();

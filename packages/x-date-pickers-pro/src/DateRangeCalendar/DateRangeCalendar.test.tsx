@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import {
-  screen,
   fireEvent,
+  screen,
   within,
   fireTouchChangedEvent,
   waitFor,
@@ -79,19 +79,19 @@ describe('<DateRangeCalendar />', () => {
       expect(rangeOn2ndCall[1]).to.toEqualDateTime(new Date(2019, 2, 19));
     });
 
-    it('should continue start selection if selected "end" date is before start', () => {
+    it('should continue start selection if selected "end" date is before start', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateRangeCalendar onChange={onChange} referenceDate={adapterToUse.date('2019-01-01')} />,
       );
 
-      fireEvent.click(getPickerDay('30', 'January 2019'));
-      fireEvent.click(getPickerDay('19', 'January 2019'));
+      await user.click(getPickerDay('30', 'January 2019'));
+      await user.click(getPickerDay('19', 'January 2019'));
 
       expect(screen.queryByTestId('DateRangeHighlight')).to.equal(null);
 
-      fireEvent.click(getPickerDay('30', 'January 2019'));
+      await user.click(getPickerDay('30', 'January 2019'));
 
       expect(onChange.callCount).to.equal(3);
       const range = onChange.lastCall.firstArg;
@@ -467,14 +467,14 @@ describe('<DateRangeCalendar />', () => {
     });
 
     it('should not go to the month of the end date when changing the start date and props.disableAutoMonthSwitching = true', async () => {
-      render(
+      const { user } = render(
         <DateRangeCalendar
           defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
           disableAutoMonthSwitching
         />,
       );
 
-      fireEvent.click(getPickerDay('5', 'January 2018'));
+      await user.click(getPickerDay('5', 'January 2018'));
       await waitFor(() => {
         expect(getPickerDay('1', 'January 2018')).not.to.equal(null);
       });
@@ -537,6 +537,9 @@ describe('<DateRangeCalendar />', () => {
           'disabled',
         );
       }
+      // `user.click` refuses disabled elements because of pointer-events: none.
+      // The assertion is that the click is ignored, so `fireEvent.click` is
+      // fine here.
       fireEvent.click(getPickerDay('2'));
       expect(handleChange.callCount).to.equal(0);
     });
@@ -562,6 +565,10 @@ describe('<DateRangeCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
+      // Performance tests assert render counts, which depend on the exact
+      // event sequence React reacts to. `fireEvent.click` fires a single
+      // synthetic click — `user.click` fires a full pointer sequence that
+      // triggers additional hover/focus state updates.
       fireEvent.click(getPickerDay('2'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });

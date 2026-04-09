@@ -3,6 +3,8 @@ import { spy } from 'sinon';
 import { screen, fireEvent, createDescribe } from '@mui/internal-test-utils';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { DescribePickerOptions } from './describePicker.types';
+// Note: fireEvent is kept for touchStart — user-event has no equivalent for
+// dispatching a raw touchstart event.
 
 function innerDescribePicker(ElementToTest: React.ElementType, options: DescribePickerOptions) {
   const { render, fieldType, hasNoView, variant } = options;
@@ -49,55 +51,61 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Component slot: DesktopPaper', () => {
-    it.skipIf(hasNoView || variant !== 'desktop')('should forward onClick and onTouchStart', () => {
-      const handleClick = spy();
-      const handleTouchStart = spy();
-      render(
-        <ElementToTest
-          {...propsToOpen}
-          slotProps={{
-            desktopPaper: {
-              onClick: handleClick,
-              onTouchStart: handleTouchStart,
-              'data-testid': 'paper',
-            },
-          }}
-        />,
-      );
-      const paper = screen.getByTestId('paper');
+    it.skipIf(hasNoView || variant !== 'desktop')(
+      'should forward onClick and onTouchStart',
+      async () => {
+        const handleClick = spy();
+        const handleTouchStart = spy();
+        const { user } = render(
+          <ElementToTest
+            {...propsToOpen}
+            slotProps={{
+              desktopPaper: {
+                onClick: handleClick,
+                onTouchStart: handleTouchStart,
+                'data-testid': 'paper',
+              },
+            }}
+          />,
+        );
+        const paper = screen.getByTestId('paper');
 
-      fireEvent.click(paper);
-      fireEvent.touchStart(paper);
+        await user.click(paper);
+        fireEvent.touchStart(paper);
 
-      expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
-    });
+        expect(handleClick.callCount).to.equal(1);
+        expect(handleTouchStart.callCount).to.equal(1);
+      },
+    );
   });
 
   describe('Component slot: Popper', () => {
-    it.skipIf(hasNoView || variant !== 'desktop')('should forward onClick and onTouchStart', () => {
-      const handleClick = spy();
-      const handleTouchStart = spy();
-      render(
-        <ElementToTest
-          {...propsToOpen}
-          slotProps={{
-            popper: {
-              onClick: handleClick,
-              onTouchStart: handleTouchStart,
-              'data-testid': 'popper',
-            },
-          }}
-        />,
-      );
-      const popper = screen.getByTestId('popper');
+    it.skipIf(hasNoView || variant !== 'desktop')(
+      'should forward onClick and onTouchStart',
+      async () => {
+        const handleClick = spy();
+        const handleTouchStart = spy();
+        const { user } = render(
+          <ElementToTest
+            {...propsToOpen}
+            slotProps={{
+              popper: {
+                onClick: handleClick,
+                onTouchStart: handleTouchStart,
+                'data-testid': 'popper',
+              },
+            }}
+          />,
+        );
+        const popper = screen.getByTestId('popper');
 
-      fireEvent.click(popper);
-      fireEvent.touchStart(popper);
+        await user.click(popper);
+        fireEvent.touchStart(popper);
 
-      expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
-    });
+        expect(handleClick.callCount).to.equal(1);
+        expect(handleTouchStart.callCount).to.equal(1);
+      },
+    );
   });
 
   describe('Component slot: Toolbar', () => {

@@ -5,7 +5,6 @@ import { FieldRef, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { PickerValue } from '@mui/x-date-pickers/internals';
-import { fireUserEvent } from '../fireUserEvent';
 import { expectFieldValue } from './assertions';
 
 interface BuildFieldInteractionsParams<P extends {}> {
@@ -16,17 +15,9 @@ interface BuildFieldInteractionsParams<P extends {}> {
 export type FieldSectionSelector = (
   selectedSection: FieldSectionType | undefined,
   index?: 'first' | 'last',
-) => void;
-
-export type FieldSectionSelectorAsync = (
-  selectedSection: FieldSectionType | undefined,
-  index?: 'first' | 'last',
 ) => Promise<void>;
 
-export type FieldPressCharacter = (
-  sectionIndex: number | undefined | null,
-  character: string,
-) => void;
+export type FieldPressCharacter = (character: string) => Promise<void>;
 
 export interface BuildFieldInteractionsResponse<P extends {}> {
   renderWithProps: (
@@ -38,15 +29,11 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
     },
   ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
     /**
-     * @deprecated use `selectSectionAsync` instead.
-     */
-    selectSection: FieldSectionSelector;
-    /**
      * Helper that simplifies selecting a section of the date field.
      * @param {FieldSectionType | undefined} selectedSection The requested section to select.
      * @param {'first' | 'last'} index The index of the section to select.
      */
-    selectSectionAsync: FieldSectionSelectorAsync;
+    selectSection: FieldSectionSelector;
     getSectionsContainer: () => HTMLDivElement;
     /**
      * Returns the contentEditable DOM node of the requested section.
@@ -61,9 +48,11 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
      */
     getActiveSection: (sectionIndex: number | undefined) => HTMLSpanElement;
     /**
-     * Press a character on the active section.
-     * @param {number | undefined | null} sectionIndex If null presses on the fieldContainer, otherwise if defined asserts that the active section is the expected one
-     * @param {string} character The character to press.
+     * Press a character on the currently focused section using user-event.
+     * The section must be focused first via `selectSection`.
+     * @param {string} character The character to press. Navigation keys like
+     *   `ArrowUp`, `Backspace`, `Delete` are mapped to their user-event
+     *   curly-brace form (`{ArrowUp}`); other strings are typed as text.
      */
     pressKey: FieldPressCharacter;
     getHiddenInput: () => HTMLInputElement;
@@ -74,13 +63,13 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
       expectedValue: string;
       selectedSection?: FieldSectionType;
     },
-  ) => void;
+  ) => Promise<void>;
   testFieldChange: (
     params: P & {
       keyStrokes: { value: string; expected: string }[];
       selectedSection?: FieldSectionType;
     },
-  ) => void;
+  ) => Promise<void>;
 }
 
 const RTL_THEME = createTheme({
@@ -154,30 +143,7 @@ export const buildFieldInteractions = <P extends {}>({
         `.${pickersSectionListClasses.section}[data-sectionindex="${sectionIndex}"] .${pickersSectionListClasses.sectionContent}`,
       )!;
 
-    const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {
-      let sectionIndexToSelect: number;
-      if (selectedSection === undefined) {
-        sectionIndexToSelect = 0;
-      } else {
-        const sections = fieldRef.current!.getSections();
-        sectionIndexToSelect = sections[index === 'first' ? 'findIndex' : 'findLastIndex'](
-          (section) => section.type === selectedSection,
-        );
-      }
-
-      act(() => {
-        fieldRef.current!.setSelectedSections(sectionIndexToSelect);
-      });
-
-      act(() => {
-        getSection(sectionIndexToSelect).focus();
-      });
-    };
-
-    const selectSectionAsync: FieldSectionSelectorAsync = async (
-      selectedSection,
-      index = 'first',
-    ) => {
+    const selectSection: FieldSectionSelector = async (selectedSection, index = 'first') => {
       let sectionIndexToSelect: number;
       if (selectedSection === undefined) {
         sectionIndexToSelect = 0;
@@ -211,10 +177,7 @@ export const buildFieldInteractions = <P extends {}>({
       return activeElement;
     };
 
-    const pressKey: FieldPressCharacter = (sectionIndex, key) => {
-      const target =
-        sectionIndex === null ? getSectionsContainer() : getActiveSection(sectionIndex);
-
+    const pressKey: FieldPressCharacter = async (key) => {
       if (
         [
           'ArrowUp',
@@ -224,19 +187,26 @@ export const buildFieldInteractions = <P extends {}>({
           'Home',
           'End',
           'Delete',
+          'Backspace',
           'ArrowLeft',
           'ArrowRight',
         ].includes(key)
       ) {
-        fireUserEvent.keyPress(target, { key });
+        await result.user.keyboard(`{${key}}`);
+      } else if (key === ' ') {
+        await result.user.keyboard('{Space}');
+      } else if (key === '') {
+        // The legacy sync helper passed an empty string to fire
+        // `input({ textContent: '' })`, which cleared the section. The
+        // equivalent user-event gesture is pressing Backspace.
+        await result.user.keyboard('{Backspace}');
       } else {
-        fireEvent.input(target, { target: { textContent: key } });
+        await result.user.keyboard(key);
       }
     };
 
     return {
       selectSection,
-      selectSectionAsync,
       getActiveSection,
       getSection,
       pressKey,
@@ -246,7 +216,7 @@ export const buildFieldInteractions = <P extends {}>({
     };
   };
 
-  const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = ({
+  const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = async ({
     key,
     expectedValue,
     selectedSection,
@@ -255,13 +225,13 @@ export const buildFieldInteractions = <P extends {}>({
     const response = renderWithProps({
       ...props,
     } as any);
-    response.selectSection(selectedSection);
-    response.pressKey(undefined, key);
+    await response.selectSection(selectedSection);
+    await response.pressKey(key);
     expectFieldValue(response.getSectionsContainer(), expectedValue);
     response.unmount();
   };
 
-  const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
+  const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = async ({
     keyStrokes,
     selectedSection,
     ...props
@@ -269,19 +239,24 @@ export const buildFieldInteractions = <P extends {}>({
     const response = renderWithProps({
       ...props,
     } as any);
-    response.selectSection(selectedSection);
-    keyStrokes.forEach((keyStroke) => {
-      response.pressKey(undefined, keyStroke.value);
+    await response.selectSection(selectedSection);
+    for (const keyStroke of keyStrokes) {
+      // eslint-disable-next-line no-await-in-loop
+      await response.pressKey(keyStroke.value);
       expectFieldValue(
         response.getSectionsContainer(),
         keyStroke.expected,
         (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
       );
-    });
+    }
     response.unmount();
   };
 
-  return { testFieldKeyPress, testFieldChange, renderWithProps };
+  return {
+    testFieldKeyPress,
+    testFieldChange,
+    renderWithProps,
+  };
 };
 
 export const cleanText = (text: string, specialCase?: 'singleDigit' | 'RTL') => {
