@@ -132,31 +132,3 @@ export function rangeButtonValueToZoom(
 
   return { start: startPercent, end: 100 };
 }
-
-/**
- * Checks if a range button's zoom matches the current zoom state.
- *
- * @param value The range button value.
- * @param currentZoom The current zoom data for the axis.
- * @param domainMin The minimum value of the full axis domain (timestamp).
- * @param domainMax The maximum value of the full axis domain (timestamp).
- * @param zoomedMin The minimum value of the current zoomed-in range (timestamp).
- * @param zoomedMax The maximum value of the current zoomed-in range (timestamp).
- * @param tolerance The tolerance for floating-point comparison (default 0.01).
- * @returns Whether the range button is currently active.
- */
-export function isRangeButtonActive(
-  value: RangeButtonValue,
-  currentZoom: { start: number; end: number },
-  domainMin: number,
-  domainMax: number,
-  zoomedMin: number,
-  zoomedMax: number,
-  tolerance: number = 0.01,
-): boolean {
-  const target = rangeButtonValueToZoom(value, domainMin, domainMax, zoomedMin, zoomedMax);
-  return (
-    Math.abs(currentZoom.start - target.start) <= tolerance &&
-    Math.abs(currentZoom.end - target.end) <= tolerance
-  );
-}
