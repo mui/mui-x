@@ -57,6 +57,9 @@
     "valueFormatter": {
       "type": { "description": "(value: number, context: { dataIndex: number }) =&gt; string" }
     },
+    "valueGetter": {
+      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; number" }
+    },
     "xAxisId": { "type": { "description": "number | string" } },
     "yAxisId": { "type": { "description": "number | string" } }
   }

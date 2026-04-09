@@ -179,7 +179,7 @@
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ colorMap?: { color: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;any&gt; }, data?: Array&lt;any&gt;, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
+        "description": "Array&lt;{ colorMap?: { color: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;any&gt; }, data?: Array&lt;any&gt;, dataKey?: string, id?: string, max?: number, min?: number, valueGetter?: func }&gt;"
       }
     },
     "zoomData": {

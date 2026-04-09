@@ -75,6 +75,9 @@
         "description": "(value: V, context: { location: \"legend\" } | { location: \"tick\", scale: (value: Date | number | { valueOf: () =&gt; number }) =&gt; number, defaultTickLabel: string, tickNumber?: number } | { location: \"tooltip\" | \"zoom-slider-tooltip\", scale: (value: Date | number | { valueOf: () =&gt; number }) =&gt; number }) =&gt; string"
       }
     },
+    "valueGetter": {
+      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; V" }
+    },
     "zoom": {
       "type": {
         "description": "boolean | { minStart?: number, maxEnd?: number, step?: number, minSpan?: number, maxSpan?: number, panning?: boolean, filterMode?: \"discard\" | \"keep\", slider?: { enabled?: boolean, size?: number, showTooltip?: \"always\" | \"hover\" | \"never\", preview?: boolean | { seriesIds?: string[] } } }"

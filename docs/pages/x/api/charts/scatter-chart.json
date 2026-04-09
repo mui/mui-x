@@ -165,7 +165,7 @@
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ colorMap?: { color: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;any&gt; }, data?: Array&lt;any&gt;, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
+        "description": "Array&lt;{ colorMap?: { color: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;any&gt; }, data?: Array&lt;any&gt;, dataKey?: string, id?: string, max?: number, min?: number, valueGetter?: func }&gt;"
       }
     }
   },
@@ -260,6 +260,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/dataset/\">Charts - Dataset</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
   "cssComponent": false
 }

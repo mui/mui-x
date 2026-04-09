@@ -38,6 +38,11 @@
         "description": "(value: { x: number, y: number, z?: any, id?: number | string }, context: { dataIndex: number }) =&gt; string"
       }
     },
+    "valueGetter": {
+      "type": {
+        "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; { x: number, y: number, z?: any, id?: number | string }"
+      }
+    },
     "xAxisId": { "type": { "description": "number | string" } },
     "yAxisId": { "type": { "description": "number | string" } },
     "zAxisId": { "type": { "description": "string" } }
