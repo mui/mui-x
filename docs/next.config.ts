@@ -130,7 +130,6 @@ export default withDeploymentConfig({
           'docs/src/modules/utils/mapApiPageTranslations': path.resolve(
             'src/modules/utils/mapApiPageTranslations.js',
           ),
-          docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
       },
