@@ -105,12 +105,7 @@ function ChartsToolbarPro({
   if (isZoomEnabled) {
     if (rangeButtons && rangeButtons.length > 0) {
       children.push(
-        <RangeButtonGroup
-          key="range-buttons"
-          value={activeRangeButtonKey}
-          exclusive
-          size="small"
-        >
+        <RangeButtonGroup key="range-buttons" value={activeRangeButtonKey} exclusive size="small">
           {rangeButtons.map((rangeButton) => (
             <ChartsToolbarRangeButtonTrigger
               key={rangeButton.label}
