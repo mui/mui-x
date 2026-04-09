@@ -12,7 +12,7 @@
     },
     "id": { "type": { "name": "string" } },
     "label": { "type": { "name": "string" } },
-    "material": { "type": { "name": "object" } },
+    "material": { "type": { "name": "shape", "description": "Partial<IconButtonProps>" } },
     "render": { "type": { "name": "element" } },
     "role": { "type": { "name": "string" } },
     "size": {
@@ -21,7 +21,7 @@
         "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
       }
     },
-    "style": { "type": { "name": "object" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
     "tabIndex": { "type": { "name": "number" } },
     "title": { "type": { "name": "string" } },
     "touchRippleRef": { "type": { "name": "any" } }

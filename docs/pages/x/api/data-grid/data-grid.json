@@ -4,7 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;GridColDef<R>&gt;" },
       "required": true
     },
-    "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
+    "apiRef": { "type": { "name": "shape", "description": "{ current: GridApiCommunity }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" }, "default": "false" },
@@ -16,8 +16,10 @@
         "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaderFilters?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
-    "cellModesModel": { "type": { "name": "object" } },
-    "checkboxColDef": { "type": { "name": "object" } },
+    "cellModesModel": { "type": { "name": "shape", "description": "GridCellModesModel" } },
+    "checkboxColDef": {
+      "type": { "name": "shape", "description": "GridCheckboxSelectionColDef<R>" }
+    },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "classes": {
       "type": { "name": "shape", "description": "Partial<GridClasses>" },
@@ -31,7 +33,9 @@
       "type": { "name": "arrayOf", "description": "Array&lt;GridColumnGroup&gt;" }
     },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
-    "columnVisibilityModel": { "type": { "name": "object" } },
+    "columnVisibilityModel": {
+      "type": { "name": "shape", "description": "GridColumnVisibilityModel" }
+    },
     "dataSource": {
       "type": { "name": "shape", "description": "{ getRows: func, updateRow?: func }" }
     },
@@ -463,7 +467,7 @@
     "rowBufferPx": { "type": { "name": "number" }, "default": "150" },
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
-    "rowModesModel": { "type": { "name": "object" } },
+    "rowModesModel": { "type": { "name": "shape", "description": "GridRowModesModel" } },
     "rows": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" }, "default": "[]" },
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
@@ -481,7 +485,7 @@
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" } },
+    "slotProps": { "type": { "name": "{}" } },
     "slots": {
       "type": { "name": "shape", "description": "Partial<GridSlotsComponent>" },
       "additionalInfo": { "slotsApi": true }
@@ -500,7 +504,7 @@
         "description": "Array&lt;{ field: string, sort: 'asc'<br>&#124;&nbsp;'desc' }&gt;"
       }
     },
-    "style": { "type": { "name": "object" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
     "sx": {
       "type": {
         "name": "union",

@@ -2,7 +2,7 @@
   "props": {
     "disabled": { "type": { "name": "bool" } },
     "id": { "type": { "name": "string" } },
-    "material": { "type": { "name": "object" } },
+    "material": { "type": { "name": "shape", "description": "Partial<ButtonProps>" } },
     "options": {
       "type": {
         "name": "shape",
@@ -18,7 +18,7 @@
       }
     },
     "startIcon": { "type": { "name": "node" } },
-    "style": { "type": { "name": "object" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
     "tabIndex": { "type": { "name": "number" } },
     "title": { "type": { "name": "string" } },
     "touchRippleRef": { "type": { "name": "any" } }

@@ -8,7 +8,9 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
-    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "dataset": {
+      "type": { "name": "arrayOf", "description": "Array&lt;DatasetElementType<unknown>&gt;" }
+    },
     "desc": { "type": { "name": "string" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "experimentalFeatures": { "type": { "name": "object" } },
@@ -69,7 +71,7 @@
         "describedArgs": ["tooltipItem"]
       }
     },
-    "plugins": { "type": { "name": "object" } },
+    "plugins": { "type": { "name": "{}" } },
     "seriesConfig": {
       "type": {
         "name": "shape",

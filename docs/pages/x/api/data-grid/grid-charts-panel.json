@@ -8,7 +8,10 @@
         "returned": "string | undefined"
       }
     },
-    "schema": { "type": { "name": "object" }, "default": "{}" }
+    "schema": {
+      "type": { "name": "shape", "description": "GridChartsConfigurationOptions" },
+      "default": "{}"
+    }
   },
   "name": "GridChartsPanel",
   "imports": [

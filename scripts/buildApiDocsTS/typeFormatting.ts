@@ -245,8 +245,13 @@ function formatObjectType(type: ts.Type, checker: ts.TypeChecker, depth: number)
     .slice()
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  // No properties, too deep, or too many properties → just "object"
+  // No properties, too deep, or too many properties
   if (properties.length === 0 || depth >= MAX_DEPTH || properties.length > MAX_OBJECT_PROPERTIES) {
+    // Use the type alias name if available instead of generic "object"
+    const typeName = checker.typeToString(type);
+    if (typeName.length < 80 && !typeName.includes('{')) {
+      return { name: 'shape', description: typeName };
+    }
     return { name: 'object' };
   }
 
@@ -368,7 +373,9 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
       depth >= MAX_DEPTH ||
       properties.length > MAX_OBJECT_PROPERTIES
     ) {
-      return 'object';
+      // Use the type alias name if available instead of generic "object"
+      const typeName = checker.typeToString(type);
+      return typeName.length < 80 && !typeName.includes('{') ? typeName : 'object';
     }
 
     const parts: string[] = [];

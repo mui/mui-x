@@ -3,7 +3,7 @@
     "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
     "disabled": { "type": { "name": "bool" } },
     "id": { "type": { "name": "string" } },
-    "material": { "type": { "name": "object" } },
+    "material": { "type": { "name": "shape", "description": "Partial<ButtonProps>" } },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
     "role": { "type": { "name": "string" } },
     "size": {
@@ -13,7 +13,7 @@
       }
     },
     "startIcon": { "type": { "name": "node" } },
-    "style": { "type": { "name": "object" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
     "tabIndex": { "type": { "name": "number" } },
     "title": { "type": { "name": "string" } },
     "touchRippleRef": { "type": { "name": "any" } }

@@ -14,7 +14,7 @@
     "material": {
       "type": {
         "name": "union",
-        "description": "object<br>&#124;&nbsp;object<br>&#124;&nbsp;object"
+        "description": "Partial<FilledTextFieldProps><br>&#124;&nbsp;Partial<OutlinedTextFieldProps><br>&#124;&nbsp;Partial<StandardTextFieldProps>"
       }
     },
     "multiline": { "type": { "name": "bool" } },
@@ -29,8 +29,8 @@
     "render": { "type": { "name": "element" } },
     "role": { "type": { "name": "string" } },
     "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
-    "slotProps": { "type": { "name": "object" } },
-    "style": { "type": { "name": "object" } },
+    "slotProps": { "type": { "name": "{}" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
     "tabIndex": { "type": { "name": "number" } },
     "type": {
       "type": {
@@ -50,6 +50,6 @@
   "muiName": "MuiPromptFieldControl",
   "filename": "/packages/x-data-grid-premium/src/components/promptField/PromptFieldControl.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/components/prompt-field\">Data Grid - Prompt Field component [<span class=\"plan-premium\"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')</a> <span class=\"plan-pro\"></span></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/prompt-field\">Data Grid - Prompt Field component <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a> <span class=\"plan-pro\"></span></li></ul>",
   "cssComponent": false
 }

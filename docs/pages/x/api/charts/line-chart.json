@@ -26,7 +26,9 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
-    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "dataset": {
+      "type": { "name": "arrayOf", "description": "Array&lt;DatasetElementType<unknown>&gt;" }
+    },
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
@@ -169,13 +171,13 @@
     "xAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object&gt;"
+        "description": "Array&lt;MakeOptional<AxisConfig<\"band\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"linear\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"log\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"point\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"pow\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"sqrt\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"symlog\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"time\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"utc\", any, ChartsXAxisProps>, \"id\">&gt;"
       }
     },
     "yAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object&gt;"
+        "description": "Array&lt;MakeOptional<AxisConfig<\"band\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"linear\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"log\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"point\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"pow\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"sqrt\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"symlog\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"time\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"utc\", any, ChartsYAxisProps>, \"id\">&gt;"
       }
     }
   },

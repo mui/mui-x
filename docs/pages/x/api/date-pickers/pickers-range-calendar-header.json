@@ -4,10 +4,10 @@
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "required": true
     },
-    "currentMonth": { "type": { "name": "object" }, "required": true },
-    "maxDate": { "type": { "name": "object" }, "required": true },
-    "minDate": { "type": { "name": "object" }, "required": true },
-    "month": { "type": { "name": "object" }, "required": true },
+    "currentMonth": { "type": { "name": "{}" }, "required": true },
+    "maxDate": { "type": { "name": "{}" }, "required": true },
+    "minDate": { "type": { "name": "{}" }, "required": true },
+    "month": { "type": { "name": "{}" }, "required": true },
     "monthIndex": { "type": { "name": "number" }, "required": true },
     "onMonthChange": {
       "type": { "name": "func" },

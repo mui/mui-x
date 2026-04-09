@@ -9,7 +9,7 @@
     "disableLine": { "type": { "name": "bool" }, "default": "false" },
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "string" } },
-    "labelStyle": { "type": { "name": "object" } },
+    "labelStyle": { "type": { "name": "shape", "description": "ChartsTextStyle" } },
     "slotProps": {
       "type": { "name": "shape", "description": "Partial<ChartsAxisSlotProps>" },
       "default": "{}"
@@ -39,7 +39,7 @@
       "type": { "name": "enum", "description": "'middle'<br>&#124;&nbsp;'tick'" },
       "default": "'middle'"
     },
-    "tickLabelStyle": { "type": { "name": "object" } },
+    "tickLabelStyle": { "type": { "name": "shape", "description": "ChartsTextStyle" } },
     "tickMaxStep": { "type": { "name": "number" } },
     "tickMinStep": { "type": { "name": "number" } },
     "tickNumber": { "type": { "name": "number" } },

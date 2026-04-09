@@ -6,14 +6,14 @@
       "type": { "name": "shape", "description": "Partial<DigitalClockClasses>" },
       "additionalInfo": { "cssApi": true }
     },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "{}" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "focusedView": { "type": { "name": "enum", "description": "'hours'" } },
-    "maxTime": { "type": { "name": "object" } },
-    "minTime": { "type": { "name": "object" } },
+    "maxTime": { "type": { "name": "{}" } },
+    "minTime": { "type": { "name": "{}" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onChange": {
       "type": { "name": "func" },
@@ -36,7 +36,7 @@
     "openTo": { "type": { "name": "enum", "description": "'hours'" } },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
-      "type": { "name": "object" },
+      "type": { "name": "{}" },
       "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`."
     },
     "shouldDisableTime": {
@@ -66,7 +66,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "{}" } },
     "view": { "type": { "name": "enum", "description": "'hours'" } },
     "views": {
       "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" },
@@ -110,6 +110,6 @@
   "muiName": "MuiDigitalClock",
   "filename": "/packages/x-date-pickers/src/DigitalClock/DigitalClock.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li>\n<li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li>\n<li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-picker/\">Time Range Picker [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li>\n<li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-picker/\">Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }

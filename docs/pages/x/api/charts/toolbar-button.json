@@ -9,7 +9,7 @@
         "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
       }
     },
-    "style": { "type": { "name": "object" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
     "tabIndex": { "type": { "name": "number" } }
   },
   "name": "ToolbarButton",

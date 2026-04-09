@@ -7,13 +7,13 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'end'"
     },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "{}" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "endAdornment": { "type": { "name": "node" } },
     "error": { "type": { "name": "bool" }, "default": "false" },
-    "fieldRef": { "type": { "name": "object" } },
+    "fieldRef": { "type": { "name": "{}" } },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
@@ -25,8 +25,8 @@
     "id": { "type": { "name": "string" } },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
-    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
-    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
+    "maxDate": { "type": { "name": "{}" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "{}" }, "default": "1900-01-01" },
     "name": { "type": { "name": "string" } },
     "onBlur": {
       "type": { "name": "func" },
@@ -104,7 +104,7 @@
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
-      "type": { "name": "object" },
+      "type": { "name": "{}" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
     },
     "selectedSections": {
@@ -156,7 +156,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "{}" } },
     "variant": {
       "type": {
         "name": "enum",

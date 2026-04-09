@@ -19,7 +19,7 @@
         "returned": "Array<any>"
       }
     },
-    "slotProps": { "type": { "name": "object" } }
+    "slotProps": { "type": { "name": "{}" } }
   },
   "name": "GridToolbarQuickFilter",
   "imports": [

@@ -10,7 +10,7 @@
         "returned": "string"
       }
     },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "{}" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
@@ -23,8 +23,8 @@
     "fixedWeekNumber": { "type": { "name": "number" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "shape", "description": "PickersInputComponentLocaleText" } },
-    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
-    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
+    "maxDate": { "type": { "name": "{}" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "{}" }, "default": "1900-01-01" },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
@@ -86,7 +86,7 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "object" },
+      "type": { "name": "{}" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "renderLoading": {
@@ -140,7 +140,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "{}" } },
     "view": {
       "type": {
         "name": "enum",

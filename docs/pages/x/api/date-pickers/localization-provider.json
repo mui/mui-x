@@ -2,7 +2,10 @@
   "props": {
     "adapterLocale": { "type": { "name": "any" } },
     "dateAdapter": {
-      "type": { "name": "object" },
+      "type": {
+        "name": "shape",
+        "description": "new (...args: any) => MuiPickersAdapter<TLocale>"
+      },
       "seeMoreLink": {
         "url": "https://mui.com/x/react-date-pickers/quickstart/#integrate-provider-and-adapter",
         "text": "date adapter setup section"

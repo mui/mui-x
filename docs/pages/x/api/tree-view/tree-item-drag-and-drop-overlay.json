@@ -6,7 +6,7 @@
         "description": "'make-child'<br>&#124;&nbsp;'move-to-parent'<br>&#124;&nbsp;'reorder-above'<br>&#124;&nbsp;'reorder-below'"
       }
     },
-    "style": { "type": { "name": "object" } }
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } }
   },
   "name": "TreeItemDragAndDropOverlay",
   "imports": [
@@ -19,6 +19,6 @@
   "muiName": "MuiTreeItemDragAndDropOverlay",
   "filename": "/packages/x-tree-view/src/TreeItemDragAndDropOverlay/TreeItemDragAndDropOverlay.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering [<span class=\"plan-pro\"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }

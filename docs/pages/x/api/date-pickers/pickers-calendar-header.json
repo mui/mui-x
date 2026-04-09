@@ -1,8 +1,8 @@
 {
   "props": {
-    "currentMonth": { "type": { "name": "object" }, "required": true },
-    "maxDate": { "type": { "name": "object" }, "required": true },
-    "minDate": { "type": { "name": "object" }, "required": true },
+    "currentMonth": { "type": { "name": "{}" }, "required": true },
+    "maxDate": { "type": { "name": "{}" }, "required": true },
+    "minDate": { "type": { "name": "{}" }, "required": true },
     "onMonthChange": {
       "type": { "name": "func" },
       "required": true,

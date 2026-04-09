@@ -14,7 +14,7 @@
     "material": {
       "type": {
         "name": "union",
-        "description": "object<br>&#124;&nbsp;object<br>&#124;&nbsp;object"
+        "description": "Partial<FilledTextFieldProps><br>&#124;&nbsp;Partial<OutlinedTextFieldProps><br>&#124;&nbsp;Partial<StandardTextFieldProps>"
       }
     },
     "multiline": { "type": { "name": "bool" } },
@@ -29,8 +29,8 @@
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
     "role": { "type": { "name": "string" } },
     "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
-    "slotProps": { "type": { "name": "object" } },
-    "style": { "type": { "name": "object" } },
+    "slotProps": { "type": { "name": "{}" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
     "tabIndex": { "type": { "name": "number" } },
     "type": {
       "type": {

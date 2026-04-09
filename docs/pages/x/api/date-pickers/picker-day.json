@@ -1,6 +1,6 @@
 {
   "props": {
-    "day": { "type": { "name": "object" }, "required": true },
+    "day": { "type": { "name": "{}" }, "required": true },
     "onDaySelect": {
       "type": { "name": "func" },
       "required": true,

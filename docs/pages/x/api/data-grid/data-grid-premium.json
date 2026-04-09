@@ -6,10 +6,13 @@
     },
     "activeChartId": { "type": { "name": "string" } },
     "aggregationFunctions": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;object" },
+      "type": {
+        "name": "union",
+        "description": "Record<string, GridAggregationFunction<any, any>><br>&#124;&nbsp;Record<string, GridAggregationFunctionDataSource>"
+      },
       "default": "GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided"
     },
-    "aggregationModel": { "type": { "name": "object" } },
+    "aggregationModel": { "type": { "name": "shape", "description": "GridAggregationModel" } },
     "aggregationRowsScope": {
       "type": { "name": "enum", "description": "'all'<br>&#124;&nbsp;'filtered'" },
       "default": "\"filtered\""
@@ -19,7 +22,7 @@
     "aiAssistantConversations": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ id?: string, prompts: Array&lt;{ createdAt: object, helperText?: string, response?: object, value: string, variant?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any }&gt;, title?: string }&gt;"
+        "description": "Array&lt;{ id?: string, prompts: Array&lt;{ createdAt: Date, helperText?: string, response?: PromptResponse, value: string, variant?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any }&gt;, title?: string }&gt;"
       }
     },
     "aiAssistantSuggestions": {
@@ -37,12 +40,14 @@
         "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaderFilters?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
-    "cellModesModel": { "type": { "name": "object" } },
+    "cellModesModel": { "type": { "name": "shape", "description": "GridCellModesModel" } },
     "cellSelection": { "type": { "name": "bool" }, "default": "false" },
     "cellSelectionFillHandle": { "type": { "name": "bool" }, "default": "false" },
-    "cellSelectionModel": { "type": { "name": "object" } },
+    "cellSelectionModel": { "type": { "name": "shape", "description": "GridCellSelectionModel" } },
     "chartsIntegration": { "type": { "name": "bool" }, "default": "false" },
-    "checkboxColDef": { "type": { "name": "object" } },
+    "checkboxColDef": {
+      "type": { "name": "shape", "description": "GridCheckboxSelectionColDef<R>" }
+    },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
     "classes": {
@@ -57,7 +62,9 @@
       "type": { "name": "arrayOf", "description": "Array&lt;GridColumnGroup&gt;" }
     },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
-    "columnVisibilityModel": { "type": { "name": "object" } },
+    "columnVisibilityModel": {
+      "type": { "name": "shape", "description": "GridColumnVisibilityModel" }
+    },
     "dataSource": {
       "type": {
         "name": "shape",
@@ -216,7 +223,7 @@
         "returned": "readonly Array<string>"
       }
     },
-    "groupingColDef": { "type": { "name": "object" } },
+    "groupingColDef": { "type": { "name": "{}" } },
     "headerFilterHeight": { "type": { "name": "number" } },
     "headerFilters": { "type": { "name": "bool" }, "default": "false" },
     "hideFooter": { "type": { "name": "bool" }, "default": "false" },
@@ -224,7 +231,10 @@
     "hideFooterRowCount": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" }, "default": "false" },
     "historyEventHandlers": {
-      "type": { "name": "object" },
+      "type": {
+        "name": "shape",
+        "description": "Record<keyof GridEventLookup, GridHistoryEventHandler<any>>"
+      },
       "default": "Handlers for `rowEditStop`, `cellEditStop` and `clipboardPasteEnd` events"
     },
     "historyStackSize": { "type": { "name": "number" }, "default": "30" },
@@ -808,7 +818,7 @@
     },
     "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
-    "rowModesModel": { "type": { "name": "object" } },
+    "rowModesModel": { "type": { "name": "shape", "description": "GridRowModesModel" } },
     "rowReordering": { "type": { "name": "bool" }, "default": "false" },
     "rows": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" }, "default": "[]" },
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
@@ -874,7 +884,7 @@
         "returned": "Array<Array<string>> | null"
       }
     },
-    "style": { "type": { "name": "object" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
     "tabNavigation": {
       "type": {
         "name": "enum",

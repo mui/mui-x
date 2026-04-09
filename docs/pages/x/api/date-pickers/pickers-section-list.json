@@ -4,7 +4,7 @@
     "elements": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ after: object, before: object, container: object, content: object }&gt;"
+        "description": "Array&lt;{ after: HTMLAttributes<HTMLSpanElement>, before: HTMLAttributes<HTMLSpanElement>, container: HTMLAttributes<HTMLSpanElement>, content: object }&gt;"
       },
       "required": true
     },

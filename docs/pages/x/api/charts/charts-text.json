@@ -4,7 +4,7 @@
     "lineHeight": { "type": { "name": "number" } },
     "needsComputation": { "type": { "name": "bool" }, "default": "false" },
     "ownerState": { "type": { "name": "any" } },
-    "style": { "type": { "name": "object" } }
+    "style": { "type": { "name": "shape", "description": "ChartsTextStyle" } }
   },
   "name": "ChartsText",
   "imports": [

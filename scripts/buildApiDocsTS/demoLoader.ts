@@ -93,10 +93,18 @@ export function parseMarkdownHeaders(content: string): { components?: string[] }
 
 export function extractTitle(content: string): string {
   const match = content.match(/^#\s+(.+)$/m);
-  if (match) {
-    return match[1].trim();
+  let title = match ? match[1].trim() : '';
+  if (!title) {
+    const yamlMatch = content.match(/^---\r?\n[\s\S]*?^title:\s*(.+)$/m);
+    title = yamlMatch ? yamlMatch[1].trim() : '';
   }
-  // Fall back to title in YAML header
-  const yamlMatch = content.match(/^---\r?\n[\s\S]*?^title:\s*(.+)$/m);
-  return yamlMatch ? yamlMatch[1].trim() : '';
+  // Convert markdown links to HTML: [text](url 'title') → <a href="url" title="title">text</a>
+  title = title.replace(
+    /\[([^\]]*)\]\(([^)\s]+)(?:\s+'([^']*)')?\)/g,
+    (_match, text, url, linkTitle) => {
+      const titleAttr = linkTitle ? ` title="${linkTitle}"` : '';
+      return `<a href="${url}"${titleAttr}>${text}</a>`;
+    },
+  );
+  return title;
 }

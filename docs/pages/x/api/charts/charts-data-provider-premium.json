@@ -4,7 +4,9 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
-    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "dataset": {
+      "type": { "name": "arrayOf", "description": "Array&lt;DatasetElementType<unknown>&gt;" }
+    },
     "experimentalFeatures": { "type": { "name": "any" } },
     "height": { "type": { "name": "number" } },
     "id": { "type": { "name": "string" } },
@@ -31,8 +33,8 @@
       }
     },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" } },
-    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "slotProps": { "type": { "name": "{}" } },
+    "slots": { "type": { "name": "{}" }, "additionalInfo": { "slotsApi": true } },
     "width": { "type": { "name": "number" } }
   },
   "name": "ChartsDataProviderPremium",
@@ -71,6 +73,6 @@
   "muiName": "MuiChartsDataProviderPremium",
   "filename": "/packages/x-charts-premium/src/ChartsDataProviderPremium/ChartsDataProviderPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li>\n<li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar [<span class=\"plan-premium\"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li>\n<li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
   "cssComponent": false
 }

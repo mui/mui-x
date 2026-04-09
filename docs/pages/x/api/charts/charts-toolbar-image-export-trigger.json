@@ -9,7 +9,7 @@
       }
     },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
-    "style": { "type": { "name": "object" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
     "tabIndex": { "type": { "name": "number" } }
   },
   "name": "ChartsToolbarImageExportTrigger",
