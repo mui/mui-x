@@ -1,26 +1,42 @@
 {
-  "props": {},
+  "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatUnreadMarkerClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "index": { "type": { "name": "number" } },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "label": { "type": { "name": "node" } },
+    "slotProps": { "type": { "name": "shape", "description": "UnreadMarkerSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<UnreadMarkerSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatUnreadMarker",
   "imports": [
     "import { ChatUnreadMarker } from '@mui/x-chat/ChatIndicators';",
     "import { ChatUnreadMarker } from '@mui/x-chat';"
   ],
+  "slots": [
+    { "name": "label", "description": "", "class": "MuiChatUnreadMarker-label" },
+    { "name": "root", "description": "", "class": "MuiChatUnreadMarker-root" }
+  ],
   "classes": [
-    {
-      "key": "label",
-      "className": "MuiChatUnreadMarker-label",
-      "description": "Styles applied to the label element.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiChatUnreadMarker-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiChatUnreadMarker-label",
+      "description": "Styles applied to the label element.",
+      "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatUnreadMarker",
   "filename": "/packages/x-chat/src/ChatIndicators/ChatUnreadMarker.tsx",
   "inheritance": null,

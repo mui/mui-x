@@ -1,12 +1,16 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "adapter": { "description": "" },
+    "activeConversationId": { "description": "" },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "composerValue": { "description": "" },
+    "conversations": { "description": "" },
     "currentUser": {
-      "description": "The local user sending messages. If omitted, derived from <code>members</code> by finding the entry with <code>role === &#39;user&#39;</code>."
+      "description": "The local user sending messages. If omitted, derived from <code>members</code> by finding the entry with <code>role === 'user'</code>."
     },
     "density": {
-      "description": "The vertical spacing density of chat messages. - <code>&#39;compact&#39;</code> – Reduced vertical spacing between messages. - <code>&#39;standard&#39;</code> – Default spacing. - <code>&#39;comfortable&#39;</code> – Increased vertical spacing between messages."
+      "description": "The vertical spacing density of chat messages.\n- <code>'compact'</code> – Reduced vertical spacing between messages.\n- <code>'standard'</code> – Default spacing.\n- <code>'comfortable'</code> – Increased vertical spacing between messages."
     },
     "features": {
       "description": "Feature flags to enable or disable built-in ChatBox behaviours."
@@ -23,9 +27,20 @@
     "initialMessages": {
       "description": "The initial messages when uncontrolled. Ignored after initialization and when <code>messages</code> is provided."
     },
+    "localeText": { "description": "" },
     "members": {
-      "description": "All participants in the chat. The current (local) user is derived as the first member with <code>role === &#39;user&#39;</code>, unless <code>currentUser</code> is provided explicitly."
+      "description": "All participants in the chat. The current (local) user is derived as the first member with <code>role === 'user'</code>, unless <code>currentUser</code> is provided explicitly."
     },
+    "messages": { "description": "" },
+    "onActiveConversationChange": { "description": "" },
+    "onComposerValueChange": { "description": "" },
+    "onConversationsChange": { "description": "" },
+    "onData": { "description": "" },
+    "onError": { "description": "" },
+    "onFinish": { "description": "" },
+    "onMessagesChange": { "description": "" },
+    "onToolCall": { "description": "" },
+    "partRenderers": { "description": "" },
     "slotProps": { "description": "The extra props for the slot components." },
     "slots": { "description": "The components used for each slot inside the ChatBox." },
     "storeClass": { "description": "The store class to use for this provider." },
@@ -33,16 +48,30 @@
       "description": "Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store."
     },
     "suggestions": {
-      "description": "Prompt suggestions displayed in the empty state. Clicking a suggestion pre-fills the composer."
+      "description": "Prompt suggestions displayed in the empty state.\nClicking a suggestion pre-fills the composer."
     },
     "suggestionsAutoSubmit": {
       "description": "Whether clicking a suggestion automatically submits the message."
     },
     "variant": {
-      "description": "The visual layout variant of the chat. - <code>&#39;default&#39;</code> – Standard layout with avatars, individual timestamps, and full spacing. - <code>&#39;compact&#39;</code> – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing."
+      "description": "The visual layout variant of the chat.\n- <code>'default'</code> – Standard layout with avatars, individual timestamps, and full spacing.\n- <code>'compact'</code> – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "layout": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the layout element"
+    },
+    "conversationsPane": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the conversations pane element"
+    },
+    "threadPane": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the thread pane element"
+    }
+  },
   "slotDescriptions": {
     "composerAttachButton": "Override the composer attach button.",
     "composerAttachmentList": "Override the composer attachment list.",
@@ -55,11 +84,11 @@
     "conversationHeaderActions": "Override the conversation header actions component.",
     "conversationHeaderInfo": "Override the conversation header info wrapper (title + subtitle column).",
     "conversationList": "Override the conversation list component.",
-    "conversationsPane": "The conversations pane container. Defaults to <code>div</code>.",
+    "conversationsPane": "The conversations pane container. Defaults to `div`.",
     "conversationSubtitle": "Override the conversation subtitle component.",
     "conversationTitle": "Override the conversation title component.",
     "dateDivider": "Override the date divider component.",
-    "layout": "The layout element that arranges conversations + thread panes. Defaults to <code>div</code>.",
+    "layout": "The layout element that arranges conversations + thread panes. Defaults to `div`.",
     "messageActions": "Override the message actions component.",
     "messageAvatar": "Override the message avatar component.",
     "messageContent": "Override the message content (bubble) component.",
@@ -67,10 +96,10 @@
     "messageList": "Override the message list component.",
     "messageMeta": "Override the message meta component.",
     "messageRoot": "Override the message root component for each message.",
-    "root": "The outermost container element. Defaults to <code>div</code>.",
+    "root": "The outermost container element. Defaults to `div`.",
     "scrollToBottom": "Override the scroll-to-bottom affordance component.",
     "suggestions": "Override the prompt suggestions container component.",
-    "threadPane": "The thread pane container. Defaults to <code>div</code>.",
+    "threadPane": "The thread pane container. Defaults to `div`.",
     "typingIndicator": "Override the typing indicator component.",
     "unreadMarker": "Override the unread marker component."
   }

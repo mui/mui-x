@@ -1,12 +1,16 @@
 {
   "props": {
-    "children": { "type": { "name": "string" }, "required": true },
+    "children": { "type": { "name": "node" }, "required": true },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatCodeBlockClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "highlighter": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(code: string, language: string) => React.ReactNode",
+        "type": "function(code: string, language: string) => ReactNode",
         "describedArgs": ["code", "language"],
-        "returned": "React.ReactNode"
+        "returned": "ReactNode"
       }
     },
     "language": { "type": { "name": "string" } }
@@ -16,17 +20,12 @@
     "import { ChatCodeBlock } from '@mui/x-chat/ChatCodeBlock';",
     "import { ChatCodeBlock } from '@mui/x-chat';"
   ],
+  "slots": [],
   "classes": [
     {
-      "key": "code",
-      "className": "MuiChatCodeBlock-code",
-      "description": "Styles applied to the code element.",
-      "isGlobal": false
-    },
-    {
-      "key": "copyButton",
-      "className": "MuiChatCodeBlock-copyButton",
-      "description": "Styles applied to the copy button element.",
+      "key": "root",
+      "className": "MuiChatCodeBlock-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
@@ -42,20 +41,24 @@
       "isGlobal": false
     },
     {
+      "key": "copyButton",
+      "className": "MuiChatCodeBlock-copyButton",
+      "description": "Styles applied to the copy button element.",
+      "isGlobal": false
+    },
+    {
       "key": "pre",
       "className": "MuiChatCodeBlock-pre",
       "description": "Styles applied to the pre element.",
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiChatCodeBlock-root",
-      "description": "Styles applied to the root element.",
+      "key": "code",
+      "className": "MuiChatCodeBlock-code",
+      "description": "Styles applied to the code element.",
       "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatCodeBlock",
   "filename": "/packages/x-chat/src/ChatCodeBlock/ChatCodeBlock.tsx",
   "inheritance": null,

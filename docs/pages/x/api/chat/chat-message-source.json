@@ -1,7 +1,16 @@
 {
   "props": {
     "href": { "type": { "name": "string" }, "required": true },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatMessageSourceClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "index": { "type": { "name": "number" } },
+    "slotProps": { "type": { "name": "shape", "description": "ChatMessageSourceSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "ChatMessageSourceSlots" },
+      "additionalInfo": { "slotsApi": true }
+    },
     "title": { "type": { "name": "string" } }
   },
   "name": "ChatMessageSource",
@@ -10,12 +19,6 @@
     "import { ChatMessageSource } from '@mui/x-chat';"
   ],
   "slots": [
-    {
-      "name": "root",
-      "description": "The root list item element.",
-      "default": "'li'",
-      "class": "MuiChatMessageSource-root"
-    },
     {
       "name": "index",
       "description": "The numeric index badge.",
@@ -27,12 +30,37 @@
       "description": "The anchor link.",
       "default": "'a'",
       "class": "MuiChatMessageSource-link"
+    },
+    {
+      "name": "root",
+      "description": "The root list item element.",
+      "default": "'li'",
+      "class": "MuiChatMessageSource-root"
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChatMessageSource-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "index",
+      "className": "MuiChatMessageSource-index",
+      "description": "Styles applied to the index badge element.",
+      "isGlobal": false
+    },
+    {
+      "key": "link",
+      "className": "MuiChatMessageSource-link",
+      "description": "Styles applied to the link element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiChatMessageSource",
   "filename": "/packages/x-chat/src/ChatMessageSources/ChatMessageSource.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/message-parts/sources-and-citations/\">Chat - Sources &amp; Citations</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/display/message-parts/sources-and-citations/\">Chat - Sources & Citations</a></li></ul>",
   "cssComponent": false
 }

@@ -1,15 +1,20 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "renderItem": { "description": "" },
     "autoScroll": {
-      "description": "<p>Controls automatic scrolling to the bottom when new messages arrive or\nstreaming content grows, as long as the user is within <code>buffer</code> pixels of\nthe bottom.</p>\n<ul>\n<li><code>true</code> – enable with the default buffer (150 px).</li>\n<li><code>{ buffer: number }</code> – enable with a custom threshold.</li>\n<li><code>false</code> – disable (the scroll-to-bottom affordance is still available).</li>\n</ul>\n<p>Scrolling when the <em>user</em> sends a message is always active.</p>\n"
-    }
+      "description": "Controls automatic scrolling to the bottom when new messages arrive or\nstreaming content grows, as long as the user is within <code>buffer</code> pixels of\nthe bottom.<br><br>- <code>true</code> – enable with the default buffer (150 px).\n- <code>{ buffer: number }</code> – enable with a custom threshold.\n- <code>false</code> – disable (the scroll-to-bottom affordance is still available).<br><br>Scrolling when the *user* sends a message is always active."
+    },
+    "classes": { "description": "" },
+    "estimatedItemSize": { "description": "" },
+    "getItemKey": { "description": "" },
+    "items": { "description": "" },
+    "onReachTop": { "description": "" },
+    "overlay": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
   },
   "classDescriptions": {
-    "content": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message list content element"
-    },
     "root": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the message list root element"
@@ -17,6 +22,18 @@
     "scroller": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the message list scroller element"
+    },
+    "content": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the message list content element"
     }
+  },
+  "slotDescriptions": {
+    "messageList": "",
+    "messageListContent": "",
+    "messageListOverlay": "",
+    "messageListScrollbar": "",
+    "messageListScrollbarThumb": "",
+    "messageListScroller": ""
   }
 }

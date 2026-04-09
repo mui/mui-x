@@ -8,6 +8,7 @@ import { dataGridFamily } from './families/dataGrid';
 import { datePickersFamily } from './families/datePickers';
 import { chartsFamily } from './families/charts';
 import { treeViewFamily } from './families/treeView';
+import { chatFamily } from './families/chat';
 
 export const CWD = process.cwd();
 
@@ -70,6 +71,7 @@ const PRODUCT_FAMILIES: ProductFamily[] = [
   datePickersFamily,
   chartsFamily,
   treeViewFamily,
+  chatFamily,
 ];
 
 // ---------------------------------------------------------------------------

@@ -14,6 +14,7 @@ export function cleanupStaleFiles(fileWrites: FileWrite[]): void {
   // Only clean directories that we write to
   const apiDirs = [
     'docs/pages/x/api/charts',
+    'docs/pages/x/api/chat',
     'docs/pages/x/api/data-grid',
     'docs/pages/x/api/date-pickers',
     'docs/pages/x/api/tree-view',

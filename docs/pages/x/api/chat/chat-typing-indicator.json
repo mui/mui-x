@@ -1,10 +1,21 @@
 {
-  "props": {},
+  "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatTypingIndicatorClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "TypingIndicatorSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<TypingIndicatorSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatTypingIndicator",
   "imports": [
     "import { ChatTypingIndicator } from '@mui/x-chat/ChatIndicators';",
     "import { ChatTypingIndicator } from '@mui/x-chat';"
   ],
+  "slots": [{ "name": "root", "description": "", "class": "MuiChatTypingIndicator-root" }],
   "classes": [
     {
       "key": "root",
@@ -13,8 +24,6 @@
       "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatTypingIndicator",
   "filename": "/packages/x-chat/src/ChatIndicators/ChatTypingIndicator.tsx",
   "inheritance": null,

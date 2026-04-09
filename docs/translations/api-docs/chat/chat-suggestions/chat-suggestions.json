@@ -2,15 +2,16 @@
   "componentDescription": "",
   "propDescriptions": {
     "autoSubmit": { "description": "Whether to auto-submit when a suggestion is clicked." },
+    "classes": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" },
     "suggestions": {
-      "description": "Suggestion items. Strings are normalized to <code>{ value, label }</code>. Ignored when <code>children</code> are provided."
+      "description": "Suggestion items. Strings are normalized to <code>{ value, label }</code>.\nIgnored when <code>children</code> are provided."
     }
   },
   "classDescriptions": {
-    "item": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "each suggestion item"
-    },
-    "root": { "description": "Styles applied to the root element." }
-  }
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "item": { "description": "Styles applied to {{nodeName}}.", "nodeName": "each suggestion item" }
+  },
+  "slotDescriptions": { "item": "", "root": "" }
 }

@@ -1,5 +1,14 @@
 {
   "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatConversationListClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "ConversationListRootSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationListRootSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
     "variant": {
       "type": { "name": "enum", "description": "'compact'<br>&#124;&nbsp;'default'" },
       "default": "'default'"
@@ -10,23 +19,38 @@
     "import { ChatConversationList } from '@mui/x-chat/ChatConversationList';",
     "import { ChatConversationList } from '@mui/x-chat';"
   ],
+  "slots": [
+    { "name": "item", "description": "", "class": "MuiChatConversationList-item" },
+    { "name": "itemActions", "description": "", "class": "MuiChatConversationList-itemActions" },
+    { "name": "itemAvatar", "description": "", "class": "MuiChatConversationList-itemAvatar" },
+    { "name": "itemContent", "description": "", "class": "MuiChatConversationList-itemContent" },
+    { "name": "preview", "description": "", "class": null },
+    { "name": "root", "description": "", "class": "MuiChatConversationList-root" },
+    { "name": "scrollbar", "description": "", "class": null },
+    { "name": "scrollbarThumb", "description": "", "class": null },
+    { "name": "scroller", "description": "", "class": "MuiChatConversationList-scroller" },
+    { "name": "timestamp", "description": "", "class": null },
+    { "name": "title", "description": "", "class": null },
+    { "name": "unreadBadge", "description": "", "class": null },
+    { "name": "viewport", "description": "", "class": null }
+  ],
   "classes": [
     {
-      "key": "compact",
-      "className": "MuiChatConversationList-compact",
-      "description": "Applied when variant=\"compact\"",
+      "key": "root",
+      "className": "MuiChatConversationList-root",
+      "description": "Styles applied to the conversation list root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scroller",
+      "className": "MuiChatConversationList-scroller",
+      "description": "Styles applied to the scroller element.",
       "isGlobal": false
     },
     {
       "key": "item",
       "className": "MuiChatConversationList-item",
       "description": "Styles applied to the list item element.",
-      "isGlobal": false
-    },
-    {
-      "key": "itemActions",
-      "className": "MuiChatConversationList-itemActions",
-      "description": "Styles applied to the item actions element.",
       "isGlobal": false
     },
     {
@@ -42,9 +66,9 @@
       "isGlobal": false
     },
     {
-      "key": "itemFocused",
-      "className": "MuiChatConversationList-itemFocused",
-      "description": "Applied to a focused conversation item",
+      "key": "itemTitle",
+      "className": "MuiChatConversationList-itemTitle",
+      "description": "Styles applied to the item title element.",
       "isGlobal": false
     },
     {
@@ -54,27 +78,9 @@
       "isGlobal": false
     },
     {
-      "key": "itemSelected",
-      "className": "MuiChatConversationList-itemSelected",
-      "description": "Applied to a selected conversation item",
-      "isGlobal": false
-    },
-    {
       "key": "itemTimestamp",
       "className": "MuiChatConversationList-itemTimestamp",
       "description": "Styles applied to the item timestamp element.",
-      "isGlobal": false
-    },
-    {
-      "key": "itemTitle",
-      "className": "MuiChatConversationList-itemTitle",
-      "description": "Styles applied to the item title element.",
-      "isGlobal": false
-    },
-    {
-      "key": "itemUnread",
-      "className": "MuiChatConversationList-itemUnread",
-      "description": "Applied to an unread conversation item",
       "isGlobal": false
     },
     {
@@ -84,20 +90,36 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiChatConversationList-root",
-      "description": "Styles applied to the conversation list root element.",
+      "key": "itemActions",
+      "className": "MuiChatConversationList-itemActions",
+      "description": "Styles applied to the item actions element.",
       "isGlobal": false
     },
     {
-      "key": "scroller",
-      "className": "MuiChatConversationList-scroller",
-      "description": "Styles applied to the scroller element.",
+      "key": "itemSelected",
+      "className": "MuiChatConversationList-itemSelected",
+      "description": "Applied to a selected conversation item",
+      "isGlobal": false
+    },
+    {
+      "key": "itemUnread",
+      "className": "MuiChatConversationList-itemUnread",
+      "description": "Applied to an unread conversation item",
+      "isGlobal": false
+    },
+    {
+      "key": "itemFocused",
+      "className": "MuiChatConversationList-itemFocused",
+      "description": "Applied to a focused conversation item",
+      "isGlobal": false
+    },
+    {
+      "key": "compact",
+      "className": "MuiChatConversationList-compact",
+      "description": "Applied when variant=\"compact\"",
       "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatConversationList",
   "filename": "/packages/x-chat/src/ChatConversationList/ChatConversationList.tsx",
   "inheritance": null,

@@ -5,8 +5,9 @@
     "import { ChatMessageInlineMeta } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageInlineMeta } from '@mui/x-chat';"
   ],
+  "slots": [],
   "classes": [],
-  "muiName": "MuiChatMessageInlineMeta",
+  "muiName": "MuiChatMessage",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageInlineMeta.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",

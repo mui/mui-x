@@ -138,8 +138,10 @@ export function generateManifest(section: string, components: ComponentApi[]): F
     'data-grid': 'dataGridApiPages',
     'date-pickers': 'datePickersApiPages',
     charts: 'chartsApiPages',
+    'tree-view': 'treeViewApiPages',
+    chat: 'chatApiPages',
   };
-  const varName = sectionToVarName[section] || 'treeViewApiPages';
+  const varName = sectionToVarName[section];
 
   const content = `import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
@@ -147,7 +149,5 @@ const ${varName}: MuiPage[] = ${JSON.stringify(unique, null, 2)};
 export default ${varName};
 `;
 
-  const fileName = sectionToVarName[section] || 'treeViewApiPages';
-
-  return { path: `docs/data/${fileName}.ts`, content };
+  return { path: `docs/data/${varName}.ts`, content };
 }

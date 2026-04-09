@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './composer-attachment-list.json';
+import jsonPageContent from './chat-message.json';
 
 export default function Page(props) {
   const { descriptions } = props;
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/composer-attachment-list',
+    'docsx/translations/api-docs/chat/chat-message',
     false,
-    /\.\/composer-attachment-list.*\.json$/,
+    /\.\/chat-message.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

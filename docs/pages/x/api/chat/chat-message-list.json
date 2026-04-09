@@ -1,8 +1,39 @@
 {
   "props": {
+    "renderItem": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(params: { id: string; index: number; }) => ReactNode",
+        "describedArgs": []
+      }
+    },
     "autoScroll": {
-      "type": { "name": "union", "description": "{ buffer?: number }<br>&#124;&nbsp;bool" },
+      "type": {
+        "name": "union",
+        "description": "bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;{ buffer?: number }"
+      },
       "default": "true"
+    },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatMessageListClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "estimatedItemSize": { "type": { "name": "number" } },
+    "getItemKey": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(id: string, index: number) => Key", "describedArgs": [] }
+    },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "onReachTop": {
+      "type": { "name": "func" },
+      "signature": { "type": "function() => void", "describedArgs": [] }
+    },
+    "overlay": { "type": { "name": "node" } },
+    "slotProps": { "type": { "name": "shape", "description": "MessageListRootSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageListRootSlots>" },
+      "additionalInfo": { "slotsApi": true }
     }
   },
   "name": "ChatMessageList",
@@ -10,13 +41,15 @@
     "import { ChatMessageList } from '@mui/x-chat/ChatMessageList';",
     "import { ChatMessageList } from '@mui/x-chat';"
   ],
+  "slots": [
+    { "name": "messageList", "description": "", "class": null },
+    { "name": "messageListContent", "description": "", "class": null },
+    { "name": "messageListOverlay", "description": "", "class": null },
+    { "name": "messageListScrollbar", "description": "", "class": null },
+    { "name": "messageListScrollbarThumb", "description": "", "class": null },
+    { "name": "messageListScroller", "description": "", "class": null }
+  ],
   "classes": [
-    {
-      "key": "content",
-      "className": "MuiChatMessageList-content",
-      "description": "Styles applied to the message list content element.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiChatMessageList-root",
@@ -28,13 +61,17 @@
       "className": "MuiChatMessageList-scroller",
       "description": "Styles applied to the message list scroller element.",
       "isGlobal": false
+    },
+    {
+      "key": "content",
+      "className": "MuiChatMessageList-content",
+      "description": "Styles applied to the message list content element.",
+      "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatMessageList",
   "filename": "/packages/x-chat/src/ChatMessageList/ChatMessageList.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/behavior/scrolling/\">Chat - Scrolling</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/history-and-pagination/\">Chat - History &amp; Pagination</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/behavior/scrolling/\">Chat - Scrolling</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/history-and-pagination/\">Chat - History & Pagination</a></li></ul>",
   "cssComponent": false
 }

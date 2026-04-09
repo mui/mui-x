@@ -11,6 +11,7 @@ export function loadDemos(): DemoMap {
 
   const sections: { dir: string; prefix: string; urlPrefix: string }[] = [
     { dir: 'docs/data/charts', prefix: '/charts', urlPrefix: '/x/react-charts' },
+    { dir: 'docs/data/chat', prefix: '/chat', urlPrefix: '/x/react-chat' },
     { dir: 'docs/data/date-pickers', prefix: '/date-pickers', urlPrefix: '/x/react-date-pickers' },
     { dir: 'docs/data/tree-view', prefix: '/tree-view', urlPrefix: '/x/react-tree-view' },
     { dir: 'docs/data/data-grid', prefix: '/data-grid', urlPrefix: '/x/react-data-grid' },

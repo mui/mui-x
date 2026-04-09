@@ -1,58 +1,10 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
-  "classDescriptions": {
-    "actions": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message actions element"
-    },
-    "authorLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message author label element"
-    },
-    "avatar": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message avatar element"
-    },
-    "bubble": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message bubble element inside content"
-    },
-    "content": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message content element"
-    },
-    "dateDivider": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the date divider element"
-    },
-    "error": { "description": "Applied when the message has an error status" },
-    "group": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message group element"
-    },
-    "groupAuthorName": { "description": "Class applied to the group author name element." },
-    "groupTimestamp": {
-      "description": "Class applied to the group timestamp element (compact variant only)."
-    },
-    "inlineMeta": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the inline meta container element (default variant)"
-    },
-    "inlineMetaSpacer": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the inline meta spacer element (default variant)"
-    },
-    "meta": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message meta element"
-    },
-    "roleAssistant": { "description": "Applied when the message role is &#39;assistant&#39;" },
-    "roleUser": { "description": "Applied when the message role is &#39;user&#39;" },
-    "root": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message root element"
-    },
-    "streaming": { "description": "Applied while the message is streaming" }
-  }
+  "propDescriptions": {
+    "classes": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "actions": "" }
 }
