@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docs/config';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
 import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
 import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
 import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
