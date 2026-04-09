@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import path from 'path';
 import fs from 'node:fs/promises';
-import { pageToTitle } from '@mui/docs/helpers';
+import { pageToTitle } from '@mui/internal-core-docs/helpers';
 import pages from 'docs/data/docs/pages';
 
 async function run() {

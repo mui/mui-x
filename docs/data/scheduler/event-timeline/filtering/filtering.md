@@ -9,7 +9,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Search and filter events in the Event Timeline.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Event search 🚧
 

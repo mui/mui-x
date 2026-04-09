@@ -165,6 +165,7 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-headersTotalHeight': '0px',
     '--DataGrid-topContainerHeight': '0px',
     '--DataGrid-bottomContainerHeight': '0px',
+    '--DataGrid-horizontalFiller': '0px',
 
     flex: 1,
     boxSizing: 'border-box',
@@ -283,6 +284,7 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
       backgroundColor: headerBackground,
+      flex: '0 0 auto',
     },
     [`& .${c.columnHeader} .${c.sortButton}`]: {
       backgroundColor: vars.header.background.base,
@@ -496,6 +498,7 @@ export const GridRootStyles = styled('div', {
     /* Row styles */
     [`.${c.row}`]: {
       display: 'flex',
+      position: 'relative',
       width: 'var(--DataGrid-rowWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
 
@@ -516,7 +519,6 @@ export const GridRootStyles = styled('div', {
         backgroundColor: 'transparent',
       },
       '&.Mui-selected': selectedStyles,
-      position: 'relative',
     },
 
     /* Cell styles */
@@ -533,6 +535,26 @@ export const GridRootStyles = styled('div', {
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
       '&.Mui-selected': selectedStyles,
+    },
+    /* Default range border styles using box-shadow to avoid layout shift */
+    [`& .${c.cell}.Mui-selected`]: {
+      '--range-top': '0 0 0 0 transparent',
+      '--range-bottom': '0 0 0 0 transparent',
+      '--range-left': '0 0 0 0 transparent',
+      '--range-right': '0 0 0 0 transparent',
+      boxShadow: 'var(--range-top), var(--range-bottom), var(--range-left), var(--range-right)',
+    },
+    [`& .${c['cell--rangeTop']}`]: {
+      '--range-top': `inset 0 2px 0 0 ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--rangeBottom']}`]: {
+      '--range-bottom': `inset 0 -2px 0 0 ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--rangeLeft']}`]: {
+      '--range-left': `inset 2px 0 0 0 ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--rangeRight']}`]: {
+      '--range-right': `inset -2px 0 0 0 ${vars.colors.interactive.focus}`,
     },
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
@@ -745,17 +767,19 @@ export const GridRootStyles = styled('div', {
     [`& .${c['filler--borderBottom']}`]: {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
     },
+    [`& .${c['filler--horizontal']}`]: {
+      width: 'var(--DataGrid-horizontalFiller)',
+    },
     [`& .${c.columnHeaders} .${c.filler}`]: {
       backgroundColor: headerBackground,
     },
 
     /* Used when skeleton/no columns overlay is visible */
     [`& .${c['main--hiddenContent']}`]: {
-      [`& .${c.virtualScrollerContent}`]: {
+      [`& .${c.virtualScrollerRenderZone}`]: {
         // We use visibility hidden so that the virtual scroller content retains its height.
         // Position fixed is used to remove the virtual scroller content from the flow.
         // https://github.com/mui/mui-x/issues/14061
-        position: 'fixed',
         visibility: 'hidden',
       },
       // Hide grid content
@@ -763,11 +787,69 @@ export const GridRootStyles = styled('div', {
         display: 'none',
       },
     },
+    /* Fill handle styles */
+    [`& .${c['cell--withFillHandle']}`]: {
+      position: 'relative',
+      '&::after': {
+        content: '""',
+        position: 'absolute',
+        bottom: 0,
+        insetInlineEnd: 0,
+        width: 7,
+        height: 7,
+        backgroundColor: vars.colors.interactive.focus,
+        cursor: 'crosshair',
+        zIndex: 50,
+      },
+    },
+    [`& .${c['cell--fillPreview']}`]: {
+      backgroundColor: `color-mix(in srgb, ${vars.colors.interactive.focus} 8%, transparent)`,
+    },
+    [`& .${c['cell--fillPreviewTop']}`]: {
+      borderTop: `1px dashed ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--fillPreviewBottom']}`]: {
+      borderBottom: `1px dashed ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--fillPreviewLeft']}`]: {
+      borderLeft: `1px dashed ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--fillPreviewRight']}`]: {
+      borderRight: `1px dashed ${vars.colors.interactive.focus}`,
+    },
     [`& .${c['row--beingDragged']}`]: {
       color: vars.colors.foreground.disabled,
       '&:hover': {
         backgroundColor: 'transparent',
       },
+    },
+
+    /* Controlled layout overrides (absolute positioning for pinned elements) */
+    [`& .${c['virtualizer--layoutControlled']} .${c['columnHeader--pinnedLeft']},
+      & .${c['virtualizer--layoutControlled']} .${c['columnHeader--pinnedRight']}`]: {
+      position: 'absolute',
+      height: 'var(--height)',
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c['cell--pinnedLeft']},
+      & .${c['virtualizer--layoutControlled']} .${c['cell--pinnedRight']}`]: {
+      position: 'absolute',
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c.row}`]: {
+      position: 'static',
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c['scrollbarFiller--pinnedRight']}`]: {
+      position: 'absolute',
+      height: 'var(--height)',
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c.virtualScrollerRenderZone}`]: {
+      position: 'static',
+      width: 'fit-content',
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c['container--top']}`]: {
+      width: 'fit-content',
+    },
+    [`& .${c['virtualizer--layoutControlled']} .${c['container--bottom']}`]: {
+      width: 'fit-content',
     },
   };
 

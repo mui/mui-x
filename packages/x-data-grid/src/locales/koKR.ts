@@ -73,7 +73,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: '연산자',
   filterPanelOperatorAnd: '그리고',
   filterPanelOperatorOr: '또는',
-  filterPanelColumns: '목록',
+  filterPanelColumn: '목록',
   filterPanelInputLabel: '값',
   filterPanelInputPlaceholder: '값 입력',
 

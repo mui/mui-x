@@ -50,6 +50,9 @@ const RecurrenceSelectorContainer = styled('div', {
   borderRadius: theme.shape.borderRadius,
   width: 'fit-content',
   maxWidth: '100%',
+  '&[data-disabled]': {
+    borderColor: (theme.vars || theme).palette.action.disabled,
+  },
 }));
 
 const RadioButtonLabel = styled(FormControlLabel, {
@@ -493,6 +496,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                   className={classes.eventDialogRecurrenceSelectorContainer}
                   role="group"
                   aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
+                  data-disabled={customDisabled || undefined}
                 >
                   {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
                     <WeekDaySelectorCheckbox
@@ -517,6 +521,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 </RepeatSectionLabel>
                 <RecurrenceSelectorContainer
                   className={classes.eventDialogRecurrenceSelectorContainer}
+                  data-disabled={customDisabled || undefined}
                 >
                   <RecurrenceSelectorToggleGroup
                     className={classes.eventDialogRecurrenceSelectorToggleGroup}

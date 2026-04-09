@@ -58,6 +58,24 @@ export function isUndoShortcut(event: React.KeyboardEvent): boolean {
   );
 }
 
+export function isFillDownShortcut(event: React.KeyboardEvent): boolean {
+  return (
+    (event.ctrlKey || event.metaKey) &&
+    String.fromCharCode(event.keyCode) === 'D' &&
+    !event.shiftKey &&
+    !event.altKey
+  );
+}
+
+export function isFillRightShortcut(event: React.KeyboardEvent): boolean {
+  return (
+    (event.ctrlKey || event.metaKey) &&
+    String.fromCharCode(event.keyCode) === 'R' &&
+    !event.shiftKey &&
+    !event.altKey
+  );
+}
+
 export function isRedoShortcut(event: React.KeyboardEvent): boolean {
   return (
     (event.ctrlKey || event.metaKey) &&

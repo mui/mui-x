@@ -83,6 +83,9 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'plugins',
         'seriesConfig',
         'manager',
+        'eventModelStructure',
+        'resourceModelStructure',
+        'dateLocale',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;

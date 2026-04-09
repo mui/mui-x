@@ -3,7 +3,7 @@ import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
-  expectFieldValueV7,
+  expectFieldValue,
   createPickerRenderer,
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
@@ -144,18 +144,17 @@ describe('<AdapterDayjs />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({});
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
           const view = renderWithProps({
-            enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

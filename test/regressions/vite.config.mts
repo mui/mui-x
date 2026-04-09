@@ -14,10 +14,10 @@ export default defineConfig({
     alias: [
       ...alias,
       {
-        find: '@mui/docs',
+        find: '@mui/internal-core-docs',
         replacement: path.resolve(
           import.meta.dirname,
-          '../../node_modules/@mui/monorepo/packages/mui-docs/src',
+          '../../node_modules/@mui/monorepo/packages-internal/core-docs/src',
         ),
       },
       {

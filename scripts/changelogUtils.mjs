@@ -23,7 +23,7 @@ const REPO = 'mui-x';
  * @type {string[]}
  * Labels to exclude from the changelog
  */
-const excludeLabels = ['dependencies', 'scope: scheduler'];
+const excludeLabels = ['dependencies'];
 
 /**
  * @type {string[]}
@@ -241,7 +241,7 @@ async function generateChangelog({
   const treeViewCommits = [];
   const treeViewProCommits = [];
   const schedulerCommits = [];
-  const schedulerProCommits = [];
+  const schedulerPremiumCommits = [];
   const internalCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -299,8 +299,8 @@ async function generateChangelog({
         case 'scheduler':
           schedulerCommits.push(commitItem);
           break;
-        case 'scheduler-pro':
-          schedulerProCommits.push(commitItem);
+        case 'scheduler-premium':
+          schedulerPremiumCommits.push(commitItem);
           break;
         case 'docs':
           docsCommits.push(commitItem);
@@ -422,11 +422,15 @@ async function generateChangelog({
     if (hasPremiumVersion) {
       lines.push(`#### \`@mui/${packageName}-premium@${packageVersion}\` ${premiumIcon}`);
 
+      // Reference the Pro tier if it exists, otherwise fall back to the base
+      // package. Products like Scheduler ship Premium without a Pro tier.
+      const previousTierPackage = hasProVersion ? `@mui/${packageName}-pro` : `@mui/${packageName}`;
+
       if (premiumCommits?.length > 0) {
-        lines.push(`Same changes as in \`@mui/${packageName}-pro@${packageVersion}\`, plus:`);
+        lines.push(`Same changes as in \`${previousTierPackage}@${packageVersion}\`, plus:`);
         lines.push(logCommitEntries(premiumCommits));
       } else {
-        lines.push(`Same changes as in \`@mui/${packageName}-pro@${packageVersion}\`.`);
+        lines.push(`Same changes as in \`${previousTierPackage}@${packageVersion}\`.`);
       }
     }
 
@@ -540,6 +544,14 @@ ${logProductSection({
   baseCommits: treeViewCommits,
   proCommits: treeViewProCommits,
   changelogKey: 'TreeView',
+})}
+
+${logProductSection({
+  productName: 'Scheduler',
+  packageName: 'x-scheduler',
+  baseCommits: schedulerCommits,
+  premiumCommits: schedulerPremiumCommits,
+  changelogKey: 'scheduler',
 })}
 
 ${logProductSection({
