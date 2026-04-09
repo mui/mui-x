@@ -1,12 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import {
-  fireEvent,
-  screen,
-  within,
-  fireTouchChangedEvent,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { screen, within, fireTouchChangedEvent, waitFor } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   buildPickerDragInteractions,
@@ -516,9 +510,9 @@ describe('<DateRangeCalendar />', () => {
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {
-    it(`prop: ${prop}="true" should not allow date editing`, () => {
+    it(`prop: ${prop}="true" should not allow date editing`, async () => {
       const handleChange = spy();
-      render(
+      const { user } = render(
         <DateRangeCalendar
           value={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-10')]}
           onChange={handleChange}
@@ -537,10 +531,7 @@ describe('<DateRangeCalendar />', () => {
           'disabled',
         );
       }
-      // `user.click` refuses disabled elements because of pointer-events: none.
-      // The assertion is that the click is ignored, so `fireEvent.click` is
-      // fine here.
-      fireEvent.click(getPickerDay('2'));
+      await user.setup({ pointerEventsCheck: 0 }).click(getPickerDay('2'));
       expect(handleChange.callCount).to.equal(0);
     });
   });
@@ -552,10 +543,10 @@ describe('<DateRangeCalendar />', () => {
   });
 
   describe('Performance', () => {
-    it('should only render the new start day when selecting a start day without a previously selected start day', () => {
+    it('should only render the new start day when selecting a start day without a previously selected start day', async () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
-      render(
+      const { user } = render(
         <DateRangeCalendar
           referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
@@ -565,18 +556,15 @@ describe('<DateRangeCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      // Performance tests assert render counts, which depend on the exact
-      // event sequence React reacts to. `fireEvent.click` fires a single
-      // synthetic click — `user.click` fires a full pointer sequence that
-      // triggers additional hover/focus state updates.
-      fireEvent.click(getPickerDay('2'));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
+      await user.click(getPickerDay('2'));
+      // 3 renders (focus, update tabIndex + autoFocus, selection) * 2 (because dev mode)
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6);
     });
 
-    it('should only render the day inside range when selecting the end day', () => {
+    it('should only render the day inside range when selecting the end day', async () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
-      render(
+      const { user } = render(
         <DateRangeCalendar
           referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
@@ -585,11 +573,12 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      fireEvent.click(getPickerDay('2'));
+      await user.click(getPickerDay('2'));
 
       const renderCountBeforeChange = RenderCount.callCount;
-      fireEvent.click(getPickerDay('4'));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
+      await user.click(getPickerDay('4'));
+      // 4 renders (focus, update tabIndex + autoFocus, selection, blur) * 2 days * 2 (because dev mode)
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(16);
     });
   });
 });
