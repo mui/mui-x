@@ -1,16 +1,15 @@
 <LineChartPro
   {...chartConfiguration}
-  showToolbar
   slots={{
-    toolbar: () => {
-      return (<Toolbar>
+    toolbar: () => (
+      <Toolbar>
         <ChartsToolbarRangeButtonTrigger value={{ unit: 'month' }}>
           1 month
         </ChartsToolbarRangeButtonTrigger>
         <ChartsToolbarRangeButtonTrigger value={null}>
           Everything
         </ChartsToolbarRangeButtonTrigger>
-      </Toolbar>);
-    }
+      </Toolbar>
+    )
   }}
 />

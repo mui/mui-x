@@ -16,26 +16,24 @@ const chartConfiguration = {
   xAxis: [{ scaleType: 'time', data: dates, zoom: true }],
   series: [{ data: values, showMark: false, label: 'Value' }],
   height: 300,
+  showToolbar: true,
 } as const;
 
 export default function ChartsToolbarCustomRangeButtons() {
   return (
     <LineChartPro
       {...chartConfiguration}
-      showToolbar
       slots={{
-        toolbar: () => {
-          return (
-            <Toolbar>
-              <ChartsToolbarRangeButtonTrigger value={{ unit: 'month' }}>
-                1 month
-              </ChartsToolbarRangeButtonTrigger>
-              <ChartsToolbarRangeButtonTrigger value={null}>
-                Everything
-              </ChartsToolbarRangeButtonTrigger>
-            </Toolbar>
-          );
-        },
+        toolbar: () => (
+          <Toolbar>
+            <ChartsToolbarRangeButtonTrigger value={{ unit: 'month' }}>
+              1 month
+            </ChartsToolbarRangeButtonTrigger>
+            <ChartsToolbarRangeButtonTrigger value={null}>
+              Everything
+            </ChartsToolbarRangeButtonTrigger>
+          </Toolbar>
+        )
       }}
     />
   );
