@@ -18,12 +18,28 @@ import {
 } from '@mui/internal-core-docs/ApiPage/private';
 import { SectionTitle, SectionTitleProps } from '@mui/internal-core-docs/SectionTitle';
 import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
-import {
-  InterfaceApiTranslation,
-  InterfaceApiContent,
-} from 'docsx/scripts/api/buildInterfacesDocumentation';
 import { TableOfContentsEntry } from '@mui/internal-markdown';
 import { kebabCase } from 'es-toolkit/string';
+
+interface InterfaceApiContent {
+  name: string;
+  imports: string[];
+  demos?: string;
+  properties: {
+    [property: string]: {
+      type: { description: string };
+      default?: string;
+      required?: true;
+      isProPlan?: true;
+      isPremiumPlan?: true;
+    };
+  };
+}
+
+interface InterfaceApiTranslation {
+  interfaceDescription: string;
+  propertiesDescriptions: { [property: string]: { description: string } };
+}
 
 type HeaderHash = 'demos' | 'import';
 
