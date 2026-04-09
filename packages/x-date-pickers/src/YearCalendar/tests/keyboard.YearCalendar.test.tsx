@@ -1,4 +1,3 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -33,11 +32,8 @@ describe('<YearCalendar /> - Keyboard', () => {
       );
 
     const { user } = render(elementsToRender);
-    const startYear = screen.getByRole('radio', { checked: true });
-    // `fireEvent.focus` wraps the focus call in `act()` so the component's
-    // internal focus-state update (via `useControlled`) doesn't leak a React
-    // warning about unwrapped state updates.
-    fireEvent.focus(startYear);
+    // Move focus to the current year
+    await user.keyboard('{Tab}');
     await user.keyboard(userEventKey);
     expect(document.activeElement?.textContent).to.equal(expectedValue);
   }
