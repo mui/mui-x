@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "noUnusedLocals": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "types": ["node", "vitest/globals"],
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "strict": true,
+    "paths": {
+      "docs/config": ["../../node_modules/@mui/monorepo/docs/config.d.ts"],
+      "@mui-internal/api-docs-builder": [
+        "../../node_modules/@mui/monorepo/packages/api-docs-builder/index.ts"
+      ],
+      "@mui-internal/api-docs-builder/*": [
+        "../../node_modules/@mui/monorepo/packages/api-docs-builder/*"
+      ]
+    }
+  },
+  "include": ["./**/*.ts"]
+}
