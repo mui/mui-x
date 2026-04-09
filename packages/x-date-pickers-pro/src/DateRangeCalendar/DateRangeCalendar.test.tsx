@@ -2,10 +2,10 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import {
   screen,
+  fireEvent,
   within,
   fireTouchChangedEvent,
   waitFor,
-  fireEvent,
 } from '@mui/internal-test-utils';
 import {
   adapterToUse,
