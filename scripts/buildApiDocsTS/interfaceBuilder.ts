@@ -6,13 +6,7 @@ import * as ts from 'typescript';
 import * as path from 'path';
 import * as fs from 'node:fs';
 import { kebabCase } from 'es-toolkit/string';
-import {
-  CWD,
-  debug,
-  MAX_EXPAND_DEPTH,
-  MAX_EXPAND_PROPERTIES,
-  MAX_EXPANDED_LENGTH,
-} from './config';
+import { CWD, debug, MAX_EXPAND_DEPTH, MAX_EXPAND_PROPERTIES, MAX_EXPANDED_LENGTH } from './config';
 import { extractJsDoc } from './jsDocUtils';
 import type { FileWrite } from './types';
 

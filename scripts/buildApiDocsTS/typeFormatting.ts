@@ -240,7 +240,10 @@ function formatObjectType(type: ts.Type, checker: ts.TypeChecker, depth: number)
     return { name: 'func' };
   }
 
-  const properties = type.getProperties().slice().sort((a, b) => a.name.localeCompare(b.name));
+  const properties = type
+    .getProperties()
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   // No properties, too deep, or too many properties → just "object"
   if (properties.length === 0 || depth >= MAX_DEPTH || properties.length > MAX_OBJECT_PROPERTIES) {
@@ -334,7 +337,10 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
     if (members.length === 1) {
       return toShort(members[0], checker, depth);
     }
-    return members.map((m) => toShort(m, checker, depth + 1)).sort().join(UNION_SEP);
+    return members
+      .map((m) => toShort(m, checker, depth + 1))
+      .sort()
+      .join(UNION_SEP);
   }
 
   // Array
@@ -353,8 +359,15 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
 
   // Object/shape
   if (type.flags & ts.TypeFlags.Object || type.isIntersection()) {
-    const properties = type.getProperties().slice().sort((a, b) => a.name.localeCompare(b.name));
-    if (properties.length === 0 || depth >= MAX_DEPTH || properties.length > MAX_OBJECT_PROPERTIES) {
+    const properties = type
+      .getProperties()
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name));
+    if (
+      properties.length === 0 ||
+      depth >= MAX_DEPTH ||
+      properties.length > MAX_OBJECT_PROPERTIES
+    ) {
       return 'object';
     }
 
