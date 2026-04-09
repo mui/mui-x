@@ -1,5 +1,7 @@
 {
-  "props": { "localeText": { "type": { "name": "object" } } },
+  "props": {
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } }
+  },
   "name": "ChartsLocalizationProvider",
   "imports": [
     "import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';",

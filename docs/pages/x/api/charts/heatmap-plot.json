@@ -1,9 +1,12 @@
 {
   "props": {
     "borderRadius": { "type": { "name": "number" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "HeatmapPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "HeatmapPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

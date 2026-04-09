@@ -6,7 +6,9 @@
         "description": "Array&lt;{ copyStyles?: bool, fileName?: string, nonce?: string, onBeforeExport?: func, quality?: number, type: string }&gt;"
       }
     },
-    "printOptions": { "type": { "name": "object" } }
+    "printOptions": {
+      "type": { "name": "shape", "description": "ChartsToolbarPrintExportOptions" }
+    }
   },
   "name": "ChartsToolbarPro",
   "imports": [

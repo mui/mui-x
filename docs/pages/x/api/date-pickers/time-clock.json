@@ -3,7 +3,10 @@
     "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
     "ampmInClock": { "type": { "name": "bool" }, "default": "false" },
     "autoFocus": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<TimeClockClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "defaultValue": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
@@ -56,9 +59,12 @@
       }
     },
     "showViewSwitcher": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "TimeClockSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "TimeClockSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

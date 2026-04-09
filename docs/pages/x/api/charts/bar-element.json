@@ -14,11 +14,17 @@
     "xOrigin": { "type": { "name": "number" }, "required": true },
     "y": { "type": { "name": "number" }, "required": true },
     "yOrigin": { "type": { "name": "number" }, "required": true },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<BarClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "hidden": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "BarElementSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "BarElementSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

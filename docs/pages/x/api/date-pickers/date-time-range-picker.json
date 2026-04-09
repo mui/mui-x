@@ -24,7 +24,7 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
       "default": "'@media (pointer: fine)'"
@@ -53,7 +53,7 @@
     "keepOpenDuringFieldFocus": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "PickersInputComponentLocaleText" } },
     "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
     "maxDateTime": { "type": { "name": "object" } },
     "maxTime": { "type": { "name": "object" } },
@@ -166,9 +166,12 @@
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "DateTimeRangePickerSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "DateTimeRangePickerSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -188,7 +191,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "view": {
       "type": {
         "name": "enum",

@@ -68,7 +68,7 @@
       }
     },
     "sectionListRef": { "type": { "name": "custom", "description": "ref" }, "required": true },
-    "value": { "type": { "name": "object" }, "required": true },
+    "value": { "type": { "name": "shape", "description": "string" }, "required": true },
     "endAdornment": { "type": { "name": "node" } },
     "fullWidth": { "type": { "name": "bool" }, "default": "false" },
     "helperText": { "type": { "name": "node" } },
@@ -79,7 +79,7 @@
     "readOnly": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PickersTextFieldSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

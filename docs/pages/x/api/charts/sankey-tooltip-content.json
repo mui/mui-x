@@ -1,5 +1,10 @@
 {
-  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
+  "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChartsTooltipContainerClasses>" },
+      "additionalInfo": { "cssApi": true }
+    }
+  },
   "name": "SankeyTooltipContent",
   "imports": [
     "import { SankeyTooltipContent } from '@mui/x-charts-pro/SankeyChart';",

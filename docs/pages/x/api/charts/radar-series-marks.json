@@ -1,6 +1,9 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<RadarClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {

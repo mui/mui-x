@@ -2,7 +2,7 @@
   "props": {
     "radar": { "type": { "name": "object" }, "required": true },
     "series": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "type": { "name": "arrayOf", "description": "Array&lt;Readonly<RadarSeries>&gt;" },
       "required": true
     },
     "className": { "type": { "name": "string" } },
@@ -44,7 +44,7 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -93,16 +93,24 @@
         "describedArgs": ["tooltipItem"]
       }
     },
-    "seriesConfig": { "type": { "name": "object" } },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<\"radar\">"
+      }
+    },
     "shape": {
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
       "default": "'sharp'"
     },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "RadarChartSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "RadarChartSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

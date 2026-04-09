@@ -2,9 +2,12 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<MultiInputTimeRangeFieldClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
@@ -59,9 +62,12 @@
       }
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "MultiInputRangeFieldSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "MultiInputRangeFieldSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -74,7 +80,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } }
+    "value": { "type": { "name": "shape", "description": "PickerRangeValue" } }
   },
   "name": "MultiInputTimeRangeField",
   "imports": [

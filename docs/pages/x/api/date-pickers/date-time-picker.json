@@ -40,7 +40,7 @@
     "keepOpenDuringFieldFocus": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "PickersInputComponentLocaleText" } },
     "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
     "maxDateTime": { "type": { "name": "object" } },
     "maxTime": { "type": { "name": "object" } },
@@ -172,9 +172,12 @@
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "DateTimePickerSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "DateTimePickerSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

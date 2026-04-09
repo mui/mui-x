@@ -9,7 +9,10 @@
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
     },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<DateRangeCalendarClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "currentMonthCalendarPosition": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "1"
@@ -27,7 +30,7 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" }, "default": "false" },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
@@ -101,9 +104,12 @@
       }
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "DateRangeCalendarSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "DateRangeCalendarSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -122,7 +128,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "view": { "type": { "name": "enum", "description": "'day'" } },
     "views": { "type": { "name": "arrayOf", "description": "Array&lt;'day'&gt;" } }
   },

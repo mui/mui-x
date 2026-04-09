@@ -1,8 +1,11 @@
 {
   "props": {
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ChartsAxisSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "ChartsAxisSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

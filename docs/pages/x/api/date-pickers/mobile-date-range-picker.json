@@ -19,7 +19,7 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" }, "default": "false" },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
@@ -43,7 +43,7 @@
     "keepOpenDuringFieldFocus": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "PickersInputComponentLocaleText" } },
     "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
     "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "name": { "type": { "name": "string" } },
@@ -132,9 +132,12 @@
       }
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "MobileDateRangePickerSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "MobileDateRangePickerSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -146,7 +149,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "viewRenderers": { "type": { "name": "shape", "description": "{ day?: func }" } }
   },
   "name": "MobileDateRangePicker",

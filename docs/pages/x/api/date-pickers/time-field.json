@@ -125,9 +125,12 @@
       }
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "TimeFieldSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "TimeFieldSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

@@ -1,7 +1,10 @@
 {
   "props": {
-    "series": { "type": { "name": "object" }, "required": true },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "series": { "type": { "name": "shape", "description": "SankeySeries" }, "required": true },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<SankeyClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
@@ -18,7 +21,7 @@
     },
     "id": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -53,10 +56,18 @@
         "describedArgs": ["tooltipItem"]
       }
     },
-    "seriesConfig": { "type": { "name": "object" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<\"sankey\">"
+      }
+    },
+    "slotProps": {
+      "type": { "name": "shape", "description": "SankeyChartSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "SankeyChartSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

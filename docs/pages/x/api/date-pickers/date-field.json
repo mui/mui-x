@@ -138,9 +138,12 @@
       }
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "DateFieldSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "DateFieldSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

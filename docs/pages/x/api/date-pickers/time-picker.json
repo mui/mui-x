@@ -27,7 +27,7 @@
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "keepOpenDuringFieldFocus": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "PickersInputComponentLocaleText" } },
     "maxTime": { "type": { "name": "object" } },
     "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
@@ -106,9 +106,12 @@
       }
     },
     "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "TimePickerSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "TimePickerSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

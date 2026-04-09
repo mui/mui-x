@@ -8,7 +8,10 @@
       }
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<RichTreeViewClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "defaultExpandedItems": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
@@ -133,9 +136,12 @@
       "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
       "default": "{ parents: false, descendants: false }"
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "RichTreeViewSlotProps<R, Multiple>" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "RichTreeViewSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

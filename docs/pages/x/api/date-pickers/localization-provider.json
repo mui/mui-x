@@ -15,7 +15,7 @@
       }
     },
     "dateLibInstance": { "type": { "name": "any" } },
-    "localeText": { "type": { "name": "object" } }
+    "localeText": { "type": { "name": "shape", "description": "Partial<PickersLocaleText>" } }
   },
   "name": "LocalizationProvider",
   "imports": [

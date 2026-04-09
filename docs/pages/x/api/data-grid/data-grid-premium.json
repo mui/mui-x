@@ -1,7 +1,7 @@
 {
   "props": {
     "columns": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "type": { "name": "arrayOf", "description": "Array&lt;GridColDef<R>&gt;" },
       "required": true
     },
     "activeChartId": { "type": { "name": "string" } },
@@ -45,12 +45,17 @@
     "checkboxColDef": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<GridClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
     "columnFilterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
-    "columnGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "columnGroupingModel": {
+      "type": { "name": "arrayOf", "description": "Array&lt;GridColumnGroup&gt;" }
+    },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "dataSource": {
@@ -238,7 +243,7 @@
       },
       "default": "false"
     },
-    "initialState": { "type": { "name": "object" } },
+    "initialState": { "type": { "name": "shape", "description": "GridInitialStatePremium" } },
     "isCellEditable": {
       "type": { "name": "func" },
       "signature": {
@@ -292,7 +297,7 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<GridLocaleText>" } },
     "logger": {
       "type": {
         "name": "shape",
@@ -748,7 +753,7 @@
     "paginationModel": {
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
-    "pinnedColumns": { "type": { "name": "object" } },
+    "pinnedColumns": { "type": { "name": "shape", "description": "GridPinnedColumnFields" } },
     "pinnedColumnsSectionSeparator": {
       "type": {
         "name": "enum",
@@ -841,8 +846,11 @@
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" } },
-    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "slotProps": { "type": { "name": "shape", "description": "GridPremiumSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<GridPremiumSlotsComponent>" },
+      "additionalInfo": { "slotsApi": true }
+    },
     "sortingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""

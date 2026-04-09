@@ -8,7 +8,10 @@
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "children": { "type": { "name": "node" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<SimpleTreeViewClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "defaultExpandedItems": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
@@ -75,8 +78,11 @@
       "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
       "default": "{ parents: false, descendants: false }"
     },
-    "slotProps": { "type": { "name": "object" } },
-    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "slotProps": { "type": { "name": "shape", "description": "SimpleTreeViewSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "SimpleTreeViewSlots" },
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",

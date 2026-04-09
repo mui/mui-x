@@ -39,7 +39,7 @@
         "description": "Array&lt;any<br>&#124;&nbsp;{ seriesId: any, type?: any }&gt;"
       }
     },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -103,11 +103,26 @@
         "description": "Array&lt;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object&gt;"
       }
     },
-    "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "seriesConfig": { "type": { "name": "object" } },
+    "series": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;BarSeriesType | LineSeriesType | ScatterSeriesType | PieSeriesType<MakeOptional<PieValueType, \"id\">> | ... 5 more ... | OHLCSeriesType&gt;"
+      }
+    },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<SeriesType>"
+      }
+    },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" } },
-    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "slotProps": {
+      "type": { "name": "shape", "description": "Partial<ChartsDataProviderSlotProps>" }
+    },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ChartsDataProviderSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
     "title": { "type": { "name": "string" } },
     "tooltipAxis": {
       "type": {

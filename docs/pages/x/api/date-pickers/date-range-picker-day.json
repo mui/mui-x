@@ -6,7 +6,10 @@
       "required": true,
       "signature": { "type": "function(day: PickerValidDate) => void", "describedArgs": ["day"] }
     },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<DateRangePickerDayClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "draggable": { "type": { "name": "bool" }, "default": "false" },

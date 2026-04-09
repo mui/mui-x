@@ -2,7 +2,10 @@
   "props": {
     "ampm": { "type": { "name": "bool" } },
     "ampmInClock": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<TimePickerToolbarClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
     "titleId": { "type": { "name": "string" } },
     "toolbarFormat": { "type": { "name": "string" } },

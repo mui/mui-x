@@ -27,7 +27,7 @@
     "skipAnimation": { "type": { "name": "bool" } },
     "startAngle": { "type": { "name": "number" }, "default": "0" },
     "title": { "type": { "name": "string" } },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "shape", "description": "number" } },
     "valueMax": { "type": { "name": "number" }, "default": "100" },
     "valueMin": { "type": { "name": "number" }, "default": "0" },
     "width": { "type": { "name": "number" } }

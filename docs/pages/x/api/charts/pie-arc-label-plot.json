@@ -37,9 +37,12 @@
     "innerRadius": { "type": { "name": "number" }, "default": "0" },
     "paddingAngle": { "type": { "name": "number" }, "default": "0" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "PieArcLabelPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PieArcLabelPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

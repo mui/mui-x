@@ -1,7 +1,7 @@
 {
   "props": {
     "series": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "type": { "name": "arrayOf", "description": "Array&lt;OHLCSeries&gt;" },
       "required": true
     },
     "axesGap": { "type": { "name": "number" }, "default": "0" },
@@ -60,7 +60,7 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -116,12 +116,20 @@
         "describedArgs": ["zoomData"]
       }
     },
-    "seriesConfig": { "type": { "name": "object" } },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<\"ohlc\">"
+      }
+    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "CandlestickChartSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "CandlestickChartSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

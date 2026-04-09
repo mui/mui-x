@@ -8,9 +8,12 @@
       }
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "AreaElementSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "AreaElementSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

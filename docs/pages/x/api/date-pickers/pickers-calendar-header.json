@@ -24,7 +24,10 @@
       },
       "required": true
     },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<PickersCalendarHeaderClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
@@ -37,9 +40,12 @@
       "type": { "name": "func" },
       "signature": { "type": "function(view: DateView) => void", "describedArgs": [] }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "PickersCalendarHeaderSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PickersCalendarHeaderSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

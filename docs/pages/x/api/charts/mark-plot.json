@@ -8,9 +8,12 @@
       }
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "MarkPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "MarkPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

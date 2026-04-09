@@ -9,7 +9,7 @@
       "default": "'end'"
     },
     "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
@@ -134,9 +134,12 @@
       }
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "SingleInputDateTimeRangeFieldSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "SingleInputDateTimeRangeFieldSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -149,7 +152,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "variant": {
       "type": {
         "name": "enum",

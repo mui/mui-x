@@ -9,19 +9,42 @@
     "experimentalFeatures": { "type": { "name": "any" } },
     "height": { "type": { "name": "number" } },
     "id": { "type": { "name": "string" } },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
         "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
-    "plugins": { "type": { "name": "object" } },
-    "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "seriesConfig": { "type": { "name": "object" } },
+    "plugins": {
+      "type": { "name": "shape", "description": "ConvertSignaturesIntoPlugins<TSignatures>" }
+    },
+    "series": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;BarSeriesType | LineSeriesType | ScatterSeriesType | PieSeriesType<MakeOptional<PieValueType, \"id\">> | ... 5 more ... | OHLCSeriesType&gt;"
+      }
+    },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<SeriesType>"
+      }
+    },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" } },
-    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "slotProps": {
+      "type": {
+        "name": "shape",
+        "description": "Partial<ChartsDataProviderSlotProps> & Partial<ChartsDataProviderProSlotProps>"
+      }
+    },
+    "slots": {
+      "type": {
+        "name": "shape",
+        "description": "Partial<ChartsDataProviderSlots> & Partial<ChartsDataProviderProSlots>"
+      },
+      "additionalInfo": { "slotsApi": true }
+    },
     "title": { "type": { "name": "string" } },
     "width": { "type": { "name": "number" } }
   },

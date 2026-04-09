@@ -1,7 +1,7 @@
 {
   "props": {
     "series": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "type": { "name": "arrayOf", "description": "Array&lt;SankeySeriesType&gt;" },
       "required": true
     },
     "colors": {
@@ -19,7 +19,7 @@
       }
     },
     "id": { "type": { "name": "string" } },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -40,7 +40,12 @@
         "describedArgs": ["tooltipItem"]
       }
     },
-    "seriesConfig": { "type": { "name": "object" } },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<\"sankey\">"
+      }
+    },
     "title": { "type": { "name": "string" } },
     "tooltipItem": {
       "type": {

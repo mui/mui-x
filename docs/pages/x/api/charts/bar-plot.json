@@ -14,9 +14,12 @@
       "default": "'svg-single'"
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "BarPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "BarPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

@@ -37,9 +37,12 @@
     },
     "paddingAngle": { "type": { "name": "number" }, "default": "0" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "PieArcPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PieArcPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

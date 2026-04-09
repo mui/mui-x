@@ -1,7 +1,13 @@
 {
   "props": {
     "angle": { "type": { "name": "number" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": {
+        "name": "shape",
+        "description": "Partial<Pick<RadarClasses, \"axisLine\" | \"axisLabel\" | \"axisRoot\">>"
+      },
+      "additionalInfo": { "cssApi": true }
+    },
     "className": { "type": { "name": "string" } },
     "divisions": { "type": { "name": "number" }, "default": "1" },
     "dominantBaseline": {

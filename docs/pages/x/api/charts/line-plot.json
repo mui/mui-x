@@ -8,9 +8,12 @@
       }
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "LineElementSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "LineElementSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

@@ -1,9 +1,15 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<PickersLayoutClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "slotProps": {
+      "type": { "name": "shape", "description": "PickersLayoutSlotProps<TValue>" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PickersLayoutSlots<TValue>" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

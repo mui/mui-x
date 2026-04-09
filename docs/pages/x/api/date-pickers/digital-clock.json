@@ -2,7 +2,10 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
     "autoFocus": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<DigitalClockClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "defaultValue": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
@@ -45,9 +48,12 @@
       }
     },
     "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "DigitalClockSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "DigitalClockSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

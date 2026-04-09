@@ -1,7 +1,7 @@
 {
   "props": {
     "series": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "type": { "name": "arrayOf", "description": "Array&lt;FunnelSeries&gt;" },
       "required": true
     },
     "axisHighlight": {
@@ -52,7 +52,7 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -94,11 +94,19 @@
         "describedArgs": ["tooltipItem"]
       }
     },
-    "seriesConfig": { "type": { "name": "object" } },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<\"funnel\">"
+      }
+    },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "FunnelChartSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "FunnelChartSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

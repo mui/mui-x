@@ -1,7 +1,10 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<DateCalendarClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
@@ -109,9 +112,12 @@
       }
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "DateCalendarSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "DateCalendarSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

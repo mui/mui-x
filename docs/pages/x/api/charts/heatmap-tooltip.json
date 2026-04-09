@@ -4,16 +4,22 @@
       "type": { "name": "enum", "description": "'node'<br>&#124;&nbsp;'pointer'" },
       "default": "'pointer'"
     },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChartsTooltipContainerClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "position": {
       "type": {
         "name": "enum",
         "description": "'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'"
       }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ChartsTooltipContainerSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "ChartsTooltipContainerSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

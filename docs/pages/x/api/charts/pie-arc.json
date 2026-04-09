@@ -12,7 +12,10 @@
     "paddingAngle": { "type": { "name": "number" }, "required": true },
     "seriesId": { "type": { "name": "string" }, "required": true },
     "startAngle": { "type": { "name": "number" }, "required": true },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<PieClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "onClick": {
       "type": { "name": "func" },
       "signature": {

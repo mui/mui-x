@@ -7,7 +7,7 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
@@ -26,7 +26,7 @@
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "keepOpenDuringFieldFocus": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "PickersInputComponentLocaleText" } },
     "maxTime": { "type": { "name": "object" } },
     "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
@@ -109,9 +109,12 @@
         "returned": "boolean"
       }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "MobileTimeRangePickerSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "MobileTimeRangePickerSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -131,7 +134,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "view": {
       "type": {
         "name": "enum",

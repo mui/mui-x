@@ -1,6 +1,9 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ScatterClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
@@ -12,9 +15,12 @@
       "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
       "default": "'svg-single'"
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ScatterPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "ScatterPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

@@ -1,9 +1,12 @@
 {
   "props": {
     "status": { "type": { "name": "object" }, "required": true },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "TreeItemIconSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "TreeItemIconSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

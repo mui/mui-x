@@ -1,6 +1,9 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<GaugeClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "cornerRadius": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "0"
@@ -29,7 +32,7 @@
     "startAngle": { "type": { "name": "number" }, "default": "0" },
     "text": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
     "title": { "type": { "name": "string" } },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "shape", "description": "number" } },
     "valueMax": { "type": { "name": "number" }, "default": "100" },
     "valueMin": { "type": { "name": "number" }, "default": "0" },
     "width": { "type": { "name": "number" } }

@@ -1,7 +1,10 @@
 {
   "props": {
     "itemId": { "type": { "name": "string" }, "required": true },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<TreeItemClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
@@ -21,9 +24,12 @@
         "describedArgs": []
       }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "TreeItemSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "TreeItemSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

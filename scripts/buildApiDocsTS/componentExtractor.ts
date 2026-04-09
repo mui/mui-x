@@ -100,18 +100,23 @@ export function extractComponentApi(
 
     let typeInfo;
     if (UNRESOLVED_OBJECT_PROPS.has(prop.name)) {
-      // These are marked as 'object' or 'arrayOf object' in PropTypes (not expanded)
-      // Check if it's an array type and preserve that
+      // These props are not fully expanded — show the type alias name instead of "object"
       const rawPropType = checker.getTypeOfSymbol(prop);
       const strippedPropType = stripOptionalType(rawPropType, checker);
+      const typeName = checker.typeToString(strippedPropType);
       const isArr =
         checker.isArrayType(strippedPropType) ||
         (strippedPropType as any).target?.getSymbol()?.name === 'Array' ||
         (strippedPropType as any).target?.getSymbol()?.name === 'ReadonlyArray';
       if (isArr) {
-        typeInfo = { name: 'arrayOf', description: 'Array&lt;object&gt;' };
-      } else {
+        const elemType = (strippedPropType as ts.TypeReference).typeArguments?.[0];
+        const elemName = elemType ? checker.typeToString(elemType) : 'object';
+        typeInfo = { name: 'arrayOf', description: `Array&lt;${elemName}&gt;` };
+      } else if (typeName === 'any' || typeName.includes('{') || typeName.length > 80) {
+        // Fall back to plain "object" for unreadable types
         typeInfo = { name: 'object' };
+      } else {
+        typeInfo = { name: 'shape', description: typeName };
       }
     } else if (prop.name === 'children') {
       typeInfo = { name: 'node' };

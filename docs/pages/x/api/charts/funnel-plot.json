@@ -8,9 +8,12 @@
         "describedArgs": ["event", "funnelItemIdentifier"]
       }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "FunnelPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "FunnelPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }

@@ -12,7 +12,7 @@
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
       "default": "\"mobile\""
     },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "PickersInputComponentLocaleText" } },
     "maxTime": { "type": { "name": "object" } },
     "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
@@ -73,9 +73,12 @@
         "returned": "boolean"
       }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "StaticTimePickerSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "StaticTimePickerSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },

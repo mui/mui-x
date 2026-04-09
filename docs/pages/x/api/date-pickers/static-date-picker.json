@@ -22,7 +22,7 @@
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "PickersInputComponentLocaleText" } },
     "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
     "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "monthsPerRow": {
@@ -123,9 +123,12 @@
       }
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "StaticDatePickerSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "StaticDatePickerSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
