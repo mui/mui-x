@@ -46,7 +46,7 @@
     },
     "sectionLabel": {
       "type": {
-        "description": "(item: { seriesId: string, dataIndex: number, value: number }) =&gt; boolean | { position?: { vertical?: \"bottom\" | \"middle\" | \"top\", horizontal?: \"center\" | \"end\" | \"start\" }, textAnchor?: \"end\" | \"middle\" | \"start\", dominantBaseline?: \"auto\" | \"baseline\" | \"central\" | \"hanging\" | \"middle\" | \"text-after-edge\" | \"text-before-edge\", offset?: number | { x?: number, y?: number } } | boolean | { position?: { vertical?: \"bottom\" | \"middle\" | \"top\", horizontal?: \"center\" | \"end\" | \"start\" }, textAnchor?: \"end\" | \"middle\" | \"start\", dominantBaseline?: \"auto\" | \"baseline\" | \"central\" | \"hanging\" | \"middle\" | \"text-after-edge\" | \"text-before-edge\", offset?: number | { x?: number, y?: number } }"
+        "description": "FunnelLabelOptions | ((item: FunnelItem) =&gt; FunnelLabelOptions | false) | false"
       },
       "default": "{ vertical: 'middle', horizontal: 'center' }",
       "isProPlan": true

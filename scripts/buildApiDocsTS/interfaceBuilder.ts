@@ -6,7 +6,13 @@ import * as ts from 'typescript';
 import * as path from 'path';
 import * as fs from 'node:fs';
 import { kebabCase } from 'es-toolkit/string';
-import { CWD, debug } from './config';
+import {
+  CWD,
+  debug,
+  MAX_EXPAND_DEPTH,
+  MAX_EXPAND_PROPERTIES,
+  MAX_EXPANDED_LENGTH,
+} from './config';
 import { extractJsDoc } from './jsDocUtils';
 import type { FileWrite } from './types';
 
@@ -341,7 +347,7 @@ const OPAQUE_TYPE_NAMES = new Set([
  * Resolves type aliases to their definitions but stops at React/DOM/opaque types.
  */
 function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number = 0): string {
-  if (depth > 3) {
+  if (depth > MAX_EXPAND_DEPTH) {
     return checkerRef.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation);
   }
 
@@ -429,7 +435,7 @@ function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number
   // Object types with a manageable number of properties — expand
   if (type.flags & ts.TypeFlags.Object) {
     const props = type.getProperties();
-    if (props.length > 0 && props.length <= 10 && callSigs.length === 0) {
+    if (props.length > 0 && props.length <= MAX_EXPAND_PROPERTIES && callSigs.length === 0) {
       // Skip if it looks like a React/DOM/class type
       if (symbolName && /^[A-Z]/.test(symbolName) && !symbolName.includes('__')) {
         const fileName = symbol?.declarations?.[0]?.getSourceFile().fileName || '';
@@ -478,7 +484,7 @@ function resolvePropertyType(prop: ts.Symbol, checker: ts.TypeChecker): string {
     expanded.includes('CSSPseudoSelector') ||
     expanded.includes('CSSSelectorObject') ||
     expanded.includes(' & ') ||
-    expanded.length > 1000
+    expanded.length > MAX_EXPANDED_LENGTH
   ) {
     const declarations = prop.getDeclarations() || [];
     for (const decl of declarations) {

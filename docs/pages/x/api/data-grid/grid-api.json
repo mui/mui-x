@@ -432,7 +432,7 @@
     },
     "setPivotModel": {
       "type": {
-        "description": "(model: (prev: { columns: { field: string; sort?: \"asc\" | \"desc\" | undefined; hidden?: boolean | undefined; }[], rows: { field: string; hidden?: boolean | undefined; }[], values: { field: string; aggFunc: string; hidden?: boolean | undefined; }[] }) =&gt; { columns: { field: string; sort?: \"asc\" | \"desc\" | undefined; hidden?: boolean | undefined; }[], rows: { field: string; hidden?: boolean | undefined; }[], values: { field: string; aggFunc: string; hidden?: boolean | undefined; }[] } | { columns: { field: string; sort?: \"asc\" | \"desc\" | undefined; hidden?: boolean | undefined; }[], rows: { field: string; hidden?: boolean | undefined; }[], values: { field: string; aggFunc: string; hidden?: boolean | undefined; }[] }) =&gt; void"
+        "description": "(model: GridPivotModel | ((prev: GridPivotModel) =&gt; GridPivotModel)) =&gt; void"
       },
       "required": true,
       "isPremiumPlan": true

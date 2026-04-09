@@ -11,6 +11,21 @@ import { treeViewFamily } from './families/treeView';
 
 export const CWD = process.cwd();
 
+// ---------------------------------------------------------------------------
+// Type expansion limits
+// ---------------------------------------------------------------------------
+
+/** Component props: max nesting depth before collapsing to "object" */
+export const MAX_DEPTH = 4;
+/** Component props: objects with more properties than this collapse to "object" */
+export const MAX_OBJECT_PROPERTIES = 30;
+/** Interface docs: max nesting depth for recursive type expansion */
+export const MAX_EXPAND_DEPTH = 3;
+/** Interface docs: only expand objects with this many properties or fewer */
+export const MAX_EXPAND_PROPERTIES = 10;
+/** Interface docs: fall back to source text if expanded result exceeds this length */
+export const MAX_EXPANDED_LENGTH = 600;
+
 const DEBUG = process.env.CI === 'true' || process.env.DEBUG === 'true';
 
 /** Logs only when DEBUG is enabled (CI=true or DEBUG=true). */
