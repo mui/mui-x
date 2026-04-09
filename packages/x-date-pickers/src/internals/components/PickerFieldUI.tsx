@@ -402,7 +402,7 @@ export function mergeSlotProps<TProps extends {}, TOwnerState extends FieldOwner
 
 /**
  * The `textField` slot props cannot be handled inside `PickerFieldUI` because it would be a breaking change to not pass the enriched props to `useField`.
- * TODO: Remove the `textField` slot and clean this logic up.
+ * TODO v10: Remove the `textField` slot and clean this logic up.
  */
 export function useFieldTextFieldProps<TProps extends UseFieldOwnerStateParameters>(
   parameters: UseFieldTextFieldPropsParameters,
