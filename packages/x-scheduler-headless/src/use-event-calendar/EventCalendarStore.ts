@@ -14,10 +14,10 @@ import {
   SchedulerStore,
   SchedulerInstanceName,
 } from '../internals/utils/SchedulerStore';
-import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
+import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
-export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
+export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
 
 export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
@@ -103,10 +103,7 @@ export class ExtendableEventCalendarStore<
     const views = this.state.views;
     if (!views.includes(view)) {
       throw new Error(
-        [
-          `MUI: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
-          'Please ensure that the requested view is included in the views array.',
-        ].join('\n'),
+        `MUI: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.\nPlease ensure that the requested view is included in the views array.`,
       );
     }
   }

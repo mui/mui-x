@@ -35,6 +35,9 @@
     "autosizeOptions": { "description": "The options for autosize when user-initiated." },
     "cellModesModel": { "description": "Controls the modes of the cells." },
     "cellSelection": { "description": "If <code>true</code>, the cell selection mode is enabled." },
+    "cellSelectionFillHandle": {
+      "description": "If <code>true</code>, a fill handle is shown at the bottom-right corner of the cell selection. Dragging the fill handle fills target cells with the values from selected cells. Requires <code>cellSelection</code> to be enabled."
+    },
     "cellSelectionModel": { "description": "Set the cell selection model of the grid." },
     "chartsIntegration": {
       "description": "If <code>true</code>, the charts integration feature is enabled."
@@ -885,7 +888,10 @@
           "description": "With all properties from GridRowScrollEndParams."
         },
         "event": { "name": "event", "description": "The event object." },
-        "details": { "name": "details", "description": "Additional details for this callback." }
+        "details": {
+          "name": "details",
+          "description": "Additional details for this callback. Prefer to use {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} unless it doesn&#39;t fulfill your needs."
+        }
       }
     },
     "onSidebarClose": {
@@ -1151,6 +1157,31 @@
       "nodeName": "the cell element",
       "conditions": "the cell is in edit mode"
     },
+    "cell--fillPreview": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is in the fill preview range"
+    },
+    "cell--fillPreviewBottom": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the bottom edge of the fill preview range"
+    },
+    "cell--fillPreviewLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the left edge of the fill preview range"
+    },
+    "cell--fillPreviewRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the right edge of the fill preview range"
+    },
+    "cell--fillPreviewTop": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the top edge of the fill preview range"
+    },
     "cell--flex": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell element in flex display mode"
@@ -1204,6 +1235,11 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "<code>align=\"right\"</code>"
+    },
+    "cell--withFillHandle": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it displays the fill handle"
     },
     "cell--withLeftBorder": {
       "description": "Styles applied the cell if <code>showColumnVerticalBorder={true}</code>."

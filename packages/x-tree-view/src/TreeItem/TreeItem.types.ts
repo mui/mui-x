@@ -59,7 +59,7 @@ export interface TreeItemSlots extends TreeItemIconSlots {
    */
   errorIcon?: React.ElementType;
   /**
-   * The component that is rendered when the item is in an loading state.
+   * The component that is rendered when the item is in a loading state.
    * Warning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.
    * @default TreeItemLoadingContainer
    */

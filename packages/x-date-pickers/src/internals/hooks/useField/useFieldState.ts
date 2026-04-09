@@ -46,18 +46,11 @@ const QUERY_LIFE_DURATION_MS = 5000;
 
 export const useFieldState = <
   TValue extends PickerValidValue,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TValidationProps extends {},
-  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+  TForwardedProps extends UseFieldForwardedProps,
 >(
-  parameters: UseFieldStateParameters<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError,
-    TValidationProps,
-    TForwardedProps
-  >,
+  parameters: UseFieldStateParameters<TValue, TError, TValidationProps, TForwardedProps>,
 ): UseFieldStateReturnValue<TValue> => {
   const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
@@ -82,7 +75,6 @@ export const useFieldState = <
       onSelectedSectionsChange,
       shouldRespectLeadingZeros = false,
       timezone: timezoneProp,
-      enableAccessibleFieldDOMStructure = true,
     },
     forwardedProps: { error: errorProp },
   } = parameters;
@@ -114,7 +106,6 @@ export const useFieldState = <
           date,
           formatDensity,
           shouldRespectLeadingZeros,
-          enableAccessibleFieldDOMStructure,
           isRtl,
         }),
       ),
@@ -127,7 +118,6 @@ export const useFieldState = <
       shouldRespectLeadingZeros,
       adapter,
       formatDensity,
-      enableAccessibleFieldDOMStructure,
     ],
   );
 
@@ -197,10 +187,7 @@ export const useFieldState = <
 
   const activeSectionIndex = parsedSelectedSections === 'all' ? 0 : parsedSelectedSections;
 
-  const sectionOrder = React.useMemo(
-    () => getSectionOrder(state.sections, isRtl && !enableAccessibleFieldDOMStructure),
-    [state.sections, isRtl, enableAccessibleFieldDOMStructure],
-  );
+  const sectionOrder = React.useMemo(() => getSectionOrder(state.sections), [state.sections]);
 
   const areAllSectionsEmpty = React.useMemo(
     () => state.sections.every((section) => section.value === ''),
@@ -333,7 +320,6 @@ export const useFieldState = <
         date,
         formatDensity,
         shouldRespectLeadingZeros,
-        enableAccessibleFieldDOMStructure,
         isRtl,
       });
       return mergeDateIntoReferenceDate(adapter, date, sections, referenceDate, false);
@@ -550,18 +536,12 @@ export const useFieldState = <
 
 interface UseFieldStateParameters<
   TValue extends PickerValidValue,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TValidationProps extends {},
-  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+  TForwardedProps extends UseFieldForwardedProps,
 > {
-  manager: PickerManager<TValue, TEnableAccessibleFieldDOMStructure, TError, TValidationProps, any>;
-  internalPropsWithDefaults: UseFieldInternalProps<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  > &
-    TValidationProps;
+  manager: PickerManager<TValue, TError, TValidationProps, any>;
+  internalPropsWithDefaults: UseFieldInternalProps<TValue, TError> & TValidationProps;
   forwardedProps: TForwardedProps;
 }
 

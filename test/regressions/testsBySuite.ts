@@ -27,6 +27,9 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/data-grid/filtering/CustomRatingOperator', // Needs interaction
     '!docsx/data/data-grid/filtering/CustomInputComponent', // Needs interaction
     '!docsx/data/data-grid/server-side-data/ServerSideLazyLoadingRevalidation', // Flashes cause flaky argos screenshots
+    '!docsx/data/data-grid/server-side-data/ServerSideLazyLoadingFullyReplaced', // Flashes cause flaky argos screenshots
+    '!docsx/data/data-grid/server-side-data/ServerSideDataGridRevalidation', // Flashes cause flaky argos screenshots
+    '!docsx/data/data-grid/server-side-data/ServerSideTreeDataRevalidation', // Flashes cause flaky argos screenshots
     '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
     '!docsx/data/charts/tooltip/Custom*', // Composition example
     '!docsx/data/charts/tooltip/Item*', // Composition example
@@ -44,6 +47,12 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/charts/sankey/CustomNodeLabelPlot', // sub-component for demo purpose
     '!docsx/data/charts/references/ReferenceArea', // sub-component for demo purpose
     '!docsx/data/charts/references/ReferencePoint', // sub-component for demo purpose
+
+    // Exclude shared utility files that don't have a default export
+    '!docsx/data/**/shared/*',
+
+    // Streaming demos conflict with sinon fake timers (cancelAnimationFrame on native timer)
+    '!docsx/data/chat/core/examples/controlled-state/ControlledStateHeadlessChat',
 
     // Exclude codesandbox embedded demos since they're not using packages built from the branch anyway.
     '!docsx/data/migration/migration-pickers-v5/MobileKeyboardView',

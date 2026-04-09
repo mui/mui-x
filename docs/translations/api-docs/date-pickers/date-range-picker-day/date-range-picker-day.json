@@ -9,12 +9,9 @@
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "day": { "description": "The date to show." },
-    "disabled": { "description": "If <code>true</code>, renders as disabled." },
+    "disabled": { "description": "If <code>true</code>, the day is disabled." },
     "disableHighlightToday": {
-      "description": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle."
-    },
-    "disableMargin": {
-      "description": "If <code>true</code>, days are rendering without margin. Useful for displaying linked range of days."
+      "description": "If <code>true</code>, today&#39;s day is not highlighted."
     },
     "disableRipple": {
       "description": "If <code>true</code>, the ripple effect is disabled.<br>⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure to highlight the element by applying separate styles with the <code>.Mui-focusVisible</code> class."
@@ -31,6 +28,10 @@
     "focusVisibleClassName": {
       "description": "This prop can help identify which element has keyboard focus. The class name will be applied when the element gains the focus through keyboard interaction. It&#39;s a polyfill for the <a href=\"https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo\">CSS :focus-visible selector</a>. The rationale for using this feature <a href=\"https://github.com/WICG/focus-visible/blob/HEAD/explainer.md\">is explained here</a>. A <a href=\"https://github.com/WICG/focus-visible\">polyfill can be used</a> to apply a <code>focus-visible</code> class to other components if needed."
     },
+    "isAnimating": { "description": "If <code>true</code>, the day is being animated." },
+    "isDayFillerCell": {
+      "description": "If <code>true</code>, the day is a filler day (its content is hidden)."
+    },
     "isEndOfHighlighting": {
       "description": "Set to <code>true</code> if the <code>day</code> is the end of a highlighted date range."
     },
@@ -38,13 +39,13 @@
       "description": "Set to <code>true</code> if the <code>day</code> is the end of a previewing date range."
     },
     "isFirstVisibleCell": {
-      "description": "If <code>true</code>, day is the first visible cell of the month. Either the first day of the month or the first day of the week depending on <code>showDaysOutsideCurrentMonth</code>."
+      "description": "If <code>true</code>, the day is the first visible cell of the month."
     },
     "isHighlighting": {
       "description": "Set to <code>true</code> if the <code>day</code> is in a highlighted date range."
     },
     "isLastVisibleCell": {
-      "description": "If <code>true</code>, day is the last visible cell of the month. Either the last day of the month or the last day of the week depending on <code>showDaysOutsideCurrentMonth</code>."
+      "description": "If <code>true</code>, the day is the last visible cell of the month."
     },
     "isPreviewing": {
       "description": "Set to <code>true</code> if the <code>day</code> is in a preview date range."
@@ -56,11 +57,54 @@
       "description": "Set to <code>true</code> if the <code>day</code> is the start of a previewing date range."
     },
     "isVisuallySelected": { "description": "Indicates if the day should be visually selected." },
+    "nativeButton": {
+      "description": "Whether the custom component is expected to render a native <code>&lt;button&gt;</code> element when passing a React component to the <code>component</code> or <code>slots</code> prop."
+    },
+    "onBlur": {
+      "description": "Callback fired when the component is blurred.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event object." },
+        "day": { "name": "day", "description": "The day." }
+      }
+    },
+    "onClick": {
+      "description": "Callback fired when the component is clicked.",
+      "typeDescriptions": { "event": { "name": "event", "description": "The event object." } }
+    },
+    "onDaySelect": {
+      "description": "Callback fired when the day is selected.",
+      "typeDescriptions": { "day": { "name": "day", "description": "The day to select." } }
+    },
+    "onFocus": {
+      "description": "Callback fired when the component is focused.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event object." },
+        "day": { "name": "day", "description": "The day." }
+      }
+    },
     "onFocusVisible": {
       "description": "Callback fired when the component is focused with a keyboard. We trigger a <code>onFocus</code> callback too."
     },
+    "onKeyDown": {
+      "description": "Callback fired when a key is pressed.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event object." },
+        "day": { "name": "day", "description": "The day." }
+      }
+    },
+    "onMouseDown": {
+      "description": "Callback fired when the mouse button is pressed.",
+      "typeDescriptions": { "event": { "name": "event", "description": "The event object." } }
+    },
+    "onMouseEnter": {
+      "description": "Callback fired when the mouse enters the component.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event object." },
+        "day": { "name": "day", "description": "The day." }
+      }
+    },
     "outsideCurrentMonth": {
-      "description": "If <code>true</code>, day is outside of month and will be hidden."
+      "description": "If <code>true</code>, the day is outside the current month."
     },
     "selected": { "description": "If <code>true</code>, renders as selected." },
     "showDaysOutsideCurrentMonth": {
@@ -69,91 +113,108 @@
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
-    "today": { "description": "If <code>true</code>, renders as today date." },
+    "today": { "description": "If <code>true</code>, today&#39;s day is highlighted." },
     "TouchRippleProps": { "description": "Props applied to the <code>TouchRipple</code> element." },
     "touchRippleRef": {
       "description": "A ref that points to the <code>TouchRipple</code> element."
     }
   },
   "classDescriptions": {
-    "day": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the day element" },
-    "dayInsideRangeInterval": {
+    "dayOutsideMonth": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the day element",
-      "conditions": "<code>selected=false</code> and <code>isHighlighting=true</code>"
+      "nodeName": "the root element",
+      "conditions": "<code>isDayOutsideMonth=true</code> and <code>showDaysOutsideCurrentMonth=true</code>"
     },
-    "dayOutsideRangeInterval": {
+    "disabled": {
+      "description": "State class applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayDisabled=true</code>"
+    },
+    "draggable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the day element",
-      "conditions": "<code>isHighlighting=false</code>"
+      "nodeName": "the root element",
+      "conditions": "<code>isDayDraggable=true</code>"
     },
     "endOfMonth": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>day</code> is the end of the month"
+      "conditions": "<code>isDayEndOfMonth=true</code>"
+    },
+    "endOfWeek": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayEndOfWeek=true</code>"
+    },
+    "fillerCell": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayOutsideMonth=true</code> and <code>showDaysOutsideCurrentMonth=false</code>"
     },
     "firstVisibleCell": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>day</code> is the first visible cell of the month"
+      "conditions": "<code>isDayFirstVisibleCell=true</code>"
     },
-    "hiddenDayFiller": {
+    "insidePreviewing": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "it is an empty cell used to fill the week"
+      "conditions": "<code>isDayInsidePreview=true</code>"
+    },
+    "insideSelection": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayInsideSelection=true</code>"
     },
     "lastVisibleCell": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>day</code> is the last visible cell of the month"
+      "conditions": "<code>isDayLastVisibleCell=true</code>"
     },
-    "notSelectedDate": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the day element",
-      "conditions": "<code>selected=false</code>"
-    },
-    "outsideCurrentMonth": {
-      "description": "Styles applied to the root element if <code>outsideCurrentMonth=true</code>"
-    },
-    "rangeIntervalDayHighlight": {
+    "previewed": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>isHighlighting=true</code>"
+      "conditions": "<code>isDayPreviewed=true</code>"
     },
-    "rangeIntervalDayHighlightEnd": {
+    "previewEnd": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>isEndOfHighlighting=true</code>"
+      "conditions": "<code>isDayPreviewEnd=true</code>"
     },
-    "rangeIntervalDayHighlightStart": {
+    "previewStart": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>isStartOfHighlighting=true</code>"
-    },
-    "rangeIntervalDayPreview": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "<code>isPreviewing=true</code>"
-    },
-    "rangeIntervalDayPreviewEnd": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "<code>isEndOfPreviewing=true</code>"
-    },
-    "rangeIntervalDayPreviewStart": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "<code>isStartOfPreviewing=true</code>"
-    },
-    "rangeIntervalPreview": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the preview element"
+      "conditions": "<code>isDayPreviewStart=true</code>"
     },
     "root": { "description": "Styles applied to the root element." },
+    "selected": {
+      "description": "State class applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDaySelected=true</code>"
+    },
+    "selectionEnd": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDaySelectionEnd=true</code>"
+    },
+    "selectionStart": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDaySelectionStart=true</code>"
+    },
     "startOfMonth": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>day</code> is the start of the month"
+      "conditions": "<code>isDayStartOfMonth=true</code>"
+    },
+    "startOfWeek": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>isDayStartOfWeek=true</code>"
+    },
+    "today": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>disableHighlightToday=false</code> and <code>isDayCurrent=true</code>"
     }
   }
 }
