@@ -26,7 +26,8 @@ export default function SeriesValueGetter() {
         },
         {
           label: 'Profit',
-          valueGetter: (item) => parseFloat(item.revenue as string) - parseFloat(item.cost as string),
+          valueGetter: (item) =>
+            parseFloat(item.revenue as string) - parseFloat(item.cost as string),
           valueFormatter: (v) => (v == null ? '' : `$${v.toFixed(2)}`),
         },
       ]}
