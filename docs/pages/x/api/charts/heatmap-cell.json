@@ -1,7 +1,7 @@
 {
   "props": {
     "height": { "type": { "name": "number" }, "required": true },
-    "ownerState": { "type": { "name": "object" }, "required": true },
+    "ownerState": { "type": { "name": "{}" }, "required": true },
     "width": { "type": { "name": "number" }, "required": true },
     "x": { "type": { "name": "number" }, "required": true },
     "y": { "type": { "name": "number" }, "required": true }

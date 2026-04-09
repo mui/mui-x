@@ -1,6 +1,6 @@
 {
   "props": {
-    "adapter": { "type": { "name": "object" }, "required": true },
+    "adapter": { "type": { "name": "{}" }, "required": true },
     "activeConversationId": { "type": { "name": "string" } },
     "composerValue": { "type": { "name": "string" } },
     "conversations": {
@@ -32,7 +32,7 @@
     "initialMessages": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: ChatMessageMetadata, parts: Array&lt;ChatDynamicToolMessagePart<string><br>&#124;&nbsp;ChatFileMessagePart<br>&#124;&nbsp;ChatReasoningMessagePart<br>&#124;&nbsp;ChatSourceDocumentMessagePart<br>&#124;&nbsp;ChatSourceUrlMessagePart<br>&#124;&nbsp;ChatStepStartMessagePart<br>&#124;&nbsp;ChatTextMessagePart<br>&#124;&nbsp;ChatToolMessagePart<string><br>&#124;&nbsp;object&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }&gt;"
+        "description": "Array&lt;{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: ChatMessageMetadata, parts: Array&lt;ChatDynamicToolMessagePart<string><br>&#124;&nbsp;ChatFileMessagePart<br>&#124;&nbsp;ChatReasoningMessagePart<br>&#124;&nbsp;ChatSourceDocumentMessagePart<br>&#124;&nbsp;ChatSourceUrlMessagePart<br>&#124;&nbsp;ChatStepStartMessagePart<br>&#124;&nbsp;ChatTextMessagePart<br>&#124;&nbsp;ChatToolMessagePart<string><br>&#124;&nbsp;{}&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }&gt;"
       }
     },
     "localeText": { "type": { "name": "shape", "description": "Partial<ChatLocaleText>" } },
@@ -45,7 +45,7 @@
     "messages": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: ChatMessageMetadata, parts: Array&lt;ChatDynamicToolMessagePart<string><br>&#124;&nbsp;ChatFileMessagePart<br>&#124;&nbsp;ChatReasoningMessagePart<br>&#124;&nbsp;ChatSourceDocumentMessagePart<br>&#124;&nbsp;ChatSourceUrlMessagePart<br>&#124;&nbsp;ChatStepStartMessagePart<br>&#124;&nbsp;ChatTextMessagePart<br>&#124;&nbsp;ChatToolMessagePart<string><br>&#124;&nbsp;object&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }&gt;"
+        "description": "Array&lt;{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: ChatMessageMetadata, parts: Array&lt;ChatDynamicToolMessagePart<string><br>&#124;&nbsp;ChatFileMessagePart<br>&#124;&nbsp;ChatReasoningMessagePart<br>&#124;&nbsp;ChatSourceDocumentMessagePart<br>&#124;&nbsp;ChatSourceUrlMessagePart<br>&#124;&nbsp;ChatStepStartMessagePart<br>&#124;&nbsp;ChatTextMessagePart<br>&#124;&nbsp;ChatToolMessagePart<string><br>&#124;&nbsp;{}&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }&gt;"
       }
     },
     "onActiveConversationChange": {

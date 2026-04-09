@@ -45,7 +45,7 @@
       "deprecated": true,
       "deprecationInfo": "Use <code>disableHitArea</code> instead."
     },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": { "type": { "name": "{}" } },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },

@@ -1,6 +1,6 @@
 {
   "props": {
-    "status": { "type": { "name": "object" }, "required": true },
+    "status": { "type": { "name": "{}" }, "required": true },
     "slotProps": {
       "type": { "name": "shape", "description": "TreeItemIconSlotProps" },
       "default": "{}"

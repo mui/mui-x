@@ -84,7 +84,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: '!='<br>&#124;&nbsp;'<'<br>&#124;&nbsp;'<='<br>&#124;&nbsp;'='<br>&#124;&nbsp;'>'<br>&#124;&nbsp;'>='<br>&#124;&nbsp;'after'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'contains'<br>&#124;&nbsp;'doesNotContain'<br>&#124;&nbsp;'doesNotEqual'<br>&#124;&nbsp;'endsWith'<br>&#124;&nbsp;'equals'<br>&#124;&nbsp;'is'<br>&#124;&nbsp;'isAnyOf'<br>&#124;&nbsp;'isEmpty'<br>&#124;&nbsp;'isNotEmpty'<br>&#124;&nbsp;'not'<br>&#124;&nbsp;'onOrAfter'<br>&#124;&nbsp;'onOrBefore'<br>&#124;&nbsp;'startsWith'<br>&#124;&nbsp;object, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: Array&lt;any&gt; }"
+        "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: '!='<br>&#124;&nbsp;'<'<br>&#124;&nbsp;'<='<br>&#124;&nbsp;'='<br>&#124;&nbsp;'>'<br>&#124;&nbsp;'>='<br>&#124;&nbsp;'after'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'contains'<br>&#124;&nbsp;'doesNotContain'<br>&#124;&nbsp;'doesNotEqual'<br>&#124;&nbsp;'endsWith'<br>&#124;&nbsp;'equals'<br>&#124;&nbsp;'is'<br>&#124;&nbsp;'isAnyOf'<br>&#124;&nbsp;'isEmpty'<br>&#124;&nbsp;'isNotEmpty'<br>&#124;&nbsp;'not'<br>&#124;&nbsp;'onOrAfter'<br>&#124;&nbsp;'onOrBefore'<br>&#124;&nbsp;'startsWith'<br>&#124;&nbsp;{}, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: Array&lt;any&gt; }"
       }
     },
     "getCellClassName": {

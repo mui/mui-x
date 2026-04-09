@@ -1,8 +1,8 @@
 {
   "props": {
     "index": { "type": { "name": "number" }, "required": true },
-    "message": { "type": { "name": "object" }, "required": true },
-    "part": { "type": { "name": "object" }, "required": true },
+    "message": { "type": { "name": "{}" }, "required": true },
+    "part": { "type": { "name": "{}" }, "required": true },
     "onToolCall": {
       "type": { "name": "func" },
       "signature": {

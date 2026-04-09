@@ -4,14 +4,8 @@
       "type": { "name": "arrayOf", "description": "Array&lt;HeatmapSeries&gt;" },
       "required": true
     },
-    "xAxis": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
-    "yAxis": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
+    "xAxis": { "type": { "name": "arrayOf", "description": "Array&lt;{}&gt;" }, "required": true },
+    "yAxis": { "type": { "name": "arrayOf", "description": "Array&lt;{}&gt;" }, "required": true },
     "borderRadius": { "type": { "name": "number" } },
     "brushConfig": {
       "type": {
@@ -29,7 +23,7 @@
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": { "type": { "name": "{}" } },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
@@ -103,10 +97,7 @@
     },
     "title": { "type": { "name": "string" } },
     "tooltip": {
-      "type": {
-        "name": "union",
-        "description": "object<br>&#124;&nbsp;object<br>&#124;&nbsp;object"
-      },
+      "type": { "name": "union", "description": "{}<br>&#124;&nbsp;{}<br>&#124;&nbsp;{}" },
       "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
     },
     "tooltipAxis": {

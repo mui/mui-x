@@ -1,6 +1,6 @@
 {
   "props": {
-    "conversation": { "type": { "name": "object" }, "required": true },
+    "conversation": { "type": { "name": "{}" }, "required": true },
     "focused": { "type": { "name": "bool" } },
     "selected": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "shape", "description": "ConversationListPreviewSlotProps" } },

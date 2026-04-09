@@ -84,13 +84,13 @@ export function formatPropType(
   checker: ts.TypeChecker,
   depth: number = 0,
 ): PropTypeInfo {
-  return withVisited(type, () => formatPropTypeInner(type, checker, depth), { name: 'object' });
+  return withVisited(type, () => formatPropTypeInner(type, checker, depth), { name: '{}' });
 }
 
 function formatPropTypeInner(type: ts.Type, checker: ts.TypeChecker, depth: number): PropTypeInfo {
   // Bail early on deep nesting
   if (depth > 3) {
-    return { name: 'object' };
+    return { name: '{}' };
   }
 
   // Check type string BEFORE stripping undefined/null (detects ReactNode, Ref<>, etc.)
@@ -252,7 +252,7 @@ function formatObjectType(type: ts.Type, checker: ts.TypeChecker, depth: number)
     if (typeName.length < 80 && !typeName.includes('{')) {
       return { name: 'shape', description: typeName };
     }
-    return { name: 'object' };
+    return { name: '{}' };
   }
 
   return withVisited(
@@ -269,11 +269,11 @@ function formatObjectType(type: ts.Type, checker: ts.TypeChecker, depth: number)
         parts.push(`${prop.name}${optional}: ${propStr}`);
       }
       if (parts.length === 0) {
-        return { name: 'object' };
+        return { name: '{}' };
       }
       return { name: 'shape', description: `{ ${parts.join(', ')} }` };
     },
-    { name: 'object' },
+    { name: '{}' },
   );
 }
 
@@ -286,7 +286,7 @@ function toShort(type: ts.Type, checker: ts.TypeChecker, depth: number): string 
     return 'any';
   }
 
-  return withVisited(type, () => toShortInner(type, checker, depth), 'object');
+  return withVisited(type, () => toShortInner(type, checker, depth), '{}');
 }
 
 function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): string {
@@ -331,7 +331,7 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
     return 'ref';
   }
   if (str.includes('SxProps')) {
-    return 'object';
+    return '{}';
   }
 
   // Union
@@ -375,7 +375,7 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
     ) {
       // Use the type alias name if available instead of generic "object"
       const typeName = checker.typeToString(type);
-      return typeName.length < 80 && !typeName.includes('{') ? typeName : 'object';
+      return typeName.length < 80 && !typeName.includes('{') ? typeName : '{}';
     }
 
     const parts: string[] = [];
@@ -388,7 +388,7 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
       parts.push(`${prop.name}${optional}: ${toShort(propType, checker, depth + 1)}`);
     }
     if (parts.length === 0) {
-      return 'object';
+      return '{}';
     }
     return `{ ${parts.join(', ')} }`;
   }

@@ -110,11 +110,11 @@ export function extractComponentApi(
         (strippedPropType as any).target?.getSymbol()?.name === 'ReadonlyArray';
       if (isArr) {
         const elemType = (strippedPropType as ts.TypeReference).typeArguments?.[0];
-        const elemName = elemType ? checker.typeToString(elemType) : 'object';
+        const elemName = elemType ? checker.typeToString(elemType) : '{}';
         typeInfo = { name: 'arrayOf', description: `Array&lt;${elemName}&gt;` };
       } else if (typeName === 'any' || typeName.includes('{') || typeName.length > 80) {
         // Fall back to plain "object" for unreadable types
-        typeInfo = { name: 'object' };
+        typeInfo = { name: '{}' };
       } else {
         typeInfo = { name: 'shape', description: typeName };
       }

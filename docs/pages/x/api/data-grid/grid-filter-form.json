@@ -19,7 +19,7 @@
       "signature": { "type": "function(item: GridFilterItem) => void", "describedArgs": ["item"] }
     },
     "hasMultipleFilters": { "type": { "name": "bool" }, "required": true },
-    "item": { "type": { "name": "object" }, "required": true },
+    "item": { "type": { "name": "{}" }, "required": true },
     "columnInputProps": { "type": { "name": "any" }, "default": "{}" },
     "columnsSort": { "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" } },
     "deleteIconProps": { "type": { "name": "any" }, "default": "{}" },

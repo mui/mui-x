@@ -1,6 +1,6 @@
 {
   "props": {
-    "radar": { "type": { "name": "object" }, "required": true },
+    "radar": { "type": { "name": "{}" }, "required": true },
     "series": {
       "type": { "name": "arrayOf", "description": "Array&lt;Readonly<RadarSeries>&gt;" },
       "required": true
@@ -14,7 +14,7 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": { "type": { "name": "{}" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
