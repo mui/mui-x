@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { fireEvent, fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
+import { fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
 import { adapterToUse, createPickerRenderer, describeValidation } from 'test/utils/pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
@@ -109,14 +109,11 @@ describe('<StaticTimePicker />', () => {
       await user.click(screen.getByTestId('hours'));
       expect(onViewChange.callCount).to.equal(2);
 
+      const userWithoutPointerEventsCheck = user.setup({ pointerEventsCheck: 0 });
       // Can not switch between meridiem
-      // `user.click` refuses elements with `pointer-events: none`. The assertion
-      // is that the click is ignored, so `fireEvent.click` is fine here.
-      fireEvent.click(screen.getByRole('button', { name: /AM/i }));
+      await userWithoutPointerEventsCheck.click(screen.getByRole('button', { name: /AM/i }));
       expect(onChange.callCount).to.equal(0);
-      // `user.click` refuses elements with `pointer-events: none`. The assertion
-      // is that the click is ignored, so `fireEvent.click` is fine here.
-      fireEvent.click(screen.getByRole('button', { name: /PM/i }));
+      await userWithoutPointerEventsCheck.click(screen.getByRole('button', { name: /PM/i }));
       expect(onChange.callCount).to.equal(0);
 
       // Can not set value
