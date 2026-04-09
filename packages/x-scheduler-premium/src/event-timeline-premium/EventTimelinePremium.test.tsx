@@ -128,6 +128,35 @@ describe('<EventTimelinePremium />', () => {
       });
     });
 
+    it('should display recurrence icon only for recurring events', () => {
+      const recurringEvent = EventBuilder.new()
+        .title('Recurring timeline event')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .recurrent('DAILY')
+        .build();
+      const singleEvent = EventBuilder.new()
+        .title('Single timeline event')
+        .singleDay('2025-07-03T11:00:00Z')
+        .resource(engineering)
+        .build();
+
+      renderTimeline({ events: [recurringEvent, singleEvent], view: 'days' });
+
+      const recurringEventElements = screen.getAllByLabelText(recurringEvent.title);
+      expect(recurringEventElements.length).to.be.greaterThan(0);
+      recurringEventElements.forEach((element) => {
+        expect(
+          element.querySelector(`.${eventTimelinePremiumClasses.eventRecurringIcon}`),
+        ).not.to.equal(null);
+      });
+
+      const singleEventElement = screen.getByLabelText(singleEvent.title);
+      expect(
+        singleEventElement.querySelector(`.${eventTimelinePremiumClasses.eventRecurringIcon}`),
+      ).to.equal(null);
+    });
+
     it('should render events correctly in the time view', () => {
       const totalWidth = 6144; // 96 hours * 64px
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
