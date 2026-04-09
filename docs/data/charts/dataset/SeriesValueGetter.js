@@ -24,6 +24,11 @@ export default function SeriesValueGetter() {
           valueGetter: (item) => parseFloat(item.cost),
           valueFormatter: (v) => (v == null ? '' : `$${v.toFixed(2)}`),
         },
+        {
+          label: 'Profit',
+          valueGetter: (item) => parseFloat(item.revenue) - parseFloat(item.cost),
+          valueFormatter: (v) => (v == null ? '' : `$${v.toFixed(2)}`),
+        },
       ]}
       yAxis={[{ label: 'Amount ($)', width: 60 }]}
       height={300}

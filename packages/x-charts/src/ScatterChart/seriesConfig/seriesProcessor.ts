@@ -25,7 +25,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
 
       let data: readonly ScatterValueType[];
       if (seriesData.valueGetter) {
-        data = dataset?.map((d) => seriesData.valueGetter!(d)) ?? [];
+        data = dataset?.map(seriesData.valueGetter!) ?? [];
       } else if (datasetKeys) {
         data =
           dataset?.map(

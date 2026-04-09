@@ -11,10 +11,13 @@ components: BarChart, LineChart, ScatterChart
 ## Overview
 
 Charts accept data through the `dataset` prop, which takes an array of objects.
-You can reference individual properties by using `dataKey` on axes and series, or `datasetKeys` for series types that require multiple fields (such as scatter, OHLC, and range bar).
+You can reference individual properties by using
 
-This is an alternative to providing `data` directly on each series or axis.
-It simplifies configuration when multiple series share the same underlying data source.
+- `dataKey` on axes and series that require single field
+- `datasetKeys` on series types that require multiple fields (such as scatter, OHLC, and range bar)
+
+This is a convenient alternative to providing `data` directly on each series or axis.
+It simplifies configuration when multiple series share the same underlying data source, but has no performance impact.
 
 {{"demo": "DatasetBasic.js"}}
 
@@ -59,7 +62,7 @@ series={[
 
 {{"demo": "SeriesValueGetter.js"}}
 
-## Special series
+## Multi fields series
 
 These series types require `datasetKeys` or the `valueGetter` to return values in a specific format.
 
