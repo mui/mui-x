@@ -1,10 +1,6 @@
 import { screen } from '@mui/internal-test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import {
-  createPickerRenderer,
-  getFieldSectionsContainer,
-  openPicker,
-} from 'test/utils/pickers';
+import { createPickerRenderer, getFieldSectionsContainer, openPicker } from 'test/utils/pickers';
 
 describe('DesktopDatePicker keepOpenDuringFieldFocus - clicking field should not close', () => {
   const { render } = createPickerRenderer();

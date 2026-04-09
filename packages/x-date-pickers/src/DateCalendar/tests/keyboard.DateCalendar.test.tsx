@@ -89,10 +89,20 @@ describe('<DateCalendar /> keyboard interactions', () => {
       ];
       [
         { initialDay: '11', key: 'ArrowLeft', userEventKey: '{ArrowLeft}', expectFocusedDay: '9' },
-        { initialDay: '09', key: 'ArrowRight', userEventKey: '{ArrowRight}', expectFocusedDay: '11' },
+        {
+          initialDay: '09',
+          key: 'ArrowRight',
+          userEventKey: '{ArrowRight}',
+          expectFocusedDay: '11',
+        },
         // Switch between months
         { initialDay: '03', key: 'ArrowLeft', userEventKey: '{ArrowLeft}', expectFocusedDay: '30' },
-        { initialDay: '30', key: 'ArrowRight', userEventKey: '{ArrowRight}', expectFocusedDay: '2' },
+        {
+          initialDay: '30',
+          key: 'ArrowRight',
+          userEventKey: '{ArrowRight}',
+          expectFocusedDay: '2',
+        },
       ].forEach(({ initialDay, key, userEventKey, expectFocusedDay }) => {
         it(`${key}`, async () => {
           const { user } = render(

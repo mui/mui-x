@@ -203,164 +203,160 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
   });
 
-  describeAdapters(
-    'key: Delete',
-    DateField,
-    ({ adapter, testFieldKeyPress, renderWithProps }) => {
-      it('should clear the selected section when only this section is completed', async () => {
-        const view = renderWithProps({
-          format: `${adapter.formats.month} ${adapter.formats.year}`,
-        });
-
-        await view.selectSection('month');
-
-        // Set a value for the "month" section
-        await view.pressKey('j');
-        expectFieldValue(view.getSectionsContainer(), 'January YYYY');
-
-        await view.user.keyboard('{Delete}');
-        expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
-
-        view.unmount();
+  describeAdapters('key: Delete', DateField, ({ adapter, testFieldKeyPress, renderWithProps }) => {
+    it('should clear the selected section when only this section is completed', async () => {
+      const view = renderWithProps({
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      it('should clear the selected section when all sections are completed', async () => {
-        await testFieldKeyPress({
-          format: `${adapter.formats.month} ${adapter.formats.year}`,
-          defaultValue: adapter.date(),
-          key: 'Delete',
-          expectedValue: 'MMMM 2022',
-        });
+      await view.selectSection('month');
+
+      // Set a value for the "month" section
+      await view.pressKey('j');
+      expectFieldValue(view.getSectionsContainer(), 'January YYYY');
+
+      await view.user.keyboard('{Delete}');
+      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
+
+      view.unmount();
+    });
+
+    it('should clear the selected section when all sections are completed', async () => {
+      await testFieldKeyPress({
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date(),
+        key: 'Delete',
+        expectedValue: 'MMMM 2022',
+      });
+    });
+
+    it('should clear all the sections when all sections are selected and all sections are completed', async () => {
+      const view = renderWithProps({
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date(),
       });
 
-      it('should clear all the sections when all sections are selected and all sections are completed', async () => {
-        const view = renderWithProps({
-          format: `${adapter.formats.month} ${adapter.formats.year}`,
-          defaultValue: adapter.date(),
-        });
+      await view.selectSection('month');
 
-        await view.selectSection('month');
+      // Select all sections
+      await view.user.keyboard('{Control>}a{/Control}');
 
-        // Select all sections
-        await view.user.keyboard('{Control>}a{/Control}');
+      await view.user.keyboard('{Delete}');
+      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
 
-        await view.user.keyboard('{Delete}');
-        expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
+      view.unmount();
+    });
 
-        view.unmount();
+    it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
+      const view = renderWithProps({
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
-        const view = renderWithProps({
-          format: `${adapter.formats.month} ${adapter.formats.year}`,
-        });
+      await view.selectSection('month');
 
-        await view.selectSection('month');
+      // Set a value for the "month" section
+      await view.pressKey('j');
+      expectFieldValue(view.getSectionsContainer(), 'January YYYY');
 
-        // Set a value for the "month" section
-        await view.pressKey('j');
-        expectFieldValue(view.getSectionsContainer(), 'January YYYY');
+      // Select all sections
+      await view.user.keyboard('{Control>}a{/Control}');
 
-        // Select all sections
-        await view.user.keyboard('{Control>}a{/Control}');
+      await view.user.keyboard('{Delete}');
+      expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
 
-        await view.user.keyboard('{Delete}');
-        expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
+      view.unmount();
+    });
 
-        view.unmount();
+    it('should not keep query after typing again on a cleared section', async () => {
+      const view = renderWithProps({
+        format: adapter.formats.year,
       });
 
-      it('should not keep query after typing again on a cleared section', async () => {
-        const view = renderWithProps({
-          format: adapter.formats.year,
-        });
+      await view.selectSection('year');
 
-        await view.selectSection('year');
+      await view.pressKey('2');
+      expectFieldValue(view.getSectionsContainer(), '0002');
 
-        await view.pressKey('2');
-        expectFieldValue(view.getSectionsContainer(), '0002');
+      await view.user.keyboard('[Delete]');
+      expectFieldValue(view.getSectionsContainer(), 'YYYY');
 
-        await view.user.keyboard('[Delete]');
-        expectFieldValue(view.getSectionsContainer(), 'YYYY');
+      await view.pressKey('2');
+      expectFieldValue(view.getSectionsContainer(), '0002');
 
-        await view.pressKey('2');
-        expectFieldValue(view.getSectionsContainer(), '0002');
+      view.unmount();
+    });
 
-        view.unmount();
+    it('should not clear the sections when props.readOnly = true', async () => {
+      await testFieldKeyPress({
+        format: adapter.formats.year,
+        defaultValue: adapter.date(),
+        readOnly: true,
+        key: 'Delete',
+        expectedValue: '2022',
+      });
+    });
+
+    it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
+      const onChange = spy();
+
+      const view = renderWithProps({
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        onChange,
       });
 
-      it('should not clear the sections when props.readOnly = true', async () => {
-        await testFieldKeyPress({
-          format: adapter.formats.year,
-          defaultValue: adapter.date(),
-          readOnly: true,
-          key: 'Delete',
-          expectedValue: '2022',
-        });
+      await view.selectSection('month');
+
+      // Select all sections
+      await view.user.keyboard('{Control>}a{/Control}');
+
+      await view.user.keyboard('{Delete}');
+      expect(onChange.callCount).to.equal(0);
+
+      view.unmount();
+    });
+
+    it('should call `onChange` when clearing the first section', async () => {
+      const onChange = spy();
+
+      const view = renderWithProps({
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date(),
+        onChange,
       });
 
-      it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
-        const onChange = spy();
+      await view.selectSection('month');
 
-        const view = renderWithProps({
-          format: `${adapter.formats.month} ${adapter.formats.year}`,
-          onChange,
-        });
+      await view.user.keyboard('[Delete]');
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).to.equal(null);
 
-        await view.selectSection('month');
+      await view.user.keyboard('[ArrowRight][Delete]');
 
-        // Select all sections
-        await view.user.keyboard('{Control>}a{/Control}');
+      expect(onChange.callCount).to.equal(1);
 
-        await view.user.keyboard('{Delete}');
-        expect(onChange.callCount).to.equal(0);
+      view.unmount();
+    });
 
-        view.unmount();
+    it('should not call `onChange` if the section is already empty', async () => {
+      const onChange = spy();
+
+      const view = renderWithProps({
+        format: `${adapter.formats.month} ${adapter.formats.year}`,
+        defaultValue: adapter.date(),
+        onChange,
       });
 
-      it('should call `onChange` when clearing the first section', async () => {
-        const onChange = spy();
+      await view.selectSection('month');
 
-        const view = renderWithProps({
-          format: `${adapter.formats.month} ${adapter.formats.year}`,
-          defaultValue: adapter.date(),
-          onChange,
-        });
+      await view.user.keyboard('[Delete]');
+      expect(onChange.callCount).to.equal(1);
 
-        await view.selectSection('month');
+      await view.user.keyboard('[Delete]');
+      expect(onChange.callCount).to.equal(1);
 
-        await view.user.keyboard('[Delete]');
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.firstArg).to.equal(null);
-
-        await view.user.keyboard('[ArrowRight][Delete]');
-
-        expect(onChange.callCount).to.equal(1);
-
-        view.unmount();
-      });
-
-      it('should not call `onChange` if the section is already empty', async () => {
-        const onChange = spy();
-
-        const view = renderWithProps({
-          format: `${adapter.formats.month} ${adapter.formats.year}`,
-          defaultValue: adapter.date(),
-          onChange,
-        });
-
-        await view.selectSection('month');
-
-        await view.user.keyboard('[Delete]');
-        expect(onChange.callCount).to.equal(1);
-
-        await view.user.keyboard('[Delete]');
-        expect(onChange.callCount).to.equal(1);
-
-        view.unmount();
-      });
-    },
-  );
+      view.unmount();
+    });
+  });
 
   describeAdapters('key: PageUp', DateField, ({ adapter, testFieldKeyPress }) => {
     describe('day section (PageUp)', () => {

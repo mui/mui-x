@@ -28,9 +28,7 @@ describe('<MonthCalendar /> - Describe Value', () => {
     setNewValue: async (value, { user }) => {
       const newValue = adapterToUse.addMonths(value!, 1);
 
-      await user.click(
-        screen.getByRole('radio', { name: adapterToUse.format(newValue, 'month') }),
-      );
+      await user.click(screen.getByRole('radio', { name: adapterToUse.format(newValue, 'month') }));
 
       return newValue;
     },

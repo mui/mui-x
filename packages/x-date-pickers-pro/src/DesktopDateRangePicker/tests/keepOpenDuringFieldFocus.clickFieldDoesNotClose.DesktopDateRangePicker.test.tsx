@@ -1,11 +1,7 @@
 import { screen } from '@mui/internal-test-utils';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import {
-  createPickerRenderer,
-  getFieldSectionsContainer,
-  openPicker,
-} from 'test/utils/pickers';
+import { createPickerRenderer, getFieldSectionsContainer, openPicker } from 'test/utils/pickers';
 
 describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field should not close', () => {
   const { render } = createPickerRenderer();

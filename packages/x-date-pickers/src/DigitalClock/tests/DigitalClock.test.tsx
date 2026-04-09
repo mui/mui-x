@@ -1,4 +1,3 @@
- 
 import { spy } from 'sinon';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import {

@@ -440,90 +440,86 @@ describe('<TimeField /> - Editing', () => {
     });
   });
 
-  describeAdapters(
-    'Digit editing',
-    TimeField,
-    ({ adapter, renderWithProps, testFieldChange }) => {
-      it('should set the minute to the digit pressed when no digit no value is provided', async () => {
-        await testFieldChange({
-          format: adapter.formats.minutes,
-          keyStrokes: [{ value: '1', expected: '01' }],
-        });
+  describeAdapters('Digit editing', TimeField, ({ adapter, renderWithProps, testFieldChange }) => {
+    it('should set the minute to the digit pressed when no digit no value is provided', async () => {
+      await testFieldChange({
+        format: adapter.formats.minutes,
+        keyStrokes: [{ value: '1', expected: '01' }],
+      });
+    });
+
+    it('should concatenate the digit pressed to the current section value if the output is valid', async () => {
+      await testFieldChange({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date('2022-06-15T14:12:25'),
+        keyStrokes: [
+          { value: '1', expected: '01' },
+          { value: '2', expected: '12' },
+        ],
+      });
+    });
+
+    it('should set the minute to the digit pressed if the concatenate exceeds the maximum value for the section', async () => {
+      await testFieldChange({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date('2022-06-15T14:12:25'),
+        keyStrokes: [
+          { value: '7', expected: '07' },
+          { value: '2', expected: '02' },
+        ],
+      });
+    });
+
+    it('should not edit when props.readOnly = true and no value is provided (digit)', async () => {
+      await testFieldChange({
+        format: adapter.formats.minutes,
+        readOnly: true,
+        keyStrokes: [{ value: '1', expected: 'mm' }],
+      });
+    });
+
+    it('should not edit value when props.readOnly = true and a value is provided (digit)', async () => {
+      await testFieldChange({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date('2022-06-15T14:12:25'),
+        readOnly: true,
+        keyStrokes: [{ value: '1', expected: '12' }],
+      });
+    });
+
+    it('should go to the next section when pressing `2` in a 12-hours format', async () => {
+      const view = renderWithProps({
+        format: adapter.formats.fullTime12h,
       });
 
-      it('should concatenate the digit pressed to the current section value if the output is valid', async () => {
-        await testFieldChange({
-          format: adapter.formats.minutes,
-          defaultValue: adapter.date('2022-06-15T14:12:25'),
-          keyStrokes: [
-            { value: '1', expected: '01' },
-            { value: '2', expected: '12' },
-          ],
-        });
+      await view.selectSection('hours');
+
+      await view.pressKey('2');
+      expectFieldValue(view.getSectionsContainer(), '02:mm aa');
+      expect(getCleanedSelectedContent()).to.equal('mm');
+
+      view.unmount();
+    });
+
+    it('should go to the next section when pressing `1` then `3` in a 12-hours format', async () => {
+      const view = renderWithProps({
+        format: adapter.formats.fullTime12h,
       });
 
-      it('should set the minute to the digit pressed if the concatenate exceeds the maximum value for the section', async () => {
-        await testFieldChange({
-          format: adapter.formats.minutes,
-          defaultValue: adapter.date('2022-06-15T14:12:25'),
-          keyStrokes: [
-            { value: '7', expected: '07' },
-            { value: '2', expected: '02' },
-          ],
-        });
-      });
+      await view.selectSection('hours');
 
-      it('should not edit when props.readOnly = true and no value is provided (digit)', async () => {
-        await testFieldChange({
-          format: adapter.formats.minutes,
-          readOnly: true,
-          keyStrokes: [{ value: '1', expected: 'mm' }],
-        });
-      });
+      await view.pressKey('1');
+      expectFieldValue(view.getSectionsContainer(), '01:mm aa');
+      expect(getCleanedSelectedContent()).to.equal('01');
 
-      it('should not edit value when props.readOnly = true and a value is provided (digit)', async () => {
-        await testFieldChange({
-          format: adapter.formats.minutes,
-          defaultValue: adapter.date('2022-06-15T14:12:25'),
-          readOnly: true,
-          keyStrokes: [{ value: '1', expected: '12' }],
-        });
-      });
+      // Press "3"
+      await view.pressKey('3');
+      expectFieldValue(view.getSectionsContainer(), '03:mm aa');
+      expect(getCleanedSelectedContent()).to.equal('mm');
 
-      it('should go to the next section when pressing `2` in a 12-hours format', async () => {
-        const view = renderWithProps({
-          format: adapter.formats.fullTime12h,
-        });
-
-        await view.selectSection('hours');
-
-        await view.pressKey('2');
-        expectFieldValue(view.getSectionsContainer(), '02:mm aa');
-        expect(getCleanedSelectedContent()).to.equal('mm');
-
-        view.unmount();
-      });
-
-      it('should go to the next section when pressing `1` then `3` in a 12-hours format', async () => {
-        const view = renderWithProps({
-          format: adapter.formats.fullTime12h,
-        });
-
-        await view.selectSection('hours');
-
-        await view.pressKey('1');
-        expectFieldValue(view.getSectionsContainer(), '01:mm aa');
-        expect(getCleanedSelectedContent()).to.equal('01');
-
-        // Press "3"
-        await view.pressKey('3');
-        expectFieldValue(view.getSectionsContainer(), '03:mm aa');
-        expect(getCleanedSelectedContent()).to.equal('mm');
-
-        view.unmount();
-      });
-    },
-  );
+      view.unmount();
+    });
+  });
 
   describeAdapters('Letter editing', TimeField, ({ adapter, testFieldChange }) => {
     it('should not edit when props.readOnly = true and no value is provided (letter)', async () => {
