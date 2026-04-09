@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Toolbar, type ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import {
   useChartsContext,
@@ -64,6 +66,18 @@ export interface ChartsToolbarProProps extends ChartsToolbarProps {
 
 const DEFAULT_IMAGE_EXPORT_OPTIONS: ChartsToolbarImageExportOptions[] = [{ type: 'image/png' }];
 
+const RangeButtonGroup = styled(ToggleButtonGroup, {
+  name: 'MuiChartsToolbarRangeButtons',
+  slot: 'Root',
+})({
+  alignSelf: 'stretch',
+  '& .MuiToggleButton-root': {
+    fontSize: '0.75rem',
+    minWidth: 'unset',
+    border: 'none',
+  },
+});
+
 /**
  * The chart toolbar component for the pro package.
  */
@@ -90,15 +104,12 @@ function ChartsToolbarPro({
 
   if (isZoomEnabled) {
     if (rangeButtons && rangeButtons.length > 0) {
-      const ToggleButtonGroup = slots.baseToggleButtonGroup;
-
       children.push(
-        <ToggleButtonGroup
+        <RangeButtonGroup
           key="range-buttons"
           value={activeRangeButtonKey}
           exclusive
           size="small"
-          style={{ alignSelf: 'stretch' }}
         >
           {rangeButtons.map((rangeButton) => (
             <ChartsToolbarRangeButtonTrigger
@@ -110,7 +121,7 @@ function ChartsToolbarPro({
               {rangeButton.label}
             </ChartsToolbarRangeButtonTrigger>
           ))}
-        </ToggleButtonGroup>,
+        </RangeButtonGroup>,
       );
       children.push(<ChartsToolbarDivider key="range-divider" />);
     }

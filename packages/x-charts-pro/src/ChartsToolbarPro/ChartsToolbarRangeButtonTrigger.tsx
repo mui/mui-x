@@ -165,12 +165,6 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     value: buttonKey,
     size,
     ...other,
-    style: {
-      fontSize: '0.75rem',
-      minWidth: 'unset',
-      border: 'none',
-      ...slotProps.baseToggleButton?.style,
-    },
     ref,
   });
 
