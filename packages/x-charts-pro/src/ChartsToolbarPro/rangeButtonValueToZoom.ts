@@ -66,7 +66,11 @@ export function rangeButtonValueToZoom(
   }
 
   if (typeof value === 'function') {
-    return value(domainMin, domainMax, zoomedMin, zoomedMax);
+    const result = value(domainMin, domainMax, zoomedMin, zoomedMax);
+    return {
+      start: Math.max(0, Math.min(100, result.start)),
+      end: Math.max(0, Math.min(100, result.end)),
+    };
   }
 
   const domainRange = domainMax - domainMin;

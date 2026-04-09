@@ -104,6 +104,7 @@ function ChartsToolbarPro({
             <ChartsToolbarRangeButtonTrigger
               key={rangeButton.label}
               value={rangeButton.value}
+              buttonKey={rangeButton.label}
               axisId={rangeButtonsAxisId}
             >
               {rangeButton.label}

@@ -33,7 +33,7 @@ export default function ChartsToolbarCustomRangeButtons() {
               Everything
             </ChartsToolbarRangeButtonTrigger>
           </Toolbar>
-        )
+        ),
       }}
     />
   );

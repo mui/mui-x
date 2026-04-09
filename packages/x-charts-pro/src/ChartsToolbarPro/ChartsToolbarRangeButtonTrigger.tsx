@@ -21,6 +21,23 @@ import {
 } from '../internals/plugins/useChartProZoom';
 import { type RangeButtonValue, rangeButtonValueToZoom } from './rangeButtonValueToZoom';
 
+/**
+ * Derives a stable key from a range button value.
+ * For function values, returns undefined (caller should provide a fallback).
+ */
+function getStableButtonKey(value: RangeButtonValue): string | undefined {
+  if (value === null) {
+    return 'range-null';
+  }
+  if (typeof value === 'function') {
+    return undefined;
+  }
+  if (Array.isArray(value)) {
+    return `range-${value[0].getTime()}-${value[1].getTime()}`;
+  }
+  return `range-${value.unit}-${value.step ?? 1}`;
+}
+
 export interface ChartsToolbarRangeButtonTriggerProps {
   /**
    * A function to customize the rendering of the component.
@@ -41,6 +58,12 @@ export interface ChartsToolbarRangeButtonTriggerProps {
    */
   axisId?: AxisId;
   /**
+   * A stable key to identify this button for active-state tracking.
+   * When not provided, a key is derived from `value` (for interval, date range, and null values)
+   * or falls back to a React-generated ID (for function values).
+   */
+  buttonKey?: string;
+  /**
    * The size of the button.
    * @default 'small'
    */
@@ -55,14 +78,15 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<ChartsToolbarRangeButtonTriggerProps>
 >(function ChartsToolbarRangeButtonTrigger(
-  { render, value, axisId: axisIdProp, size = 'small', ...other },
+  { render, value, axisId: axisIdProp, buttonKey: buttonKeyProp, size = 'small', ...other },
   ref,
 ) {
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartsContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
 
-  const buttonKey = useId();
+  const fallbackKey = useId();
+  const buttonKey = buttonKeyProp ?? getStableButtonKey(value) ?? fallbackKey;
   const zoomOptionsLookup = store.use(selectorChartZoomOptionsLookup);
   const rawXAxes = store.use(selectorChartRawXAxis);
   const { domains } = store.use(selectorChartXAxisWithDomains);
@@ -140,12 +164,13 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     selected: isActive,
     value: buttonKey,
     size,
+    ...other,
     style: {
       fontSize: '0.75rem',
       minWidth: 'unset',
       border: 'none',
+      ...slotProps.baseToggleButton?.style,
     },
-    ...other,
     ref,
   });
 
@@ -162,6 +187,12 @@ ChartsToolbarRangeButtonTrigger.propTypes = {
    * Defaults to the first x-axis with zoom enabled.
    */
   axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * A stable key to identify this button for active-state tracking.
+   * When not provided, a key is derived from `value` (for interval, date range, and null values)
+   * or falls back to a React-generated ID (for function values).
+   */
+  buttonKey: PropTypes.string,
   /**
    * A function to customize the rendering of the component.
    */
