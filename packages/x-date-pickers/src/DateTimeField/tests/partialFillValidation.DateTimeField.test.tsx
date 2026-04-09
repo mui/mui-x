@@ -9,7 +9,6 @@ describeAdapters(
     it('should call onError with partiallyFilledDate when date is partially filled', async () => {
       const onError = spy();
       const view = renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
         onError,
       });
 
@@ -23,7 +22,6 @@ describeAdapters(
     it('should call onError with null when partially filled field is fully cleared', async () => {
       const onError = spy();
       const view = renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
         onError,
       });
 
@@ -40,7 +38,6 @@ describeAdapters(
     it('should return invalidDate error when all sections filled but date is invalid', async () => {
       const onError = spy();
       const view = renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
         onError,
       });
 
@@ -65,7 +62,7 @@ describeAdapters(
     });
 
     it('should show field as invalid when partially filled', async () => {
-      const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+      const view = renderWithProps({});
 
       await view.selectSectionAsync('month');
       await view.user.keyboard('01');

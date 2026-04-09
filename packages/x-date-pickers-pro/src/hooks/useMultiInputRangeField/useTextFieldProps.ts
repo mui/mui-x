@@ -32,9 +32,8 @@ export function useTextFieldProps<
   TForwardedProps extends UseTextFieldBaseForwardedProps,
   TError,
 >(
-  parameters: UseTextFieldPropsParameters<TManager, TForwardedProps>,
+  parameters: UseTextFieldPropsParameters<TManager, TForwardedProps, TError>,
 ): UseMultiInputRangeFieldTextFieldProps<TForwardedProps> {
-
   const pickerContext = useNullablePickerContext();
   const fieldPrivateContext = useNullableFieldPrivateContext();
   const pickerPrivateContext = usePickerPrivateContext();

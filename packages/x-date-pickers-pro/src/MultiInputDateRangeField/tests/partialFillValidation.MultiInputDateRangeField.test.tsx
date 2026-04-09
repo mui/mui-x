@@ -9,12 +9,10 @@ describe('<MultiInputDateRangeField /> - partiallyFilledDate validation', () => 
 
   it('should call onError with partiallyFilledDate for start when start is partially filled', async () => {
     const onError = spy();
-    const { user } = render(
-      <MultiInputDateRangeField enableAccessibleFieldDOMStructure onError={onError} />,
-    );
+    const { user } = render(<MultiInputDateRangeField onError={onError} />);
 
     const months = screen.getAllByRole('spinbutton', { name: 'Month' });
-    await user.click(months[0]); // start month
+    await user.click(months[0]);
     await user.keyboard('01');
 
     expect(onError.callCount).to.equal(1);
@@ -23,12 +21,10 @@ describe('<MultiInputDateRangeField /> - partiallyFilledDate validation', () => 
 
   it('should call onError with partiallyFilledDate for end when end is partially filled', async () => {
     const onError = spy();
-    const { user } = render(
-      <MultiInputDateRangeField enableAccessibleFieldDOMStructure onError={onError} />,
-    );
+    const { user } = render(<MultiInputDateRangeField onError={onError} />);
 
     const months = screen.getAllByRole('spinbutton', { name: 'Month' });
-    await user.click(months[1]); // end month
+    await user.click(months[1]);
     await user.keyboard('01');
 
     expect(onError.callCount).to.equal(1);
@@ -37,9 +33,7 @@ describe('<MultiInputDateRangeField /> - partiallyFilledDate validation', () => 
 
   it('should call onError with null when partially filled start is fully cleared', async () => {
     const onError = spy();
-    const { user } = render(
-      <MultiInputDateRangeField enableAccessibleFieldDOMStructure onError={onError} />,
-    );
+    const { user } = render(<MultiInputDateRangeField onError={onError} />);
 
     const months = screen.getAllByRole('spinbutton', { name: 'Month' });
     await user.click(months[0]);
@@ -54,7 +48,7 @@ describe('<MultiInputDateRangeField /> - partiallyFilledDate validation', () => 
   });
 
   it('should show start field as invalid when start is partially filled', async () => {
-    const { user } = render(<MultiInputDateRangeField enableAccessibleFieldDOMStructure />);
+    const { user } = render(<MultiInputDateRangeField />);
 
     const months = screen.getAllByRole('spinbutton', { name: 'Month' });
     await user.click(months[0]);
@@ -66,7 +60,7 @@ describe('<MultiInputDateRangeField /> - partiallyFilledDate validation', () => 
   });
 
   it('should not show fields as invalid for empty fields', async () => {
-    render(<MultiInputDateRangeField enableAccessibleFieldDOMStructure />);
+    render(<MultiInputDateRangeField />);
 
     const roots = screen.getAllByRole('group');
     expect(roots[0]).to.have.attribute('aria-invalid', 'false');
@@ -75,9 +69,7 @@ describe('<MultiInputDateRangeField /> - partiallyFilledDate validation', () => 
 
   it('should return invalidDate error when start is fully filled but date is invalid', async () => {
     const onError = spy();
-    const { user } = render(
-      <MultiInputDateRangeField enableAccessibleFieldDOMStructure onError={onError} />,
-    );
+    const { user } = render(<MultiInputDateRangeField onError={onError} />);
 
     const months = screen.getAllByRole('spinbutton', { name: 'Month' });
     const days = screen.getAllByRole('spinbutton', { name: 'Day' });
