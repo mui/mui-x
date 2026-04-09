@@ -1,0 +1,37 @@
+{
+  "props": {
+    "index": { "type": { "name": "number" }, "required": true },
+    "message": { "type": { "name": "object" }, "required": true },
+    "part": { "type": { "name": "object" }, "required": true },
+    "onToolCall": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(payload: ChatOnToolCallPayload) => void | Promise<void>",
+        "describedArgs": []
+      }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "FilePartSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<FilePartSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "FilePart",
+  "imports": [
+    "import { FilePart } from '@mui/x-chat-headless/message';",
+    "import { FilePart } from '@mui/x-chat-headless';",
+    "import { FilePart } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "filename", "description": "", "class": null },
+    { "name": "link", "description": "", "class": null },
+    { "name": "preview", "description": "", "class": null },
+    { "name": "root", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiFilePart",
+  "filename": "/packages/x-chat-headless/src/message/parts/FilePart.tsx",
+  "inheritance": null,
+  "demos": "",
+  "cssComponent": false
+}

@@ -1,0 +1,24 @@
+{
+  "props": {
+    "slotProps": {
+      "type": { "name": "shape", "description": "ConversationHeaderActionsSlotProps" }
+    },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationHeaderActionsSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "ConversationHeaderActions",
+  "imports": [
+    "import { ConversationHeaderActions } from '@mui/x-chat-headless/conversation';",
+    "import { ConversationHeaderActions } from '@mui/x-chat-headless';",
+    "import { ConversationHeaderActions } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "actions", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationHeaderActions",
+  "filename": "/packages/x-chat-headless/src/conversation/ConversationHeaderActions.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/thread/\">Chat - Headless thread</a></li>\n<li><a href=\"/x/react-chat/material/thread/\">Chat - Thread</a></li></ul>",
+  "cssComponent": false
+}

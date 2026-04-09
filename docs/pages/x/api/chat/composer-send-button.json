@@ -1,0 +1,22 @@
+{
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "ComposerSendButtonSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerSendButtonSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "ComposerSendButton",
+  "imports": [
+    "import { ComposerSendButton } from '@mui/x-chat-headless/composer';",
+    "import { ComposerSendButton } from '@mui/x-chat-headless';",
+    "import { ComposerSendButton } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "sendButton", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiComposerSendButton",
+  "filename": "/packages/x-chat-headless/src/composer/ComposerSendButton.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/composer/\">Chat - Headless composer</a></li>\n<li><a href=\"/x/react-chat/material/composer/\">Chat - Composer</a></li></ul>",
+  "cssComponent": false
+}

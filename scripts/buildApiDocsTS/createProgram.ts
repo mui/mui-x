@@ -25,6 +25,7 @@ export function createTSProgram(): { program: ts.Program; checker: ts.TypeChecke
     'packages/x-charts-premium/src/index.ts',
     'packages/x-tree-view/src/index.ts',
     'packages/x-tree-view-pro/src/index.ts',
+    'packages/x-chat-headless/src/index.ts',
     'packages/x-chat/src/index.ts',
     'packages/x-license/src/index.ts',
   ].map((p) => path.resolve(CWD, p));

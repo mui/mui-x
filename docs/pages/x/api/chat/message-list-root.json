@@ -1,0 +1,55 @@
+{
+  "props": {
+    "renderItem": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(params: { id: string; index: number; }) => ReactNode",
+        "describedArgs": []
+      }
+    },
+    "autoScroll": {
+      "type": {
+        "name": "union",
+        "description": "bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;{ buffer?: number }"
+      },
+      "default": "true"
+    },
+    "estimatedItemSize": { "type": { "name": "number" } },
+    "getItemKey": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(id: string, index: number) => Key", "describedArgs": [] }
+    },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "onReachTop": {
+      "type": { "name": "func" },
+      "signature": { "type": "function() => void", "describedArgs": [] }
+    },
+    "overlay": { "type": { "name": "node" } },
+    "slotProps": { "type": { "name": "shape", "description": "MessageListRootSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageListRootSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "MessageListRoot",
+  "imports": [
+    "import { MessageListRoot } from '@mui/x-chat-headless/message-list';",
+    "import { MessageListRoot } from '@mui/x-chat-headless';",
+    "import { MessageListRoot } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "messageList", "description": "", "class": null },
+    { "name": "messageListContent", "description": "", "class": null },
+    { "name": "messageListOverlay", "description": "", "class": null },
+    { "name": "messageListScrollbar", "description": "", "class": null },
+    { "name": "messageListScrollbarThumb", "description": "", "class": null },
+    { "name": "messageListScroller", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiMessageListRoot",
+  "filename": "/packages/x-chat-headless/src/message-list/MessageListRoot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/message-list/\">Chat - Headless message list</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li></ul>",
+  "cssComponent": false
+}

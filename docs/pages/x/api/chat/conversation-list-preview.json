@@ -1,0 +1,26 @@
+{
+  "props": {
+    "conversation": { "type": { "name": "object" }, "required": true },
+    "focused": { "type": { "name": "bool" } },
+    "selected": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "shape", "description": "ConversationListPreviewSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationListPreviewSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "unread": { "type": { "name": "bool" } }
+  },
+  "name": "ConversationListPreview",
+  "imports": [
+    "import { ConversationListPreview } from '@mui/x-chat-headless/conversation-list';",
+    "import { ConversationListPreview } from '@mui/x-chat-headless';",
+    "import { ConversationListPreview } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationListPreview",
+  "filename": "/packages/x-chat-headless/src/conversation-list/ConversationListPreview.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/conversation-list/\">Chat - Headless conversation list</a></li>\n<li><a href=\"/x/react-chat/material/conversation-list/\">Chat - Conversation list</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,0 +1,36 @@
+{
+  "props": {
+    "index": { "type": { "name": "number" }, "required": true },
+    "message": { "type": { "name": "object" }, "required": true },
+    "part": { "type": { "name": "object" }, "required": true },
+    "onToolCall": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(payload: ChatOnToolCallPayload) => void | Promise<void>",
+        "describedArgs": []
+      }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "ReasoningPartSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ReasoningPartSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "ReasoningPart",
+  "imports": [
+    "import { ReasoningPart } from '@mui/x-chat-headless/message';",
+    "import { ReasoningPart } from '@mui/x-chat-headless';",
+    "import { ReasoningPart } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "content", "description": "", "class": null },
+    { "name": "root", "description": "", "class": null },
+    { "name": "summary", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiReasoningPart",
+  "filename": "/packages/x-chat-headless/src/message/parts/ReasoningPart.tsx",
+  "inheritance": null,
+  "demos": "",
+  "cssComponent": false
+}

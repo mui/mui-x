@@ -1,0 +1,22 @@
+{
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "MessageActionsSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageActionsSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "MessageActions",
+  "imports": [
+    "import { MessageActions } from '@mui/x-chat-headless/message';",
+    "import { MessageActions } from '@mui/x-chat-headless';",
+    "import { MessageActions } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "actions", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiMessageActions",
+  "filename": "/packages/x-chat-headless/src/message/MessageActions.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/messages/\">Chat - Headless messages</a></li></ul>",
+  "cssComponent": false
+}

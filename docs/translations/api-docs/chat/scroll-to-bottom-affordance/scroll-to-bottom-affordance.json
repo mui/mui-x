@@ -1,6 +1,10 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "scrollBehavior": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
+  },
   "classDescriptions": {},
   "slotDescriptions": { "badge": "", "icon": "", "root": "" }
 }

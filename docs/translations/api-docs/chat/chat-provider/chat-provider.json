@@ -1,8 +1,12 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "adapter": { "description": "" },
+    "activeConversationId": { "description": "" },
+    "composerValue": { "description": "" },
+    "conversations": { "description": "" },
     "currentUser": {
-      "description": "The local user sending messages. If omitted, derived from <code>members</code> by finding the entry with <code>role === &#39;user&#39;</code>."
+      "description": "The local user sending messages. If omitted, derived from <code>members</code> by finding the entry with <code>role === 'user'</code>."
     },
     "initialActiveConversationId": {
       "description": "The initial active conversation ID when uncontrolled. Ignored after initialization and when <code>activeConversationId</code> is provided."
@@ -17,12 +21,23 @@
       "description": "The initial messages when uncontrolled. Ignored after initialization and when <code>messages</code> is provided."
     },
     "members": {
-      "description": "All participants in the chat. The current (local) user is derived as the first member with <code>role === &#39;user&#39;</code>, unless <code>currentUser</code> is provided explicitly."
+      "description": "All participants in the chat. The current (local) user is derived as the first member with <code>role === 'user'</code>, unless <code>currentUser</code> is provided explicitly."
     },
+    "messages": { "description": "" },
+    "onActiveConversationChange": { "description": "" },
+    "onComposerValueChange": { "description": "" },
+    "onConversationsChange": { "description": "" },
+    "onData": { "description": "" },
+    "onError": { "description": "" },
+    "onFinish": { "description": "" },
+    "onMessagesChange": { "description": "" },
+    "onToolCall": { "description": "" },
+    "partRenderers": { "description": "" },
     "storeClass": { "description": "The store class to use for this provider." },
     "streamFlushInterval": {
       "description": "Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

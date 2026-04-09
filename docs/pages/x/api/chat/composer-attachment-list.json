@@ -1,0 +1,22 @@
+{
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "ComposerAttachmentListSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerAttachmentListSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "ComposerAttachmentList",
+  "imports": [
+    "import { ComposerAttachmentList } from '@mui/x-chat-headless/composer';",
+    "import { ComposerAttachmentList } from '@mui/x-chat-headless';",
+    "import { ComposerAttachmentList } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "attachmentList", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiComposerAttachmentList",
+  "filename": "/packages/x-chat-headless/src/composer/ComposerAttachmentList.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/composer/\">Chat - Headless composer</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,0 +1,31 @@
+{
+  "props": {
+    "conversation": { "type": { "name": "object" }, "required": true },
+    "focused": { "type": { "name": "bool" } },
+    "selected": { "type": { "name": "bool" } },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ConversationListItemAvatarSlotProps" }
+    },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationListItemAvatarSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "unread": { "type": { "name": "bool" } }
+  },
+  "name": "ConversationListItemAvatar",
+  "imports": [
+    "import { ConversationListItemAvatar } from '@mui/x-chat-headless/conversation-list';",
+    "import { ConversationListItemAvatar } from '@mui/x-chat-headless';",
+    "import { ConversationListItemAvatar } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "image", "description": "", "class": null },
+    { "name": "root", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiConversationListItemAvatar",
+  "filename": "/packages/x-chat-headless/src/conversation-list/ConversationListItemAvatar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/conversation-list/\">Chat - Headless conversation list</a></li>\n<li><a href=\"/x/react-chat/material/conversation-list/\">Chat - Conversation list</a></li></ul>",
+  "cssComponent": false
+}

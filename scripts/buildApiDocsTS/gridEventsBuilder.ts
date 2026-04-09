@@ -71,8 +71,8 @@ export function buildGridEventsDocumentation(
     if (!lookupSym) {
       continue;
     }
-    // eslint-disable-next-line no-bitwise
     let resolved = lookupSym;
+    // eslint-disable-next-line no-bitwise
     if (resolved.flags & ts.SymbolFlags.Alias) {
       resolved = checker.getAliasedSymbol(resolved);
     }

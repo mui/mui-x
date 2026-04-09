@@ -1,0 +1,24 @@
+{
+  "props": {
+    "children": { "type": { "name": "node" } },
+    "htmlFor": { "type": { "name": "string" } },
+    "slotProps": { "type": { "name": "shape", "description": "ComposerLabelSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerLabelSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "ComposerLabel",
+  "imports": [
+    "import { ComposerLabel } from '@mui/x-chat-headless/composer';",
+    "import { ComposerLabel } from '@mui/x-chat-headless';",
+    "import { ComposerLabel } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "label", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiComposerLabel",
+  "filename": "/packages/x-chat-headless/src/composer/ComposerLabel.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/composer/\">Chat - Headless composer</a></li></ul>",
+  "cssComponent": false
+}

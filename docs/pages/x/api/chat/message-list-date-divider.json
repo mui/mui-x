@@ -1,0 +1,33 @@
+{
+  "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
+    "formatDate": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(date: Date) => ReactNode", "describedArgs": [] }
+    },
+    "index": { "type": { "name": "number" } },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "slotProps": { "type": { "name": "shape", "description": "MessageListDateDividerSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageListDateDividerSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "MessageListDateDivider",
+  "imports": [
+    "import { MessageListDateDivider } from '@mui/x-chat-headless/message-list';",
+    "import { MessageListDateDivider } from '@mui/x-chat-headless';",
+    "import { MessageListDateDivider } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "divider", "description": "", "class": null },
+    { "name": "label", "description": "", "class": null },
+    { "name": "line", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiMessageListDateDivider",
+  "filename": "/packages/x-chat-headless/src/message-list/MessageListDateDivider.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/messages/\">Chat - Headless messages</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,0 +1,28 @@
+{
+  "props": {
+    "conversation": { "type": { "name": "object" }, "required": true },
+    "focused": { "type": { "name": "bool" } },
+    "selected": { "type": { "name": "bool" } },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ConversationListTimestampSlotProps" }
+    },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationListTimestampSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "unread": { "type": { "name": "bool" } }
+  },
+  "name": "ConversationListTimestamp",
+  "imports": [
+    "import { ConversationListTimestamp } from '@mui/x-chat-headless/conversation-list';",
+    "import { ConversationListTimestamp } from '@mui/x-chat-headless';",
+    "import { ConversationListTimestamp } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationListTimestamp",
+  "filename": "/packages/x-chat-headless/src/conversation-list/ConversationListTimestamp.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/conversation-list/\">Chat - Headless conversation list</a></li>\n<li><a href=\"/x/react-chat/material/conversation-list/\">Chat - Conversation list</a></li></ul>",
+  "cssComponent": false
+}

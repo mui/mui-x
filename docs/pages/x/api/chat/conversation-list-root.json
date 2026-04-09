@@ -1,0 +1,40 @@
+{
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "ConversationListRootSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationListRootSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "variant": {
+      "type": { "name": "enum", "description": "'compact'<br>&#124;&nbsp;'default'" },
+      "default": "'default'"
+    }
+  },
+  "name": "ConversationListRoot",
+  "imports": [
+    "import { ConversationListRoot } from '@mui/x-chat-headless/conversation-list';",
+    "import { ConversationListRoot } from '@mui/x-chat-headless';",
+    "import { ConversationListRoot } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "item", "description": "", "class": null },
+    { "name": "itemActions", "description": "", "class": null },
+    { "name": "itemAvatar", "description": "", "class": null },
+    { "name": "itemContent", "description": "", "class": null },
+    { "name": "preview", "description": "", "class": null },
+    { "name": "root", "description": "", "class": null },
+    { "name": "scrollbar", "description": "", "class": null },
+    { "name": "scrollbarThumb", "description": "", "class": null },
+    { "name": "scroller", "description": "", "class": null },
+    { "name": "timestamp", "description": "", "class": null },
+    { "name": "title", "description": "", "class": null },
+    { "name": "unreadBadge", "description": "", "class": null },
+    { "name": "viewport", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiConversationListRoot",
+  "filename": "/packages/x-chat-headless/src/conversation-list/ConversationListRoot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/conversation-list/\">Chat - Headless conversation list</a></li>\n<li><a href=\"/x/react-chat/material/conversation-list/\">Chat - Conversation list</a></li></ul>",
+  "cssComponent": false
+}

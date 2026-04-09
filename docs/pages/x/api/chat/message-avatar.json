@@ -1,0 +1,25 @@
+{
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "MessageAvatarSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageAvatarSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "MessageAvatar",
+  "imports": [
+    "import { MessageAvatar } from '@mui/x-chat-headless/message';",
+    "import { MessageAvatar } from '@mui/x-chat-headless';",
+    "import { MessageAvatar } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "avatar", "description": "", "class": null },
+    { "name": "image", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiMessageAvatar",
+  "filename": "/packages/x-chat-headless/src/message/MessageAvatar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/messages/\">Chat - Headless messages</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,0 +1,34 @@
+{
+  "props": {
+    "scrollBehavior": {
+      "type": {
+        "name": "enum",
+        "description": "'auto'<br>&#124;&nbsp;'instant'<br>&#124;&nbsp;'smooth'"
+      }
+    },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ScrollToBottomAffordanceSlotProps" }
+    },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ScrollToBottomAffordanceSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "ScrollToBottomAffordance",
+  "imports": [
+    "import { ScrollToBottomAffordance } from '@mui/x-chat-headless/indicators';",
+    "import { ScrollToBottomAffordance } from '@mui/x-chat-headless';",
+    "import { ScrollToBottomAffordance } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "badge", "description": "", "class": null },
+    { "name": "icon", "description": "", "class": null },
+    { "name": "root", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiScrollToBottomAffordance",
+  "filename": "/packages/x-chat-headless/src/indicators/ScrollToBottomAffordance.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/indicators/\">Chat - Headless indicators</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li></ul>",
+  "cssComponent": false
+}

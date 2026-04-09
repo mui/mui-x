@@ -1,0 +1,24 @@
+{
+  "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
+    "isGrouped": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "shape", "description": "MessageRootSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageRootSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "MessageRoot",
+  "imports": [
+    "import { MessageRoot } from '@mui/x-chat-headless/message';",
+    "import { MessageRoot } from '@mui/x-chat-headless';",
+    "import { MessageRoot } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiMessageRoot",
+  "filename": "/packages/x-chat-headless/src/message/MessageRoot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/messages/\">Chat - Headless messages</a></li></ul>",
+  "cssComponent": false
+}

@@ -43,6 +43,7 @@ export function cleanupStaleFiles(fileWrites: FileWrite[]): void {
   // Also clean translation directories
   const translationDirs = [
     'docs/translations/api-docs/charts',
+    'docs/translations/api-docs/chat',
     'docs/translations/api-docs/data-grid',
     'docs/translations/api-docs/date-pickers',
     'docs/translations/api-docs/tree-view',

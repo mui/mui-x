@@ -1,0 +1,113 @@
+{
+  "props": {
+    "adapter": { "type": { "name": "object" }, "required": true },
+    "activeConversationId": { "type": { "name": "string" } },
+    "composerValue": { "type": { "name": "string" } },
+    "conversations": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ avatarUrl?: string, id: string, lastMessageAt?: string, metadata?: object, participants?: Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any }&gt;, readState?: 'read'<br>&#124;&nbsp;'unread', subtitle?: string, title?: string, unreadCount?: number }&gt;"
+      }
+    },
+    "currentUser": {
+      "type": {
+        "name": "shape",
+        "description": "{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }"
+      }
+    },
+    "initialActiveConversationId": { "type": { "name": "string" } },
+    "initialComposerValue": { "type": { "name": "string" } },
+    "initialConversations": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ avatarUrl?: string, id: string, lastMessageAt?: string, metadata?: object, participants?: Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any }&gt;, readState?: 'read'<br>&#124;&nbsp;'unread', subtitle?: string, title?: string, unreadCount?: number }&gt;"
+      }
+    },
+    "initialMessages": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: object, parts: Array&lt;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }&gt;"
+      }
+    },
+    "members": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }&gt;"
+      }
+    },
+    "messages": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: object, parts: Array&lt;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object<br>&#124;&nbsp;object&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }&gt;"
+      }
+    },
+    "onActiveConversationChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(conversationId: string | undefined) => void",
+        "describedArgs": []
+      }
+    },
+    "onComposerValueChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: string) => void", "describedArgs": [] }
+    },
+    "onConversationsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(conversations: Array<ChatConversation>) => void",
+        "describedArgs": []
+      }
+    },
+    "onData": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(part: ChatFallbackDataMessagePart<`data-${string}`>) => void | Promise<void>",
+        "describedArgs": []
+      }
+    },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(error: ChatError) => void", "describedArgs": [] }
+    },
+    "onFinish": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(payload: ChatOnFinishPayload) => void | Promise<void>",
+        "describedArgs": []
+      }
+    },
+    "onMessagesChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(messages: Array<ChatMessage>) => void", "describedArgs": [] }
+    },
+    "onToolCall": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(payload: ChatOnToolCallPayload) => void | Promise<void>",
+        "describedArgs": []
+      }
+    },
+    "partRenderers": {
+      "type": {
+        "name": "shape",
+        "description": "{ dynamic-tool?: func, file?: func, reasoning?: func, source-document?: func, source-url?: func, step-start?: func, text?: func, tool?: func }"
+      }
+    },
+    "storeClass": { "type": { "name": "object" }, "default": "ChatStore" },
+    "streamFlushInterval": { "type": { "name": "number" }, "default": "16" }
+  },
+  "name": "ChatProvider",
+  "imports": [
+    "import { ChatProvider } from '@mui/x-chat-headless/ChatProvider';",
+    "import { ChatProvider } from '@mui/x-chat-headless';",
+    "import { ChatProvider } from '@mui/x-chat';"
+  ],
+  "slots": [],
+  "classes": [],
+  "muiName": "MuiChatProvider",
+  "filename": "/packages/x-chat-headless/src/ChatProvider.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/\">Chat - Headless</a></li></ul>",
+  "cssComponent": false
+}
