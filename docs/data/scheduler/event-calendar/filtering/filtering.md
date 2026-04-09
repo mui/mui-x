@@ -9,7 +9,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Search and filter events in the Event Calendar.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Event search [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
 

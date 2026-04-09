@@ -53,7 +53,7 @@ Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
             for (const key of ['open', 'high', 'low', 'close'] as const) {
               if (d[datasetKeys[key]] !== null && typeof d[datasetKeys[key]] !== 'number') {
                 warnOnce([
-                  `MUI X Charts: Your dataset key "${key}" is used for plotting a candlestick, but contains nonnumerical elements.`,
+                  `MUI X Charts: Your dataset key "${key}" is used for plotting a candlestick, but contains non-numerical elements.`,
                   'Candlestick charts only support numbers.',
                 ]);
               }

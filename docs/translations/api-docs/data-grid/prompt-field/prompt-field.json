@@ -3,7 +3,7 @@
   "propDescriptions": {
     "className": { "description": "Override or extend the styles applied to the component." },
     "onRecordError": {
-      "description": "Called when an speech recognition error occurs.",
+      "description": "Called when a speech recognition error occurs.",
       "typeDescriptions": { "error": { "name": "error", "description": "The error message" } }
     },
     "onSubmit": {

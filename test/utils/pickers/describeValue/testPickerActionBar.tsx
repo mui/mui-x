@@ -89,7 +89,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onClose = spy();
 
         const { selectSection, pressKey } = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -150,7 +149,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onClose = spy();
 
         const { selectSection, pressKey } = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,

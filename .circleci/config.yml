@@ -47,7 +47,7 @@ default-job: &default-job
   parameters:
     <<: *default-parameters
   environment:
-    # expose it globally otherwise we have to thread it from each job to the install command
+    &default-environment # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
     # Used by the code-infra orb to diff against the correct base branch for dedupe and prettier checks
@@ -140,6 +140,9 @@ jobs:
           path: test-results
   test_lint:
     <<: *default-job
+    environment:
+      <<: *default-environment
+      NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - checkout
       - install-deps
@@ -180,19 +183,6 @@ jobs:
       - run:
           name: '`pnpm l10n` changes committed?'
           command: git add -A && git diff --exit-code --staged
-      - run:
-          name: '`pnpm @mui/x-charts-vendor build` was run?'
-          command: |
-            # #target-branch-reference
-            # Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
-            # For example, when creating v9 from v8, `master -> v8.x`
-            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
-            then
-              echo "No changes to dependencies detected. Skipping..."
-            else
-              pnpm --filter @mui/x-charts-vendor build
-              git add -A && git diff --exit-code --staged
-            fi
       - run:
           name: 'No dynamic date library import in the Pickers built types?'
           command: |

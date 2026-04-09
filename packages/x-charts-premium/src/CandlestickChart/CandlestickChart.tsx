@@ -34,6 +34,7 @@ import {
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
+import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
 import {
   ChartsLegend,
   type ChartsLegendSlotProps,
@@ -172,6 +173,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
               <ChartsAxisHighlight {...axisHighlightProps} />
             </g>
             <ChartsAxis {...chartsAxisProps} />
+            <ChartsZoomSlider />
             <ChartsClipPath {...clipPathProps} />
             {children}
           </ChartsSvgLayer>

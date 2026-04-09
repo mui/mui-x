@@ -3,13 +3,14 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
+components: EventCalendar, EventCalendarPremium, StandaloneAgendaView, StandaloneDayView, StandaloneWeekView, StandaloneMonthView
 ---
 
 # Event Calendar - Views
 
 <p class="description">Choose which views are available in the Event Calendar.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## All views
 
