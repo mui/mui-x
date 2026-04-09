@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { screen, within, fireTouchChangedEvent, waitFor } from '@mui/internal-test-utils';
+import {
+  screen,
+  within,
+  fireTouchChangedEvent,
+  waitFor,
+  fireEvent,
+} from '@mui/internal-test-utils';
 import {
   adapterToUse,
   buildPickerDragInteractions,
@@ -546,7 +552,7 @@ describe('<DateRangeCalendar />', () => {
     it('should only render the new start day when selecting a start day without a previously selected start day', async () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
-      const { user } = render(
+      render(
         <DateRangeCalendar
           referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
@@ -556,15 +562,15 @@ describe('<DateRangeCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      await user.click(getPickerDay('2'));
-      // 3 renders (focus, update tabIndex + autoFocus, selection) * 2 (because dev mode)
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6);
+      // sticking with `fireEvent` for simplified performance test
+      fireEvent.click(getPickerDay('2'));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
     it('should only render the day inside range when selecting the end day', async () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
-      const { user } = render(
+      render(
         <DateRangeCalendar
           referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
@@ -573,12 +579,12 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      await user.click(getPickerDay('2'));
+      fireEvent.click(getPickerDay('2'));
 
       const renderCountBeforeChange = RenderCount.callCount;
-      await user.click(getPickerDay('4'));
-      // 4 renders (focus, update tabIndex + autoFocus, selection, blur) * 2 days * 2 (because dev mode)
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(16);
+      // sticking with `fireEvent` for simplified performance test
+      fireEvent.click(getPickerDay('4'));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
     });
   });
 });
