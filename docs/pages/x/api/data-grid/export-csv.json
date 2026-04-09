@@ -9,7 +9,7 @@
         "description": "{ allColumns?: bool, delimiter?: string, escapeFormulas?: bool, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, includeColumnGroupsHeaders?: bool, includeHeaders?: bool, shouldAppendQuotes?: bool, utf8WithBom?: bool }"
       }
     },
-    "render": { "type": { "name": "element" } },
+    "render": { "type": { "name": "custom", "description": "ref" } },
     "role": { "type": { "name": "string" } },
     "size": {
       "type": {

@@ -4,7 +4,7 @@
     "disabled": { "type": { "name": "bool" } },
     "id": { "type": { "name": "string" } },
     "material": { "type": { "name": "shape", "description": "Partial<ButtonProps>" } },
-    "render": { "type": { "name": "element" } },
+    "render": { "type": { "name": "custom", "description": "ref" } },
     "role": { "type": { "name": "string" } },
     "size": {
       "type": {

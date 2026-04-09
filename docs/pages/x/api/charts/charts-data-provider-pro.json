@@ -23,7 +23,7 @@
     "series": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;BarSeriesType | LineSeriesType | ScatterSeriesType | PieSeriesType<MakeOptional<PieValueType, \"id\">> | ... 5 more ... | OHLCSeriesType&gt;"
+        "description": "Array&lt;BarSeriesType | LineSeriesType | ScatterSeriesType | PieSeriesType<MakeOptional<PieValueType, \"id\">> | RadarSeriesType | HeatmapSeriesType | FunnelSeriesType | SankeySeriesType | RangeBarSeriesType | OHLCSeriesType&gt;"
       }
     },
     "seriesConfig": {

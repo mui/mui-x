@@ -1,7 +1,5 @@
 {
-  "props": {
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
-  },
+  "props": { "render": { "type": { "name": "custom", "description": "ref" } } },
   "name": "ChartsToolbarZoomInTrigger",
   "imports": [
     "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-pro/ChartsToolbarPro';",

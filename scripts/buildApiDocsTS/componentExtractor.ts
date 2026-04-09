@@ -103,14 +103,14 @@ export function extractComponentApi(
       // These props are not fully expanded — show the type alias name instead of "object"
       const rawPropType = checker.getTypeOfSymbol(prop);
       const strippedPropType = stripOptionalType(rawPropType, checker);
-      const typeName = checker.typeToString(strippedPropType);
+      const typeName = checker.typeToString(strippedPropType, undefined, ts.TypeFormatFlags.NoTruncation);
       const isArr =
         checker.isArrayType(strippedPropType) ||
         (strippedPropType as any).target?.getSymbol()?.name === 'Array' ||
         (strippedPropType as any).target?.getSymbol()?.name === 'ReadonlyArray';
       if (isArr) {
         const elemType = (strippedPropType as ts.TypeReference).typeArguments?.[0];
-        const elemName = elemType ? checker.typeToString(elemType) : '{}';
+        const elemName = elemType ? checker.typeToString(elemType, undefined, ts.TypeFormatFlags.NoTruncation) : '{}';
         typeInfo = { name: 'arrayOf', description: `Array&lt;${elemName}&gt;` };
       } else if (typeName === 'any' || typeName.includes('{') || typeName.length > 80) {
         // Fall back to plain "object" for unreadable types

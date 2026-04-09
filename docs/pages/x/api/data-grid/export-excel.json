@@ -9,7 +9,7 @@
         "description": "{ allColumns?: bool, columnsStyles?: ColumnsStylesInterface, escapeFormulas?: bool, exceljsPostProcess?: func, exceljsPreProcess?: func, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, includeColumnGroupsHeaders?: bool, includeHeaders?: bool, valueOptionsSheetName?: string, worker?: func }"
       }
     },
-    "render": { "type": { "name": "element" } },
+    "render": { "type": { "name": "custom", "description": "ref" } },
     "role": { "type": { "name": "string" } },
     "size": {
       "type": {

@@ -8,6 +8,11 @@ import { MAX_DEPTH, MAX_OBJECT_PROPERTIES } from './config';
 
 const UNION_SEP = '<br>&#124;&nbsp;';
 
+/** typeToString with NoTruncation to avoid "... N more ..." in long unions */
+function fullTypeToString(checker: ts.TypeChecker, type: ts.Type): string {
+  return checker.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation);
+}
+
 // Track visited types to prevent infinite recursion
 const visitedTypes = new Set<number>();
 
@@ -94,7 +99,7 @@ function formatPropTypeInner(type: ts.Type, checker: ts.TypeChecker, depth: numb
   }
 
   // Check type string BEFORE stripping undefined/null (detects ReactNode, Ref<>, etc.)
-  const rawTypeStr = checker.typeToString(type);
+  const rawTypeStr = fullTypeToString(checker, type);
   if (rawTypeStr === 'ReactNode' || rawTypeStr === 'React.ReactNode') {
     return { name: 'node' };
   }
@@ -140,7 +145,7 @@ function formatPropTypeInner(type: ts.Type, checker: ts.TypeChecker, depth: numb
   }
 
   // Also check after stripping (catches cases where e.g. ReactNode | undefined was stripped)
-  const strippedStr = checker.typeToString(type);
+  const strippedStr = fullTypeToString(checker, type);
   if (strippedStr === 'ReactNode' || strippedStr === 'React.ReactNode') {
     return { name: 'node' };
   }
@@ -248,7 +253,7 @@ function formatObjectType(type: ts.Type, checker: ts.TypeChecker, depth: number)
   // No properties, too deep, or too many properties
   if (properties.length === 0 || depth >= MAX_DEPTH || properties.length > MAX_OBJECT_PROPERTIES) {
     // Use the type alias name if available instead of generic "object"
-    const typeName = checker.typeToString(type);
+    const typeName = fullTypeToString(checker, type);
     if (typeName.length < 80 && !typeName.includes('{')) {
       return { name: 'shape', description: typeName };
     }
@@ -320,7 +325,7 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
   }
 
   // React types (via fast string check)
-  const str = checker.typeToString(type);
+  const str = fullTypeToString(checker, type);
   if (str === 'ReactNode' || str === 'React.ReactNode') {
     return 'node';
   }
@@ -374,7 +379,7 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
       properties.length > MAX_OBJECT_PROPERTIES
     ) {
       // Use the type alias name if available instead of generic "object"
-      const typeName = checker.typeToString(type);
+      const typeName = fullTypeToString(checker, type);
       return typeName.length < 80 && !typeName.includes('{') ? typeName : '{}';
     }
 

@@ -2,7 +2,7 @@
   "props": {
     "disabled": { "type": { "name": "bool" } },
     "id": { "type": { "name": "string" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "render": { "type": { "name": "custom", "description": "ref" } },
     "size": {
       "type": {
         "name": "enum",
