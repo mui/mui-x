@@ -48,7 +48,7 @@ export interface ChartsToolbarRangeButtonTriggerProps {
    *
    * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
    * - `[start, end]` — An absolute date range.
-   * - `(domainMin, domainMax, zoomedMin, zoomedMax) => { start, end }` — A function that receives the full axis domain bounds and the current zoomed-in bounds (as timestamps) and returns zoom percentages.
+   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`, `zoomed`) and returns zoom percentages (0-100).
    * - `null` — Resets zoom to show all data.
    */
   value: RangeButtonValue;
@@ -71,8 +71,8 @@ export interface ChartsToolbarRangeButtonTriggerProps {
 }
 
 /**
- * A button that sets the chart zoom to a predefined time range.
- * It renders the `baseButton` slot.
+ * A button that sets the chart zoom to a predefined range.
+ * It renders the `baseToggleButton` slot.
  */
 const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   HTMLButtonElement,
@@ -93,7 +93,7 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   const zoomMap = store.use(selectorChartZoomMap);
   const activeRangeButtonKey = store.use(selectorChartActiveRangeButtonKey);
 
-  // Resolve the target axis ID: use the prop, or find the first time-scale x-axis with zoom enabled.
+  // Resolve the target axis ID: use the prop, or find the first zoomable x-axis.
   const resolvedAxisId = React.useMemo(() => {
     if (axisIdProp !== undefined) {
       return axisIdProp;
@@ -101,15 +101,18 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     if (!rawXAxes) {
       return undefined;
     }
-    const timeAxis = rawXAxes.find(
-      (axis) =>
-        (axis.scaleType === 'time' || axis.scaleType === 'utc') &&
-        zoomOptionsLookup[axis.id] !== undefined,
-    );
-    return timeAxis?.id;
+    return rawXAxes.find((axis) => zoomOptionsLookup[axis.id] !== undefined)?.id;
   }, [axisIdProp, rawXAxes, zoomOptionsLookup]);
 
+  // Determine if the resolved axis is ordinal (band/point) to use index-based domain.
+  const resolvedAxis = React.useMemo(
+    () => rawXAxes?.find((axis) => axis.id === resolvedAxisId),
+    [rawXAxes, resolvedAxisId],
+  );
+  const isOrdinal = resolvedAxis?.scaleType === 'band' || resolvedAxis?.scaleType === 'point';
+
   // Get the full (unzoomed) domain for the target axis.
+  // For ordinal axes (band/point), use index-based range since domain values are categories.
   const axisDomain = React.useMemo(() => {
     if (resolvedAxisId === undefined) {
       return undefined;
@@ -118,10 +121,13 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     if (!domainDef || domainDef.domain.length < 2) {
       return undefined;
     }
+    if (isOrdinal) {
+      return { min: 0, max: domainDef.domain.length - 1 };
+    }
     const min = domainDef.domain[0];
     const max = domainDef.domain[domainDef.domain.length - 1];
     return { min: Number(min), max: Number(max) };
-  }, [resolvedAxisId, domains]);
+  }, [resolvedAxisId, domains, isOrdinal]);
 
   // Compute zoomed-in bounds from current zoom percentages and full domain.
   const currentZoom = resolvedAxisId !== undefined ? zoomMap?.get(resolvedAxisId) : undefined;
@@ -142,13 +148,12 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     if (resolvedAxisId === undefined || !axisDomain || !zoomedBounds || !buttonKey) {
       return;
     }
-    const zoom = rangeButtonValueToZoom(
-      value,
-      axisDomain.min,
-      axisDomain.max,
-      zoomedBounds.min,
-      zoomedBounds.max,
-    );
+    const zoom = rangeButtonValueToZoom(value, {
+      scaleType: resolvedAxis?.scaleType ?? 'linear',
+      data: resolvedAxis?.data,
+      domain: axisDomain,
+      zoomed: zoomedBounds,
+    });
     // setAxisZoomData clears activeRangeButtonKey, then we set it back.
     instance.setAxisZoomData(resolvedAxisId, {
       axisId: resolvedAxisId,
@@ -156,7 +161,7 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
       end: zoom.end,
     });
     instance.setActiveRangeButtonKey(buttonKey);
-  }, [resolvedAxisId, axisDomain, zoomedBounds, value, instance, buttonKey]);
+  }, [resolvedAxisId, resolvedAxis, axisDomain, zoomedBounds, value, instance, buttonKey]);
 
   const element = useComponentRenderer(slots.baseToggleButton, render, {
     ...slotProps.baseToggleButton,

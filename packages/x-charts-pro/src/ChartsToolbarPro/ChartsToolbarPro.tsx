@@ -23,6 +23,8 @@ import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
 import { ChartsToolbarRangeButtonTrigger } from './ChartsToolbarRangeButtonTrigger';
 import { type RangeButtonValue } from './rangeButtonValueToZoom';
+
+export type { RangeButtonFunctionParams } from './rangeButtonValueToZoom';
 import { type ChartsSlotsPro } from '../internals/material';
 import {
   type ChartsToolbarPrintExportOptions,
@@ -43,7 +45,7 @@ export interface RangeButtonConfig {
    *
    * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
    * - `[start, end]` — An absolute date range.
-   * - `(domainMin, domainMax, zoomedMin, zoomedMax) => { start, end }` — A function that receives the full axis domain bounds and the current zoomed-in bounds (as timestamps) and returns zoom percentages.
+   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`, `zoomed`) and returns zoom percentages (0-100).
    * - `null` — Resets zoom to show all data.
    */
   value: RangeButtonValue;

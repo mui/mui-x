@@ -66,11 +66,11 @@ If you're composing a custom component without `ChartsWrapper`, you can ignore t
 
 ## Range buttons
 
-Range buttons allow users to quickly zoom to predefined time ranges from the toolbar.
-They are particularly useful for time-series charts where users need to switch between different time windows.
+Range buttons allow users to quickly zoom to predefined ranges from the toolbar.
+They work with both time-series and ordinal (band/point) axes.
 
 Pass the `rangeButtons` prop to the toolbar to configure the available ranges.
-Each button zooms the chart to show a specific time period calculated from the end of the data.
+Each button zooms the chart to show a specific portion of the data.
 
 {{"demo": "ChartsToolbarRangeButtons.js"}}
 
@@ -100,11 +100,19 @@ Use `[startDate, endDate]` to zoom to a fixed date range.
 #### Function
 
 Use a function to compute custom zoom percentages (0–100).
-It receives the full domain bounds and the current zoomed-in bounds as timestamps.
+The function receives a params object with the axis context:
+
+- `scaleType` — The axis scale type (e.g., `'time'`, `'band'`, `'linear'`).
+- `data` — The axis data values (available for ordinal axes).
+- `domain` — The full domain bounds (`{ min, max }`). Timestamps for time axes, indices for ordinal.
+- `zoomed` — The current zoomed-in bounds (`{ min, max }`).
 
 ```tsx
 { label: 'First half', value: () => ({ start: 0, end: 50 }) }
-{ label: 'Last half', value: () => ({ start: 50, end: 100 }) }
+{ label: 'Last 5 items', value: ({ data }) => {
+  const count = data.length;
+  return { start: ((count - 5) / (count - 1)) * 100, end: 100 };
+}}
 ```
 
 #### Reset
@@ -118,6 +126,14 @@ Use `null` to reset zoom to show all data.
 The following demo shows all value types together:
 
 {{"demo": "ChartsToolbarRangeButtonValues.js"}}
+
+### Ordinal axes
+
+Range buttons also work with ordinal (band/point) axes.
+When the axis data contains date-like values, calendar intervals and absolute date ranges are matched against the data points automatically.
+Function values receive index-based domain bounds instead of timestamps.
+
+{{"demo": "ChartsToolbarOrdinalRangeButtons.js"}}
 
 ### Custom toolbar with range buttons
 
