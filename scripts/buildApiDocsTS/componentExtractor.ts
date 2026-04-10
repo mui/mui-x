@@ -579,7 +579,12 @@ export function parseConformanceTest(componentFilePath: string): ConformanceInfo
 
   // Search for test files in various locations, including describeConformance.*.test.tsx
   const pkgSrc = dir.replace(/\/src\/.*/, '/src');
-  const candidateDirs = [dir, path.join(dir, 'tests'), path.join(dir, '..'), path.join(pkgSrc, 'tests')];
+  const candidateDirs = [
+    dir,
+    path.join(dir, 'tests'),
+    path.join(dir, '..'),
+    path.join(pkgSrc, 'tests'),
+  ];
 
   let testContent: string | undefined;
   for (const testDir of candidateDirs) {

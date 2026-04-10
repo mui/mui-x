@@ -41,9 +41,7 @@ export function generateComponentFiles(api: ComponentApi): FileWrite[] {
   });
 
   // 2. JS wrapper page
-  const isDataGrid =
-    api.section === 'data-grid' &&
-    ['DataGrid', 'DataGridPro', 'DataGridPremium'].includes(api.name);
+  const isDataGrid = api.section === 'data-grid';
 
   let jsContent: string;
   if (isDataGrid) {

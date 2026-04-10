@@ -12,9 +12,7 @@ import type { FileWrite } from './types';
 
 /** typeToString with NoTruncation and single quotes for string literals */
 function typeToStr(checker: ts.TypeChecker, type: ts.Type): string {
-  return checker
-    .typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation)
-    .replace(/"/g, "'");
+  return checker.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation).replace(/"/g, "'");
 }
 
 /**

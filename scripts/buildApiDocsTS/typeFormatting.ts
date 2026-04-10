@@ -10,9 +10,7 @@ const UNION_SEP = '<br>&#124;&nbsp;';
 
 /** typeToString with NoTruncation, using single quotes for string literals */
 function fullTypeToString(checker: ts.TypeChecker, type: ts.Type): string {
-  return checker
-    .typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation)
-    .replace(/"/g, "'");
+  return checker.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation).replace(/"/g, "'");
 }
 
 // Track visited types to prevent infinite recursion
