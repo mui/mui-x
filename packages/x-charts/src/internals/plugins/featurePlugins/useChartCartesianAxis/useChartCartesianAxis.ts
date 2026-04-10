@@ -49,7 +49,9 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   }
 
   const drawingArea = store.use(selectorChartDrawingArea);
-  const processedSeries: ProcessedSeries<ChartSeriesType, 'cartesian'> = store.use(selectorChartSeriesProcessed);
+  const processedSeries: ProcessedSeries<ChartSeriesType, 'cartesian'> = store.use(
+    selectorChartSeriesProcessed,
+  );
 
   const isInteractionEnabled = store.use(selectorChartsInteractionIsInitialized);
   const { axis: xAxisWithScale, axisIds: xAxisIds } = store.use(selectorChartXAxis);
@@ -136,7 +138,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
     if (!isInteractionEnabled || !hasInteractionPlugin || !element || params.disableAxisListener) {
-      return () => { };
+      return () => {};
     }
 
     // Clean the interaction when the mouse leaves the chart.
@@ -207,7 +209,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     const element = chartsLayerContainerRef.current;
     const onAxisClick = params.onAxisClick;
     if (element === null || !onAxisClick) {
-      return () => { };
+      return () => {};
     }
 
     const axisClickHandler = instance.addInteractionListener('tap', (event) => {
@@ -311,6 +313,6 @@ useChartCartesianAxis.getInitialState = (params) => ({
   ...(params.highlightedAxis === undefined
     ? {}
     : {
-      controlledCartesianAxisHighlight: params.highlightedAxis,
-    }),
+        controlledCartesianAxisHighlight: params.highlightedAxis,
+      }),
 });

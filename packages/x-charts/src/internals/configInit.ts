@@ -13,8 +13,8 @@ class CartesianSeriesTypes {
     if (cartesianInstance) {
       throw new Error(
         'MUI X Charts: Only one CartesianSeriesTypes instance can be created. ' +
-        'This is a singleton class used internally for series type registration. ' +
-        'Use the existing instance instead of creating a new one.',
+          'This is a singleton class used internally for series type registration. ' +
+          'Use the existing instance instead of creating a new one.',
       );
     }
     cartesianInstance = this.types;
@@ -36,8 +36,8 @@ class PolarSeriesTypes {
     if (polarInstance) {
       throw new Error(
         'MUI X Charts: Only one PolarSeriesTypes instance can be created. ' +
-        'This is a singleton class used internally for series type registration. ' +
-        'Use the existing instance instead of creating a new one.',
+          'This is a singleton class used internally for series type registration. ' +
+          'Use the existing instance instead of creating a new one.',
       );
     }
     polarInstance = this.types;

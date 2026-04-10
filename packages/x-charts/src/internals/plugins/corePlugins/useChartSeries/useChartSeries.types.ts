@@ -56,7 +56,10 @@ export type UseChartSeriesDefaultizedParameters<
   theme: 'light' | 'dark';
 };
 
-export type ProcessedSeries<SeriesType extends ChartSeriesType = ChartSeriesType, AxisType extends 'cartesian' | 'polar' = any> = {
+export type ProcessedSeries<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  AxisType extends 'cartesian' | 'polar' = any,
+> = {
   [type in SeriesType]?: SeriesProcessorResult<type, AxisType>;
 };
 

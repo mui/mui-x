@@ -1,6 +1,10 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import type { ChartSeriesType, ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
+import type {
+  ChartSeriesType,
+  ChartSeriesDefaultized,
+  ChartsSeriesConfig,
+} from '../models/seriesType/config';
 import type { SeriesId } from '../models/seriesType/common';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries';
@@ -53,12 +57,20 @@ export const selectorSeriesOfType = createSelectorMemoized(
   },
 );
 
-export const useAllSeriesOfType = <T extends ChartSeriesType, AxisType extends 'cartesian' | 'polar' = any>(seriesType: T) => {
+export const useAllSeriesOfType = <
+  T extends ChartSeriesType,
+  AxisType extends 'cartesian' | 'polar' = any,
+>(
+  seriesType: T,
+) => {
   const store = useStore();
   return store.use(selectorAllSeriesOfType, seriesType) as ProcessedSeries<T, AxisType>[T];
 };
 
-export const useSeriesOfType = <T extends ChartSeriesType, AxisType extends 'cartesian' | 'polar' = any>(
+export const useSeriesOfType = <
+  T extends ChartSeriesType,
+  AxisType extends 'cartesian' | 'polar' = any,
+>(
   seriesType: T,
   seriesId?: SeriesId | SeriesId[],
 ) => {
