@@ -5,7 +5,7 @@ import type { ChartSeriesTypeRequiredPlugins } from './seriesConfig.types';
 
 export type GetItemAtPosition<
   SeriesType extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar',
+  AxisType extends 'cartesian' | 'radial',
 > = (
   state: ChartState<ChartSeriesTypeRequiredPlugins<SeriesType, AxisType>>,
   point: { x: number; y: number },

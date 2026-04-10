@@ -74,7 +74,7 @@ export interface TooltipGetterAxesConfig {
 
 export type TooltipGetter<
   SeriesType extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
+  AxisType extends 'cartesian' | 'radial' = any,
 > = (params: {
   series: ChartSeriesDefaultized<SeriesType, AxisType>;
   axesConfig: TooltipGetterAxesConfig;
@@ -98,6 +98,6 @@ export type AxisTooltipGetter<
 > = (
   series: Record<
     SeriesId,
-    ChartSeriesDefaultized<SeriesType, Directions extends 'x' | 'y' ? 'cartesian' : 'polar'>
+    ChartSeriesDefaultized<SeriesType, Directions extends 'x' | 'y' ? 'cartesian' : 'radial'>
   >,
 ) => { direction: Directions; axisId: AxisId | undefined }[];

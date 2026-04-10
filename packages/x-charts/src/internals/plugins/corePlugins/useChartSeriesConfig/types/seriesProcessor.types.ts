@@ -15,7 +15,7 @@ export type SeriesProcessorParams<SeriesType extends ChartSeriesType> = {
 
 export type SeriesProcessorResult<
   SeriesType extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
+  AxisType extends 'cartesian' | 'radial' = any,
 > = {
   series: Record<SeriesId, ChartSeriesDefaultized<SeriesType, AxisType>>;
   seriesOrder: SeriesId[];
@@ -27,7 +27,7 @@ export type SeriesProcessorResult<
 
 export type SeriesProcessor<
   SeriesType extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
+  AxisType extends 'cartesian' | 'radial' = any,
 > = (
   params: SeriesProcessorParams<SeriesType>,
   dataset?: Readonly<DatasetType>,

@@ -111,7 +111,7 @@ export interface ChartsSeriesConfig {
         itemIdentifierWithData: LineItemIdentifier;
         valueType: number | null;
         canBeStacked: true;
-        axisType: 'polar';
+        axisType: 'radial';
         highlightScope: CommonHighlightScope;
         descriptionGetterParams: {
           identifier: LineItemIdentifier;
@@ -180,7 +180,7 @@ export interface ChartsSeriesConfig {
     itemIdentifier: RadarItemIdentifier;
     itemIdentifierWithData: RadarItemIdentifier;
     valueType: number;
-    axisType: 'polar';
+    axisType: 'radial';
     highlightScope: CommonHighlightScope;
     descriptionGetterParams: {
       identifier: RadarItemIdentifier;
@@ -227,7 +227,7 @@ export type PolarChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
     [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: infer A }
-      ? 'polar' extends A
+      ? 'radial' extends A
         ? Key
         : never
       : never;
@@ -243,15 +243,15 @@ export type StackableChartSeriesType = keyof Pick<
 
 export type ChartSeries<
   SeriesType extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
-> = AxisType extends 'cartesian' | 'polar'
+  AxisType extends 'cartesian' | 'radial' = any,
+> = AxisType extends 'cartesian' | 'radial'
   ? Extract<ChartsSeriesConfig[SeriesType], { axisType: AxisType }>['seriesInput']
   : ChartsSeriesConfig[SeriesType]['seriesInput'];
 
 export type ChartSeriesDefaultized<
   SeriesType extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
-> = (AxisType extends 'cartesian' | 'polar'
+  AxisType extends 'cartesian' | 'radial' = any,
+> = (AxisType extends 'cartesian' | 'radial'
   ? Extract<ChartsSeriesConfig[SeriesType], { axisType: AxisType }>['series']
   : ChartsSeriesConfig[SeriesType]['series']) &
   (ChartsSeriesConfig[SeriesType] extends {

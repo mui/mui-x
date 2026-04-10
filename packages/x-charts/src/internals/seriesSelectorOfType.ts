@@ -59,7 +59,7 @@ export const selectorSeriesOfType = createSelectorMemoized(
 
 export const useAllSeriesOfType = <
   T extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
+  AxisType extends 'cartesian' | 'radial' = any,
 >(
   seriesType: T,
 ) => {
@@ -69,7 +69,7 @@ export const useAllSeriesOfType = <
 
 export const useSeriesOfType = <
   T extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
+  AxisType extends 'cartesian' | 'radial' = any,
 >(
   seriesType: T,
   seriesId?: SeriesId | SeriesId[],

@@ -13,13 +13,13 @@ import { useStore } from '../internals/store/useStore';
  * The hook assumes polar and cartesian are never implemented at the same time.
  * @returns The coordinate system
  */
-export function useAxisSystem(): 'none' | 'polar' | 'cartesian' {
+export function useAxisSystem(): 'none' | 'radial' | 'cartesian' {
   const store = useStore<[UseChartPolarAxisSignature]>();
   const rawRotationAxis = store.use(selectorChartRawRotationAxis);
   const rawXAxis = store.use(selectorChartRawXAxis);
 
   if (rawRotationAxis !== undefined) {
-    return 'polar';
+    return 'radial';
   }
   if (rawXAxis !== undefined) {
     return 'cartesian';

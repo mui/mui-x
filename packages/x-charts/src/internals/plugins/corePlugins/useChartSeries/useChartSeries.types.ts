@@ -58,7 +58,7 @@ export type UseChartSeriesDefaultizedParameters<
 
 export type ProcessedSeries<
   SeriesType extends ChartSeriesType = ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
+  AxisType extends 'cartesian' | 'radial' = any,
 > = {
   [type in SeriesType]?: SeriesProcessorResult<type, AxisType>;
 };

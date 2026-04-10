@@ -26,14 +26,14 @@ import { type AxisTooltipContentProps, type ItemTooltipContentProps } from './To
 
 export type ChartSeriesTypeRequiredPlugins<
   SeriesType extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
+  AxisType extends 'cartesian' | 'radial' = any,
 > =
   Extract<ChartsSeriesConfig[SeriesType], { axisType: AxisType }> extends { axisType: infer A }
     ? 'cartesian' extends A
-      ? 'polar' extends A
+      ? 'radial' extends A
         ? [] // Dual-mode series (both cartesian and polar): should be [polar] | [cartesian], but this look too complex to maintain compared to its benefits.
         : [UseChartCartesianAxisSignature]
-      : 'polar' extends A
+      : 'radial' extends A
         ? [UseChartPolarAxisSignature]
         : []
     : [];
@@ -44,7 +44,7 @@ export type ChartSeriesTypeRequiredPlugins<
  */
 type ChartSeriesTypeAxisDirections<
   SeriesType extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
+  AxisType extends 'cartesian' | 'radial' = any,
 > =
   | (SeriesType extends CartesianChartSeriesType
       ? AxisType extends 'cartesian'
@@ -52,14 +52,14 @@ type ChartSeriesTypeAxisDirections<
         : never
       : never)
   | (SeriesType extends PolarChartSeriesType
-      ? AxisType extends 'polar'
+      ? AxisType extends 'radial'
         ? 'rotation' | 'radius'
         : never
       : never);
 
 export type ChartSeriesTypeConfig<
   SeriesType extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
+  AxisType extends 'cartesian' | 'radial' = any,
 > = {
   seriesProcessor: SeriesProcessor<SeriesType>;
   /**
@@ -99,7 +99,7 @@ export type ChartSeriesTypeConfig<
     : {}
   : {}) &
   (SeriesType extends PolarChartSeriesType
-    ? AxisType extends 'polar'
+    ? AxisType extends 'radial'
       ? {
           rotationExtremumGetter: PolarExtremumGetter<SeriesType>;
           radiusExtremumGetter: PolarExtremumGetter<SeriesType>;
@@ -118,7 +118,7 @@ export type ChartSeriesTypeConfig<
 
 export type ChartSeriesConfig<
   SeriesType extends ChartSeriesType,
-  AxisType extends 'cartesian' | 'polar' = any,
+  AxisType extends 'cartesian' | 'radial' = any,
 > = {
   [Key in SeriesType]: ChartSeriesTypeConfig<Key, AxisType>;
 };

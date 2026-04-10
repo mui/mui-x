@@ -13,7 +13,7 @@ const axisExtremumCallback = <SeriesType extends PolarChartSeriesType>(
   chartType: SeriesType,
   axis: AxisConfig,
   axisDirection: 'rotation' | 'radius',
-  seriesConfig: ChartSeriesConfig<SeriesType, 'polar'>,
+  seriesConfig: ChartSeriesConfig<SeriesType, 'radial'>,
   axisIndex: number,
   formattedSeries: ProcessedSeries<SeriesType>,
 ): PolarExtremumGetterResult => {

@@ -4,9 +4,9 @@ import { type SeriesId } from '../models/seriesType/common';
 import { type ChartSeriesDefaultized } from '../models/seriesType/config';
 import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
 
-export type UseLineSeriesReturnValue<AxisType extends 'cartesian' | 'polar'> =
+export type UseLineSeriesReturnValue<AxisType extends 'cartesian' | 'radial'> =
   ChartSeriesDefaultized<'line', AxisType>;
-export type UseLineSeriesContextReturnValue<AxisType extends 'cartesian' | 'polar'> =
+export type UseLineSeriesContextReturnValue<AxisType extends 'cartesian' | 'radial'> =
   ProcessedSeries<'line', AxisType>['line'];
 
 /**
@@ -15,7 +15,7 @@ export type UseLineSeriesContextReturnValue<AxisType extends 'cartesian' | 'pola
  * @param {SeriesId} seriesId The id of the series to get.
  * @returns {UseLineSeriesReturnValue} the line series
  */
-export function useLineSeries<AxisType extends 'cartesian' | 'polar' = 'cartesian'>(
+export function useLineSeries<AxisType extends 'cartesian' | 'radial' = 'cartesian'>(
   seriesId: SeriesId,
 ): UseLineSeriesReturnValue<AxisType> | undefined;
 /**
@@ -26,7 +26,7 @@ export function useLineSeries<AxisType extends 'cartesian' | 'polar' = 'cartesia
  * @returns {UseLineSeriesReturnValue[]} the line series
  */
 export function useLineSeries<
-  AxisType extends 'cartesian' | 'polar' = 'cartesian',
+  AxisType extends 'cartesian' | 'radial' = 'cartesian',
 >(): UseLineSeriesReturnValue<AxisType>[];
 /**
  * Get access to the internal state of line series.
@@ -34,7 +34,7 @@ export function useLineSeries<
  * @param {SeriesId[]} seriesIds The ids of the series to get. Order is preserved.
  * @returns {UseLineSeriesReturnValue[]} the line series
  */
-export function useLineSeries<AxisType extends 'cartesian' | 'polar' = 'cartesian'>(
+export function useLineSeries<AxisType extends 'cartesian' | 'radial' = 'cartesian'>(
   seriesIds: SeriesId[],
 ): UseLineSeriesReturnValue<AxisType>[];
 export function useLineSeries(seriesIds?: SeriesId | SeriesId[]) {
@@ -50,7 +50,7 @@ export function useLineSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the line series
  */
 export function useLineSeriesContext<
-  AxisType extends 'cartesian' | 'polar' = 'cartesian',
+  AxisType extends 'cartesian' | 'radial' = 'cartesian',
 >(): UseLineSeriesContextReturnValue<AxisType> {
   return useAllSeriesOfType('line');
 }

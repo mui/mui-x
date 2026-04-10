@@ -37,7 +37,7 @@ const selectorReturnNull = () => null;
 
 function getIsOpenSelector(
   trigger: TriggerOptions,
-  axisSystem: 'none' | 'polar' | 'cartesian',
+  axisSystem: 'none' | 'radial' | 'cartesian',
   shouldPreventBecauseOfBrush?: boolean,
 ) {
   if (shouldPreventBecauseOfBrush) {
@@ -46,7 +46,7 @@ function getIsOpenSelector(
   if (trigger === 'item') {
     return selectorChartsTooltipItemIsDefined;
   }
-  if (axisSystem === 'polar') {
+  if (axisSystem === 'radial') {
     return selectorChartsInteractionPolarAxisTooltip;
   }
   if (axisSystem === 'cartesian') {
