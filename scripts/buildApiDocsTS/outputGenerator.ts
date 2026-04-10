@@ -42,18 +42,18 @@ export function generateComponentFiles(api: ComponentApi): FileWrite[] {
 
   // 2. JS wrapper page
   const isDataGrid = api.section === 'data-grid';
+  const layoutImport = isDataGrid
+    ? "import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';"
+    : '';
 
-  let jsContent: string;
-  if (isDataGrid) {
-    jsContent = `import * as React from 'react';
+  const jsContent = `import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import jsonPageContent from './${slug}.json';
+${layoutImport}import jsonPageContent from './${slug}.json';
 
 export default function Page(props) {
   const { descriptions } = props;
-  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
+  return <ApiPage ${isDataGrid ? '{...layoutConfig} ' : ''}descriptions={descriptions} pageContent={jsonPageContent} />;
 }
 
 export async function getStaticProps() {
@@ -67,29 +67,6 @@ export async function getStaticProps() {
   return { props: { descriptions } };
 }
 `;
-  } else {
-    jsContent = `import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './${slug}.json';
-
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
-
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/${api.section}/${slug}',
-    false,
-    /\\.\\/${slug}.*\\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
-}
-`;
-  }
 
   files.push({ path: `${apiDir}/${slug}.js`, content: jsContent });
 
