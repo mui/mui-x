@@ -57,9 +57,10 @@
   },
   "name": "SankeyDataProvider",
   "imports": [
+    "import { SankeyDataProvider } from '@mui/x-charts-premium/SankeyChart';",
+    "import { SankeyDataProvider } from '@mui/x-charts-premium';",
     "import { SankeyDataProvider } from '@mui/x-charts-pro/SankeyChart';",
-    "import { SankeyDataProvider } from '@mui/x-charts-pro';",
-    "import { SankeyDataProvider } from '@mui/x-charts-premium';"
+    "import { SankeyDataProvider } from '@mui/x-charts-pro';"
   ],
   "slots": [],
   "classes": [],

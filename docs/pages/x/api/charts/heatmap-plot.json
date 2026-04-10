@@ -13,9 +13,10 @@
   },
   "name": "HeatmapPlot",
   "imports": [
+    "import { HeatmapPlot } from '@mui/x-charts-premium/Heatmap';",
+    "import { HeatmapPlot } from '@mui/x-charts-premium';",
     "import { HeatmapPlot } from '@mui/x-charts-pro/Heatmap';",
-    "import { HeatmapPlot } from '@mui/x-charts-pro';",
-    "import { HeatmapPlot } from '@mui/x-charts-premium';"
+    "import { HeatmapPlot } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

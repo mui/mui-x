@@ -1,8 +1,8 @@
 {
   "name": "GridRowOrderChangeParams",
   "imports": [
-    "import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro';",
-    "import { GridRowOrderChangeParams } from '@mui/x-data-grid-premium';"
+    "import { GridRowOrderChangeParams } from '@mui/x-data-grid-premium';",
+    "import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro';"
   ],
   "demos": "  - [Flat row reordering](/x/react-data-grid/row-ordering/#implementing-row-reordering)\n  - [Tree data reordering](/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering)\n  - [Row grouping reordering](/x/react-data-grid/row-grouping/#drag-and-drop-group-reordering)",
   "properties": {

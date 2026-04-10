@@ -19,8 +19,8 @@
   "name": "SourceDocumentPart",
   "imports": [
     "import { SourceDocumentPart } from '@mui/x-chat-headless/message';",
-    "import { SourceDocumentPart } from '@mui/x-chat-headless';",
-    "import { SourceDocumentPart } from '@mui/x-chat';"
+    "import { SourceDocumentPart } from '@mui/x-chat';",
+    "import { SourceDocumentPart } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "excerpt", "description": "", "class": null },

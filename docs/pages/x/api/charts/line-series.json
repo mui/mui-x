@@ -1,9 +1,9 @@
 {
   "name": "LineSeries",
   "imports": [
-    "import { LineSeries } from '@mui/x-charts';",
+    "import { LineSeries } from '@mui/x-charts-premium';",
     "import { LineSeries } from '@mui/x-charts-pro';",
-    "import { LineSeries } from '@mui/x-charts-premium';"
+    "import { LineSeries } from '@mui/x-charts';"
   ],
   "properties": {
     "type": { "type": { "description": "'line'" }, "required": true },

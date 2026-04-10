@@ -21,9 +21,9 @@
   "name": "ColumnsPanelTrigger",
   "imports": [
     "import { ColumnsPanelTrigger } from '@mui/x-data-grid/components';",
-    "import { ColumnsPanelTrigger } from '@mui/x-data-grid';",
+    "import { ColumnsPanelTrigger } from '@mui/x-data-grid-premium';",
     "import { ColumnsPanelTrigger } from '@mui/x-data-grid-pro';",
-    "import { ColumnsPanelTrigger } from '@mui/x-data-grid-premium';"
+    "import { ColumnsPanelTrigger } from '@mui/x-data-grid';"
   ],
   "slots": [],
   "classes": [],

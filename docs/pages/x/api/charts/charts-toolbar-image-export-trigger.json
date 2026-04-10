@@ -14,9 +14,10 @@
   },
   "name": "ChartsToolbarImageExportTrigger",
   "imports": [
+    "import { ChartsToolbarImageExportTrigger } from '@mui/x-charts-premium/ChartsToolbarPro';",
+    "import { ChartsToolbarImageExportTrigger } from '@mui/x-charts-premium';",
     "import { ChartsToolbarImageExportTrigger } from '@mui/x-charts-pro/ChartsToolbarPro';",
-    "import { ChartsToolbarImageExportTrigger } from '@mui/x-charts-pro';",
-    "import { ChartsToolbarImageExportTrigger } from '@mui/x-charts-premium';"
+    "import { ChartsToolbarImageExportTrigger } from '@mui/x-charts-pro';"
   ],
   "slots": [],
   "classes": [],

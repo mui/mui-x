@@ -19,8 +19,8 @@
   "name": "FilePart",
   "imports": [
     "import { FilePart } from '@mui/x-chat-headless/message';",
-    "import { FilePart } from '@mui/x-chat-headless';",
-    "import { FilePart } from '@mui/x-chat';"
+    "import { FilePart } from '@mui/x-chat';",
+    "import { FilePart } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "filename", "description": "", "class": null },

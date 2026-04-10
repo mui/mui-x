@@ -87,8 +87,10 @@ export function buildInterfacePages(
       }
     }
 
-    // Build imports
-    const imports = projects.map((p) => `import { ${interfaceName} } from '@mui/${p}';`);
+    // Build imports (premium first, then pro, then community)
+    const imports = [...projects]
+      .reverse()
+      .map((p) => `import { ${interfaceName} } from '@mui/${p}';`);
 
     // Build properties
     const properties: Record<string, any> = {};

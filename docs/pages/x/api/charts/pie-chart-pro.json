@@ -100,9 +100,10 @@
   },
   "name": "PieChartPro",
   "imports": [
+    "import { PieChartPro } from '@mui/x-charts-premium/PieChartPro';",
+    "import { PieChartPro } from '@mui/x-charts-premium';",
     "import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';",
-    "import { PieChartPro } from '@mui/x-charts-pro';",
-    "import { PieChartPro } from '@mui/x-charts-premium';"
+    "import { PieChartPro } from '@mui/x-charts-pro';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

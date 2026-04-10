@@ -2,9 +2,10 @@
   "props": { "render": { "type": { "name": "custom", "description": "ref" } } },
   "name": "ChartsToolbarZoomInTrigger",
   "imports": [
+    "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-premium/ChartsToolbarPro';",
+    "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-premium';",
     "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-pro/ChartsToolbarPro';",
-    "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-pro';",
-    "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-premium';"
+    "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-pro';"
   ],
   "slots": [],
   "classes": [],

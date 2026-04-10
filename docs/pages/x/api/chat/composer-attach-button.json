@@ -9,8 +9,8 @@
   "name": "ComposerAttachButton",
   "imports": [
     "import { ComposerAttachButton } from '@mui/x-chat-headless/composer';",
-    "import { ComposerAttachButton } from '@mui/x-chat-headless';",
-    "import { ComposerAttachButton } from '@mui/x-chat';"
+    "import { ComposerAttachButton } from '@mui/x-chat';",
+    "import { ComposerAttachButton } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "attachButton", "description": "", "class": null },

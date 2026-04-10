@@ -22,10 +22,12 @@
   },
   "name": "LineElement",
   "imports": [
-    "import { LineElement } from '@mui/x-charts/LineChart';",
-    "import { LineElement } from '@mui/x-charts';",
+    "import { LineElement } from '@mui/x-charts-premium/LineChart';",
+    "import { LineElement } from '@mui/x-charts-premium';",
+    "import { LineElement } from '@mui/x-charts-pro/LineChart';",
     "import { LineElement } from '@mui/x-charts-pro';",
-    "import { LineElement } from '@mui/x-charts-premium';"
+    "import { LineElement } from '@mui/x-charts/LineChart';",
+    "import { LineElement } from '@mui/x-charts';"
   ],
   "slots": [
     {

@@ -9,8 +9,8 @@
   "name": "ComposerSendButton",
   "imports": [
     "import { ComposerSendButton } from '@mui/x-chat-headless/composer';",
-    "import { ComposerSendButton } from '@mui/x-chat-headless';",
-    "import { ComposerSendButton } from '@mui/x-chat';"
+    "import { ComposerSendButton } from '@mui/x-chat';",
+    "import { ComposerSendButton } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "sendButton", "description": "", "class": null }],
   "classes": [],

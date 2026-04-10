@@ -55,10 +55,12 @@
   },
   "name": "ChartsXAxis",
   "imports": [
-    "import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';",
-    "import { ChartsXAxis } from '@mui/x-charts';",
+    "import { ChartsXAxis } from '@mui/x-charts-premium/ChartsXAxis';",
+    "import { ChartsXAxis } from '@mui/x-charts-premium';",
+    "import { ChartsXAxis } from '@mui/x-charts-pro/ChartsXAxis';",
     "import { ChartsXAxis } from '@mui/x-charts-pro';",
-    "import { ChartsXAxis } from '@mui/x-charts-premium';"
+    "import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';",
+    "import { ChartsXAxis } from '@mui/x-charts';"
   ],
   "slots": [
     {

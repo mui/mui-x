@@ -121,9 +121,10 @@
   },
   "name": "FunnelChart",
   "imports": [
+    "import { FunnelChart } from '@mui/x-charts-premium/FunnelChart';",
+    "import { FunnelChart } from '@mui/x-charts-premium';",
     "import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';",
-    "import { FunnelChart } from '@mui/x-charts-pro';",
-    "import { FunnelChart } from '@mui/x-charts-premium';"
+    "import { FunnelChart } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

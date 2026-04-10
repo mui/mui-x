@@ -160,10 +160,12 @@
   },
   "name": "ChartsContainer",
   "imports": [
-    "import { ChartsContainer } from '@mui/x-charts/ChartsContainer';",
-    "import { ChartsContainer } from '@mui/x-charts';",
+    "import { ChartsContainer } from '@mui/x-charts-premium/ChartsContainer';",
+    "import { ChartsContainer } from '@mui/x-charts-premium';",
+    "import { ChartsContainer } from '@mui/x-charts-pro/ChartsContainer';",
     "import { ChartsContainer } from '@mui/x-charts-pro';",
-    "import { ChartsContainer } from '@mui/x-charts-premium';"
+    "import { ChartsContainer } from '@mui/x-charts/ChartsContainer';",
+    "import { ChartsContainer } from '@mui/x-charts';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

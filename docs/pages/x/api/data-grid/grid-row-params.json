@@ -1,9 +1,9 @@
 {
   "name": "GridRowParams",
   "imports": [
-    "import { GridRowParams } from '@mui/x-data-grid';",
+    "import { GridRowParams } from '@mui/x-data-grid-premium';",
     "import { GridRowParams } from '@mui/x-data-grid-pro';",
-    "import { GridRowParams } from '@mui/x-data-grid-premium';"
+    "import { GridRowParams } from '@mui/x-data-grid';"
   ],
   "demos": "  - [Master-detail row panels](/x/react-data-grid/master-detail/)",
   "properties": {

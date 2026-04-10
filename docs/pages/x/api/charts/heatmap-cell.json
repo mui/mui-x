@@ -8,9 +8,10 @@
   },
   "name": "HeatmapCell",
   "imports": [
+    "import { HeatmapCell } from '@mui/x-charts-premium/Heatmap';",
+    "import { HeatmapCell } from '@mui/x-charts-premium';",
     "import { HeatmapCell } from '@mui/x-charts-pro/Heatmap';",
-    "import { HeatmapCell } from '@mui/x-charts-pro';",
-    "import { HeatmapCell } from '@mui/x-charts-premium';"
+    "import { HeatmapCell } from '@mui/x-charts-pro';"
   ],
   "slots": [],
   "classes": [],

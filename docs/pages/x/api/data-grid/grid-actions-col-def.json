@@ -1,9 +1,9 @@
 {
   "name": "GridActionsColDef",
   "imports": [
-    "import { GridActionsColDef } from '@mui/x-data-grid';",
+    "import { GridActionsColDef } from '@mui/x-data-grid-premium';",
     "import { GridActionsColDef } from '@mui/x-data-grid-pro';",
-    "import { GridActionsColDef } from '@mui/x-data-grid-premium';"
+    "import { GridActionsColDef } from '@mui/x-data-grid';"
   ],
   "demos": "  - [Special column properties](/x/react-data-grid/column-definition/#special-properties)",
   "properties": {

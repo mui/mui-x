@@ -15,8 +15,8 @@
   "name": "ConversationListItemAvatar",
   "imports": [
     "import { ConversationListItemAvatar } from '@mui/x-chat-headless/conversation-list';",
-    "import { ConversationListItemAvatar } from '@mui/x-chat-headless';",
-    "import { ConversationListItemAvatar } from '@mui/x-chat';"
+    "import { ConversationListItemAvatar } from '@mui/x-chat';",
+    "import { ConversationListItemAvatar } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "image", "description": "", "class": null },

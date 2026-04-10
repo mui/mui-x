@@ -154,8 +154,8 @@
   "name": "TimePicker",
   "imports": [
     "import { TimePicker } from '@mui/x-date-pickers/TimePicker';",
-    "import { TimePicker } from '@mui/x-date-pickers';",
-    "import { TimePicker } from '@mui/x-date-pickers-pro';"
+    "import { TimePicker } from '@mui/x-date-pickers-pro';",
+    "import { TimePicker } from '@mui/x-date-pickers';"
   ],
   "slots": [
     {

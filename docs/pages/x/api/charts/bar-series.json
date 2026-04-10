@@ -1,9 +1,9 @@
 {
   "name": "BarSeries",
   "imports": [
-    "import { BarSeries } from '@mui/x-charts';",
+    "import { BarSeries } from '@mui/x-charts-premium';",
     "import { BarSeries } from '@mui/x-charts-pro';",
-    "import { BarSeries } from '@mui/x-charts-premium';"
+    "import { BarSeries } from '@mui/x-charts';"
   ],
   "properties": {
     "type": { "type": { "description": "'bar'" }, "required": true },

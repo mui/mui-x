@@ -23,8 +23,8 @@
   "name": "LocalizationProvider",
   "imports": [
     "import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';",
-    "import { LocalizationProvider } from '@mui/x-date-pickers';",
-    "import { LocalizationProvider } from '@mui/x-date-pickers-pro';"
+    "import { LocalizationProvider } from '@mui/x-date-pickers-pro';",
+    "import { LocalizationProvider } from '@mui/x-date-pickers';"
   ],
   "slots": [],
   "classes": [],

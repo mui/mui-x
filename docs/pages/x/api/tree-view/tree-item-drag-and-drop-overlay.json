@@ -11,8 +11,8 @@
   "name": "TreeItemDragAndDropOverlay",
   "imports": [
     "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';",
-    "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view';",
-    "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view-pro';"
+    "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view-pro';",
+    "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view';"
   ],
   "slots": [],
   "classes": [],

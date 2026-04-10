@@ -20,9 +20,10 @@
   },
   "name": "FunnelPlot",
   "imports": [
+    "import { FunnelPlot } from '@mui/x-charts-premium/FunnelChart';",
+    "import { FunnelPlot } from '@mui/x-charts-premium';",
     "import { FunnelPlot } from '@mui/x-charts-pro/FunnelChart';",
-    "import { FunnelPlot } from '@mui/x-charts-pro';",
-    "import { FunnelPlot } from '@mui/x-charts-premium';"
+    "import { FunnelPlot } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

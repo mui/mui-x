@@ -15,8 +15,8 @@
   "name": "ConversationListItemContent",
   "imports": [
     "import { ConversationListItemContent } from '@mui/x-chat-headless/conversation-list';",
-    "import { ConversationListItemContent } from '@mui/x-chat-headless';",
-    "import { ConversationListItemContent } from '@mui/x-chat';"
+    "import { ConversationListItemContent } from '@mui/x-chat';",
+    "import { ConversationListItemContent } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],

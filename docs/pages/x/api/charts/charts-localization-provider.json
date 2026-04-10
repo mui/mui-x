@@ -4,10 +4,12 @@
   },
   "name": "ChartsLocalizationProvider",
   "imports": [
-    "import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';",
-    "import { ChartsLocalizationProvider } from '@mui/x-charts';",
+    "import { ChartsLocalizationProvider } from '@mui/x-charts-premium/ChartsLocalizationProvider';",
+    "import { ChartsLocalizationProvider } from '@mui/x-charts-premium';",
+    "import { ChartsLocalizationProvider } from '@mui/x-charts-pro/ChartsLocalizationProvider';",
     "import { ChartsLocalizationProvider } from '@mui/x-charts-pro';",
-    "import { ChartsLocalizationProvider } from '@mui/x-charts-premium';"
+    "import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';",
+    "import { ChartsLocalizationProvider } from '@mui/x-charts';"
   ],
   "slots": [],
   "classes": [],

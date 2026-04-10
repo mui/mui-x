@@ -2,9 +2,10 @@
   "props": {},
   "name": "FocusedHeatmapCell",
   "imports": [
+    "import { FocusedHeatmapCell } from '@mui/x-charts-premium/Heatmap';",
+    "import { FocusedHeatmapCell } from '@mui/x-charts-premium';",
     "import { FocusedHeatmapCell } from '@mui/x-charts-pro/Heatmap';",
-    "import { FocusedHeatmapCell } from '@mui/x-charts-pro';",
-    "import { FocusedHeatmapCell } from '@mui/x-charts-premium';"
+    "import { FocusedHeatmapCell } from '@mui/x-charts-pro';"
   ],
   "slots": [],
   "classes": [],

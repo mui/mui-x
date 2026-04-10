@@ -13,8 +13,8 @@
   "name": "ConversationListRoot",
   "imports": [
     "import { ConversationListRoot } from '@mui/x-chat-headless/conversation-list';",
-    "import { ConversationListRoot } from '@mui/x-chat-headless';",
-    "import { ConversationListRoot } from '@mui/x-chat';"
+    "import { ConversationListRoot } from '@mui/x-chat';",
+    "import { ConversationListRoot } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "item", "description": "", "class": null },

@@ -138,8 +138,8 @@
   "name": "MobileTimePicker",
   "imports": [
     "import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';",
-    "import { MobileTimePicker } from '@mui/x-date-pickers';",
-    "import { MobileTimePicker } from '@mui/x-date-pickers-pro';"
+    "import { MobileTimePicker } from '@mui/x-date-pickers-pro';",
+    "import { MobileTimePicker } from '@mui/x-date-pickers';"
   ],
   "slots": [
     {

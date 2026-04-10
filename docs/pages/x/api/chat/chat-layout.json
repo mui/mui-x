@@ -9,8 +9,8 @@
   "name": "ChatLayout",
   "imports": [
     "import { ChatLayout } from '@mui/x-chat-headless/chat';",
-    "import { ChatLayout } from '@mui/x-chat-headless';",
-    "import { ChatLayout } from '@mui/x-chat';"
+    "import { ChatLayout } from '@mui/x-chat';",
+    "import { ChatLayout } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "conversationsPane", "description": "", "class": null },

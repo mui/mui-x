@@ -9,8 +9,8 @@
   "name": "MessageActions",
   "imports": [
     "import { MessageActions } from '@mui/x-chat-headless/message';",
-    "import { MessageActions } from '@mui/x-chat-headless';",
-    "import { MessageActions } from '@mui/x-chat';"
+    "import { MessageActions } from '@mui/x-chat';",
+    "import { MessageActions } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "actions", "description": "", "class": null }],
   "classes": [],

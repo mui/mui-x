@@ -183,8 +183,8 @@
   "name": "DateTimeField",
   "imports": [
     "import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';",
-    "import { DateTimeField } from '@mui/x-date-pickers';",
-    "import { DateTimeField } from '@mui/x-date-pickers-pro';"
+    "import { DateTimeField } from '@mui/x-date-pickers-pro';",
+    "import { DateTimeField } from '@mui/x-date-pickers';"
   ],
   "slots": [
     {

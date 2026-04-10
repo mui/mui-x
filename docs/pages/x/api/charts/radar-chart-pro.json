@@ -134,9 +134,10 @@
   },
   "name": "RadarChartPro",
   "imports": [
+    "import { RadarChartPro } from '@mui/x-charts-premium/RadarChartPro';",
+    "import { RadarChartPro } from '@mui/x-charts-premium';",
     "import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';",
-    "import { RadarChartPro } from '@mui/x-charts-pro';",
-    "import { RadarChartPro } from '@mui/x-charts-premium';"
+    "import { RadarChartPro } from '@mui/x-charts-pro';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

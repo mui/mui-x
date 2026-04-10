@@ -50,9 +50,10 @@
   },
   "name": "ChartsDataProviderPro",
   "imports": [
+    "import { ChartsDataProviderPro } from '@mui/x-charts-premium/ChartsDataProviderPro';",
+    "import { ChartsDataProviderPro } from '@mui/x-charts-premium';",
     "import { ChartsDataProviderPro } from '@mui/x-charts-pro/ChartsDataProviderPro';",
-    "import { ChartsDataProviderPro } from '@mui/x-charts-pro';",
-    "import { ChartsDataProviderPro } from '@mui/x-charts-premium';"
+    "import { ChartsDataProviderPro } from '@mui/x-charts-pro';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

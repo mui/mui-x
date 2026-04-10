@@ -34,10 +34,12 @@
   },
   "name": "ChartsReferenceLine",
   "imports": [
-    "import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';",
-    "import { ChartsReferenceLine } from '@mui/x-charts';",
+    "import { ChartsReferenceLine } from '@mui/x-charts-premium/ChartsReferenceLine';",
+    "import { ChartsReferenceLine } from '@mui/x-charts-premium';",
+    "import { ChartsReferenceLine } from '@mui/x-charts-pro/ChartsReferenceLine';",
     "import { ChartsReferenceLine } from '@mui/x-charts-pro';",
-    "import { ChartsReferenceLine } from '@mui/x-charts-premium';"
+    "import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';",
+    "import { ChartsReferenceLine } from '@mui/x-charts';"
   ],
   "slots": [],
   "classes": [

@@ -228,8 +228,8 @@
   "name": "DateTimePicker",
   "imports": [
     "import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';",
-    "import { DateTimePicker } from '@mui/x-date-pickers';",
-    "import { DateTimePicker } from '@mui/x-date-pickers-pro';"
+    "import { DateTimePicker } from '@mui/x-date-pickers-pro';",
+    "import { DateTimePicker } from '@mui/x-date-pickers';"
   ],
   "slots": [
     {

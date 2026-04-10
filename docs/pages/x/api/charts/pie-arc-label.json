@@ -19,10 +19,12 @@
   },
   "name": "PieArcLabel",
   "imports": [
-    "import { PieArcLabel } from '@mui/x-charts/PieChart';",
-    "import { PieArcLabel } from '@mui/x-charts';",
+    "import { PieArcLabel } from '@mui/x-charts-premium/PieChart';",
+    "import { PieArcLabel } from '@mui/x-charts-premium';",
+    "import { PieArcLabel } from '@mui/x-charts-pro/PieChart';",
     "import { PieArcLabel } from '@mui/x-charts-pro';",
-    "import { PieArcLabel } from '@mui/x-charts-premium';"
+    "import { PieArcLabel } from '@mui/x-charts/PieChart';",
+    "import { PieArcLabel } from '@mui/x-charts';"
   ],
   "slots": [],
   "classes": [],

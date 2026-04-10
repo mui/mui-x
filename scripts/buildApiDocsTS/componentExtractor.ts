@@ -246,11 +246,25 @@ export function extractComponentApi(
   const muiName = extractMuiName(comp.filePath, comp.name);
 
   // Compute imports
-  const subdir = getSubdirectoryImport(comp.filePath, comp.packageDir);
-  const imports = [
-    `import { ${comp.name} } from '${subdir}';`,
-    ...comp.reExportPackages.map((pkg) => `import { ${comp.name} } from '${pkg}';`),
-  ];
+  const subdirSuffix = getSubdirectoryImportSuffix(comp.filePath, comp.packageDir);
+  const imports: string[] = [];
+  if (comp.section === 'charts') {
+    // Charts: show subdirectory + root import for each package
+    for (const pkg of comp.reExportPackages) {
+      if (subdirSuffix) {
+        imports.push(`import { ${comp.name} } from '${pkg}/${subdirSuffix}';`);
+      }
+      imports.push(`import { ${comp.name} } from '${pkg}';`);
+    }
+  } else {
+    // Other sections: subdirectory import first, then root imports
+    if (subdirSuffix) {
+      imports.push(`import { ${comp.name} } from '${comp.reExportPackages[comp.reExportPackages.length - 1]}/${subdirSuffix}';`);
+    }
+    for (const pkg of comp.reExportPackages) {
+      imports.push(`import { ${comp.name} } from '${pkg}';`);
+    }
+  }
 
   // Handle tree-view special case: RichTreeView not re-exported to pro
   if (comp.name === 'RichTreeView' && comp.packageName === 'x-tree-view') {
@@ -616,15 +630,19 @@ export function htmlEncode(text: string): string {
     .replace(/\[\[(\w+)\]\]/g, (_, name) => name); // Linkification handled later
 }
 
-export function getSubdirectoryImport(filePath: string, packageDir: string): string {
+/**
+ * Get the subdirectory import suffix for a component file.
+ * e.g. src/LineChart/AreaPlot.tsx → "LineChart"
+ * e.g. src/DataGrid/DataGrid.tsx → "DataGrid"
+ * Returns empty string if the component is at the root of src/.
+ */
+export function getSubdirectoryImportSuffix(filePath: string, packageDir: string): string {
   const relativePath = path.relative(path.resolve(CWD, packageDir), filePath).replace(/\\/g, '/');
-  // e.g., src/LineChart/AreaPlot.tsx → @mui/x-charts/LineChart
   const parts = relativePath.replace(/^src\//, '').split('/');
-  const pkgName = `@mui/${path.basename(packageDir)}`;
   if (parts.length > 1) {
-    return `${pkgName}/${parts[0]}`;
+    return parts[0];
   }
-  return `${pkgName}/${parts[0].replace('.tsx', '')}`;
+  return '';
 }
 
 export function getDefaultDemos(comp: DiscoveredComponent): DemoInfo[] {

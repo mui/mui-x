@@ -16,8 +16,8 @@
   "name": "MessageListDateDivider",
   "imports": [
     "import { MessageListDateDivider } from '@mui/x-chat-headless/message-list';",
-    "import { MessageListDateDivider } from '@mui/x-chat-headless';",
-    "import { MessageListDateDivider } from '@mui/x-chat';"
+    "import { MessageListDateDivider } from '@mui/x-chat';",
+    "import { MessageListDateDivider } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "divider", "description": "", "class": null },

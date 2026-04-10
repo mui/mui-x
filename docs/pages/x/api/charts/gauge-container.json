@@ -34,10 +34,12 @@
   },
   "name": "GaugeContainer",
   "imports": [
-    "import { GaugeContainer } from '@mui/x-charts/Gauge';",
-    "import { GaugeContainer } from '@mui/x-charts';",
+    "import { GaugeContainer } from '@mui/x-charts-premium/Gauge';",
+    "import { GaugeContainer } from '@mui/x-charts-premium';",
+    "import { GaugeContainer } from '@mui/x-charts-pro/Gauge';",
     "import { GaugeContainer } from '@mui/x-charts-pro';",
-    "import { GaugeContainer } from '@mui/x-charts-premium';"
+    "import { GaugeContainer } from '@mui/x-charts/Gauge';",
+    "import { GaugeContainer } from '@mui/x-charts';"
   ],
   "slots": [],
   "classes": [],

@@ -13,8 +13,8 @@
   "name": "UnreadMarker",
   "imports": [
     "import { UnreadMarker } from '@mui/x-chat-headless/indicators';",
-    "import { UnreadMarker } from '@mui/x-chat-headless';",
-    "import { UnreadMarker } from '@mui/x-chat';"
+    "import { UnreadMarker } from '@mui/x-chat';",
+    "import { UnreadMarker } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "label", "description": "", "class": null },

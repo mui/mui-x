@@ -1,9 +1,9 @@
 {
   "name": "GridApi",
   "imports": [
-    "import { GridApi } from '@mui/x-data-grid';",
+    "import { GridApi } from '@mui/x-data-grid-premium';",
     "import { GridApi } from '@mui/x-data-grid-pro';",
-    "import { GridApi } from '@mui/x-data-grid-premium';"
+    "import { GridApi } from '@mui/x-data-grid';"
   ],
   "properties": {
     "addRowGroupingCriteria": {

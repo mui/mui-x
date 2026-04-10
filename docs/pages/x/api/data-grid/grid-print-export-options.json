@@ -1,9 +1,9 @@
 {
   "name": "GridPrintExportOptions",
   "imports": [
-    "import { GridPrintExportOptions } from '@mui/x-data-grid';",
+    "import { GridPrintExportOptions } from '@mui/x-data-grid-premium';",
     "import { GridPrintExportOptions } from '@mui/x-data-grid-pro';",
-    "import { GridPrintExportOptions } from '@mui/x-data-grid-premium';"
+    "import { GridPrintExportOptions } from '@mui/x-data-grid';"
   ],
   "demos": "  - [Print export](/x/react-data-grid/export/#print-export)",
   "properties": {

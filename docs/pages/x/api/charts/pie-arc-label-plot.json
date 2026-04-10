@@ -49,10 +49,12 @@
   },
   "name": "PieArcLabelPlot",
   "imports": [
-    "import { PieArcLabelPlot } from '@mui/x-charts/PieChart';",
-    "import { PieArcLabelPlot } from '@mui/x-charts';",
+    "import { PieArcLabelPlot } from '@mui/x-charts-premium/PieChart';",
+    "import { PieArcLabelPlot } from '@mui/x-charts-premium';",
+    "import { PieArcLabelPlot } from '@mui/x-charts-pro/PieChart';",
     "import { PieArcLabelPlot } from '@mui/x-charts-pro';",
-    "import { PieArcLabelPlot } from '@mui/x-charts-premium';"
+    "import { PieArcLabelPlot } from '@mui/x-charts/PieChart';",
+    "import { PieArcLabelPlot } from '@mui/x-charts';"
   ],
   "slots": [{ "name": "pieArcLabel", "description": "", "class": null }],
   "classes": [],

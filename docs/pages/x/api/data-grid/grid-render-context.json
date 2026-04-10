@@ -1,9 +1,9 @@
 {
   "name": "GridRenderContext",
   "imports": [
-    "import { GridRenderContext } from '@mui/x-data-grid';",
+    "import { GridRenderContext } from '@mui/x-data-grid-premium';",
     "import { GridRenderContext } from '@mui/x-data-grid-pro';",
-    "import { GridRenderContext } from '@mui/x-data-grid-premium';"
+    "import { GridRenderContext } from '@mui/x-data-grid';"
   ],
   "properties": {
     "firstColumnIndex": { "type": { "description": "number" }, "required": true },

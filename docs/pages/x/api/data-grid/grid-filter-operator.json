@@ -1,9 +1,9 @@
 {
   "name": "GridFilterOperator",
   "imports": [
-    "import { GridFilterOperator } from '@mui/x-data-grid';",
+    "import { GridFilterOperator } from '@mui/x-data-grid-premium';",
     "import { GridFilterOperator } from '@mui/x-data-grid-pro';",
-    "import { GridFilterOperator } from '@mui/x-data-grid-premium';"
+    "import { GridFilterOperator } from '@mui/x-data-grid';"
   ],
   "demos": "  - [Custom filter operator](/x/react-data-grid/filtering/customization/#create-a-custom-operator)",
   "properties": {

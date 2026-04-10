@@ -73,8 +73,8 @@
   "name": "PickerDay",
   "imports": [
     "import { PickerDay } from '@mui/x-date-pickers/PickerDay';",
-    "import { PickerDay } from '@mui/x-date-pickers';",
-    "import { PickerDay } from '@mui/x-date-pickers-pro';"
+    "import { PickerDay } from '@mui/x-date-pickers-pro';",
+    "import { PickerDay } from '@mui/x-date-pickers';"
   ],
   "slots": [],
   "classes": [

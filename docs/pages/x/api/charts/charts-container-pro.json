@@ -52,9 +52,10 @@
   },
   "name": "ChartsContainerPro",
   "imports": [
+    "import { ChartsContainerPro } from '@mui/x-charts-premium/ChartsContainerPro';",
+    "import { ChartsContainerPro } from '@mui/x-charts-premium';",
     "import { ChartsContainerPro } from '@mui/x-charts-pro/ChartsContainerPro';",
-    "import { ChartsContainerPro } from '@mui/x-charts-pro';",
-    "import { ChartsContainerPro } from '@mui/x-charts-premium';"
+    "import { ChartsContainerPro } from '@mui/x-charts-pro';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

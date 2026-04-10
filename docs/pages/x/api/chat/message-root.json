@@ -11,8 +11,8 @@
   "name": "MessageRoot",
   "imports": [
     "import { MessageRoot } from '@mui/x-chat-headless/message';",
-    "import { MessageRoot } from '@mui/x-chat-headless';",
-    "import { MessageRoot } from '@mui/x-chat';"
+    "import { MessageRoot } from '@mui/x-chat';",
+    "import { MessageRoot } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],

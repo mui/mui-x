@@ -1,9 +1,9 @@
 {
   "name": "GridColDef",
   "imports": [
-    "import { GridColDef } from '@mui/x-data-grid';",
+    "import { GridColDef } from '@mui/x-data-grid-premium';",
     "import { GridColDef } from '@mui/x-data-grid-pro';",
-    "import { GridColDef } from '@mui/x-data-grid-premium';"
+    "import { GridColDef } from '@mui/x-data-grid';"
   ],
   "demos": "  - [Column definition](/x/react-data-grid/column-definition/)",
   "properties": {

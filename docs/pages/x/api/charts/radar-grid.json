@@ -17,10 +17,12 @@
   },
   "name": "RadarGrid",
   "imports": [
-    "import { RadarGrid } from '@mui/x-charts/RadarChart';",
-    "import { RadarGrid } from '@mui/x-charts';",
+    "import { RadarGrid } from '@mui/x-charts-premium/RadarChart';",
+    "import { RadarGrid } from '@mui/x-charts-premium';",
+    "import { RadarGrid } from '@mui/x-charts-pro/RadarChart';",
     "import { RadarGrid } from '@mui/x-charts-pro';",
-    "import { RadarGrid } from '@mui/x-charts-premium';"
+    "import { RadarGrid } from '@mui/x-charts/RadarChart';",
+    "import { RadarGrid } from '@mui/x-charts';"
   ],
   "slots": [],
   "classes": [],

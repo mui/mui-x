@@ -102,9 +102,8 @@
   },
   "name": "ChatProvider",
   "imports": [
-    "import { ChatProvider } from '@mui/x-chat-headless/ChatProvider';",
-    "import { ChatProvider } from '@mui/x-chat-headless';",
-    "import { ChatProvider } from '@mui/x-chat';"
+    "import { ChatProvider } from '@mui/x-chat';",
+    "import { ChatProvider } from '@mui/x-chat-headless';"
   ],
   "slots": [],
   "classes": [],

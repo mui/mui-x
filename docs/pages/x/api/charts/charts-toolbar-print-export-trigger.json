@@ -14,9 +14,10 @@
   },
   "name": "ChartsToolbarPrintExportTrigger",
   "imports": [
+    "import { ChartsToolbarPrintExportTrigger } from '@mui/x-charts-premium/ChartsToolbarPro';",
+    "import { ChartsToolbarPrintExportTrigger } from '@mui/x-charts-premium';",
     "import { ChartsToolbarPrintExportTrigger } from '@mui/x-charts-pro/ChartsToolbarPro';",
-    "import { ChartsToolbarPrintExportTrigger } from '@mui/x-charts-pro';",
-    "import { ChartsToolbarPrintExportTrigger } from '@mui/x-charts-premium';"
+    "import { ChartsToolbarPrintExportTrigger } from '@mui/x-charts-pro';"
   ],
   "slots": [],
   "classes": [],

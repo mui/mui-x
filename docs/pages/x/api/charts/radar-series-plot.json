@@ -23,10 +23,12 @@
   },
   "name": "RadarSeriesPlot",
   "imports": [
-    "import { RadarSeriesPlot } from '@mui/x-charts/RadarChart';",
-    "import { RadarSeriesPlot } from '@mui/x-charts';",
+    "import { RadarSeriesPlot } from '@mui/x-charts-premium/RadarChart';",
+    "import { RadarSeriesPlot } from '@mui/x-charts-premium';",
+    "import { RadarSeriesPlot } from '@mui/x-charts-pro/RadarChart';",
     "import { RadarSeriesPlot } from '@mui/x-charts-pro';",
-    "import { RadarSeriesPlot } from '@mui/x-charts-premium';"
+    "import { RadarSeriesPlot } from '@mui/x-charts/RadarChart';",
+    "import { RadarSeriesPlot } from '@mui/x-charts';"
   ],
   "slots": [],
   "classes": [],

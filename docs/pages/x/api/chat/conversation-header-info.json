@@ -9,8 +9,8 @@
   "name": "ConversationHeaderInfo",
   "imports": [
     "import { ConversationHeaderInfo } from '@mui/x-chat-headless/conversation';",
-    "import { ConversationHeaderInfo } from '@mui/x-chat-headless';",
-    "import { ConversationHeaderInfo } from '@mui/x-chat';"
+    "import { ConversationHeaderInfo } from '@mui/x-chat';",
+    "import { ConversationHeaderInfo } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "headerInfo", "description": "", "class": null }],
   "classes": [],

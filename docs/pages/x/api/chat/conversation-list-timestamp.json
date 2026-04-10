@@ -15,8 +15,8 @@
   "name": "ConversationListTimestamp",
   "imports": [
     "import { ConversationListTimestamp } from '@mui/x-chat-headless/conversation-list';",
-    "import { ConversationListTimestamp } from '@mui/x-chat-headless';",
-    "import { ConversationListTimestamp } from '@mui/x-chat';"
+    "import { ConversationListTimestamp } from '@mui/x-chat';",
+    "import { ConversationListTimestamp } from '@mui/x-chat-headless';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],

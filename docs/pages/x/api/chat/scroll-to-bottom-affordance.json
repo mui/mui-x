@@ -17,8 +17,8 @@
   "name": "ScrollToBottomAffordance",
   "imports": [
     "import { ScrollToBottomAffordance } from '@mui/x-chat-headless/indicators';",
-    "import { ScrollToBottomAffordance } from '@mui/x-chat-headless';",
-    "import { ScrollToBottomAffordance } from '@mui/x-chat';"
+    "import { ScrollToBottomAffordance } from '@mui/x-chat';",
+    "import { ScrollToBottomAffordance } from '@mui/x-chat-headless';"
   ],
   "slots": [
     { "name": "badge", "description": "", "class": null },

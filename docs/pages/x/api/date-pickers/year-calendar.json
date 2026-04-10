@@ -79,8 +79,8 @@
   "name": "YearCalendar",
   "imports": [
     "import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';",
-    "import { YearCalendar } from '@mui/x-date-pickers';",
-    "import { YearCalendar } from '@mui/x-date-pickers-pro';"
+    "import { YearCalendar } from '@mui/x-date-pickers-pro';",
+    "import { YearCalendar } from '@mui/x-date-pickers';"
   ],
   "slots": [
     {

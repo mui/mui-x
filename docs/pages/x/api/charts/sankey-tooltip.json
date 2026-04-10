@@ -33,9 +33,10 @@
   },
   "name": "SankeyTooltip",
   "imports": [
+    "import { SankeyTooltip } from '@mui/x-charts-premium/SankeyChart';",
+    "import { SankeyTooltip } from '@mui/x-charts-premium';",
     "import { SankeyTooltip } from '@mui/x-charts-pro/SankeyChart';",
-    "import { SankeyTooltip } from '@mui/x-charts-pro';",
-    "import { SankeyTooltip } from '@mui/x-charts-premium';"
+    "import { SankeyTooltip } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

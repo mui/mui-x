@@ -49,10 +49,12 @@
   },
   "name": "PieArcPlot",
   "imports": [
-    "import { PieArcPlot } from '@mui/x-charts/PieChart';",
-    "import { PieArcPlot } from '@mui/x-charts';",
+    "import { PieArcPlot } from '@mui/x-charts-premium/PieChart';",
+    "import { PieArcPlot } from '@mui/x-charts-premium';",
+    "import { PieArcPlot } from '@mui/x-charts-pro/PieChart';",
     "import { PieArcPlot } from '@mui/x-charts-pro';",
-    "import { PieArcPlot } from '@mui/x-charts-premium';"
+    "import { PieArcPlot } from '@mui/x-charts/PieChart';",
+    "import { PieArcPlot } from '@mui/x-charts';"
   ],
   "slots": [{ "name": "pieArc", "description": "", "class": null }],
   "classes": [],
