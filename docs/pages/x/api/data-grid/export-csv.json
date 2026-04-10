@@ -33,6 +33,7 @@
   "slots": [],
   "classes": [],
   "muiName": "MuiExportCsv",
+  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/export/ExportCsv.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/components/export\">Data Grid - Export component</a></li></ul>",

@@ -39,6 +39,7 @@
   "slots": [],
   "classes": [],
   "muiName": "MuiGridFilterPanel",
+  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/panel/filterPanel/GridFilterPanel.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a> <span class=\"plan-pro\"></span></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a> <span class=\"plan-premium\"></span></li></ul>",

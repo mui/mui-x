@@ -185,7 +185,10 @@
     }
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiSingleInputTimeRangeField",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/SingleInputTimeRangeField/SingleInputTimeRangeField.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-field/\">Time Range Field <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",

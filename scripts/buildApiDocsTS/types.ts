@@ -57,6 +57,7 @@ export interface PackageConfig {
   skipComponent?: (componentName: string, filePath: string) => boolean;
   includeUnstable?: boolean;
   reExportPackages: string[];
+  defaultForwardsRefTo?: string;
 }
 
 export interface ComponentApi {
@@ -114,6 +115,7 @@ export interface DiscoveredComponent {
   packageDir: string;
   section: string;
   reExportPackages: string[];
+  defaultForwardsRefTo?: string;
 }
 
 export interface DemoInfo {

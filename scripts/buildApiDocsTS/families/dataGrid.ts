@@ -36,6 +36,7 @@ const COMPONENTS: Record<string, Set<string>> = {
 export const dataGridFamily: ProductFamily = {
   section: 'data-grid',
   packages: ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'],
+  defaultForwardsRefTo: 'GridRoot',
   skipComponent: (name, filePath) => {
     let pkg = 'x-data-grid';
     if (filePath.includes('/x-data-grid-premium/')) {

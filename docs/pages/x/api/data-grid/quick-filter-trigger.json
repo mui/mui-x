@@ -28,6 +28,7 @@
   "slots": [],
   "classes": [],
   "muiName": "MuiQuickFilterTrigger",
+  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilterTrigger.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/components/quick-filter\">Data Grid - Quick Filter component</a></li></ul>",

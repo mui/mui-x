@@ -51,6 +51,8 @@ export interface ProductFamily {
   skipComponent?: (componentName: string, filePath: string) => boolean;
   /** Props whose types should not be expanded (kept as "object" or "arrayOf object") */
   unresolvedProps?: string[];
+  /** Default forwardsRefTo when no conformance test is found */
+  defaultForwardsRefTo?: string;
   /** Interfaces to document */
   interfaces?: {
     /** Extra packages to search beyond the family packages (e.g. x-data-grid-generator) */
@@ -114,6 +116,7 @@ export function getPackageConfigs(): PackageConfig[] {
         includeUnstable: family.includeUnstable,
         skipComponent: family.skipComponent,
         reExportPackages: getReExportPackages(pkg, family),
+        defaultForwardsRefTo: family.defaultForwardsRefTo,
       });
     }
   }

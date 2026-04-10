@@ -33,6 +33,7 @@
   "slots": [],
   "classes": [],
   "muiName": "MuiExportPrint",
+  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/export/ExportPrint.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/components/export\">Data Grid - Export component</a></li></ul>",

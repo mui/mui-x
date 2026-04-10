@@ -279,7 +279,10 @@
     }
   ],
   "classes": [],
+  "spread": false,
+  "themeDefaultProps": false,
   "muiName": "MuiDesktopTimePicker",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DesktopTimePicker/DesktopTimePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",

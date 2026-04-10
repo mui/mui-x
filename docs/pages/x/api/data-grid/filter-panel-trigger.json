@@ -28,6 +28,7 @@
   "slots": [],
   "classes": [],
   "muiName": "MuiFilterPanelTrigger",
+  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/filterPanel/FilterPanelTrigger.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-data-grid/components/filter-panel\">Data Grid - Filter Panel component 🚧</a></li></ul>",

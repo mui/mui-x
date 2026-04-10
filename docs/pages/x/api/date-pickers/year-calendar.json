@@ -116,7 +116,10 @@
       "isGlobal": true
     }
   ],
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiYearCalendar",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",

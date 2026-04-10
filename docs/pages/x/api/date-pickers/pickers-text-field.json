@@ -162,7 +162,10 @@
       "isGlobal": true
     }
   ],
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiPickersTextField",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/PickersTextField/PickersTextField.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-field/\">Custom field</a></li></ul>",

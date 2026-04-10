@@ -198,7 +198,10 @@
     }
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiDateField",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateField/DateField.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-field/\">Date Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",

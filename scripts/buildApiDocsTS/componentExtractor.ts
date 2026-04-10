@@ -300,9 +300,11 @@ export function extractComponentApi(
     classDescriptions,
   };
 
-  // Add conformance test info if available
+  // Add conformance test info if available, fall back to family default
   if (conformance.forwardsRefTo !== undefined) {
     result.forwardsRefTo = conformance.forwardsRefTo;
+  } else if (comp.defaultForwardsRefTo) {
+    result.forwardsRefTo = comp.defaultForwardsRefTo;
   }
   if (conformance.spread !== undefined) {
     result.spread = conformance.spread;
@@ -575,18 +577,29 @@ export function parseConformanceTest(componentFilePath: string): ConformanceInfo
   const dir = path.dirname(componentFilePath);
   const baseName = path.basename(componentFilePath, '.tsx');
 
-  // Look for test files
-  const testPatterns = [
-    path.join(dir, `${baseName}.test.tsx`),
-    path.join(dir, `${baseName}.test.ts`),
-    path.join(dir, 'tests', `${baseName}.test.tsx`),
-    path.join(dir, '..', `${baseName}.test.tsx`),
-  ];
+  // Search for test files in various locations, including describeConformance.*.test.tsx
+  const pkgSrc = dir.replace(/\/src\/.*/, '/src');
+  const candidateDirs = [dir, path.join(dir, 'tests'), path.join(dir, '..'), path.join(pkgSrc, 'tests')];
 
   let testContent: string | undefined;
-  for (const testPath of testPatterns) {
-    if (fs.existsSync(testPath)) {
-      testContent = fs.readFileSync(testPath, 'utf8');
+  for (const testDir of candidateDirs) {
+    if (!fs.existsSync(testDir) || !fs.statSync(testDir).isDirectory()) {
+      continue;
+    }
+    for (const file of fs.readdirSync(testDir)) {
+      if (file.endsWith(`${baseName}.test.tsx`) || file.endsWith(`${baseName}.test.ts`)) {
+        const candidate = fs.readFileSync(path.join(testDir, file), 'utf8');
+        if (candidate.includes('describeConformance')) {
+          testContent = candidate;
+          break;
+        }
+        // Keep first test file as fallback
+        if (!testContent) {
+          testContent = candidate;
+        }
+      }
+    }
+    if (testContent?.includes('describeConformance')) {
       break;
     }
   }
@@ -594,22 +607,17 @@ export function parseConformanceTest(componentFilePath: string): ConformanceInfo
     return {};
   }
 
-  // Check for describeConformance
-  const conformanceMatch = testContent.match(
-    /describeConformance\b[\s\S]*?\(\s*[\s\S]*?,\s*\(\)\s*=>\s*\(\s*\{([\s\S]*?)\}\s*\)/,
-  );
-  if (!conformanceMatch) {
+  if (!testContent.includes('describeConformance')) {
     return {};
   }
 
-  const block = conformanceMatch[1];
-
-  // Extract refInstanceof
-  const refMatch = block.match(/refInstanceof:\s*window\.(\w+)/);
+  // Extract refInstanceof directly from the file (regex on the full block is fragile
+  // because conformance callbacks can contain deeply nested JSX/objects)
+  const refMatch = testContent.match(/refInstanceof:\s*window\.(\w+)/);
   const forwardsRefTo = refMatch?.[1];
 
   // Extract skip array
-  const skipMatch = block.match(/skip:\s*\[([\s\S]*?)\]/);
+  const skipMatch = testContent.match(/skip:\s*\[([\s\S]*?)\]/);
   const skipContent = skipMatch?.[1] || '';
   const skippedTests = skipContent.match(/'([^']+)'/g)?.map((s) => s.replace(/'/g, '')) || [];
 

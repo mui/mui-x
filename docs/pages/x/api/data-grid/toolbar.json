@@ -12,6 +12,7 @@
   "slots": [],
   "classes": [],
   "muiName": "MuiDataGrid",
+  "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/toolbarV8/Toolbar.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li>\n<li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar component</a></li></ul>",
