@@ -3,6 +3,7 @@ import { useSeries } from '../hooks/useSeries';
 import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
 import { type SeriesId } from '../models/seriesType/common';
 import {
+  type ChartSeriesDefaultized,
   type CartesianChartSeriesType,
   type ChartsSeriesConfig,
   type PolarChartSeriesType,
@@ -33,6 +34,7 @@ import {
   type ComposableCartesianChartSeriesType,
   composableCartesianSeriesTypes,
 } from '../models/seriesType/composition';
+import type { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 
 export interface UseAxesTooltipReturnValue<
   SeriesType extends CartesianChartSeriesType | PolarChartSeriesType =
@@ -156,82 +158,92 @@ export function useAxesTooltip<
     });
   }
 
-  Object.keys(series)
-    .filter((seriesType): seriesType is ComposableCartesianChartSeriesType =>
-      composableCartesianSeriesTypes.has(seriesType as ComposableCartesianChartSeriesType),
-    )
-    .forEach(<Type extends ComposableCartesianChartSeriesType>(seriesType: Type) => {
-      const seriesOfType = series[seriesType];
-      if (!seriesOfType) {
-        return [];
-      }
-      return seriesOfType.seriesOrder.forEach((seriesId) => {
-        const seriesToAdd = seriesOfType.series[seriesId]!;
+  const isCartesianContext = xAxis !== undefined || yAxis !== undefined;
 
-        // Skip hidden series (only if visibility manager is available)
-        if (isItemVisible && !isItemVisible({ type: seriesType, seriesId })) {
-          return;
+  if (isCartesianContext) {
+    Object.keys(series)
+      .filter((seriesType): seriesType is ComposableCartesianChartSeriesType =>
+        composableCartesianSeriesTypes.has(seriesType as ComposableCartesianChartSeriesType),
+      )
+      .forEach(<Type extends ComposableCartesianChartSeriesType>(seriesType: Type) => {
+        const seriesOfType = series[seriesType] as ProcessedSeries<Type, 'cartesian'>[Type];
+        if (!seriesOfType) {
+          return [];
         }
+        return seriesOfType.seriesOrder.forEach((seriesId) => {
+          const seriesToAdd = seriesOfType.series[seriesId] as ChartSeriesDefaultized<
+            Type,
+            'cartesian'
+          >;
 
-        const providedXAxisId = seriesToAdd.xAxisId ?? defaultXAxis.id;
-        const providedYAxisId = seriesToAdd.yAxisId ?? defaultYAxis.id;
-
-        const tooltipItemIndex = tooltipAxes.findIndex(
-          ({ axisDirection, axisId }) =>
-            (axisDirection === 'x' && axisId === providedXAxisId) ||
-            (axisDirection === 'y' && axisId === providedYAxisId),
-        );
-        // Test if the series uses the default axis
-        if (tooltipItemIndex >= 0) {
-          const zAxisId = 'zAxisId' in seriesToAdd ? seriesToAdd.zAxisId : zAxisIds[0];
-          const { dataIndex } = tooltipAxes[tooltipItemIndex];
-          const color =
-            colorProcessors[seriesType]?.(
-              seriesToAdd,
-              xAxis[providedXAxisId],
-              yAxis[providedYAxisId],
-              zAxisId ? zAxis[zAxisId] : undefined,
-            )(dataIndex) ?? '';
-
-          const rawValue = seriesToAdd.data[dataIndex] ?? null;
-          const formattedLabel = getLabel(seriesToAdd.label, 'tooltip') ?? null;
-
-          let value: any;
-          let formattedValue: any;
-
-          if (seriesType === 'ohlc' && Array.isArray(rawValue)) {
-            const [open, high, low, close] = rawValue as [number, number, number, number];
-            const formatter = seriesToAdd.valueFormatter as any;
-            value = { open, high, low, close };
-            formattedValue = {
-              open: formatter(open, { dataIndex, field: 'open' }),
-              high: formatter(high, { dataIndex, field: 'high' }),
-              low: formatter(low, { dataIndex, field: 'low' }),
-              close: formatter(close, { dataIndex, field: 'close' }),
-            };
-          } else {
-            value = rawValue;
-            formattedValue = (seriesToAdd.valueFormatter as any)(rawValue, {
-              dataIndex,
-            });
+          // Skip hidden series (only if visibility manager is available)
+          if (isItemVisible && !isItemVisible({ type: seriesType, seriesId })) {
+            return;
           }
 
-          tooltipAxes[tooltipItemIndex].seriesItems.push({
-            seriesId,
-            color,
-            value,
-            formattedValue,
-            formattedLabel,
-            markType: seriesToAdd.labelMarkType,
-            markShape:
-              'showMark' in seriesToAdd && seriesToAdd.showMark
-                ? (seriesToAdd.shape ?? 'circle')
-                : undefined,
-          });
-        }
-      });
-    });
+          const providedXAxisId = seriesToAdd.xAxisId ?? defaultXAxis.id;
+          const providedYAxisId = seriesToAdd.yAxisId ?? defaultYAxis.id;
 
+          const tooltipItemIndex = tooltipAxes.findIndex(
+            ({ axisDirection, axisId }) =>
+              (axisDirection === 'x' && axisId === providedXAxisId) ||
+              (axisDirection === 'y' && axisId === providedYAxisId),
+          );
+          // Test if the series uses the default axis
+          if (tooltipItemIndex >= 0) {
+            const zAxisId = 'zAxisId' in seriesToAdd ? seriesToAdd.zAxisId : zAxisIds[0];
+            const { dataIndex } = tooltipAxes[tooltipItemIndex];
+            const color =
+              colorProcessors[seriesType]?.(
+                seriesToAdd,
+                xAxis[providedXAxisId],
+                yAxis[providedYAxisId],
+                zAxisId ? zAxis[zAxisId] : undefined,
+              )(dataIndex) ?? '';
+
+            const rawValue = seriesToAdd.data[dataIndex] ?? null;
+            const formattedLabel = getLabel(seriesToAdd.label, 'tooltip') ?? null;
+
+            let value: any;
+            let formattedValue: any;
+
+            if (seriesType === 'ohlc' && Array.isArray(rawValue)) {
+              const [open, high, low, close] = rawValue as [number, number, number, number];
+              const formatter = seriesToAdd.valueFormatter as any;
+              value = { open, high, low, close };
+              formattedValue = {
+                open: formatter(open, { dataIndex, field: 'open' }),
+                high: formatter(high, { dataIndex, field: 'high' }),
+                low: formatter(low, { dataIndex, field: 'low' }),
+                close: formatter(close, { dataIndex, field: 'close' }),
+              };
+            } else {
+              value = rawValue;
+              formattedValue = (seriesToAdd.valueFormatter as any)(rawValue, {
+                dataIndex,
+              });
+            }
+
+            tooltipAxes[tooltipItemIndex].seriesItems.push({
+              seriesId,
+              color,
+              value,
+              formattedValue,
+              formattedLabel,
+              markType: seriesToAdd.labelMarkType,
+              markShape:
+                'showMark' in seriesToAdd && seriesToAdd.showMark
+                  ? (seriesToAdd.shape ?? 'circle')
+                  : undefined,
+            });
+          }
+        });
+      });
+
+    return tooltipAxes as UseAxesTooltipReturnValue<SeriesType>[];
+  }
+
+  // For polar charts
   Object.keys(series)
     .filter(isPolarSeriesType)
     .forEach(<Type extends PolarChartSeriesType>(seriesType: Type) => {
@@ -278,6 +290,5 @@ export function useAxesTooltip<
         }
       });
     });
-
   return tooltipAxes as UseAxesTooltipReturnValue<SeriesType>[];
 }

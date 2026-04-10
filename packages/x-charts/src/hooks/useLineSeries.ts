@@ -4,8 +4,8 @@ import { type SeriesId } from '../models/seriesType/common';
 import { type ChartSeriesDefaultized } from '../models/seriesType/config';
 import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
 
-export type UseLineSeriesReturnValue = ChartSeriesDefaultized<'line'>;
-export type UseLineSeriesContextReturnValue = ProcessedSeries['line'];
+export type UseLineSeriesReturnValue<AxisType extends 'cartesian' | 'polar'> = ChartSeriesDefaultized<'line', AxisType>;
+export type UseLineSeriesContextReturnValue<AxisType extends 'cartesian' | 'polar'> = ProcessedSeries<'line', AxisType>['line'];
 
 /**
  * Get access to the internal state of line series.
@@ -13,7 +13,7 @@ export type UseLineSeriesContextReturnValue = ProcessedSeries['line'];
  * @param {SeriesId} seriesId The id of the series to get.
  * @returns {UseLineSeriesReturnValue} the line series
  */
-export function useLineSeries(seriesId: SeriesId): UseLineSeriesReturnValue | undefined;
+export function useLineSeries<AxisType extends 'cartesian' | 'polar' = 'cartesian'>(seriesId: SeriesId): UseLineSeriesReturnValue<AxisType> | undefined;
 /**
  * Get access to the internal state of line series.
  *
@@ -21,14 +21,14 @@ export function useLineSeries(seriesId: SeriesId): UseLineSeriesReturnValue | un
  *
  * @returns {UseLineSeriesReturnValue[]} the line series
  */
-export function useLineSeries(): UseLineSeriesReturnValue[];
+export function useLineSeries<AxisType extends 'cartesian' | 'polar' = 'cartesian'>(): UseLineSeriesReturnValue<AxisType>[];
 /**
  * Get access to the internal state of line series.
  *
  * @param {SeriesId[]} seriesIds The ids of the series to get. Order is preserved.
  * @returns {UseLineSeriesReturnValue[]} the line series
  */
-export function useLineSeries(seriesIds: SeriesId[]): UseLineSeriesReturnValue[];
+export function useLineSeries<AxisType extends 'cartesian' | 'polar' = 'cartesian'>(seriesIds: SeriesId[]): UseLineSeriesReturnValue<AxisType>[];
 export function useLineSeries(seriesIds?: SeriesId | SeriesId[]) {
   return useSeriesOfType('line', seriesIds);
 }
@@ -41,6 +41,6 @@ export function useLineSeries(seriesIds?: SeriesId | SeriesId[]) {
  * - stackingGroups: the array of stacking groups. Each group contains the series ids stacked and the strategy to use.
  * @returns the line series
  */
-export function useLineSeriesContext(): UseLineSeriesContextReturnValue {
+export function useLineSeriesContext<AxisType extends 'cartesian' | 'polar' = 'cartesian'>(): UseLineSeriesContextReturnValue<AxisType> {
   return useAllSeriesOfType('line');
 }

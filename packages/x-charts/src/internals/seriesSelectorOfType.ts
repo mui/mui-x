@@ -1,7 +1,7 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { type ChartSeriesDefaultized, type ChartsSeriesConfig } from '../models/seriesType/config';
-import { type SeriesId } from '../models/seriesType/common';
+import type { ChartSeriesType, ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
+import type { SeriesId } from '../models/seriesType/common';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries';
 import { useStore } from './store/useStore';
@@ -53,18 +53,18 @@ export const selectorSeriesOfType = createSelectorMemoized(
   },
 );
 
-export const useAllSeriesOfType = <T extends keyof ChartsSeriesConfig>(seriesType: T) => {
+export const useAllSeriesOfType = <T extends ChartSeriesType, AxisType extends 'cartesian' | 'polar' = any>(seriesType: T) => {
   const store = useStore();
-  return store.use(selectorAllSeriesOfType, seriesType) as ProcessedSeries[T];
+  return store.use(selectorAllSeriesOfType, seriesType) as ProcessedSeries<T, AxisType>[T];
 };
 
-export const useSeriesOfType = <T extends keyof ChartsSeriesConfig>(
+export const useSeriesOfType = <T extends ChartSeriesType, AxisType extends 'cartesian' | 'polar' = any>(
   seriesType: T,
   seriesId?: SeriesId | SeriesId[],
 ) => {
   const store = useStore();
   return store.use(selectorSeriesOfType, seriesType, seriesId) as
-    | ChartSeriesDefaultized<T>
-    | ChartSeriesDefaultized<T>[]
+    | ChartSeriesDefaultized<T, AxisType>
+    | ChartSeriesDefaultized<T, AxisType>[]
     | undefined;
 };

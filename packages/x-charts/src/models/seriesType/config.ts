@@ -5,7 +5,7 @@ import type {
   ScatterItemIdentifier,
   ScatterValueType,
 } from './scatter';
-import type { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
+import type { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier, RadialLineSeriesType, DefaultizedRadialLineSeriesType } from './line';
 import type { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import type {
   PieSeriesType,
@@ -32,7 +32,7 @@ export interface ChartsSeriesConfig {
      * Series type when passed to the formatter (some ids are given default values to simplify the DX)
      */
     seriesInput: DefaultizedProps<BarSeriesType, 'id'> &
-      MakeRequired<SeriesColor<number | null>, 'color'>;
+    MakeRequired<SeriesColor<number | null>, 'color'>;
     /**
      * Series type when stored in the context (with all the preprocessing added))
      */
@@ -56,7 +56,7 @@ export interface ChartsSeriesConfig {
     itemIdentifierWithData: BarItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
-    axisType: 'cartesian' | 'polar';
+    axisType: 'cartesian';
     highlightScope: CommonHighlightScope;
     descriptionGetterParams: {
       identifier: BarItemIdentifier;
@@ -72,7 +72,7 @@ export interface ChartsSeriesConfig {
   };
   line: {
     seriesInput: DefaultizedProps<LineSeriesType, 'id'> &
-      MakeRequired<SeriesColor<number | null>, 'color'>;
+    MakeRequired<SeriesColor<number | null>, 'color'>;
     series: DefaultizedLineSeriesType;
     seriesLayout: {};
     seriesProp: LineSeriesType;
@@ -80,7 +80,7 @@ export interface ChartsSeriesConfig {
     itemIdentifierWithData: LineItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
-    axisType: 'cartesian' | 'polar';
+    axisType: 'cartesian';
     highlightScope: CommonHighlightScope;
     descriptionGetterParams: {
       identifier: LineItemIdentifier;
@@ -93,10 +93,33 @@ export interface ChartsSeriesConfig {
       seriesId: SeriesId;
       dataIndex?: number;
     };
+  } | {
+    seriesInput: DefaultizedProps<RadialLineSeriesType, 'id'> &
+    MakeRequired<SeriesColor<number | null>, 'color'>;
+    series: DefaultizedRadialLineSeriesType;
+    seriesLayout: {};
+    seriesProp: RadialLineSeriesType;
+    itemIdentifier: LineItemIdentifier;
+    itemIdentifierWithData: LineItemIdentifier;
+    valueType: number | null;
+    canBeStacked: true;
+    axisType: 'polar';
+    highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: LineItemIdentifier;
+      xAxis: ComputedXAxis;
+      yAxis: ComputedYAxis;
+      series: DefaultizedRadialLineSeriesType;
+    };
+    highlightIdentifier: {
+      type: 'line';
+      seriesId: SeriesId;
+      dataIndex?: number;
+    };
   };
   scatter: {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
-      MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
+    MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
     series: DefaultizedScatterSeriesType;
     seriesLayout: {};
     seriesProp: ScatterSeriesType;
@@ -142,7 +165,7 @@ export interface ChartsSeriesConfig {
   };
   radar: {
     seriesInput: DefaultizedProps<RadarSeriesType, 'id'> &
-      MakeRequired<SeriesColor<number>, 'color'>;
+    MakeRequired<SeriesColor<number>, 'color'>;
     series: DefaultizedRadarSeriesType;
     seriesLayout: {};
     seriesProp: RadarSeriesType;
@@ -174,10 +197,10 @@ export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
     [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: infer A }
-      ? 'cartesian' extends A
-        ? Key
-        : never
-      : never;
+    ? 'cartesian' extends A
+    ? Key
+    : never
+    : never;
   }[ChartSeriesType]
 >;
 
@@ -188,18 +211,18 @@ export type CartesianChartSeriesType = keyof Pick<
  */
 export type SeriesTypeWithDataIndex = {
   [K in ChartSeriesType]: 'dataIndex' extends keyof ChartsSeriesConfig[K]['itemIdentifier']
-    ? K
-    : never;
+  ? K
+  : never;
 }[ChartSeriesType];
 
 export type PolarChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
     [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: infer A }
-      ? 'polar' extends A
-        ? Key
-        : never
-      : never;
+    ? 'polar' extends A
+    ? Key
+    : never
+    : never;
   }[ChartSeriesType]
 >;
 
@@ -210,23 +233,25 @@ export type StackableChartSeriesType = keyof Pick<
   }[ChartSeriesType]
 >;
 
-export type ChartSeries<SeriesType extends ChartSeriesType> =
-  ChartsSeriesConfig[SeriesType]['seriesInput'];
+export type ChartSeries<SeriesType extends ChartSeriesType, AxisType extends 'cartesian' | 'polar' = any> =
+  (AxisType extends 'cartesian' | 'polar' ? Extract<ChartsSeriesConfig[SeriesType], { axisType: AxisType }>['seriesInput'] : ChartsSeriesConfig[SeriesType]['seriesInput']);
 
-export type ChartSeriesDefaultized<SeriesType extends ChartSeriesType> =
-  ChartsSeriesConfig[SeriesType] extends {
+export type ChartSeriesDefaultized<SeriesType extends ChartSeriesType, AxisType extends 'cartesian' | 'polar' = any> =
+  (AxisType extends 'cartesian' | 'polar' ? Extract<ChartsSeriesConfig[SeriesType], { axisType: AxisType }>['series'] : ChartsSeriesConfig[SeriesType]['series']) &
+  (ChartsSeriesConfig[SeriesType] extends {
     canBeStacked: true;
   }
-    ? ChartsSeriesConfig[SeriesType]['series'] & {
-        visibleStackedData: [number, number][];
-        stackedData: [number, number][];
-      }
-    : ChartsSeriesConfig[SeriesType]['series'];
+    ? {
+      visibleStackedData: [number, number][];
+
+      stackedData: [number, number][];
+    }
+    : {});
 
 export type ChartSeriesLayout<SeriesType extends ChartSeriesType> =
   ChartsSeriesConfig[SeriesType] extends any
-    ? ChartsSeriesConfig[SeriesType]['seriesLayout']
-    : never;
+  ? ChartsSeriesConfig[SeriesType]['seriesLayout']
+  : never;
 
 export type DatasetElementType<T> = {
   [key: string]: T;
@@ -235,5 +260,5 @@ export type DatasetType<T = unknown> = DatasetElementType<T>[];
 
 export type HighlightScope<SeriesType extends ChartSeriesType> =
   ChartsSeriesConfig[SeriesType] extends any
-    ? ChartsSeriesConfig[SeriesType]['highlightScope']
-    : never;
+  ? ChartsSeriesConfig[SeriesType]['highlightScope']
+  : never;

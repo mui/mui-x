@@ -4,7 +4,7 @@ import type {
   TooltipGetter,
 } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
-const tooltipGetter: TooltipGetter<'line'> = (params) => {
+const tooltipGetter: TooltipGetter<'line', 'cartesian'> = (params) => {
   const { series, getColor, identifier } = params;
 
   if (!identifier || identifier.dataIndex === undefined) {

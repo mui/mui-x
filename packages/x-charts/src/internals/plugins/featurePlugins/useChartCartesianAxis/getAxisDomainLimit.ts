@@ -7,7 +7,7 @@ export const getAxisDomainLimit = <T extends CartesianChartSeriesType>(
   axis: Pick<AxisConfig, 'id' | 'domainLimit'>,
   axisDirection: 'x' | 'y',
   axisIndex: number,
-  formattedSeries: ProcessedSeries<T | 'line'>,
+  formattedSeries: ProcessedSeries<T | 'line', 'cartesian'>,
 ):
   | 'nice'
   | 'strict'

@@ -13,7 +13,7 @@ const axisExtremumCallback = <SeriesType extends CartesianChartSeriesType>(
   chartType: SeriesType,
   axis: AxisConfig,
   axisDirection: 'x' | 'y',
-  seriesConfig: ChartSeriesConfig<SeriesType>,
+  seriesConfig: ChartSeriesConfig<SeriesType, 'cartesian'>,
   axisIndex: number,
   formattedSeries: ProcessedSeries<SeriesType>,
   getFilters?: GetZoomAxisFilters,

@@ -154,7 +154,7 @@ export default function getItemAtPosition(
 
   const { axis: xAxes, axisIds: xAxisIds } = selectorChartXAxis(state);
   const { axis: yAxes, axisIds: yAxisIds } = selectorChartYAxis(state);
-  const series = selectorAllSeriesOfType(state, 'line') as ProcessedSeries['line'];
+  const series = selectorAllSeriesOfType(state, 'line') as ProcessedSeries<'line', 'cartesian'>['line'];
 
   if (!series || series.seriesOrder.length === 0) {
     return undefined;

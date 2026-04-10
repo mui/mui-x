@@ -11,6 +11,6 @@ export function isCartesianSeriesType(seriesType: string): seriesType is Cartesi
 
 export function isCartesianSeries(
   series: ChartSeriesDefaultized<ChartSeriesType>,
-): series is ChartSeriesDefaultized<CartesianChartSeriesType> {
+): series is ChartSeriesDefaultized<CartesianChartSeriesType, 'cartesian'> {
   return isCartesianSeriesType(series.type);
 }

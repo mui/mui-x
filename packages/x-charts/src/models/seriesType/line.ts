@@ -137,3 +137,10 @@ export interface DefaultizedLineSeriesType extends DefaultizedProps<
 > {
   hidden: boolean;
 }
+
+export interface DefaultizedRadialLineSeriesType extends DefaultizedProps<
+  RadialLineSeriesType,
+  CommonDefaultizedProps | 'color'
+> {
+  hidden: boolean;
+}

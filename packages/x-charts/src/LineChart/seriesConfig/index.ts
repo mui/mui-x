@@ -16,7 +16,7 @@ import {
 } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import descriptionGetter from './descriptionGetter';
 
-export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
+export const lineSeriesConfig: ChartSeriesTypeConfig<'line', 'cartesian'> = {
   colorProcessor: getColor,
   seriesProcessor,
   legendGetter,

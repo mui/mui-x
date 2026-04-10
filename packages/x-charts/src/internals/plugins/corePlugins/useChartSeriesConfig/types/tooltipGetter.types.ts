@@ -72,8 +72,8 @@ export interface TooltipGetterAxesConfig {
   radius?: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
 }
 
-export type TooltipGetter<SeriesType extends ChartSeriesType> = (params: {
-  series: ChartSeriesDefaultized<SeriesType>;
+export type TooltipGetter<SeriesType extends ChartSeriesType, AxisType extends 'cartesian' | 'polar' = any> = (params: {
+  series: ChartSeriesDefaultized<SeriesType, AxisType>;
   axesConfig: TooltipGetterAxesConfig;
   getColor: ColorGetter<SeriesType>;
   identifier: SeriesItemIdentifierWithType<SeriesType> | null;
@@ -93,5 +93,5 @@ export type AxisTooltipGetter<
   SeriesType extends ChartSeriesType,
   Directions extends 'x' | 'y' | 'rotation' | 'radius' = 'x' | 'y',
 > = (
-  series: Record<SeriesId, ChartSeriesDefaultized<SeriesType>>,
+  series: Record<SeriesId, ChartSeriesDefaultized<SeriesType, Directions extends 'x' | 'y' ? 'cartesian' : 'polar'>>,
 ) => { direction: Directions; axisId: AxisId | undefined }[];

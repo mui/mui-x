@@ -13,8 +13,8 @@ export type SeriesProcessorParams<SeriesType extends ChartSeriesType> = {
   seriesOrder: SeriesId[];
 };
 
-export type SeriesProcessorResult<SeriesType extends ChartSeriesType> = {
-  series: Record<SeriesId, ChartSeriesDefaultized<SeriesType>>;
+export type SeriesProcessorResult<SeriesType extends ChartSeriesType, AxisType extends 'cartesian' | 'polar' = any> = {
+  series: Record<SeriesId, ChartSeriesDefaultized<SeriesType, AxisType>>;
   seriesOrder: SeriesId[];
 } & (ChartsSeriesConfig[SeriesType] extends {
   canBeStacked: true;
@@ -22,8 +22,8 @@ export type SeriesProcessorResult<SeriesType extends ChartSeriesType> = {
   ? { stackingGroups: StackingGroupsType }
   : {});
 
-export type SeriesProcessor<SeriesType extends ChartSeriesType> = (
+export type SeriesProcessor<SeriesType extends ChartSeriesType, AxisType extends 'cartesian' | 'polar' = any> = (
   params: SeriesProcessorParams<SeriesType>,
   dataset?: Readonly<DatasetType>,
   isItemVisible?: IsItemVisibleFunction,
-) => SeriesProcessorResult<SeriesType>;
+) => SeriesProcessorResult<SeriesType, AxisType>;

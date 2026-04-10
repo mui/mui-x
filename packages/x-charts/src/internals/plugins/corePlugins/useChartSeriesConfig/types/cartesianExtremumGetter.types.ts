@@ -6,7 +6,7 @@ import type { AxisConfig, AxisId } from '../../../../../models/axis';
 import type { SeriesId } from '../../../../../models/seriesType/common';
 
 type CartesianExtremumGetterParams<SeriesType extends CartesianChartSeriesType> = {
-  series: Record<SeriesId, ChartSeriesDefaultized<SeriesType>>;
+  series: Record<SeriesId, ChartSeriesDefaultized<SeriesType, 'cartesian'>>;
   axis: AxisConfig;
   axisIndex: number;
   isDefaultAxis: boolean;
