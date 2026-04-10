@@ -8,9 +8,11 @@ import { MAX_DEPTH, MAX_OBJECT_PROPERTIES } from './config';
 
 const UNION_SEP = '<br>&#124;&nbsp;';
 
-/** typeToString with NoTruncation to avoid "... N more ..." in long unions */
+/** typeToString with NoTruncation, using single quotes for string literals */
 function fullTypeToString(checker: ts.TypeChecker, type: ts.Type): string {
-  return checker.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation);
+  return checker
+    .typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation)
+    .replace(/"/g, "'");
 }
 
 // Track visited types to prevent infinite recursion
@@ -446,12 +448,16 @@ export function extractFunctionSignature(
       return `${p.name}: ${jsDocType}`;
     }
     const paramType = checker.getTypeOfSymbol(p);
-    const typeString = checker.typeToString(paramType, undefined, ts.TypeFormatFlags.NoTruncation);
+    const typeString = checker
+      .typeToString(paramType, undefined, ts.TypeFormatFlags.NoTruncation)
+      .replace(/"/g, "'");
     return `${p.name}: ${typeString}`;
   });
 
   const returnType = checker.getReturnTypeOfSignature(sig);
-  const returnStr = checker.typeToString(returnType, undefined, ts.TypeFormatFlags.NoTruncation);
+  const returnStr = checker
+    .typeToString(returnType, undefined, ts.TypeFormatFlags.NoTruncation)
+    .replace(/"/g, "'");
 
   const describedArgs = sig.parameters.filter((p) => jsDoc.params.has(p.name)).map((p) => p.name);
 

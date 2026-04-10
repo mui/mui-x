@@ -5,7 +5,7 @@
 import * as ts from 'typescript';
 import * as path from 'path';
 import * as fs from 'node:fs';
-import { CWD, UNRESOLVED_OBJECT_PROPS, COMMON_INHERITED_PROPS } from './config';
+import { CWD, UNRESOLVED_OBJECT_PROPS, COMMON_INHERITED_PROPS, debug } from './config';
 import { extractJsDoc, isMuiXProp } from './jsDocUtils';
 import { formatPropType, extractFunctionSignature } from './typeFormatting';
 import type {
@@ -46,7 +46,7 @@ export function extractComponentApi(
   // Find the component's props type
   const propsType = findComponentPropsType(comp.name, sourceFile, checker);
   if (!propsType) {
-    console.warn(`  Could not find props type for ${comp.name}`);
+    debug(`  Could not find props type for ${comp.name}`);
     return null;
   }
 
@@ -103,11 +103,9 @@ export function extractComponentApi(
       // These props are not fully expanded — show the type alias name instead of "object"
       const rawPropType = checker.getTypeOfSymbol(prop);
       const strippedPropType = stripOptionalType(rawPropType, checker);
-      const typeName = checker.typeToString(
-        strippedPropType,
-        undefined,
-        ts.TypeFormatFlags.NoTruncation,
-      );
+      const typeName = checker
+        .typeToString(strippedPropType, undefined, ts.TypeFormatFlags.NoTruncation)
+        .replace(/"/g, "'");
       const isArr =
         checker.isArrayType(strippedPropType) ||
         (strippedPropType as any).target?.getSymbol()?.name === 'Array' ||
@@ -115,7 +113,9 @@ export function extractComponentApi(
       if (isArr) {
         const elemType = (strippedPropType as ts.TypeReference).typeArguments?.[0];
         const elemName = elemType
-          ? checker.typeToString(elemType, undefined, ts.TypeFormatFlags.NoTruncation)
+          ? checker
+              .typeToString(elemType, undefined, ts.TypeFormatFlags.NoTruncation)
+              .replace(/"/g, "'")
           : '{}';
         typeInfo = { name: 'arrayOf', description: `Array&lt;${elemName}&gt;` };
       } else if (typeName === 'any' || typeName.includes('{') || typeName.length > 80) {

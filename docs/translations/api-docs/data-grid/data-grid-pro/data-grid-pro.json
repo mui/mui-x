@@ -136,8 +136,8 @@
       "description": "Function that returns the height of the row detail panel.",
       "typeDescriptions": {
         "params": { "name": "params", "description": "With all properties from GridRowParams." },
-        "number | \"auto\"": {
-          "name": "number | \"auto\"",
+        "number | 'auto'": {
+          "name": "number | 'auto'",
           "description": "The height in pixels or \"auto\" to use the content height."
         }
       }

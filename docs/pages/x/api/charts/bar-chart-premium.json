@@ -145,7 +145,7 @@
     "seriesConfig": {
       "type": {
         "name": "shape",
-        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<\"bar\">"
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'bar'>"
       }
     },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
@@ -176,13 +176,13 @@
     "xAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;MakeOptional<AxisConfig<\"band\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"linear\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"log\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"point\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"pow\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"sqrt\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"symlog\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"time\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"utc\", any, ChartsXAxisProps>, \"id\">&gt;"
+        "description": "Array&lt;MakeOptional<AxisConfig<'band', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'linear', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'log', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'point', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'pow', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'sqrt', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'symlog', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'time', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'utc', any, ChartsXAxisProps>, 'id'>&gt;"
       }
     },
     "yAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;MakeOptional<AxisConfig<\"band\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"linear\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"log\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"point\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"pow\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"sqrt\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"symlog\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"time\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"utc\", any, ChartsYAxisProps>, \"id\">&gt;"
+        "description": "Array&lt;MakeOptional<AxisConfig<'band', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'linear', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'log', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'point', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'pow', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'sqrt', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'symlog', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'time', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'utc', any, ChartsYAxisProps>, 'id'>&gt;"
       }
     },
     "zAxis": {

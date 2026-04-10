@@ -96,7 +96,7 @@
     "seriesConfig": {
       "type": {
         "name": "shape",
-        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<\"radar\">"
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'radar'>"
       }
     },
     "shape": {

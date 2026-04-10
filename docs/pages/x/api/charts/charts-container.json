@@ -101,19 +101,19 @@
     "radiusAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;AxisConfig<\"linear\", any, ChartsRadiusAxisProps>&gt;"
+        "description": "Array&lt;AxisConfig<'linear', any, ChartsRadiusAxisProps>&gt;"
       }
     },
     "rotationAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;AxisConfig<\"band\", any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<\"linear\", any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<\"log\", any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<\"point\", any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<\"pow\", any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<\"sqrt\", any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<\"symlog\", any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<\"time\", any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<\"utc\", any, ChartsRotationAxisProps>&gt;"
+        "description": "Array&lt;AxisConfig<'band', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'linear', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'log', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'point', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'pow', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'sqrt', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'symlog', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'time', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'utc', any, ChartsRotationAxisProps>&gt;"
       }
     },
     "series": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;BarSeriesType | LineSeriesType | ScatterSeriesType | PieSeriesType<MakeOptional<PieValueType, \"id\">> | RadarSeriesType | HeatmapSeriesType | FunnelSeriesType | SankeySeriesType | RangeBarSeriesType | OHLCSeriesType&gt;"
+        "description": "Array&lt;BarSeriesType | LineSeriesType | ScatterSeriesType | PieSeriesType<MakeOptional<PieValueType, 'id'>> | RadarSeriesType | HeatmapSeriesType | FunnelSeriesType | SankeySeriesType | RangeBarSeriesType | OHLCSeriesType&gt;"
       }
     },
     "seriesConfig": {
@@ -142,13 +142,13 @@
     "xAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;MakeOptional<AxisConfig<\"band\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"linear\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"log\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"point\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"pow\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"sqrt\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"symlog\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"time\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"utc\", any, ChartsXAxisProps>, \"id\">&gt;"
+        "description": "Array&lt;MakeOptional<AxisConfig<'band', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'linear', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'log', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'point', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'pow', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'sqrt', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'symlog', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'time', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'utc', any, ChartsXAxisProps>, 'id'>&gt;"
       }
     },
     "yAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;MakeOptional<AxisConfig<\"band\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"linear\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"log\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"point\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"pow\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"sqrt\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"symlog\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"time\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"utc\", any, ChartsYAxisProps>, \"id\">&gt;"
+        "description": "Array&lt;MakeOptional<AxisConfig<'band', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'linear', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'log', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'point', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'pow', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'sqrt', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'symlog', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'time', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'utc', any, ChartsYAxisProps>, 'id'>&gt;"
       }
     },
     "zAxis": {

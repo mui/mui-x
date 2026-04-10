@@ -165,9 +165,9 @@
       "type": { "name": "func" },
       "default": "\"() => 500\"",
       "signature": {
-        "type": "function(params: GridRowParams) => number | \"auto\"",
+        "type": "function(params: GridRowParams) => number | 'auto'",
         "describedArgs": ["params"],
-        "returned": "number | \"auto\""
+        "returned": "number | 'auto'"
       }
     },
     "getEstimatedRowHeight": {

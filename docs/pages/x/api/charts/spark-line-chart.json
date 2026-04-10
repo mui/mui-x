@@ -185,13 +185,13 @@
     "xAxis": {
       "type": {
         "name": "union",
-        "description": "MakeOptional<AxisConfig<\"band\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"linear\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"log\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"point\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"pow\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"sqrt\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"symlog\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"time\", any, ChartsXAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"utc\", any, ChartsXAxisProps>, \"id\">"
+        "description": "MakeOptional<AxisConfig<'band', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'linear', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'log', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'point', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'pow', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'sqrt', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'symlog', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'time', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'utc', any, ChartsXAxisProps>, 'id'>"
       }
     },
     "yAxis": {
       "type": {
         "name": "union",
-        "description": "MakeOptional<AxisConfig<\"band\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"linear\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"log\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"point\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"pow\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"sqrt\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"symlog\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"time\", any, ChartsYAxisProps>, \"id\"><br>&#124;&nbsp;MakeOptional<AxisConfig<\"utc\", any, ChartsYAxisProps>, \"id\">"
+        "description": "MakeOptional<AxisConfig<'band', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'linear', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'log', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'point', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'pow', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'sqrt', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'symlog', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'time', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'utc', any, ChartsYAxisProps>, 'id'>"
       }
     }
   },

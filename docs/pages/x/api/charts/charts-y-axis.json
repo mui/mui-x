@@ -1,6 +1,6 @@
 {
   "props": {
-    "axis": { "type": { "name": "shape", "description": "\"y\"" } },
+    "axis": { "type": { "name": "shape", "description": "'y'" } },
     "axisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "classes": {
       "type": { "name": "shape", "description": "Partial<ChartsAxisClasses>" },

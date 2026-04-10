@@ -75,7 +75,7 @@
     "seriesConfig": {
       "type": {
         "name": "shape",
-        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<\"pie\">"
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'pie'>"
       }
     },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },

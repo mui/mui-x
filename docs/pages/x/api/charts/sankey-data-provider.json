@@ -43,7 +43,7 @@
     "seriesConfig": {
       "type": {
         "name": "shape",
-        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<\"sankey\">"
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'sankey'>"
       }
     },
     "title": { "type": { "name": "string" } },

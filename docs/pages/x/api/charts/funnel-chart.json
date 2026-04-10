@@ -97,7 +97,7 @@
     "seriesConfig": {
       "type": {
         "name": "shape",
-        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<\"funnel\">"
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'funnel'>"
       }
     },
     "skipAnimation": { "type": { "name": "bool" } },
