@@ -35,7 +35,7 @@
     {
       "name": "sortColumn",
       "description": "Sorts a column.",
-      "type": "(field: string, direction?: \"asc\" | \"desc\", allowMultipleSorting?: boolean) => void"
+      "type": "(field: string, direction?: 'asc' | 'desc', allowMultipleSorting?: boolean) => void"
     }
   ]
 }

@@ -10,6 +10,13 @@ import { CWD, debug, MAX_EXPAND_DEPTH, MAX_EXPAND_PROPERTIES, MAX_EXPANDED_LENGT
 import { extractJsDoc } from './jsDocUtils';
 import type { FileWrite } from './types';
 
+/** typeToString with NoTruncation and single quotes for string literals */
+function typeToStr(checker: ts.TypeChecker, type: ts.Type): string {
+  return checker
+    .typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation)
+    .replace(/"/g, "'");
+}
+
 /**
  * Build full documentation pages for interfaces (JSON + translation + JS wrapper).
  * Returns the files to write and a map of documented interface names → packages.
@@ -342,7 +349,7 @@ const OPAQUE_TYPE_NAMES = new Set([
  */
 function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number = 0): string {
   if (depth > MAX_EXPAND_DEPTH) {
-    return checkerRef.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation);
+    return typeToStr(checkerRef, type);
   }
 
   // Strip undefined/null from unions
@@ -382,7 +389,7 @@ function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number
     return 'any';
   }
   if (type.isStringLiteral()) {
-    return JSON.stringify(type.value);
+    return `'${type.value}'`;
   }
   if (type.isNumberLiteral()) {
     return String(type.value);
@@ -392,7 +399,7 @@ function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number
   const symbol = type.getSymbol() || type.aliasSymbol;
   const symbolName = symbol?.name || '';
   if (OPAQUE_TYPE_NAMES.has(symbolName)) {
-    return checkerRef.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation);
+    return typeToStr(checkerRef, type);
   }
 
   // Functions — expand signature
@@ -434,7 +441,7 @@ function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number
       if (symbolName && /^[A-Z]/.test(symbolName) && !symbolName.includes('__')) {
         const fileName = symbol?.declarations?.[0]?.getSourceFile().fileName || '';
         if (fileName.includes('node_modules') && !fileName.includes('@mui/x-')) {
-          return checkerRef.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation);
+          return typeToStr(checkerRef, type);
         }
       }
       const parts = props.map((p) => {
@@ -446,7 +453,7 @@ function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number
     }
   }
 
-  return checkerRef.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation);
+  return typeToStr(checkerRef, type);
 }
 
 export function escapeHtml(s: string): string {
@@ -462,7 +469,7 @@ function resolvePropertyType(prop: ts.Symbol, checker: ts.TypeChecker): string {
 
   // Check if the raw type string contains indexed access types (Partial<X>["prop"]).
   // If so, resolve via base constraint first, since expandTypeDeep can't handle these.
-  const rawStr = checker.typeToString(propType, undefined, ts.TypeFormatFlags.NoTruncation);
+  const rawStr = typeToStr(checker, propType);
   if (rawStr.includes('["') || rawStr.includes("['")) {
     const baseConstraint = checker.getBaseConstraintOfType(propType);
     if (baseConstraint) {

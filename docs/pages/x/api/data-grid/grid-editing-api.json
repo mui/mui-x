@@ -5,12 +5,12 @@
     {
       "name": "getCellMode",
       "description": "Gets the mode of a cell.",
-      "type": "(id: number | string, field: string) => \"edit\" | \"view\""
+      "type": "(id: number | string, field: string) => 'edit' | 'view'"
     },
     {
       "name": "getRowMode",
       "description": "Gets the mode of a row.",
-      "type": "(id: number | string) => \"edit\" | \"view\""
+      "type": "(id: number | string) => 'edit' | 'view'"
     },
     {
       "name": "getRowWithUpdatedValues",
@@ -40,12 +40,12 @@
     {
       "name": "stopCellEditMode",
       "description": "Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.\nIf `params.ignoreModifications` is `true` it will discard the modifications made.",
-      "type": "(params: { id: number | string, field: string, ignoreModifications?: boolean, cellToFocusAfter?: \"below\" | \"left\" | \"none\" | \"right\" }) => void"
+      "type": "(params: { id: number | string, field: string, ignoreModifications?: boolean, cellToFocusAfter?: 'below' | 'left' | 'none' | 'right' }) => void"
     },
     {
       "name": "stopRowEditMode",
       "description": "Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.\nIf `params.ignoreModifications` is `true` it will discard the modifications made.",
-      "type": "(params: { id: number | string, ignoreModifications?: boolean, field?: string, cellToFocusAfter?: \"below\" | \"left\" | \"none\" | \"right\" }) => void"
+      "type": "(params: { id: number | string, ignoreModifications?: boolean, field?: string, cellToFocusAfter?: 'below' | 'left' | 'none' | 'right' }) => void"
     }
   ]
 }

@@ -7,7 +7,7 @@
   ],
   "properties": {
     "api": { "type": { "description": "GridApiCommunity" }, "required": true },
-    "cellMode": { "type": { "description": "\"edit\" | \"view\"" }, "required": true },
+    "cellMode": { "type": { "description": "'edit' | 'view'" }, "required": true },
     "colDef": { "type": { "description": "GridStateColDef" }, "required": true },
     "field": { "type": { "description": "string" }, "required": true },
     "hasFocus": { "type": { "description": "boolean" }, "required": true },

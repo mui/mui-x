@@ -6,9 +6,9 @@
     "import { LineSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "type": { "type": { "description": "\"line\"" }, "required": true },
+    "type": { "type": { "description": "'line'" }, "required": true },
     "area": { "type": { "description": "boolean" } },
-    "baseline": { "type": { "description": "\"max\" | \"min\" | number" }, "default": "0" },
+    "baseline": { "type": { "description": "'max' | 'min' | number" }, "default": "0" },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": { "description": "(data: { value: number, dataIndex: number }) =&gt; string" }
@@ -16,7 +16,7 @@
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
     "curve": {
       "type": {
-        "description": "\"bumpX\" | \"bumpY\" | \"catmullRom\" | \"linear\" | \"monotoneX\" | \"monotoneY\" | \"natural\" | \"step\" | \"stepAfter\" | \"stepBefore\""
+        "description": "'bumpX' | 'bumpY' | 'catmullRom' | 'linear' | 'monotoneX' | 'monotoneY' | 'natural' | 'step' | 'stepAfter' | 'stepBefore'"
       },
       "default": "'monotoneX'"
     },
@@ -25,21 +25,21 @@
     "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"global\" | \"none\" | \"series\" }"
+        "description": "{ highlight?: 'item' | 'none' | 'series', fade?: 'global' | 'none' | 'series' }"
       }
     },
     "id": { "type": { "description": "string" } },
     "label": {
-      "type": { "description": "(location: \"legend\" | \"tooltip\") =&gt; string | string" }
+      "type": { "description": "(location: 'legend' | 'tooltip') =&gt; string | string" }
     },
     "labelMarkType": {
       "type": {
-        "description": "\"circle\" | \"line\" | \"line+mark\" | \"square\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+        "description": "'circle' | 'line' | 'line+mark' | 'square' | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
       }
     },
     "shape": {
       "type": {
-        "description": "\"circle\" | \"cross\" | \"diamond\" | \"square\" | \"star\" | \"triangle\" | \"wye\""
+        "description": "'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye'"
       }
     },
     "showMark": {
@@ -49,14 +49,12 @@
     },
     "stack": { "type": { "description": "string" } },
     "stackOffset": {
-      "type": {
-        "description": "\"diverging\" | \"expand\" | \"none\" | \"silhouette\" | \"wiggle\""
-      },
+      "type": { "description": "'diverging' | 'expand' | 'none' | 'silhouette' | 'wiggle'" },
       "default": "'none'"
     },
     "stackOrder": {
       "type": {
-        "description": "\"appearance\" | \"ascending\" | \"descending\" | \"insideOut\" | \"none\" | \"reverse\""
+        "description": "'appearance' | 'ascending' | 'descending' | 'insideOut' | 'none' | 'reverse'"
       },
       "default": "'none'"
     },

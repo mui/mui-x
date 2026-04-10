@@ -10,7 +10,7 @@
     "label": { "type": { "description": "string" }, "required": true },
     "markType": {
       "type": {
-        "description": "\"circle\" | \"line\" | \"line+mark\" | \"square\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+        "description": "'circle' | 'line' | 'line+mark' | 'square' | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
       },
       "required": true
     },
@@ -19,7 +19,7 @@
     "seriesId": { "type": { "description": "string" }, "required": true },
     "type": {
       "type": {
-        "description": "\"bar\" | \"funnel\" | \"heatmap\" | \"line\" | \"ohlc\" | \"pie\" | \"radar\" | \"rangeBar\" | \"sankey\" | \"scatter\""
+        "description": "'bar' | 'funnel' | 'heatmap' | 'line' | 'ohlc' | 'pie' | 'radar' | 'rangeBar' | 'sankey' | 'scatter'"
       },
       "required": true
     },

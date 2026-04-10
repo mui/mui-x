@@ -55,7 +55,9 @@ export function buildGridSelectorsDocumentation(
     let returnType = '';
     if (callSigs.length > 0) {
       const retType = checker.getReturnTypeOfSignature(callSigs[0]);
-      returnType = checker.typeToString(retType, undefined, ts.TypeFormatFlags.NoTruncation);
+      returnType = checker
+        .typeToString(retType, undefined, ts.TypeFormatFlags.NoTruncation)
+        .replace(/"/g, "'");
       // Clean up generic params
       returnType = returnType.replace(/<GridApi(?:Community|Pro)?>/g, '');
     }

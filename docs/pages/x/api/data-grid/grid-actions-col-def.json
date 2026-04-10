@@ -14,13 +14,13 @@
       },
       "required": true
     },
-    "type": { "type": { "description": "\"actions\"" }, "default": "'actions'", "required": true },
+    "type": { "type": { "description": "'actions'" }, "default": "'actions'", "required": true },
     "aggregable": {
       "type": { "description": "boolean" },
       "default": "true",
       "isPremiumPlan": true
     },
-    "align": { "type": { "description": "\"center\" | \"left\" | \"right\"" } },
+    "align": { "type": { "description": "'center' | 'left' | 'right'" } },
     "availableAggregationFunctions": {
       "type": { "description": "string[]" },
       "isPremiumPlan": true
@@ -41,7 +41,7 @@
     "disableColumnMenu": { "type": { "description": "boolean" }, "default": "false" },
     "disableExport": { "type": { "description": "boolean" }, "default": "false" },
     "disableReorder": { "type": { "description": "boolean" }, "default": "false" },
-    "display": { "type": { "description": "\"flex\" | \"text\"" } },
+    "display": { "type": { "description": "'flex' | 'text'" } },
     "editable": { "type": { "description": "boolean" }, "default": "false" },
     "examples": { "type": { "description": "V[]" } },
     "filterable": { "type": { "description": "boolean" }, "default": "true" },
@@ -68,7 +68,7 @@
       },
       "isPremiumPlan": true
     },
-    "headerAlign": { "type": { "description": "\"center\" | \"left\" | \"right\"" } },
+    "headerAlign": { "type": { "description": "'center' | 'left' | 'right'" } },
     "headerClassName": { "type": { "description": "GridColumnHeaderClassNamePropType" } },
     "headerName": { "type": { "description": "string" } },
     "hideable": { "type": { "description": "boolean" }, "default": "true" },
@@ -85,7 +85,7 @@
     "pivotable": { "type": { "description": "boolean" }, "default": "true", "isPremiumPlan": true },
     "preProcessEditCellProps": {
       "type": {
-        "description": "(params: { id: number | string, row: any, props: { value?: any, isValidating?: boolean, isProcessingProps?: boolean, changeReason?: \"debouncedSetEditCellValue\" | \"setEditCellValue\" }, hasChanged?: boolean, otherFieldsProps?: Record&lt;string, GridEditCellProps&lt;any&gt;&gt; }) =&gt; Promise&lt;GridEditCellProps&lt;any&gt;&gt; | { value?: any, isValidating?: boolean, isProcessingProps?: boolean, changeReason?: \"debouncedSetEditCellValue\" | \"setEditCellValue\" }"
+        "description": "(params: { id: number | string, row: any, props: { value?: any, isValidating?: boolean, isProcessingProps?: boolean, changeReason?: 'debouncedSetEditCellValue' | 'setEditCellValue' }, hasChanged?: boolean, otherFieldsProps?: Record&lt;string, GridEditCellProps&lt;any&gt;&gt; }) =&gt; Promise&lt;GridEditCellProps&lt;any&gt;&gt; | { value?: any, isValidating?: boolean, isProcessingProps?: boolean, changeReason?: 'debouncedSetEditCellValue' | 'setEditCellValue' }"
       }
     },
     "renderCell": {

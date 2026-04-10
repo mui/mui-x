@@ -137,19 +137,15 @@ export function buildGridEventsDocumentation(
       if (member.name === 'params') {
         paramsStr = srcDecl?.type
           ? normalizeTypeText(srcDecl.type.getText())
-          : checker.typeToString(
-              checker.getTypeOfSymbol(member),
-              undefined,
-              ts.TypeFormatFlags.NoTruncation,
-            );
+          : checker
+              .typeToString(checker.getTypeOfSymbol(member), undefined, ts.TypeFormatFlags.NoTruncation)
+              .replace(/"/g, "'");
       } else if (member.name === 'event') {
         const evtText = srcDecl?.type
           ? normalizeTypeText(srcDecl.type.getText())
-          : checker.typeToString(
-              checker.getTypeOfSymbol(member),
-              undefined,
-              ts.TypeFormatFlags.NoTruncation,
-            );
+          : checker
+              .typeToString(checker.getTypeOfSymbol(member), undefined, ts.TypeFormatFlags.NoTruncation)
+              .replace(/"/g, "'");
         eventStr = `MuiEvent<${evtText}>`;
       }
     }

@@ -10,7 +10,7 @@
     {
       "name": "getFilterState",
       "description": "Returns the filter state for the given filter model without applying it to the Data Grid.",
-      "type": "(filterModel: { items: GridFilterItem[], logicOperator?: \"and\" | \"or\", quickFilterValues?: any[], quickFilterLogicOperator?: \"and\" | \"or\", quickFilterExcludeHiddenColumns?: boolean }) => { filterModel: { items: GridFilterItem[], logicOperator?: \"and\" | \"or\", quickFilterValues?: any[], quickFilterLogicOperator?: \"and\" | \"or\", quickFilterExcludeHiddenColumns?: boolean }, filteredRowsLookup: Record<GridRowId, false>, filteredChildrenCountLookup: Record<GridRowId, number>, filteredDescendantCountLookup: Record<GridRowId, number> }"
+      "type": "(filterModel: { items: GridFilterItem[], logicOperator?: 'and' | 'or', quickFilterValues?: any[], quickFilterLogicOperator?: 'and' | 'or', quickFilterExcludeHiddenColumns?: boolean }) => { filterModel: { items: GridFilterItem[], logicOperator?: 'and' | 'or', quickFilterValues?: any[], quickFilterLogicOperator?: 'and' | 'or', quickFilterExcludeHiddenColumns?: boolean }, filteredRowsLookup: Record<GridRowId, false>, filteredChildrenCountLookup: Record<GridRowId, number>, filteredDescendantCountLookup: Record<GridRowId, number> }"
     },
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
     {
@@ -21,12 +21,12 @@
     {
       "name": "setFilterLogicOperator",
       "description": "Changes the [[GridLogicOperator]] used to connect the filters.",
-      "type": "(operator: \"and\" | \"or\") => void"
+      "type": "(operator: 'and' | 'or') => void"
     },
     {
       "name": "setFilterModel",
       "description": "Sets the filter model to the one given by `model`.",
-      "type": "(model: { items: GridFilterItem[], logicOperator?: \"and\" | \"or\", quickFilterValues?: any[], quickFilterLogicOperator?: \"and\" | \"or\", quickFilterExcludeHiddenColumns?: boolean }, reason?: \"changeLogicOperator\" | \"deleteFilterItem\" | \"removeAllFilterItems\" | \"restoreState\" | \"upsertFilterItem\" | \"upsertFilterItems\") => void"
+      "type": "(model: { items: GridFilterItem[], logicOperator?: 'and' | 'or', quickFilterValues?: any[], quickFilterLogicOperator?: 'and' | 'or', quickFilterExcludeHiddenColumns?: boolean }, reason?: 'changeLogicOperator' | 'deleteFilterItem' | 'removeAllFilterItems' | 'restoreState' | 'upsertFilterItem' | 'upsertFilterItems') => void"
     },
     {
       "name": "setQuickFilterValues",

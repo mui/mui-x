@@ -25,7 +25,7 @@
     {
       "name": "setRowSelectionModel",
       "description": "Sets the new row selection model.\n\n⚠️ Caution: `setRowSelectionModel` doesn't apply the selection propagation automatically.\nPass model returned by API method `getPropagatedRowSelectionModel` instead to apply the selection propagation.",
-      "type": "(rowSelectionModel: { type: \"exclude\" | \"include\", ids: Set<GridRowId> }, reason?: \"multipleRowsSelection\" | \"singleRowSelection\") => void"
+      "type": "(rowSelectionModel: { type: 'exclude' | 'include', ids: Set<GridRowId> }, reason?: 'multipleRowsSelection' | 'singleRowSelection') => void"
     }
   ]
 }

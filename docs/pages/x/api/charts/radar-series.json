@@ -7,7 +7,7 @@
   ],
   "properties": {
     "data": { "type": { "description": "number[]" }, "required": true },
-    "type": { "type": { "description": "\"radar\"" }, "required": true },
+    "type": { "type": { "description": "'radar'" }, "required": true },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": { "description": "(data: { value: number, dataIndex: number }) =&gt; string" }
@@ -16,16 +16,16 @@
     "hideMark": { "type": { "description": "boolean" } },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: \"item\" | \"none\" | \"series\", fade?: \"global\" | \"none\" | \"series\" }"
+        "description": "{ highlight?: 'item' | 'none' | 'series', fade?: 'global' | 'none' | 'series' }"
       }
     },
     "id": { "type": { "description": "string" } },
     "label": {
-      "type": { "description": "(location: \"legend\" | \"tooltip\") =&gt; string | string" }
+      "type": { "description": "(location: 'legend' | 'tooltip') =&gt; string | string" }
     },
     "labelMarkType": {
       "type": {
-        "description": "\"circle\" | \"line\" | \"line+mark\" | \"square\" | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+        "description": "'circle' | 'line' | 'line+mark' | 'square' | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
       }
     },
     "valueFormatter": {

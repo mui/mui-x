@@ -72,7 +72,7 @@
       "required": true
     },
     "getCellMode": {
-      "type": { "description": "(id: number | string, field: string) =&gt; \"edit\" | \"view\"" },
+      "type": { "description": "(id: number | string, field: string) =&gt; 'edit' | 'view'" },
       "required": true
     },
     "getCellParams": {
@@ -136,7 +136,7 @@
     },
     "getFilterState": {
       "type": {
-        "description": "(filterModel: { items: GridFilterItem[], logicOperator?: \"and\" | \"or\", quickFilterValues?: any[], quickFilterLogicOperator?: \"and\" | \"or\", quickFilterExcludeHiddenColumns?: boolean }) =&gt; { filterModel: { items: GridFilterItem[], logicOperator?: \"and\" | \"or\", quickFilterValues?: any[], quickFilterLogicOperator?: \"and\" | \"or\", quickFilterExcludeHiddenColumns?: boolean }, filteredRowsLookup: Record&lt;GridRowId, false&gt;, filteredChildrenCountLookup: Record&lt;GridRowId, number&gt;, filteredDescendantCountLookup: Record&lt;GridRowId, number&gt; }"
+        "description": "(filterModel: { items: GridFilterItem[], logicOperator?: 'and' | 'or', quickFilterValues?: any[], quickFilterLogicOperator?: 'and' | 'or', quickFilterExcludeHiddenColumns?: boolean }) =&gt; { filterModel: { items: GridFilterItem[], logicOperator?: 'and' | 'or', quickFilterValues?: any[], quickFilterLogicOperator?: 'and' | 'or', quickFilterExcludeHiddenColumns?: boolean }, filteredRowsLookup: Record&lt;GridRowId, false&gt;, filteredChildrenCountLookup: Record&lt;GridRowId, number&gt;, filteredDescendantCountLookup: Record&lt;GridRowId, number&gt; }"
       },
       "required": true
     },
@@ -151,7 +151,7 @@
     },
     "getPropagatedRowSelectionModel": {
       "type": {
-        "description": "(inputSelectionModel: { type: \"exclude\" | \"include\", ids: Set&lt;GridRowId&gt; }) =&gt; { type: \"exclude\" | \"include\", ids: Set&lt;GridRowId&gt; }"
+        "description": "(inputSelectionModel: { type: 'exclude' | 'include', ids: Set&lt;GridRowId&gt; }) =&gt; { type: 'exclude' | 'include', ids: Set&lt;GridRowId&gt; }"
       },
       "required": true
     },
@@ -177,7 +177,7 @@
       "required": true
     },
     "getRowMode": {
-      "type": { "description": "(id: number | string) =&gt; \"edit\" | \"view\"" },
+      "type": { "description": "(id: number | string) =&gt; 'edit' | 'view'" },
       "required": true
     },
     "getRowModels": {
@@ -250,7 +250,7 @@
       "isPremiumPlan": true
     },
     "isColumnPinned": {
-      "type": { "description": "(field: string) =&gt; \"left\" | \"right\" | boolean" },
+      "type": { "description": "(field: string) =&gt; 'left' | 'right' | boolean" },
       "required": true,
       "isProPlan": true
     },
@@ -263,7 +263,7 @@
       "required": true
     },
     "pinColumn": {
-      "type": { "description": "(field: string, side: \"left\" | \"right\") =&gt; void" },
+      "type": { "description": "(field: string, side: 'left' | 'right') =&gt; void" },
       "required": true,
       "isProPlan": true
     },
@@ -381,9 +381,7 @@
       "required": true
     },
     "setDensity": {
-      "type": {
-        "description": "(density: \"comfortable\" | \"compact\" | \"standard\") =&gt; void"
-      },
+      "type": { "description": "(density: 'comfortable' | 'compact' | 'standard') =&gt; void" },
       "required": true
     },
     "setEditCellValue": {
@@ -398,12 +396,12 @@
       "isProPlan": true
     },
     "setFilterLogicOperator": {
-      "type": { "description": "(operator: \"and\" | \"or\") =&gt; void" },
+      "type": { "description": "(operator: 'and' | 'or') =&gt; void" },
       "required": true
     },
     "setFilterModel": {
       "type": {
-        "description": "(model: { items: GridFilterItem[], logicOperator?: \"and\" | \"or\", quickFilterValues?: any[], quickFilterLogicOperator?: \"and\" | \"or\", quickFilterExcludeHiddenColumns?: boolean }, reason?: \"changeLogicOperator\" | \"deleteFilterItem\" | \"removeAllFilterItems\" | \"restoreState\" | \"upsertFilterItem\" | \"upsertFilterItems\") =&gt; void"
+        "description": "(model: { items: GridFilterItem[], logicOperator?: 'and' | 'or', quickFilterValues?: any[], quickFilterLogicOperator?: 'and' | 'or', quickFilterExcludeHiddenColumns?: boolean }, reason?: 'changeLogicOperator' | 'deleteFilterItem' | 'removeAllFilterItems' | 'restoreState' | 'upsertFilterItem' | 'upsertFilterItems') =&gt; void"
       },
       "required": true
     },
@@ -471,7 +469,7 @@
     },
     "setRowPosition": {
       "type": {
-        "description": "(sourceRowId: number | string, targetRowId: number | string, position: \"above\" | \"below\" | \"inside\") =&gt; Promise&lt;void&gt; | void"
+        "description": "(sourceRowId: number | string, targetRowId: number | string, position: 'above' | 'below' | 'inside') =&gt; Promise&lt;void&gt; | void"
       },
       "required": true
     },
@@ -481,7 +479,7 @@
     },
     "setRowSelectionModel": {
       "type": {
-        "description": "(rowSelectionModel: { type: \"exclude\" | \"include\", ids: Set&lt;GridRowId&gt; }, reason?: \"multipleRowsSelection\" | \"singleRowSelection\") =&gt; void"
+        "description": "(rowSelectionModel: { type: 'exclude' | 'include', ids: Set&lt;GridRowId&gt; }, reason?: 'multipleRowsSelection' | 'singleRowSelection') =&gt; void"
       },
       "required": true
     },
@@ -502,20 +500,20 @@
     },
     "showPreferences": {
       "type": {
-        "description": "(newValue: \"aiAssistant\" | \"columns\" | \"filters\", panelId?: string, labelId?: string) =&gt; void"
+        "description": "(newValue: 'aiAssistant' | 'columns' | 'filters', panelId?: string, labelId?: string) =&gt; void"
       },
       "required": true
     },
     "showSidebar": {
       "type": {
-        "description": "(newValue: \"charts\" | \"pivot\", sidebarId?: string, labelId?: string) =&gt; void"
+        "description": "(newValue: 'charts' | 'pivot', sidebarId?: string, labelId?: string) =&gt; void"
       },
       "required": true,
       "isPremiumPlan": true
     },
     "sortColumn": {
       "type": {
-        "description": "(field: string, direction?: \"asc\" | \"desc\", allowMultipleSorting?: boolean) =&gt; void"
+        "description": "(field: string, direction?: 'asc' | 'desc', allowMultipleSorting?: boolean) =&gt; void"
       },
       "required": true
     },
@@ -538,20 +536,20 @@
     "state": { "type": { "description": "GridStatePremium" }, "required": true },
     "stopCellEditMode": {
       "type": {
-        "description": "(params: { id: number | string, field: string, ignoreModifications?: boolean, cellToFocusAfter?: \"below\" | \"left\" | \"none\" | \"right\" }) =&gt; void"
+        "description": "(params: { id: number | string, field: string, ignoreModifications?: boolean, cellToFocusAfter?: 'below' | 'left' | 'none' | 'right' }) =&gt; void"
       },
       "required": true
     },
     "stopHeaderFilterEditMode": { "type": { "description": "() =&gt; void" }, "required": true },
     "stopRowEditMode": {
       "type": {
-        "description": "(params: { id: number | string, ignoreModifications?: boolean, field?: string, cellToFocusAfter?: \"below\" | \"left\" | \"none\" | \"right\" }) =&gt; void"
+        "description": "(params: { id: number | string, ignoreModifications?: boolean, field?: string, cellToFocusAfter?: 'below' | 'left' | 'none' | 'right' }) =&gt; void"
       },
       "required": true
     },
     "subscribeEvent": {
       "type": {
-        "description": "(event: E, handler: (params: GridEventLookup[E] extends { params: any; } ? GridEventLookup[E][\"params\"] : undefined, event: GridEventLookup[E] extends { event: MuiBaseEvent; } ? MuiEvent&lt;GridEventLookup[E][\"event\"]&gt; : { defaultMuiPrevented?: boolean | undefined; }, details: { reason?: any, api: GridApiCommon&lt;GridStateCommunity, GridInitialStateCommunity&gt; }) =&gt; void, options?: { isFirst?: boolean }) =&gt; () =&gt; void"
+        "description": "(event: E, handler: (params: GridEventLookup[E] extends { params: any; } ? GridEventLookup[E]['params'] : undefined, event: GridEventLookup[E] extends { event: MuiBaseEvent; } ? MuiEvent&lt;GridEventLookup[E]['event']&gt; : { defaultMuiPrevented?: boolean | undefined; }, details: { reason?: any, api: GridApiCommon&lt;GridStateCommunity, GridInitialStateCommunity&gt; }) =&gt; void, options?: { isFirst?: boolean }) =&gt; () =&gt; void"
       },
       "required": true
     },
