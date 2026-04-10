@@ -79,6 +79,7 @@ export function discoverComponents(
         section: config.section,
         reExportPackages: config.reExportPackages,
         defaultForwardsRefTo: config.defaultForwardsRefTo,
+        subdirImportForAllPackages: config.subdirImportForAllPackages,
       });
     }
   }

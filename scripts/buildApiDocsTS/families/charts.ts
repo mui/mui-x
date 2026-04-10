@@ -56,6 +56,7 @@ export const chartsFamily: ProductFamily = {
   section: 'charts',
   packages: ['x-charts', 'x-charts-pro', 'x-charts-premium'],
   includeUnstable: true,
+  subdirImportForAllPackages: true,
   skipComponent: (name, filePath) => {
     if (filePath.includes('/context/')) {
       return true;

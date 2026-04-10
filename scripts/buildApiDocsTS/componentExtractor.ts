@@ -248,8 +248,8 @@ export function extractComponentApi(
   // Compute imports
   const subdirSuffix = getSubdirectoryImportSuffix(comp.filePath, comp.packageDir);
   const imports: string[] = [];
-  if (comp.section === 'charts') {
-    // Charts: show subdirectory + root import for each package
+  if (comp.subdirImportForAllPackages) {
+    // Show subdirectory + root import for every package
     for (const pkg of comp.reExportPackages) {
       if (subdirSuffix) {
         imports.push(`import { ${comp.name} } from '${pkg}/${subdirSuffix}';`);
@@ -257,7 +257,7 @@ export function extractComponentApi(
       imports.push(`import { ${comp.name} } from '${pkg}';`);
     }
   } else {
-    // Other sections: subdirectory import first, then root imports
+    // Subdirectory import for the originating package only, then root imports
     if (subdirSuffix) {
       imports.push(`import { ${comp.name} } from '${comp.reExportPackages[0]}/${subdirSuffix}';`);
     }

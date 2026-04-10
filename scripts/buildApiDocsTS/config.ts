@@ -53,6 +53,8 @@ export interface ProductFamily {
   unresolvedProps?: string[];
   /** Default forwardsRefTo when no conformance test is found */
   defaultForwardsRefTo?: string;
+  /** Show subdirectory imports for every package (e.g. @mui/x-charts/BarChart, @mui/x-charts-pro/BarChart) */
+  subdirImportForAllPackages?: boolean;
   /** Interfaces to document */
   interfaces?: {
     /** Extra packages to search beyond the family packages (e.g. x-data-grid-generator) */
@@ -117,6 +119,7 @@ export function getPackageConfigs(): PackageConfig[] {
         skipComponent: family.skipComponent,
         reExportPackages: getReExportPackages(pkg, family),
         defaultForwardsRefTo: family.defaultForwardsRefTo,
+        subdirImportForAllPackages: family.subdirImportForAllPackages,
       });
     }
   }

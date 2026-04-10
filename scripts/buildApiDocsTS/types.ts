@@ -58,6 +58,7 @@ export interface PackageConfig {
   includeUnstable?: boolean;
   reExportPackages: string[];
   defaultForwardsRefTo?: string;
+  subdirImportForAllPackages?: boolean;
 }
 
 export interface ComponentApi {
@@ -116,6 +117,7 @@ export interface DiscoveredComponent {
   section: string;
   reExportPackages: string[];
   defaultForwardsRefTo?: string;
+  subdirImportForAllPackages?: boolean;
 }
 
 export interface DemoInfo {
