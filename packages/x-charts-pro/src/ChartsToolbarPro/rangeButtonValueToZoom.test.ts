@@ -52,7 +52,7 @@ describe('rangeButtonValueToZoom', () => {
         domain: { min: 0, max: 2 },
         zoomed: { min: 0, max: 2 },
       };
-      const fn = vi.fn((p: RangeButtonFunctionParams) => ({ start: 0, end: 100 }));
+      const fn = vi.fn((_p: RangeButtonFunctionParams) => ({ start: 0, end: 100 }));
       rangeButtonValueToZoom(fn, ordinalParams);
       expect(fn).toHaveBeenCalledWith(ordinalParams);
       expect(fn.mock.calls[0][0].scaleType).to.equal('band');
@@ -62,10 +62,13 @@ describe('rangeButtonValueToZoom', () => {
 
   describe('zero or negative domain range', () => {
     it('should return full range when domainMin equals domainMax', () => {
-      const result = rangeButtonValueToZoom({ unit: 'month' }, {
-        ...timeParams,
-        domain: { min: domainMin, max: domainMin },
-      });
+      const result = rangeButtonValueToZoom(
+        { unit: 'month' },
+        {
+          ...timeParams,
+          domain: { min: domainMin, max: domainMin },
+        },
+      );
       expect(result).to.deep.equal({ start: 0, end: 100 });
     });
   });
@@ -194,21 +197,18 @@ describe('rangeButtonValueToZoom', () => {
     });
 
     it('should work with function values using data', () => {
-      const result = rangeButtonValueToZoom(
-        ({ data }) => {
-          const itemCount = data!.length;
-          const visibleItems = 3;
-          const startPct = ((itemCount - visibleItems) / itemCount) * 100;
-          return { start: startPct, end: 100 };
-        },
-        ordinalParams,
-      );
+      const result = rangeButtonValueToZoom(({ data }) => {
+        const itemCount = data!.length;
+        const visibleItems = 3;
+        const startPct = ((itemCount - visibleItems) / itemCount) * 100;
+        return { start: startPct, end: 100 };
+      }, ordinalParams);
       expect(result.start).to.be.closeTo(70, 0.1);
       expect(result.end).to.equal(100);
     });
 
     it('should pass scaleType and data to function values', () => {
-      const fn = vi.fn((p: RangeButtonFunctionParams) => ({ start: 0, end: 100 }));
+      const fn = vi.fn((_p: RangeButtonFunctionParams) => ({ start: 0, end: 100 }));
       rangeButtonValueToZoom(fn, ordinalParams);
       expect(fn.mock.calls[0][0].scaleType).to.equal('band');
       expect(fn.mock.calls[0][0].data).to.have.length(10);
@@ -217,10 +217,7 @@ describe('rangeButtonValueToZoom', () => {
   });
 
   describe('ordinal axis with date-like data', () => {
-    const monthlyDates = Array.from(
-      { length: 12 },
-      (_, i) => new Date(2024, i, 1),
-    );
+    const monthlyDates = Array.from({ length: 12 }, (_, i) => new Date(2024, i, 1));
     const ordinalDateParams: RangeButtonFunctionParams = {
       scaleType: 'band',
       data: monthlyDates,
@@ -256,10 +253,7 @@ describe('rangeButtonValueToZoom', () => {
     });
 
     it('should handle calendar interval { unit: "month", step: 3 }', () => {
-      const result = rangeButtonValueToZoom(
-        { unit: 'month', step: 3 },
-        ordinalDateParams,
-      );
+      const result = rangeButtonValueToZoom({ unit: 'month', step: 3 }, ordinalDateParams);
       expect(result.start).to.be.closeTo((8 / 11) * 100, 5);
       expect(result.end).to.equal(100);
     });
@@ -271,29 +265,23 @@ describe('rangeButtonValueToZoom', () => {
     });
 
     it('should work with date strings', () => {
-      const result = rangeButtonValueToZoom(
-        [new Date(2024, 3, 1), new Date(2024, 6, 1)],
-        {
-          scaleType: 'band',
-          data: ['2024-01-01', '2024-04-01', '2024-07-01', '2024-10-01'],
-          domain: { min: 0, max: 3 },
-          zoomed: { min: 0, max: 3 },
-        },
-      );
+      const result = rangeButtonValueToZoom([new Date(2024, 3, 1), new Date(2024, 6, 1)], {
+        scaleType: 'band',
+        data: ['2024-01-01', '2024-04-01', '2024-07-01', '2024-10-01'],
+        domain: { min: 0, max: 3 },
+        zoomed: { min: 0, max: 3 },
+      });
       expect(result.start).to.be.closeTo((1 / 3) * 100, 0.1);
       expect(result.end).to.be.closeTo((2 / 3) * 100, 0.1);
     });
 
     it('should fall back to continuous logic for non-date-like data', () => {
-      const result = rangeButtonValueToZoom(
-        [new Date(2024, 0, 1), new Date(2024, 6, 1)],
-        {
-          scaleType: 'band',
-          data: ['A', 'B', 'C', 'D', 'E'],
-          domain: { min: 0, max: 4 },
-          zoomed: { min: 0, max: 4 },
-        },
-      );
+      const result = rangeButtonValueToZoom([new Date(2024, 0, 1), new Date(2024, 6, 1)], {
+        scaleType: 'band',
+        data: ['A', 'B', 'C', 'D', 'E'],
+        domain: { min: 0, max: 4 },
+        zoomed: { min: 0, max: 4 },
+      });
       expect(result.start).to.be.a('number');
       expect(result.end).to.be.a('number');
     });

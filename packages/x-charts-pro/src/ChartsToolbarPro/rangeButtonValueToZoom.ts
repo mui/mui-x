@@ -153,7 +153,10 @@ export function rangeButtonValueToZoom(
     };
   }
 
-  const { domain: { min: domainMin, max: domainMax }, data: ordinalData } = params;
+  const {
+    domain: { min: domainMin, max: domainMax },
+    data: ordinalData,
+  } = params;
 
   // For ordinal axes with date-like data, resolve date ranges and intervals to matching indices.
   const timestamps = ordinalData ? toTimestampArray(ordinalData) : undefined;

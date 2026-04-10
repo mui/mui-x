@@ -486,6 +486,7 @@
   { "name": "rainbowSurgePaletteDark", "kind": "Variable" },
   { "name": "rainbowSurgePaletteLight", "kind": "Variable" },
   { "name": "RangeButtonConfig", "kind": "Interface" },
+  { "name": "RangeButtonFunctionParams", "kind": "Interface" },
   { "name": "redPalette", "kind": "Variable" },
   { "name": "redPaletteDark", "kind": "Variable" },
   { "name": "redPaletteLight", "kind": "Variable" },

@@ -15,10 +15,7 @@ import { useChartsLocalization } from '@mui/x-charts/hooks';
 import useId from '@mui/utils/useId';
 import { ChartsToolbarDivider } from './internals/ChartsToolbarDivider';
 import { ChartsMenu } from './internals/ChartsMenu';
-import {
-  selectorChartZoomIsEnabled,
-  selectorChartActiveRangeButtonKey,
-} from '../internals/plugins/useChartProZoom';
+import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
 import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
 import { ChartsToolbarRangeButtonTrigger } from './ChartsToolbarRangeButtonTrigger';
@@ -98,7 +95,6 @@ function ChartsToolbarPro({
   const exportMenuId = useId();
   const exportMenuTriggerId = useId();
   const isZoomEnabled = store.use(selectorChartZoomIsEnabled);
-  const activeRangeButtonKey = store.use(selectorChartActiveRangeButtonKey);
   const imageExportOptionList = rawImageExportOptions ?? DEFAULT_IMAGE_EXPORT_OPTIONS;
   const showExportMenu = !printOptions?.disableToolbarButton || imageExportOptionList.length > 0;
 
@@ -107,12 +103,12 @@ function ChartsToolbarPro({
   if (isZoomEnabled) {
     if (rangeButtons && rangeButtons.length > 0) {
       children.push(
-        <RangeButtonGroup key="range-buttons" value={activeRangeButtonKey} exclusive size="small">
+        <RangeButtonGroup key="range-buttons" exclusive size="small">
           {rangeButtons.map((rangeButton) => (
             <ChartsToolbarRangeButtonTrigger
               key={rangeButton.label}
               value={rangeButton.value}
-              buttonKey={rangeButton.label}
+              label={rangeButton.label}
               axisId={rangeButtonsAxisId}
             >
               {rangeButton.label}
@@ -129,16 +125,20 @@ function ChartsToolbarPro({
 
     children.push(
       <Tooltip key="zoom-in" {...slotProps.baseTooltip} title={localeText.zoomIn}>
-        <ChartsToolbarZoomInTrigger render={<ToolbarButton size="small" />}>
-          <ZoomInIcon fontSize="small" {...slotProps.zoomInIcon} />
-        </ChartsToolbarZoomInTrigger>
+        <span>
+          <ChartsToolbarZoomInTrigger render={<ToolbarButton size="small" />}>
+            <ZoomInIcon fontSize="small" {...slotProps.zoomInIcon} />
+          </ChartsToolbarZoomInTrigger>
+        </span>
       </Tooltip>,
     );
     children.push(
       <Tooltip key="zoom-out" {...slotProps.baseTooltip} title={localeText.zoomOut}>
-        <ChartsToolbarZoomOutTrigger render={<ToolbarButton size="small" />}>
-          <ZoomOutIcon fontSize="small" {...slotProps.zoomOutIcon} />
-        </ChartsToolbarZoomOutTrigger>
+        <span>
+          <ChartsToolbarZoomOutTrigger render={<ToolbarButton size="small" />}>
+            <ZoomOutIcon fontSize="small" {...slotProps.zoomOutIcon} />
+          </ChartsToolbarZoomOutTrigger>
+        </span>
       </Tooltip>,
     );
   }

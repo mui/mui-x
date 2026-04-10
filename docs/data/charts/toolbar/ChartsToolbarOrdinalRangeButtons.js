@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
-const months = Array.from(
-  { length: 24 },
-  (_, i) => new Date(2023, i, 1),
-);
+const months = Array.from({ length: 24 }, (_, i) => new Date(2023, i, 1));
 const values = months.map(
   (_, i) => 50 + 30 * Math.sin(i / 3) + 10 * Math.cos(i / 2),
 );

@@ -1,31 +1,27 @@
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-
-const startDate = new Date(2023, 0, 1);
-const dates = Array.from(
-  { length: 365 * 2 },
-  (_, i) => new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000),
-);
-const values = dates.map(
-  (_, i) => 100 + 50 * Math.sin(i / 30) + 20 * Math.sin(i / 7) + i * 0.05,
-);
+import { dataset } from '../dataset/gdpPerCapitaEvolution';
 
 export default function ChartsToolbarRangeButtonValues() {
   return (
     <LineChartPro
-      xAxis={[{ scaleType: 'time', data: dates, zoom: true }]}
-      series={[{ data: values, showMark: false, label: 'Value' }]}
+      dataset={dataset}
+      xAxis={[{ scaleType: 'time', dataKey: 'date', zoom: true, tickNumber: 5 }]}
+      series={[
+        { dataKey: 'fr', label: 'France' },
+        { dataKey: 'gb', label: 'UK' },
+        { dataKey: 'dl', label: 'Germany' },
+      ]}
       height={300}
       showToolbar
       slotProps={{
         toolbar: {
           rangeButtons: [
             // Calendar intervals
-            { label: '1M', value: { unit: 'month' } },
-            { label: '6M', value: { unit: 'month', step: 6 } },
-            { label: '1Y', value: { unit: 'year' } },
+            { label: '5Y', value: { unit: 'year', step: 5 } },
+            { label: '10Y', value: { unit: 'year', step: 10 } },
             // Absolute date range
-            { label: '2023', value: [new Date(2023, 0, 1), new Date(2024, 0, 1)] },
+            { label: '2000s', value: [new Date(2000, 0, 1), new Date(2010, 0, 1)] },
             // Function
             { label: 'First half', value: () => ({ start: 0, end: 50 }) },
             // Reset

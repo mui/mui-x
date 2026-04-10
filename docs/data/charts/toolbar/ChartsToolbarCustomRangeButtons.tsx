@@ -2,34 +2,30 @@ import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { ChartsToolbarRangeButtonTrigger } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { Toolbar } from '@mui/x-charts/Toolbar';
-
-const startDate = new Date(2023, 0, 1);
-const dates = Array.from(
-  { length: 365 * 2 },
-  (_, i) => new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000),
-);
-const values = dates.map(
-  (_, i) => 100 + 50 * Math.sin(i / 30) + 20 * Math.sin(i / 7) + i * 0.05,
-);
-
-const chartConfiguration = {
-  xAxis: [{ scaleType: 'time', data: dates, zoom: true }],
-  series: [{ data: values, showMark: false, label: 'Value' }],
-  height: 300,
-  showToolbar: true,
-} as const;
+import { dataset } from '../dataset/gdpPerCapitaEvolution';
 
 export default function ChartsToolbarCustomRangeButtons() {
   return (
     <LineChartPro
-      {...chartConfiguration}
+      dataset={dataset}
+      xAxis={[{ scaleType: 'time', dataKey: 'date', zoom: true, tickNumber: 5 }]}
+      series={[
+        { dataKey: 'fr', label: 'France' },
+        { dataKey: 'gb', label: 'UK' },
+        { dataKey: 'dl', label: 'Germany' },
+      ]}
+      height={300}
+      showToolbar
       slots={{
         toolbar: () => (
           <Toolbar>
-            <ChartsToolbarRangeButtonTrigger value={{ unit: 'month' }}>
-              1 month
+            <ChartsToolbarRangeButtonTrigger
+              label="10 years"
+              value={{ unit: 'year', step: 10 }}
+            >
+              10 years
             </ChartsToolbarRangeButtonTrigger>
-            <ChartsToolbarRangeButtonTrigger value={null}>
+            <ChartsToolbarRangeButtonTrigger label="Everything" value={null}>
               Everything
             </ChartsToolbarRangeButtonTrigger>
           </Toolbar>

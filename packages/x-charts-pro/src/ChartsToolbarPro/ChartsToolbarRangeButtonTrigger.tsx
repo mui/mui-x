@@ -14,29 +14,12 @@ import {
   type AxisId,
 } from '@mui/x-charts/internals';
 import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
-import useId from '@mui/utils/useId';
 import {
   type UseChartProZoomSignature,
   selectorChartActiveRangeButtonKey,
+  selectorChartCanZoomOut,
 } from '../internals/plugins/useChartProZoom';
 import { type RangeButtonValue, rangeButtonValueToZoom } from './rangeButtonValueToZoom';
-
-/**
- * Derives a stable key from a range button value.
- * For function values, returns undefined (caller should provide a fallback).
- */
-function getStableButtonKey(value: RangeButtonValue): string | undefined {
-  if (value === null) {
-    return 'range-null';
-  }
-  if (typeof value === 'function') {
-    return undefined;
-  }
-  if (Array.isArray(value)) {
-    return `range-${value[0].getTime()}-${value[1].getTime()}`;
-  }
-  return `range-${value.unit}-${value.step ?? 1}`;
-}
 
 export interface ChartsToolbarRangeButtonTriggerProps {
   /**
@@ -58,11 +41,9 @@ export interface ChartsToolbarRangeButtonTriggerProps {
    */
   axisId?: AxisId;
   /**
-   * A stable key to identify this button for active-state tracking.
-   * When not provided, a key is derived from `value` (for interval, date range, and null values)
-   * or falls back to a React-generated ID (for function values).
+   * The label used to identify the button for active-state tracking.
    */
-  buttonKey?: string;
+  label: string;
   /**
    * The size of the button.
    * @default 'small'
@@ -78,20 +59,18 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<ChartsToolbarRangeButtonTriggerProps>
 >(function ChartsToolbarRangeButtonTrigger(
-  { render, value, axisId: axisIdProp, buttonKey: buttonKeyProp, size = 'small', ...other },
+  { render, value, axisId: axisIdProp, label, size = 'small', ...other },
   ref,
 ) {
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartsContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
-
-  const fallbackKey = useId();
-  const buttonKey = buttonKeyProp ?? getStableButtonKey(value) ?? fallbackKey;
+  const activeRangeButtonKey = store.use(selectorChartActiveRangeButtonKey);
+  const canZoomOut = store.use(selectorChartCanZoomOut);
   const zoomOptionsLookup = store.use(selectorChartZoomOptionsLookup);
   const rawXAxes = store.use(selectorChartRawXAxis);
   const { domains } = store.use(selectorChartXAxisWithDomains);
   const zoomMap = store.use(selectorChartZoomMap);
-  const activeRangeButtonKey = store.use(selectorChartActiveRangeButtonKey);
 
   // Resolve the target axis ID: use the prop, or find the first zoomable x-axis.
   const resolvedAxisId = React.useMemo(() => {
@@ -142,10 +121,8 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     };
   }, [axisDomain, currentZoom]);
 
-  const isActive = activeRangeButtonKey === buttonKey;
-
   const handleClick = React.useCallback(() => {
-    if (resolvedAxisId === undefined || !axisDomain || !zoomedBounds || !buttonKey) {
+    if (resolvedAxisId === undefined || !axisDomain || !zoomedBounds) {
       return;
     }
     const zoom = rangeButtonValueToZoom(value, {
@@ -154,20 +131,26 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
       domain: axisDomain,
       zoomed: zoomedBounds,
     });
-    // setAxisZoomData clears activeRangeButtonKey, then we set it back.
     instance.setAxisZoomData(resolvedAxisId, {
       axisId: resolvedAxisId,
       start: zoom.start,
       end: zoom.end,
     });
-    instance.setActiveRangeButtonKey(buttonKey);
-  }, [resolvedAxisId, resolvedAxis, axisDomain, zoomedBounds, value, instance, buttonKey]);
+    instance.setActiveRangeButtonKey(label);
+  }, [resolvedAxisId, resolvedAxis, axisDomain, zoomedBounds, value, instance, label]);
+
+  // Determine if this button is selected.
+  // When explicitly clicked, activeRangeButtonKey matches the label.
+  // When no button has been clicked and zoom is at full range, the null-value button is active.
+  const isActive =
+    activeRangeButtonKey === label ||
+    (activeRangeButtonKey === null && value === null && canZoomOut);
 
   const element = useComponentRenderer(slots.baseToggleButton, render, {
     ...slotProps.baseToggleButton,
     onClick: handleClick,
     selected: isActive,
-    value: buttonKey,
+    value: label,
     size,
     ...other,
     ref,
@@ -187,11 +170,9 @@ ChartsToolbarRangeButtonTrigger.propTypes = {
    */
   axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
-   * A stable key to identify this button for active-state tracking.
-   * When not provided, a key is derived from `value` (for interval, date range, and null values)
-   * or falls back to a React-generated ID (for function values).
+   * The label used to identify the button for active-state tracking.
    */
-  buttonKey: PropTypes.string,
+  label: PropTypes.string.isRequired,
   /**
    * A function to customize the rendering of the component.
    */
@@ -206,7 +187,7 @@ ChartsToolbarRangeButtonTrigger.propTypes = {
    *
    * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
    * - `[start, end]` — An absolute date range.
-   * - `(domainMin, domainMax, zoomedMin, zoomedMax) => { start, end }` — A function that receives the full axis domain bounds and the current zoomed-in bounds (as timestamps) and returns zoom percentages.
+   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`, `zoomed`) and returns zoom percentages (0-100).
    * - `null` — Resets zoom to show all data.
    */
   value: PropTypes.oneOfType([

@@ -517,6 +517,7 @@
   { "name": "RangeBarSeriesType", "kind": "Interface" },
   { "name": "RangeBarValueType", "kind": "TypeAlias" },
   { "name": "RangeButtonConfig", "kind": "Interface" },
+  { "name": "RangeButtonFunctionParams", "kind": "Interface" },
   { "name": "redPalette", "kind": "Variable" },
   { "name": "redPaletteDark", "kind": "Variable" },
   { "name": "redPaletteLight", "kind": "Variable" },
