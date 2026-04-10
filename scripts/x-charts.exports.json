@@ -204,6 +204,7 @@
   { "name": "DefaultizedPieSeriesType", "kind": "Interface" },
   { "name": "DefaultizedPieValueType", "kind": "TypeAlias" },
   { "name": "DefaultizedRadarSeriesType", "kind": "Interface" },
+  { "name": "DefaultizedRadialLineSeriesType", "kind": "Interface" },
   { "name": "DefaultizedScatterSeriesType", "kind": "Interface" },
   { "name": "DefaultizedSeriesType", "kind": "TypeAlias" },
   { "name": "Direction", "kind": "TypeAlias" },
