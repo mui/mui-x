@@ -79,6 +79,17 @@ export type CartesianSeriesType = {
   yAxisId?: AxisId;
 };
 
+export type RadialSeriesType = {
+  /**
+   * The id of the rotation axis used to render the series.
+   */
+  rotationAxisId?: AxisId;
+  /**
+   * The id of the radius axis used to render the series.
+   */
+  radiusAxisId?: AxisId;
+};
+
 export type StackableSeriesType = {
   /**
    * The key that identifies the stacking group.

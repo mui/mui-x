@@ -61,3 +61,5 @@ cartesianSeriesTypes.addType('scatter');
 export const polarSeriesTypes = new PolarSeriesTypes();
 
 polarSeriesTypes.addType('radar');
+polarSeriesTypes.addType('line');
+polarSeriesTypes.addType('bar');

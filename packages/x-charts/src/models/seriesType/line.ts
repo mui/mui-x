@@ -1,11 +1,12 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
-import {
-  type CartesianSeriesType,
-  type CommonDefaultizedProps,
-  type CommonSeriesType,
-  type SeriesId,
-  type StackableSeriesType,
+import type {
+  RadialSeriesType,
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  SeriesId,
+  StackableSeriesType,
 } from './common';
 import { type DatasetElementType } from './config';
 import { type CurveType } from '../curve';
@@ -35,8 +36,8 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 
 export type MarkShape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
 
-export interface LineSeriesType
-  extends CommonSeriesType<number | null, 'line'>, CartesianSeriesType, StackableSeriesType {
+interface CommonLineSeriesType
+  extends CommonSeriesType<number | null, 'line'>, StackableSeriesType {
   type: 'line';
   /**
    * Data associated to the line.
@@ -112,6 +113,10 @@ export interface LineSeriesType
    */
   baseline?: number | 'min' | 'max';
 }
+
+export interface LineSeriesType extends CommonLineSeriesType, CartesianSeriesType {}
+
+export interface RadialLineSeriesType extends CommonLineSeriesType, RadialSeriesType {}
 
 /**
  * An object that allows to identify a single line.

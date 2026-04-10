@@ -56,7 +56,7 @@ export interface ChartsSeriesConfig {
     itemIdentifierWithData: BarItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
-    axisType: 'cartesian';
+    axisType: 'cartesian' | 'polar';
     highlightScope: CommonHighlightScope;
     descriptionGetterParams: {
       identifier: BarItemIdentifier;
@@ -80,7 +80,7 @@ export interface ChartsSeriesConfig {
     itemIdentifierWithData: LineItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
-    axisType: 'cartesian';
+    axisType: 'cartesian' | 'polar';
     highlightScope: CommonHighlightScope;
     descriptionGetterParams: {
       identifier: LineItemIdentifier;
@@ -173,8 +173,10 @@ export type ChartSeriesType = keyof ChartsSeriesConfig;
 export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
-    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: 'cartesian' }
-      ? Key
+    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: infer A }
+      ? 'cartesian' extends A
+        ? Key
+        : never
       : never;
   }[ChartSeriesType]
 >;
@@ -193,7 +195,11 @@ export type SeriesTypeWithDataIndex = {
 export type PolarChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
-    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: 'polar' } ? Key : never;
+    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: infer A }
+      ? 'polar' extends A
+        ? Key
+        : never
+      : never;
   }[ChartSeriesType]
 >;
 
