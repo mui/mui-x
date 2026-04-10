@@ -61,6 +61,9 @@
         "description": "&lt;TScaleName extends S&gt;(value: V, context: AxisValueFormatterContext&lt;TScaleName&gt;) =&gt; string"
       }
     },
+    "valueGetter": {
+      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; V" }
+    },
     "zoom": { "type": { "description": "boolean | ZoomOptions" }, "isProPlan": true }
   }
 }
