@@ -116,8 +116,8 @@
   "name": "ChatRoot",
   "imports": [
     "import { ChatRoot } from '@mui/x-chat-headless/chat';",
-    "import { ChatRoot } from '@mui/x-chat';",
-    "import { ChatRoot } from '@mui/x-chat-headless';"
+    "import { ChatRoot } from '@mui/x-chat-headless';",
+    "import { ChatRoot } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],

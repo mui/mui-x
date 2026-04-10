@@ -95,8 +95,8 @@
   "name": "PickersTextField",
   "imports": [
     "import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';",
-    "import { PickersTextField } from '@mui/x-date-pickers-pro';",
-    "import { PickersTextField } from '@mui/x-date-pickers';"
+    "import { PickersTextField } from '@mui/x-date-pickers';",
+    "import { PickersTextField } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
     {

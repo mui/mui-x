@@ -94,8 +94,8 @@
   "name": "TimeClock",
   "imports": [
     "import { TimeClock } from '@mui/x-date-pickers/TimeClock';",
-    "import { TimeClock } from '@mui/x-date-pickers-pro';",
-    "import { TimeClock } from '@mui/x-date-pickers';"
+    "import { TimeClock } from '@mui/x-date-pickers';",
+    "import { TimeClock } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
     {

@@ -150,8 +150,8 @@
   "name": "DesktopTimePicker",
   "imports": [
     "import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';",
-    "import { DesktopTimePicker } from '@mui/x-date-pickers-pro';",
-    "import { DesktopTimePicker } from '@mui/x-date-pickers';"
+    "import { DesktopTimePicker } from '@mui/x-date-pickers';",
+    "import { DesktopTimePicker } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
     {

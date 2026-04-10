@@ -7,10 +7,10 @@
   },
   "name": "HeatmapTooltipContent",
   "imports": [
-    "import { HeatmapTooltipContent } from '@mui/x-charts-premium/Heatmap';",
-    "import { HeatmapTooltipContent } from '@mui/x-charts-premium';",
     "import { HeatmapTooltipContent } from '@mui/x-charts-pro/Heatmap';",
-    "import { HeatmapTooltipContent } from '@mui/x-charts-pro';"
+    "import { HeatmapTooltipContent } from '@mui/x-charts-pro';",
+    "import { HeatmapTooltipContent } from '@mui/x-charts-premium/Heatmap';",
+    "import { HeatmapTooltipContent } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

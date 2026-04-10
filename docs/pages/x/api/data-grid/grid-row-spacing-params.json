@@ -1,9 +1,9 @@
 {
   "name": "GridRowSpacingParams",
   "imports": [
-    "import { GridRowSpacingParams } from '@mui/x-data-grid-premium';",
+    "import { GridRowSpacingParams } from '@mui/x-data-grid';",
     "import { GridRowSpacingParams } from '@mui/x-data-grid-pro';",
-    "import { GridRowSpacingParams } from '@mui/x-data-grid';"
+    "import { GridRowSpacingParams } from '@mui/x-data-grid-premium';"
   ],
   "demos": "  - [Row spacing](/x/react-data-grid/row-height/#row-spacing)",
   "properties": {

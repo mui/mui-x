@@ -7,12 +7,12 @@
   },
   "name": "ChartsItemTooltipContent",
   "imports": [
-    "import { ChartsItemTooltipContent } from '@mui/x-charts-premium/ChartsTooltip';",
-    "import { ChartsItemTooltipContent } from '@mui/x-charts-premium';",
+    "import { ChartsItemTooltipContent } from '@mui/x-charts/ChartsTooltip';",
+    "import { ChartsItemTooltipContent } from '@mui/x-charts';",
     "import { ChartsItemTooltipContent } from '@mui/x-charts-pro/ChartsTooltip';",
     "import { ChartsItemTooltipContent } from '@mui/x-charts-pro';",
-    "import { ChartsItemTooltipContent } from '@mui/x-charts/ChartsTooltip';",
-    "import { ChartsItemTooltipContent } from '@mui/x-charts';"
+    "import { ChartsItemTooltipContent } from '@mui/x-charts-premium/ChartsTooltip';",
+    "import { ChartsItemTooltipContent } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

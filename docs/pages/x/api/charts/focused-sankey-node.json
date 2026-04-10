@@ -2,10 +2,10 @@
   "props": {},
   "name": "FocusedSankeyNode",
   "imports": [
-    "import { FocusedSankeyNode } from '@mui/x-charts-premium/SankeyChart';",
-    "import { FocusedSankeyNode } from '@mui/x-charts-premium';",
     "import { FocusedSankeyNode } from '@mui/x-charts-pro/SankeyChart';",
-    "import { FocusedSankeyNode } from '@mui/x-charts-pro';"
+    "import { FocusedSankeyNode } from '@mui/x-charts-pro';",
+    "import { FocusedSankeyNode } from '@mui/x-charts-premium/SankeyChart';",
+    "import { FocusedSankeyNode } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

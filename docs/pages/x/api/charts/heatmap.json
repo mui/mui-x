@@ -131,10 +131,10 @@
   },
   "name": "Heatmap",
   "imports": [
-    "import { Heatmap } from '@mui/x-charts-premium/Heatmap';",
-    "import { Heatmap } from '@mui/x-charts-premium';",
     "import { Heatmap } from '@mui/x-charts-pro/Heatmap';",
-    "import { Heatmap } from '@mui/x-charts-pro';"
+    "import { Heatmap } from '@mui/x-charts-pro';",
+    "import { Heatmap } from '@mui/x-charts-premium/Heatmap';",
+    "import { Heatmap } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

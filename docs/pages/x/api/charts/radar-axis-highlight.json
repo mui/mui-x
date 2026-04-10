@@ -5,12 +5,12 @@
   },
   "name": "RadarAxisHighlight",
   "imports": [
-    "import { RadarAxisHighlight } from '@mui/x-charts-premium/RadarChart';",
-    "import { RadarAxisHighlight } from '@mui/x-charts-premium';",
+    "import { RadarAxisHighlight } from '@mui/x-charts/RadarChart';",
+    "import { RadarAxisHighlight } from '@mui/x-charts';",
     "import { RadarAxisHighlight } from '@mui/x-charts-pro/RadarChart';",
     "import { RadarAxisHighlight } from '@mui/x-charts-pro';",
-    "import { RadarAxisHighlight } from '@mui/x-charts/RadarChart';",
-    "import { RadarAxisHighlight } from '@mui/x-charts';"
+    "import { RadarAxisHighlight } from '@mui/x-charts-premium/RadarChart';",
+    "import { RadarAxisHighlight } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

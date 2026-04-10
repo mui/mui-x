@@ -19,8 +19,8 @@
   "name": "SourceUrlPart",
   "imports": [
     "import { SourceUrlPart } from '@mui/x-chat-headless/message';",
-    "import { SourceUrlPart } from '@mui/x-chat';",
-    "import { SourceUrlPart } from '@mui/x-chat-headless';"
+    "import { SourceUrlPart } from '@mui/x-chat-headless';",
+    "import { SourceUrlPart } from '@mui/x-chat';"
   ],
   "slots": [
     { "name": "icon", "description": "", "class": null },

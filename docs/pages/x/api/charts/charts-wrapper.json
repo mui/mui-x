@@ -19,12 +19,12 @@
   },
   "name": "ChartsWrapper",
   "imports": [
-    "import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';",
-    "import { ChartsWrapper } from '@mui/x-charts-premium';",
+    "import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';",
+    "import { ChartsWrapper } from '@mui/x-charts';",
     "import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';",
     "import { ChartsWrapper } from '@mui/x-charts-pro';",
-    "import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';",
-    "import { ChartsWrapper } from '@mui/x-charts';"
+    "import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';",
+    "import { ChartsWrapper } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

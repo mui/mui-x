@@ -15,12 +15,12 @@
   },
   "name": "RadarSeriesMarks",
   "imports": [
-    "import { RadarSeriesMarks } from '@mui/x-charts-premium/RadarChart';",
-    "import { RadarSeriesMarks } from '@mui/x-charts-premium';",
+    "import { RadarSeriesMarks } from '@mui/x-charts/RadarChart';",
+    "import { RadarSeriesMarks } from '@mui/x-charts';",
     "import { RadarSeriesMarks } from '@mui/x-charts-pro/RadarChart';",
     "import { RadarSeriesMarks } from '@mui/x-charts-pro';",
-    "import { RadarSeriesMarks } from '@mui/x-charts/RadarChart';",
-    "import { RadarSeriesMarks } from '@mui/x-charts';"
+    "import { RadarSeriesMarks } from '@mui/x-charts-premium/RadarChart';",
+    "import { RadarSeriesMarks } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

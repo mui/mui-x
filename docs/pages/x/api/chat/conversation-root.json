@@ -9,8 +9,8 @@
   "name": "ConversationRoot",
   "imports": [
     "import { ConversationRoot } from '@mui/x-chat-headless/conversation';",
-    "import { ConversationRoot } from '@mui/x-chat';",
-    "import { ConversationRoot } from '@mui/x-chat-headless';"
+    "import { ConversationRoot } from '@mui/x-chat-headless';",
+    "import { ConversationRoot } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],

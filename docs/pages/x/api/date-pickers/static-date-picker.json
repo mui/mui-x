@@ -168,8 +168,8 @@
   "name": "StaticDatePicker",
   "imports": [
     "import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';",
-    "import { StaticDatePicker } from '@mui/x-date-pickers-pro';",
-    "import { StaticDatePicker } from '@mui/x-date-pickers';"
+    "import { StaticDatePicker } from '@mui/x-date-pickers';",
+    "import { StaticDatePicker } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
     {

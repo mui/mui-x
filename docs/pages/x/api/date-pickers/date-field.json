@@ -168,8 +168,8 @@
   "name": "DateField",
   "imports": [
     "import { DateField } from '@mui/x-date-pickers/DateField';",
-    "import { DateField } from '@mui/x-date-pickers-pro';",
-    "import { DateField } from '@mui/x-date-pickers';"
+    "import { DateField } from '@mui/x-date-pickers';",
+    "import { DateField } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
     {

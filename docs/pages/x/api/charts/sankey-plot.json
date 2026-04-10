@@ -22,10 +22,10 @@
   },
   "name": "SankeyPlot",
   "imports": [
-    "import { SankeyPlot } from '@mui/x-charts-premium/SankeyChart';",
-    "import { SankeyPlot } from '@mui/x-charts-premium';",
     "import { SankeyPlot } from '@mui/x-charts-pro/SankeyChart';",
-    "import { SankeyPlot } from '@mui/x-charts-pro';"
+    "import { SankeyPlot } from '@mui/x-charts-pro';",
+    "import { SankeyPlot } from '@mui/x-charts-premium/SankeyChart';",
+    "import { SankeyPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

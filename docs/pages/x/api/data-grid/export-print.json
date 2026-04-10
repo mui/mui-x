@@ -26,9 +26,9 @@
   "name": "ExportPrint",
   "imports": [
     "import { ExportPrint } from '@mui/x-data-grid/components';",
-    "import { ExportPrint } from '@mui/x-data-grid-premium';",
+    "import { ExportPrint } from '@mui/x-data-grid';",
     "import { ExportPrint } from '@mui/x-data-grid-pro';",
-    "import { ExportPrint } from '@mui/x-data-grid';"
+    "import { ExportPrint } from '@mui/x-data-grid-premium';"
   ],
   "slots": [],
   "classes": [],

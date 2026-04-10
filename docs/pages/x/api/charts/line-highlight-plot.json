@@ -12,12 +12,12 @@
   },
   "name": "LineHighlightPlot",
   "imports": [
-    "import { LineHighlightPlot } from '@mui/x-charts-premium/LineChart';",
-    "import { LineHighlightPlot } from '@mui/x-charts-premium';",
+    "import { LineHighlightPlot } from '@mui/x-charts/LineChart';",
+    "import { LineHighlightPlot } from '@mui/x-charts';",
     "import { LineHighlightPlot } from '@mui/x-charts-pro/LineChart';",
     "import { LineHighlightPlot } from '@mui/x-charts-pro';",
-    "import { LineHighlightPlot } from '@mui/x-charts/LineChart';",
-    "import { LineHighlightPlot } from '@mui/x-charts';"
+    "import { LineHighlightPlot } from '@mui/x-charts-premium/LineChart';",
+    "import { LineHighlightPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [{ "name": "lineHighlight", "description": "", "class": null }],
   "classes": [],

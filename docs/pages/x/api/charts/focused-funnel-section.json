@@ -2,10 +2,10 @@
   "props": {},
   "name": "FocusedFunnelSection",
   "imports": [
-    "import { FocusedFunnelSection } from '@mui/x-charts-premium/FunnelChart';",
-    "import { FocusedFunnelSection } from '@mui/x-charts-premium';",
     "import { FocusedFunnelSection } from '@mui/x-charts-pro/FunnelChart';",
-    "import { FocusedFunnelSection } from '@mui/x-charts-pro';"
+    "import { FocusedFunnelSection } from '@mui/x-charts-pro';",
+    "import { FocusedFunnelSection } from '@mui/x-charts-premium/FunnelChart';",
+    "import { FocusedFunnelSection } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

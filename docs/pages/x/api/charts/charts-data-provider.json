@@ -44,12 +44,12 @@
   },
   "name": "ChartsDataProvider",
   "imports": [
-    "import { ChartsDataProvider } from '@mui/x-charts-premium/ChartsDataProvider';",
-    "import { ChartsDataProvider } from '@mui/x-charts-premium';",
+    "import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';",
+    "import { ChartsDataProvider } from '@mui/x-charts';",
     "import { ChartsDataProvider } from '@mui/x-charts-pro/ChartsDataProvider';",
     "import { ChartsDataProvider } from '@mui/x-charts-pro';",
-    "import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';",
-    "import { ChartsDataProvider } from '@mui/x-charts';"
+    "import { ChartsDataProvider } from '@mui/x-charts-premium/ChartsDataProvider';",
+    "import { ChartsDataProvider } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

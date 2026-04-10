@@ -22,8 +22,8 @@
   "name": "PickersSectionList",
   "imports": [
     "import { PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';",
-    "import { PickersSectionList } from '@mui/x-date-pickers-pro';",
-    "import { PickersSectionList } from '@mui/x-date-pickers';"
+    "import { PickersSectionList } from '@mui/x-date-pickers';",
+    "import { PickersSectionList } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
     { "name": "root", "description": "", "class": "MuiPickersSectionList-root" },

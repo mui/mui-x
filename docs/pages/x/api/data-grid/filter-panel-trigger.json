@@ -21,9 +21,9 @@
   "name": "FilterPanelTrigger",
   "imports": [
     "import { FilterPanelTrigger } from '@mui/x-data-grid/components';",
-    "import { FilterPanelTrigger } from '@mui/x-data-grid-premium';",
+    "import { FilterPanelTrigger } from '@mui/x-data-grid';",
     "import { FilterPanelTrigger } from '@mui/x-data-grid-pro';",
-    "import { FilterPanelTrigger } from '@mui/x-data-grid';"
+    "import { FilterPanelTrigger } from '@mui/x-data-grid-premium';"
   ],
   "slots": [],
   "classes": [],

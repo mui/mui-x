@@ -82,10 +82,10 @@
   },
   "name": "SankeyChart",
   "imports": [
-    "import { SankeyChart } from '@mui/x-charts-premium/SankeyChart';",
-    "import { SankeyChart } from '@mui/x-charts-premium';",
     "import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';",
-    "import { SankeyChart } from '@mui/x-charts-pro';"
+    "import { SankeyChart } from '@mui/x-charts-pro';",
+    "import { SankeyChart } from '@mui/x-charts-premium/SankeyChart';",
+    "import { SankeyChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

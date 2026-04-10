@@ -9,8 +9,8 @@
   "name": "MessageAvatar",
   "imports": [
     "import { MessageAvatar } from '@mui/x-chat-headless/message';",
-    "import { MessageAvatar } from '@mui/x-chat';",
-    "import { MessageAvatar } from '@mui/x-chat-headless';"
+    "import { MessageAvatar } from '@mui/x-chat-headless';",
+    "import { MessageAvatar } from '@mui/x-chat';"
   ],
   "slots": [
     { "name": "avatar", "description": "", "class": null },

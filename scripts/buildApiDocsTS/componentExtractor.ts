@@ -259,7 +259,7 @@ export function extractComponentApi(
   } else {
     // Other sections: subdirectory import first, then root imports
     if (subdirSuffix) {
-      imports.push(`import { ${comp.name} } from '${comp.reExportPackages[comp.reExportPackages.length - 1]}/${subdirSuffix}';`);
+      imports.push(`import { ${comp.name} } from '${comp.reExportPackages[0]}/${subdirSuffix}';`);
     }
     for (const pkg of comp.reExportPackages) {
       imports.push(`import { ${comp.name} } from '${pkg}';`);

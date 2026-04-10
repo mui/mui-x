@@ -224,8 +224,8 @@
   "name": "DesktopDateTimePicker",
   "imports": [
     "import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';",
-    "import { DesktopDateTimePicker } from '@mui/x-date-pickers-pro';",
-    "import { DesktopDateTimePicker } from '@mui/x-date-pickers';"
+    "import { DesktopDateTimePicker } from '@mui/x-date-pickers';",
+    "import { DesktopDateTimePicker } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
     {

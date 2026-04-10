@@ -1,9 +1,9 @@
 {
   "name": "GridFilterModel",
   "imports": [
-    "import { GridFilterModel } from '@mui/x-data-grid-premium';",
+    "import { GridFilterModel } from '@mui/x-data-grid';",
     "import { GridFilterModel } from '@mui/x-data-grid-pro';",
-    "import { GridFilterModel } from '@mui/x-data-grid';"
+    "import { GridFilterModel } from '@mui/x-data-grid-premium';"
   ],
   "demos": "  - [Pass filters to the grid](/x/react-data-grid/filtering/#pass-filters-to-the-data-grid)",
   "properties": {

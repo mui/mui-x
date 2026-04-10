@@ -99,11 +99,7 @@ export const COMMON_INHERITED_PROPS = new Set([
 
 function getReExportPackages(pkg: string, family: ProductFamily): string[] {
   const idx = family.packages.indexOf(pkg);
-  // Reverse: premium first, then pro, then community
-  return family.packages
-    .slice(idx)
-    .reverse()
-    .map((p) => `@mui/${p}`);
+  return family.packages.slice(idx).map((p) => `@mui/${p}`);
 }
 
 /** Build the flat list of PackageConfig from the product families. */

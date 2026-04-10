@@ -14,12 +14,12 @@
   },
   "name": "ToolbarButton",
   "imports": [
-    "import { ToolbarButton } from '@mui/x-charts-premium/Toolbar';",
-    "import { ToolbarButton } from '@mui/x-charts-premium';",
+    "import { ToolbarButton } from '@mui/x-charts/Toolbar';",
+    "import { ToolbarButton } from '@mui/x-charts';",
     "import { ToolbarButton } from '@mui/x-charts-pro/Toolbar';",
     "import { ToolbarButton } from '@mui/x-charts-pro';",
-    "import { ToolbarButton } from '@mui/x-charts/Toolbar';",
-    "import { ToolbarButton } from '@mui/x-charts';"
+    "import { ToolbarButton } from '@mui/x-charts-premium/Toolbar';",
+    "import { ToolbarButton } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

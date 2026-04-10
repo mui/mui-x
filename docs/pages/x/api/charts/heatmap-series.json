@@ -1,8 +1,8 @@
 {
   "name": "HeatmapSeries",
   "imports": [
-    "import { HeatmapSeries } from '@mui/x-charts-premium';",
-    "import { HeatmapSeries } from '@mui/x-charts-pro';"
+    "import { HeatmapSeries } from '@mui/x-charts-pro';",
+    "import { HeatmapSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
     "type": { "type": { "description": "'heatmap'" }, "required": true, "isProPlan": true },

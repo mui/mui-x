@@ -51,12 +51,12 @@
   },
   "name": "PiecewiseColorLegend",
   "imports": [
-    "import { PiecewiseColorLegend } from '@mui/x-charts-premium/ChartsLegend';",
-    "import { PiecewiseColorLegend } from '@mui/x-charts-premium';",
+    "import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';",
+    "import { PiecewiseColorLegend } from '@mui/x-charts';",
     "import { PiecewiseColorLegend } from '@mui/x-charts-pro/ChartsLegend';",
     "import { PiecewiseColorLegend } from '@mui/x-charts-pro';",
-    "import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';",
-    "import { PiecewiseColorLegend } from '@mui/x-charts';"
+    "import { PiecewiseColorLegend } from '@mui/x-charts-premium/ChartsLegend';",
+    "import { PiecewiseColorLegend } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

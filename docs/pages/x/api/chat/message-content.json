@@ -26,8 +26,8 @@
   "name": "MessageContent",
   "imports": [
     "import { MessageContent } from '@mui/x-chat-headless/message';",
-    "import { MessageContent } from '@mui/x-chat';",
-    "import { MessageContent } from '@mui/x-chat-headless';"
+    "import { MessageContent } from '@mui/x-chat-headless';",
+    "import { MessageContent } from '@mui/x-chat';"
   ],
   "slots": [
     { "name": "bubble", "description": "", "class": null },

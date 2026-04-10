@@ -28,12 +28,12 @@
   },
   "name": "BarLabel",
   "imports": [
-    "import { BarLabel } from '@mui/x-charts-premium/BarChart';",
-    "import { BarLabel } from '@mui/x-charts-premium';",
+    "import { BarLabel } from '@mui/x-charts/BarChart';",
+    "import { BarLabel } from '@mui/x-charts';",
     "import { BarLabel } from '@mui/x-charts-pro/BarChart';",
     "import { BarLabel } from '@mui/x-charts-pro';",
-    "import { BarLabel } from '@mui/x-charts/BarChart';",
-    "import { BarLabel } from '@mui/x-charts';"
+    "import { BarLabel } from '@mui/x-charts-premium/BarChart';",
+    "import { BarLabel } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

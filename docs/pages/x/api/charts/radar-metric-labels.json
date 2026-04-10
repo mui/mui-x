@@ -2,12 +2,12 @@
   "props": {},
   "name": "RadarMetricLabels",
   "imports": [
-    "import { RadarMetricLabels } from '@mui/x-charts-premium/RadarChart';",
-    "import { RadarMetricLabels } from '@mui/x-charts-premium';",
+    "import { RadarMetricLabels } from '@mui/x-charts/RadarChart';",
+    "import { RadarMetricLabels } from '@mui/x-charts';",
     "import { RadarMetricLabels } from '@mui/x-charts-pro/RadarChart';",
     "import { RadarMetricLabels } from '@mui/x-charts-pro';",
-    "import { RadarMetricLabels } from '@mui/x-charts/RadarChart';",
-    "import { RadarMetricLabels } from '@mui/x-charts';"
+    "import { RadarMetricLabels } from '@mui/x-charts-premium/RadarChart';",
+    "import { RadarMetricLabels } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

@@ -28,12 +28,12 @@
   },
   "name": "ChartsLegend",
   "imports": [
-    "import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';",
-    "import { ChartsLegend } from '@mui/x-charts-premium';",
+    "import { ChartsLegend } from '@mui/x-charts/ChartsLegend';",
+    "import { ChartsLegend } from '@mui/x-charts';",
     "import { ChartsLegend } from '@mui/x-charts-pro/ChartsLegend';",
     "import { ChartsLegend } from '@mui/x-charts-pro';",
-    "import { ChartsLegend } from '@mui/x-charts/ChartsLegend';",
-    "import { ChartsLegend } from '@mui/x-charts';"
+    "import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';",
+    "import { ChartsLegend } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

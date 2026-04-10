@@ -196,8 +196,8 @@
   "name": "StaticDateTimePicker",
   "imports": [
     "import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';",
-    "import { StaticDateTimePicker } from '@mui/x-date-pickers-pro';",
-    "import { StaticDateTimePicker } from '@mui/x-date-pickers';"
+    "import { StaticDateTimePicker } from '@mui/x-date-pickers';",
+    "import { StaticDateTimePicker } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
     {

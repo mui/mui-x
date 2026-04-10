@@ -1,9 +1,9 @@
 {
   "name": "GridCsvExportOptions",
   "imports": [
-    "import { GridCsvExportOptions } from '@mui/x-data-grid-premium';",
+    "import { GridCsvExportOptions } from '@mui/x-data-grid';",
     "import { GridCsvExportOptions } from '@mui/x-data-grid-pro';",
-    "import { GridCsvExportOptions } from '@mui/x-data-grid';"
+    "import { GridCsvExportOptions } from '@mui/x-data-grid-premium';"
   ],
   "demos": "  - [CSV export](/x/react-data-grid/export/#csv-export)",
   "properties": {

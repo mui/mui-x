@@ -12,8 +12,8 @@
   "name": "SuggestionItem",
   "imports": [
     "import { SuggestionItem } from '@mui/x-chat-headless/suggestions';",
-    "import { SuggestionItem } from '@mui/x-chat';",
-    "import { SuggestionItem } from '@mui/x-chat-headless';"
+    "import { SuggestionItem } from '@mui/x-chat-headless';",
+    "import { SuggestionItem } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],

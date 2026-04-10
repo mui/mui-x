@@ -19,8 +19,8 @@
   "name": "ReasoningPart",
   "imports": [
     "import { ReasoningPart } from '@mui/x-chat-headless/message';",
-    "import { ReasoningPart } from '@mui/x-chat';",
-    "import { ReasoningPart } from '@mui/x-chat-headless';"
+    "import { ReasoningPart } from '@mui/x-chat-headless';",
+    "import { ReasoningPart } from '@mui/x-chat';"
   ],
   "slots": [
     { "name": "content", "description": "", "class": null },

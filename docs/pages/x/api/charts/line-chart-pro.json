@@ -215,10 +215,10 @@
   },
   "name": "LineChartPro",
   "imports": [
-    "import { LineChartPro } from '@mui/x-charts-premium/LineChartPro';",
-    "import { LineChartPro } from '@mui/x-charts-premium';",
     "import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';",
-    "import { LineChartPro } from '@mui/x-charts-pro';"
+    "import { LineChartPro } from '@mui/x-charts-pro';",
+    "import { LineChartPro } from '@mui/x-charts-premium/LineChartPro';",
+    "import { LineChartPro } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

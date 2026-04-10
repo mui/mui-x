@@ -14,8 +14,8 @@
   "name": "TimePickerToolbar",
   "imports": [
     "import { TimePickerToolbar } from '@mui/x-date-pickers/TimePicker';",
-    "import { TimePickerToolbar } from '@mui/x-date-pickers-pro';",
-    "import { TimePickerToolbar } from '@mui/x-date-pickers';"
+    "import { TimePickerToolbar } from '@mui/x-date-pickers';",
+    "import { TimePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [],
   "classes": [

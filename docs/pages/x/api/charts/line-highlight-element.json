@@ -14,12 +14,12 @@
   },
   "name": "LineHighlightElement",
   "imports": [
-    "import { LineHighlightElement } from '@mui/x-charts-premium/LineChart';",
-    "import { LineHighlightElement } from '@mui/x-charts-premium';",
+    "import { LineHighlightElement } from '@mui/x-charts/LineChart';",
+    "import { LineHighlightElement } from '@mui/x-charts';",
     "import { LineHighlightElement } from '@mui/x-charts-pro/LineChart';",
     "import { LineHighlightElement } from '@mui/x-charts-pro';",
-    "import { LineHighlightElement } from '@mui/x-charts/LineChart';",
-    "import { LineHighlightElement } from '@mui/x-charts';"
+    "import { LineHighlightElement } from '@mui/x-charts-premium/LineChart';",
+    "import { LineHighlightElement } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

@@ -100,8 +100,8 @@
   "name": "MultiSectionDigitalClock",
   "imports": [
     "import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';",
-    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers-pro';",
-    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers';"
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers';",
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
     {

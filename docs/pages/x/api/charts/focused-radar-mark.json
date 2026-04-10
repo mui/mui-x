@@ -2,12 +2,12 @@
   "props": {},
   "name": "FocusedRadarMark",
   "imports": [
-    "import { FocusedRadarMark } from '@mui/x-charts-premium/RadarChart';",
-    "import { FocusedRadarMark } from '@mui/x-charts-premium';",
+    "import { FocusedRadarMark } from '@mui/x-charts/RadarChart';",
+    "import { FocusedRadarMark } from '@mui/x-charts';",
     "import { FocusedRadarMark } from '@mui/x-charts-pro/RadarChart';",
     "import { FocusedRadarMark } from '@mui/x-charts-pro';",
-    "import { FocusedRadarMark } from '@mui/x-charts/RadarChart';",
-    "import { FocusedRadarMark } from '@mui/x-charts';"
+    "import { FocusedRadarMark } from '@mui/x-charts-premium/RadarChart';",
+    "import { FocusedRadarMark } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

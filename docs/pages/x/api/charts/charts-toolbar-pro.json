@@ -12,10 +12,10 @@
   },
   "name": "ChartsToolbarPro",
   "imports": [
-    "import { ChartsToolbarPro } from '@mui/x-charts-premium/ChartsToolbarPro';",
-    "import { ChartsToolbarPro } from '@mui/x-charts-premium';",
     "import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';",
-    "import { ChartsToolbarPro } from '@mui/x-charts-pro';"
+    "import { ChartsToolbarPro } from '@mui/x-charts-pro';",
+    "import { ChartsToolbarPro } from '@mui/x-charts-premium/ChartsToolbarPro';",
+    "import { ChartsToolbarPro } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

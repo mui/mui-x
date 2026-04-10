@@ -1,9 +1,9 @@
 {
   "name": "GridRowClassNameParams",
   "imports": [
-    "import { GridRowClassNameParams } from '@mui/x-data-grid-premium';",
+    "import { GridRowClassNameParams } from '@mui/x-data-grid';",
     "import { GridRowClassNameParams } from '@mui/x-data-grid-pro';",
-    "import { GridRowClassNameParams } from '@mui/x-data-grid';"
+    "import { GridRowClassNameParams } from '@mui/x-data-grid-premium';"
   ],
   "demos": "  - [Styling rows](/x/react-data-grid/style/#styling-rows)",
   "properties": {

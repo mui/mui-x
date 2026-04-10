@@ -31,12 +31,12 @@
   },
   "name": "BarElement",
   "imports": [
-    "import { BarElement } from '@mui/x-charts-premium/BarChart';",
-    "import { BarElement } from '@mui/x-charts-premium';",
+    "import { BarElement } from '@mui/x-charts/BarChart';",
+    "import { BarElement } from '@mui/x-charts';",
     "import { BarElement } from '@mui/x-charts-pro/BarChart';",
     "import { BarElement } from '@mui/x-charts-pro';",
-    "import { BarElement } from '@mui/x-charts/BarChart';",
-    "import { BarElement } from '@mui/x-charts';"
+    "import { BarElement } from '@mui/x-charts-premium/BarChart';",
+    "import { BarElement } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

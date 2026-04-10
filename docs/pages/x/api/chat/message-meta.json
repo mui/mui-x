@@ -9,8 +9,8 @@
   "name": "MessageMeta",
   "imports": [
     "import { MessageMeta } from '@mui/x-chat-headless/message';",
-    "import { MessageMeta } from '@mui/x-chat';",
-    "import { MessageMeta } from '@mui/x-chat-headless';"
+    "import { MessageMeta } from '@mui/x-chat-headless';",
+    "import { MessageMeta } from '@mui/x-chat';"
   ],
   "slots": [
     { "name": "edited", "description": "", "class": null },

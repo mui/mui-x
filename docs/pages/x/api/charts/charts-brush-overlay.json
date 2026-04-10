@@ -2,12 +2,12 @@
   "props": { "className": { "type": { "name": "string" } } },
   "name": "ChartsBrushOverlay",
   "imports": [
-    "import { ChartsBrushOverlay } from '@mui/x-charts-premium/ChartsBrushOverlay';",
-    "import { ChartsBrushOverlay } from '@mui/x-charts-premium';",
+    "import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';",
+    "import { ChartsBrushOverlay } from '@mui/x-charts';",
     "import { ChartsBrushOverlay } from '@mui/x-charts-pro/ChartsBrushOverlay';",
     "import { ChartsBrushOverlay } from '@mui/x-charts-pro';",
-    "import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';",
-    "import { ChartsBrushOverlay } from '@mui/x-charts';"
+    "import { ChartsBrushOverlay } from '@mui/x-charts-premium/ChartsBrushOverlay';",
+    "import { ChartsBrushOverlay } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

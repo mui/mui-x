@@ -197,12 +197,12 @@
   },
   "name": "SparkLineChart",
   "imports": [
-    "import { SparkLineChart } from '@mui/x-charts-premium/SparkLineChart';",
-    "import { SparkLineChart } from '@mui/x-charts-premium';",
+    "import { SparkLineChart } from '@mui/x-charts/SparkLineChart';",
+    "import { SparkLineChart } from '@mui/x-charts';",
     "import { SparkLineChart } from '@mui/x-charts-pro/SparkLineChart';",
     "import { SparkLineChart } from '@mui/x-charts-pro';",
-    "import { SparkLineChart } from '@mui/x-charts/SparkLineChart';",
-    "import { SparkLineChart } from '@mui/x-charts';"
+    "import { SparkLineChart } from '@mui/x-charts-premium/SparkLineChart';",
+    "import { SparkLineChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

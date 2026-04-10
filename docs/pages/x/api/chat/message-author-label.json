@@ -9,8 +9,8 @@
   "name": "MessageAuthorLabel",
   "imports": [
     "import { MessageAuthorLabel } from '@mui/x-chat-headless/message';",
-    "import { MessageAuthorLabel } from '@mui/x-chat';",
-    "import { MessageAuthorLabel } from '@mui/x-chat-headless';"
+    "import { MessageAuthorLabel } from '@mui/x-chat-headless';",
+    "import { MessageAuthorLabel } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "authorLabel", "description": "", "class": null }],
   "classes": [],

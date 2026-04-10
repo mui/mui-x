@@ -8,12 +8,12 @@
   },
   "name": "ChartsText",
   "imports": [
-    "import { ChartsText } from '@mui/x-charts-premium/ChartsText';",
-    "import { ChartsText } from '@mui/x-charts-premium';",
+    "import { ChartsText } from '@mui/x-charts/ChartsText';",
+    "import { ChartsText } from '@mui/x-charts';",
     "import { ChartsText } from '@mui/x-charts-pro/ChartsText';",
     "import { ChartsText } from '@mui/x-charts-pro';",
-    "import { ChartsText } from '@mui/x-charts/ChartsText';",
-    "import { ChartsText } from '@mui/x-charts';"
+    "import { ChartsText } from '@mui/x-charts-premium/ChartsText';",
+    "import { ChartsText } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

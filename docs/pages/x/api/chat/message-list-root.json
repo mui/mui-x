@@ -35,8 +35,8 @@
   "name": "MessageListRoot",
   "imports": [
     "import { MessageListRoot } from '@mui/x-chat-headless/message-list';",
-    "import { MessageListRoot } from '@mui/x-chat';",
-    "import { MessageListRoot } from '@mui/x-chat-headless';"
+    "import { MessageListRoot } from '@mui/x-chat-headless';",
+    "import { MessageListRoot } from '@mui/x-chat';"
   ],
   "slots": [
     { "name": "messageList", "description": "", "class": null },

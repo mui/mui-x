@@ -6,12 +6,12 @@
   },
   "name": "AnimatedLine",
   "imports": [
-    "import { AnimatedLine } from '@mui/x-charts-premium/LineChart';",
-    "import { AnimatedLine } from '@mui/x-charts-premium';",
+    "import { AnimatedLine } from '@mui/x-charts/LineChart';",
+    "import { AnimatedLine } from '@mui/x-charts';",
     "import { AnimatedLine } from '@mui/x-charts-pro/LineChart';",
     "import { AnimatedLine } from '@mui/x-charts-pro';",
-    "import { AnimatedLine } from '@mui/x-charts/LineChart';",
-    "import { AnimatedLine } from '@mui/x-charts';"
+    "import { AnimatedLine } from '@mui/x-charts-premium/LineChart';",
+    "import { AnimatedLine } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

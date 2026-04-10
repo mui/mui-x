@@ -171,12 +171,12 @@
   },
   "name": "ScatterChart",
   "imports": [
-    "import { ScatterChart } from '@mui/x-charts-premium/ScatterChart';",
-    "import { ScatterChart } from '@mui/x-charts-premium';",
+    "import { ScatterChart } from '@mui/x-charts/ScatterChart';",
+    "import { ScatterChart } from '@mui/x-charts';",
     "import { ScatterChart } from '@mui/x-charts-pro/ScatterChart';",
     "import { ScatterChart } from '@mui/x-charts-pro';",
-    "import { ScatterChart } from '@mui/x-charts/ScatterChart';",
-    "import { ScatterChart } from '@mui/x-charts';"
+    "import { ScatterChart } from '@mui/x-charts-premium/ScatterChart';",
+    "import { ScatterChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

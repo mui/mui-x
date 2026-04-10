@@ -1,8 +1,8 @@
 {
   "name": "FunnelSeries",
   "imports": [
-    "import { FunnelSeries } from '@mui/x-charts-premium';",
-    "import { FunnelSeries } from '@mui/x-charts-pro';"
+    "import { FunnelSeries } from '@mui/x-charts-pro';",
+    "import { FunnelSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
     "data": {

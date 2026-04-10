@@ -1,9 +1,9 @@
 {
   "name": "GridSingleSelectColDef",
   "imports": [
-    "import { GridSingleSelectColDef } from '@mui/x-data-grid-premium';",
+    "import { GridSingleSelectColDef } from '@mui/x-data-grid';",
     "import { GridSingleSelectColDef } from '@mui/x-data-grid-pro';",
-    "import { GridSingleSelectColDef } from '@mui/x-data-grid';"
+    "import { GridSingleSelectColDef } from '@mui/x-data-grid-premium';"
   ],
   "demos": "  - [Special column properties](/x/react-data-grid/column-definition/#special-properties)",
   "properties": {

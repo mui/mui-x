@@ -21,12 +21,12 @@
   },
   "name": "AreaElement",
   "imports": [
-    "import { AreaElement } from '@mui/x-charts-premium/LineChart';",
-    "import { AreaElement } from '@mui/x-charts-premium';",
+    "import { AreaElement } from '@mui/x-charts/LineChart';",
+    "import { AreaElement } from '@mui/x-charts';",
     "import { AreaElement } from '@mui/x-charts-pro/LineChart';",
     "import { AreaElement } from '@mui/x-charts-pro';",
-    "import { AreaElement } from '@mui/x-charts/LineChart';",
-    "import { AreaElement } from '@mui/x-charts';"
+    "import { AreaElement } from '@mui/x-charts-premium/LineChart';",
+    "import { AreaElement } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

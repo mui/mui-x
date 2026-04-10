@@ -76,8 +76,8 @@
   "name": "DigitalClock",
   "imports": [
     "import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';",
-    "import { DigitalClock } from '@mui/x-date-pickers-pro';",
-    "import { DigitalClock } from '@mui/x-date-pickers';"
+    "import { DigitalClock } from '@mui/x-date-pickers';",
+    "import { DigitalClock } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
     {

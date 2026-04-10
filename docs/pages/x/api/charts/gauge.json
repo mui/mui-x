@@ -39,12 +39,12 @@
   },
   "name": "Gauge",
   "imports": [
-    "import { Gauge } from '@mui/x-charts-premium/Gauge';",
-    "import { Gauge } from '@mui/x-charts-premium';",
+    "import { Gauge } from '@mui/x-charts/Gauge';",
+    "import { Gauge } from '@mui/x-charts';",
     "import { Gauge } from '@mui/x-charts-pro/Gauge';",
     "import { Gauge } from '@mui/x-charts-pro';",
-    "import { Gauge } from '@mui/x-charts/Gauge';",
-    "import { Gauge } from '@mui/x-charts';"
+    "import { Gauge } from '@mui/x-charts-premium/Gauge';",
+    "import { Gauge } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [

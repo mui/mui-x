@@ -31,9 +31,9 @@
   "name": "QuickFilter",
   "imports": [
     "import { QuickFilter } from '@mui/x-data-grid/components';",
-    "import { QuickFilter } from '@mui/x-data-grid-premium';",
+    "import { QuickFilter } from '@mui/x-data-grid';",
     "import { QuickFilter } from '@mui/x-data-grid-pro';",
-    "import { QuickFilter } from '@mui/x-data-grid';"
+    "import { QuickFilter } from '@mui/x-data-grid-premium';"
   ],
   "slots": [],
   "classes": [],

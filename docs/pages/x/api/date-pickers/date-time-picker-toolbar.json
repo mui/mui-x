@@ -15,8 +15,8 @@
   "name": "DateTimePickerToolbar",
   "imports": [
     "import { DateTimePickerToolbar } from '@mui/x-date-pickers/DateTimePicker';",
-    "import { DateTimePickerToolbar } from '@mui/x-date-pickers-pro';",
-    "import { DateTimePickerToolbar } from '@mui/x-date-pickers';"
+    "import { DateTimePickerToolbar } from '@mui/x-date-pickers';",
+    "import { DateTimePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [],
   "classes": [

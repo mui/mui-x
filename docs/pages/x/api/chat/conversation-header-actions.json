@@ -11,8 +11,8 @@
   "name": "ConversationHeaderActions",
   "imports": [
     "import { ConversationHeaderActions } from '@mui/x-chat-headless/conversation';",
-    "import { ConversationHeaderActions } from '@mui/x-chat';",
-    "import { ConversationHeaderActions } from '@mui/x-chat-headless';"
+    "import { ConversationHeaderActions } from '@mui/x-chat-headless';",
+    "import { ConversationHeaderActions } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "actions", "description": "", "class": null }],
   "classes": [],

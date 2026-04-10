@@ -12,12 +12,12 @@
   },
   "name": "ChartsAxis",
   "imports": [
-    "import { ChartsAxis } from '@mui/x-charts-premium/ChartsAxis';",
-    "import { ChartsAxis } from '@mui/x-charts-premium';",
+    "import { ChartsAxis } from '@mui/x-charts/ChartsAxis';",
+    "import { ChartsAxis } from '@mui/x-charts';",
     "import { ChartsAxis } from '@mui/x-charts-pro/ChartsAxis';",
     "import { ChartsAxis } from '@mui/x-charts-pro';",
-    "import { ChartsAxis } from '@mui/x-charts/ChartsAxis';",
-    "import { ChartsAxis } from '@mui/x-charts';"
+    "import { ChartsAxis } from '@mui/x-charts-premium/ChartsAxis';",
+    "import { ChartsAxis } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

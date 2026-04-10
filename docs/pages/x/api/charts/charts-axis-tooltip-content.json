@@ -14,12 +14,12 @@
   },
   "name": "ChartsAxisTooltipContent",
   "imports": [
-    "import { ChartsAxisTooltipContent } from '@mui/x-charts-premium/ChartsTooltip';",
-    "import { ChartsAxisTooltipContent } from '@mui/x-charts-premium';",
+    "import { ChartsAxisTooltipContent } from '@mui/x-charts/ChartsTooltip';",
+    "import { ChartsAxisTooltipContent } from '@mui/x-charts';",
     "import { ChartsAxisTooltipContent } from '@mui/x-charts-pro/ChartsTooltip';",
     "import { ChartsAxisTooltipContent } from '@mui/x-charts-pro';",
-    "import { ChartsAxisTooltipContent } from '@mui/x-charts/ChartsTooltip';",
-    "import { ChartsAxisTooltipContent } from '@mui/x-charts';"
+    "import { ChartsAxisTooltipContent } from '@mui/x-charts-premium/ChartsTooltip';",
+    "import { ChartsAxisTooltipContent } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

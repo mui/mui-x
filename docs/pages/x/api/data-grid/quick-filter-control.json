@@ -43,9 +43,9 @@
   "name": "QuickFilterControl",
   "imports": [
     "import { QuickFilterControl } from '@mui/x-data-grid/components';",
-    "import { QuickFilterControl } from '@mui/x-data-grid-premium';",
+    "import { QuickFilterControl } from '@mui/x-data-grid';",
     "import { QuickFilterControl } from '@mui/x-data-grid-pro';",
-    "import { QuickFilterControl } from '@mui/x-data-grid';"
+    "import { QuickFilterControl } from '@mui/x-data-grid-premium';"
   ],
   "slots": [],
   "classes": [],

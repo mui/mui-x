@@ -31,8 +31,8 @@
   "name": "ToolPart",
   "imports": [
     "import { ToolPart } from '@mui/x-chat-headless/message';",
-    "import { ToolPart } from '@mui/x-chat';",
-    "import { ToolPart } from '@mui/x-chat-headless';"
+    "import { ToolPart } from '@mui/x-chat-headless';",
+    "import { ToolPart } from '@mui/x-chat';"
   ],
   "slots": [
     { "name": "actions", "description": "", "class": null },

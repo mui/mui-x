@@ -1,9 +1,9 @@
 {
   "name": "AxisConfig",
   "imports": [
-    "import { AxisConfig } from '@mui/x-charts-premium';",
+    "import { AxisConfig } from '@mui/x-charts';",
     "import { AxisConfig } from '@mui/x-charts-pro';",
-    "import { AxisConfig } from '@mui/x-charts';"
+    "import { AxisConfig } from '@mui/x-charts-premium';"
   ],
   "properties": {
     "id": { "type": { "description": "number | string" }, "required": true },

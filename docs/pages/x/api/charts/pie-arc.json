@@ -28,12 +28,12 @@
   },
   "name": "PieArc",
   "imports": [
-    "import { PieArc } from '@mui/x-charts-premium/PieChart';",
-    "import { PieArc } from '@mui/x-charts-premium';",
+    "import { PieArc } from '@mui/x-charts/PieChart';",
+    "import { PieArc } from '@mui/x-charts';",
     "import { PieArc } from '@mui/x-charts-pro/PieChart';",
     "import { PieArc } from '@mui/x-charts-pro';",
-    "import { PieArc } from '@mui/x-charts/PieChart';",
-    "import { PieArc } from '@mui/x-charts';"
+    "import { PieArc } from '@mui/x-charts-premium/PieChart';",
+    "import { PieArc } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

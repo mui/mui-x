@@ -11,8 +11,8 @@
   "name": "ComposerLabel",
   "imports": [
     "import { ComposerLabel } from '@mui/x-chat-headless/composer';",
-    "import { ComposerLabel } from '@mui/x-chat';",
-    "import { ComposerLabel } from '@mui/x-chat-headless';"
+    "import { ComposerLabel } from '@mui/x-chat-headless';",
+    "import { ComposerLabel } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "label", "description": "", "class": null }],
   "classes": [],

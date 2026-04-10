@@ -5,9 +5,9 @@
   "name": "Toolbar",
   "imports": [
     "import { Toolbar } from '@mui/x-data-grid/components';",
-    "import { Toolbar } from '@mui/x-data-grid-premium';",
+    "import { Toolbar } from '@mui/x-data-grid';",
     "import { Toolbar } from '@mui/x-data-grid-pro';",
-    "import { Toolbar } from '@mui/x-data-grid';"
+    "import { Toolbar } from '@mui/x-data-grid-premium';"
   ],
   "slots": [],
   "classes": [],

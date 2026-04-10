@@ -16,8 +16,8 @@
   "name": "ComposerRoot",
   "imports": [
     "import { ComposerRoot } from '@mui/x-chat-headless/composer';",
-    "import { ComposerRoot } from '@mui/x-chat';",
-    "import { ComposerRoot } from '@mui/x-chat-headless';"
+    "import { ComposerRoot } from '@mui/x-chat-headless';",
+    "import { ComposerRoot } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],

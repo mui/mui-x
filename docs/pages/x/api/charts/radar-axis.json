@@ -30,12 +30,12 @@
   },
   "name": "RadarAxis",
   "imports": [
-    "import { RadarAxis } from '@mui/x-charts-premium/RadarChart';",
-    "import { RadarAxis } from '@mui/x-charts-premium';",
+    "import { RadarAxis } from '@mui/x-charts/RadarChart';",
+    "import { RadarAxis } from '@mui/x-charts';",
     "import { RadarAxis } from '@mui/x-charts-pro/RadarChart';",
     "import { RadarAxis } from '@mui/x-charts-pro';",
-    "import { RadarAxis } from '@mui/x-charts/RadarChart';",
-    "import { RadarAxis } from '@mui/x-charts';"
+    "import { RadarAxis } from '@mui/x-charts-premium/RadarChart';",
+    "import { RadarAxis } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

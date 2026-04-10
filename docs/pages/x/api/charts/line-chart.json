@@ -183,12 +183,12 @@
   },
   "name": "LineChart",
   "imports": [
-    "import { LineChart } from '@mui/x-charts-premium/LineChart';",
-    "import { LineChart } from '@mui/x-charts-premium';",
+    "import { LineChart } from '@mui/x-charts/LineChart';",
+    "import { LineChart } from '@mui/x-charts';",
     "import { LineChart } from '@mui/x-charts-pro/LineChart';",
     "import { LineChart } from '@mui/x-charts-pro';",
-    "import { LineChart } from '@mui/x-charts/LineChart';",
-    "import { LineChart } from '@mui/x-charts';"
+    "import { LineChart } from '@mui/x-charts-premium/LineChart';",
+    "import { LineChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

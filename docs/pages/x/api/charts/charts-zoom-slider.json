@@ -2,10 +2,10 @@
   "props": {},
   "name": "ChartsZoomSlider",
   "imports": [
-    "import { ChartsZoomSlider } from '@mui/x-charts-premium/ChartsZoomSlider';",
-    "import { ChartsZoomSlider } from '@mui/x-charts-premium';",
     "import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';",
-    "import { ChartsZoomSlider } from '@mui/x-charts-pro';"
+    "import { ChartsZoomSlider } from '@mui/x-charts-pro';",
+    "import { ChartsZoomSlider } from '@mui/x-charts-premium/ChartsZoomSlider';",
+    "import { ChartsZoomSlider } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [],

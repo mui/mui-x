@@ -206,10 +206,10 @@
   },
   "name": "BarChartPro",
   "imports": [
-    "import { BarChartPro } from '@mui/x-charts-premium/BarChartPro';",
-    "import { BarChartPro } from '@mui/x-charts-premium';",
     "import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';",
-    "import { BarChartPro } from '@mui/x-charts-pro';"
+    "import { BarChartPro } from '@mui/x-charts-pro';",
+    "import { BarChartPro } from '@mui/x-charts-premium/BarChartPro';",
+    "import { BarChartPro } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

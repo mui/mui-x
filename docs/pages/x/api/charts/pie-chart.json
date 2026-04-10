@@ -100,12 +100,12 @@
   },
   "name": "PieChart",
   "imports": [
-    "import { PieChart } from '@mui/x-charts-premium/PieChart';",
-    "import { PieChart } from '@mui/x-charts-premium';",
+    "import { PieChart } from '@mui/x-charts/PieChart';",
+    "import { PieChart } from '@mui/x-charts';",
     "import { PieChart } from '@mui/x-charts-pro/PieChart';",
     "import { PieChart } from '@mui/x-charts-pro';",
-    "import { PieChart } from '@mui/x-charts/PieChart';",
-    "import { PieChart } from '@mui/x-charts';"
+    "import { PieChart } from '@mui/x-charts-premium/PieChart';",
+    "import { PieChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

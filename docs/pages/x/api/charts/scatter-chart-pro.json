@@ -197,10 +197,10 @@
   },
   "name": "ScatterChartPro",
   "imports": [
-    "import { ScatterChartPro } from '@mui/x-charts-premium/ScatterChartPro';",
-    "import { ScatterChartPro } from '@mui/x-charts-premium';",
     "import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';",
-    "import { ScatterChartPro } from '@mui/x-charts-pro';"
+    "import { ScatterChartPro } from '@mui/x-charts-pro';",
+    "import { ScatterChartPro } from '@mui/x-charts-premium/ScatterChartPro';",
+    "import { ScatterChartPro } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

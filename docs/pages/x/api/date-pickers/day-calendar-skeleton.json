@@ -16,8 +16,8 @@
   "name": "DayCalendarSkeleton",
   "imports": [
     "import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';",
-    "import { DayCalendarSkeleton } from '@mui/x-date-pickers-pro';",
-    "import { DayCalendarSkeleton } from '@mui/x-date-pickers';"
+    "import { DayCalendarSkeleton } from '@mui/x-date-pickers';",
+    "import { DayCalendarSkeleton } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [],
   "classes": [

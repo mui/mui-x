@@ -10,12 +10,12 @@
   },
   "name": "ChartsGrid",
   "imports": [
-    "import { ChartsGrid } from '@mui/x-charts-premium/ChartsGrid';",
-    "import { ChartsGrid } from '@mui/x-charts-premium';",
+    "import { ChartsGrid } from '@mui/x-charts/ChartsGrid';",
+    "import { ChartsGrid } from '@mui/x-charts';",
     "import { ChartsGrid } from '@mui/x-charts-pro/ChartsGrid';",
     "import { ChartsGrid } from '@mui/x-charts-pro';",
-    "import { ChartsGrid } from '@mui/x-charts/ChartsGrid';",
-    "import { ChartsGrid } from '@mui/x-charts';"
+    "import { ChartsGrid } from '@mui/x-charts-premium/ChartsGrid';",
+    "import { ChartsGrid } from '@mui/x-charts-premium';"
   ],
   "slots": [],
   "classes": [
