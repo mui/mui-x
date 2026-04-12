@@ -42,6 +42,11 @@ Use the `xAxis` and `yAxis` props to set x and y ticks.
 
 {{"demo": "BasicHeatmap.js"}}
 
+### Using a dataset
+
+You can use the `dataset` prop combined with a `valueGetter` on the series to transform dataset items into heatmap values.
+See the [Dataset](/x/react-charts/dataset/) page for more details.
+
 ## Color mapping
 
 Use the `zAxis` configuration to customize how values map to color.

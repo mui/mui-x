@@ -72,7 +72,6 @@ describe(`RTL - test arrows navigation`, () => {
   it('should move selected section to the next section respecting RTL order in empty field', () => {
     const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
 
-    // Test with accessible DOM structure
     const view = renderWithProps({}, { direction: 'rtl' });
 
     view.selectSection('hours');
@@ -88,7 +87,6 @@ describe(`RTL - test arrows navigation`, () => {
   it('should move selected section to the previous section respecting RTL order in empty field', () => {
     const expectedValues = ['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'];
 
-    // Test with accessible DOM structure
     const view = renderWithProps({}, { direction: 'rtl' });
 
     view.selectSection('day');
@@ -105,7 +103,6 @@ describe(`RTL - test arrows navigation`, () => {
     // 25/04/2018 => 1397/02/05
     const expectedValues = ['11', '54', '1397', '02', '05', '05'];
 
-    // Test with accessible DOM structure
     const view = renderWithProps(
       {
         defaultValue: adapter.date('2018-04-25T11:54:00'),
@@ -127,7 +124,6 @@ describe(`RTL - test arrows navigation`, () => {
     // 25/04/2018 => 1397/02/05
     const expectedValues = ['05', '02', '1397', '54', '11', '11'];
 
-    // Test with accessible DOM structure
     const view = renderWithProps(
       {
         defaultValue: adapter.date('2018-04-25T11:54:00'),

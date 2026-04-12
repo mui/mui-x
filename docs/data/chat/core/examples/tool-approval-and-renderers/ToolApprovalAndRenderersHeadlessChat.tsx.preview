@@ -1,0 +1,7 @@
+<ChatProvider
+  adapter={adapter}
+  initialActiveConversationId="tools"
+  partRenderers={partRenderers}
+>
+  <ToolAndRendererInner />
+</ChatProvider>

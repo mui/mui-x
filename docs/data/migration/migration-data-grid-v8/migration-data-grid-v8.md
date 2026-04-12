@@ -17,17 +17,17 @@ This guide is also available in <a href="https://raw.githubusercontent.com/mui/m
 
 ## Start using the new release
 
-In `package.json`, change the version of the Data Grid package to `next`.
+In `package.json`, change the version of the Data Grid package to `^9.0.0`.
 
 ```diff
 -"@mui/x-data-grid": "^8.x.x",
-+"@mui/x-data-grid": "next",
++"@mui/x-data-grid": "^9.0.0",
 
 -"@mui/x-data-grid-pro": "^8.x.x",
-+"@mui/x-data-grid-pro": "next",
++"@mui/x-data-grid-pro": "^9.0.0",
 
 -"@mui/x-data-grid-premium": "^8.x.x",
-+"@mui/x-data-grid-premium": "next",
++"@mui/x-data-grid-premium": "^9.0.0",
 ```
 
 ## Breaking changes
@@ -51,7 +51,7 @@ You can use this codemod to automatically remove the `charts` property from `exp
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+npx @mui/x-codemod@latest v9.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
 ### Locale text changes

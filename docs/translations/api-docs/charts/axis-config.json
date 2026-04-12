@@ -65,6 +65,9 @@
       "description": "The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
     },
     "valueFormatter": { "description": "Formats the axis value." },
+    "valueGetter": {
+      "description": "A function to extract and transform the value from the <code>dataset</code> item.<br />It receives the full dataset item and should return the axis value.<br />Can be used as an alternative to <code>dataKey</code>."
+    },
     "zoom": { "description": "" }
   }
 }
