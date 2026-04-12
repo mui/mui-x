@@ -3,7 +3,7 @@
   "version": "9.0.0-alpha.2",
   "author": "MUI Team",
   "description": "The Premium plan edition of the scheduler components (MUI X).",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "SEE LICENSE IN LICENSE.md",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
