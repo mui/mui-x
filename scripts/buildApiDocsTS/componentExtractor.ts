@@ -255,7 +255,7 @@ export function extractComponentApi(
   }
 
   // Metadata
-  const conformance = parseConformanceTest(comp.filePath);
+  const { info: conformance, defaultsFallback } = parseConformanceTest(comp.filePath);
   const muiName = muiNameEarly;
 
   // Compute imports
@@ -326,7 +326,11 @@ export function extractComponentApi(
     result.themeDefaultProps = conformance.themeDefaultProps;
   }
 
-  return { kind: 'ok', api: result };
+  const warnings: string[] = [];
+  if (defaultsFallback) {
+    warnings.push('conformance options could not be parsed — spread/themeDefaultProps defaulted to true');
+  }
+  return { kind: 'ok', api: result, warnings: warnings.length ? warnings : undefined };
 }
 
 // ---------------------------------------------------------------------------
@@ -560,6 +564,10 @@ function discoverClassesFiles(dir: string, program: ts.Program): ClassesCandidat
 /**
  * Walks the classes source file to find the exported `<X>Classes`-typed const and the
  * `generateUtilityClasses('Mui<Y>', ...)` call it contains (directly or via spread).
+ *
+ * Returns the FIRST such declaration found. If a file exports multiple `*Classes` consts
+ * (base + overrides, variants, etc.) only the first wins. MUI X convention is one classes
+ * const per file, so this is adequate — revisit if we ever need multi-namespace support.
  */
 function parseClassesFile(
   sourceFile: ts.SourceFile,
@@ -812,11 +820,17 @@ function hasIgnoreJsDocTag(node: ts.Node): boolean {
 // Test file parsing (for forwardsRefTo, spread, themeDefaultProps)
 // ---------------------------------------------------------------------------
 
-export function parseConformanceTest(componentFilePath: string): ConformanceInfo {
+export function parseConformanceTest(componentFilePath: string): {
+  info: ConformanceInfo;
+  /** Set when the file mentions describeConformance but we couldn't parse its options. */
+  defaultsFallback?: boolean;
+} {
   const dir = path.dirname(componentFilePath);
   const baseName = path.basename(componentFilePath, '.tsx');
 
-  // Search for test files in several conventional locations.
+  // Find the first test file for this component that actually calls describeConformance.
+  // Unlike the previous implementation there is no "fallback" file — if no candidate
+  // mentions describeConformance we simply return empty.
   const pkgSrc = dir.replace(/\/src\/.*/, '/src');
   const candidateDirs = [
     dir,
@@ -826,8 +840,8 @@ export function parseConformanceTest(componentFilePath: string): ConformanceInfo
   ];
 
   let testFilePath: string | undefined;
-  let testFallback: string | undefined;
-  for (const testDir of candidateDirs) {
+  let testContent: string | undefined;
+  outer: for (const testDir of candidateDirs) {
     if (!fs.existsSync(testDir) || !fs.statSync(testDir).isDirectory()) {
       continue;
     }
@@ -839,44 +853,40 @@ export function parseConformanceTest(componentFilePath: string): ConformanceInfo
       const content = fs.readFileSync(candidatePath, 'utf8');
       if (content.includes('describeConformance')) {
         testFilePath = candidatePath;
-        break;
-      }
-      if (!testFallback) {
-        testFallback = candidatePath;
+        testContent = content;
+        break outer;
       }
     }
-    if (testFilePath) {
-      break;
-    }
   }
-  const finalPath = testFilePath ?? testFallback;
-  if (!finalPath) {
-    return {};
-  }
-
-  const content = fs.readFileSync(finalPath, 'utf8');
-  if (!content.includes('describeConformance')) {
-    return {};
+  if (!testFilePath || !testContent) {
+    return { info: {} };
   }
 
   const sourceFile = ts.createSourceFile(
-    finalPath,
-    content,
+    testFilePath,
+    testContent,
     ts.ScriptTarget.Latest,
     true,
     ts.ScriptKind.TSX,
   );
   const info = extractConformanceInfoFromAst(sourceFile);
-  // If the file mentions describeConformance but we couldn't find a concrete call
-  // (e.g. the file has a hand-rolled adaptation instead of the helper), default to
-  // the "assumed conformant" values so we don't regress vs. the old output.
+  // The file mentions describeConformance but we couldn't parse its options object
+  // (hand-rolled adaptation, computed callback, etc.). Default to "assumed conformant"
+  // so we match the old output, but flag it so the pipeline can surface a warning.
+  const isEmpty = info.forwardsRefTo === undefined && info.spread === undefined && info.themeDefaultProps === undefined;
+  if (isEmpty) {
+    return {
+      info: { spread: true, themeDefaultProps: true },
+      defaultsFallback: true,
+    };
+  }
   if (info.spread === undefined) {
     info.spread = true;
   }
   if (info.themeDefaultProps === undefined) {
     info.themeDefaultProps = true;
   }
-  return info;
+  return { info };
 }
 
 /**
@@ -951,12 +961,16 @@ function readConformanceObject(obj: ts.ObjectLiteralExpression): ConformanceInfo
     }
     if (prop.name.text === 'refInstanceof') {
       const init = prop.initializer;
+      // `window.HTMLDivElement` — extract the member name
       if (
         ts.isPropertyAccessExpression(init) &&
         ts.isIdentifier(init.expression) &&
         init.expression.text === 'window'
       ) {
         forwardsRefTo = init.name.text;
+      } else if (ts.isIdentifier(init)) {
+        // Plain identifier like `HTMLDivElement` (no `window.` prefix)
+        forwardsRefTo = init.text;
       }
     } else if (prop.name.text === 'skip' && ts.isArrayLiteralExpression(prop.initializer)) {
       for (const elem of prop.initializer.elements) {

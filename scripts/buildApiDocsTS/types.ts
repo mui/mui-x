@@ -62,7 +62,7 @@ export interface PackageConfig {
 }
 
 export type ExtractResult =
-  | { kind: 'ok'; api: ComponentApi }
+  | { kind: 'ok'; api: ComponentApi; warnings?: string[] }
   | { kind: 'skipped'; reason: string };
 
 export interface ComponentApi {

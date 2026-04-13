@@ -53,6 +53,7 @@ async function main(grep?: string) {
   }
 
   const skipped: { name: string; filePath: string; reason: string }[] = [];
+  let warningCount = 0;
 
   // Pre-index configs by section
   const interfaceEntries = getInterfacesToDocument();
@@ -83,6 +84,12 @@ async function main(grep?: string) {
     }
 
     const { api } = result;
+    if (result.warnings) {
+      warningCount += result.warnings.length;
+      for (const w of result.warnings) {
+        debug(`    ⚠ ${comp.name}: ${w}`);
+      }
+    }
     const sectionComponents = componentsBySection.get(comp.section) || [];
     sectionComponents.push(api);
     componentsBySection.set(comp.section, sectionComponents);
@@ -111,8 +118,9 @@ async function main(grep?: string) {
   cleanupStaleFiles(allFiles);
   await writeAllFiles(allFiles);
 
+  const warnSuffix = warningCount > 0 ? `, ${warningCount} warning(s)` : '';
   console.log(
-    `Done in ${Date.now() - start}ms — ${allFiles.length} files written, ${skipped.length} skipped`,
+    `Done in ${Date.now() - start}ms — ${allFiles.length} files written, ${skipped.length} skipped${warnSuffix}`,
   );
 
   /** Build interfaces, events, and selectors for a given section. */
