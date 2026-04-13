@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MarkdownElement } from '@mui/docs/MarkdownElement';
+import { MarkdownElement } from '@mui/internal-core-docs/MarkdownDocs';
 
 interface MuiXVersion {
   version: string;
