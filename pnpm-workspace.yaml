@@ -86,7 +86,6 @@ catalog:
 engineStrict: true
 
 ignoredBuiltDependencies:
-  - '@mui/monorepo'
   - core-js
   - msw
 
