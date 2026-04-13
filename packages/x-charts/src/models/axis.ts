@@ -14,6 +14,7 @@ import type {
 } from '@mui/x-charts-vendor/d3-scale';
 import { type SxProps } from '@mui/system/styleFunctionSx';
 import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
+import { type DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
@@ -512,6 +513,14 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * The key used to retrieve `data` from the `dataset` prop.
    */
   dataKey?: string;
+  /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return the axis value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {V} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => V;
   /**
    * Formats the axis value.
    * @param {V} value The value to format.
