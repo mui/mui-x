@@ -174,7 +174,7 @@ export function buildInterfacePages(
     const layoutProp = isDataGrid ? '{...layoutConfig} ' : '';
     const jsContent = `import * as React from 'react';
 import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
-${layoutImport}import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+${layoutImport}import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
 import jsonPageContent from './${slug}.json';
 
 export default function Page(props) {

@@ -47,8 +47,8 @@ export function generateComponentFiles(api: ComponentApi): FileWrite[] {
     : '';
 
   const jsContent = `import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+import { ApiPage } from '@mui/internal-core-docs/ApiPage';
+import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
 ${layoutImport}import jsonPageContent from './${slug}.json';
 
 export default function Page(props) {
