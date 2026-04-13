@@ -1,9 +1,16 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "ConversationTitleSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationTitleSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ConversationTitle",
   "imports": [
-    "import { ConversationTitle } from '@mui/x-chat/headless';",
-    "import { ConversationTitle } from '@mui/x-chat/headless';"
+    "import { ConversationTitle } from '@mui/x-chat-headless/conversation';",
+    "import { ConversationTitle } from '@mui/x-chat-headless';",
+    "import { ConversationTitle } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "title", "description": "", "class": null }],
   "classes": [],

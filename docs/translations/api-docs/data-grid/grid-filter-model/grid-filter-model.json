@@ -1,0 +1,16 @@
+{
+  "interfaceDescription": "Model describing the filters to apply to the grid.",
+  "propertiesDescriptions": {
+    "items": { "description": "" },
+    "logicOperator": {
+      "description": "- `GridLogicOperator.And`: the row must pass all the filter items.\n- `GridLogicOperator.Or`: the row must pass at least on filter item."
+    },
+    "quickFilterExcludeHiddenColumns": {
+      "description": "If `false`, the quick filter will also consider cell values from hidden columns."
+    },
+    "quickFilterLogicOperator": {
+      "description": "- `GridLogicOperator.And`: the row must pass all the values.\n- `GridLogicOperator.Or`: the row must pass at least one value."
+    },
+    "quickFilterValues": { "description": "values used to quick filter rows" }
+  }
+}

@@ -1,16 +1,18 @@
 {
-  "componentDescription": "The top level Prompt Field component that provides context to child components.\nIt renders a `<div />` element.",
+  "componentDescription": "",
   "propDescriptions": {
-    "className": { "description": "Override or extend the styles applied to the component." },
-    "onRecordError": {
-      "description": "Called when a speech recognition error occurs.",
-      "typeDescriptions": { "error": { "name": "error", "description": "The error message" } }
-    },
     "onSubmit": {
       "description": "Called when the user submits the prompt.",
       "typeDescriptions": { "prompt": { "name": "prompt", "description": "The prompt" } }
     },
+    "className": { "description": "Override or extend the styles applied to the component." },
+    "lang": { "description": "The BCP 47 language tag to use for the speech recognition." },
+    "onRecordError": {
+      "description": "Called when a speech recognition error occurs.",
+      "typeDescriptions": { "error": { "name": "error", "description": "The error message" } }
+    },
     "render": { "description": "A function to customize rendering of the component." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

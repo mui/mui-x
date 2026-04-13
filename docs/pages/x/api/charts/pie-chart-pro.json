@@ -1,17 +1,19 @@
 {
   "props": {
     "series": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "type": { "name": "arrayOf", "description": "Array&lt;PieSeries&gt;" },
       "required": true
     },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
-    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "dataset": {
+      "type": { "name": "arrayOf", "description": "Array&lt;DatasetElementType<unknown>&gt;" }
+    },
     "desc": { "type": { "name": "string" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": { "type": { "name": "{}" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
@@ -23,7 +25,7 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -34,7 +36,7 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -55,7 +57,13 @@
         "describedArgs": ["highlightedItem"]
       }
     },
-    "onItemClick": { "type": { "name": "func" } },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent<SVGPathElement, MouseEvent>, pieItemIdentifier: PieItemIdentifier, item: DefaultizedPieValueType) => void",
+        "describedArgs": []
+      }
+    },
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {
@@ -63,11 +71,21 @@
         "describedArgs": ["tooltipItem"]
       }
     },
+    "plugins": { "type": { "name": "{}" } },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'pie'>"
+      }
+    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "PieChartProSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PieChartProSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -75,7 +93,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'pie' }"
       }
     },
     "width": { "type": { "name": "number" } }
@@ -83,7 +101,9 @@
   "name": "PieChartPro",
   "imports": [
     "import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';",
-    "import { PieChartPro } from '@mui/x-charts-pro';"
+    "import { PieChartPro } from '@mui/x-charts-pro';",
+    "import { PieChartPro } from '@mui/x-charts-premium/PieChartPro';",
+    "import { PieChartPro } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

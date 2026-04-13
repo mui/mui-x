@@ -24,8 +24,9 @@
       }
     },
     "seriesId": {
-      "description": "The id of the series to display. If undefined all series are displayed."
+      "description": "The id of the series to display.\nIf undefined all series are displayed."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

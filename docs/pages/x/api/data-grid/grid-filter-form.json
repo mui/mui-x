@@ -19,13 +19,7 @@
       "signature": { "type": "function(item: GridFilterItem) => void", "describedArgs": ["item"] }
     },
     "hasMultipleFilters": { "type": { "name": "bool" }, "required": true },
-    "item": {
-      "type": {
-        "name": "shape",
-        "description": "{ field: string, id?: number<br>&#124;&nbsp;string, operator: string, value?: any }"
-      },
-      "required": true
-    },
+    "item": { "type": { "name": "{}" }, "required": true },
     "columnInputProps": { "type": { "name": "any" }, "default": "{}" },
     "columnsSort": { "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" } },
     "deleteIconProps": { "type": { "name": "any" }, "default": "{}" },
@@ -33,11 +27,12 @@
     "filterColumns": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(args: FilterColumnsArgs) => void",
-        "describedArgs": ["args"]
+        "type": "function(args: FilterColumnsArgs) => Array<string>",
+        "describedArgs": ["args"],
+        "returned": "Array<string>"
       }
     },
-    "focusElementRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "focusElementRef": { "type": { "name": "custom", "description": "ref" } },
     "logicOperatorInputProps": { "type": { "name": "any" }, "default": "{}" },
     "logicOperators": {
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
@@ -55,11 +50,12 @@
     "import { GridFilterForm } from '@mui/x-data-grid-pro';",
     "import { GridFilterForm } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiGridFilterForm",
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/panel/filterPanel/GridFilterForm.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a> <span class=\"plan-pro\"></span></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a> <span class=\"plan-premium\"></span></li></ul>",
   "cssComponent": false
 }

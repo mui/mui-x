@@ -1,19 +1,23 @@
 {
   "name": "GridListViewColDef",
   "imports": [
-    "import { GridListViewColDef } from '@mui/x-data-grid-premium'",
-    "import { GridListViewColDef } from '@mui/x-data-grid-pro'",
-    "import { GridListViewColDef } from '@mui/x-data-grid'"
+    "import { GridListViewColDef } from '@mui/x-data-grid';",
+    "import { GridListViewColDef } from '@mui/x-data-grid-pro';",
+    "import { GridListViewColDef } from '@mui/x-data-grid-premium';"
   ],
-  "demos": "<ul><li><a href=\"/x/react-data-grid/list-view/\">List view</a></li></ul>",
+  "demos": "  - [List view](/x/react-data-grid/list-view/)",
   "properties": {
     "field": { "type": { "description": "string" }, "required": true },
-    "align": { "type": { "description": "GridAlignment" } },
-    "cellClassName": { "type": { "description": "GridCellClassNamePropType&lt;R, V&gt;" } },
-    "display": { "type": { "description": "'text' | 'flex'" } },
+    "align": { "type": { "description": "'center' | 'left' | 'right'" } },
+    "cellClassName": {
+      "type": {
+        "description": "(params: GridCellParams&lt;R, V, V, GridTreeNode&gt;) =&gt; string | string"
+      }
+    },
+    "display": { "type": { "description": "'flex' | 'text'" } },
     "renderCell": {
       "type": {
-        "description": "(params: GridRenderCellParams&lt;R, V, F&gt;) =&gt; React.ReactNode"
+        "description": "(params: GridRenderCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; Iterable&lt;ReactNode&gt; | Promise&lt;AwaitedReactNode&gt; | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | ReactPortal | bigint | boolean | null | number | string | undefined"
       }
     }
   }

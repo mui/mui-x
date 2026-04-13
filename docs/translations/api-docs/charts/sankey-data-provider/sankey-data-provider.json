@@ -1,5 +1,56 @@
 {
-  "componentDescription": "Orchestrates the data providers for the sankey chart components and hooks.\n\nUse this component if you have custom HTML components that need to access the chart data.",
-  "propDescriptions": {},
-  "classDescriptions": {}
+  "componentDescription": "",
+  "propDescriptions": {
+    "series": { "description": "" },
+    "colors": { "description": "Color palette used to colorize multiple series." },
+    "desc": {
+      "description": "The description of the chart.\nUsed to provide an accessible description for the chart."
+    },
+    "disableKeyboardNavigation": {
+      "description": "If <code>true</code>, disables keyboard navigation for the chart."
+    },
+    "experimentalFeatures": {
+      "description": "Options to enable features planned for the next major."
+    },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
+    },
+    "highlightedItem": {
+      "description": "The highlighted item.\nUsed when the highlight is controlled."
+    },
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic.\nIf you don't provide this prop. It falls back to a randomly generated id."
+    },
+    "localeText": { "description": "Localized text for chart components." },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area.\nIt's used for leaving some space for extra information such as the x- and y-axis or legend.<br><br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": {
+        "highlightedItem": {
+          "name": "highlightedItem",
+          "description": "The newly highlighted item."
+        }
+      }
+    },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
+    "seriesConfig": {
+      "description": "The configuration for the series types.\nThis is used to define how each series type should be processed, colored, and displayed."
+    },
+    "title": {
+      "description": "The title of the chart.\nUsed to provide an accessible label for the chart."
+    },
+    "tooltipItem": { "description": "The tooltip item.\nUsed when the tooltip is controlled." },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

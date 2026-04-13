@@ -2,15 +2,18 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
     "autoFocus": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "defaultValue": { "type": { "name": "object" } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<DigitalClockClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "defaultValue": { "type": { "name": "{}" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "focusedView": { "type": { "name": "enum", "description": "'hours'" } },
-    "maxTime": { "type": { "name": "object" } },
-    "minTime": { "type": { "name": "object" } },
+    "maxTime": { "type": { "name": "{}" } },
+    "minTime": { "type": { "name": "{}" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onChange": {
       "type": { "name": "func" },
@@ -33,7 +36,7 @@
     "openTo": { "type": { "name": "enum", "description": "'hours'" } },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
-      "type": { "name": "object" },
+      "type": { "name": "{}" },
       "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`."
     },
     "shouldDisableTime": {
@@ -45,18 +48,14 @@
       }
     },
     "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "DigitalClockSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "DigitalClockSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
     },
     "timeStep": { "type": { "name": "number" }, "default": "30" },
     "timezone": {
@@ -67,7 +66,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "{}" } },
     "view": { "type": { "name": "enum", "description": "'hours'" } },
     "views": {
       "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" },
@@ -90,9 +89,9 @@
   ],
   "classes": [
     {
-      "key": "item",
-      "className": "MuiDigitalClock-item",
-      "description": "Styles applied to the list item (by default: MenuItem) element.",
+      "key": "root",
+      "className": "MuiDigitalClock-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
@@ -102,9 +101,9 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiDigitalClock-root",
-      "description": "Styles applied to the root element.",
+      "key": "item",
+      "className": "MuiDigitalClock-item",
+      "description": "Styles applied to the list item (by default: MenuItem) element.",
       "isGlobal": false
     }
   ],

@@ -1,6 +1,5 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
     "shape": {
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
@@ -20,9 +19,12 @@
   "imports": [
     "import { RadarGrid } from '@mui/x-charts/RadarChart';",
     "import { RadarGrid } from '@mui/x-charts';",
+    "import { RadarGrid } from '@mui/x-charts-pro/RadarChart';",
     "import { RadarGrid } from '@mui/x-charts-pro';",
+    "import { RadarGrid } from '@mui/x-charts-premium/RadarChart';",
     "import { RadarGrid } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiRadarGrid",
   "filename": "/packages/x-charts/src/RadarChart/RadarGrid/RadarGrid.tsx",

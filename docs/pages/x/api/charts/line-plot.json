@@ -8,9 +8,12 @@
       }
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "LineElementSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "LineElementSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -19,7 +22,9 @@
   "imports": [
     "import { LinePlot } from '@mui/x-charts/LineChart';",
     "import { LinePlot } from '@mui/x-charts';",
+    "import { LinePlot } from '@mui/x-charts-pro/LineChart';",
     "import { LinePlot } from '@mui/x-charts-pro';",
+    "import { LinePlot } from '@mui/x-charts-premium/LineChart';",
     "import { LinePlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -27,7 +32,7 @@
       "name": "line",
       "description": "The component that renders the line.",
       "default": "LineElementPath",
-      "class": null
+      "class": "MuiLineChart-line"
     }
   ],
   "classes": [],

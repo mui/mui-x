@@ -8,9 +8,12 @@
       }
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "AreaElementSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "AreaElementSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -19,7 +22,9 @@
   "imports": [
     "import { AreaPlot } from '@mui/x-charts/LineChart';",
     "import { AreaPlot } from '@mui/x-charts';",
+    "import { AreaPlot } from '@mui/x-charts-pro/LineChart';",
     "import { AreaPlot } from '@mui/x-charts-pro';",
+    "import { AreaPlot } from '@mui/x-charts-premium/LineChart';",
     "import { AreaPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -27,7 +32,7 @@
       "name": "area",
       "description": "The component that renders the area.",
       "default": "AnimatedArea",
-      "class": null
+      "class": "MuiLineChart-area"
     }
   ],
   "classes": [],

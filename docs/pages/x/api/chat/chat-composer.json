@@ -1,0 +1,103 @@
+{
+  "props": {
+    "attachmentConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func }"
+      }
+    },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatComposerClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "disabled": { "type": { "name": "bool" } },
+    "features": {
+      "type": {
+        "name": "shape",
+        "description": "{ attachments?: bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;{ acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func } }"
+      }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "ComposerRootSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerRootSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "variant": {
+      "type": { "name": "enum", "description": "'compact'<br>&#124;&nbsp;'default'" },
+      "default": "'default'"
+    }
+  },
+  "name": "ChatComposer",
+  "imports": [
+    "import { ChatComposer } from '@mui/x-chat/ChatComposer';",
+    "import { ChatComposer } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": "MuiChatComposer-root" }],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChatComposer-root",
+      "description": "Styles applied to the input root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "Styles applied to the root element when disabled.",
+      "isGlobal": true
+    },
+    {
+      "key": "label",
+      "className": "MuiChatComposer-label",
+      "description": "Styles applied to the input label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "textArea",
+      "className": "MuiChatComposer-textArea",
+      "description": "Styles applied to the textarea element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sendButton",
+      "className": "MuiChatComposer-sendButton",
+      "description": "Styles applied to the send button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "attachButton",
+      "className": "MuiChatComposer-attachButton",
+      "description": "Styles applied to the attach button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbar",
+      "className": "MuiChatComposer-toolbar",
+      "description": "Styles applied to the toolbar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "attachmentList",
+      "className": "MuiChatComposer-attachmentList",
+      "description": "Styles applied to the attachment list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "helperText",
+      "className": "MuiChatComposer-helperText",
+      "description": "Styles applied to the helper text element.",
+      "isGlobal": false
+    },
+    {
+      "key": "variantCompact",
+      "className": "MuiChatComposer-variantCompact",
+      "description": "Styles applied to the root element when variant=\"compact\".",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChatComposer",
+  "filename": "/packages/x-chat/src/ChatComposer/ChatComposer.tsx",
+  "inheritance": null,
+  "demos": "",
+  "cssComponent": false
+}

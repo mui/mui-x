@@ -1,11 +1,11 @@
 {
   "name": "GridPrintExportApi",
-  "description": "The Print export API interface that is available in the grid apiRef.",
+  "description": "The Print export API interface that is available in the grid [[apiRef]].",
   "properties": [
     {
       "name": "exportDataAsPrint",
-      "description": "Print the grid&#39;s data.",
-      "type": "(options?: GridPrintExportOptions) => void"
+      "description": "Print the grid's data.",
+      "type": "(options?: undefined | { fileName?: string | undefined, hideToolbar?: false | true | undefined, hideFooter?: false | true | undefined, includeCheckboxes?: false | true | undefined, copyStyles?: false | true | undefined, bodyClassName?: string | undefined, pageStyle?: () => string | string | undefined, getRowsToExport?: (params: GridPrintGetRowsToExportParams<GridApiCommunity>) => GridRowId[] | undefined, fields?: string[] | undefined, allColumns?: false | true | undefined }) => void"
     }
   ]
 }

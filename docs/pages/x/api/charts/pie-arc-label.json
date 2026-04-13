@@ -1,56 +1,33 @@
 {
-  "props": {},
+  "props": {
+    "arcLabelRadius": { "type": { "name": "number" }, "required": true },
+    "color": { "type": { "name": "string" }, "required": true },
+    "cornerRadius": { "type": { "name": "number" }, "required": true },
+    "endAngle": { "type": { "name": "number" }, "required": true },
+    "isFaded": { "type": { "name": "bool" }, "required": true },
+    "isHighlighted": { "type": { "name": "bool" }, "required": true },
+    "paddingAngle": { "type": { "name": "number" }, "required": true },
+    "seriesId": { "type": { "name": "string" }, "required": true },
+    "skipAnimation": { "type": { "name": "bool" }, "required": true },
+    "startAngle": { "type": { "name": "number" }, "required": true },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<PieClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "formattedArcLabel": { "type": { "name": "string" } },
+    "hidden": { "type": { "name": "bool" } }
+  },
   "name": "PieArcLabel",
   "imports": [
     "import { PieArcLabel } from '@mui/x-charts/PieChart';",
     "import { PieArcLabel } from '@mui/x-charts';",
+    "import { PieArcLabel } from '@mui/x-charts-pro/PieChart';",
     "import { PieArcLabel } from '@mui/x-charts-pro';",
+    "import { PieArcLabel } from '@mui/x-charts-premium/PieChart';",
     "import { PieArcLabel } from '@mui/x-charts-premium';"
   ],
-  "classes": [
-    {
-      "key": "animate",
-      "className": "MuiPieArcLabel-animate",
-      "description": "Styles applied when animation is not skipped.",
-      "isGlobal": false
-    },
-    {
-      "key": "arc",
-      "className": "MuiPieArcLabel-arc",
-      "description": "Styles applied to an individual pie arc element.",
-      "isGlobal": false
-    },
-    {
-      "key": "arcLabel",
-      "className": "MuiPieArcLabel-arcLabel",
-      "description": "Styles applied to an individual pie arc label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "focusIndicator",
-      "className": "MuiPieArcLabel-focusIndicator",
-      "description": "Styles applied to the focused pie arc element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiPieArcLabel-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "series",
-      "className": "MuiPieArcLabel-series",
-      "description": "Styles applied to the `g` element that contains all pie arcs of a series.",
-      "isGlobal": false
-    },
-    {
-      "key": "seriesLabels",
-      "className": "MuiPieArcLabel-seriesLabels",
-      "description": "Styles applied to the `g` element that contains all pie arc labels of a series.",
-      "isGlobal": false
-    }
-  ],
+  "slots": [],
+  "classes": [],
   "muiName": "MuiPieArcLabel",
   "filename": "/packages/x-charts/src/PieChart/PieArcLabel.tsx",
   "inheritance": null,

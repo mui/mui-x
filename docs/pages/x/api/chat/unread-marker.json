@@ -1,13 +1,24 @@
 {
-  "props": {},
+  "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
+    "index": { "type": { "name": "number" } },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "label": { "type": { "name": "node" } },
+    "slotProps": { "type": { "name": "shape", "description": "UnreadMarkerSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<UnreadMarkerSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "UnreadMarker",
   "imports": [
-    "import { UnreadMarker } from '@mui/x-chat/headless';",
-    "import { UnreadMarker } from '@mui/x-chat/headless';"
+    "import { UnreadMarker } from '@mui/x-chat-headless/indicators';",
+    "import { UnreadMarker } from '@mui/x-chat-headless';",
+    "import { UnreadMarker } from '@mui/x-chat';"
   ],
   "slots": [
-    { "name": "root", "description": "", "class": null },
-    { "name": "label", "description": "", "class": null }
+    { "name": "label", "description": "", "class": null },
+    { "name": "root", "description": "", "class": null }
   ],
   "classes": [],
   "muiName": "MuiUnreadMarker",

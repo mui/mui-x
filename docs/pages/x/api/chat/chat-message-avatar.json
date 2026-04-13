@@ -1,114 +1,25 @@
 {
-  "props": {},
+  "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatMessageClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "MessageAvatarSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageAvatarSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatMessageAvatar",
   "imports": [
     "import { ChatMessageAvatar } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageAvatar } from '@mui/x-chat';"
   ],
-  "classes": [
-    {
-      "key": "actions",
-      "className": "MuiChatMessageAvatar-actions",
-      "description": "Styles applied to the message actions element.",
-      "isGlobal": false
-    },
-    {
-      "key": "authorLabel",
-      "className": "MuiChatMessageAvatar-authorLabel",
-      "description": "Styles applied to the message author label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "avatar",
-      "className": "MuiChatMessageAvatar-avatar",
-      "description": "Styles applied to the message avatar element.",
-      "isGlobal": false
-    },
-    {
-      "key": "bubble",
-      "className": "MuiChatMessageAvatar-bubble",
-      "description": "Styles applied to the message bubble element inside content.",
-      "isGlobal": false
-    },
-    {
-      "key": "content",
-      "className": "MuiChatMessageAvatar-content",
-      "description": "Styles applied to the message content element.",
-      "isGlobal": false
-    },
-    {
-      "key": "dateDivider",
-      "className": "MuiChatMessageAvatar-dateDivider",
-      "description": "Styles applied to the date divider element.",
-      "isGlobal": false
-    },
-    {
-      "key": "error",
-      "className": "Mui-error",
-      "description": "Applied when the message has an error status",
-      "isGlobal": true
-    },
-    {
-      "key": "group",
-      "className": "MuiChatMessageAvatar-group",
-      "description": "Styles applied to the message group element.",
-      "isGlobal": false
-    },
-    {
-      "key": "groupAuthorName",
-      "className": "MuiChatMessageAvatar-groupAuthorName",
-      "description": "Class applied to the group author name element.",
-      "isGlobal": false
-    },
-    {
-      "key": "groupTimestamp",
-      "className": "MuiChatMessageAvatar-groupTimestamp",
-      "description": "Class applied to the group timestamp element (compact variant only).",
-      "isGlobal": false
-    },
-    {
-      "key": "inlineMeta",
-      "className": "MuiChatMessageAvatar-inlineMeta",
-      "description": "Styles applied to the inline meta container element (default variant).",
-      "isGlobal": false
-    },
-    {
-      "key": "inlineMetaSpacer",
-      "className": "MuiChatMessageAvatar-inlineMetaSpacer",
-      "description": "Styles applied to the inline meta spacer element (default variant).",
-      "isGlobal": false
-    },
-    {
-      "key": "meta",
-      "className": "MuiChatMessageAvatar-meta",
-      "description": "Styles applied to the message meta element.",
-      "isGlobal": false
-    },
-    {
-      "key": "roleAssistant",
-      "className": "MuiChatMessageAvatar-roleAssistant",
-      "description": "Applied when the message role is 'assistant'",
-      "isGlobal": false
-    },
-    {
-      "key": "roleUser",
-      "className": "MuiChatMessageAvatar-roleUser",
-      "description": "Applied when the message role is 'user'",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChatMessageAvatar-root",
-      "description": "Styles applied to the message root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "streaming",
-      "className": "MuiChatMessageAvatar-streaming",
-      "description": "Applied while the message is streaming",
-      "isGlobal": false
-    }
+  "slots": [
+    { "name": "avatar", "description": "", "class": "MuiChatMessage-avatar" },
+    { "name": "image", "description": "", "class": null }
   ],
+  "classes": [],
   "muiName": "MuiChatMessageAvatar",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageAvatar.tsx",
   "inheritance": null,

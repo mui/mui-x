@@ -1,18 +1,25 @@
 {
   "props": {
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
     "options": {
       "type": {
         "name": "shape",
         "description": "{ copyStyles?: bool, fileName?: string, nonce?: string, onBeforeExport?: func }"
       }
     },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "render": { "type": { "name": "custom", "description": "ref" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
+    "tabIndex": { "type": { "name": "number" } }
   },
   "name": "ChartsToolbarPrintExportTrigger",
   "imports": [
     "import { ChartsToolbarPrintExportTrigger } from '@mui/x-charts-pro/ChartsToolbarPro';",
-    "import { ChartsToolbarPrintExportTrigger } from '@mui/x-charts-pro';"
+    "import { ChartsToolbarPrintExportTrigger } from '@mui/x-charts-pro';",
+    "import { ChartsToolbarPrintExportTrigger } from '@mui/x-charts-premium/ChartsToolbarPro';",
+    "import { ChartsToolbarPrintExportTrigger } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiChartsToolbarPrintExportTrigger",
   "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarPrintExportTrigger.tsx",

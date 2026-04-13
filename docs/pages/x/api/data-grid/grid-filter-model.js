@@ -13,9 +13,9 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/data-grid/',
+    'docsx/translations/api-docs/data-grid/grid-filter-model',
     false,
-    /\.\/grid-filter-model.*.json$/,
+    /\.\/grid-filter-model.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
   return { props: { descriptions } };

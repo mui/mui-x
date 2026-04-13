@@ -1,7 +1,44 @@
 {
   "props": {
+    "autoComplete": { "type": { "name": "string" } },
+    "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "color": { "type": { "name": "enum", "description": "'error'<br>&#124;&nbsp;'primary'" } },
+    "disabled": { "type": { "name": "bool" } },
+    "error": { "type": { "name": "bool" } },
+    "fullWidth": { "type": { "name": "bool" } },
+    "helperText": { "type": { "name": "string" } },
+    "id": { "type": { "name": "string" } },
+    "inputRef": { "type": { "name": "custom", "description": "ref" } },
+    "label": { "type": { "name": "node" } },
+    "material": {
+      "type": {
+        "name": "union",
+        "description": "Partial<FilledTextFieldProps><br>&#124;&nbsp;Partial<OutlinedTextFieldProps><br>&#124;&nbsp;Partial<StandardTextFieldProps>"
+      }
+    },
+    "multiline": { "type": { "name": "bool" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: ChangeEvent<HTMLElement, Element>) => void",
+        "describedArgs": []
+      }
+    },
+    "placeholder": { "type": { "name": "string" } },
+    "render": { "type": { "name": "custom", "description": "ref" } },
+    "role": { "type": { "name": "string" } },
+    "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
+    "slotProps": { "type": { "name": "{}" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "type": {
+      "type": {
+        "name": "union",
+        "description": "'button'<br>&#124;&nbsp;'checkbox'<br>&#124;&nbsp;'color'<br>&#124;&nbsp;'date'<br>&#124;&nbsp;'datetime-local'<br>&#124;&nbsp;'email'<br>&#124;&nbsp;'file'<br>&#124;&nbsp;'hidden'<br>&#124;&nbsp;'image'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'number'<br>&#124;&nbsp;'password'<br>&#124;&nbsp;'radio'<br>&#124;&nbsp;'range'<br>&#124;&nbsp;'reset'<br>&#124;&nbsp;'search'<br>&#124;&nbsp;'submit'<br>&#124;&nbsp;'tel'<br>&#124;&nbsp;'text'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'url'<br>&#124;&nbsp;'week'<br>&#124;&nbsp;{}"
+      }
+    },
+    "value": { "type": { "name": "shape", "description": "string" } }
   },
   "name": "QuickFilterControl",
   "imports": [
@@ -10,6 +47,7 @@
     "import { QuickFilterControl } from '@mui/x-data-grid-pro';",
     "import { QuickFilterControl } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiQuickFilterControl",
   "forwardsRefTo": "GridRoot",

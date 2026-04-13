@@ -1,14 +1,26 @@
 {
-  "props": {},
+  "props": {
+    "attachmentConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func }"
+      }
+    },
+    "disabled": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "shape", "description": "ComposerRootSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerRootSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ComposerRoot",
   "imports": [
-    "import { ComposerRoot } from '@mui/x-chat/headless';",
-    "import { ComposerRoot } from '@mui/x-chat/headless';"
+    "import { ComposerRoot } from '@mui/x-chat-headless/composer';",
+    "import { ComposerRoot } from '@mui/x-chat-headless';",
+    "import { ComposerRoot } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiComposerRoot",
   "filename": "/packages/x-chat-headless/src/composer/ComposerRoot.tsx",
   "inheritance": null,

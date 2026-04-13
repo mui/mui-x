@@ -1,11 +1,11 @@
 {
   "name": "GridAggregationFunction",
-  "imports": ["import { GridAggregationFunction } from '@mui/x-data-grid-premium'"],
-  "demos": "<ul><li><a href=\"/x/react-data-grid/aggregation/#aggregation-functions\">Aggregation functions</a></li></ul>",
+  "imports": ["import { GridAggregationFunction } from '@mui/x-data-grid-premium';"],
+  "demos": "  - [Aggregation functions](/x/react-data-grid/aggregation/#aggregation-functions)",
   "properties": {
     "apply": {
       "type": {
-        "description": "(params: GridAggregationParams&lt;V&gt;, api?: GridApiPremium) =&gt; AV | null | undefined"
+        "description": "(params: { values: (V | undefined)[], groupId: number | string, field: string }, api?: GridApiPremium | undefined) =&gt; AV | null | undefined"
       },
       "required": true,
       "isPremiumPlan": true
@@ -17,7 +17,7 @@
     },
     "columnTypes": { "type": { "description": "string[]" }, "isPremiumPlan": true },
     "getCellValue": {
-      "type": { "description": "(params: GridAggregationGetCellValueParams) =&gt; V" },
+      "type": { "description": "(params: { row: GridValidRowModel, field: string }) =&gt; V" },
       "isPremiumPlan": true
     },
     "hasCellUnit": {
@@ -30,6 +30,11 @@
       "default": "apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})",
       "isPremiumPlan": true
     },
-    "valueFormatter": { "type": { "description": "GridValueFormatter" }, "isPremiumPlan": true }
+    "valueFormatter": {
+      "type": {
+        "description": "(value: never, row: GridValidRowModel, column: GridActionsColDef&lt;GridValidRowModel, any, any&gt; | GridBaseColDef&lt;GridValidRowModel, any, any&gt; | GridSingleSelectColDef&lt;GridValidRowModel, any, any&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; any"
+      },
+      "isPremiumPlan": true
+    }
   }
 }

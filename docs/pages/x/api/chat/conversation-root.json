@@ -1,14 +1,19 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "ConversationRootSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationRootSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ConversationRoot",
   "imports": [
-    "import { ConversationRoot } from '@mui/x-chat/headless';",
-    "import { ConversationRoot } from '@mui/x-chat/headless';"
+    "import { ConversationRoot } from '@mui/x-chat-headless/conversation';",
+    "import { ConversationRoot } from '@mui/x-chat-headless';",
+    "import { ConversationRoot } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiConversationRoot",
   "filename": "/packages/x-chat-headless/src/conversation/ConversationRoot.tsx",
   "inheritance": null,

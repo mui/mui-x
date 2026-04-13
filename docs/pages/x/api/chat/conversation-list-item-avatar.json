@@ -1,13 +1,26 @@
 {
-  "props": {},
+  "props": {
+    "conversation": { "type": { "name": "{}" }, "required": true },
+    "focused": { "type": { "name": "bool" } },
+    "selected": { "type": { "name": "bool" } },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ConversationListItemAvatarSlotProps" }
+    },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationListItemAvatarSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "unread": { "type": { "name": "bool" } }
+  },
   "name": "ConversationListItemAvatar",
   "imports": [
-    "import { ConversationListItemAvatar } from '@mui/x-chat/headless';",
-    "import { ConversationListItemAvatar } from '@mui/x-chat/headless';"
+    "import { ConversationListItemAvatar } from '@mui/x-chat-headless/conversation-list';",
+    "import { ConversationListItemAvatar } from '@mui/x-chat-headless';",
+    "import { ConversationListItemAvatar } from '@mui/x-chat';"
   ],
   "slots": [
-    { "name": "root", "description": "", "class": null },
-    { "name": "image", "description": "", "class": null }
+    { "name": "image", "description": "", "class": null },
+    { "name": "root", "description": "", "class": null }
   ],
   "classes": [],
   "muiName": "MuiConversationListItemAvatar",

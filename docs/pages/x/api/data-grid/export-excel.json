@@ -1,18 +1,34 @@
 {
   "props": {
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
+    "material": { "type": { "name": "shape", "description": "Partial<ButtonProps>" } },
     "options": {
       "type": {
         "name": "shape",
-        "description": "{ allColumns?: bool, columnsStyles?: object, escapeFormulas?: bool, exceljsPostProcess?: func, exceljsPreProcess?: func, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, includeColumnGroupsHeaders?: bool, includeHeaders?: bool, valueOptionsSheetName?: string, worker?: func }"
+        "description": "{ allColumns?: bool, columnsStyles?: ColumnsStylesInterface, escapeFormulas?: bool, exceljsPostProcess?: func, exceljsPreProcess?: func, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, includeColumnGroupsHeaders?: bool, includeHeaders?: bool, valueOptionsSheetName?: string, worker?: func }"
       }
     },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "render": { "type": { "name": "custom", "description": "ref" } },
+    "role": { "type": { "name": "string" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
+      }
+    },
+    "startIcon": { "type": { "name": "node" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "title": { "type": { "name": "string" } },
+    "touchRippleRef": { "type": { "name": "any" } }
   },
   "name": "ExportExcel",
   "imports": [
     "import { ExportExcel } from '@mui/x-data-grid-premium/components';",
     "import { ExportExcel } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiExportExcel",
   "forwardsRefTo": "GridRoot",

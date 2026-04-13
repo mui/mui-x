@@ -1,18 +1,17 @@
 {
-  "componentDescription": "",
+  "componentDescription": "Demos:\n\n- [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)\n- [Custom components](https://mui.com/x/react-date-pickers/custom-components/)\n\nAPI:\n\n- [DatePickerToolbar API](https://mui.com/x/api/date-pickers/date-picker-toolbar/)",
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
     "hidden": { "description": "If <code>true</code>, show the toolbar even in desktop mode." },
-    "sx": {
-      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
-    },
+    "titleId": { "description": "" },
     "toolbarFormat": { "description": "Toolbar date format." },
     "toolbarPlaceholder": {
       "description": "Toolbar value placeholder—it is displayed when the value is empty."
     }
   },
   "classDescriptions": {
-    "root": { "description": "Styles applied to the root element." },
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
     "title": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the title element" }
-  }
+  },
+  "slotDescriptions": {}
 }

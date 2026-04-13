@@ -2,56 +2,88 @@
   "props": {
     "areAllSectionsEmpty": { "type": { "name": "bool" }, "required": true },
     "contentEditable": { "type": { "name": "bool" }, "required": true },
+    "disabled": { "type": { "name": "bool" }, "required": true },
     "elements": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ after: object, before: object, container: object, content: object }&gt;"
+        "description": "Array&lt;{ after: HTMLAttributes<HTMLSpanElement>, before: HTMLAttributes<HTMLSpanElement>, container: HTMLAttributes<HTMLSpanElement>, content: {} }&gt;"
       },
       "required": true
     },
-    "color": {
-      "type": {
-        "name": "enum",
-        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
-      },
-      "default": "'primary'"
+    "error": { "type": { "name": "bool" }, "default": "false", "required": true },
+    "onBlur": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: FocusEvent<HTMLDivElement, Element>) => void",
+        "describedArgs": []
+      }
     },
+    "onChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: ChangeEvent<HTMLInputElement, Element>) => void",
+        "describedArgs": []
+      }
+    },
+    "onClick": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: MouseEvent<HTMLDivElement, MouseEvent>) => void",
+        "describedArgs": []
+      }
+    },
+    "onFocus": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: FocusEvent<HTMLDivElement, Element>) => void",
+        "describedArgs": []
+      }
+    },
+    "onInput": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: FormEvent<HTMLDivElement>) => void",
+        "describedArgs": []
+      }
+    },
+    "onKeyDown": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: MuiEvent<KeyboardEvent<HTMLDivElement>>) => void",
+        "describedArgs": []
+      }
+    },
+    "onPaste": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: ClipboardEvent<HTMLDivElement>) => void",
+        "describedArgs": []
+      }
+    },
+    "sectionListRef": { "type": { "name": "custom", "description": "ref" }, "required": true },
+    "value": { "type": { "name": "shape", "description": "string" }, "required": true },
     "endAdornment": { "type": { "name": "node" } },
-    "error": { "type": { "name": "bool" }, "default": "false" },
-    "focused": { "type": { "name": "bool" } },
     "fullWidth": { "type": { "name": "bool" }, "default": "false" },
     "helperText": { "type": { "name": "node" } },
-    "hiddenLabel": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
-    "margin": {
-      "type": {
-        "name": "enum",
-        "description": "'dense'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'normal'"
-      },
-      "default": "'none'"
-    },
     "name": { "type": { "name": "string" } },
-    "required": { "type": { "name": "bool" }, "default": "false" },
-    "size": {
-      "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" },
-      "default": "'medium'"
-    },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "readOnly": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "{}" }, "default": "{}" },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PickersTextFieldSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
     "startAdornment": { "type": { "name": "node" } },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
     "variant": {
       "type": {
         "name": "enum",
@@ -95,29 +127,10 @@
       "name": "root",
       "description": "The component used for the root slot.",
       "default": "FormControl",
-      "class": "MuiPickersTextField-root"
+      "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "fullWidth",
-      "className": "MuiPickersTextField-fullWidth",
-      "description": "Styles applied to the root element if `fullWidth={true}`.",
-      "isGlobal": false
-    },
-    {
-      "key": "marginDense",
-      "className": "MuiPickersTextField-marginDense",
-      "description": "Styles applied to the root element if `margin=\"dense\"`.",
-      "isGlobal": false
-    },
-    {
-      "key": "marginNormal",
-      "className": "MuiPickersTextField-marginNormal",
-      "description": "Styles applied to the root element if `margin=\"normal\"`.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiPickersTextField",

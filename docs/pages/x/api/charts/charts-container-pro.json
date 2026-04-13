@@ -2,60 +2,87 @@
   "props": {
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
-      "default": "blueberryTwilightPalette"
+      "default": "rainbowSurgePalette"
     },
-    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "dataset": {
+      "type": { "name": "arrayOf", "description": "Array&lt;DatasetElementType<unknown>&gt;" }
+    },
+    "desc": { "type": { "name": "string" } },
+    "experimentalFeatures": { "type": { "name": "any" } },
     "height": { "type": { "name": "number" } },
-    "highlightedItem": {
-      "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
-      }
-    },
     "id": { "type": { "name": "string" } },
-    "initialZoom": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
-      }
-    },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
-        "name": "shape",
-        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
-    "onHighlightChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(highlightedItem: HighlightItemData | null) => void",
-        "describedArgs": ["highlightedItem"]
-      }
+    "plugins": {
+      "type": { "name": "shape", "description": "ConvertSignaturesIntoPlugins<TSignatures>" }
     },
-    "onZoomChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(zoomData: Array<ZoomData>) => void",
-        "describedArgs": ["zoomData"]
-      }
-    },
-    "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "skipAnimation": { "type": { "name": "bool" } },
-    "width": { "type": { "name": "number" } },
-    "xAxis": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "yAxis": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "zAxis": {
+    "series": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
+        "description": "Array&lt;BarSeriesType | LineSeriesType | ScatterSeriesType | PieSeriesType<MakeOptional<PieValueType, 'id'>> | RadarSeriesType | HeatmapSeriesType | FunnelSeriesType | SankeySeriesType | RangeBarSeriesType | OHLCSeriesType&gt;"
       }
-    }
+    },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<SeriesType>"
+      }
+    },
+    "skipAnimation": { "type": { "name": "bool" } },
+    "slotProps": {
+      "type": {
+        "name": "shape",
+        "description": "Partial<ChartsDataProviderSlotProps> & Partial<ChartsDataProviderProSlotProps>"
+      }
+    },
+    "slots": {
+      "type": {
+        "name": "shape",
+        "description": "Partial<ChartsDataProviderSlots> & Partial<ChartsDataProviderProSlots>"
+      },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "title": { "type": { "name": "string" } },
+    "width": { "type": { "name": "number" } }
   },
   "name": "ChartsContainerPro",
   "imports": [
     "import { ChartsContainerPro } from '@mui/x-charts-pro/ChartsContainerPro';",
-    "import { ChartsContainerPro } from '@mui/x-charts-pro';"
+    "import { ChartsContainerPro } from '@mui/x-charts-pro';",
+    "import { ChartsContainerPro } from '@mui/x-charts-premium/ChartsContainerPro';",
+    "import { ChartsContainerPro } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseDivider", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
+    { "name": "baseMenuItem", "description": "", "class": null },
+    { "name": "baseMenuList", "description": "", "class": null },
+    { "name": "basePopper", "description": "", "class": null },
+    { "name": "baseTooltip", "description": "", "class": null },
+    {
+      "name": "exportIcon",
+      "description": "Icon displayed on the toolbar's export button.",
+      "default": "ChartsExportIcon",
+      "class": null
+    },
+    {
+      "name": "zoomInIcon",
+      "description": "Icon displayed on the toolbar's zoom in button.",
+      "default": "ChartsZoomInIcon",
+      "class": null
+    },
+    {
+      "name": "zoomOutIcon",
+      "description": "Icon displayed on the toolbar's zoom out button.",
+      "default": "ChartsZoomOutIcon",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiChartsContainerPro",

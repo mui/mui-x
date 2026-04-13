@@ -1,28 +1,20 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
-  "classDescriptions": {
-    "animate": { "description": "Styles applied when animation is not skipped." },
-    "arc": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "an individual pie arc element"
-    },
-    "arcLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "an individual pie arc label element"
-    },
-    "focusIndicator": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the focused pie arc element"
-    },
-    "root": { "description": "Styles applied to the root element." },
-    "series": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the <code>g</code> element that contains all pie arcs of a series"
-    },
-    "seriesLabels": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the <code>g</code> element that contains all pie arc labels of a series"
-    }
-  }
+  "propDescriptions": {
+    "arcLabelRadius": { "description": "" },
+    "color": { "description": "" },
+    "cornerRadius": { "description": "" },
+    "endAngle": { "description": "" },
+    "isFaded": { "description": "" },
+    "isHighlighted": { "description": "" },
+    "paddingAngle": { "description": "" },
+    "seriesId": { "description": "" },
+    "skipAnimation": { "description": "" },
+    "startAngle": { "description": "" },
+    "classes": { "description": "" },
+    "formattedArcLabel": { "description": "" },
+    "hidden": { "description": "" }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

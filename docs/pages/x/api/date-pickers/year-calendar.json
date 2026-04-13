@@ -1,13 +1,19 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "defaultValue": { "type": { "name": "object" } },
+    "autoFocus": { "type": { "name": "bool" } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<YearCalendarClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "defaultValue": { "type": { "name": "{}" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
-    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
-    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
+    "gridLabelId": { "type": { "name": "string" } },
+    "hasFocus": { "type": { "name": "bool" } },
+    "maxDate": { "type": { "name": "{}" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "{}" }, "default": "1900-01-01" },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
@@ -15,9 +21,17 @@
         "describedArgs": ["value"]
       }
     },
+    "onFocusedViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(hasFocus: boolean) => void", "describedArgs": [] }
+    },
+    "onYearFocus": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(year: number) => void", "describedArgs": [] }
+    },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
-      "type": { "name": "object" },
+      "type": { "name": "{}" },
       "default": "The closest valid year using the validation props, except callbacks such as `shouldDisableYear`."
     },
     "shouldDisableYear": {
@@ -28,9 +42,12 @@
         "returned": "boolean"
       }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "YearCalendarSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "YearCalendarSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -49,7 +66,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "{}" } },
     "yearsOrder": {
       "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" },
       "default": "'asc'"
@@ -73,32 +90,7 @@
       "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "button",
-      "className": "MuiYearCalendar-button",
-      "description": "Styles applied to the button element that represents a single year",
-      "isGlobal": false
-    },
-    {
-      "key": "disabled",
-      "className": "Mui-disabled",
-      "description": "Styles applied to a disabled button element.",
-      "isGlobal": true
-    },
-    {
-      "key": "root",
-      "className": "MuiYearCalendar-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "selected",
-      "className": "Mui-selected",
-      "description": "Styles applied to a selected button element.",
-      "isGlobal": true
-    }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiYearCalendar",

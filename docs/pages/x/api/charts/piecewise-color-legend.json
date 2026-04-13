@@ -8,7 +8,10 @@
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "The first axis item."
     },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<PiecewiseColorLegendClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "direction": {
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
       "default": "'horizontal'"
@@ -24,16 +27,9 @@
     "labelPosition": {
       "type": {
         "name": "enum",
-        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'inline-start'<br>&#124;&nbsp;'inline-end'"
+        "description": "'end'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'inline-end'<br>&#124;&nbsp;'inline-start'<br>&#124;&nbsp;'start'"
       },
       "default": "'extremes'"
-    },
-    "markType": {
-      "type": {
-        "name": "enum",
-        "description": "'square'<br>&#124;&nbsp;'circle'<br>&#124;&nbsp;'line'"
-      },
-      "default": "'square'"
     },
     "onItemClick": {
       "type": { "name": "func" },
@@ -41,16 +37,78 @@
         "type": "function(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, legendItem: PiecewiseColorLegendItemContext, index: number) => void",
         "describedArgs": ["event", "legendItem", "index"]
       }
-    }
+    },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ChartsLegendSlotProps" },
+      "default": "{}"
+    },
+    "slots": {
+      "type": { "name": "shape", "description": "ChartsLegendSlots" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "tabIndex": { "type": { "name": "number" } }
   },
   "name": "PiecewiseColorLegend",
   "imports": [
     "import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';",
     "import { PiecewiseColorLegend } from '@mui/x-charts';",
+    "import { PiecewiseColorLegend } from '@mui/x-charts-pro/ChartsLegend';",
     "import { PiecewiseColorLegend } from '@mui/x-charts-pro';",
+    "import { PiecewiseColorLegend } from '@mui/x-charts-premium/ChartsLegend';",
     "import { PiecewiseColorLegend } from '@mui/x-charts-premium';"
   ],
+  "slots": [
+    {
+      "name": "legend",
+      "description": "Custom rendering of the legend.",
+      "default": "ChartsLegend",
+      "class": null
+    }
+  ],
   "classes": [
+    {
+      "key": "root",
+      "className": "MuiPiecewiseColorLegend-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "minLabel",
+      "className": "MuiPiecewiseColorLegend-minLabel",
+      "description": "Styles applied to the list item that renders the `minLabel`.",
+      "isGlobal": false
+    },
+    {
+      "key": "maxLabel",
+      "className": "MuiPiecewiseColorLegend-maxLabel",
+      "description": "Styles applied to the list item that renders the `maxLabel`.",
+      "isGlobal": false
+    },
+    {
+      "key": "item",
+      "className": "MuiPiecewiseColorLegend-item",
+      "description": "Styles applied to the list items.",
+      "isGlobal": false
+    },
+    {
+      "key": "vertical",
+      "className": "MuiPiecewiseColorLegend-vertical",
+      "description": "Styles applied to the legend in column layout.",
+      "isGlobal": false
+    },
+    {
+      "key": "horizontal",
+      "className": "MuiPiecewiseColorLegend-horizontal",
+      "description": "Styles applied to the legend in row layout.",
+      "isGlobal": false
+    },
+    {
+      "key": "start",
+      "className": "MuiPiecewiseColorLegend-start",
+      "description": "Styles applied to the legend with the labels before the color marks.",
+      "isGlobal": false
+    },
     {
       "key": "end",
       "className": "MuiPiecewiseColorLegend-end",
@@ -64,9 +122,9 @@
       "isGlobal": false
     },
     {
-      "key": "horizontal",
-      "className": "MuiPiecewiseColorLegend-horizontal",
-      "description": "Styles applied to the legend in row layout.",
+      "key": "inlineStart",
+      "className": "MuiPiecewiseColorLegend-inlineStart",
+      "description": "Styles applied to the legend with the labels inlined before the color marks.",
       "isGlobal": false
     },
     {
@@ -76,57 +134,15 @@
       "isGlobal": false
     },
     {
-      "key": "inlineStart",
-      "className": "MuiPiecewiseColorLegend-inlineStart",
-      "description": "Styles applied to the legend with the labels inlined before the color marks.",
-      "isGlobal": false
-    },
-    {
-      "key": "item",
-      "className": "MuiPiecewiseColorLegend-item",
-      "description": "Styles applied to the list items.",
-      "isGlobal": false
-    },
-    {
-      "key": "label",
-      "className": "MuiPiecewiseColorLegend-label",
-      "description": "Styles applied to the series label.",
-      "isGlobal": false
-    },
-    {
       "key": "mark",
       "className": "MuiPiecewiseColorLegend-mark",
       "description": "Styles applied to the marks.",
       "isGlobal": false
     },
     {
-      "key": "maxLabel",
-      "className": "MuiPiecewiseColorLegend-maxLabel",
-      "description": "Styles applied to the list item that renders the `maxLabel`.",
-      "isGlobal": false
-    },
-    {
-      "key": "minLabel",
-      "className": "MuiPiecewiseColorLegend-minLabel",
-      "description": "Styles applied to the list item that renders the `minLabel`.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiPiecewiseColorLegend-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "start",
-      "className": "MuiPiecewiseColorLegend-start",
-      "description": "Styles applied to the legend with the labels before the color marks.",
-      "isGlobal": false
-    },
-    {
-      "key": "vertical",
-      "className": "MuiPiecewiseColorLegend-vertical",
-      "description": "Styles applied to the legend in column layout.",
+      "key": "label",
+      "className": "MuiPiecewiseColorLegend-label",
+      "description": "Styles applied to the series label.",
       "isGlobal": false
     }
   ],

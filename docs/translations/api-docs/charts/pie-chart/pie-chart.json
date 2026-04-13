@@ -1,12 +1,15 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "series": {
+      "description": "The series to display in the pie chart.\nAn array of PieSeries objects."
+    },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
     },
     "desc": {
-      "description": "The description of the chart. Used to provide an accessible description for the chart."
+      "description": "The description of the chart.\nUsed to provide an accessible description for the chart."
     },
     "disableKeyboardNavigation": {
       "description": "If <code>true</code>, disables keyboard navigation for the chart."
@@ -18,22 +21,22 @@
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
     "hiddenItems": {
-      "description": "List of hidden series and/or items.<br>Different chart types use different keys."
+      "description": "List of hidden series and/or items.<br><br>Different chart types use different keys."
     },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
-      "description": "The highlighted item. Used when the highlight is controlled."
+      "description": "The highlighted item.\nUsed when the highlight is controlled."
     },
     "id": {
-      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+      "description": "This prop is used to help implement the accessibility logic.\nIf you don't provide this prop. It falls back to a randomly generated id."
     },
     "initialHiddenItems": {
-      "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
+      "description": "List of initially hidden series and/or items.\nUsed for uncontrolled state.<br><br>Different chart types use different keys."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
     "margin": {
-      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+      "description": "The margin between the SVG and the drawing area.\nIt's used for leaving some space for extra information such as the x- and y-axis or legend.<br><br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
     "onHiddenItemsChange": {
       "description": "Callback fired when any hidden identifiers change.",
@@ -60,24 +63,48 @@
         "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
       }
     },
-    "series": {
-      "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series/'>PieSeries</a> objects."
+    "plugins": { "description": "Array of plugins used to add features to the chart." },
+    "seriesConfig": {
+      "description": "The configuration for the series types.\nThis is used to define how each series type should be processed, colored, and displayed."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {
-      "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
+      "description": "If <code>true</code>, animations are skipped.\nIf unset or <code>false</code>, the animations respects the user's <code>prefers-reduced-motion</code> setting."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "title": {
-      "description": "The title of the chart. Used to provide an accessible label for the chart."
+      "description": "The title of the chart.\nUsed to provide an accessible label for the chart."
     },
-    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
+    "tooltipItem": { "description": "The tooltip item.\nUsed when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "series": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the `g` element that contains all pie arcs of a series"
+    },
+    "seriesLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the `g` element that contains all pie arc labels of a series"
+    },
+    "arc": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual pie arc element"
+    },
+    "arcLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual pie arc label element"
+    },
+    "animate": { "description": "Styles applied when animation is not skipped." },
+    "focusIndicator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the focused pie arc element"
+    }
+  },
   "slotDescriptions": {
     "baseButton": "",
     "baseIconButton": "",

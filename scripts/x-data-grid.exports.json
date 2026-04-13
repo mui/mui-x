@@ -105,7 +105,7 @@
   { "name": "GridAutosizeOptions", "kind": "TypeAlias" },
   { "name": "GridBaseIconProps", "kind": "TypeAlias" },
   { "name": "GridBasicGroupNode", "kind": "Interface" },
-  { "name": "GridBody", "kind": "ImportSpecifier" },
+  { "name": "GridBody", "kind": "Function" },
   { "name": "GridBooleanCell", "kind": "Variable" },
   { "name": "GridCallbackDetails", "kind": "Interface" },
   { "name": "GridCell", "kind": "Variable" },

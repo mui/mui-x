@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["api/buildApi.ts"],
+  "include": ["i18n.js"],
   "compilerOptions": {
     "allowJs": true,
     "noEmit": true,

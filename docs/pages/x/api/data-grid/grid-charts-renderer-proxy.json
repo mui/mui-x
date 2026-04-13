@@ -1,20 +1,33 @@
 {
   "props": {
     "id": { "type": { "name": "string" }, "required": true },
-    "renderer": { "type": { "name": "func" }, "required": true },
+    "renderer": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;{ contextType?: func, defaultProps?: { chartType?: string, configuration?: Record<string, string | number | boolean | null>, dimensions?: Array&lt;{}&gt;, onRender?: func, values?: Array&lt;{}&gt; }, displayName?: string, getDerivedStateFromError?: func, getDerivedStateFromProps?: func, propTypes?: any }"
+      },
+      "required": true
+    },
     "label": { "type": { "name": "string" } },
-    "onRender": { "type": { "name": "func" } }
+    "onRender": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(type: string, props: Record<string, any>, Component: ComponentType<any>) => ReactNode",
+        "describedArgs": []
+      }
+    }
   },
   "name": "GridChartsRendererProxy",
   "imports": [
     "import { GridChartsRendererProxy } from '@mui/x-data-grid-premium/context';",
     "import { GridChartsRendererProxy } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiGridChartsRendererProxy",
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-premium/src/context/GridChartsRendererProxy.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a> <span class=\"plan-pro\"></span></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a> <span class=\"plan-premium\"></span></li></ul>",
   "cssComponent": false
 }

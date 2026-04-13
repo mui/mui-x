@@ -8,9 +8,12 @@
       }
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "PiePlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PiePlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -19,7 +22,9 @@
   "imports": [
     "import { PiePlot } from '@mui/x-charts/PieChart';",
     "import { PiePlot } from '@mui/x-charts';",
+    "import { PiePlot } from '@mui/x-charts-pro/PieChart';",
     "import { PiePlot } from '@mui/x-charts-pro';",
+    "import { PiePlot } from '@mui/x-charts-premium/PieChart';",
     "import { PiePlot } from '@mui/x-charts-premium';"
   ],
   "slots": [

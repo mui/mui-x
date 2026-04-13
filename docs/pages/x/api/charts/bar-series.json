@@ -1,15 +1,15 @@
 {
   "name": "BarSeries",
   "imports": [
-    "import { BarSeries } from '@mui/x-charts-premium'",
-    "import { BarSeries } from '@mui/x-charts-pro'",
-    "import { BarSeries } from '@mui/x-charts'"
+    "import { BarSeries } from '@mui/x-charts';",
+    "import { BarSeries } from '@mui/x-charts-pro';",
+    "import { BarSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
     "type": { "type": { "description": "'bar'" }, "required": true },
     "barLabel": {
       "type": {
-        "description": "'value' | ((item: BarItem, context: BarLabelContext) =&gt; string | null | undefined)"
+        "description": "'value' | (item: { seriesId: string, dataIndex: number, value: null | number }, context: { bar: { height: number, width: number } }) =&gt; null | string | undefined"
       }
     },
     "barLabelPlacement": {
@@ -18,28 +18,46 @@
     },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
+      "type": { "description": "(data: { value: null | number, dataIndex: number }) =&gt; string" }
     },
-    "data": { "type": { "description": "ReadonlyArray&lt;BarValueType | null&gt;" } },
+    "data": { "type": { "description": "readonly (number | null)[]" } },
     "dataKey": { "type": { "description": "string" } },
-    "highlightScope": { "type": { "description": "HighlightScope&lt;SeriesType&gt;" } },
-    "id": { "type": { "description": "SeriesId" } },
-    "label": {
-      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
+    "highlightScope": {
+      "type": {
+        "description": "{ highlight?: 'item' | 'none' | 'series' | undefined, fade?: 'global' | 'none' | 'series' | undefined }"
+      }
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
+    "id": { "type": { "description": "string" } },
+    "label": {
+      "type": { "description": "(location: 'legend' | 'tooltip') =&gt; string | string" }
+    },
+    "labelMarkType": {
+      "type": {
+        "description": "'circle' | 'line' | 'line+mark' | 'square' | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+      }
+    },
     "layout": { "type": { "description": "'horizontal' | 'vertical'" }, "default": "'vertical'" },
     "minBarSize": { "type": { "description": "number" }, "default": "0px" },
     "stack": { "type": { "description": "string" } },
-    "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },
-    "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
-    "valueGetter": {
+    "stackOffset": {
+      "type": { "description": "'diverging' | 'expand' | 'none' | 'silhouette' | 'wiggle'" },
+      "default": "'diverging'"
+    },
+    "stackOrder": {
       "type": {
-        "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; BarValueType | null"
+        "description": "'appearance' | 'ascending' | 'descending' | 'insideOut' | 'none' | 'reverse'"
+      },
+      "default": "'none'"
+    },
+    "valueFormatter": {
+      "type": {
+        "description": "(value: null | number, context: { dataIndex: number }) =&gt; null | string"
       }
     },
-    "xAxisId": { "type": { "description": "AxisId" } },
-    "yAxisId": { "type": { "description": "AxisId" } }
+    "valueGetter": {
+      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; null | number" }
+    },
+    "xAxisId": { "type": { "description": "number | string" } },
+    "yAxisId": { "type": { "description": "number | string" } }
   }
 }

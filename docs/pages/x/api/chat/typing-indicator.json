@@ -1,9 +1,16 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "TypingIndicatorSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<TypingIndicatorSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "TypingIndicator",
   "imports": [
-    "import { TypingIndicator } from '@mui/x-chat/headless';",
-    "import { TypingIndicator } from '@mui/x-chat/headless';"
+    "import { TypingIndicator } from '@mui/x-chat-headless/indicators';",
+    "import { TypingIndicator } from '@mui/x-chat-headless';",
+    "import { TypingIndicator } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],

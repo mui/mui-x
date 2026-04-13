@@ -1,14 +1,51 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "currentMonth": { "type": { "name": "{}" }, "required": true },
+    "maxDate": { "type": { "name": "{}" }, "required": true },
+    "minDate": { "type": { "name": "{}" }, "required": true },
+    "onMonthChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(date: any) => void", "describedArgs": [] }
+    },
+    "reduceAnimations": { "type": { "name": "bool" }, "required": true },
+    "timezone": { "type": { "name": "string" }, "required": true },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
+      },
+      "required": true
+    },
+    "views": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
+      },
+      "required": true
+    },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<PickersCalendarHeaderClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
     "format": {
       "type": { "name": "string" },
       "default": "`${adapter.formats.month} ${adapter.formats.year}`"
     },
     "labelId": { "type": { "name": "string" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: DateView) => void", "describedArgs": [] }
+    },
+    "slotProps": {
+      "type": { "name": "shape", "description": "PickersCalendarHeaderSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PickersCalendarHeaderSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -66,9 +103,9 @@
   ],
   "classes": [
     {
-      "key": "label",
-      "className": "MuiPickersCalendarHeader-label",
-      "description": "Styles applied to the label element.",
+      "key": "root",
+      "className": "MuiPickersCalendarHeader-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
@@ -78,9 +115,21 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiPickersCalendarHeader-root",
-      "description": "Styles applied to the root element.",
+      "key": "label",
+      "className": "MuiPickersCalendarHeader-label",
+      "description": "Styles applied to the label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "switchViewButton",
+      "className": "MuiPickersCalendarHeader-switchViewButton",
+      "description": "Styles applied to the switch view button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "switchViewIcon",
+      "className": "MuiPickersCalendarHeader-switchViewIcon",
+      "description": "Styles applied to the switch view icon element.",
       "isGlobal": false
     }
   ],

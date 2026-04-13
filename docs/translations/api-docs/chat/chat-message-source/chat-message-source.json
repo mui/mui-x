@@ -2,12 +2,22 @@
   "componentDescription": "",
   "propDescriptions": {
     "href": { "description": "The URL this source links to." },
+    "classes": { "description": "" },
     "index": { "description": "1-based position number displayed as a muted badge." },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" },
     "title": {
       "description": "Display title for the source. Falls back to <code>href</code> when omitted."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "index": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the index badge element"
+    },
+    "link": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the link element" }
+  },
   "slotDescriptions": {
     "index": "The numeric index badge.",
     "link": "The anchor link.",

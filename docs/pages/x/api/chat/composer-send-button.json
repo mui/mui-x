@@ -1,9 +1,16 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "ComposerSendButtonSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerSendButtonSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ComposerSendButton",
   "imports": [
-    "import { ComposerSendButton } from '@mui/x-chat/headless';",
-    "import { ComposerSendButton } from '@mui/x-chat/headless';"
+    "import { ComposerSendButton } from '@mui/x-chat-headless/composer';",
+    "import { ComposerSendButton } from '@mui/x-chat-headless';",
+    "import { ComposerSendButton } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "sendButton", "description": "", "class": null }],
   "classes": [],

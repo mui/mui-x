@@ -1,9 +1,16 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "ComposerHelperTextSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerHelperTextSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ComposerHelperText",
   "imports": [
-    "import { ComposerHelperText } from '@mui/x-chat/headless';",
-    "import { ComposerHelperText } from '@mui/x-chat/headless';"
+    "import { ComposerHelperText } from '@mui/x-chat-headless/composer';",
+    "import { ComposerHelperText } from '@mui/x-chat-headless';",
+    "import { ComposerHelperText } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "helperText", "description": "", "class": null }],
   "classes": [],

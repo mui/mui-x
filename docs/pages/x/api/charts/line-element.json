@@ -1,10 +1,21 @@
 {
   "props": {
+    "color": { "type": { "name": "string" }, "required": true },
+    "d": { "type": { "name": "string" }, "required": true },
+    "seriesId": { "type": { "name": "string" }, "required": true },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<LineClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "gradientId": { "type": { "name": "string" } },
     "hidden": { "type": { "name": "bool" } },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "LineElementSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "LineElementSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -13,7 +24,9 @@
   "imports": [
     "import { LineElement } from '@mui/x-charts/LineChart';",
     "import { LineElement } from '@mui/x-charts';",
+    "import { LineElement } from '@mui/x-charts-pro/LineChart';",
     "import { LineElement } from '@mui/x-charts-pro';",
+    "import { LineElement } from '@mui/x-charts-premium/LineChart';",
     "import { LineElement } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -21,7 +34,7 @@
       "name": "line",
       "description": "The component that renders the line.",
       "default": "LineElementPath",
-      "class": null
+      "class": "MuiLineChart-line"
     }
   ],
   "classes": [],

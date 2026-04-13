@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "items": { "description": "" },
     "apiRef": {
       "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useRichTreeViewApiRef()</code>."
     },
@@ -9,36 +10,39 @@
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "defaultExpandedItems": {
-      "description": "Expanded item ids. Used when the item&#39;s expansion is not controlled."
+      "description": "Expanded item ids.\nUsed when the item's expansion is not controlled."
     },
     "defaultSelectedItems": {
-      "description": "Selected item ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+      "description": "Selected item ids. (Uncontrolled)\nWhen <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
     },
     "disabledItemsFocusable": {
       "description": "Whether the items should be focusable when disabled."
     },
     "disableSelection": { "description": "Whether selection is disabled." },
     "domStructure": {
-      "description": "When equal to &#39;flat&#39;, the tree is rendered as a flat list (children are rendered as siblings of their parents). When equal to &#39;nested&#39;, the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children). Nested DOM structure is not compatible with collapse / expansion animations."
+      "description": "When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).\nWhen equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).\nNested DOM structure is not compatible with collapse / expansion animations."
     },
     "expandedItems": {
-      "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
+      "description": "Expanded item ids.\nUsed when the item's expansion is controlled."
     },
     "expansionTrigger": {
-      "description": "The slot that triggers the item&#39;s expansion when clicked."
+      "description": "The slot that triggers the item's expansion when clicked."
     },
     "getItemChildren": {
       "description": "Used to determine the children of a given item.",
       "typeDescriptions": {
         "item": { "name": "item", "description": "The item to check." },
-        "Array<R>": { "name": "Array<R>", "description": "The children of the item." }
+        "Array<R> | undefined": {
+          "name": "Array<R> | undefined",
+          "description": "The children of the item."
+        }
       }
     },
     "getItemId": {
       "description": "Used to determine the id of a given item.",
       "typeDescriptions": {
         "item": { "name": "item", "description": "The item to check." },
-        "TreeViewItemId": { "name": "TreeViewItemId", "description": "The id of the item." }
+        "string": { "name": "string", "description": "The id of the item." }
       }
     },
     "getItemLabel": {
@@ -49,7 +53,7 @@
       }
     },
     "id": {
-      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+      "description": "This prop is used to help implement the accessibility logic.\nIf you don't provide this prop. It falls back to a randomly generated id."
     },
     "isItemDisabled": {
       "description": "Used to determine if a given item should be disabled.",
@@ -73,10 +77,10 @@
       }
     },
     "itemChildrenIndentation": {
-      "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
+      "description": "Horizontal indentation between an item and its children.\nExamples: 24, \"24px\", \"2rem\", \"2em\"."
     },
     "itemHeight": {
-      "description": "Sets the height in pixel of an item. Set to <code>null</code> to explicitly remove any item height restriction when items have different heights."
+      "description": "Sets the height in pixel of an item.\nSet to <code>null</code> to explicitly remove any item height restriction when items have different heights."
     },
     "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {
@@ -115,7 +119,7 @@
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "The DOM event that triggered the change. <strong>Warning</strong>: This is a generic event not a focus event."
+          "description": "The DOM event that triggered the change. **Warning**: This is a generic event not a focus event."
         },
         "itemId": { "name": "itemId", "description": "The id of the focused item." }
       }
@@ -150,15 +154,15 @@
         },
         "itemIds": {
           "name": "itemIds",
-          "description": "The ids of the selected items. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
+          "description": "The ids of the selected items.\nWhen <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
         }
       }
     },
     "selectedItems": {
-      "description": "Selected item ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+      "description": "Selected item ids. (Controlled)\nWhen <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
     },
     "selectionPropagation": {
-      "description": "When <code>selectionPropagation.descendants</code> is set to <code>true</code>.<br>- Selecting a parent selects all its descendants automatically. - Deselecting a parent deselects all its descendants automatically.<br>When <code>selectionPropagation.parents</code> is set to <code>true</code>.<br>- Selecting all the descendants of a parent selects the parent automatically. - Deselecting a descendant of a selected parent deselects the parent automatically.<br>Only works when <code>multiSelect</code> is <code>true</code>. On the &lt;SimpleTreeView /&gt;, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)"
+      "description": "When <code>selectionPropagation.descendants</code> is set to <code>true</code>.<br><br>- Selecting a parent selects all its descendants automatically.\n- Deselecting a parent deselects all its descendants automatically.<br><br>When <code>selectionPropagation.parents</code> is set to <code>true</code>.<br><br>- Selecting all the descendants of a parent selects the parent automatically.\n- Deselecting a descendant of a selected parent deselects the parent automatically.<br><br>Only works when <code>multiSelect</code> is <code>true</code>.\nOn the <SimpleTreeView />, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)"
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
@@ -167,35 +171,39 @@
     }
   },
   "classDescriptions": {
-    "itemCheckbox": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "item": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item&#39;s checkbox element"
+      "nodeName": "the item's root element"
     },
     "itemContent": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item&#39;s content element"
+      "nodeName": "the item's content element"
     },
     "itemGroupTransition": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item&#39;s transition element"
+      "nodeName": "the item's transition element"
     },
     "itemIconContainer": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item&#39;s icon container element icon"
+      "nodeName": "the item's icon container element icon"
     },
     "itemLabel": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item&#39;s label element"
+      "nodeName": "the item's label element"
     },
     "itemLabelInput": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the item&#39;s label input element (visible only",
-      "conditions": "editing is enabled)"
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item's label input element (visible only when editing is enabled)"
+    },
+    "itemCheckbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item's checkbox element"
     }
   },
   "slotDescriptions": {
     "collapseIcon": "The default icon used to collapse the item.",
-    "endIcon": "The default icon displayed next to an end item. This is applied to all Tree Items and can be overridden by the TreeItem <code>icon</code> slot prop.",
+    "endIcon": "The default icon displayed next to an end item.\nThis is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.",
     "expandIcon": "The default icon used to expand the item.",
     "item": "Custom component to render a Tree Item.",
     "root": "Element rendered at the root."

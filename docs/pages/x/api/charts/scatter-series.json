@@ -1,40 +1,52 @@
 {
   "name": "ScatterSeries",
   "imports": [
-    "import { ScatterSeries } from '@mui/x-charts-premium'",
-    "import { ScatterSeries } from '@mui/x-charts-pro'",
-    "import { ScatterSeries } from '@mui/x-charts'"
+    "import { ScatterSeries } from '@mui/x-charts';",
+    "import { ScatterSeries } from '@mui/x-charts-pro';",
+    "import { ScatterSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
     "type": { "type": { "description": "'scatter'" }, "required": true },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
+      "type": {
+        "description": "(data: { value: null | { x: number, y: number, z?: any, id?: string | number | undefined }, dataIndex: number }) =&gt; string"
+      }
     },
     "data": { "type": { "description": "readonly ScatterValueType[]" } },
     "datasetKeys": {
       "type": {
-        "description": "{<br />  /**<br />   * The key used to retrieve data from the dataset for the X axis.<br />   */<br />  x: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Y axis.<br />   */<br />  y: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Z axis.<br />   */<br />  z?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the id.<br />   */<br />  id?: string<br />}"
+        "description": "{ x: string, y: string, z?: string | undefined, id?: string | undefined }"
       }
     },
-    "highlightScope": { "type": { "description": "HighlightScope&lt;SeriesType&gt;" } },
-    "id": { "type": { "description": "SeriesId" } },
-    "label": {
-      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
-    },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
-    "markerSize": { "type": { "description": "number" } },
-    "preview": {
+    "highlightScope": {
       "type": {
-        "description": "{<br />  /**<br />   * The size of the preview marker in pixels.<br />   * @default 1<br />   */<br />  markerSize?: number<br />}"
+        "description": "{ highlight?: 'item' | 'none' | 'series' | undefined, fade?: 'global' | 'none' | 'series' | undefined }"
       }
     },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
-    "valueGetter": {
-      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; ScatterValueType" }
+    "id": { "type": { "description": "string" } },
+    "label": {
+      "type": { "description": "(location: 'legend' | 'tooltip') =&gt; string | string" }
     },
-    "xAxisId": { "type": { "description": "AxisId" } },
-    "yAxisId": { "type": { "description": "AxisId" } },
+    "labelMarkType": {
+      "type": {
+        "description": "'circle' | 'line' | 'line+mark' | 'square' | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+      }
+    },
+    "markerSize": { "type": { "description": "number" } },
+    "preview": { "type": { "description": "{ markerSize?: number | undefined }" } },
+    "valueFormatter": {
+      "type": {
+        "description": "(value: null | { x: number, y: number, z?: any, id?: number | string | undefined }, context: { dataIndex: number }) =&gt; null | string"
+      }
+    },
+    "valueGetter": {
+      "type": {
+        "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; { x: number, y: number, z?: any, id?: number | string | undefined }"
+      }
+    },
+    "xAxisId": { "type": { "description": "number | string" } },
+    "yAxisId": { "type": { "description": "number | string" } },
     "zAxisId": { "type": { "description": "string" } }
   }
 }

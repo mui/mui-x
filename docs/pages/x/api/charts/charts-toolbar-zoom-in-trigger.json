@@ -1,12 +1,13 @@
 {
-  "props": {
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
-  },
+  "props": { "render": { "type": { "name": "custom", "description": "ref" } } },
   "name": "ChartsToolbarZoomInTrigger",
   "imports": [
     "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-pro/ChartsToolbarPro';",
-    "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-pro';"
+    "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-pro';",
+    "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-premium/ChartsToolbarPro';",
+    "import { ChartsToolbarZoomInTrigger } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiChartsToolbarZoomInTrigger",
   "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarZoomInTrigger.tsx",

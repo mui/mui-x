@@ -1,5 +1,5 @@
 {
-  "componentDescription": "Renders a Sankey diagram plot.",
+  "componentDescription": "",
   "propDescriptions": {
     "classes": { "description": "Classes applied to the various elements." },
     "className": { "description": "A CSS class name applied to the root element." },
@@ -18,5 +18,6 @@
       }
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

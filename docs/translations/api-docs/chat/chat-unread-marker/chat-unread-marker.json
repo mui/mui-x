@@ -1,8 +1,17 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "messageId": { "description": "" },
+    "classes": { "description": "" },
+    "index": { "description": "" },
+    "items": { "description": "" },
+    "label": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
+  },
   "classDescriptions": {
-    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },
-    "root": { "description": "Styles applied to the root element." }
-  }
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" }
+  },
+  "slotDescriptions": { "label": "", "root": "" }
 }

@@ -1,38 +1,49 @@
 {
   "name": "AxisConfig",
   "imports": [
-    "import { AxisConfig } from '@mui/x-charts-premium'",
-    "import { AxisConfig } from '@mui/x-charts-pro'",
-    "import { AxisConfig } from '@mui/x-charts'"
+    "import { AxisConfig } from '@mui/x-charts';",
+    "import { AxisConfig } from '@mui/x-charts-pro';",
+    "import { AxisConfig } from '@mui/x-charts-premium';"
   ],
   "properties": {
-    "id": { "type": { "description": "AxisId" }, "required": true },
-    "scaleType": { "type": { "description": "'linear'" }, "required": true },
+    "id": { "type": { "description": "number | string" }, "required": true },
+    "scaleType": {
+      "type": {
+        "description": "'band' | 'linear' | 'log' | 'point' | 'pow' | 'sqrt' | 'symlog' | 'time' | 'utc'"
+      },
+      "required": true
+    },
     "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
     "className": { "type": { "description": "string" } },
-    "colorMap": { "type": { "description": "ContinuousColorConfig | PiecewiseColorConfig" } },
+    "colorMap": {
+      "type": {
+        "description": "{ type: 'continuous', min?: Date | number | undefined, max?: Date | number | undefined, color: (t: number) =&gt; string | readonly [string, string] } | { type: 'ordinal', values?: readonly (string | number | Date)[] | undefined, colors: string[], unknownColor?: string | undefined } | { type: 'piecewise', thresholds: (number | Date)[], colors: string[] }"
+      }
+    },
     "data": { "type": { "description": "readonly V[]" } },
     "dataKey": { "type": { "description": "string" } },
     "disableLine": { "type": { "description": "boolean" }, "default": "false" },
     "disableTicks": { "type": { "description": "boolean" }, "default": "false" },
     "domainLimit": {
       "type": {
-        "description": "'nice' | 'strict' | ((min: NumberValue, max: NumberValue) =&gt; { min: NumberValue; max: NumberValue })"
+        "description": "'nice' | 'strict' | (min: number | { valueOf: () =&gt; number }, max: number | { valueOf: () =&gt; number }) =&gt; { min: number | { valueOf(): number; }, max: number | { valueOf(): number; } }"
       }
     },
     "height": {
-      "type": { "description": "number | 'auto'" },
+      "type": { "description": "'auto' | number" },
       "default": "45 if an axis label is provided, 25 otherwise."
     },
     "hideTooltip": { "type": { "description": "boolean" } },
     "ignoreTooltip": { "type": { "description": "boolean" } },
     "label": { "type": { "description": "string" } },
-    "labelStyle": { "type": { "description": "ChartsTextProps['style']" } },
+    "labelStyle": { "type": { "description": "ChartsTextStyle" } },
     "offset": { "type": { "description": "number" }, "default": "0" },
-    "position": { "type": { "description": "'top' | 'bottom' | 'none'" } },
+    "position": { "type": { "description": "'bottom' | 'none' | 'top'" } },
     "reverse": { "type": { "description": "boolean" } },
     "slotProps": {
-      "type": { "description": "Partial&lt;ChartsAxisSlotProps&gt;" },
+      "type": {
+        "description": "{ axisLine?: Partial&lt;SVGAttributes&lt;SVGPathElement&gt;&gt; | undefined, axisTick?: Partial&lt;SVGAttributes&lt;SVGPathElement&gt;&gt; | undefined, axisTickLabel?: Partial&lt;ChartsTextProps&gt; | undefined, axisLabel?: Partial&lt;ChartsTextProps&gt; | undefined, xAxis?: Partial&lt;ChartsXAxisProps&gt; | undefined, yAxis?: Partial&lt;ChartsYAxisProps&gt; | undefined }"
+      },
       "default": "{}"
     },
     "slots": { "type": { "description": "Partial&lt;ChartsAxisSlots&gt;" }, "default": "{}" },
@@ -42,28 +53,33 @@
       "default": "'auto'"
     },
     "tickLabelInterval": {
-      "type": { "description": "'auto' | ((value: any, index: number) =&gt; boolean)" },
+      "type": { "description": "'auto' | (value: any, index: number) =&gt; boolean" },
       "default": "'auto'"
     },
     "tickLabelPlacement": { "type": { "description": "'middle' | 'tick'" }, "default": "'middle'" },
-    "tickLabelStyle": { "type": { "description": "ChartsTextProps['style']" } },
+    "tickLabelStyle": { "type": { "description": "ChartsTextStyle" } },
     "tickMaxStep": { "type": { "description": "number" } },
     "tickMinStep": { "type": { "description": "number" } },
     "tickNumber": { "type": { "description": "number" } },
     "tickPlacement": {
-      "type": { "description": "'start' | 'end' | 'middle' | 'extremities'" },
+      "type": { "description": "'end' | 'extremities' | 'middle' | 'start'" },
       "default": "'extremities'"
     },
     "tickSize": { "type": { "description": "number" }, "default": "6" },
     "tickSpacing": { "type": { "description": "number" }, "default": "0" },
     "valueFormatter": {
       "type": {
-        "description": "&lt;TScaleName extends S&gt;(value: V, context: AxisValueFormatterContext&lt;TScaleName&gt;) =&gt; string"
+        "description": "(value: V, context: { location: 'legend' } | { location: 'tick', scale: (value: Date | NumberValue) =&gt; number | undefined, defaultTickLabel: string, tickNumber?: number | undefined } | { location: 'tooltip' | 'zoom-slider-tooltip', scale: (value: Date | NumberValue) =&gt; number | undefined }) =&gt; string"
       }
     },
     "valueGetter": {
       "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; V" }
     },
-    "zoom": { "type": { "description": "boolean | ZoomOptions" }, "isProPlan": true }
+    "zoom": {
+      "type": {
+        "description": "boolean | { minStart?: number | undefined, maxEnd?: number | undefined, step?: number | undefined, minSpan?: number | undefined, maxSpan?: number | undefined, panning?: boolean | undefined, filterMode?: 'discard' | 'keep' | undefined, slider?: undefined | { enabled?: boolean | undefined, size?: number | undefined, showTooltip?: ZoomSliderShowTooltip | undefined, preview?: boolean | ZoomSliderPreviewOptions | undefined } }"
+      },
+      "isProPlan": true
+    }
   }
 }

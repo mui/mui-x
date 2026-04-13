@@ -1,7 +1,10 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<DateCalendarClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
@@ -11,7 +14,7 @@
         "returned": "string"
       }
     },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "{}" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
@@ -25,8 +28,8 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
-    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
+    "maxDate": { "type": { "name": "{}" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "{}" }, "default": "1900-01-01" },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
@@ -72,16 +75,16 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "object" },
+      "type": { "name": "{}" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`."
     },
     "renderLoading": {
       "type": { "name": "func" },
       "default": "() => <span>...</span>",
       "signature": {
-        "type": "function() => React.ReactNode",
+        "type": "function() => ReactNode",
         "describedArgs": [],
-        "returned": "React.ReactNode"
+        "returned": "ReactNode"
       }
     },
     "shouldDisableDate": {
@@ -109,9 +112,12 @@
       }
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "DateCalendarSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "DateCalendarSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -130,7 +136,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "{}" } },
     "view": {
       "type": {
         "name": "enum",

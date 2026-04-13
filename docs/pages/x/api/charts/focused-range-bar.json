@@ -5,6 +5,7 @@
     "import { FocusedRangeBar } from '@mui/x-charts-premium/BarChartPremium';",
     "import { FocusedRangeBar } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiFocusedRangeBar",
   "filename": "/packages/x-charts-premium/src/BarChartPremium/RangeBar/FocusedRangeBar.tsx",

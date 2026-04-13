@@ -2,29 +2,24 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "direction": {
-      "type": {
-        "name": "union",
-        "description": "'column-reverse'<br>&#124;&nbsp;'column'<br>&#124;&nbsp;'row-reverse'<br>&#124;&nbsp;'row'<br>&#124;&nbsp;Array&lt;'column-reverse'<br>&#124;&nbsp;'column'<br>&#124;&nbsp;'row-reverse'<br>&#124;&nbsp;'row'&gt;<br>&#124;&nbsp;object"
-      },
-      "default": "'column'"
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<MultiInputTimeRangeFieldClasses>" },
+      "additionalInfo": { "cssApi": true }
     },
+    "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
+    "defaultValue": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
-    "divider": { "type": { "name": "node" } },
-    "endFieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "endFieldRef": { "type": { "name": "{}" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "maxTime": { "type": { "name": "object" } },
-    "minTime": { "type": { "name": "object" } },
+    "maxTime": { "type": { "name": "{}" } },
+    "minTime": { "type": { "name": "{}" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onChange": {
       "type": { "name": "func" },
@@ -49,7 +44,7 @@
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
-      "type": { "name": "union", "description": "Array&lt;object&gt;<br>&#124;&nbsp;object" },
+      "type": { "name": "{}" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
     },
     "selectedSections": {
@@ -67,27 +62,16 @@
       }
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "MultiInputRangeFieldSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "MultiInputRangeFieldSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "spacing": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;object<br>&#124;&nbsp;string"
-      },
-      "default": "0"
-    },
-    "startFieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
+    "startFieldRef": { "type": { "name": "{}" } },
     "timezone": {
       "type": { "name": "string" },
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
@@ -96,8 +80,7 @@
         "text": "timezones documentation"
       }
     },
-    "useFlexGap": { "type": { "name": "bool" }, "default": "false" },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } }
+    "value": { "type": { "name": "shape", "description": "PickerRangeValue" } }
   },
   "name": "MultiInputTimeRangeField",
   "imports": [
@@ -109,13 +92,13 @@
       "name": "root",
       "description": "Element rendered at the root.",
       "default": "MultiInputRangeFieldRoot",
-      "class": "MuiMultiInputTimeRangeField-root"
+      "class": null
     },
     {
       "name": "separator",
       "description": "Element rendered between the two inputs.",
       "default": "MultiInputRangeFieldSeparator",
-      "class": "MuiMultiInputTimeRangeField-separator"
+      "class": null
     },
     {
       "name": "textField",

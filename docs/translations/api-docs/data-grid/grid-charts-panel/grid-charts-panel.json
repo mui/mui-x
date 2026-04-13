@@ -13,5 +13,6 @@
     },
     "schema": { "description": "The schema of the charts configuration." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

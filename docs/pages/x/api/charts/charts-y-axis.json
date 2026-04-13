@@ -1,20 +1,34 @@
 {
   "props": {
+    "axis": { "type": { "name": "shape", "description": "'y'" } },
     "axisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChartsAxisClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "disableLine": { "type": { "name": "bool" }, "default": "false" },
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "string" } },
-    "labelStyle": { "type": { "name": "object" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "labelStyle": { "type": { "name": "shape", "description": "ChartsTextStyle" } },
+    "slotProps": {
+      "type": { "name": "shape", "description": "Partial<ChartsAxisSlotProps>" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "Partial<ChartsAxisSlots>" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
     "tickInterval": {
-      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
-      "default": "'auto'"
+      "type": {
+        "name": "union",
+        "description": "'auto'<br>&#124;&nbsp;Array&lt;any&gt;<br>&#124;&nbsp;func"
+      },
+      "default": "'auto'",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-charts/axis/#fixed-tick-positions",
+        "text": ""
+      }
     },
     "tickLabelInterval": {
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;func" },
@@ -24,7 +38,7 @@
       "type": { "name": "enum", "description": "'middle'<br>&#124;&nbsp;'tick'" },
       "default": "'middle'"
     },
-    "tickLabelStyle": { "type": { "name": "object" } },
+    "tickLabelStyle": { "type": { "name": "shape", "description": "ChartsTextStyle" } },
     "tickMaxStep": { "type": { "name": "number" } },
     "tickMinStep": { "type": { "name": "number" } },
     "tickNumber": { "type": { "name": "number" } },
@@ -35,13 +49,16 @@
       },
       "default": "'extremities'"
     },
-    "tickSize": { "type": { "name": "number" }, "default": "6" }
+    "tickSize": { "type": { "name": "number" }, "default": "6" },
+    "tickSpacing": { "type": { "name": "number" }, "default": "0" }
   },
   "name": "ChartsYAxis",
   "imports": [
     "import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';",
     "import { ChartsYAxis } from '@mui/x-charts';",
+    "import { ChartsYAxis } from '@mui/x-charts-pro/ChartsYAxis';",
     "import { ChartsYAxis } from '@mui/x-charts-pro';",
+    "import { ChartsYAxis } from '@mui/x-charts-premium/ChartsYAxis';",
     "import { ChartsYAxis } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -83,8 +100,6 @@
     }
   ],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChartsYAxis",
   "filename": "/packages/x-charts/src/ChartsYAxis/ChartsYAxis.tsx",
   "inheritance": null,

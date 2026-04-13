@@ -7,10 +7,13 @@
         "describedArgs": ["event", "lineItemIdentifier"]
       }
     },
-    "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "MarkPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "MarkPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -19,10 +22,12 @@
   "imports": [
     "import { MarkPlot } from '@mui/x-charts/LineChart';",
     "import { MarkPlot } from '@mui/x-charts';",
+    "import { MarkPlot } from '@mui/x-charts-pro/LineChart';",
     "import { MarkPlot } from '@mui/x-charts-pro';",
+    "import { MarkPlot } from '@mui/x-charts-premium/LineChart';",
     "import { MarkPlot } from '@mui/x-charts-premium';"
   ],
-  "slots": [{ "name": "mark", "description": "", "class": null }],
+  "slots": [{ "name": "mark", "description": "", "class": "MuiLineChart-mark" }],
   "classes": [],
   "muiName": "MuiMarkPlot",
   "filename": "/packages/x-charts/src/LineChart/MarkPlot.tsx",

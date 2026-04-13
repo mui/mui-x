@@ -1,21 +1,32 @@
 {
-  "props": {},
+  "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatConversationClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "ConversationRootSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationRootSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatConversation",
   "imports": [
     "import { ChatConversation } from '@mui/x-chat/ChatConversation';",
     "import { ChatConversation } from '@mui/x-chat';"
   ],
+  "slots": [{ "name": "root", "description": "", "class": "MuiChatConversation-root" }],
   "classes": [
+    {
+      "key": "root",
+      "className": "MuiChatConversation-root",
+      "description": "Styles applied to the conversation root element.",
+      "isGlobal": false
+    },
     {
       "key": "header",
       "className": "MuiChatConversation-header",
       "description": "Styles applied to the conversation header element.",
-      "isGlobal": false
-    },
-    {
-      "key": "headerActions",
-      "className": "MuiChatConversation-headerActions",
-      "description": "Styles applied to the conversation header actions element.",
       "isGlobal": false
     },
     {
@@ -25,9 +36,9 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiChatConversation-root",
-      "description": "Styles applied to the conversation root element.",
+      "key": "title",
+      "className": "MuiChatConversation-title",
+      "description": "Styles applied to the conversation title element.",
       "isGlobal": false
     },
     {
@@ -37,14 +48,12 @@
       "isGlobal": false
     },
     {
-      "key": "title",
-      "className": "MuiChatConversation-title",
-      "description": "Styles applied to the conversation title element.",
+      "key": "headerActions",
+      "className": "MuiChatConversation-headerActions",
+      "description": "Styles applied to the conversation header actions element.",
       "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatConversation",
   "filename": "/packages/x-chat/src/ChatConversation/ChatConversation.tsx",
   "inheritance": null,

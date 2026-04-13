@@ -1,14 +1,12 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
+    "ampm": { "type": { "name": "bool" } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<DateTimeRangePickerToolbarClasses>" },
+      "additionalInfo": { "cssApi": true }
     },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "titleId": { "type": { "name": "string" } },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
@@ -17,13 +15,8 @@
     "import { DateTimeRangePickerToolbar } from '@mui/x-date-pickers-pro/DateTimeRangePicker';",
     "import { DateTimeRangePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
-    {
-      "key": "endToolbar",
-      "className": "MuiDateTimeRangePickerToolbar-endToolbar",
-      "description": "Styles applied to the end toolbar element.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiDateTimeRangePickerToolbar-root",
@@ -34,6 +27,12 @@
       "key": "startToolbar",
       "className": "MuiDateTimeRangePickerToolbar-startToolbar",
       "description": "Styles applied to the start toolbar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "endToolbar",
+      "className": "MuiDateTimeRangePickerToolbar-endToolbar",
+      "description": "Styles applied to the end toolbar element.",
       "isGlobal": false
     }
   ],

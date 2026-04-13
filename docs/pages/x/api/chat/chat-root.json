@@ -1,17 +1,129 @@
 {
-  "props": {},
+  "props": {
+    "adapter": { "type": { "name": "{}" }, "required": true },
+    "activeConversationId": { "type": { "name": "string" } },
+    "composerValue": { "type": { "name": "string" } },
+    "conversations": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ avatarUrl?: string, id: string, lastMessageAt?: string, metadata?: ChatConversationMetadata, participants?: Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any }&gt;, readState?: 'read'<br>&#124;&nbsp;'unread', subtitle?: string, title?: string, unreadCount?: number }&gt;"
+      }
+    },
+    "currentUser": {
+      "type": {
+        "name": "shape",
+        "description": "{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }"
+      }
+    },
+    "density": {
+      "type": {
+        "name": "enum",
+        "description": "'comfortable'<br>&#124;&nbsp;'compact'<br>&#124;&nbsp;'standard'"
+      }
+    },
+    "initialActiveConversationId": { "type": { "name": "string" } },
+    "initialComposerValue": { "type": { "name": "string" } },
+    "initialConversations": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ avatarUrl?: string, id: string, lastMessageAt?: string, metadata?: ChatConversationMetadata, participants?: Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any }&gt;, readState?: 'read'<br>&#124;&nbsp;'unread', subtitle?: string, title?: string, unreadCount?: number }&gt;"
+      }
+    },
+    "initialMessages": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: ChatMessageMetadata, parts: Array&lt;ChatDynamicToolMessagePart<string><br>&#124;&nbsp;ChatFileMessagePart<br>&#124;&nbsp;ChatReasoningMessagePart<br>&#124;&nbsp;ChatSourceDocumentMessagePart<br>&#124;&nbsp;ChatSourceUrlMessagePart<br>&#124;&nbsp;ChatStepStartMessagePart<br>&#124;&nbsp;ChatTextMessagePart<br>&#124;&nbsp;ChatToolMessagePart<string><br>&#124;&nbsp;{}&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }&gt;"
+      }
+    },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChatLocaleText>" } },
+    "members": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }&gt;"
+      }
+    },
+    "messages": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: ChatMessageMetadata, parts: Array&lt;ChatDynamicToolMessagePart<string><br>&#124;&nbsp;ChatFileMessagePart<br>&#124;&nbsp;ChatReasoningMessagePart<br>&#124;&nbsp;ChatSourceDocumentMessagePart<br>&#124;&nbsp;ChatSourceUrlMessagePart<br>&#124;&nbsp;ChatStepStartMessagePart<br>&#124;&nbsp;ChatTextMessagePart<br>&#124;&nbsp;ChatToolMessagePart<string><br>&#124;&nbsp;{}&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }&gt;"
+      }
+    },
+    "onActiveConversationChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(conversationId: string | undefined) => void",
+        "describedArgs": []
+      }
+    },
+    "onComposerValueChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: string) => void", "describedArgs": [] }
+    },
+    "onConversationsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(conversations: Array<ChatConversation>) => void",
+        "describedArgs": []
+      }
+    },
+    "onData": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(part: ChatFallbackDataMessagePart<`data-${string}`>) => void | Promise<void>",
+        "describedArgs": []
+      }
+    },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(error: ChatError) => void", "describedArgs": [] }
+    },
+    "onFinish": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(payload: ChatOnFinishPayload) => void | Promise<void>",
+        "describedArgs": []
+      }
+    },
+    "onMessagesChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(messages: Array<ChatMessage>) => void", "describedArgs": [] }
+    },
+    "onToolCall": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(payload: ChatOnToolCallPayload) => void | Promise<void>",
+        "describedArgs": []
+      }
+    },
+    "partRenderers": {
+      "type": {
+        "name": "shape",
+        "description": "{ dynamic-tool?: func, file?: func, reasoning?: func, source-document?: func, source-url?: func, step-start?: func, text?: func, tool?: func }"
+      }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "ChatRootSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ChatRootSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "storeClass": {
+      "type": { "name": "shape", "description": "ChatStoreConstructor<Cursor>" },
+      "default": "ChatStore"
+    },
+    "streamFlushInterval": { "type": { "name": "number" }, "default": "16" },
+    "variant": { "type": { "name": "enum", "description": "'compact'<br>&#124;&nbsp;'default'" } }
+  },
   "name": "ChatRoot",
   "imports": [
-    "import { ChatRoot } from '@mui/x-chat/headless';",
-    "import { ChatRoot } from '@mui/x-chat/headless';"
+    "import { ChatRoot } from '@mui/x-chat-headless/chat';",
+    "import { ChatRoot } from '@mui/x-chat-headless';",
+    "import { ChatRoot } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatRoot",
   "filename": "/packages/x-chat-headless/src/chat/ChatRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/customization/headless/\">Chat - Headless Components</a></li>\n<li><a href=\"/x/react-chat/customization/localization/\">Chat - Localization</a></li>\n<li><a href=\"/x/react-chat/customization/tailwind/\">Chat - Tailwind CSS</a></li>\n<li><a href=\"/x/react-chat/headless/composition/\">Chat - Headless composition</a></li>\n<li><a href=\"/x/react-chat/material/customization/\">Chat - Customization</a></li>\n<li><a href=\"/x/react-chat/material/slot-overrides/\">Chat - Slot overrides</a></li>\n<li><a href=\"/x/react-chat/\">MUI X Chat</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/customization/headless/\">Chat - Headless Components</a></li>\n<li><a href=\"/x/react-chat/customization/localization/\">Chat - Localization</a></li>\n<li><a href=\"/x/react-chat/customization/tailwind/\">Chat - Tailwind CSS</a></li>\n<li><a href=\"/x/react-chat/headless/composition/\">Chat - Headless composition</a></li>\n<li><a href=\"/x/react-chat/material/customization/\">Chat - Customization</a></li>\n<li><a href=\"/x/react-chat/material/slot-overrides/\">Chat - Slot overrides</a></li>\n<li><a href=\"/x/react-chat/overview/\">MUI X Chat</a></li></ul>",
   "cssComponent": false
 }

@@ -1,16 +1,12 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<TimeRangePickerTabsClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "hidden": {
       "type": { "name": "bool" },
       "default": "`window.innerHeight < 667` for `DesktopTimeRangePicker` and `MobileTimeRangePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticTimeRangePicker`"
-    },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
     },
     "timeIcon": { "type": { "name": "element" }, "default": "Time" }
   },
@@ -19,6 +15,7 @@
     "import { TimeRangePickerTabs } from '@mui/x-date-pickers-pro/TimeRangePicker';",
     "import { TimeRangePickerTabs } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
     {
       "key": "root",

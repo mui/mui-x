@@ -1,37 +1,44 @@
 {
   "name": "FunnelSeries",
   "imports": [
-    "import { FunnelSeries } from '@mui/x-charts-premium'",
-    "import { FunnelSeries } from '@mui/x-charts-pro'"
+    "import { FunnelSeries } from '@mui/x-charts-pro';",
+    "import { FunnelSeries } from '@mui/x-charts-premium';"
   ],
   "properties": {
     "data": {
-      "type": { "description": "Readonly&lt;FunnelValueType[]&gt;" },
+      "type": { "description": "readonly FunnelValueType[]" },
       "required": true,
       "isProPlan": true
     },
     "type": { "type": { "description": "'funnel'" }, "required": true, "isProPlan": true },
     "borderRadius": { "type": { "description": "number" }, "default": "8", "isProPlan": true },
     "curve": {
-      "type": { "description": "FunnelCurveType" },
+      "type": {
+        "description": "'bump' | 'linear' | 'linear-sharp' | 'pyramid' | 'step' | 'step-pyramid'"
+      },
       "default": "'linear'",
       "isProPlan": true
     },
     "funnelDirection": {
-      "type": { "description": "'increasing' | 'decreasing' | 'auto'" },
+      "type": { "description": "'auto' | 'decreasing' | 'increasing'" },
       "default": "'auto'",
       "isProPlan": true
     },
     "highlightScope": {
-      "type": { "description": "HighlightScope&lt;SeriesType&gt;" },
-      "isProPlan": true
+      "type": {
+        "description": "{ highlight?: 'item' | 'none' | 'series' | undefined, fade?: 'global' | 'none' | 'series' | undefined }"
+      }
     },
-    "id": { "type": { "description": "SeriesId" }, "isProPlan": true },
+    "id": { "type": { "description": "string" } },
     "label": {
-      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" },
+      "type": { "description": "(location: 'legend' | 'tooltip') =&gt; string | string" },
       "isProPlan": true
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" }, "isProPlan": true },
+    "labelMarkType": {
+      "type": {
+        "description": "'circle' | 'line' | 'line+mark' | 'square' | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt;"
+      }
+    },
     "layout": {
       "type": { "description": "'horizontal' | 'vertical'" },
       "default": "'vertical'",
@@ -45,15 +52,16 @@
       "isProPlan": true
     },
     "valueFormatter": {
-      "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" },
-      "isProPlan": true
+      "type": {
+        "description": "(value: { id?: number | string | undefined, value: number, label?: (location: 'legend' | 'section' | 'tooltip') =&gt; string | undefined | string | undefined, color?: string | undefined, labelMarkType?: 'circle' | 'line' | 'line+mark' | 'square' | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt; | undefined }, context: { dataIndex: number }) =&gt; null | string"
+      }
     },
     "variant": {
       "type": { "description": "'filled' | 'outlined'" },
       "default": "'filled'",
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "AxisId" }, "isProPlan": true },
-    "yAxisId": { "type": { "description": "AxisId" }, "isProPlan": true }
+    "xAxisId": { "type": { "description": "number | string" } },
+    "yAxisId": { "type": { "description": "number | string" } }
   }
 }

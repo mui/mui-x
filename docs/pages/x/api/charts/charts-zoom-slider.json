@@ -3,11 +3,12 @@
   "name": "ChartsZoomSlider",
   "imports": [
     "import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';",
-    "import { ChartsZoomSlider } from '@mui/x-charts-pro';"
+    "import { ChartsZoomSlider } from '@mui/x-charts-pro';",
+    "import { ChartsZoomSlider } from '@mui/x-charts-premium/ChartsZoomSlider';",
+    "import { ChartsZoomSlider } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChartsZoomSlider",
   "filename": "/packages/x-charts-pro/src/ChartsZoomSlider/ChartsZoomSlider.tsx",
   "inheritance": null,

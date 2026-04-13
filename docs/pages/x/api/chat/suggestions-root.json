@@ -1,0 +1,32 @@
+{
+  "props": {
+    "autoSubmit": { "type": { "name": "bool" }, "default": "false" },
+    "slotProps": { "type": { "name": "shape", "description": "SuggestionsRootSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<SuggestionsRootSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "suggestions": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;string<br>&#124;&nbsp;{ label?: string, value: string }&gt;"
+      }
+    }
+  },
+  "name": "SuggestionsRoot",
+  "imports": [
+    "import { SuggestionsRoot } from '@mui/x-chat-headless/suggestions';",
+    "import { SuggestionsRoot } from '@mui/x-chat-headless';",
+    "import { SuggestionsRoot } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "item", "description": "", "class": null },
+    { "name": "root", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiSuggestionsRoot",
+  "filename": "/packages/x-chat-headless/src/suggestions/SuggestionsRoot.tsx",
+  "inheritance": null,
+  "demos": "",
+  "cssComponent": false
+}

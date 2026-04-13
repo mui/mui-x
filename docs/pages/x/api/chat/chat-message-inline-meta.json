@@ -5,6 +5,7 @@
     "import { ChatMessageInlineMeta } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageInlineMeta } from '@mui/x-chat';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiChatMessageInlineMeta",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageInlineMeta.tsx",

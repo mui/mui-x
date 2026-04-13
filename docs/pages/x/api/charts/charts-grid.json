@@ -1,6 +1,10 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChartsGridClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "className": { "type": { "name": "string" } },
     "horizontal": { "type": { "name": "bool" } },
     "vertical": { "type": { "name": "bool" } }
   },
@@ -8,14 +12,17 @@
   "imports": [
     "import { ChartsGrid } from '@mui/x-charts/ChartsGrid';",
     "import { ChartsGrid } from '@mui/x-charts';",
+    "import { ChartsGrid } from '@mui/x-charts-pro/ChartsGrid';",
     "import { ChartsGrid } from '@mui/x-charts-pro';",
+    "import { ChartsGrid } from '@mui/x-charts-premium/ChartsGrid';",
     "import { ChartsGrid } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [
     {
-      "key": "horizontalLine",
-      "className": "MuiChartsGrid-horizontalLine",
-      "description": "Styles applied to x-axes.",
+      "key": "root",
+      "className": "MuiChartsGrid-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
@@ -25,9 +32,9 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiChartsGrid-root",
-      "description": "Styles applied to the root element.",
+      "key": "horizontalLine",
+      "className": "MuiChartsGrid-horizontalLine",
+      "description": "Styles applied to x-axes.",
       "isGlobal": false
     },
     {
@@ -37,8 +44,6 @@
       "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChartsGrid",
   "filename": "/packages/x-charts/src/ChartsGrid/ChartsGrid.tsx",
   "inheritance": null,

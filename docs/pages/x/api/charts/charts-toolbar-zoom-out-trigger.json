@@ -1,12 +1,13 @@
 {
-  "props": {
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
-  },
+  "props": { "render": { "type": { "name": "custom", "description": "ref" } } },
   "name": "ChartsToolbarZoomOutTrigger",
   "imports": [
     "import { ChartsToolbarZoomOutTrigger } from '@mui/x-charts-pro/ChartsToolbarPro';",
-    "import { ChartsToolbarZoomOutTrigger } from '@mui/x-charts-pro';"
+    "import { ChartsToolbarZoomOutTrigger } from '@mui/x-charts-pro';",
+    "import { ChartsToolbarZoomOutTrigger } from '@mui/x-charts-premium/ChartsToolbarPro';",
+    "import { ChartsToolbarZoomOutTrigger } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiChartsToolbarZoomOutTrigger",
   "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarZoomOutTrigger.tsx",

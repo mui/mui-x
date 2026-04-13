@@ -1,0 +1,59 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "attachmentConfig": {
+      "description": "Configuration for attachment validation constraints.\nWhen provided, file attachments are validated against these rules."
+    },
+    "classes": { "description": "" },
+    "disabled": { "description": "" },
+    "features": { "description": "Feature flags to control composer capabilities." },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" },
+    "variant": {
+      "description": "The visual layout variant of the composer.\n- <code>'default'</code> – Stacked layout: attachment list, textarea, then toolbar below.\n- <code>'compact'</code> – Inline layout: start actions, textarea, end actions in a single row.<br><br>When omitted, inherits from the nearest <code>ChatVariantProvider</code> (e.g. set by <code>ChatBox</code>)."
+    }
+  },
+  "classDescriptions": {
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the input root element"
+    },
+    "disabled": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element when disabled"
+    },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the input label element"
+    },
+    "textArea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the textarea element"
+    },
+    "sendButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the send button element"
+    },
+    "attachButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the attach button element"
+    },
+    "toolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar element"
+    },
+    "attachmentList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the attachment list element"
+    },
+    "helperText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the helper text element"
+    },
+    "variantCompact": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element when variant=\"compact\""
+    }
+  },
+  "slotDescriptions": { "root": "" }
+}

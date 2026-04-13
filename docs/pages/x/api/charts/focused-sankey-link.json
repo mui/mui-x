@@ -3,8 +3,11 @@
   "name": "FocusedSankeyLink",
   "imports": [
     "import { FocusedSankeyLink } from '@mui/x-charts-pro/SankeyChart';",
-    "import { FocusedSankeyLink } from '@mui/x-charts-pro';"
+    "import { FocusedSankeyLink } from '@mui/x-charts-pro';",
+    "import { FocusedSankeyLink } from '@mui/x-charts-premium/SankeyChart';",
+    "import { FocusedSankeyLink } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiFocusedSankeyLink",
   "filename": "/packages/x-charts-pro/src/SankeyChart/FocusedSankeyLink.tsx",

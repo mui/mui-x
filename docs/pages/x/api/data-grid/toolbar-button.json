@@ -1,6 +1,30 @@
 {
   "props": {
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "color": {
+      "type": {
+        "name": "enum",
+        "description": "'default'<br>&#124;&nbsp;'inherit'<br>&#124;&nbsp;'primary'"
+      }
+    },
+    "disabled": { "type": { "name": "bool" } },
+    "edge": {
+      "type": { "name": "union", "description": "'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;bool" }
+    },
+    "id": { "type": { "name": "string" } },
+    "label": { "type": { "name": "string" } },
+    "material": { "type": { "name": "shape", "description": "Partial<IconButtonProps>" } },
+    "render": { "type": { "name": "element" } },
+    "role": { "type": { "name": "string" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
+      }
+    },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "title": { "type": { "name": "string" } },
+    "touchRippleRef": { "type": { "name": "any" } }
   },
   "name": "ToolbarButton",
   "imports": [
@@ -9,11 +33,12 @@
     "import { ToolbarButton } from '@mui/x-data-grid-pro';",
     "import { ToolbarButton } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiToolbarButton",
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/toolbarV8/ToolbarButton.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar component</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li>\n<li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar component</a></li></ul>",
   "cssComponent": false
 }

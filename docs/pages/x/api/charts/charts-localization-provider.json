@@ -1,15 +1,18 @@
 {
-  "props": { "localeText": { "type": { "name": "object" } } },
+  "props": {
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } }
+  },
   "name": "ChartsLocalizationProvider",
   "imports": [
     "import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';",
     "import { ChartsLocalizationProvider } from '@mui/x-charts';",
+    "import { ChartsLocalizationProvider } from '@mui/x-charts-pro/ChartsLocalizationProvider';",
     "import { ChartsLocalizationProvider } from '@mui/x-charts-pro';",
+    "import { ChartsLocalizationProvider } from '@mui/x-charts-premium/ChartsLocalizationProvider';",
     "import { ChartsLocalizationProvider } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChartsLocalizationProvider",
   "filename": "/packages/x-charts/src/ChartsLocalizationProvider/ChartsLocalizationProvider.tsx",
   "inheritance": null,

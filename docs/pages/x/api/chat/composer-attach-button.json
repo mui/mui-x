@@ -1,9 +1,16 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "ComposerAttachButtonSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerAttachButtonSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ComposerAttachButton",
   "imports": [
-    "import { ComposerAttachButton } from '@mui/x-chat/headless';",
-    "import { ComposerAttachButton } from '@mui/x-chat/headless';"
+    "import { ComposerAttachButton } from '@mui/x-chat-headless/composer';",
+    "import { ComposerAttachButton } from '@mui/x-chat-headless';",
+    "import { ComposerAttachButton } from '@mui/x-chat';"
   ],
   "slots": [
     { "name": "attachButton", "description": "", "class": null },

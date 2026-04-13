@@ -1,11 +1,20 @@
 {
-  "props": {},
+  "props": {
+    "action": {
+      "type": {
+        "name": "enum",
+        "description": "'make-child'<br>&#124;&nbsp;'move-to-parent'<br>&#124;&nbsp;'reorder-above'<br>&#124;&nbsp;'reorder-below'"
+      }
+    },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } }
+  },
   "name": "TreeItemDragAndDropOverlay",
   "imports": [
     "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';",
     "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view';",
     "import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view-pro';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiTreeItemDragAndDropOverlay",
   "filename": "/packages/x-tree-view/src/TreeItemDragAndDropOverlay/TreeItemDragAndDropOverlay.tsx",

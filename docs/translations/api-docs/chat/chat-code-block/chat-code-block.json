@@ -2,30 +2,24 @@
   "componentDescription": "",
   "propDescriptions": {
     "children": { "description": "The code string to display." },
+    "classes": { "description": "" },
     "highlighter": {
-      "description": "Optional syntax highlighter. Receives the code string and a language identifier, and should return highlighted React nodes. When omitted, raw code is displayed.",
+      "description": "Optional syntax highlighter. Receives the code string and a language identifier,\nand should return highlighted React nodes. When omitted, raw code is displayed.",
       "typeDescriptions": {
-        "code": { "name": "code", "description": "The code string to highlight." },
+        "code": { "name": "code", "description": "- The code string to highlight." },
         "language": {
           "name": "language",
-          "description": "The language identifier for syntax highlighting."
+          "description": "- The language identifier for syntax highlighting."
         },
-        "React.ReactNode": {
-          "name": "React.ReactNode",
-          "description": "The highlighted React nodes."
-        }
+        "ReactNode": { "name": "ReactNode", "description": "The highlighted React nodes." }
       }
     },
     "language": {
-      "description": "Language identifier shown in the header (e.g. &quot;typescript&quot;, &quot;python&quot;)."
+      "description": "Language identifier shown in the header (e.g. \"typescript\", \"python\")."
     }
   },
   "classDescriptions": {
-    "code": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the code element" },
-    "copyButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the copy button element"
-    },
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
     "header": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header element"
@@ -34,7 +28,12 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the language label element"
     },
+    "copyButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the copy button element"
+    },
     "pre": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the pre element" },
-    "root": { "description": "Styles applied to the root element." }
-  }
+    "code": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the code element" }
+  },
+  "slotDescriptions": {}
 }

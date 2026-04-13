@@ -1,9 +1,20 @@
 {
   "props": {
+    "color": { "type": { "name": "string" }, "required": true },
+    "d": { "type": { "name": "string" }, "required": true },
+    "seriesId": { "type": { "name": "string" }, "required": true },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<LineClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "gradientId": { "type": { "name": "string" } },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "AreaElementSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "AreaElementSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -12,7 +23,9 @@
   "imports": [
     "import { AreaElement } from '@mui/x-charts/LineChart';",
     "import { AreaElement } from '@mui/x-charts';",
+    "import { AreaElement } from '@mui/x-charts-pro/LineChart';",
     "import { AreaElement } from '@mui/x-charts-pro';",
+    "import { AreaElement } from '@mui/x-charts-premium/LineChart';",
     "import { AreaElement } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -20,7 +33,7 @@
       "name": "area",
       "description": "The component that renders the area.",
       "default": "AnimatedArea",
-      "class": null
+      "class": "MuiLineChart-area"
     }
   ],
   "classes": [],

@@ -1,7 +1,10 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "d": { "description": "" },
+    "ownerState": { "description": "" },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

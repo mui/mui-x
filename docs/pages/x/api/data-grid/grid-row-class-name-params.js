@@ -13,9 +13,9 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/data-grid/',
+    'docsx/translations/api-docs/data-grid/grid-row-class-name-params',
     false,
-    /\.\/grid-row-class-name-params.*.json$/,
+    /\.\/grid-row-class-name-params.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
   return { props: { descriptions } };

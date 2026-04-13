@@ -3,15 +3,19 @@
     "text": { "type": { "name": "string" }, "required": true },
     "lineHeight": { "type": { "name": "number" } },
     "needsComputation": { "type": { "name": "bool" }, "default": "false" },
-    "style": { "type": { "name": "object" } }
+    "ownerState": { "type": { "name": "any" } },
+    "style": { "type": { "name": "shape", "description": "ChartsTextStyle" } }
   },
   "name": "ChartsText",
   "imports": [
     "import { ChartsText } from '@mui/x-charts/ChartsText';",
     "import { ChartsText } from '@mui/x-charts';",
+    "import { ChartsText } from '@mui/x-charts-pro/ChartsText';",
     "import { ChartsText } from '@mui/x-charts-pro';",
+    "import { ChartsText } from '@mui/x-charts-premium/ChartsText';",
     "import { ChartsText } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiChartsText",
   "filename": "/packages/x-charts/src/ChartsText/ChartsText.tsx",

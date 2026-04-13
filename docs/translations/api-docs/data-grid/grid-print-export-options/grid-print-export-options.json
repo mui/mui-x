@@ -1,0 +1,23 @@
+{
+  "interfaceDescription": "The options to apply on the Print export.",
+  "propertiesDescriptions": {
+    "allColumns": { "description": "If `true`, the hidden columns will also be exported." },
+    "bodyClassName": { "description": "One or more classes passed to the print window." },
+    "copyStyles": {
+      "description": "If `false`, all <style> and <link type=\"stylesheet\" /> tags from the <head> will not be copied\nto the print window."
+    },
+    "fields": {
+      "description": "The columns exported.\nThis should only be used if you want to restrict the columns exports."
+    },
+    "fileName": { "description": "The value to be used as the print window title." },
+    "getRowsToExport": {
+      "description": "Function that returns the list of row ids to export in the order they should be exported."
+    },
+    "hideFooter": { "description": "If `true`, the footer is removed for when printing." },
+    "hideToolbar": { "description": "If `true`, the toolbar is removed for when printing." },
+    "includeCheckboxes": {
+      "description": "If `true`, the selection checkboxes will be included when printing."
+    },
+    "pageStyle": { "description": "Provide Print specific styles to the print window." }
+  }
+}

@@ -1,17 +1,10 @@
 {
   "props": {
-    "radar": {
-      "type": {
-        "name": "shape",
-        "description": "{ labelFormatter?: func, labelGap?: number, max?: number, metrics: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;{ max?: number, min?: number, name: string }&gt;, startAngle?: number }"
-      },
-      "required": true
-    },
+    "radar": { "type": { "name": "{}" }, "required": true },
     "series": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "type": { "name": "arrayOf", "description": "Array&lt;Readonly<RadarSeries>&gt;" },
       "required": true
     },
-    "className": { "type": { "name": "string" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
@@ -20,7 +13,7 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": { "type": { "name": "{}" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
@@ -39,7 +32,7 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -50,7 +43,7 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -99,15 +92,25 @@
         "describedArgs": ["tooltipItem"]
       }
     },
+    "plugins": { "type": { "name": "{}" } },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'radar'>"
+      }
+    },
     "shape": {
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
       "default": "'sharp'"
     },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "RadarChartProSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "RadarChartProSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -124,7 +127,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }"
       }
     },
     "width": { "type": { "name": "number" } }
@@ -132,7 +135,9 @@
   "name": "RadarChartPro",
   "imports": [
     "import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';",
-    "import { RadarChartPro } from '@mui/x-charts-pro';"
+    "import { RadarChartPro } from '@mui/x-charts-pro';",
+    "import { RadarChartPro } from '@mui/x-charts-premium/RadarChartPro';",
+    "import { RadarChartPro } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

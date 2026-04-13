@@ -4,26 +4,56 @@
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "required": true
     },
-    "month": { "type": { "name": "object" }, "required": true },
+    "currentMonth": { "type": { "name": "{}" }, "required": true },
+    "maxDate": { "type": { "name": "{}" }, "required": true },
+    "minDate": { "type": { "name": "{}" }, "required": true },
+    "month": { "type": { "name": "{}" }, "required": true },
     "monthIndex": { "type": { "name": "number" }, "required": true },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "onMonthChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(date: any) => void", "describedArgs": [] }
+    },
+    "reduceAnimations": { "type": { "name": "bool" }, "required": true },
+    "timezone": { "type": { "name": "string" }, "required": true },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
+      },
+      "required": true
+    },
+    "views": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
+      },
+      "required": true
+    },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<PickersCalendarHeaderClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
     "format": {
       "type": { "name": "string" },
       "default": "`${adapter.formats.month} ${adapter.formats.year}`"
     },
     "labelId": { "type": { "name": "string" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: DateView) => void", "describedArgs": [] }
+    },
+    "slotProps": {
+      "type": { "name": "shape", "description": "PickersCalendarHeaderSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PickersCalendarHeaderSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
     }
   },
   "name": "PickersRangeCalendarHeader",
@@ -60,35 +90,16 @@
       "name": "switchViewButton",
       "description": "Button displayed to switch between different calendar views.",
       "default": "IconButton",
-      "class": "MuiPickersRangeCalendarHeader-switchViewButton"
+      "class": null
     },
     {
       "name": "switchViewIcon",
       "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is `year`.",
       "default": "ArrowDropDown",
-      "class": "MuiPickersRangeCalendarHeader-switchViewIcon"
+      "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "label",
-      "className": "MuiPickersRangeCalendarHeader-label",
-      "description": "Styles applied to the label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "labelContainer",
-      "className": "MuiPickersRangeCalendarHeader-labelContainer",
-      "description": "Styles applied to the label container element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiPickersRangeCalendarHeader-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiPickersRangeCalendarHeader",

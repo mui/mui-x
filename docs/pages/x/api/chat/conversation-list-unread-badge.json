@@ -1,9 +1,22 @@
 {
-  "props": {},
+  "props": {
+    "conversation": { "type": { "name": "{}" }, "required": true },
+    "focused": { "type": { "name": "bool" } },
+    "selected": { "type": { "name": "bool" } },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ConversationListUnreadBadgeSlotProps" }
+    },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationListUnreadBadgeSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "unread": { "type": { "name": "bool" } }
+  },
   "name": "ConversationListUnreadBadge",
   "imports": [
-    "import { ConversationListUnreadBadge } from '@mui/x-chat/headless';",
-    "import { ConversationListUnreadBadge } from '@mui/x-chat/headless';"
+    "import { ConversationListUnreadBadge } from '@mui/x-chat-headless/conversation-list';",
+    "import { ConversationListUnreadBadge } from '@mui/x-chat-headless';",
+    "import { ConversationListUnreadBadge } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],

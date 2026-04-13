@@ -1,7 +1,7 @@
 {
   "props": {
     "series": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "type": { "name": "arrayOf", "description": "Array&lt;LineSeries&gt;" },
       "required": true
     },
     "axesGap": { "type": { "name": "number" }, "default": "0" },
@@ -26,7 +26,9 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
-    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "dataset": {
+      "type": { "name": "arrayOf", "description": "Array&lt;DatasetElementType<unknown>&gt;" }
+    },
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
@@ -54,7 +56,7 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -65,14 +67,20 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
         "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
-    "onAreaClick": { "type": { "name": "func" } },
+    "onAreaClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent<SVGElement, MouseEvent>, lineItemIdentifier: LineItemIdentifier) => void",
+        "describedArgs": []
+      }
+    },
     "onAxisClick": {
       "type": { "name": "func" },
       "signature": {
@@ -101,8 +109,20 @@
         "describedArgs": ["axisItems"]
       }
     },
-    "onLineClick": { "type": { "name": "func" } },
-    "onMarkClick": { "type": { "name": "func" } },
+    "onLineClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent<SVGElement, MouseEvent>, lineItemIdentifier: LineItemIdentifier) => void",
+        "describedArgs": []
+      }
+    },
+    "onMarkClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent<SVGElement, MouseEvent>, lineItemIdentifier: LineItemIdentifier) => void",
+        "describedArgs": []
+      }
+    },
     "onTooltipAxisChange": {
       "type": { "name": "func" },
       "signature": {
@@ -117,11 +137,20 @@
         "describedArgs": ["tooltipItem"]
       }
     },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'line'>"
+      }
+    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "LineChartSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "LineChartSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -135,20 +164,20 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }"
       }
     },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axis?: 'x', barGapRatio?: number, categoryGapRatio?: number, classes?: object, className?: string, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, groups?: Array&lt;{ getValue: func, tickLabelStyle?: object, tickSize?: number }&gt;, height?: 'auto'<br>&#124;&nbsp;number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, offset?: number, ordinalTimeTicks?: Array&lt;'biweekly'<br>&#124;&nbsp;'days'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'months'<br>&#124;&nbsp;'quarterly'<br>&#124;&nbsp;'weeks'<br>&#124;&nbsp;'years'<br>&#124;&nbsp;{ format: func, getTickNumber: func, isTick: func }&gt;, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'band', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelMinGap?: number, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func }<br>&#124;&nbsp;{ axis?: 'x', classes?: object, className?: string, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, groups?: Array&lt;{ getValue: func, tickLabelStyle?: object, tickSize?: number }&gt;, height?: 'auto'<br>&#124;&nbsp;number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, offset?: number, ordinalTimeTicks?: Array&lt;'biweekly'<br>&#124;&nbsp;'days'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'months'<br>&#124;&nbsp;'quarterly'<br>&#124;&nbsp;'weeks'<br>&#124;&nbsp;'years'<br>&#124;&nbsp;{ format: func, getTickNumber: func, isTick: func }&gt;, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'point', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelMinGap?: number, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func }<br>&#124;&nbsp;{ axis?: 'x', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, height?: 'auto'<br>&#124;&nbsp;number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number, min?: number, offset?: number, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'log', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelMinGap?: number, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func }<br>&#124;&nbsp;{ axis?: 'x', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, constant?: number, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, height?: 'auto'<br>&#124;&nbsp;number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number, min?: number, offset?: number, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'symlog', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelMinGap?: number, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func }<br>&#124;&nbsp;{ axis?: 'x', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, height?: 'auto'<br>&#124;&nbsp;number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number, min?: number, offset?: number, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'pow', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelMinGap?: number, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func }<br>&#124;&nbsp;{ axis?: 'x', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, height?: 'auto'<br>&#124;&nbsp;number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number, min?: number, offset?: number, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'sqrt', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelMinGap?: number, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func }<br>&#124;&nbsp;{ axis?: 'x', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, height?: 'auto'<br>&#124;&nbsp;number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number<br>&#124;&nbsp;{ valueOf: func }, min?: number<br>&#124;&nbsp;{ valueOf: func }, offset?: number, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'time', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelMinGap?: number, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func }<br>&#124;&nbsp;{ axis?: 'x', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, height?: 'auto'<br>&#124;&nbsp;number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number<br>&#124;&nbsp;{ valueOf: func }, min?: number<br>&#124;&nbsp;{ valueOf: func }, offset?: number, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'utc', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelMinGap?: number, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func }<br>&#124;&nbsp;{ axis?: 'x', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, height?: 'auto'<br>&#124;&nbsp;number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number, min?: number, offset?: number, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'linear', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelMinGap?: number, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func }&gt;"
+        "description": "Array&lt;MakeOptional<AxisConfig<'band', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'linear', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'log', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'point', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'pow', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'sqrt', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'symlog', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'time', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'utc', any, ChartsXAxisProps>, 'id'>&gt;"
       }
     },
     "yAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axis?: 'y', barGapRatio?: number, categoryGapRatio?: number, classes?: object, className?: string, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, groups?: Array&lt;{ getValue: func, tickLabelStyle?: object, tickSize?: number }&gt;, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, offset?: number, ordinalTimeTicks?: Array&lt;'biweekly'<br>&#124;&nbsp;'days'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'months'<br>&#124;&nbsp;'quarterly'<br>&#124;&nbsp;'weeks'<br>&#124;&nbsp;'years'<br>&#124;&nbsp;{ format: func, getTickNumber: func, isTick: func }&gt;, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'band', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func, width?: 'auto'<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ axis?: 'y', classes?: object, className?: string, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, groups?: Array&lt;{ getValue: func, tickLabelStyle?: object, tickSize?: number }&gt;, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, offset?: number, ordinalTimeTicks?: Array&lt;'biweekly'<br>&#124;&nbsp;'days'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'months'<br>&#124;&nbsp;'quarterly'<br>&#124;&nbsp;'weeks'<br>&#124;&nbsp;'years'<br>&#124;&nbsp;{ format: func, getTickNumber: func, isTick: func }&gt;, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'point', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func, width?: 'auto'<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ axis?: 'y', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number, min?: number, offset?: number, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'log', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func, width?: 'auto'<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ axis?: 'y', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, constant?: number, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number, min?: number, offset?: number, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'symlog', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func, width?: 'auto'<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ axis?: 'y', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number, min?: number, offset?: number, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'pow', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func, width?: 'auto'<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ axis?: 'y', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number, min?: number, offset?: number, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'sqrt', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func, width?: 'auto'<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ axis?: 'y', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number<br>&#124;&nbsp;{ valueOf: func }, min?: number<br>&#124;&nbsp;{ valueOf: func }, offset?: number, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'time', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func, width?: 'auto'<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ axis?: 'y', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number<br>&#124;&nbsp;{ valueOf: func }, min?: number<br>&#124;&nbsp;{ valueOf: func }, offset?: number, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'utc', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func, width?: 'auto'<br>&#124;&nbsp;number }<br>&#124;&nbsp;{ axis?: 'y', classes?: object, className?: string, colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, max?: number, min?: number, offset?: number, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'linear', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, valueGetter?: func, width?: 'auto'<br>&#124;&nbsp;number }&gt;"
+        "description": "Array&lt;MakeOptional<AxisConfig<'band', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'linear', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'log', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'point', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'pow', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'sqrt', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'symlog', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'time', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'utc', any, ChartsYAxisProps>, 'id'>&gt;"
       }
     }
   },
@@ -156,7 +185,9 @@
   "imports": [
     "import { LineChart } from '@mui/x-charts/LineChart';",
     "import { LineChart } from '@mui/x-charts';",
+    "import { LineChart } from '@mui/x-charts-pro/LineChart';",
     "import { LineChart } from '@mui/x-charts-pro';",
+    "import { LineChart } from '@mui/x-charts-premium/LineChart';",
     "import { LineChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -164,7 +195,7 @@
       "name": "area",
       "description": "The component that renders the area.",
       "default": "AnimatedArea",
-      "class": null
+      "class": "MuiLineChart-area"
     },
     {
       "name": "axisLabel",
@@ -202,7 +233,7 @@
       "name": "line",
       "description": "The component that renders the line.",
       "default": "LineElementPath",
-      "class": null
+      "class": "MuiLineChart-line"
     },
     { "name": "lineHighlight", "description": "", "class": null },
     {
@@ -211,7 +242,7 @@
       "default": "ChartsLoadingOverlay",
       "class": null
     },
-    { "name": "mark", "description": "", "class": null },
+    { "name": "mark", "description": "", "class": "MuiLineChart-mark" },
     {
       "name": "noDataOverlay",
       "description": "Overlay component rendered when the chart has no data to display.",
@@ -243,13 +274,62 @@
       "class": null
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "area",
+      "className": "MuiLineChart-area",
+      "description": "Styles applied to the area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiLineChart-line",
+      "description": "Styles applied to the line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiLineChart-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markAnimate",
+      "className": "MuiLineChart-markAnimate",
+      "description": "Styles applied to a mark element when it is animated.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlight",
+      "className": "MuiLineChart-highlight",
+      "description": "Styles applied to the highlight element.",
+      "isGlobal": false
+    },
+    {
+      "key": "areaPlot",
+      "className": "MuiLineChart-areaPlot",
+      "description": "Styles applied to the AreaPlot root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "linePlot",
+      "className": "MuiLineChart-linePlot",
+      "description": "Styles applied to the LinePlot root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markPlot",
+      "className": "MuiLineChart-markPlot",
+      "description": "Styles applied to the MarkPlot root element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiLineChart",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/LineChart/LineChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/dataset/\">Charts - Dataset</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
   "cssComponent": false
 }

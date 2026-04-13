@@ -4,9 +4,12 @@
   "imports": [
     "import { ChartsSurface } from '@mui/x-charts/ChartsSurface';",
     "import { ChartsSurface } from '@mui/x-charts';",
+    "import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';",
     "import { ChartsSurface } from '@mui/x-charts-pro';",
+    "import { ChartsSurface } from '@mui/x-charts-premium/ChartsSurface';",
     "import { ChartsSurface } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [
     {
       "key": "root",
@@ -15,8 +18,6 @@
       "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChartsSurface",
   "filename": "/packages/x-charts/src/ChartsSurface/ChartsSurface.tsx",
   "inheritance": null,

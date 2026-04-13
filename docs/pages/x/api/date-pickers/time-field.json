@@ -8,21 +8,14 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'end'"
     },
-    "color": {
-      "type": {
-        "name": "enum",
-        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
-      },
-      "default": "'primary'"
-    },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "{}" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "endAdornment": { "type": { "name": "node" } },
     "error": { "type": { "name": "bool" }, "default": "false" },
-    "fieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "fieldRef": { "type": { "name": "{}" } },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
@@ -31,21 +24,20 @@
     },
     "fullWidth": { "type": { "name": "bool" }, "default": "false" },
     "helperText": { "type": { "name": "node" } },
-    "hiddenLabel": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
-    "margin": {
-      "type": {
-        "name": "enum",
-        "description": "'dense'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'normal'"
-      },
-      "default": "'none'"
-    },
-    "maxTime": { "type": { "name": "object" } },
-    "minTime": { "type": { "name": "object" } },
+    "maxTime": { "type": { "name": "{}" } },
+    "minTime": { "type": { "name": "{}" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "name": { "type": { "name": "string" } },
+    "onBlur": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: FocusEvent<HTMLDivElement, Element>) => void",
+        "describedArgs": []
+      }
+    },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
@@ -53,12 +45,53 @@
         "describedArgs": ["value", "context"]
       }
     },
-    "onClear": { "type": { "name": "func" } },
+    "onClear": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent<Element, MouseEvent>) => void",
+        "describedArgs": []
+      }
+    },
+    "onClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent<HTMLDivElement, MouseEvent>) => void",
+        "describedArgs": []
+      }
+    },
     "onError": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(error: TError, value: TValue) => void",
         "describedArgs": ["error", "value"]
+      }
+    },
+    "onFocus": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: FocusEvent<HTMLDivElement, Element>) => void",
+        "describedArgs": []
+      }
+    },
+    "onInput": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: FormEvent<HTMLDivElement>) => void",
+        "describedArgs": []
+      }
+    },
+    "onKeyDown": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MuiEvent<KeyboardEvent<HTMLDivElement>>) => void",
+        "describedArgs": []
+      }
+    },
+    "onPaste": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: ClipboardEvent<HTMLDivElement>) => void",
+        "describedArgs": []
       }
     },
     "onSelectedSectionsChange": {
@@ -74,10 +107,9 @@
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
-      "type": { "name": "object" },
+      "type": { "name": "{}" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
     },
-    "required": { "type": { "name": "bool" }, "default": "false" },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -93,24 +125,16 @@
       }
     },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
-    "size": {
-      "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" },
-      "default": "'medium'"
+    "slotProps": {
+      "type": { "name": "shape", "description": "TimeFieldSlotProps" },
+      "default": "{}"
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "TimeFieldSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
     "startAdornment": { "type": { "name": "node" } },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
     "timezone": {
       "type": { "name": "string" },
       "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
@@ -119,7 +143,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "{}" } },
     "variant": {
       "type": {
         "name": "enum",
@@ -160,32 +184,7 @@
       "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "fullWidth",
-      "className": "MuiTimeField-fullWidth",
-      "description": "Styles applied to the root element if `fullWidth={true}`.",
-      "isGlobal": false
-    },
-    {
-      "key": "marginDense",
-      "className": "MuiTimeField-marginDense",
-      "description": "Styles applied to the root element if `margin=\"dense\"`.",
-      "isGlobal": false
-    },
-    {
-      "key": "marginNormal",
-      "className": "MuiTimeField-marginNormal",
-      "description": "Styles applied to the root element if `margin=\"normal\"`.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiTimeField-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiTimeField",

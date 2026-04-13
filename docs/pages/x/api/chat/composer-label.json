@@ -1,9 +1,18 @@
 {
-  "props": {},
+  "props": {
+    "children": { "type": { "name": "node" } },
+    "htmlFor": { "type": { "name": "string" } },
+    "slotProps": { "type": { "name": "shape", "description": "ComposerLabelSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerLabelSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ComposerLabel",
   "imports": [
-    "import { ComposerLabel } from '@mui/x-chat/headless';",
-    "import { ComposerLabel } from '@mui/x-chat/headless';"
+    "import { ComposerLabel } from '@mui/x-chat-headless/composer';",
+    "import { ComposerLabel } from '@mui/x-chat-headless';",
+    "import { ComposerLabel } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "label", "description": "", "class": null }],
   "classes": [],

@@ -5,6 +5,7 @@
     "import { CandlestickPlot } from '@mui/x-charts-premium/CandlestickChart';",
     "import { CandlestickPlot } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiCandlestickPlot",
   "filename": "/packages/x-charts-premium/src/CandlestickChart/CandlestickPlot.tsx",

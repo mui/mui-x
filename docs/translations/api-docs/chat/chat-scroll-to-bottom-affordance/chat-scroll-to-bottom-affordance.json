@@ -1,5 +1,13 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
+  "propDescriptions": {
+    "classes": { "description": "" },
+    "scrollBehavior": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
+  },
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" }
+  },
+  "slotDescriptions": { "badge": "", "icon": "", "root": "" }
 }

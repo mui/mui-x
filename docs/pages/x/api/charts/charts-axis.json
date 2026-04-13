@@ -1,8 +1,11 @@
 {
   "props": {
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ChartsAxisSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "ChartsAxisSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -11,7 +14,9 @@
   "imports": [
     "import { ChartsAxis } from '@mui/x-charts/ChartsAxis';",
     "import { ChartsAxis } from '@mui/x-charts';",
+    "import { ChartsAxis } from '@mui/x-charts-pro/ChartsAxis';",
     "import { ChartsAxis } from '@mui/x-charts-pro';",
+    "import { ChartsAxis } from '@mui/x-charts-premium/ChartsAxis';",
     "import { ChartsAxis } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -54,9 +59,39 @@
   ],
   "classes": [
     {
-      "key": "bottom",
-      "className": "MuiChartsAxis-bottom",
-      "description": "Styles applied to the bottom axis.",
+      "key": "root",
+      "className": "MuiChartsAxis-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiChartsAxis-line",
+      "description": "Styles applied to the main line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "tickContainer",
+      "className": "MuiChartsAxis-tickContainer",
+      "description": "Styles applied to group including the tick and its label.",
+      "isGlobal": false
+    },
+    {
+      "key": "tick",
+      "className": "MuiChartsAxis-tick",
+      "description": "Styles applied to ticks.",
+      "isGlobal": false
+    },
+    {
+      "key": "tickLabel",
+      "className": "MuiChartsAxis-tickLabel",
+      "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiChartsAxis-label",
+      "description": "Styles applied to the group containing the axis label.",
       "isGlobal": false
     },
     {
@@ -72,9 +107,15 @@
       "isGlobal": false
     },
     {
-      "key": "label",
-      "className": "MuiChartsAxis-label",
-      "description": "Styles applied to the group containing the axis label.",
+      "key": "top",
+      "className": "MuiChartsAxis-top",
+      "description": "Styles applied to the top axis.",
+      "isGlobal": false
+    },
+    {
+      "key": "bottom",
+      "className": "MuiChartsAxis-bottom",
+      "description": "Styles applied to the bottom axis.",
       "isGlobal": false
     },
     {
@@ -84,45 +125,9 @@
       "isGlobal": false
     },
     {
-      "key": "line",
-      "className": "MuiChartsAxis-line",
-      "description": "Styles applied to the main line element.",
-      "isGlobal": false
-    },
-    {
       "key": "right",
       "className": "MuiChartsAxis-right",
       "description": "Styles applied to the right axis.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChartsAxis-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "tick",
-      "className": "MuiChartsAxis-tick",
-      "description": "Styles applied to ticks.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickContainer",
-      "className": "MuiChartsAxis-tickContainer",
-      "description": "Styles applied to group including the tick and its label.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickLabel",
-      "className": "MuiChartsAxis-tickLabel",
-      "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.",
-      "isGlobal": false
-    },
-    {
-      "key": "top",
-      "className": "MuiChartsAxis-top",
-      "description": "Styles applied to the top axis.",
       "isGlobal": false
     }
   ],

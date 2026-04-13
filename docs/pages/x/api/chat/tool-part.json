@@ -1,0 +1,56 @@
+{
+  "props": {
+    "index": { "type": { "name": "number" }, "required": true },
+    "message": { "type": { "name": "{}" }, "required": true },
+    "part": {
+      "type": {
+        "name": "union",
+        "description": "{ toolInvocation: { approval?: { approved: bool, reason?: string }, callProviderMetadata?: Record<string, unknown>, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'dynamic-tool' }<br>&#124;&nbsp;{ toolInvocation: { approval?: { approved: bool, reason?: string }, callProviderMetadata?: Record<string, unknown>, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'tool' }"
+      },
+      "required": true
+    },
+    "onToolCall": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(payload: ChatOnToolCallPayload) => void | Promise<void>",
+        "describedArgs": []
+      }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "ToolPartSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ToolPartSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "toolSlotProps": {
+      "type": { "name": "shape", "description": "Record<string, ToolPartSlotProps>" }
+    },
+    "toolSlots": {
+      "type": { "name": "shape", "description": "Record<string, Partial<ToolPartSlots>>" }
+    }
+  },
+  "name": "ToolPart",
+  "imports": [
+    "import { ToolPart } from '@mui/x-chat-headless/message';",
+    "import { ToolPart } from '@mui/x-chat-headless';",
+    "import { ToolPart } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "actions", "description": "", "class": null },
+    { "name": "approveButton", "description": "", "class": null },
+    { "name": "denyButton", "description": "", "class": null },
+    { "name": "error", "description": "", "class": null },
+    { "name": "header", "description": "", "class": null },
+    { "name": "icon", "description": "", "class": null },
+    { "name": "root", "description": "", "class": null },
+    { "name": "section", "description": "", "class": null },
+    { "name": "sectionContent", "description": "", "class": null },
+    { "name": "state", "description": "", "class": null },
+    { "name": "title", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiToolPart",
+  "filename": "/packages/x-chat-headless/src/message/parts/ToolPart.tsx",
+  "inheritance": null,
+  "demos": "",
+  "cssComponent": false
+}

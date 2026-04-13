@@ -1,13 +1,20 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "defaultValue": { "type": { "name": "object" } },
+    "autoFocus": { "type": { "name": "bool" } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<MonthCalendarClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "currentMonth": { "type": { "name": "{}" } },
+    "defaultValue": { "type": { "name": "{}" } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
-    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
-    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
+    "gridLabelId": { "type": { "name": "string" } },
+    "hasFocus": { "type": { "name": "bool" } },
+    "maxDate": { "type": { "name": "{}" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "{}" }, "default": "1900-01-01" },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
@@ -19,9 +26,17 @@
         "describedArgs": ["value"]
       }
     },
+    "onFocusedViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(hasFocus: boolean) => void", "describedArgs": [] }
+    },
+    "onMonthFocus": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(month: number) => void", "describedArgs": [] }
+    },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
-      "type": { "name": "object" },
+      "type": { "name": "{}" },
       "default": "The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`."
     },
     "shouldDisableMonth": {
@@ -32,9 +47,12 @@
         "returned": "boolean"
       }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "MonthCalendarSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "MonthCalendarSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -53,7 +71,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } }
+    "value": { "type": { "name": "{}" } }
   },
   "name": "MonthCalendar",
   "imports": [
@@ -69,32 +87,7 @@
       "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "button",
-      "className": "MuiMonthCalendar-button",
-      "description": "Styles applied to the button element that represents a single month",
-      "isGlobal": false
-    },
-    {
-      "key": "disabled",
-      "className": "Mui-disabled",
-      "description": "Styles applied to a disabled button element.",
-      "isGlobal": true
-    },
-    {
-      "key": "root",
-      "className": "MuiMonthCalendar-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "selected",
-      "className": "Mui-selected",
-      "description": "Styles applied to a selected button element.",
-      "isGlobal": true
-    }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiMonthCalendar",

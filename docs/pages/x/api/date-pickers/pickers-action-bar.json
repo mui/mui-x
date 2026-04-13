@@ -5,15 +5,7 @@
         "name": "arrayOf",
         "description": "Array&lt;'accept'<br>&#124;&nbsp;'cancel'<br>&#124;&nbsp;'clear'<br>&#124;&nbsp;'next'<br>&#124;&nbsp;'nextOrAccept'<br>&#124;&nbsp;'today'&gt;"
       },
-      "default": "`[]` for Pickers with one selection step which `closeOnSelect`.\n- `['cancel', 'nextOrAccept']` for all other Pickers."
-    },
-    "disableSpacing": { "type": { "name": "bool" }, "default": "false" },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
+      "default": "- `[]` for Pickers with one selection step which `closeOnSelect`.\n- `['cancel', 'nextOrAccept']` for all other Pickers."
     }
   },
   "name": "PickersActionBar",
@@ -22,22 +14,8 @@
     "import { PickersActionBar } from '@mui/x-date-pickers';",
     "import { PickersActionBar } from '@mui/x-date-pickers-pro';"
   ],
-  "classes": [
-    {
-      "key": "root",
-      "className": "MuiPickersActionBar-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "spacing",
-      "className": "MuiPickersActionBar-spacing",
-      "description": "Styles applied to the root element unless `disableSpacing={true}`.",
-      "isGlobal": false
-    }
-  ],
-  "spread": true,
-  "themeDefaultProps": null,
+  "slots": [],
+  "classes": [],
   "muiName": "MuiPickersActionBar",
   "filename": "/packages/x-date-pickers/src/PickersActionBar/PickersActionBar.tsx",
   "inheritance": null,

@@ -1,7 +1,7 @@
 {
   "name": "ChartImageExportOptions",
-  "imports": ["import { ChartImageExportOptions } from '@mui/x-charts-pro'"],
-  "demos": "<ul><li><a href=\"https://mui.com/x/react-charts/export/#export-as-image\">Image export</a></li></ul>",
+  "imports": ["import { ChartImageExportOptions } from '@mui/x-charts-pro';"],
+  "demos": "  - [Image export](https://mui.com/x/react-charts/export/#export-as-image)",
   "properties": {
     "copyStyles": { "type": { "description": "boolean" }, "default": "true", "isProPlan": true },
     "fileName": {
@@ -15,10 +15,6 @@
       "isProPlan": true
     },
     "quality": { "type": { "description": "number" }, "default": "0.9", "isProPlan": true },
-    "type": {
-      "type": { "description": "'image/png' | string" },
-      "default": "'image/png'",
-      "isProPlan": true
-    }
+    "type": { "type": { "description": "string" }, "default": "'image/png'", "isProPlan": true }
   }
 }

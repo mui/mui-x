@@ -1,9 +1,16 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "ComposerToolbarSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerToolbarSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ComposerToolbar",
   "imports": [
-    "import { ComposerToolbar } from '@mui/x-chat/headless';",
-    "import { ComposerToolbar } from '@mui/x-chat/headless';"
+    "import { ComposerToolbar } from '@mui/x-chat-headless/composer';",
+    "import { ComposerToolbar } from '@mui/x-chat-headless';",
+    "import { ComposerToolbar } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "toolbar", "description": "", "class": null }],
   "classes": [],

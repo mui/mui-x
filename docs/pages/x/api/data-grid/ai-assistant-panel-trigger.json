@@ -1,13 +1,29 @@
 {
   "props": {
     "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "disabled": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
+    "material": { "type": { "name": "shape", "description": "Partial<ButtonProps>" } },
+    "render": { "type": { "name": "custom", "description": "ref" } },
+    "role": { "type": { "name": "string" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
+      }
+    },
+    "startIcon": { "type": { "name": "node" } },
+    "style": { "type": { "name": "shape", "description": "CSSProperties" } },
+    "tabIndex": { "type": { "name": "number" } },
+    "title": { "type": { "name": "string" } },
+    "touchRippleRef": { "type": { "name": "any" } }
   },
   "name": "AiAssistantPanelTrigger",
   "imports": [
     "import { AiAssistantPanelTrigger } from '@mui/x-data-grid-premium/components';",
     "import { AiAssistantPanelTrigger } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiAiAssistantPanelTrigger",
   "forwardsRefTo": "GridRoot",

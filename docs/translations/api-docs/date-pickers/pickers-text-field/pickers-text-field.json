@@ -2,71 +2,47 @@
   "componentDescription": "",
   "propDescriptions": {
     "areAllSectionsEmpty": {
-      "description": "Is <code>true</code> if the current values equals the empty value. For a single item value, it means that <code>value === null</code> For a range value, it means that <code>value === [null, null]</code>"
-    },
-    "color": {
-      "description": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#custom-colors\">palette customization guide</a>."
+      "description": "Is <code>true</code> if the current values equals the empty value.\nFor a single item value, it means that <code>value === null</code>\nFor a range value, it means that <code>value === [null, null]</code>"
     },
     "contentEditable": {
-      "description": "If true, the whole element is editable. Useful when all the sections are selected."
+      "description": "If true, the whole element is editable.\nUseful when all the sections are selected."
     },
+    "disabled": { "description": "" },
     "elements": {
-      "description": "The elements to render. Each element contains the prop to edit a section of the value."
+      "description": "The elements to render.\nEach element contains the prop to edit a section of the value."
     },
-    "endAdornment": { "description": "End <code>InputAdornment</code> for this component." },
     "error": {
       "description": "If <code>true</code>, the <code>input</code> will indicate an error."
     },
-    "focused": {
-      "description": "If <code>true</code>, the component is displayed in focused state."
-    },
+    "onBlur": { "description": "" },
+    "onChange": { "description": "" },
+    "onClick": { "description": "" },
+    "onFocus": { "description": "" },
+    "onInput": { "description": "" },
+    "onKeyDown": { "description": "" },
+    "onPaste": { "description": "" },
+    "sectionListRef": { "description": "" },
+    "value": { "description": "" },
+    "endAdornment": { "description": "End <code>InputAdornment</code> for this component." },
     "fullWidth": {
       "description": "If <code>true</code>, the input will take up the full width of its container."
     },
     "helperText": { "description": "The helper text content." },
-    "hiddenLabel": {
-      "description": "If <code>true</code>, the label is hidden. This is used to increase density for a <code>FilledInput</code>. Be sure to add <code>aria-label</code> to the <code>input</code> element."
-    },
     "id": { "description": "The id of the <code>input</code> element." },
     "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
     "label": { "description": "The label content." },
-    "margin": {
-      "description": "If <code>dense</code> or <code>normal</code>, will adjust vertical spacing of this and contained components."
-    },
     "name": { "description": "Name attribute of the <code>input</code> element." },
-    "required": {
-      "description": "If <code>true</code>, the label will indicate that the <code>input</code> is required."
-    },
-    "size": { "description": "The size of the component." },
+    "readOnly": { "description": "" },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "The components used for each slot inside." },
     "startAdornment": { "description": "Start <code>InputAdornment</code> for this component." },
-    "sx": {
-      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
-    },
     "variant": { "description": "The variant to use." }
   },
-  "classDescriptions": {
-    "fullWidth": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "<code>fullWidth={true}</code>"
-    },
-    "marginDense": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "<code>margin=\"dense\"</code>"
-    },
-    "marginNormal": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "<code>margin=\"normal\"</code>"
-    }
-  },
+  "classDescriptions": {},
   "slotDescriptions": {
     "formHelperText": "The component used for the form helper text slot.",
-    "htmlInput": "The component rendered as the underlying hidden <code>&lt;input&gt;</code> element.",
-    "input": "The component used for the input slot. Defaults to one of <code>PickersInput</code>, <code>PickersFilledInput</code>, <code>PickersOutlinedInput</code> based on <code>variant</code>.",
+    "htmlInput": "The component rendered as the underlying hidden `<input>` element.",
+    "input": "The component used for the input slot.\nDefaults to one of `PickersInput`, `PickersFilledInput`, `PickersOutlinedInput` based on `variant`.",
     "inputLabel": "The component used for the input label slot.",
     "root": "The component used for the root slot."
   }

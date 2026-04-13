@@ -1,6 +1,9 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChartsLegendClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "direction": {
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" }
     },
@@ -11,19 +14,25 @@
         "describedArgs": ["event", "legendItem", "index"]
       }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ChartsLegendSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "ChartsLegendSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "tabIndex": { "type": { "name": "number" } },
     "toggleVisibilityOnClick": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "ChartsLegend",
   "imports": [
     "import { ChartsLegend } from '@mui/x-charts/ChartsLegend';",
     "import { ChartsLegend } from '@mui/x-charts';",
+    "import { ChartsLegend } from '@mui/x-charts-pro/ChartsLegend';",
     "import { ChartsLegend } from '@mui/x-charts-pro';",
+    "import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';",
     "import { ChartsLegend } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -36,15 +45,9 @@
   ],
   "classes": [
     {
-      "key": "hidden",
-      "className": "MuiChartsLegend-hidden",
-      "description": "Styles applied to hidden items.",
-      "isGlobal": false
-    },
-    {
-      "key": "horizontal",
-      "className": "MuiChartsLegend-horizontal",
-      "description": "Styles applied to the legend in row layout.",
+      "key": "root",
+      "className": "MuiChartsLegend-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
@@ -54,9 +57,15 @@
       "isGlobal": false
     },
     {
-      "key": "label",
-      "className": "MuiChartsLegend-label",
-      "description": "Styles applied to the series label.",
+      "key": "series",
+      "className": "MuiChartsLegend-series",
+      "description": "Styles applied to a series element.",
+      "isGlobal": false
+    },
+    {
+      "key": "hidden",
+      "className": "MuiChartsLegend-hidden",
+      "description": "Styles applied to hidden items.",
       "isGlobal": false
     },
     {
@@ -66,21 +75,21 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiChartsLegend-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "series",
-      "className": "MuiChartsLegend-series",
-      "description": "Styles applied to a series element.",
+      "key": "label",
+      "className": "MuiChartsLegend-label",
+      "description": "Styles applied to the series label.",
       "isGlobal": false
     },
     {
       "key": "vertical",
       "className": "MuiChartsLegend-vertical",
       "description": "Styles applied to the legend in column layout.",
+      "isGlobal": false
+    },
+    {
+      "key": "horizontal",
+      "className": "MuiChartsLegend-horizontal",
+      "description": "Styles applied to the legend in row layout.",
       "isGlobal": false
     }
   ],

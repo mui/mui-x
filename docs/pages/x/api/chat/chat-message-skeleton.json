@@ -1,5 +1,16 @@
 {
-  "props": { "lines": { "type": { "name": "number" }, "default": "3" } },
+  "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatMessageSkeletonClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "lines": { "type": { "name": "number" }, "default": "3" },
+    "slotProps": { "type": { "name": "shape", "description": "ChatMessageSkeletonSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "ChatMessageSkeletonSlots" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatMessageSkeleton",
   "imports": [
     "import { ChatMessageSkeleton } from '@mui/x-chat/ChatMessageSkeleton';",
@@ -7,24 +18,35 @@
   ],
   "slots": [
     {
-      "name": "root",
-      "description": "The root container element.",
-      "default": "'div'",
-      "class": "MuiChatMessageSkeleton-root"
-    },
-    {
       "name": "line",
       "description": "Each animated shimmer line element.",
       "default": "'div'",
       "class": "MuiChatMessageSkeleton-line"
+    },
+    {
+      "name": "root",
+      "description": "The root container element.",
+      "default": "'div'",
+      "class": "MuiChatMessageSkeleton-root"
     }
   ],
-  "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChatMessageSkeleton-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiChatMessageSkeleton-line",
+      "description": "Styles applied to each shimmer line element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiChatMessageSkeleton",
   "filename": "/packages/x-chat/src/ChatMessageSkeleton/ChatMessageSkeleton.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/loading-and-empty-states/\">Chat - Loading &amp; Empty States</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/display/loading-and-empty-states/\">Chat - Loading & Empty States</a></li></ul>",
   "cssComponent": false
 }

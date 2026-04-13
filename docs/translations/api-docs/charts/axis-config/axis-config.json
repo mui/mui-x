@@ -1,0 +1,69 @@
+{
+  "interfaceDescription": "Use this type for advanced typing. For basic usage, use `XAxis`, `YAxis`, `RotationAxis` or `RadiusAxis`.",
+  "propertiesDescriptions": {
+    "id": {
+      "description": "ID used to identify the axis.\n\nThe ID must be unique across all axes in this chart."
+    },
+    "scaleType": { "description": "" },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "className": { "description": "A CSS class name applied to the root element." },
+    "colorMap": { "description": "" },
+    "data": { "description": "The data used by `'band'` and `'point'` scales." },
+    "dataKey": { "description": "The key used to retrieve `data` from the `dataset` prop." },
+    "disableLine": { "description": "If true, the axis line is disabled." },
+    "disableTicks": { "description": "If true, the ticks are disabled." },
+    "domainLimit": {
+      "description": "Defines the axis scale domain based on the min/max values of series linked to it.\n- 'nice': Rounds the domain at human friendly values.\n- 'strict': Set the domain to the min/max value provided. No extra space is added.\n- function: Receives the calculated extremums as parameters, and should return the axis domain."
+    },
+    "height": {
+      "description": "The height of the axis.\nSet to `'auto'` to automatically calculate the height based on tick label measurements."
+    },
+    "hideTooltip": { "description": "If `true`, hide this value in the tooltip" },
+    "ignoreTooltip": {
+      "description": "If `true`, the axis will be ignored by the tooltip with `trigger='axis'`."
+    },
+    "label": { "description": "The label of the axis." },
+    "labelStyle": { "description": "The style applied to the axis label." },
+    "offset": {
+      "description": "The offset of the axis in pixels. It can be used to move the axis from its default position.\nX-axis: A top axis will move up, and a bottom axis will move down.\nY-axis: A left axis will move left, and a right axis will move right."
+    },
+    "position": {
+      "description": "Position of the axis.\n\nWhen set, the space for the axis is reserved, even if the axis is not displayed due to missing data.\n\nSet to 'none' to hide the axis.\n\nThe first axis in the list will always have a default position."
+    },
+    "reverse": { "description": "If `true`, Reverse the axis scaleBand." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "sx": { "description": "" },
+    "tickInterval": {
+      "description": "Defines which ticks are displayed.\nIts value can be:\n- 'auto' In such case the ticks are computed based on axis scale and other parameters.\n- a filtering function of the form `(value, index) => boolean` which is available only if the axis has \"point\" scale.\n- an array containing the values where ticks should be displayed."
+    },
+    "tickLabelInterval": {
+      "description": "Defines which ticks get its label displayed. Its value can be:\n- 'auto' In such case, labels are displayed if they do not overlap with the previous one.\n- a filtering function of the form (value, index) => boolean. Warning: the index is tick index, not data ones."
+    },
+    "tickLabelPlacement": {
+      "description": "The placement of ticks label. Can be the middle of the band, or the tick position.\nOnly used if scale is 'band'."
+    },
+    "tickLabelStyle": { "description": "The style applied to ticks text." },
+    "tickMaxStep": {
+      "description": "Maximal step between two ticks.\nWhen using time data, the value is assumed to be in ms.\nNot supported by categorical axis (band, points)."
+    },
+    "tickMinStep": {
+      "description": "Minimal step between two ticks.\nWhen using time data, the value is assumed to be in ms.\nNot supported by categorical axis (band, points)."
+    },
+    "tickNumber": {
+      "description": "The number of ticks. This number is not guaranteed.\nNot supported by categorical axis (band, points)."
+    },
+    "tickPlacement": {
+      "description": "The placement of ticks in regard to the band interval.\nOnly used if scale is 'band'."
+    },
+    "tickSize": { "description": "The size of the ticks." },
+    "tickSpacing": {
+      "description": "The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
+    },
+    "valueFormatter": { "description": "Formats the axis value." },
+    "valueGetter": {
+      "description": "A function to extract and transform the value from the `dataset` item.\nIt receives the full dataset item and should return the axis value.\nCan be used as an alternative to `dataKey`."
+    },
+    "zoom": { "description": "" }
+  }
+}

@@ -1,5 +1,9 @@
 {
   "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<GaugeClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "cornerRadius": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "0"
@@ -26,8 +30,9 @@
     },
     "skipAnimation": { "type": { "name": "bool" } },
     "startAngle": { "type": { "name": "number" }, "default": "0" },
+    "text": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
     "title": { "type": { "name": "string" } },
-    "value": { "type": { "name": "number" } },
+    "value": { "type": { "name": "shape", "description": "number" } },
     "valueMax": { "type": { "name": "number" }, "default": "100" },
     "valueMin": { "type": { "name": "number" }, "default": "0" },
     "width": { "type": { "name": "number" } }
@@ -36,16 +41,13 @@
   "imports": [
     "import { Gauge } from '@mui/x-charts/Gauge';",
     "import { Gauge } from '@mui/x-charts';",
+    "import { Gauge } from '@mui/x-charts-pro/Gauge';",
     "import { Gauge } from '@mui/x-charts-pro';",
+    "import { Gauge } from '@mui/x-charts-premium/Gauge';",
     "import { Gauge } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [
-    {
-      "key": "referenceArc",
-      "className": "MuiGauge-referenceArc",
-      "description": "Styles applied to the arc displaying the range of available values.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiGauge-root",
@@ -56,6 +58,12 @@
       "key": "valueArc",
       "className": "MuiGauge-valueArc",
       "description": "Styles applied to the arc displaying the value.",
+      "isGlobal": false
+    },
+    {
+      "key": "referenceArc",
+      "className": "MuiGauge-referenceArc",
+      "description": "Styles applied to the arc displaying the range of available values.",
       "isGlobal": false
     },
     {

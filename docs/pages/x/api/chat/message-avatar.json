@@ -1,9 +1,16 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "MessageAvatarSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageAvatarSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "MessageAvatar",
   "imports": [
-    "import { MessageAvatar } from '@mui/x-chat/headless';",
-    "import { MessageAvatar } from '@mui/x-chat/headless';"
+    "import { MessageAvatar } from '@mui/x-chat-headless/message';",
+    "import { MessageAvatar } from '@mui/x-chat-headless';",
+    "import { MessageAvatar } from '@mui/x-chat';"
   ],
   "slots": [
     { "name": "avatar", "description": "", "class": null },

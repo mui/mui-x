@@ -14,9 +14,12 @@
       "default": "'svg-single'"
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "BarPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "BarPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -25,7 +28,9 @@
   "imports": [
     "import { BarPlot } from '@mui/x-charts/BarChart';",
     "import { BarPlot } from '@mui/x-charts';",
+    "import { BarPlot } from '@mui/x-charts-pro/BarChart';",
     "import { BarPlot } from '@mui/x-charts-pro';",
+    "import { BarPlot } from '@mui/x-charts-premium/BarChart';",
     "import { BarPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -43,8 +48,6 @@
     }
   ],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiBarPlot",
   "filename": "/packages/x-charts/src/BarChart/BarPlot.tsx",
   "inheritance": null,

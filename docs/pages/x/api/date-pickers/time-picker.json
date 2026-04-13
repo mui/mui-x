@@ -4,7 +4,7 @@
     "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
     "closeOnSelect": { "type": { "name": "bool" }, "default": "false" },
-    "defaultValue": { "type": { "name": "object" } },
+    "defaultValue": { "type": { "name": "{}" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
       "default": "'@media (pointer: fine)'"
@@ -16,7 +16,7 @@
       "type": { "name": "bool" },
       "default": "false",
       "deprecated": true,
-      "deprecationInfo": "Use the <a href=\"https://mui.com/x/react-date-pickers/fields/\">field component</a> instead."
+      "deprecationInfo": "Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead."
     },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "format": { "type": { "name": "string" } },
@@ -27,9 +27,9 @@
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "keepOpenDuringFieldFocus": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
-    "localeText": { "type": { "name": "object" } },
-    "maxTime": { "type": { "name": "object" } },
-    "minTime": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "PickersInputComponentLocaleText" } },
+    "maxTime": { "type": { "name": "{}" } },
+    "minTime": { "type": { "name": "{}" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "name": { "type": { "name": "string" } },
     "onAccept": {
@@ -46,7 +46,10 @@
         "describedArgs": ["value", "context"]
       }
     },
-    "onClose": { "type": { "name": "func" } },
+    "onClose": {
+      "type": { "name": "func" },
+      "signature": { "type": "function() => void", "describedArgs": [] }
+    },
     "onError": {
       "type": { "name": "func" },
       "signature": {
@@ -54,7 +57,10 @@
         "describedArgs": ["error", "value"]
       }
     },
-    "onOpen": { "type": { "name": "func" } },
+    "onOpen": {
+      "type": { "name": "func" },
+      "signature": { "type": "function() => void", "describedArgs": [] }
+    },
     "onSelectedSectionsChange": {
       "type": { "name": "func" },
       "signature": {
@@ -82,7 +88,7 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "object" },
+      "type": { "name": "{}" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "selectedSections": {
@@ -100,18 +106,14 @@
       }
     },
     "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "TimePickerSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "TimePickerSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
     },
     "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
     "timeSteps": {
@@ -129,7 +131,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "object" } },
+    "value": { "type": { "name": "{}" } },
     "view": {
       "type": {
         "name": "enum",
@@ -299,8 +301,6 @@
     }
   ],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiTimePicker",
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePicker.tsx",
   "inheritance": null,

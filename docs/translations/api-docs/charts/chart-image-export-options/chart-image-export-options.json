@@ -1,0 +1,21 @@
+{
+  "interfaceDescription": "The options to apply on the image export.",
+  "propertiesDescriptions": {
+    "copyStyles": {
+      "description": "If `true`, the styles of the page the chart belongs to will be copied to the export iframe.\nCopying styles is useful to ensure that the exported chart looks the same as it does on the page."
+    },
+    "fileName": { "description": "The name of the file without the extension." },
+    "nonce": {
+      "description": "A nonce to be used for Content Security Policy (CSP) compliance.\nIf provided, this nonce will be added to any style elements created during the export process."
+    },
+    "onBeforeExport": {
+      "description": "Callback function that is called before the export is triggered.\nIt can be used to modify the iframe or perform any other actions before the export, such as updating styles,\nremoving elements, etc."
+    },
+    "quality": {
+      "description": "The quality of the image to be exported between 0 and 1. This is only applicable for lossy formats, such as\n'image/jpeg' and 'image/webp'. 'image/png' does not support this option."
+    },
+    "type": {
+      "description": "The format of the image to be exported.\nBrowsers are required to support 'image/png'. Some browsers also support 'image/jpeg' and 'image/webp'.\nIf the provided `type` is not supported by the browser, it will default to 'image/png'."
+    }
+  }
+}

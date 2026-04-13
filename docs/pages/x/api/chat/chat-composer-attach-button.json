@@ -1,74 +1,25 @@
 {
-  "props": {},
+  "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatComposerClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "ComposerAttachButtonSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerAttachButtonSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatComposerAttachButton",
   "imports": [
     "import { ChatComposerAttachButton } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerAttachButton } from '@mui/x-chat';"
   ],
-  "classes": [
-    {
-      "key": "attachButton",
-      "className": "MuiChatComposerAttachButton-attachButton",
-      "description": "Styles applied to the attach button element.",
-      "isGlobal": false
-    },
-    {
-      "key": "attachmentList",
-      "className": "MuiChatComposerAttachButton-attachmentList",
-      "description": "Styles applied to the attachment list element.",
-      "isGlobal": false
-    },
-    {
-      "key": "disabled",
-      "className": "Mui-disabled",
-      "description": "Styles applied to the root element when disabled.",
-      "isGlobal": true
-    },
-    {
-      "key": "helperText",
-      "className": "MuiChatComposerAttachButton-helperText",
-      "description": "Styles applied to the helper text element.",
-      "isGlobal": false
-    },
-    {
-      "key": "label",
-      "className": "MuiChatComposerAttachButton-label",
-      "description": "Styles applied to the input label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChatComposerAttachButton-root",
-      "description": "Styles applied to the input root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "sendButton",
-      "className": "MuiChatComposerAttachButton-sendButton",
-      "description": "Styles applied to the send button element.",
-      "isGlobal": false
-    },
-    {
-      "key": "textArea",
-      "className": "MuiChatComposerAttachButton-textArea",
-      "description": "Styles applied to the textarea element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbar",
-      "className": "MuiChatComposerAttachButton-toolbar",
-      "description": "Styles applied to the toolbar element.",
-      "isGlobal": false
-    },
-    {
-      "key": "variantCompact",
-      "className": "MuiChatComposerAttachButton-variantCompact",
-      "description": "Styles applied to the root element when variant=\"compact\".",
-      "isGlobal": false
-    }
+  "slots": [
+    { "name": "attachButton", "description": "", "class": "MuiChatComposer-attachButton" },
+    { "name": "attachInput", "description": "", "class": null }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
+  "classes": [],
   "muiName": "MuiChatComposerAttachButton",
   "filename": "/packages/x-chat/src/ChatComposer/ChatComposerAttachButton.tsx",
   "inheritance": null,

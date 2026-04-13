@@ -1,6 +1,10 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<SankeyClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "className": { "type": { "name": "string" } },
     "onLinkClick": {
       "type": { "name": "func" },
       "signature": {
@@ -19,11 +23,12 @@
   "name": "SankeyPlot",
   "imports": [
     "import { SankeyPlot } from '@mui/x-charts-pro/SankeyChart';",
-    "import { SankeyPlot } from '@mui/x-charts-pro';"
+    "import { SankeyPlot } from '@mui/x-charts-pro';",
+    "import { SankeyPlot } from '@mui/x-charts-premium/SankeyChart';",
+    "import { SankeyPlot } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiSankeyPlot",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyPlot.tsx",
   "inheritance": null,

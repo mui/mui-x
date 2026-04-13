@@ -35,6 +35,7 @@
     "import { QuickFilter } from '@mui/x-data-grid-pro';",
     "import { QuickFilter } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiQuickFilter",
   "forwardsRefTo": "GridRoot",

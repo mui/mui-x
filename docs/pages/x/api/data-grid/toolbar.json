@@ -9,11 +9,12 @@
     "import { Toolbar } from '@mui/x-data-grid-pro';",
     "import { Toolbar } from '@mui/x-data-grid-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiToolbar",
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/toolbarV8/Toolbar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar component</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li>\n<li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar component</a></li></ul>",
   "cssComponent": false
 }

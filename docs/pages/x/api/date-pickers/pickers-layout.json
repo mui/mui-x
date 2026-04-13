@@ -1,9 +1,15 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<PickersLayoutClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "slotProps": {
+      "type": { "name": "shape", "description": "PickersLayoutSlotProps<TValue>" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PickersLayoutSlots<TValue>" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -26,7 +32,7 @@
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the Picker views.",
       "default": "PickersActionBar",
-      "class": "MuiPickersLayout-actionBar"
+      "class": null
     },
     {
       "name": "layout",
@@ -37,39 +43,16 @@
       "name": "shortcuts",
       "description": "Custom component for the shortcuts.",
       "default": "PickersShortcuts",
-      "class": "MuiPickersLayout-shortcuts"
+      "class": null
     },
-    {
-      "name": "tabs",
-      "description": "Tabs enabling toggling between views.",
-      "class": "MuiPickersLayout-tabs"
-    },
+    { "name": "tabs", "description": "Tabs enabling toggling between views.", "class": null },
     {
       "name": "toolbar",
       "description": "Custom component for the toolbar.\nIt is placed above the Picker views.",
-      "class": "MuiPickersLayout-toolbar"
+      "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "contentWrapper",
-      "className": "MuiPickersLayout-contentWrapper",
-      "description": "Styles applied to the contentWrapper element (which contains the tabs and the view itself).",
-      "isGlobal": false
-    },
-    {
-      "key": "landscape",
-      "className": "MuiPickersLayout-landscape",
-      "description": "Styles applied to the root element in landscape orientation.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiPickersLayout-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiPickersLayout",
   "filename": "/packages/x-date-pickers/src/PickersLayout/PickersLayout.tsx",
   "inheritance": null,

@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "angle": {
-      "description": "The absolute rotation angle of the metrics (in degree) If not defined the metric angle will be used."
+      "description": "The absolute rotation angle of the metrics (in degree)\nIf not defined the metric angle will be used."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "className": { "description": "A CSS class name applied to the root element." },
@@ -11,14 +11,15 @@
       "description": "The labels dominant baseline or a function returning the dominant baseline for a given axis angle (in degree)."
     },
     "labelOrientation": {
-      "description": "Defines how label align with the axis. - &#39;horizontal&#39;: labels stay horizontal and their placement change with the axis angle. - &#39;rotated&#39;: labels are rotated 90deg relatively to their axis."
+      "description": "Defines how label align with the axis.\n- 'horizontal': labels stay horizontal and their placement change with the axis angle.\n- 'rotated': labels are rotated 90deg relatively to their axis."
     },
     "metric": {
-      "description": "The metric to get. If <code>undefined</code>, the hook returns <code>null</code>"
+      "description": "The metric to get.\nIf <code>undefined</code>, the hook returns <code>null</code>"
     },
     "textAnchor": {
       "description": "The labels text anchor or a function returning the text anchor for a given axis angle (in degree)."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

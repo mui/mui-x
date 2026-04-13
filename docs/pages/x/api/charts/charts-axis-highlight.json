@@ -1,12 +1,28 @@
 {
-  "props": {},
+  "props": {
+    "x": {
+      "type": {
+        "name": "enum",
+        "description": "'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none'"
+      }
+    },
+    "y": {
+      "type": {
+        "name": "enum",
+        "description": "'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none'"
+      }
+    }
+  },
   "name": "ChartsAxisHighlight",
   "imports": [
     "import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';",
     "import { ChartsAxisHighlight } from '@mui/x-charts';",
+    "import { ChartsAxisHighlight } from '@mui/x-charts-pro/ChartsAxisHighlight';",
     "import { ChartsAxisHighlight } from '@mui/x-charts-pro';",
+    "import { ChartsAxisHighlight } from '@mui/x-charts-premium/ChartsAxisHighlight';",
     "import { ChartsAxisHighlight } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [
     {
       "key": "root",

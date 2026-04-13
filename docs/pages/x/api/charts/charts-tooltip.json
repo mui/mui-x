@@ -1,63 +1,15 @@
 {
   "props": {
     "anchor": {
-      "type": { "name": "enum", "description": "'node'<br>&#124;&nbsp;'pointer'" },
-      "default": "'pointer'"
-    },
-    "anchorEl": {
-      "type": {
-        "name": "union",
-        "description": "HTML element<br>&#124;&nbsp;object<br>&#124;&nbsp;func"
-      }
-    },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "component": { "type": { "name": "elementType" } },
-    "components": {
-      "type": { "name": "shape", "description": "{ Root?: elementType }" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "use the <code>slots</code> prop instead. This prop will be removed in a future major release. <a href=\"/material-ui/migration/migrating-from-deprecated-apis/\">How to migrate</a>."
-    },
-    "componentsProps": {
-      "type": { "name": "shape", "description": "{ root?: func<br>&#124;&nbsp;object }" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "use the <code>slotProps</code> prop instead. This prop will be removed in a future major release. <a href=\"/material-ui/migration/migrating-from-deprecated-apis/\">How to migrate</a>."
-    },
-    "container": {
-      "type": {
-        "name": "union",
-        "description": "(props, propName) => {\n  if (props[propName] == null) {\n    return new Error(`MUI X: Prop '${propName}' is required but wasn't specified`);\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`MUI X: Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}<br>&#124;&nbsp;func"
-      }
-    },
-    "disablePortal": { "type": { "name": "bool" }, "default": "false" },
-    "keepMounted": { "type": { "name": "bool" }, "default": "false" },
-    "modifiers": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ data?: object, effect?: func, enabled?: bool, fn?: func, name?: any, options?: object, phase?: 'afterMain'<br>&#124;&nbsp;'afterRead'<br>&#124;&nbsp;'afterWrite'<br>&#124;&nbsp;'beforeMain'<br>&#124;&nbsp;'beforeRead'<br>&#124;&nbsp;'beforeWrite'<br>&#124;&nbsp;'main'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'write', requires?: Array&lt;string&gt;, requiresIfExists?: Array&lt;string&gt; }&gt;"
-      }
-    },
-    "open": { "type": { "name": "bool" } },
-    "placement": {
       "type": {
         "name": "enum",
-        "description": "'auto-end'<br>&#124;&nbsp;'auto-start'<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;'bottom-end'<br>&#124;&nbsp;'bottom-start'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left-end'<br>&#124;&nbsp;'left-start'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right-end'<br>&#124;&nbsp;'right-start'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top-end'<br>&#124;&nbsp;'top-start'<br>&#124;&nbsp;'top'"
+        "description": "'chart'<br>&#124;&nbsp;'node'<br>&#124;&nbsp;'pointer'"
       },
-      "default": "'bottom'"
+      "default": "'pointer'"
     },
-    "popperOptions": {
-      "type": {
-        "name": "shape",
-        "description": "{ modifiers?: array, onFirstUpdate?: func, placement?: 'auto-end'<br>&#124;&nbsp;'auto-start'<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;'bottom-end'<br>&#124;&nbsp;'bottom-start'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left-end'<br>&#124;&nbsp;'left-start'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right-end'<br>&#124;&nbsp;'right-start'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top-end'<br>&#124;&nbsp;'top-start'<br>&#124;&nbsp;'top', strategy?: 'absolute'<br>&#124;&nbsp;'fixed' }"
-      },
-      "default": "{}"
-    },
-    "popperRef": {
-      "type": {
-        "name": "union",
-        "description": "func<br>&#124;&nbsp;{ current?: { destroy: func, forceUpdate: func, setOptions: func, state: { attributes: object, elements: object, modifiersData: object, options: object, orderedModifiers: Array&lt;object&gt;, placement: 'auto-end'<br>&#124;&nbsp;'auto-start'<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;'bottom-end'<br>&#124;&nbsp;'bottom-start'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left-end'<br>&#124;&nbsp;'left-start'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right-end'<br>&#124;&nbsp;'right-start'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top-end'<br>&#124;&nbsp;'top-start'<br>&#124;&nbsp;'top', rects: object, reset: bool, scrollParents: object, strategy: 'absolute'<br>&#124;&nbsp;'fixed', styles: object }, update: func } }"
-      }
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChartsTooltipContainerClasses>" },
+      "additionalInfo": { "cssApi": true }
     },
     "position": {
       "type": {
@@ -65,27 +17,22 @@
         "description": "'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'"
       }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ChartsTooltipContainerSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "ChartsTooltipContainerSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
     "sort": {
       "type": {
         "name": "enum",
-        "description": "'none'<br>&#124;&nbsp;'asc'<br>&#124;&nbsp;'desc'"
+        "description": "'asc'<br>&#124;&nbsp;'desc'<br>&#124;&nbsp;'none'"
       },
       "default": "'none'"
     },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
-    },
-    "transition": { "type": { "name": "bool" }, "default": "false" },
     "trigger": {
       "type": {
         "name": "enum",
@@ -98,34 +45,48 @@
   "imports": [
     "import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';",
     "import { ChartsTooltip } from '@mui/x-charts';",
+    "import { ChartsTooltip } from '@mui/x-charts-pro/ChartsTooltip';",
     "import { ChartsTooltip } from '@mui/x-charts-pro';",
+    "import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';",
     "import { ChartsTooltip } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
-      "name": "tooltip",
-      "description": "Custom component for the tooltip popper.",
-      "default": "ChartsTooltipRoot",
-      "class": null
+      "name": "root",
+      "description": "The component that renders the root.",
+      "default": "'div'",
+      "class": "MuiChartsTooltip-root"
     }
   ],
   "classes": [
     {
-      "key": "axisValueCell",
-      "className": "MuiChartsTooltip-axisValueCell",
-      "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
+      "key": "root",
+      "className": "MuiChartsTooltip-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiChartsTooltip-paper",
+      "description": "Styles applied to the paper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiChartsTooltip-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiChartsTooltip-row",
+      "description": "Styles applied to the row element.",
       "isGlobal": false
     },
     {
       "key": "cell",
       "className": "MuiChartsTooltip-cell",
       "description": "Styles applied to the cell element.",
-      "isGlobal": false
-    },
-    {
-      "key": "labelCell",
-      "className": "MuiChartsTooltip-labelCell",
-      "description": "Styles applied to the labelCell element.",
       "isGlobal": false
     },
     {
@@ -141,33 +102,21 @@
       "isGlobal": false
     },
     {
-      "key": "paper",
-      "className": "MuiChartsTooltip-paper",
-      "description": "Styles applied to the paper element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChartsTooltip-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "row",
-      "className": "MuiChartsTooltip-row",
-      "description": "Styles applied to the row element.",
-      "isGlobal": false
-    },
-    {
-      "key": "table",
-      "className": "MuiChartsTooltip-table",
-      "description": "Styles applied to the table element.",
+      "key": "labelCell",
+      "className": "MuiChartsTooltip-labelCell",
+      "description": "Styles applied to the labelCell element.",
       "isGlobal": false
     },
     {
       "key": "valueCell",
       "className": "MuiChartsTooltip-valueCell",
       "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "axisValueCell",
+      "className": "MuiChartsTooltip-axisValueCell",
+      "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
       "isGlobal": false
     }
   ],

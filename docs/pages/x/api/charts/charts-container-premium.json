@@ -1,9 +1,75 @@
 {
-  "props": {},
+  "props": {
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "rainbowSurgePalette"
+    },
+    "dataset": {
+      "type": { "name": "arrayOf", "description": "Array&lt;DatasetElementType<unknown>&gt;" }
+    },
+    "desc": { "type": { "name": "string" } },
+    "experimentalFeatures": { "type": { "name": "any" } },
+    "height": { "type": { "name": "number" } },
+    "id": { "type": { "name": "string" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
+    "margin": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "plugins": {
+      "type": { "name": "shape", "description": "ConvertSignaturesIntoPlugins<TSignatures>" }
+    },
+    "series": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;BarSeriesType | LineSeriesType | ScatterSeriesType | PieSeriesType<MakeOptional<PieValueType, 'id'>> | RadarSeriesType | HeatmapSeriesType | FunnelSeriesType | SankeySeriesType | RangeBarSeriesType | OHLCSeriesType&gt;"
+      }
+    },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<SeriesType>"
+      }
+    },
+    "skipAnimation": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "{}" } },
+    "slots": { "type": { "name": "{}" }, "additionalInfo": { "slotsApi": true } },
+    "title": { "type": { "name": "string" } },
+    "width": { "type": { "name": "number" } }
+  },
   "name": "ChartsContainerPremium",
   "imports": [
     "import { ChartsContainerPremium } from '@mui/x-charts-premium/ChartsContainerPremium';",
     "import { ChartsContainerPremium } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseDivider", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
+    { "name": "baseMenuItem", "description": "", "class": null },
+    { "name": "baseMenuList", "description": "", "class": null },
+    { "name": "basePopper", "description": "", "class": null },
+    { "name": "baseTooltip", "description": "", "class": null },
+    {
+      "name": "exportIcon",
+      "description": "Icon displayed on the toolbar's export button.",
+      "default": "ChartsExportIcon",
+      "class": null
+    },
+    {
+      "name": "zoomInIcon",
+      "description": "Icon displayed on the toolbar's zoom in button.",
+      "default": "ChartsZoomInIcon",
+      "class": null
+    },
+    {
+      "name": "zoomOutIcon",
+      "description": "Icon displayed on the toolbar's zoom out button.",
+      "default": "ChartsZoomOutIcon",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiChartsContainerPremium",

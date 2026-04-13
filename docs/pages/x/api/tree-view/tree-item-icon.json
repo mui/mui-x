@@ -1,8 +1,12 @@
 {
   "props": {
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "status": { "type": { "name": "{}" }, "required": true },
+    "slotProps": {
+      "type": { "name": "shape", "description": "TreeItemIconSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "TreeItemIconSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -15,8 +19,8 @@
   ],
   "slots": [
     { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
-    { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },
     { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
+    { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },
     {
       "name": "icon",
       "description": "The icon to display next to the Tree Item's label.",

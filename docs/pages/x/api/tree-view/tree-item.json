@@ -1,18 +1,35 @@
 {
   "props": {
     "itemId": { "type": { "name": "string" }, "required": true },
-    "children": { "type": { "name": "any" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<TreeItemClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
     "label": { "type": { "name": "node" } },
-    "onBlur": { "type": { "name": "func" } },
-    "onFocus": { "type": { "name": "custom", "description": "unsupportedProp" } },
-    "onKeyDown": { "type": { "name": "func" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "onBlur": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: FocusEvent<HTMLLIElement, Element> & TreeViewCancellableEvent) => void",
+        "describedArgs": []
+      }
+    },
+    "onFocus": { "type": { "name": "any" } },
+    "onKeyDown": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: KeyboardEvent<HTMLLIElement> & TreeViewCancellableEvent) => void",
+        "describedArgs": []
+      }
+    },
+    "slotProps": {
+      "type": { "name": "shape", "description": "TreeItemSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "TreeItemSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -32,11 +49,12 @@
   ],
   "slots": [
     {
-      "name": "root",
-      "description": "The component that renders the root.",
-      "default": "TreeItemRoot",
-      "class": "MuiTreeItem-root"
+      "name": "checkbox",
+      "description": "The component that renders the item checkbox for selection.",
+      "default": "TreeItemCheckbox",
+      "class": "MuiTreeItem-checkbox"
     },
+    { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
     {
       "name": "content",
       "description": "The component that renders the content of the item.\n(e.g.: everything related to this item, not to its children).",
@@ -44,22 +62,35 @@
       "class": "MuiTreeItem-content"
     },
     {
+      "name": "dragAndDropOverlay",
+      "description": "The component that renders the overlay when an item reordering is ongoing.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component.",
+      "default": "TreeItemDragAndDropOverlay",
+      "class": "MuiTreeItem-dragAndDropOverlay"
+    },
+    { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
+    {
+      "name": "errorIcon",
+      "description": "The component that is rendered when the item is in an error state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
+      "default": "TreeItemErrorContainer",
+      "class": "MuiTreeItem-errorIcon"
+    },
+    { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },
+    {
       "name": "groupTransition",
       "description": "The component that renders the children of the item.",
       "default": "TreeItemGroupTransition",
       "class": "MuiTreeItem-groupTransition"
     },
     {
+      "name": "icon",
+      "description": "The icon to display next to the Tree Item's label.",
+      "class": null
+    },
+    {
       "name": "iconContainer",
       "description": "The component that renders the icon.",
       "default": "TreeItemIconContainer",
       "class": "MuiTreeItem-iconContainer"
-    },
-    {
-      "name": "checkbox",
-      "description": "The component that renders the item checkbox for selection.",
-      "default": "TreeItemCheckbox",
-      "class": "MuiTreeItem-checkbox"
     },
     {
       "name": "label",
@@ -74,33 +105,80 @@
       "class": "MuiTreeItem-labelInput"
     },
     {
-      "name": "dragAndDropOverlay",
-      "description": "The component that renders the overlay when an item reordering is ongoing.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component.",
-      "default": "TreeItemDragAndDropOverlay",
-      "class": "MuiTreeItem-dragAndDropOverlay"
-    },
-    {
-      "name": "errorIcon",
-      "description": "The component that is rendered when the item is in an error state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
-      "default": "TreeItemErrorContainer",
-      "class": "MuiTreeItem-errorIcon"
-    },
-    {
       "name": "loadingIcon",
       "description": "The component that is rendered when the item is in a loading state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
       "default": "TreeItemLoadingContainer",
       "class": "MuiTreeItem-loadingIcon"
     },
-    { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
-    { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },
-    { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
     {
-      "name": "icon",
-      "description": "The icon to display next to the Tree Item's label.",
-      "class": null
+      "name": "root",
+      "description": "The component that renders the root.",
+      "default": "TreeItemRoot",
+      "class": "MuiTreeItem-root"
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiTreeItem-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "content",
+      "className": "MuiTreeItem-content",
+      "description": "Styles applied to the content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "groupTransition",
+      "className": "MuiTreeItem-groupTransition",
+      "description": "Styles applied to the transition element.",
+      "isGlobal": false
+    },
+    {
+      "key": "iconContainer",
+      "className": "MuiTreeItem-iconContainer",
+      "description": "Styles applied to the icon container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiTreeItem-label",
+      "description": "Styles applied to the label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelInput",
+      "className": "MuiTreeItem-labelInput",
+      "description": "Styles applied to the label input element (visible only when editing is enabled).",
+      "isGlobal": false
+    },
+    {
+      "key": "checkbox",
+      "className": "MuiTreeItem-checkbox",
+      "description": "Styles applied to the checkbox element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dragAndDropOverlay",
+      "className": "MuiTreeItem-dragAndDropOverlay",
+      "description": "Styles applied to the drag and drop overlay element.",
+      "isGlobal": false
+    },
+    {
+      "key": "errorIcon",
+      "className": "MuiTreeItem-errorIcon",
+      "description": "Styles applied to the error icon element",
+      "isGlobal": false
+    },
+    {
+      "key": "loadingIcon",
+      "className": "MuiTreeItem-loadingIcon",
+      "description": "Styles applied to the loading icon element",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiTreeItem",

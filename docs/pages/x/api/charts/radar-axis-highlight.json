@@ -1,12 +1,18 @@
 {
-  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
+  "props": {
+    "classes": { "type": { "name": "{}" }, "additionalInfo": { "cssApi": true } },
+    "className": { "type": { "name": "string" } }
+  },
   "name": "RadarAxisHighlight",
   "imports": [
     "import { RadarAxisHighlight } from '@mui/x-charts/RadarChart';",
     "import { RadarAxisHighlight } from '@mui/x-charts';",
+    "import { RadarAxisHighlight } from '@mui/x-charts-pro/RadarChart';",
     "import { RadarAxisHighlight } from '@mui/x-charts-pro';",
+    "import { RadarAxisHighlight } from '@mui/x-charts-premium/RadarChart';",
     "import { RadarAxisHighlight } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiRadarAxisHighlight",
   "filename": "/packages/x-charts/src/RadarChart/RadarAxisHighlight/RadarAxisHighlight.tsx",

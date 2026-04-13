@@ -1,6 +1,7 @@
 {
   "props": {
     "dataIndex": { "type": { "name": "number" }, "required": true },
+    "seriesId": { "type": { "name": "string" }, "required": true },
     "shape": {
       "type": {
         "name": "enum",
@@ -8,21 +9,26 @@
       },
       "required": true
     },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<LineClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "hidden": { "type": { "name": "bool" }, "default": "false" },
     "isFaded": { "type": { "name": "bool" }, "default": "false" },
     "isHighlighted": { "type": { "name": "bool" }, "default": "false" },
-    "skipAnimation": { "type": { "name": "bool" } }
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "MarkElement",
   "imports": [
     "import { MarkElement } from '@mui/x-charts/LineChart';",
     "import { MarkElement } from '@mui/x-charts';",
+    "import { MarkElement } from '@mui/x-charts-pro/LineChart';",
     "import { MarkElement } from '@mui/x-charts-pro';",
+    "import { MarkElement } from '@mui/x-charts-premium/LineChart';",
     "import { MarkElement } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiMarkElement",
   "filename": "/packages/x-charts/src/LineChart/MarkElement.tsx",
   "inheritance": null,

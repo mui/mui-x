@@ -1,43 +1,45 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "" },
     "cornerRadius": {
-      "description": "The radius applied to arc corners (similar to border radius). Set it to &#39;50%&#39; to get rounded arc."
+      "description": "The radius applied to arc corners (similar to border radius).\nSet it to '50%' to get rounded arc."
     },
     "cx": {
-      "description": "The x coordinate of the arc center. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the width the drawing area."
+      "description": "The x coordinate of the arc center.\nCan be a number (in px) or a string with a percentage such as '50%'.\nThe '100%' is the width the drawing area."
     },
     "cy": {
-      "description": "The y coordinate of the arc center. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the height the drawing area."
+      "description": "The y coordinate of the arc center.\nCan be a number (in px) or a string with a percentage such as '50%'.\nThe '100%' is the height the drawing area."
     },
     "desc": {
-      "description": "The description of the chart. Used to provide an accessible description for the chart."
+      "description": "The description of the chart.\nUsed to provide an accessible description for the chart."
     },
     "endAngle": { "description": "The end angle (deg)." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
     "id": {
-      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+      "description": "This prop is used to help implement the accessibility logic.\nIf you don't provide this prop. It falls back to a randomly generated id."
     },
     "innerRadius": {
-      "description": "The radius between circle center and the beginning of the arc. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the maximal radius that fit into the drawing area."
+      "description": "The radius between circle center and the beginning of the arc.\nCan be a number (in px) or a string with a percentage such as '50%'.\nThe '100%' is the maximal radius that fit into the drawing area."
     },
     "margin": {
-      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+      "description": "The margin between the SVG and the drawing area.\nIt's used for leaving some space for extra information such as the x- and y-axis or legend.<br><br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
     "outerRadius": {
-      "description": "The radius between circle center and the end of the arc. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the maximal radius that fit into the drawing area."
+      "description": "The radius between circle center and the end of the arc.\nCan be a number (in px) or a string with a percentage such as '50%'.\nThe '100%' is the maximal radius that fit into the drawing area."
     },
     "skipAnimation": {
-      "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
+      "description": "If <code>true</code>, animations are skipped.\nIf unset or <code>false</code>, the animations respects the user's <code>prefers-reduced-motion</code> setting."
     },
     "startAngle": { "description": "The start angle (deg)." },
+    "text": { "description": "" },
     "title": {
-      "description": "The title of the chart. Used to provide an accessible label for the chart."
+      "description": "The title of the chart.\nUsed to provide an accessible label for the chart."
     },
     "value": {
-      "description": "The value of the gauge. Set to <code>null</code> to not display a value."
+      "description": "The value of the gauge.\nSet to <code>null</code> to not display a value."
     },
     "valueMax": { "description": "The maximal value of the gauge." },
     "valueMin": { "description": "The minimal value of the gauge." },
@@ -46,15 +48,16 @@
     }
   },
   "classDescriptions": {
-    "referenceArc": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the arc displaying the range of available values"
-    },
-    "root": { "description": "Styles applied to the root element." },
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
     "valueArc": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the arc displaying the value"
     },
+    "referenceArc": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the arc displaying the range of available values"
+    },
     "valueText": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the value text" }
-  }
+  },
+  "slotDescriptions": {}
 }

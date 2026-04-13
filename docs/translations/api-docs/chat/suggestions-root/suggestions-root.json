@@ -1,0 +1,13 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "autoSubmit": { "description": "Whether to auto-submit when a suggestion is clicked." },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" },
+    "suggestions": {
+      "description": "Suggestion items. Strings are normalized to <code>{ value, label }</code>.\nIgnored when <code>children</code> are provided."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "item": "", "root": "" }
+}

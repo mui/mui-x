@@ -4,7 +4,10 @@
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "The `id` of the first defined axis."
     },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChartsReferenceLineClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "label": { "type": { "name": "string" } },
     "labelAlign": {
       "type": {
@@ -13,8 +16,8 @@
       },
       "default": "'middle'"
     },
-    "labelStyle": { "type": { "name": "object" } },
-    "lineStyle": { "type": { "name": "object" } },
+    "labelStyle": { "type": { "name": "shape", "description": "ChartsTextStyle" } },
+    "lineStyle": { "type": { "name": "shape", "description": "CSSProperties" } },
     "spacing": {
       "type": {
         "name": "union",
@@ -33,28 +36,13 @@
   "imports": [
     "import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';",
     "import { ChartsReferenceLine } from '@mui/x-charts';",
+    "import { ChartsReferenceLine } from '@mui/x-charts-pro/ChartsReferenceLine';",
     "import { ChartsReferenceLine } from '@mui/x-charts-pro';",
+    "import { ChartsReferenceLine } from '@mui/x-charts-premium/ChartsReferenceLine';",
     "import { ChartsReferenceLine } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [
-    {
-      "key": "horizontal",
-      "className": "MuiChartsReferenceLine-horizontal",
-      "description": "Styles applied to the root element if the reference line is horizontal.",
-      "isGlobal": false
-    },
-    {
-      "key": "label",
-      "className": "MuiChartsReferenceLine-label",
-      "description": "Styles applied to the reference label.",
-      "isGlobal": false
-    },
-    {
-      "key": "line",
-      "className": "MuiChartsReferenceLine-line",
-      "description": "Styles applied to the reference line.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiChartsReferenceLine-root",
@@ -65,6 +53,24 @@
       "key": "vertical",
       "className": "MuiChartsReferenceLine-vertical",
       "description": "Styles applied to the root element if the reference line is vertical.",
+      "isGlobal": false
+    },
+    {
+      "key": "horizontal",
+      "className": "MuiChartsReferenceLine-horizontal",
+      "description": "Styles applied to the root element if the reference line is horizontal.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiChartsReferenceLine-line",
+      "description": "Styles applied to the reference line.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiChartsReferenceLine-label",
+      "description": "Styles applied to the reference label.",
       "isGlobal": false
     }
   ],

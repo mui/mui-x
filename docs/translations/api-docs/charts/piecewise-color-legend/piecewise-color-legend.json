@@ -15,12 +15,11 @@
         "params": { "name": "params", "description": "The bound of the piece to format." },
         "string | null": {
           "name": "string | null",
-          "description": "The displayed label, <code>&#39;&#39;</code> to skip the label but show the color mark, or <code>null</code> to skip it entirely."
+          "description": "The displayed label, <code>''</code> to skip the label but show the color mark, or <code>null</code> to skip it entirely."
         }
       }
     },
-    "labelPosition": { "description": "Where to position the labels relative to the gradient." },
-    "markType": { "description": "The type of the mark." },
+    "labelPosition": { "description": "Where to position the labels relative to the color marks." },
     "onItemClick": {
       "description": "Callback fired when a legend item is clicked.",
       "typeDescriptions": {
@@ -28,9 +27,34 @@
         "legendItem": { "name": "legendItem", "description": "The legend item data." },
         "index": { "name": "index", "description": "The index of the clicked legend item." }
       }
-    }
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "tabIndex": { "description": "" }
   },
   "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "minLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the list item that renders the `minLabel`"
+    },
+    "maxLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the list item that renders the `maxLabel`"
+    },
+    "item": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the list items" },
+    "vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend in column layout"
+    },
+    "horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend in row layout"
+    },
+    "start": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with the labels before the color marks"
+    },
     "end": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the legend with the labels after the color marks"
@@ -39,37 +63,16 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the legend with the labels on the extremes of the color marks"
     },
-    "horizontal": {
+    "inlineStart": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend in row layout"
+      "nodeName": "the legend with the labels inlined before the color marks"
     },
     "inlineEnd": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the legend with the labels inlined after the color marks"
     },
-    "inlineStart": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels inlined before the color marks"
-    },
-    "item": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the list items" },
-    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the marks" },
-    "maxLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the list item that renders the <code>maxLabel</code>"
-    },
-    "minLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the list item that renders the <code>minLabel</code>"
-    },
-    "root": { "description": "Styles applied to the root element." },
-    "start": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels before the color marks"
-    },
-    "vertical": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend in column layout"
-    }
-  }
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" }
+  },
+  "slotDescriptions": { "legend": "Custom rendering of the legend." }
 }

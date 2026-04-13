@@ -1,18 +1,23 @@
 {
-  "props": {},
+  "props": {
+    "imageExportOptions": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ copyStyles?: bool, fileName?: string, nonce?: string, onBeforeExport?: func, quality?: number, type: string }&gt;"
+      }
+    },
+    "printOptions": {
+      "type": { "name": "shape", "description": "ChartsToolbarPrintExportOptions" }
+    }
+  },
   "name": "ChartsToolbarPro",
   "imports": [
     "import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';",
-    "import { ChartsToolbarPro } from '@mui/x-charts-pro';"
+    "import { ChartsToolbarPro } from '@mui/x-charts-pro';",
+    "import { ChartsToolbarPro } from '@mui/x-charts-premium/ChartsToolbarPro';",
+    "import { ChartsToolbarPro } from '@mui/x-charts-premium';"
   ],
-  "slots": [
-    {
-      "name": "toolbar",
-      "description": "Custom component for the toolbar.",
-      "default": "ChartsToolbar",
-      "class": null
-    }
-  ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiChartsToolbarPro",
   "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarPro.tsx",

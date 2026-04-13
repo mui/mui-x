@@ -1,6 +1,9 @@
 {
-  "componentDescription": "The chart toolbar component for the pro package.",
-  "propDescriptions": {},
+  "componentDescription": "",
+  "propDescriptions": {
+    "imageExportOptions": { "description": "" },
+    "printOptions": { "description": "" }
+  },
   "classDescriptions": {},
-  "slotDescriptions": { "toolbar": "Custom component for the toolbar." }
+  "slotDescriptions": {}
 }

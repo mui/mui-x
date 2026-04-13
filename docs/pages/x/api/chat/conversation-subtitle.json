@@ -1,9 +1,16 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "ConversationSubtitleSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationSubtitleSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ConversationSubtitle",
   "imports": [
-    "import { ConversationSubtitle } from '@mui/x-chat/headless';",
-    "import { ConversationSubtitle } from '@mui/x-chat/headless';"
+    "import { ConversationSubtitle } from '@mui/x-chat-headless/conversation';",
+    "import { ConversationSubtitle } from '@mui/x-chat-headless';",
+    "import { ConversationSubtitle } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "subtitle", "description": "", "class": null }],
   "classes": [],

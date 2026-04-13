@@ -1,9 +1,20 @@
 {
-  "props": {},
+  "props": {
+    "conversation": { "type": { "name": "{}" }, "required": true },
+    "focused": { "type": { "name": "bool" } },
+    "selected": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "shape", "description": "ConversationListPreviewSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationListPreviewSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "unread": { "type": { "name": "bool" } }
+  },
   "name": "ConversationListPreview",
   "imports": [
-    "import { ConversationListPreview } from '@mui/x-chat/headless';",
-    "import { ConversationListPreview } from '@mui/x-chat/headless';"
+    "import { ConversationListPreview } from '@mui/x-chat-headless/conversation-list';",
+    "import { ConversationListPreview } from '@mui/x-chat-headless';",
+    "import { ConversationListPreview } from '@mui/x-chat';"
   ],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],

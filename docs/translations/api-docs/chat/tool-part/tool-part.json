@@ -1,0 +1,31 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "index": { "description": "" },
+    "message": { "description": "" },
+    "part": { "description": "" },
+    "onToolCall": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" },
+    "toolSlotProps": {
+      "description": "Per-tool-name slotProps overrides, merged on top of <code>slotProps</code>.\nKeyed by <code>toolInvocation.toolName</code>."
+    },
+    "toolSlots": {
+      "description": "Per-tool-name slot overrides, merged on top of <code>slots</code>.\nKeyed by <code>toolInvocation.toolName</code>."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "actions": "",
+    "approveButton": "",
+    "denyButton": "",
+    "error": "",
+    "header": "",
+    "icon": "",
+    "root": "",
+    "section": "",
+    "sectionContent": "",
+    "state": "",
+    "title": ""
+  }
+}

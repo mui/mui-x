@@ -20,7 +20,7 @@
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
       "default": "'start'"
     },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "defaultValue": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" }, "default": "false" },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableDragEditing": { "type": { "name": "bool" }, "default": "false" },
@@ -31,7 +31,7 @@
       "type": { "name": "bool" },
       "default": "false",
       "deprecated": true,
-      "deprecationInfo": "Use the <a href=\"https://mui.com/x/react-date-pickers/fields/\">field component</a> instead."
+      "deprecationInfo": "Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead."
     },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
@@ -45,13 +45,13 @@
     "keepOpenDuringFieldFocus": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
-    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
-    "maxDateTime": { "type": { "name": "object" } },
-    "maxTime": { "type": { "name": "object" } },
-    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
-    "minDateTime": { "type": { "name": "object" } },
-    "minTime": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "PickersInputComponentLocaleText" } },
+    "maxDate": { "type": { "name": "{}" }, "default": "2099-12-31" },
+    "maxDateTime": { "type": { "name": "{}" } },
+    "maxTime": { "type": { "name": "{}" } },
+    "minDate": { "type": { "name": "{}" }, "default": "1900-01-01" },
+    "minDateTime": { "type": { "name": "{}" } },
+    "minTime": { "type": { "name": "{}" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "name": { "type": { "name": "string" } },
     "onAccept": {
@@ -68,7 +68,10 @@
         "describedArgs": ["value", "context"]
       }
     },
-    "onClose": { "type": { "name": "func" } },
+    "onClose": {
+      "type": { "name": "func" },
+      "signature": { "type": "function() => void", "describedArgs": [] }
+    },
     "onError": {
       "type": { "name": "func" },
       "signature": {
@@ -83,7 +86,10 @@
         "describedArgs": ["month"]
       }
     },
-    "onOpen": { "type": { "name": "func" } },
+    "onOpen": {
+      "type": { "name": "func" },
+      "signature": { "type": "function() => void", "describedArgs": [] }
+    },
     "onRangePositionChange": {
       "type": { "name": "func" },
       "signature": {
@@ -116,16 +122,16 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "union", "description": "Array&lt;object&gt;<br>&#124;&nbsp;object" },
+      "type": { "name": "{}" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "renderLoading": {
       "type": { "name": "func" },
       "default": "() => \"...\"",
       "signature": {
-        "type": "function() => React.ReactNode",
+        "type": "function() => ReactNode",
         "describedArgs": [],
-        "returned": "React.ReactNode"
+        "returned": "ReactNode"
       }
     },
     "selectedSections": {
@@ -152,18 +158,14 @@
     },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "MobileDateTimeRangePickerSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "MobileDateTimeRangePickerSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
     },
     "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
     "timeSteps": {
@@ -181,7 +183,7 @@
         "text": "timezones documentation"
       }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "value": { "type": { "name": "shape", "description": "PickerRangeValue" } },
     "view": {
       "type": {
         "name": "enum",

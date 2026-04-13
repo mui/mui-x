@@ -1,6 +1,10 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<RadarClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "className": { "type": { "name": "string" } },
     "onAreaClick": {
       "type": { "name": "func" },
       "signature": {
@@ -21,12 +25,13 @@
   "imports": [
     "import { RadarSeriesPlot } from '@mui/x-charts/RadarChart';",
     "import { RadarSeriesPlot } from '@mui/x-charts';",
+    "import { RadarSeriesPlot } from '@mui/x-charts-pro/RadarChart';",
     "import { RadarSeriesPlot } from '@mui/x-charts-pro';",
+    "import { RadarSeriesPlot } from '@mui/x-charts-premium/RadarChart';",
     "import { RadarSeriesPlot } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiRadarSeriesPlot",
   "filename": "/packages/x-charts/src/RadarChart/RadarSeriesPlot/RadarSeriesPlot.tsx",
   "inheritance": null,

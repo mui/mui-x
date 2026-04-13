@@ -1,9 +1,32 @@
 {
-  "props": {},
+  "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatScrollToBottomAffordanceClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "scrollBehavior": {
+      "type": {
+        "name": "enum",
+        "description": "'auto'<br>&#124;&nbsp;'instant'<br>&#124;&nbsp;'smooth'"
+      }
+    },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ScrollToBottomAffordanceSlotProps" }
+    },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ScrollToBottomAffordanceSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatScrollToBottomAffordance",
   "imports": [
     "import { ChatScrollToBottomAffordance } from '@mui/x-chat/ChatIndicators';",
     "import { ChatScrollToBottomAffordance } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "badge", "description": "", "class": null },
+    { "name": "icon", "description": "", "class": null },
+    { "name": "root", "description": "", "class": "MuiChatScrollToBottomAffordance-root" }
   ],
   "classes": [
     {
@@ -13,8 +36,6 @@
       "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatScrollToBottomAffordance",
   "filename": "/packages/x-chat/src/ChatIndicators/ChatScrollToBottomAffordance.tsx",
   "inheritance": null,

@@ -3,18 +3,15 @@
   "propDescriptions": {
     "ampm": { "description": "12h/24h view for hour selection clock." },
     "autoFocus": {
-      "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount."
+      "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount.\nIf <code>true</code>, the field is focused during the first mount."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "dateSeparator": { "description": "String displayed between the start and the end dates." },
     "defaultValue": {
       "description": "The default value. Use when the component is not controlled."
     },
-    "direction": {
-      "description": "Defines the <code>flex-direction</code> style property. It is applied for all screen sizes."
-    },
     "disabled": {
-      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
+      "description": "If <code>true</code>, the component is disabled.\nWhen disabled, the value cannot be changed and no interaction is possible."
     },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
@@ -25,30 +22,24 @@
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },
-    "divider": { "description": "Add an element between each child." },
     "endFieldRef": {
       "description": "The ref object used to interact with the end field imperatively."
     },
     "format": { "description": "Format of the date when rendered in the input(s)." },
     "formatDensity": {
-      "description": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
+      "description": "Density of the format when rendered in the input.\nSetting <code>formatDensity</code> to <code>\"spacious\"</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
     },
     "maxTime": {
-      "description": "Maximal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
+      "description": "Maximal selectable time.\nThe date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
     },
     "minTime": {
-      "description": "Minimal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
+      "description": "Minimal selectable time.\nThe date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>."
     },
     "minutesStep": { "description": "Step over minutes." },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
-        "value": {
-          "name": "value",
-          "description": "The new value.",
-          "argType": "TValue",
-          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
-        },
+        "value": { "name": "value", "description": "The new value." },
         "context": {
           "name": "context",
           "description": "The context containing the validation result of the current value."
@@ -56,20 +47,13 @@
       }
     },
     "onError": {
-      "description": "Callback fired when the error associated with the current value changes. When a validation error is detected, the <code>error</code> parameter contains a non-null value. This can be used to render an appropriate form error.",
+      "description": "Callback fired when the error associated with the current value changes.\nWhen a validation error is detected, the <code>error</code> parameter contains a non-null value.\nThis can be used to render an appropriate form error.",
       "typeDescriptions": {
         "error": {
           "name": "error",
-          "description": "The reason why the current value is not valid.",
-          "argType": "TError",
-          "argTypeDescription": "The validation error type. It will be either <code>string</code> or a <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+          "description": "The reason why the current value is not valid."
         },
-        "value": {
-          "name": "value",
-          "description": "The value associated with the error.",
-          "argType": "TValue",
-          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
-        }
+        "value": { "name": "value", "description": "The value associated with the error." }
       }
     },
     "onSelectedSectionsChange": {
@@ -79,13 +63,13 @@
       }
     },
     "readOnly": {
-      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
+      "description": "If <code>true</code>, the component is read-only.\nWhen read-only, the value cannot be changed but the user can interact with the interface."
     },
     "referenceDate": {
-      "description": "The date used to generate a part of the new value that is not present in the format when both <code>value</code> and <code>defaultValue</code> are empty. For example, on time fields it will be used to determine the date to set."
+      "description": "The date used to generate a part of the new value that is not present in the format when both <code>value</code> and <code>defaultValue</code> are empty.\nFor example, on time fields it will be used to determine the date to set."
     },
     "selectedSections": {
-      "description": "The currently selected sections. This prop accepts four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
+      "description": "The currently selected sections.\nThis prop accepts four formats:\n1. If a number is provided, the section at this index will be selected.\n2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected.\n3. If <code>\"all\"</code> is provided, all the sections will be selected.\n4. If <code>null</code> is provided, no section will be selected.\nIf not provided, the selected sections will be handled internally."
     },
     "shouldDisableTime": {
       "description": "Disable specific time.",
@@ -99,30 +83,23 @@
       }
     },
     "shouldRespectLeadingZeros": {
-      "description": "If <code>true</code>, the format will respect the leading zeroes (for example on dayjs, the format <code>M/D/YYYY</code> will render <code>8/16/2018</code>) If <code>false</code>, the format will always add leading zeroes (for example on dayjs, the format <code>M/D/YYYY</code> will render <code>08/16/2018</code>)<br>Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (for example &quot;DD&quot;), so <code>shouldRespectLeadingZeros={true}</code> might lead to inconsistencies when using <code>AdapterLuxon</code>.<br>Warning n°2: When <code>shouldRespectLeadingZeros={true}</code>, the field will add an invisible character on the sections containing a single digit to make sure <code>onChange</code> is fired. If you need to get the clean value from the input, you can remove this character using <code>input.value.replace(/\\u200e/g, &#39;&#39;)</code>.<br>Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros. This mean that when using <code>shouldRespectLeadingZeros={false}</code>, if you retrieve the value directly from the input (not listening to <code>onChange</code>) and your format contains tokens without leading zeros, the value will not be parsed by your library."
+      "description": "If <code>true</code>, the format will respect the leading zeroes (for example on dayjs, the format <code>M/D/YYYY</code> will render <code>8/16/2018</code>)\nIf <code>false</code>, the format will always add leading zeroes (for example on dayjs, the format <code>M/D/YYYY</code> will render <code>08/16/2018</code>)<br><br>Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (for example \"DD\"), so <code>shouldRespectLeadingZeros={true}</code> might lead to inconsistencies when using <code>AdapterLuxon</code>.<br><br>Warning n°2: When <code>shouldRespectLeadingZeros={true}</code>, the field will add an invisible character on the sections containing a single digit to make sure <code>onChange</code> is fired.\nIf you need to get the clean value from the input, you can remove this character using <code>input.value.replace(/\\u200e/g, '')</code>.<br><br>Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.\nThis mean that when using <code>shouldRespectLeadingZeros={false}</code>, if you retrieve the value directly from the input (not listening to <code>onChange</code>) and your format contains tokens without leading zeros, the value will not be parsed by your library."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "spacing": { "description": "Defines the space between immediate children." },
     "startFieldRef": {
       "description": "The ref object used to interact with the start field imperatively."
     },
-    "sx": {
-      "description": "The system prop, which allows defining system overrides as well as additional CSS styles."
-    },
     "timezone": {
-      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
-      "seeMoreText": "See the {{link}} for more details."
+      "description": "Choose which timezone to use for the value.\nExample: \"default\", \"system\", \"UTC\", \"America/New_York\".\nIf you pass values from other timezones to some props, they will be converted to this timezone before being used.",
+      "seeMoreText": "See {{link}} for more details."
     },
-    "useFlexGap": {
-      "description": "If <code>true</code>, the CSS flexbox <code>gap</code> is used instead of applying <code>margin</code> to children.<br>While CSS <code>gap</code> removes the <a href=\"https://mui.com/joy-ui/react-stack/#limitations\">known limitations</a>, it is not fully supported in some browsers. We recommend checking <a href=\"https://caniuse.com/?search=flex%20gap\">https://caniuse.com/?search=flex%20gap</a> before using this flag.<br>To enable this flag globally, follow the <a href=\"https://mui.com/material-ui/customization/theme-components/#default-props\">theme&#39;s default props</a> configuration."
-    },
-    "value": { "description": "The selected value. Used when the component is controlled." }
+    "value": { "description": "The selected value.\nUsed when the component is controlled." }
   },
   "classDescriptions": {},
   "slotDescriptions": {
     "root": "Element rendered at the root.",
     "separator": "Element rendered between the two inputs.",
-    "textField": "Form control with an input to render a date. It is rendered twice: once for the start date and once for the end date."
+    "textField": "Form control with an input to render a date.\nIt is rendered twice: once for the start date and once for the end date."
   }
 }

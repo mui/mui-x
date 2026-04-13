@@ -1,1 +1,6 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": { "action": { "description": "" }, "style": { "description": "" } },
+  "classDescriptions": {},
+  "slotDescriptions": {}
+}

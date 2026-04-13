@@ -1,5 +1,12 @@
 {
   "props": {
+    "data": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ color: string, endAngle: number, formattedValue: string, hidden: bool, id?: number<br>&#124;&nbsp;string, index: number, label?: func<br>&#124;&nbsp;string, labelMarkType?: 'circle'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'line+mark'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;func<br>&#124;&nbsp;{ contextType?: func, defaultProps?: Partial<ChartsLabelCustomMarkProps>, displayName?: string, getDerivedStateFromError?: func, getDerivedStateFromProps?: func, propTypes?: any }, padAngle: number, startAngle: number, value: number }&gt;"
+      },
+      "required": true
+    },
     "outerRadius": { "type": { "name": "number" }, "required": true },
     "seriesId": { "type": { "name": "string" }, "required": true },
     "arcLabel": {
@@ -30,9 +37,12 @@
     "innerRadius": { "type": { "name": "number" }, "default": "0" },
     "paddingAngle": { "type": { "name": "number" }, "default": "0" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "PieArcLabelPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "PieArcLabelPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -41,7 +51,9 @@
   "imports": [
     "import { PieArcLabelPlot } from '@mui/x-charts/PieChart';",
     "import { PieArcLabelPlot } from '@mui/x-charts';",
+    "import { PieArcLabelPlot } from '@mui/x-charts-pro/PieChart';",
     "import { PieArcLabelPlot } from '@mui/x-charts-pro';",
+    "import { PieArcLabelPlot } from '@mui/x-charts-premium/PieChart';",
     "import { PieArcLabelPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [{ "name": "pieArcLabel", "description": "", "class": null }],

@@ -1,13 +1,31 @@
 {
-  "props": {},
+  "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
+    "groupKey": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.id ?? message.role ?? ''",
+      "signature": {
+        "type": "function(message: ChatMessage) => string | number",
+        "describedArgs": []
+      }
+    },
+    "index": { "type": { "name": "number" } },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "slotProps": { "type": { "name": "shape", "description": "MessageGroupSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageGroupSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "MessageGroup",
   "imports": [
-    "import { MessageGroup } from '@mui/x-chat/headless';",
-    "import { MessageGroup } from '@mui/x-chat/headless';"
+    "import { MessageGroup } from '@mui/x-chat-headless/message-group';",
+    "import { MessageGroup } from '@mui/x-chat-headless';",
+    "import { MessageGroup } from '@mui/x-chat';"
   ],
   "slots": [
-    { "name": "group", "description": "", "class": null },
     { "name": "authorName", "description": "", "class": null },
+    { "name": "group", "description": "", "class": null },
     {
       "name": "groupTimestamp",
       "description": "The timestamp element rendered next to the author name in compact mode.\nOnly rendered when `variant === 'compact'` and the message has a `createdAt` value.",
@@ -16,8 +34,6 @@
     }
   ],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiMessageGroup",
   "filename": "/packages/x-chat-headless/src/message-group/MessageGroup.tsx",
   "inheritance": null,

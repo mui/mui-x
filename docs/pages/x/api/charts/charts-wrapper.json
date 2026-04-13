@@ -21,9 +21,12 @@
   "imports": [
     "import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';",
     "import { ChartsWrapper } from '@mui/x-charts';",
+    "import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';",
     "import { ChartsWrapper } from '@mui/x-charts-pro';",
+    "import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';",
     "import { ChartsWrapper } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiChartsWrapper",
   "filename": "/packages/x-charts/src/ChartsWrapper/ChartsWrapper.tsx",
