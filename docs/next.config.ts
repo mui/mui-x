@@ -127,10 +127,6 @@ export default withDeploymentConfig({
           '@mui/x-license': path.resolve(currentDirectory, '../packages/x-license/src'),
           '@mui/x-chat-headless': path.resolve(currentDirectory, '../packages/x-chat-headless/src'),
           '@mui/x-chat': path.resolve(currentDirectory, '../packages/x-chat/src'),
-          'docs/src/modules/utils/mapApiPageTranslations': path.resolve(
-            'src/modules/utils/mapApiPageTranslations.js',
-          ),
-          docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
       },
