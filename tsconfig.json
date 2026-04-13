@@ -1,6 +1,18 @@
 {
-  "extends": "./node_modules/@mui/monorepo/tsconfig.json",
+  // Previously: "extends": "@mui/monorepo/tsconfig.json". Flattened so that tools
+  // which resolve `extends` as a relative path (notably the `loadTypescriptConfig`
+  // walk inside `@mui/internal-docs-infra/pipeline/loadPrecomputedTypes`) don't
+  // choke on the node_modules package specifier.
   "compilerOptions": {
+    // --- Inlined from @mui/monorepo/tsconfig.json ---
+    "target": "es2022",
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "module": "preserve",
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "noErrorTruncation": false,
+    // --- mui-x-specific overrides ---
     "lib": ["dom", "dom.iterable", "esnext"],
     "moduleResolution": "bundler",
     // Already tested with eslint
