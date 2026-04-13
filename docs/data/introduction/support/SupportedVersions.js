@@ -9,10 +9,11 @@ import { MarkdownElement } from '@mui/docs/MarkdownElement';
 //
 // #target-branch-reference
 // Add a new entry when creating a new major version branch.
-// For example, when creating v10 from v9, add `{ version: '^10.0.0', releaseDate: null, plannedRelease: 'April 2030' }`
+// For example, when creating v10 from v9, add `{ version: '^10.0.0', releaseDate: null, plannedRelease: 'April 2027' }`
 const muiXVersions = [
-  { version: '^9.0.0', releaseDate: null, plannedRelease: 'April 2026' },
-  { version: '^8.0.0', releaseDate: '2025-04-17' },
+  // { version: '^10.0.0', releaseDate: null, plannedRelease: 'April 2027' },
+  { version: '^9.0.0', releaseDate: '2026-04-08' },
+  { version: '^8.0.0', releaseDate: '2025-04-17', ltsEndDate: '2028-04-08' },
   { version: '^7.0.0', releaseDate: '2024-03-23', ltsEndDate: '2027-04-17' },
   { version: '^6.0.0', releaseDate: '2023-03-03', ltsEndDate: '2026-03-23' },
   { version: '^5.0.0', releaseDate: '2021-11-23', ltsEndDate: '2025-03-03' },
