@@ -169,6 +169,22 @@ Since `v9` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v8` to `v9`.
 
+## Update `@mui/material` and `@mui/system` packages
+
+The minimum supported version of `@mui/material` and `@mui/system` has been updated to `^7.3.0` or `^9.0.0`.
+The v5 and v6 versions are no longer supported.
+
+If you are using `@mui/material` v5 or v6, you need to upgrade to at least v7.
+Follow the [Material UI migration guide](/material-ui/migration/upgrade-to-v9/) to upgrade your implementation.
+
+```diff
+-"@mui/material": "^5.x.x",
++"@mui/material": "^7.3.0",
+
+-"@mui/system": "^5.x.x",
++"@mui/system": "^7.3.0",
+```
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v9. You can run `v9.0.0/charts/preset-safe` targeting only Charts or `v9.0.0/preset-safe` to target the other packages as well.
