@@ -23,7 +23,7 @@ const valueFormatter: AxisConfig['valueFormatter'] = (value, { location }) => {
 export default function BarChartDemo() {
   return (
     <React.Fragment>
-      <Typography variant="body2" color="text.secondary" fontWeight={500} sx={{ px: 1 }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, px: 1 }}>
         Issues opened daily
       </Typography>
       <BarChart

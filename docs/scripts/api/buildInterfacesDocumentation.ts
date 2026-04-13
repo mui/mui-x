@@ -407,7 +407,7 @@ export async function buildInterfacesDocumentationPage(
       `import * as React from 'react';
     import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
     import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-    import mapApiPageTranslations from 'docsx/src/modules/utils/mapApiPageTranslations';
+    import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
     import jsonPageContent from './${slug}.json';
   
     export default function Page(props) {

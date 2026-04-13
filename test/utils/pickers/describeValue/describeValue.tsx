@@ -42,7 +42,7 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
     renderWithProps = (props: any, config?: any) =>
       interactions.renderWithProps({ ...defaultProps, ...props }, { ...config, componentFamily });
   } else {
-    renderWithProps = ({ enableAccessibleFieldDOMStructure, ...props }: any, config?: any) => {
+    renderWithProps = (props: any, config?: any) => {
       const response = render(<WrappedElementToTest {...props} hook={config?.hook} />);
 
       return {
