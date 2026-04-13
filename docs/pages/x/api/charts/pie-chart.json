@@ -143,7 +143,50 @@
       "class": null
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiPieChart-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiPieChart-series",
+      "description": "Styles applied to the `g` element that contains all pie arcs of a series.",
+      "isGlobal": false
+    },
+    {
+      "key": "seriesLabels",
+      "className": "MuiPieChart-seriesLabels",
+      "description": "Styles applied to the `g` element that contains all pie arc labels of a series.",
+      "isGlobal": false
+    },
+    {
+      "key": "arc",
+      "className": "MuiPieChart-arc",
+      "description": "Styles applied to an individual pie arc element.",
+      "isGlobal": false
+    },
+    {
+      "key": "arcLabel",
+      "className": "MuiPieChart-arcLabel",
+      "description": "Styles applied to an individual pie arc label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "animate",
+      "className": "MuiPieChart-animate",
+      "description": "Styles applied when animation is not skipped.",
+      "isGlobal": false
+    },
+    {
+      "key": "focusIndicator",
+      "className": "MuiPieChart-focusIndicator",
+      "description": "Styles applied to the focused pie arc element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiPieChart",

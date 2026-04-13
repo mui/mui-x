@@ -16,7 +16,7 @@
   ],
   "slots": [],
   "classes": [],
-  "muiName": "MuiPickersLayout",
+  "muiName": "MuiPickersActionBar",
   "filename": "/packages/x-date-pickers/src/PickersActionBar/PickersActionBar.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",

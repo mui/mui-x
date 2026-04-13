@@ -11,7 +11,7 @@
   ],
   "slots": [],
   "classes": [],
-  "muiName": "MuiDataGrid",
+  "muiName": "MuiToolbar",
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/toolbarV8/Toolbar.tsx",
   "inheritance": null,

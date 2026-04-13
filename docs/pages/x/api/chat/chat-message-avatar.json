@@ -16,11 +16,11 @@
     "import { ChatMessageAvatar } from '@mui/x-chat';"
   ],
   "slots": [
-    { "name": "avatar", "description": "", "class": null },
+    { "name": "avatar", "description": "", "class": "MuiChatMessage-avatar" },
     { "name": "image", "description": "", "class": null }
   ],
   "classes": [],
-  "muiName": "MuiChatMessage",
+  "muiName": "MuiChatMessageAvatar",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageAvatar.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",

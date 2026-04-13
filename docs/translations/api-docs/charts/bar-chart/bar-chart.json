@@ -143,7 +143,32 @@
       "description": "The configuration of the y-axes.\nIf not provided, a default axis config is used.\nAn array of AxisConfig objects."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the bar plot element"
+    },
+    "series": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group surrounding a series' bar elements"
+    },
+    "seriesLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group surrounding a series' labels"
+    },
+    "element": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual bar element"
+    },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual bar label"
+    },
+    "labelAnimate": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "a bar label when it is animated"
+    }
+  },
   "slotDescriptions": {
     "axisLabel": "Custom component for axis label.",
     "axisLine": "Custom component for the axis main line.",

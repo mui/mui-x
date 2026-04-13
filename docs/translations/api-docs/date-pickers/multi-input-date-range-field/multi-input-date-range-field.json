@@ -87,13 +87,7 @@
     },
     "value": { "description": "The selected value.\nUsed when the component is controlled." }
   },
-  "classDescriptions": {
-    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
-    "separator": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the separator element"
-    }
-  },
+  "classDescriptions": {},
   "slotDescriptions": {
     "root": "Element rendered at the root.",
     "separator": "Element rendered between the two inputs.",

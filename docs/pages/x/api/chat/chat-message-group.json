@@ -28,16 +28,16 @@
   ],
   "slots": [
     { "name": "authorName", "description": "", "class": null },
-    { "name": "group", "description": "", "class": null },
+    { "name": "group", "description": "", "class": "MuiChatMessage-group" },
     {
       "name": "groupTimestamp",
       "description": "The timestamp element rendered next to the author name in compact mode.\nOnly rendered when `variant === 'compact'` and the message has a `createdAt` value.",
       "default": "'span'",
-      "class": null
+      "class": "MuiChatMessage-groupTimestamp"
     }
   ],
   "classes": [],
-  "muiName": "MuiChatMessage",
+  "muiName": "MuiChatMessageGroup",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageGroup.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",

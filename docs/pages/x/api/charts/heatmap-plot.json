@@ -23,7 +23,7 @@
       "name": "cell",
       "description": "The component that renders the heatmap cell.",
       "default": "HeatmapCell",
-      "class": null
+      "class": "MuiHeatmap-cell"
     }
   ],
   "classes": [],

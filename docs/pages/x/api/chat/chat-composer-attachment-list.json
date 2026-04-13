@@ -15,9 +15,11 @@
     "import { ChatComposerAttachmentList } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerAttachmentList } from '@mui/x-chat';"
   ],
-  "slots": [{ "name": "attachmentList", "description": "", "class": null }],
+  "slots": [
+    { "name": "attachmentList", "description": "", "class": "MuiChatComposer-attachmentList" }
+  ],
   "classes": [],
-  "muiName": "MuiChatComposer",
+  "muiName": "MuiChatComposerAttachmentList",
   "filename": "/packages/x-chat/src/ChatComposer/ChatComposerAttachmentList.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li></ul>",

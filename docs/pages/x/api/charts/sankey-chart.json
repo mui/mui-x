@@ -115,7 +115,62 @@
       "class": null
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiSankeyChart-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "nodes",
+      "className": "MuiSankeyChart-nodes",
+      "description": "Styles applied to the nodes container.",
+      "isGlobal": false
+    },
+    {
+      "key": "nodeLabels",
+      "className": "MuiSankeyChart-nodeLabels",
+      "description": "Styles applied to the node label container.",
+      "isGlobal": false
+    },
+    {
+      "key": "links",
+      "className": "MuiSankeyChart-links",
+      "description": "Styles applied to the links container.",
+      "isGlobal": false
+    },
+    {
+      "key": "linkLabels",
+      "className": "MuiSankeyChart-linkLabels",
+      "description": "Styles applied to the link label container.",
+      "isGlobal": false
+    },
+    {
+      "key": "node",
+      "className": "MuiSankeyChart-node",
+      "description": "Styles applied to an individual node element.",
+      "isGlobal": false
+    },
+    {
+      "key": "link",
+      "className": "MuiSankeyChart-link",
+      "description": "Styles applied to an individual link element.",
+      "isGlobal": false
+    },
+    {
+      "key": "nodeLabel",
+      "className": "MuiSankeyChart-nodeLabel",
+      "description": "Styles applied to an individual node label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "linkLabel",
+      "className": "MuiSankeyChart-linkLabel",
+      "description": "Styles applied to an individual link label element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiSankeyChart",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyChart.tsx",
   "inheritance": null,

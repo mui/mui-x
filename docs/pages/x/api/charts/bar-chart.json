@@ -263,7 +263,44 @@
       "class": null
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiBarChart-root",
+      "description": "Styles applied to the bar plot element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiBarChart-series",
+      "description": "Styles applied to the group surrounding a series' bar elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "seriesLabels",
+      "className": "MuiBarChart-seriesLabels",
+      "description": "Styles applied to the group surrounding a series' labels.",
+      "isGlobal": false
+    },
+    {
+      "key": "element",
+      "className": "MuiBarChart-element",
+      "description": "Styles applied to an individual bar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiBarChart-label",
+      "description": "Styles applied to an individual bar label.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelAnimate",
+      "className": "MuiBarChart-labelAnimate",
+      "description": "Styles applied to a bar label when it is animated.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiBarChart",

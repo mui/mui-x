@@ -19,7 +19,7 @@
   ],
   "slots": [{ "name": "actions", "description": "", "class": null }],
   "classes": [],
-  "muiName": "MuiChatConversation",
+  "muiName": "MuiChatConversationHeaderActions",
   "filename": "/packages/x-chat/src/ChatConversation/ChatConversationHeaderActions.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/multi-conversation/conversation-header/\">Chat - Conversation Header</a></li></ul>",

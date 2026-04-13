@@ -136,7 +136,23 @@
     },
     "zAxis": { "description": "The configuration of the z-axes." }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scatter plot element"
+    },
+    "series": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group surrounding a series' scatter elements"
+    },
+    "marker": {
+      "description": "Styles applied to an individual scatter marker element.\nNot applied when using the `svg-batch` renderer."
+    },
+    "focusedMark": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the focused scatter mark element"
+    }
+  },
   "slotDescriptions": {
     "axisLabel": "Custom component for axis label.",
     "axisLine": "Custom component for the axis main line.",

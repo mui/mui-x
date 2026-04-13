@@ -15,9 +15,9 @@
     "import { ChatConversationHeaderInfo } from '@mui/x-chat/ChatConversation';",
     "import { ChatConversationHeaderInfo } from '@mui/x-chat';"
   ],
-  "slots": [{ "name": "headerInfo", "description": "", "class": null }],
+  "slots": [{ "name": "headerInfo", "description": "", "class": "MuiChatConversation-headerInfo" }],
   "classes": [],
-  "muiName": "MuiChatConversation",
+  "muiName": "MuiChatConversationHeaderInfo",
   "filename": "/packages/x-chat/src/ChatConversation/ChatConversationHeaderInfo.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/multi-conversation/conversation-header/\">Chat - Conversation Header</a></li></ul>",

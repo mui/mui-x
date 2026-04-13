@@ -90,32 +90,7 @@
       "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "root",
-      "className": "MuiYearCalendar-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "button",
-      "className": "MuiYearCalendar-button",
-      "description": "Styles applied to the button element that represents a single year",
-      "isGlobal": false
-    },
-    {
-      "key": "disabled",
-      "className": "Mui-disabled",
-      "description": "Styles applied to a disabled button element.",
-      "isGlobal": true
-    },
-    {
-      "key": "selected",
-      "className": "Mui-selected",
-      "description": "Styles applied to a selected button element.",
-      "isGlobal": true
-    }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiYearCalendar",

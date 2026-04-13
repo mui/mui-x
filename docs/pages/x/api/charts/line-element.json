@@ -34,7 +34,7 @@
       "name": "line",
       "description": "The component that renders the line.",
       "default": "LineElementPath",
-      "class": null
+      "class": "MuiLineChart-line"
     }
   ],
   "classes": [],

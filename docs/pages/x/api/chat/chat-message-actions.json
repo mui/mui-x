@@ -15,9 +15,9 @@
     "import { ChatMessageActions } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageActions } from '@mui/x-chat';"
   ],
-  "slots": [{ "name": "actions", "description": "", "class": null }],
+  "slots": [{ "name": "actions", "description": "", "class": "MuiChatMessage-actions" }],
   "classes": [],
-  "muiName": "MuiChatMessage",
+  "muiName": "MuiChatMessageActions",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageActions.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/display/message-actions/\">Chat - Message Actions</a></li></ul>",

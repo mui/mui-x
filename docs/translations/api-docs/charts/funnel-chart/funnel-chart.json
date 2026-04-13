@@ -107,7 +107,28 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the funnel plot element"
+    },
+    "section": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual funnel section element"
+    },
+    "sectionFilled": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "a funnel section element if `variant=\"filled\"`"
+    },
+    "sectionOutlined": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "a funnel section element if `variant=\"outlined\"`"
+    },
+    "sectionLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "a funnel section label element"
+    }
+  },
   "slotDescriptions": {
     "axisLabel": "Custom component for axis label.",
     "axisLine": "Custom component for the axis main line.",

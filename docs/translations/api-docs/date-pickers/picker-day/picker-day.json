@@ -67,22 +67,6 @@
     },
     "today": { "description": "If <code>true</code>, today's day is highlighted." }
   },
-  "classDescriptions": {
-    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
-    "dayOutsideMonth": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`"
-    },
-    "fillerCell": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`"
-    },
-    "today": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if `disableHighlightToday=false` and `today=true`"
-    },
-    "selected": { "description": "State class applied to the root element if `selected=true`." },
-    "disabled": { "description": "State class applied to the root element if `disabled=true`." }
-  },
+  "classDescriptions": {},
   "slotDescriptions": {}
 }

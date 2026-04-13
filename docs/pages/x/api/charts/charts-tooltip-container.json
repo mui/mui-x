@@ -49,11 +49,11 @@
       "name": "root",
       "description": "The component that renders the root.",
       "default": "'div'",
-      "class": null
+      "class": "MuiChartsTooltip-root"
     }
   ],
   "classes": [],
-  "muiName": "MuiChartsTooltip",
+  "muiName": "MuiChartsTooltipContainer",
   "filename": "/packages/x-charts/src/ChartsTooltip/ChartsTooltipContainer.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>",

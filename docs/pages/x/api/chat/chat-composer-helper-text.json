@@ -15,9 +15,9 @@
     "import { ChatComposerHelperText } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerHelperText } from '@mui/x-chat';"
   ],
-  "slots": [{ "name": "helperText", "description": "", "class": null }],
+  "slots": [{ "name": "helperText", "description": "", "class": "MuiChatComposer-helperText" }],
   "classes": [],
-  "muiName": "MuiChatComposer",
+  "muiName": "MuiChatComposerHelperText",
   "filename": "/packages/x-chat/src/ChatComposer/ChatComposerHelperText.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li></ul>",

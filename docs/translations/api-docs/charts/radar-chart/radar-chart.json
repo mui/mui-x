@@ -126,7 +126,56 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "axisRoot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the radar axis root element"
+    },
+    "axisLine": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the radar axis line element"
+    },
+    "axisLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every radar axis label element"
+    },
+    "gridRadial": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every radial line element of the grid"
+    },
+    "gridDivider": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every divider element of the grid"
+    },
+    "gridStripe": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every stripe element of the grid"
+    },
+    "seriesRoot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the series plot root element"
+    },
+    "seriesArea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the series area element"
+    },
+    "seriesMark": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the series mark element"
+    },
+    "axisHighlightRoot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the axis highlight root element"
+    },
+    "axisHighlightLine": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the axis highlight line element"
+    },
+    "axisHighlightDot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every axis highlight dot element"
+    }
+  },
   "slotDescriptions": {
     "baseButton": "",
     "baseIconButton": "",

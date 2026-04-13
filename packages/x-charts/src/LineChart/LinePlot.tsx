@@ -17,14 +17,14 @@ import { useLinePlotData } from './useLinePlotData';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { lineClasses, useUtilityClasses } from './lineClasses';
 
-export interface LinePlotSlots extends LineElementSlots {}
+export interface LinePlotSlots extends LineElementSlots { }
 
-export interface LinePlotSlotProps extends LineElementSlotProps {}
+export interface LinePlotSlotProps extends LineElementSlotProps { }
 
 export interface LinePlotProps
   extends
-    React.SVGAttributes<SVGSVGElement>,
-    Pick<LineElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
+  React.SVGAttributes<SVGSVGElement>,
+  Pick<LineElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
   /**
    * Callback fired when a line item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

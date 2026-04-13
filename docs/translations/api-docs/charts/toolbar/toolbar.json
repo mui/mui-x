@@ -3,6 +3,8 @@
   "propDescriptions": {
     "render": { "description": "A function to customize rendering of the component." }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" }
+  },
   "slotDescriptions": {}
 }

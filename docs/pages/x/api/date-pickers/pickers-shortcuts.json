@@ -20,7 +20,7 @@
   ],
   "slots": [],
   "classes": [],
-  "muiName": "MuiPickersLayout",
+  "muiName": "MuiPickersShortcuts",
   "filename": "/packages/x-date-pickers/src/PickersShortcuts/PickersShortcuts.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/shortcuts/\">Shortcuts</a></li></ul>",

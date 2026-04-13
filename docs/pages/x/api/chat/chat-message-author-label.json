@@ -15,9 +15,9 @@
     "import { ChatMessageAuthorLabel } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageAuthorLabel } from '@mui/x-chat';"
   ],
-  "slots": [{ "name": "authorLabel", "description": "", "class": null }],
+  "slots": [{ "name": "authorLabel", "description": "", "class": "MuiChatMessage-authorLabel" }],
   "classes": [],
-  "muiName": "MuiChatMessage",
+  "muiName": "MuiChatMessageAuthorLabel",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageAuthorLabel.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",

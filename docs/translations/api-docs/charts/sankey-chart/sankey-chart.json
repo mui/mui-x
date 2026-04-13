@@ -71,7 +71,41 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "nodes": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the nodes container"
+    },
+    "nodeLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the node label container"
+    },
+    "links": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the links container"
+    },
+    "linkLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the link label container"
+    },
+    "node": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual node element"
+    },
+    "link": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual link element"
+    },
+    "nodeLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual node label element"
+    },
+    "linkLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual link label element"
+    }
+  },
   "slotDescriptions": {
     "baseButton": "",
     "baseIconButton": "",

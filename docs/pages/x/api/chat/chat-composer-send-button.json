@@ -15,9 +15,9 @@
     "import { ChatComposerSendButton } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerSendButton } from '@mui/x-chat';"
   ],
-  "slots": [{ "name": "sendButton", "description": "", "class": null }],
+  "slots": [{ "name": "sendButton", "description": "", "class": "MuiChatComposer-sendButton" }],
   "classes": [],
-  "muiName": "MuiChatComposer",
+  "muiName": "MuiChatComposerSendButton",
   "filename": "/packages/x-chat/src/ChatComposer/ChatComposerSendButton.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li></ul>",

@@ -4,7 +4,31 @@
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "line": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the main line element"
+    },
+    "tickContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "group including the tick and its label"
+    },
+    "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
+    "tickLabel": {
+      "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap."
+    },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group containing the axis label"
+    },
+    "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
+    "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" },
+    "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" },
+    "bottom": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the bottom axis" },
+    "left": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the left axis" },
+    "right": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the right axis" }
+  },
   "slotDescriptions": {
     "axisLabel": "Custom component for axis label.",
     "axisLine": "Custom component for the axis main line.",

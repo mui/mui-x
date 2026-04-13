@@ -16,9 +16,9 @@
     "import { ChatComposerLabel } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerLabel } from '@mui/x-chat';"
   ],
-  "slots": [{ "name": "label", "description": "", "class": null }],
+  "slots": [{ "name": "label", "description": "", "class": "MuiChatComposer-label" }],
   "classes": [],
-  "muiName": "MuiChatComposer",
+  "muiName": "MuiChatComposerLabel",
   "filename": "/packages/x-chat/src/ChatComposer/ChatComposerLabel.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li></ul>",

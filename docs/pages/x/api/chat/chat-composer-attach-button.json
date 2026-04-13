@@ -16,11 +16,11 @@
     "import { ChatComposerAttachButton } from '@mui/x-chat';"
   ],
   "slots": [
-    { "name": "attachButton", "description": "", "class": null },
+    { "name": "attachButton", "description": "", "class": "MuiChatComposer-attachButton" },
     { "name": "attachInput", "description": "", "class": null }
   ],
   "classes": [],
-  "muiName": "MuiChatComposer",
+  "muiName": "MuiChatComposerAttachButton",
   "filename": "/packages/x-chat/src/ChatComposer/ChatComposerAttachButton.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/behavior/attachments/\">Chat - Attachments</a></li></ul>",

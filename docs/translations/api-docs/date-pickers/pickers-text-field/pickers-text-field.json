@@ -38,16 +38,7 @@
     "startAdornment": { "description": "Start <code>InputAdornment</code> for this component." },
     "variant": { "description": "The variant to use." }
   },
-  "classDescriptions": {
-    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
-    "focused": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element if focused"
-    },
-    "disabled": { "description": "State class applied to the root element if `disabled=true`." },
-    "error": { "description": "State class applied to the root element if `error=true`." },
-    "required": { "description": "State class applied to the root element id `required=true`" }
-  },
+  "classDescriptions": {},
   "slotDescriptions": {
     "formHelperText": "The component used for the form helper text slot.",
     "htmlInput": "The component rendered as the underlying hidden `<input>` element.",

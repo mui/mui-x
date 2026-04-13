@@ -28,7 +28,7 @@
     { "name": "line", "description": "", "class": null }
   ],
   "classes": [],
-  "muiName": "MuiChatMessage",
+  "muiName": "MuiChatDateDivider",
   "filename": "/packages/x-chat/src/ChatMessage/ChatDateDivider.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",

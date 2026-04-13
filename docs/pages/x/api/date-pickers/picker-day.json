@@ -77,44 +77,7 @@
     "import { PickerDay } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [],
-  "classes": [
-    {
-      "key": "root",
-      "className": "MuiPickerDay-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "dayOutsideMonth",
-      "className": "MuiPickerDay-dayOutsideMonth",
-      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`.",
-      "isGlobal": false
-    },
-    {
-      "key": "fillerCell",
-      "className": "MuiPickerDay-fillerCell",
-      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`.",
-      "isGlobal": false
-    },
-    {
-      "key": "today",
-      "className": "MuiPickerDay-today",
-      "description": "Styles applied to the root element if `disableHighlightToday=false` and `today=true`.",
-      "isGlobal": false
-    },
-    {
-      "key": "selected",
-      "className": "Mui-selected",
-      "description": "State class applied to the root element if `selected=true`.",
-      "isGlobal": true
-    },
-    {
-      "key": "disabled",
-      "className": "Mui-disabled",
-      "description": "State class applied to the root element if `disabled=true`.",
-      "isGlobal": true
-    }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiPickerDay",

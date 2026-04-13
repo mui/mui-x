@@ -26,35 +26,12 @@
     "import { PickersSectionList } from '@mui/x-date-pickers-pro';"
   ],
   "slots": [
-    { "name": "root", "description": "", "class": "MuiPickersSectionList-root" },
-    { "name": "section", "description": "", "class": "MuiPickersSectionList-section" },
-    {
-      "name": "sectionContent",
-      "description": "",
-      "class": "MuiPickersSectionList-sectionContent"
-    },
+    { "name": "root", "description": "", "class": null },
+    { "name": "section", "description": "", "class": null },
+    { "name": "sectionContent", "description": "", "class": null },
     { "name": "sectionSeparator", "description": "", "class": null }
   ],
-  "classes": [
-    {
-      "key": "root",
-      "className": "MuiPickersSectionList-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "section",
-      "className": "MuiPickersSectionList-section",
-      "description": "Styles applied to the container of a section.",
-      "isGlobal": false
-    },
-    {
-      "key": "sectionContent",
-      "className": "MuiPickersSectionList-sectionContent",
-      "description": "Styles applied to the content of a section.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiPickersSectionList",
   "filename": "/packages/x-date-pickers/src/PickersSectionList/PickersSectionList.tsx",
   "inheritance": null,

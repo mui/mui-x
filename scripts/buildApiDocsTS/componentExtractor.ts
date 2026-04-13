@@ -218,12 +218,27 @@ export function extractComponentApi(
   // Extract slots
   const slots = extractSlots(propsType, checker, comp.name, comp.section);
 
-  // Extract classes
-  const classes = extractClasses(comp.filePath, comp.name, checker, program);
+  // Metadata (muiName needed for class extraction)
+  const muiNameEarly = extractMuiName(comp.filePath, comp.name);
 
-  // Link slots to classes
+  // Extract classes
+  const classes = extractClasses(
+    path.dirname(comp.filePath),
+    comp.name,
+    muiNameEarly,
+    checker,
+    program,
+  );
+
+  // For slot → class linking, also consider classes from any *Classes.ts file in the
+  // component's folder (not just the ones "owned" by this component). This handles
+  // sub-components like AreaPlot whose slots reference the parent chart's classes
+  // (e.g. MuiLineChart-area).
+  const slotLinkClasses = classes.length
+    ? classes
+    : extractAllFolderClasses(path.dirname(comp.filePath), checker, program);
   for (const slot of slots) {
-    const matchingClass = classes.find((c) => c.key === slot.name);
+    const matchingClass = slotLinkClasses.find((c) => c.key === slot.name);
     if (matchingClass) {
       slot.class = matchingClass.className;
     }
@@ -243,7 +258,7 @@ export function extractComponentApi(
 
   // Metadata
   const conformance = parseConformanceTest(comp.filePath);
-  const muiName = extractMuiName(comp.filePath, comp.name);
+  const muiName = muiNameEarly;
 
   // Compute imports
   const subdirSuffix = getSubdirectoryImportSuffix(comp.filePath, comp.packageDir);
@@ -446,55 +461,124 @@ export function stripOptionalType(type: ts.Type, checker: ts.TypeChecker): ts.Ty
 // ---------------------------------------------------------------------------
 
 export function extractClasses(
-  filePath: string,
+  dir: string,
   componentName: string,
+  muiName: string,
   checker: ts.TypeChecker,
   program: ts.Program,
 ): ClassInfo[] {
-  // Look for the classes file
-  const dir = path.dirname(filePath);
-  const classesFileName = `${componentName[0].toLowerCase()}${componentName.slice(1)}Classes`;
-  const candidates = [
-    path.join(dir, `${classesFileName}.ts`),
-    path.join(dir, `${classesFileName}.tsx`),
-    path.join(dir, `${componentName}Classes.ts`),
-    path.join(dir, `${componentName}Classes.tsx`),
-  ];
-
-  let classesFile: string | undefined;
-  for (const candidate of candidates) {
-    if (fs.existsSync(candidate)) {
-      classesFile = candidate;
-      break;
-    }
-  }
-  if (!classesFile) {
+  if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
     return [];
   }
+
+  // Priority 1: classes file whose name matches the component (e.g. piecewiseColorLegendClasses.ts
+  // for PiecewiseColorLegend). In this case, the component's muiName is the authoritative prefix,
+  // regardless of what `generateUtilityClasses` was called with (source files sometimes pass a
+  // typo'd string there).
+  const lowerFirst = componentName[0].toLowerCase() + componentName.slice(1);
+  const nameMatchFile = [
+    path.join(dir, `${lowerFirst}Classes.ts`),
+    path.join(dir, `${lowerFirst}Classes.tsx`),
+  ].find((p) => fs.existsSync(p));
+  if (nameMatchFile) {
+    const result = buildClassesFromFile(nameMatchFile, muiName, checker, program);
+    if (result) {
+      return result;
+    }
+  }
+
+  // Priority 2: scan folder for *Classes.ts whose `generateUtilityClasses('Mui<X>', ...)`
+  // prefix matches the component's muiName. Handles cases like barClasses.ts → MuiBarChart.
+  for (const file of fs.readdirSync(dir)) {
+    if (!file.endsWith('Classes.ts') && !file.endsWith('Classes.tsx')) {
+      continue;
+    }
+    const classesFile = path.join(dir, file);
+    if (classesFile === nameMatchFile) {
+      continue;
+    }
+    const content = fs.readFileSync(classesFile, 'utf8');
+    const prefixMatch = content.match(/generateUtilityClasses\(\s*'(Mui\w+)'/);
+    if (!prefixMatch || prefixMatch[1] !== muiName) {
+      continue;
+    }
+    const result = buildClassesFromFile(classesFile, muiName, checker, program);
+    if (result) {
+      return result;
+    }
+  }
+
+  return [];
+}
+
+/**
+ * Collects ClassInfo entries from every *Classes.ts file in the folder, using whatever
+ * prefix each file's `generateUtilityClasses('Mui<X>', ...)` call specifies. Used for
+ * slot → class linking on sub-components that don't "own" classes themselves.
+ */
+function extractAllFolderClasses(
+  dir: string,
+  checker: ts.TypeChecker,
+  program: ts.Program,
+): ClassInfo[] {
+  if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
+    return [];
+  }
+  const result: ClassInfo[] = [];
+  for (const file of fs.readdirSync(dir)) {
+    if (!file.endsWith('Classes.ts') && !file.endsWith('Classes.tsx')) {
+      continue;
+    }
+    const classesFile = path.join(dir, file);
+    const content = fs.readFileSync(classesFile, 'utf8');
+    const prefixMatch = content.match(/generateUtilityClasses\(\s*'(Mui\w+)'/);
+    if (!prefixMatch) {
+      continue;
+    }
+    const classes = buildClassesFromFile(classesFile, prefixMatch[1], checker, program);
+    if (classes) {
+      result.push(...classes);
+    }
+  }
+  return result;
+}
+
+function buildClassesFromFile(
+  classesFile: string,
+  prefix: string,
+  checker: ts.TypeChecker,
+  program: ts.Program,
+): ClassInfo[] | null {
+  const content = fs.readFileSync(classesFile, 'utf8');
+  // Find the interface name via the const declaration: `export const xxxClasses: XxxClasses = ...`
+  const ifaceMatch = content.match(/export\s+const\s+\w+\s*:\s*(\w+Classes)\s*=/);
+  if (!ifaceMatch) {
+    return null;
+  }
+  const classesInterfaceName = ifaceMatch[1];
 
   const sourceFile = program.getSourceFile(classesFile);
   if (!sourceFile) {
-    return [];
+    return null;
   }
-
   const moduleSymbol = checker.getSymbolAtLocation(sourceFile);
   if (!moduleSymbol) {
-    return [];
+    return null;
   }
-
   const exports = checker.getExportsOfModule(moduleSymbol);
-
-  // Find the Classes interface
-  const classesInterfaceName = `${componentName}Classes`;
-  const classesSymbol = exports.find((exportSymbol) => exportSymbol.name === classesInterfaceName);
+  const classesSymbol = exports.find((s) => s.name === classesInterfaceName);
   if (!classesSymbol) {
-    return [];
+    return null;
   }
-
   const classesType = checker.getDeclaredTypeOfSymbol(classesSymbol);
-  const properties = classesType.getProperties();
+  return buildClassInfos(classesType.getProperties(), prefix, checker);
+}
 
-  const muiName = extractMuiName(filePath, componentName);
+function buildClassInfos(
+  properties: ts.Symbol[],
+  prefix: string,
+  checker: ts.TypeChecker,
+): ClassInfo[] {
   const classes: ClassInfo[] = [];
 
   const GLOBAL_STATES = new Set([
@@ -518,8 +602,8 @@ export function extractClasses(
     }
 
     const isGlobal = GLOBAL_STATES.has(prop.name);
-    const prefix = isGlobal ? 'Mui' : muiName;
-    const className = `${prefix}-${prop.name}`;
+    const classPrefix = isGlobal ? 'Mui' : prefix;
+    const className = `${classPrefix}-${prop.name}`;
 
     classes.push({
       key: prop.name,
@@ -538,10 +622,22 @@ export function extractClasses(
 
 export function extractMuiName(filePath: string, componentName: string): string {
   const content = fs.readFileSync(filePath, 'utf8');
-  // Look for name: 'MuiXxx' in styled() or useUtilityClasses
-  const match = content.match(/name:\s*'(Mui\w+)'/);
-  if (match) {
-    return match[1];
+  // Prefer useThemeProps({ props: ..., name: 'MuiXxx' }) — this is the canonical
+  // component-level name.
+  const themeMatch = content.match(/useThemeProps\s*\(\s*\{[^}]*name:\s*'(Mui\w+)'/);
+  if (themeMatch) {
+    return themeMatch[1];
+  }
+  // Fall back to `name: 'MuiXxx'` inside a styled() call, but only accept it if
+  // the name actually corresponds to this component (i.e. ends with the component
+  // name). This prevents sub-components like HeatmapCell (styled with the parent's
+  // namespace 'MuiHeatmap') from being labeled with the parent's name.
+  const styledMatches = content.matchAll(/name:\s*'(Mui\w+)'/g);
+  for (const m of styledMatches) {
+    const x = m[1].slice(3); // strip "Mui"
+    if (x === componentName || x.endsWith(componentName)) {
+      return m[1];
+    }
   }
   return `Mui${componentName}`;
 }

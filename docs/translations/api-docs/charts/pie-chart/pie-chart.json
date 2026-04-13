@@ -81,7 +81,30 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "series": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the `g` element that contains all pie arcs of a series"
+    },
+    "seriesLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the `g` element that contains all pie arc labels of a series"
+    },
+    "arc": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual pie arc element"
+    },
+    "arcLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual pie arc label element"
+    },
+    "animate": { "description": "Styles applied when animation is not skipped." },
+    "focusIndicator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the focused pie arc element"
+    }
+  },
   "slotDescriptions": {
     "baseButton": "",
     "baseIconButton": "",

@@ -32,7 +32,7 @@
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the Picker views.",
       "default": "PickersActionBar",
-      "class": "MuiPickersLayout-actionBar"
+      "class": null
     },
     {
       "name": "layout",
@@ -43,63 +43,16 @@
       "name": "shortcuts",
       "description": "Custom component for the shortcuts.",
       "default": "PickersShortcuts",
-      "class": "MuiPickersLayout-shortcuts"
+      "class": null
     },
-    {
-      "name": "tabs",
-      "description": "Tabs enabling toggling between views.",
-      "class": "MuiPickersLayout-tabs"
-    },
+    { "name": "tabs", "description": "Tabs enabling toggling between views.", "class": null },
     {
       "name": "toolbar",
       "description": "Custom component for the toolbar.\nIt is placed above the Picker views.",
-      "class": "MuiPickersLayout-toolbar"
+      "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "root",
-      "className": "MuiPickersLayout-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "landscape",
-      "className": "MuiPickersLayout-landscape",
-      "description": "Styles applied to the root element in landscape orientation.",
-      "isGlobal": false
-    },
-    {
-      "key": "contentWrapper",
-      "className": "MuiPickersLayout-contentWrapper",
-      "description": "Styles applied to the contentWrapper element (which contains the tabs and the view itself).",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbar",
-      "className": "MuiPickersLayout-toolbar",
-      "description": "Styles applied to the toolbar.",
-      "isGlobal": false
-    },
-    {
-      "key": "actionBar",
-      "className": "MuiPickersLayout-actionBar",
-      "description": "Styles applied to the action bar.",
-      "isGlobal": false
-    },
-    {
-      "key": "tabs",
-      "className": "MuiPickersLayout-tabs",
-      "description": "Styles applied to the tabs.",
-      "isGlobal": false
-    },
-    {
-      "key": "shortcuts",
-      "className": "MuiPickersLayout-shortcuts",
-      "description": "Styles applied to the shortcuts container.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiPickersLayout",
   "filename": "/packages/x-date-pickers/src/PickersLayout/PickersLayout.tsx",
   "inheritance": null,

@@ -33,11 +33,11 @@
     "import { ChatMessageContent } from '@mui/x-chat';"
   ],
   "slots": [
-    { "name": "bubble", "description": "", "class": null },
-    { "name": "content", "description": "", "class": null }
+    { "name": "bubble", "description": "", "class": "MuiChatMessage-bubble" },
+    { "name": "content", "description": "", "class": "MuiChatMessage-content" }
   ],
   "classes": [],
-  "muiName": "MuiChatMessage",
+  "muiName": "MuiChatMessageContent",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageContent.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/ai-and-agents/reasoning/\">Chat - Reasoning</a></li>\n<li><a href=\"/x/react-chat/ai-and-agents/step-tracking/\">Chat - Step Tracking</a></li>\n<li><a href=\"/x/react-chat/ai-and-agents/tool-calling/\">Chat - Tool Calling</a></li>\n<li><a href=\"/x/react-chat/display/message-parts/custom-parts/\">Chat - Custom Parts</a></li>\n<li><a href=\"/x/react-chat/display/message-parts/files-and-images/\">Chat - Files & Images</a></li>\n<li><a href=\"/x/react-chat/display/message-parts/sources-and-citations/\">Chat - Sources & Citations</a></li>\n<li><a href=\"/x/react-chat/display/message-parts/text-and-markdown/\">Chat - Text & Markdown</a></li></ul>",

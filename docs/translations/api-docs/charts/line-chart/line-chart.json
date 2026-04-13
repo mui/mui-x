@@ -132,7 +132,31 @@
       "description": "The configuration of the y-axes.\nIf not provided, a default axis config is used.\nAn array of AxisConfig objects."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "area": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the area element" },
+    "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the line element" },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
+    "markAnimate": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "a mark element when it is animated"
+    },
+    "highlight": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the highlight element"
+    },
+    "areaPlot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AreaPlot root element"
+    },
+    "linePlot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the LinePlot root element"
+    },
+    "markPlot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the MarkPlot root element"
+    }
+  },
   "slotDescriptions": {
     "area": "The component that renders the area.",
     "axisLabel": "Custom component for axis label.",

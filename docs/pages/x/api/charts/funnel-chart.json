@@ -208,7 +208,38 @@
       "class": null
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiFunnelChart-root",
+      "description": "Styles applied to the funnel plot element.",
+      "isGlobal": false
+    },
+    {
+      "key": "section",
+      "className": "MuiFunnelChart-section",
+      "description": "Styles applied to an individual funnel section element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sectionFilled",
+      "className": "MuiFunnelChart-sectionFilled",
+      "description": "Styles applied to a funnel section element if `variant=\"filled\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sectionOutlined",
+      "className": "MuiFunnelChart-sectionOutlined",
+      "description": "Styles applied to a funnel section element if `variant=\"outlined\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sectionLabel",
+      "className": "MuiFunnelChart-sectionLabel",
+      "description": "Styles applied to a funnel section label element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiFunnelChart",

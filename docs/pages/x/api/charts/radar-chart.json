@@ -175,7 +175,80 @@
       "class": null
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "axisRoot",
+      "className": "MuiRadarChart-axisRoot",
+      "description": "Styles applied to the radar axis root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "axisLine",
+      "className": "MuiRadarChart-axisLine",
+      "description": "Styles applied to the radar axis line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "axisLabel",
+      "className": "MuiRadarChart-axisLabel",
+      "description": "Styles applied to every radar axis label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "gridRadial",
+      "className": "MuiRadarChart-gridRadial",
+      "description": "Styles applied to every radial line element of the grid.",
+      "isGlobal": false
+    },
+    {
+      "key": "gridDivider",
+      "className": "MuiRadarChart-gridDivider",
+      "description": "Styles applied to every divider element of the grid.",
+      "isGlobal": false
+    },
+    {
+      "key": "gridStripe",
+      "className": "MuiRadarChart-gridStripe",
+      "description": "Styles applied to every stripe element of the grid.",
+      "isGlobal": false
+    },
+    {
+      "key": "seriesRoot",
+      "className": "MuiRadarChart-seriesRoot",
+      "description": "Styles applied to the series plot root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "seriesArea",
+      "className": "MuiRadarChart-seriesArea",
+      "description": "Styles applied to the series area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "seriesMark",
+      "className": "MuiRadarChart-seriesMark",
+      "description": "Styles applied to the series mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "axisHighlightRoot",
+      "className": "MuiRadarChart-axisHighlightRoot",
+      "description": "Styles applied to the axis highlight root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "axisHighlightLine",
+      "className": "MuiRadarChart-axisHighlightLine",
+      "description": "Styles applied to the axis highlight line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "axisHighlightDot",
+      "className": "MuiRadarChart-axisHighlightDot",
+      "description": "Styles applied to every axis highlight dot element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiRadarChart",

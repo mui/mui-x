@@ -17,7 +17,7 @@
   ],
   "slots": [
     { "name": "edited", "description": "", "class": null },
-    { "name": "meta", "description": "", "class": null },
+    { "name": "meta", "description": "", "class": "MuiChatMessage-meta" },
     { "name": "status", "description": "", "class": null },
     {
       "name": "streamingProgress",
@@ -38,7 +38,7 @@
     { "name": "timestamp", "description": "", "class": null }
   ],
   "classes": [],
-  "muiName": "MuiChatMessage",
+  "muiName": "MuiChatMessageMeta",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageMeta.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",

@@ -15,9 +15,9 @@
     "import { ChatComposerToolbar } from '@mui/x-chat/ChatComposer';",
     "import { ChatComposerToolbar } from '@mui/x-chat';"
   ],
-  "slots": [{ "name": "toolbar", "description": "", "class": null }],
+  "slots": [{ "name": "toolbar", "description": "", "class": "MuiChatComposer-toolbar" }],
   "classes": [],
-  "muiName": "MuiChatComposer",
+  "muiName": "MuiChatComposerToolbar",
   "filename": "/packages/x-chat/src/ChatComposer/ChatComposerToolbar.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li></ul>",

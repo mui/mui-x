@@ -12,7 +12,14 @@
     "import { Toolbar } from '@mui/x-charts-premium';"
   ],
   "slots": [],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChartsToolbar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiChartsToolbar",
   "filename": "/packages/x-charts/src/Toolbar/Toolbar.tsx",
   "inheritance": null,

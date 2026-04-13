@@ -20,7 +20,7 @@
   ],
   "slots": [],
   "classes": [],
-  "muiName": "MuiDataGrid",
+  "muiName": "MuiGridChartsPanel",
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-premium/src/components/chartsPanel/GridChartsPanel.tsx",
   "inheritance": null,

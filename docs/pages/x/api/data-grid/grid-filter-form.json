@@ -52,7 +52,7 @@
   ],
   "slots": [],
   "classes": [],
-  "muiName": "MuiDataGrid",
+  "muiName": "MuiGridFilterForm",
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/panel/filterPanel/GridFilterForm.tsx",
   "inheritance": null,

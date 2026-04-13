@@ -89,13 +89,13 @@
       "name": "root",
       "description": "Element rendered at the root.",
       "default": "MultiInputRangeFieldRoot",
-      "class": "MuiMultiInputDateRangeField-root"
+      "class": null
     },
     {
       "name": "separator",
       "description": "Element rendered between the two inputs.",
       "default": "MultiInputRangeFieldSeparator",
-      "class": "MuiMultiInputDateRangeField-separator"
+      "class": null
     },
     {
       "name": "textField",
@@ -104,20 +104,7 @@
       "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "root",
-      "className": "MuiMultiInputDateRangeField-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "separator",
-      "className": "MuiMultiInputDateRangeField-separator",
-      "description": "Styles applied to the separator element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiMultiInputDateRangeField",

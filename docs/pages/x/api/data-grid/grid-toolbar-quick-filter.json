@@ -30,7 +30,7 @@
   ],
   "slots": [],
   "classes": [],
-  "muiName": "MuiDataGrid",
+  "muiName": "MuiGridToolbarQuickFilter",
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/toolbar/GridToolbarQuickFilter.tsx",
   "inheritance": null,
