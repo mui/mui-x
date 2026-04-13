@@ -5,6 +5,7 @@ import * as semver from 'semver';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { withDeploymentConfig } from '@mui/internal-docs-infra/withDocsInfra';
+import type { LoaderOptions as PrecomputedTypesLoaderOptions } from '@mui/internal-docs-infra/pipeline/loadPrecomputedTypes';
 import { findPages } from './src/modules/utils/find';
 import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
@@ -165,6 +166,20 @@ export default withDeploymentConfig({
             test: /\.+(js|jsx|mjs|ts|tsx)$/,
             include: [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/],
             use: options.defaultLoaders.babel,
+          },
+          // New types pipeline (POC) — intercept `types.*.ts` next to API pages and
+          // precompute props metadata at build time via the docs-infra loader.
+          {
+            test: /[/\\]docs[/\\]pages[/\\]x[/\\]api[/\\].+[/\\]types\..*\.ts$/,
+            use: [
+              options.defaultLoaders.babel,
+              {
+                loader: '@mui/internal-docs-infra/pipeline/loadPrecomputedTypes',
+                options: {
+                  socketDir: '.next/docs-infra',
+                } satisfies PrecomputedTypesLoaderOptions,
+              },
+            ],
           },
           {
             test: /\.(ts|tsx)$/,
