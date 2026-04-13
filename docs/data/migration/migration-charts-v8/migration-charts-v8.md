@@ -175,7 +175,7 @@ The minimum supported version of `@mui/material` and `@mui/system` has been upda
 The v5 and v6 versions are no longer supported.
 
 If you are using `@mui/material` v5 or v6, you need to upgrade to at least v7.
-Follow the [Material UI migration guide](/material-ui/migration/upgrade-to-v9/) to upgrade your implementation.
+Follow the [Material UI migration guide](/material-ui/migration/upgrade-to-v9/) to upgrade your implementation.
 
 ```diff
 -"@mui/material": "^5.x.x",
