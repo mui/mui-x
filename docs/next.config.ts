@@ -69,7 +69,9 @@ export default withDeploymentConfig({
   },
   experimental: {
     esmExternals: undefined,
+    externalDir: true,
   },
+  transpilePackages: ['@mui/internal-core-docs', '@mui/base', '@mui/utils'],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
@@ -114,9 +116,6 @@ export default withDeploymentConfig({
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
-          '@mui/x-license': path.resolve(currentDirectory, '../packages/x-license/src'),
-          '@mui/x-chat-headless': path.resolve(currentDirectory, '../packages/x-chat-headless/src'),
-          '@mui/x-chat': path.resolve(currentDirectory, '../packages/x-chat/src'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
       },
