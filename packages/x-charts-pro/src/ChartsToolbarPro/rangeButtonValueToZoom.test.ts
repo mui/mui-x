@@ -9,7 +9,6 @@ const timeParams: RangeButtonFunctionParams = {
   scaleType: 'time',
   data: undefined,
   domain: { min: domainMin, max: domainMax },
-  zoomed: { min: domainMin, max: domainMax },
 };
 
 describe('rangeButtonValueToZoom', () => {
@@ -32,16 +31,12 @@ describe('rangeButtonValueToZoom', () => {
       expect(result).to.deep.equal({ start: 25, end: 75 });
     });
 
-    it('should clamp results below 0', () => {
-      const result = rangeButtonValueToZoom(() => ({ start: -20, end: 80 }), timeParams);
-      expect(result.start).to.equal(0);
-      expect(result.end).to.equal(80);
-    });
+    it('should pass through results outside 0-100 (caller controls zoom bounds)', () => {
+      const below = rangeButtonValueToZoom(() => ({ start: -20, end: 80 }), timeParams);
+      expect(below).to.deep.equal({ start: -20, end: 80 });
 
-    it('should clamp results above 100', () => {
-      const result = rangeButtonValueToZoom(() => ({ start: 10, end: 150 }), timeParams);
-      expect(result.start).to.equal(10);
-      expect(result.end).to.equal(100);
+      const above = rangeButtonValueToZoom(() => ({ start: 10, end: 150 }), timeParams);
+      expect(above).to.deep.equal({ start: 10, end: 150 });
     });
 
     it('should receive data and scaleType for ordinal axes', () => {
@@ -50,7 +45,6 @@ describe('rangeButtonValueToZoom', () => {
         scaleType: 'band',
         data,
         domain: { min: 0, max: 2 },
-        zoomed: { min: 0, max: 2 },
       };
       const fn = vi.fn((_p: RangeButtonFunctionParams) => ({ start: 0, end: 100 }));
       rangeButtonValueToZoom(fn, ordinalParams);
@@ -83,13 +77,13 @@ describe('rangeButtonValueToZoom', () => {
       expect(result.end).to.equal(100);
     });
 
-    it('should clamp dates outside the domain', () => {
+    it('should pass through dates outside the domain without clamping', () => {
       const result = rangeButtonValueToZoom(
         [new Date(2020, 0, 1), new Date(2030, 0, 1)],
         timeParams,
       );
-      expect(result.start).to.equal(0);
-      expect(result.end).to.equal(100);
+      expect(result.start).to.be.lessThan(0);
+      expect(result.end).to.be.greaterThan(100);
     });
 
     it('should handle dates partially outside the domain', () => {
@@ -97,7 +91,7 @@ describe('rangeButtonValueToZoom', () => {
         [new Date(2020, 0, 1), new Date(2024, 0, 1)],
         timeParams,
       );
-      expect(result.start).to.equal(0);
+      expect(result.start).to.be.lessThan(0);
       expect(result.end).to.be.closeTo(50, 0.1);
     });
   });
@@ -170,9 +164,9 @@ describe('rangeButtonValueToZoom', () => {
       expect(result.end).to.equal(100);
     });
 
-    it('should clamp start to 0 when interval exceeds domain', () => {
+    it('should let start go negative when interval exceeds domain', () => {
       const result = rangeButtonValueToZoom({ unit: 'year', step: 10 }, timeParams);
-      expect(result.start).to.equal(0);
+      expect(result.start).to.be.lessThan(0);
       expect(result.end).to.equal(100);
     });
 
@@ -188,7 +182,6 @@ describe('rangeButtonValueToZoom', () => {
       scaleType: 'band',
       data: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
       domain: { min: 0, max: 9 },
-      zoomed: { min: 0, max: 9 },
     };
 
     it('should reset to full range with null', () => {
@@ -222,7 +215,6 @@ describe('rangeButtonValueToZoom', () => {
       scaleType: 'band',
       data: monthlyDates,
       domain: { min: 0, max: 11 },
-      zoomed: { min: 0, max: 11 },
     };
 
     it('should match absolute date range to data indices', () => {
@@ -264,26 +256,63 @@ describe('rangeButtonValueToZoom', () => {
       expect(result.end).to.equal(100);
     });
 
+    it('should skip missing (non-date) items and still match valid dates', () => {
+      const result = rangeButtonValueToZoom(
+        [new Date(2024, 3, 1), new Date(2024, 8, 1)],
+        {
+          scaleType: 'band',
+          // Index 2 is a missing value (null) mixed in with valid dates.
+          data: [
+            new Date(2024, 0, 1),
+            new Date(2024, 3, 1),
+            null,
+            new Date(2024, 8, 1),
+            new Date(2024, 11, 1),
+          ],
+          domain: { min: 0, max: 4 },
+        },
+      );
+      expect(result.start).to.be.closeTo((1 / 4) * 100, 0.1);
+      expect(result.end).to.be.closeTo((3 / 4) * 100, 0.1);
+    });
+
     it('should work with date strings', () => {
       const result = rangeButtonValueToZoom([new Date(2024, 3, 1), new Date(2024, 6, 1)], {
         scaleType: 'band',
         data: ['2024-01-01', '2024-04-01', '2024-07-01', '2024-10-01'],
         domain: { min: 0, max: 3 },
-        zoomed: { min: 0, max: 3 },
       });
       expect(result.start).to.be.closeTo((1 / 3) * 100, 0.1);
       expect(result.end).to.be.closeTo((2 / 3) * 100, 0.1);
     });
 
-    it('should fall back to continuous logic for non-date-like data', () => {
-      const result = rangeButtonValueToZoom([new Date(2024, 0, 1), new Date(2024, 6, 1)], {
-        scaleType: 'band',
-        data: ['A', 'B', 'C', 'D', 'E'],
-        domain: { min: 0, max: 4 },
-        zoomed: { min: 0, max: 4 },
-      });
-      expect(result.start).to.be.a('number');
-      expect(result.end).to.be.a('number');
+    it('should warn and fall back to continuous logic for non-date-like data', () => {
+      let result: { start: number; end: number } | undefined;
+      expect(() => {
+        result = rangeButtonValueToZoom([new Date(2024, 0, 1), new Date(2024, 6, 1)], {
+          scaleType: 'band',
+          data: ['A', 'B', 'C', 'D', 'E'],
+          domain: { min: 0, max: 4 },
+        });
+      }).toWarnDev(
+        [
+          'MUI X Charts: Range button received a date value for an ordinal axis whose data could not be parsed as dates.',
+          'The zoom range may not match the intended selection. Provide date-like axis data or use a function value.',
+        ].join('\n'),
+      );
+      expect(result!.start).to.be.a('number');
+      expect(result!.end).to.be.a('number');
+    });
+
+    it('should warn when the range end is before its start', () => {
+      expect(() => {
+        rangeButtonValueToZoom([new Date(2024, 6, 1), new Date(2024, 0, 1)], ordinalDateParams);
+      }).toWarnDev(
+        [
+          'MUI X Charts: Range button received a date range whose end is before its start.',
+          'This produces an empty zoom range.',
+        ].join('\n'),
+      );
     });
   });
 });

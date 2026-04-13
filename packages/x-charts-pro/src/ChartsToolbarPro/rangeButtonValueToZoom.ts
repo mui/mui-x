@@ -1,3 +1,5 @@
+import { warnOnce } from '@mui/x-internals/warning';
+
 /**
  * A calendar interval unit for range buttons.
  */
@@ -77,45 +79,23 @@ function toTimestamp(val: unknown): number | undefined {
 }
 
 /**
- * Finds the first index in `timestamps` where the value is >= `target`.
- * Returns 0 if all values are greater, or `timestamps.length - 1` if all are smaller.
- */
-function findFirstIndexGte(timestamps: number[], target: number): number {
-  for (let i = 0; i < timestamps.length; i += 1) {
-    if (timestamps[i] >= target) {
-      return i;
-    }
-  }
-  return timestamps.length - 1;
-}
-
-/**
- * Finds the last index in `timestamps` where the value is <= `target`.
- * Returns `timestamps.length - 1` if all values are smaller, or 0 if all are greater.
- */
-function findLastIndexLte(timestamps: number[], target: number): number {
-  for (let i = timestamps.length - 1; i >= 0; i -= 1) {
-    if (timestamps[i] <= target) {
-      return i;
-    }
-  }
-  return 0;
-}
-
-/**
  * Converts ordinal data to timestamps.
- * Returns `undefined` if fewer than 2 items can be converted.
+ * Items that cannot be converted are kept as `NaN` so their index is preserved.
+ * Returns `undefined` if fewer than 2 items could be converted.
  */
 function toTimestampArray(data: readonly unknown[]): number[] | undefined {
-  const timestamps: number[] = [];
+  const timestamps: number[] = new Array(data.length);
+  let convertedItems = 0;
   for (let i = 0; i < data.length; i += 1) {
     const ts = toTimestamp(data[i]);
-    if (ts === undefined) {
-      return undefined;
+    if (ts !== undefined) {
+      convertedItems += 1;
+      timestamps[i] = ts;
+    } else {
+      timestamps[i] = Number.NaN;
     }
-    timestamps.push(ts);
   }
-  return timestamps.length >= 2 ? timestamps : undefined;
+  return convertedItems >= 2 ? timestamps : undefined;
 }
 
 /**
@@ -129,7 +109,6 @@ function toTimestampArray(data: readonly unknown[]): number[] | undefined {
  * @param params.scaleType The scale type of the axis.
  * @param params.data The axis data values (for ordinal axes).
  * @param params.domain The full domain bounds.
- * @param params.zoomed The current zoomed-in bounds.
  * @returns The zoom start and end percentages (0-100).
  */
 export function rangeButtonValueToZoom(
@@ -142,10 +121,13 @@ export function rangeButtonValueToZoom(
 
   if (typeof value === 'function') {
     const result = value(params);
-    return {
-      start: Math.max(0, Math.min(100, result.start)),
-      end: Math.max(0, Math.min(100, result.end)),
-    };
+    if (process.env.NODE_ENV !== 'production' && result.end < result.start) {
+      warnOnce([
+        `MUI X Charts: Range button function returned an end value (${result.end}) lower than the start value (${result.start}).`,
+        'This likely produces an unexpected zoom range.',
+      ]);
+    }
+    return { start: result.start, end: result.end };
   }
 
   const {
@@ -157,26 +139,44 @@ export function rangeButtonValueToZoom(
   const timestamps = ordinalData ? toTimestampArray(ordinalData) : undefined;
 
   if (timestamps) {
-    const itemCount = timestamps.length;
-    const maxIndex = itemCount - 1;
+    const maxIndex = timestamps.length - 1;
 
     if (Array.isArray(value)) {
-      const startIdx = findFirstIndexGte(timestamps, value[0].getTime());
-      const endIdx = findLastIndexLte(timestamps, value[1].getTime());
+      const startTarget = value[0].getTime();
+      const endTarget = value[1].getTime();
+      if (process.env.NODE_ENV !== 'production' && endTarget < startTarget) {
+        warnOnce([
+          'MUI X Charts: Range button received a date range whose end is before its start.',
+          'This produces an empty zoom range.',
+        ]);
+      }
+      const firstGte = timestamps.findIndex((ts) => !Number.isNaN(ts) && ts >= startTarget);
+      const lastLte = timestamps.findLastIndex((ts) => !Number.isNaN(ts) && ts <= endTarget);
+      const startIndex = firstGte === -1 ? maxIndex : firstGte;
+      const endIndex = lastLte === -1 ? 0 : lastLte;
       return {
-        start: Math.max(0, (startIdx / maxIndex) * 100),
-        end: Math.min(100, (endIdx / maxIndex) * 100),
+        start: (startIndex / maxIndex) * 100,
+        end: (endIndex / maxIndex) * 100,
       };
     }
 
-    // Interval — compute target date from the last data point's timestamp.
-    const lastTimestamp = timestamps[maxIndex];
+    // Interval — compute target date from the last valid data point's timestamp.
+    const lastValidIndex = timestamps.findLastIndex((ts) => !Number.isNaN(ts));
+    const lastTimestamp = timestamps[lastValidIndex];
     const targetStartMs = computeIntervalStart(value, lastTimestamp);
-    const startIdx = findFirstIndexGte(timestamps, targetStartMs);
+    const firstGte = timestamps.findIndex((ts) => !Number.isNaN(ts) && ts >= targetStartMs);
+    const startIndex = firstGte === -1 ? maxIndex : firstGte;
     return {
-      start: Math.max(0, (startIdx / maxIndex) * 100),
+      start: (startIndex / maxIndex) * 100,
       end: 100,
     };
+  }
+
+  if (process.env.NODE_ENV !== 'production' && ordinalData !== undefined) {
+    warnOnce([
+      'MUI X Charts: Range button received a date value for an ordinal axis whose data could not be parsed as dates.',
+      'The zoom range may not match the intended selection. Provide date-like axis data or use a function value.',
+    ]);
   }
 
   const domainRange = domainMax - domainMin;
@@ -187,17 +187,20 @@ export function rangeButtonValueToZoom(
   // Absolute date range
   if (Array.isArray(value)) {
     const [rangeStart, rangeEnd] = value;
+    if (process.env.NODE_ENV !== 'production' && rangeEnd.getTime() < rangeStart.getTime()) {
+      warnOnce([
+        'MUI X Charts: Range button received a date range whose end is before its start.',
+        'This produces an empty zoom range.',
+      ]);
+    }
     const startPercent = ((rangeStart.getTime() - domainMin) / domainRange) * 100;
     const endPercent = ((rangeEnd.getTime() - domainMin) / domainRange) * 100;
-    return {
-      start: Math.max(0, Math.min(100, startPercent)),
-      end: Math.max(0, Math.min(100, endPercent)),
-    };
+    return { start: startPercent, end: endPercent };
   }
 
   // Interval — subtract from the end of the domain
   const targetStartMs = computeIntervalStart(value, domainMax);
-  const startPercent = Math.max(0, ((targetStartMs - domainMin) / domainRange) * 100);
+  const startPercent = ((targetStartMs - domainMin) / domainRange) * 100;
 
   return { start: startPercent, end: 100 };
 }
