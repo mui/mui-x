@@ -241,11 +241,11 @@ function useClickAwayListener(
         movedRef.current = true;
       };
 
-      doc.addEventListener('touchstart', handleClickAway);
+      doc.addEventListener('touchstart', handleClickAway, true);
       doc.addEventListener('touchmove', handleTouchMove);
 
       return () => {
-        doc.removeEventListener('touchstart', handleClickAway);
+        doc.removeEventListener('touchstart', handleClickAway, true);
         doc.removeEventListener('touchmove', handleTouchMove);
       };
     }
@@ -260,10 +260,10 @@ function useClickAwayListener(
     if (active) {
       const doc = ownerDocument(nodeRef.current);
 
-      doc.addEventListener('click', handleClickAway);
+      doc.addEventListener('click', handleClickAway, true);
 
       return () => {
-        doc.removeEventListener('click', handleClickAway);
+        doc.removeEventListener('click', handleClickAway, true);
         // cleanup `handleClickAway`
         syntheticEventRef.current = false;
       };
