@@ -1,21 +1,11 @@
 import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import jsonPageContent from './data-grid.json';
+import { TypesDataGrid } from './types.data-grid';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
-}
-
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/data-grid/data-grid',
-    false,
-    /\.\/data-grid.*\.json$/,
+export default function Page() {
+  return (
+    <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
+      <h1>DataGrid — new types pipeline POC (diagnostic)</h1>
+      <TypesDataGrid />
+    </main>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }
