@@ -82,7 +82,6 @@
     "@mui/internal-core-docs": "9.0.1-canary.1",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
-    "@mui/monorepo": "github:mui/material-ui#c11f4ee1aec564bef4d94e62ea87e83b7d0a8c79",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "16.2.1",
     "@octokit/plugin-retry": "8.0.3",

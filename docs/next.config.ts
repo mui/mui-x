@@ -148,11 +148,6 @@ export default withDeploymentConfig({
             ],
           },
           {
-            test: /\.+(js|jsx|mjs|ts|tsx)$/,
-            include: [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/],
-            use: options.defaultLoaders.babel,
-          },
-          {
             test: /\.(ts|tsx)$/,
             loader: 'string-replace-loader',
             options: {
