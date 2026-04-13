@@ -5,7 +5,7 @@
     {
       "name": "autosizeColumns",
       "description": "Auto-size the columns of the grid based on the cells' content and the space available.",
-      "type": "(options?: { columns?: string[], includeHeaders?: boolean, includeHeaderFilters?: boolean, includeOutliers?: boolean, outliersFactor?: number, expand?: boolean, disableColumnVirtualization?: boolean }) => Promise<void>"
+      "type": "(options?: undefined | { columns?: string[] | undefined, includeHeaders?: false | true | undefined, includeHeaderFilters?: false | true | undefined, includeOutliers?: false | true | undefined, outliersFactor?: number | undefined, expand?: false | true | undefined, disableColumnVirtualization?: false | true | undefined }) => Promise<void>"
     }
   ]
 }

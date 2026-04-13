@@ -350,11 +350,13 @@ function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number
     return typeToStr(checkerRef, type);
   }
 
-  // Strip undefined/null from unions
+  // Unions: only strip undefined/null at the top level (depth 0) — nested unions like
+  // function return types should preserve `null` and `undefined` to reflect the real signature.
   if (type.isUnion()) {
-    const members = type.types.filter(
-      (t) => !(t.flags & (ts.TypeFlags.Undefined | ts.TypeFlags.Null)),
-    );
+    const members =
+      depth === 0
+        ? type.types.filter((t) => !(t.flags & (ts.TypeFlags.Undefined | ts.TypeFlags.Null)))
+        : type.types;
     if (members.length === 0) {
       return 'never';
     }
@@ -366,7 +368,7 @@ function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number
       return expandTypeDeep(members[0], checkerRef, depth);
     }
     // Deduplicate expanded members
-    const expanded = members.map((m) => expandTypeDeep(m, checkerRef, depth));
+    const expanded = members.map((m) => expandTypeDeep(m, checkerRef, depth + 1));
     return [...new Set(expanded)].sort().join(' | ');
   }
 
@@ -382,6 +384,9 @@ function expandTypeDeep(type: ts.Type, checkerRef: ts.TypeChecker, depth: number
   }
   if (type.flags & ts.TypeFlags.Null) {
     return 'null';
+  }
+  if (type.flags & ts.TypeFlags.Undefined) {
+    return 'undefined';
   }
   if (type.flags & (ts.TypeFlags.Any | ts.TypeFlags.Unknown)) {
     return 'any';

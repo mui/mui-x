@@ -20,7 +20,7 @@
     {
       "name": "selectCellRange",
       "description": "Selects all cells that are inside the range given by `start` and `end` coordinates.",
-      "type": "(start: { id: number | string, field: string }, end: { id: number | string, field: string }, keepOtherSelected?: boolean) => void"
+      "type": "(start: { id: number | string, field: string }, end: { id: number | string, field: string }, keepOtherSelected?: boolean | undefined) => void"
     },
     {
       "name": "setCellSelectionModel",

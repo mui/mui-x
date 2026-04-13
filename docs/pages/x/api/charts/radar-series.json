@@ -16,7 +16,7 @@
     "hideMark": { "type": { "description": "boolean" } },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: 'item' | 'none' | 'series', fade?: 'global' | 'none' | 'series' }"
+        "description": "{ highlight?: 'item' | 'none' | 'series' | undefined, fade?: 'global' | 'none' | 'series' | undefined }"
       }
     },
     "id": { "type": { "description": "string" } },
@@ -29,7 +29,9 @@
       }
     },
     "valueFormatter": {
-      "type": { "description": "(value: number, context: { dataIndex: number }) =&gt; string" }
+      "type": {
+        "description": "(value: number, context: { dataIndex: number }) =&gt; null | string"
+      }
     }
   }
 }

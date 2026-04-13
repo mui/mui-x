@@ -5,7 +5,7 @@
   "properties": {
     "apply": {
       "type": {
-        "description": "(params: { values: (V | undefined)[], groupId: number | string, field: string }, api?: GridApiPremium) =&gt; AV"
+        "description": "(params: { values: (V | undefined)[], groupId: number | string, field: string }, api?: GridApiPremium | undefined) =&gt; AV | null | undefined"
       },
       "required": true,
       "isPremiumPlan": true

@@ -16,7 +16,7 @@
     "headerLabel": { "type": { "description": "string" } },
     "InputComponent": {
       "type": {
-        "description": "(props: I) =&gt; Iterable&lt;ReactNode&gt; | Promise&lt;AwaitedReactNode&gt; | Promise&lt;ReactNode&gt; | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | ReactPortal | bigint | boolean | number | string | new (props: I, context: any) =&gt; Component&lt;any, any, any&gt;"
+        "description": "(props: I) =&gt; Iterable&lt;ReactNode&gt; | Promise&lt;AwaitedReactNode&gt; | Promise&lt;ReactNode&gt; | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | ReactPortal | bigint | boolean | null | number | string | undefined | new (props: I, context: any) =&gt; Component&lt;any, any, any&gt;"
       }
     },
     "InputComponentProps": { "type": { "description": "Partial&lt;I&gt;" } },

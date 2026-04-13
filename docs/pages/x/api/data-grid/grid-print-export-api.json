@@ -5,7 +5,7 @@
     {
       "name": "exportDataAsPrint",
       "description": "Print the grid's data.",
-      "type": "(options?: { fileName?: string, hideToolbar?: boolean, hideFooter?: boolean, includeCheckboxes?: boolean, copyStyles?: boolean, bodyClassName?: string, pageStyle?: () => string | string, getRowsToExport?: (params: { apiRef: RefObject<GridApiCommunity> }) => GridRowId[], fields?: string[], allColumns?: boolean }) => void"
+      "type": "(options?: undefined | { fileName?: string | undefined, hideToolbar?: false | true | undefined, hideFooter?: false | true | undefined, includeCheckboxes?: false | true | undefined, copyStyles?: false | true | undefined, bodyClassName?: string | undefined, pageStyle?: () => string | string | undefined, getRowsToExport?: (params: GridPrintGetRowsToExportParams<GridApiCommunity>) => GridRowId[] | undefined, fields?: string[] | undefined, allColumns?: false | true | undefined }) => void"
     }
   ]
 }

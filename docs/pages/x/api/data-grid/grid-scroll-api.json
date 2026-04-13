@@ -5,17 +5,17 @@
     {
       "name": "getScrollPosition",
       "description": "Returns the current scroll position.",
-      "type": "() => { left: number, top: number, renderContext?: { firstRowIndex: number, lastRowIndex: number, firstColumnIndex: number, lastColumnIndex: number } }"
+      "type": "() => { left: number, top: number, renderContext?: undefined | { firstRowIndex: number, lastRowIndex: number, firstColumnIndex: number, lastColumnIndex: number } }"
     },
     {
       "name": "scroll",
       "description": "Triggers the viewport to scroll to the given positions (in pixels).",
-      "type": "(params: { left?: number, top?: number, renderContext?: { firstRowIndex: number, lastRowIndex: number, firstColumnIndex: number, lastColumnIndex: number } }) => void"
+      "type": "(params: { left?: number | undefined, top?: number | undefined, renderContext?: undefined | { firstRowIndex: number, lastRowIndex: number, firstColumnIndex: number, lastColumnIndex: number } }) => void"
     },
     {
       "name": "scrollToIndexes",
       "description": "Triggers the viewport to scroll to the cell at indexes given by `params`.\nReturns `true` if the grid had to scroll to reach the target.",
-      "type": "(params: { colIndex?: number, rowIndex?: number }) => boolean"
+      "type": "(params: { colIndex?: number | undefined, rowIndex?: number | undefined }) => boolean"
     }
   ]
 }

@@ -17,7 +17,7 @@
     "display": { "type": { "description": "'flex' | 'text'" } },
     "renderCell": {
       "type": {
-        "description": "(params: GridRenderCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; Iterable&lt;ReactNode&gt; | Promise&lt;AwaitedReactNode&gt; | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | ReactPortal | bigint | boolean | number | string"
+        "description": "(params: GridRenderCellParams&lt;R, V, F, GridTreeNodeWithRender&gt;) =&gt; Iterable&lt;ReactNode&gt; | Promise&lt;AwaitedReactNode&gt; | ReactElement&lt;unknown, string | JSXElementConstructor&lt;any&gt;&gt; | ReactPortal | bigint | boolean | null | number | string | undefined"
       }
     }
   }

@@ -10,12 +10,12 @@
     {
       "name": "selectRowRange",
       "description": "Change the selection state of all the selectable rows in a range.",
-      "type": "(range: { startId: number | string, endId: number | string }, isSelected?: boolean, resetSelection?: boolean) => void"
+      "type": "(range: { startId: number | string, endId: number | string }, isSelected?: boolean | undefined, resetSelection?: boolean | undefined) => void"
     },
     {
       "name": "selectRows",
       "description": "Change the selection state of multiple rows.",
-      "type": "(ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void"
+      "type": "(ids: GridRowId[], isSelected?: boolean | undefined, resetSelection?: boolean | undefined) => void"
     }
   ]
 }

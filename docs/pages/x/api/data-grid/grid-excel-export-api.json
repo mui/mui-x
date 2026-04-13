@@ -5,12 +5,12 @@
     {
       "name": "exportDataAsExcel",
       "description": "Downloads and exports an Excel file of the grid's data.",
-      "type": "(options?: GridExcelExportOptions) => Promise<void>"
+      "type": "(options?: GridExcelExportOptions | undefined) => Promise<void>"
     },
     {
       "name": "getDataAsExcel",
       "description": "Returns the grid data as an exceljs workbook.\nThis method is used internally by `exportDataAsExcel`.",
-      "type": "(options?: GridExcelExportOptions) => Promise<Workbook>"
+      "type": "(options?: GridExcelExportOptions | undefined) => Promise<Workbook> | null"
     }
   ]
 }

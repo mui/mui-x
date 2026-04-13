@@ -26,7 +26,7 @@
     },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: 'item' | 'none' | 'series', fade?: 'global' | 'none' | 'series' }"
+        "description": "{ highlight?: 'item' | 'none' | 'series' | undefined, fade?: 'global' | 'none' | 'series' | undefined }"
       }
     },
     "id": { "type": { "description": "string" } },
@@ -53,7 +53,7 @@
     },
     "valueFormatter": {
       "type": {
-        "description": "(value: { id?: number | string, value: number, label?: (location: 'legend' | 'section' | 'tooltip') =&gt; string | string, color?: string, labelMarkType?: 'circle' | 'line' | 'line+mark' | 'square' | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt; }, context: { dataIndex: number }) =&gt; string"
+        "description": "(value: { id?: number | string | undefined, value: number, label?: (location: 'legend' | 'section' | 'tooltip') =&gt; string | undefined | string | undefined, color?: string | undefined, labelMarkType?: 'circle' | 'line' | 'line+mark' | 'square' | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt; | undefined }, context: { dataIndex: number }) =&gt; null | string"
       }
     },
     "variant": {

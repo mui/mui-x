@@ -15,7 +15,7 @@
     {
       "name": "setPaginationMeta",
       "description": "Sets the `paginationMeta` to a new value.",
-      "type": "(paginationMeta: { hasNextPage?: boolean }) => void"
+      "type": "(paginationMeta: { hasNextPage?: boolean | undefined }) => void"
     },
     {
       "name": "setPaginationModel",

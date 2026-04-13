@@ -10,7 +10,7 @@
     "dataKey": { "type": { "description": "string" }, "isProPlan": true },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: 'item' | 'none' | 'series', fade?: 'global' | 'none' | 'series' }"
+        "description": "{ highlight?: 'item' | 'none' | 'series' | undefined, fade?: 'global' | 'none' | 'series' | undefined }"
       }
     },
     "id": { "type": { "description": "string" } },
@@ -25,7 +25,7 @@
     },
     "valueFormatter": {
       "type": {
-        "description": "(value: number, context: { xIndex: number, yIndex: number }) =&gt; string"
+        "description": "(value: null | number, context: { xIndex: number, yIndex: number }) =&gt; null | string"
       },
       "isProPlan": true
     },

@@ -11,7 +11,7 @@
     "baseline": { "type": { "description": "'max' | 'min' | number" }, "default": "0" },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": { "description": "(data: { value: number, dataIndex: number }) =&gt; string" }
+      "type": { "description": "(data: { value: null | number, dataIndex: number }) =&gt; string" }
     },
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
     "curve": {
@@ -25,7 +25,7 @@
     "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: 'item' | 'none' | 'series', fade?: 'global' | 'none' | 'series' }"
+        "description": "{ highlight?: 'item' | 'none' | 'series' | undefined, fade?: 'global' | 'none' | 'series' | undefined }"
       }
     },
     "id": { "type": { "description": "string" } },
@@ -60,10 +60,12 @@
     },
     "strictStepCurve": { "type": { "description": "boolean" } },
     "valueFormatter": {
-      "type": { "description": "(value: number, context: { dataIndex: number }) =&gt; string" }
+      "type": {
+        "description": "(value: null | number, context: { dataIndex: number }) =&gt; null | string"
+      }
     },
     "valueGetter": {
-      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; number" }
+      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; null | number" }
     },
     "xAxisId": { "type": { "description": "number | string" } },
     "yAxisId": { "type": { "description": "number | string" } }

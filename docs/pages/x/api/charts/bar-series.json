@@ -9,7 +9,7 @@
     "type": { "type": { "description": "'bar'" }, "required": true },
     "barLabel": {
       "type": {
-        "description": "'value' | (item: { seriesId: string, dataIndex: number, value: number }, context: { bar: { height: number, width: number } }) =&gt; string"
+        "description": "'value' | (item: { seriesId: string, dataIndex: number, value: null | number }, context: { bar: { height: number, width: number } }) =&gt; null | string | undefined"
       }
     },
     "barLabelPlacement": {
@@ -18,13 +18,13 @@
     },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": { "description": "(data: { value: number, dataIndex: number }) =&gt; string" }
+      "type": { "description": "(data: { value: null | number, dataIndex: number }) =&gt; string" }
     },
     "data": { "type": { "description": "readonly (number | null)[]" } },
     "dataKey": { "type": { "description": "string" } },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: 'item' | 'none' | 'series', fade?: 'global' | 'none' | 'series' }"
+        "description": "{ highlight?: 'item' | 'none' | 'series' | undefined, fade?: 'global' | 'none' | 'series' | undefined }"
       }
     },
     "id": { "type": { "description": "string" } },
@@ -50,10 +50,12 @@
       "default": "'none'"
     },
     "valueFormatter": {
-      "type": { "description": "(value: number, context: { dataIndex: number }) =&gt; string" }
+      "type": {
+        "description": "(value: null | number, context: { dataIndex: number }) =&gt; null | string"
+      }
     },
     "valueGetter": {
-      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; number" }
+      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; null | number" }
     },
     "xAxisId": { "type": { "description": "number | string" } },
     "yAxisId": { "type": { "description": "number | string" } }

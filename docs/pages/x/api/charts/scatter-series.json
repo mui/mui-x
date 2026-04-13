@@ -10,16 +10,18 @@
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": {
-        "description": "(data: { value: { x: number, y: number, z?: any, id?: number | string }, dataIndex: number }) =&gt; string"
+        "description": "(data: { value: null | { x: number, y: number, z?: any, id?: string | number | undefined }, dataIndex: number }) =&gt; string"
       }
     },
     "data": { "type": { "description": "readonly ScatterValueType[]" } },
     "datasetKeys": {
-      "type": { "description": "{ x: string, y: string, z?: string, id?: string }" }
+      "type": {
+        "description": "{ x: string, y: string, z?: string | undefined, id?: string | undefined }"
+      }
     },
     "highlightScope": {
       "type": {
-        "description": "{ highlight?: 'item' | 'none' | 'series', fade?: 'global' | 'none' | 'series' }"
+        "description": "{ highlight?: 'item' | 'none' | 'series' | undefined, fade?: 'global' | 'none' | 'series' | undefined }"
       }
     },
     "id": { "type": { "description": "string" } },
@@ -32,15 +34,15 @@
       }
     },
     "markerSize": { "type": { "description": "number" } },
-    "preview": { "type": { "description": "{ markerSize?: number }" } },
+    "preview": { "type": { "description": "{ markerSize?: number | undefined }" } },
     "valueFormatter": {
       "type": {
-        "description": "(value: { x: number, y: number, z?: any, id?: number | string }, context: { dataIndex: number }) =&gt; string"
+        "description": "(value: null | { x: number, y: number, z?: any, id?: number | string | undefined }, context: { dataIndex: number }) =&gt; null | string"
       }
     },
     "valueGetter": {
       "type": {
-        "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; { x: number, y: number, z?: any, id?: number | string }"
+        "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; { x: number, y: number, z?: any, id?: number | string | undefined }"
       }
     },
     "xAxisId": { "type": { "description": "number | string" } },

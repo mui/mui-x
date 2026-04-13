@@ -5,12 +5,12 @@
     {
       "name": "exportDataAsCsv",
       "description": "Downloads and exports a CSV of the grid's data.",
-      "type": "(options?: { delimiter?: string, fileName?: string, utf8WithBom?: boolean, includeHeaders?: boolean, includeColumnGroupsHeaders?: boolean, getRowsToExport?: (params: { apiRef: RefObject<GridApiCommunity> }) => GridRowId[], shouldAppendQuotes?: boolean, escapeFormulas?: boolean, fields?: string[], allColumns?: boolean }) => void"
+      "type": "(options?: undefined | { delimiter?: string | undefined, fileName?: string | undefined, utf8WithBom?: false | true | undefined, includeHeaders?: false | true | undefined, includeColumnGroupsHeaders?: false | true | undefined, getRowsToExport?: (params: GridCsvGetRowsToExportParams<GridApiCommunity>) => GridRowId[] | undefined, shouldAppendQuotes?: false | true | undefined, escapeFormulas?: false | true | undefined, fields?: string[] | undefined, allColumns?: false | true | undefined }) => void"
     },
     {
       "name": "getDataAsCsv",
       "description": "Returns the grid data as a CSV string.\nThis method is used internally by `exportDataAsCsv`.",
-      "type": "(options?: { delimiter?: string, fileName?: string, utf8WithBom?: boolean, includeHeaders?: boolean, includeColumnGroupsHeaders?: boolean, getRowsToExport?: (params: { apiRef: RefObject<GridApiCommunity> }) => GridRowId[], shouldAppendQuotes?: boolean, escapeFormulas?: boolean, fields?: string[], allColumns?: boolean }) => string"
+      "type": "(options?: undefined | { delimiter?: string | undefined, fileName?: string | undefined, utf8WithBom?: false | true | undefined, includeHeaders?: false | true | undefined, includeColumnGroupsHeaders?: false | true | undefined, getRowsToExport?: (params: GridCsvGetRowsToExportParams<GridApiCommunity>) => GridRowId[] | undefined, shouldAppendQuotes?: false | true | undefined, escapeFormulas?: false | true | undefined, fields?: string[] | undefined, allColumns?: false | true | undefined }) => string"
     }
   ]
 }

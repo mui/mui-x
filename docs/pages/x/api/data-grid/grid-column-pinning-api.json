@@ -5,7 +5,7 @@
     {
       "name": "getPinnedColumns",
       "description": "Returns which columns are pinned.",
-      "type": "() => { left?: string[], right?: string[] }"
+      "type": "() => { left?: string[] | undefined, right?: string[] | undefined }"
     },
     {
       "name": "isColumnPinned",
@@ -20,7 +20,7 @@
     {
       "name": "setPinnedColumns",
       "description": "Changes the pinned columns.",
-      "type": "(pinnedColumns: { left?: string[], right?: string[] }) => void"
+      "type": "(pinnedColumns: { left?: string[] | undefined, right?: string[] | undefined }) => void"
     },
     { "name": "unpinColumn", "description": "Unpins a column.", "type": "(field: string) => void" }
   ]

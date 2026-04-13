@@ -25,27 +25,27 @@
     {
       "name": "setEditCellValue",
       "description": "Sets the value of the edit cell.\nCommonly used inside the edit cell component.",
-      "type": "(params: { id: number | string, field: string, value: any, debounceMs?: number, unstable_skipValueParser?: boolean }, event?: AnimationEvent | ClipboardEvent | CompositionEvent | DragEvent | ErrorEvent | Event | FocusEvent | FormDataEvent | InputEvent | KeyboardEvent | MouseEvent | PointerEvent | ProgressEvent<EventTarget> | SecurityPolicyViolationEvent | SubmitEvent | SyntheticEvent<HTMLElement, Event> | ToggleEvent | TouchEvent | TransitionEvent | UIEvent | WheelEvent | {}) => Promise<boolean> | void"
+      "type": "(params: { id: number | string, field: string, value: any, debounceMs?: number | undefined, unstable_skipValueParser?: boolean | undefined }, event?: AnimationEvent | ClipboardEvent | CompositionEvent | DragEvent | ErrorEvent | Event | FocusEvent | FormDataEvent | InputEvent | KeyboardEvent | MouseEvent | PointerEvent | ProgressEvent<EventTarget> | SecurityPolicyViolationEvent | SubmitEvent | SyntheticEvent<HTMLElement, Event> | ToggleEvent | TouchEvent | TransitionEvent | UIEvent | WheelEvent | undefined | {}) => Promise<boolean> | void"
     },
     {
       "name": "startCellEditMode",
       "description": "Puts the cell corresponding to the given row id and field into edit mode.",
-      "type": "(params: { id: number | string, field: string, deleteValue?: boolean, initialValue?: any }) => void"
+      "type": "(params: { id: number | string, field: string, deleteValue?: boolean | undefined, initialValue?: any }) => void"
     },
     {
       "name": "startRowEditMode",
       "description": "Puts the row corresponding to the given id into edit mode.",
-      "type": "(params: { id: number | string, fieldToFocus?: string, deleteValue?: boolean, initialValue?: string }) => void"
+      "type": "(params: { id: number | string, fieldToFocus?: string | undefined, deleteValue?: boolean | undefined, initialValue?: string | undefined }) => void"
     },
     {
       "name": "stopCellEditMode",
       "description": "Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.\nIf `params.ignoreModifications` is `true` it will discard the modifications made.",
-      "type": "(params: { id: number | string, field: string, ignoreModifications?: boolean, cellToFocusAfter?: 'below' | 'left' | 'none' | 'right' }) => void"
+      "type": "(params: { id: number | string, field: string, ignoreModifications?: boolean | undefined, cellToFocusAfter?: 'below' | 'left' | 'none' | 'right' | undefined }) => void"
     },
     {
       "name": "stopRowEditMode",
       "description": "Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.\nIf `params.ignoreModifications` is `true` it will discard the modifications made.",
-      "type": "(params: { id: number | string, ignoreModifications?: boolean, field?: string, cellToFocusAfter?: 'below' | 'left' | 'none' | 'right' }) => void"
+      "type": "(params: { id: number | string, ignoreModifications?: boolean | undefined, field?: string | undefined, cellToFocusAfter?: 'below' | 'left' | 'none' | 'right' | undefined }) => void"
     }
   ]
 }
