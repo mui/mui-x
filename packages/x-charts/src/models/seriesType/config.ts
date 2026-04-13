@@ -5,7 +5,14 @@ import type {
   ScatterItemIdentifier,
   ScatterValueType,
 } from './scatter';
-import type { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
+import type {
+  LineSeriesType,
+  DefaultizedLineSeriesType,
+  LineItemIdentifier,
+  RadialLineSeriesType,
+  DefaultizedRadialLineSeriesType,
+  RadialLineItemIdentifier,
+} from './line';
 import type { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import type {
   PieSeriesType,
@@ -90,6 +97,30 @@ export interface ChartsSeriesConfig {
     };
     highlightIdentifier: {
       type: 'line';
+      seriesId: SeriesId;
+      dataIndex?: number;
+    };
+  };
+  ['radial-line']: {
+    seriesInput: DefaultizedProps<RadialLineSeriesType, 'id'> &
+      MakeRequired<SeriesColor<number | null>, 'color'>;
+    series: DefaultizedRadialLineSeriesType;
+    seriesLayout: {};
+    seriesProp: RadialLineSeriesType;
+    itemIdentifier: RadialLineItemIdentifier;
+    itemIdentifierWithData: RadialLineItemIdentifier;
+    valueType: number | null;
+    canBeStacked: true;
+    axisType: 'polar';
+    highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: RadialLineItemIdentifier;
+      rotationAxis: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
+      radiusAxis: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
+      series: DefaultizedRadialLineSeriesType;
+    };
+    highlightIdentifier: {
+      type: 'radial-line';
       seriesId: SeriesId;
       dataIndex?: number;
     };

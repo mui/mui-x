@@ -1,11 +1,12 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
-import {
-  type CartesianSeriesType,
-  type CommonDefaultizedProps,
-  type CommonSeriesType,
-  type SeriesId,
-  type StackableSeriesType,
+import type {
+  RadialSeriesType,
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  SeriesId,
+  StackableSeriesType,
 } from './common';
 import { type DatasetElementType } from './config';
 import { type CurveType } from '../curve';
@@ -35,9 +36,7 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 
 export type MarkShape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
 
-export interface LineSeriesType
-  extends CommonSeriesType<number | null, 'line'>, CartesianSeriesType, StackableSeriesType {
-  type: 'line';
+interface CommonLineSeriesType {
   /**
    * Data associated to the line.
    */
@@ -113,6 +112,24 @@ export interface LineSeriesType
   baseline?: number | 'min' | 'max';
 }
 
+export interface LineSeriesType
+  extends
+    CommonSeriesType<number | null, 'line'>,
+    CartesianSeriesType,
+    StackableSeriesType,
+    CommonLineSeriesType {
+  type: 'line';
+}
+
+export interface RadialLineSeriesType
+  extends
+    CommonSeriesType<number | null, 'line'>,
+    RadialSeriesType,
+    StackableSeriesType,
+    CommonLineSeriesType {
+  type: 'radial-line';
+}
+
 /**
  * An object that allows to identify a single line.
  * Used for item interaction
@@ -126,8 +143,28 @@ export type LineItemIdentifier = {
   dataIndex?: number;
 };
 
+/**
+ * An object that allows to identify a single line.
+ * Used for item interaction
+ */
+export type RadialLineItemIdentifier = {
+  type: 'radial-line';
+  seriesId: SeriesId;
+  /**
+   * `dataIndex` can be `undefined` if the mouse is over the area and not a specific item.
+   */
+  dataIndex?: number;
+};
+
 export interface DefaultizedLineSeriesType extends DefaultizedProps<
   LineSeriesType,
+  CommonDefaultizedProps | 'color'
+> {
+  hidden: boolean;
+}
+
+export interface DefaultizedRadialLineSeriesType extends DefaultizedProps<
+  RadialLineSeriesType,
   CommonDefaultizedProps | 'color'
 > {
   hidden: boolean;

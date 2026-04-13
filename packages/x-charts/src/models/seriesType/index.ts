@@ -35,7 +35,7 @@ export type HighlightItemIdentifierWithType<SeriesType extends ChartSeriesType> 
   SeriesType extends any ? ChartsSeriesConfig[SeriesType]['highlightIdentifier'] : never;
 
 export type FocusedItemIdentifier<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  SeriesType extends 'line' | 'radar'
+  SeriesType extends 'line' | 'radar' | 'radial-line'
     ? DefaultizedProps<ChartsSeriesConfig[SeriesType]['itemIdentifier'], 'dataIndex'>
     : SeriesType extends 'heatmap'
       ? DefaultizedProps<ChartsSeriesConfig[SeriesType]['itemIdentifier'], 'xIndex' | 'yIndex'>
