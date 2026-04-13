@@ -841,7 +841,10 @@ export function parseConformanceTest(componentFilePath: string): {
 
   let testFilePath: string | undefined;
   let testContent: string | undefined;
-  outer: for (const testDir of candidateDirs) {
+  for (const testDir of candidateDirs) {
+    if (testFilePath) {
+      break;
+    }
     if (!fs.existsSync(testDir) || !fs.statSync(testDir).isDirectory()) {
       continue;
     }
@@ -854,7 +857,7 @@ export function parseConformanceTest(componentFilePath: string): {
       if (content.includes('describeConformance')) {
         testFilePath = candidatePath;
         testContent = content;
-        break outer;
+        break;
       }
     }
   }
