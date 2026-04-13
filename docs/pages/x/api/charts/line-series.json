@@ -27,7 +27,7 @@
     "shape": { "type": { "description": "MarkShape" } },
     "showMark": { "type": { "description": "boolean | ((params: ShowMarkParams) =&gt; boolean)" } },
     "stack": { "type": { "description": "string" } },
-    "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },
+    "stackOffset": { "type": { "description": "StackOffsetType" } },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "strictStepCurve": { "type": { "description": "boolean" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
