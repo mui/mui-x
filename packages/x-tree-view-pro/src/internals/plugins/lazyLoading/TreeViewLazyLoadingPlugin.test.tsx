@@ -38,6 +38,44 @@ describeTreeView<RichTreeViewProStore<any, any>>(
     }
 
     describe('interaction', () => {
+      it('should keep the loading icon visible while loading when parameters references change', async () => {
+        let resolveFetch: (() => void) | undefined;
+        const getTreeItems = spy(
+          () =>
+            new Promise<ItemType[]>((resolve) => {
+              resolveFetch = () => resolve([{ id: '1-1', childrenCount: 0 }]);
+            }),
+        );
+
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems,
+          },
+          selectedItems: [],
+          selectionPropagation: { descendants: true, parents: false },
+        });
+
+        fireEvent.click(view.getItemContent('1'));
+
+        expect(view.getItemIconContainer('1').querySelector('[role="progressbar"]')).not.to.equal(null);
+
+        view.setProps({
+          selectedItems: ['1'],
+          selectionPropagation: { descendants: true, parents: false },
+        });
+
+        expect(view.getItemIconContainer('1').querySelector('[role="progressbar"]')).not.to.equal(null);
+
+        await act(async () => {
+          resolveFetch!();
+        });
+
+        expect(getTreeItems.callCount).to.equal(1);
+        expect(view.getItemIconContainer('1').querySelector('[role="progressbar"]')).to.equal(null);
+      });
+
       it('should load children when expanding an item', async () => {
         const view = render({
           items: [{ id: '1', childrenCount: 1 }],
