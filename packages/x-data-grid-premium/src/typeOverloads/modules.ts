@@ -3,6 +3,7 @@ import type {
   GridExportDisplayOptions,
   GridRowId,
   GridValidRowModel,
+  GridValueGetter,
 } from '@mui/x-data-grid-pro';
 import type { GridAggregationCellMeta } from '@mui/x-data-grid-pro/internals';
 import type {
@@ -146,6 +147,22 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * @default true
    */
   chartable?: boolean;
+  /**
+   * Value getter for Excel export. If provided, this value is used instead of
+   * the cell's displayed value when exporting to Excel.
+   *
+   * Return a string starting with '=' to export as an Excel formula
+   * (requires `escapeFormulas: false` in export options).
+   * Return other values to export as regular cell values.
+   *
+   * Note: This option is not supported when using the Excel export web worker.
+   * @param {V} value The value of the cell.
+   * @param {R} row The row of the cell.
+   * @param {GridColDef} column The column of the cell.
+   * @param {RefObject<GridApiPremium>} apiRef The API reference.
+   * @returns The value to export to Excel.
+   */
+  excelValueGetter?: GridValueGetter<R, V, F>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

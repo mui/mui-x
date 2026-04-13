@@ -65,6 +65,7 @@
     "dayjs": "catalog:",
     "es-toolkit": "catalog:",
     "fg-loadcss": "^3.1.0",
+    "hyperformula": "^3.1.1",
     "jscodeshift": "catalog:",
     "luxon": "catalog:",
     "lz-string": "^1.5.0",
