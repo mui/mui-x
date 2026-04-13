@@ -105,7 +105,6 @@ The function receives a params object with the axis context:
 - `scaleType` — The axis scale type (e.g., `'time'`, `'band'`, `'linear'`).
 - `data` — The axis data values (available for ordinal axes).
 - `domain` — The full domain bounds (`{ min, max }`). Timestamps for time axes, indices for ordinal.
-- `zoomed` — The current zoomed-in bounds (`{ min, max }`).
 
 ```tsx
 { label: 'First half', value: () => ({ start: 0, end: 50 }) }

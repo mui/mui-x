@@ -10,7 +10,6 @@ import {
   selectorChartRawXAxis,
   selectorChartXAxisWithDomains,
   selectorChartZoomOptionsLookup,
-  selectorChartZoomMap,
   type AxisId,
 } from '@mui/x-charts/internals';
 import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
@@ -31,7 +30,7 @@ export interface ChartsToolbarRangeButtonTriggerProps {
    *
    * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
    * - `[start, end]` — An absolute date range.
-   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`, `zoomed`) and returns zoom percentages (0-100).
+   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`) and returns zoom percentages (0-100).
    * - `null` — Resets zoom to show all data.
    */
   value: RangeButtonValue;
@@ -70,7 +69,6 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   const zoomOptionsLookup = store.use(selectorChartZoomOptionsLookup);
   const rawXAxes = store.use(selectorChartRawXAxis);
   const { domains } = store.use(selectorChartXAxisWithDomains);
-  const zoomMap = store.use(selectorChartZoomMap);
 
   // Resolve the target axis ID: use the prop, or find the first zoomable x-axis.
   const resolvedAxisId = React.useMemo(() => {
@@ -90,7 +88,7 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   );
   const isOrdinal = resolvedAxis?.scaleType === 'band' || resolvedAxis?.scaleType === 'point';
 
-  // Get the full (unzoomed) domain for the target axis.
+  // Get the full domain for the target axis, ignoring the current zoom.
   // For ordinal axes (band/point), use index-based range since domain values are categories.
   const axisDomain = React.useMemo(() => {
     if (resolvedAxisId === undefined) {
@@ -108,28 +106,14 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     return { min: Number(min), max: Number(max) };
   }, [resolvedAxisId, domains, isOrdinal]);
 
-  // Compute zoomed-in bounds from current zoom percentages and full domain.
-  const currentZoom = resolvedAxisId !== undefined ? zoomMap?.get(resolvedAxisId) : undefined;
-  const zoomedBounds = React.useMemo(() => {
-    if (!axisDomain || !currentZoom) {
-      return undefined;
-    }
-    const range = axisDomain.max - axisDomain.min;
-    return {
-      min: axisDomain.min + (currentZoom.start / 100) * range,
-      max: axisDomain.min + (currentZoom.end / 100) * range,
-    };
-  }, [axisDomain, currentZoom]);
-
   const handleClick = React.useCallback(() => {
-    if (resolvedAxisId === undefined || !axisDomain || !zoomedBounds) {
+    if (resolvedAxisId === undefined || !axisDomain) {
       return;
     }
     const zoom = rangeButtonValueToZoom(value, {
       scaleType: resolvedAxis?.scaleType ?? 'linear',
       data: resolvedAxis?.data,
       domain: axisDomain,
-      zoomed: zoomedBounds,
     });
     instance.setAxisZoomData(resolvedAxisId, {
       axisId: resolvedAxisId,
@@ -137,7 +121,7 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
       end: zoom.end,
     });
     instance.setActiveRangeButtonKey(label);
-  }, [resolvedAxisId, resolvedAxis, axisDomain, zoomedBounds, value, instance, label]);
+  }, [resolvedAxisId, resolvedAxis, axisDomain, value, instance, label]);
 
   // Determine if this button is selected.
   // When explicitly clicked, activeRangeButtonKey matches the label.
@@ -187,7 +171,7 @@ ChartsToolbarRangeButtonTrigger.propTypes = {
    *
    * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
    * - `[start, end]` — An absolute date range.
-   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`, `zoomed`) and returns zoom percentages (0-100).
+   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`) and returns zoom percentages (0-100).
    * - `null` — Resets zoom to show all data.
    */
   value: PropTypes.oneOfType([

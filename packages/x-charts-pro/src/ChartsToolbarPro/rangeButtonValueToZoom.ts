@@ -25,15 +25,10 @@ export interface RangeButtonFunctionParams {
    */
   data: readonly unknown[] | undefined;
   /**
-   * The full (unzoomed) domain bounds.
+   * The full domain bounds, ignoring any current zoom.
    * For time axes, these are timestamps. For ordinal axes, these are indices.
    */
   domain: { min: number; max: number };
-  /**
-   * The current zoomed-in bounds.
-   * For time axes, these are timestamps. For ordinal axes, these are indices.
-   */
-  zoomed: { min: number; max: number };
 }
 
 /**
@@ -44,7 +39,7 @@ export interface RangeButtonFunctionParams {
  *   @example { unit: 'year' } // Last year (step defaults to 1)
  * - `[start, end]` — An absolute date range.
  *   @example [new Date(2024, 0, 1), new Date(2024, 6, 1)] // Jan–Jul 2024
- * - `(params) => { start, end }` — A function that receives axis context and returns zoom percentages (0-100).
+ * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`) and returns zoom percentages (0-100).
  *   @example ({ domain }) => ({ start: 0, end: 50 }) // First half of data
  *   @example ({ data }) => {
  *     const lastFive = Math.max(0, data.length - 5);

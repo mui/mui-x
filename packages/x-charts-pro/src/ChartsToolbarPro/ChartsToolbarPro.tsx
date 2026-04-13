@@ -42,7 +42,7 @@ export interface RangeButtonConfig {
    *
    * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
    * - `[start, end]` — An absolute date range.
-   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`, `zoomed`) and returns zoom percentages (0-100).
+   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`) and returns zoom percentages (0-100).
    * - `null` — Resets zoom to show all data.
    */
   value: RangeButtonValue;
