@@ -79,7 +79,7 @@
     "@mui/internal-netlify-cache": "0.0.3-canary.2",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
-    "@mui/monorepo": "github:mui/material-ui#70f797aaeb9e47fa18e59e19371dbb1eac28d815",
+    "@mui/monorepo": "github:mui/material-ui#6dfd6e1b292da7e049973d9333fcfe4065839fc3",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "16.2.1",
     "@octokit/plugin-retry": "8.0.3",
