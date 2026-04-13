@@ -13,20 +13,20 @@ function fullTypeToString(checker: ts.TypeChecker, type: ts.Type): string {
   return checker.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation).replace(/"/g, "'");
 }
 
-// Track visited types to prevent infinite recursion
-const visitedTypes = new Set<number>();
+/** Cycle-tracking set threaded through recursive walks. One set per top-level call. */
+type Visited = Set<number>;
 
-function withVisited<T>(type: ts.Type, fn: () => T, fallback: T): T {
+function withVisited<T>(type: ts.Type, visited: Visited, fn: () => T, fallback: T): T {
   const id = (type as any).id as number | undefined;
   if (id !== undefined) {
-    if (visitedTypes.has(id)) {
+    if (visited.has(id)) {
       return fallback;
     }
-    visitedTypes.add(id);
+    visited.add(id);
     try {
       return fn();
     } finally {
-      visitedTypes.delete(id);
+      visited.delete(id);
     }
   }
   return fn();
@@ -83,16 +83,28 @@ function isArrayType(type: ts.Type, checker: ts.TypeChecker): boolean {
 
 /**
  * Main entry point: TypeScript type → PropType-style { name, description? }.
+ * Creates a fresh visited set per top-level call so concurrent invocations don't collide.
  */
 export function formatPropType(
   type: ts.Type,
   checker: ts.TypeChecker,
   depth: number = 0,
+  visited: Visited = new Set(),
 ): PropTypeInfo {
-  return withVisited(type, () => formatPropTypeInner(type, checker, depth), { name: '{}' });
+  return withVisited(
+    type,
+    visited,
+    () => formatPropTypeInner(type, checker, depth, visited),
+    { name: '{}' },
+  );
 }
 
-function formatPropTypeInner(type: ts.Type, checker: ts.TypeChecker, depth: number): PropTypeInfo {
+function formatPropTypeInner(
+  type: ts.Type,
+  checker: ts.TypeChecker,
+  depth: number,
+  visited: Visited,
+): PropTypeInfo {
   // Bail early on deep nesting
   if (depth > 3) {
     return { name: '{}' };
@@ -169,12 +181,12 @@ function formatPropTypeInner(type: ts.Type, checker: ts.TypeChecker, depth: numb
 
   // Union types
   if (type.isUnion()) {
-    return formatUnionType(type, checker, depth);
+    return formatUnionType(type, checker, depth, visited);
   }
 
   // Array
   if (isArrayType(type, checker)) {
-    return formatArrayType(type, checker, depth);
+    return formatArrayType(type, checker, depth, visited);
   }
 
   // Function
@@ -184,7 +196,7 @@ function formatPropTypeInner(type: ts.Type, checker: ts.TypeChecker, depth: numb
 
   // Object / shape
   if (type.flags & ts.TypeFlags.Object || type.isIntersection()) {
-    return formatObjectType(type, checker, depth);
+    return formatObjectType(type, checker, depth, visited);
   }
 
   return { name: 'any' };
@@ -194,7 +206,12 @@ function formatPropTypeInner(type: ts.Type, checker: ts.TypeChecker, depth: numb
 // Union
 // ---------------------------------------------------------------------------
 
-function formatUnionType(type: ts.UnionType, checker: ts.TypeChecker, depth: number): PropTypeInfo {
+function formatUnionType(
+  type: ts.UnionType,
+  checker: ts.TypeChecker,
+  depth: number,
+  visited: Visited,
+): PropTypeInfo {
   const members = type.types.filter(
     (t) => !(t.flags & (ts.TypeFlags.Undefined | ts.TypeFlags.Null)),
   );
@@ -203,7 +220,7 @@ function formatUnionType(type: ts.UnionType, checker: ts.TypeChecker, depth: num
     return { name: 'any' };
   }
   if (members.length === 1) {
-    return formatPropType(members[0], checker, depth);
+    return formatPropType(members[0], checker, depth, visited);
   }
 
   // All string/number literals → enum
@@ -219,7 +236,7 @@ function formatUnionType(type: ts.UnionType, checker: ts.TypeChecker, depth: num
   }
 
   // Mixed union
-  const parts = members.map((m) => toShort(m, checker, depth + 1));
+  const parts = members.map((m) => toShort(m, checker, depth + 1, visited));
   return { name: 'union', description: parts.sort().join(UNION_SEP) };
 }
 
@@ -227,10 +244,15 @@ function formatUnionType(type: ts.UnionType, checker: ts.TypeChecker, depth: num
 // Array
 // ---------------------------------------------------------------------------
 
-function formatArrayType(type: ts.Type, checker: ts.TypeChecker, depth: number): PropTypeInfo {
+function formatArrayType(
+  type: ts.Type,
+  checker: ts.TypeChecker,
+  depth: number,
+  visited: Visited,
+): PropTypeInfo {
   const typeArgs = (type as ts.TypeReference).typeArguments;
   if (typeArgs && typeArgs.length > 0) {
-    const elemStr = toShort(typeArgs[0], checker, depth + 1);
+    const elemStr = toShort(typeArgs[0], checker, depth + 1, visited);
     return { name: 'arrayOf', description: `Array&lt;${elemStr}&gt;` };
   }
   return { name: 'arrayOf', description: 'Array&lt;any&gt;' };
@@ -240,7 +262,12 @@ function formatArrayType(type: ts.Type, checker: ts.TypeChecker, depth: number):
 // Object / shape
 // ---------------------------------------------------------------------------
 
-function formatObjectType(type: ts.Type, checker: ts.TypeChecker, depth: number): PropTypeInfo {
+function formatObjectType(
+  type: ts.Type,
+  checker: ts.TypeChecker,
+  depth: number,
+  visited: Visited,
+): PropTypeInfo {
   if (type.getCallSignatures().length > 0) {
     return { name: 'func' };
   }
@@ -262,6 +289,7 @@ function formatObjectType(type: ts.Type, checker: ts.TypeChecker, depth: number)
 
   return withVisited(
     type,
+    visited,
     () => {
       const parts: string[] = [];
       for (const prop of properties) {
@@ -270,7 +298,7 @@ function formatObjectType(type: ts.Type, checker: ts.TypeChecker, depth: number)
         }
         const propType = checker.getTypeOfSymbol(prop);
         const optional = prop.flags & ts.SymbolFlags.Optional ? '?' : '';
-        const propStr = toShort(propType, checker, depth + 1);
+        const propStr = toShort(propType, checker, depth + 1, visited);
         parts.push(`${prop.name}${optional}: ${propStr}`);
       }
       if (parts.length === 0) {
@@ -286,15 +314,25 @@ function formatObjectType(type: ts.Type, checker: ts.TypeChecker, depth: number)
 // Short string representation (used inside descriptions)
 // ---------------------------------------------------------------------------
 
-function toShort(type: ts.Type, checker: ts.TypeChecker, depth: number): string {
+function toShort(
+  type: ts.Type,
+  checker: ts.TypeChecker,
+  depth: number,
+  visited: Visited,
+): string {
   if (depth > 4) {
     return 'any';
   }
 
-  return withVisited(type, () => toShortInner(type, checker, depth), '{}');
+  return withVisited(type, visited, () => toShortInner(type, checker, depth, visited), '{}');
 }
 
-function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): string {
+function toShortInner(
+  type: ts.Type,
+  checker: ts.TypeChecker,
+  depth: number,
+  visited: Visited,
+): string {
   type = stripUndefinedNull(type, checker);
 
   // Boolean
@@ -345,10 +383,10 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
       (t) => !(t.flags & (ts.TypeFlags.Undefined | ts.TypeFlags.Null)),
     );
     if (members.length === 1) {
-      return toShort(members[0], checker, depth);
+      return toShort(members[0], checker, depth, visited);
     }
     return members
-      .map((m) => toShort(m, checker, depth + 1))
+      .map((m) => toShort(m, checker, depth + 1, visited))
       .sort()
       .join(UNION_SEP);
   }
@@ -357,7 +395,7 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
   if (isArrayType(type, checker)) {
     const typeArgs = (type as ts.TypeReference).typeArguments;
     if (typeArgs && typeArgs.length > 0) {
-      return `Array&lt;${toShort(typeArgs[0], checker, depth + 1)}&gt;`;
+      return `Array&lt;${toShort(typeArgs[0], checker, depth + 1, visited)}&gt;`;
     }
     return 'array';
   }
@@ -390,7 +428,7 @@ function toShortInner(type: ts.Type, checker: ts.TypeChecker, depth: number): st
       }
       const propType = checker.getTypeOfSymbol(prop);
       const optional = prop.flags & ts.SymbolFlags.Optional ? '?' : '';
-      parts.push(`${prop.name}${optional}: ${toShort(propType, checker, depth + 1)}`);
+      parts.push(`${prop.name}${optional}: ${toShort(propType, checker, depth + 1, visited)}`);
     }
     if (parts.length === 0) {
       return '{}';

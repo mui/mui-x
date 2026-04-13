@@ -36,7 +36,7 @@ import type { FileWrite, ComponentApi } from './types';
 // Main
 // ---------------------------------------------------------------------------
 
-async function main() {
+async function main(grep?: string) {
   const start = Date.now();
 
   console.log('Building API docs...');
@@ -45,7 +45,14 @@ async function main() {
 
   const demos = loadDemos();
   const configs = getPackageConfigs();
-  const components = discoverComponents(configs, checker, program);
+  let components = discoverComponents(configs, checker, program);
+  if (grep) {
+    const re = new RegExp(grep);
+    components = components.filter((c) => re.test(c.name));
+    console.log(`Filter --grep ${grep}: ${components.length} component(s) match`);
+  }
+
+  const skipped: { name: string; filePath: string; reason: string }[] = [];
 
   // Pre-index configs by section
   const interfaceEntries = getInterfacesToDocument();
@@ -67,11 +74,15 @@ async function main() {
       console.log(`  ${currentSection}`);
     }
 
-    const api = extractComponentApi(comp, checker, program, demos);
-    if (!api) {
+    const result = extractComponentApi(comp, checker, program, demos);
+    if (result.kind === 'skipped') {
+      const relPath = path.relative(CWD, comp.filePath);
+      skipped.push({ name: comp.name, filePath: relPath, reason: result.reason });
+      debug(`    ⚠ skipped ${comp.name} — ${result.reason} (${relPath})`);
       continue;
     }
 
+    const { api } = result;
     const sectionComponents = componentsBySection.get(comp.section) || [];
     sectionComponents.push(api);
     componentsBySection.set(comp.section, sectionComponents);
@@ -100,7 +111,9 @@ async function main() {
   cleanupStaleFiles(allFiles);
   await writeAllFiles(allFiles);
 
-  console.log(`Done in ${Date.now() - start}ms — ${allFiles.length} files written`);
+  console.log(
+    `Done in ${Date.now() - start}ms — ${allFiles.length} files written, ${skipped.length} skipped`,
+  );
 
   /** Build interfaces, events, and selectors for a given section. */
   function buildSectionExtras(section: string) {
@@ -137,8 +150,8 @@ yargs(hideBin(process.argv))
         description: 'Filter components by name pattern',
         type: 'string',
       }),
-    handler: () =>
-      main().catch((error) => {
+    handler: (argv) =>
+      main(argv.grep as string | undefined).catch((error) => {
         console.error(error);
         process.exit(1);
       }),

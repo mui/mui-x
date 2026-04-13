@@ -6,7 +6,9 @@ import * as path from 'path';
 import { CWD } from './config';
 
 export function createTSProgram(): { program: ts.Program; checker: ts.TypeChecker } {
-  const configPath = ts.findConfigFile(CWD, ts.sys.fileExists, 'tsconfig.json')!;
+  // Pin to the monorepo root tsconfig explicitly — don't walk up from CWD, since running
+  // the script from a subpackage would pick up the wrong config.
+  const configPath = path.resolve(CWD, 'tsconfig.json');
   const config = ts.readConfigFile(configPath, ts.sys.readFile);
   const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, CWD);
 

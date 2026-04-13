@@ -5,7 +5,7 @@
 import * as ts from 'typescript';
 import * as path from 'path';
 import * as fs from 'node:fs';
-import { CWD, UNRESOLVED_OBJECT_PROPS, COMMON_INHERITED_PROPS, debug } from './config';
+import { CWD, UNRESOLVED_OBJECT_PROPS, COMMON_INHERITED_PROPS } from './config';
 import { extractJsDoc, isMuiXProp } from './jsDocUtils';
 import { formatPropType, extractFunctionSignature } from './typeFormatting';
 import type {
@@ -19,6 +19,7 @@ import type {
   DemoMap,
   ConformanceInfo,
   PropInfo,
+  ExtractResult,
 } from './types';
 
 // ---------------------------------------------------------------------------
@@ -30,24 +31,21 @@ export function extractComponentApi(
   checker: ts.TypeChecker,
   program: ts.Program,
   demos: DemoMap,
-): ComponentApi | null {
+): ExtractResult {
   const sourceFile = program.getSourceFile(comp.filePath);
   if (!sourceFile) {
-    return null;
+    return { kind: 'skipped', reason: 'source file not found in TS program' };
   }
 
   // Skip components marked with @ignore on their definition.
-  // We look for "@ignore" in the JSDoc comment directly preceding the component definition
-  // (const ComponentName, function ComponentName, or export ... ComponentName).
-  if (hasIgnoreOnDefinition(sourceFile.getFullText(), comp.name)) {
-    return null;
+  if (hasIgnoreOnDefinition(sourceFile, comp.name)) {
+    return { kind: 'skipped', reason: '@ignore on component definition' };
   }
 
   // Find the component's props type
   const propsType = findComponentPropsType(comp.name, sourceFile, checker);
   if (!propsType) {
-    debug(`  Could not find props type for ${comp.name}`);
-    return null;
+    return { kind: 'skipped', reason: 'could not resolve props type' };
   }
 
   // Get component description from JSDoc
@@ -219,7 +217,7 @@ export function extractComponentApi(
   const slots = extractSlots(propsType, checker, comp.name, comp.section);
 
   // Metadata (muiName needed for class extraction)
-  const muiNameEarly = extractMuiName(comp.filePath, comp.name);
+  const muiNameEarly = extractMuiName(sourceFile, comp.name);
 
   // Extract classes
   const classes = extractClasses(
@@ -328,7 +326,7 @@ export function extractComponentApi(
     result.themeDefaultProps = conformance.themeDefaultProps;
   }
 
-  return result;
+  return { kind: 'ok', api: result };
 }
 
 // ---------------------------------------------------------------------------
@@ -471,38 +469,29 @@ export function extractClasses(
     return [];
   }
 
+  const candidates = discoverClassesFiles(dir, program);
+
   // Priority 1: classes file whose name matches the component (e.g. piecewiseColorLegendClasses.ts
-  // for PiecewiseColorLegend). In this case, the component's muiName is the authoritative prefix,
-  // regardless of what `generateUtilityClasses` was called with (source files sometimes pass a
-  // typo'd string there).
+  // for PiecewiseColorLegend). In this case the component's muiName is authoritative, regardless
+  // of what `generateUtilityClasses` was called with (source sometimes has typos there).
   const lowerFirst = componentName[0].toLowerCase() + componentName.slice(1);
-  const nameMatchFile = [
-    path.join(dir, `${lowerFirst}Classes.ts`),
-    path.join(dir, `${lowerFirst}Classes.tsx`),
-  ].find((p) => fs.existsSync(p));
-  if (nameMatchFile) {
-    const result = buildClassesFromFile(nameMatchFile, muiName, checker, program);
+  const nameMatch = candidates.find(
+    (c) => path.basename(c.filePath, path.extname(c.filePath)) === `${lowerFirst}Classes`,
+  );
+  if (nameMatch) {
+    const result = buildClassesFromCandidate(nameMatch, muiName, checker);
     if (result) {
       return result;
     }
   }
 
-  // Priority 2: scan folder for *Classes.ts whose `generateUtilityClasses('Mui<X>', ...)`
-  // prefix matches the component's muiName. Handles cases like barClasses.ts → MuiBarChart.
-  for (const file of fs.readdirSync(dir)) {
-    if (!file.endsWith('Classes.ts') && !file.endsWith('Classes.tsx')) {
+  // Priority 2: any classes file whose `generateUtilityClasses('Mui<X>', ...)` prefix matches
+  // the component's muiName. Handles cases like barClasses.ts → MuiBarChart.
+  for (const candidate of candidates) {
+    if (candidate === nameMatch || candidate.prefix !== muiName) {
       continue;
     }
-    const classesFile = path.join(dir, file);
-    if (classesFile === nameMatchFile) {
-      continue;
-    }
-    const content = fs.readFileSync(classesFile, 'utf8');
-    const prefixMatch = content.match(/generateUtilityClasses\(\s*'(Mui\w+)'/);
-    if (!prefixMatch || prefixMatch[1] !== muiName) {
-      continue;
-    }
-    const result = buildClassesFromFile(classesFile, muiName, checker, program);
+    const result = buildClassesFromCandidate(candidate, muiName, checker);
     if (result) {
       return result;
     }
@@ -512,9 +501,9 @@ export function extractClasses(
 }
 
 /**
- * Collects ClassInfo entries from every *Classes.ts file in the folder, using whatever
- * prefix each file's `generateUtilityClasses('Mui<X>', ...)` call specifies. Used for
- * slot → class linking on sub-components that don't "own" classes themselves.
+ * Collects ClassInfo entries from every *Classes.ts file in the folder, using each file's
+ * own `generateUtilityClasses('Mui<X>', ...)` prefix. Used for slot → class linking on
+ * sub-components that don't "own" classes themselves.
  */
 function extractAllFolderClasses(
   dir: string,
@@ -525,17 +514,8 @@ function extractAllFolderClasses(
     return [];
   }
   const result: ClassInfo[] = [];
-  for (const file of fs.readdirSync(dir)) {
-    if (!file.endsWith('Classes.ts') && !file.endsWith('Classes.tsx')) {
-      continue;
-    }
-    const classesFile = path.join(dir, file);
-    const content = fs.readFileSync(classesFile, 'utf8');
-    const prefixMatch = content.match(/generateUtilityClasses\(\s*'(Mui\w+)'/);
-    if (!prefixMatch) {
-      continue;
-    }
-    const classes = buildClassesFromFile(classesFile, prefixMatch[1], checker, program);
+  for (const candidate of discoverClassesFiles(dir, program)) {
+    const classes = buildClassesFromCandidate(candidate, candidate.prefix, checker);
     if (classes) {
       result.push(...classes);
     }
@@ -543,30 +523,111 @@ function extractAllFolderClasses(
   return result;
 }
 
-function buildClassesFromFile(
-  classesFile: string,
+interface ClassesCandidate {
+  filePath: string;
+  sourceFile: ts.SourceFile;
+  /** `Mui<X>` prefix passed to `generateUtilityClasses`. */
+  prefix: string;
+  /** The `<X>Classes` interface the const was annotated with. */
+  interfaceName: string;
+}
+
+/**
+ * Finds every `*Classes.ts` file in `dir` that exposes a
+ * `export const xxxClasses: <X>Classes = generateUtilityClasses('Mui<Y>', [...])`-style
+ * declaration (or the spread variant used by some files). Returns the prefix and interface
+ * name parsed from the AST — no regex over source.
+ */
+function discoverClassesFiles(dir: string, program: ts.Program): ClassesCandidate[] {
+  const candidates: ClassesCandidate[] = [];
+  for (const file of fs.readdirSync(dir)) {
+    if (!file.endsWith('Classes.ts') && !file.endsWith('Classes.tsx')) {
+      continue;
+    }
+    const classesFile = path.join(dir, file);
+    const sourceFile = program.getSourceFile(classesFile);
+    if (!sourceFile) {
+      continue;
+    }
+    const parsed = parseClassesFile(sourceFile);
+    if (parsed) {
+      candidates.push({ filePath: classesFile, sourceFile, ...parsed });
+    }
+  }
+  return candidates;
+}
+
+/**
+ * Walks the classes source file to find the exported `<X>Classes`-typed const and the
+ * `generateUtilityClasses('Mui<Y>', ...)` call it contains (directly or via spread).
+ */
+function parseClassesFile(
+  sourceFile: ts.SourceFile,
+): { prefix: string; interfaceName: string } | null {
+  for (const stmt of sourceFile.statements) {
+    if (!ts.isVariableStatement(stmt)) {
+      continue;
+    }
+    for (const decl of stmt.declarationList.declarations) {
+      if (!decl.type || !ts.isTypeReferenceNode(decl.type)) {
+        continue;
+      }
+      if (!ts.isIdentifier(decl.type.typeName)) {
+        continue;
+      }
+      const interfaceName = decl.type.typeName.text;
+      if (!interfaceName.endsWith('Classes')) {
+        continue;
+      }
+      if (!decl.initializer) {
+        continue;
+      }
+      const prefix = findGenerateUtilityClassesPrefix(decl.initializer);
+      if (prefix) {
+        return { prefix, interfaceName };
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Given an initializer expression, finds the first `generateUtilityClasses('Mui<X>', ...)`
+ * call reachable inside it (directly, or inside an ObjectLiteralExpression with a spread).
+ */
+function findGenerateUtilityClassesPrefix(node: ts.Node): string | undefined {
+  let result: string | undefined;
+  const visit = (n: ts.Node): void => {
+    if (result) {
+      return;
+    }
+    if (
+      ts.isCallExpression(n) &&
+      ts.isIdentifier(n.expression) &&
+      n.expression.text === 'generateUtilityClasses' &&
+      n.arguments.length > 0 &&
+      ts.isStringLiteral(n.arguments[0])
+    ) {
+      result = n.arguments[0].text;
+      return;
+    }
+    ts.forEachChild(n, visit);
+  };
+  visit(node);
+  return result;
+}
+
+function buildClassesFromCandidate(
+  candidate: ClassesCandidate,
   prefix: string,
   checker: ts.TypeChecker,
-  program: ts.Program,
 ): ClassInfo[] | null {
-  const content = fs.readFileSync(classesFile, 'utf8');
-  // Find the interface name via the const declaration: `export const xxxClasses: XxxClasses = ...`
-  const ifaceMatch = content.match(/export\s+const\s+\w+\s*:\s*(\w+Classes)\s*=/);
-  if (!ifaceMatch) {
-    return null;
-  }
-  const classesInterfaceName = ifaceMatch[1];
-
-  const sourceFile = program.getSourceFile(classesFile);
-  if (!sourceFile) {
-    return null;
-  }
-  const moduleSymbol = checker.getSymbolAtLocation(sourceFile);
+  const moduleSymbol = checker.getSymbolAtLocation(candidate.sourceFile);
   if (!moduleSymbol) {
     return null;
   }
   const exports = checker.getExportsOfModule(moduleSymbol);
-  const classesSymbol = exports.find((s) => s.name === classesInterfaceName);
+  const classesSymbol = exports.find((s) => s.name === candidate.interfaceName);
   if (!classesSymbol) {
     return null;
   }
@@ -617,52 +678,134 @@ function buildClassInfos(
 }
 
 // ---------------------------------------------------------------------------
-// MuiName extraction from source
+// MuiName extraction via AST
 // ---------------------------------------------------------------------------
 
-export function extractMuiName(filePath: string, componentName: string): string {
-  const content = fs.readFileSync(filePath, 'utf8');
-  // Prefer useThemeProps({ props: ..., name: 'MuiXxx' }) — this is the canonical
-  // component-level name.
-  const themeMatch = content.match(/useThemeProps\s*\(\s*\{[^}]*name:\s*'(Mui\w+)'/);
-  if (themeMatch) {
-    return themeMatch[1];
+/**
+ * Walks the component's source file AST to find its canonical Mui name.
+ * Priority 1: `useThemeProps({ props: ..., name: 'MuiXxx' })` — the canonical
+ * component-level name.
+ * Priority 2: `styled(..., { name: 'MuiXxx' })` — only if the name actually
+ * corresponds to this component (ends with its name). This prevents
+ * sub-components like HeatmapCell (styled with the parent's namespace
+ * 'MuiHeatmap') from being mis-labeled.
+ */
+export function extractMuiName(
+  sourceFile: ts.SourceFile,
+  componentName: string,
+): string {
+  let themePropsName: string | undefined;
+  const styledNames: string[] = [];
+
+  const visit = (node: ts.Node): void => {
+    if (!themePropsName && ts.isCallExpression(node)) {
+      const calleeName = getCalleeName(node);
+      if (calleeName === 'useThemeProps') {
+        const name = getNameOptionFromCall(node);
+        if (name) {
+          themePropsName = name;
+        }
+      } else if (calleeName === 'styled') {
+        const name = getNameOptionFromCall(node);
+        if (name) {
+          styledNames.push(name);
+        }
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+
+  if (themePropsName) {
+    return themePropsName;
   }
-  // Fall back to `name: 'MuiXxx'` inside a styled() call, but only accept it if
-  // the name actually corresponds to this component (i.e. ends with the component
-  // name). This prevents sub-components like HeatmapCell (styled with the parent's
-  // namespace 'MuiHeatmap') from being labeled with the parent's name.
-  const styledMatches = content.matchAll(/name:\s*'(Mui\w+)'/g);
-  for (const m of styledMatches) {
-    const x = m[1].slice(3); // strip "Mui"
+  for (const name of styledNames) {
+    const x = name.slice(3); // strip "Mui"
     if (x === componentName || x.endsWith(componentName)) {
-      return m[1];
+      return name;
     }
   }
   return `Mui${componentName}`;
 }
 
-// ---------------------------------------------------------------------------
-// Check if a component definition has @ignore in its JSDoc
-// ---------------------------------------------------------------------------
-
-export function hasIgnoreOnDefinition(sourceText: string, componentName: string): boolean {
-  // Find the component definition (const X =, function X, export default function X, etc.)
-  const defPattern = new RegExp(`(?:const|let|var|function)\\s+${componentName}\\b`);
-  const defMatch = defPattern.exec(sourceText);
-  if (!defMatch) {
-    return false;
+/** Returns the identifier name of the callee (handles plain calls and member calls). */
+function getCalleeName(call: ts.CallExpression): string | undefined {
+  const expr = call.expression;
+  if (ts.isIdentifier(expr)) {
+    return expr.text;
   }
-
-  // Look backwards from the definition for the closest JSDoc comment
-  const beforeDef = sourceText.slice(0, defMatch.index);
-  // Find the last JSDoc block: /** ... */
-  const lastJsDoc = beforeDef.match(/\/\*\*[\s\S]*?\*\/\s*(?:export\s+(?:default\s+)?)?$/);
-  if (!lastJsDoc) {
-    return false;
+  if (ts.isPropertyAccessExpression(expr) && ts.isIdentifier(expr.name)) {
+    return expr.name.text;
   }
+  return undefined;
+}
 
-  return lastJsDoc[0].includes('@ignore');
+/** Find a `name: '...'` property in any object-literal argument of the call. */
+function getNameOptionFromCall(call: ts.CallExpression): string | undefined {
+  for (const arg of call.arguments) {
+    if (ts.isObjectLiteralExpression(arg)) {
+      for (const prop of arg.properties) {
+        if (
+          ts.isPropertyAssignment(prop) &&
+          ts.isIdentifier(prop.name) &&
+          prop.name.text === 'name' &&
+          ts.isStringLiteral(prop.initializer)
+        ) {
+          return prop.initializer.text;
+        }
+      }
+    }
+  }
+  return undefined;
+}
+
+// ---------------------------------------------------------------------------
+// @ignore detection via JSDoc tags
+// ---------------------------------------------------------------------------
+
+/**
+ * Checks whether the component declaration carries an `@ignore` JSDoc tag.
+ * Walks the source file for a top-level declaration with the given name and
+ * inspects its JSDoc via `ts.getJSDocTags`.
+ */
+export function hasIgnoreOnDefinition(
+  sourceFile: ts.SourceFile,
+  componentName: string,
+): boolean {
+  for (const stmt of sourceFile.statements) {
+    // function Foo() {}
+    if (ts.isFunctionDeclaration(stmt) && stmt.name?.text === componentName) {
+      if (hasIgnoreJsDocTag(stmt)) {
+        return true;
+      }
+    }
+    // const Foo = ...
+    if (ts.isVariableStatement(stmt)) {
+      for (const decl of stmt.declarationList.declarations) {
+        if (ts.isIdentifier(decl.name) && decl.name.text === componentName) {
+          if (hasIgnoreJsDocTag(stmt)) {
+            return true;
+          }
+        }
+      }
+    }
+    // export default function Foo() {} / export default Foo
+    if (ts.isExportAssignment(stmt) && !stmt.isExportEquals) {
+      if (
+        ts.isIdentifier(stmt.expression) &&
+        stmt.expression.text === componentName &&
+        hasIgnoreJsDocTag(stmt)
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function hasIgnoreJsDocTag(node: ts.Node): boolean {
+  const tags = ts.getJSDocTags(node);
+  return tags.some((tag) => tag.tagName.text === 'ignore');
 }
 
 // ---------------------------------------------------------------------------
@@ -673,7 +816,7 @@ export function parseConformanceTest(componentFilePath: string): ConformanceInfo
   const dir = path.dirname(componentFilePath);
   const baseName = path.basename(componentFilePath, '.tsx');
 
-  // Search for test files in various locations, including describeConformance.*.test.tsx
+  // Search for test files in several conventional locations.
   const pkgSrc = dir.replace(/\/src\/.*/, '/src');
   const candidateDirs = [
     dir,
@@ -682,50 +825,153 @@ export function parseConformanceTest(componentFilePath: string): ConformanceInfo
     path.join(pkgSrc, 'tests'),
   ];
 
-  let testContent: string | undefined;
+  let testFilePath: string | undefined;
+  let testFallback: string | undefined;
   for (const testDir of candidateDirs) {
     if (!fs.existsSync(testDir) || !fs.statSync(testDir).isDirectory()) {
       continue;
     }
     for (const file of fs.readdirSync(testDir)) {
-      if (file.endsWith(`${baseName}.test.tsx`) || file.endsWith(`${baseName}.test.ts`)) {
-        const candidate = fs.readFileSync(path.join(testDir, file), 'utf8');
-        if (candidate.includes('describeConformance')) {
-          testContent = candidate;
-          break;
-        }
-        // Keep first test file as fallback
-        if (!testContent) {
-          testContent = candidate;
-        }
+      if (!file.endsWith(`${baseName}.test.tsx`) && !file.endsWith(`${baseName}.test.ts`)) {
+        continue;
+      }
+      const candidatePath = path.join(testDir, file);
+      const content = fs.readFileSync(candidatePath, 'utf8');
+      if (content.includes('describeConformance')) {
+        testFilePath = candidatePath;
+        break;
+      }
+      if (!testFallback) {
+        testFallback = candidatePath;
       }
     }
-    if (testContent?.includes('describeConformance')) {
+    if (testFilePath) {
       break;
     }
   }
-  if (!testContent) {
+  const finalPath = testFilePath ?? testFallback;
+  if (!finalPath) {
     return {};
   }
 
-  if (!testContent.includes('describeConformance')) {
+  const content = fs.readFileSync(finalPath, 'utf8');
+  if (!content.includes('describeConformance')) {
     return {};
   }
 
-  // Extract refInstanceof directly from the file (regex on the full block is fragile
-  // because conformance callbacks can contain deeply nested JSX/objects)
-  const refMatch = testContent.match(/refInstanceof:\s*window\.(\w+)/);
-  const forwardsRefTo = refMatch?.[1];
+  const sourceFile = ts.createSourceFile(
+    finalPath,
+    content,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  const info = extractConformanceInfoFromAst(sourceFile);
+  // If the file mentions describeConformance but we couldn't find a concrete call
+  // (e.g. the file has a hand-rolled adaptation instead of the helper), default to
+  // the "assumed conformant" values so we don't regress vs. the old output.
+  if (info.spread === undefined) {
+    info.spread = true;
+  }
+  if (info.themeDefaultProps === undefined) {
+    info.themeDefaultProps = true;
+  }
+  return info;
+}
 
-  // Extract skip array
-  const skipMatch = testContent.match(/skip:\s*\[([\s\S]*?)\]/);
-  const skipContent = skipMatch?.[1] || '';
-  const skippedTests = skipContent.match(/'([^']+)'/g)?.map((s) => s.replace(/'/g, '')) || [];
+/**
+ * Walks a parsed test file AST to extract the options passed to `describeConformance`.
+ * Looks for a call to `describeConformance(component, () => ({...}))` and reads the
+ * returned object literal's `refInstanceof` and `skip` properties.
+ */
+function extractConformanceInfoFromAst(sourceFile: ts.SourceFile): ConformanceInfo {
+  let result: ConformanceInfo = {};
 
-  const spread = !skippedTests.includes('propsSpread');
-  const themeDefaultProps = !skippedTests.includes('themeDefaultProps');
+  const visit = (node: ts.Node): void => {
+    if (
+      ts.isCallExpression(node) &&
+      ts.isIdentifier(node.expression) &&
+      node.expression.text === 'describeConformance'
+    ) {
+      const callback = node.arguments[1];
+      if (
+        callback &&
+        (ts.isArrowFunction(callback) || ts.isFunctionExpression(callback))
+      ) {
+        const optionsObj = findReturnedObjectLiteral(callback);
+        if (optionsObj) {
+          result = readConformanceObject(optionsObj);
+        }
+      }
+      return;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
 
-  return { forwardsRefTo, spread, themeDefaultProps };
+  return result;
+}
+
+/** Given an arrow/function expression, find the returned ObjectLiteralExpression. */
+function findReturnedObjectLiteral(
+  fn: ts.ArrowFunction | ts.FunctionExpression,
+): ts.ObjectLiteralExpression | undefined {
+  const body = fn.body;
+  // `() => ({...})`
+  if (ts.isParenthesizedExpression(body) && ts.isObjectLiteralExpression(body.expression)) {
+    return body.expression;
+  }
+  // `() => ({...})` without parens (rare)
+  if (ts.isObjectLiteralExpression(body)) {
+    return body;
+  }
+  // `() => { return {...}; }`
+  if (ts.isBlock(body)) {
+    for (const stmt of body.statements) {
+      if (
+        ts.isReturnStatement(stmt) &&
+        stmt.expression &&
+        ts.isObjectLiteralExpression(stmt.expression)
+      ) {
+        return stmt.expression;
+      }
+    }
+  }
+  return undefined;
+}
+
+/** Reads `refInstanceof: window.X` and `skip: [...]` from the options object literal. */
+function readConformanceObject(obj: ts.ObjectLiteralExpression): ConformanceInfo {
+  let forwardsRefTo: string | undefined;
+  const skipped: string[] = [];
+
+  for (const prop of obj.properties) {
+    if (!ts.isPropertyAssignment(prop) || !ts.isIdentifier(prop.name)) {
+      continue;
+    }
+    if (prop.name.text === 'refInstanceof') {
+      const init = prop.initializer;
+      if (
+        ts.isPropertyAccessExpression(init) &&
+        ts.isIdentifier(init.expression) &&
+        init.expression.text === 'window'
+      ) {
+        forwardsRefTo = init.name.text;
+      }
+    } else if (prop.name.text === 'skip' && ts.isArrayLiteralExpression(prop.initializer)) {
+      for (const elem of prop.initializer.elements) {
+        if (ts.isStringLiteral(elem)) {
+          skipped.push(elem.text);
+        }
+      }
+    }
+  }
+
+  return {
+    forwardsRefTo,
+    spread: !skipped.includes('propsSpread'),
+    themeDefaultProps: !skipped.includes('themeDefaultProps'),
+  };
 }
 
 // ---------------------------------------------------------------------------

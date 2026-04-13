@@ -61,6 +61,10 @@ export interface PackageConfig {
   subdirImportForAllPackages?: boolean;
 }
 
+export type ExtractResult =
+  | { kind: 'ok'; api: ComponentApi }
+  | { kind: 'skipped'; reason: string };
+
 export interface ComponentApi {
   name: string;
   filename: string;
