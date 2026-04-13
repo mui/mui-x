@@ -7,7 +7,11 @@ import {
   type DatasetType,
 } from '../../models/seriesType/config';
 import { type SeriesId } from '../../models/seriesType/common';
-import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type {
+  SeriesProcessorParams,
+  SeriesProcessorResult,
+} from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { IsItemVisibleFunction } from '../../internals/plugins/featurePlugins/useChartVisibilityManager';
 import type { DefaultizedLineSeriesType } from '../../models';
 import type { MarkShape } from '../../models/seriesType/line';
 
@@ -24,7 +28,21 @@ const defaultShapes: MarkShape[] = [
 const lineValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedLineSeriesType['valueFormatter'];
 
-const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible) => {
+function seriesProcessor(
+  params: SeriesProcessorParams<'line'>,
+  dataset?: Readonly<DatasetType>,
+  isItemVisible?: IsItemVisibleFunction,
+): SeriesProcessorResult<'line'>;
+function seriesProcessor(
+  params: SeriesProcessorParams<'radial-line'>,
+  dataset?: Readonly<DatasetType>,
+  isItemVisible?: IsItemVisibleFunction,
+): SeriesProcessorResult<'radial-line'>;
+function seriesProcessor(
+  params: SeriesProcessorParams<'line' | 'radial-line'>,
+  dataset?: Readonly<DatasetType>,
+  isItemVisible?: IsItemVisibleFunction,
+): SeriesProcessorResult<'line' | 'radial-line'> {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
@@ -87,7 +105,7 @@ Line plots only support numeric and null values.`,
     }
   });
 
-  const completedSeries: Record<SeriesId, ChartSeriesDefaultized<'line'>> = {};
+  const completedSeries: Record<SeriesId, ChartSeriesDefaultized<'line' | 'radial-line'>> = {};
 
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;
@@ -155,6 +173,6 @@ Line plots only support numeric and null values.`,
     stackingGroups,
     series: completedSeries,
   };
-};
+}
 
 export default seriesProcessor;

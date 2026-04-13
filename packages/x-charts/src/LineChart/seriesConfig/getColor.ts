@@ -1,7 +1,7 @@
 import { type ColorProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
-const getColor: ColorProcessor<'line'> = (series, xAxis, yAxis) => {
+const getColor: ColorProcessor<'line' | 'radial-line'> = (series, xAxis, yAxis) => {
   const yColorScale = yAxis?.colorScale;
   const xColorScale = xAxis?.colorScale;
   const getSeriesColor = getSeriesColorFn(series);
