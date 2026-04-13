@@ -88,6 +88,6 @@
   "muiName": "MuiChartsYAxis",
   "filename": "/packages/x-charts/src/ChartsYAxis/ChartsYAxis.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li>\n<li><a href=\"/x/react-charts/axis-customization/\">Charts - Axis customization</a></li>\n<li><a href=\"/x/react-charts/axis-ticks/\">Charts - Ticks and grid</a></li></ul>",
   "cssComponent": false
 }
