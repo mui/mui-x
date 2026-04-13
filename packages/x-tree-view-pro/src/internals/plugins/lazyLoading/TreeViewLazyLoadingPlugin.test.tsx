@@ -59,14 +59,18 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
         fireEvent.click(view.getItemContent('1'));
 
-        expect(view.getItemIconContainer('1').querySelector('[role="progressbar"]')).not.to.equal(null);
+        expect(view.getItemIconContainer('1').querySelector('[role="progressbar"]')).not.to.equal(
+          null,
+        );
 
         view.setProps({
           selectedItems: ['1'],
           selectionPropagation: { descendants: true, parents: false },
         });
 
-        expect(view.getItemIconContainer('1').querySelector('[role="progressbar"]')).not.to.equal(null);
+        expect(view.getItemIconContainer('1').querySelector('[role="progressbar"]')).not.to.equal(
+          null,
+        );
 
         await act(async () => {
           resolveFetch!();
