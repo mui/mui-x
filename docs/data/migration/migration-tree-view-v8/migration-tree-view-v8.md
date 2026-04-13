@@ -23,6 +23,10 @@ In `package.json`, change the version of the Tree View package to `^9.0.0`.
 +"@mui/x-tree-view-pro": "^9.0.0",
 ```
 
+The `v9` major release contains changes that affect the public API.
+These changes were done for consistency, improved stability and to make room for new features.
+Described below are the steps needed to migrate from `v8` to `v9`.
+
 ## Update `@mui/material` and `@mui/system` packages
 
 The minimum supported version of `@mui/material` and `@mui/system` has been updated to `^7.3.0` or `^9.0.0`.
@@ -38,10 +42,6 @@ Follow the [Material UI migration guide](/material-ui/migration/upgrade-to-v9/)
 -"@mui/system": "^5.x.x",
 +"@mui/system": "^7.3.0",
 ```
-
-The `v9` major release contains changes that affect the public API.
-These changes were done for consistency, improved stability and to make room for new features.
-Described below are the steps needed to migrate from `v8` to `v9`.
 
 ## Breaking changes
 
