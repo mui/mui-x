@@ -33,6 +33,7 @@ export type DefaultizedAxisConfig<
 };
 
 type RotationConfig = PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>;
+type RadiusConfig = PolarAxisConfig<ScaleName, any, ChartsRadiusAxisProps>;
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -57,7 +58,11 @@ function getRange(
       deg2rad((axis as RotationConfig).endAngle, 2 * Math.PI),
     ];
   }
-  return [0, Math.min(drawingArea.height, drawingArea.width) / 2];
+  const availableRadius = Math.min(drawingArea.height, drawingArea.width) / 2;
+  return [
+    (axis as RadiusConfig).minRadius ?? 0,
+    (axis as RadiusConfig).maxRadius ?? availableRadius,
+  ];
 }
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
