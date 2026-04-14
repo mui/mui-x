@@ -9,7 +9,8 @@ title: Ask Your Table - AI Assistant
 :::info
 The AI Assistant requires a prompt processing backend to interpret natural language queries.
 You can [build your own service](#with-a-custom-service) using any AI provider—no additional add-on is required beyond the Premium license.
-Alternatively, MUI offers a [hosted processing service](#with-muis-service) as a paid add-on; contact [sales@mui.com](mailto:sales@mui.com) to learn more.
+Alternatively, MUI offers a [hosted processing service](#with-muis-service) as a paid add-on.
+Contact [sales@mui.com](mailto:sales@mui.com) to learn more.
 :::
 
 The AI Assistant feature lets users interact with the Data Grid component using natural language.
@@ -78,9 +79,10 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 1. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.
 
    :::warning
-   Do not expose the API key to the public. Instead, keep it private and use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and forwards the request to MUI's service.
+   Do not expose the API key to the public.
+   Instead, keep it private and use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and forwards the request to MUI's service.
 
-   **Next.js App Router** (`app/api/prompt/route.ts`):
+   Next.js App Router (`app/api/prompt/route.ts`):
 
    ```ts
    import { type NextRequest, NextResponse } from 'next/server';
@@ -100,7 +102,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    }
    ```
 
-   **Fastify** (using [`@fastify/http-proxy`](https://www.npmjs.com/package/@fastify/http-proxy)):
+   Fastify (using [`@fastify/http-proxy`](https://www.npmjs.com/package/@fastify/http-proxy)):
 
    ```ts
    fastify.register(proxy, {
@@ -251,7 +253,7 @@ async function processPrompt(
 }
 ```
 
-**Improving results for ambiguous prompts:** if users receive unexpected or incorrect grid updates, provide more specific column `examples` or add an `additionalContext` string describing what the rows represent.
+If users receive unexpected or incorrect grid updates, provide more specific column `examples` or add an `additionalContext` string describing what the rows represent.
 This gives the model enough context to interpret ambiguous queries correctly.
 
 ## API
