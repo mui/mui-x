@@ -206,8 +206,10 @@ Your resolver should return `Promise<PromptResponse>`.
 
 ## Error handling
 
-When `onPrompt` throws or the service returns `{ ok: false, message }`, the Data Grid surfaces an error indicator in the assistant panel.
-Wrap your implementation to catch network errors and log them to your error tracking service:
+When `onPrompt` rejects, the Data Grid automatically displays the error message in the assistant panel.
+`unstable_gridDefaultPromptResolver()` converts `{ ok: false, message }` service responses into a rejected promise, so this happens without any extra handling in your code.
+
+If you want to log errors to an external service before the Data Grid handles them, wrap your implementation in a try/catch and re-throw:
 
 ```ts
 async function processPrompt(
@@ -221,7 +223,6 @@ async function processPrompt(
       query,
       context,
       conversationId,
-      { privateMode: true },
     );
   } catch (error) {
     // Report to your error tracking service (Sentry, Datadog, etc.)
