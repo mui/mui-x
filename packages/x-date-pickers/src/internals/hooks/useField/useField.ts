@@ -163,8 +163,19 @@ export const useField = <
   });
 
   const handleRootBlur = useEventCallback((event: React.FocusEvent<HTMLDivElement>) => {
-    onBlur?.(event);
     rootProps.onBlur(event);
+    // Defer the user's onBlur callback to match the internal field behavior:
+    // only fire when focus truly leaves the field, not on transient blurs
+    // caused by focus moving between sections or programmatic focus changes.
+    setTimeout(() => {
+      if (!domGetters.isReady()) {
+        return;
+      }
+      const activeElement = getActiveElement(domGetters.getRoot());
+      if (!domGetters.getRoot().contains(activeElement)) {
+        onBlur?.(event);
+      }
+    });
   });
 
   const handleRootFocus = useEventCallback((event: React.FocusEvent<HTMLDivElement>) => {

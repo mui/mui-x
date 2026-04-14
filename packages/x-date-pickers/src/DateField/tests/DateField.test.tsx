@@ -1,10 +1,13 @@
+import * as React from 'react';
+import { spy } from 'sinon';
 import InputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { screen } from '@mui/internal-test-utils';
-import { createPickerRenderer } from 'test/utils/pickers';
+import { buildFieldInteractions, createPickerRenderer } from 'test/utils/pickers';
 
 describe('<DateField />', () => {
   const { render } = createPickerRenderer();
+  const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
 
   describe('slotProps behavior', () => {
     it('should respect the `slotProps.textField.slotProps.input`', () => {
@@ -37,6 +40,19 @@ describe('<DateField />', () => {
       );
 
       expect(screen.getByTestId('test-html-input')).not.to.equal(null);
+    });
+
+    it('should not call `slotProps.textField.onBlur` when the field gains focus', async () => {
+      const onBlur = spy();
+      const view = renderWithProps({ slotProps: { textField: { onBlur } } } as any);
+
+      // Tab into the field: the PickersSectionList root (tabIndex=0) receives focus first,
+      // then focus moves programmatically to section 0. That transient root blur must NOT
+      // dispatch the user's onBlur callback.
+      await view.user.tab();
+
+      expect(onBlur.callCount).to.equal(0);
+      view.unmount();
     });
   });
 
