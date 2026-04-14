@@ -200,7 +200,7 @@ This provides all the scaling properties to its children, and lets you use the `
 
 In turn, those components require an `axisId` prop to link them to an axis you defined in the `<ChartsContainer />`.
 You can choose their position with the `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
-The props described in the [rendering playground](/x/react-charts/axis-customization/#rendering) are also available.
+The props described in the [rendering playground](/x/react-charts/axis-customization/#custom-axis-rendering) are also available.
 
 {{"demo": "AxisWithComposition.js"}}
 
