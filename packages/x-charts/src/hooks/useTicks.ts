@@ -194,8 +194,8 @@ function getTimeTicks<T extends { toString(): string }>(
 
 interface GetTicksOptions
   extends
-    Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'>,
-    Required<Pick<TickParams, 'tickNumber'>> {
+  Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'>,
+  Required<Pick<TickParams, 'tickNumber'>> {
   scale: D3Scale;
   valueFormatter?: AxisConfig['valueFormatter'];
   isInside: (offset: number) => boolean;
@@ -300,15 +300,15 @@ export function getTicks(options: GetTicksOptions) {
         }),
 
         ...(tickPlacement === 'extremities' &&
-        endIndex === domain.length - 1 &&
-        isInside(scale.range()[1])
+          endIndex === domain.length - 1 &&
+          isInside(scale.range()[1])
           ? [
-              {
-                formattedValue: undefined,
-                offset: scale.range()[1],
-                labelOffset: 0,
-              },
-            ]
+            {
+              formattedValue: undefined,
+              offset: scale.range()[1],
+              labelOffset: 0,
+            },
+          ]
           : []),
       ];
     }
@@ -384,8 +384,37 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
   return scale.ticks(tickNumber);
 }
 
+const alwaysTrue = () => true;
+
+// Avoid ticks on more than 360° for rotation axis.
+const isInsideRotation = (scale: D3Scale) => (rotation: number) =>
+  Math.abs(scale.range()[0] - rotation) < Math.PI * 2 - 0.01;
+
+function getIsInside(
+  scale: D3Scale,
+  direction: 'x' | 'y' | 'rotation' | 'radius',
+  instance: ReturnType<typeof useChartsContext>['instance'],
+) {
+  switch (direction) {
+    case 'rotation':
+      return isInsideRotation(scale);
+
+    case 'radius':
+      return (radiusOffset: number) => radiusOffset >= 1;
+
+    case 'x':
+      return instance.isXInside;
+
+    case 'y':
+      return instance.isYInside;
+
+    default:
+      return alwaysTrue;
+  }
+}
+
 export function useTicks(
-  options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' },
+  options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' | 'rotation' | 'radius' },
 ): TickItem[] {
   const {
     scale,
@@ -399,7 +428,6 @@ export function useTicks(
     ordinalTimeTicks,
   } = options;
   const { instance } = useChartsContext();
-  const isInside = direction === 'x' ? instance.isXInside : instance.isYInside;
 
   return React.useMemo(
     () =>
@@ -411,7 +439,7 @@ export function useTicks(
         tickLabelPlacement,
         tickSpacing,
         valueFormatter,
-        isInside,
+        isInside: getIsInside(scale, direction, instance),
         ordinalTimeTicks,
       }),
     [
@@ -422,7 +450,8 @@ export function useTicks(
       tickLabelPlacement,
       tickSpacing,
       valueFormatter,
-      isInside,
+      direction,
+      instance,
       ordinalTimeTicks,
     ],
   );

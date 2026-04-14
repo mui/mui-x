@@ -29,6 +29,7 @@ export function ChartsRadiusGrid(props: ChartsRadiusGridProps) {
     tickNumber,
     tickInterval,
     tickSpacing,
+    direction: 'radius',
   });
 
   return (

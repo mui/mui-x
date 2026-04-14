@@ -30,6 +30,7 @@ export function ChartsRotationGrid(props: ChartsRotationGridProps) {
     tickNumber,
     tickInterval,
     tickSpacing,
+    direction: 'rotation',
   });
 
   return (
