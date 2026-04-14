@@ -102,7 +102,6 @@
     "babel-plugin-transform-replace-expressions": "0.2.0",
     "concurrently": "9.2.1",
     "cross-env": "catalog:",
-    "danger": "13.0.5",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
     "es-toolkit": "catalog:",
