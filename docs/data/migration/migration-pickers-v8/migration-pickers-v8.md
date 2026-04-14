@@ -13,23 +13,125 @@ This is a reference guide for upgrading `@mui/x-date-pickers` from v8 to v9.
 
 ## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `next`.
+In `package.json`, change the version of the date pickers package to `^9.0.0`.
 
 ```diff
 -"@mui/x-date-pickers": "8.x.x",
-+"@mui/x-date-pickers": "next",
++"@mui/x-date-pickers": "^9.0.0",
 
 -"@mui/x-date-pickers-pro": "8.x.x",
-+"@mui/x-date-pickers-pro": "next",
++"@mui/x-date-pickers-pro": "^9.0.0",
 ```
 
 Since `v9` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v8` to `v9`.
 
+## Update `@mui/material` and `@mui/system` packages
+
+The minimum supported version of `@mui/material` and `@mui/system` has been updated to `^7.3.0` or `^9.0.0`.
+This change enables the opt-in [Native Color](/material-ui/customization/css-theme-variables/native-color/) feature, which replaces JavaScript color manipulation with native CSS.
+The v5 and v6 versions are no longer supported.
+
+If you are using `@mui/material` v5 or v6, you need to upgrade to at least v7.3.0.
+Follow the [Material UI migration guide](/material-ui/migration/upgrade-to-v9/) to upgrade your implementation.
+
+```diff
+-"@mui/material": "^5.x.x",
++"@mui/material": "^7.3.0",
+
+-"@mui/system": "^5.x.x",
++"@mui/system": "^7.3.0",
+```
+
+:::success
+The amount of breaking changes is relatively large, but most of them might impact only a small portion of users, who are using advanced customization.
+
+Changes that might impact such users are marked with a ⏩ emoji.
+You can skip them and come back to them later if you experience any issues after the migration.
+:::
+
+:::warning
+Some behavioral changes are marked with a ⚠️ emoji for better visibility.
+
+Make sure to double-check them to avoid unexpected changes in your flow.
+
+If you have suggestions for how we could improve behaviors in the future, feel free to open a [GitHub issue](https://github.com/mui/mui-x/issues/new/choose) to discuss it.
+:::
+
+## Run codemods
+
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v9. You can run `v9.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v9.0.0/preset-safe` to target the other packages as well.
+
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
+
+<!-- #npm-tag-reference -->
+
+```bash
+# Date and Time Pickers specific
+npx @mui/x-codemod@latest v9.0.0/pickers/preset-safe <path>
+
+# Target the other packages as well
+npx @mui/x-codemod@latest v9.0.0/preset-safe <path>
+```
+
+:::info
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-pickers-v900) for more details.
+:::
+
+Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
+
+If you have already applied the `v9.0.0/pickers/preset-safe` (or `v9.0.0/preset-safe`) codemod, then you should not need to take any further action on these items.
+
+All other changes must be handled manually.
+
+## ⚠️ Accessible DOM structure is now the default
+
+The `enableAccessibleFieldDOMStructure` prop has been removed from all Picker and Field components.
+The accessible DOM structure (section-based `PickersTextField`) introduced in v7 is now the only supported mode.
+The legacy `<input>` based fallback is no longer available.
+
+The `preset-safe` codemod will remove the prop from your code automatically—both as a direct prop and inside `slotProps.field`.
+
+:::info
+The codemod cannot handle cases where `enableAccessibleFieldDOMStructure` is passed via spread syntax or through a variable reference.
+These cases must be updated manually:
+
+```tsx
+// Not handled by the codemod — remove enableAccessibleFieldDOMStructure manually
+const fieldProps = { enableAccessibleFieldDOMStructure: false };
+<DatePicker {...fieldProps} />;
+
+const slotProps = { field: { enableAccessibleFieldDOMStructure: false } };
+<DatePicker slotProps={slotProps} />;
+```
+
+:::
+
+:::warning
+**Action required if you used a custom `textField` slot with `enableAccessibleFieldDOMStructure={false}`**
+
+If you were using `enableAccessibleFieldDOMStructure={false}` with a custom `textField` slot that renders a standard `<input />` element, your component will **crash at runtime** after upgrading.
+The field now always uses the accessible DOM structure, which passes section-based props (like `elements` and `contentEditable`) that a plain `<input />` cannot handle.
+
+You must update your custom `textField` slot to be compatible with `PickersTextField`, which renders a `PickersSectionList` internally.
+See the [custom field documentation](/x/react-date-pickers/custom-field/) for implementation guidance.
+
+If you were **not** using a custom `textField` slot, simply removing the prop is sufficient—no other changes are needed.
+:::
+
+```diff
+-<DatePicker enableAccessibleFieldDOMStructure label="Start date" />
++<DatePicker label="Start date" />
+
+-<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: CustomTextField }} />
+ // CustomTextField must now be compatible with PickersTextField props
++<DatePicker slots={{ textField: CustomPickerTextField }} />
+```
+
 ## Slots breaking changes
 
-### Dialog slot
+### ⏩ Dialog slot
 
 The `dialog` slot no longer receives the deprecated `TransitionComponent`, `TransitionProps`, and `PaperProps` props.
 If you were passing a custom `dialog` slot, you need to update it to use `slots` and `slotProps` instead:
@@ -51,7 +153,7 @@ If you were passing a custom `dialog` slot, you need to update it to use `slots`
 
 ## Fields breaking changes
 
-### Renamed `fieldRef` props
+### ✅ Renamed `fieldRef` props
 
 The `unstableFieldRef`, `unstableStartFieldRef`, and `unstableEndFieldRef` props have been renamed to `fieldRef`, `startFieldRef`, and `endFieldRef` respectively.
 For Picker components, `fieldRef` should now be passed through the `slotProps.field.fieldRef` prop.
@@ -98,16 +200,21 @@ const fieldRef = React.useRef<FieldRef<PickerValue>>(null);
 fieldRef.current?.clearValue();
 ```
 
+### ⚠️ `textField` slot type change
+
+The `textField` slot prop on Picker and Field components now only accepts `PickersTextFieldProps`.
+It no longer accepts `TextFieldProps` from `@mui/material`.
+
 ## Components breaking changes
 
-### Day slot
+### ⚠️ Day slot
 
 The `PickerDay2` and `DateRangePickerDay2` components have been renamed to `PickerDay` and `DateRangePickerDay` respectively, replacing the old components.
 They are now the default components for the `day` slot, so you no longer need to pass them to `slots`.
 
 The `PickerDay` and `DateRangePickerDay` components now use `display: flex`.
 
-### Component structure change
+### ⚠️ Component structure change
 
 The `PickerDay` and `DateRangePickerDay` components have been simplified and now use a single `ButtonBase` element.
 Previously, they used multiple nested elements to render the selection and preview highlights.
@@ -116,7 +223,7 @@ These highlights are now rendered using `::before` and `::after` pseudo-elements
 This change might affect your custom styles if you were targeting the nested elements.
 For example, in `DateRangePickerDay`, the `day` class has been removed as there is no longer a separate element for the day content.
 
-### `DateRangePickerDay` selection behavior
+### ⚠️ `DateRangePickerDay` selection behavior
 
 The `isDaySelected` condition in `DateRangePickerDay` has been updated to also include individually selected days, not just days within a valid range.
 Previously, a day was only considered "selected" (receiving the `.Mui-selected` class) if it was part of a fully defined and valid range.
@@ -126,7 +233,7 @@ This makes the behavior more consistent with the single date picker (`PickerDay`
 
 This change might affect your custom CSS if you were targeting the `.Mui-selected` state of `DateRangePickerDay` and expected it to only be present for complete ranges.
 
-### `disableMargin` prop removal
+### ⚠️ `disableMargin` prop removal
 
 The `disableMargin` prop has been removed from `PickerDay` and `DateRangePickerDay` components.
 In v8, `DateRangePickerDay` internally hardcoded `disableMargin={true}` on the `PickersDay` component.
@@ -142,7 +249,7 @@ If you want to remove the margins, you can use the `--PickerDay-horizontalMargin
 />
 ```
 
-### Renamed `PickersDay`
+### ✅ Renamed `PickersDay`
 
 The `PickersDay` component has been renamed to `PickerDay` to be consistent with the other components.
 The theme component name has also been updated from `MuiPickersDay` to `MuiPickerDay`.
@@ -174,7 +281,7 @@ const theme = createTheme({
 });
 ```
 
-### `DateRangePickerDay` classes
+### ✅ `DateRangePickerDay` classes
 
 The `DateRangePickerDay` classes have been updated to be more consistent with the other components and to better describe their purpose.
 Several keys have been removed from the `DateRangePickerDayClasses` interface.
@@ -217,7 +324,7 @@ const theme = createTheme({
 });
 ```
 
-### `PickerDay` classes
+### ✅ `PickerDay` classes
 
 Several keys have been removed from the `PickerDayClasses` interface:
 
@@ -225,7 +332,7 @@ Several keys have been removed from the `PickerDayClasses` interface:
 - `hiddenDayFiller` and `hiddenDaySpacingFiller` have been renamed to `fillerCell`.
 - `outsideCurrentMonth` has been renamed to `dayOutsideMonth`.
 
-### `data-testid` changes
+### ⏩ `data-testid` changes
 
 The `data-testid` attributes on several components have been updated, which may break your unit or integration tests if you are querying for these specific IDs.
 
@@ -235,60 +342,137 @@ The `data-testid` attributes on several components have been updated, which may 
 - The `DateRangePreview` test ID has been removed entirely.
 - `PickerDay` (formerly `PickersDay`) now respects a custom `data-testid` prop if provided, falling back to its default value `"day"`.
 
-## Codemods
+### ✅ Drop deprecated `PickersTextField` props
 
-The following codemods can be used to automatically apply these changes to your codebase:
+The legacy `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props have been removed from `PickersTextField` and from every Picker / Field component.
+They were the last remnants of the old Material UI `TextField` API.
 
-### `rename-picker-classes`
+The replacement is the new `slotProps` shape, which mirrors the Material UI v9 `TextField` API:
 
-Renames `PickerDay` and `DateRangePickerDay` class keys.
+| Removed prop          | New location               |
+| :-------------------- | :------------------------- |
+| `InputProps`          | `slotProps.input`          |
+| `inputProps`          | `slotProps.htmlInput`      |
+| `InputLabelProps`     | `slotProps.inputLabel`     |
+| `FormHelperTextProps` | `slotProps.formHelperText` |
 
-```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-classes <path>
+On `PickersTextField` the new keys live directly under `slotProps`:
+
+```diff
+ <PickersTextField
+-  InputProps={{ startAdornment: <CakeIcon /> }}
+-  inputProps={{ 'data-testid': 'input' }}
++  slotProps={{
++    input: { startAdornment: <CakeIcon /> },
++    htmlInput: { 'data-testid': 'input' },
++  }}
+ />
 ```
 
-### `rename-field-ref`
+On Picker and Field components they are nested inside `slotProps.textField.slotProps`:
 
-Renames `unstable field refs` to stable ones.
+```diff
+ <DateField
+-  InputProps={{ name: 'birthday' }}
+-  inputProps={{ 'data-testid': 'input' }}
++  slotProps={{
++    textField: {
++      slotProps: {
++        input: { name: 'birthday' },
++        htmlInput: { 'data-testid': 'input' },
++      },
++    },
++  }}
+ />
 
-```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path>
+ <DatePicker
+-  slotProps={{ textField: { InputProps: { name: 'date' } } }}
++  slotProps={{ textField: { slotProps: { input: { name: 'date' } } } }}
+ />
 ```
 
-### `rename-picker-day-2`
-
-Renames `PickerDay2` and `DateRangePickerDay2` components and their related types/classes to `PickerDay` and `DateRangePickerDay`.
-Also renames theme component names (`MuiPickerDay2` → `MuiPickerDay`, `MuiDateRangePickerDay2` → `MuiDateRangePickerDay`) in `createTheme` calls, string literals, and template literals.
+The `preset-safe` codemod (or the standalone `migrate-text-field-props` codemod) performs this rewrite automatically:
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-day-2 <path>
+npx @mui/x-codemod@next v9.0.0/pickers/migrate-text-field-props <path>
 ```
-
-### `remove-picker-day-2`
-
-Removes the unnecessary `slots={{ day: PickerDay2 }}` and `slots={{ day: DateRangePickerDay2 }}` usages.
 
 :::info
-The codemod also handles objects passed through variables (for example `const slots = { day: PickerDay2 }`).
-In this case, it will remove the property from the object, but might leave the empty object and the `slots` prop on the component if they are now empty.
+The codemod cannot handle cases where the legacy props are passed via spread syntax or assigned through a variable reference. These usages must be migrated manually.
 :::
 
-```bash
-npx @mui/x-codemod@next v9.0.0/pickers/remove-picker-day-2 <path>
+## ⏩ `LocalizationProvider` breaking changes
+
+### ⏩ `utils` field removed from the adapter context value
+
+The deprecated `utils` field has been removed from the `PickersAdapterContextValue` interface (the value exposed by the internal pickers adapter context).
+Use the `adapter` field instead — it holds the exact same reference.
+
+The recommended way to access the adapter remains the `usePickerAdapter` hook.
+
+```diff
+ import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
+
+ const adapter = usePickerAdapter();
+-// Previously, you could also read `utils` from the internal context value.
 ```
 
-### `rename-pickers-day`
+### ⏩ `MuiPickersAdapterContext` export removed
 
-Renames `PickersDay` to `PickerDay` and all related types and theme components.
+The deprecated `MuiPickersAdapterContext` named export has been removed from `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
+Use the `usePickerAdapter` hook to access the adapter instead of reading the context directly.
 
-```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-pickers-day <path>
+```diff
+-import { MuiPickersAdapterContext } from '@mui/x-date-pickers/LocalizationProvider';
+-import * as React from 'react';
+-
+-const adapter = React.useContext(MuiPickersAdapterContext)?.adapter;
++import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
++
++const adapter = usePickerAdapter();
 ```
 
-### `remove-disable-margin`
+## ⏩ Removed types
 
-Removes the `disableMargin` prop from `PickerDay` (and legacy `PickersDay`) components and replaces it with the `--PickerDay-horizontalMargin` CSS variable set to `0` via the `sx` prop.
+### ⏩ `UseDateManagerParameters` and `UseDateTimeManagerParameters`
 
-```bash
-npx @mui/x-codemod@next v9.0.0/pickers/remove-disable-margin <path>
+The `UseDateManagerParameters` and `UseDateTimeManagerParameters` interfaces have been removed.
+They only contained the `enableAccessibleFieldDOMStructure` prop, which has been removed in v9.
+The `useDateManager` and `useDateTimeManager` hooks no longer accept any parameters.
+
+```diff
+-import { UseDateManagerParameters } from '@mui/x-date-pickers/managers';
+-import { UseDateTimeManagerParameters } from '@mui/x-date-pickers/managers';
+```
+
+### ⏩ `PickerManager` generic change
+
+The `PickerManager` interface now has 4 type parameters instead of 5.
+The `TEnableAccessibleFieldDOMStructure` type parameter has been removed.
+
+```diff
+-PickerManager<TValue, TError, TValidationProps, TEnableAccessibleFieldDOMStructure, TFieldInternalProps>
++PickerManager<TValue, TError, TValidationProps, TFieldInternalProps>
+```
+
+### ⏩ Picker and Field component type parameters
+
+All Picker and Field component prop types no longer have the `TEnableAccessibleFieldDOMStructure` generic parameter.
+If you were passing this type parameter explicitly, remove it:
+
+```diff
+-type MyPickerProps = DatePickerProps<true>;
++type MyPickerProps = DatePickerProps;
+
+-type MyFieldProps = DateFieldProps<true>;
++type MyFieldProps = DateFieldProps;
+```
+
+This applies to all Picker component prop types (`DatePickerProps`, `DateTimePickerProps`, `TimePickerProps`, `DateRangePickerProps`, etc.), all Field component prop types (`DateFieldProps`, `TimeFieldProps`, etc.), and their `Desktop`/`Mobile`/`Static` variants.
+
+The field hooks also no longer accept this type parameter:
+
+```diff
+-const response = useDateField<true, typeof props>(props);
++const response = useDateField<typeof props>(props);
 ```

@@ -954,15 +954,8 @@ async function main() {
 
     // Push the committed changes to fork remote
     console.log('Pushing committed changes to fork remote...');
-    try {
-      await execa('git', ['push', forkRemote, branchName]);
-      console.log(`Changes pushed to ${forkRemote}/${branchName}`);
-    } catch (error) {
-      console.error('Error pushing to fork remote:', error);
-      console.error('Falling back to pushing to origin...');
-      await execa('git', ['push', 'origin', branchName]);
-      console.log(`Changes pushed to origin/${branchName}`);
-    }
+    await execa('git', ['push', forkRemote, branchName]);
+    console.log(`Changes pushed to ${forkRemote}/${branchName}`);
 
     // Create PR body with checklist
     const prBody = createPrBody(newVersion);

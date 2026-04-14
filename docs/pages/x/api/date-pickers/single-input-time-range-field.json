@@ -1,6 +1,7 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
+    "areAllSectionsEmpty": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
     "clearButtonPosition": {
@@ -20,6 +21,8 @@
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
+    "endAdornment": { "type": { "name": "node" } },
+    "error": { "type": { "name": "bool" }, "default": "false" },
     "fieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
@@ -66,6 +69,10 @@
         "describedArgs": ["newValue"]
       }
     },
+    "openPickerButtonPosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'end'"
+    },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
       "type": { "name": "union", "description": "Array&lt;object&gt;<br>&#124;&nbsp;object" },
@@ -97,6 +104,7 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "startAdornment": { "type": { "name": "node" } },
     "sx": {
       "type": {
         "name": "union",
@@ -148,11 +156,29 @@
     {
       "name": "textField",
       "description": "Form control with an input to render the value.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     }
   ],
   "classes": [
+    {
+      "key": "fullWidth",
+      "className": "MuiSingleInputTimeRangeField-fullWidth",
+      "description": "Styles applied to the root element if `fullWidth={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "marginDense",
+      "className": "MuiSingleInputTimeRangeField-marginDense",
+      "description": "Styles applied to the root element if `margin=\"dense\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "marginNormal",
+      "className": "MuiSingleInputTimeRangeField-marginNormal",
+      "description": "Styles applied to the root element if `margin=\"normal\"`.",
+      "isGlobal": false
+    },
     {
       "key": "root",
       "className": "MuiSingleInputTimeRangeField-root",
