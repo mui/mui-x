@@ -11,10 +11,17 @@ export default function RadiusAxisPlayground() {
     <ChartsUsageDemo
       componentName="RadiusAxis"
       data={{
-        disableLine: { knob: 'switch', defaultValue: false },
-        disableTicks: { knob: 'switch', defaultValue: false },
+        disableLine: { knob: 'switch', defaultValue: true },
+        disableTicks: { knob: 'switch', defaultValue: true },
+        center: { knob: 'switch', defaultValue: true },
         tickSize: { knob: 'number', defaultValue: 6, min: 0, max: 20 },
-        angle: { knob: 'number', defaultValue: -90, min: -180, max: 180, step: 10 },
+        angle: {
+          knob: 'number',
+          defaultValue: -90,
+          min: -180,
+          max: 180,
+          step: 10,
+        },
         radiusTickNumber: { knob: 'number', defaultValue: 5, min: 0, max: 20 },
         startAngle: {
           knob: 'number',
@@ -37,12 +44,7 @@ export default function RadiusAxisPlayground() {
         <Box
           sx={{
             width: '100%',
-            maxWidth: 400,
-            '& .MuiChartsRadiusAxis-tickLabel': {
-              backgroundColor: 'background.paper',
-              border: '1px solid',
-              borderColor: 'divider',
-            },
+            height: 400,
           }}
         >
           <Unstable_ChartsRadialDataProvider
@@ -70,10 +72,11 @@ export default function RadiusAxisPlayground() {
               <ChartsSvgLayer>
                 <Unstable_ChartsRadialGrid rotation radius />
                 <ChartsRadiusAxis
-                  angle={(props.angle * Math.PI) / 180}
+                  angle={props.angle}
                   disableLine={props.disableLine}
                   disableTicks={props.disableTicks}
                   tickSize={props.tickSize}
+                  center={props.center}
                 />
               </ChartsSvgLayer>
             </ChartsLayerContainer>
