@@ -30,6 +30,10 @@ In `package.json`, change the version of the Data Grid package to `^9.0.0`.
 +"@mui/x-data-grid-premium": "^9.0.0",
 ```
 
+### Material UI compatibility
+
+Requires `@mui/material` at least `^7.3.0` up to `^9.0.0`. This compatibility lets you opt-in to [Native Color](/material-ui/customization/css-theme-variables/native-color/) feature that replaces JavaScript color manipulation with native CSS.
+
 ## Breaking changes
 
 ### Stabilized `experimentalFeatures`

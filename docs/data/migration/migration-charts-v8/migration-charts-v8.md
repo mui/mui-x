@@ -169,6 +169,10 @@ Since `v9` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v8` to `v9`.
 
+### Material UI compatibility
+
+Requires `@mui/material` at least `^7.3.0` up to `^9.0.0`. This compatibility lets you opt-in to [Native Color](/material-ui/customization/css-theme-variables/native-color/) feature that replaces JavaScript color manipulation with native CSS.
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v9. You can run `v9.0.0/charts/preset-safe` targeting only Charts or `v9.0.0/preset-safe` to target the other packages as well.

@@ -27,6 +27,10 @@ The `v9` major release contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v8` to `v9`.
 
+### Material UI compatibility
+
+Requires `@mui/material` at least `^7.3.0` up to `^9.0.0`. This compatibility lets you opt-in to [Native Color](/material-ui/customization/css-theme-variables/native-color/) feature that replaces JavaScript color manipulation with native CSS.
+
 ## Breaking changes
 
 ## Hooks
