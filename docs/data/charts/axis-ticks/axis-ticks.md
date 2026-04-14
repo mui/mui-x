@@ -4,7 +4,7 @@ productId: x-charts
 components: ChartsAxis, ChartsGrid, ChartsXAxis, ChartsYAxis
 ---
 
-# Charts - Ticks and grid
+# Charts - Axis ticks and grid
 
 <p class="description">Configure axis ticks and the chart grid.</p>
 
