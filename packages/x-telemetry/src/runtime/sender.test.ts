@@ -33,6 +33,8 @@ describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
     fetchSpy = vi.fn().mockResolvedValue(new Response('ok', { status: 200 }));
     vi.stubGlobal('fetch', fetchSpy);
     telemetryContext.traits.isCI = false;
+    telemetryContext.traits.runtimePackageNameHash = 'test-runtime-hash';
+    telemetryContext.config.runtimePackageNameHashResolved = true;
     // Reset env config cache
     getTelemetryEnvConfig(true);
   });
@@ -101,6 +103,32 @@ describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
     await sendMuiXTelemetryEvent(testEvent);
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not call fetch("/package.json") when telemetry is disabled', async () => {
+    // Reset runtime resolution flag so it would try to fetch if not gated
+    telemetryContext.config.runtimePackageNameHashResolved = false;
+    telemetryContext.traits.runtimePackageNameHash = null;
+    muiXTelemetrySettings.disableTelemetry();
+
+    const { default: sendMuiXTelemetryEvent } = await import('./sender');
+    await sendMuiXTelemetryEvent(testEvent);
+
+    // Neither the package.json fetch nor the telemetry POST should happen
+    expect(fetchSpy).not.toHaveBeenCalled();
+
+    muiXTelemetrySettings.enableTelemetry();
+  });
+
+  it('should not call fetch("/package.json") in CI', async () => {
+    telemetryContext.config.runtimePackageNameHashResolved = false;
+    telemetryContext.traits.runtimePackageNameHash = null;
+    telemetryContext.traits.isCI = true;
+
+    const { default: sendMuiXTelemetryEvent } = await import('./sender');
+    await sendMuiXTelemetryEvent(testEvent);
+
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it('should send correct payload to the telemetry endpoint', async () => {

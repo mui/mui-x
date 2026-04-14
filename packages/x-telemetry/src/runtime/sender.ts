@@ -35,11 +35,15 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
       return;
     }
 
-    const { default: getTelemetryContext } = await import('./get-context');
-    const telemetryContext = await getTelemetryContext();
-    if (!event || !shouldSendTelemetry(telemetryContext)) {
+    // Check eligibility using base context (no runtime resolution / fetch)
+    // so disabled telemetry doesn't trigger fetch('/package.json')
+    const { default: baseTelemetryContext } = await import('../context');
+    if (!event || !shouldSendTelemetry(baseTelemetryContext)) {
       return;
     }
+
+    const { default: getTelemetryContext } = await import('./get-context');
+    const telemetryContext = await getTelemetryContext();
 
     const eventPayload = {
       ...event,
