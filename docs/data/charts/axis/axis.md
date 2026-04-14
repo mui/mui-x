@@ -383,7 +383,7 @@ The props described in the [rendering playground above](/x/react-charts/axis/#re
 
 {{"demo": "AxisWithComposition.js"}}
 
-### Reference line
+## Reference line
 
 Use the `<ChartsReferenceLine />` component to add a reference line to a chart.
 You can provide an `x` or a `y` prop for a vertical or horizontal line, respectively, at this value.
@@ -394,3 +394,9 @@ Elements can be styled with the `lineStyle` and `labelStyle` props.
 More examples are available in [docs page about references](/x/react-charts/references/).
 
 {{"demo": "ReferenceLine.js"}}
+
+## Radial grid
+
+Similarly the the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates
+
+{{"demo": "RadialGridPlayground.js", "hideToolbar": true, "bg": "playground"}}
