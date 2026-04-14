@@ -20,8 +20,6 @@ import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
 import { ChartsToolbarRangeButtonTrigger } from './ChartsToolbarRangeButtonTrigger';
 import { type RangeButtonValue } from './rangeButtonValueToZoom';
-
-export type { RangeButtonFunctionParams } from './rangeButtonValueToZoom';
 import { type ChartsSlotsPro } from '../internals/material';
 import {
   type ChartsToolbarPrintExportOptions,
@@ -31,6 +29,8 @@ import {
   type ChartsToolbarImageExportOptions,
   ChartsToolbarImageExportTrigger,
 } from './ChartsToolbarImageExportTrigger';
+
+export type { RangeButtonFunctionParams } from './rangeButtonValueToZoom';
 
 export interface RangeButtonConfig {
   /**
