@@ -1,5 +1,6 @@
 {
   "props": {
+    "label": { "type": { "name": "string" }, "required": true },
     "value": {
       "type": {
         "name": "union",
