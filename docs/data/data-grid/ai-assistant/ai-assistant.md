@@ -6,10 +6,10 @@ title: Ask Your Table - AI Assistant
 
 <p class="description">Translate natural language into Data Grid views.</p>
 
-:::warning
-To use this feature you must have a prompt processing backend.
-MUI [offers this service](/x/react-data-grid/ai-assistant/#with-muis-service) as a part of a premium package add-on.
-Email us at [sales@mui.com](mailto:sales@mui.com) for more information.
+:::info
+The AI Assistant requires a prompt processing backend to interpret natural language queries.
+You can [build your own service](#with-a-custom-service) using any AI provider—no additional add-on is required beyond the Premium license.
+Alternatively, MUI offers a [hosted processing service](#with-muis-service) as a paid add-on; contact [sales@mui.com](mailto:sales@mui.com) to learn more.
 :::
 
 The AI Assistant feature lets users interact with the Data Grid component using natural language.
@@ -78,9 +78,29 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 1. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.
 
    :::warning
-   Do not expose the API key to the public. Instead, keep it private, use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request on to MUI's service.
+   Do not expose the API key to the public. Instead, keep it private and use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and forwards the request to MUI's service.
 
-   This is an example of a [Fastify proxy](https://www.npmjs.com/package/@fastify/http-proxy) for the prompt requests.
+   **Next.js App Router** (`app/api/prompt/route.ts`):
+
+   ```ts
+   import { type NextRequest, NextResponse } from 'next/server';
+
+   export async function POST(request: NextRequest) {
+     const body = await request.text();
+     const response = await fetch('https://backend.mui.com/api/v1/datagrid/prompt', {
+       method: 'POST',
+       headers: {
+         'content-type': 'application/json',
+         'x-api-key': process.env.MUI_DATAGRID_API_KEY!,
+       },
+       body,
+     });
+     const data = await response.json();
+     return NextResponse.json(data, { status: response.status });
+   }
+   ```
+
+   **Fastify** (using [`@fastify/http-proxy`](https://www.npmjs.com/package/@fastify/http-proxy)):
 
    ```ts
    fastify.register(proxy, {
@@ -108,8 +128,10 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    :::success
    You can implement `onPrompt()` with `unstable_gridDefaultPromptResolver()`.
    This adds the necessary headers and stringifies the body in the correct format for you.
+   The `unstable_` prefix means this API may change in a minor release as it matures—it is suitable for production use.
 
-   It also makes it possible to provide additional context for better processing results, as shown below:
+   Pass `privateMode: true` to limit MUI's service logging to billing data only—no query text or context is stored.
+   This is recommended for production deployments, especially those handling sensitive data:
 
    ```ts
    const PROMPT_RESOLVER_PROXY_BASE_URL =
@@ -118,6 +140,23 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
        : 'https://api.my-proxy.com';
 
    function processPrompt(query: string, context: string, conversationId?: string) {
+     return unstable_gridDefaultPromptResolver(
+       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+       query,
+       context,
+       conversationId,
+       { privateMode: true },
+     );
+   }
+   ```
+
+   Omit `privateMode` (or set it to `false`) to allow MUI to store query text for error analysis and service improvement.
+   Your grid's row data is never stored—only the query text itself.
+
+   You can also provide additional context for better processing results:
+
+   ```ts
+   function processPrompt(query: string, context: string, conversationId?: string) {
      const additionalContext = `The rows represent: List of employees with their company, position and start date`;
 
      return unstable_gridDefaultPromptResolver(
@@ -125,22 +164,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
        query,
        context,
        conversationId,
-       { additionalContext },
-     );
-   }
-   ```
-
-   By default, MUI's prompt resolver service stores the queries made to the service to analyze potential errors and improve the service (data is never stored).
-   Enable `privateMode` to make the service only keep track of the data needed for billing, without any query related data.
-
-   ```ts
-   function processPrompt(query: string, context: string, conversationId?: string) {
-     return unstable_gridDefaultPromptResolver(
-       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
-       query,
-       context,
-       conversationId,
-       { privateMode: true },
+       { privateMode: true, additionalContext },
      );
    }
    ```
@@ -199,6 +223,36 @@ type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 ```
 
 Your resolver should return `Promise<PromptResponse>`.
+
+## Error handling
+
+When `onPrompt` throws or the service returns `{ ok: false, message }`, the Data Grid surfaces an error indicator in the assistant panel.
+Wrap your implementation to catch network errors and log them to your error tracking service:
+
+```ts
+async function processPrompt(
+  query: string,
+  context: string,
+  conversationId?: string,
+) {
+  try {
+    return await unstable_gridDefaultPromptResolver(
+      `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+      query,
+      context,
+      conversationId,
+      { privateMode: true },
+    );
+  } catch (error) {
+    // Report to your error tracking service (Sentry, Datadog, etc.)
+    console.error('[AI Assistant] Prompt processing failed:', error);
+    throw error;
+  }
+}
+```
+
+**Improving results for ambiguous prompts:** if users receive unexpected or incorrect grid updates, provide more specific column `examples` or add an `additionalContext` string describing what the rows represent.
+This gives the model enough context to interpret ambiguous queries correctly.
 
 ## API
 
