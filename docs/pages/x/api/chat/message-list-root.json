@@ -1,0 +1,24 @@
+{
+  "props": {},
+  "name": "MessageListRoot",
+  "imports": [
+    "import { MessageListRoot } from '@mui/x-chat/headless';",
+    "import { MessageListRoot } from '@mui/x-chat/headless';"
+  ],
+  "slots": [
+    { "name": "messageList", "description": "", "class": null },
+    { "name": "messageListScroller", "description": "", "class": null },
+    { "name": "messageListContent", "description": "", "class": null },
+    { "name": "messageListOverlay", "description": "", "class": null },
+    { "name": "messageListScrollbar", "description": "", "class": null },
+    { "name": "messageListScrollbarThumb", "description": "", "class": null }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiMessageListRoot",
+  "filename": "/packages/x-chat-headless/src/message-list/MessageListRoot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/message-list/\">Chat - Headless message list</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li></ul>",
+  "cssComponent": false
+}

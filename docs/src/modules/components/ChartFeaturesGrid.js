@@ -73,7 +73,11 @@ const content = [
 
 export default function ChartFeaturesGrid() {
   return (
-    <Box mb={12}>
+    <Box
+      sx={{
+        mb: 12,
+      }}
+    >
       <Grid container spacing={2}>
         {content.map(({ icon, title, link }) => (
           <Grid key={title} size={{ xs: 12, sm: 6, lg: 3 }}>

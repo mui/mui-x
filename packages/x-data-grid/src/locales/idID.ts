@@ -73,7 +73,7 @@ export const idIDGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Dan',
   filterPanelOperatorOr: 'Atau',
-  filterPanelColumns: 'Kolom',
+  filterPanelColumn: 'Kolom',
   filterPanelInputLabel: 'Nilai',
   filterPanelInputPlaceholder: 'Nilai filter',
 
