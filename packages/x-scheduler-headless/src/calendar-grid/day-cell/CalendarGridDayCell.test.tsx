@@ -18,11 +18,17 @@ describe('<CalendarGrid.DayCell />', () => {
 
   function DayCellWrapper({
     children,
+    rowTypes,
+    rowCounts,
     ...providerProps
-  }: { children: React.ReactNode } & Partial<React.ComponentProps<typeof EventCalendarProvider>>) {
+  }: {
+    children: React.ReactNode;
+    rowTypes?: React.ComponentProps<typeof CalendarGrid.Root>['rowTypes'];
+    rowCounts?: React.ComponentProps<typeof CalendarGrid.Root>['rowCounts'];
+  } & Partial<React.ComponentProps<typeof EventCalendarProvider>>) {
     return (
       <EventCalendarProvider events={[]} {...providerProps}>
-        <CalendarGrid.Root>
+        <CalendarGrid.Root rowTypes={rowTypes} rowCounts={rowCounts}>
           <CalendarGrid.DayRow start={adapter.startOfDay(day)} end={adapter.endOfDay(day)}>
             {children}
           </CalendarGrid.DayRow>
@@ -81,6 +87,90 @@ describe('<CalendarGrid.DayCell />', () => {
       await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder).to.equal(null);
+    });
+  });
+
+  describe('arrow key navigation', () => {
+    it('should move focus to the next cell on ArrowRight', async () => {
+      const day2 = adapter.addDays(day, 1);
+      const { user } = render(
+        <DayCellWrapper rowTypes={['day-grid']} rowCounts={{}}>
+          <CalendarGrid.DayCell value={day} />
+          <CalendarGrid.DayCell value={day2} />
+        </DayCellWrapper>,
+      );
+
+      const cells = screen.getAllByRole('gridcell');
+      await user.click(cells[0]);
+      await user.keyboard('{ArrowRight}');
+
+      expect(cells[1]).toHaveFocus();
+    });
+
+    it('should move focus to the previous cell on ArrowLeft', async () => {
+      const day2 = adapter.addDays(day, 1);
+      const { user } = render(
+        <DayCellWrapper rowTypes={['day-grid']} rowCounts={{}}>
+          <CalendarGrid.DayCell value={day} />
+          <CalendarGrid.DayCell value={day2} />
+        </DayCellWrapper>,
+      );
+
+      const cells = screen.getAllByRole('gridcell');
+      await user.click(cells[1]);
+      await user.keyboard('{ArrowLeft}');
+
+      expect(cells[0]).toHaveFocus();
+    });
+
+    it('should not move focus on ArrowRight at the last column', async () => {
+      const { user } = render(
+        <DayCellWrapper rowTypes={['day-grid']} rowCounts={{}}>
+          <CalendarGrid.DayCell value={day} />
+        </DayCellWrapper>,
+      );
+
+      const cell = screen.getByRole('gridcell');
+      await user.click(cell);
+      await user.keyboard('{ArrowRight}');
+
+      expect(cell).toHaveFocus();
+    });
+
+    it('should not move focus on ArrowLeft at the first column', async () => {
+      const { user } = render(
+        <DayCellWrapper rowTypes={['day-grid']} rowCounts={{}}>
+          <CalendarGrid.DayCell value={day} />
+        </DayCellWrapper>,
+      );
+
+      const cell = screen.getByRole('gridcell');
+      await user.click(cell);
+      await user.keyboard('{ArrowLeft}');
+
+      expect(cell).toHaveFocus();
+    });
+
+    it('should use roving tabIndex pattern', async () => {
+      const day2 = adapter.addDays(day, 1);
+      const { user } = render(
+        <DayCellWrapper rowTypes={['day-grid']} rowCounts={{}}>
+          <CalendarGrid.DayCell value={day} />
+          <CalendarGrid.DayCell value={day2} />
+        </DayCellWrapper>,
+      );
+
+      const cells = screen.getAllByRole('gridcell');
+
+      // Before any interaction, all cells have default tabIndex
+      await user.click(cells[0]);
+      expect(cells[0]).to.have.attribute('tabindex', '0');
+      expect(cells[1]).to.have.attribute('tabindex', '-1');
+
+      // After navigating, tabIndex follows focus
+      await user.keyboard('{ArrowRight}');
+      expect(cells[0]).to.have.attribute('tabindex', '-1');
+      expect(cells[1]).to.have.attribute('tabindex', '0');
     });
   });
 });

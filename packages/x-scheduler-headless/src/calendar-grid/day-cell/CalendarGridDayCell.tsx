@@ -3,11 +3,13 @@ import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
+import { useCompositeListContext } from '../../base-ui-copy/composite/list/CompositeListContext';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
+import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import { useDayCellDropTarget } from './useDayCellDropTarget';
 import { CalendarGridDayCellContext } from './CalendarGridDayCellContext';
 
@@ -29,12 +31,17 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   } = componentProps;
 
   const adapter = useAdapterContext();
-  const { focusedCell, setFocusedCell } = useCalendarGridRootContext();
+  const { focusedCell, setFocusedCell, rowTypes, rowCounts } = useCalendarGridRootContext();
+  const { rowIndex } = useCalendarGridDayRowContext();
   const { ref: listItemRef, index } = useCompositeListItem();
+  const { elementsRef } = useCompositeListContext();
   const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
 
   const cellRef = React.useRef<HTMLDivElement>(null);
-  const hasFocus = focusedCell?.rowType === 'day-grid' && focusedCell?.columnIndex === index;
+  const hasFocus =
+    focusedCell?.rowType === 'day-grid' &&
+    focusedCell?.rowIndex === rowIndex &&
+    focusedCell?.columnIndex === index;
 
   const getPlaceholderFields = () => ({
     surfaceType: 'day-grid' as const,
@@ -55,10 +62,14 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   }, [hasFocus]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const target = getNavigationTarget(event.key, 'day-grid', index);
+    const target = getNavigationTarget(event.key, 'day-grid', rowIndex, index, {
+      columnCount: elementsRef.current.length,
+      rowTypes,
+      rowCounts,
+    });
     if (target) {
       event.preventDefault();
-      setFocusedCell(target.rowType, target.columnIndex);
+      setFocusedCell(target.rowType, target.rowIndex, target.columnIndex);
       return;
     }
 
@@ -70,7 +81,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
   const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
-      setFocusedCell('day-grid', index);
+      setFocusedCell('day-grid', rowIndex, index);
     }
   };
 

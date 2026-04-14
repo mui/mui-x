@@ -4,6 +4,7 @@ import { createSelector, useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
+import { useCompositeListContext } from '../../base-ui-copy/composite/list/CompositeListContext';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
@@ -41,14 +42,19 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   } = componentProps;
 
   const store = useEventCalendarStoreContext();
-  const { id: rootId, focusedCell, setFocusedCell } = useCalendarGridRootContext();
+  const { id: rootId, focusedCell, setFocusedCell, rowTypes, rowCounts } =
+    useCalendarGridRootContext();
   const isCurrentDay = useStore(store, selectorIsCurrentDate, date.value, skipDataCurrent);
 
   const { ref: listItemRef, index } = useCompositeListItem();
+  const { elementsRef } = useCompositeListContext();
   const id = getCalendarGridHeaderCellId(rootId, index);
 
   const cellRef = React.useRef<HTMLDivElement>(null);
-  const hasFocus = focusedCell?.rowType === 'header' && focusedCell?.columnIndex === index;
+  const hasFocus =
+    focusedCell?.rowType === 'header' &&
+    focusedCell?.rowIndex === 0 &&
+    focusedCell?.columnIndex === index;
 
   // Apply DOM focus when this cell becomes the focused cell
   React.useEffect(() => {
@@ -63,10 +69,14 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   }, [hasFocus]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const target = getNavigationTarget(event.key, 'header', index);
+    const target = getNavigationTarget(event.key, 'header', 0, index, {
+      columnCount: elementsRef.current.length,
+      rowTypes,
+      rowCounts,
+    });
     if (target) {
       event.preventDefault();
-      setFocusedCell(target.rowType, target.columnIndex);
+      setFocusedCell(target.rowType, target.rowIndex, target.columnIndex);
       return;
     }
 
@@ -78,8 +88,10 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     }
   };
 
-  const handleFocus = () => {
-    setFocusedCell('header', index);
+  const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      setFocusedCell('header', 0, index);
+    }
   };
 
   const state: CalendarGridHeaderCell.State = React.useMemo(
@@ -90,7 +102,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   );
 
   const keyboardProps = {
-    tabIndex: hasFocus ? 0 : -1,
+    tabIndex: focusedCell === null || hasFocus ? 0 : -1,
     onKeyDown: handleKeyDown,
     onFocus: handleFocus,
   };

@@ -99,6 +99,8 @@ const MonthViewBody = styled('div', {
   overflow: 'hidden',
 });
 
+const MONTH_VIEW_ROW_TYPES: ('header' | 'day-grid' | 'time-grid')[] = ['header', 'day-grid'];
+
 const CELL_PADDING = 5; // theme.spacing(0.5) * 2
 const DAY_NUMBER_HEADER_HEIGHT = 22; // event height (18px) + gap (4px)
 const EVENT_HEIGHT = 18;
@@ -167,6 +169,11 @@ export const MonthView = React.memo(
       return tempWeeks;
     }, [adapter, days]);
 
+    const monthViewRowCounts = React.useMemo(
+      () => ({ 'day-grid': weeks.length } as const),
+      [weeks.length],
+    );
+
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     useResizeObserver(
@@ -187,7 +194,11 @@ export const MonthView = React.memo(
         className={clsx(props.className, classes.monthView)}
       >
         <MoreEventsPopoverProvider>
-          <MonthViewGrid className={classes.monthViewGrid}>
+          <MonthViewGrid
+            className={classes.monthViewGrid}
+            rowTypes={MONTH_VIEW_ROW_TYPES}
+            rowCounts={monthViewRowCounts}
+          >
             <MonthViewHeader className={classes.monthViewHeader} ownerState={{ showWeekNumber }}>
               {showWeekNumber && (
                 <MonthViewWeekHeaderCell className={classes.monthViewWeekHeaderCell}>
@@ -209,6 +220,7 @@ export const MonthView = React.memo(
               {weeks.map((week, weekIdx) => (
                 <MonthViewWeekRow
                   key={weekIdx}
+                  rowIndex={weekIdx}
                   maxEvents={maxEvents}
                   days={week}
                   occurrencesMap={occurrencesMap}

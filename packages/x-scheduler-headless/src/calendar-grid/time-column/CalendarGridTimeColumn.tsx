@@ -4,6 +4,7 @@ import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
+import { useCompositeListContext } from '../../base-ui-copy/composite/list/CompositeListContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useAdapterContext } from '../../use-adapter-context';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
@@ -34,12 +35,16 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { focusedCell, setFocusedCell } = useCalendarGridRootContext();
+  const { focusedCell, setFocusedCell, rowTypes, rowCounts } = useCalendarGridRootContext();
   const isCurrentDay = useStore(store, schedulerNowSelectors.isCurrentDay, start);
   const { ref: listItemRef, index } = useCompositeListItem();
+  const { elementsRef } = useCompositeListContext();
 
   const cellRef = React.useRef<HTMLDivElement>(null);
-  const hasFocus = focusedCell?.rowType === 'time-grid' && focusedCell?.columnIndex === index;
+  const hasFocus =
+    focusedCell?.rowType === 'time-grid' &&
+    focusedCell?.rowIndex === 0 &&
+    focusedCell?.columnIndex === index;
 
   const { getCursorPositionInElementMs, ref: dropTargetRef } = useTimeDropTarget({
     start,
@@ -83,10 +88,14 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   }, [hasFocus]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const target = getNavigationTarget(event.key, 'time-grid', index);
+    const target = getNavigationTarget(event.key, 'time-grid', 0, index, {
+      columnCount: elementsRef.current.length,
+      rowTypes,
+      rowCounts,
+    });
     if (target) {
       event.preventDefault();
-      setFocusedCell(target.rowType, target.columnIndex);
+      setFocusedCell(target.rowType, target.rowIndex, target.columnIndex);
       return;
     }
 
@@ -98,7 +107,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
-      setFocusedCell('time-grid', index);
+      setFocusedCell('time-grid', 0, index);
     }
   };
 
