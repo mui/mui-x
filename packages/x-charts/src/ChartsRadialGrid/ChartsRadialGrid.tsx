@@ -68,18 +68,24 @@ function ChartsRadialGrid(inProps: ChartsRadialGridProps) {
   const startAngle = rotationAxisConfig?.scale.range()[0] ?? 0;
   const endAngle = rotationAxisConfig?.scale.range()[1] ?? 0;
 
-
   return (
     <GridRoot {...other} className={clsx(classes.root, className)}>
       {rotation && rotationAxisConfig && (
-        <ChartsRotationGrid axis={rotationAxisConfig} outerRadius={outerRadius} innerRadius={innerRadius} classes={classes} />
+        <ChartsRotationGrid
+          axis={rotationAxisConfig}
+          outerRadius={outerRadius}
+          innerRadius={innerRadius}
+          classes={classes}
+        />
       )}
 
       {radius && radiusAxisConfig && (
-        <ChartsRadiusGrid axis={radiusAxisConfig} 
-        startAngle={startAngle}
-        endAngle={endAngle}
-        classes={classes} />
+        <ChartsRadiusGrid
+          axis={radiusAxisConfig}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          classes={classes}
+        />
       )}
     </GridRoot>
   );

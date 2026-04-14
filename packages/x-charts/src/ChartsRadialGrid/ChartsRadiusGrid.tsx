@@ -51,7 +51,7 @@ export function ChartsRadiusGrid(props: ChartsRadiusGridProps) {
       </React.Fragment>
     );
   }
-  
+
   const startDx = Math.cos(startAngle - Math.PI / 2);
   const startDy = Math.sin(startAngle - Math.PI / 2);
   const endDx = Math.cos(endAngle - Math.PI / 2);
@@ -60,7 +60,7 @@ export function ChartsRadiusGrid(props: ChartsRadiusGridProps) {
   const isLargeArc = Math.abs(endAngle - startAngle) >= Math.PI;
   return (
     <React.Fragment>
-      {ticks.map(({  offset: radius }) => {
+      {ticks.map(({ offset: radius }) => {
         return (
           <GridPath
             key={`radius-${radius}`}

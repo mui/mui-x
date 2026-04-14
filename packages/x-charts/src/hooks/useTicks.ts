@@ -194,8 +194,8 @@ function getTimeTicks<T extends { toString(): string }>(
 
 interface GetTicksOptions
   extends
-  Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'>,
-  Required<Pick<TickParams, 'tickNumber'>> {
+    Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'>,
+    Required<Pick<TickParams, 'tickNumber'>> {
   scale: D3Scale;
   valueFormatter?: AxisConfig['valueFormatter'];
   isInside: (offset: number) => boolean;
@@ -300,15 +300,15 @@ export function getTicks(options: GetTicksOptions) {
         }),
 
         ...(tickPlacement === 'extremities' &&
-          endIndex === domain.length - 1 &&
-          isInside(scale.range()[1])
+        endIndex === domain.length - 1 &&
+        isInside(scale.range()[1])
           ? [
-            {
-              formattedValue: undefined,
-              offset: scale.range()[1],
-              labelOffset: 0,
-            },
-          ]
+              {
+                formattedValue: undefined,
+                offset: scale.range()[1],
+                labelOffset: 0,
+              },
+            ]
           : []),
       ];
     }
