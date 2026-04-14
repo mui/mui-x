@@ -154,7 +154,7 @@ The `getValue()` function receives the axis data value and should return a group
 Each group name is used as-is, overriding any `valueFormatter` for the axis.
 Groups are displayed in the order they're defined in the `groups` array.
 
-In the demos below shows the feature with:
+The demos below show the feature with:
 
 - The x-axis grouped by month, quarter, and year.
 - The y-axis is grouped by category and subcategory.
