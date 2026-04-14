@@ -17,7 +17,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
   describe('Focus', () => {
     it('should select 1st section on mount focus (`autoFocus = true`)', () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         autoFocus: true,
       });
@@ -30,7 +29,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
   describe('Click', () => {
     it('should select the clicked selection when the input is already focused', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         value: [null, adapterToUse.date('2022-02-24')],
       });
@@ -53,7 +51,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
     });
 
     it('should not change the selection when clicking on the only already selected section', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         value: [null, adapterToUse.date('2022-02-24')],
       });
@@ -78,7 +75,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
   describe('key: ArrowRight', () => {
     it('should allow to move from left to right with ArrowRight', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
 
       await view.selectSectionAsync('month');
@@ -103,7 +99,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
     });
 
     it('should stay on the current section when the last section is selected', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
 
       await view.selectSectionAsync('year', 'last');
@@ -117,7 +112,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
   describe('key: ArrowLeft', () => {
     it('should allow to move from right to left with ArrowLeft', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
 
       await view.selectSectionAsync('year', 'last');
@@ -141,7 +135,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
     });
 
     it('should stay on the current section when the first section is selected', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
 
       await view.selectSectionAsync('month');

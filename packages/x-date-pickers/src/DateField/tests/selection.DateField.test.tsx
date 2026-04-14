@@ -15,7 +15,6 @@ describe('<DateField /> - Selection', () => {
 
   describe('Focus', () => {
     it('should select 1st section on mount (`autoFocus = true`)', () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         autoFocus: true,
       });
@@ -25,7 +24,6 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select 1st section (`autoFocus = true`) with start separator', () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         autoFocus: true,
         format: `- ${adapterToUse.formats.year}`,
@@ -35,8 +33,7 @@ describe('<DateField /> - Selection', () => {
       view.unmount();
     });
 
-    it('should not select 1st section (v7) on mount (`autoFocus = true` and `disabled = true`)', () => {
-      // Test with accessible DOM structure
+    it('should not select 1st section on mount (`autoFocus = true` and `disabled = true`)', () => {
       const view = renderWithProps({
         autoFocus: true,
         disabled: true,
@@ -49,7 +46,6 @@ describe('<DateField /> - Selection', () => {
 
   describe('Click', () => {
     it('should select the clicked selection when the input is already focused', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
 
       await view.selectSectionAsync('day');
@@ -74,7 +70,6 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should not select section on click (`disabled = true`)', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         disabled: true,
       });
@@ -88,7 +83,6 @@ describe('<DateField /> - Selection', () => {
 
   describe('key: Ctrl + A', () => {
     it('should select all sections', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
       await view.selectSectionAsync('month');
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -102,7 +96,6 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select all sections with start separator', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: `- ${adapterToUse.formats.year}`,
       });
@@ -120,7 +113,6 @@ describe('<DateField /> - Selection', () => {
 
   describe('key: ArrowRight', () => {
     it('should move selection to the next section when one section is selected', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
       await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
@@ -130,7 +122,6 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should stay on the current section when the last section is selected', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
       await view.selectSectionAsync('year');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
@@ -140,7 +131,6 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select the last section when all the sections are selected', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
       await view.selectSectionAsync('month');
 
@@ -159,7 +149,6 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select the next section when editing after all the sections were selected', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
       await view.selectSectionAsync('month');
 
@@ -183,7 +172,6 @@ describe('<DateField /> - Selection', () => {
 
   describe('key: ArrowLeft', () => {
     it('should move selection to the previous section when one section is selected', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
       await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
@@ -193,7 +181,6 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should stay on the current section when the first section is selected', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
       await view.selectSectionAsync('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
@@ -203,7 +190,6 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select the first section when all the sections are selected', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({});
       await view.selectSectionAsync('month');
 

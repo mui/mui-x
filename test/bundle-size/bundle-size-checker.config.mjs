@@ -77,6 +77,6 @@ export default defineConfig(async () => {
       // Stabilize release info string
       [JSON.stringify(generateReleaseInfo())]: JSON.stringify('__RELEASE_INFO__'),
     },
-    comment: false,
+    comment: true,
   };
 });

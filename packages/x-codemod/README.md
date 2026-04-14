@@ -69,7 +69,7 @@ To run codemods for a specific package, refer to the respective section.
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/preset-safe <path|folder>
+npx @mui/x-codemod@latest v9.0.0/preset-safe <path|folder>
 ```
 
 The corresponding sub-sections are listed below
@@ -90,7 +90,7 @@ If `charts` is the only property, the entire `experimentalFeatures` prop is remo
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/data-grid/remove-stabilized-experimentalFeatures <path|folder>
+npx @mui/x-codemod@latest v9.0.0/data-grid/remove-stabilized-experimentalFeatures <path|folder>
 ```
 
 ```diff
@@ -109,7 +109,7 @@ The `preset-safe` codemods for Charts.
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/charts/preset-safe <path|folder>
+npx @mui/x-codemod@latest v9.0.0/charts/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -320,7 +320,7 @@ The `preset-safe` codemods for Pickers.
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/preset-safe <path|folder>
+npx @mui/x-codemod@latest v9.0.0/pickers/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -332,6 +332,7 @@ The list includes these transformers
 - [`rename-pickers-day`](#rename-pickers-day)
 - [`rename-picker-classes`](#rename-picker-classes)
 - [`remove-disable-margin`](#remove-disable-margin)
+- [`migrate-text-field-props`](#migrate-text-field-props)
 
 #### `rename-field-ref`
 
@@ -351,7 +352,7 @@ Renames the `unstableFieldRef` prop to `fieldRef` on all Picker and Field compon
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path|folder>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-field-ref <path|folder>
 ```
 
 #### `remove-enable-accessible-field-dom-structure`
@@ -373,7 +374,7 @@ The accessible DOM structure is now the only supported option and this prop has 
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/remove-enable-accessible-field-dom-structure <path|folder>
+npx @mui/x-codemod@latest v9.0.0/pickers/remove-enable-accessible-field-dom-structure <path|folder>
 ```
 
 #### `remove-picker-day-2`
@@ -392,7 +393,7 @@ Also handles objects passed through variables (for example `const slots = { day:
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/remove-picker-day-2 <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/remove-picker-day-2 <path>
 ```
 
 #### `rename-picker-day-2`
@@ -419,7 +420,7 @@ Renames `PickerDay2` and `DateRangePickerDay2` components and their related type
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-day-2 <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-picker-day-2 <path>
 ```
 
 #### `rename-pickers-day`
@@ -443,7 +444,7 @@ Renames `PickersDay` to `PickerDay` and all related types, classes, and theme co
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-pickers-day <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-pickers-day <path>
 ```
 
 #### `rename-picker-classes`
@@ -464,7 +465,7 @@ Renames `PickerDay` and `DateRangePickerDay` CSS class keys to their new equival
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-classes <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/rename-picker-classes <path>
 ```
 
 #### `remove-disable-margin`
@@ -484,7 +485,37 @@ When `disableMargin={false}`, the prop is simply removed without adding the CSS 
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/pickers/remove-disable-margin <path>
+npx @mui/x-codemod@latest v9.0.0/pickers/remove-disable-margin <path>
+```
+
+#### `migrate-text-field-props`
+
+Rewrites the legacy `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props on Picker, Field and `PickersTextField` components into the new `slotProps.{input,htmlInput,inputLabel,formHelperText}` shape. On Picker and Field components the new keys are nested inside `slotProps.textField.slotProps`; on `PickersTextField` they live directly under `slotProps`.
+
+```diff
+-<DateField
+-  InputProps={{ name: 'birthday' }}
+-  inputProps={{ 'data-testid': 'html-input' }}
+-/>
++<DateField
++  slotProps={{
++    textField: {
++      slotProps: {
++        input: { name: 'birthday' },
++        htmlInput: { 'data-testid': 'html-input' },
++      },
++    },
++  }}
++/>
+
+-<DatePicker slotProps={{ textField: { InputProps: { name: 'date' } } }} />
++<DatePicker slotProps={{ textField: { slotProps: { input: { name: 'date' } } } }} />
+```
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/migrate-text-field-props <path>
 ```
 
 ## v8.0.0
