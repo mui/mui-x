@@ -317,6 +317,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "event placeholder elements"
     },
+    "eventRecurringIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event recurring icon elements"
+    },
     "eventResizeHandler": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "event resize handler elements"
