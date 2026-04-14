@@ -82,7 +82,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    Do not expose the API key to the public.
    Instead, keep it private and use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and forwards the request to MUI's service.
 
-   Next.js App Router (`app/api/prompt/route.ts`):
+   This is an example of a Next.js App Router route handler (`app/api/prompt/route.ts`) for the prompt requests.
 
    ```ts
    import { type NextRequest, NextResponse } from 'next/server';
@@ -102,7 +102,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    }
    ```
 
-   Fastify (using [`@fastify/http-proxy`](https://www.npmjs.com/package/@fastify/http-proxy)):
+   This is an example of a [Fastify proxy](https://www.npmjs.com/package/@fastify/http-proxy) for the prompt requests.
 
    ```ts
    fastify.register(proxy, {
