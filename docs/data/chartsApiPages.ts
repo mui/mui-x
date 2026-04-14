@@ -153,6 +153,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-range-button-trigger',
+    title: 'ChartsToolbarRangeButtonTrigger',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-toolbar-zoom-in-trigger',
     title: 'ChartsToolbarZoomInTrigger',
     plan: 'pro',
