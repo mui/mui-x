@@ -68,8 +68,8 @@
  * - **Root Index**: `x/llms.txt` (concatenates all project indexes)
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import yargs, { ArgumentsCamelCase } from 'yargs';
 import { kebabCase } from 'es-toolkit/string';
 import * as prettier from 'prettier';
