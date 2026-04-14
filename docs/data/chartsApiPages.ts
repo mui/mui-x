@@ -126,6 +126,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsRadialGrid',
   },
   {
+    pathname: '/x/api/charts/charts-radius-axis',
+    title: 'ChartsRadiusAxis',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },
