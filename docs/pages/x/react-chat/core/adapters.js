@@ -1,4 +1,4 @@
-import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
+import { MarkdownDocs } from '@mui/internal-core-docs/MarkdownDocs';
 import * as pageProps from 'docsx/data/chat/core/adapters/adapters.md?muiMarkdown';
 
 export default function Page() {
