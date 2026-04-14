@@ -394,9 +394,3 @@ Elements can be styled with the `lineStyle` and `labelStyle` props.
 More examples are available in [docs page about references](/x/react-charts/references/).
 
 {{"demo": "ReferenceLine.js"}}
-
-## Radial grid
-
-Similarly the the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates
-
-{{"demo": "RadialGridPlayground.js", "hideToolbar": true, "bg": "playground"}}

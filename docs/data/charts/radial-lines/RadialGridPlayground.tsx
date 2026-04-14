@@ -13,12 +13,24 @@ export default function RadialGridPlayground() {
         {
           rotation: { knob: 'switch', defaultValue: true },
           radius: { knob: 'switch', defaultValue: true },
-          rotationTickNumber: { knob: 'number', defaultValue: 10 },
-          radiusTickNumber: { knob: 'number', defaultValue: 10 },
-          startAngle: { knob: 'number', defaultValue: 0, min: -360, max: 360 },
-          endAngle: { knob: 'number', defaultValue: 360, min: -360, max: 360 },
-          minRadius: { knob: 'number', defaultValue: 0, min: 0 },
-          maxRadius: { knob: 'number', defaultValue: 100, min: 50 },
+          rotationTickNumber: { knob: 'number', defaultValue: 10, min: 0, max: 20 },
+          radiusTickNumber: { knob: 'number', defaultValue: 10, min: 0, max: 20 },
+          startAngle: {
+            knob: 'number',
+            defaultValue: -90,
+            min: -360,
+            max: 400,
+            step: 10,
+          },
+          endAngle: {
+            knob: 'number',
+            defaultValue: 90,
+            min: -360,
+            max: 400,
+            step: 10,
+          },
+          minRadius: { knob: 'number', defaultValue: 30, min: 0, step: 10 },
+          maxRadius: { knob: 'number', defaultValue: 150, min: 50, step: 10 },
         } as const
       }
       renderDemo={(props) => (
@@ -54,14 +66,22 @@ export default function RadialGridPlayground() {
               </ChartsSvgLayer>
             </ChartsLayerContainer>
           </Unstable_ChartsRadialDataProvider>
-          ,
         </Box>
       )}
-      getCode={({
-        props,
-      }) => `import { Unstable_ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
-
-      <Unstable_ChartsRadialGrid ${[props.rotation && 'rotation', props.radius && 'radius'].filter(Boolean).join(' ')} />`}
+      getCode={({ props }) => `<Unstable_ChartsRadialDataProvider
+  rotationAxis={[{
+    startAngle: ${props.startAngle},
+    endAngle: ${props.endAngle},
+    tickNumber: ${props.rotationTickNumber},
+  }]}
+  radiusAxis={[{
+    minRadius: ${props.minRadius},
+    maxRadius: ${props.maxRadius},
+    tickNumber: ${props.radiusTickNumber},
+  }]}
+>
+  <Unstable_ChartsRadialGrid ${[props.rotation && 'rotation', props.radius && 'radius'].filter(Boolean).join(' ')} />
+</Unstable_ChartsRadialDataProvider>`}
     />
   );
 }
