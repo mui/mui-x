@@ -118,6 +118,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLocalizationProvider',
   },
   {
+    pathname: '/x/api/charts/charts-radial-data-provider',
+    title: 'ChartsRadialDataProvider',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },

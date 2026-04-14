@@ -24,6 +24,10 @@
       },
       "isProPlan": true
     },
+    "valueGetter": {
+      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; HeatmapValueType" },
+      "isProPlan": true
+    },
     "xAxisId": { "type": { "description": "AxisId" }, "isProPlan": true },
     "yAxisId": { "type": { "description": "AxisId" }, "isProPlan": true }
   }

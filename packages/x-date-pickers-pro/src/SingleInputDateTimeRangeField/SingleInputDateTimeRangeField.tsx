@@ -257,6 +257,12 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
+   * The position at which the opening button is placed.
+   * If there is no Picker to open, the button is not rendered
+   * @default 'end'
+   */
+  openPickerButtonPosition: PropTypes.oneOf(['end', 'start']),
+  /**
    * If `true`, the component is read-only.
    * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false

@@ -489,7 +489,6 @@ describe('<TimeField /> - Editing', () => {
     });
 
     it('should go to the next section when pressing `2` in a 12-hours format', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: adapter.formats.fullTime12h,
       });
@@ -504,7 +503,6 @@ describe('<TimeField /> - Editing', () => {
     });
 
     it('should go to the next section when pressing `1` then `3` in a 12-hours format', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: adapter.formats.fullTime12h,
       });
@@ -593,29 +591,27 @@ describe('<TimeField /> - Editing', () => {
     TimeField,
     ({ adapter, renderWithProps }) => {
       it('should not loose date information when a value is provided', async () => {
-        // Test with accessible DOM structure
-        const onChangeV7 = spy();
+        const onChange = spy();
 
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
-          onChange: onChangeV7,
+          onChange,
         });
 
         await view.selectSectionAsync('hours');
         fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
 
         view.unmount();
       });
 
       it('should not loose date information when cleaning the date then filling it again', async () => {
-        // Test with accessible DOM structure
-        const onChangeV7 = spy();
+        const onChange = spy();
 
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
-          onChange: onChangeV7,
+          onChange,
           format: adapter.formats.fullTime24h,
         });
 
@@ -633,25 +629,24 @@ describe('<TimeField /> - Editing', () => {
 
         view.pressKey(1, '4');
         expectFieldValue(view.getSectionsContainer(), '03:04');
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
 
         view.unmount();
       });
 
       it('should not loose time information when using the hour format and value is provided', async () => {
-        // Test with accessible DOM structure
-        const onChangeV7 = spy();
+        const onChange = spy();
 
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
-          onChange: onChangeV7,
+          onChange,
           format: adapter.formats.hours24h,
         });
 
         await view.selectSectionAsync('hours');
         fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
 
         view.unmount();
       });

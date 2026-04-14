@@ -7,10 +7,7 @@ import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
 import { DateRangeManagerFieldInternalProps } from '../managers/useDateRangeManager';
 
 export interface UseSingleInputDateRangeFieldProps
-  extends
-    DateRangeManagerFieldInternalProps,
-    // TODO v8: Remove once the range fields open with a button.
-    Omit<ExportedPickerFieldUIProps, 'openPickerButtonPosition'> {}
+  extends DateRangeManagerFieldInternalProps, ExportedPickerFieldUIProps {}
 
 export type SingleInputDateRangeFieldProps = Omit<
   BuiltInFieldTextFieldProps,
