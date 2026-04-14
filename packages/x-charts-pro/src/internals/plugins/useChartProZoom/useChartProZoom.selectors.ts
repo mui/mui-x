@@ -30,7 +30,7 @@ export const selectorChartCanZoomOut = createSelector(
   selectorChartZoomState,
   selectorChartZoomOptionsLookup,
   (zoomState, zoomOptions) => {
-    return zoomState.zoomData.every((zoomData) => {
+    return !zoomState.zoomData.every((zoomData) => {
       const span = zoomData.end - zoomData.start;
       const options = zoomOptions[zoomData.axisId];
       return (
@@ -50,7 +50,7 @@ export const selectorChartCanZoomIn = createSelector(
   selectorChartZoomState,
   selectorChartZoomOptionsLookup,
   (zoomState, zoomOptions) => {
-    return zoomState.zoomData.every((zoomData) => {
+    return !zoomState.zoomData.every((zoomData) => {
       const span = zoomData.end - zoomData.start;
       const options = zoomOptions[zoomData.axisId];
       return span === options.minSpan;

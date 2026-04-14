@@ -128,7 +128,7 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   // When no button has been clicked and zoom is at full range, the null-value button is active.
   const isActive =
     activeRangeButtonKey === label ||
-    (activeRangeButtonKey === null && value === null && canZoomOut);
+    (activeRangeButtonKey === null && value === null && !canZoomOut);
 
   const element = useComponentRenderer(slots.baseToggleButton, render, {
     ...slotProps.baseToggleButton,
