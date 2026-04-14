@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './pie-chart-pro.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesPieChartPro } from './types.pie-chart-pro';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['colors', 'dataset', 'desc', 'disableKeyboardNavigation', 'experimentalFeatures', 'height', 'hiddenItems', 'hideLegend', 'highlightedItem', 'id', 'initialHiddenItems', 'loading', 'localeText', 'margin', 'onHiddenItemsChange', 'onHighlightChange', 'onItemClick', 'onTooltipItemChange', 'series', 'showToolbar', 'skipAnimation', 'slotProps', 'slots', 'title', 'tooltipItem', 'width'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/pie-chart-pro',
-    false,
-    /\.\/pie-chart-pro.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="PieChartPro" allowedProps={allowedProps}>
+      <TypesPieChartPro />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

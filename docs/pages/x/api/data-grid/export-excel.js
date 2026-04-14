@@ -1,21 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import jsonPageContent from './export-excel.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesExportExcel } from './types.export-excel';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['options', 'render'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/data-grid/export-excel',
-    false,
-    /\.\/export-excel.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ExportExcel" allowedProps={allowedProps}>
+      <TypesExportExcel />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

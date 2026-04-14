@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './event-timeline-premium.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesEventTimelinePremium } from './types.event-timeline-premium';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['apiRef', 'areEventsDraggable', 'areEventsResizable', 'canDragEventsFromTheOutside', 'canDropEventsToTheOutside', 'classes', 'dataSource', 'dateLocale', 'defaultPreferences', 'defaultView', 'defaultVisibleDate', 'defaultVisibleResources', 'displayTimezone', 'eventColor', 'eventModelStructure', 'events', 'localeText', 'onEventsChange', 'onPreferencesChange', 'onViewChange', 'onVisibleDateChange', 'onVisibleResourcesChange', 'preferences', 'readOnly', 'resourceColumnLabel', 'resourceModelStructure', 'resources', 'showCurrentTimeIndicator', 'sx', 'view', 'views', 'visibleDate', 'visibleResources'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/scheduler/event-timeline-premium',
-    false,
-    /\.\/event-timeline-premium.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="EventTimelinePremium" allowedProps={allowedProps}>
+      <TypesEventTimelinePremium />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

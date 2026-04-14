@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './static-date-picker.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesStaticDatePicker } from './types.static-date-picker';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['autoFocus', 'dayOfWeekFormatter', 'defaultValue', 'disableFuture', 'disableHighlightToday', 'disablePast', 'disabled', 'displayStaticWrapperAs', 'displayWeekNumber', 'fixedWeekNumber', 'loading', 'localeText', 'maxDate', 'minDate', 'monthsPerRow', 'onAccept', 'onChange', 'onClose', 'onError', 'onMonthChange', 'onViewChange', 'onYearChange', 'openTo', 'orientation', 'readOnly', 'reduceAnimations', 'referenceDate', 'renderLoading', 'shouldDisableDate', 'shouldDisableMonth', 'shouldDisableYear', 'showDaysOutsideCurrentMonth', 'slotProps', 'slots', 'sx', 'timezone', 'value', 'view', 'viewRenderers', 'views', 'yearsOrder', 'yearsPerRow'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/static-date-picker',
-    false,
-    /\.\/static-date-picker.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="StaticDatePicker" allowedProps={allowedProps}>
+      <TypesStaticDatePicker />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

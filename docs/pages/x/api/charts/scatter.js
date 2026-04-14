@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './scatter.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesScatter } from './types.scatter';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['colorGetter', 'onItemClick'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/scatter',
-    false,
-    /\.\/scatter.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="Scatter" allowedProps={allowedProps}>
+      <TypesScatter />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

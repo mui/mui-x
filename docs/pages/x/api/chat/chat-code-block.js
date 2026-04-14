@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './chat-code-block.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesChatCodeBlock } from './types.chat-code-block';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['children', 'highlighter', 'language'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/chat/chat-code-block',
-    false,
-    /\.\/chat-code-block.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ChatCodeBlock" allowedProps={allowedProps}>
+      <TypesChatCodeBlock />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

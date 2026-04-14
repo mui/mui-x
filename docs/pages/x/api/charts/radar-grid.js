@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './radar-grid.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesRadarGrid } from './types.radar-grid';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['classes', 'divisions', 'shape', 'stripeColor'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/radar-grid',
-    false,
-    /\.\/radar-grid.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="RadarGrid" allowedProps={allowedProps}>
+      <TypesRadarGrid />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

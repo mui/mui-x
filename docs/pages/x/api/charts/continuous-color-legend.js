@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './continuous-color-legend.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesContinuousColorLegend } from './types.continuous-color-legend';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['axisDirection', 'axisId', 'classes', 'direction', 'gradientId', 'labelPosition', 'maxLabel', 'minLabel', 'reverse', 'rotateGradient', 'thickness'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/continuous-color-legend',
-    false,
-    /\.\/continuous-color-legend.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ContinuousColorLegend" allowedProps={allowedProps}>
+      <TypesContinuousColorLegend />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

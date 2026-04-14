@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './animated-area.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesAnimatedArea } from './types.animated-area';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['skipAnimation'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/animated-area',
-    false,
-    /\.\/animated-area.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="AnimatedArea" allowedProps={allowedProps}>
+      <TypesAnimatedArea />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

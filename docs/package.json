@@ -9,6 +9,7 @@
     "dev": "cross-env-shell 'next dev --webpack --port ${PORT:-3001}'",
     "deploy": "git fetch upstream master && git push -f upstream FETCH_HEAD:docs-v9",
     "icons": "rimraf public/static/icons/* && node ./scripts/buildIcons.js",
+    "internal-validate": "docs-infra validate",
     "serve": "serve ./export -l 3010",
     "create-playground": "node ./scripts/createPlayground.js",
     "typescript": "tsc -p tsconfig.json",

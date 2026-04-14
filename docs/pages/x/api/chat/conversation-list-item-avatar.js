@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './conversation-list-item-avatar.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesConversationListItemAvatar } from './types.conversation-list-item-avatar';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = [];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/chat/conversation-list-item-avatar',
-    false,
-    /\.\/conversation-list-item-avatar.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ConversationListItemAvatar" allowedProps={allowedProps}>
+      <TypesConversationListItemAvatar />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

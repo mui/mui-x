@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './charts-localization-provider.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesChartsLocalizationProvider } from './types.charts-localization-provider';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['localeText'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/charts-localization-provider',
-    false,
-    /\.\/charts-localization-provider.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ChartsLocalizationProvider" allowedProps={allowedProps}>
+      <TypesChartsLocalizationProvider />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

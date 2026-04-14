@@ -1,21 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import jsonPageContent from './grid-filter-panel.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesGridFilterPanel } from './types.grid-filter-panel';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['columnsSort', 'disableAddFilterButton', 'disableRemoveAllButton', 'filterFormProps', 'getColumnForNewFilter', 'logicOperators', 'sx'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/data-grid/grid-filter-panel',
-    false,
-    /\.\/grid-filter-panel.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="GridFilterPanel" allowedProps={allowedProps}>
+      <TypesGridFilterPanel />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

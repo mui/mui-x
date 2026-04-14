@@ -1,22 +1,12 @@
-import * as React from 'react';
-import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import mapApiPageTranslations from 'docsx/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './grid-cell-params.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesGridCellParams } from './types.grid-cell-params';
 
-export default function Page(props) {
-  const { descriptions } = props;
+const allowedProps = [];
+
+export default function Page() {
   return (
-    <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />
+    <TypesPageShell name="GridCellParams" allowedProps={allowedProps}>
+      <TypesGridCellParams />
+    </TypesPageShell>
   );
-}
-
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/data-grid/',
-    false,
-    /\.\/grid-cell-params.*.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
-  return { props: { descriptions } };
 }

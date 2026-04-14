@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './standalone-event.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesStandaloneEvent } from './types.standalone-event';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['className', 'nativeButton', 'onEventDrop', 'render', 'style', 'sx'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/scheduler/standalone-event',
-    false,
-    /\.\/standalone-event.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="StandaloneEvent" allowedProps={allowedProps}>
+      <TypesStandaloneEvent />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './rich-tree-view-pro.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesRichTreeViewPro } from './types.rich-tree-view-pro';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['apiRef', 'canMoveItemToNewPosition', 'checkboxSelection', 'classes', 'dataSource', 'dataSourceCache', 'defaultExpandedItems', 'defaultSelectedItems', 'disableSelection', 'disableVirtualization', 'disabledItemsFocusable', 'domStructure', 'expandedItems', 'expansionTrigger', 'getItemChildren', 'getItemId', 'getItemLabel', 'id', 'isItemDisabled', 'isItemEditable', 'isItemReorderable', 'isItemSelectionDisabled', 'itemChildrenIndentation', 'itemHeight', 'itemsReordering', 'multiSelect', 'onExpandedItemsChange', 'onItemClick', 'onItemExpansionToggle', 'onItemFocus', 'onItemLabelChange', 'onItemPositionChange', 'onItemSelectionToggle', 'onItemsLazyLoaded', 'onSelectedItemsChange', 'selectedItems', 'selectionPropagation', 'slotProps', 'slots', 'sx'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/tree-view/rich-tree-view-pro',
-    false,
-    /\.\/rich-tree-view-pro.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="RichTreeViewPro" allowedProps={allowedProps}>
+      <TypesRichTreeViewPro />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

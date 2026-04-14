@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './chat-box.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesChatBox } from './types.chat-box';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['classes', 'currentUser', 'density', 'features', 'initialActiveConversationId', 'initialComposerValue', 'initialConversations', 'initialMessages', 'members', 'slotProps', 'slots', 'storeClass', 'streamFlushInterval', 'suggestions', 'suggestionsAutoSubmit', 'variant'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/chat/chat-box',
-    false,
-    /\.\/chat-box.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ChatBox" allowedProps={allowedProps}>
+      <TypesChatBox />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

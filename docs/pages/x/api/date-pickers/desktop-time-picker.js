@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './desktop-time-picker.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesDesktopTimePicker } from './types.desktop-time-picker';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['ampm', 'ampmInClock', 'autoFocus', 'closeOnSelect', 'defaultValue', 'disableFuture', 'disableIgnoringDatePartForTimeValidation', 'disableOpenPicker', 'disablePast', 'disabled', 'format', 'formatDensity', 'inputRef', 'keepOpenDuringFieldFocus', 'label', 'localeText', 'maxTime', 'minTime', 'minutesStep', 'name', 'onAccept', 'onChange', 'onClose', 'onError', 'onOpen', 'onSelectedSectionsChange', 'onViewChange', 'open', 'openTo', 'orientation', 'readOnly', 'reduceAnimations', 'referenceDate', 'selectedSections', 'shouldDisableTime', 'skipDisabled', 'slotProps', 'slots', 'sx', 'thresholdToRenderTimeInASingleColumn', 'timeSteps', 'timezone', 'value', 'view', 'viewRenderers', 'views'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/desktop-time-picker',
-    false,
-    /\.\/desktop-time-picker.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="DesktopTimePicker" allowedProps={allowedProps}>
+      <TypesDesktopTimePicker />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

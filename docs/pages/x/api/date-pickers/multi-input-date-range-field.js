@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './multi-input-date-range-field.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesMultiInputDateRangeField } from './types.multi-input-date-range-field';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['autoFocus', 'classes', 'dateSeparator', 'defaultValue', 'direction', 'disableFuture', 'disablePast', 'disabled', 'divider', 'endFieldRef', 'format', 'formatDensity', 'maxDate', 'minDate', 'onChange', 'onError', 'onSelectedSectionsChange', 'readOnly', 'referenceDate', 'selectedSections', 'shouldDisableDate', 'shouldRespectLeadingZeros', 'slotProps', 'slots', 'spacing', 'startFieldRef', 'sx', 'timezone', 'useFlexGap', 'value'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/multi-input-date-range-field',
-    false,
-    /\.\/multi-input-date-range-field.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="MultiInputDateRangeField" allowedProps={allowedProps}>
+      <TypesMultiInputDateRangeField />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

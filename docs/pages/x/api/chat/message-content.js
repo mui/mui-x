@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './message-content.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesMessageContent } from './types.message-content';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = [];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/chat/message-content',
-    false,
-    /\.\/message-content.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="MessageContent" allowedProps={allowedProps}>
+      <TypesMessageContent />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

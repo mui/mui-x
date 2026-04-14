@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './rich-tree-view.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesRichTreeView } from './types.rich-tree-view';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['apiRef', 'checkboxSelection', 'classes', 'defaultExpandedItems', 'defaultSelectedItems', 'disableSelection', 'disabledItemsFocusable', 'domStructure', 'expandedItems', 'expansionTrigger', 'getItemChildren', 'getItemId', 'getItemLabel', 'id', 'isItemDisabled', 'isItemEditable', 'isItemSelectionDisabled', 'itemChildrenIndentation', 'itemHeight', 'multiSelect', 'onExpandedItemsChange', 'onItemClick', 'onItemExpansionToggle', 'onItemFocus', 'onItemLabelChange', 'onItemSelectionToggle', 'onSelectedItemsChange', 'selectedItems', 'selectionPropagation', 'slotProps', 'slots', 'sx'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/tree-view/rich-tree-view',
-    false,
-    /\.\/rich-tree-view.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="RichTreeView" allowedProps={allowedProps}>
+      <TypesRichTreeView />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

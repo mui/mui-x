@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './conversation-list-unread-badge.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesConversationListUnreadBadge } from './types.conversation-list-unread-badge';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = [];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/chat/conversation-list-unread-badge',
-    false,
-    /\.\/conversation-list-unread-badge.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ConversationListUnreadBadge" allowedProps={allowedProps}>
+      <TypesConversationListUnreadBadge />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

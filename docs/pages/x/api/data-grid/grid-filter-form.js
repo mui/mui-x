@@ -1,21 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import jsonPageContent from './grid-filter-form.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesGridFilterForm } from './types.grid-filter-form';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['applyFilterChanges', 'applyMultiFilterOperatorChanges', 'columnInputProps', 'columnsSort', 'deleteFilter', 'deleteIconProps', 'disableMultiFilterOperator', 'filterColumns', 'focusElementRef', 'hasMultipleFilters', 'item', 'logicOperatorInputProps', 'logicOperators', 'operatorInputProps', 'readOnly', 'showMultiFilterOperators', 'valueInputProps'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/data-grid/grid-filter-form',
-    false,
-    /\.\/grid-filter-form.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="GridFilterForm" allowedProps={allowedProps}>
+      <TypesGridFilterForm />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

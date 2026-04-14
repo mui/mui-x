@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './charts-tooltip.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesChartsTooltip } from './types.charts-tooltip';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['anchor', 'anchorEl', 'classes', 'component', 'components', 'componentsProps', 'container', 'disablePortal', 'keepMounted', 'modifiers', 'open', 'placement', 'popperOptions', 'popperRef', 'position', 'slotProps', 'slots', 'sort', 'sx', 'transition', 'trigger'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/charts-tooltip',
-    false,
-    /\.\/charts-tooltip.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ChartsTooltip" allowedProps={allowedProps}>
+      <TypesChartsTooltip />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

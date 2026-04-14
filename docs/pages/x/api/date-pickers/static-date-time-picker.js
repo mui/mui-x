@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './static-date-time-picker.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesStaticDateTimePicker } from './types.static-date-time-picker';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['ampm', 'ampmInClock', 'autoFocus', 'dayOfWeekFormatter', 'defaultValue', 'disableFuture', 'disableHighlightToday', 'disableIgnoringDatePartForTimeValidation', 'disablePast', 'disabled', 'displayStaticWrapperAs', 'displayWeekNumber', 'fixedWeekNumber', 'loading', 'localeText', 'maxDate', 'maxDateTime', 'maxTime', 'minDate', 'minDateTime', 'minTime', 'minutesStep', 'monthsPerRow', 'onAccept', 'onChange', 'onClose', 'onError', 'onMonthChange', 'onViewChange', 'onYearChange', 'openTo', 'orientation', 'readOnly', 'reduceAnimations', 'referenceDate', 'renderLoading', 'shouldDisableDate', 'shouldDisableMonth', 'shouldDisableTime', 'shouldDisableYear', 'showDaysOutsideCurrentMonth', 'skipDisabled', 'slotProps', 'slots', 'sx', 'thresholdToRenderTimeInASingleColumn', 'timeSteps', 'timezone', 'value', 'view', 'viewRenderers', 'views', 'yearsOrder', 'yearsPerRow'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/static-date-time-picker',
-    false,
-    /\.\/static-date-time-picker.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="StaticDateTimePicker" allowedProps={allowedProps}>
+      <TypesStaticDateTimePicker />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

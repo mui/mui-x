@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './charts-container-pro.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesChartsContainerPro } from './types.charts-container-pro';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['colors', 'dataset', 'disableAxisListener', 'height', 'highlightedItem', 'id', 'initialZoom', 'margin', 'onHighlightChange', 'onZoomChange', 'series', 'skipAnimation', 'width', 'xAxis', 'yAxis', 'zAxis'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/charts-container-pro',
-    false,
-    /\.\/charts-container-pro.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ChartsContainerPro" allowedProps={allowedProps}>
+      <TypesChartsContainerPro />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

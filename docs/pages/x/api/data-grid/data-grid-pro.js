@@ -1,21 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import jsonPageContent from './data-grid-pro.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesDataGridPro } from './types.data-grid-pro';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['apiRef', 'aria-label', 'aria-labelledby', 'autoHeight', 'autoPageSize', 'autosizeOnMount', 'autosizeOptions', 'cellModesModel', 'checkboxColDef', 'checkboxSelection', 'checkboxSelectionVisibleOnly', 'classes', 'clipboardCopyCellDelimiter', 'columnBufferPx', 'columnFilterDebounceMs', 'columnGroupHeaderHeight', 'columnHeaderHeight', 'columnVisibilityModel', 'columns', 'dataSource', 'dataSourceCache', 'dataSourceRevalidateMs', 'defaultGroupingExpansionDepth', 'density', 'detailPanelExpandedRowIds', 'disableAutosize', 'disableChildrenFiltering', 'disableChildrenSorting', 'disableColumnFilter', 'disableColumnMenu', 'disableColumnPinning', 'disableColumnReorder', 'disableColumnResize', 'disableColumnSelector', 'disableColumnSorting', 'disableDensitySelector', 'disableEval', 'disableMultipleColumnsFiltering', 'disableMultipleColumnsSorting', 'disableMultipleRowSelection', 'disableRowSelectionExcludeModel', 'disableRowSelectionOnClick', 'disableVirtualization', 'editMode', 'estimatedRowCount', 'experimentalFeatures', 'filterDebounceMs', 'filterMode', 'filterModel', 'getCellClassName', 'getDetailPanelContent', 'getDetailPanelHeight', 'getEstimatedRowHeight', 'getRowClassName', 'getRowHeight', 'getRowId', 'getRowSpacing', 'getTreeDataPath', 'groupingColDef', 'headerFilterHeight', 'headerFilters', 'hideFooter', 'hideFooterPagination', 'hideFooterRowCount', 'hideFooterSelectedRowCount', 'ignoreDiacritics', 'ignoreValueFormatterDuringExport', 'initialState', 'isCellEditable', 'isGroupExpandedByDefault', 'isRowReorderable', 'isRowSelectable', 'isValidRowReorder', 'keepColumnPositionIfDraggedOutside', 'keepNonExistentRowsSelected', 'label', 'lazyLoading', 'lazyLoadingRequestThrottleMs', 'listView', 'listViewColumn', 'loading', 'localeText', 'logLevel', 'logger', 'multipleColumnsSortingMode', 'nonce', 'onCellClick', 'onCellDoubleClick', 'onCellEditStart', 'onCellEditStop', 'onCellKeyDown', 'onCellModesModelChange', 'onClipboardCopy', 'onColumnHeaderClick', 'onColumnHeaderContextMenu', 'onColumnHeaderDoubleClick', 'onColumnHeaderEnter', 'onColumnHeaderLeave', 'onColumnHeaderOut', 'onColumnHeaderOver', 'onColumnOrderChange', 'onColumnResize', 'onColumnVisibilityModelChange', 'onColumnWidthChange', 'onDataSourceError', 'onDensityChange', 'onDetailPanelExpandedRowIdsChange', 'onFetchRows', 'onFilterModelChange', 'onMenuClose', 'onMenuOpen', 'onPaginationMetaChange', 'onPaginationModelChange', 'onPinnedColumnsChange', 'onPreferencePanelClose', 'onPreferencePanelOpen', 'onProcessRowUpdateError', 'onResize', 'onRowClick', 'onRowCountChange', 'onRowDoubleClick', 'onRowEditStart', 'onRowEditStop', 'onRowModesModelChange', 'onRowOrderChange', 'onRowSelectionModelChange', 'onRowsScrollEnd', 'onSortModelChange', 'pageSizeOptions', 'pagination', 'paginationMeta', 'paginationMode', 'paginationModel', 'pinnedColumns', 'pinnedColumnsSectionSeparator', 'pinnedRows', 'pinnedRowsSectionSeparator', 'processRowUpdate', 'resizeThrottleMs', 'rowBufferPx', 'rowCount', 'rowHeight', 'rowModesModel', 'rowReordering', 'rowSelection', 'rowSelectionModel', 'rowSelectionPropagation', 'rowSpacingType', 'rowSpanning', 'rows', 'rowsLoadingMode', 'scrollEndThreshold', 'scrollbarSize', 'setTreeDataPath', 'showCellVerticalBorder', 'showColumnVerticalBorder', 'showToolbar', 'slotProps', 'slots', 'sortModel', 'sortingMode', 'sortingOrder', 'sx', 'tabNavigation', 'throttleRowsMs', 'treeData', 'virtualizeColumnsWithAutoRowHeight'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/data-grid/data-grid-pro',
-    false,
-    /\.\/data-grid-pro.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="DataGridPro" allowedProps={allowedProps}>
+      <TypesDataGridPro />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

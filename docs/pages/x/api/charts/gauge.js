@@ -1,11 +1,12 @@
-import * as React from 'react';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
 import { TypesGauge } from './types.gauge';
+
+const allowedProps = ['cornerRadius', 'cx', 'cy', 'desc', 'endAngle', 'height', 'id', 'innerRadius', 'margin', 'outerRadius', 'skipAnimation', 'startAngle', 'title', 'value', 'valueMax', 'valueMin', 'width'];
 
 export default function Page() {
   return (
-    <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
-      <h1>Gauge — new types pipeline POC</h1>
+    <TypesPageShell name="Gauge" allowedProps={allowedProps}>
       <TypesGauge />
-    </main>
+    </TypesPageShell>
   );
 }

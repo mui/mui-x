@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './day-calendar-skeleton.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesDayCalendarSkeleton } from './types.day-calendar-skeleton';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['classes', 'sx'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/day-calendar-skeleton',
-    false,
-    /\.\/day-calendar-skeleton.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="DayCalendarSkeleton" allowedProps={allowedProps}>
+      <TypesDayCalendarSkeleton />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

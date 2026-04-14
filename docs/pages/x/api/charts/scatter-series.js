@@ -1,22 +1,12 @@
-import * as React from 'react';
-import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import mapApiPageTranslations from 'docsx/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './scatter-series.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesScatterSeries } from './types.scatter-series';
 
-export default function Page(props) {
-  const { descriptions } = props;
+const allowedProps = [];
+
+export default function Page() {
   return (
-    <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />
+    <TypesPageShell name="ScatterSeries" allowedProps={allowedProps}>
+      <TypesScatterSeries />
+    </TypesPageShell>
   );
-}
-
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/',
-    false,
-    /\.\/scatter-series.*.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
-  return { props: { descriptions } };
 }

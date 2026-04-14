@@ -1,21 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import jsonPageContent from './data-grid-premium.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesDataGridPremium } from './types.data-grid-premium';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['activeChartId', 'aggregationFunctions', 'aggregationModel', 'aggregationRowsScope', 'aiAssistant', 'aiAssistantActiveConversationIndex', 'aiAssistantConversations', 'aiAssistantSuggestions', 'allowAiAssistantDataSampling', 'apiRef', 'aria-label', 'aria-labelledby', 'autoHeight', 'autoPageSize', 'autosizeOnMount', 'autosizeOptions', 'cellModesModel', 'cellSelection', 'cellSelectionFillHandle', 'cellSelectionModel', 'chartsIntegration', 'checkboxColDef', 'checkboxSelection', 'checkboxSelectionVisibleOnly', 'classes', 'clipboardCopyCellDelimiter', 'columnBufferPx', 'columnFilterDebounceMs', 'columnGroupHeaderHeight', 'columnHeaderHeight', 'columnVisibilityModel', 'columns', 'dataSource', 'dataSourceCache', 'dataSourceRevalidateMs', 'defaultGroupingExpansionDepth', 'density', 'detailPanelExpandedRowIds', 'disableAggregation', 'disableAutosize', 'disableChildrenFiltering', 'disableChildrenSorting', 'disableClipboardPaste', 'disableColumnFilter', 'disableColumnMenu', 'disableColumnPinning', 'disableColumnReorder', 'disableColumnResize', 'disableColumnSelector', 'disableColumnSorting', 'disableDensitySelector', 'disableEval', 'disableMultipleColumnsFiltering', 'disableMultipleColumnsSorting', 'disableMultipleRowSelection', 'disablePivoting', 'disableRowGrouping', 'disableRowSelectionExcludeModel', 'disableRowSelectionOnClick', 'disableVirtualization', 'editMode', 'estimatedRowCount', 'experimentalFeatures', 'filterDebounceMs', 'filterMode', 'filterModel', 'getAggregationPosition', 'getCellClassName', 'getDetailPanelContent', 'getDetailPanelHeight', 'getEstimatedRowHeight', 'getPivotDerivedColumns', 'getRowClassName', 'getRowHeight', 'getRowId', 'getRowSpacing', 'getTreeDataPath', 'groupingColDef', 'headerFilterHeight', 'headerFilters', 'hideFooter', 'hideFooterPagination', 'hideFooterRowCount', 'hideFooterSelectedRowCount', 'historyEventHandlers', 'historyStackSize', 'historyValidationEvents', 'ignoreDiacritics', 'ignoreValueFormatterDuringExport', 'initialState', 'isCellEditable', 'isGroupExpandedByDefault', 'isRowReorderable', 'isRowSelectable', 'isValidRowReorder', 'keepColumnPositionIfDraggedOutside', 'keepNonExistentRowsSelected', 'label', 'lazyLoading', 'lazyLoadingRequestThrottleMs', 'listView', 'listViewColumn', 'loading', 'localeText', 'logLevel', 'logger', 'multipleColumnsSortingMode', 'nonce', 'onActiveChartIdChange', 'onAggregationModelChange', 'onAiAssistantActiveConversationIndexChange', 'onAiAssistantConversationsChange', 'onBeforeClipboardPasteStart', 'onCellClick', 'onCellDoubleClick', 'onCellEditStart', 'onCellEditStop', 'onCellKeyDown', 'onCellModesModelChange', 'onCellSelectionModelChange', 'onClipboardCopy', 'onClipboardPasteEnd', 'onClipboardPasteStart', 'onColumnHeaderClick', 'onColumnHeaderContextMenu', 'onColumnHeaderDoubleClick', 'onColumnHeaderEnter', 'onColumnHeaderLeave', 'onColumnHeaderOut', 'onColumnHeaderOver', 'onColumnOrderChange', 'onColumnResize', 'onColumnVisibilityModelChange', 'onColumnWidthChange', 'onDataSourceError', 'onDensityChange', 'onDetailPanelExpandedRowIdsChange', 'onExcelExportStateChange', 'onFetchRows', 'onFilterModelChange', 'onMenuClose', 'onMenuOpen', 'onPaginationMetaChange', 'onPaginationModelChange', 'onPinnedColumnsChange', 'onPivotActiveChange', 'onPivotModelChange', 'onPivotPanelOpenChange', 'onPreferencePanelClose', 'onPreferencePanelOpen', 'onProcessRowUpdateError', 'onPrompt', 'onRedo', 'onResize', 'onRowClick', 'onRowCountChange', 'onRowDoubleClick', 'onRowEditStart', 'onRowEditStop', 'onRowGroupingModelChange', 'onRowModesModelChange', 'onRowOrderChange', 'onRowSelectionModelChange', 'onRowsScrollEnd', 'onSidebarClose', 'onSidebarOpen', 'onSortModelChange', 'onUndo', 'pageSizeOptions', 'pagination', 'paginationMeta', 'paginationMode', 'paginationModel', 'pinnedColumns', 'pinnedColumnsSectionSeparator', 'pinnedRows', 'pinnedRowsSectionSeparator', 'pivotActive', 'pivotModel', 'pivotPanelOpen', 'pivotingColDef', 'processRowUpdate', 'resizeThrottleMs', 'rowBufferPx', 'rowCount', 'rowGroupingColumnMode', 'rowGroupingModel', 'rowHeight', 'rowModesModel', 'rowReordering', 'rowSelection', 'rowSelectionModel', 'rowSelectionPropagation', 'rowSpacingType', 'rowSpanning', 'rows', 'rowsLoadingMode', 'scrollEndThreshold', 'scrollbarSize', 'setTreeDataPath', 'showCellVerticalBorder', 'showColumnVerticalBorder', 'showToolbar', 'slotProps', 'slots', 'sortModel', 'sortingMode', 'sortingOrder', 'splitClipboardPastedText', 'sx', 'tabNavigation', 'throttleRowsMs', 'treeData', 'virtualizeColumnsWithAutoRowHeight'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/data-grid/data-grid-premium',
-    false,
-    /\.\/data-grid-premium.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="DataGridPremium" allowedProps={allowedProps}>
+      <TypesDataGridPremium />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

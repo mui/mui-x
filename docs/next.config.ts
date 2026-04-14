@@ -79,6 +79,7 @@ export default withDeploymentConfig({
     // TODO, those shouldn't be needed in the first place
     '@mui/monorepo', // Migrate everything to @mui/internal-core-docs until the @mui/monorepo dependency becomes obsolete
     '@mui/internal-core-docs', // needed to fix slashes in the generated links (https://github.com/mui/mui-x/pull/13713#issuecomment-2205591461, )
+    '@mui/internal-docs-infra', // TEMP: local link points at ../mui-public/packages/docs-infra source tree
   ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
@@ -133,6 +134,11 @@ export default withDeploymentConfig({
           ),
           docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
+          // TEMP: force React dedupe so linked @mui/internal-docs-infra doesn't
+          // load its own React copy (breaks hooks with "Cannot read properties
+          // of null (reading 'useMemo')").
+          react: path.resolve(currentDirectory, 'node_modules/react'),
+          'react-dom': path.resolve(currentDirectory, 'node_modules/react-dom'),
         },
       },
       module: {
@@ -174,7 +180,10 @@ export default withDeploymentConfig({
             use: [
               options.defaultLoaders.babel,
               {
-                loader: '@mui/internal-docs-infra/pipeline/loadPrecomputedTypes',
+                loader: path.resolve(
+                  currentDirectory,
+                  'node_modules/@mui/internal-docs-infra/build/pipeline/loadPrecomputedTypes/index.mjs',
+                ),
                 options: {
                   socketDir: '.next/docs-infra',
                 } satisfies PrecomputedTypesLoaderOptions,

@@ -1,22 +1,12 @@
-import * as React from 'react';
-import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import mapApiPageTranslations from 'docsx/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './chart-image-export-options.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesChartImageExportOptions } from './types.chart-image-export-options';
 
-export default function Page(props) {
-  const { descriptions } = props;
+const allowedProps = [];
+
+export default function Page() {
   return (
-    <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />
+    <TypesPageShell name="ChartImageExportOptions" allowedProps={allowedProps}>
+      <TypesChartImageExportOptions />
+    </TypesPageShell>
   );
-}
-
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/',
-    false,
-    /\.\/chart-image-export-options.*.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
-  return { props: { descriptions } };
 }

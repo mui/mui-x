@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './year-calendar.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesYearCalendar } from './types.year-calendar';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['classes', 'defaultValue', 'disableFuture', 'disableHighlightToday', 'disablePast', 'disabled', 'maxDate', 'minDate', 'onChange', 'readOnly', 'referenceDate', 'shouldDisableYear', 'slotProps', 'slots', 'sx', 'timezone', 'value', 'yearsOrder', 'yearsPerRow'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/year-calendar',
-    false,
-    /\.\/year-calendar.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="YearCalendar" allowedProps={allowedProps}>
+      <TypesYearCalendar />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

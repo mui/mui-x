@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './charts-toolbar-zoom-out-trigger.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesChartsToolbarZoomOutTrigger } from './types.charts-toolbar-zoom-out-trigger';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['render'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/charts-toolbar-zoom-out-trigger',
-    false,
-    /\.\/charts-toolbar-zoom-out-trigger.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ChartsToolbarZoomOutTrigger" allowedProps={allowedProps}>
+      <TypesChartsToolbarZoomOutTrigger />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

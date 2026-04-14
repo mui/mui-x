@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './digital-clock.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesDigitalClock } from './types.digital-clock';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['ampm', 'autoFocus', 'classes', 'defaultValue', 'disableFuture', 'disableIgnoringDatePartForTimeValidation', 'disablePast', 'disabled', 'focusedView', 'maxTime', 'minTime', 'minutesStep', 'onChange', 'onFocusedViewChange', 'onViewChange', 'openTo', 'readOnly', 'referenceDate', 'shouldDisableTime', 'skipDisabled', 'slotProps', 'slots', 'sx', 'timeStep', 'timezone', 'value', 'view', 'views'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/digital-clock',
-    false,
-    /\.\/digital-clock.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="DigitalClock" allowedProps={allowedProps}>
+      <TypesDigitalClock />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

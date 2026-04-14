@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './date-calendar.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesDateCalendar } from './types.date-calendar';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['autoFocus', 'classes', 'dayOfWeekFormatter', 'defaultValue', 'disableFuture', 'disableHighlightToday', 'disablePast', 'disabled', 'displayWeekNumber', 'fixedWeekNumber', 'focusedView', 'loading', 'maxDate', 'minDate', 'monthsPerRow', 'onChange', 'onFocusedViewChange', 'onMonthChange', 'onViewChange', 'onYearChange', 'openTo', 'readOnly', 'reduceAnimations', 'referenceDate', 'renderLoading', 'shouldDisableDate', 'shouldDisableMonth', 'shouldDisableYear', 'showDaysOutsideCurrentMonth', 'slotProps', 'slots', 'sx', 'timezone', 'value', 'view', 'views', 'yearsOrder', 'yearsPerRow'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/date-calendar',
-    false,
-    /\.\/date-calendar.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="DateCalendar" allowedProps={allowedProps}>
+      <TypesDateCalendar />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './localization-provider.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesLocalizationProvider } from './types.localization-provider';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['adapterLocale', 'dateAdapter', 'dateFormats', 'dateLibInstance', 'localeText'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/localization-provider',
-    false,
-    /\.\/localization-provider.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="LocalizationProvider" allowedProps={allowedProps}>
+      <TypesLocalizationProvider />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

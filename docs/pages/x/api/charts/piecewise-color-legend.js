@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './piecewise-color-legend.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesPiecewiseColorLegend } from './types.piecewise-color-legend';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['axisDirection', 'axisId', 'classes', 'direction', 'labelFormatter', 'labelPosition', 'markType', 'onItemClick'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/piecewise-color-legend',
-    false,
-    /\.\/piecewise-color-legend.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="PiecewiseColorLegend" allowedProps={allowedProps}>
+      <TypesPiecewiseColorLegend />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

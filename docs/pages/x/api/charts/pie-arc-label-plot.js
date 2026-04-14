@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './pie-arc-label-plot.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesPieArcLabelPlot } from './types.pie-arc-label-plot';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['arcLabel', 'arcLabelMinAngle', 'arcLabelRadius', 'cornerRadius', 'faded', 'highlighted', 'innerRadius', 'outerRadius', 'paddingAngle', 'seriesId', 'skipAnimation', 'slotProps', 'slots'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/pie-arc-label-plot',
-    false,
-    /\.\/pie-arc-label-plot.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="PieArcLabelPlot" allowedProps={allowedProps}>
+      <TypesPieArcLabelPlot />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

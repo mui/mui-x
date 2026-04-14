@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './simple-tree-view.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesSimpleTreeView } from './types.simple-tree-view';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['apiRef', 'checkboxSelection', 'children', 'classes', 'defaultExpandedItems', 'defaultSelectedItems', 'disableSelection', 'disabledItemsFocusable', 'expandedItems', 'expansionTrigger', 'id', 'itemChildrenIndentation', 'itemHeight', 'multiSelect', 'onExpandedItemsChange', 'onItemClick', 'onItemExpansionToggle', 'onItemFocus', 'onItemSelectionToggle', 'onSelectedItemsChange', 'selectedItems', 'selectionPropagation', 'slotProps', 'slots', 'sx'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/tree-view/simple-tree-view',
-    false,
-    /\.\/simple-tree-view.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="SimpleTreeView" allowedProps={allowedProps}>
+      <TypesSimpleTreeView />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

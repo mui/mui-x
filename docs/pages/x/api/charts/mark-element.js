@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './mark-element.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesMarkElement } from './types.mark-element';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['dataIndex', 'hidden', 'isFaded', 'isHighlighted', 'shape', 'skipAnimation'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/mark-element',
-    false,
-    /\.\/mark-element.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="MarkElement" allowedProps={allowedProps}>
+      <TypesMarkElement />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './sankey-chart.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesSankeyChart } from './types.sankey-chart';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['classes', 'colors', 'desc', 'disableKeyboardNavigation', 'experimentalFeatures', 'height', 'highlightedItem', 'id', 'loading', 'localeText', 'margin', 'onHighlightChange', 'onLinkClick', 'onNodeClick', 'onTooltipItemChange', 'series', 'slotProps', 'slots', 'title', 'tooltipItem', 'width'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/sankey-chart',
-    false,
-    /\.\/sankey-chart.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="SankeyChart" allowedProps={allowedProps}>
+      <TypesSankeyChart />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

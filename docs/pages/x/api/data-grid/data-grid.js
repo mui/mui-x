@@ -1,11 +1,12 @@
-import * as React from 'react';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
 import { TypesDataGrid } from './types.data-grid';
+
+const allowedProps = ['apiRef', 'aria-label', 'aria-labelledby', 'autoHeight', 'autoPageSize', 'autosizeOnMount', 'autosizeOptions', 'cellModesModel', 'checkboxColDef', 'checkboxSelection', 'classes', 'clipboardCopyCellDelimiter', 'columnBufferPx', 'columnFilterDebounceMs', 'columnGroupHeaderHeight', 'columnHeaderHeight', 'columnVisibilityModel', 'columns', 'dataSource', 'dataSourceCache', 'dataSourceRevalidateMs', 'density', 'disableAutosize', 'disableColumnFilter', 'disableColumnMenu', 'disableColumnResize', 'disableColumnSelector', 'disableColumnSorting', 'disableDensitySelector', 'disableEval', 'disableMultipleRowSelection', 'disableRowSelectionExcludeModel', 'disableRowSelectionOnClick', 'disableVirtualization', 'editMode', 'estimatedRowCount', 'experimentalFeatures', 'filterDebounceMs', 'filterMode', 'filterModel', 'getCellClassName', 'getDetailPanelContent', 'getEstimatedRowHeight', 'getRowClassName', 'getRowHeight', 'getRowId', 'getRowSpacing', 'hideFooter', 'hideFooterPagination', 'hideFooterSelectedRowCount', 'ignoreDiacritics', 'ignoreValueFormatterDuringExport', 'initialState', 'isCellEditable', 'isRowSelectable', 'keepNonExistentRowsSelected', 'label', 'loading', 'localeText', 'logLevel', 'logger', 'nonce', 'onCellClick', 'onCellDoubleClick', 'onCellEditStart', 'onCellEditStop', 'onCellKeyDown', 'onCellModesModelChange', 'onClipboardCopy', 'onColumnHeaderClick', 'onColumnHeaderContextMenu', 'onColumnHeaderDoubleClick', 'onColumnHeaderEnter', 'onColumnHeaderLeave', 'onColumnHeaderOut', 'onColumnHeaderOver', 'onColumnOrderChange', 'onColumnResize', 'onColumnVisibilityModelChange', 'onColumnWidthChange', 'onDataSourceError', 'onDensityChange', 'onFilterModelChange', 'onMenuClose', 'onMenuOpen', 'onPaginationMetaChange', 'onPaginationModelChange', 'onPreferencePanelClose', 'onPreferencePanelOpen', 'onProcessRowUpdateError', 'onResize', 'onRowClick', 'onRowCountChange', 'onRowDoubleClick', 'onRowEditStart', 'onRowEditStop', 'onRowModesModelChange', 'onRowSelectionModelChange', 'onSortModelChange', 'pageSizeOptions', 'paginationMeta', 'paginationMode', 'paginationModel', 'processRowUpdate', 'resizeThrottleMs', 'rowBufferPx', 'rowCount', 'rowHeight', 'rowModesModel', 'rowSelection', 'rowSelectionModel', 'rowSpacingType', 'rowSpanning', 'rows', 'scrollbarSize', 'showCellVerticalBorder', 'showColumnVerticalBorder', 'showToolbar', 'slotProps', 'slots', 'sortModel', 'sortingMode', 'sortingOrder', 'sx', 'virtualizeColumnsWithAutoRowHeight'];
 
 export default function Page() {
   return (
-    <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
-      <h1>DataGrid — new types pipeline POC (diagnostic)</h1>
+    <TypesPageShell name="DataGrid" allowedProps={allowedProps}>
       <TypesDataGrid />
-    </main>
+    </TypesPageShell>
   );
 }

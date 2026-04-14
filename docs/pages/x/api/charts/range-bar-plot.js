@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './range-bar-plot.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesRangeBarPlot } from './types.range-bar-plot';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['borderRadius', 'onItemClick', 'skipAnimation', 'slotProps', 'slots'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/range-bar-plot',
-    false,
-    /\.\/range-bar-plot.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="RangeBarPlot" allowedProps={allowedProps}>
+      <TypesRangeBarPlot />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

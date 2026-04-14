@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './charts-x-axis.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesChartsXAxis } from './types.charts-x-axis';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['axisId', 'classes', 'disableLine', 'disableTicks', 'label', 'labelStyle', 'slotProps', 'slots', 'tickInterval', 'tickLabelInterval', 'tickLabelMinGap', 'tickLabelPlacement', 'tickLabelStyle', 'tickMaxStep', 'tickMinStep', 'tickNumber', 'tickPlacement', 'tickSize'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/charts-x-axis',
-    false,
-    /\.\/charts-x-axis.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ChartsXAxis" allowedProps={allowedProps}>
+      <TypesChartsXAxis />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

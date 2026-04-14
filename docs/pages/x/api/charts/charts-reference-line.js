@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './charts-reference-line.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesChartsReferenceLine } from './types.charts-reference-line';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['axisId', 'classes', 'label', 'labelAlign', 'labelStyle', 'lineStyle', 'spacing', 'x', 'y'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/charts-reference-line',
-    false,
-    /\.\/charts-reference-line.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="ChartsReferenceLine" allowedProps={allowedProps}>
+      <TypesChartsReferenceLine />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

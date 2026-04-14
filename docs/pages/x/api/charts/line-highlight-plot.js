@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './line-highlight-plot.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesLineHighlightPlot } from './types.line-highlight-plot';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['slotProps', 'slots'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/line-highlight-plot',
-    false,
-    /\.\/line-highlight-plot.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="LineHighlightPlot" allowedProps={allowedProps}>
+      <TypesLineHighlightPlot />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

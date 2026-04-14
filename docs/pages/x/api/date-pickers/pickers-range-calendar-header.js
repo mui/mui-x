@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './pickers-range-calendar-header.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesPickersRangeCalendarHeader } from './types.pickers-range-calendar-header';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['calendars', 'classes', 'format', 'labelId', 'month', 'monthIndex', 'slotProps', 'slots', 'sx'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/pickers-range-calendar-header',
-    false,
-    /\.\/pickers-range-calendar-header.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="PickersRangeCalendarHeader" allowedProps={allowedProps}>
+      <TypesPickersRangeCalendarHeader />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

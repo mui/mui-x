@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './heatmap-plot.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesHeatmapPlot } from './types.heatmap-plot';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['borderRadius', 'className', 'slotProps', 'slots'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/heatmap-plot',
-    false,
-    /\.\/heatmap-plot.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="HeatmapPlot" allowedProps={allowedProps}>
+      <TypesHeatmapPlot />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

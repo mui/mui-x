@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './picker-day.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesPickerDay } from './types.picker-day';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['TouchRippleProps', 'action', 'centerRipple', 'classes', 'day', 'disableHighlightToday', 'disableRipple', 'disableTouchRipple', 'disabled', 'focusRipple', 'focusVisibleClassName', 'isAnimating', 'isDayFillerCell', 'isFirstVisibleCell', 'isLastVisibleCell', 'isVisuallySelected', 'nativeButton', 'onBlur', 'onClick', 'onDaySelect', 'onFocus', 'onFocusVisible', 'onKeyDown', 'onMouseDown', 'onMouseEnter', 'outsideCurrentMonth', 'selected', 'showDaysOutsideCurrentMonth', 'sx', 'today', 'touchRippleRef'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/picker-day',
-    false,
-    /\.\/picker-day.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="PickerDay" allowedProps={allowedProps}>
+      <TypesPickerDay />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

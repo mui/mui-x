@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './pickers-text-field.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesPickersTextField } from './types.pickers-text-field';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['areAllSectionsEmpty', 'color', 'contentEditable', 'elements', 'endAdornment', 'error', 'focused', 'fullWidth', 'helperText', 'hiddenLabel', 'id', 'inputRef', 'label', 'margin', 'name', 'required', 'size', 'slotProps', 'slots', 'startAdornment', 'sx', 'variant'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/pickers-text-field',
-    false,
-    /\.\/pickers-text-field.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="PickersTextField" allowedProps={allowedProps}>
+      <TypesPickersTextField />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

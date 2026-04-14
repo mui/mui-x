@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './date-time-range-picker-tabs.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesDateTimeRangePickerTabs } from './types.date-time-range-picker-tabs';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['classes', 'dateIcon', 'hidden', 'sx', 'timeIcon'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/date-time-range-picker-tabs',
-    false,
-    /\.\/date-time-range-picker-tabs.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="DateTimeRangePickerTabs" allowedProps={allowedProps}>
+      <TypesDateTimeRangePickerTabs />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

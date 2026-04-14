@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './tree-item-drag-and-drop-overlay.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesTreeItemDragAndDropOverlay } from './types.tree-item-drag-and-drop-overlay';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = [];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/tree-view/tree-item-drag-and-drop-overlay',
-    false,
-    /\.\/tree-item-drag-and-drop-overlay.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="TreeItemDragAndDropOverlay" allowedProps={allowedProps}>
+      <TypesTreeItemDragAndDropOverlay />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

@@ -1,20 +1,12 @@
-import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './tree-item.json';
+import { TypesPageShell } from 'docsx/src/modules/api-docs/TypesPageShell';
+import { TypesTreeItem } from './types.tree-item';
 
-export default function Page(props) {
-  const { descriptions } = props;
-  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
+const allowedProps = ['children', 'classes', 'disableSelection', 'disabled', 'id', 'itemId', 'label', 'onBlur', 'onFocus', 'onKeyDown', 'slotProps', 'slots', 'sx'];
 
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/tree-view/tree-item',
-    false,
-    /\.\/tree-item.*\.json$/,
+export default function Page() {
+  return (
+    <TypesPageShell name="TreeItem" allowedProps={allowedProps}>
+      <TypesTreeItem />
+    </TypesPageShell>
   );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }
