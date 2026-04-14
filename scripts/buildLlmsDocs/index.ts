@@ -74,10 +74,13 @@ import yargs, { ArgumentsCamelCase } from 'yargs';
 import { kebabCase } from 'es-toolkit/string';
 import * as prettier from 'prettier';
 import { processMarkdownFile, processApiJson } from '@mui-internal-scripts/generate-llms-txt';
-import { ComponentInfo, ProjectSettings } from '@mui-internal/api-docs-builder';
+import {
+  ComponentInfo,
+  ProjectSettings,
+  findComponents,
+  findPagesMarkdown,
+} from '@mui/internal-api-docs-builder';
 import { getHeaders } from '@mui/internal-markdown';
-import findComponents from '@mui-internal/api-docs-builder/utils/findComponents';
-import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
 import { pageToTitleI18n } from '@mui/internal-core-docs/helpers';
 import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 import pages from 'docsx/data/pages';

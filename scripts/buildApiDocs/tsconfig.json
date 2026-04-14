@@ -13,13 +13,7 @@
     "moduleResolution": "node",
     "strict": true,
     "paths": {
-      "docs/config": ["../../node_modules/@mui/monorepo/docs/config.d.ts"],
-      "@mui-internal/api-docs-builder": [
-        "../../node_modules/@mui/monorepo/packages/api-docs-builder/index.ts"
-      ],
-      "@mui-internal/api-docs-builder/*": [
-        "../../node_modules/@mui/monorepo/packages/api-docs-builder/*"
-      ]
+      "docs/config": ["../../node_modules/@mui/monorepo/docs/config.d.ts"]
     }
   },
   "include": ["./**/*.ts"]

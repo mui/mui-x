@@ -75,6 +75,7 @@
     "@mui/internal-babel-plugin-minify-errors": "2.0.8-canary.25",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.76",
     "@mui/internal-code-infra": "0.0.4-canary.25",
+    "@mui/internal-api-docs-builder": "https://pkg.pr.new/mui/material-ui/@mui/internal-api-docs-builder@58754a9",
     "@mui/internal-markdown": "3.0.6",
     "@mui/internal-netlify-cache": "0.0.3-canary.5",
     "@mui/internal-test-utils": "catalog:",
