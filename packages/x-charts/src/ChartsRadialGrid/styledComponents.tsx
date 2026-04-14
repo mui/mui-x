@@ -12,8 +12,18 @@ export const GridRoot = styled('g', {
 })({});
 
 export const GridLine = styled('line', {
-  name: 'MuiChartsRadialGrid',
-  slot: 'Line',
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})(({ theme }) => ({
+  stroke: (theme.vars || theme).palette.divider,
+  shapeRendering: 'crispEdges',
+  strokeWidth: 1,
+  fill: 'none',
+}));
+
+export const GridPath = styled('path', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
 })(({ theme }) => ({
   stroke: (theme.vars || theme).palette.divider,
   shapeRendering: 'crispEdges',
@@ -22,8 +32,8 @@ export const GridLine = styled('line', {
 }));
 
 export const GridCircle = styled('circle', {
-  name: 'MuiChartsRadialGrid',
-  slot: 'Line',
+  slot: 'internal',
+  shouldForwardProp: undefined,
 })(({ theme }) => ({
   stroke: (theme.vars || theme).palette.divider,
   shapeRendering: 'crispEdges',

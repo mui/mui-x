@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTicks } from '../hooks/useTicks';
-import { GridCircle } from './styledComponents';
+import { GridCircle, GridPath } from './styledComponents';
 import { type ChartsRadialGridClasses } from './chartsRadialGridClasses';
 import { useChartsContext } from '../context/ChartsProvider';
 import {
@@ -11,6 +11,8 @@ import { type PolarAxisDefaultized } from '../models/axis';
 
 interface ChartsRadiusGridProps {
   axis: PolarAxisDefaultized<any, any, any>;
+  startAngle: number;
+  endAngle: number;
   classes: Partial<ChartsRadialGridClasses>;
 }
 
@@ -19,7 +21,7 @@ interface ChartsRadiusGridProps {
  */
 export function ChartsRadiusGrid(props: ChartsRadiusGridProps) {
   const { store } = useChartsContext<[UseChartPolarAxisSignature]>();
-  const { axis, classes } = props;
+  const { axis, startAngle, endAngle, classes } = props;
   const { cx, cy } = store.use(selectorChartPolarCenter);
 
   const { scale, tickNumber, tickInterval, tickSpacing } = axis;
@@ -32,17 +34,41 @@ export function ChartsRadiusGrid(props: ChartsRadiusGridProps) {
     direction: 'radius',
   });
 
+  const isFullCircle = Math.abs(endAngle - startAngle) >= 2 * Math.PI - 0.0001;
+
+  if (isFullCircle) {
+    return (
+      <React.Fragment>
+        {ticks.map(({ offset: radius }) => (
+          <GridCircle
+            key={`radius-${radius}`}
+            cx={cx}
+            cy={cy}
+            r={radius}
+            className={classes.radiusLine}
+          />
+        ))}
+      </React.Fragment>
+    );
+  }
+  
+  const startDx = Math.cos(startAngle - Math.PI / 2);
+  const startDy = Math.sin(startAngle - Math.PI / 2);
+  const endDx = Math.cos(endAngle - Math.PI / 2);
+  const endDy = Math.sin(endAngle - Math.PI / 2);
+
+  const isLargeArc = Math.abs(endAngle - startAngle) >= Math.PI;
   return (
     <React.Fragment>
-      {ticks.map(({ value, offset }) => (
-        <GridCircle
-          key={`radius-${value?.getTime?.() ?? value}`}
-          cx={cx}
-          cy={cy}
-          r={offset}
-          className={classes.radiusLine}
-        />
-      ))}
+      {ticks.map(({  offset: radius }) => {
+        return (
+          <GridPath
+            key={`radius-${radius}`}
+            d={`M${cx + startDx * radius},${cy + startDy * radius} A ${radius} ${radius} 0 ${isLargeArc ? 1 : 0} 1 ${cx + endDx * radius},${cy + endDy * radius}`}
+            className={classes.radiusLine}
+          />
+        );
+      })}
     </React.Fragment>
   );
 }

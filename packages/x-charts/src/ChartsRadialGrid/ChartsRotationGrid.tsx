@@ -11,7 +11,8 @@ import { type PolarAxisDefaultized } from '../models/axis';
 
 interface ChartsRotationGridProps {
   axis: PolarAxisDefaultized<any, any, any>;
-  radius: number;
+  innerRadius: number;
+  outerRadius: number;
   classes: Partial<ChartsRadialGridClasses>;
 }
 
@@ -20,7 +21,7 @@ interface ChartsRotationGridProps {
  */
 export function ChartsRotationGrid(props: ChartsRotationGridProps) {
   const { store } = useChartsContext<[UseChartPolarAxisSignature]>();
-  const { axis, radius, classes } = props;
+  const { axis, innerRadius, outerRadius, classes } = props;
   const { cx, cy } = store.use(selectorChartPolarCenter);
 
   const { scale, tickNumber, tickInterval, tickSpacing } = axis;
@@ -36,16 +37,22 @@ export function ChartsRotationGrid(props: ChartsRotationGridProps) {
   return (
     <React.Fragment>
       {ticks.map(({ value, offset }) => {
-        const angle = (offset * Math.PI) / 180 - Math.PI / 2;
-        const x = cx + radius * Math.cos(angle);
-        const y = cy + radius * Math.sin(angle);
+        const angle = offset - Math.PI / 2;
+
+        const dx = Math.cos(angle);
+        const dy = Math.sin(angle);
+
+        const x1 = cx + innerRadius * dx;
+        const y1 = cy + innerRadius * dy;
+        const x2 = cx + outerRadius * dx;
+        const y2 = cy + outerRadius * dy;
         return (
           <GridLine
             key={`rotation-${value?.getTime?.() ?? value}`}
-            x1={cx}
-            y1={cy}
-            x2={x}
-            y2={y}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
             className={classes.rotationLine}
           />
         );
