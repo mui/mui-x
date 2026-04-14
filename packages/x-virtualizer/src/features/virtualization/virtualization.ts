@@ -364,10 +364,10 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   });
 
   const forceUpdateRenderContext = () => {
-    // skip update if dimensions are not ready and virtualization is enabled
+    // skip update if dimensions are not ready or virtualization is disabled
     if (
-      !Dimensions.selectors.dimensions(store.state).isReady &&
-      (enabledForRows || enabledForColumns)
+      (!enabledForRows && !enabledForColumns) ||
+      !Dimensions.selectors.dimensions(store.state).isReady
     ) {
       return;
     }
