@@ -132,8 +132,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    This adds the necessary headers and stringifies the body in the correct format for you.
    The `unstable_` prefix means this API may change in a minor release as it matures—it is suitable for production use.
 
-   Pass `privateMode: true` to limit MUI's service logging to billing data only—no query text or context is stored.
-   This is recommended for production deployments, especially those handling sensitive data:
+   It also makes it possible to provide additional context for better processing results, as shown below:
 
    ```ts
    const PROMPT_RESOLVER_PROXY_BASE_URL =
@@ -142,23 +141,6 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
        : 'https://api.my-proxy.com';
 
    function processPrompt(query: string, context: string, conversationId?: string) {
-     return unstable_gridDefaultPromptResolver(
-       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
-       query,
-       context,
-       conversationId,
-       { privateMode: true },
-     );
-   }
-   ```
-
-   Omit `privateMode` (or set it to `false`) to allow MUI to store query text for error analysis and service improvement.
-   Your grid's row data is never stored—only the query text itself.
-
-   You can also provide additional context for better processing results:
-
-   ```ts
-   function processPrompt(query: string, context: string, conversationId?: string) {
      const additionalContext = `The rows represent: List of employees with their company, position and start date`;
 
      return unstable_gridDefaultPromptResolver(
@@ -166,7 +148,23 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
        query,
        context,
        conversationId,
-       { privateMode: true, additionalContext },
+       { additionalContext },
+     );
+   }
+   ```
+
+   By default, MUI's prompt resolver service logs query text to analyze errors and improve the service—your grid's row data is never stored.
+   Pass `privateMode: true` to limit logging to billing data only, with no query text stored.
+   This is recommended for production deployments handling sensitive data:
+
+   ```ts
+   function processPrompt(query: string, context: string, conversationId?: string) {
+     return unstable_gridDefaultPromptResolver(
+       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+       query,
+       context,
+       conversationId,
+       { privateMode: true },
      );
    }
    ```
