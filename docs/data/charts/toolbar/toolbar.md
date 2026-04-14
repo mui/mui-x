@@ -102,7 +102,7 @@ Use `[startDate, endDate]` to zoom to a fixed date range.
 Use a function to compute custom zoom percentages (0–100).
 The function receives a params object with the axis context:
 
-- `scaleType` — The axis scale type (e.g., `'time'`, `'band'`, `'linear'`).
+- `scaleType` — The axis scale type (`'time'`, `'band'`, `'linear'`).
 - `data` — The axis data values (available for ordinal axes).
 - `domain` — The full domain bounds (`{ min, max }`). Timestamps for time axes, indices for ordinal.
 
