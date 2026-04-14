@@ -180,10 +180,7 @@ export default withDeploymentConfig({
             use: [
               options.defaultLoaders.babel,
               {
-                loader: path.resolve(
-                  currentDirectory,
-                  'node_modules/@mui/internal-docs-infra/build/pipeline/loadPrecomputedTypes/index.mjs',
-                ),
+                loader: '@mui/internal-docs-infra/pipeline/loadPrecomputedTypes',
                 options: {
                   socketDir: '.next/docs-infra',
                 } satisfies PrecomputedTypesLoaderOptions,
