@@ -354,6 +354,7 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/components/ai-assistant-panel',
             title: 'AI Assistant Panel',
+            planned: true,
             plan: 'premium',
           },
         ],
