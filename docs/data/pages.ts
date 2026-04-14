@@ -710,7 +710,7 @@ const pages: MuiPage[] = [
                   { pathname: '/x/react-charts/axis', title: 'Overview' },
                   { pathname: '/x/react-charts/axis-ticks', title: 'Ticks and grid' },
                   { pathname: '/x/react-charts/axis-customization', title: 'Customization' },
-                ]
+                ],
               },
               { pathname: '/x/react-charts/brush' },
               { pathname: '/x/react-charts/components', title: 'Custom components' },
