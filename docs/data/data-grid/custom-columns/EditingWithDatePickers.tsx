@@ -81,9 +81,11 @@ function GridEditDateCell({
             padding: '0 9px',
             justifyContent: 'center',
           },
-          InputProps: {
-            disableUnderline: true,
-            sx: { fontSize: 'inherit' },
+          slotProps: {
+            input: {
+              disableUnderline: true,
+              sx: { fontSize: 'inherit' },
+            },
           },
         },
       }}

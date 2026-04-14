@@ -181,7 +181,7 @@ interface TimeGridColumnProps {
 }
 
 /**
- * Makes sure any event dropped in the time grid column is turned into an non all-day event.
+ * Makes sure any event dropped in the time grid column is turned into a non all-day event.
  */
 function addPropertiesToDroppedEvent() {
   return {

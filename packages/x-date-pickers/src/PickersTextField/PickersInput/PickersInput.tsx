@@ -153,6 +153,8 @@ const PickersInput = React.forwardRef(function PickersInput(
     disableUnderline = false,
     ownerState: ownerStateProp,
     classes: classesProp,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ...other
   } = props;
 
@@ -165,9 +167,12 @@ const PickersInput = React.forwardRef(function PickersInput(
 
   return (
     <PickersInputBase
-      slots={{ root: PickersInputRoot }}
-      slotProps={{ root: { disableUnderline } }}
       {...other}
+      slots={{ root: PickersInputRoot, ...inSlots }}
+      slotProps={{
+        ...inSlotProps,
+        root: { disableUnderline, ...inSlotProps?.root },
+      }}
       ownerState={ownerState}
       label={label}
       classes={classes}
@@ -187,8 +192,8 @@ PickersInput.propTypes = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  classes: PropTypes.object,
   className: PropTypes.string,
-  component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
@@ -221,11 +226,6 @@ PickersInput.propTypes = {
    * The id of the `input` element.
    */
   id: PropTypes.string,
-  /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
    */
@@ -273,7 +273,6 @@ PickersInput.propTypes = {
    * Start `InputAdornment` for this component.
    */
   startAdornment: PropTypes.node,
-  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

@@ -69,8 +69,11 @@ const selectors = {
     return positions;
   }),
   needsHorizontalScrollbar: (state: BaseState) =>
-    state.dimensions.viewportOuterSize.width > 0 &&
-    state.dimensions.columnsTotalWidth > state.dimensions.viewportOuterSize.width,
+    state.dimensions.viewportInnerSize.width > 0 &&
+    state.dimensions.columnsTotalWidth > state.dimensions.viewportInnerSize.width,
+  needsVerticalScrollbar: (state: BaseState) =>
+    state.dimensions.viewportInnerSize.height > 0 &&
+    state.dimensions.contentSize.height > state.dimensions.viewportInnerSize.height,
 };
 
 export const Dimensions = {
