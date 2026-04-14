@@ -5,11 +5,11 @@ import type { GridFilterItem, GridLogicOperator } from './gridFilterItem';
  * @demos
  *   - [Pass filters to the grid](/x/react-data-grid/filtering/#pass-filters-to-the-data-grid)
  */
-export interface GridFilterModel {
+export interface GridFilterModel<V = any> {
   /**
    * @default []
    */
-  items: GridFilterItem[];
+  items: GridFilterItem<V>[];
   /**
    * - `GridLogicOperator.And`: the row must pass all the filter items.
    * - `GridLogicOperator.Or`: the row must pass at least on filter item.

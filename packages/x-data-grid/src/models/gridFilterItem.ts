@@ -5,7 +5,7 @@ import type { GridBaseColDef } from './colDef/gridColDef';
  * @demos
  *   - [Custom filter operator](/x/react-data-grid/filtering/customization/#create-a-custom-operator)
  */
-export interface GridFilterItem {
+export interface GridFilterItem<V = any> {
   /**
    * Must be unique.
    * Only useful when the model contains several items.
@@ -19,7 +19,7 @@ export interface GridFilterItem {
    * The filtering value.
    * The operator filtering function will decide for each row if the row values is correct compared to this value.
    */
-  value?: any;
+  value?: V;
   /**
    * The name of the operator we want to apply.
    * A custom operator is supported by providing any string value.
