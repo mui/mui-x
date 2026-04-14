@@ -27,6 +27,23 @@ Since `v9` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v8` to `v9`.
 
+## Update `@mui/material` and `@mui/system` packages
+
+The minimum supported version of `@mui/material` and `@mui/system` has been updated to `^7.3.0` or `^9.0.0`.
+This change enables the opt-in [Native Color](/material-ui/customization/css-theme-variables/native-color/) feature, which replaces JavaScript color manipulation with native CSS.
+The v5 and v6 versions are no longer supported.
+
+If you are using `@mui/material` v5 or v6, you need to upgrade to at least v7.3.0.
+Follow the [Material UI migration guide](/material-ui/migration/upgrade-to-v9/) to upgrade your implementation.
+
+```diff
+-"@mui/material": "^5.x.x",
++"@mui/material": "^7.3.0",
+
+-"@mui/system": "^5.x.x",
++"@mui/system": "^7.3.0",
+```
+
 :::success
 The amount of breaking changes is relatively large, but most of them might impact only a small portion of users, who are using advanced customization.
 
