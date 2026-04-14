@@ -159,6 +159,7 @@ function useClickAwayListener(
     // https://github.com/facebook/react/issues/20074
     function armClickAwayListener() {
       activatedRef.current = true;
+      syntheticEventRef.current = false;
     }
 
     document.addEventListener('mousedown', armClickAwayListener, true);
