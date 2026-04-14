@@ -26,6 +26,9 @@ import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugi
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 
+/**
+ * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
+ */
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
@@ -51,11 +54,19 @@ export interface ScatterProps {
   slotProps?: ScatterSlotProps;
 }
 
+/**
+ * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
+ */
 export interface ScatterSlots extends ScatterMarkerSlots {}
 
+/**
+ * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
+ */
 export interface ScatterSlotProps extends ScatterMarkerSlotProps {}
 
 /**
+ * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
+ *
  * Demos:
  *
  * - [Scatter](https://mui.com/x/react-charts/scatter/)
