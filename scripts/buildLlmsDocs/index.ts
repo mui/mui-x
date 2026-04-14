@@ -73,7 +73,7 @@ import * as path from 'node:path';
 import yargs, { ArgumentsCamelCase } from 'yargs';
 import { kebabCase } from 'es-toolkit/string';
 import * as prettier from 'prettier';
-import { processMarkdownFile, processApiJson } from '@mui-internal-scripts/generate-llms-txt';
+import { processMarkdownFile, processApiJson } from '@mui/internal-scripts/generate-llms-txt';
 import {
   ComponentInfo,
   ProjectSettings,

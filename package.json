@@ -78,6 +78,7 @@
     "@mui/internal-api-docs-builder": "https://pkg.pr.new/mui/material-ui/@mui/internal-api-docs-builder@58754a9",
     "@mui/internal-markdown": "3.0.6",
     "@mui/internal-netlify-cache": "0.0.3-canary.5",
+    "@mui/internal-scripts": "https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@eef91f5",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/monorepo": "github:mui/material-ui#c11f4ee1aec564bef4d94e62ea87e83b7d0a8c79",
