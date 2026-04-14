@@ -41,8 +41,6 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   eventPlaceholder: string;
   /** Styles applied to event resize handler elements. */
   eventResizeHandler: string;
-  /** Styles applied to event content elements. */
-  eventContent: string;
   /** Styles applied to event lines clamp elements. */
   eventLinesClamp: string;
   /** Styles applied to event recurring icon elements. */
@@ -123,7 +121,6 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'event',
     'eventPlaceholder',
     'eventResizeHandler',
-    'eventContent',
     'eventLinesClamp',
     'eventRecurringIcon',
     'timeHeader',
