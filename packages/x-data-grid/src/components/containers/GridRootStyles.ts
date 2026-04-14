@@ -22,11 +22,6 @@ const separatorIconDragStyles = {
   x: 10.5,
 };
 
-// Emotion thinks it knows better than us which selector we should use.
-// https://github.com/emotion-js/emotion/issues/1105#issuecomment-1722524968
-const ignoreSsrWarning =
-  '/* emotion-disable-server-rendering-unsafe-selector-warning-please-do-not-use-this-the-warning-exists-for-a-reason */';
-
 const shouldShowBorderTopRightRadiusSelector = (apiRef: RefObject<GridApiCommunity>) =>
   !apiRef.current.state.dimensions.isReady
     ? apiRef.current.state.dimensions.scrollbarSize === 0
@@ -187,7 +182,7 @@ export const GridRootStyles = styled('div', {
     overflowAnchor: 'none', // Keep the same scrolling position
     transform: 'translate(0, 0)', // Create a stacking context to keep scrollbars from showing on top
 
-    [`.${c.main} > *:first-child${ignoreSsrWarning}`]: {
+    [`.${c.main} > *:first-of-type`]: {
       borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
       borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
     },
