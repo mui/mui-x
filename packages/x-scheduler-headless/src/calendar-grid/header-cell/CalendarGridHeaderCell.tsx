@@ -42,8 +42,13 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   } = componentProps;
 
   const store = useEventCalendarStoreContext();
-  const { id: rootId, focusedCell, setFocusedCell, rowTypes, rowCounts } =
-    useCalendarGridRootContext();
+  const {
+    id: rootId,
+    focusedCell,
+    setFocusedCell,
+    rowTypes,
+    rowCounts,
+  } = useCalendarGridRootContext();
   const isCurrentDay = useStore(store, selectorIsCurrentDate, date.value, skipDataCurrent);
 
   const { ref: listItemRef, index } = useCompositeListItem();

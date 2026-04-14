@@ -170,7 +170,7 @@ export const MonthView = React.memo(
     }, [adapter, days]);
 
     const monthViewRowCounts = React.useMemo(
-      () => ({ 'day-grid': weeks.length } as const),
+      () => ({ 'day-grid': weeks.length }) as const,
       [weeks.length],
     );
 

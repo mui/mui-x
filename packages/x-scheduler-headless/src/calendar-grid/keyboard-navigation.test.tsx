@@ -38,11 +38,7 @@ describe('CalendarGrid keyboard navigation', () => {
           </CalendarGrid.HeaderRow>
           <CalendarGrid.DayRow start={days[0]} end={adapter.endOfDay(days[6])}>
             {days.map((day, i) => (
-              <CalendarGrid.DayCell
-                key={i}
-                value={day}
-                data-testid={`day-${i}`}
-              />
+              <CalendarGrid.DayCell key={i} value={day} data-testid={`day-${i}`} />
             ))}
           </CalendarGrid.DayRow>
         </CalendarGrid.Root>
@@ -52,9 +48,7 @@ describe('CalendarGrid keyboard navigation', () => {
 
   describe('horizontal navigation (ArrowLeft / ArrowRight)', () => {
     it('should move focus between header cells', async () => {
-      const { user } = render(
-        <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />,
-      );
+      const { user } = render(<GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />);
 
       const header0 = screen.getByTestId('header-0');
       const header1 = screen.getByTestId('header-1');
@@ -65,9 +59,7 @@ describe('CalendarGrid keyboard navigation', () => {
     });
 
     it('should move focus between day cells', async () => {
-      const { user } = render(
-        <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />,
-      );
+      const { user } = render(<GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />);
 
       const cell2 = screen.getByTestId('day-2');
       const cell3 = screen.getByTestId('day-3');
@@ -78,9 +70,7 @@ describe('CalendarGrid keyboard navigation', () => {
     });
 
     it('should not move past the last column on ArrowRight', async () => {
-      const { user } = render(
-        <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />,
-      );
+      const { user } = render(<GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />);
 
       const lastHeader = screen.getByTestId('header-6');
       await user.click(lastHeader);
@@ -90,9 +80,7 @@ describe('CalendarGrid keyboard navigation', () => {
     });
 
     it('should not move past the first column on ArrowLeft', async () => {
-      const { user } = render(
-        <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />,
-      );
+      const { user } = render(<GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />);
 
       const firstCell = screen.getByTestId('day-0');
       await user.click(firstCell);
@@ -104,9 +92,7 @@ describe('CalendarGrid keyboard navigation', () => {
 
   describe('vertical navigation between row types (ArrowDown / ArrowUp)', () => {
     it('should move from header to day cell on ArrowDown', async () => {
-      const { user } = render(
-        <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />,
-      );
+      const { user } = render(<GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />);
 
       const header3 = screen.getByTestId('header-3');
       const cell3 = screen.getByTestId('day-3');
@@ -117,9 +103,7 @@ describe('CalendarGrid keyboard navigation', () => {
     });
 
     it('should move from day cell to header on ArrowUp', async () => {
-      const { user } = render(
-        <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />,
-      );
+      const { user } = render(<GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />);
 
       const header3 = screen.getByTestId('header-3');
       const cell3 = screen.getByTestId('day-3');
@@ -130,9 +114,7 @@ describe('CalendarGrid keyboard navigation', () => {
     });
 
     it('should not move up from header row', async () => {
-      const { user } = render(
-        <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />,
-      );
+      const { user } = render(<GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />);
 
       const header0 = screen.getByTestId('header-0');
       await user.click(header0);
@@ -142,9 +124,7 @@ describe('CalendarGrid keyboard navigation', () => {
     });
 
     it('should not move down from the last row type', async () => {
-      const { user } = render(
-        <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />,
-      );
+      const { user } = render(<GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />);
 
       const cell0 = screen.getByTestId('day-0');
       await user.click(cell0);
@@ -169,10 +149,7 @@ describe('CalendarGrid keyboard navigation', () => {
 
       return (
         <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root
-            rowTypes={['header', 'day-grid']}
-            rowCounts={{ 'day-grid': 3 }}
-          >
+          <CalendarGrid.Root rowTypes={['header', 'day-grid']} rowCounts={{ 'day-grid': 3 }}>
             <CalendarGrid.HeaderRow>
               {week0Days.map((day, i) => (
                 <CalendarGrid.HeaderCell
@@ -190,11 +167,7 @@ describe('CalendarGrid keyboard navigation', () => {
               end={adapter.endOfDay(week0Days[6])}
             >
               {week0Days.map((day, i) => (
-                <CalendarGrid.DayCell
-                  key={i}
-                  value={day}
-                  data-testid={`w0-${i}`}
-                />
+                <CalendarGrid.DayCell key={i} value={day} data-testid={`w0-${i}`} />
               ))}
             </CalendarGrid.DayRow>
             <CalendarGrid.DayRow
@@ -203,11 +176,7 @@ describe('CalendarGrid keyboard navigation', () => {
               end={adapter.endOfDay(week1Days[6])}
             >
               {week1Days.map((day, i) => (
-                <CalendarGrid.DayCell
-                  key={i}
-                  value={day}
-                  data-testid={`w1-${i}`}
-                />
+                <CalendarGrid.DayCell key={i} value={day} data-testid={`w1-${i}`} />
               ))}
             </CalendarGrid.DayRow>
             <CalendarGrid.DayRow
@@ -216,11 +185,7 @@ describe('CalendarGrid keyboard navigation', () => {
               end={adapter.endOfDay(week2Days[6])}
             >
               {week2Days.map((day, i) => (
-                <CalendarGrid.DayCell
-                  key={i}
-                  value={day}
-                  data-testid={`w2-${i}`}
-                />
+                <CalendarGrid.DayCell key={i} value={day} data-testid={`w2-${i}`} />
               ))}
             </CalendarGrid.DayRow>
           </CalendarGrid.Root>
@@ -334,9 +299,7 @@ describe('CalendarGrid keyboard navigation', () => {
 
   describe('roving tabIndex', () => {
     it('should set tabIndex=0 on the focused cell and tabIndex=-1 on others', async () => {
-      const { user } = render(
-        <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />,
-      );
+      const { user } = render(<GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />);
 
       const cell0 = screen.getByTestId('day-0');
       const cell1 = screen.getByTestId('day-1');

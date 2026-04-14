@@ -11,21 +11,18 @@ describe('<CalendarGrid.HeaderCell />', () => {
 
   const day = adapter.now('default');
 
-  describeConformance(
-    <CalendarGrid.HeaderCell date={processDate(day, adapter)} />,
-    () => ({
-      refInstanceof: window.HTMLDivElement,
-      render(node) {
-        return render(
-          <EventCalendarProvider events={[]}>
-            <CalendarGrid.Root>
-              <CalendarGrid.HeaderRow>{node}</CalendarGrid.HeaderRow>
-            </CalendarGrid.Root>
-          </EventCalendarProvider>,
-        );
-      },
-    }),
-  );
+  describeConformance(<CalendarGrid.HeaderCell date={processDate(day, adapter)} />, () => ({
+    refInstanceof: window.HTMLDivElement,
+    render(node) {
+      return render(
+        <EventCalendarProvider events={[]}>
+          <CalendarGrid.Root>
+            <CalendarGrid.HeaderRow>{node}</CalendarGrid.HeaderRow>
+          </CalendarGrid.Root>
+        </EventCalendarProvider>,
+      );
+    },
+  }));
 
   describe('keyboard interactions', () => {
     it('should delegate Enter keypress to the child button', async () => {
