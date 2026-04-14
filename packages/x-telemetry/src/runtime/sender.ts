@@ -1,4 +1,4 @@
-import type { TelemetryContextType } from './get-context';
+import type { TelemetryContextType } from '../context';
 import { getTelemetryEnvConfigValue } from './config';
 import { TelemetryEvent } from '../types';
 import { fetchWithRetry } from './fetcher';

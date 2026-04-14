@@ -42,6 +42,7 @@ describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
   afterEach(() => {
     vi.unstubAllEnvs();
     vi.unstubAllGlobals();
+    muiXTelemetrySettings.enableTelemetry();
     getTelemetryEnvConfig(true);
   });
 
@@ -116,8 +117,6 @@ describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
 
     // Neither the package.json fetch nor the telemetry POST should happen
     expect(fetchSpy).not.toHaveBeenCalled();
-
-    muiXTelemetrySettings.enableTelemetry();
   });
 
   it('should not call fetch("/package.json") in CI', async () => {
