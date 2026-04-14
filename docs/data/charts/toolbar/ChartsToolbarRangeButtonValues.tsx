@@ -7,7 +7,9 @@ export default function ChartsToolbarRangeButtonValues() {
     <LineChartPro
       dataset={dataset}
       xAxis={[{ scaleType: 'time', dataKey: 'date', zoom: true, tickNumber: 5 }]}
-      yAxis={[{ width: 60, valueFormatter: (v: number) => `$${(v / 1000).toFixed(0)}k` }]}
+      yAxis={[
+        { width: 60, valueFormatter: (v: number) => `$${(v / 1000).toFixed(0)}k` },
+      ]}
       series={[
         { dataKey: 'fr', label: 'France' },
         { dataKey: 'gb', label: 'UK' },

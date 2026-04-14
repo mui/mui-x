@@ -257,21 +257,18 @@ describe('rangeButtonValueToZoom', () => {
     });
 
     it('should skip missing (non-date) items and still match valid dates', () => {
-      const result = rangeButtonValueToZoom(
-        [new Date(2024, 3, 1), new Date(2024, 8, 1)],
-        {
-          scaleType: 'band',
-          // Index 2 is a missing value (null) mixed in with valid dates.
-          data: [
-            new Date(2024, 0, 1),
-            new Date(2024, 3, 1),
-            null,
-            new Date(2024, 8, 1),
-            new Date(2024, 11, 1),
-          ],
-          domain: { min: 0, max: 4 },
-        },
-      );
+      const result = rangeButtonValueToZoom([new Date(2024, 3, 1), new Date(2024, 8, 1)], {
+        scaleType: 'band',
+        // Index 2 is a missing value (null) mixed in with valid dates.
+        data: [
+          new Date(2024, 0, 1),
+          new Date(2024, 3, 1),
+          null,
+          new Date(2024, 8, 1),
+          new Date(2024, 11, 1),
+        ],
+        domain: { min: 0, max: 4 },
+      });
       expect(result.start).to.be.closeTo((1 / 4) * 100, 0.1);
       expect(result.end).to.be.closeTo((3 / 4) * 100, 0.1);
     });
