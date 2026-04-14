@@ -6,14 +6,18 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { CompositeListContext } from './CompositeListContext';
 
-export type CompositeMetadata<CustomMetadata> = { index?: number | null } & CustomMetadata;
+export type CompositeMetadata<CustomMetadata> = {
+  index?: number | null | undefined;
+} & CustomMetadata;
 
 /**
  * Provides context for a list of items in a composite component.
  * @internal
  */
 export function CompositeList<Metadata>(props: CompositeList.Props<Metadata>) {
-  const { children, elementsRef, labelsRef, onMapChange } = props;
+  const { children, elementsRef, labelsRef, onMapChange: onMapChangeProp } = props;
+
+  const onMapChange = useStableCallback(onMapChangeProp);
 
   const nextIndexRef = React.useRef(0);
   const listeners = useRefWithInit(createListeners).current;
@@ -48,7 +52,11 @@ export function CompositeList<Metadata>(props: CompositeList.Props<Metadata>) {
     disableEslintWarning(mapTick);
 
     const newMap = new Map<Element, CompositeMetadata<Metadata>>();
-    const sortedNodes = Array.from(map.keys()).sort(sortByDocumentPosition);
+    // Filter out disconnected elements before sorting to avoid inconsistent
+    // compareDocumentPosition results when elements are detached from the DOM.
+    const sortedNodes = Array.from(map.keys())
+      .filter((node) => node.isConnected)
+      .sort(sortByDocumentPosition);
 
     sortedNodes.forEach((node, index) => {
       const metadata = map.get(node) ?? ({} as CompositeMetadata<Metadata>);
@@ -99,7 +107,7 @@ export function CompositeList<Metadata>(props: CompositeList.Props<Metadata>) {
       nextIndexRef.current = sortedMap.size;
     }
 
-    onMapChange?.(sortedMap);
+    onMapChange(sortedMap);
   }, [onMapChange, sortedMap, elementsRef, labelsRef, mapTick]);
 
   useIsoLayoutEffect(() => {
@@ -164,19 +172,24 @@ function sortByDocumentPosition(a: Element, b: Element) {
 
 function disableEslintWarning(_: any) {}
 
+export interface CompositeListState {}
+
+export interface CompositeListProps<Metadata> {
+  children: React.ReactNode;
+  /**
+   * A ref to the list of HTML elements, ordered by their index.
+   * `useListNavigation`'s `listRef` prop.
+   */
+  elementsRef: React.RefObject<Array<HTMLElement | null>>;
+  /**
+   * A ref to the list of element labels, ordered by their index.
+   * `useTypeahead`'s `listRef` prop.
+   */
+  labelsRef?: React.RefObject<Array<string | null>> | undefined;
+  onMapChange?: ((newMap: Map<Element, CompositeMetadata<Metadata> | null>) => void) | undefined;
+}
+
 export namespace CompositeList {
-  export interface Props<Metadata> {
-    children: React.ReactNode;
-    /**
-     * A ref to the list of HTML elements, ordered by their index.
-     * `useListNavigation`'s `listRef` prop.
-     */
-    elementsRef: React.RefObject<Array<HTMLElement | null>>;
-    /**
-     * A ref to the list of element labels, ordered by their index.
-     * `useTypeahead`'s `listRef` prop.
-     */
-    labelsRef?: React.RefObject<Array<string | null>>;
-    onMapChange?: (newMap: Map<Element, CompositeMetadata<Metadata> | null>) => void;
-  }
+  export type State = CompositeListState;
+  export type Props<Metadata> = CompositeListProps<Metadata>;
 }

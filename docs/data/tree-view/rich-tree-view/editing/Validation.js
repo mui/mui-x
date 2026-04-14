@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutlined';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';

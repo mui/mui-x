@@ -1,4 +1,4 @@
-import type { MuiPage } from '@mui/docs/MuiPage';
+import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
 const chartsApiPages: MuiPage[] = [
   {
@@ -116,6 +116,10 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-localization-provider',
     title: 'ChartsLocalizationProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-radial-data-provider',
+    title: 'ChartsRadialDataProvider',
   },
   {
     pathname: '/x/api/charts/charts-reference-line',

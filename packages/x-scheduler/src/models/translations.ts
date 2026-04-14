@@ -10,7 +10,6 @@ export interface EventDialogLocaleText {
   closeButtonLabel: string;
   deleteEvent: string;
   descriptionLabel: string;
-  editDisabledNotice: string;
   endDateLabel: string;
   endTimeLabel: string;
   eventTitleAriaLabel: string;
@@ -58,9 +57,6 @@ export interface EventDialogLocaleText {
   radioGroupAriaLabel: string;
   thisAndFollowing: string;
   title: string;
-
-  // General
-  loading: string;
 }
 
 export interface EventCalendarLocaleText extends EventDialogLocaleText {

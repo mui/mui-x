@@ -6,18 +6,18 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { alpha } from '@mui/material/styles';
-import { Translate, useTranslate, useUserLanguage } from '@mui/docs/i18n';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { MarkdownElement } from '@mui/docs/MarkdownElement';
-import { SectionTitle, SectionTitleProps } from '@mui/docs/SectionTitle';
-import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
-import PropertiesSection from 'docs/src/modules/components/ApiPage/sections/PropertiesSection';
-import { PropertyDefinition } from 'docs/src/modules/components/ApiPage/definitions/properties';
-import { LayoutStorageKeys } from 'docs/src/modules/components/ApiPage';
+import { Translate, useTranslate, useUserLanguage } from '@mui/internal-core-docs/i18n';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
+import { MarkdownElement } from '@mui/internal-core-docs/MarkdownDocs';
+import { LayoutStorageKeys } from '@mui/internal-core-docs/ApiPage';
+import type { PropertyDefinition } from '@mui/internal-core-docs/ApiPage/definitions';
 import {
   DEFAULT_API_LAYOUT_STORAGE_KEYS,
-  ApiDisplayOptions,
-} from 'docs/src/modules/components/ApiPage/sections/ToggleDisplayOption';
+  type ApiDisplayLayout,
+} from '@mui/internal-core-docs/ApiPage/sections/ToggleDisplayOption';
+import { PropertiesSection } from '@mui/internal-core-docs/ApiPage/sections/PropertiesSection';
+import { AppLayoutDocs } from '@mui/internal-core-docs/AppLayout';
+import { SectionTitle, SectionTitleProps } from '@mui/internal-core-docs/SectionTitle';
 import {
   InterfaceApiTranslation,
   InterfaceApiContent,
@@ -56,7 +56,7 @@ interface ApiPageProps {
     };
   };
   pageContent: InterfaceApiContent;
-  defaultLayout?: ApiDisplayOptions;
+  defaultLayout?: ApiDisplayLayout;
   /**
    * The localStorage key used to save the user layout for each section.
    * It's useful to dave different preferences on different pages.

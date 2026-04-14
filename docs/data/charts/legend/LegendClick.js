@@ -7,7 +7,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 
 import { ChartsLegend, PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 
 const pieSeries = [

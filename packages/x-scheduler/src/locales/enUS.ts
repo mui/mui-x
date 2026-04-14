@@ -14,11 +14,10 @@ const enUSDialog: EventDialogLocaleText = {
   dateTimeSectionLabel: 'Date & time',
   resourceColorSectionLabel: 'Resource & color',
   allDayLabel: 'All Day',
-  closeButtonAriaLabel: 'Close modal',
+  closeButtonAriaLabel: 'Close',
   closeButtonLabel: 'Close',
   deleteEvent: 'Delete event',
   descriptionLabel: 'Description',
-  editDisabledNotice: 'Editing is currently unavailable for recurrent events',
   endDateLabel: 'End date',
   endTimeLabel: 'End time',
   eventTitleAriaLabel: 'Event title',
@@ -38,7 +37,7 @@ const enUSDialog: EventDialogLocaleText = {
   recurrenceEveryLabel: 'Every',
   recurrenceRepeatLabel: 'Repeat',
   recurrenceTabLabel: 'Recurrence',
-  recurrenceMainSelectCustomLabel: 'Select your recurrence pattern',
+  recurrenceMainSelectCustomLabel: 'Recurrence',
   recurrenceWeeklyFrequencyLabel: 'weeks',
   recurrenceWeeklyPresetLabel: (weekday) => `Repeats weekly on ${weekday}`,
   recurrenceMonthlyFrequencyLabel: 'months',
@@ -53,22 +52,19 @@ const enUSDialog: EventDialogLocaleText = {
   recurrenceYearlyPresetLabel: (date) => `Repeats annually on ${date}`,
   noResourceAriaLabel: 'No specific resource',
   resourceLabel: 'Resource',
-  saveChanges: 'Save changes',
+  saveChanges: 'Save',
   startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   startDateLabel: 'Start date',
   startTimeLabel: 'Start time',
 
   // ScopeDialog
-  all: 'All events in the series',
+  all: 'All events',
   cancel: 'Cancel',
   confirm: 'Confirm',
   onlyThis: 'Only this event',
   radioGroupAriaLabel: 'Editing recurring events scope',
   thisAndFollowing: 'This and following events',
   title: 'Apply this change to:',
-
-  // General
-  loading: 'Loading...',
 };
 
 const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> = {

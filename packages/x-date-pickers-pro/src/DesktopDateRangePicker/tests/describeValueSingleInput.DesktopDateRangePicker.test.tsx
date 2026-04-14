@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
@@ -40,7 +40,7 @@ describe('<DesktopDateRangePicker /> - Describe Value', () => {
 
       const expectedValueStr = `${expectedStartValueStr} – ${expectedEndValueStr}`;
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
     setNewValue: (
       value,

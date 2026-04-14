@@ -97,7 +97,7 @@ function EditAction(props: Pick<GridRowParams, 'row'>) {
     setEditing(false);
   };
 
-  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSave = (event: React.FormEvent) => {
     event.preventDefault();
     apiRef.current.updateRows([{ id: row.id, name, position }]);
     handleClose();
@@ -184,20 +184,13 @@ function ListViewCell(props: GridRenderCellParams) {
   const { row } = props;
 
   return (
-    <Stack
-      direction="row"
-      sx={{
-        alignItems: 'center',
-        height: '100%',
-        gap: 2,
-      }}
-    >
+    <Stack direction="row" sx={{ alignItems: 'center', height: '100%', gap: 2 }}>
       <Avatar sx={{ width: 32, height: 32, backgroundColor: row.avatar }} />
       <Stack sx={{ flexGrow: 1 }}>
-        <Typography variant="body2" fontWeight={500}>
+        <Typography variant="body2" sx={{ fontWeight: 500 }}>
           {row.name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {row.position}
         </Typography>
       </Stack>

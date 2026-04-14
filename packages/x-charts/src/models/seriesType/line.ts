@@ -7,6 +7,7 @@ import {
   type SeriesId,
   type StackableSeriesType,
 } from './common';
+import { type DatasetElementType } from './config';
 import { type CurveType } from '../curve';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
@@ -45,6 +46,14 @@ export interface LineSeriesType
    * The key used to retrieve data from the dataset.
    */
   dataKey?: string;
+  /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return the series value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {number | null} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => number | null;
   /**
    * If `true`, the series is rendered as an area instead of a line.
    */

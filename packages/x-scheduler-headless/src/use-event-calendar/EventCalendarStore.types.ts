@@ -51,7 +51,7 @@ export interface EventCalendarParameters<
   defaultView?: CalendarView;
   /**
    * The views available in the calendar.
-   * @default ["week", "day", "month", "agenda"]
+   * @default ["day", "week", "month", "agenda"]
    */
   views?: CalendarView[];
   /**

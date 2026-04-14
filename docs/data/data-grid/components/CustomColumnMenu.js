@@ -10,7 +10,7 @@ import {
   useGridApiRef,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import StarOutlineIcon from '@mui/icons-material/StarOutlined';
 
 const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)(
   ({ theme, ownerState }) => ({
