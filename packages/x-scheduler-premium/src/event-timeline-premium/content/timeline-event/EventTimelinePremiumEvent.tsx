@@ -3,14 +3,11 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
+import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import {
-  EventDragPreview,
-  getPaletteVariants,
-  RepeatRoundedIcon,
-} from '@mui/x-scheduler/internals';
+import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
@@ -101,7 +98,7 @@ const EventTimelinePremiumEventLinesClamp = styled('span', {
   overflowWrap: 'break-word',
 });
 
-const EventTimelinePremiumEventRecurringIcon = styled(RepeatRoundedIcon, {
+const EventTimelinePremiumEventRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventTimeline',
   slot: 'EventRecurringIcon',
 })({
