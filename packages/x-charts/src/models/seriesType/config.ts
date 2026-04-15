@@ -101,30 +101,6 @@ export interface ChartsSeriesConfig {
       dataIndex?: number;
     };
   };
-  ['radial-line']: {
-    seriesInput: DefaultizedProps<RadialLineSeriesType, 'id'> &
-      MakeRequired<SeriesColor<number | null>, 'color'>;
-    series: DefaultizedRadialLineSeriesType;
-    seriesLayout: {};
-    seriesProp: RadialLineSeriesType;
-    itemIdentifier: RadialLineItemIdentifier;
-    itemIdentifierWithData: RadialLineItemIdentifier;
-    valueType: number | null;
-    canBeStacked: true;
-    axisType: 'polar';
-    highlightScope: CommonHighlightScope;
-    descriptionGetterParams: {
-      identifier: RadialLineItemIdentifier;
-      rotationAxis: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
-      radiusAxis: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
-      series: DefaultizedRadialLineSeriesType;
-    };
-    highlightIdentifier: {
-      type: 'radial-line';
-      seriesId: SeriesId;
-      dataIndex?: number;
-    };
-  };
   scatter: {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
       MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;

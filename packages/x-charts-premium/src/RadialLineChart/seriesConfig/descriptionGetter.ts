@@ -1,5 +1,5 @@
-import { getLabel } from '../../internals/getLabel';
-import type { DescriptionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { getLabel } from '../../../../x-charts/src/internals/getLabel';
+import type { DescriptionGetter } from '../../../../x-charts/src/internals/plugins/corePlugins/useChartSeriesConfig';
 
 const descriptionGetter: DescriptionGetter<'radial-line'> = (params) => {
   const { identifier, series, rotationAxis, localeText } = params;

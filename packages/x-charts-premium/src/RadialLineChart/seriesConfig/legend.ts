@@ -1,6 +1,6 @@
-import type { SeriesLegendItemParams } from '../../ChartsLegend';
-import { getLabel } from '../../internals/getLabel';
-import { type LegendGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { SeriesLegendItemParams } from '../../../../x-charts/src/ChartsLegend';
+import { getLabel } from '../../../../x-charts/src/internals/getLabel';
+import { type LegendGetter } from '../../../../x-charts/src/internals/plugins/corePlugins/useChartSeriesConfig';
 
 const legendGetter: LegendGetter<'radial-line'> = (params) => {
   const { seriesOrder, series } = params;
