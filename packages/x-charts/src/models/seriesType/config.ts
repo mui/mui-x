@@ -5,11 +5,7 @@ import type {
   ScatterItemIdentifier,
   ScatterValueType,
 } from './scatter';
-import type {
-  LineSeriesType,
-  DefaultizedLineSeriesType,
-  LineItemIdentifier,
-} from './line';
+import type { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
 import type { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import type {
   PieSeriesType,
