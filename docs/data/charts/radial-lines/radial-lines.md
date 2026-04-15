@@ -10,6 +10,6 @@ components: ChartsRadialDataProvider, ChartsRadialGrid
 
 ## Radial grid
 
-Similarly the the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates
+Similarly to the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates
 
 {{"demo": "RadialGridPlayground.js", "hideToolbar": true, "bg": "playground"}}
