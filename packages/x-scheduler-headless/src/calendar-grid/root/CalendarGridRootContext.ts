@@ -15,7 +15,8 @@ export interface CalendarGridRootContext {
    */
   id: string | undefined;
   /**
-   * The coordinates of the cell that currently holds the roving tabIndex.
+   * The coordinates of the cell that currently has keyboard focus.
+   * Controls which cell's interactive children (events) are in the Tab order.
    * `null` when no cell has been focused via keyboard yet.
    */
   focusedCell: GridCellCoordinates | null;

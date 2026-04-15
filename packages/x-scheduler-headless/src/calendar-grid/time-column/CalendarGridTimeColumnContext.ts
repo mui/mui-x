@@ -16,7 +16,7 @@ export interface CalendarGridTimeColumnContext {
    */
   index: number;
   /**
-   * Whether this column currently holds the roving tabIndex focus.
+   * Whether this column currently has keyboard focus.
    * When `true`, interactive children (e.g. events) should use `tabIndex={0}`
    * so they are reachable via Tab. When `false`, they should use `tabIndex={-1}`.
    */
