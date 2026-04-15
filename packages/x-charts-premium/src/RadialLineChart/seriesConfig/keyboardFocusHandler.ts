@@ -1,9 +1,9 @@
-import { createCommonKeyboardFocusHandler } from '../../../../x-charts/src/internals/createCommonKeyboardFocusHandler';
-import type { KeyboardFocusHandler } from '../../../../x-charts/src/internals/plugins/featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import {
+  createCommonKeyboardFocusHandler,
+  type KeyboardFocusHandler,
   type ComposableRadialChartSeriesType,
   composableRadialSeriesTypes,
-} from '../../../../x-charts/src/models/seriesType/composition';
+} from '@mui/x-charts/internals';
 
 const keyboardFocusHandler: KeyboardFocusHandler<'radial-line', ComposableRadialChartSeriesType> =
   createCommonKeyboardFocusHandler<'radial-line', ComposableRadialChartSeriesType>(

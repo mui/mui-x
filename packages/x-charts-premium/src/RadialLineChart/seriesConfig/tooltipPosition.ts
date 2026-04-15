@@ -1,4 +1,4 @@
-import type { TooltipItemPositionGetter } from '../../../../x-charts/src/internals/plugins/corePlugins/useChartSeriesConfig';
+import type { TooltipItemPositionGetter } from '@mui/x-charts/internals';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'radial-line'> = () => {
   // Todo: to implement

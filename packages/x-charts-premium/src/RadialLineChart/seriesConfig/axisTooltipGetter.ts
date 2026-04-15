@@ -1,4 +1,4 @@
-import type { AxisTooltipGetter } from '../../../../x-charts/src/internals/plugins/corePlugins/useChartSeriesConfig';
+import type { AxisTooltipGetter } from '@mui/x-charts/internals';
 
 export const axisTooltipGetter: AxisTooltipGetter<'radial-line', 'rotation' | 'radius'> = (
   series,
