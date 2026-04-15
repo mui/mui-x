@@ -5,6 +5,80 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.28.3
+
+_Apr 15, 2026_
+
+We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to this community member for their valuable contribution:
+@nk10nikhil
+
+The following team members contributed to this release:
+@flaviendelangle, @LukasTy, @MBilalShafi, @michelengelen, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.28.2`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.28.2`, plus:
+
+- [DataGridPro] Improve trigger for nested row reordering (#21996) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.28.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.28.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.28.3`
+
+- [pickers] Ensure correct `display` property on Day component (#21980) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.28.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.28.3`.
+
+### Charts
+
+#### `@mui/x-charts@8.28.2`
+
+- [charts] Add missing export for `ChartsBrushOverlay` (#21993) (#22008) @nk10nikhil
+
+#### `@mui/x-charts-pro@8.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.28.2`.
+
+#### `@mui/x-charts-premium@8.28.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.28.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.28.3`
+
+- [tree view] Move `lazyLoadedItems` initialization to state initializer (#22087) @michelengelen
+
+#### `@mui/x-tree-view-pro@8.28.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.28.3`, plus:
+
+- [RichTreeViewPro] Allow to auto-expand lazy loaded items (#21957) @flaviendelangle
+
+### Docs
+
+- [docs] Fix `TreeDataFullExample` data grid demo crash (#22007) @sai6855
+
+### Miscellaneous
+
+- [core] Post v9 stable updates (#22035) @LukasTy
+
 ## 8.28.2
 
 _Apr 1, 2026_
