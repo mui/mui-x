@@ -53,6 +53,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     eventPlaceholder: ['eventPlaceholder'],
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
+    eventRecurringIcon: ['eventRecurringIcon'],
     timeHeader: ['timeHeader'],
     timeHeaderCell: ['timeHeaderCell'],
     timeHeaderDayLabel: ['timeHeaderDayLabel'],

@@ -277,7 +277,7 @@ If `axisId` is not provided, the first axis is used by default.
 ### Grid
 
 Use `ChartsGrid` to add a grid to the component.
-See [Axis—Grid](/x/react-charts/axis/#grid) for more information.
+See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for more information.
 
 ### Legend
 
