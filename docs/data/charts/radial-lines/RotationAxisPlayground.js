@@ -17,7 +17,7 @@ export default function RotationAxisPlayground() {
         rotationTickNumber: { knob: 'number', defaultValue: 8, min: 0, max: 20 },
         startAngle: {
           knob: 'number',
-          defaultValue: -180,
+          defaultValue: -90,
           min: -360,
           max: 400,
           step: 10,
