@@ -11,6 +11,7 @@ import {
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import type { AxisId } from '../models/axis';
+import { radiusAxisClasses } from './radiusAxisClasses';
 
 export interface ChartsRadiusAxisComponentProps {
   /**
@@ -127,7 +128,7 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisComponentProps) {
   const paperBackground = (theme.vars ?? theme).palette.background.paper;
 
   return (
-    <g className={clsx('MuiChartsRadiusAxis-root', className)}>
+    <g className={clsx(radiusAxisClasses.root, className)}>
       {!disableLine && (
         <line
           x1={cx + dx * innerRadius}
@@ -136,6 +137,7 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisComponentProps) {
           y2={cy + dy * outerRadius}
           stroke={stroke}
           shapeRendering="crispEdges"
+          className={radiusAxisClasses.line}
         />
       )}
       {ticks.map(({ offset: radius, formattedValue }, index) => {
@@ -149,7 +151,7 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisComponentProps) {
         const labelX = tx + (center ? 0 : px * (tickSize + TICK_LABEL_GAP));
         const labelY = ty + (center ? 0 : py * (tickSize + TICK_LABEL_GAP));
         return (
-          <g key={index}>
+          <g key={index} className={radiusAxisClasses.tickContainer}>
             {!disableTicks && (
               <line
                 x1={tx}
@@ -158,6 +160,7 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisComponentProps) {
                 y2={ty + py * tickSize}
                 stroke={stroke}
                 shapeRendering="crispEdges"
+                className={radiusAxisClasses.tick}
               />
             )}
             <foreignObject
@@ -173,6 +176,7 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisComponentProps) {
                 }}
               >
                 <span
+                  className={radiusAxisClasses.tickLabel}
                   style={{
                     position: 'fixed',
                     transform: getTransform(dx, dy, Boolean(center)),
