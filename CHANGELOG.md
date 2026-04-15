@@ -8,7 +8,9 @@ _Apr 15, 2026_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 📊 Added `valueGetter` to axes and series configurations, which allow for dynamically getting data out of a `dataset`.
+- 🐞 Bugfixes
+- 📚 Docs updates
 
 Special thanks go out to these community members for their valuable contributions:
 @Anexus5919, @nk10nikhil
@@ -20,7 +22,6 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@9.0.2`
 
-- [DataGrid] Add `isAnyOf` paste recipe (#21961) @MBilalShafi
 - [DataGrid] Fix skeleton overlay backdrop issue (#21951) @MBilalShafi
 - [DataGrid] Make `overridesResolver` of `ResizablePanelHandle` dynamic (#21724) @sai6855
 
@@ -53,7 +54,7 @@ Same changes as in `@mui/x-date-pickers@9.0.2`.
 - [charts] Create a `ChartsRadialGrid` (#22085) @alexfauquette
 - [charts] Deprecate `Scatter` component (#22060) @JCQuintas
 - [charts] Remove duplicate `useThemeProps` call (#22045) @alexfauquette
-- [charts] Simplify focus state handling in BarElement component (#22101) @sai6855
+- [charts] Simplify focus state handling in `BarElement` component (#22101) @sai6855
 
 #### `@mui/x-charts-pro@9.0.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -81,8 +82,7 @@ Same changes as in `@mui/x-tree-view@9.0.2`, plus:
 
 #### `@mui/x-scheduler@9.0.0-alpha.2`
 
-- [scheduler] Add recurrence icon to recurring events in EventTimeline (#22019) (#22046) @nk10nikhil
-- [scheduler] Fix README for published packages (#22042) @rita-codes
+- [scheduler] Add recurrence icon to recurring events in `EventTimeline` (#22019) (#22046) @nk10nikhil
 - [scheduler] Reset scroll position when navigating to a new time period (#22036) @Anexus5919
 - [l10n] Improve German (de-DE) locale (#21944) @rita-codes
 - [l10n] Improve Portuguese - Portugal (pt-PT) locale & Improve Portuguese - Brazil (pt-BR) locale (#21943) @rita-codes
@@ -93,21 +93,23 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.2`.
 
 ### Docs
 
-- [docs] Add @mui/material upgrade requirement to v9 migration guides (#22068) @LukasTy
+- [docs] Add data grid `isAnyOf` paste recipe (#21961) @MBilalShafi
+- [docs] Add `@mui/material` upgrade requirement to v9 migration guides (#22068) @LukasTy
 - [docs] Fix pages width with `disableToc` (#22051) @LukasTy
 - [docs] Split charts axis page (#22069) @alexfauquette
-- [docs] Update ChartsRadialDataProvider API page imports (#22072) @JCQuintas
+- [docs] Update `ChartsRadialDataProvider` API page imports (#22072) @JCQuintas
 
 ### Core
 
 - [code-infra] Fix lock file (#22053) @JCQuintas
-- [code-infra] Limit release:build lerna concurrency to 6 (#22077) @Janpot
+- [code-infra] Limit `release:build` lerna concurrency to 6 (#22077) @Janpot
 - [docs-infra] Update monorepo dependency with relevant migration (#22041) @brijeshb42
 
 ### Miscellaneous
 
 - [telemetry] Skip runtime resolution when telemetry is disabled (#22078) @aemartos
 - [test] Remove v7 suffix from test helpers and stale comments (#22023) @LukasTy
+- [scheduler] Fix README for published packages (#22042) @rita-codes
 
 ## 9.0.1
 
