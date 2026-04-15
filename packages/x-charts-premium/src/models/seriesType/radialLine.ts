@@ -1,1 +1,1 @@
-export type * from "@mui/x-charts/models"
+export type * from '@mui/x-charts/models';
