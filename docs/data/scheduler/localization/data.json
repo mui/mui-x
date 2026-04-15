@@ -227,7 +227,7 @@
     "languageTag": "pt-PT",
     "importName": "ptPT",
     "localeName": "Portuguese",
-    "missingKeysCount": 90,
+    "missingKeysCount": 0,
     "totalKeysCount": 90,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/ptPT.ts"
   },
@@ -235,7 +235,7 @@
     "languageTag": "pt-BR",
     "importName": "ptBR",
     "localeName": "Portuguese (Brazil)",
-    "missingKeysCount": 90,
+    "missingKeysCount": 0,
     "totalKeysCount": 90,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/ptBR.ts"
   },
