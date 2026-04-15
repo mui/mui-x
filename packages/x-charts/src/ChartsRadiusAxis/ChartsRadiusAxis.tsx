@@ -141,7 +141,6 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisComponentProps) {
         />
       )}
       {ticks.map(({ offset: radius, formattedValue }, index) => {
-        
         if (!formattedValue) {
           return null;
         }

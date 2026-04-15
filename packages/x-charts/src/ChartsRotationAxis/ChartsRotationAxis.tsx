@@ -105,14 +105,12 @@ function ChartsRotationAxis(props: ChartsRotationAxisComponentProps) {
     y: cy - Math.cos(angle) * r,
   });
 
-  // Build the axis arc path. If the arc spans a full circle, use two half arcs to avoid degenerate paths.
-  const sweep = endAngle - startAngle;
-  const isFullCircle = Math.abs(Math.abs(sweep) - 2 * Math.PI) < 0.01;
-  const sweepFlag = sweep >= 0 ? 1 : 0;
+  const isFullCircle = Math.abs(endAngle - startAngle) > 2 * Math.PI - 0.01;
+  const sweepFlag = endAngle - startAngle >= 0 ? 1 : 0;
 
   const start = angleToPoint(startAngle, radius);
   const end = angleToPoint(endAngle, radius);
-  const largeArcFlag = Math.abs(sweep) > Math.PI ? 1 : 0;
+  const largeArcFlag = Math.abs(endAngle - startAngle) > Math.PI ? 1 : 0;
   const arcPath =
     `M ${start.x} ${start.y} ` +
     `A ${radius} ${radius} 0 ${largeArcFlag} ${sweepFlag} ${end.x} ${end.y}`;
