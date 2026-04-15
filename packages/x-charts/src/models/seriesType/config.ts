@@ -9,9 +9,6 @@ import type {
   LineSeriesType,
   DefaultizedLineSeriesType,
   LineItemIdentifier,
-  RadialLineSeriesType,
-  DefaultizedRadialLineSeriesType,
-  RadialLineItemIdentifier,
 } from './line';
 import type { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import type {
