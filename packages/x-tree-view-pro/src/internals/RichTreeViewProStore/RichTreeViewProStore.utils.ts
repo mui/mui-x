@@ -9,7 +9,6 @@ const DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED = () => true;
 const DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED = () => false;
 
 const deriveStateFromParameters = (parameters: RichTreeViewProStoreParameters<any, any>) => ({
-  lazyLoadedItems: parameters.dataSource ? TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE : null,
   currentReorder: null,
   isItemReorderable: parameters.itemsReordering
     ? (parameters.isItemReorderable ?? DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED)
@@ -24,6 +23,7 @@ export const parametersToStateMapper: TreeViewParametersToStateMapper<
 > = {
   getInitialState: (minimalInitialState, parameters) => ({
     ...ExtendableRichTreeViewStore.rawMapper.getInitialState(minimalInitialState, parameters),
+    lazyLoadedItems: parameters.dataSource ? TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE : null,
     ...deriveStateFromParameters(parameters),
   }),
   updateStateFromParameters: (newMinimalState, parameters, updateModel) => {
