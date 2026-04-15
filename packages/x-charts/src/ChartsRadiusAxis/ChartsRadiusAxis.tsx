@@ -79,13 +79,6 @@ function getTransform(px: number, py: number, center: boolean) {
   return `translate(${translateX}, ${translateY})`;
 }
 
-/**
- * Renders a radius axis with tick labels along a given angle of a polar chart.
- *
- * Demos:
- *
- * - [Radar](https://mui.com/x/react-charts/radar/)
- */
 function ChartsRadiusAxis(props: ChartsRadiusAxisComponentProps) {
   const {
     axisId,
@@ -142,14 +135,15 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisComponentProps) {
           x2={cx + dx * outerRadius}
           y2={cy + dy * outerRadius}
           stroke={stroke}
-          strokeOpacity={0.3}
           shapeRendering="crispEdges"
         />
       )}
       {ticks.map(({ offset: radius, formattedValue }, index) => {
-        if (formattedValue === undefined) {
+        
+        if (!formattedValue) {
           return null;
         }
+
         const tx = cx + dx * radius;
         const ty = cy + dy * radius;
         const labelX = tx + (center ? 0 : px * (tickSize + TICK_LABEL_GAP));
@@ -163,11 +157,9 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisComponentProps) {
                 x2={tx + px * tickSize}
                 y2={ty + py * tickSize}
                 stroke={stroke}
-                strokeOpacity={0.6}
                 shapeRendering="crispEdges"
               />
             )}
-            <circle cx={labelX} cy={labelY} r={2} fill={'red'} />
             <foreignObject
               x={labelX}
               y={labelY}
