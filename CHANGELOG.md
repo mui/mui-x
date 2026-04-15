@@ -65,13 +65,15 @@ Same changes as in `@mui/x-charts-pro@9.0.2`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@9.0.1`
+#### `@mui/x-tree-view@9.0.2`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.0.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.2`, plus:
 
 - [tree view] Move `lazyLoadedItems` initialization to state initializer (#22073) @michelengelen
-
-#### `@mui/x-tree-view-pro@9.0.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@9.0.1`.
 
 ### Scheduler
 
