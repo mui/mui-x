@@ -954,7 +954,8 @@ describe('<DataGrid /> - Layout & warnings', () => {
       }).toErrorDev([
         reactMajor >= 19 &&
           'The Data Grid component requires all rows to have a unique `id` property',
-        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid2)> component',
+        // `ForwardRef(DataGrid)` on newer `@vitejs/plugin-react`, `ForwardRef(DataGrid2)` on older ones.
+        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(

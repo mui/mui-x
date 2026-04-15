@@ -9,7 +9,7 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Lazily load events for the Event Timeline.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 :::warning
 This feature isn't available yet, but it is planned — you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21143) to help us prioritize it.

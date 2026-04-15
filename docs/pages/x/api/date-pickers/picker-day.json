@@ -1,0 +1,149 @@
+{
+  "props": {
+    "day": { "type": { "name": "object" }, "required": true },
+    "onDaySelect": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(day: PickerValidDate) => void", "describedArgs": ["day"] }
+    },
+    "action": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;{ current?: { focusVisible: func } }"
+      }
+    },
+    "centerRipple": { "type": { "name": "bool" }, "default": "false" },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
+    "disableRipple": { "type": { "name": "bool" }, "default": "false" },
+    "disableTouchRipple": { "type": { "name": "bool" }, "default": "false" },
+    "focusRipple": { "type": { "name": "bool" }, "default": "false" },
+    "focusVisibleClassName": { "type": { "name": "string" } },
+    "isAnimating": { "type": { "name": "bool" }, "default": "false" },
+    "isDayFillerCell": { "type": { "name": "bool" }, "default": "false" },
+    "isFirstVisibleCell": { "type": { "name": "bool" }, "default": "false" },
+    "isLastVisibleCell": { "type": { "name": "bool" }, "default": "false" },
+    "isVisuallySelected": { "type": { "name": "bool" } },
+    "nativeButton": { "type": { "name": "bool" } },
+    "onBlur": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
+      }
+    },
+    "onClick": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => void",
+        "describedArgs": ["event"]
+      }
+    },
+    "onFocus": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
+      }
+    },
+    "onFocusVisible": { "type": { "name": "func" } },
+    "onKeyDown": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.KeyboardEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
+      }
+    },
+    "onMouseDown": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.MouseEvent<HTMLButtonElement>) => void",
+        "describedArgs": ["event"]
+      }
+    },
+    "onMouseEnter": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.MouseEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
+      }
+    },
+    "outsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
+    "selected": { "type": { "name": "bool" }, "default": "false" },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "today": { "type": { "name": "bool" }, "default": "false" },
+    "TouchRippleProps": { "type": { "name": "object" } },
+    "touchRippleRef": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;{ current?: { pulsate: func, start: func, stop: func } }"
+      }
+    }
+  },
+  "name": "PickerDay",
+  "imports": [
+    "import { PickerDay } from '@mui/x-date-pickers/PickerDay';",
+    "import { PickerDay } from '@mui/x-date-pickers';",
+    "import { PickerDay } from '@mui/x-date-pickers-pro';"
+  ],
+  "classes": [
+    {
+      "key": "dayOutsideMonth",
+      "className": "MuiPickerDay-dayOutsideMonth",
+      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`.",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "fillerCell",
+      "className": "MuiPickerDay-fillerCell",
+      "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPickerDay-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "selected",
+      "className": "Mui-selected",
+      "description": "State class applied to the root element if `selected=true`.",
+      "isGlobal": true
+    },
+    {
+      "key": "today",
+      "className": "MuiPickerDay-today",
+      "description": "Styles applied to the root element if `disableHighlightToday=false` and `today=true`.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiPickerDay",
+  "forwardsRefTo": "HTMLButtonElement",
+  "filename": "/packages/x-date-pickers/src/PickerDay/PickerDay.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li>\n<li><a href=\"/x/react-date-pickers/playground/\">Customization playground</a></li></ul>",
+  "cssComponent": false
+}

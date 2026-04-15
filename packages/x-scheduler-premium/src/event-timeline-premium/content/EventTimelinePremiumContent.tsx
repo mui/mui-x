@@ -361,6 +361,15 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     eventsHeaderCellRef.current?.style.setProperty('--events-scroll-left', String(scrollLeft));
   }, []);
 
+  // Reset horizontal scroll position to the left edge when navigating to a new time period
+  React.useEffect(() => {
+    for (const ref of [eventsScrollerRef, eventsScrollbarRef, eventsHeaderRef]) {
+      if (ref.current) {
+        ref.current.scrollLeft = 0;
+      }
+    }
+  }, [viewConfig.start]);
+
   // Sync horizontal scroll: events body ↔ events scrollbar + events header
   useSyncedHorizontalScroll(
     eventsScrollerRef,

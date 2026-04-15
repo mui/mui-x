@@ -1,0 +1,29 @@
+{
+  "props": {},
+  "name": "ChatUnreadMarker",
+  "imports": [
+    "import { ChatUnreadMarker } from '@mui/x-chat/ChatIndicators';",
+    "import { ChatUnreadMarker } from '@mui/x-chat';"
+  ],
+  "classes": [
+    {
+      "key": "label",
+      "className": "MuiChatUnreadMarker-label",
+      "description": "Styles applied to the label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChatUnreadMarker-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatUnreadMarker",
+  "filename": "/packages/x-chat/src/ChatIndicators/ChatUnreadMarker.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/multi-conversation/read-receipts/\">Chat - Read Receipts</a></li></ul>",
+  "cssComponent": false
+}
