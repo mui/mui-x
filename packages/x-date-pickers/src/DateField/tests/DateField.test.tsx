@@ -2,11 +2,10 @@ import { spy } from 'sinon';
 import InputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { screen } from '@mui/internal-test-utils';
-import { buildFieldInteractions, createPickerRenderer } from 'test/utils/pickers';
+import { createPickerRenderer } from 'test/utils/pickers';
 
 describe('<DateField />', () => {
   const { render } = createPickerRenderer();
-  const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
 
   describe('slotProps behavior', () => {
     it('should respect the `slotProps.textField.slotProps.input`', () => {
@@ -45,7 +44,7 @@ describe('<DateField />', () => {
   describe('slotProps.textField focus/blur behavior', () => {
     it('should not call `slotProps.textField.onBlur` when focus enters the field via tab', async () => {
       const onBlur = spy();
-      const view = renderWithProps({ slotProps: { textField: { onBlur } } } as any);
+      const view = render(<DateField slotProps={{ textField: { onBlur } }} />);
 
       // Tabbing into the field moves focus to the PickersSectionList root (tabIndex=0)
       // first, then programmatically to section 0. The transient root blur must not
@@ -53,24 +52,22 @@ describe('<DateField />', () => {
       await view.user.tab();
 
       expect(onBlur.callCount).to.equal(0);
-      view.unmount();
     });
 
     it('should call `slotProps.textField.onFocus` only once when focus enters the field via tab', async () => {
       const onFocus = spy();
-      const view = renderWithProps({ slotProps: { textField: { onFocus } } } as any);
+      const view = render(<DateField slotProps={{ textField: { onFocus } }} />);
 
       // Tabbing into the field fires a focus on the root and then on section 0.
       // Only the first focus (from outside the field) should reach the user.
       await view.user.tab();
 
       expect(onFocus.callCount).to.equal(1);
-      view.unmount();
     });
 
     it('should call `slotProps.textField.onBlur` when focus leaves the field via tab', async () => {
       const onBlur = spy();
-      const view = renderWithProps({ slotProps: { textField: { onBlur } } } as any);
+      const view = render(<DateField slotProps={{ textField: { onBlur } }} />);
 
       await view.user.tab();
       expect(onBlur.callCount).to.equal(0);
@@ -78,16 +75,12 @@ describe('<DateField />', () => {
       // Tab out of the field (to the document body or next focusable).
       await view.user.tab();
       expect(onBlur.callCount).to.equal(1);
-
-      view.unmount();
     });
 
     it('should not fire `slotProps.textField.onBlur` or `onFocus` when focus moves between sections', async () => {
       const onBlur = spy();
       const onFocus = spy();
-      const view = renderWithProps({
-        slotProps: { textField: { onBlur, onFocus } },
-      } as any);
+      const view = render(<DateField slotProps={{ textField: { onBlur, onFocus } }} />);
 
       await view.user.tab();
       const blurCallCountAfterTabIn = onBlur.callCount;
@@ -98,8 +91,6 @@ describe('<DateField />', () => {
 
       expect(onBlur.callCount).to.equal(blurCallCountAfterTabIn);
       expect(onFocus.callCount).to.equal(focusCallCountAfterTabIn);
-
-      view.unmount();
     });
   });
 
