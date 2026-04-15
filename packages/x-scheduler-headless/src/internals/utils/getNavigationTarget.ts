@@ -1,22 +1,22 @@
 import type {
-  GridCellRowType,
+  GridRowType,
   GridCellCoordinates,
 } from '../../calendar-grid/root/CalendarGridRootContext';
 
-export const DEFAULT_ROW_TYPES: GridCellRowType[] = ['header', 'day-grid', 'time-grid'];
+export const DEFAULT_ROW_TYPES: GridRowType[] = ['header', 'day-grid', 'time-grid'];
 
 export interface NavigationOptions {
   /** The total number of columns in the current row. */
   columnCount: number;
   /** The ordered list of row types that are rendered in the grid. */
-  rowTypes: GridCellRowType[];
+  rowTypes: GridRowType[];
   /** The number of rows for each row type. Defaults to 1 for unspecified types. */
-  rowsPerType: Partial<Record<GridCellRowType, number>>;
+  rowsPerType: Partial<Record<GridRowType, number>>;
 }
 
 function getRowCount(
-  rowsPerType: Partial<Record<GridCellRowType, number>>,
-  rowType: GridCellRowType,
+  rowsPerType: Partial<Record<GridRowType, number>>,
+  rowType: GridRowType,
 ): number {
   return rowsPerType[rowType] ?? 1;
 }
@@ -27,7 +27,7 @@ function getRowCount(
  */
 export function getNavigationTarget(
   key: string,
-  rowType: GridCellRowType,
+  rowType: GridRowType,
   rowIndex: number,
   columnIndex: number,
   options: NavigationOptions,

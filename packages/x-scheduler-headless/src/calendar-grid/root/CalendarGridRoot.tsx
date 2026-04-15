@@ -7,10 +7,10 @@ import { DEFAULT_ROW_TYPES } from '../../internals/utils/getNavigationTarget';
 import {
   CalendarGridRootContext,
   type GridCellCoordinates,
-  type GridCellRowType,
+  type GridRowType,
 } from './CalendarGridRootContext';
 
-const DEFAULT_ROWS_PER_TYPE: Partial<Record<GridCellRowType, number>> = {};
+const DEFAULT_ROWS_PER_TYPE: Partial<Record<GridRowType, number>> = {};
 
 export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   componentProps: CalendarGridRoot.Props,
@@ -35,7 +35,7 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   const [focusedCell, setFocusedCellState] = React.useState<GridCellCoordinates | null>(null);
 
   const setFocusedCell = React.useCallback(
-    (rowType: GridCellRowType, rowIndex: number, columnIndex: number) => {
+    (rowType: GridRowType, rowIndex: number, columnIndex: number) => {
       setFocusedCellState({ rowType, rowIndex, columnIndex });
     },
     [],
@@ -67,13 +67,13 @@ export namespace CalendarGridRoot {
      * Used for vertical arrow-key navigation so it only targets rows that actually exist.
      * @default ['header', 'day-grid', 'time-grid']
      */
-    rowTypes?: GridCellRowType[];
+    rowTypes?: GridRowType[];
     /**
      * The number of rows for each row type.
      * Defaults to 1 for row types not specified.
      * Month view uses this to indicate multiple week rows (e.g., `{ 'day-grid': 5 }`).
      * @default {}
      */
-    rowsPerType?: Partial<Record<GridCellRowType, number>>;
+    rowsPerType?: Partial<Record<GridRowType, number>>;
   }
 }

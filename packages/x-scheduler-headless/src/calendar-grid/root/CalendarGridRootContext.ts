@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 
-export type GridCellRowType = 'header' | 'day-grid' | 'time-grid';
+export type GridRowType = 'header' | 'day-grid' | 'time-grid';
 
 export interface GridCellCoordinates {
-  rowType: GridCellRowType;
+  rowType: GridRowType;
   rowIndex: number;
   columnIndex: number;
 }
@@ -24,18 +24,18 @@ export interface CalendarGridRootContext {
    * Updates the focused cell coordinates.
    * The cell matching these coordinates will receive `tabIndex={0}` and DOM focus.
    */
-  setFocusedCell: (rowType: GridCellRowType, rowIndex: number, columnIndex: number) => void;
+  setFocusedCell: (rowType: GridRowType, rowIndex: number, columnIndex: number) => void;
   /**
    * The ordered list of row types that are rendered in the grid.
    * Used for vertical arrow-key navigation so it only targets rows that actually exist.
    */
-  rowTypes: GridCellRowType[];
+  rowTypes: GridRowType[];
   /**
    * The number of rows for each row type.
    * Defaults to 1 for row types not specified.
    * Month view uses this to indicate multiple week rows (e.g., `{ 'day-grid': 5 }`).
    */
-  rowsPerType: Partial<Record<GridCellRowType, number>>;
+  rowsPerType: Partial<Record<GridRowType, number>>;
 }
 
 export const CalendarGridRootContext = React.createContext<CalendarGridRootContext | undefined>(
