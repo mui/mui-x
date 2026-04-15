@@ -49,7 +49,7 @@ export default function RadiusAxisPlayground() {
         >
           <Unstable_ChartsRadialDataProvider
             width={400}
-            height={300}
+            height={400}
             rotationAxis={[
               {
                 min: 0,
@@ -96,8 +96,16 @@ export default function RadiusAxisPlayground() {
 >
   <Unstable_ChartsRadialGrid rotation radius />
   <ChartsRadiusAxis
-    angle={${((props.angle * Math.PI) / 180).toFixed(3)}}${props.disableLine ? '\n    disableLine' : ''}${props.disableTicks ? '\n    disableTicks' : ''}
-    tickSize={${props.tickSize}}
+${[
+  `angle={${props.angle}}`,
+  `tickSize={${props.tickSize}}`,
+  props.disableLine && 'disableLine',
+  props.disableTicks && 'disableTicks',
+  props.center && 'center',
+]
+  .filter(Boolean)
+  .map((line) => `    ${line}`)
+  .join('\n')}
   />
 </Unstable_ChartsRadialDataProvider>`}
     />
