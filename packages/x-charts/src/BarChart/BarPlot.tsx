@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import { type BarElementSlotProps, type BarElementSlots } from './BarElement';
 import { type BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
-import { type BarLabelSlotProps, type BarLabelSlots } from './BarLabel/BarLabelItem';
+import { type BarLabelSlotProps, type BarLabelSlots } from './BarLabel';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';

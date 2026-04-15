@@ -1,6 +1,9 @@
+import * as React from 'react';
 import { type SeriesId } from '../../models/seriesType/common';
 import type { BarClasses } from '../barClasses';
 import { type BarValueType } from '../../models';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type BarLabelProps } from './BarLabel';
 
 export interface BarLabelOwnerState {
   seriesId: SeriesId;
@@ -47,3 +50,15 @@ export type BarLabelFunction = (
   item: BarItem,
   context: BarLabelContext,
 ) => string | null | undefined;
+
+export interface BarLabelSlots {
+  /**
+   * The component that renders the bar label.
+   * @default BarLabel
+   */
+  barLabel?: React.JSXElementConstructor<BarLabelProps>;
+}
+
+export interface BarLabelSlotProps {
+  barLabel?: SlotComponentPropsFromProps<BarLabelProps, {}, BarLabelOwnerState>;
+}

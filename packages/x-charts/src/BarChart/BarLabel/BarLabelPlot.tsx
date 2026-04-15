@@ -1,14 +1,19 @@
 import * as React from 'react';
+import useSlotProps from '@mui/utils/useSlotProps';
+import { useUtilityClasses } from '../barClasses';
+import { type BarLabelOwnerState, type BarLabelFunction, type BarLabelSlots, type BarLabelSlotProps } from './BarLabel.types';
+import { BarLabel, type BarLabelProps } from './BarLabel';
+import { useItemHighlightState } from '../../hooks/useItemHighlightState';
 import { type AnimationData } from '../types';
-import { BarLabelItem } from './BarLabelItem';
 import type { SeriesId } from '../../models/seriesType/common';
 import { type BarSeriesType, type BarValueType } from '../../models/seriesType/bar';
-import { type BarLabelFunction } from './BarLabel.types';
 
 interface BarLabelPlotProps {
   processedSeries: ProcessedBarLabelSeriesData;
   className: string;
   skipAnimation?: boolean;
+  slotProps?: BarLabelSlotProps;
+  slots?: BarLabelSlots;
 }
 
 export interface ProcessedBarLabelSeriesData {
@@ -29,6 +34,103 @@ export interface ProcessedBarLabelData extends AnimationData {
   hidden: boolean;
 }
 
+interface BarLabelItemInnerProps {
+  seriesId: SeriesId;
+  dataIndex: number;
+  color: string;
+  value: BarValueType | null;
+  xOrigin: number;
+  yOrigin: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  skipAnimation: boolean;
+  layout: 'vertical' | 'horizontal';
+  hidden: boolean;
+  barLabel: 'value' | BarLabelFunction;
+  barLabelPlacement: BarLabelProps['placement'];
+  slotProps?: BarLabelSlotProps;
+  slots?: BarLabelSlots;
+}
+
+function BarLabelItemInner(props: BarLabelItemInnerProps) {
+  const {
+    seriesId,
+    color,
+    dataIndex,
+    barLabel,
+    slots,
+    slotProps,
+    xOrigin,
+    yOrigin,
+    x,
+    y,
+    width,
+    height,
+    value,
+    skipAnimation,
+    layout,
+    barLabelPlacement,
+    hidden,
+  } = props;
+
+  const highlightState = useItemHighlightState({
+    type: 'bar',
+    seriesId,
+    dataIndex,
+  });
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
+
+  const ownerState: BarLabelOwnerState = {
+    seriesId,
+    color,
+    isFaded,
+    isHighlighted,
+    dataIndex,
+    skipAnimation,
+    layout,
+  };
+  const classes = useUtilityClasses(ownerState);
+
+  const Component = slots?.barLabel ?? BarLabel;
+
+  const { ownerState: barLabelOwnerState, ...barLabelProps } = useSlotProps({
+    elementType: Component,
+    externalSlotProps: slotProps?.barLabel,
+    additionalProps: {
+      xOrigin,
+      yOrigin,
+      x,
+      y,
+      width,
+      height,
+      placement: barLabelPlacement,
+      className: classes.label,
+      'data-highlighted': isHighlighted || undefined,
+      'data-faded': isFaded || undefined,
+    },
+    ownerState,
+  });
+
+  // Inline getBarLabel logic
+  const formattedLabelText =
+    barLabel === 'value'
+      ? value ? value.toString() : null
+      : barLabel({ seriesId, dataIndex, value }, { bar: { height, width } });
+
+  if (!formattedLabelText) {
+    return null;
+  }
+
+  return (
+    <Component {...barLabelProps} {...barLabelOwnerState} hidden={hidden}>
+      {formattedLabelText}
+    </Component>
+  );
+}
+
 /**
  * @ignore - internal component.
  */
@@ -36,14 +138,16 @@ function BarLabelPlot(props: BarLabelPlotProps) {
   const { processedSeries, className, skipAnimation, ...other } = props;
   const { seriesId, data, layout, xOrigin, yOrigin } = processedSeries;
 
-  if (!processedSeries.barLabel) {
+  const { barLabel } = processedSeries;
+
+  if (!barLabel) {
     return null;
   }
 
   return (
     <g key={seriesId} className={className} data-series={seriesId}>
       {data.map(({ x, y, dataIndex, color, value, width, height, hidden }) => (
-        <BarLabelItem
+        <BarLabelItemInner
           key={dataIndex}
           seriesId={seriesId}
           dataIndex={dataIndex}
@@ -58,9 +162,9 @@ function BarLabelPlot(props: BarLabelPlotProps) {
           skipAnimation={skipAnimation ?? false}
           layout={layout ?? 'vertical'}
           hidden={hidden}
-          {...other}
-          barLabel={processedSeries.barLabel}
+          barLabel={barLabel}
           barLabelPlacement={processedSeries.barLabelPlacement || 'center'}
+          {...other}
         />
       ))}
     </g>
