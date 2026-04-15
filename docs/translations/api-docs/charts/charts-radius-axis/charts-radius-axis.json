@@ -1,5 +1,5 @@
 {
-  "componentDescription": "Renders a radius axis with tick labels along a given angle of a polar chart.",
+  "componentDescription": "",
   "propDescriptions": {
     "angle": {
       "description": "The angle (in degrees) along which the tick labels are rendered. By default, uses the start angle of the rotation axis."
@@ -15,5 +15,17 @@
     "disableTicks": { "description": "If <code>true</code>, the ticks are not rendered." },
     "tickSize": { "description": "The size (in pixels) of the tick marks." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "line": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the main line element"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
+    "tickContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group including the tick and its label"
+    },
+    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tick label" }
+  }
 }

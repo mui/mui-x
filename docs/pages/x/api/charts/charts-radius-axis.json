@@ -14,7 +14,38 @@
     "import { ChartsRadiusAxis } from '@mui/x-charts-pro';",
     "import { ChartsRadiusAxis } from '@mui/x-charts-premium';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "line",
+      "className": "MuiChartsRadiusAxis-line",
+      "description": "Styles applied to the main line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChartsRadiusAxis-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "tick",
+      "className": "MuiChartsRadiusAxis-tick",
+      "description": "Styles applied to ticks.",
+      "isGlobal": false
+    },
+    {
+      "key": "tickContainer",
+      "className": "MuiChartsRadiusAxis-tickContainer",
+      "description": "Styles applied to the group including the tick and its label.",
+      "isGlobal": false
+    },
+    {
+      "key": "tickLabel",
+      "className": "MuiChartsRadiusAxis-tickLabel",
+      "description": "Styles applied to the tick label.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiChartsRadiusAxis",
   "filename": "/packages/x-charts/src/ChartsRadiusAxis/ChartsRadiusAxis.tsx",
   "inheritance": null,
