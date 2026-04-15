@@ -204,7 +204,7 @@ The props described in the [rendering playground](/x/react-charts/axis-customiza
 
 {{"demo": "AxisWithComposition.js"}}
 
-### Reference line
+## Reference line
 
 Use the `<ChartsReferenceLine />` component to add a reference line to a chart.
 You can provide an `x` or a `y` prop for a vertical or horizontal line, respectively, at this value.
