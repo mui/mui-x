@@ -1,4 +1,4 @@
-import { getLabel, type AxisTooltipGetter, type TooltipGetter } from '@mui/x-charts/internals';
+import { getLabel, type TooltipGetter } from '@mui/x-charts/internals';
 
 const tooltipGetter: TooltipGetter<'radial-line'> = (params) => {
   const { series, getColor, identifier } = params;
@@ -20,12 +20,6 @@ const tooltipGetter: TooltipGetter<'radial-line'> = (params) => {
     markType: series.labelMarkType,
     markShape: series.showMark ? series.shape : undefined,
   };
-};
-
-export const axisTooltipGetter: AxisTooltipGetter<'radial-line', 'rotation' | 'radius'> = (
-  series,
-) => {
-  return Object.values(series).map((s) => ({ direction: 'rotation', axisId: s.rotationAxisId }));
 };
 
 export default tooltipGetter;
