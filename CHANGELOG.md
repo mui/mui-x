@@ -1,7 +1,9 @@
 # Changelog
 
 ## 9.0.2
+
 <!-- generated comparing v9.0.1..master -->
+
 _Apr 15, 2026_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
