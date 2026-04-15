@@ -16,6 +16,11 @@
     "tickSize": { "description": "The size (in pixels) of the tick marks." }
   },
   "classDescriptions": {
+    "centered": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the tick label",
+      "conditions": "centered"
+    },
     "line": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the main line element"

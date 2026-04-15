@@ -16,6 +16,12 @@
   ],
   "classes": [
     {
+      "key": "centered",
+      "className": "MuiChartsRadiusAxis-centered",
+      "description": "Styles applied to the tick label when centered.",
+      "isGlobal": false
+    },
+    {
       "key": "line",
       "className": "MuiChartsRadiusAxis-line",
       "description": "Styles applied to the main line element.",
