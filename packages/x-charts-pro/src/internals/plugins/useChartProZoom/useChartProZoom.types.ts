@@ -32,6 +32,11 @@ export interface UseChartProZoomParameters {
    * Configuration for zoom interactions.
    */
   zoomInteractionConfig?: ZoomInteractionConfig;
+  /**
+   * The label of the range button that corresponds to the initial zoom state.
+   * Used to pre-select that button on mount.
+   */
+  initialRangeKey?: string;
 }
 
 export type UseChartProZoomDefaultizedParameters = UseChartProZoomParameters &

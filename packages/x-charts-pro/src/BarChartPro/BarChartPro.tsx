@@ -74,7 +74,8 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
+  const { initialZoom, initialRangeKey, zoomData, onZoomChange, apiRef, showToolbar, ...other } =
+    props;
   const {
     chartsWrapperProps,
     chartsContainerProps,
@@ -95,6 +96,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   >({
     ...chartsContainerProps,
     initialZoom,
+    initialRangeKey,
     zoomData,
     onZoomChange,
     apiRef,
@@ -312,6 +314,11 @@ BarChartPro.propTypes = {
       }),
     ]).isRequired,
   ),
+  /**
+   * The label of the range button that corresponds to the initial zoom state.
+   * Used to pre-select that button on mount.
+   */
+  initialRangeKey: PropTypes.string,
   /**
    * The list of zoom data related to each axis.
    * Used to initialize the zoom in a specific configuration without controlling it.

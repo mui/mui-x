@@ -33,7 +33,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
     zoomInteractionConfig,
   } = params;
 
-  const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
+  const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => { }));
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
 
   useEffectAfterFirstRender(() => {
@@ -229,13 +229,14 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
 
 useChartProZoom.params = {
   initialZoom: true,
+  initialRangeKey: true,
   onZoomChange: true,
   zoomData: true,
   zoomInteractionConfig: true,
 };
 
 useChartProZoom.getInitialState = (params) => {
-  const { initialZoom, zoomData, defaultizedXAxis, defaultizedYAxis } = params;
+  const { initialZoom, initialRangeKey, zoomData, defaultizedXAxis, defaultizedYAxis } = params;
 
   const optionsLookup = {
     ...createZoomLookup('x')(defaultizedXAxis),
@@ -254,7 +255,7 @@ useChartProZoom.getInitialState = (params) => {
         params.zoomInteractionConfig,
         optionsLookup,
       ),
-      activeRangeButtonKey: null,
+      activeRangeButtonKey: initialRangeKey ?? null,
     },
   };
 };

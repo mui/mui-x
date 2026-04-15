@@ -347,6 +347,11 @@ CandlestickChart.propTypes = {
     ]).isRequired,
   ),
   /**
+   * The label of the range button that corresponds to the initial zoom state.
+   * Used to pre-select that button on mount.
+   */
+  initialRangeKey: PropTypes.string,
+  /**
    * The list of zoom data related to each axis.
    * Used to initialize the zoom in a specific configuration without controlling it.
    */

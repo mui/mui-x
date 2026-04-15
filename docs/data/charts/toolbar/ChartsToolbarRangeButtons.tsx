@@ -17,6 +17,8 @@ export default function ChartsToolbarRangeButtons() {
       ]}
       height={300}
       showToolbar
+      initialZoom={[{ axisId: 0, start: 80, end: 100 }]}
+      initialRangeKey="5Y"
       slotProps={{
         toolbar: {
           rangeButtons: [

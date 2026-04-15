@@ -27,6 +27,7 @@ export const useChartsContainerProProps = <
 ): UseChartsContainerProPropsReturnValue<SeriesType, TSignatures> => {
   const {
     initialZoom,
+    initialRangeKey,
     zoomData,
     onZoomChange,
     zoomInteractionConfig,
@@ -41,6 +42,7 @@ export const useChartsContainerProProps = <
   const chartsDataProviderProProps = {
     ...chartsDataProviderProps,
     initialZoom,
+    initialRangeKey,
     zoomData,
     onZoomChange,
     zoomInteractionConfig,
