@@ -19,16 +19,16 @@ describe('<CalendarGrid.DayCell />', () => {
   function DayCellWrapper({
     children,
     rowTypes,
-    rowCounts,
+    rowsPerType,
     ...providerProps
   }: {
     children: React.ReactNode;
     rowTypes?: React.ComponentProps<typeof CalendarGrid.Root>['rowTypes'];
-    rowCounts?: React.ComponentProps<typeof CalendarGrid.Root>['rowCounts'];
+    rowsPerType?: React.ComponentProps<typeof CalendarGrid.Root>['rowsPerType'];
   } & Partial<React.ComponentProps<typeof EventCalendarProvider>>) {
     return (
       <EventCalendarProvider events={[]} {...providerProps}>
-        <CalendarGrid.Root rowTypes={rowTypes} rowCounts={rowCounts}>
+        <CalendarGrid.Root rowTypes={rowTypes} rowsPerType={rowsPerType}>
           <CalendarGrid.DayRow start={adapter.startOfDay(day)} end={adapter.endOfDay(day)}>
             {children}
           </CalendarGrid.DayRow>
@@ -94,7 +94,7 @@ describe('<CalendarGrid.DayCell />', () => {
     it('should move focus to the next cell on ArrowRight', async () => {
       const day2 = adapter.addDays(day, 1);
       const { user } = render(
-        <DayCellWrapper rowTypes={['day-grid']} rowCounts={{}}>
+        <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
           <CalendarGrid.DayCell value={day} />
           <CalendarGrid.DayCell value={day2} />
         </DayCellWrapper>,
@@ -110,7 +110,7 @@ describe('<CalendarGrid.DayCell />', () => {
     it('should move focus to the previous cell on ArrowLeft', async () => {
       const day2 = adapter.addDays(day, 1);
       const { user } = render(
-        <DayCellWrapper rowTypes={['day-grid']} rowCounts={{}}>
+        <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
           <CalendarGrid.DayCell value={day} />
           <CalendarGrid.DayCell value={day2} />
         </DayCellWrapper>,
@@ -125,7 +125,7 @@ describe('<CalendarGrid.DayCell />', () => {
 
     it('should not move focus on ArrowRight at the last column', async () => {
       const { user } = render(
-        <DayCellWrapper rowTypes={['day-grid']} rowCounts={{}}>
+        <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
           <CalendarGrid.DayCell value={day} />
         </DayCellWrapper>,
       );
@@ -139,7 +139,7 @@ describe('<CalendarGrid.DayCell />', () => {
 
     it('should not move focus on ArrowLeft at the first column', async () => {
       const { user } = render(
-        <DayCellWrapper rowTypes={['day-grid']} rowCounts={{}}>
+        <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
           <CalendarGrid.DayCell value={day} />
         </DayCellWrapper>,
       );
@@ -154,7 +154,7 @@ describe('<CalendarGrid.DayCell />', () => {
     it('should keep all cells tabbable so Tab flows through the grid', async () => {
       const day2 = adapter.addDays(day, 1);
       const { user } = render(
-        <DayCellWrapper rowTypes={['day-grid']} rowCounts={{}}>
+        <DayCellWrapper rowTypes={['day-grid']} rowsPerType={{}}>
           <CalendarGrid.DayCell value={day} />
           <CalendarGrid.DayCell value={day2} />
         </DayCellWrapper>,

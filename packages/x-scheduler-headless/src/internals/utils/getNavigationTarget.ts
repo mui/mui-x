@@ -11,14 +11,14 @@ export interface NavigationOptions {
   /** The ordered list of row types that are rendered in the grid. */
   rowTypes: GridCellRowType[];
   /** The number of rows for each row type. Defaults to 1 for unspecified types. */
-  rowCounts: Partial<Record<GridCellRowType, number>>;
+  rowsPerType: Partial<Record<GridCellRowType, number>>;
 }
 
 function getRowCount(
-  rowCounts: Partial<Record<GridCellRowType, number>>,
+  rowsPerType: Partial<Record<GridCellRowType, number>>,
   rowType: GridCellRowType,
 ): number {
-  return rowCounts[rowType] ?? 1;
+  return rowsPerType[rowType] ?? 1;
 }
 
 /**
@@ -32,7 +32,7 @@ export function getNavigationTarget(
   columnIndex: number,
   options: NavigationOptions,
 ): GridCellCoordinates | null {
-  const { columnCount, rowTypes, rowCounts } = options;
+  const { columnCount, rowTypes, rowsPerType } = options;
 
   switch (key) {
     case 'ArrowLeft':
@@ -43,7 +43,7 @@ export function getNavigationTarget(
         : null;
     case 'ArrowDown': {
       // First, try to move to the next row within the same row type
-      if (rowIndex < getRowCount(rowCounts, rowType) - 1) {
+      if (rowIndex < getRowCount(rowsPerType, rowType) - 1) {
         return { rowType, rowIndex: rowIndex + 1, columnIndex };
       }
       // Otherwise, move to the first row of the next row type
@@ -64,7 +64,7 @@ export function getNavigationTarget(
         const prevRowType = rowTypes[typeIndex - 1];
         return {
           rowType: prevRowType,
-          rowIndex: getRowCount(rowCounts, prevRowType) - 1,
+          rowIndex: getRowCount(rowsPerType, prevRowType) - 1,
           columnIndex,
         };
       }

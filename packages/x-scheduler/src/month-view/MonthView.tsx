@@ -169,7 +169,7 @@ export const MonthView = React.memo(
       return tempWeeks;
     }, [adapter, days]);
 
-    const monthViewRowCounts = React.useMemo(
+    const monthViewRowsPerType = React.useMemo(
       () => ({ 'day-grid': weeks.length }) as const,
       [weeks.length],
     );
@@ -197,7 +197,7 @@ export const MonthView = React.memo(
           <MonthViewGrid
             className={classes.monthViewGrid}
             rowTypes={MONTH_VIEW_ROW_TYPES}
-            rowCounts={monthViewRowCounts}
+            rowsPerType={monthViewRowsPerType}
           >
             <MonthViewHeader className={classes.monthViewHeader} ownerState={{ showWeekNumber }}>
               {showWeekNumber && (

@@ -47,7 +47,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     focusedCell,
     setFocusedCell,
     rowTypes,
-    rowCounts,
+    rowsPerType,
   } = useCalendarGridRootContext();
   const isCurrentDay = useStore(store, selectorIsCurrentDate, date.value, skipDataCurrent);
 
@@ -77,7 +77,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     const target = getNavigationTarget(event.key, 'header', 0, index, {
       columnCount: elementsRef.current.length,
       rowTypes,
-      rowCounts,
+      rowsPerType,
     });
     if (target) {
       event.preventDefault();

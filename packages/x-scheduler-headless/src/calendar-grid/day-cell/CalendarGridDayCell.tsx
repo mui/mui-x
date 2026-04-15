@@ -31,7 +31,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   } = componentProps;
 
   const adapter = useAdapterContext();
-  const { focusedCell, setFocusedCell, rowTypes, rowCounts } = useCalendarGridRootContext();
+  const { focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
   const { rowIndex } = useCalendarGridDayRowContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const { elementsRef } = useCompositeListContext();
@@ -65,7 +65,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     const target = getNavigationTarget(event.key, 'day-grid', rowIndex, index, {
       columnCount: elementsRef.current.length,
       rowTypes,
-      rowCounts,
+      rowsPerType,
     });
     if (target) {
       event.preventDefault();

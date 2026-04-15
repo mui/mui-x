@@ -17,14 +17,14 @@ describe('CalendarGrid keyboard navigation', () => {
 
   function GridWithHeaderAndDayCells({
     rowTypes,
-    rowCounts,
+    rowsPerType,
   }: {
     rowTypes?: React.ComponentProps<typeof CalendarGrid.Root>['rowTypes'];
-    rowCounts?: React.ComponentProps<typeof CalendarGrid.Root>['rowCounts'];
+    rowsPerType?: React.ComponentProps<typeof CalendarGrid.Root>['rowsPerType'];
   }) {
     return (
       <EventCalendarProvider events={[]}>
-        <CalendarGrid.Root rowTypes={rowTypes} rowCounts={rowCounts}>
+        <CalendarGrid.Root rowTypes={rowTypes} rowsPerType={rowsPerType}>
           <CalendarGrid.HeaderRow>
             {days.map((day, i) => (
               <CalendarGrid.HeaderCell
@@ -149,7 +149,7 @@ describe('CalendarGrid keyboard navigation', () => {
 
       return (
         <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root rowTypes={['header', 'day-grid']} rowCounts={{ 'day-grid': 3 }}>
+          <CalendarGrid.Root rowTypes={['header', 'day-grid']} rowsPerType={{ 'day-grid': 3 }}>
             <CalendarGrid.HeaderRow>
               {week0Days.map((day, i) => (
                 <CalendarGrid.HeaderCell
@@ -325,7 +325,7 @@ describe('CalendarGrid keyboard navigation', () => {
 
       return (
         <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root rowTypes={['day-grid']} rowCounts={{}}>
+          <CalendarGrid.Root rowTypes={['day-grid']} rowsPerType={{}}>
             <CalendarGrid.DayRow start={day1} end={adapter.endOfDay(day2)}>
               <CalendarGrid.DayCell value={day1} data-testid="cell-0">
                 <CalendarGrid.DayEvent

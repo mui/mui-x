@@ -24,13 +24,13 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
     // Internal props
     id: idProp,
     rowTypes = DEFAULT_ROW_TYPES,
-    rowCounts: rowCountsProp = DEFAULT_ROW_COUNTS,
+    rowsPerType: rowsPerTypeProp = DEFAULT_ROW_COUNTS,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
   const id = useId(idProp);
-  const rowCounts = rowCountsProp;
+  const rowsPerType = rowsPerTypeProp;
 
   const [focusedCell, setFocusedCellState] = React.useState<GridCellCoordinates | null>(null);
 
@@ -42,8 +42,8 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   );
 
   const contextValue: CalendarGridRootContext = React.useMemo(
-    () => ({ id, focusedCell, setFocusedCell, rowTypes, rowCounts }),
-    [id, focusedCell, setFocusedCell, rowTypes, rowCounts],
+    () => ({ id, focusedCell, setFocusedCell, rowTypes, rowsPerType }),
+    [id, focusedCell, setFocusedCell, rowTypes, rowsPerType],
   );
 
   const element = useRenderElement('div', componentProps, {
@@ -74,6 +74,6 @@ export namespace CalendarGridRoot {
      * Month view uses this to indicate multiple week rows (e.g., `{ 'day-grid': 5 }`).
      * @default {}
      */
-    rowCounts?: Partial<Record<GridCellRowType, number>>;
+    rowsPerType?: Partial<Record<GridCellRowType, number>>;
   }
 }

@@ -35,7 +35,7 @@ export interface CalendarGridRootContext {
    * Defaults to 1 for row types not specified.
    * Month view uses this to indicate multiple week rows (e.g., `{ 'day-grid': 5 }`).
    */
-  rowCounts: Partial<Record<GridCellRowType, number>>;
+  rowsPerType: Partial<Record<GridCellRowType, number>>;
 }
 
 export const CalendarGridRootContext = React.createContext<CalendarGridRootContext | undefined>(

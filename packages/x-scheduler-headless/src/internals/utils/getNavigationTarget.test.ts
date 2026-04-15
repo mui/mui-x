@@ -7,7 +7,7 @@ import { getNavigationTarget, DEFAULT_ROW_TYPES, NavigationOptions } from './get
 const weekViewOptions: NavigationOptions = {
   columnCount: 7,
   rowTypes: DEFAULT_ROW_TYPES,
-  rowCounts: {},
+  rowsPerType: {},
 };
 
 /**
@@ -16,7 +16,7 @@ const weekViewOptions: NavigationOptions = {
 const monthViewOptions: NavigationOptions = {
   columnCount: 7,
   rowTypes: ['header', 'day-grid'],
-  rowCounts: { 'day-grid': 5 },
+  rowsPerType: { 'day-grid': 5 },
 };
 
 /**
@@ -25,7 +25,7 @@ const monthViewOptions: NavigationOptions = {
 const dayViewOptions: NavigationOptions = {
   columnCount: 1,
   rowTypes: DEFAULT_ROW_TYPES,
-  rowCounts: {},
+  rowsPerType: {},
 };
 
 describe('getNavigationTarget', () => {
@@ -152,7 +152,7 @@ describe('getNavigationTarget', () => {
       const options: NavigationOptions = {
         columnCount: 7,
         rowTypes: ['header', 'day-grid', 'time-grid'],
-        rowCounts: { 'day-grid': 5 },
+        rowsPerType: { 'day-grid': 5 },
       };
       const result = getNavigationTarget('ArrowUp', 'time-grid', 0, 3, options);
       expect(result).to.deep.equal({ rowType: 'day-grid', rowIndex: 4, columnIndex: 3 });
@@ -164,7 +164,7 @@ describe('getNavigationTarget', () => {
       const options: NavigationOptions = {
         columnCount: 7,
         rowTypes: ['header', 'day-grid', 'time-grid'],
-        rowCounts: { 'day-grid': 3 },
+        rowsPerType: { 'day-grid': 3 },
       };
       const result = getNavigationTarget('ArrowDown', 'day-grid', 2, 5, options);
       expect(result).to.deep.equal({ rowType: 'time-grid', rowIndex: 0, columnIndex: 5 });
@@ -184,7 +184,7 @@ describe('getNavigationTarget', () => {
       const options: NavigationOptions = {
         columnCount: 7,
         rowTypes: ['header', 'day-grid'],
-        rowCounts: {},
+        rowsPerType: {},
       };
       const result = getNavigationTarget('ArrowDown', 'time-grid', 0, 3, options);
       expect(result).to.equal(null);
@@ -194,7 +194,7 @@ describe('getNavigationTarget', () => {
       const options: NavigationOptions = {
         columnCount: 7,
         rowTypes: ['header', 'day-grid'],
-        rowCounts: {},
+        rowsPerType: {},
       };
       const result = getNavigationTarget('ArrowUp', 'time-grid', 0, 3, options);
       expect(result).to.equal(null);

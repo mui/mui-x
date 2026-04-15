@@ -35,7 +35,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { focusedCell, setFocusedCell, rowTypes, rowCounts } = useCalendarGridRootContext();
+  const { focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
   const isCurrentDay = useStore(store, schedulerNowSelectors.isCurrentDay, start);
   const { ref: listItemRef, index } = useCompositeListItem();
   const { elementsRef } = useCompositeListContext();
@@ -91,7 +91,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     const target = getNavigationTarget(event.key, 'time-grid', 0, index, {
       columnCount: elementsRef.current.length,
       rowTypes,
-      rowCounts,
+      rowsPerType,
     });
     if (target) {
       event.preventDefault();
