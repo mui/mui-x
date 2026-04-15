@@ -1,18 +1,15 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "angle": {
-      "description": "The angle (in degrees) along which the tick labels are rendered. By default, uses the start angle of the rotation axis."
-    },
     "axisId": {
-      "description": "Id of the radius axis to render. If not provided, it will use the first defined radius axis."
-    },
-    "center": {
-      "description": "If <code>true</code>, the tick labels are centered on the axis line instead of being offset away from it."
+      "description": "Id of the rotation axis to render. If not provided, it will use the first defined rotation axis."
     },
     "className": { "description": "A CSS class name applied to the root element." },
     "disableLine": { "description": "If <code>true</code>, the axis line is not rendered." },
     "disableTicks": { "description": "If <code>true</code>, the ticks are not rendered." },
+    "radiusAxisId": {
+      "description": "Id of the radius axis used to compute the axis radius. If not provided, it will use the first defined radius axis."
+    },
     "tickSize": { "description": "The size (in pixels) of the tick marks." }
   },
   "classDescriptions": {
