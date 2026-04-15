@@ -455,6 +455,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventRecurringIcon",
+      "className": "MuiEventTimelinePremium-eventRecurringIcon",
+      "description": "Styles applied to event recurring icon elements.",
+      "isGlobal": false
+    },
+    {
       "key": "eventResizeHandler",
       "className": "MuiEventTimelinePremium-eventResizeHandler",
       "description": "Styles applied to event resize handler elements.",
