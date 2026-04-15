@@ -1,5 +1,4 @@
 import { spy } from 'sinon';
-import { fireEvent } from '@mui/internal-test-utils';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { expectFieldValue, describeAdapters } from 'test/utils/pickers';
 
