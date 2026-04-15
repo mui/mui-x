@@ -11,7 +11,7 @@ _Apr 15, 2026_
 
 We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🐞 Bugfixes
 
 Special thanks go out to this community member for their valuable contribution:
 @nk10nikhil
