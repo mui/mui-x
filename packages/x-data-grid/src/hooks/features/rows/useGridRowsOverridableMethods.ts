@@ -33,41 +33,36 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
         );
       }
 
-      // Get the target index from the targetRowId using the lookup selector
+      // Validate both rows are in the current (filtered) view.
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
-      const targetRowIndexUnadjusted = sortedFilteredRowIndexLookup[targetRowId];
-
-      if (targetRowIndexUnadjusted === undefined) {
+      if (sortedFilteredRowIndexLookup[targetRowId] === undefined) {
         throw new Error(`MUI X: Target row with id #${targetRowId} not found in current view.`);
       }
-
-      const sourceRowIndex = sortedFilteredRowIndexLookup[sourceRowId];
-
-      if (sourceRowIndex === undefined) {
+      if (sortedFilteredRowIndexLookup[sourceRowId] === undefined) {
         throw new Error(`MUI X: Source row with id #${sourceRowId} not found in current view.`);
-      }
-
-      const dragDirection = targetRowIndexUnadjusted < sourceRowIndex ? 'up' : 'down';
-
-      let targetRowIndex;
-      if (dragDirection === 'up') {
-        targetRowIndex =
-          position === 'above' ? targetRowIndexUnadjusted : targetRowIndexUnadjusted + 1;
-      } else {
-        targetRowIndex =
-          position === 'above' ? targetRowIndexUnadjusted - 1 : targetRowIndexUnadjusted;
-      }
-
-      if (targetRowIndex === sourceRowIndex) {
-        return;
       }
 
       apiRef.current.setState((state) => {
         const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
         const allRows = group.children;
 
-        const updatedRows = [...allRows];
-        updatedRows.splice(targetRowIndex, 0, updatedRows.splice(sourceRowIndex, 1)[0]);
+        const sourceFullIndex = allRows.indexOf(sourceRowId);
+        const targetFullIndex = allRows.indexOf(targetRowId);
+        if (sourceFullIndex === -1 || targetFullIndex === -1) {
+          return state;
+        }
+
+        // Remove source, then insert next to target anchor id so filtered-out
+        // rows between source and target keep their relative position.
+        const updatedRows = allRows.filter((id) => id !== sourceRowId);
+        const anchorIndex = updatedRows.indexOf(targetRowId);
+        const insertAt = position === 'above' ? anchorIndex : anchorIndex + 1;
+
+        if (insertAt === sourceFullIndex) {
+          return state;
+        }
+
+        updatedRows.splice(insertAt, 0, sourceRowId);
 
         return {
           ...state,
