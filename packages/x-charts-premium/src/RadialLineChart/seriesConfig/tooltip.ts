@@ -1,8 +1,4 @@
-import {
-  getLabel,
-  type AxisTooltipGetter,
-  type TooltipGetter,
-} from '@mui/x-charts/internals';
+import { getLabel, type AxisTooltipGetter, type TooltipGetter } from '@mui/x-charts/internals';
 
 const tooltipGetter: TooltipGetter<'radial-line'> = (params) => {
   const { series, getColor, identifier } = params;
