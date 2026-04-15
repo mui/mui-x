@@ -10,7 +10,7 @@ import {
   type GridCellRowType,
 } from './CalendarGridRootContext';
 
-const DEFAULT_ROW_COUNTS: Partial<Record<GridCellRowType, number>> = {};
+const DEFAULT_ROWS_PER_TYPE: Partial<Record<GridCellRowType, number>> = {};
 
 export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   componentProps: CalendarGridRoot.Props,
@@ -24,7 +24,7 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
     // Internal props
     id: idProp,
     rowTypes = DEFAULT_ROW_TYPES,
-    rowsPerType: rowsPerTypeProp = DEFAULT_ROW_COUNTS,
+    rowsPerType: rowsPerTypeProp = DEFAULT_ROWS_PER_TYPE,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
