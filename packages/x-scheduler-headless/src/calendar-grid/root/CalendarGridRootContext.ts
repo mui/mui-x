@@ -1,13 +1,6 @@
 'use client';
 import * as React from 'react';
-
-export type GridRowType = 'header' | 'day-grid' | 'time-grid';
-
-export interface GridCellCoordinates {
-  rowType: GridRowType;
-  rowIndex: number;
-  columnIndex: number;
-}
+import type { GridRowType, GridCellCoordinates } from '../../models/calendarGrid';
 
 export interface CalendarGridRootContext {
   /**

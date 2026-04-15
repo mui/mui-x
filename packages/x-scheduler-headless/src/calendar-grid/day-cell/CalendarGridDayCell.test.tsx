@@ -2,6 +2,7 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { GridRowType } from '@mui/x-scheduler-headless/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
   adapter,
@@ -23,8 +24,8 @@ describe('<CalendarGrid.DayCell />', () => {
     ...providerProps
   }: {
     children: React.ReactNode;
-    rowTypes?: React.ComponentProps<typeof CalendarGrid.Root>['rowTypes'];
-    rowsPerType?: React.ComponentProps<typeof CalendarGrid.Root>['rowsPerType'];
+    rowTypes?: GridRowType[];
+    rowsPerType?: Partial<Record<GridRowType, number>>;
   } & Partial<React.ComponentProps<typeof EventCalendarProvider>>) {
     return (
       <EventCalendarProvider events={[]} {...providerProps}>

@@ -1,7 +1,4 @@
-import type {
-  GridRowType,
-  GridCellCoordinates,
-} from '../../calendar-grid/root/CalendarGridRootContext';
+import type { GridRowType, GridCellCoordinates } from '../../models/calendarGrid';
 
 export const DEFAULT_ROW_TYPES: GridRowType[] = ['header', 'day-grid', 'time-grid'];
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { GridRowType } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 
@@ -19,8 +20,8 @@ describe('CalendarGrid keyboard navigation', () => {
     rowTypes,
     rowsPerType,
   }: {
-    rowTypes?: React.ComponentProps<typeof CalendarGrid.Root>['rowTypes'];
-    rowsPerType?: React.ComponentProps<typeof CalendarGrid.Root>['rowsPerType'];
+    rowTypes?: GridRowType[];
+    rowsPerType?: Partial<Record<GridRowType, number>>;
   }) {
     return (
       <EventCalendarProvider events={[]}>

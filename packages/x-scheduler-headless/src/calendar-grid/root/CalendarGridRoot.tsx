@@ -4,11 +4,8 @@ import { useId } from '@base-ui/utils/useId';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { DEFAULT_ROW_TYPES } from '../../internals/utils/getNavigationTarget';
-import {
-  CalendarGridRootContext,
-  type GridCellCoordinates,
-  type GridRowType,
-} from './CalendarGridRootContext';
+import type { GridCellCoordinates, GridRowType } from '../../models/calendarGrid';
+import { CalendarGridRootContext } from './CalendarGridRootContext';
 
 const DEFAULT_ROWS_PER_TYPE: Partial<Record<GridRowType, number>> = {};
 
