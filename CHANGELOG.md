@@ -91,6 +91,16 @@ Same changes as in `@mui/x-tree-view@9.0.2`, plus:
 
 Same changes as in `@mui/x-scheduler@9.0.0-alpha.2`.
 
+### Chat
+
+#### `@mui/x-chat@9.0.0-alpha.1`
+
+- Internal changes.
+
+#### `@mui/x-chat-headless@9.0.0-alpha.1`
+
+- Internal changes.
+
 ### Docs
 
 - [docs] Add data grid `isAnyOf` paste recipe (#21961) @MBilalShafi
