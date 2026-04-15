@@ -23,7 +23,7 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@8.28.2`
 
-- [DataGrid] Fix Demo `TreeDataFullExample` crash (#22007) @sai6855
+Internal changes.
 
 #### `@mui/x-data-grid-pro@8.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -70,6 +70,10 @@ Same changes as in `@mui/x-charts-pro@8.28.2`.
 Same changes as in `@mui/x-tree-view@8.28.3`, plus:
 
 - [RichTreeViewPro] Allow to auto-expand lazy loaded items (#21957) @flaviendelangle
+
+### Docs
+
+- [docs] Fix `TreeDataFullExample` data grid demo crash (#22007) @sai6855
 
 ### Miscellaneous
 
