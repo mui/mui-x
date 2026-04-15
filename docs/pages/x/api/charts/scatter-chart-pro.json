@@ -69,6 +69,7 @@
         "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }&gt;"
       }
     },
+    "initialRangeKey": { "type": { "name": "string" } },
     "initialZoom": {
       "type": {
         "name": "arrayOf",

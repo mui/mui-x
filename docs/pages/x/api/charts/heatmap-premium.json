@@ -43,6 +43,7 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "initialRangeKey": { "type": { "name": "string" } },
     "initialZoom": {
       "type": {
         "name": "arrayOf",

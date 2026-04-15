@@ -46,6 +46,9 @@
     "initialHiddenItems": {
       "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
     },
+    "initialRangeKey": {
+      "description": "The label of the range button that corresponds to the initial zoom state. Used to pre-select that button on mount."
+    },
     "initialZoom": {
       "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
     },

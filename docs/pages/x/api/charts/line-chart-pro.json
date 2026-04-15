@@ -64,6 +64,7 @@
         "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }&gt;"
       }
     },
+    "initialRangeKey": { "type": { "name": "string" } },
     "initialZoom": {
       "type": {
         "name": "arrayOf",

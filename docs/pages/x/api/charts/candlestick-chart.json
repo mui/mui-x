@@ -53,6 +53,7 @@
         "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'ohlc' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'ohlc' }&gt;"
       }
     },
+    "initialRangeKey": { "type": { "name": "string" } },
     "initialZoom": {
       "type": {
         "name": "arrayOf",
