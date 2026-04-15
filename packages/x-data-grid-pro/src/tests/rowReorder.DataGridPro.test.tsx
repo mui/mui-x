@@ -2,7 +2,13 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, createEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues, getRowsFieldContent } from 'test/utils/helperFn';
-import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  gridClasses,
+  useGridApiRef,
+  type GridApi,
+  gridDataRowIdsSelector,
+} from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
@@ -484,5 +490,45 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     await waitFor(() => {
       expect(getRowsFieldContent('brand')).to.deep.equal(['Puma', 'Vans', 'Nike']);
     });
+  });
+
+  // Regression test for https://github.com/mui/mui-x/issues/22057 — hidden-row
+  // preservation. A filtered no-op drop must not reshuffle filtered-out rows
+  // in the underlying tree.
+  it('setRowPosition should be a no-op when the visible order does not change with a filter applied', () => {
+    const columns = [{ field: 'brand' }, { field: 'status' }];
+    const initialRows = [
+      { id: 0, brand: 'A', status: 'active' },
+      { id: 1, brand: 'X', status: 'inactive' },
+      { id: 2, brand: 'B', status: 'active' },
+    ];
+    let apiRef!: React.RefObject<GridApi | null>;
+
+    function Test() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={initialRows}
+            columns={columns}
+            filterModel={{ items: [{ field: 'status', operator: 'equals', value: 'active' }] }}
+          />
+        </div>
+      );
+    }
+
+    render(<Test />);
+    expect(getRowsFieldContent('brand')).to.deep.equal(['A', 'B']);
+    // Underlying tree still has X between A and B.
+    expect(gridDataRowIdsSelector(apiRef)).to.deep.equal([0, 1, 2]);
+
+    // "Move A above B" is already true in the visible view → no-op.
+    apiRef.current!.setRowPosition(0, 2, 'above');
+    expect(gridDataRowIdsSelector(apiRef)).to.deep.equal([0, 1, 2]);
+
+    // "Move B below A" is also already true → no-op.
+    apiRef.current!.setRowPosition(2, 0, 'below');
+    expect(gridDataRowIdsSelector(apiRef)).to.deep.equal([0, 1, 2]);
   });
 });

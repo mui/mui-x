@@ -33,22 +33,34 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
         );
       }
 
-      // Validate both rows are in the current (filtered) view.
+      // Resolve positions in the filtered view to detect visible-order no-ops.
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
-      if (sortedFilteredRowIndexLookup[targetRowId] === undefined) {
+      const targetFilteredIndex = sortedFilteredRowIndexLookup[targetRowId];
+      const sourceFilteredIndex = sortedFilteredRowIndexLookup[sourceRowId];
+
+      if (targetFilteredIndex === undefined) {
         throw new Error(`MUI X: Target row with id #${targetRowId} not found in current view.`);
       }
-      if (sortedFilteredRowIndexLookup[sourceRowId] === undefined) {
+      if (sourceFilteredIndex === undefined) {
         throw new Error(`MUI X: Source row with id #${sourceRowId} not found in current view.`);
+      }
+
+      // No-op when the requested drop would not change the visible order.
+      // Mutating the backing tree here would silently reshuffle filtered-out
+      // rows around the source without any visible feedback.
+      if (
+        sourceFilteredIndex === targetFilteredIndex ||
+        (position === 'above' && sourceFilteredIndex === targetFilteredIndex - 1) ||
+        (position === 'below' && sourceFilteredIndex === targetFilteredIndex + 1)
+      ) {
+        return;
       }
 
       apiRef.current.setState((state) => {
         const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
         const allRows = group.children;
 
-        const sourceFullIndex = allRows.indexOf(sourceRowId);
-        const targetFullIndex = allRows.indexOf(targetRowId);
-        if (sourceFullIndex === -1 || targetFullIndex === -1) {
+        if (allRows.indexOf(sourceRowId) === -1 || allRows.indexOf(targetRowId) === -1) {
           return state;
         }
 
@@ -57,10 +69,6 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
         const updatedRows = allRows.filter((id) => id !== sourceRowId);
         const anchorIndex = updatedRows.indexOf(targetRowId);
         const insertAt = position === 'above' ? anchorIndex : anchorIndex + 1;
-
-        if (insertAt === sourceFullIndex) {
-          return state;
-        }
 
         updatedRows.splice(insertAt, 0, sourceRowId);
 
