@@ -96,11 +96,6 @@ interface CommonLineSeriesType {
    */
   connectNulls?: boolean;
   /**
-   * Defines how stacked series handle negative values.
-   * @default 'none'
-   */
-  stackOffset?: StackOffsetType;
-  /**
    * The value of the line at the base of the series area.
    *
    * - `'min'` the area will fill the space **under** the line.
@@ -119,6 +114,11 @@ export interface LineSeriesType
     StackableSeriesType,
     CommonLineSeriesType {
   type: 'line';
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'none'
+   */
+  stackOffset?: StackOffsetType;
 }
 
 export interface RadialLineSeriesType
@@ -128,6 +128,11 @@ export interface RadialLineSeriesType
     StackableSeriesType,
     CommonLineSeriesType {
   type: 'radial-line';
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'none'
+   */
+  stackOffset?: StackOffsetType;
 }
 
 /**
