@@ -111,8 +111,10 @@ export function PickerFieldUI<TProps extends UseFieldProps>(props: PickerFieldUI
 
   const handleClickOpeningButton = useEventCallback((event: React.MouseEvent) => {
     event.preventDefault();
-    // Force open instead of toggling to avoid conflicts with field-level open-on-focus logic
-    pickerContext?.setOpen(true);
+    // Toggle the picker open state.
+    // We use `pickerContext.open` (current render value) so that when the click-away listener
+    // (capture phase) has already queued a close, both handlers queue `setOpen(false)` and agree.
+    pickerContext?.setOpen(!pickerContext?.open);
   });
 
   const triggerStatus = pickerContext ? pickerContext.triggerStatus : 'hidden';

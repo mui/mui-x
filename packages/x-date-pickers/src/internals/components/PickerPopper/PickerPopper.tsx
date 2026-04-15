@@ -242,11 +242,11 @@ function useClickAwayListener(
         movedRef.current = true;
       };
 
-      doc.addEventListener('touchstart', handleClickAway, true);
+      doc.addEventListener('touchstart', handleClickAway);
       doc.addEventListener('touchmove', handleTouchMove);
 
       return () => {
-        doc.removeEventListener('touchstart', handleClickAway, true);
+        doc.removeEventListener('touchstart', handleClickAway);
         doc.removeEventListener('touchmove', handleTouchMove);
       };
     }
@@ -388,6 +388,18 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const classes = useUtilityClasses(classesProp);
 
   const handleClickAway: OnClickAway = useEventCallback((event) => {
+    // Do not interfere when clicking the open/close button — let its own handler manage the state.
+    // This matters with the capture-phase click listener: the click-away fires before the button's
+    // React onClick, so if we dismissed here the button's setOpen call would fight with us.
+    const eventTargets = event.composedPath ? event.composedPath() : [];
+    if (
+      eventTargets.some(
+        (t) => t instanceof Element && t.getAttribute('data-mui-picker-open-button') === 'true',
+      )
+    ) {
+      return;
+    }
+
     // Do not close when clicking inside the field if keepOpenDuringFieldFocus is enabled
     if (
       keepOpenDuringFieldFocus &&
@@ -411,8 +423,6 @@ export function PickerPopper(inProps: PickerPopperProps) {
         dismissViews();
       });
     } else {
-      // Get all the targets of this event.
-      const eventTargets = event.composedPath();
       // https://github.com/mui/mui-x/pull/13434
       // Check if the click is on an interactive element.
       // If it is, we don't want to refocus the last focused element.
