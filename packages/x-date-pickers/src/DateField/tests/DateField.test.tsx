@@ -65,6 +65,16 @@ describe('<DateField />', () => {
       expect(onFocus.callCount).to.equal(1);
     });
 
+    it('should call `slotProps.textField.onFocus` only once when focus is applied programmatically via autoFocus', () => {
+      const onFocus = spy();
+      // `autoFocus` triggers a programmatic `.focus()` on section 0 from a mount effect,
+      // which can produce a focus event with `relatedTarget === null`. The user callback
+      // must still fire exactly once.
+      render(<DateField autoFocus slotProps={{ textField: { onFocus } }} />);
+
+      expect(onFocus.callCount).to.equal(1);
+    });
+
     it('should call `slotProps.textField.onBlur` when focus leaves the field via tab', async () => {
       const onBlur = spy();
       const view = render(<DateField slotProps={{ textField: { onBlur } }} />);
