@@ -1,8 +1,5 @@
 import {
   type ChartSeriesTypeConfig,
-  lineSeriesProcessor,
-  lineColorProcessor,
-  lineGetSeriesWithDefaultValues,
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
   createIsHighlighted,
@@ -12,20 +9,23 @@ import legendGetter from './legend';
 import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { axisTooltipGetter } from './axisTooltipGetter';
+import colorProcessor from './getColor';
+import seriesProcessor from './seriesProcessor';
+import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import descriptionGetter from './descriptionGetter';
 import { radiusExtremumGetter, rotationExtremumGetter } from './extremums';
 import tooltipGetter from './tooltip';
 
 export const radialLineSeriesConfig: ChartSeriesTypeConfig<'radial-line'> = {
-  colorProcessor: lineColorProcessor,
-  seriesProcessor: lineSeriesProcessor,
+  colorProcessor,
+  seriesProcessor,
   legendGetter,
   tooltipGetter,
   tooltipItemPositionGetter,
   axisTooltipGetter,
   rotationExtremumGetter,
   radiusExtremumGetter,
-  getSeriesWithDefaultValues: lineGetSeriesWithDefaultValues,
+  getSeriesWithDefaultValues,
   // getItemAtPosition,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
