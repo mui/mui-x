@@ -88,12 +88,6 @@ Same changes as in `@mui/x-tree-view@9.0.2`, plus:
 
 Same changes as in `@mui/x-scheduler@9.0.0-alpha.2`.
 
-### Codemod
-
-#### `@mui/x-codemod@9.0.0`
-
-Internal changes.
-
 ### Docs
 
 - [docs] Add @mui/material upgrade requirement to v9 migration guides (#22068) @LukasTy
