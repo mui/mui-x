@@ -470,11 +470,6 @@ SparkLineChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radial-line']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['scatter']).isRequired,
       }),
       PropTypes.shape({
@@ -496,11 +491,6 @@ SparkLineChart.propTypes = {
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['line']),
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radial-line']),
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
@@ -547,11 +537,6 @@ SparkLineChart.propTypes = {
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['line']).isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radial-line']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
@@ -616,11 +601,6 @@ SparkLineChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radial-line']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['scatter']).isRequired,
       }),
       PropTypes.shape({
@@ -642,11 +622,6 @@ SparkLineChart.propTypes = {
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['line']),
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radial-line']),
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
@@ -807,11 +782,6 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radial-line']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,

@@ -152,12 +152,12 @@ ChartsContainer.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'radial-line', 'scatter']),
+        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']),
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'radial-line', 'scatter']).isRequired,
+        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
       }),
     ]).isRequired,
   ),
@@ -183,7 +183,7 @@ ChartsContainer.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'radial-line', 'scatter']).isRequired,
+      type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
     }),
   ]),
   /**
@@ -223,12 +223,12 @@ ChartsContainer.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'radial-line', 'scatter']),
+        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']),
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'radial-line', 'scatter']).isRequired,
+        type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
       }),
     ]).isRequired,
   ),
@@ -1104,7 +1104,7 @@ ChartsContainer.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'radial-line', 'scatter']).isRequired,
+      type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
     }),
   ]),
   /**
