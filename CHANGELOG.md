@@ -1,5 +1,116 @@
 # Changelog
 
+## 9.0.2
+<!-- generated comparing v9.0.1..master -->
+_Apr 15, 2026_
+
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to these community members for their valuable contributions:
+@Anexus5919, @nk10nikhil
+
+The following team members contributed to this release:
+@aemartos, @alexfauquette, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @rita-codes, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.0.2`
+
+- [DataGrid] Add `isAnyOf` paste recipe (#21961) @MBilalShafi
+- [DataGrid] Fix skeleton overlay backdrop issue (#21951) @MBilalShafi
+- [DataGrid] Make `overridesResolver` of `ResizablePanelHandle` dynamic (#21724) @sai6855
+
+#### `@mui/x-data-grid-pro@9.0.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.0.2`.
+
+#### `@mui/x-data-grid-premium@9.0.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.0.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.0.2`
+
+- [fields] Allow `openPickerButtonPosition` on single-input range fields (#22011) @LukasTy
+- [pickers] Fix spurious `onBlur`/`onFocus` firing during field focus transitions (#22098) @LukasTy
+- [pickers] Use `convertToMeridiem` utility in `transferDateSectionValue` (#22062) @michelengelen
+
+#### `@mui/x-date-pickers-pro@9.0.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.0.2`.
+
+### Charts
+
+#### `@mui/x-charts@9.0.2`
+
+- [charts] Add `valueGetter` to axes and series (#21963) @JCQuintas
+- [charts] Create a `ChartsRadialDataProvider` (#22047) @alexfauquette
+- [charts] Create a `ChartsRadialGrid` (#22085) @alexfauquette
+- [charts] Deprecate `Scatter` component (#22060) @JCQuintas
+- [charts] Remove duplicate `useThemeProps` call (#22045) @alexfauquette
+- [charts] Simplify focus state handling in BarElement component (#22101) @sai6855
+
+#### `@mui/x-charts-pro@9.0.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.0.2`, plus:
+
+- [charts-pro] Add range buttons to toolbar (#21964) @JCQuintas
+
+#### `@mui/x-charts-premium@9.0.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.0.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.0.1`
+
+- [tree view] Move `lazyLoadedItems` initialization to state initializer (#22073) @michelengelen
+
+#### `@mui/x-tree-view-pro@9.0.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.1`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-alpha.2`
+
+- [scheduler] Add recurrence icon to recurring events in EventTimeline (#22019) (#22046) @nk10nikhil
+- [scheduler] Fix README for published packages (#22042) @rita-codes
+
+#### `@mui/x-scheduler-premium@9.0.0-alpha.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-alpha.2`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.0.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add @mui/material upgrade requirement to v9 migration guides (#22068) @LukasTy
+- [docs] Fix pages width with `disableToc` (#22051) @LukasTy
+- [docs] Split charts axis page (#22069) @alexfauquette
+- [docs] Update ChartsRadialDataProvider API page imports (#22072) @JCQuintas
+
+### Core
+
+- [code-infra] Fix lock file (#22053) @JCQuintas
+- [code-infra] Limit release:build lerna concurrency to 6 (#22077) @Janpot
+- [docs-infra] Update monorepo dependency with relevant migration (#22041) @brijeshb42
+
+### Miscellaneous
+
+- fix(scheduler): reset scroll position when navigating to a new time p… (#22036) @Anexus5919
+- [l10n][scheduler] Improve German (de-DE) locale (#21944) @rita-codes
+- [l10n][scheduler] Improve Portuguese - Portugal (pt-PT) locale & Improve Portuguese - Brazil (pt-BR) locale (#21943) @rita-codes
+- [telemetry] Skip runtime resolution when telemetry is disabled (#22078) @aemartos
+- [test] Remove v7 suffix from test helpers and stale comments (#22023) @LukasTy
+
 ## 9.0.1
 
 <!-- generated comparing v9.0.0..master -->
