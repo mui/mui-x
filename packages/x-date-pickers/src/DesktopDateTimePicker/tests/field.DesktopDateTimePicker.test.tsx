@@ -1,10 +1,4 @@
-import {
-  createPickerRenderer,
-  getTextbox,
-  expectFieldPlaceholderV6,
-  expectFieldValueV7,
-  buildFieldInteractions,
-} from 'test/utils/pickers';
+import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
 import {
   DesktopDateTimePicker,
   DesktopDateTimePickerProps,
@@ -19,33 +13,19 @@ describe('<DesktopDateTimePicker /> - Field', () => {
 
   it('should pass the ampm prop to the field', () => {
     const view = renderWithProps({
-      enableAccessibleFieldDOMStructure: true as const,
       ampm: true,
     });
 
-    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm aa');
+    expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm aa');
 
     view.setProps({ ampm: false });
-    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm');
+    expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm');
   });
 
   it('should adapt the default field format based on the props of the picker', () => {
-    const testFormat = (props: DesktopDateTimePickerProps<any>, expectedFormat: string) => {
-      // Test with accessible DOM structure
-      let view = renderWithProps(
-        { ...props, enableAccessibleFieldDOMStructure: true as const },
-        { componentFamily: 'picker' },
-      );
-      expectFieldValueV7(view.getSectionsContainer(), expectedFormat);
-      view.unmount();
-
-      // Test with non-accessible DOM structure
-      view = renderWithProps(
-        { ...props, enableAccessibleFieldDOMStructure: false as const },
-        { componentFamily: 'picker' },
-      );
-      const input = getTextbox();
-      expectFieldPlaceholderV6(input, expectedFormat);
+    const testFormat = (props: DesktopDateTimePickerProps, expectedFormat: string) => {
+      const view = renderWithProps({ ...props }, { componentFamily: 'picker' });
+      expectFieldValue(view.getSectionsContainer(), expectedFormat);
       view.unmount();
     };
 

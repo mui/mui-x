@@ -1,6 +1,6 @@
-import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
+import { MarkdownDocs } from '@mui/internal-core-docs/MarkdownDocs';
 import * as pageProps from 'docsx/data/charts/range-bar/range-bar.md?muiMarkdown';
 
 export default function Page() {
-  return <MarkdownDocs {...pageProps} />;
+  return <MarkdownDocs disableAd {...pageProps} />;
 }

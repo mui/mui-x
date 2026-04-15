@@ -1,8 +1,9 @@
 {
   "name": "@mui/x-charts-vendor",
-  "version": "9.0.0-alpha.2",
+  "version": "9.0.0",
   "author": "MUI Team",
   "description": "Vendored dependencies for MUI X Charts.",
+  "license": "MIT AND ISC",
   "keywords": [
     "data visualization",
     "React",
@@ -14,7 +15,6 @@
     "url": "git+https://github.com/mui/mui-x.git",
     "directory": "packages/x-charts-vendor"
   },
-  "license": "MIT AND ISC",
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@types/d3-array": "^3.2.2",
@@ -45,7 +45,7 @@
     "@babel/plugin-transform-modules-commonjs": "7.28.6",
     "@babel/plugin-transform-runtime": "catalog:",
     "babel-plugin-module-resolver": "5.0.2",
-    "execa": "9.6.1",
+    "execa": "catalog:",
     "rimraf": "catalog:"
   },
   "publishConfig": {

@@ -68,7 +68,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Och',
   filterPanelOperatorOr: 'Eller',
-  filterPanelColumns: 'Kolumner',
+  filterPanelColumn: 'Kolumner',
   filterPanelInputLabel: 'Värde',
   filterPanelInputPlaceholder: 'Filtervärde',
 

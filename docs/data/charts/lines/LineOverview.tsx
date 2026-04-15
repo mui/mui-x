@@ -95,10 +95,9 @@ export default function LineOverview() {
   const clipPathId = React.useId();
   return (
     <Box sx={{ width: '100%' }}>
-      <Typography textAlign="center">
+      <Typography sx={{ textAlign: 'center' }}>
         US unemployment rate comparison with GDP per capita
       </Typography>
-
       <ChartsDataProviderPro
         height={300}
         dataset={usaUnemploymentAndGdp}
@@ -183,13 +182,10 @@ export default function LineOverview() {
         </ChartsSurface>
         <ChartsTooltip />
       </ChartsDataProviderPro>
-
       <Typography
         variant="caption"
         component="p"
-        color="text.secondary"
-        textAlign="left"
-        sx={{ pt: 1 }}
+        sx={{ color: 'text.secondary', textAlign: 'left', pt: 1 }}
       >
         Source: FRED
       </Typography>

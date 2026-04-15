@@ -541,7 +541,7 @@ export const useGridRowEditing = (
         delete prevRowValuesLookup.current[id];
       };
 
-      if (ignoreModifications && apiRef.current.getRow(id)) {
+      if (ignoreModifications) {
         finishRowEditMode();
         return;
       }

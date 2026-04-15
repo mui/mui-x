@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as url from 'url';
+import * as semver from 'semver';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { withDeploymentConfig } from '@mui/internal-docs-infra/withDocsInfra';
@@ -13,7 +14,6 @@ import generateReleaseInfo from '../scripts/generateReleaseInfo.mjs';
 
 declare global {
   interface MUIEnv {
-    SHOW_SCHEDULER?: '1';
     DOCS_STATS_ENABLED?: string;
     PULL_REQUEST?: string;
     PICKERS_ADAPTERS_DEPS?: string;
@@ -25,6 +25,8 @@ declare global {
     DATE_PICKERS_VERSION?: string;
     CHARTS_VERSION?: string;
     TREE_VIEW_VERSION?: string;
+    SCHEDULER_VERSION?: string;
+    CHAT_VERSION?: string;
   }
 }
 
@@ -50,6 +52,8 @@ const dataGridPkg = loadPkg('./packages/x-data-grid');
 const datePickersPkg = loadPkg('./packages/x-date-pickers');
 const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');
+const schedulerPkg = loadPkg('./packages/x-scheduler');
+const chatPkg = loadPkg('./packages/x-chat');
 
 const pickersAdaptersDeps = getPickerAdapterDeps();
 
@@ -80,6 +84,7 @@ export default withDeploymentConfig({
   env: {
     // docs-infra
     LIB_VERSION: pkg.version,
+    SEARCH_INDEX: `material-ui-v${semver.major(pkg.version)}`,
     SOURCE_CODE_REPO,
     SOURCE_GITHUB_BRANCH,
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
@@ -88,10 +93,11 @@ export default withDeploymentConfig({
     DATE_PICKERS_VERSION: datePickersPkg.version,
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
+    SCHEDULER_VERSION: schedulerPkg.version,
+    CHAT_VERSION: chatPkg.version,
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
     MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
     MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
-    ...(process.env.DEPLOY_ENV === 'production' ? {} : { SHOW_SCHEDULER: '1' }),
   },
   // @ts-ignore
   webpack: (config, options) => {
@@ -119,10 +125,8 @@ export default withDeploymentConfig({
           ...config.resolve.alias,
           ...MONOREPO_ALIASES,
           '@mui/x-license': path.resolve(currentDirectory, '../packages/x-license/src'),
-          'docs/src/modules/utils/mapApiPageTranslations': path.resolve(
-            'src/modules/utils/mapApiPageTranslations.js',
-          ),
-          docs: path.resolve(MONOREPO_PATH, './docs'),
+          '@mui/x-chat-headless': path.resolve(currentDirectory, '../packages/x-chat-headless/src'),
+          '@mui/x-chat': path.resolve(currentDirectory, '../packages/x-chat/src'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
       },
