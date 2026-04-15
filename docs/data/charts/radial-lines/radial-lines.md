@@ -8,13 +8,17 @@ components: ChartsRadialDataProvider, ChartsRadialGrid, ChartsRadiusAxis
 
 <p class="description">Use radial line charts to show trends along periodic values.</p>
 
-## Radial grid
+## Radial coordinates
+
+This section explain how to display grid and axes in radial chart.
+
+### Radial grid
 
 Similarly the the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates
 
 {{"demo": "RadialGridPlayground.js", "hideToolbar": true, "bg": "playground"}}
 
-## Radius axis
+### Radius axis
 
 The `ChartsRadiusAxis` component renders tick labels along a radial spoke.
 Each label is wrapped in a `foreignObject`, so you can style it with CSS.
