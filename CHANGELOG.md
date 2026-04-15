@@ -83,6 +83,9 @@ Same changes as in `@mui/x-tree-view@9.0.2`, plus:
 
 - [scheduler] Add recurrence icon to recurring events in EventTimeline (#22019) (#22046) @nk10nikhil
 - [scheduler] Fix README for published packages (#22042) @rita-codes
+- [scheduler] Reset scroll position when navigating to a new time period (#22036) @Anexus5919
+- [l10n] Improve German (de-DE) locale (#21944) @rita-codes
+- [l10n] Improve Portuguese - Portugal (pt-PT) locale & Improve Portuguese - Brazil (pt-BR) locale (#21943) @rita-codes
 
 #### `@mui/x-scheduler-premium@9.0.0-alpha.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -103,9 +106,6 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.2`.
 
 ### Miscellaneous
 
-- fix(scheduler): reset scroll position when navigating to a new time p… (#22036) @Anexus5919
-- [l10n][scheduler] Improve German (de-DE) locale (#21944) @rita-codes
-- [l10n][scheduler] Improve Portuguese - Portugal (pt-PT) locale & Improve Portuguese - Brazil (pt-BR) locale (#21943) @rita-codes
 - [telemetry] Skip runtime resolution when telemetry is disabled (#22078) @aemartos
 - [test] Remove v7 suffix from test helpers and stale comments (#22023) @LukasTy
 
