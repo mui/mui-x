@@ -11,7 +11,7 @@ import {
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import type { AxisId } from '../models/axis';
-import { type ChartsRadiusAxisClasses, useUtilityClasses } from './radiusAxisClasses';
+import { type ChartsRadiusAxisClasses, useUtilityClasses } from './chartsRadiusAxisClasses';
 import { getLabelTransform } from './getLabelTransform';
 import { RadialAxisLabel } from '../internals/components/RadialAxisLabel';
 

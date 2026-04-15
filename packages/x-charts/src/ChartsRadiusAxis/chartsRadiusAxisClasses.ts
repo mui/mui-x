@@ -39,7 +39,7 @@ export const useUtilityClasses = (
   return composeClasses(slots, getRadiusAxisUtilityClass, classes);
 };
 
-export const radiusAxisClasses: ChartsRadiusAxisClasses = generateUtilityClasses(
+export const chartsRadiusAxisClasses: ChartsRadiusAxisClasses = generateUtilityClasses(
   'MuiChartsRadiusAxis',
   ['root', 'line', 'tickContainer', 'tick', 'tickLabel', 'centered'],
 );
