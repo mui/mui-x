@@ -319,10 +319,6 @@ describe('CalendarGrid keyboard navigation', () => {
   });
 
   describe('event tabIndex follows cell focus', () => {
-    const eventDay = adapter.date('2025-05-05T12:00:00', 'default');
-    const eventStart = processDate(eventDay, adapter);
-    const eventEnd = processDate(adapter.addHours(eventDay, 1), adapter);
-
     function GridWithEvents() {
       const day1 = adapter.date('2025-05-05T12:00:00', 'default');
       const day2 = adapter.addDays(day1, 1);
