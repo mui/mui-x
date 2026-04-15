@@ -33,7 +33,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
     zoomInteractionConfig,
   } = params;
 
-  const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => { }));
+  const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
 
   useEffectAfterFirstRender(() => {
