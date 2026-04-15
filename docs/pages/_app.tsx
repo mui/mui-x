@@ -10,7 +10,7 @@ import {
 } from '@mui/internal-core-docs/DocsApp';
 import { ThemeProvider } from '@mui/internal-core-docs/ThemeContext';
 import findActivePage from '@mui/internal-core-docs/findActivePage';
-import getProductInfoFromUrl from '@mui/internal-core-docs/getProductInfoFromUrl';
+import { getProductInfoFromUrl } from '@mui/internal-core-docs/utils';
 import { pathnameToLanguage } from '@mui/internal-core-docs/helpers';
 import { Translations } from '@mui/internal-core-docs/i18n';
 import { LicenseInfo } from '@mui/x-license';
