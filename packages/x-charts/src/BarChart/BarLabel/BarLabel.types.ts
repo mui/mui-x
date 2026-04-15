@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { type SeriesId } from '../../models/seriesType/common';
 import type { BarClasses } from '../barClasses';
 import { type BarValueType } from '../../models';
-import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { type BarLabelProps } from './BarLabel';
 
 export interface BarLabelOwnerState {

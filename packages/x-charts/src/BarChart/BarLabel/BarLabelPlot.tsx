@@ -1,7 +1,12 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useUtilityClasses } from '../barClasses';
-import { type BarLabelOwnerState, type BarLabelFunction, type BarLabelSlots, type BarLabelSlotProps } from './BarLabel.types';
+import {
+  type BarLabelOwnerState,
+  type BarLabelFunction,
+  type BarLabelSlots,
+  type BarLabelSlotProps,
+} from './BarLabel.types';
 import { BarLabel, type BarLabelProps } from './BarLabel';
 import { useItemHighlightState } from '../../hooks/useItemHighlightState';
 import { type AnimationData } from '../types';
@@ -114,11 +119,13 @@ function BarLabelItemInner(props: BarLabelItemInnerProps) {
     ownerState,
   });
 
-  // Inline getBarLabel logic
-  const formattedLabelText =
-    barLabel === 'value'
-      ? value ? value.toString() : null
-      : barLabel({ seriesId, dataIndex, value }, { bar: { height, width } });
+  let formattedLabelText: string | null | undefined;
+  if (barLabel === 'value') {
+    // We don't want to show the label if the value is 0
+    formattedLabelText = value ? value.toString() : null;
+  } else {
+    formattedLabelText = barLabel({ seriesId, dataIndex, value }, { bar: { height, width } });
+  }
 
   if (!formattedLabelText) {
     return null;
