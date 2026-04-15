@@ -7,6 +7,7 @@ import { isInfinity } from '../internals/isInfinity';
 import { tickFrequencies } from '../utils/timeTicks';
 import { isDateData } from '../internals/dateHelpers';
 import { useChartsContext } from '../context/ChartsProvider/useChartsContext';
+import { EPSILON } from '../utils/epsilon';
 
 export interface TickParams {
   /**
@@ -388,7 +389,7 @@ const alwaysTrue = () => true;
 
 // Avoid ticks on more than 360° for rotation axis.
 const isInsideRotation = (scale: D3Scale) => (rotation: number) =>
-  Math.abs(scale.range()[0] - rotation) < Math.PI * 2 - 0.01;
+  Math.abs(scale.range()[0] - rotation) < Math.PI * 2 - EPSILON;
 
 function getIsInside(
   scale: D3Scale,
