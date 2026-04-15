@@ -151,7 +151,7 @@ describe('<CalendarGrid.DayCell />', () => {
       expect(cell).toHaveFocus();
     });
 
-    it('should use roving tabIndex pattern', async () => {
+    it('should keep all cells tabbable so Tab flows through the grid', async () => {
       const day2 = adapter.addDays(day, 1);
       const { user } = render(
         <DayCellWrapper rowTypes={['day-grid']} rowCounts={{}}>
@@ -162,14 +162,14 @@ describe('<CalendarGrid.DayCell />', () => {
 
       const cells = screen.getAllByRole('gridcell');
 
-      // Before any interaction, all cells have default tabIndex
+      // All cells are always tabbable
       await user.click(cells[0]);
       expect(cells[0]).to.have.attribute('tabindex', '0');
-      expect(cells[1]).to.have.attribute('tabindex', '-1');
+      expect(cells[1]).to.have.attribute('tabindex', '0');
 
-      // After navigating, tabIndex follows focus
+      // After navigating, all cells remain tabbable
       await user.keyboard('{ArrowRight}');
-      expect(cells[0]).to.have.attribute('tabindex', '-1');
+      expect(cells[0]).to.have.attribute('tabindex', '0');
       expect(cells[1]).to.have.attribute('tabindex', '0');
     });
   });

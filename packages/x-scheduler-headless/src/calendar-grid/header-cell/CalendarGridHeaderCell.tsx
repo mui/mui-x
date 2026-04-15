@@ -107,7 +107,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   );
 
   const keyboardProps = {
-    tabIndex: focusedCell === null || hasFocus ? 0 : -1,
+    tabIndex: 0,
     onKeyDown: handleKeyDown,
     onFocus: handleFocus,
   };

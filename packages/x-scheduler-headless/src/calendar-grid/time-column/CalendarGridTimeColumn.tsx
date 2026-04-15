@@ -123,13 +123,14 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       start,
       end,
       index,
+      hasFocus,
       getCursorPositionInElementMs,
     }),
-    [start, end, index, getCursorPositionInElementMs],
+    [start, end, index, hasFocus, getCursorPositionInElementMs],
   );
 
   const keyboardProps = {
-    tabIndex: focusedCell === null || hasFocus ? 0 : -1,
+    tabIndex: 0,
     onKeyDown: handleKeyDown,
     onFocus: handleFocus,
   };

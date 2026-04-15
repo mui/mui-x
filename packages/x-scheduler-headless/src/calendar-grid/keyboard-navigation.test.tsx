@@ -255,22 +255,24 @@ describe('CalendarGrid keyboard navigation', () => {
       expect(screen.getByTestId('w0-2')).toHaveFocus();
     });
 
-    it('should only focus one cell at a time across all weeks', async () => {
+    it('should keep all cells tabbable but only move DOM focus to one', async () => {
       const { user } = render(<MonthLikeGrid />);
 
       await user.click(screen.getByTestId('w0-3'));
 
-      // Only the focused cell should have tabindex=0 among all gridcells
+      // All cells are tabbable (tabindex=0) so Tab flows through the grid
       const allCells = screen.getAllByRole('gridcell');
-      const focusedCells = allCells.filter((cell) => cell.getAttribute('tabindex') === '0');
-      expect(focusedCells).toHaveLength(1);
-      expect(focusedCells[0]).to.equal(screen.getByTestId('w0-3'));
+      const tabbableCells = allCells.filter((cell) => cell.getAttribute('tabindex') === '0');
+      expect(tabbableCells).toHaveLength(allCells.length);
 
-      // After navigating down, only the new cell should have tabindex=0
+      // But only one cell has DOM focus
+      expect(screen.getByTestId('w0-3')).toHaveFocus();
+
+      // After navigating down, all cells remain tabbable but DOM focus moves
       await user.keyboard('{ArrowDown}');
-      const newFocusedCells = allCells.filter((cell) => cell.getAttribute('tabindex') === '0');
-      expect(newFocusedCells).toHaveLength(1);
-      expect(newFocusedCells[0]).to.equal(screen.getByTestId('w1-3'));
+      const newTabbableCells = allCells.filter((cell) => cell.getAttribute('tabindex') === '0');
+      expect(newTabbableCells).toHaveLength(allCells.length);
+      expect(screen.getByTestId('w1-3')).toHaveFocus();
     });
 
     it('should combine horizontal and vertical navigation', async () => {
@@ -297,20 +299,83 @@ describe('CalendarGrid keyboard navigation', () => {
     });
   });
 
-  describe('roving tabIndex', () => {
-    it('should set tabIndex=0 on the focused cell and tabIndex=-1 on others', async () => {
+  describe('tabIndex behavior', () => {
+    it('should keep all cells tabbable so Tab flows through the grid', async () => {
       const { user } = render(<GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />);
 
       const cell0 = screen.getByTestId('day-0');
       const cell1 = screen.getByTestId('day-1');
 
+      // All cells always have tabindex=0
       await user.click(cell0);
       expect(cell0).to.have.attribute('tabindex', '0');
-      expect(cell1).to.have.attribute('tabindex', '-1');
+      expect(cell1).to.have.attribute('tabindex', '0');
 
       await user.keyboard('{ArrowRight}');
-      expect(cell0).to.have.attribute('tabindex', '-1');
+      expect(cell0).to.have.attribute('tabindex', '0');
       expect(cell1).to.have.attribute('tabindex', '0');
+      expect(cell1).toHaveFocus();
+    });
+  });
+
+  describe('event tabIndex follows cell focus', () => {
+    const eventDay = adapter.date('2025-05-05T12:00:00', 'default');
+    const eventStart = processDate(eventDay, adapter);
+    const eventEnd = processDate(adapter.addHours(eventDay, 1), adapter);
+
+    function GridWithEvents() {
+      const day1 = adapter.date('2025-05-05T12:00:00', 'default');
+      const day2 = adapter.addDays(day1, 1);
+
+      return (
+        <EventCalendarProvider events={[]}>
+          <CalendarGrid.Root rowTypes={['day-grid']} rowCounts={{}}>
+            <CalendarGrid.DayRow start={day1} end={adapter.endOfDay(day2)}>
+              <CalendarGrid.DayCell value={day1} data-testid="cell-0">
+                <CalendarGrid.DayEvent
+                  eventId="event-1"
+                  occurrenceKey="occ-1"
+                  start={processDate(day1, adapter)}
+                  end={processDate(adapter.addHours(day1, 1), adapter)}
+                  renderDragPreview={() => null}
+                  data-testid="event-1"
+                />
+              </CalendarGrid.DayCell>
+              <CalendarGrid.DayCell value={day2} data-testid="cell-1">
+                <CalendarGrid.DayEvent
+                  eventId="event-2"
+                  occurrenceKey="occ-2"
+                  start={processDate(day2, adapter)}
+                  end={processDate(adapter.addHours(day2, 1), adapter)}
+                  renderDragPreview={() => null}
+                  data-testid="event-2"
+                />
+              </CalendarGrid.DayCell>
+            </CalendarGrid.DayRow>
+          </CalendarGrid.Root>
+        </EventCalendarProvider>
+      );
+    }
+
+    it('should make events tabbable only when their parent cell is focused', async () => {
+      const { user } = render(<GridWithEvents />);
+
+      const event1 = screen.getByTestId('event-1');
+      const event2 = screen.getByTestId('event-2');
+
+      // Before any cell is focused, all events are not tabbable
+      expect(event1).to.have.attribute('tabindex', '-1');
+      expect(event2).to.have.attribute('tabindex', '-1');
+
+      // Focus cell-0 → event-1 becomes tabbable
+      await user.click(screen.getByTestId('cell-0'));
+      expect(event1).to.have.attribute('tabindex', '0');
+      expect(event2).to.have.attribute('tabindex', '-1');
+
+      // Navigate to cell-1 → event-2 becomes tabbable, event-1 becomes not tabbable
+      await user.keyboard('{ArrowRight}');
+      expect(event1).to.have.attribute('tabindex', '-1');
+      expect(event2).to.have.attribute('tabindex', '0');
     });
   });
 });

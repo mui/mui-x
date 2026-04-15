@@ -231,7 +231,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           type="button"
           className={classes.monthViewCellNumberButton}
           onClick={(event) => store.switchToDay(day.value, event)}
-          tabIndex={0}
+          tabIndex={-1}
         >
           {cellNumberContent}
         </MonthViewCellNumberButton>
