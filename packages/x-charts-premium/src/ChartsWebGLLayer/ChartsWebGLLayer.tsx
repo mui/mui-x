@@ -72,6 +72,8 @@ export const ChartsWebGLLayer = React.forwardRef<
 
   const requestRender = React.useCallback(() => {
     renderScheduledRef.current = true;
+    // Trigger a re-render so the flush effect runs, even if only a child's state changed
+    rerender();
   }, []);
 
   // Centralized resize handling — render all plots on canvas resize
