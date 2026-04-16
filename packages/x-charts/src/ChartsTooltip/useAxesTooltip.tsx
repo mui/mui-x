@@ -252,11 +252,11 @@ export function useAxesTooltip<
         }
 
         const providedRotationAxisId =
-          ('rotationAxisId' in seriesToAdd ? seriesToAdd.rotationAxisId : undefined) ??
-          defaultRotationAxis!.id;
+          ('rotationAxisId' in seriesToAdd ? (seriesToAdd.rotationAxisId as AxisId) : undefined) ??
+          defaultRotationAxis?.id;
         const providedRadiusAxisId =
-          ('radiusAxisId' in seriesToAdd ? seriesToAdd.radiusAxisId : undefined) ??
-          defaultRadiusAxis!.id;
+          ('radiusAxisId' in seriesToAdd ? (seriesToAdd.radiusAxisId as AxisId) : undefined) ??
+          defaultRadiusAxis?.id;
 
         const tooltipItemIndex = tooltipAxes.findIndex(
           ({ axisDirection, axisId }) =>
@@ -269,8 +269,10 @@ export function useAxesTooltip<
           const color =
             colorProcessors[seriesType]?.(
               seriesToAdd,
-              rotationAxis[providedRotationAxisId],
-              radiusAxis[providedRadiusAxisId],
+              providedRotationAxisId !== undefined
+                ? rotationAxis[providedRotationAxisId]
+                : undefined,
+              providedRadiusAxisId !== undefined ? radiusAxis[providedRadiusAxisId] : undefined,
             )(dataIndex) ?? '';
 
           const value = seriesToAdd.data[dataIndex] ?? null;

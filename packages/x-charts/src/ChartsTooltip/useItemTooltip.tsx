@@ -61,10 +61,11 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
     ? (itemSeries.yAxisId ?? yAxisIds[0])
     : undefined;
   const radiusAxisId: AxisId | undefined = isPolarSeries(itemSeries)
-    ? (('radiusAxisId' in itemSeries ? itemSeries.radiusAxisId : undefined) ?? radiusAxisIds[0])
+    ? (('radiusAxisId' in itemSeries ? (itemSeries.radiusAxisId as AxisId) : undefined) ??
+      radiusAxisIds[0])
     : undefined;
   const rotationAxisId: AxisId | undefined = isPolarSeries(itemSeries)
-    ? (('rotationAxisId' in itemSeries ? itemSeries.rotationAxisId : undefined) ??
+    ? (('rotationAxisId' in itemSeries ? (itemSeries.rotationAxisId as AxisId) : undefined) ??
       rotationAxisIds[0])
     : undefined;
 
