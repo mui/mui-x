@@ -319,6 +319,80 @@ describe('CalendarGrid keyboard navigation', () => {
     });
   });
 
+  describe('navigation with all three row types', () => {
+    function FullGrid() {
+      return (
+        <EventCalendarProvider events={[]}>
+          <CalendarGrid.Root
+            rowTypes={['header', 'day-grid', 'time-grid']}
+            rowsPerType={{}}
+          >
+            <CalendarGrid.HeaderRow>
+              {days.slice(0, 3).map((day, i) => (
+                <CalendarGrid.HeaderCell
+                  key={i}
+                  date={processDate(day, adapter)}
+                  data-testid={`header-${i}`}
+                >
+                  {adapter.format(day, 'weekday3Letters')}
+                </CalendarGrid.HeaderCell>
+              ))}
+            </CalendarGrid.HeaderRow>
+            <CalendarGrid.DayRow start={days[0]} end={adapter.endOfDay(days[2])}>
+              {days.slice(0, 3).map((day, i) => (
+                <CalendarGrid.DayCell key={i} value={day} data-testid={`day-${i}`} />
+              ))}
+            </CalendarGrid.DayRow>
+            <CalendarGrid.TimeScrollableContent>
+              {days.slice(0, 3).map((day, i) => (
+                <CalendarGrid.TimeColumn
+                  key={i}
+                  start={day}
+                  end={adapter.endOfDay(day)}
+                  data-testid={`time-${i}`}
+                />
+              ))}
+            </CalendarGrid.TimeScrollableContent>
+          </CalendarGrid.Root>
+        </EventCalendarProvider>
+      );
+    }
+
+    it('should navigate from header to day-grid to time-grid with ArrowDown', async () => {
+      const { user } = render(<FullGrid />);
+
+      await user.click(screen.getByTestId('header-1'));
+      await user.keyboard('{ArrowDown}');
+      expect(screen.getByTestId('day-1')).toHaveFocus();
+
+      await user.keyboard('{ArrowDown}');
+      expect(screen.getByTestId('time-1')).toHaveFocus();
+    });
+
+    it('should navigate from time-grid to day-grid to header with ArrowUp', async () => {
+      const { user } = render(<FullGrid />);
+
+      await user.click(screen.getByTestId('time-1'));
+      await user.keyboard('{ArrowUp}');
+      expect(screen.getByTestId('day-1')).toHaveFocus();
+
+      await user.keyboard('{ArrowUp}');
+      expect(screen.getByTestId('header-1')).toHaveFocus();
+    });
+
+    it('should not move past header on ArrowUp or past time-grid on ArrowDown', async () => {
+      const { user } = render(<FullGrid />);
+
+      await user.click(screen.getByTestId('header-0'));
+      await user.keyboard('{ArrowUp}');
+      expect(screen.getByTestId('header-0')).toHaveFocus();
+
+      await user.click(screen.getByTestId('time-0'));
+      await user.keyboard('{ArrowDown}');
+      expect(screen.getByTestId('time-0')).toHaveFocus();
+    });
+  });
+
   describe('event tabIndex follows cell focus', () => {
     function GridWithEvents() {
       const day1 = adapter.date('2025-05-05T12:00:00', 'default');
