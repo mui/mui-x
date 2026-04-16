@@ -91,6 +91,9 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
     : isPolarSeries(itemSeries)
       ? ((seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<PolarChartSeriesType>)(
           itemSeries as any,
+          rotationAxisId !== undefined ? rotationAxis[rotationAxisId] : undefined,
+          radiusAxisId !== undefined ? radiusAxis[radiusAxisId] : undefined,
+          zAxisId !== undefined ? zAxis[zAxisId] : undefined,
         ) as ColorGetter<SeriesType>)
       : ((seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<typeof itemSeries.type>)(
           itemSeries as any,
