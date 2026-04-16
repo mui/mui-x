@@ -5,8 +5,8 @@ export const GridRoot = styled('g', {
   name: 'MuiChartsGrid',
   slot: 'Root',
   overridesResolver: (props, styles) => [
-    { [`&.${chartsGridClasses.verticalLine}`]: styles.verticalLine },
-    { [`&.${chartsGridClasses.horizontalLine}`]: styles.horizontalLine },
+    { [`& .${chartsGridClasses.verticalLine}`]: styles.verticalLine },
+    { [`& .${chartsGridClasses.horizontalLine}`]: styles.horizontalLine },
     styles.root,
   ],
 })({});
