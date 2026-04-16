@@ -49,6 +49,10 @@ export interface EventDialogClasses {
   eventDialogResourceMenuColorDot: string;
   /** Styles applied to the event dialog resource menu color radio button element. */
   eventDialogResourceMenuColorRadioButton: string;
+  /** Styles applied to the event dialog color menu item element. */
+  eventDialogColorMenuItem: string;
+  /** Styles applied to the event dialog color menu color dot element. */
+  eventDialogColorMenuColorDot: string;
   /** Styles applied to the event dialog inline row element. */
   eventDialogInlineRow: string;
   /** Styles applied to the event dialog section header title element. */
@@ -121,6 +125,8 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogResourceMenuListSubheader',
   'eventDialogResourceMenuColorDot',
   'eventDialogResourceMenuColorRadioButton',
+  'eventDialogColorMenuItem',
+  'eventDialogColorMenuColorDot',
   'eventDialogRecurrenceLabelContainer',
   'eventDialogRecurrenceSelectorContainer',
   'eventDialogInlineRow',
@@ -172,6 +178,8 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogResourceMenuListSubheader: ['eventDialogResourceMenuListSubheader'],
   eventDialogResourceMenuColorDot: ['eventDialogResourceMenuColorDot'],
   eventDialogResourceMenuColorRadioButton: ['eventDialogResourceMenuColorRadioButton'],
+  eventDialogColorMenuItem: ['eventDialogColorMenuItem'],
+  eventDialogColorMenuColorDot: ['eventDialogColorMenuColorDot'],
   eventDialogRecurrenceLabelContainer: ['eventDialogRecurrenceLabelContainer'],
   eventDialogRecurrenceSelectorContainer: ['eventDialogRecurrenceSelectorContainer'],
   eventDialogInlineRow: ['eventDialogInlineRow'],

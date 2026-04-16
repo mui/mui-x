@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material/styles';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -24,6 +23,7 @@ import { getPaletteVariants, PaletteName } from '../../utils/tokens';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 
 const NO_RESOURCE_VALUE = '';
+const NO_COLOR_VALUE = '';
 
 const ResourceMenuItem = styled(MenuItem, {
   name: 'MuiEventDialog',
@@ -53,34 +53,15 @@ const ResourceMenuColorDot = styled('span', {
   },
 }));
 
-const ColorSelectionContainer = styled('div', {
+const ColorMenuColorDot = styled('span', {
   name: 'MuiEventDialog',
-  slot: 'ColorSelectionContainer',
-})(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: theme.spacing(1),
-  borderRadius: theme.shape.borderRadius,
-}));
-
-const ResourceMenuColorRadioButton = styled('button', {
-  name: 'MuiEventDialog',
-  slot: 'ResourceMenuColorRadioButton',
+  slot: 'ColorMenuColorDot',
 })<{ palette?: PaletteName }>(({ theme }) => ({
-  width: 24,
-  height: 24,
-  borderRadius: theme.shape.borderRadius,
-  border: 'none',
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  width: 14,
+  height: 14,
+  borderRadius: '2px',
+  flexShrink: 0,
   backgroundColor: 'var(--event-main)',
-  color: 'white',
-  '&:disabled': {
-    cursor: 'not-allowed',
-    opacity: 0.5,
-  },
   variants: getPaletteVariants(theme),
 }));
 
@@ -88,8 +69,12 @@ interface ResourceSelectProps {
   readOnly?: boolean;
   resourceId: string | null;
   onResourceChange: (value: SchedulerResourceId) => void;
-  onColorChange: (value: SchedulerEventColor) => void;
+}
+
+interface ColorSelectProps {
+  readOnly?: boolean;
   color: SchedulerEventColor | null;
+  onColorChange: (value: SchedulerEventColor | null) => void;
 }
 
 interface ResourceSelectAdornmentProps {
@@ -125,8 +110,8 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
   );
 }
 
-export default function ResourceAndColorSection(props: ResourceSelectProps) {
-  const { readOnly, resourceId, onResourceChange, onColorChange, color } = props;
+export function ResourceSection(props: ResourceSelectProps) {
+  const { readOnly, resourceId, onResourceChange } = props;
 
   // Context hooks
   const { classes, localeText } = useEventDialogStyledContext();
@@ -187,81 +172,152 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
   };
 
   return (
-    <React.Fragment>
-      <FormControl size="small" fullWidth>
-        <InputLabel id="resource-select-label">{localeText.resourceLabel}</InputLabel>
-        <Select
-          labelId="resource-select-label"
-          label={localeText.resourceLabel}
-          value={resourceId ?? NO_RESOURCE_VALUE}
-          displayEmpty
-          onChange={handleChange}
-          readOnly={readOnly}
-          startAdornment={
-            <InputAdornment position="start">
-              <ResourceSelectAdornment resource={resource} />
-            </InputAdornment>
+    <FormControl size="small" fullWidth>
+      <InputLabel id="resource-select-label">{localeText.resourceLabel}</InputLabel>
+      <Select
+        labelId="resource-select-label"
+        label={localeText.resourceLabel}
+        value={resourceId ?? NO_RESOURCE_VALUE}
+        displayEmpty
+        onChange={handleChange}
+        readOnly={readOnly}
+        startAdornment={
+          <InputAdornment position="start">
+            <ResourceSelectAdornment resource={resource} />
+          </InputAdornment>
+        }
+        renderValue={() => (resource ? resource.label : localeText.labelInvalidResource)}
+      >
+        {resourcesOptions.flatMap((resourceOption) => {
+          const items: React.ReactNode[] = [];
+
+          if (resourceOption.showDivider) {
+            items.push(<Divider key={`divider-${resourceOption.value}`} />);
           }
-          renderValue={() => (resource ? resource.label : localeText.labelInvalidResource)}
-        >
-          {resourcesOptions.flatMap((resourceOption) => {
-            const items: React.ReactNode[] = [];
 
-            if (resourceOption.showDivider) {
-              items.push(<Divider key={`divider-${resourceOption.value}`} />);
-            }
-
-            if (resourceOption.isGroupRoot) {
-              items.push(
-                <ResourceMenuListSubheader
-                  key={`header-${resourceOption.value}`}
-                  className={classes.eventDialogResourceMenuListSubheader}
-                >
-                  {resourceOption.label.toUpperCase()}
-                </ResourceMenuListSubheader>,
-              );
-            }
-
+          if (resourceOption.isGroupRoot) {
             items.push(
-              <ResourceMenuItem
-                key={resourceOption.value ?? NO_RESOURCE_VALUE}
-                value={resourceOption.value ?? NO_RESOURCE_VALUE}
-                aria-label={resourceOption.label}
-                className={classes.eventDialogResourceMenuItem}
-                style={{ '--resource-indent': resourceOption.indentLevel } as React.CSSProperties}
+              <ResourceMenuListSubheader
+                key={`header-${resourceOption.value}`}
+                className={classes.eventDialogResourceMenuListSubheader}
               >
-                <ListItemIcon>
-                  <ResourceMenuColorDot
-                    className={classes.eventDialogResourceMenuColorDot}
-                    data-palette={resourceOption.eventColor}
-                    data-no-resource={Boolean(resourceOption.value === null)}
-                  />
-                </ListItemIcon>
-                <ListItemText>{resourceOption.label}</ListItemText>
-              </ResourceMenuItem>,
+                {resourceOption.label.toUpperCase()}
+              </ResourceMenuListSubheader>,
             );
+          }
 
-            return items;
-          })}
-        </Select>
-      </FormControl>
-      <ColorSelectionContainer role="radiogroup" aria-label={localeText.colorPickerLabel}>
+          items.push(
+            <ResourceMenuItem
+              key={resourceOption.value ?? NO_RESOURCE_VALUE}
+              value={resourceOption.value ?? NO_RESOURCE_VALUE}
+              aria-label={resourceOption.label}
+              className={classes.eventDialogResourceMenuItem}
+              style={{ '--resource-indent': resourceOption.indentLevel } as React.CSSProperties}
+            >
+              <ListItemIcon>
+                <ResourceMenuColorDot
+                  className={classes.eventDialogResourceMenuColorDot}
+                  data-palette={resourceOption.eventColor}
+                  data-no-resource={Boolean(resourceOption.value === null)}
+                />
+              </ListItemIcon>
+              <ListItemText>{resourceOption.label}</ListItemText>
+            </ResourceMenuItem>,
+          );
+
+          return items;
+        })}
+      </Select>
+    </FormControl>
+  );
+}
+
+export function ColorSection(props: ColorSelectProps) {
+  const { readOnly, color, onColorChange } = props;
+
+  const { classes, localeText } = useEventDialogStyledContext();
+
+  const colorLabels: Record<SchedulerEventColor, string> = {
+    red: localeText.colorRedLabel,
+    pink: localeText.colorPinkLabel,
+    purple: localeText.colorPurpleLabel,
+    indigo: localeText.colorIndigoLabel,
+    blue: localeText.colorBlueLabel,
+    teal: localeText.colorTealLabel,
+    green: localeText.colorGreenLabel,
+    lime: localeText.colorLimeLabel,
+    amber: localeText.colorAmberLabel,
+    orange: localeText.colorOrangeLabel,
+    grey: localeText.colorGreyLabel,
+  };
+
+  const handleChange = (event: SelectChangeEvent<string>) => {
+    const value = event.target.value;
+    onColorChange(value === NO_COLOR_VALUE ? null : (value as SchedulerEventColor));
+  };
+
+  return (
+    <FormControl size="small" fullWidth>
+      <InputLabel id="color-select-label">{localeText.colorPickerLabel}</InputLabel>
+      <Select
+        labelId="color-select-label"
+        label={localeText.colorPickerLabel}
+        value={color ?? NO_COLOR_VALUE}
+        displayEmpty
+        onChange={handleChange}
+        readOnly={readOnly}
+        startAdornment={
+          color ? (
+            <InputAdornment position="start">
+              <ColorMenuColorDot
+                className={classes.eventDialogColorMenuColorDot}
+                data-palette={color}
+              />
+            </InputAdornment>
+          ) : null
+        }
+        renderValue={(selected) => {
+          if (!selected) {
+            return localeText.labelNoColor;
+          }
+          return colorLabels[selected as SchedulerEventColor];
+        }}
+      >
+        <MenuItem value={NO_COLOR_VALUE} className={classes.eventDialogColorMenuItem}>
+          <ListItemText>{localeText.labelNoColor}</ListItemText>
+        </MenuItem>
         {EVENT_COLORS.map((colorOption) => (
-          <ResourceMenuColorRadioButton
+          <MenuItem
             key={colorOption}
-            type="button"
-            role="radio"
-            aria-checked={color === colorOption}
-            disabled={readOnly}
-            onClick={() => onColorChange(colorOption)}
-            aria-label={`Select ${colorOption} as event color`}
-            data-palette={colorOption}
-            className={classes.eventDialogResourceMenuColorRadioButton}
+            value={colorOption}
+            className={classes.eventDialogColorMenuItem}
           >
-            {color === colorOption && <CheckIcon fontSize="small" />}
-          </ResourceMenuColorRadioButton>
+            <ListItemIcon>
+              <ColorMenuColorDot
+                className={classes.eventDialogColorMenuColorDot}
+                data-palette={colorOption}
+              />
+            </ListItemIcon>
+            <ListItemText>{colorLabels[colorOption]}</ListItemText>
+          </MenuItem>
         ))}
-      </ColorSelectionContainer>
+      </Select>
+    </FormControl>
+  );
+}
+
+// Keep default export for backward compatibility
+export default function ResourceAndColorSection(props: ResourceSelectProps & ColorSelectProps) {
+  const { readOnly, resourceId, onResourceChange, onColorChange, color } = props;
+
+  return (
+    <React.Fragment>
+      <ResourceSection
+        readOnly={readOnly}
+        resourceId={resourceId}
+        onResourceChange={onResourceChange}
+      />
+      <ColorSection readOnly={readOnly} color={color} onColorChange={onColorChange} />
     </React.Fragment>
   );
 }

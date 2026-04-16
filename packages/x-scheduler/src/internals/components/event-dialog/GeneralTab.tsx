@@ -21,7 +21,7 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { computeRange, ControlledValue, hasProp } from './utils';
-import ResourceAndColorSection from './ResourceAndColorSection';
+import { ResourceSection, ColorSection } from './ResourceAndColorSection';
 import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 
 const SectionHeaderTitle = styled(Typography, {
@@ -59,8 +59,6 @@ const AllDayFormControlLabel = styled(FormControlLabel, {
   name: 'MuiEventDialog',
   slot: 'AllDayFormControlLabel',
 })({
-  width: '100%',
-  justifyContent: 'space-between',
   [`&.${formControlLabelClasses.root}`]: {
     marginLeft: 0,
   },
@@ -133,12 +131,8 @@ export function GeneralTab(props: GeneralTabProps) {
     setControlled(newState);
   };
 
-  const handleColorChange = (newColor: SchedulerEventColor) => {
-    if (!newColor) {
-      return;
-    }
-
-    const newState = { ...controlled, color: newColor === controlled.color ? null : newColor };
+  const handleColorChange = (newColor: SchedulerEventColor | null) => {
+    const newState = { ...controlled, color: newColor };
     pushPlaceholder(newState);
     setControlled(newState);
   };
@@ -233,14 +227,19 @@ export function GeneralTab(props: GeneralTabProps) {
         </DateTimeFieldsContainer>
         <Divider />
         <SectionHeaderTitle variant="subtitle2">
-          {localeText.resourceColorSectionLabel}
+          {localeText.resourceSectionLabel}
         </SectionHeaderTitle>
-        <ResourceAndColorSection
+        <ResourceSection
           readOnly={isPropertyReadOnly('resource')}
           resourceId={controlled.resourceId}
           onResourceChange={handleResourceChange}
-          onColorChange={handleColorChange}
+        />
+        <Divider />
+        <SectionHeaderTitle variant="subtitle2">{localeText.colorSectionLabel}</SectionHeaderTitle>
+        <ColorSection
+          readOnly={isPropertyReadOnly('color')}
           color={controlled.color}
+          onColorChange={handleColorChange}
         />
         <Divider />
         <TextField
