@@ -2,7 +2,6 @@ import { MuiPickersAdapter, PickerValidDate } from '../models';
 import { MultiSectionDigitalClockOption } from './MultiSectionDigitalClock.types';
 
 interface GetHoursSectionOptionsParameters {
-  now: PickerValidDate;
   value: PickerValidDate | null;
   adapter: MuiPickersAdapter;
   ampm: boolean;
@@ -13,7 +12,6 @@ interface GetHoursSectionOptionsParameters {
 }
 
 export const getHourSectionOptions = ({
-  now,
   value,
   adapter,
   ampm,
@@ -49,10 +47,14 @@ export const getHourSectionOptions = ({
 
   const endHour = ampm ? 11 : 23;
   for (let hour = 0; hour <= endHour; hour += timeStep) {
-    let label = adapter.format(adapter.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
-    const ariaLabel = resolveAriaLabel(parseInt(label, 10).toString());
-
-    label = adapter.formatNumber(label);
+    // Compute the label from the loop index rather than from a concrete date.
+    // Going through `adapter.setHours(now, hour)` can return the "wrong" hour on a DST
+    // spring-forward day in some adapters (e.g. setting hours to 2 AM lands on 3 AM because
+    // 2 AM does not exist), which previously led to duplicate labels and a missing entry in
+    // the dropdown. See https://github.com/mui/mui-x/issues/21669.
+    const displayedHour = ampm && hour === 0 ? 12 : hour;
+    const ariaLabel = resolveAriaLabel(displayedHour.toString());
+    const label = adapter.formatNumber(displayedHour.toString().padStart(2, '0'));
 
     result.push({
       value: hour,
