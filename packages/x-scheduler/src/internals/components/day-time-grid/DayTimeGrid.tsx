@@ -159,8 +159,13 @@ const DayTimeGridHeaderContent = styled('span', {
 const DayTimeGridHeaderCell = styled(CalendarGrid.HeaderCell, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridHeaderCell',
-})({
+})(({ theme }) => ({
   display: 'flex',
+  '&:focus-visible': {
+    outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
+    outlineOffset: -2,
+    borderRadius: theme.shape.borderRadius,
+  },
   '&:last-of-type': {
     gridColumn: 'span 2',
   },
@@ -185,7 +190,7 @@ const DayTimeGridHeaderCell = styled(CalendarGrid.HeaderCell, {
       background: 'transparent',
     },
   },
-});
+}));
 
 const DayTimeGridHeaderButton = styled('button', {
   name: 'MuiEventCalendar',
@@ -417,7 +422,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 className={classes.dayTimeGridHeaderButton}
                 type="button"
                 onClick={(event) => store.switchToDay(day.value, event)}
-                tabIndex={0}
+                tabIndex={-1}
               >
                 {renderHeaderContent(day)}
               </DayTimeGridHeaderButton>

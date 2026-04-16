@@ -2,6 +2,7 @@ import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-e
 import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 
 export interface MonthViewWeekRowProps {
+  rowIndex: number;
   maxEvents: number;
   days: SchedulerProcessedDate[];
   occurrencesMap: useEventOccurrencesGroupedByDay.ReturnValue;
