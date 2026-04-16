@@ -95,7 +95,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     });
     if (target) {
       event.preventDefault();
-      setFocusedCell(target.rowType, target.rowIndex, target.columnIndex);
+      setFocusedCell(target);
       return;
     }
 
@@ -107,7 +107,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
-      setFocusedCell('time-grid', 0, index);
+      setFocusedCell({ rowType: 'time-grid', rowIndex: 0, columnIndex: index });
     }
   };
 

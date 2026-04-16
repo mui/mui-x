@@ -81,7 +81,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     });
     if (target) {
       event.preventDefault();
-      setFocusedCell(target.rowType, target.rowIndex, target.columnIndex);
+      setFocusedCell(target);
       return;
     }
 
@@ -95,7 +95,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
 
   const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
-      setFocusedCell('header', 0, index);
+      setFocusedCell({ rowType: 'header', rowIndex: 0, columnIndex: index });
     }
   };
 

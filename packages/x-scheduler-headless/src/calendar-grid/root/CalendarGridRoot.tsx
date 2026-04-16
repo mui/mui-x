@@ -29,14 +29,19 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   const id = useId(idProp);
   const rowsPerType = rowsPerTypeProp;
 
+  const rootRef = React.useRef<HTMLDivElement>(null);
+
   const [focusedCell, setFocusedCellState] = React.useState<GridCellCoordinates | null>(null);
 
-  const setFocusedCell = React.useCallback(
-    (rowType: GridRowType, rowIndex: number, columnIndex: number) => {
-      setFocusedCellState({ rowType, rowIndex, columnIndex });
-    },
-    [],
-  );
+  const setFocusedCell = React.useCallback((coordinates: GridCellCoordinates) => {
+    setFocusedCellState(coordinates);
+  }, []);
+
+  const handleBlur = React.useCallback((event: React.FocusEvent<HTMLDivElement>) => {
+    if (!rootRef.current?.contains(event.relatedTarget as Node)) {
+      setFocusedCellState(null);
+    }
+  }, []);
 
   const contextValue: CalendarGridRootContext = React.useMemo(
     () => ({ id, focusedCell, setFocusedCell, rowTypes, rowsPerType }),
@@ -44,8 +49,8 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   );
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef],
-    props: [elementProps, { role: 'grid', id }],
+    ref: [forwardedRef, rootRef],
+    props: [elementProps, { role: 'grid', id, onBlur: handleBlur }],
   });
 
   return (

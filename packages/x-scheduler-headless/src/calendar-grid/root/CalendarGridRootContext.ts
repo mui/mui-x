@@ -17,7 +17,7 @@ export interface CalendarGridRootContext {
    * Updates the focused cell coordinates.
    * The cell matching these coordinates will receive `tabIndex={0}` and DOM focus.
    */
-  setFocusedCell: (rowType: GridRowType, rowIndex: number, columnIndex: number) => void;
+  setFocusedCell: (coordinates: GridCellCoordinates) => void;
   /**
    * The ordered list of row types that are rendered in the grid.
    * Used for vertical arrow-key navigation so it only targets rows that actually exist.
