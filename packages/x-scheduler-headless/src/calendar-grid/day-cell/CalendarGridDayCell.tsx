@@ -5,6 +5,8 @@ import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
+import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
+import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { useDayCellDropTarget } from './useDayCellDropTarget';
 import { CalendarGridDayCellContext } from './CalendarGridDayCellContext';
 
@@ -26,8 +28,10 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   } = componentProps;
 
   const adapter = useAdapterContext();
+  const { id: rootId } = useCalendarGridRootContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
+  const columnHeaderId = getCalendarGridHeaderCellId(rootId, index);
 
   const eventCreationProps = useEventCreation(() => ({
     surfaceType: 'day-grid',
@@ -44,9 +48,17 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     [index],
   );
 
+  const ariaLabelledBy = [columnHeaderId, elementProps['aria-labelledby']]
+    .filter(Boolean)
+    .join(' ');
+
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef, dropTargetRef, listItemRef],
-    props: [elementProps, { role: 'gridcell' }, eventCreationProps],
+    props: [
+      elementProps,
+      { role: 'gridcell', 'aria-labelledby': ariaLabelledBy || undefined },
+      eventCreationProps,
+    ],
   });
 
   return (
