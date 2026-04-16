@@ -92,18 +92,23 @@ export namespace Dimensions {
 }
 
 function initializeState(params: ParamsWithDefaults): Dimensions.State {
+  const { rowCount, dimensions: dimensionsParams } = params;
+  const { columnsTotalWidth, rowHeight, autoHeight, minimalContentHeight } = dimensionsParams;
+  const currentPageTotalHeight = rowCount * rowHeight;
+
   const dimensions = {
     ...EMPTY_DIMENSIONS,
-    ...params.dimensions,
-    autoHeight: params.dimensions.autoHeight,
-    minimalContentHeight: params.dimensions.minimalContentHeight,
+    ...dimensionsParams,
+    autoHeight,
+    minimalContentHeight,
+    contentSize: {
+      width: columnsTotalWidth,
+      height: roundToDecimalPlaces(currentPageTotalHeight, 1),
+    },
   };
 
-  const { rowCount } = params;
-  const { rowHeight } = dimensions;
-
   const rowsMeta = {
-    currentPageTotalHeight: rowCount * rowHeight,
+    currentPageTotalHeight,
     positions: Array.from({ length: rowCount }, (_, i) => i * rowHeight),
     pinnedTopRowsTotalHeight: 0,
     pinnedBottomRowsTotalHeight: 0,
