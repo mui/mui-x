@@ -1,8 +1,8 @@
 export * from './colDef';
 export * from './cursorCoordinates';
-export type * from './elementSize';
+export * from './elementSize';
 export * from './gridEditRowModel';
-export type * from './gridFeatureMode';
+export * from './gridFeatureMode';
 export * from './gridFilterItem';
 export * from './gridFilterModel';
 export type { GridFilterInputValueProps } from './gridFilterInputComponent';
