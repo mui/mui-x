@@ -77,6 +77,11 @@ const MonthViewHeaderCell = styled(CalendarGrid.HeaderCell, {
   '&:not(:first-of-type)': {
     borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
+  '&:focus-visible': {
+    outline: 'none',
+    borderRadius: theme.shape.borderRadius,
+    boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
+  },
 }));
 
 const MonthViewWeekHeaderCell = styled('div', {

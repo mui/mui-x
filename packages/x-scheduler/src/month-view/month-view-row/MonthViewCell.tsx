@@ -26,6 +26,7 @@ import { useEventDialogContext } from '../../internals/components/event-dialog/E
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventSkeleton } from '../../internals/components/event-skeleton';
+import { getCellFocusBackground } from '../../internals/utils/tokens';
 
 const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   name: 'MuiEventCalendar',
@@ -54,6 +55,10 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   },
   '&[data-other-month]': {
     color: (theme.vars || theme).palette.text.disabled,
+  },
+  '&:focus-visible': {
+    outline: 'none',
+    backgroundColor: getCellFocusBackground(theme),
   },
   // Today button states
   [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton} > .${eventCalendarClasses.monthViewCellNumber}`]:
@@ -114,7 +119,7 @@ const MonthViewCellNumberButton = styled('button', {
     backgroundColor: (theme.vars || theme).palette.action.selected,
   },
   '&:focus-visible': {
-    backgroundColor: (theme.vars || theme).palette.action.focus,
+    backgroundColor: getCellFocusBackground(theme),
     outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
     outlineOffset: 2,
   },
