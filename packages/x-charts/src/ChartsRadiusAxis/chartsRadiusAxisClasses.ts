@@ -1,7 +1,7 @@
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import type { ChartsRadiusAxisComponentProps } from './ChartsRadiusAxis';
+import type { ChartsRadiusAxisProps } from './ChartsRadiusAxis';
 
 export interface ChartsRadiusAxisClasses {
   /** Styles applied to the root element. */
@@ -25,7 +25,7 @@ export function getRadiusAxisUtilityClass(slot: string) {
 }
 
 export const useUtilityClasses = (
-  props: Pick<ChartsRadiusAxisComponentProps, 'classes' | 'center'>,
+  props: Pick<ChartsRadiusAxisProps, 'classes' | 'center'>,
 ) => {
   const { classes, center } = props;
   const slots = {

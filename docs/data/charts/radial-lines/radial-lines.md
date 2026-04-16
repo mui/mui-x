@@ -10,11 +10,11 @@ components: ChartsRadialDataProvider, ChartsRadialGrid, ChartsRadiusAxis
 
 ## Radial coordinates
 
-This section explain how to display grid and axes in radial chart.
+This section explains how to display grid and axes in radial chart.
 
 ### Radial grid
 
-Similarly the the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates
+Similarly to the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates
 
 {{"demo": "RadialGridPlayground.js", "hideToolbar": true, "bg": "playground"}}
 

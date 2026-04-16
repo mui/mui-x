@@ -1,9 +1,9 @@
 /**
- * Return the `transform` style value for a tick label at a given position.
+ * Return the vertical/horizontal alignment for a tick label at a given position.
  * @param px The normalized x position to the axis line (between -1 and 1).
  * @param py The normalized y position to the axis line (between -1 and 1).
  * @param center If true, the tick labels are centered on it's position.
- * @returns The `transform` style value for the tick label.
+ * @returns The vertical and horizontal alignment for the tick label.
  */
 export function getLabelTransform(
   px: number,

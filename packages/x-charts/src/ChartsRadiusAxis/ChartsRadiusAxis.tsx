@@ -1,6 +1,4 @@
 'use client';
-import * as React from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import { useTicks } from '../hooks/useTicks';
@@ -15,7 +13,7 @@ import { type ChartsRadiusAxisClasses, useUtilityClasses } from './chartsRadiusA
 import { getLabelTransform } from './getLabelTransform';
 import { RadialAxisLabel } from '../internals/components/RadialAxisLabel';
 
-export interface ChartsRadiusAxisComponentProps {
+export interface ChartsRadiusAxisProps {
   /**
    * Id of the radius axis to render.
    * If not provided, it will use the first defined radius axis.
@@ -54,7 +52,7 @@ export interface ChartsRadiusAxisComponentProps {
 
 const TICK_LABEL_GAP = 4;
 
-function ChartsRadiusAxis(props: ChartsRadiusAxisComponentProps) {
+export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
   const {
     axisId,
     angle: angleProp,
@@ -160,41 +158,3 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisComponentProps) {
     </g>
   );
 }
-
-ChartsRadiusAxis.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * The angle (in degrees) along which the tick labels are rendered.
-   * By default, uses the start angle of the rotation axis.
-   */
-  angle: PropTypes.number,
-  /**
-   * Id of the radius axis to render.
-   * If not provided, it will use the first defined radius axis.
-   */
-  axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  /**
-   * A CSS class name applied to the root element.
-   */
-  className: PropTypes.string,
-  /**
-   * If `true`, the axis line is not rendered.
-   * @default false
-   */
-  disableLine: PropTypes.bool,
-  /**
-   * If `true`, the ticks are not rendered.
-   * @default false
-   */
-  disableTicks: PropTypes.bool,
-  /**
-   * The size (in pixels) of the tick marks.
-   * @default 6
-   */
-  tickSize: PropTypes.number,
-} as any;
-
-export { ChartsRadiusAxis };
