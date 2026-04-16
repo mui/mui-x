@@ -1,6 +1,6 @@
 import { findMinMax, type PolarExtremumGetter } from '@mui/x-charts/internals';
 
-export const rotationExtremumGetter: PolarExtremumGetter<'radial-line'> = (params) => {
+export const rotationExtremumGetter: PolarExtremumGetter<'radialLine'> = (params) => {
   const { axis } = params;
 
   return findMinMax(axis.data ?? []);
@@ -26,7 +26,7 @@ function getSeriesExtremums(
   );
 }
 
-export const radiusExtremumGetter: PolarExtremumGetter<'radial-line'> = (params) => {
+export const radiusExtremumGetter: PolarExtremumGetter<'radialLine'> = (params) => {
   const { series, axis, isDefaultAxis } = params;
 
   return Object.keys(series)

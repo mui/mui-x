@@ -16,7 +16,7 @@ import descriptionGetter from './descriptionGetter';
 import { radiusExtremumGetter, rotationExtremumGetter } from './extremums';
 import tooltipGetter from './tooltip';
 
-export const radialLineSeriesConfig: ChartSeriesTypeConfig<'radial-line'> = {
+export const radialLineSeriesConfig: ChartSeriesTypeConfig<'radialLine'> = {
   colorProcessor,
   seriesProcessor,
   legendGetter,

@@ -1,6 +1,6 @@
 import { getLabel, type DescriptionGetter } from '@mui/x-charts/internals';
 
-const descriptionGetter: DescriptionGetter<'radial-line'> = (params) => {
+const descriptionGetter: DescriptionGetter<'radialLine'> = (params) => {
   const { identifier, series, rotationAxis, localeText } = params;
 
   const label = getLabel(series.label, 'tooltip');

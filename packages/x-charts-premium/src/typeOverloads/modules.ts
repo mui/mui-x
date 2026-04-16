@@ -79,7 +79,7 @@ declare module '@mui/x-charts/internals' {
         dataIndex?: number;
       };
     };
-    ['radial-line']: {
+    radialLine: {
       seriesInput: DefaultizedProps<RadialLineSeriesType, 'id'> &
         MakeRequired<SeriesColor<number | null>, 'color'>;
       series: DefaultizedRadialLineSeriesType;
@@ -98,7 +98,7 @@ declare module '@mui/x-charts/internals' {
         series: DefaultizedRadialLineSeriesType;
       };
       highlightIdentifier: {
-        type: 'radial-line';
+        type: 'radialLine';
         seriesId: SeriesId;
         dataIndex?: number;
       };

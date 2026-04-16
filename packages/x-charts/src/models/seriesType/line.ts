@@ -36,7 +36,7 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 export type MarkShape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
 
 /**
- * @internal The series type shared by the line and radial-line charts
+ * @internal The series type shared by the line and radialLine charts
  */
 export interface CommonLineSeriesType {
   /**

@@ -15,7 +15,7 @@ export interface RadialLineSeriesType
     RadialSeriesType,
     StackableSeriesType,
     CommonLineSeriesType {
-  type: 'radial-line';
+  type: 'radialLine';
   /**
    * Defines how stacked series handle negative values.
    * @default 'none'
@@ -27,7 +27,7 @@ export interface RadialLineSeriesType
  * Used for item interaction
  */
 export type RadialLineItemIdentifier = {
-  type: 'radial-line';
+  type: 'radialLine';
   seriesId: SeriesId;
   /**
    * `dataIndex` can be `undefined` if the mouse is over the area and not a specific item.

@@ -1,6 +1,6 @@
 import { type ColorProcessor, getSeriesColorFn } from '@mui/x-charts/internals';
 
-const getColor: ColorProcessor<'radial-line'> = (series, rotationAxis, radiusAxis) => {
+const getColor: ColorProcessor<'radialLine'> = (series, rotationAxis, radiusAxis) => {
   const yColorScale = radiusAxis?.colorScale;
   const xColorScale = rotationAxis?.colorScale;
   const getSeriesColor = getSeriesColorFn(series);

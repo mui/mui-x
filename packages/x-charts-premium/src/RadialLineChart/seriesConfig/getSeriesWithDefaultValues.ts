@@ -1,6 +1,6 @@
 import type { GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
 
-const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'radial-line'> = (
+const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'radialLine'> = (
   seriesData,
   seriesIndex,
   colors,

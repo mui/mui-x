@@ -26,10 +26,10 @@ const lineValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedRadialLineSeriesType['valueFormatter'];
 
 function seriesProcessor(
-  params: SeriesProcessorParams<'radial-line'>,
+  params: SeriesProcessorParams<'radialLine'>,
   dataset?: Readonly<DatasetType>,
   isItemVisible?: IsItemVisibleFunction,
-): SeriesProcessorResult<'radial-line'> {
+): SeriesProcessorResult<'radialLine'> {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
@@ -92,7 +92,7 @@ Radial line plots only support numeric and null values.`,
     }
   });
 
-  const completedSeries: Record<SeriesId, ChartSeriesDefaultized<'radial-line'>> = {};
+  const completedSeries: Record<SeriesId, ChartSeriesDefaultized<'radialLine'>> = {};
 
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;
@@ -118,7 +118,7 @@ Radial line plots only support numeric and null values.`,
         const keyIndex = keys.indexOf(key);
         const seriesId = ids[keyIndex];
 
-        if (!isItemVisible?.({ type: 'radial-line', seriesId })) {
+        if (!isItemVisible?.({ type: 'radialLine', seriesId })) {
           // For hidden series, return 0 so they don't contribute to the stack
           return 0;
         }
@@ -141,7 +141,7 @@ Radial line plots only support numeric and null values.`,
       } else {
         data = series[id].data!;
       }
-      const hidden = !isItemVisible?.({ type: 'radial-line', seriesId: id });
+      const hidden = !isItemVisible?.({ type: 'radialLine', seriesId: id });
       completedSeries[id] = {
         labelMarkType: 'line+mark',
         ...series[id],

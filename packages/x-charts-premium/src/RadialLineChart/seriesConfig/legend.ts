@@ -1,7 +1,7 @@
 import type { SeriesLegendItemParams } from '@mui/x-charts/ChartsLegend';
 import { getLabel, type LegendGetter } from '@mui/x-charts/internals';
 
-const legendGetter: LegendGetter<'radial-line'> = (params) => {
+const legendGetter: LegendGetter<'radialLine'> = (params) => {
   const { seriesOrder, series } = params;
   return seriesOrder.reduce((acc, seriesId) => {
     const formattedLabel = getLabel(series[seriesId].label, 'legend');
@@ -11,7 +11,7 @@ const legendGetter: LegendGetter<'radial-line'> = (params) => {
     }
 
     acc.push({
-      type: 'radial-line',
+      type: 'radialLine',
       markType: series[seriesId].labelMarkType,
       markShape: series[seriesId].showMark ? (series[seriesId].shape ?? 'circle') : undefined,
       seriesId,
