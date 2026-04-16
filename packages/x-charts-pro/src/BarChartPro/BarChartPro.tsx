@@ -100,6 +100,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     zoomData,
     onZoomChange,
     apiRef,
+    rangeButtons: props.slotProps?.toolbar?.rangeButtons,
     plugins: BAR_CHART_PRO_PLUGINS,
   });
 

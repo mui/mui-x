@@ -19,8 +19,8 @@ import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom
 import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
 import { ChartsToolbarRangeButtonTrigger } from './ChartsToolbarRangeButtonTrigger';
-import { type RangeButtonValue } from './rangeButtonValueToZoom';
 import { type ChartsSlotsPro } from '../internals/material';
+import { type RangeButtonConfig } from './rangeButtonValueToZoom';
 import {
   type ChartsToolbarPrintExportOptions,
   ChartsToolbarPrintExportTrigger,
@@ -31,22 +31,7 @@ import {
 } from './ChartsToolbarImageExportTrigger';
 
 export type { RangeButtonFunctionParams } from './rangeButtonValueToZoom';
-
-export interface RangeButtonConfig {
-  /**
-   * The label displayed on the button (e.g., "1M", "3M", "1Y").
-   */
-  label: string;
-  /**
-   * The range value.
-   *
-   * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
-   * - `[start, end]` — An absolute date range.
-   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`) and returns zoom percentages (0-100).
-   * - `null` — Resets zoom to show all data.
-   */
-  value: RangeButtonValue;
-}
+export type { RangeButtonConfig } from './rangeButtonValueToZoom';
 
 export interface ChartsToolbarProProps extends ChartsToolbarProps {
   printOptions?: ChartsToolbarPrintExportOptions;

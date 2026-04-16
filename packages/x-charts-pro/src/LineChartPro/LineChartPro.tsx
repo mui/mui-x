@@ -104,6 +104,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
     zoomData,
     onZoomChange,
     apiRef,
+    rangeButtons: props.slotProps?.toolbar?.rangeButtons,
     plugins: LINE_CHART_PRO_PLUGINS,
   });
 

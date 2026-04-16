@@ -109,6 +109,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     zoomData,
     onZoomChange,
     apiRef,
+    rangeButtons: props.slotProps?.toolbar?.rangeButtons,
     plugins: SCATTER_CHART_PRO_PLUGINS,
   });
 

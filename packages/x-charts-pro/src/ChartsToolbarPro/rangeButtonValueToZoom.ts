@@ -243,3 +243,23 @@ function computeIntervalStart(
       return 0;
   }
 }
+
+/**
+ * Configuration for a range button shown in the toolbar.
+ */
+export interface RangeButtonConfig {
+  /**
+   * The label displayed on the button (e.g., "1M", "3M", "1Y").
+   * Also used to match `initialRangeKey` for computing the initial zoom.
+   */
+  label: string;
+  /**
+   * The range value.
+   *
+   * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
+   * - `[start, end]` — An absolute date range.
+   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`) and returns zoom percentages (0-100).
+   * - `null` — Resets zoom to show all data.
+   */
+  value: RangeButtonValue;
+}

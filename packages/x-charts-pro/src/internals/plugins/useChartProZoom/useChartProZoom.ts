@@ -24,6 +24,7 @@ import { useZoomOnBrush } from './gestureHooks/useZoomOnBrush';
 import { useZoomOnDoubleTapReset } from './gestureHooks/useZoomOnDoubleTapReset';
 import { initializeZoomInteractionConfig } from './initializeZoomInteractionConfig';
 import { initializeZoomData } from './initializeZoomData';
+import { rangeButtonValueToZoom } from '../../../ChartsToolbarPro/rangeButtonValueToZoom';
 
 export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginData) => {
   const { store, params } = pluginData;
@@ -233,18 +234,90 @@ useChartProZoom.params = {
   onZoomChange: true,
   zoomData: true,
   zoomInteractionConfig: true,
+  rangeButtons: true,
 };
 
 useChartProZoom.getInitialState = (params) => {
-  const { initialZoom, initialRangeKey, zoomData, defaultizedXAxis, defaultizedYAxis } = params;
+  const {
+    initialZoom,
+    initialRangeKey,
+    zoomData,
+    defaultizedXAxis,
+    defaultizedYAxis,
+    rangeButtons,
+  } = params;
 
   const optionsLookup = {
     ...createZoomLookup('x')(defaultizedXAxis),
     ...createZoomLookup('y')(defaultizedYAxis),
   };
-  const userZoomData =
-    // eslint-disable-next-line no-nested-ternary
-    zoomData !== undefined ? zoomData : initialZoom !== undefined ? initialZoom : undefined;
+
+  let userZoomData: readonly ZoomData[] | undefined;
+
+  // Priority order:
+  // 1. Controlled zoom (zoomData prop)
+  if (zoomData !== undefined) {
+    userZoomData = zoomData;
+  }
+  // 2. Explicit initial zoom
+  else if (initialZoom !== undefined) {
+    userZoomData = initialZoom;
+  }
+  // 3. Initial range key — compute zoom from the matching range button
+  else if (initialRangeKey !== undefined && rangeButtons && rangeButtons.length > 0) {
+    const rangeButton = rangeButtons.find((button) => button.label === initialRangeKey);
+    // Find the first x-axis that has zoom enabled
+    const zoomableXAxis = defaultizedXAxis.find((axis) => optionsLookup[axis.id]);
+
+    if (rangeButton && zoomableXAxis) {
+      const { data: axisData, scaleType } = zoomableXAxis;
+      const isOrdinal = scaleType === 'band' || scaleType === 'point';
+
+      let domain: { min: number; max: number } | undefined;
+
+      if (isOrdinal) {
+        domain = { min: 0, max: (axisData?.length ?? 1) - 1 };
+      } else if (axisData && axisData.length >= 2) {
+        let min = Infinity;
+        let max = -Infinity;
+        for (const val of axisData) {
+          const n = Number(val);
+          // eslint-disable-next-line no-restricted-globals
+          if (!isNaN(n)) {
+            if (n < min) {
+              min = n;
+            }
+            if (n > max) {
+              max = n;
+            }
+          }
+        }
+        if (Number.isFinite(min) && Number.isFinite(max)) {
+          domain = { min, max };
+        }
+      }
+
+      if (domain) {
+        try {
+          const zoom = rangeButtonValueToZoom(rangeButton.value, {
+            scaleType: scaleType ?? 'linear',
+            data: axisData,
+            domain,
+          });
+          userZoomData = [
+            {
+              axisId: zoomableXAxis.id,
+              start: zoom.start,
+              end: zoom.end,
+            },
+          ];
+        } catch {
+          // Fall through to default if computation fails
+        }
+      }
+    }
+  }
+  // 4. Default (full data range)
 
   return {
     zoom: {

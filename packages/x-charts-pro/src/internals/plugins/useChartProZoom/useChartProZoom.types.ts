@@ -11,6 +11,7 @@ import {
   type ZoomInteractionConfig,
   type DefaultizedZoomInteractionConfig,
 } from './ZoomInteractionConfig.types';
+import type { RangeButtonConfig } from '../../../ChartsToolbarPro/rangeButtonValueToZoom';
 
 export interface UseChartProZoomParameters {
   /**
@@ -34,9 +35,15 @@ export interface UseChartProZoomParameters {
   zoomInteractionConfig?: ZoomInteractionConfig;
   /**
    * The label of the range button that corresponds to the initial zoom state.
-   * Used to pre-select that button on mount.
+   * When set together with `rangeButtons`, automatically computes `initialZoom` from the matching button.
+   * Also pre-selects that button in the toolbar on mount.
    */
   initialRangeKey?: string;
+  /**
+   * Configuration for range buttons.
+   * Used together with `initialRangeKey` to compute the initial zoom state automatically.
+   */
+  rangeButtons?: readonly RangeButtonConfig[];
 }
 
 export type UseChartProZoomDefaultizedParameters = UseChartProZoomParameters &

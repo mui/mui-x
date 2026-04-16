@@ -31,6 +31,7 @@ export const useChartsContainerProProps = <
     zoomData,
     onZoomChange,
     zoomInteractionConfig,
+    rangeButtons,
     plugins,
     apiRef,
     ...baseProps
@@ -46,6 +47,7 @@ export const useChartsContainerProProps = <
     zoomData,
     onZoomChange,
     zoomInteractionConfig,
+    rangeButtons,
     apiRef,
     plugins: plugins ?? DEFAULT_PLUGINS,
   } as unknown as ChartsDataProviderProProps<SeriesType, TSignatures>;
