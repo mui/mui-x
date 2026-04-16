@@ -517,6 +517,7 @@
   { "name": "GridPanelClasses", "kind": "Interface" },
   { "name": "GridPanelContent", "kind": "Function" },
   { "name": "GridPanelFooter", "kind": "Function" },
+  { "name": "GridPanelHeader", "kind": "Function" },
   { "name": "GridPanelProps", "kind": "Interface" },
   { "name": "GridPanelWrapper", "kind": "Variable" },
   { "name": "GridPanelWrapperProps", "kind": "Interface" },

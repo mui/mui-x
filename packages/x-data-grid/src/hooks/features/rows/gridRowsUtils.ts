@@ -457,4 +457,3 @@ export const rowHeightWarning = [
   `MUI X: The \`rowHeight\` prop should be a number greater than 0.`,
   `The default value will be used instead.`,
 ].join('\n');
-
