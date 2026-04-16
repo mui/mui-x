@@ -3,14 +3,13 @@ import * as React from 'react';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { type DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
-import { useWebGLContext } from '../../ChartsWebGLLayer/ChartsWebGLLayer';
+import { useWebGLLayer } from '../../ChartsWebGLLayer/ChartsWebGLLayer';
 import { useHeatmapSeriesContext } from '../../hooks';
 import {
   heatmapFragmentShaderSourceNoBorderRadius,
   heatmapFragmentShaderSourceWithBorderRadius,
   heatmapVertexShaderSource,
 } from './shaders';
-import { useWebGLResizeObserver } from '../../utils/webgl/useWebGLResizeObserver';
 import {
   attachShader,
   bindQuadBuffer,
@@ -25,24 +24,34 @@ export function HeatmapWebGLPlot({
 }: {
   borderRadius?: number;
 }): React.JSX.Element | null {
-  const gl = useWebGLContext();
+  const layer = useWebGLLayer();
   const series = useHeatmapSeriesContext();
 
   const seriesToDisplay = series?.series[series.seriesOrder[0]];
 
-  if (!gl || !seriesToDisplay) {
+  if (!layer || !seriesToDisplay) {
     return null;
   }
 
-  return <HeatmapWebGLPlotImpl gl={gl} borderRadius={borderRadius ?? 0} series={seriesToDisplay} />;
+  return (
+    <HeatmapWebGLPlotImpl
+      gl={layer.gl}
+      registerDraw={layer.registerDraw}
+      requestRender={layer.requestRender}
+      borderRadius={borderRadius ?? 0}
+      series={seriesToDisplay}
+    />
+  );
 }
 
 function HeatmapWebGLPlotImpl(props: {
   gl: WebGL2RenderingContext;
+  registerDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
+  requestRender: () => void;
   borderRadius: number;
   series: DefaultizedHeatmapSeriesType;
 }) {
-  const { gl, borderRadius, series } = props;
+  const { gl, registerDraw, requestRender, borderRadius, series } = props;
 
   const drawingArea = useDrawingArea();
   const xScale = useXScale<'band'>();
@@ -58,24 +67,15 @@ function HeatmapWebGLPlotImpl(props: {
   });
   const [quadBuffer] = React.useState(() => uploadQuadBuffer(gl));
   const dataLength = series.data.length;
-  const renderScheduledRef = React.useRef<boolean>(false);
 
-  const render = React.useCallback(() => {
-    renderScheduledRef.current = false;
-
-    // Clear and draw
-    gl.clearColor(0, 0, 0, 0.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
+  const drawRef = React.useRef<(() => void) | null>(null);
+  drawRef.current = () => {
     gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, dataLength);
-  }, [dataLength, gl]);
+  };
 
-  const scheduleRender = React.useCallback(() => {
-    renderScheduledRef.current = true;
-  }, []);
-
-  // On resize render directly to avoid a frame where the canvas is blank
-  useWebGLResizeObserver(render);
+  React.useEffect(() => {
+    return registerDraw(drawRef);
+  }, [registerDraw]);
 
   React.useEffect(() => {
     /* Enable blending for transparency
@@ -194,11 +194,11 @@ function HeatmapWebGLPlotImpl(props: {
       setupBorderRadiusUniform();
     }
 
-    scheduleRender();
+    requestRender();
   }, [
     gl,
     program,
-    scheduleRender,
+    requestRender,
     seriesBorderRadius,
     setupBorderRadiusUniform,
     // We use the event callback versions here because we only want this effect to trigger when the border radius changes
@@ -209,24 +209,18 @@ function HeatmapWebGLPlotImpl(props: {
 
   React.useEffect(() => {
     setupResolutionUniform();
-    scheduleRender();
-  }, [setupResolutionUniform, scheduleRender]);
+    requestRender();
+  }, [setupResolutionUniform, requestRender]);
 
   React.useEffect(() => {
     setupRectDimensionsUniform();
-    scheduleRender();
-  }, [setupRectDimensionsUniform, scheduleRender]);
+    requestRender();
+  }, [setupRectDimensionsUniform, requestRender]);
 
   React.useEffect(() => {
     setupAttributes();
-    scheduleRender();
-  }, [scheduleRender, setupAttributes]);
-
-  React.useEffect(() => {
-    if (renderScheduledRef.current) {
-      render();
-    }
-  });
+    requestRender();
+  }, [requestRender, setupAttributes]);
 
   return null;
 }
