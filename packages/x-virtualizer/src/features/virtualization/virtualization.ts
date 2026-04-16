@@ -144,7 +144,7 @@ function initializeState(params: ParamsWithDefaults) {
   // detects no change and skips the store notification, which avoids a nested
   // re-render.
   const renderContext =
-    !!enabled && !!enabledForRows && !!enabledForColumns
+    enabled === false && enabledForRows === false && enabledForColumns === false
       ? {
           firstRowIndex: 0,
           lastRowIndex: params.rows.length,
