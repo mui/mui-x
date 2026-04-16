@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
+import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProviderPremium';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
-import { ChartsWebGLLayer, useWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
+import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
+import { useWebGLLayer } from '@mui/x-charts-premium/hooks';
 
 /**
  * Draws a blue rectangle using scissor test.
@@ -74,7 +75,7 @@ function RedPlot() {
  */
 export default function WebGLSharedCanvas() {
   return (
-    <ChartsDataProvider
+    <ChartsDataProviderPremium
       height={200}
       width={200}
       series={[]}
@@ -88,6 +89,6 @@ export default function WebGLSharedCanvas() {
           </ChartsWebGLLayer>
         </ChartsLayerContainer>
       </ChartsWrapper>
-    </ChartsDataProvider>
+    </ChartsDataProviderPremium>
   );
 }

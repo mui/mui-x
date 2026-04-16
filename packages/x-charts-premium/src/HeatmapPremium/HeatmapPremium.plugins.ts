@@ -23,6 +23,10 @@ import {
   useChartProZoom,
   type UseChartProZoomSignature,
 } from '@mui/x-charts-pro/plugins';
+import {
+  useChartPremiumWebGL,
+  type UseChartPremiumWebGLSignature,
+} from '../internals/plugins/useChartPremiumWebGL';
 
 export type HeatmapPremiumPluginSignatures = [
   UseChartZAxisSignature,
@@ -35,6 +39,7 @@ export type HeatmapPremiumPluginSignatures = [
   UseChartProZoomSignature,
   UseChartItemClickSignature<'heatmap'>,
   UseChartKeyboardNavigationSignature,
+  UseChartPremiumWebGLSignature,
 ];
 
 export const HEATMAP_PREMIUM_PLUGINS = [
@@ -48,4 +53,5 @@ export const HEATMAP_PREMIUM_PLUGINS = [
   useChartProZoom,
   useChartItemClick,
   useChartKeyboardNavigation,
+  useChartPremiumWebGL,
 ] as ConvertSignaturesIntoPlugins<HeatmapPremiumPluginSignatures>;

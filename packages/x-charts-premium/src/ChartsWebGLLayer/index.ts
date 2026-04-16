@@ -1,2 +1,1 @@
-export { ChartsWebGLLayer, useWebGLLayer } from './ChartsWebGLLayer';
-export type { ChartsWebGLContextValue } from './ChartsWebGLLayer';
+export { ChartsWebGLLayer } from './ChartsWebGLLayer';

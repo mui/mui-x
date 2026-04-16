@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { ChartsDataProvider } from '../ChartsDataProvider';
+import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { ChartsWebGLLayer, useWebGLContext } from './ChartsWebGLLayer';
+import { ChartsWebGLLayer } from './ChartsWebGLLayer';
+import { useWebGLLayer } from '../hooks/useWebGLLayer';
 
 describe('<WebGLProvider />', () => {
   const { render } = createRenderer();
@@ -12,17 +13,17 @@ describe('<WebGLProvider />', () => {
     let contextValue: WebGL2RenderingContext | null = null;
 
     function TestComponent() {
-      const context = useWebGLContext();
+      const layer = useWebGLLayer();
 
       React.useEffect(() => {
-        contextValue = context;
-      }, [context]);
+        contextValue = layer?.gl ?? null;
+      }, [layer]);
 
       return null;
     }
 
     render(
-      <ChartsDataProvider
+      <ChartsDataProviderPremium
         height={100}
         width={100}
         series={[]}
@@ -33,7 +34,7 @@ describe('<WebGLProvider />', () => {
             <TestComponent />
           </ChartsWebGLLayer>
         </ChartsWrapper>
-      </ChartsDataProvider>,
+      </ChartsDataProviderPremium>,
     );
 
     expect(contextValue).to.be.instanceOf(WebGL2RenderingContext);

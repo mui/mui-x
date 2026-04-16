@@ -1,6 +1,7 @@
 import { useHeatmapProps } from '@mui/x-charts-pro/internals';
 import { type HeatmapPremiumProps } from './HeatmapPremium';
 import { type HeatmapPlotPremiumProps } from './HeatmapPlotPremium';
+import { HEATMAP_PREMIUM_PLUGINS } from './HeatmapPremium.plugins';
 
 export type UseHeatmapPremiumProps = HeatmapPremiumProps;
 
@@ -15,6 +16,9 @@ export function useHeatmapPremiumProps(props: UseHeatmapPremiumProps) {
   return {
     ...other,
     heatmapPlotPremiumProps,
-    chartsDataProviderPremiumProps: chartsDataProviderProProps,
+    chartsDataProviderPremiumProps: {
+      ...chartsDataProviderProProps,
+      plugins: HEATMAP_PREMIUM_PLUGINS,
+    },
   };
 }

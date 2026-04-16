@@ -1,90 +1,42 @@
 'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { selectorChartSvgHeight, selectorChartSvgWidth, useStore } from '@mui/x-charts/internals';
+import {
+  selectorChartSvgHeight,
+  selectorChartSvgWidth,
+  useStore,
+  useChartsContext,
+} from '@mui/x-charts/internals';
 import { useDrawingArea, useChartRootRef } from '@mui/x-charts/hooks';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
-
-export interface ChartsWebGLContextValue {
-  gl: WebGL2RenderingContext;
-  /**
-   * Register a draw callback ref. Returns an unregister function.
-   * Callbacks are called in registration order (DOM order, since React effects fire top-to-bottom).
-   * Use a ref so the draw function can change without re-registration.
-   * @param {React.RefObject} drawRef A ref object whose current property is a draw callback function. The callback will be called with the WebGL context already set to this layer's canvas. Set to null to temporarily disable drawing without unregistering.
-   * @returns {Function} Unregister function to remove the draw callback from the layer.
-   */
-  registerDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
-  /**
-   * Request a render frame. The layer will clear once, then call all registered draw callbacks in order.
-   */
-  requestRender: () => void;
-}
-
-const ChartsWebGLContext = React.createContext<ChartsWebGLContextValue | null>(null);
-
-export function useWebGLContext(): WebGL2RenderingContext | null {
-  return React.useContext(ChartsWebGLContext)?.gl ?? null;
-}
-
-export function useWebGLLayer(): ChartsWebGLContextValue | null {
-  return React.useContext(ChartsWebGLContext);
-}
+import {
+  selectorWebGLRenderTickOptional,
+  type UseChartPremiumWebGLSignature,
+} from '../internals/plugins/useChartPremiumWebGL';
 
 export const ChartsWebGLLayer = React.forwardRef<
   HTMLCanvasElement,
   React.PropsWithChildren<React.ComponentProps<'canvas'>>
->(function WebGLProvider({ children, ...props }, ref) {
+>(function ChartsWebGLLayer({ children, ...props }, ref) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const [glContext, setGlContext] = React.useState<WebGL2RenderingContext | null>(null);
   const handleRef = useForkRef(canvasRef, ref);
   const chartRoot = useChartRootRef().current;
   const drawingArea = useDrawingArea();
   const [, rerender] = React.useReducer((s) => s + 1, 0);
+  const { store, instance } = useChartsContext<[], [UseChartPremiumWebGLSignature]>();
 
-  const drawRefsRef = React.useRef<Array<React.RefObject<(() => void) | null>>>([]);
-  const renderScheduledRef = React.useRef(false);
+  const renderTick = store.use(selectorWebGLRenderTickOptional);
 
-  const renderAll = React.useCallback(() => {
-    if (!glContext) {
-      return;
-    }
-    renderScheduledRef.current = false;
-    glContext.clearColor(0, 0, 0, 0.0);
-    glContext.clear(glContext.COLOR_BUFFER_BIT);
-    for (const drawRef of drawRefsRef.current) {
-      drawRef.current?.();
-    }
-  }, [glContext]);
-
-  const registerDraw = React.useCallback(
-    (drawRef: React.RefObject<(() => void) | null>) => {
-      drawRefsRef.current.push(drawRef);
-      return () => {
-        const idx = drawRefsRef.current.indexOf(drawRef);
-        if (idx >= 0) {
-          drawRefsRef.current.splice(idx, 1);
-        }
-      };
-    },
-    [],
-  );
-
-  const requestRender = React.useCallback(() => {
-    renderScheduledRef.current = true;
-    // Trigger a re-render so the flush effect runs, even if only a child's state changed
-    rerender();
-  }, []);
+  const glContext = instance.webGLContextRef?.current ?? null;
+  const flushRender = instance.flushWebGLRender;
 
   // Centralized resize handling — render all plots on canvas resize
-  useWebGLResizeObserver(glContext, renderAll);
+  useWebGLResizeObserver(glContext, flushRender ?? (() => {}));
 
-  // Flush scheduled renders after all children's effects have run
+  // Flush scheduled renders when renderTick changes
   React.useEffect(() => {
-    if (renderScheduledRef.current) {
-      renderAll();
-    }
-  });
+    flushRender?.();
+  }, [renderTick, flushRender]);
 
   React.useEffect(() => {
     /* The chart root isn't available on first render because the ref is only set after mounting the root component. */
@@ -96,7 +48,7 @@ export const ChartsWebGLLayer = React.forwardRef<
   React.useEffect(() => {
     const canvas = canvasRef.current;
 
-    if (!canvas) {
+    if (!canvas || !instance.setWebGLContext) {
       return undefined;
     }
 
@@ -104,7 +56,7 @@ export const ChartsWebGLLayer = React.forwardRef<
       // Must prevent default otherwise the context won't be marked as restorable
       // https://registry.khronos.org/webgl/extensions/WEBGL_lose_context/
       event.preventDefault();
-      setGlContext(null);
+      instance.setWebGLContext!(null);
     };
     const initializeContext = () => {
       const ctx = canvas.getContext('webgl2', {
@@ -118,7 +70,7 @@ export const ChartsWebGLLayer = React.forwardRef<
         return;
       }
 
-      setGlContext(ctx);
+      instance.setWebGLContext!(ctx);
     };
 
     canvas.addEventListener('webglcontextlost', handleContextLost);
@@ -130,20 +82,16 @@ export const ChartsWebGLLayer = React.forwardRef<
     return () => {
       canvas.removeEventListener('webglcontextlost', handleContextLost);
       canvas.removeEventListener('webglcontextrestored', initializeContext);
+      instance.setWebGLContext!(null);
     };
-  }, [chartRoot]);
-
-  const contextValue = React.useMemo<ChartsWebGLContextValue | null>(
-    () => (glContext ? { gl: glContext, registerDraw, requestRender } : null),
-    [glContext, registerDraw, requestRender],
-  );
+  }, [chartRoot, instance]);
 
   if (!chartRoot) {
     return null;
   }
 
   return (
-    <ChartsWebGLContext.Provider value={contextValue}>
+    <React.Fragment>
       <CanvasPositioner aria-hidden="true">
         <canvas
           ref={handleRef}
@@ -158,7 +106,7 @@ export const ChartsWebGLLayer = React.forwardRef<
         />
       </CanvasPositioner>
       {children}
-    </ChartsWebGLContext.Provider>
+    </React.Fragment>
   );
 });
 
