@@ -91,7 +91,7 @@ export function DayGridCell(props: DayGridCellProps) {
           '--row-count': rowCount,
         } as React.CSSProperties
       }
-      aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} ${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
+      aria-labelledby={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
       role="gridcell"
       data-weekend={isWeekend(adapter, day.value) || undefined}
     >
