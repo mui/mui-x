@@ -25,6 +25,7 @@ import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartS
 import { deg2rad } from '../../../angleConversion';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { scaleBand, scalePoint } from '../../../scales';
+import { type ComputedAxisConfig } from '../useChartCartesianAxis';
 
 export type DefaultizedAxisConfig<
   AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps,
@@ -64,7 +65,7 @@ const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
 export type ComputeResult<T extends ChartsAxisProps> = {
-  axis: DefaultizedAxisConfig<T>;
+  axis: ComputedAxisConfig<T>;
   axisIds: string[];
 };
 

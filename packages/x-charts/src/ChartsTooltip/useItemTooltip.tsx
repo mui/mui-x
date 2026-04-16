@@ -1,12 +1,22 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
-import { type ChartSeriesDefaultized, type ChartSeriesType } from '../models/seriesType/config';
-import { type SeriesItemIdentifierWithType } from '../models/seriesType';
+import type {
+  PolarChartSeriesType,
+  ChartSeriesDefaultized,
+  ChartSeriesType,
+} from '../models/seriesType/config';
+import {
+  type CartesianChartSeriesType,
+  type SeriesItemIdentifierWithType,
+} from '../models/seriesType';
 import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { useStore } from '../internals/store/useStore';
-import { useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
+import { useRadiusAxes, useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
-import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import {
+  type ColorGetter,
+  selectorChartSeriesConfig,
+} from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import {
   type ItemTooltip,
   type ItemTooltipWithMultipleValues,
@@ -16,6 +26,7 @@ import {
 } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { isCartesianSeries } from '../internals/isCartesian';
 import { type AxisId } from '../models/axis';
+import { isPolarSeries } from '../internals/isPolar';
 
 export type UseItemTooltipReturnValue<SeriesType extends ChartSeriesType> = ItemTooltip<SeriesType>;
 export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;
@@ -36,7 +47,9 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxes();
+
   const { rotationAxis, rotationAxisIds } = useRotationAxes();
+  const { radiusAxis, radiusAxisIds } = useRadiusAxes();
 
   if (!identifier) {
     return null;
@@ -56,18 +69,32 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
   const yAxisId: AxisId | undefined = isCartesianSeries(itemSeries)
     ? (itemSeries.yAxisId ?? yAxisIds[0])
     : undefined;
+  const radiusAxisId: AxisId | undefined = isPolarSeries(itemSeries)
+    ? (('radiusAxisId' in itemSeries ? itemSeries.radiusAxisId : undefined) ?? radiusAxisIds[0])
+    : undefined;
+  const rotationAxisId: AxisId | undefined = isPolarSeries(itemSeries)
+    ? (('rotationAxisId' in itemSeries ? itemSeries.rotationAxisId : undefined) ??
+      rotationAxisIds[0])
+    : undefined;
+
   const zAxisId: AxisId | undefined =
     'zAxisId' in itemSeries ? (itemSeries.zAxisId ?? zAxisIds[0]) : zAxisIds[0];
 
-  const rotationAxisId: AxisId | undefined = rotationAxisIds[0];
-
-  const getColor =
-    (seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<SeriesType>)?.(
-      itemSeries,
-      xAxisId !== undefined ? xAxis[xAxisId] : undefined,
-      yAxisId !== undefined ? yAxis[yAxisId] : undefined,
-      zAxisId !== undefined ? zAxis[zAxisId] : undefined,
-    ) ?? (() => '');
+  // eslint-disable-next-line no-nested-ternary
+  const getColor: ColorGetter<SeriesType> = isCartesianSeries(itemSeries)
+    ? ((seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<CartesianChartSeriesType>)(
+        itemSeries as any,
+        xAxisId !== undefined ? xAxis[xAxisId] : undefined,
+        yAxisId !== undefined ? yAxis[yAxisId] : undefined,
+        zAxisId !== undefined ? zAxis[zAxisId] : undefined,
+      ) as ColorGetter<SeriesType>)
+    : isPolarSeries(itemSeries)
+      ? ((seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<PolarChartSeriesType>)(
+          itemSeries as any,
+        ) as ColorGetter<SeriesType>)
+      : ((seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<typeof itemSeries.type>)(
+          itemSeries as any,
+        ) as ColorGetter<SeriesType>);
 
   const axesConfig: TooltipGetterAxesConfig = {};
 
@@ -80,6 +107,9 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
 
   if (rotationAxisId !== undefined) {
     axesConfig.rotation = rotationAxis[rotationAxisId];
+  }
+  if (radiusAxisId !== undefined) {
+    axesConfig.radius = radiusAxis[radiusAxisId];
   }
 
   return (seriesConfig[itemSeries.type].tooltipGetter as unknown as TooltipGetter<SeriesType>)({

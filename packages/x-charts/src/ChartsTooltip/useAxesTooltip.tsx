@@ -12,6 +12,8 @@ import { useStore } from '../internals/store/useStore';
 import { getLabel } from '../internals/getLabel';
 import { utcFormatter } from './utils';
 import {
+  useRadiusAxes,
+  useRadiusAxis,
   useRotationAxes,
   useRotationAxis,
   useXAxes,
@@ -112,6 +114,7 @@ export function useAxesTooltip<
   const defaultXAxis = useXAxis();
   const defaultYAxis = useYAxis();
   const defaultRotationAxis = useRotationAxis();
+  const defaultRadiusAxis = useRadiusAxis();
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
 
@@ -127,6 +130,7 @@ export function useAxesTooltip<
   const { zAxis, zAxisIds } = useZAxes();
 
   const { rotationAxis } = useRotationAxes();
+  const { radiusAxis } = useRadiusAxes();
 
   const colorProcessors = useColorProcessor();
 
@@ -187,7 +191,7 @@ export function useAxesTooltip<
           const { dataIndex } = tooltipAxes[tooltipItemIndex];
           const color =
             colorProcessors[seriesType]?.(
-              seriesToAdd,
+              seriesToAdd as any,
               xAxis[providedXAxisId],
               yAxis[providedYAxisId],
               zAxisId ? zAxis[zAxisId] : undefined,
@@ -247,9 +251,12 @@ export function useAxesTooltip<
           return;
         }
 
-        const providedRotationAxisId: AxisId | undefined =
-          // @ts-expect-error Should be fixed when we introduce a polar series with a rotationAxisId
-          seriesToAdd.rotationAxisId ?? defaultRotationAxis?.id;
+        const providedRotationAxisId =
+          ('rotationAxisId' in seriesToAdd ? seriesToAdd.rotationAxisId : undefined) ??
+          defaultRotationAxis!.id;
+        const providedRadiusAxisId =
+          ('radiusAxisId' in seriesToAdd ? seriesToAdd.radiusAxisId : undefined) ??
+          defaultRadiusAxis!.id;
 
         const tooltipItemIndex = tooltipAxes.findIndex(
           ({ axisDirection, axisId }) =>
@@ -258,7 +265,13 @@ export function useAxesTooltip<
         // Test if the series uses the default axis
         if (tooltipItemIndex >= 0) {
           const { dataIndex } = tooltipAxes[tooltipItemIndex];
-          const color = colorProcessors[seriesType]?.(seriesToAdd)(dataIndex) ?? '';
+
+          const color =
+            colorProcessors[seriesType]?.(
+              seriesToAdd as any,
+              rotationAxis[providedRotationAxisId],
+              radiusAxis[providedRadiusAxisId],
+            )(dataIndex) ?? '';
 
           const value = seriesToAdd.data[dataIndex] ?? null;
           const formattedValue = (seriesToAdd.valueFormatter as any)(value, {
