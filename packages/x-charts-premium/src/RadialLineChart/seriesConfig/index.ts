@@ -4,6 +4,7 @@ import {
   identifierCleanerSeriesIdDataIndex,
   createIsHighlighted,
   createIsFaded,
+  polarSeriesTypes,
 } from '@mui/x-charts/internals';
 import legendGetter from './legend';
 import tooltipItemPositionGetter from './tooltipPosition';
@@ -15,6 +16,8 @@ import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import descriptionGetter from './descriptionGetter';
 import { radiusExtremumGetter, rotationExtremumGetter } from './extremums';
 import tooltipGetter from './tooltip';
+
+polarSeriesTypes.addType('radialLine');
 
 export const radialLineSeriesConfig: ChartSeriesTypeConfig<'radialLine'> = {
   colorProcessor,
