@@ -9,7 +9,8 @@ import type {
   DatasetElementType,
   DatasetType,
 } from '@mui/x-charts/internals';
-import type { SeriesId, DefaultizedRadialLineSeriesType, MarkShape } from '@mui/x-charts/models';
+import type { SeriesId, MarkShape } from '@mui/x-charts/models';
+import type { DefaultizedRadialLineSeriesType } from '../../models/seriesType/radialLine';
 
 const defaultShapes: MarkShape[] = [
   'circle',

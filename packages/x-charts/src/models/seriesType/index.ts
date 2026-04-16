@@ -43,7 +43,13 @@ export type FocusedItemIdentifier<SeriesType extends ChartSeriesType = ChartSeri
 
 export { type SeriesId } from './common';
 export type { CartesianChartSeriesType, StackableChartSeriesType } from './config';
-export * from './line';
+export type {
+  ShowMarkParams,
+  MarkShape,
+  LineSeriesType,
+  LineItemIdentifier,
+  DefaultizedLineSeriesType,
+} from './line';
 export * from './bar';
 export * from './scatter';
 export * from './pie';

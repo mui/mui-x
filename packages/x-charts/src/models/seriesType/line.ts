@@ -1,7 +1,6 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
 import type {
-  RadialSeriesType,
   CartesianSeriesType,
   CommonDefaultizedProps,
   CommonSeriesType,
@@ -36,7 +35,10 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 
 export type MarkShape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
 
-interface CommonLineSeriesType {
+/**
+ * @internal The series type shared by the line and radial-line charts
+ */
+export interface CommonLineSeriesType {
   /**
    * Data associated to the line.
    */
@@ -121,20 +123,6 @@ export interface LineSeriesType
   stackOffset?: StackOffsetType;
 }
 
-export interface RadialLineSeriesType
-  extends
-    CommonSeriesType<number | null, 'line'>,
-    RadialSeriesType,
-    StackableSeriesType,
-    CommonLineSeriesType {
-  type: 'radial-line';
-  /**
-   * Defines how stacked series handle negative values.
-   * @default 'none'
-   */
-  stackOffset?: StackOffsetType;
-}
-
 /**
  * An object that allows to identify a single line.
  * Used for item interaction
@@ -148,28 +136,8 @@ export type LineItemIdentifier = {
   dataIndex?: number;
 };
 
-/**
- * An object that allows to identify a single line.
- * Used for item interaction
- */
-export type RadialLineItemIdentifier = {
-  type: 'radial-line';
-  seriesId: SeriesId;
-  /**
-   * `dataIndex` can be `undefined` if the mouse is over the area and not a specific item.
-   */
-  dataIndex?: number;
-};
-
 export interface DefaultizedLineSeriesType extends DefaultizedProps<
   LineSeriesType,
-  CommonDefaultizedProps | 'color'
-> {
-  hidden: boolean;
-}
-
-export interface DefaultizedRadialLineSeriesType extends DefaultizedProps<
-  RadialLineSeriesType,
   CommonDefaultizedProps | 'color'
 > {
   hidden: boolean;

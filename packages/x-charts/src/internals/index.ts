@@ -92,6 +92,7 @@ export * from '../context/ChartsSlotsContext';
 // series configuration
 export * from '../models/seriesType/config';
 export * from '../models/seriesType/common';
+export * from '../models/seriesType/line';
 
 export * from '../models/z-axis';
 export * from '../models/axis';
