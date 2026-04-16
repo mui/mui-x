@@ -11,6 +11,7 @@ describe('useCalendarGridDateFromPositionInTimeColumn', () => {
     const value: CalendarGridTimeColumnContext = React.useMemo(
       () => ({
         index: 0,
+        hasFocus: false,
         start: START,
         end: adapter.addHours(START, 12),
         getCursorPositionInElementMs: ({ input }: any) => {

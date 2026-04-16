@@ -30,30 +30,21 @@ export interface UseMobilePickerSlots
   field: React.ElementType;
 }
 
-export interface ExportedUseMobilePickerSlotProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->
+export interface ExportedUseMobilePickerSlotProps
   extends
     PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<PickerValue>,
     PickerFieldUISlotPropsFromContext {
-  field?: SlotComponentPropsFromProps<
-    PickerFieldSlotProps<PickerValue, TEnableAccessibleFieldDOMStructure>,
-    {},
-    PickerOwnerState
-  >;
+  field?: SlotComponentPropsFromProps<PickerFieldSlotProps<PickerValue>, {}, PickerOwnerState>;
 }
 
-export interface UseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends
-    ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
+export interface UseMobilePickerSlotProps
+  extends ExportedUseMobilePickerSlotProps, Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps extends UsePickerNonStaticProps {}
 
 export interface UseMobilePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerProps<PickerValue, TView, TError, any>,
 >
@@ -69,18 +60,12 @@ export interface UseMobilePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: UseMobilePickerSlotProps;
 }
 
 export interface UseMobilePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TExternalProps extends UseMobilePickerProps<
-    TView,
-    TEnableAccessibleFieldDOMStructure,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseMobilePickerProps<TView, any, TExternalProps>,
 > extends Pick<
   UsePickerParameters<PickerValue, TView, TExternalProps>,
   'valueManager' | 'valueType' | 'validator' | 'ref'

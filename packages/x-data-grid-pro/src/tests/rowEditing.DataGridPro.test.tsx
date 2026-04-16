@@ -480,6 +480,20 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(getCell(0, 1).textContent).to.equal('USDGBP');
       });
 
+      it('should not call processRowUpdate when ignoreModifications=true, even if the row is not in the grid', async () => {
+        const processRowUpdate = spy((row) => row);
+        const { setProps } = render(<TestCase processRowUpdate={processRowUpdate} />);
+        act(() => apiRef.current?.startRowEditMode({ id: 0 }));
+        await act(() =>
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        // Simulate removing the row from the data while cancelling (e.g. FullFeaturedCrudGrid pattern)
+        setProps({ rows: defaultData.rows.filter((row) => row.id !== 0) });
+        act(() => apiRef.current?.stopRowEditMode({ id: 0, ignoreModifications: true }));
+        await act(() => Promise.resolve());
+        expect(processRowUpdate.callCount).to.equal(0);
+      });
+
       it('should do nothing if props are still being processed and ignoreModifications=false', async () => {
         let resolveCallback: () => void;
         const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>

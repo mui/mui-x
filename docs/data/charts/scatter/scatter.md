@@ -35,6 +35,8 @@ It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, 
 Scatter series use a different pattern than other charts: use the `datasetKeys` property with an object that has required `x` and `y` keys.
 You can also include optional `id` and `z` keys.
 
+See the [Dataset](/x/react-charts/dataset/) page to learn more.
+
 {{"demo": "ScatterDataset.js"}}
 
 ## Interaction
@@ -109,7 +111,7 @@ See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) 
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) for details.
+See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
 {{"demo": "GridDemo.js"}}
 

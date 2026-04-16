@@ -4,7 +4,7 @@ import {
   adapterToUse,
   openPickerAsync,
   getFieldSectionsContainer,
-  expectFieldValueV7,
+  expectFieldValue,
 } from 'test/utils/pickers';
 import { vi } from 'vitest';
 import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
@@ -44,7 +44,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
       await user.click(screen.getByRole('option', { name: 'PM' }));
 
       const sectionsContainer = getFieldSectionsContainer();
-      expectFieldValueV7(sectionsContainer, '01/11/2018 04:05 PM – 01/11/2018 05:10 PM');
+      expectFieldValue(sectionsContainer, '01/11/2018 04:05 PM – 01/11/2018 05:10 PM');
     });
 
     it('should use time from `referenceDate` when selecting the day', async () => {
@@ -64,7 +64,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
       expect(screen.getByRole('option', { name: '15 minutes', selected: true })).not.to.equal(null);
       expect(screen.getByRole('option', { name: 'PM', selected: true })).not.to.equal(null);
       const sectionsContainer = getFieldSectionsContainer();
-      expectFieldValueV7(sectionsContainer, '04/11/2022 02:15 PM – MM/DD/YYYY hh:mm aa');
+      expectFieldValue(sectionsContainer, '04/11/2022 02:15 PM – MM/DD/YYYY hh:mm aa');
     });
 
     it('should cycle focused views among the visible step after selection', async () => {
@@ -91,7 +91,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
       const meridiem = screen.getByRole('option', { name: 'AM' });
       expect(meridiem).toHaveFocus();
       const sectionsContainer = getFieldSectionsContainer();
-      expectFieldValueV7(sectionsContainer, '01/10/2018 12:00 AM – MM/DD/YYYY hh:mm aa');
+      expectFieldValue(sectionsContainer, '01/10/2018 12:00 AM – MM/DD/YYYY hh:mm aa');
     });
 
     it('should work with separate start and end "reference" dates', async () => {

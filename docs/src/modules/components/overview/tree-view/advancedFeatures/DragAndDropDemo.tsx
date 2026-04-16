@@ -82,16 +82,9 @@ export default function DragAndDropDemo() {
     <DemoWrapper link="/x/react-tree-view/rich-tree-view/editing/">
       <Stack
         spacing={1}
-        sx={{ width: '100%', padding: 2, minHeight: '600px' }}
-        justifyContent="space-between"
+        sx={{ justifyContent: 'space-between', width: '100%', padding: 2, minHeight: '600px' }}
       >
-        <Box
-          sx={{
-            height: 352,
-            width: 320,
-            alignSelf: 'center',
-          }}
-        >
+        <Box sx={{ height: 352, width: 320, alignSelf: 'center' }}>
           <ThemeProvider theme={theme}>
             <RichTreeViewPro
               items={MUI_X_PRODUCTS}

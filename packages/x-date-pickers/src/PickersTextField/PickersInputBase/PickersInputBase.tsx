@@ -306,7 +306,6 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     fullWidth,
     name,
     readOnly,
-    inputProps,
     inputRef,
     sectionListRef,
     onFocus,
@@ -321,7 +320,6 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const activeBarRef = React.useRef<HTMLDivElement>(null);
   const sectionOffsetsRef = React.useRef<number[]>([]);
   const handleRootRef = useForkRef(ref, rootRef);
-  const handleInputRef = useForkRef(inputProps?.ref, inputRef);
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
     throw new Error(
@@ -399,6 +397,14 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
 
+  const HtmlInputComponent = slots?.htmlInput || PickersInputBaseInput;
+  const { ref: resolvedHtmlInputRef, ...htmlInputProps } = useSlotProps({
+    elementType: HtmlInputComponent,
+    externalSlotProps: slotProps?.htmlInput,
+    ownerState,
+  }) as React.ComponentPropsWithRef<'input'>;
+  const handleInputRef = useForkRef(resolvedHtmlInputRef, inputRef);
+
   const isSingleInputRange = elements.some(
     (element) => element.content['data-range-position'] !== undefined,
   );
@@ -453,7 +459,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
             ...muiFormControl,
           })
         : null}
-      <PickersInputBaseInput
+      <HtmlInputComponent
         name={name}
         className={classes.input}
         value={value}
@@ -467,7 +473,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         // Hidden input element cannot be focused, trigger the root focus instead
         // This allows to maintain the ability to do `inputRef.current.focus()` to focus the field
         onFocus={handleHiddenInputFocus}
-        {...inputProps}
+        {...htmlInputProps}
         ref={handleInputRef}
       />
       {isSingleInputRange && (
@@ -492,8 +498,8 @@ PickersInputBase.propTypes = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  classes: PropTypes.object,
   className: PropTypes.string,
-  component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
@@ -512,13 +518,31 @@ PickersInputBase.propTypes = {
       content: PropTypes.object.isRequired,
     }),
   ).isRequired,
+  /**
+   * End `InputAdornment` for this component.
+   */
   endAdornment: PropTypes.node,
+  /**
+   * If `true`, the input will take up the full width of its container.
+   * @default false
+   */
   fullWidth: PropTypes.bool,
+  /**
+   * The id of the `input` element.
+   */
   id: PropTypes.string,
-  inputProps: PropTypes.object,
+  /**
+   * Pass a ref to the `input` element.
+   */
   inputRef: refType,
+  /**
+   * The label content.
+   */
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  /**
+   * Name attribute of the `input` element.
+   */
   name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
@@ -550,8 +574,10 @@ PickersInputBase.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Start `InputAdornment` for this component.
+   */
   startAdornment: PropTypes.node,
-  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
