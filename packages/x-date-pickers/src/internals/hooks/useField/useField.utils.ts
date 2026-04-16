@@ -410,6 +410,14 @@ export const getSectionsBoundaries = (
     },
     hours: ({ format }) => {
       const lastHourInDay = adapter.getHours(endOfDay);
+
+      const formattedMidnight = Number(
+        removeLocalizedDigits(
+          adapter.formatByString(adapter.startOfDay(today), format),
+          localizedDigits,
+        ),
+      );
+
       const hasMeridiem =
         removeLocalizedDigits(
           adapter.formatByString(adapter.endOfDay(today), format),
@@ -417,23 +425,21 @@ export const getSectionsBoundaries = (
         ) !== lastHourInDay.toString();
 
       if (hasMeridiem) {
-        const startValue = Number(
-          removeLocalizedDigits(
-            adapter.formatByString(adapter.startOfDay(today), format),
-            localizedDigits,
-          ),
-        );
-
-        return {
-          minimum: startValue === 0 ? 0 : 1,
-          maximum: startValue === 0 ? 11 : startValue,
-        };
+        // K/KK format (hour 0-11): midnight formats as 0
+        if (formattedMidnight === 0) {
+          return { minimum: 0, maximum: 11 };
+        }
+        // h/hh format (hour 1-12): midnight formats as 12
+        return { minimum: 1, maximum: formattedMidnight };
       }
 
-      return {
-        minimum: 0,
-        maximum: lastHourInDay,
-      };
+      // k/kk format (hour 1-24): midnight formats as 24 (> lastHourInDay)
+      if (formattedMidnight > lastHourInDay) {
+        return { minimum: 1, maximum: formattedMidnight };
+      }
+
+      // H/HH format (hour 0-23)
+      return { minimum: 0, maximum: lastHourInDay };
     },
     minutes: () => ({
       minimum: 0,

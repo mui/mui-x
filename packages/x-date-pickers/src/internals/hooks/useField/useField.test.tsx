@@ -1,8 +1,8 @@
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import {
   getSectionVisibleValue,
-  parseSelectedSections,
   getSectionsBoundaries,
+  parseSelectedSections,
 } from './useField.utils';
 
 const COMMON_PROPERTIES = {
@@ -66,41 +66,37 @@ describe('useField utility functions', () => {
       expect(parseSelectedSections('year', [])).to.equal(null);
     });
   });
+
   describe('getSectionsBoundaries', () => {
     const adapter = new AdapterDateFns();
     const timezone = 'default';
 
-    it('should return correct boundaries for hours with "h" format', () => {
+    it('should return correct boundaries for "h" format (hour 1-12)', () => {
       const boundaries = getSectionsBoundaries(adapter, DEFAULT_LOCALIZED_DIGITS, timezone);
-      const hoursBoundaries = boundaries.hours({
-        currentDate: null,
-        format: 'h',
-        contentType: 'digit',
-      });
-      expect(hoursBoundaries.minimum).to.equal(1);
-      expect(hoursBoundaries.maximum).to.equal(12);
+      const result = boundaries.hours({ currentDate: null, format: 'h', contentType: 'digit' });
+      expect(result.minimum).to.equal(1);
+      expect(result.maximum).to.equal(12);
     });
 
-    it('should return correct boundaries for hours with "K" format', () => {
+    it('should return correct boundaries for "K" format (hour 0-11)', () => {
       const boundaries = getSectionsBoundaries(adapter, DEFAULT_LOCALIZED_DIGITS, timezone);
-      const hoursBoundaries = boundaries.hours({
-        currentDate: null,
-        format: 'K',
-        contentType: 'digit',
-      });
-      expect(hoursBoundaries.minimum).to.equal(0);
-      expect(hoursBoundaries.maximum).to.equal(11);
+      const result = boundaries.hours({ currentDate: null, format: 'K', contentType: 'digit' });
+      expect(result.minimum).to.equal(0);
+      expect(result.maximum).to.equal(11);
     });
 
-    it('should return correct boundaries for hours with "HH" format', () => {
+    it('should return correct boundaries for "H" format (hour 0-23)', () => {
       const boundaries = getSectionsBoundaries(adapter, DEFAULT_LOCALIZED_DIGITS, timezone);
-      const hoursBoundaries = boundaries.hours({
-        currentDate: null,
-        format: 'HH',
-        contentType: 'digit',
-      });
-      expect(hoursBoundaries.minimum).to.equal(0);
-      expect(hoursBoundaries.maximum).to.equal(23);
+      const result = boundaries.hours({ currentDate: null, format: 'H', contentType: 'digit' });
+      expect(result.minimum).to.equal(0);
+      expect(result.maximum).to.equal(23);
+    });
+
+    it('should return correct boundaries for "k" format (hour 1-24)', () => {
+      const boundaries = getSectionsBoundaries(adapter, DEFAULT_LOCALIZED_DIGITS, timezone);
+      const result = boundaries.hours({ currentDate: null, format: 'k', contentType: 'digit' });
+      expect(result.minimum).to.equal(1);
+      expect(result.maximum).to.equal(24);
     });
   });
 });
