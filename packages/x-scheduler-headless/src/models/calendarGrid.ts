@@ -7,7 +7,7 @@ export type GridRowType = 'header' | 'day-grid' | 'time-grid';
  * The coordinates of a cell in the calendar grid.
  */
 export interface GridCellCoordinates {
-  rowType: GridRowType;
-  rowIndex: number;
-  columnIndex: number;
+  readonly rowType: GridRowType;
+  readonly rowIndex: number;
+  readonly columnIndex: number;
 }

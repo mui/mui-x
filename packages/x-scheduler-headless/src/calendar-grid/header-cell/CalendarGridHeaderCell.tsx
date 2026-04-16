@@ -63,13 +63,8 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
 
   // Apply DOM focus when this cell becomes the focused cell
   React.useEffect(() => {
-    if (!hasFocus || !cellRef.current) {
-      return;
-    }
-    const focusableChild = cellRef.current.querySelector<HTMLElement>('[tabindex="0"]');
-    const elementToFocus = focusableChild ?? cellRef.current;
-    if (!cellRef.current.contains(document.activeElement)) {
-      elementToFocus.focus({ preventScroll: true });
+    if (hasFocus && cellRef.current && !cellRef.current.contains(document.activeElement)) {
+      cellRef.current.focus({ preventScroll: true });
     }
   }, [hasFocus]);
 

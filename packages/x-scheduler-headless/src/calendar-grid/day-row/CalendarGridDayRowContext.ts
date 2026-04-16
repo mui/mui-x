@@ -28,7 +28,7 @@ export function useCalendarGridDayRowContext() {
   if (context === undefined) {
     throw new Error(
       'MUI X Scheduler: CalendarGridDayRowContext is missing. ' +
-        '<CalendarGrid.DayEvent /> must be placed within <CalendarGrid.DayRow />. ' +
+        '<CalendarGrid.DayCell /> and <CalendarGrid.DayEvent /> must be placed within <CalendarGrid.DayRow />. ' +
         'Ensure the component hierarchy is correct.',
     );
   }

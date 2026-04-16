@@ -354,7 +354,7 @@ describe('CalendarGrid keyboard navigation', () => {
       );
     }
 
-    it('should make events tabbable only when their parent cell is focused', async () => {
+    it('should make day events tabbable only when their parent cell is focused', async () => {
       const { user } = render(<GridWithEvents />);
 
       const event1 = screen.getByTestId('event-1');
@@ -373,6 +373,69 @@ describe('CalendarGrid keyboard navigation', () => {
       await user.keyboard('{ArrowRight}');
       expect(event1).to.have.attribute('tabindex', '-1');
       expect(event2).to.have.attribute('tabindex', '0');
+    });
+
+    function GridWithTimeEvents() {
+      const day1 = adapter.date('2025-05-05T12:00:00', 'default');
+      const day2 = adapter.addDays(day1, 1);
+
+      return (
+        <EventCalendarProvider events={[]}>
+          <CalendarGrid.Root rowTypes={['time-grid']} rowsPerType={{}}>
+            <CalendarGrid.TimeScrollableContent>
+              <CalendarGrid.TimeColumn
+                start={day1}
+                end={adapter.endOfDay(day1)}
+                data-testid="col-0"
+              >
+                <CalendarGrid.TimeEvent
+                  eventId="event-1"
+                  occurrenceKey="occ-1"
+                  start={processDate(adapter.addHours(day1, 9), adapter)}
+                  end={processDate(adapter.addHours(day1, 10), adapter)}
+                  renderDragPreview={() => null}
+                  data-testid="time-event-1"
+                />
+              </CalendarGrid.TimeColumn>
+              <CalendarGrid.TimeColumn
+                start={day2}
+                end={adapter.endOfDay(day2)}
+                data-testid="col-1"
+              >
+                <CalendarGrid.TimeEvent
+                  eventId="event-2"
+                  occurrenceKey="occ-2"
+                  start={processDate(adapter.addHours(day2, 9), adapter)}
+                  end={processDate(adapter.addHours(day2, 10), adapter)}
+                  renderDragPreview={() => null}
+                  data-testid="time-event-2"
+                />
+              </CalendarGrid.TimeColumn>
+            </CalendarGrid.TimeScrollableContent>
+          </CalendarGrid.Root>
+        </EventCalendarProvider>
+      );
+    }
+
+    it('should make time events tabbable only when their parent column is focused', async () => {
+      const { user } = render(<GridWithTimeEvents />);
+
+      const timeEvent1 = screen.getByTestId('time-event-1');
+      const timeEvent2 = screen.getByTestId('time-event-2');
+
+      // Before any column is focused, all events are not tabbable
+      expect(timeEvent1).to.have.attribute('tabindex', '-1');
+      expect(timeEvent2).to.have.attribute('tabindex', '-1');
+
+      // Focus col-0 → time-event-1 becomes tabbable
+      await user.click(screen.getByTestId('col-0'));
+      expect(timeEvent1).to.have.attribute('tabindex', '0');
+      expect(timeEvent2).to.have.attribute('tabindex', '-1');
+
+      // Navigate to col-1 → time-event-2 becomes tabbable, time-event-1 becomes not tabbable
+      await user.keyboard('{ArrowRight}');
+      expect(timeEvent1).to.have.attribute('tabindex', '-1');
+      expect(timeEvent2).to.have.attribute('tabindex', '0');
     });
   });
 });

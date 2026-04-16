@@ -68,6 +68,30 @@ describe('<CalendarGrid.DayCell />', () => {
       expect(store!.state.occurrencePlaceholder?.surfaceType).to.equal('day-grid');
     });
 
+    it('should not create event on Enter when pressed on a child element', async () => {
+      let store: AnyEventCalendarStore | null = null;
+
+      const { user } = render(
+        <DayCellWrapper>
+          <CalendarGrid.DayCell value={day}>
+            <button type="button">child</button>
+          </CalendarGrid.DayCell>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </DayCellWrapper>,
+      );
+
+      const button = screen.getByRole('button', { name: 'child' });
+      await user.click(button);
+      await user.keyboard('{Enter}');
+
+      expect(store!.state.occurrencePlaceholder).to.equal(null);
+    });
+
     it('should not create event on Enter when eventCreation is false', async () => {
       let store: AnyEventCalendarStore | null = null;
 
