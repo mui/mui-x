@@ -417,14 +417,16 @@ export const getSectionsBoundaries = (
         ) !== lastHourInDay.toString();
 
       if (hasMeridiem) {
-        return {
-          minimum: 1,
-          maximum: Number(
-            removeLocalizedDigits(
-              adapter.formatByString(adapter.startOfDay(today), format),
-              localizedDigits,
-            ),
+        const startValue = Number(
+          removeLocalizedDigits(
+            adapter.formatByString(adapter.startOfDay(today), format),
+            localizedDigits,
           ),
+        );
+
+        return {
+          minimum: startValue === 0 ? 0 : 1,
+          maximum: startValue === 0 ? 11 : startValue,
         };
       }
 
