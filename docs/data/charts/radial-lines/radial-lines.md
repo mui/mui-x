@@ -1,7 +1,7 @@
 ---
 title: React Radial Line chart
 productId: x-charts
-components: ChartsRadialDataProvider, ChartsRadialGrid, RadialLineChart
+components: ChartsRadialDataProvider, ChartsRadialGrid, RadialLineChart, RadialMarkPlot
 ---
 
 # Charts - Radial Lines
