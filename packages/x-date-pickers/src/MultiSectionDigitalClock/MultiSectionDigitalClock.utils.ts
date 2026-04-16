@@ -2,6 +2,7 @@ import { MuiPickersAdapter, PickerValidDate } from '../models';
 import { MultiSectionDigitalClockOption } from './MultiSectionDigitalClock.types';
 
 interface GetHoursSectionOptionsParameters {
+  now: PickerValidDate;
   value: PickerValidDate | null;
   adapter: MuiPickersAdapter;
   ampm: boolean;
@@ -12,6 +13,7 @@ interface GetHoursSectionOptionsParameters {
 }
 
 export const getHourSectionOptions = ({
+  now,
   value,
   adapter,
   ampm,
@@ -45,16 +47,25 @@ export const getHourSectionOptions = ({
     return isSelected(hour, adapter.getHours(valueOrReferenceDate));
   };
 
+  // Use a fixed DST-free reference day for generating the hour labels so that
+  // `adapter.setHours(reference, N)` is guaranteed to return a date whose local
+  // hour equals `N`. When the adapter's `now` falls on a DST spring-forward day,
+  // setting the hour to a non-existent local value (e.g. 2 AM on 2026-03-08 in
+  // `America/Los_Angeles`) rolls the result forward, which in turn produces a
+  // duplicate label and drops one entry from the column. January 15 is guaranteed
+  // to not be a DST transition day in any timezone.
+  // See https://github.com/mui/mui-x/issues/21669.
+  const labelReferenceDate = adapter.setDate(adapter.setMonth(adapter.startOfDay(now), 0), 15);
+
   const endHour = ampm ? 11 : 23;
   for (let hour = 0; hour <= endHour; hour += timeStep) {
-    // Compute the label from the loop index rather than from a concrete date.
-    // Going through `adapter.setHours(now, hour)` can return the "wrong" hour on a DST
-    // spring-forward day in some adapters (e.g. setting hours to 2 AM lands on 3 AM because
-    // 2 AM does not exist), which previously led to duplicate labels and a missing entry in
-    // the dropdown. See https://github.com/mui/mui-x/issues/21669.
-    const displayedHour = ampm && hour === 0 ? 12 : hour;
-    const ariaLabel = resolveAriaLabel(displayedHour.toString());
-    const label = adapter.formatNumber(displayedHour.toString().padStart(2, '0'));
+    let label = adapter.format(
+      adapter.setHours(labelReferenceDate, hour),
+      ampm ? 'hours12h' : 'hours24h',
+    );
+    const ariaLabel = resolveAriaLabel(parseInt(label, 10).toString());
+
+    label = adapter.formatNumber(label);
 
     result.push({
       value: hour,

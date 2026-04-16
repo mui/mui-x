@@ -307,6 +307,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
               );
             },
             items: getHourSectionOptions({
+              now,
               value,
               ampm,
               adapter,
