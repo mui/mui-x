@@ -24,7 +24,6 @@ export default function BasicRadialLineChart() {
         { data: [3, 5, 7, 9, 12, 15, 18, 16, 13, 9, 6, 4], label: 'Temperature' },
       ]}
       rotationAxis={[{ scaleType: 'point', data: months }]}
-      radiusAxis={[{ min: 0 }]}
       grid={{ rotation: true, radius: true }}
     />
   );
