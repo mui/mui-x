@@ -136,12 +136,29 @@ export namespace Virtualization {
 }
 
 function initializeState(params: ParamsWithDefaults) {
+  const { enabled, enabledForRows, enabledForColumns } = params.initialState?.virtualization ?? {};
+
+  // When virtualization is fully disabled, pre-compute the render context to
+  // cover all rows/columns. This matches what `computeRenderContext` returns
+  // for the disabled case, so the first `forceUpdateRenderContext` after mount
+  // detects no change and skips the store notification, which avoids a nested
+  // re-render.
+  const renderContext =
+    enabled === false && enabledForRows === false && enabledForColumns === false
+      ? {
+          firstRowIndex: 0,
+          lastRowIndex: params.rows.length,
+          firstColumnIndex: 0,
+          lastColumnIndex: params.columns?.length ?? 0,
+        }
+      : EMPTY_RENDER_CONTEXT;
+
   const state: Virtualization.State<typeof params.layout> = {
     virtualization: {
       enabled: !platform.isJSDOM,
       enabledForRows: !platform.isJSDOM,
       enabledForColumns: !platform.isJSDOM,
-      renderContext: EMPTY_RENDER_CONTEXT,
+      renderContext,
       props: (params.layout.constructor as typeof Layout).elements.reduce(
         (acc, key) => (acc[key as string], acc),
         {} as Record<string, Record<string, any>>,
