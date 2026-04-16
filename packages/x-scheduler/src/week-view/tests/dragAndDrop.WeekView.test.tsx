@@ -27,16 +27,13 @@ function getTimeGridColumns(): HTMLElement[] {
  * E.g., `getDayGridCell(3)` returns the cell for the 3rd of the month.
  */
 function getDayGridCell(dayOfMonth: number): HTMLElement {
-  const cells = document.querySelectorAll<HTMLElement>(
-    '[role="gridcell"][aria-labelledby*="DayTimeGridAllDayEventsHeaderCell"]',
-  );
-  const headers = Array.from(
+  const header = Array.from(
     document.querySelectorAll<HTMLElement>('[role="columnheader"][aria-label]'),
-  );
-  const columnIndex = headers.findIndex((h) =>
-    h.getAttribute('aria-label')?.endsWith(` ${dayOfMonth}`),
-  );
-  const cell = cells[columnIndex];
+  ).find((h) => h.getAttribute('aria-label')?.endsWith(` ${dayOfMonth}`));
+
+  const cell = screen
+    .getAllByRole('gridcell')
+    .find((c) => c.getAttribute('aria-labelledby')?.includes(header!.id));
   if (!cell) {
     throw new Error(`Could not find day grid cell for day ${dayOfMonth}`);
   }

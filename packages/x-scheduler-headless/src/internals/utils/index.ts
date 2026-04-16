@@ -10,3 +10,4 @@ export * from './TimeoutManager';
 export * from './date-utils';
 export * from './useInitializeApiRef';
 export * from './useEventCreation';
+export * from './accessibility-utils';

@@ -9,6 +9,10 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headles
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  getCalendarGridHeaderCellId,
+  useCalendarGridRootContext,
+} from '@mui/x-scheduler-headless/internals';
 import { DayGridEvent } from '../event';
 import { EventDialogTrigger } from '../event-dialog';
 import { useEventDialogContext } from '../event-dialog/EventDialog';
@@ -51,13 +55,14 @@ const DayTimeGridAllDayEventContainer = styled('div', {
 });
 
 export function DayGridCell(props: DayGridCellProps) {
-  const { day, row } = props;
+  const { day, row, columnIndex } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const { schedulerId, classes } = useEventCalendarStyledContext();
+  const { id: rootId } = useCalendarGridRootContext();
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -91,7 +96,7 @@ export function DayGridCell(props: DayGridCellProps) {
           '--row-count': rowCount,
         } as React.CSSProperties
       }
-      aria-labelledby={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
+      aria-labelledby={`${getCalendarGridHeaderCellId(rootId, columnIndex)} ${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
       role="gridcell"
       data-weekend={isWeekend(adapter, day.value) || undefined}
     >
@@ -123,6 +128,7 @@ export function DayGridCell(props: DayGridCellProps) {
 interface DayGridCellProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
   row: useEventOccurrencesWithDayGridPosition.ReturnValue;
+  columnIndex: number;
 }
 
 /**

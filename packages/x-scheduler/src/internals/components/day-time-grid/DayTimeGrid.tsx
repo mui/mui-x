@@ -452,8 +452,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           role="row"
           className={classes.dayTimeGridAllDayEventsRow}
         >
-          {occurrences.days.map((day) => (
-            <DayGridCell key={day.key} day={day} row={occurrences} />
+          {occurrences.days.map((day, index) => (
+            <DayGridCell key={day.key} day={day} row={occurrences} columnIndex={index} />
           ))}
         </DayTimeGridAllDayEventsRow>
         <div className={classes.dayTimeGridScrollablePlaceholder} />

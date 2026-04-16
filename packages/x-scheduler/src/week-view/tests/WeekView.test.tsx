@@ -42,16 +42,16 @@ describe('<WeekView />', () => {
       );
 
       const getEventsFromDate = (date: number) => {
-        const cells = document.querySelectorAll<HTMLElement>(
-          '[role="gridcell"][aria-labelledby*="DayTimeGridAllDayEventsHeaderCell"]',
-        );
-        const headers = Array.from(
+        const header = Array.from(
           document.querySelectorAll<HTMLElement>('[role="columnheader"][aria-label]'),
-        );
-        const columnIndex = headers.findIndex((h) =>
-          h.getAttribute('aria-label')?.endsWith(` ${date}`),
-        );
-        return cells[columnIndex].querySelectorAll(`.${eventCalendarClasses.dayGridEvent}`);
+        ).find((h) => h.getAttribute('aria-label')?.endsWith(` ${date}`));
+
+        return screen
+          .getAllByRole('gridcell')
+          .find((cell) =>
+            cell.getAttribute('aria-labelledby')?.includes(header!.id),
+          )!
+          .querySelectorAll(`.${eventCalendarClasses.dayGridEvent}`);
       };
 
       // Main event should render in the start date cell
