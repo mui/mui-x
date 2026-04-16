@@ -7,15 +7,13 @@ import { useStore } from '../internals/store/useStore';
 import { useRadiusAxes, useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
 import {
-  type ColorGetter,
-  selectorChartSeriesConfig,
-} from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import {
   type ItemTooltip,
   type ItemTooltipWithMultipleValues,
   type TooltipGetter,
   type TooltipGetterAxesConfig,
   type ColorProcessor,
+  type ColorGetter,
+  selectorChartSeriesConfig,
 } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { isCartesianSeries } from '../internals/isCartesian';
 import { type AxisId } from '../models/axis';
