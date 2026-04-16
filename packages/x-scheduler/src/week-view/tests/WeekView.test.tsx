@@ -48,9 +48,7 @@ describe('<WeekView />', () => {
 
         return screen
           .getAllByRole('gridcell')
-          .find((cell) =>
-            cell.getAttribute('aria-labelledby')?.includes(header!.id),
-          )!
+          .find((cell) => cell.getAttribute('aria-labelledby')?.includes(header!.id))!
           .querySelectorAll(`.${eventCalendarClasses.dayGridEvent}`);
       };
 

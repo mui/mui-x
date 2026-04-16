@@ -48,6 +48,8 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     [index],
   );
 
+  // Associate this cell with its column header, matching the pattern used by DayEvent and TimeEvent.
+  // Any additional aria-labelledby passed by the styled layer (e.g., an "All day" row header) is appended.
   const ariaLabelledBy = [columnHeaderId, elementProps['aria-labelledby']]
     .filter(Boolean)
     .join(' ');
