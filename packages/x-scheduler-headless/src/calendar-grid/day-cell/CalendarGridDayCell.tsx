@@ -32,7 +32,13 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   } = componentProps;
 
   const adapter = useAdapterContext();
-  const { id: rootId, focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
+  const {
+    id: rootId,
+    focusedCell,
+    setFocusedCell,
+    rowTypes,
+    rowsPerType,
+  } = useCalendarGridRootContext();
   const { rowIndex } = useCalendarGridDayRowContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const { elementsRef } = useCompositeListContext();
