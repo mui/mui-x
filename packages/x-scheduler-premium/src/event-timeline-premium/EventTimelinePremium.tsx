@@ -11,6 +11,7 @@ import {
 } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
+import { useId } from '@base-ui/utils/useId';
 import {
   eventDialogSlots,
   EventDialogStyledContext,
@@ -129,19 +130,21 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   const { localeText, resourceColumnLabel, apiRef, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
+  const schedulerId = useId();
+
   const mergedLocaleText = React.useMemo(
     () => ({ ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText }),
     [localeText],
   );
 
   const timelineStyledContextValue = React.useMemo(
-    () => ({ classes, localeText: mergedLocaleText, resourceColumnLabel }),
-    [classes, mergedLocaleText, resourceColumnLabel],
+    () => ({ schedulerId, classes, localeText: mergedLocaleText, resourceColumnLabel }),
+    [schedulerId, classes, mergedLocaleText, resourceColumnLabel],
   );
 
   const dialogStyledContextValue = React.useMemo(
-    () => ({ classes, localeText: mergedLocaleText }),
-    [classes, mergedLocaleText],
+    () => ({ schedulerId, classes, localeText: mergedLocaleText }),
+    [schedulerId, classes, mergedLocaleText],
   );
 
   return (

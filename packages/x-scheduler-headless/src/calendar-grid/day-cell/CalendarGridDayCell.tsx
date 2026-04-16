@@ -6,6 +6,7 @@ import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompo
 import { useCompositeListContext } from '../../base-ui-copy/composite/list/CompositeListContext';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
+import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
@@ -31,11 +32,18 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   } = componentProps;
 
   const adapter = useAdapterContext();
-  const { focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
+  const {
+    id: rootId,
+    focusedCell,
+    setFocusedCell,
+    rowTypes,
+    rowsPerType,
+  } = useCalendarGridRootContext();
   const { rowIndex } = useCalendarGridDayRowContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const { elementsRef } = useCompositeListContext();
   const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
+  const columnHeaderId = getCalendarGridHeaderCellId(rootId, index);
 
   const cellRef = React.useRef<HTMLDivElement>(null);
   const hasFocus =
@@ -93,6 +101,12 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     [index, hasFocus],
   );
 
+  // Associate this cell with its column header, matching the pattern used by DayEvent and TimeEvent.
+  // Any additional aria-labelledby passed by the styled layer (e.g., an "All day" row header) is appended.
+  const ariaLabelledBy = [columnHeaderId, elementProps['aria-labelledby']]
+    .filter(Boolean)
+    .join(' ');
+
   const keyboardProps = {
     // All cells are always tabbable so Tab flows through: cell → events → next cell → events.
     // Arrow keys navigate programmatically via setFocusedCell, independent of tabIndex.
@@ -103,7 +117,12 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef, dropTargetRef, listItemRef, cellRef],
-    props: [elementProps, { role: 'gridcell' }, keyboardProps, eventCreationProps],
+    props: [
+      elementProps,
+      { role: 'gridcell', 'aria-labelledby': ariaLabelledBy || undefined },
+      keyboardProps,
+      eventCreationProps,
+    ],
   });
 
   return (

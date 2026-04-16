@@ -218,6 +218,7 @@ function EventRowContent({
   placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
 }) {
   const store = useEventTimelinePremiumStoreContext();
+  const { schedulerId } = useEventTimelinePremiumStyledContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -240,7 +241,7 @@ function EventRowContent({
         <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
           <EventTimelinePremiumEvent
             occurrence={occurrence}
-            ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
+            ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
             variant="regular"
           />
         </EventDialogTrigger>
@@ -249,7 +250,7 @@ function EventRowContent({
         <EventTimelinePremiumEvent
           ref={placeholderRef}
           occurrence={placeholder}
-          ariaLabelledBy={`EventTimelinePremiumTitleCell-${placeholder.resource}`}
+          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${placeholder.resource}`}
           variant="placeholder"
         />
       )}

@@ -125,7 +125,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -157,7 +157,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
       <EventDialogHeader onClose={onClose}>
         <EventDialogTitle
           variant="h6"
-          id="draggable-dialog-title"
+          id={`${schedulerId}-draggable-dialog-title`}
           className={classes.eventDialogTitle}
         >
           {occurrence.title}
