@@ -24,9 +24,7 @@ export function getRadiusAxisUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsRadiusAxis', slot);
 }
 
-export const useUtilityClasses = (
-  props: Pick<ChartsRadiusAxisProps, 'classes' | 'center'>,
-) => {
+export const useUtilityClasses = (props: Pick<ChartsRadiusAxisProps, 'classes' | 'center'>) => {
   const { classes, center } = props;
   const slots = {
     root: ['root'],
