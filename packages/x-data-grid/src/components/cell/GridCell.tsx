@@ -31,7 +31,6 @@ import {
   gridTabIndexCellSelector,
 } from '../../hooks/features/focus/gridFocusStateSelector';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { PinnedColumnPosition } from '../../internals/constants';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridEditCellStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
