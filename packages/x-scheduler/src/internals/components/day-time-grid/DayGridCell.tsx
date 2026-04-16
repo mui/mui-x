@@ -14,6 +14,7 @@ import { EventDialogTrigger } from '../event-dialog';
 import { useEventDialogContext } from '../event-dialog/EventDialog';
 import { EventSkeleton } from '../event-skeleton';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
+import { getCellFocusBackground } from '../../utils/tokens';
 
 const EVENT_HEIGHT = 22;
 
@@ -35,6 +36,10 @@ const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
 
   '&[data-weekend]': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
+  },
+  '&:focus-visible': {
+    outline: 'none',
+    backgroundColor: getCellFocusBackground(theme),
   },
 }));
 

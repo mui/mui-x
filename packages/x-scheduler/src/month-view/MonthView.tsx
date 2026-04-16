@@ -4,7 +4,11 @@ import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
-import { EventCalendarViewConfig, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
+import {
+  EventCalendarViewConfig,
+  GridRowType,
+  SchedulerProcessedDate,
+} from '@mui/x-scheduler-headless/models';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
@@ -73,6 +77,11 @@ const MonthViewHeaderCell = styled(CalendarGrid.HeaderCell, {
   '&:not(:first-of-type)': {
     borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
+  '&:focus-visible': {
+    outline: 'none',
+    borderRadius: theme.shape.borderRadius,
+    boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
+  },
 }));
 
 const MonthViewWeekHeaderCell = styled('div', {
@@ -98,6 +107,8 @@ const MonthViewBody = styled('div', {
   flexGrow: 1,
   overflow: 'hidden',
 });
+
+const MONTH_VIEW_ROW_TYPES: GridRowType[] = ['header', 'day-grid'];
 
 const CELL_PADDING = 5; // theme.spacing(0.5) * 2
 const DAY_NUMBER_HEADER_HEIGHT = 22; // event height (18px) + gap (4px)
@@ -167,6 +178,11 @@ export const MonthView = React.memo(
       return tempWeeks;
     }, [adapter, days]);
 
+    const monthViewRowsPerType = React.useMemo(
+      () => ({ 'day-grid': weeks.length }) as const,
+      [weeks.length],
+    );
+
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     useResizeObserver(
@@ -187,7 +203,11 @@ export const MonthView = React.memo(
         className={clsx(props.className, classes.monthView)}
       >
         <MoreEventsPopoverProvider>
-          <MonthViewGrid className={classes.monthViewGrid}>
+          <MonthViewGrid
+            className={classes.monthViewGrid}
+            rowTypes={MONTH_VIEW_ROW_TYPES}
+            rowsPerType={monthViewRowsPerType}
+          >
             <MonthViewHeader className={classes.monthViewHeader} ownerState={{ showWeekNumber }}>
               {showWeekNumber && (
                 <MonthViewWeekHeaderCell className={classes.monthViewWeekHeaderCell}>
@@ -209,6 +229,7 @@ export const MonthView = React.memo(
               {weeks.map((week, weekIdx) => (
                 <MonthViewWeekRow
                   key={weekIdx}
+                  rowIndex={weekIdx}
                   maxEvents={maxEvents}
                   days={week}
                   occurrencesMap={occurrencesMap}
