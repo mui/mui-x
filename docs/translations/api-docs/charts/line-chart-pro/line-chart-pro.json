@@ -49,7 +49,7 @@
       "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
     },
     "initialRangeKey": {
-      "description": "The label of the range button that corresponds to the initial zoom state. Used to pre-select that button on mount."
+      "description": "The label of the range button that corresponds to the initial zoom state. When set together with <code>rangeButtons</code>, automatically computes <code>initialZoom</code> from the matching button. Also pre-selects that button in the toolbar on mount."
     },
     "initialZoom": {
       "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
@@ -116,6 +116,9 @@
       "typeDescriptions": {
         "zoomData": { "name": "zoomData", "description": "Updated zoom data." }
       }
+    },
+    "rangeButtons": {
+      "description": "Configuration for range buttons. Used together with <code>initialRangeKey</code> to compute the initial zoom state automatically."
     },
     "series": {
       "description": "The series to display in the line chart. An array of <a href='/x/api/charts/line-series/'>LineSeries</a> objects."

@@ -117,6 +117,12 @@
         "describedArgs": ["zoomData"]
       }
     },
+    "rangeButtons": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ label: string, value?: Array&lt;Date&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;{ step?: number, unit: 'day'<br>&#124;&nbsp;'hour'<br>&#124;&nbsp;'microsecond'<br>&#124;&nbsp;'millisecond'<br>&#124;&nbsp;'minute'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'second'<br>&#124;&nbsp;'week'<br>&#124;&nbsp;'year' } }&gt;"
+      }
+    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

@@ -272,7 +272,8 @@ Heatmap.propTypes = {
   id: PropTypes.string,
   /**
    * The label of the range button that corresponds to the initial zoom state.
-   * Used to pre-select that button on mount.
+   * When set together with `rangeButtons`, automatically computes `initialZoom` from the matching button.
+   * Also pre-selects that button in the toolbar on mount.
    */
   initialRangeKey: PropTypes.string,
   /**
@@ -343,6 +344,33 @@ Heatmap.propTypes = {
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
   onZoomChange: PropTypes.func,
+  /**
+   * Configuration for range buttons.
+   * Used together with `initialRangeKey` to compute the initial zoom state automatically.
+   */
+  rangeButtons: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+        PropTypes.func,
+        PropTypes.shape({
+          step: PropTypes.number,
+          unit: PropTypes.oneOf([
+            'day',
+            'hour',
+            'microsecond',
+            'millisecond',
+            'minute',
+            'month',
+            'second',
+            'week',
+            'year',
+          ]).isRequired,
+        }),
+      ]),
+    }),
+  ),
   /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeries]] objects.

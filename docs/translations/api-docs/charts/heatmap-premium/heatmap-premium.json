@@ -30,7 +30,7 @@
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
     "initialRangeKey": {
-      "description": "The label of the range button that corresponds to the initial zoom state. Used to pre-select that button on mount."
+      "description": "The label of the range button that corresponds to the initial zoom state. When set together with <code>rangeButtons</code>, automatically computes <code>initialZoom</code> from the matching button. Also pre-selects that button in the toolbar on mount."
     },
     "initialZoom": {
       "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
@@ -73,6 +73,9 @@
       "typeDescriptions": {
         "zoomData": { "name": "zoomData", "description": "Updated zoom data." }
       }
+    },
+    "rangeButtons": {
+      "description": "Configuration for range buttons. Used together with <code>initialRangeKey</code> to compute the initial zoom state automatically."
     },
     "renderer": {
       "description": "<p>The type of renderer to use for the heatmap plot.</p>\n<ul>\n<li><code>svg-single</code>: Renders every scatter item in a <code>&lt;rect /&gt;</code> element.</li>\n<li><code>webgl</code>: Renders heatmap cells using WebGL for better performance, at the cost of some limitations.\n         Read more: <a href=\"https://mui.com/x/react-charts/heatmap/#performance\">https://mui.com/x/react-charts/heatmap/#performance</a></li>\n</ul>\n"
