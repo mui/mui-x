@@ -69,31 +69,27 @@ describe('useField utility functions', () => {
 
   describe('getSectionsBoundaries', () => {
     const adapter = new AdapterDateFns();
-    const timezone = 'default';
+    const boundaries = getSectionsBoundaries(adapter, DEFAULT_LOCALIZED_DIGITS, 'default');
 
     it('should return correct boundaries for "h" format (hour 1-12)', () => {
-      const boundaries = getSectionsBoundaries(adapter, DEFAULT_LOCALIZED_DIGITS, timezone);
       const result = boundaries.hours({ currentDate: null, format: 'h', contentType: 'digit' });
       expect(result.minimum).to.equal(1);
       expect(result.maximum).to.equal(12);
     });
 
     it('should return correct boundaries for "K" format (hour 0-11)', () => {
-      const boundaries = getSectionsBoundaries(adapter, DEFAULT_LOCALIZED_DIGITS, timezone);
       const result = boundaries.hours({ currentDate: null, format: 'K', contentType: 'digit' });
       expect(result.minimum).to.equal(0);
       expect(result.maximum).to.equal(11);
     });
 
     it('should return correct boundaries for "H" format (hour 0-23)', () => {
-      const boundaries = getSectionsBoundaries(adapter, DEFAULT_LOCALIZED_DIGITS, timezone);
       const result = boundaries.hours({ currentDate: null, format: 'H', contentType: 'digit' });
       expect(result.minimum).to.equal(0);
       expect(result.maximum).to.equal(23);
     });
 
     it('should return correct boundaries for "k" format (hour 1-24)', () => {
-      const boundaries = getSectionsBoundaries(adapter, DEFAULT_LOCALIZED_DIGITS, timezone);
       const result = boundaries.hours({ currentDate: null, format: 'k', contentType: 'digit' });
       expect(result.minimum).to.equal(1);
       expect(result.maximum).to.equal(24);
