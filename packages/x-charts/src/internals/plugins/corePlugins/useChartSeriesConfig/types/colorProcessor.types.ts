@@ -7,13 +7,11 @@ import type {
   ScaleName,
 } from '../../../../../models/axis';
 import type {
-  CartesianChartSeriesType,
   DefaultizedSeriesType,
 } from '../../../../../models/seriesType';
 import type { ZAxisDefaultized } from '../../../../../models/z-axis';
 import type {
   ChartSeriesType,
-  PolarChartSeriesType,
 } from '../../../../../models/seriesType/config';
 
 /**
@@ -23,26 +21,18 @@ import type {
 export type ColorGetter<SeriesType extends ChartSeriesType> = SeriesType extends 'pie' | 'funnel'
   ? (dataIndex: number) => string
   : SeriesType extends 'heatmap'
-    ? (value: number | null) => string
-    : (dataIndex?: number) => string;
+  ? (value: number | null) => string
+  : (dataIndex?: number) => string;
 
-type CartesianColorProcessor<SeriesType extends CartesianChartSeriesType> = (
+export type ColorProcessor<SeriesType extends ChartSeriesType> = (
   series: DefaultizedSeriesType<SeriesType>,
-  xAxis?: ComputedXAxis,
-  yAxis?: ComputedYAxis,
+  /**
+   * Either the x-axis or rotation-axis, depending on the coordinate system.
+   */
+  mainAxis?: ComputedXAxis | ComputedAxis<ScaleName, any, ChartsRotationAxisProps>,
+  /**
+   * Either the y-axis or radius-axis, depending on the coordinate system.
+   */
+  secondaryAxis?: ComputedYAxis | ComputedAxis<ScaleName, any, ChartsRadiusAxisProps>,
   zAxis?: ZAxisDefaultized,
 ) => ColorGetter<SeriesType>;
-
-type PolarColorProcessor<SeriesType extends PolarChartSeriesType> = (
-  series: DefaultizedSeriesType<SeriesType>,
-  rotationAxis?: ComputedAxis<ScaleName, any, ChartsRotationAxisProps>,
-  radiusAxis?: ComputedAxis<ScaleName, any, ChartsRadiusAxisProps>,
-  zAxis?: ZAxisDefaultized,
-) => ColorGetter<SeriesType>;
-
-export type ColorProcessor<SeriesType extends ChartSeriesType> =
-  SeriesType extends CartesianChartSeriesType
-    ? CartesianColorProcessor<SeriesType>
-    : SeriesType extends PolarChartSeriesType
-      ? PolarColorProcessor<SeriesType>
-      : (series: DefaultizedSeriesType<SeriesType>) => ColorGetter<SeriesType>;

@@ -1,14 +1,7 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
-import type {
-  PolarChartSeriesType,
-  ChartSeriesDefaultized,
-  ChartSeriesType,
-} from '../models/seriesType/config';
-import {
-  type CartesianChartSeriesType,
-  type SeriesItemIdentifierWithType,
-} from '../models/seriesType';
+import type { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
+import { type SeriesItemIdentifierWithType } from '../models/seriesType';
 import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { useStore } from '../internals/store/useStore';
 import { useRadiusAxes, useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
@@ -80,24 +73,29 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
   const zAxisId: AxisId | undefined =
     'zAxisId' in itemSeries ? (itemSeries.zAxisId ?? zAxisIds[0]) : zAxisIds[0];
 
-  // eslint-disable-next-line no-nested-ternary
-  const getColor: ColorGetter<SeriesType> = isCartesianSeries(itemSeries)
-    ? ((seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<CartesianChartSeriesType>)(
-        itemSeries as any,
-        xAxisId !== undefined ? xAxis[xAxisId] : undefined,
-        yAxisId !== undefined ? yAxis[yAxisId] : undefined,
-        zAxisId !== undefined ? zAxis[zAxisId] : undefined,
-      ) as ColorGetter<SeriesType>)
-    : isPolarSeries(itemSeries)
-      ? ((seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<PolarChartSeriesType>)(
-          itemSeries as any,
-          rotationAxisId !== undefined ? rotationAxis[rotationAxisId] : undefined,
-          radiusAxisId !== undefined ? radiusAxis[radiusAxisId] : undefined,
-          zAxisId !== undefined ? zAxis[zAxisId] : undefined,
-        ) as ColorGetter<SeriesType>)
-      : ((seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<typeof itemSeries.type>)(
-          itemSeries as any,
-        ) as ColorGetter<SeriesType>);
+  const mainAxis =
+    // eslint-disable-next-line no-nested-ternary
+    rotationAxisId !== undefined
+      ? rotationAxis[rotationAxisId]
+      : xAxisId !== undefined
+        ? xAxis[xAxisId]
+        : undefined;
+  const secondAxis =
+    // eslint-disable-next-line no-nested-ternary
+    radiusAxisId !== undefined
+      ? radiusAxis[radiusAxisId]
+      : yAxisId !== undefined
+        ? yAxis[yAxisId]
+        : undefined;
+
+  const getColor: ColorGetter<SeriesType> = (
+    seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<SeriesType>
+  )(
+    itemSeries,
+    mainAxis,
+    secondAxis,
+    zAxisId !== undefined ? zAxis[zAxisId] : undefined,
+  ) as ColorGetter<SeriesType>;
 
   const axesConfig: TooltipGetterAxesConfig = {};
 

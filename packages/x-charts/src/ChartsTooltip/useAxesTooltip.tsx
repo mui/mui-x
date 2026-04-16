@@ -191,7 +191,7 @@ export function useAxesTooltip<
           const { dataIndex } = tooltipAxes[tooltipItemIndex];
           const color =
             colorProcessors[seriesType]?.(
-              seriesToAdd as any,
+              seriesToAdd,
               xAxis[providedXAxisId],
               yAxis[providedYAxisId],
               zAxisId ? zAxis[zAxisId] : undefined,
@@ -268,7 +268,7 @@ export function useAxesTooltip<
 
           const color =
             colorProcessors[seriesType]?.(
-              seriesToAdd as any,
+              seriesToAdd,
               rotationAxis[providedRotationAxisId],
               radiusAxis[providedRadiusAxisId],
             )(dataIndex) ?? '';
