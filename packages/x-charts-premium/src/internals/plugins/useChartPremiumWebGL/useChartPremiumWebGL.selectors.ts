@@ -19,9 +19,9 @@ export const selectorWebGLIsContextReady = createSelector(
  * Optional selector that returns undefined if the WebGL plugin is not loaded.
  * Safe to use from components that may or may not have the plugin available.
  */
-export const selectorWebGLStateOptional: ChartOptionalRootSelector<UseChartPremiumWebGLSignature> = (
-  state,
-) => state.webGL;
+export const selectorWebGLStateOptional: ChartOptionalRootSelector<
+  UseChartPremiumWebGLSignature
+> = (state) => state.webGL;
 
 export const selectorWebGLRenderTickOptional = createSelector(
   selectorWebGLStateOptional,

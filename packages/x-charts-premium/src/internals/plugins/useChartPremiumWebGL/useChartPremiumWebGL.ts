@@ -15,18 +15,15 @@ export const useChartPremiumWebGL: ChartPlugin<UseChartPremiumWebGLSignature> = 
     [store],
   );
 
-  const registerWebGLDraw = React.useCallback(
-    (drawRef: React.RefObject<(() => void) | null>) => {
-      drawRefsRef.current.push(drawRef);
-      return () => {
-        const idx = drawRefsRef.current.indexOf(drawRef);
-        if (idx >= 0) {
-          drawRefsRef.current.splice(idx, 1);
-        }
-      };
-    },
-    [],
-  );
+  const registerWebGLDraw = React.useCallback((drawRef: React.RefObject<(() => void) | null>) => {
+    drawRefsRef.current.push(drawRef);
+    return () => {
+      const idx = drawRefsRef.current.indexOf(drawRef);
+      if (idx >= 0) {
+        drawRefsRef.current.splice(idx, 1);
+      }
+    };
+  }, []);
 
   const requestWebGLRender = React.useCallback(() => {
     store.set('webGL', { ...store.state.webGL, renderTick: store.state.webGL.renderTick + 1 });

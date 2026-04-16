@@ -26,10 +26,7 @@ import {
   useChartProZoom,
   type UseChartProZoomSignature,
 } from '@mui/x-charts-pro/plugins';
-import {
-  useChartPremiumWebGL,
-  type UseChartPremiumWebGLSignature,
-} from './useChartPremiumWebGL';
+import { useChartPremiumWebGL, type UseChartPremiumWebGLSignature } from './useChartPremiumWebGL';
 
 export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
