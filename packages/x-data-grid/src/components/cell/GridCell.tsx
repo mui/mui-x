@@ -38,13 +38,6 @@ import { gridEditCellStateSelector } from '../../hooks/features/editing/gridEdit
 import { attachPinnedStyle } from '../../internals/utils';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
 
-export const gridPinnedColumnPositionLookup = {
-  [PinnedColumnPosition.LEFT]: GridPinnedColumnPosition.LEFT,
-  [PinnedColumnPosition.RIGHT]: GridPinnedColumnPosition.RIGHT,
-  [PinnedColumnPosition.NONE]: undefined,
-  [PinnedColumnPosition.VIRTUAL]: undefined,
-};
-
 export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   align: GridAlignment;
   className?: string;

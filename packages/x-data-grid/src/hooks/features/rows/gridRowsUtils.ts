@@ -458,7 +458,3 @@ export const rowHeightWarning = [
   `The default value will be used instead.`,
 ].join('\n');
 
-export const getRowHeightWarning = [
-  `MUI X: The \`getRowHeight\` prop should return a number greater than 0 or 'auto'.`,
-  `The default value will be used instead.`,
-].join('\n');

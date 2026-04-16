@@ -9,23 +9,6 @@ import { useLazyRef } from './useLazyRef';
 
 const defaultCompare = Object.is;
 export const objectShallowCompare = fastObjectShallowCompare as (a: unknown, b: unknown) => boolean;
-const arrayShallowCompare = (a: any[], b: any[]) => {
-  if (a === b) {
-    return true;
-  }
-
-  return a.length === b.length && a.every((v, i) => v === b[i]);
-};
-
-export const argsEqual = (prev: any, curr: any) => {
-  let fn = Object.is;
-  if (curr instanceof Array) {
-    fn = arrayShallowCompare;
-  } else if (curr instanceof Object) {
-    fn = objectShallowCompare;
-  }
-  return fn(prev, curr);
-};
 
 const createRefs = () => ({ state: null, equals: null, selector: null, args: undefined }) as any;
 
