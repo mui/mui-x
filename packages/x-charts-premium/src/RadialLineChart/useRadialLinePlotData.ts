@@ -33,7 +33,7 @@ export function useRadialLinePlotData() {
           data,
           hidden,
           rotationAxisId = rotationAxisIds[0],
-          radiusAxisId = radiusAxisIds[0]
+          radiusAxisId = radiusAxisIds[0],
         } = series[seriesId];
 
         const radiusAxis = radiusAxisMap[radiusAxisId];

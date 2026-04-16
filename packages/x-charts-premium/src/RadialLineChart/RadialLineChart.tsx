@@ -137,10 +137,7 @@ export const RadialLineChart = React.forwardRef(function RadialLineChart(
       {...chartsDataProviderProps}
       seriesConfig={{ radialLine: radialLineSeriesConfig }}
     >
-      <ChartsWrapper
-        {...chartsWrapperProps}
-        ref={ref}
-      >
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
