@@ -321,7 +321,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { classes, localeText } = useEventCalendarStyledContext();
+  const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
 
   // Ref hooks
@@ -440,7 +440,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       >
         <DayTimeGridAllDayEventsHeaderCell
           className={classes.dayTimeGridAllDayEventsHeaderCell}
-          id="DayTimeGridAllDayEventsHeaderCell"
+          id={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
           role="columnheader"
         >
           {localeText.allDay}

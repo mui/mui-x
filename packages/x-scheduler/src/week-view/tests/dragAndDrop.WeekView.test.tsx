@@ -28,7 +28,7 @@ function getTimeGridColumns(): HTMLElement[] {
  */
 function getDayGridCell(dayOfMonth: number): HTMLElement {
   const cell = document.querySelector<HTMLElement>(
-    `[role="gridcell"][aria-labelledby="DayTimeGridHeaderCell-${dayOfMonth} DayTimeGridAllDayEventsHeaderCell"]`,
+    `[role="gridcell"][aria-labelledby*="DayTimeGridHeaderCell-${dayOfMonth}"][aria-labelledby*="DayTimeGridAllDayEventsHeaderCell"]`,
   );
   if (!cell) {
     throw new Error(`Could not find day grid cell for day ${dayOfMonth}`);

@@ -46,8 +46,9 @@ describe('<WeekView />', () => {
           .getAllByRole('gridcell')
           .find((cell) => {
             const labelledBy = cell.getAttribute('aria-labelledby');
-            return labelledBy?.includes(
-              `DayTimeGridHeaderCell-${date} DayTimeGridAllDayEventsHeaderCell`,
+            return (
+              labelledBy?.includes(`DayTimeGridHeaderCell-${date}`) &&
+              labelledBy?.includes('DayTimeGridAllDayEventsHeaderCell')
             );
           })!
           .querySelectorAll(`.${eventCalendarClasses.dayGridEvent}`);

@@ -57,7 +57,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
-  const { classes } = useEventCalendarStyledContext();
+  const { schedulerId, classes } = useEventCalendarStyledContext();
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -91,7 +91,7 @@ export function DayGridCell(props: DayGridCellProps) {
           '--row-count': rowCount,
         } as React.CSSProperties
       }
-      aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
+      aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} ${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
       role="gridcell"
       data-weekend={isWeekend(adapter, day.value) || undefined}
     >
