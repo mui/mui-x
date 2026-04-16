@@ -323,10 +323,7 @@ describe('CalendarGrid keyboard navigation', () => {
     function FullGrid() {
       return (
         <EventCalendarProvider events={[]}>
-          <CalendarGrid.Root
-            rowTypes={['header', 'day-grid', 'time-grid']}
-            rowsPerType={{}}
-          >
+          <CalendarGrid.Root rowTypes={['header', 'day-grid', 'time-grid']} rowsPerType={{}}>
             <CalendarGrid.HeaderRow>
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.HeaderCell
