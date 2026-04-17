@@ -164,7 +164,7 @@ Here is the list of the currently supported formats:
 - The hours
   - ✅ 0-based 12-hours values (for example, `03`)
   - ✅ 0-based 24-hours values (for example, `15`)
-  - ❌ 1-based values (for example, `24` instead of `00`)
+  - ⚠️ 1-based values are currently only supported with the date-fns and Moment.js adapters (for example, `24` instead of `00`)
 
 - The minutes
 

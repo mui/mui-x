@@ -80,7 +80,7 @@ export function GeneralTab(props: GeneralTabProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -146,8 +146,8 @@ export function GeneralTab(props: GeneralTabProps) {
   return (
     <EventDialogTabPanel
       role="tabpanel"
-      id="general-tabpanel"
-      aria-labelledby="general-tab"
+      id={`${schedulerId}-general-tabpanel`}
+      aria-labelledby={`${schedulerId}-general-tab`}
       className={classes.eventDialogTabPanel}
       hidden={value !== 'general'}
     >
@@ -221,7 +221,7 @@ export function GeneralTab(props: GeneralTabProps) {
           <AllDayFormControlLabel
             control={
               <Switch
-                id="enable-all-day-switch"
+                id={`${schedulerId}-enable-all-day-switch`}
                 checked={controlled.allDay}
                 onChange={(event) => handleToggleAllDay(event.target.checked)}
                 disabled={isPropertyReadOnly('allDay')}

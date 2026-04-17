@@ -94,7 +94,7 @@ You can test all configuration options in the following demo:
 ### Date axis
 
 If your band axis represents dates that are sorted and evenly spaced (as is typical), you can set `ordinalTimeTicks` to pick certain date frequencies.
-This modifies the [tick management](/x/react-charts/axis/#ordinal-tick-management).
+This modifies the [tick management](/x/react-charts/axis-ticks/#ordinal-tick-management).
 
 Instead of one tick per band, the axis renders ticks according to the provided frequencies and the tick number.
 
@@ -120,7 +120,7 @@ You can work around this limitation by using a [symlog scale](/x/react-charts/ax
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) for details.
+See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
 {{"demo": "GridDemo.js"}}
 

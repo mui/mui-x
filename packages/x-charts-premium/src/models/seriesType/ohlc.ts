@@ -4,6 +4,7 @@ import {
   type CartesianSeriesType,
   type SeriesId,
   type CommonDefaultizedProps,
+  type DatasetElementType,
 } from '@mui/x-charts/internals';
 import { type DefaultizedProps } from '@mui/x-internals/types';
 
@@ -44,6 +45,12 @@ export interface OHLCSeriesType
     value: number | null,
     context: { dataIndex: number; field: OHLCField },
   ) => string | null;
+  /**
+   * A function to transform the dataset item into an OHLC value.
+   * @param {DatasetElementType} item The full dataset item.
+   * @returns {OHLCValueType | null} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => OHLCValueType | null;
   /**
    * The keys used to retrieve data from the dataset.
    * When provided, all of `open`, `high`, `low`, and `close` must be specified.

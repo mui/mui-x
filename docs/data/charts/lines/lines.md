@@ -177,7 +177,7 @@ Its API and behavior may change in future releases.
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) for details.
+See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
 {{"demo": "GridDemo.js"}}
 
