@@ -25,9 +25,6 @@ describe('TimelineGrid keyboard navigation', () => {
     ResourceBuilder.new().build(),
   ];
 
-  const start = processDate(DEFAULT_TESTING_VISIBLE_DATE, adapter);
-  const end = processDate(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 1), adapter);
-
   let store: AnyEventCalendarStore | null = null;
 
   function Grid() {
@@ -60,8 +57,8 @@ describe('TimelineGrid keyboard navigation', () => {
                   <TimelineGrid.Event
                     eventId={`event-${resourceId}`}
                     occurrenceKey={`occ-${resourceId}`}
-                    start={start}
-                    end={end}
+                    start={processDate(DEFAULT_TESTING_VISIBLE_DATE, adapter)}
+                    end={processDate(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 1), adapter)}
                     renderDragPreview={() => null}
                     data-testid={`event-${resourceId}`}
                   />
