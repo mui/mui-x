@@ -33,7 +33,7 @@ describe('TimelineGrid keyboard navigation', () => {
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
       >
         <TimelineGrid.Root>
-          <TimelineGrid.SubGrid trackItems>
+          <TimelineGrid.SubGrid>
             {(resourceId) => (
               <TimelineGrid.EventRow
                 key={resourceId}
@@ -109,7 +109,7 @@ describe('TimelineGrid keyboard navigation', () => {
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         >
           <TimelineGrid.Root>
-            <TimelineGrid.SubGrid trackItems>
+            <TimelineGrid.SubGrid>
               {(resourceId) => (
                 <TimelineGrid.Row
                   key={resourceId}
@@ -120,7 +120,7 @@ describe('TimelineGrid keyboard navigation', () => {
                 </TimelineGrid.Row>
               )}
             </TimelineGrid.SubGrid>
-            <TimelineGrid.SubGrid trackItems>
+            <TimelineGrid.SubGrid>
               {(resourceId) => (
                 <TimelineGrid.EventRow
                   key={resourceId}
@@ -206,7 +206,7 @@ describe('TimelineGrid keyboard navigation', () => {
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         >
           <TimelineGrid.Root>
-            <TimelineGrid.SubGrid trackItems>
+            <TimelineGrid.SubGrid>
               {(resourceId) => (
                 <TimelineGrid.EventRow
                   key={resourceId}
@@ -251,7 +251,7 @@ describe('TimelineGrid keyboard navigation', () => {
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         >
           <TimelineGrid.Root>
-            <TimelineGrid.SubGrid trackItems>
+            <TimelineGrid.SubGrid>
               <TimelineGrid.EventRow resourceId={resource1.id} data-testid={`row-${resource1.id}`}>
                 {() => (
                   <TimelineGrid.Event

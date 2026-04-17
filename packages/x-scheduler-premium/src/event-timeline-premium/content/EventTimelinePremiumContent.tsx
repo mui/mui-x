@@ -468,7 +468,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             <EventTimelinePremiumTitleSubGrid
               ref={titleSubGridRef}
               className={classes.titleSubGrid}
-              trackItems
             >
               {(resourceId) => (
                 <EventTimelinePremiumTitleCell key={resourceId} resourceId={resourceId} />
@@ -479,7 +478,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               role="presentation"
               className={classes.eventsSubGridWrapper}
             >
-              <EventTimelinePremiumEventsSubGrid className={classes.eventsSubGrid} trackItems>
+              <EventTimelinePremiumEventsSubGrid className={classes.eventsSubGrid}>
                 {(resourceId) => (
                   <EventTimelinePremiumEventsSubGridRow
                     key={resourceId}

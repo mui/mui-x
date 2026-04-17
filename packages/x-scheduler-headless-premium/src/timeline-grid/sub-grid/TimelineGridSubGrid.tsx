@@ -22,7 +22,6 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
     style,
     // Internal props
     children: childrenProp,
-    trackItems = false,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -54,11 +53,7 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
     props: [elementProps, { role: 'rowgroup', children }],
   });
 
-  if (trackItems) {
-    return <CompositeList elementsRef={rowsRef}>{element}</CompositeList>;
-  }
-
-  return element;
+  return <CompositeList elementsRef={rowsRef}>{element}</CompositeList>;
 });
 
 export namespace TimelineGridSubGrid {
@@ -66,11 +61,5 @@ export namespace TimelineGridSubGrid {
 
   export interface Props extends Omit<BaseUIComponentProps<'div', State>, 'children'> {
     children?: React.ReactNode | ((resourceId: SchedulerResourceId) => React.ReactNode);
-    /**
-     * Whether to track child items via CompositeList for keyboard navigation.
-     * When `true`, child components can use `useCompositeListItem()` to get their index.
-     * @default false
-     */
-    trackItems?: boolean;
   }
 }
