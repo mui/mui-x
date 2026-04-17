@@ -418,16 +418,19 @@ export const getSectionsBoundaries = (
         ),
       );
 
-      const hasMeridiem =
+      const formattedEndOfDay = Number(
         removeLocalizedDigits(
           adapter.formatByString(adapter.endOfDay(today), format),
           localizedDigits,
-        ) !== lastHourInDay.toString();
+        ),
+      );
+
+      const hasMeridiem = formattedEndOfDay !== lastHourInDay;
 
       if (hasMeridiem) {
         // K/KK format (hour 0-11): midnight formats as 0
         if (formattedMidnight === 0) {
-          return { minimum: 0, maximum: 11 };
+          return { minimum: 0, maximum: formattedEndOfDay };
         }
         // h/hh format (hour 1-12): midnight formats as 12
         return { minimum: 1, maximum: formattedMidnight };
