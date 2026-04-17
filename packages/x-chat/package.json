@@ -1,0 +1,91 @@
+{
+  "name": "@mui/x-chat",
+  "version": "9.0.0-alpha.1",
+  "author": "MUI Team",
+  "description": "The community edition of the MUI X Chat components.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com/x/react-chat/",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/mui-org"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./locales": "./src/locales/index.ts",
+    "./*": "./src/*/index.ts"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "mui",
+    "mui-x",
+    "material-ui",
+    "material design",
+    "chat",
+    "chatbox",
+    "messaging",
+    "ai",
+    "llm"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "code-infra build --flat",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git",
+    "directory": "packages/x-chat"
+  },
+  "dependencies": {
+    "@babel/runtime": "catalog:",
+    "@mui/utils": "catalog:",
+    "@mui/x-chat-headless": "workspace:*",
+    "@mui/x-internals": "workspace:*",
+    "clsx": "catalog:",
+    "prop-types": "catalog:"
+  },
+  "peerDependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^7.3.0 || ^9.0.0-beta.0 || ^9.0.0",
+    "@mui/system": "^7.3.0 || ^9.0.0-beta.1",
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    },
+    "@mui/icons-material": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@mui/icons-material": "catalog:",
+    "@mui/internal-test-utils": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
+    "@types/prop-types": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
+  }
+}

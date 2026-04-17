@@ -15,6 +15,7 @@ import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventSkeleton } from '../event-skeleton';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
+import { getCellFocusBackground } from '../../utils/tokens';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
@@ -31,6 +32,10 @@ const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   },
   ':last-of-type': {
     borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+  '&:focus-visible': {
+    outline: 'none',
+    backgroundColor: getCellFocusBackground(theme),
   },
 }));
 
@@ -181,7 +186,7 @@ interface TimeGridColumnProps {
 }
 
 /**
- * Makes sure any event dropped in the time grid column is turned into an non all-day event.
+ * Makes sure any event dropped in the time grid column is turned into a non all-day event.
  */
 function addPropertiesToDroppedEvent() {
   return {

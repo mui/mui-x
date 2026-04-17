@@ -132,6 +132,7 @@ Refer to `package.json` for other available scripts.
 
 When updating demos in the `docs` folder, only update the `.tsx` files.
 To generate `.js` files, run `pnpm docs:typescript:formatted`.
+After updating the demo, run `pnpm markdownlint` and `pnpm valelint` to ensure the markdown files are valid. Fix the found issues.
 
 ## Codemods
 

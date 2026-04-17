@@ -207,7 +207,6 @@ describe('<DateField /> - Editing Keyboard', () => {
 
   describeAdapters('key: Delete', DateField, ({ adapter, testFieldKeyPress, renderWithProps }) => {
     it('should clear the selected section when only this section is completed', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
@@ -220,8 +219,6 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
       expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
-
-      view.unmount();
     });
 
     it('should clear the selected section when all sections are completed', () => {
@@ -234,7 +231,6 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     it('should clear all the sections when all sections are selected and all sections are completed', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(),
@@ -251,12 +247,9 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
       expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
-
-      view.unmount();
     });
 
     it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
@@ -276,12 +269,9 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
       expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
-
-      view.unmount();
     });
 
     it('should not keep query after typing again on a cleared section', async () => {
-      // Test with accessible DOM structure
       const view = renderWithProps({
         format: adapter.formats.year,
       });
@@ -296,8 +286,6 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       view.pressKey(0, '2');
       expectFieldValue(view.getSectionsContainer(), '0002');
-
-      view.unmount();
     });
 
     it('should not clear the sections when props.readOnly = true', () => {
@@ -311,12 +299,11 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
-      // Test with accessible DOM structure
-      const onChangeV7 = spy();
+      const onChange = spy();
 
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
-        onChange: onChangeV7,
+        onChange,
       });
 
       await view.selectSectionAsync('month');
@@ -329,53 +316,45 @@ describe('<DateField /> - Editing Keyboard', () => {
       });
 
       fireUserEvent.keyPress(view.getSectionsContainer(), { key: 'Delete' });
-      expect(onChangeV7.callCount).to.equal(0);
-
-      view.unmount();
+      expect(onChange.callCount).to.equal(0);
     });
 
     it('should call `onChange` when clearing the first section', async () => {
-      // Test with accessible DOM structure
-      const onChangeV7 = spy();
+      const onChange = spy();
 
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(),
-        onChange: onChangeV7,
+        onChange,
       });
 
       await view.selectSectionAsync('month');
 
       await view.user.keyboard('[Delete]');
-      expect(onChangeV7.callCount).to.equal(1);
-      expect(onChangeV7.lastCall.firstArg).to.equal(null);
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).to.equal(null);
 
       await view.user.keyboard('[ArrowRight][Delete]');
 
-      expect(onChangeV7.callCount).to.equal(1);
-
-      view.unmount();
+      expect(onChange.callCount).to.equal(1);
     });
 
     it('should not call `onChange` if the section is already empty', async () => {
-      // Test with accessible DOM structure
-      const onChangeV7 = spy();
+      const onChange = spy();
 
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         defaultValue: adapter.date(),
-        onChange: onChangeV7,
+        onChange,
       });
 
       await view.selectSectionAsync('month');
 
       await view.user.keyboard('[Delete]');
-      expect(onChangeV7.callCount).to.equal(1);
+      expect(onChange.callCount).to.equal(1);
 
       await view.user.keyboard('[Delete]');
-      expect(onChangeV7.callCount).to.equal(1);
-
-      view.unmount();
+      expect(onChange.callCount).to.equal(1);
     });
   });
 

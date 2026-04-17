@@ -231,6 +231,8 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
     disableUnderline = false,
     hiddenLabel = false,
     classes: classesProp,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ...other
   } = props;
 
@@ -243,9 +245,17 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
 
   return (
     <PickersInputBase
-      slots={{ root: PickersFilledInputRoot, input: PickersFilledSectionsContainer }}
-      slotProps={{ root: { disableUnderline }, input: { hiddenLabel } }}
       {...other}
+      slots={{
+        root: PickersFilledInputRoot,
+        input: PickersFilledSectionsContainer,
+        ...inSlots,
+      }}
+      slotProps={{
+        ...inSlotProps,
+        root: { disableUnderline, ...inSlotProps?.root },
+        input: { hiddenLabel, ...inSlotProps?.input },
+      }}
       label={label}
       classes={classes}
       ref={ref as any}
@@ -265,8 +275,8 @@ PickersFilledInput.propTypes = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  classes: PropTypes.object,
   className: PropTypes.string,
-  component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
@@ -300,11 +310,6 @@ PickersFilledInput.propTypes = {
    * The id of the `input` element.
    */
   id: PropTypes.string,
-  /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
    */
@@ -352,7 +357,6 @@ PickersFilledInput.propTypes = {
    * Start `InputAdornment` for this component.
    */
   startAdornment: PropTypes.node,
-  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

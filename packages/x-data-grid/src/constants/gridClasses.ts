@@ -140,6 +140,30 @@ export interface GridClasses {
    */
   'cell--rangeRight': string;
   /**
+   * Styles applied to the cell element when it displays the fill handle.
+   */
+  'cell--withFillHandle': string;
+  /**
+   * Styles applied to the cell element when it is in the fill preview range.
+   */
+  'cell--fillPreview': string;
+  /**
+   * Styles applied to the cell element if it is at the top edge of the fill preview range.
+   */
+  'cell--fillPreviewTop': string;
+  /**
+   * Styles applied to the cell element if it is at the bottom edge of the fill preview range.
+   */
+  'cell--fillPreviewBottom': string;
+  /**
+   * Styles applied to the cell element if it is at the left edge of the fill preview range.
+   */
+  'cell--fillPreviewLeft': string;
+  /**
+   * Styles applied to the cell element if it is at the right edge of the fill preview range.
+   */
+  'cell--fillPreviewRight': string;
+  /**
    * Styles applied to the cell element if it is pinned to the left.
    */
   'cell--pinnedLeft': string;
@@ -1019,6 +1043,12 @@ export const gridClassesOverrides = {
     'cell--rangeLeft',
     'cell--rangeRight',
     'cell--rangeTop',
+    'cell--withFillHandle',
+    'cell--fillPreview',
+    'cell--fillPreviewTop',
+    'cell--fillPreviewBottom',
+    'cell--fillPreviewLeft',
+    'cell--fillPreviewRight',
     'cell--selectionMode',
     'cell--textCenter',
     'cell--textLeft',

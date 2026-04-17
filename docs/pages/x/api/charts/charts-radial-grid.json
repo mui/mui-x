@@ -1,0 +1,47 @@
+{
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "radius": { "type": { "name": "bool" } },
+    "rotation": { "type": { "name": "bool" } }
+  },
+  "name": "ChartsRadialGrid",
+  "imports": [
+    "import { ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';",
+    "import { ChartsRadialGrid } from '@mui/x-charts';",
+    "import { ChartsRadialGrid } from '@mui/x-charts-pro';",
+    "import { ChartsRadialGrid } from '@mui/x-charts-premium';"
+  ],
+  "classes": [
+    {
+      "key": "line",
+      "className": "MuiChartsRadialGrid-line",
+      "description": "Styles applied to every line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "radiusLine",
+      "className": "MuiChartsRadialGrid-radiusLine",
+      "description": "Styles applied to radius (circular) lines.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChartsRadialGrid-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "rotationLine",
+      "className": "MuiChartsRadialGrid-rotationLine",
+      "description": "Styles applied to rotation (spoke) lines.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChartsRadialGrid",
+  "filename": "/packages/x-charts/src/ChartsRadialGrid/ChartsRadialGrid.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
+  "cssComponent": false
+}
