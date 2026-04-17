@@ -80,8 +80,6 @@ describe(`RTL - test arrows navigation`, () => {
       // eslint-disable-next-line no-await-in-loop
       await view.user.keyboard('{ArrowRight}');
     }
-
-    view.unmount();
   });
 
   it('should move selected section to the previous section respecting RTL order in empty field', async () => {
@@ -96,8 +94,6 @@ describe(`RTL - test arrows navigation`, () => {
       // eslint-disable-next-line no-await-in-loop
       await view.user.keyboard('{ArrowLeft}');
     }
-
-    view.unmount();
   });
 
   it('should move selected section to the next section respecting RTL order in non-empty field', async () => {
@@ -118,8 +114,6 @@ describe(`RTL - test arrows navigation`, () => {
       // eslint-disable-next-line no-await-in-loop
       await view.user.keyboard('{ArrowRight}');
     }
-
-    view.unmount();
   });
 
   it('should move selected section to the previous section respecting RTL order in non-empty field', async () => {
@@ -140,8 +134,6 @@ describe(`RTL - test arrows navigation`, () => {
       // eslint-disable-next-line no-await-in-loop
       await view.user.keyboard('{ArrowLeft}');
     }
-
-    view.unmount();
   });
 });
 

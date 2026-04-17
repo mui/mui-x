@@ -217,8 +217,6 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       await view.user.keyboard('{Delete}');
       expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
-
-      view.unmount();
     });
 
     it('should clear the selected section when all sections are completed', async () => {
@@ -243,8 +241,6 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       await view.user.keyboard('{Delete}');
       expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
-
-      view.unmount();
     });
 
     it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
@@ -263,8 +259,6 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       await view.user.keyboard('{Delete}');
       expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY');
-
-      view.unmount();
     });
 
     it('should not keep query after typing again on a cleared section', async () => {
@@ -282,8 +276,6 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       await view.pressKey('2');
       expectFieldValue(view.getSectionsContainer(), '0002');
-
-      view.unmount();
     });
 
     it('should not clear the sections when props.readOnly = true', async () => {
@@ -311,8 +303,6 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       await view.user.keyboard('{Delete}');
       expect(onChange.callCount).to.equal(0);
-
-      view.unmount();
     });
 
     it('should call `onChange` when clearing the first section', async () => {
@@ -333,8 +323,6 @@ describe('<DateField /> - Editing Keyboard', () => {
       await view.user.keyboard('[ArrowRight][Delete]');
 
       expect(onChange.callCount).to.equal(1);
-
-      view.unmount();
     });
 
     it('should not call `onChange` if the section is already empty', async () => {
@@ -353,8 +341,6 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       await view.user.keyboard('[Delete]');
       expect(onChange.callCount).to.equal(1);
-
-      view.unmount();
     });
   });
 

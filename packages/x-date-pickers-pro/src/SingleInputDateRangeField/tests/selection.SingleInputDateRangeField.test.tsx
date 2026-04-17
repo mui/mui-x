@@ -21,8 +21,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       });
       expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY – MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM');
-
-      view.unmount();
     });
   });
 
@@ -45,8 +43,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
       await view.selectSection('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
-
-      view.unmount();
     });
 
     it('should not change the selection when clicking on the only already selected section', async () => {
@@ -67,8 +63,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
       await view.selectSection('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
-
-      view.unmount();
     });
   });
 
@@ -93,8 +87,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
       await view.user.keyboard('{ArrowRight}');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
-
-      view.unmount();
     });
 
     it('should stay on the current section when the last section is selected', async () => {
@@ -104,8 +96,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('YYYY');
       await view.user.keyboard('{ArrowRight}');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
-
-      view.unmount();
     });
   });
 
@@ -129,8 +119,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
       await view.user.keyboard('{ArrowLeft}');
       expect(getCleanedSelectedContent()).to.equal('MM');
-
-      view.unmount();
     });
 
     it('should stay on the current section when the first section is selected', async () => {
@@ -140,8 +128,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM');
       await view.user.keyboard('{ArrowLeft}');
       expect(getCleanedSelectedContent()).to.equal('MM');
-
-      view.unmount();
     });
   });
 });

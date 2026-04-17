@@ -12,8 +12,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         const view = renderWithProps({});
 
         expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY – MM/DD/YYYY');
-
-        view.unmount();
       });
 
       it('should use the default value when defined', () => {
@@ -22,8 +20,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         expectFieldValue(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
-
-        view.unmount();
       });
 
       it('should use the controlled value instead of the default value when both are defined', () => {
@@ -33,8 +29,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         expectFieldValue(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
-
-        view.unmount();
       });
 
       it('should use the controlled value instead of the default value when both are defined and the controlled value has null dates', () => {
@@ -44,8 +38,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         expectFieldValue(view.getSectionsContainer(), '06/04/2022 – MM/DD/YYYY');
-
-        view.unmount();
       });
 
       it('should react to controlled value update (from a non null date to another non null date)', () => {
@@ -59,8 +51,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           value: [adapter.date('2023-06-04'), adapter.date('2023-06-05')],
         });
         expectFieldValue(view.getSectionsContainer(), '06/04/2023 – 06/05/2023');
-
-        view.unmount();
       });
 
       it('should react to controlled value update (from a non null date to a null date)', () => {
@@ -74,8 +64,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           value: [null, adapter.date('2022-06-05')],
         });
         expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY – 06/05/2022');
-
-        view.unmount();
       });
 
       it('should react to controlled value update (from a null date to a non null date)', () => {
@@ -89,8 +77,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           value: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
         });
         expectFieldValue(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
-
-        view.unmount();
       });
 
       it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', async () => {
@@ -108,8 +94,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChange.callCount).to.equal(1);
         expect(onChange.lastCall.firstArg[0]).toEqualDateTime(new Date(2023, 5, 4));
         expect(onChange.lastCall.firstArg[1]).toEqualDateTime(new Date(2022, 5, 5));
-
-        view.unmount();
       });
 
       it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', async () => {
@@ -127,8 +111,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChange.callCount).to.equal(1);
         expect(onChange.lastCall.firstArg[0]).toEqualDateTime(new Date(2023, 5, 4));
         expect(onChange.lastCall.firstArg[1]).toEqualDateTime(new Date(2022, 5, 5));
-
-        view.unmount();
       });
 
       it('should not call the onChange callback before filling the last section of the active date when starting from a null value', async () => {
@@ -153,8 +135,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         await waitFor(() => {
           expectFieldValue(view.getSectionsContainer(), 'DD MMMM – DD MMMM');
         });
-
-        view.unmount();
       });
     },
   );
@@ -173,8 +153,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       await view.user.keyboard('{Delete}');
       expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
-
-      view.unmount();
     });
 
     it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
@@ -193,8 +171,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       await view.user.keyboard('{Delete}');
       expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
-
-      view.unmount();
     });
 
     it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
@@ -212,8 +188,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       await view.user.keyboard('{Delete}');
       expect(onChange.callCount).to.equal(0);
-
-      view.unmount();
     });
 
     it('should call `onChange` when clearing the first section of each date', async () => {
@@ -254,8 +228,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       await view.user.keyboard('{ArrowRight}');
       await view.user.keyboard('{Delete}');
       expect(onChange.callCount).to.equal(2);
-
-      view.unmount();
     });
 
     it('should not call `onChange` if the section is already empty', async () => {
@@ -274,8 +246,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       await view.user.keyboard('{Delete}');
       expect(onChange.callCount).to.equal(1);
-
-      view.unmount();
     });
   });
 
@@ -296,8 +266,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         await view.user.keyboard('{Backspace}');
         expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
-
-        view.unmount();
       });
 
       it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', async () => {
@@ -316,8 +284,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         await view.user.keyboard('{Backspace}');
         expectFieldValue(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
-
-        view.unmount();
       });
 
       it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', async () => {
@@ -335,8 +301,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         await view.user.keyboard('{Backspace}');
         expect(onChange.callCount).to.equal(0);
-
-        view.unmount();
       });
 
       it('should call `onChange` when clearing the first section of each date (Backspace)', async () => {
@@ -377,8 +341,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         await view.user.keyboard('{ArrowRight}');
         await view.user.keyboard('{Backspace}');
         expect(onChange.callCount).to.equal(2);
-
-        view.unmount();
       });
 
       it('should not call `onChange` if the section is already empty (Backspace)', async () => {
@@ -397,8 +359,6 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         await view.user.keyboard('{Backspace}');
         expect(onChange.callCount).to.equal(1);
-
-        view.unmount();
       });
     },
   );

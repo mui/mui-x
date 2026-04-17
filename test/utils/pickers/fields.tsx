@@ -228,7 +228,6 @@ export const buildFieldInteractions = <P extends {}>({
     await response.selectSection(selectedSection);
     await response.pressKey(key);
     expectFieldValue(response.getSectionsContainer(), expectedValue);
-    response.unmount();
   };
 
   const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = async ({
@@ -249,7 +248,6 @@ export const buildFieldInteractions = <P extends {}>({
         (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
       );
     }
-    response.unmount();
   };
 
   return {
