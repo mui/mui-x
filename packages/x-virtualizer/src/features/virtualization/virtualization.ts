@@ -1140,6 +1140,13 @@ export function computeOffsetLeft(
   return Math.abs(offset);
 }
 
+const EMPTY_BUFFER = {
+  rowAfter: 0,
+  rowBefore: 0,
+  columnAfter: 0,
+  columnBefore: 0,
+};
+
 function bufferForDirection(
   isRtl: boolean,
   direction: ScrollDirection,
@@ -1150,12 +1157,7 @@ function bufferForDirection(
   layoutMode: VirtualizationState['layoutMode'] = 'uncontrolled',
 ) {
   if (layoutMode === 'controlled') {
-    return {
-      rowAfter: 0,
-      rowBefore: 0,
-      columnAfter: 0,
-      columnBefore: 0,
-    };
+    return EMPTY_BUFFER;
   }
 
   if (isRtl) {
