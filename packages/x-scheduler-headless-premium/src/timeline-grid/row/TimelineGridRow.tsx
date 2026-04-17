@@ -26,8 +26,6 @@ export const TimelineGridRow = React.forwardRef(function TimelineGridRow(
 
   const isNavigable = columnType != null;
 
-  // These hooks are only useful when the row is navigable,
-  // but must be called unconditionally to follow the rules of hooks.
   const { focusedCell, setFocusedCell, columnTypes } = useTimelineGridRootContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const { elementsRef } = useCompositeListContext();
