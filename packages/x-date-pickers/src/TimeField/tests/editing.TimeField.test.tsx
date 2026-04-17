@@ -733,7 +733,6 @@ describe('<TimeField /> - Editing', () => {
         defaultValue: adapter.date('2022-06-15T14:12:00'),
       });
       expectFieldValue(view.getSectionsContainer(), '02:12 PM');
-      view.unmount();
     });
 
     it('should render the correct hour value with KK format', () => {
@@ -742,7 +741,6 @@ describe('<TimeField /> - Editing', () => {
         defaultValue: adapter.date('2022-06-15T14:12:00'),
       });
       expectFieldValue(view.getSectionsContainer(), '02:12 PM');
-      view.unmount();
     });
 
     it('should wrap from 11 to 0 when pressing ArrowUp at the maximum', () => {
@@ -752,6 +750,22 @@ describe('<TimeField /> - Editing', () => {
         key: 'ArrowUp',
         expectedValue: '00:12 PM',
       });
+    });
+
+    it('should produce noon (12:xx) when wrapping K from 11 to 0 with PM meridiem', async () => {
+      const onChange = spy();
+
+      const view = renderWithProps({
+        format: 'K:mm aa',
+        defaultValue: adapter.date('2022-06-15T23:12:00'),
+        onChange,
+      });
+
+      await view.selectSectionAsync('hours');
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
+
+      // K=0 + PM = noon (12:xx), not midnight (00:xx)
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 5, 15, 12, 12, 0));
     });
 
     it('should wrap from 0 to 11 when pressing ArrowDown at the minimum', () => {
@@ -790,7 +804,6 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date('2022-06-15T00:12:00'),
         });
         expectFieldValue(view.getSectionsContainer(), '24:12');
-        view.unmount();
       });
 
       it('should render the correct hour value with kk format', () => {
@@ -799,7 +812,6 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date('2022-06-15T14:12:00'),
         });
         expectFieldValue(view.getSectionsContainer(), '14:12');
-        view.unmount();
       });
 
       it('should wrap from 24 to 1 when pressing ArrowUp at the maximum', () => {

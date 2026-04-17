@@ -79,6 +79,12 @@ describe('useField utility functions', () => {
       expect(result.maximum).to.equal(12);
     });
 
+    it('should return correct boundaries for "hh" format (hour 1-12, padded)', () => {
+      const result = boundaries.hours({ currentDate: null, format: 'hh', contentType: 'digit' });
+      expect(result.minimum).to.equal(1);
+      expect(result.maximum).to.equal(12);
+    });
+
     it('should return correct boundaries for "K" format (hour 0-11)', () => {
       const result = boundaries.hours({ currentDate: null, format: 'K', contentType: 'digit' });
       expect(result.minimum).to.equal(0);
@@ -93,6 +99,12 @@ describe('useField utility functions', () => {
 
     it('should return correct boundaries for "H" format (hour 0-23)', () => {
       const result = boundaries.hours({ currentDate: null, format: 'H', contentType: 'digit' });
+      expect(result.minimum).to.equal(0);
+      expect(result.maximum).to.equal(23);
+    });
+
+    it('should return correct boundaries for "HH" format (hour 0-23, padded)', () => {
+      const result = boundaries.hours({ currentDate: null, format: 'HH', contentType: 'digit' });
       expect(result.minimum).to.equal(0);
       expect(result.maximum).to.equal(23);
     });
