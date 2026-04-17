@@ -94,7 +94,9 @@ describe('TimelineGrid keyboard navigation', () => {
       const { user } = render(<Grid />);
 
       const rows = getEventsRows();
-      act(() => { rows[0].focus(); });
+      act(() => {
+        rows[0].focus();
+      });
       await user.keyboard('{ArrowDown}');
 
       expect(rows[1]).toHaveFocus();
@@ -104,7 +106,9 @@ describe('TimelineGrid keyboard navigation', () => {
       const { user } = render(<Grid />);
 
       const rows = getEventsRows();
-      act(() => { rows[1].focus(); });
+      act(() => {
+        rows[1].focus();
+      });
       await user.keyboard('{ArrowUp}');
 
       expect(rows[0]).toHaveFocus();
@@ -114,7 +118,9 @@ describe('TimelineGrid keyboard navigation', () => {
       const { user } = render(<Grid />);
 
       const rows = getEventsRows();
-      act(() => { rows[0].focus(); });
+      act(() => {
+        rows[0].focus();
+      });
       await user.keyboard('{ArrowUp}');
 
       expect(rows[0]).toHaveFocus();
@@ -125,7 +131,9 @@ describe('TimelineGrid keyboard navigation', () => {
 
       const rows = getEventsRows();
       const lastRow = rows[rows.length - 1];
-      act(() => { lastRow.focus(); });
+      act(() => {
+        lastRow.focus();
+      });
       await user.keyboard('{ArrowDown}');
 
       expect(lastRow).toHaveFocus();
@@ -136,7 +144,9 @@ describe('TimelineGrid keyboard navigation', () => {
     it('should move focus from title to events on ArrowRight', async () => {
       const { user } = render(<Grid />);
 
-      act(() => { getTitleRows()[0].focus(); });
+      act(() => {
+        getTitleRows()[0].focus();
+      });
       await user.keyboard('{ArrowRight}');
 
       expect(getEventsRows()[0]).toHaveFocus();
@@ -145,7 +155,9 @@ describe('TimelineGrid keyboard navigation', () => {
     it('should move focus from events to title on ArrowLeft', async () => {
       const { user } = render(<Grid />);
 
-      act(() => { getEventsRows()[0].focus(); });
+      act(() => {
+        getEventsRows()[0].focus();
+      });
       await user.keyboard('{ArrowLeft}');
 
       expect(getTitleRows()[0]).toHaveFocus();
@@ -154,7 +166,9 @@ describe('TimelineGrid keyboard navigation', () => {
     it('should preserve row index when switching columns', async () => {
       const { user } = render(<Grid />);
 
-      act(() => { getTitleRows()[1].focus(); });
+      act(() => {
+        getTitleRows()[1].focus();
+      });
       await user.keyboard('{ArrowRight}');
       expect(getEventsRows()[1]).toHaveFocus();
 
@@ -168,7 +182,9 @@ describe('TimelineGrid keyboard navigation', () => {
       const { user } = render(<Grid />);
 
       const rows = getEventsRows();
-      act(() => { rows[0].focus(); });
+      act(() => {
+        rows[0].focus();
+      });
       await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);
@@ -182,16 +198,16 @@ describe('TimelineGrid keyboard navigation', () => {
       const { user } = render(<Grid />);
 
       const eventsRows = getEventsRows();
-      const events = eventsRows.map((row) =>
-        row.querySelector('[data-testid^="event-"]')!,
-      );
+      const events = eventsRows.map((row) => row.querySelector('[data-testid^="event-"]')!);
 
       // Before any row is focused, all events are not tabbable
       expect(events[0]).to.have.attribute('tabindex', '-1');
       expect(events[1]).to.have.attribute('tabindex', '-1');
 
       // Focus row 0 → its event becomes tabbable
-      act(() => { eventsRows[0].focus(); });
+      act(() => {
+        eventsRows[0].focus();
+      });
       expect(events[0]).to.have.attribute('tabindex', '0');
       expect(events[1]).to.have.attribute('tabindex', '-1');
 
