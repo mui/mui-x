@@ -14,19 +14,19 @@ import {
   AnyEventCalendarStore,
 } from 'test/utils/scheduler';
 
-const resource1 = ResourceBuilder.new().build();
-const resource2 = ResourceBuilder.new().build();
-const resource3 = ResourceBuilder.new().build();
-
-const resources = [resource1, resource2, resource3];
-
-const start = processDate(DEFAULT_TESTING_VISIBLE_DATE, adapter);
-const end = processDate(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 1), adapter);
-
 describe('TimelineGrid keyboard navigation', () => {
   const { render } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
+
+  const resources = [
+    ResourceBuilder.new().build(),
+    ResourceBuilder.new().build(),
+    ResourceBuilder.new().build(),
+  ];
+
+  const start = processDate(DEFAULT_TESTING_VISIBLE_DATE, adapter);
+  const end = processDate(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 1), adapter);
 
   let store: AnyEventCalendarStore | null = null;
 
