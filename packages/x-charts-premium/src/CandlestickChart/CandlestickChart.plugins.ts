@@ -17,10 +17,7 @@ import {
   useChartProZoom,
   type UseChartProZoomSignature,
 } from '@mui/x-charts-pro/plugins';
-import {
-  useChartPremiumWebGL,
-  type UseChartPremiumWebGLSignature,
-} from '../internals/plugins/useChartPremiumWebGL';
+import { useChartWebGL, type UseChartWebGLSignature } from '../internals/plugins/useChartWebGL';
 
 export type CandlestickChartPluginSignatures = [
   UseChartTooltipSignature<'ohlc'>,
@@ -30,7 +27,7 @@ export type CandlestickChartPluginSignatures = [
   UseChartProZoomSignature,
   UseChartVisibilityManagerSignature<'ohlc'>,
   UseChartProExportSignature,
-  UseChartPremiumWebGLSignature,
+  UseChartWebGLSignature,
 ];
 
 export const CANDLESTICK_CHART_PLUGINS: ConvertSignaturesIntoPlugins<CandlestickChartPluginSignatures> =
@@ -42,5 +39,5 @@ export const CANDLESTICK_CHART_PLUGINS: ConvertSignaturesIntoPlugins<Candlestick
     useChartProZoom,
     useChartVisibilityManager,
     useChartProExport,
-    useChartPremiumWebGL,
+    useChartWebGL,
   ];

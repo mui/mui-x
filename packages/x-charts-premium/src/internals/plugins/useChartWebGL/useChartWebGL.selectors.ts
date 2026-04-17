@@ -1,9 +1,8 @@
 import { createSelector } from '@mui/x-internals/store';
 import { type ChartRootSelector, type ChartOptionalRootSelector } from '@mui/x-charts/internals';
-import { type UseChartPremiumWebGLSignature } from './useChartPremiumWebGL.types';
+import { type UseChartWebGLSignature } from './useChartWebGL.types';
 
-export const selectorWebGLState: ChartRootSelector<UseChartPremiumWebGLSignature> = (state) =>
-  state.webGL;
+export const selectorWebGLState: ChartRootSelector<UseChartWebGLSignature> = (state) => state.webGL;
 
 export const selectorWebGLRenderTick = createSelector(
   selectorWebGLState,
@@ -19,9 +18,9 @@ export const selectorWebGLIsContextReady = createSelector(
  * Optional selector that returns undefined if the WebGL plugin is not loaded.
  * Safe to use from components that may or may not have the plugin available.
  */
-export const selectorWebGLStateOptional: ChartOptionalRootSelector<
-  UseChartPremiumWebGLSignature
-> = (state) => state.webGL;
+export const selectorWebGLStateOptional: ChartOptionalRootSelector<UseChartWebGLSignature> = (
+  state,
+) => state.webGL;
 
 export const selectorWebGLRenderTickOptional = createSelector(
   selectorWebGLStateOptional,

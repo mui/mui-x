@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import { type ChartPlugin } from '@mui/x-charts/internals';
-import { type UseChartPremiumWebGLSignature } from './useChartPremiumWebGL.types';
+import { type UseChartWebGLSignature } from './useChartWebGL.types';
 
-export const useChartPremiumWebGL: ChartPlugin<UseChartPremiumWebGLSignature> = ({ store }) => {
+export const useChartWebGL: ChartPlugin<UseChartWebGLSignature> = ({ store }) => {
   const webGLContextRef = React.useRef<WebGL2RenderingContext | null>(null);
   const drawRefsRef = React.useRef<Array<React.RefObject<(() => void) | null>>>([]);
 
@@ -52,9 +52,9 @@ export const useChartPremiumWebGL: ChartPlugin<UseChartPremiumWebGLSignature> = 
   };
 };
 
-useChartPremiumWebGL.params = {};
+useChartWebGL.params = {};
 
-useChartPremiumWebGL.getInitialState = () => ({
+useChartWebGL.getInitialState = () => ({
   webGL: {
     renderTick: 0,
     isContextReady: false,

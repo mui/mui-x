@@ -1,7 +1,7 @@
 import type * as React from 'react';
 import { type ChartPluginSignature } from '@mui/x-charts/internals';
 
-export interface UseChartPremiumWebGLInstance {
+export interface UseChartWebGLInstance {
   /**
    * Ref holding the current WebGL2 rendering context. Null until a ChartsWebGLLayer mounts.
    */
@@ -29,7 +29,7 @@ export interface UseChartPremiumWebGLInstance {
   flushWebGLRender: () => void;
 }
 
-export interface UseChartPremiumWebGLState {
+export interface UseChartWebGLState {
   webGL: {
     /**
      * Incremented each time a render is requested, causing subscribers to re-render
@@ -44,7 +44,7 @@ export interface UseChartPremiumWebGLState {
   };
 }
 
-export type UseChartPremiumWebGLSignature = ChartPluginSignature<{
-  instance: UseChartPremiumWebGLInstance;
-  state: UseChartPremiumWebGLState;
+export type UseChartWebGLSignature = ChartPluginSignature<{
+  instance: UseChartWebGLInstance;
+  state: UseChartWebGLState;
 }>;

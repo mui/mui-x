@@ -11,8 +11,8 @@ import { useDrawingArea, useChartRootRef } from '@mui/x-charts/hooks';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
 import {
   selectorWebGLRenderTickOptional,
-  type UseChartPremiumWebGLSignature,
-} from '../internals/plugins/useChartPremiumWebGL';
+  type UseChartWebGLSignature,
+} from '../internals/plugins/useChartWebGL';
 
 export const ChartsWebGLLayer = React.forwardRef<
   HTMLCanvasElement,
@@ -23,7 +23,7 @@ export const ChartsWebGLLayer = React.forwardRef<
   const chartRoot = useChartRootRef().current;
   const drawingArea = useDrawingArea();
   const [, rerender] = React.useReducer((s) => s + 1, 0);
-  const { store, instance } = useChartsContext<[], [UseChartPremiumWebGLSignature]>();
+  const { store, instance } = useChartsContext<[], [UseChartWebGLSignature]>();
 
   const renderTick = store.use(selectorWebGLRenderTickOptional);
 

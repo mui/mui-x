@@ -26,7 +26,7 @@ import {
   useChartProZoom,
   type UseChartProZoomSignature,
 } from '@mui/x-charts-pro/plugins';
-import { useChartPremiumWebGL, type UseChartPremiumWebGLSignature } from './useChartPremiumWebGL';
+import { useChartWebGL, type UseChartWebGLSignature } from './useChartWebGL';
 
 export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
@@ -39,7 +39,7 @@ export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeries
   UseChartVisibilityManagerSignature<SeriesType>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
-  UseChartPremiumWebGLSignature,
+  UseChartWebGLSignature,
 ];
 
 export type AllPluginsType<SeriesType extends ChartSeriesType = ChartSeriesType> =
@@ -56,7 +56,7 @@ export const ALL_PLUGINS = [
   useChartVisibilityManager,
   useChartProZoom,
   useChartProExport,
-  useChartPremiumWebGL,
+  useChartWebGL,
 ];
 
 export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
@@ -70,7 +70,7 @@ export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSe
   UseChartVisibilityManagerSignature<SeriesType>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
-  UseChartPremiumWebGLSignature,
+  UseChartWebGLSignature,
 ];
 
 export type DefaultPluginsType<SeriesType extends ChartSeriesType = ChartSeriesType> =
@@ -86,5 +86,5 @@ export const DEFAULT_PLUGINS = [
   useChartVisibilityManager,
   useChartProZoom,
   useChartProExport,
-  useChartPremiumWebGL,
+  useChartWebGL,
 ];
