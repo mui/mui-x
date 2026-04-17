@@ -135,10 +135,16 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const viewportProps = virtualizer.store.use(LayoutDataGrid.selectors.viewportProps);
   const contentProps = virtualizer.store.use(LayoutDataGrid.selectors.contentProps);
   const positionerProps = virtualizer.store.use(LayoutDataGrid.selectors.positionerProps);
-  const scrollbarVerticalProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollbarVerticalProps);
-  const scrollbarHorizontalProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollbarHorizontalProps);
+  const scrollbarVerticalProps = virtualizer.store.use(
+    LayoutDataGrid.selectors.scrollbarVerticalProps,
+  );
+  const scrollbarHorizontalProps = virtualizer.store.use(
+    LayoutDataGrid.selectors.scrollbarHorizontalProps,
+  );
   const scrollAreaProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollAreaProps);
-  const containerVerticalProps = virtualizer.store.use(LayoutDataGrid.selectors.containerVerticalProps);
+  const containerVerticalProps = virtualizer.store.use(
+    LayoutDataGrid.selectors.containerVerticalProps,
+  );
 
   const rows = virtualizer.api.getters.getRows(undefined, gridRowTreeSelector(apiRef));
 
@@ -177,9 +183,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
               {<rootProps.slots.detailPanels />}
             </RenderZone>
 
-            {hasContentFiller && (
-              <div className={gridClasses.contentFiller} {...contentProps} />
-            )}
+            {hasContentFiller && <div className={gridClasses.contentFiller} {...contentProps} />}
 
             {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
 

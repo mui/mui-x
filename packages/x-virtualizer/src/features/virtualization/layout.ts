@@ -233,7 +233,6 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
   };
 }
 
-
 type ListElements = BaseElements;
 
 export class LayoutList extends Layout<ListElements> {
