@@ -1,12 +1,9 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { LayoutDataGrid } from '@mui/x-virtualizer';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { useGridVirtualizerContext } from '../../hooks/utils/useGridVirtualizerContext';
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -16,6 +13,10 @@ type Position = 'vertical' | 'horizontal';
 type OwnerState = DataGridProcessedProps;
 type GridVirtualScrollbarProps = {
   position: Position;
+  scrollPosition: React.RefObject<{
+    left: number;
+    top: number;
+  }>;
 };
 
 const useUtilityClasses = (ownerState: OwnerState, position: Position) => {
@@ -100,13 +101,6 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps, props.position);
     const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-    const virtualizer = useGridVirtualizerContext();
-    const { ref: virtualizerRef } = virtualizer.store.use(
-      props.position === 'vertical'
-        ? LayoutDataGrid.selectors.scrollbarVerticalProps
-        : LayoutDataGrid.selectors.scrollbarHorizontalProps,
-    );
-    const mergedRef = useForkRef(ref, virtualizerRef);
 
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';
 
@@ -126,7 +120,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
 
     return (
       <Container
-        ref={mergedRef}
+        ref={ref}
         className={classes.root}
         tabIndex={-1}
         aria-hidden="true"
