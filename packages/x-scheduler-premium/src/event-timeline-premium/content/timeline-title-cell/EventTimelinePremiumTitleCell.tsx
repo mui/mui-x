@@ -47,7 +47,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const { classes } = useEventTimelinePremiumStyledContext();
+  const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
@@ -60,7 +60,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       style={{ '--resource-depth': depth } as React.CSSProperties}
     >
       <EventTimelinePremiumTitleCellRoot
-        id={`EventTimelinePremiumTitleCell-${resourceId}`}
+        id={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
         className={classes.titleCell}
         data-palette={eventColor}
       >
