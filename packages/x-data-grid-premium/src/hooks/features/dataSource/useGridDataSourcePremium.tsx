@@ -233,7 +233,11 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
     addEventHandler(apiRef, event as keyof GridEventLookup, handler);
   });
 
-  useGridEvent(apiRef, 'rowGroupingModelChange', runIf(!pivotActive, handleRowGroupingModelChange));
+  useGridEvent(
+    apiRef,
+    'rowGroupingModelChange',
+    runIf(!pivotActive && !!props.dataSource, handleRowGroupingModelChange),
+  );
   useGridEvent(
     apiRef,
     'aggregationModelChange',
