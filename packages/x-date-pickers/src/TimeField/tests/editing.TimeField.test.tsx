@@ -738,8 +738,8 @@ describe('<TimeField /> - Editing', () => {
       expectFieldValue(view.getSectionsContainer(), '02:12 PM');
     });
 
-    it('should wrap from 11 to 0 when pressing ArrowUp at the maximum', () => {
-      testFieldKeyPress({
+    it('should wrap from 11 to 0 when pressing ArrowUp at the maximum', async () => {
+      await testFieldKeyPress({
         format: 'K:mm aa',
         defaultValue: adapter.date('2022-06-15T23:12:00'),
         key: 'ArrowUp',
@@ -763,8 +763,8 @@ describe('<TimeField /> - Editing', () => {
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 5, 15, 12, 12, 0));
     });
 
-    it('should wrap from 0 to 11 when pressing ArrowDown at the minimum', () => {
-      testFieldKeyPress({
+    it('should wrap from 0 to 11 when pressing ArrowDown at the minimum', async () => {
+      await testFieldKeyPress({
         format: 'K:mm aa',
         defaultValue: adapter.date('2022-06-15T12:12:00'),
         key: 'ArrowDown',
@@ -772,8 +772,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should accept typed digit input for K format', () => {
-      testFieldChange({
+    it('should accept typed digit input for K format', async () => {
+      await testFieldChange({
         format: 'K:mm aa',
         keyStrokes: [
           // "1" stays in the section because "10" and "11" are still valid
@@ -809,8 +809,8 @@ describe('<TimeField /> - Editing', () => {
         expectFieldValue(view.getSectionsContainer(), '14:12');
       });
 
-      it('should wrap from 24 to 1 when pressing ArrowUp at the maximum', () => {
-        testFieldKeyPress({
+      it('should wrap from 24 to 1 when pressing ArrowUp at the maximum', async () => {
+        await testFieldKeyPress({
           format: 'k:mm',
           defaultValue: adapter.date('2022-06-15T00:12:00'),
           key: 'ArrowUp',
@@ -818,8 +818,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should wrap from 1 to 24 when pressing ArrowDown at the minimum', () => {
-        testFieldKeyPress({
+      it('should wrap from 1 to 24 when pressing ArrowDown at the minimum', async () => {
+        await testFieldKeyPress({
           format: 'k:mm',
           defaultValue: adapter.date('2022-06-15T01:12:00'),
           key: 'ArrowDown',
@@ -827,8 +827,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should accept two-digit input for kk format', () => {
-        testFieldChange({
+      it('should accept two-digit input for kk format', async () => {
+        await testFieldChange({
           format: 'kk:mm',
           keyStrokes: [
             { value: '1', expected: '01:mm' },
