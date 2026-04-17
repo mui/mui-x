@@ -36,8 +36,8 @@ export function HeatmapWebGLPlot({
   return (
     <HeatmapWebGLPlotImpl
       gl={layer.gl}
-      registerDraw={layer.registerDraw}
-      requestRender={layer.requestRender}
+      webGLRegisterDraw={layer.webGLRegisterDraw}
+      webGLRequestRender={layer.webGLRequestRender}
       borderRadius={borderRadius ?? 0}
       series={seriesToDisplay}
     />
@@ -46,12 +46,12 @@ export function HeatmapWebGLPlot({
 
 function HeatmapWebGLPlotImpl(props: {
   gl: WebGL2RenderingContext;
-  registerDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
-  requestRender: () => void;
+  webGLRegisterDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
+  webGLRequestRender: () => void;
   borderRadius: number;
   series: DefaultizedHeatmapSeriesType;
 }) {
-  const { gl, registerDraw, requestRender, borderRadius, series } = props;
+  const { gl, webGLRegisterDraw, webGLRequestRender, borderRadius, series } = props;
 
   const drawingArea = useDrawingArea();
   const xScale = useXScale<'band'>();
@@ -74,8 +74,8 @@ function HeatmapWebGLPlotImpl(props: {
   };
 
   React.useEffect(() => {
-    return registerDraw(drawRef);
-  }, [registerDraw]);
+    return webGLRegisterDraw(drawRef);
+  }, [webGLRegisterDraw]);
 
   React.useEffect(() => {
     /* Enable blending for transparency
@@ -194,11 +194,11 @@ function HeatmapWebGLPlotImpl(props: {
       setupBorderRadiusUniform();
     }
 
-    requestRender();
+    webGLRequestRender();
   }, [
     gl,
     program,
-    requestRender,
+    webGLRequestRender,
     seriesBorderRadius,
     setupBorderRadiusUniform,
     // We use the event callback versions here because we only want this effect to trigger when the border radius changes
@@ -209,18 +209,18 @@ function HeatmapWebGLPlotImpl(props: {
 
   React.useEffect(() => {
     setupResolutionUniform();
-    requestRender();
-  }, [setupResolutionUniform, requestRender]);
+    webGLRequestRender();
+  }, [setupResolutionUniform, webGLRequestRender]);
 
   React.useEffect(() => {
     setupRectDimensionsUniform();
-    requestRender();
-  }, [setupRectDimensionsUniform, requestRender]);
+    webGLRequestRender();
+  }, [setupRectDimensionsUniform, webGLRequestRender]);
 
   React.useEffect(() => {
     setupAttributes();
-    requestRender();
-  }, [requestRender, setupAttributes]);
+    webGLRequestRender();
+  }, [webGLRequestRender, setupAttributes]);
 
   return null;
 }

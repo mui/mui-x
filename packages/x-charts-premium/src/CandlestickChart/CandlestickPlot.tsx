@@ -24,7 +24,7 @@ function CandlestickWebGLPlot() {
 
   React.useEffect(() => {
     if (layer && isHidden) {
-      layer.requestRender();
+      layer.webGLRequestRender();
     }
   }, [layer, isHidden]);
 
@@ -35,8 +35,8 @@ function CandlestickWebGLPlot() {
   return (
     <CandlestickWebGLPlotImpl
       gl={layer.gl}
-      registerDraw={layer.registerDraw}
-      requestRender={layer.requestRender}
+      webGLRegisterDraw={layer.webGLRegisterDraw}
+      webGLRequestRender={layer.webGLRequestRender}
       series={seriesToDisplay}
     />
   );
@@ -44,13 +44,13 @@ function CandlestickWebGLPlot() {
 
 function CandlestickWebGLPlotImpl({
   gl,
-  registerDraw,
-  requestRender,
+  webGLRegisterDraw,
+  webGLRequestRender,
   series,
 }: {
   gl: WebGL2RenderingContext;
-  registerDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
-  requestRender: () => void;
+  webGLRegisterDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
+  webGLRequestRender: () => void;
   series: DefaultizedOHLCSeriesType;
 }) {
   const drawingArea = useDrawingArea();
@@ -67,8 +67,8 @@ function CandlestickWebGLPlotImpl({
   };
 
   React.useEffect(() => {
-    return registerDraw(drawRef);
-  }, [registerDraw]);
+    return webGLRegisterDraw(drawRef);
+  }, [webGLRegisterDraw]);
 
   React.useEffect(() => {
     const prog = new CandlestickWebGLProgram(gl);
@@ -82,22 +82,22 @@ function CandlestickWebGLPlotImpl({
   React.useEffect(() => {
     program?.setResolution(drawingArea.width, drawingArea.height);
 
-    requestRender();
-  }, [drawingArea.height, drawingArea.width, gl, requestRender, program]);
+    webGLRequestRender();
+  }, [drawingArea.height, drawingArea.width, gl, webGLRequestRender, program]);
 
   const candleWidth = xScale.bandwidth();
   React.useEffect(() => {
     program?.setCandleWidth(candleWidth);
 
-    requestRender();
-  }, [candleWidth, gl, program, requestRender]);
+    webGLRequestRender();
+  }, [candleWidth, gl, program, webGLRequestRender]);
 
   const plotData = useCandlestickPlotData(drawingArea, series, xScale, yScale);
   React.useEffect(() => {
     program?.plot(plotData);
 
-    requestRender();
-  }, [gl, plotData, program, requestRender]);
+    webGLRequestRender();
+  }, [gl, plotData, program, webGLRequestRender]);
 
   return null;
 }

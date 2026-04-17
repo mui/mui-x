@@ -7,7 +7,7 @@ export const useChartWebGL: ChartPlugin<UseChartWebGLSignature> = ({ store }) =>
   const webGLContextRef = React.useRef<WebGL2RenderingContext | null>(null);
   const drawRefsRef = React.useRef<Array<React.RefObject<(() => void) | null>>>([]);
 
-  const setWebGLContext = React.useCallback(
+  const webGLSetContext = React.useCallback(
     (gl: WebGL2RenderingContext | null) => {
       webGLContextRef.current = gl;
       store.set('webGL', { ...store.state.webGL, isContextReady: gl !== null });
@@ -15,7 +15,7 @@ export const useChartWebGL: ChartPlugin<UseChartWebGLSignature> = ({ store }) =>
     [store],
   );
 
-  const registerWebGLDraw = React.useCallback((drawRef: React.RefObject<(() => void) | null>) => {
+  const webGLRegisterDraw = React.useCallback((drawRef: React.RefObject<(() => void) | null>) => {
     drawRefsRef.current.push(drawRef);
     return () => {
       const idx = drawRefsRef.current.indexOf(drawRef);
@@ -25,11 +25,11 @@ export const useChartWebGL: ChartPlugin<UseChartWebGLSignature> = ({ store }) =>
     };
   }, []);
 
-  const requestWebGLRender = React.useCallback(() => {
+  const webGLRequestRender = React.useCallback(() => {
     store.set('webGL', { ...store.state.webGL, renderTick: store.state.webGL.renderTick + 1 });
   }, [store]);
 
-  const flushWebGLRender = React.useCallback(() => {
+  const webGLFlushRender = React.useCallback(() => {
     const gl = webGLContextRef.current;
     if (!gl) {
       return;
@@ -44,10 +44,10 @@ export const useChartWebGL: ChartPlugin<UseChartWebGLSignature> = ({ store }) =>
   return {
     instance: {
       webGLContextRef,
-      setWebGLContext,
-      registerWebGLDraw,
-      requestWebGLRender,
-      flushWebGLRender,
+      webGLSetContext,
+      webGLRegisterDraw,
+      webGLRequestRender,
+      webGLFlushRender,
     },
   };
 };

@@ -28,7 +28,7 @@ export const ChartsWebGLLayer = React.forwardRef<
   const renderTick = store.use(selectorWebGLRenderTickOptional);
 
   const glContext = instance.webGLContextRef?.current ?? null;
-  const flushRender = instance.flushWebGLRender;
+  const flushRender = instance.webGLFlushRender;
 
   // Centralized resize handling — render all plots on canvas resize
   useWebGLResizeObserver(glContext, flushRender ?? (() => {}));
@@ -48,7 +48,7 @@ export const ChartsWebGLLayer = React.forwardRef<
   React.useEffect(() => {
     const canvas = canvasRef.current;
 
-    if (!canvas || !instance.setWebGLContext) {
+    if (!canvas || !instance.webGLSetContext) {
       return undefined;
     }
 
@@ -56,7 +56,7 @@ export const ChartsWebGLLayer = React.forwardRef<
       // Must prevent default otherwise the context won't be marked as restorable
       // https://registry.khronos.org/webgl/extensions/WEBGL_lose_context/
       event.preventDefault();
-      instance.setWebGLContext!(null);
+      instance.webGLSetContext!(null);
     };
     const initializeContext = () => {
       const ctx = canvas.getContext('webgl2', {
@@ -70,7 +70,7 @@ export const ChartsWebGLLayer = React.forwardRef<
         return;
       }
 
-      instance.setWebGLContext!(ctx);
+      instance.webGLSetContext!(ctx);
     };
 
     canvas.addEventListener('webglcontextlost', handleContextLost);
@@ -82,7 +82,7 @@ export const ChartsWebGLLayer = React.forwardRef<
     return () => {
       canvas.removeEventListener('webglcontextlost', handleContextLost);
       canvas.removeEventListener('webglcontextrestored', initializeContext);
-      instance.setWebGLContext!(null);
+      instance.webGLSetContext!(null);
     };
   }, [chartRoot, instance]);
 

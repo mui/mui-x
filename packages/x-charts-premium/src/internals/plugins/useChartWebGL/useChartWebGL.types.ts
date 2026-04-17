@@ -10,23 +10,25 @@ export interface UseChartWebGLInstance {
    * Called by ChartsWebGLLayer to set or clear the WebGL context.
    * @param {WebGL2RenderingContext | null} gl The WebGL context from the layer, or null if the context was lost.
    */
-  setWebGLContext: (gl: WebGL2RenderingContext | null) => void;
+  webGLSetContext: (gl: WebGL2RenderingContext | null) => void;
   /**
    * Register a draw callback ref. Returns an unregister function.
-   * Callbacks are called in registration order (DOM order).
+   * Callbacks are called in registration order, which matches DOM order on initial mount.
+   * A component that unmounts and remounts (e.g. toggled via series visibility) will re-register
+   * at the end of the list, potentially changing the z-order relative to its DOM siblings.
    * @param {React.RefObject} drawRef A ref object whose current property is a callback function to call on each render, or null if the callback should be unregistered.
    * @returns {() => void} Unregister function to remove the callback from the render cycle.
    */
-  registerWebGLDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
+  webGLRegisterDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
   /**
    * Request a render frame. The layer will clear once, then call all registered draw callbacks in order.
    */
-  requestWebGLRender: () => void;
+  webGLRequestRender: () => void;
   /**
    * Clear the canvas and call all registered draw callbacks.
    * Called internally by ChartsWebGLLayer's flush effect and resize observer.
    */
-  flushWebGLRender: () => void;
+  webGLFlushRender: () => void;
 }
 
 export interface UseChartWebGLState {

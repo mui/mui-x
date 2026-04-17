@@ -25,11 +25,11 @@ function BluePlot() {
     if (!layer) {
       return undefined;
     }
-    return layer.registerDraw(drawRef);
+    return layer.webGLRegisterDraw(drawRef);
   }, [layer]);
 
   React.useEffect(() => {
-    layer?.requestRender();
+    layer?.webGLRequestRender();
   }, [layer]);
 
   return null;
@@ -57,11 +57,11 @@ function RedPlot() {
     if (!layer) {
       return undefined;
     }
-    return layer.registerDraw(drawRef);
+    return layer.webGLRegisterDraw(drawRef);
   }, [layer]);
 
   React.useEffect(() => {
-    layer?.requestRender();
+    layer?.webGLRequestRender();
   }, [layer]);
 
   return null;
