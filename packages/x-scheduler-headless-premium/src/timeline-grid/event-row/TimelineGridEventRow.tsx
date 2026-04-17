@@ -1,11 +1,16 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
+import {
+  useRenderElement,
+  BaseUIComponentProps,
+  useCompositeListItem,
+  useCompositeListContext,
+} from '@mui/x-scheduler-headless/base-ui-copy';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventCreation } from '@mui/x-scheduler-headless/internals';
+import { useEventCreation, useKeyboardEventCreation } from '@mui/x-scheduler-headless/internals';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-headless/constants';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
@@ -14,6 +19,7 @@ import { usePlaceholderInRow } from './usePlaceholderInRow';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventRowDataAttributes } from './TimelineGridEventRowDataAttributes';
+import { useTimelineGridRootContext } from '../root/TimelineGridRootContext';
 
 const stateAttributesMapping = {
   resourceId: (value: SchedulerResourceId) => ({
@@ -41,6 +47,11 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
+  const { focusedCell, setFocusedCell, columnTypes } = useTimelineGridRootContext();
+
+  // Composite list hooks
+  const { ref: listItemRef, index } = useCompositeListItem();
+  const { elementsRef } = useCompositeListContext();
 
   // Selector hooks
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
@@ -51,6 +62,10 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     viewConfig.end,
     resourceId,
   );
+
+  // Focus state
+  const rowRef = React.useRef<HTMLDivElement>(null);
+  const hasFocus = focusedCell?.columnType === 'events' && focusedCell?.rowIndex === index;
 
   // Feature hooks
   const { getCursorPositionInElementMs, ref: dropTargetRef } = useEventRowDropTarget({
@@ -77,9 +92,56 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     };
   });
 
+  const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => ({
+    surfaceType: 'timeline' as const,
+    start: viewConfig.start,
+    end: adapter.addMinutes(viewConfig.start, creationConfig.duration),
+    resourceId,
+    lockSurfaceType: true,
+  }));
+
+  // Apply DOM focus when this row becomes the focused row
+  React.useEffect(() => {
+    if (hasFocus && rowRef.current && !rowRef.current.contains(document.activeElement)) {
+      rowRef.current.focus({ preventScroll: true });
+    }
+  }, [hasFocus]);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const totalRows = elementsRef.current.length;
+    if (event.key === 'ArrowUp' && index > 0) {
+      event.preventDefault();
+      setFocusedCell({ columnType: 'events', rowIndex: index - 1 });
+      return;
+    }
+    if (event.key === 'ArrowDown' && index < totalRows - 1) {
+      event.preventDefault();
+      setFocusedCell({ columnType: 'events', rowIndex: index + 1 });
+      return;
+    }
+    if (event.key === 'ArrowLeft') {
+      const typeIndex = columnTypes.indexOf('events');
+      if (typeIndex > 0) {
+        event.preventDefault();
+        setFocusedCell({ columnType: columnTypes[typeIndex - 1], rowIndex: index });
+      }
+      return;
+    }
+    if (event.key === 'Enter' && event.target === event.currentTarget && triggerKeyboardCreation) {
+      event.preventDefault();
+      triggerKeyboardCreation();
+    }
+  };
+
+  const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      setFocusedCell({ columnType: 'events', rowIndex: index });
+    }
+  };
+
   const contextValue: TimelineGridEventRowContext = React.useMemo(
-    () => ({ getCursorPositionInElementMs }),
-    [getCursorPositionInElementMs],
+    () => ({ hasFocus, getCursorPositionInElementMs }),
+    [hasFocus, getCursorPositionInElementMs],
   );
 
   const occurrencesWithPosition = useEventOccurrencesWithTimelinePosition({
@@ -100,12 +162,17 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
 
   const state: TimelineGridEventRow.State = { resourceId };
 
-  // TODO: Add aria-rowindex using Composite.
+  const keyboardProps = {
+    tabIndex: 0,
+    onKeyDown: handleKeyDown,
+    onFocus: handleFocus,
+  };
+
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, dropTargetRef],
+    ref: [forwardedRef, dropTargetRef, listItemRef, rowRef],
     state,
     stateAttributesMapping,
-    props: [elementProps, { role: 'row', children }, eventCreationProps],
+    props: [elementProps, { role: 'row', children }, keyboardProps, eventCreationProps],
   });
 
   return (

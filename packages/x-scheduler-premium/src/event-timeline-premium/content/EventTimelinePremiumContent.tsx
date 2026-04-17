@@ -17,6 +17,7 @@ import {
   EventDialogProvider,
   EventDialogTrigger,
   useEventDialogContext,
+  getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from './view-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
@@ -154,6 +155,10 @@ const EventTimelinePremiumEventsSubGridRow = styled(TimelineGrid.EventRow, {
   alignContent: 'start',
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+  '&:focus-visible': {
+    outline: 'none',
+    backgroundColor: getCellFocusBackground(theme),
   },
 }));
 
@@ -463,6 +468,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             <EventTimelinePremiumTitleSubGrid
               ref={titleSubGridRef}
               className={classes.titleSubGrid}
+              trackItems
             >
               {(resourceId) => (
                 <EventTimelinePremiumTitleCell key={resourceId} resourceId={resourceId} />
@@ -473,7 +479,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               role="presentation"
               className={classes.eventsSubGridWrapper}
             >
-              <EventTimelinePremiumEventsSubGrid className={classes.eventsSubGrid}>
+              <EventTimelinePremiumEventsSubGrid className={classes.eventsSubGrid} trackItems>
                 {(resourceId) => (
                   <EventTimelinePremiumEventsSubGridRow
                     key={resourceId}

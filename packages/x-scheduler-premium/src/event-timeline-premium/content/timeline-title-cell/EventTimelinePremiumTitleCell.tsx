@@ -18,6 +18,11 @@ const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.Row, {
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
+  '&:focus-visible': {
+    outline: 'none',
+    boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
+    borderRadius: theme.shape.borderRadius,
+  },
 }));
 
 const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.Cell, {
@@ -57,6 +62,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   return (
     <EventTimelinePremiumTitleCellRow
       className={classes.titleCellRow}
+      columnType="title"
       style={{ '--resource-depth': depth } as React.CSSProperties}
     >
       <EventTimelinePremiumTitleCellRoot

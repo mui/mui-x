@@ -1,7 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
+import {
+  useRenderElement,
+  BaseUIComponentProps,
+  CompositeList,
+} from '@mui/x-scheduler-headless/base-ui-copy';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -18,6 +22,7 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
     style,
     // Internal props
     children: childrenProp,
+    trackItems = false,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -42,10 +47,18 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
     return childrenProp;
   }, [childrenProp, resources]);
 
-  return useRenderElement('div', componentProps, {
+  const rowsRef = React.useRef<(HTMLDivElement | null)[]>([]);
+
+  const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
     props: [elementProps, { role: 'rowgroup', children }],
   });
+
+  if (trackItems) {
+    return <CompositeList elementsRef={rowsRef}>{element}</CompositeList>;
+  }
+
+  return element;
 });
 
 export namespace TimelineGridSubGrid {
@@ -53,5 +66,11 @@ export namespace TimelineGridSubGrid {
 
   export interface Props extends Omit<BaseUIComponentProps<'div', State>, 'children'> {
     children?: React.ReactNode | ((resourceId: SchedulerResourceId) => React.ReactNode);
+    /**
+     * Whether to track child items via CompositeList for keyboard navigation.
+     * When `true`, child components can use `useCompositeListItem()` to get their index.
+     * @default false
+     */
+    trackItems?: boolean;
   }
 }
