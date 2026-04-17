@@ -504,8 +504,6 @@ describe('<TimeField /> - Editing', () => {
       view.pressKey(0, '2');
       expectFieldValue(view.getSectionsContainer(), '02:mm aa');
       expect(getCleanedSelectedContent()).to.equal('mm');
-
-      view.unmount();
     });
 
     it('should go to the next section when pressing `1` then `3` in a 12-hours format', async () => {
@@ -523,8 +521,6 @@ describe('<TimeField /> - Editing', () => {
       view.pressKey(0, '3');
       expectFieldValue(view.getSectionsContainer(), '03:mm aa');
       expect(getCleanedSelectedContent()).to.equal('mm');
-
-      view.unmount();
     });
   });
 
@@ -608,8 +604,6 @@ describe('<TimeField /> - Editing', () => {
         fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
-
-        view.unmount();
       });
 
       it('should not loose date information when cleaning the date then filling it again', async () => {
@@ -636,8 +630,6 @@ describe('<TimeField /> - Editing', () => {
         view.pressKey(1, '4');
         expectFieldValue(view.getSectionsContainer(), '03:04');
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
-
-        view.unmount();
       });
 
       it('should not loose time information when using the hour format and value is provided', async () => {
@@ -653,8 +645,6 @@ describe('<TimeField /> - Editing', () => {
         fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
-
-        view.unmount();
       });
     },
   );
