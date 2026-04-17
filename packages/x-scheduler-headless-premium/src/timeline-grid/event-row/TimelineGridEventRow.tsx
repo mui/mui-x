@@ -172,7 +172,12 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     ref: [forwardedRef, dropTargetRef, listItemRef, rowRef],
     state,
     stateAttributesMapping,
-    props: [elementProps, { role: 'row', children }, keyboardProps, eventCreationProps],
+    props: [
+      elementProps,
+      { role: 'row', 'aria-rowindex': index + 1, children },
+      keyboardProps,
+      eventCreationProps,
+    ],
   });
 
   return (

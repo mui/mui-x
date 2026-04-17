@@ -88,7 +88,11 @@ export const TimelineGridRow = React.forwardRef(function TimelineGridRow(
 
   return useRenderElement('div', componentProps, {
     ref: isNavigable ? [forwardedRef, listItemRef, rowRef] : [forwardedRef],
-    props: [elementProps, { role: 'row' }, keyboardProps],
+    props: [
+      elementProps,
+      { role: 'row', 'aria-rowindex': isNavigable ? index + 1 : undefined },
+      keyboardProps,
+    ],
   });
 });
 
