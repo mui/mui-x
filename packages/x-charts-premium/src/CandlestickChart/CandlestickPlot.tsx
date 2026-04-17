@@ -5,7 +5,7 @@ import { useXScale, useYScale } from '@mui/x-charts/hooks';
 import { type DefaultizedOHLCSeriesType } from '../models';
 import { useOHLCSeriesContext } from '../hooks/useOHLCSeries';
 import { useCandlestickPlotData } from './useCandlestickPlotData';
-import { useWebGLLayer } from '../hooks/useWebGLLayer';
+import { useWebGLLayer } from '../internals/useWebGLLayer';
 import { checkCandlestickScaleErrors } from './checkCandlestickScaleErrors';
 import { CandlestickWebGLProgram } from './CandlestickWebGLProgram';
 

@@ -3,7 +3,7 @@ import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProvi
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
-import { useWebGLLayer } from '@mui/x-charts-premium/hooks';
+import { useWebGLLayer } from '@mui/x-charts-premium/internals';
 
 /**
  * Draws a blue rectangle using scissor test.

@@ -3,7 +3,7 @@ import { useChartsContext } from '@mui/x-charts/internals';
 import {
   selectorWebGLIsContextReadyOptional,
   type UseChartPremiumWebGLSignature,
-} from '../internals/plugins/useChartPremiumWebGL';
+} from './plugins/useChartPremiumWebGL';
 
 /**
  * Returns the WebGL layer context from the premium plugin, or null if the GL context is not ready.

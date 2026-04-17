@@ -4,7 +4,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { ChartsWebGLLayer } from './ChartsWebGLLayer';
-import { useWebGLLayer } from '../hooks/useWebGLLayer';
+import { useWebGLLayer } from '../internals/useWebGLLayer';
 
 describe('<WebGLProvider />', () => {
   const { render } = createRenderer();
