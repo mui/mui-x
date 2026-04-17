@@ -6,10 +6,8 @@ import {
   useCompositeListItem,
   useCompositeListContext,
 } from '@mui/x-scheduler-headless/base-ui-copy';
-import {
-  useTimelineGridRootContext,
-  type TimelineGridColumnType,
-} from '../root/TimelineGridRootContext';
+import type { TimelineGridColumnType } from '../../models/timelineGrid';
+import { useTimelineGridRootContext } from '../root/TimelineGridRootContext';
 
 export const TimelineGridRow = React.forwardRef(function TimelineGridRow(
   componentProps: TimelineGridRow.Props,

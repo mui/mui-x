@@ -6,12 +6,11 @@ import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/schedule
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridRootCssVars } from './TimelineGridRootCssVars';
-import {
-  TimelineGridRootContext,
-  DEFAULT_COLUMN_TYPES,
-  type TimelineGridCellCoordinates,
-  type TimelineGridColumnType,
-} from './TimelineGridRootContext';
+import type {
+  TimelineGridCellCoordinates,
+  TimelineGridColumnType,
+} from '../../models/timelineGrid';
+import { TimelineGridRootContext, DEFAULT_COLUMN_TYPES } from './TimelineGridRootContext';
 
 export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   componentProps: TimelineGridRoot.Props,
