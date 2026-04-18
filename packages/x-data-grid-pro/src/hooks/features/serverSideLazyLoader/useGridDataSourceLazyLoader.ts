@@ -638,7 +638,7 @@ export const useGridDataSourceLazyLoader = (
   // pagination-model state.
   const addGetRowsParams = React.useCallback<GridPipeProcessor<'getRowsParams'>>(
     (params) => {
-      if (!lazyLoadingRowsUpdateStrategyActive) {
+      if (!isStrategyActive) {
         return params;
       }
       const renderContext = gridRenderContextSelector(privateApiRef);
@@ -663,7 +663,7 @@ export const useGridDataSourceLazyLoader = (
         end: adjustedParams.end,
       };
     },
-    [privateApiRef, lazyLoadingRowsUpdateStrategyActive],
+    [privateApiRef, isStrategyActive],
   );
 
   useGridRegisterPipeProcessor(privateApiRef, 'getRowsParams', addGetRowsParams);
