@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ConversationListItem",
+  "imports": [
+    "import { ConversationListItem } from '@mui/x-chat/headless';",
+    "import { ConversationListItem } from '@mui/x-chat/headless';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationListItem",
+  "filename": "/packages/x-chat-headless/src/conversation-list/ConversationListItem.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/conversation-list/\">Chat - Headless conversation list</a></li>\n<li><a href=\"/x/react-chat/material/conversation-list/\">Chat - Conversation list</a></li></ul>",
+  "cssComponent": false
+}

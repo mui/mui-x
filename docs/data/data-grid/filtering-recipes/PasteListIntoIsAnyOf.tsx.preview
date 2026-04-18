@@ -1,0 +1,13 @@
+<DataGrid
+  rows={data.rows}
+  columns={columns}
+  loading={loading}
+  filterModel={filterModel}
+  onFilterModelChange={setFilterModel}
+  initialState={{
+    preferencePanel: {
+      open: true,
+      openedPanelValue: GridPreferencePanelsValue.filters,
+    },
+  }}
+/>

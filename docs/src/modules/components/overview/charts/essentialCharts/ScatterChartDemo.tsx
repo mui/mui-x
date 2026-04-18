@@ -78,7 +78,7 @@ function CustomTooltip() {
 
 function Scatter() {
   return (
-    <Stack height="100%">
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center">Processor density (in transistor/mm²)</Typography>
       <ScatterChart
         series={series}

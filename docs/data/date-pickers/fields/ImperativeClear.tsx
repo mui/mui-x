@@ -19,7 +19,7 @@ export default function ImperativeClear() {
   const endFieldRef = React.useRef<FieldRef<PickerValue>>(null);
 
   const CustomMultiInputDateRangeField = React.useCallback(
-    (props: MultiInputDateRangeFieldProps<true>) => (
+    (props: MultiInputDateRangeFieldProps) => (
       <MultiInputDateRangeField
         {...props}
         startFieldRef={startFieldRef}
@@ -37,7 +37,7 @@ export default function ImperativeClear() {
           <Typography variant="body2">
             Using <code>fieldRef</code> to clear the value and focus the field.
           </Typography>
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
             <DatePicker
               slotProps={{ field: { fieldRef }, textField: { fullWidth: true } }}
             />
@@ -68,7 +68,7 @@ export default function ImperativeClear() {
             Using <code>fieldRef</code> to clear the value of a single-input range
             picker.
           </Typography>
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
             <DateRangePicker
               slotProps={{
                 field: { fieldRef: rangeFieldRef },

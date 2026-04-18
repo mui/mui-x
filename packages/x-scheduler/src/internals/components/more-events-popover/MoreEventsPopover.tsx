@@ -66,7 +66,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { classes } = useEventCalendarStyledContext();
+  const { schedulerId, classes } = useEventCalendarStyledContext();
   const { subscribeCloseHandler } = useEventDialogContext();
 
   React.useEffect(() => {
@@ -79,7 +79,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     <Popover className={classes.moreEventsPopover} open={open} anchorEl={anchor} onClose={onClose}>
       <MoreEventsPopoverHeader
         className={classes.moreEventsPopoverHeader}
-        id={`PopoverHeader-${day.key}`}
+        id={`${schedulerId}-PopoverHeader-${day.key}`}
         aria-label={`${formatWeekDayMonthAndDayOfMonth(day.value, adapter)}`}
       >
         <MoreEventsPopoverTitle className={classes.moreEventsPopoverTitle}>

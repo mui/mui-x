@@ -3,6 +3,7 @@ productId: x-scheduler
 title: React Scheduler component - Lazy loading
 packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
+components: EventCalendarPremium
 ---
 
 # Event Calendar - Lazy loading events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')

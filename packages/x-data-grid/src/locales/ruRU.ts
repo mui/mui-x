@@ -92,7 +92,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Операторы',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
-  filterPanelColumns: 'Столбцы',
+  filterPanelColumn: 'Столбцы',
   filterPanelInputLabel: 'Значение',
   filterPanelInputPlaceholder: 'Значение фильтра',
 

@@ -19,7 +19,7 @@ import Rating from '@mui/material/Rating';
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import { styled, ThemeProvider } from '@mui/material/styles';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import { DemoContainer } from '../DemoContainer';
