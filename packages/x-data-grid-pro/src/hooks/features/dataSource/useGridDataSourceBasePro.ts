@@ -88,7 +88,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     cacheChunkManager,
     cache,
   } = useGridDataSourceBase(apiRef, props, {
-    fetchRowChildren: (parents, fetchParams) => nestedDataManager.queue(parents, fetchParams),
+    fetchRowChildren: nestedDataManager.queue,
     clearDataSourceState,
     handleEditRow,
     ...options,

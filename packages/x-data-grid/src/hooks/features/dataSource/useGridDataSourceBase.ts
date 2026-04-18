@@ -107,7 +107,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         return;
       }
 
-      const { skipCache, keepChildrenExpanded, ...getRowsParams } = params || {};
+      const { skipCache, keepChildrenExpanded, showChildrenLoading, ...getRowsParams } =
+        params || {};
 
       const fetchParams = {
         ...gridGetRowsParamsSelector(apiRef),
@@ -116,7 +117,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       };
 
       if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
-        options.fetchRowChildren?.([parentId], [fetchParams]);
+        options.fetchRowChildren?.([parentId], [fetchParams], showChildrenLoading);
         return;
       }
 
