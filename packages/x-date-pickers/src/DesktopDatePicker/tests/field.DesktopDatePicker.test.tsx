@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { act } from '@mui/internal-test-utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
@@ -73,4 +75,55 @@ describe('<DesktopDatePicker /> - Field', () => {
       expectFieldValue(view.getSectionsContainer(), 'MMMM 2022');
     });
   });
+
+  describeAdapters(
+    'Controlled invalid value',
+    DesktopDatePicker,
+    ({ adapter, renderWithProps }) => {
+      it('should keep the entered sections when the controlled value ignores a validator-invalid date', async () => {
+        const view = renderWithProps(
+          {
+            minDate: adapter.date('2022-01-01'),
+            maxDate: adapter.date('2022-12-31'),
+          },
+          {
+            componentFamily: 'picker',
+            hook: function useControlledInvalidValueProps() {
+              const [value, setValue] = React.useState(null);
+
+              return {
+                value,
+                onChange: (newValue, context) => {
+                  if (context.validationError == null) {
+                    setValue(newValue);
+                  }
+                },
+              };
+            },
+          },
+        );
+
+        await view.selectSectionAsync('month');
+        await view.user.keyboard('04');
+        await view.selectSectionAsync('day');
+        await view.user.keyboard('17');
+        expectFieldValue(view.getSectionsContainer(), '04/17/YYYY');
+
+        await view.selectSectionAsync('year');
+        await view.user.keyboard('2023');
+
+        await act(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+          });
+        });
+
+        expectFieldValue(view.getSectionsContainer(), '04/17/2023');
+
+        await view.selectSectionAsync('year');
+        await view.user.keyboard('2022');
+        expectFieldValue(view.getSectionsContainer(), '04/17/2022');
+      });
+    },
+  );
 });
