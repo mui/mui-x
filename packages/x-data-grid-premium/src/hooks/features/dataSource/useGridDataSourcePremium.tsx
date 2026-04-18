@@ -90,18 +90,10 @@ export const useGridDataSourcePremium = (
       },
       groupingModelSize,
     );
-    const [prevStrategy1, prevStrategy2] = previousStrategies;
 
-    apiRef.current.setStrategyAvailability(
-      GridStrategyGroup.DataSource,
-      prevStrategy1,
-      () => false,
-    );
-    apiRef.current.setStrategyAvailability(
-      GridStrategyGroup.DataSource,
-      prevStrategy2,
-      () => false,
-    );
+    previousStrategies.forEach((strategy) => {
+      apiRef.current.setStrategyAvailability(GridStrategyGroup.DataSource, strategy, () => false);
+    });
 
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
