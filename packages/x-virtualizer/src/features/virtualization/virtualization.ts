@@ -226,6 +226,13 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     [store, onRenderContextChange],
   );
 
+  const syncScrollPosition = () => {
+    store.set('virtualization', {
+      ...store.state.virtualization,
+      scrollPosition: { current: { ...scrollPosition.current } },
+    });
+  };
+
   const triggerUpdateRenderContext = useEventCallback(() => {
     const scroller = layout.refs.scroller.current;
     if (!scroller) {
@@ -271,10 +278,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
     if (!shouldUpdate) {
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        scrollPosition: { current: { ...scrollPosition.current } },
-      });
+      syncScrollPosition();
       return renderContext;
     }
 
@@ -314,10 +318,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
       scrollTimeout.start(1000, triggerUpdateRenderContext);
     } else {
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        scrollPosition: { current: { ...scrollPosition.current } },
-      });
+      syncScrollPosition();
     }
 
     return nextRenderContext;
@@ -788,13 +789,6 @@ function computeRenderContext(
     renderContext.lastRowIndex = lastRowIndex;
   }
 
-  // XXX
-  // if (inputs.listView) {
-  //   return {
-  //     ...renderContext,
-  //     lastColumnIndex: 1,
-  //   };
-  // }
   if (inputs.enabledForColumns) {
     let firstColumnIndex = 0;
     let lastColumnIndex = inputs.columnPositions.length;
@@ -945,25 +939,28 @@ function binarySearch(
     return -1;
   }
 
-  if (sliceStart >= sliceEnd) {
-    return sliceStart;
+  let start = sliceStart;
+  let end = sliceEnd;
+  while (start < end) {
+    const pivot = start + ((end - start) >> 1);
+    const position = positions[pivot];
+
+    let isBefore: boolean;
+    if (options?.atStart) {
+      const width =
+        (pivot === positions.length - 1 ? options.lastPosition : positions[pivot + 1]) - position;
+      isBefore = offset - width < position;
+    } else {
+      isBefore = offset <= position;
+    }
+
+    if (isBefore) {
+      end = pivot;
+    } else {
+      start = pivot + 1;
+    }
   }
-
-  const pivot = sliceStart + Math.floor((sliceEnd - sliceStart) / 2);
-  const position = positions[pivot];
-
-  let isBefore: boolean;
-  if (options?.atStart) {
-    const width =
-      (pivot === positions.length - 1 ? options.lastPosition : positions[pivot + 1]) - position;
-    isBefore = offset - width < position;
-  } else {
-    isBefore = offset <= position;
-  }
-
-  return isBefore
-    ? binarySearch(offset, positions, options, sliceStart, pivot)
-    : binarySearch(offset, positions, options, pivot + 1, sliceEnd);
+  return start;
 }
 
 function exponentialSearch(
@@ -1130,7 +1127,7 @@ function createScrollCache(
 type ScrollCache = ReturnType<typeof createScrollCache>;
 
 function createRange(from: number, to: number) {
-  return Array.from({ length: to - from }).map((_, i) => from + i);
+  return Array.from({ length: to - from }, (_, i) => from + i);
 }
 
 function getFirstNonSpannedColumnToRender({
@@ -1177,21 +1174,19 @@ function getFirstNonSpannedColumnToRender({
 
 /** Placeholder API functions for colspan & rowspan to re-implement */
 function createSpanningAPI(): AbstractAPI {
-  const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
-    throw new Error('MUI X: Unimplemented: colspan feature is required');
+  const unimpl =
+    (feature: string) =>
+    () => {
+      throw new Error(`MUI X: Unimplemented: ${feature} feature is required`);
+    };
+  return {
+    getCellColSpanInfo: unimpl('colspan') as AbstractAPI['getCellColSpanInfo'],
+    calculateColSpan: unimpl('colspan') as AbstractAPI['calculateColSpan'],
+    getHiddenCellsOrigin: unimpl('rowspan') as AbstractAPI['getHiddenCellsOrigin'],
   };
-
-  const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {
-    throw new Error('MUI X: Unimplemented: colspan feature is required');
-  };
-
-  const getHiddenCellsOrigin: AbstractAPI['getHiddenCellsOrigin'] = () => {
-    throw new Error('MUI X: Unimplemented: rowspan feature is required');
-  };
-
-  return { getCellColSpanInfo, calculateColSpan, getHiddenCellsOrigin };
 }
 
 export function roundToDecimalPlaces(value: number, decimals: number) {
-  return Math.round(value * 10 ** decimals) / 10 ** decimals;
+  const p = 10 ** decimals;
+  return Math.round(value * p) / p;
 }
