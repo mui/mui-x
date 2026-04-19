@@ -15,7 +15,10 @@ function TickParamsSelector({
   setTickLabelPlacement,
 }) {
   return (
-    <Stack direction="column" justifyContent="space-between" sx={{ width: '100%' }}>
+    <Stack
+      direction="column"
+      sx={{ justifyContent: 'space-between', width: '100%' }}
+    >
       <FormControl>
         <FormLabel id="tick-placement-radio-buttons-group-label">
           tickPlacement

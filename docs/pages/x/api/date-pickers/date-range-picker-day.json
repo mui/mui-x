@@ -32,6 +32,7 @@
     "isStartOfHighlighting": { "type": { "name": "bool" } },
     "isStartOfPreviewing": { "type": { "name": "bool" } },
     "isVisuallySelected": { "type": { "name": "bool" } },
+    "nativeButton": { "type": { "name": "bool" } },
     "onBlur": {
       "type": { "name": "func" },
       "default": "() => {}",

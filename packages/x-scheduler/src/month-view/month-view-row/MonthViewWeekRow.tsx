@@ -39,7 +39,7 @@ const MonthViewWeekNumberCell = styled('div', {
 }));
 
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
-  const { maxEvents, days, occurrencesMap, firstDayRef } = props;
+  const { rowIndex, maxEvents, days, occurrencesMap, firstDayRef } = props;
 
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
@@ -62,6 +62,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       key={weekNumber}
       start={start}
       end={end}
+      rowIndex={rowIndex}
       data-show-week-number={showWeekNumber || undefined}
     >
       {showWeekNumber && (

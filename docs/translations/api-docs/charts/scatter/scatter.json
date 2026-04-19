@@ -1,5 +1,6 @@
 {
   "componentDescription": "",
+  "deprecationInfo": "The <code>Scatter</code> component is an internal implementation detail of <code>ScatterPlot</code> and will be removed from the public API in v10. Use <code>ScatterPlot</code> instead.<br>Demos:<br>- <a href=\"https://mui.com/x/react-charts/scatter/\">Scatter</a> - <a href=\"https://mui.com/x/react-charts/scatter-demo/\">Scatter demonstration</a><br>API:<br>- <a href=\"https://mui.com/x/api/charts/scatter/\">Scatter API</a>",
   "propDescriptions": {
     "colorGetter": {
       "description": "Function to get the color of a scatter item given its data index. The data index argument is optional. If not provided, the color for the entire series is returned. If provided, the color for the specific scatter item is returned."

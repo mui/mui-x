@@ -46,6 +46,8 @@ You can specify the time period with the `xAxis` prop. This axis must have a ban
 
 You can use the `dataset` prop to provide OHLC data and `datasetKeys` on the series to map dataset fields to the open, high, low, and close values.
 
+See the [Dataset](/x/react-charts/dataset/) page to learn more.
+
 {{"demo": "DatasetCandlestick.js"}}
 
 ## Value formatting

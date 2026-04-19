@@ -63,7 +63,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
       const { selectSection, pressKey } = renderWithProps(
         {
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -102,7 +101,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       'should not select input content after closing on mobile',
       () => {
         const { selectSection, pressKey } = renderWithProps(
-          { enableAccessibleFieldDOMStructure: true, defaultValue: values[0] },
+          { defaultValue: values[0] },
           { componentFamily },
         );
 
@@ -120,7 +119,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
       const { selectSection, pressKey } = renderWithProps(
         {
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -162,7 +160,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
       const { selectSection, pressKey } = renderWithProps(
         {
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -197,7 +194,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
       const { selectSection, pressKey } = renderWithProps(
         {
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -265,7 +261,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
       const { selectSection, pressKey, user } = renderWithProps(
         {
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,
@@ -330,7 +325,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
         const { selectSection, pressKey } = renderWithProps(
           {
-            enableAccessibleFieldDOMStructure: true,
             onChange,
             onAccept,
             onClose,
@@ -449,7 +443,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
       const { user } = renderWithProps(
         {
-          enableAccessibleFieldDOMStructure: true,
           onChange,
           onAccept,
           onClose,

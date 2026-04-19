@@ -74,7 +74,7 @@ describe('<EventTimelinePremium />', () => {
       });
       // Check that we have one title cell per resource by counting the cells with IDs
       const resourceTitleCells = baseResources.map((resource) =>
-        document.getElementById(`EventTimelinePremiumTitleCell-${resource.id}`),
+        document.querySelector(`[id$="-EventTimelinePremiumTitleCell-${resource.id}"]`),
       );
       expect(resourceTitleCells.filter(Boolean).length).to.equal(baseResources.length);
     });
@@ -126,6 +126,35 @@ describe('<EventTimelinePremium />', () => {
       baseEvents.forEach((eventItem) => {
         expect(screen.getByText(eventItem.title)).not.to.equal(null);
       });
+    });
+
+    it('should display recurrence icon only for recurring events', () => {
+      const recurringEvent = EventBuilder.new()
+        .title('Recurring timeline event')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .recurrent('DAILY')
+        .build();
+      const singleEvent = EventBuilder.new()
+        .title('Single timeline event')
+        .singleDay('2025-07-03T11:00:00Z')
+        .resource(engineering)
+        .build();
+
+      renderTimeline({ events: [recurringEvent, singleEvent], view: 'days' });
+
+      const recurringEventElements = screen.getAllByLabelText(recurringEvent.title);
+      expect(recurringEventElements.length).to.be.greaterThan(0);
+      recurringEventElements.forEach((element) => {
+        expect(
+          element.querySelector(`.${eventTimelinePremiumClasses.eventRecurringIcon}`),
+        ).not.to.equal(null);
+      });
+
+      const singleEventElement = screen.getByLabelText(singleEvent.title);
+      expect(
+        singleEventElement.querySelector(`.${eventTimelinePremiumClasses.eventRecurringIcon}`),
+      ).to.equal(null);
     });
 
     it('should render events correctly in the time view', () => {
