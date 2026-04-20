@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { DefaultizedProps, WithDataAttributes } from '@mui/x-internals/types';
 import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
@@ -28,7 +28,7 @@ export interface BaseTimePickerSlots extends TimeClockSlots {
 }
 
 export interface BaseTimePickerSlotProps extends TimeClockSlotProps {
-  toolbar?: ExportedTimePickerToolbarProps;
+  toolbar?: WithDataAttributes<ExportedTimePickerToolbarProps>;
 }
 
 export type TimePickerViewRenderers<TView extends TimeViewWithMeridiem> = PickerViewRendererLookup<

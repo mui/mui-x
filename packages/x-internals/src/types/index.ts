@@ -1,5 +1,6 @@
 export * from './base';
 export * from './AppendKeys';
+export * from './AssertSlotDataAttributes';
 export * from './DataAttributes';
 export * from './DefaultizedProps';
 export * from './DistributiveOmit';

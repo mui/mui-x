@@ -1,4 +1,5 @@
 import type * as React from 'react';
+import type { WithDataAttributes } from '@mui/x-internals/types';
 import type { ScatterMarkerProps } from './ScatterMarker';
 
 export interface ScatterMarkerSlots {
@@ -10,7 +11,7 @@ export interface ScatterMarkerSlots {
 }
 
 export interface ScatterMarkerSlotProps {
-  marker?: ScatterMarkerProps;
+  marker?: WithDataAttributes<ScatterMarkerProps>;
 }
 
 export interface ScatterMarkerSlotExtension {

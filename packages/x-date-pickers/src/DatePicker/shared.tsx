@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { DefaultizedProps, WithDataAttributes } from '@mui/x-internals/types';
 import {
   DateCalendarSlots,
   DateCalendarSlotProps,
@@ -30,7 +30,7 @@ export interface BaseDatePickerSlots extends DateCalendarSlots {
 }
 
 export interface BaseDatePickerSlotProps extends DateCalendarSlotProps {
-  toolbar?: ExportedDatePickerToolbarProps;
+  toolbar?: WithDataAttributes<ExportedDatePickerToolbarProps>;
 }
 
 export type DatePickerViewRenderers<TView extends DateView> = PickerViewRendererLookup<

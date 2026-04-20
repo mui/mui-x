@@ -24,3 +24,14 @@ export type DataAttributes = React.AriaAttributes &
   DataAttributesOverrides & {
     [k: `data-${string}`]: DataAttributeValue;
   };
+
+/**
+ * Widens a slot-props type to also accept `data-*` and `aria-*` attributes.
+ *
+ * Implemented as a union between the original type and the intersected widened
+ * form — `T | (T & DataAttributes)` — so that pre-typed values remain
+ * assignable to the original branch without having to declare a `data-*`
+ * index signature themselves, while object literals can pick up the widened
+ * branch and include `data-*` / `aria-*` keys.
+ */
+export type WithDataAttributes<T> = T | (T & DataAttributes);

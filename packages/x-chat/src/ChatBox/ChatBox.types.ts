@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentPropsFromProps, WithDataAttributes } from '@mui/x-internals/types';
 import {
   type ChatRootProps,
   type MessageListRootAutoScrollConfig,
@@ -103,31 +103,31 @@ export interface ChatBoxSlotProps {
   layout?: SlotComponentPropsFromProps<'div', { sx?: SxProps<Theme> }, {}>;
   conversationsPane?: SlotComponentPropsFromProps<'div', { sx?: SxProps<Theme> }, {}>;
   threadPane?: SlotComponentPropsFromProps<'div', { sx?: SxProps<Theme> }, {}>;
-  conversationList?: Partial<ChatConversationListProps>;
-  conversationHeader?: Partial<ChatConversationHeaderProps>;
-  conversationTitle?: Partial<ChatConversationTitleProps>;
-  conversationSubtitle?: Partial<ChatConversationSubtitleProps>;
-  conversationHeaderInfo?: Partial<ChatConversationHeaderInfoProps>;
-  conversationHeaderActions?: Partial<ChatConversationHeaderActionsProps>;
-  messageList?: Partial<ChatMessageListProps>;
-  messageRoot?: Partial<ChatMessageProps>;
-  messageAvatar?: Partial<ChatMessageAvatarProps>;
-  messageContent?: Partial<ChatMessageContentProps>;
-  messageMeta?: Partial<ChatMessageMetaProps>;
-  messageActions?: Partial<ChatMessageActionsProps>;
-  messageGroup?: Partial<ChatMessageGroupProps>;
-  dateDivider?: Partial<ChatDateDividerProps>;
-  composerRoot?: Partial<ChatComposerProps>;
-  composerInput?: Partial<ChatComposerTextAreaProps>;
-  composerSendButton?: Partial<ChatComposerSendButtonProps>;
-  composerAttachButton?: Partial<ChatComposerAttachButtonProps>;
-  composerAttachmentList?: Partial<ChatComposerAttachmentListProps>;
-  composerToolbar?: Partial<ChatComposerToolbarProps>;
-  composerHelperText?: Partial<ChatComposerHelperTextProps>;
-  typingIndicator?: Partial<ChatTypingIndicatorProps>;
-  unreadMarker?: Partial<ChatUnreadMarkerProps>;
-  scrollToBottom?: Partial<ChatScrollToBottomAffordanceProps>;
-  suggestions?: Partial<ChatSuggestionsProps>;
+  conversationList?: WithDataAttributes<Partial<ChatConversationListProps>>;
+  conversationHeader?: WithDataAttributes<Partial<ChatConversationHeaderProps>>;
+  conversationTitle?: WithDataAttributes<Partial<ChatConversationTitleProps>>;
+  conversationSubtitle?: WithDataAttributes<Partial<ChatConversationSubtitleProps>>;
+  conversationHeaderInfo?: WithDataAttributes<Partial<ChatConversationHeaderInfoProps>>;
+  conversationHeaderActions?: WithDataAttributes<Partial<ChatConversationHeaderActionsProps>>;
+  messageList?: WithDataAttributes<Partial<ChatMessageListProps>>;
+  messageRoot?: WithDataAttributes<Partial<ChatMessageProps>>;
+  messageAvatar?: WithDataAttributes<Partial<ChatMessageAvatarProps>>;
+  messageContent?: WithDataAttributes<Partial<ChatMessageContentProps>>;
+  messageMeta?: WithDataAttributes<Partial<ChatMessageMetaProps>>;
+  messageActions?: WithDataAttributes<Partial<ChatMessageActionsProps>>;
+  messageGroup?: WithDataAttributes<Partial<ChatMessageGroupProps>>;
+  dateDivider?: WithDataAttributes<Partial<ChatDateDividerProps>>;
+  composerRoot?: WithDataAttributes<Partial<ChatComposerProps>>;
+  composerInput?: WithDataAttributes<Partial<ChatComposerTextAreaProps>>;
+  composerSendButton?: WithDataAttributes<Partial<ChatComposerSendButtonProps>>;
+  composerAttachButton?: WithDataAttributes<Partial<ChatComposerAttachButtonProps>>;
+  composerAttachmentList?: WithDataAttributes<Partial<ChatComposerAttachmentListProps>>;
+  composerToolbar?: WithDataAttributes<Partial<ChatComposerToolbarProps>>;
+  composerHelperText?: WithDataAttributes<Partial<ChatComposerHelperTextProps>>;
+  typingIndicator?: WithDataAttributes<Partial<ChatTypingIndicatorProps>>;
+  unreadMarker?: WithDataAttributes<Partial<ChatUnreadMarkerProps>>;
+  scrollToBottom?: WithDataAttributes<Partial<ChatScrollToBottomAffordanceProps>>;
+  suggestions?: WithDataAttributes<Partial<ChatSuggestionsProps>>;
 }
 
 export interface ChatBoxFeatures {

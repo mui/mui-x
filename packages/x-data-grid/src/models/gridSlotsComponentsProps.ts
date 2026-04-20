@@ -1,4 +1,5 @@
 import type * as React from 'react';
+import type { WithDataAttributes } from '@mui/x-internals/types';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -46,8 +47,8 @@ import type {
   ToggleButtonProps,
 } from './gridBaseSlots';
 
-type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
-type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
+type RootProps = React.HTMLAttributes<HTMLDivElement>;
+type MainProps = React.HTMLAttributes<HTMLDivElement>;
 
 // Overrides for module augmentation
 export interface BaseAutocompletePropsOverrides {}
@@ -175,5 +176,5 @@ export interface GridRowCheckboxProps extends CheckboxProps, RowCheckboxPropsOve
  * Overridable components props dynamically passed to the component at rendering.
  */
 export type GridSlotsComponentsProps = Partial<{
-  [K in keyof GridSlotProps]: Partial<GridSlotProps[K]>;
+  [K in keyof GridSlotProps]: WithDataAttributes<Partial<GridSlotProps[K]>>;
 }>;

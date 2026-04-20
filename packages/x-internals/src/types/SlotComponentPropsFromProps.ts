@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { DataAttributes } from './DataAttributes';
+import { DataAttributes, WithDataAttributes } from './DataAttributes';
 
 type ResolveSlotProps<T> = T extends React.ElementType ? React.ComponentPropsWithRef<T> : T;
 
@@ -9,11 +9,10 @@ type ResolveSlotProps<T> = T extends React.ElementType ? React.ComponentPropsWit
  * type or an element type as the first generic — when given an element type,
  * its props are derived via `React.ComponentPropsWithRef`.
  *
- * Accepts `data-*` and `aria-*` attributes via a widened variant that adds
- * `DataAttributes`. Kept as a separate union variant (rather than intersected
- * into every variant) so that user code casting to a custom prop type — e.g.
- * `{ editable: true } as CustomLabelProps` — keeps matching the non-widened
- * variant without needing the custom type to declare a `data-*` index
+ * Accepts `data-*` and `aria-*` attributes via `WithDataAttributes`, which
+ * keeps the original type as one branch of a union so that user code casting
+ * to a custom prop type — e.g. `{ editable: true } as CustomLabelProps` — stays
+ * assignable without needing the custom type to declare a `data-*` index
  * signature.
  *
  * @template T - A props type, or a React element type whose props to use.
@@ -25,6 +24,5 @@ export type SlotComponentPropsFromProps<
   TOverrides extends {} = {},
   TOwnerState extends {} = {},
 > =
-  | (Partial<ResolveSlotProps<T>> & TOverrides)
-  | (Partial<ResolveSlotProps<T>> & TOverrides & DataAttributes)
+  | WithDataAttributes<Partial<ResolveSlotProps<T>> & TOverrides>
   | ((ownerState: TOwnerState) => Partial<ResolveSlotProps<T>> & TOverrides & DataAttributes);

@@ -3,6 +3,7 @@ import { FormControlProps } from '@mui/material/FormControl';
 import { FormHelperTextProps } from '@mui/material/FormHelperText';
 import { InputLabelProps } from '@mui/material/InputLabel';
 import { TextFieldVariants } from '@mui/material/TextField';
+import type { WithDataAttributes } from '@mui/x-internals/types';
 import {
   PickersInputBaseProps,
   PickersInputPropsUsedByField,
@@ -41,11 +42,11 @@ export interface PickersTextFieldSlots {
 }
 
 export interface PickersTextFieldSlotProps<InputPropsType extends PickersInputBaseProps> {
-  root?: Partial<FormControlProps>;
-  input?: Partial<InputPropsType>;
-  inputLabel?: Partial<InputLabelProps>;
-  htmlInput?: React.ComponentPropsWithRef<'input'>;
-  formHelperText?: Partial<FormHelperTextProps>;
+  root?: WithDataAttributes<Partial<FormControlProps>>;
+  input?: WithDataAttributes<Partial<InputPropsType>>;
+  inputLabel?: WithDataAttributes<Partial<InputLabelProps>>;
+  htmlInput?: WithDataAttributes<React.ComponentPropsWithRef<'input'>>;
+  formHelperText?: WithDataAttributes<Partial<FormHelperTextProps>>;
 }
 
 export interface PickersTextFieldSlotsAndSlotProps<InputPropsType extends PickersInputBaseProps> {

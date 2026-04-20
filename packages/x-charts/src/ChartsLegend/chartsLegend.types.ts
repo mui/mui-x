@@ -1,3 +1,4 @@
+import type { WithDataAttributes } from '@mui/x-internals/types';
 import type { ChartsLegendProps } from './ChartsLegend';
 import { type ContinuousColorLegendProps } from './ContinuousColorLegend';
 import { type ChartsLegendPosition } from './legend.types';
@@ -15,9 +16,11 @@ export interface ChartsLegendSlots {
 }
 
 export interface ChartsLegendSlotProps {
-  legend?: Partial<ChartsLegendProps | ContinuousColorLegendProps | PiecewiseColorLegendProps> &
-    // We allow position only on slots.
-    ChartsLegendPosition;
+  legend?: WithDataAttributes<
+    Partial<ChartsLegendProps | ContinuousColorLegendProps | PiecewiseColorLegendProps> &
+      // We allow position only on slots.
+      ChartsLegendPosition
+  >;
 }
 
 export interface ChartsLegendSlotExtension {
