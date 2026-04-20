@@ -41,8 +41,11 @@ const PRESET_NAVIGATION_STEP: Record<
  * (`zoomIn()` moves toward index 0, `zoomOut()` toward the end) behaves consistently
  * regardless of the order the user provides.
  *
- * TODO: when custom presets land (see `PresetConfig` in PR #21827), replace this hardcoded
- * list with a `zoomLevel` field on the preset config and sort by that instead.
+ * TODO: once the extended `PresetConfig` lands (see #21827) — with `tickWidth`, `timeResolution`
+ * and multi-level `headers` — replace this hardcoded list with a data-driven sort derived from
+ * the config itself (Bryntum's `PresetStore` approach: sort by `msPerPixel` = milliseconds per
+ * pixel, computed from `tickWidth` and the bottom header's unit/increment). That removes the
+ * need for any external ranking when custom presets are registered.
  */
 const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = [
   'dayAndHour',
