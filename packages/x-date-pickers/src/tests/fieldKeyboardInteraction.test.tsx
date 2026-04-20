@@ -80,8 +80,6 @@ describe(`RTL - test arrows navigation`, () => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
       fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowRight' });
     });
-
-    view.unmount();
   });
 
   it('should move selected section to the previous section respecting RTL order in empty field', () => {
@@ -95,8 +93,6 @@ describe(`RTL - test arrows navigation`, () => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
       fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowLeft' });
     });
-
-    view.unmount();
   });
 
   it('should move selected section to the next section respecting RTL order in non-empty field', () => {
@@ -116,8 +112,6 @@ describe(`RTL - test arrows navigation`, () => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
       fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowRight' });
     });
-
-    view.unmount();
   });
 
   it('should move selected section to the previous section respecting RTL order in non-empty field', () => {
@@ -137,8 +131,6 @@ describe(`RTL - test arrows navigation`, () => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
       fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowLeft' });
     });
-
-    view.unmount();
   });
 });
 

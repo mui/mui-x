@@ -55,7 +55,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   // Context hooks
-  const { classes, localeText } = useEventCalendarStyledContext();
+  const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
 
   // Ref hooks
@@ -150,7 +150,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         className={classes.preferencesMenuButton}
         aria-label={localeText.preferencesMenu}
         onClick={handleClick}
-        aria-controls={open ? 'preferences-menu' : undefined}
+        aria-controls={open ? `${schedulerId}-preferences-menu` : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
       >
@@ -158,7 +158,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
       </IconButton>
       <Menu
         className={classes.preferencesMenuList}
-        id="preferences-menu"
+        id={`${schedulerId}-preferences-menu`}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}

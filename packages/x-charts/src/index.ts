@@ -32,6 +32,7 @@ export type {
 } from './ChartsContainer';
 export * from './ChartsDataProvider';
 export * from './ChartsRadialDataProvider';
+export * from './ChartsRadialGrid';
 export * from './Toolbar';
 export * from './ChartsWrapper';
 export * from './ChartsBrushOverlay';
