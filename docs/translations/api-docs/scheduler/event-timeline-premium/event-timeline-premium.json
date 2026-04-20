@@ -26,8 +26,8 @@
     "defaultPreferences": {
       "description": "The default preferences for the timeline. To use controlled preferences, use the <code>preferences</code> prop."
     },
-    "defaultView": {
-      "description": "The view initially displayed in the timeline. To render a controlled timeline, use the <code>view</code> prop."
+    "defaultPreset": {
+      "description": "The preset initially displayed in the timeline. To render a controlled timeline, use the <code>preset</code> prop."
     },
     "defaultVisibleDate": {
       "description": "The date initially used to determine the visible date range in each view. To render a controlled calendar, use the <code>visibleDate</code> prop."
@@ -50,12 +50,16 @@
     },
     "onEventsChange": { "description": "Callback fired when some event of the calendar change." },
     "onPreferencesChange": { "description": "Event handler called when the preferences change." },
-    "onViewChange": { "description": "Event handler called when the view changes." },
+    "onPresetChange": { "description": "Event handler called when the preset changes." },
     "onVisibleDateChange": { "description": "Event handler called when the visible date changes." },
     "onVisibleResourcesChange": {
       "description": "Event handler called when the visible resources change."
     },
     "preferences": { "description": "Preferences currently displayed in the timeline." },
+    "preset": { "description": "The preset currently displayed in the timeline." },
+    "presets": {
+      "description": "The presets available in the timeline, ordered from most-zoomed-in to most-zoomed-out. A future zoom API will rely on this order: <code>zoomIn()</code> moves toward index 0, <code>zoomOut()</code> toward <code>presets.length - 1</code>."
+    },
     "readOnly": { "description": "Whether the calendar is in read-only mode." },
     "resourceColumnLabel": {
       "description": "The label displayed in the resource column header. When provided, this takes priority over <code>localeText.timelineResourceTitleHeader</code>."
@@ -70,8 +74,6 @@
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
-    "view": { "description": "The view currently displayed in the timeline." },
-    "views": { "description": "The views available in the timeline." },
     "visibleDate": {
       "description": "The date currently used to determine the visible date range in each view."
     },

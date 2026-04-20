@@ -4,7 +4,7 @@ import { useStore } from '@base-ui/utils/store/useStore';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { formatWeekDayMonthAndDayOfMonth, useFormatTime } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
@@ -13,7 +13,7 @@ const TimeHeaderRoot = styled('div', {
   slot: 'TimeHeader',
 })({
   display: 'flex',
-  minWidth: 'calc(var(--unit-count) * var(--time-cell-width))',
+  minWidth: 'calc(var(--unit-count) * var(--dayAndHour-cell-width))',
 });
 
 const TimeHeaderCell = styled('div', {
@@ -47,7 +47,7 @@ const TimeCellsRow = styled('div', {
 })(({ theme }) => ({
   padding: theme.spacing(0, 1),
   display: 'grid',
-  gridTemplateColumns: 'repeat(24, var(--time-cell-width))',
+  gridTemplateColumns: 'repeat(24, var(--dayAndHour-cell-width))',
 }));
 
 const TimeCell = styled('div', {
@@ -73,14 +73,14 @@ export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Feature hooks
   const formatTime = useFormatTime();
 
   const days = React.useMemo(
-    () => getDayList({ adapter, start: viewConfig.start, end: viewConfig.end }),
-    [adapter, viewConfig],
+    () => getDayList({ adapter, start: presetConfig.start, end: presetConfig.end }),
+    [adapter, presetConfig],
   );
 
   const template = adapter.date('2020-01-01T00:00:00', 'default');

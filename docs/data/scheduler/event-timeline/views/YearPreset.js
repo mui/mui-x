@@ -5,9 +5,9 @@ import {
   initialEvents,
   resources,
   defaultVisibleDate,
-} from '../../datasets/car-rental';
+} from '../../datasets/tv-series';
 
-export default function TimeView() {
+export default function YearPreset() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
@@ -17,8 +17,8 @@ export default function TimeView() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="time"
-        views={['time']}
+        defaultPreset="year"
+        presets={['year']}
       />
     </div>
   );

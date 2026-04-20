@@ -3,18 +3,18 @@ import {
   SchedulerParameters,
   SchedulerChangeEventDetails,
 } from '@mui/x-scheduler-headless/internals';
-import { EventTimelinePremiumView } from '../models/view';
+import { EventTimelinePremiumPreset } from '../models/preset';
 import { EventTimelinePremiumPreferences } from '../models/preferences';
 
 export interface EventTimelinePremiumState extends SchedulerState {
   /**
-   * The view displayed in the timeline.
+   * The preset displayed in the timeline.
    */
-  view: EventTimelinePremiumView;
+  preset: EventTimelinePremiumPreset;
   /**
-   * The views available in the timeline.
+   * The presets available in the timeline.
    */
-  views: EventTimelinePremiumView[];
+  presets: EventTimelinePremiumPreset[];
   /**
    * Preferences for the timeline.
    */
@@ -26,25 +26,27 @@ export interface EventTimelinePremiumParameters<
   TResource extends object,
 > extends SchedulerParameters<TEvent, TResource> {
   /**
-   * The view currently displayed in the timeline.
+   * The preset currently displayed in the timeline.
    */
-  view?: EventTimelinePremiumView;
+  preset?: EventTimelinePremiumPreset;
   /**
-   * The view initially displayed in the timeline.
-   * To render a controlled timeline, use the `view` prop.
-   * @default "time"
+   * The preset initially displayed in the timeline.
+   * To render a controlled timeline, use the `preset` prop.
+   * @default "dayAndHour"
    */
-  defaultView?: EventTimelinePremiumView;
+  defaultPreset?: EventTimelinePremiumPreset;
   /**
-   * The views available in the timeline.
-   * @default ["time", "days", "weeks", "months", "years"]
+   * The presets available in the timeline, ordered from most-zoomed-in to most-zoomed-out.
+   * A future zoom API will rely on this order: `zoomIn()` moves toward index 0,
+   * `zoomOut()` toward `presets.length - 1`.
+   * @default ["dayAndHour", "day", "dayAndWeek", "monthAndYear", "year"]
    */
-  views?: EventTimelinePremiumView[];
+  presets?: EventTimelinePremiumPreset[];
   /**
-   * Event handler called when the view changes.
+   * Event handler called when the preset changes.
    */
-  onViewChange?: (
-    view: EventTimelinePremiumView,
+  onPresetChange?: (
+    preset: EventTimelinePremiumPreset,
     eventDetails: SchedulerChangeEventDetails,
   ) => void;
   /**

@@ -18,7 +18,7 @@ export default function ResourceColumnLabel() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         resourceColumnLabel="Team"
-        defaultView="months"
+        defaultPreset="monthAndYear"
       />
     </div>
   );

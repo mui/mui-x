@@ -5,9 +5,9 @@ import {
   initialEvents,
   resources,
   defaultVisibleDate,
-} from '../../datasets/tv-series';
+} from '../../datasets/company-roadmap';
 
-export default function YearsView() {
+export default function DayAndWeekPreset() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
@@ -17,8 +17,8 @@ export default function YearsView() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="years"
-        views={['years']}
+        defaultPreset="dayAndWeek"
+        presets={['dayAndWeek']}
       />
     </div>
   );

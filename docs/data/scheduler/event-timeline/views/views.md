@@ -6,41 +6,41 @@ githubLabel: 'scope: scheduler'
 components: EventTimelinePremium
 ---
 
-# Event Timeline - Views
+# Event Timeline - Presets
 
 <p class="description">The Event Timeline Premium supports several zoom levels to display events at different time scales.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
-## Time view
+## Day and hour preset
 
-The `time` view displays a few days with hourly granularity—ideal for scheduling tasks within specific hours.
+The `dayAndHour` preset displays a few days with hourly granularity—ideal for scheduling tasks within specific hours.
 
-{{"demo": "TimeView.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "DayAndHourPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Days view
+## Day preset
 
-The `days` view displays several weeks with daily granularity—ideal for bookings and short-term planning.
+The `day` preset displays several weeks with daily granularity—ideal for bookings and short-term planning.
 
-{{"demo": "DaysView.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "DayPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Weeks view
+## Day and week preset
 
-The `weeks` view displays several months with weekly granularity—ideal for project planning and sprint tracking.
+The `dayAndWeek` preset displays several months with weekly granularity—ideal for project planning and sprint tracking.
 
-{{"demo": "WeeksView.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "DayAndWeekPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Months view
+## Month and year preset
 
-The `months` view displays several years with monthly granularity—ideal for long-term roadmaps and strategic planning.
+The `monthAndYear` preset displays several years with monthly granularity—ideal for long-term roadmaps and strategic planning.
 
-{{"demo": "MonthsView.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "MonthAndYearPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Years view
+## Year preset
 
-The `years` view displays decades with yearly granularity—ideal for high-level overviews of multi-year initiatives.
+The `year` preset displays decades with yearly granularity—ideal for high-level overviews of multi-year initiatives.
 
-{{"demo": "YearsView.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "YearPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Zoom in/out 🚧
 
