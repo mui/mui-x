@@ -29,14 +29,30 @@ export const ChartsWebGLLayer = React.forwardRef<
   const renderTick = store.use(selectorWebGLRenderTickOptional);
 
   const glContext = instance.webGLContextRef?.current ?? null;
-  const flushRender = instance.webGLFlushRender;
+  const drawEntriesRef = instance.webGLDrawEntriesRef;
+
+  const flushRender = React.useCallback(() => {
+    const gl = glContext;
+    const entries = drawEntriesRef?.current;
+    if (!gl || !entries) {
+      return;
+    }
+    gl.clearColor(0, 0, 0, 0.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    // Sort by order so z-order matches children's position in ChartsWebGLLayer,
+    // stable across remount.
+    const sorted = [...entries].sort((a, b) => a.order - b.order);
+    for (const { drawRef } of sorted) {
+      drawRef.current?.();
+    }
+  }, [glContext, drawEntriesRef]);
 
   // Centralized resize handling — render all plots on canvas resize
-  useWebGLResizeObserver(glContext, flushRender ?? (() => {}));
+  useWebGLResizeObserver(glContext, flushRender);
 
   // Flush scheduled renders when renderTick changes
   React.useEffect(() => {
-    flushRender?.();
+    flushRender();
   }, [renderTick, flushRender]);
 
   React.useEffect(() => {

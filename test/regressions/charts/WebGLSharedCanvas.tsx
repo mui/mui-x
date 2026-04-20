@@ -12,14 +12,16 @@ function BluePlot() {
   const layer = useWebGLLayer();
   const drawRef = React.useRef<(() => void) | null>(null);
 
-  drawRef.current = () => {
-    const { gl } = layer!;
-    gl.enable(gl.SCISSOR_TEST);
-    gl.scissor(10, 10, 80, 80);
-    gl.clearColor(0.2, 0.4, 0.9, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.disable(gl.SCISSOR_TEST);
-  };
+  React.useEffect(() => {
+    drawRef.current = () => {
+      const { gl } = layer!;
+      gl.enable(gl.SCISSOR_TEST);
+      gl.scissor(10, 10, 80, 80);
+      gl.clearColor(0.2, 0.4, 0.9, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.disable(gl.SCISSOR_TEST);
+    };
+  }, [layer]);
 
   React.useEffect(() => {
     if (!layer) {
@@ -44,14 +46,16 @@ function RedPlot() {
   const layer = useWebGLLayer();
   const drawRef = React.useRef<(() => void) | null>(null);
 
-  drawRef.current = () => {
-    const { gl } = layer!;
-    gl.enable(gl.SCISSOR_TEST);
-    gl.scissor(50, 50, 80, 80);
-    gl.clearColor(0.9, 0.2, 0.2, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.disable(gl.SCISSOR_TEST);
-  };
+  React.useEffect(() => {
+    drawRef.current = () => {
+      const { gl } = layer!;
+      gl.enable(gl.SCISSOR_TEST);
+      gl.scissor(50, 50, 80, 80);
+      gl.clearColor(0.9, 0.2, 0.2, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.disable(gl.SCISSOR_TEST);
+    };
+  }, [layer]);
 
   React.useEffect(() => {
     if (!layer) {

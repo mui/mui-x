@@ -1,11 +1,20 @@
 import type * as React from 'react';
 import { type ChartPluginSignature } from '@mui/x-charts/internals';
 
+export interface WebGLDrawEntry {
+  drawRef: React.RefObject<(() => void) | null>;
+  order: number;
+}
+
 export interface UseChartWebGLInstance {
   /**
    * Ref holding the current WebGL2 rendering context. Null until a ChartsWebGLLayer mounts.
    */
   webGLContextRef: React.RefObject<WebGL2RenderingContext | null>;
+  /**
+   * Ref holding the list of registered draw entries. Consumed by `ChartsWebGLLayer` during flush.
+   */
+  webGLDrawEntriesRef: React.RefObject<Array<WebGLDrawEntry>>;
   /**
    * Called by ChartsWebGLLayer to set or clear the WebGL context.
    * @param {WebGL2RenderingContext | null} gl The WebGL context from the layer, or null if the context was lost.
@@ -28,11 +37,6 @@ export interface UseChartWebGLInstance {
    * Request a render frame. The layer will clear once, then call all registered draw callbacks in order.
    */
   webGLRequestRender: () => void;
-  /**
-   * Clear the canvas and call all registered draw callbacks.
-   * Called internally by ChartsWebGLLayer's flush effect and resize observer.
-   */
-  webGLFlushRender: () => void;
 }
 
 export interface UseChartWebGLState {

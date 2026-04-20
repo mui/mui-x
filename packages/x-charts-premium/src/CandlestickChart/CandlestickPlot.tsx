@@ -9,7 +9,7 @@ import { useWebGLLayer } from '../internals/useWebGLLayer';
 import { checkCandlestickScaleErrors } from './checkCandlestickScaleErrors';
 import { CandlestickWebGLProgram } from './CandlestickWebGLProgram';
 
-export interface CandlestickPlotProps {}
+export interface CandlestickPlotProps { }
 
 export function CandlestickPlot() {
   return <CandlestickWebGLPlot />;
@@ -62,9 +62,12 @@ function CandlestickWebGLPlotImpl({
   const dataLength = series.data.length;
 
   const drawRef = React.useRef<(() => void) | null>(null);
-  drawRef.current = () => {
-    program?.render(dataLength);
-  };
+
+  React.useEffect(() => {
+    drawRef.current = () => {
+      program?.render(dataLength);
+    };
+  }, [program, dataLength]);
 
   React.useEffect(() => {
     return webGLRegisterDraw(drawRef);
