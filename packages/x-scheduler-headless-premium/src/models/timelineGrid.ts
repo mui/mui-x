@@ -1,7 +1,7 @@
 /**
  * The type of column in the timeline grid.
- * - `'title'` — the resource name column on the left
- * - `'events'` — the events column on the right
+ * - `'title'` — the column displaying the resource name.
+ * - `'events'` — the column displaying the event timeline.
  */
 export type TimelineGridColumnType = 'title' | 'events';
 

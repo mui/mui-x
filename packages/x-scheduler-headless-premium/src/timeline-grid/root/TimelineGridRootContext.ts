@@ -7,8 +7,8 @@ import type {
 
 export interface TimelineGridRootContext {
   /**
-   * The coordinates of the cell that currently has keyboard focus.
-   * `null` when no cell has been focused via keyboard yet.
+   * The coordinates of the cell that currently owns focus within the grid.
+   * `null` when focus is outside the grid.
    */
   focusedCell: TimelineGridCellCoordinates | null;
   /**
