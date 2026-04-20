@@ -194,9 +194,7 @@ export const ChartsWebGLLayer = React.forwardRef<
         if (!React.isValidElement(child)) {
           return child;
         }
-        return (
-          <WebGLOrderContext.Provider value={index}>{child}</WebGLOrderContext.Provider>
-        );
+        return <WebGLOrderContext.Provider value={index}>{child}</WebGLOrderContext.Provider>;
       })}
     </ChartsWebGLContext.Provider>
   );

@@ -23,10 +23,7 @@ function getDevicePixelContentBoxSize(entry: ResizeObserverEntry) {
  * @param gl The WebGL2 rendering context whose canvas to observe.
  * @param onResize Callback invoked after the canvas and viewport are updated.
  */
-export function useWebGLResizeObserver(
-  gl: WebGL2RenderingContext | null,
-  onResize: () => void,
-) {
+export function useWebGLResizeObserver(gl: WebGL2RenderingContext | null, onResize: () => void) {
   React.useEffect(() => {
     const canvas = gl?.canvas;
 

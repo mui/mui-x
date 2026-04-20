@@ -78,12 +78,7 @@ function RedPlot() {
  */
 export default function WebGLSharedCanvas() {
   return (
-    <ChartsDataProvider
-      height={200}
-      width={200}
-      series={[]}
-      xAxis={[{ id: 'x', data: [1, 2, 3] }]}
-    >
+    <ChartsDataProvider height={200} width={200} series={[]} xAxis={[{ id: 'x', data: [1, 2, 3] }]}>
       <ChartsWrapper>
         <ChartsLayerContainer>
           <ChartsWebGLLayer>
