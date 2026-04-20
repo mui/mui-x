@@ -51,7 +51,7 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   ampm: PropTypes.bool,
   /**
-   * If `true`, the `input` element is focused during the first mount.
+   * If `true`, the field is focused during the first mount.
    * @default false
    */
   autoFocus: PropTypes.bool,
