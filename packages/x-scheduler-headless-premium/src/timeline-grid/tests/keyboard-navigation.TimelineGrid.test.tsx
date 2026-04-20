@@ -37,13 +37,12 @@ describe('TimelineGrid keyboard navigation', () => {
         <TimelineGrid.Root>
           <TimelineGrid.SubGrid>
             {(resourceId) => (
-              <TimelineGrid.Row
+              <TimelineGrid.TitleRow
                 key={resourceId}
-                columnType="title"
                 data-testid={`title-${resourceId}`}
               >
                 <TimelineGrid.Cell>{resourceId}</TimelineGrid.Cell>
-              </TimelineGrid.Row>
+              </TimelineGrid.TitleRow>
             )}
           </TimelineGrid.SubGrid>
           <TimelineGrid.SubGrid>

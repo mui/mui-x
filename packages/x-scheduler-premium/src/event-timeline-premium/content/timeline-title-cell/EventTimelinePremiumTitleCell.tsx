@@ -8,7 +8,7 @@ import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-p
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
-const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.Row, {
+const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.TitleRow, {
   name: 'MuiEventTimeline',
   slot: 'TitleCellRow',
 })(({ theme }) => ({
@@ -62,7 +62,6 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   return (
     <EventTimelinePremiumTitleCellRow
       className={classes.titleCellRow}
-      columnType="title"
       style={{ '--resource-depth': depth } as React.CSSProperties}
     >
       <EventTimelinePremiumTitleCellRoot
