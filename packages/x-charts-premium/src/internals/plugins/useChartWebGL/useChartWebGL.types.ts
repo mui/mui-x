@@ -13,13 +13,17 @@ export interface UseChartWebGLInstance {
   webGLSetContext: (gl: WebGL2RenderingContext | null) => void;
   /**
    * Register a draw callback ref. Returns an unregister function.
-   * Callbacks are called in registration order, which matches DOM order on initial mount.
-   * A component that unmounts and remounts (e.g. toggled via series visibility) will re-register
-   * at the end of the list, potentially changing the z-order relative to its DOM siblings.
+   * Callbacks are sorted by the provided `order` number so z-order follows render order
+   * even when components unmount and remount (e.g. toggled via series visibility).
+   * The order is derived from the child's position in `ChartsWebGLLayer`'s children.
    * @param {React.RefObject} drawRef A ref object whose current property is a callback function to call on each render, or null if the callback should be unregistered.
+   * @param {number} order Z-order index. Lower values draw first (behind higher values).
    * @returns {() => void} Unregister function to remove the callback from the render cycle.
    */
-  webGLRegisterDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
+  webGLRegisterDraw: (
+    drawRef: React.RefObject<(() => void) | null>,
+    order: number,
+  ) => () => void;
   /**
    * Request a render frame. The layer will clear once, then call all registered draw callbacks in order.
    */

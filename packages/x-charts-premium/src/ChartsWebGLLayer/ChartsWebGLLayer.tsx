@@ -13,6 +13,7 @@ import {
   selectorWebGLRenderTickOptional,
   type UseChartWebGLSignature,
 } from '../internals/plugins/useChartWebGL';
+import { WebGLOrderContext } from '../internals/WebGLOrderContext';
 
 export const ChartsWebGLLayer = React.forwardRef<
   HTMLCanvasElement,
@@ -105,7 +106,14 @@ export const ChartsWebGLLayer = React.forwardRef<
           }}
         />
       </CanvasPositioner>
-      {children}
+      {React.Children.map(children, (child, index) => {
+        if (!React.isValidElement(child)) {
+          return child;
+        }
+        return (
+          <WebGLOrderContext.Provider value={index}>{child}</WebGLOrderContext.Provider>
+        );
+      })}
     </React.Fragment>
   );
 });

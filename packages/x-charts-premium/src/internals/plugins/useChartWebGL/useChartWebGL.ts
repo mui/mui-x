@@ -3,9 +3,14 @@ import * as React from 'react';
 import { type ChartPlugin } from '@mui/x-charts/internals';
 import { type UseChartWebGLSignature } from './useChartWebGL.types';
 
+type DrawEntry = {
+  drawRef: React.RefObject<(() => void) | null>;
+  order: number;
+};
+
 export const useChartWebGL: ChartPlugin<UseChartWebGLSignature> = ({ store }) => {
   const webGLContextRef = React.useRef<WebGL2RenderingContext | null>(null);
-  const drawRefsRef = React.useRef<Array<React.RefObject<(() => void) | null>>>([]);
+  const drawEntriesRef = React.useRef<Array<DrawEntry>>([]);
 
   const webGLSetContext = React.useCallback(
     (gl: WebGL2RenderingContext | null) => {
@@ -15,15 +20,19 @@ export const useChartWebGL: ChartPlugin<UseChartWebGLSignature> = ({ store }) =>
     [store],
   );
 
-  const webGLRegisterDraw = React.useCallback((drawRef: React.RefObject<(() => void) | null>) => {
-    drawRefsRef.current.push(drawRef);
-    return () => {
-      const idx = drawRefsRef.current.indexOf(drawRef);
-      if (idx >= 0) {
-        drawRefsRef.current.splice(idx, 1);
-      }
-    };
-  }, []);
+  const webGLRegisterDraw = React.useCallback(
+    (drawRef: React.RefObject<(() => void) | null>, order: number) => {
+      const entry: DrawEntry = { drawRef, order };
+      drawEntriesRef.current.push(entry);
+      return () => {
+        const idx = drawEntriesRef.current.indexOf(entry);
+        if (idx >= 0) {
+          drawEntriesRef.current.splice(idx, 1);
+        }
+      };
+    },
+    [],
+  );
 
   const webGLRequestRender = React.useCallback(() => {
     store.set('webGL', { ...store.state.webGL, renderTick: store.state.webGL.renderTick + 1 });
@@ -36,7 +45,11 @@ export const useChartWebGL: ChartPlugin<UseChartWebGLSignature> = ({ store }) =>
     }
     gl.clearColor(0, 0, 0, 0.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    for (const drawRef of drawRefsRef.current) {
+
+    // Sort by order so z-order matches the children's position in ChartsWebGLLayer,
+    // stable across remount.
+    const sorted = [...drawEntriesRef.current].sort((a, b) => a.order - b.order);
+    for (const { drawRef } of sorted) {
       drawRef.current?.();
     }
   }, []);
