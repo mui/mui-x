@@ -6,18 +6,18 @@ import useForkRef from '@mui/utils/useForkRef';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
-import { GridRowEventLookup } from '../models/events';
-import { GridRowId, GridRowModel } from '../models/gridRows';
+import type { GridRowEventLookup } from '../models/events';
+import type { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridCellModes } from '../models/gridEditRowModel';
 import { gridClasses } from '../constants/gridClasses';
 import { composeGridClasses } from '../utils/composeGridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { GridPinnedColumns } from '../hooks/features/columns';
+import type { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
-import { GridRowClassNameParams } from '../models/params/gridRowParams';
+import type { GridRowClassNameParams } from '../models/params/gridRowParams';
 import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
@@ -30,6 +30,7 @@ import {
   gridRowIsEditingSelector,
 } from '../hooks/features/editing/gridEditingSelectors';
 import { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
+import { GridRowDragAndDropOverlay } from './GridRowDragAndDropOverlay';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -493,6 +494,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       {cells}
       <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
+      <GridRowDragAndDropOverlay rowId={rowId} />
     </div>
   );
 });

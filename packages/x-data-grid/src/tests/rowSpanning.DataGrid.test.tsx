@@ -1,7 +1,7 @@
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef, type DataGridProps, type GridApi } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { getCell, getActiveCell, microtasks } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -287,8 +287,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
         ]);
       });
 
-      // 2 updates on `rows` update, one for the reset (necessary to track deleted or updated data values) and one for the new computed state
-      expect(rowSpanningStateUpdates).to.equal(2);
+      expect(rowSpanningStateUpdates).to.equal(1);
 
       dispose();
     });

@@ -6,7 +6,7 @@ components: BarChart, BarElement, BarPlot
 
 # Charts - Bar demos
 
-<p class="description">This page groups demos using bar charts.</p>
+<p class="description">Explore bar chart demos and examples.</p>
 
 ## TinyBarChart
 
@@ -39,3 +39,9 @@ components: BarChart, BarElement, BarPlot
 ## Population pyramid
 
 {{"demo": "PopulationPyramidBarChart.js"}}
+
+## Waterfall chart [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+The following demo shows a waterfall chart built with a [range bar chart](/x/react-charts/range-bar/).
+
+{{"demo": "WaterfallChart.js"}}

@@ -2,9 +2,13 @@ import {
   EventCalendarPreferences,
   CalendarView,
   EventCalendarPreferencesMenuConfig,
-  CalendarViewConfig,
+  EventCalendarViewConfig,
 } from '../models';
-import { SchedulerState, SchedulerParameters } from '../utils/SchedulerStore';
+import {
+  SchedulerState,
+  SchedulerParameters,
+  SchedulerChangeEventDetails,
+} from '../internals/utils/SchedulerStore';
 
 export interface EventCalendarState extends SchedulerState {
   /**
@@ -28,11 +32,13 @@ export interface EventCalendarState extends SchedulerState {
    * Config of the current view.
    * Should not be used in selectors, only in event handlers.
    */
-  viewConfig: CalendarViewConfig | null;
+  viewConfig: EventCalendarViewConfig | null;
 }
 
-export interface EventCalendarParameters<TEvent extends object, TResource extends object>
-  extends SchedulerParameters<TEvent, TResource> {
+export interface EventCalendarParameters<
+  TEvent extends object,
+  TResource extends object,
+> extends SchedulerParameters<TEvent, TResource> {
   /**
    * The view currently displayed in the calendar.
    */
@@ -45,13 +51,13 @@ export interface EventCalendarParameters<TEvent extends object, TResource extend
   defaultView?: CalendarView;
   /**
    * The views available in the calendar.
-   * @default ["week", "day", "month", "agenda"]
+   * @default ["day", "week", "month", "agenda"]
    */
   views?: CalendarView[];
   /**
    * Event handler called when the view changes.
    */
-  onViewChange?: (view: CalendarView, event: React.UIEvent | Event) => void;
+  onViewChange?: (view: CalendarView, eventDetails: SchedulerChangeEventDetails) => void;
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
@@ -67,7 +73,7 @@ export interface EventCalendarParameters<TEvent extends object, TResource extend
    */
   onPreferencesChange?: (
     preferences: Partial<EventCalendarPreferences>,
-    event: React.UIEvent | Event,
+    eventDetails: SchedulerChangeEventDetails,
   ) => void;
   /**
    * Config of the preferences menu.

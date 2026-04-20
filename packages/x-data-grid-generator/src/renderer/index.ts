@@ -14,3 +14,4 @@ export * from './renderEditStatus';
 export * from './renderEditIncoterm';
 export * from './renderEditRating';
 export * from './renderEditCountry';
+export * from './renderEditBoolean';

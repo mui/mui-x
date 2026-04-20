@@ -1,10 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridCsvExportOptions, GridPrintExportOptions } from '../../models/gridExport';
+import type { GridCsvExportOptions, GridPrintExportOptions } from '../../models/gridExport';
 import { GridToolbarExportContainer } from './GridToolbarExportContainer';
 
 export interface GridExportDisplayOptions {

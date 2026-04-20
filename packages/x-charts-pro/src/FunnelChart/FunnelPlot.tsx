@@ -1,14 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { cartesianSeriesTypes, useSelector, useStore } from '@mui/x-charts/internals';
-import { FunnelItemIdentifier } from './funnel.types';
+import { cartesianSeriesTypes, useStore } from '@mui/x-charts/internals';
+import { type FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
-import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
+import { type FunnelPlotSlotExtension } from './funnelPlotSlots.types';
+import { useUtilityClasses } from './funnelClasses';
 import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
-import { getFunnelCurve, Point } from './curves';
+import { getFunnelCurve, type Point } from './curves';
 import { FunnelSectionLabel } from './FunnelSectionLabel';
 import {
   selectorChartXAxis,
@@ -16,10 +18,15 @@ import {
   selectorFunnelGap,
 } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
 import { createPositionGetter } from './coordinateMapper';
+import { get2DExtrema } from './get2DExtrema';
 
 cartesianSeriesTypes.addType('funnel');
 
 export interface FunnelPlotProps extends FunnelPlotSlotExtension {
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
   /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -34,9 +41,9 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
 const useAggregatedData = () => {
   const seriesData = useFunnelSeriesContext();
   const store = useStore();
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
-  const gap = useSelector(store, selectorFunnelGap);
+  const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = store.use(selectorChartYAxis);
+  const gap = store.use(selectorFunnelGap);
 
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
@@ -61,39 +68,10 @@ const useAggregatedData = () => {
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const xPosition = createPositionGetter(xScale, isHorizontal, gap);
-      const yPosition = createPositionGetter(yScale, !isHorizontal, gap);
+      const xPosition = createPositionGetter(xScale, isHorizontal, gap, baseScaleConfig.data);
+      const yPosition = createPositionGetter(yScale, !isHorizontal, gap, baseScaleConfig.data);
 
-      const allY = currentSeries.dataPoints.flatMap((d, dataIndex) =>
-        d.flatMap((v) =>
-          yPosition(
-            v.y,
-            dataIndex,
-            baseScaleConfig.data?.[dataIndex],
-            v.stackOffset,
-            v.useBandWidth,
-          ),
-        ),
-      );
-      const allX = currentSeries.dataPoints.flatMap((d, dataIndex) =>
-        d.flatMap((v) =>
-          xPosition(
-            v.x,
-            dataIndex,
-            baseScaleConfig.data?.[dataIndex],
-            v.stackOffset,
-            v.useBandWidth,
-          ),
-        ),
-      );
-      const minPoint = {
-        x: Math.min(...allX),
-        y: Math.min(...allY),
-      };
-      const maxPoint = {
-        x: Math.max(...allX),
-        y: Math.max(...allY),
-      };
+      const [minPoint, maxPoint] = get2DExtrema(currentSeries.dataPoints, xPosition, yPosition);
 
       return currentSeries.dataPoints.flatMap((values, dataIndex) => {
         const color = currentSeries.data[dataIndex].color!;
@@ -121,20 +99,8 @@ const useAggregatedData = () => {
         });
         const bandPoints = curve({} as any).processPoints(
           values.map((v) => ({
-            x: xPosition(
-              v.x,
-              dataIndex,
-              baseScaleConfig.data?.[dataIndex],
-              v.stackOffset,
-              v.useBandWidth,
-            ),
-            y: yPosition(
-              v.y,
-              dataIndex,
-              baseScaleConfig.data?.[dataIndex],
-              v.stackOffset,
-              v.useBandWidth,
-            ),
+            x: xPosition(v.x, dataIndex, v.stackOffset, v.useBandWidth),
+            y: yPosition(v.y, dataIndex, v.stackOffset, v.useBandWidth),
           })),
         );
 
@@ -172,12 +138,13 @@ const useAggregatedData = () => {
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const { onItemClick, ...other } = props;
+  const { className, onItemClick, ...other } = props;
 
   const data = useAggregatedData();
+  const classes = useUtilityClasses();
 
   return (
-    <React.Fragment>
+    <g className={clsx(classes.root, className)}>
       {data.map((series) => {
         if (series.length === 0) {
           return null;
@@ -212,7 +179,7 @@ function FunnelPlot(props: FunnelPlotProps) {
 
         return (
           <g data-series={series[0].seriesId} key={series[0].seriesId}>
-            {series.map(({ id, label, seriesId, dataIndex }) => {
+            {series.map(({ id, label, seriesId, dataIndex, variant }) => {
               if (!label || !label.value) {
                 return null;
               }
@@ -223,6 +190,7 @@ function FunnelPlot(props: FunnelPlotProps) {
                   label={label}
                   dataIndex={dataIndex}
                   seriesId={seriesId}
+                  variant={variant}
                   {...other}
                 />
               );
@@ -230,7 +198,7 @@ function FunnelPlot(props: FunnelPlotProps) {
           </g>
         );
       })}
-    </React.Fragment>
+    </g>
   );
 }
 

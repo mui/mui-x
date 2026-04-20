@@ -19,14 +19,10 @@ import {
 } from '../validation/validateTimeRange';
 import { formatRange } from '../internals/utils/date-utils';
 
-export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  parameters: UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
-): UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure> {
-  const {
-    enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure,
-    dateSeparator,
-    ampm,
-  } = parameters;
+export function useTimeRangeManager(
+  parameters: UseTimeRangeManagerParameters = {},
+): UseTimeRangeManagerReturnValue {
+  const { dateSeparator, ampm } = parameters;
 
   return React.useMemo(
     () => ({
@@ -34,12 +30,11 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
       validator: validateTimeRange,
       internal_valueManager: rangeValueManager,
       internal_fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
-      internal_enableAccessibleFieldDOMStructure: enableAccessibleFieldDOMStructure,
       internal_useApplyDefaultValuesToFieldInternalProps:
         useApplyDefaultValuesToTimeRangeFieldInternalProps,
       internal_useOpenPickerButtonAriaLabel: createUseOpenPickerButtonAriaLabel(ampm),
     }),
-    [enableAccessibleFieldDOMStructure, dateSeparator, ampm],
+    [dateSeparator, ampm],
   );
 }
 
@@ -57,13 +52,9 @@ function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
   };
 }
 
-function useApplyDefaultValuesToTimeRangeFieldInternalProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->(
-  internalProps: TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-): PickerManagerFieldInternalPropsWithDefaults<
-  UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-> {
+function useApplyDefaultValuesToTimeRangeFieldInternalProps(
+  internalProps: TimeRangeManagerFieldInternalProps,
+): PickerManagerFieldInternalPropsWithDefaults<UseTimeRangeManagerReturnValue> {
   const adapter = usePickerAdapter();
   const validationProps = useApplyDefaultValuesToTimeValidationProps(internalProps);
 
@@ -83,31 +74,18 @@ function useApplyDefaultValuesToTimeRangeFieldInternalProps<
   );
 }
 
-export interface UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends RangeFieldSeparatorProps,
-    AmPmProps {
-  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
-}
+export interface UseTimeRangeManagerParameters extends RangeFieldSeparatorProps, AmPmProps {}
 
-export type UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure extends boolean> =
-  PickerManager<
-    PickerRangeValue,
-    TEnableAccessibleFieldDOMStructure,
-    TimeRangeValidationError,
-    ValidateTimeRangeProps,
-    TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
-  >;
+export type UseTimeRangeManagerReturnValue = PickerManager<
+  PickerRangeValue,
+  TimeRangeValidationError,
+  ValidateTimeRangeProps,
+  TimeRangeManagerFieldInternalProps
+>;
 
-export interface TimeRangeManagerFieldInternalProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
-      UseFieldInternalProps<
-        PickerRangeValue,
-        TEnableAccessibleFieldDOMStructure,
-        TimeRangeValidationError
-      >,
-      'format'
-    >,
+export interface TimeRangeManagerFieldInternalProps
+  extends
+    MakeOptional<UseFieldInternalProps<PickerRangeValue, TimeRangeValidationError>, 'format'>,
     ExportedValidateTimeRangeProps,
     AmPmProps,
     RangeFieldSeparatorProps {}

@@ -4,7 +4,7 @@ import {
   addColumnGroupingHeaders,
   addSerializedRowToWorksheet,
   createValueOptionsSheetIfNeeded,
-  ExcelExportInitEvent,
+  type ExcelExportInitEvent,
   getExcelJs,
 } from './utils';
 

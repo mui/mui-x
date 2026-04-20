@@ -1,8 +1,9 @@
+'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import { GridStateApi, GridStatePrivateApi } from '../../models/api/gridStateApi';
-import { GridControlStateItem } from '../../models/controlStateItem';
+import type { GridStateApi, GridStatePrivateApi } from '../../models/api/gridStateApi';
+import type { GridControlStateItem } from '../../models/controlStateItem';
 import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
 
@@ -66,7 +67,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
         // Events are here to forward to other hooks and apply changes.
         // You are trying to update several states in a no isolated way.
         throw new Error(
-          `You're not allowed to update several sub-state in one transaction. You already updated ${
+          `MUI X: You're not allowed to update several sub-state in one transaction. You already updated ${
             updatedControlStateIds[0].stateId
           }, therefore, you're not allowed to update ${updatedControlStateIds
             .map((el) => el.stateId)

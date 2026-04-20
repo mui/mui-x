@@ -7,9 +7,7 @@ export type TreeViewDefaultItemModelProperties = {
   children?: TreeViewDefaultItemModelProperties[];
 };
 
-export type TreeViewBaseItem<R extends {} = TreeViewDefaultItemModelProperties> = R & {
-  children?: TreeViewBaseItem<R>[];
-};
+export type TreeViewValidItem<R extends {}> = { children?: R[] };
 
 export type TreeViewItemsReorderingAction =
   | 'reorder-above'

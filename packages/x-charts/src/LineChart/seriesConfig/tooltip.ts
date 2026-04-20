@@ -1,5 +1,8 @@
 import { getLabel } from '../../internals/getLabel';
-import type { AxisTooltipGetter, TooltipGetter } from '../../internals/plugins/models';
+import type {
+  AxisTooltipGetter,
+  TooltipGetter,
+} from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const tooltipGetter: TooltipGetter<'line'> = (params) => {
   const { series, getColor, identifier } = params;
@@ -19,6 +22,7 @@ const tooltipGetter: TooltipGetter<'line'> = (params) => {
     value,
     formattedValue,
     markType: series.labelMarkType,
+    markShape: series.showMark ? series.shape : undefined,
   };
 };
 

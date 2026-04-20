@@ -1,4 +1,4 @@
-import { Logger } from '../logger';
+import type { Logger } from '../logger';
 
 /**
  * The logger API interface that is available in the grid `apiRef`.

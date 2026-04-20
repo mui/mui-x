@@ -9,7 +9,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
-import { Watermark } from '@mui/x-license';
+import { Watermark } from '@mui/x-license/internals';
 import {
   BaseDateValidationProps,
   DayCalendar,
@@ -61,9 +61,12 @@ import {
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
-import { dateRangePickerDay2Classes } from '../DateRangePickerDay2';
 
-const releaseInfo = '__RELEASE_INFO__';
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-date-pickers-pro' as const,
+};
 
 const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',
@@ -85,24 +88,14 @@ const DateRangeCalendarMonthContainer = styled('div', {
 
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
-const InnerDayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
+const InnerDayCalendarForRange = styled(DayCalendar, {
+  slot: 'internal',
+})(() => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
-    [`& .${dateRangePickerDay2Classes.root}, & .${dayClasses.day}`]: {
+    [`& .${dayClasses.root}`]: {
       cursor: 'grabbing',
-    },
-    [`& .${dayClasses.root}:not(.${dayClasses.rangeIntervalDayHighlightStart}):not(.${dayClasses.rangeIntervalDayHighlightEnd}) .${dayClasses.day}:not(.${dayClasses.notSelectedDate})`]:
-      {
-        // we can't override `PickersDay` background color here, because it's styles take precedence
-        opacity: 0.6,
-      },
-  },
-  [`&:not(.${dateRangeCalendarClasses.dayDragging}) .${dayClasses.dayOutsideRangeInterval}`]: {
-    '@media (pointer: fine)': {
-      '&:hover': {
-        border: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
-      },
     },
   },
 }));
@@ -496,7 +489,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   const slotPropsForDayCalendar = {
     ...slotProps,
     day: (dayOwnerState) => {
-      const { day, isDaySelected } = dayOwnerState;
+      const { day, isDaySelected, isDayOutsideMonth } = dayOwnerState;
       const isSelectedStartDate = isStartOfRange(adapter, day, valueDayRange);
       const isSelectedEndDate = isEndOfRange(adapter, day, valueDayRange);
       const shouldInitDragging = !shouldDisableDragEditing && valueDayRange[0] && valueDayRange[1];
@@ -533,6 +526,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         'data-position': datePosition,
         ...dragEventHandlers,
         draggable: isElementDraggable ? true : undefined,
+        isDayFillerCell: isDayOutsideMonth && !showDaysOutsideCurrentMonth,
         ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
       };
     },
@@ -586,7 +580,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
       ownerState={ownerState}
       {...other}
     >
-      <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
+      <Watermark packageInfo={packageInfo} />
       {calendarMonths.map((monthIndex) => {
         const month = visibleMonths[monthIndex];
         const labelId = `${id}-grid-${monthIndex}-label`;
@@ -709,7 +703,7 @@ DateRangeCalendar.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,

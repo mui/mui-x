@@ -1,11 +1,11 @@
 'use client';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import useForkRef from '@mui/utils/useForkRef';
 import { useRegisterToolbarButton } from '@mui/x-internals/ToolbarContext';
 import { useChartsSlots } from '../context/ChartsSlotsContext';
-import { ChartsSlotProps } from '../internals/material';
+import { type ChartsSlotProps } from '../internals/material';
 
 export type ToolbarButtonProps = ChartsSlotProps['baseIconButton'] & {
   /**

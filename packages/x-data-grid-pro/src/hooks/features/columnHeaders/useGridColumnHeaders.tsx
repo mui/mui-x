@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import {
   gridFocusColumnHeaderFilterSelector,
@@ -5,7 +6,7 @@ import {
   gridFilterModelSelector,
   gridTabIndexColumnHeaderFilterSelector,
   getDataGridUtilityClass,
-  GridFilterItem,
+  type GridFilterItem,
 } from '@mui/x-data-grid';
 import {
   gridColumnsTotalWidthSelector,
@@ -13,11 +14,11 @@ import {
   gridHeaderFilterHeightSelector,
   gridVerticalScrollbarWidthSelector,
   useGridColumnHeaders as useGridColumnHeadersCommunity,
-  UseGridColumnHeadersProps,
-  GetHeadersParams,
+  type UseGridColumnHeadersProps,
+  type GetHeadersParams,
   useGridPrivateApiContext,
   getGridFilter,
-  GridStateColDef,
+  type GridStateColDef,
   GridColumnHeaderRow,
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
@@ -25,7 +26,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type OwnerState = DataGridProProcessedProps;
 

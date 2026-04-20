@@ -1,6 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridValidRowModel, GridColDef, GridKeyValue } from '@mui/x-data-grid-pro';
-import { GridApiPremium } from './gridApiPremium';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridValidRowModel, GridColDef, GridKeyValue } from '@mui/x-data-grid-pro';
+import type { GridApiPremium } from './gridApiPremium';
 
 /**
  * Function signature for setting a grouping value on a row.

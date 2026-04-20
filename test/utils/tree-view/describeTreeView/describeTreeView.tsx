@@ -5,6 +5,7 @@ import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
+import { TreeViewAnyStore, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import {
   DescribeTreeViewTestRunner,
@@ -14,13 +15,6 @@ import {
   DescribeTreeViewRendererUtils,
   TreeViewItemIdTreeElement,
 } from './describeTreeView.types';
-
-// TODO #20051: Replace with imported type
-type TreeViewAnyStore = { parameters: any };
-
-// TODO #20051: Replace with imported type
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type TreeViewPublicAPI<TStore extends TreeViewAnyStore> = any;
 
 const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
   message: string,
@@ -120,6 +114,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
 
   const createRendererForComponentWithItemsProp = (
     TreeViewComponent: typeof RichTreeView | typeof RichTreeViewPro,
+    defaultProps?: Record<string, unknown>,
   ) => {
     const objectRenderer: DescribeTreeViewRenderer<TStore> = ({
       items: rawItems,
@@ -144,8 +139,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
                 'data-testid': ownerState.itemId,
               }) as any,
           }}
-          // TODO #20051: Remove any
-          getItemLabel={(item: any) => {
+          getItemLabel={(item) => {
             if (item.label) {
               if (typeof item.label !== 'string') {
                 throw new Error('Only use string labels when testing RichTreeView(Pro)');
@@ -156,8 +150,9 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
 
             return item.id;
           }}
-          // TODO #20051: Remove any
-          isItemDisabled={(item: any) => !!item.disabled}
+          isItemDisabled={(item) => !!item.disabled}
+          isItemSelectionDisabled={(item) => !!item.disableSelection}
+          {...defaultProps}
           {...other}
         />
       );
@@ -195,6 +190,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
           itemId={item.id}
           label={item.label ?? item.id}
           disabled={item.disabled}
+          disableSelection={item.disableSelection}
           data-testid={item.id}
           key={item.id}
           {...slotProps?.item}
@@ -237,7 +233,9 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
 
     describe('RichTreeViewPro', () => {
       testRunner({
-        ...createRendererForComponentWithItemsProp(RichTreeViewPro),
+        ...createRendererForComponentWithItemsProp(RichTreeViewPro, {
+          disableVirtualization: true,
+        }),
         treeViewComponentName: 'RichTreeViewPro',
         TreeViewComponent: RichTreeViewPro,
         TreeItemComponent: TreeItem,

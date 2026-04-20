@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -22,7 +22,8 @@ import { MUI_X_PRODUCTS } from './products';
 import DemoWrapper from '../../DemoWrapper';
 
 interface CustomTreeItemProps
-  extends Omit<UseTreeItemParameters, 'rootRef'>,
+  extends
+    Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -81,18 +82,9 @@ export default function DragAndDropDemo() {
     <DemoWrapper link="/x/react-tree-view/rich-tree-view/editing/">
       <Stack
         spacing={1}
-        sx={{ width: '100%', padding: 2, minHeight: '600px' }}
-        justifyContent="space-between"
+        sx={{ justifyContent: 'space-between', width: '100%', padding: 2, minHeight: '600px' }}
       >
-        <Box
-          sx={{
-            minHeight: 352,
-            minWidth: 260,
-            padding: 2,
-            width: 'fit-content',
-            alignSelf: 'center',
-          }}
-        >
+        <Box sx={{ height: 352, width: 320, alignSelf: 'center' }}>
           <ThemeProvider theme={theme}>
             <RichTreeViewPro
               items={MUI_X_PRODUCTS}

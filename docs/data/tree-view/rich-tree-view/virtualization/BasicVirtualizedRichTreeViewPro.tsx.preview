@@ -1,0 +1,1 @@
+<RichTreeViewPro items={items} defaultExpandedItems={defaultExpandedItems} />

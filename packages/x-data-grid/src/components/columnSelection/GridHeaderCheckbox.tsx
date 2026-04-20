@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isMultipleRowSelectionEnabled } from '../../hooks/features/rowSelection/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -16,7 +17,7 @@ import type { GridHeaderSelectionCheckboxParams } from '../../models/params/grid
 import { gridExpandedSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 import type { GridRowId } from '../../models/gridRows';
-import { type GridRowSelectionModel } from '../../models/gridRowSelectionModel';
+import type { GridRowSelectionModel } from '../../models/gridRowSelectionModel';
 import { createRowSelectionManager } from '../../models/gridRowSelectionManager';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -143,13 +144,19 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
       apiRef.current.publishEvent('headerSelectionCheckboxChange', params);
     };
 
-    const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
-    React.useLayoutEffect(() => {
+    const multipleSelectionEnabled = isMultipleRowSelectionEnabled(rootProps);
+
+    const tabIndex =
+      tabIndexState !== null && tabIndexState.field === props.field && multipleSelectionEnabled
+        ? 0
+        : -1;
+
+    useEnhancedEffect(() => {
       const element = apiRef.current.getColumnHeaderElement(props.field);
-      if (tabIndex === 0 && element) {
+      if (tabIndex === 0 && element && multipleSelectionEnabled) {
         element!.tabIndex = -1;
       }
-    }, [tabIndex, apiRef, props.field]);
+    }, [tabIndex, apiRef, props.field, multipleSelectionEnabled]);
 
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
@@ -188,7 +195,7 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
         }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
-        disabled={!isMultipleRowSelectionEnabled(rootProps)}
+        disabled={!multipleSelectionEnabled}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
         ref={ref}

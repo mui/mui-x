@@ -1,24 +1,23 @@
 'use client';
-import { ChartSeriesType } from '../models/seriesType/config';
+import { type ChartSeriesType } from '../models/seriesType/config';
 import {
-  ProcessedSeries,
-  UseChartSeriesSignature,
-  selectorChartSeriesConfig,
+  type ProcessedSeries,
+  type UseChartSeriesSignature,
 } from '../internals/plugins/corePlugins/useChartSeries';
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { useSeries } from './useSeries';
-import type { LegendItemParams } from '../ChartsLegend';
+import type { SeriesLegendItemParams } from '../ChartsLegend';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
-import { ChartSeriesConfig } from '../internals/plugins/models/seriesConfig';
+import { type ChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
 function getSeriesToDisplay(
   series: ProcessedSeries,
   seriesConfig: ChartSeriesConfig<ChartSeriesType>,
 ) {
   return (Object.keys(series) as ChartSeriesType[]).flatMap(
-    <T extends ChartSeriesType>(seriesType: T) => {
-      const getter = seriesConfig[seriesType as T].legendGetter;
-      return getter === undefined ? [] : getter(series[seriesType as T]!);
+    <SeriesType extends ChartSeriesType>(seriesType: SeriesType) => {
+      const getter = seriesConfig[seriesType as SeriesType].legendGetter;
+      return getter === undefined ? [] : getter(series[seriesType as SeriesType]!);
     },
   );
 }
@@ -32,10 +31,10 @@ function getSeriesToDisplay(
  *
  * @returns legend data
  */
-export function useLegend(): { items: LegendItemParams[] } {
+export function useLegend(): { items: SeriesLegendItemParams[] } {
   const series = useSeries();
   const store = useStore<[UseChartSeriesSignature]>();
-  const seriesConfig = useSelector(store, selectorChartSeriesConfig);
+  const seriesConfig = store.use(selectorChartSeriesConfig);
 
   return {
     items: getSeriesToDisplay(series, seriesConfig),

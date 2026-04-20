@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { GridRowId, gridRowNodeSelector } from '@mui/x-data-grid';
+import { type GridRowId, gridRowNodeSelector } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 
 type OwnerState = DataGridProProcessedProps;
 
@@ -20,8 +20,10 @@ const DetailPanel = styled('div', {
   overflow: 'auto',
 });
 
-interface GridDetailPanelProps
-  extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className' | 'children'> {
+interface GridDetailPanelProps extends Pick<
+  React.HTMLAttributes<HTMLDivElement>,
+  'className' | 'children'
+> {
   /**
    * The row ID that this panel belongs to.
    */

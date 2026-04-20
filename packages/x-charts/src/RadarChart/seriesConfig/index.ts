@@ -1,18 +1,34 @@
-import formatter from './formatter';
+import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import { radiusExtremumGetter, rotationExtremumGetter } from './extremums';
-import { ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
+import { type ChartSeriesTypeConfig } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import legendGetter from './legend';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
+import tooltipItemPositionGetter from './tooltipPosition';
+import keyboardFocusHandler from './keyboardFocusHandler';
+import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
+import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
+import {
+  createIsHighlighted,
+  createIsFaded,
+} from '../../internals/plugins/featurePlugins/useChartHighlight';
+import descriptionGetter from './descriptionGetter';
 
 export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   colorProcessor: getColor,
-  seriesProcessor: formatter,
+  seriesProcessor,
   legendGetter,
   tooltipGetter,
+  tooltipItemPositionGetter,
   axisTooltipGetter,
   getSeriesWithDefaultValues,
   radiusExtremumGetter,
   rotationExtremumGetter,
+  keyboardFocusHandler,
+  identifierSerializer: identifierSerializerSeriesIdDataIndex,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  descriptionGetter,
+  isHighlightedCreator: createIsHighlighted,
+  isFadedCreator: createIsFaded,
 };

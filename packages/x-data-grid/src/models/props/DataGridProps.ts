@@ -1,20 +1,24 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
-import { GridDensity } from '../gridDensity';
-import { GridEditMode } from '../gridEditRowModel';
-import { GridFeatureMode } from '../gridFeatureMode';
-import { Logger } from '../logger';
-import { GridSortDirection, GridSortModel } from '../gridSortModel';
-import { GridSlotsComponent } from '../gridSlotsComponent';
-import { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
-import { GridEventListener } from '../events';
-import { GridCallbackDetails, GridLocaleText } from '../api';
-import { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColDef, GridListViewColDef } from '../colDef/gridColDef';
-import { GridClasses } from '../../constants/gridClasses';
-import {
+import type * as React from 'react';
+import type { RefObject } from '@mui/x-internals/types';
+import type { SxProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+import type { GridDensity } from '../gridDensity';
+import type { GridEditMode } from '../gridEditRowModel';
+import type { GridFeatureMode } from '../gridFeatureMode';
+import type { Logger } from '../logger';
+import type { GridSortDirection, GridSortModel } from '../gridSortModel';
+import type { GridSlotsComponent } from '../gridSlotsComponent';
+import type { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
+import type { GridEventListener } from '../events';
+import type { GridCallbackDetails, GridLocaleText } from '../api';
+import type { GridApiCommunity } from '../api/gridApiCommunity';
+import type {
+  GridColDef,
+  GridListViewColDef,
+  GridCheckboxSelectionColDef,
+} from '../colDef/gridColDef';
+import type { GridClasses } from '../../constants/gridClasses';
+import type {
   GridRowHeightParams,
   GridRowHeightReturnValue,
   GridRowParams,
@@ -22,18 +26,17 @@ import {
   GridRowSpacingParams,
   GridRowClassNameParams,
 } from '../params';
-import { GridCellParams } from '../params/gridCellParams';
-import { GridFilterModel } from '../gridFilterModel';
-import { GridRowSelectionModel } from '../gridRowSelectionModel';
-import { GridInitialStateCommunity } from '../gridStateCommunity';
-import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
-import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
-import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
-import { GridColumnGroupingModel } from '../gridColumnGrouping';
-import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
+import type { GridCellParams } from '../params/gridCellParams';
+import type { GridFilterModel } from '../gridFilterModel';
+import type { GridRowSelectionModel, GridRowSelectionPropagation } from '../gridRowSelectionModel';
+import type { GridInitialStateCommunity } from '../gridStateCommunity';
+import type { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
+import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
+import type { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
+import type { GridColumnGroupingModel } from '../gridColumnGrouping';
+import type { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
 import type { GridDataSource, GridDataSourceCache } from '../gridDataSource';
-import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
 import type {
   GridGetRowsError,
   GridUpdateRowError,
@@ -50,6 +53,15 @@ export interface GridExperimentalFeatures {
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
+  /**
+   * Sets the layout mode of the virtualizer.
+   * - `'uncontrolled'` (default): the browser controls scrolling and the virtualizer
+   *   positions rows using a filler element.
+   * - `'controlled'`: the virtualizer controls scrolling by translating the viewport,
+   *   enabling features such as sticky pinned rows and columns without extra DOM cost.
+   * @default 'uncontrolled'
+   */
+  virtualizerLayoutMode: 'controlled' | 'uncontrolled';
 }
 
 /**
@@ -356,6 +368,13 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   throttleRowsMs: number;
   /**
+   * If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.
+   * If the refetched rows are different from the current rows, the grid will update the rows.
+   * Set to `0` to disable polling.
+   * @default 0
+   */
+  dataSourceRevalidateMs: number;
+  /**
    * If `true`, reordering columns is disabled.
    * @default false
    */
@@ -424,8 +443,9 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
 /**
  * The Data Grid props with no default value.
  */
-export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends CommonProps {
+export interface DataGridPropsWithoutDefaultValue<
+  R extends GridValidRowModel = any,
+> extends CommonProps {
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -863,6 +883,15 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   autosizeOptions?: GridAutosizeOptions;
   /**
+   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   *
+   * @warning
+   * Be careful when overriding `renderHeader` or `renderCell` in the `checkboxColDef` prop.
+   * The default implementation of these properties includes the logic for selecting all rows and selecting a single row, respectively.
+   * Overriding them without providing the same functionality will break the row selection.
+   */
+  checkboxColDef?: GridCheckboxSelectionColDef<R>;
+  /**
    * Callback fired while a column is being resized.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
@@ -945,7 +974,8 @@ export interface DataGridPremiumSharedPropsWithDefaultValue {
  * The props of the Data Grid component after the pre-processing phase.
  */
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
-  extends DataGridPropsWithDefaultValues,
+  extends
+    DataGridPropsWithDefaultValues,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
     DataGridPropsWithoutDefaultValue<R>,
     DataGridProSharedPropsWithoutDefaultValue,

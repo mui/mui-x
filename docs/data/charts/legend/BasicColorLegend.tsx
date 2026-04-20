@@ -7,7 +7,7 @@ import { dataset } from './tempAnomaly';
 
 export default function BasicColorLegend() {
   return (
-    <Stack width="100%">
+    <Stack sx={{ width: '100%' }}>
       <Typography variant="body1">
         Global temperature anomaly relative to 1961-1990 average
       </Typography>
@@ -17,7 +17,6 @@ export default function BasicColorLegend() {
           {
             label: 'Global temperature anomaly relative to 1961-1990',
             dataKey: 'anomaly',
-            showMark: false,
             valueFormatter: (value) => `${value?.toFixed(2)}°`,
           },
         ]}

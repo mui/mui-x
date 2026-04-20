@@ -1,7 +1,7 @@
-import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useRadarSeries, useRadarSeriesContext } from './useRadarSeries';
-import { DefaultizedRadarSeriesType, RadarSeriesType } from '../models';
+import { type DefaultizedRadarSeriesType, type RadarSeriesType } from '../models';
 import { Unstable_RadarChart as RadarChart } from '../RadarChart';
 
 const mockSeries: RadarSeriesType[] = [
@@ -67,5 +67,10 @@ describe('useRadarSeries', () => {
     }).toWarnDev(message);
 
     expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+  });
+
+  it('should return empty array when empty seriesIds array is provided', () => {
+    const { result } = renderHook(() => useRadarSeries([]), options);
+    expect(result.current).to.deep.equal([]);
   });
 });

@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { RadarChart, RadarSeries } from '@mui/x-charts/RadarChart';
-import { HighlightItemData } from '@mui/x-charts/context';
+import { HighlightItemIdentifier } from '@mui/x-charts/models';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -17,26 +17,24 @@ function valueFormatter(v: number | null) {
 
 export default function DemoRadarSeriesHighlight() {
   const [highlightedItem, setHighlightedItem] =
-    React.useState<HighlightItemData | null>(null);
+    React.useState<HighlightItemIdentifier<'radar'> | null>(null);
   const [fillArea, setFillArea] = React.useState(false);
 
   const withOptions = (series: RadarSeries[]) =>
     series.map((item) => ({
       ...item,
       fillArea,
-      type: 'radar' as const,
     }));
 
   const handleHighLightedSeries = (event: any, newHighLightedSeries: string) => {
     if (newHighLightedSeries !== null) {
-      setHighlightedItem((prev) => ({
-        ...prev,
+      setHighlightedItem({
         seriesId: newHighLightedSeries,
-      }));
+      });
     }
   };
   return (
-    <Stack sx={{ width: '100%' }} spacing={2} alignItems={'center'}>
+    <Stack spacing={2} sx={{ alignItems: 'center', width: '100%' }}>
       <ToggleButtonGroup
         value={highlightedItem?.seriesId ?? null}
         exclusive

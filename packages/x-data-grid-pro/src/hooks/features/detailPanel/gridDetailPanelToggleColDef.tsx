@@ -1,7 +1,7 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GRID_STRING_COL_DEF, GridColDef, gridRowIdSelector } from '@mui/x-data-grid';
+import type { RefObject } from '@mui/x-internals/types';
+import { GRID_STRING_COL_DEF, type GridColDef, gridRowIdSelector } from '@mui/x-data-grid';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import type { GridApiPro } from '../../../models/gridApiPro';
 import { GridDetailPanelToggleCell } from '../../../components/GridDetailPanelToggleCell';
 import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector';
 
@@ -30,5 +30,5 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   },
   rowSpanValueGetter: (_, row, __, apiRef) => gridRowIdSelector(apiRef, row),
   renderCell: (params) => <GridDetailPanelToggleCell {...params} />,
-  renderHeader: ({ colDef }) => <div aria-label={colDef.headerName} />,
+  renderHeader: ({ colDef }) => <div aria-label={colDef.headerName} role="presentation" />,
 };

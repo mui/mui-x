@@ -1,5 +1,5 @@
 import { createRenderer, act } from '@mui/internal-test-utils';
-import { DataGridPro, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid-pro';
+import { DataGridPro, type GridColDef, type GridColumnGroupingModel } from '@mui/x-data-grid-pro';
 import {
   getActiveCell,
   getActiveColumnHeader,

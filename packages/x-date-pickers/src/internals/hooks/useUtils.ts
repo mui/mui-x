@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { PickersTimezone, PickerValidDate } from '../../models';
 import { useLocalizationContext, usePickerAdapter } from '../../hooks/usePickerAdapter';

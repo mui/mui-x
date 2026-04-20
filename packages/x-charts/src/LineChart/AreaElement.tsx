@@ -1,60 +1,24 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { AnimatedArea, AnimatedAreaProps } from './AnimatedArea';
-import { SeriesId } from '../models/seriesType/common';
-
-export interface AreaElementClasses {
-  /** Styles applied to the root element. */
-  root: string;
-  /** Styles applied to the root element when highlighted. */
-  highlighted: string;
-  /** Styles applied to the root element when faded. */
-  faded: string;
-  /**
-   * Styles applied to the root element for a specified series.
-   * Needs to be suffixed with the series ID: `.${areaElementClasses.series}-${seriesId}`.
-   */
-  series: string;
-}
-
-export type AreaElementClassKey = keyof AreaElementClasses;
+import { useItemHighlightState } from '../hooks/useItemHighlightState';
+import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
+import { useStore } from '../internals/store/useStore';
+import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
+import { type SeriesId } from '../models/seriesType/common';
+import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 export interface AreaElementOwnerState {
-  id: SeriesId;
+  seriesId: SeriesId;
   color: string;
   gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
-  classes?: Partial<AreaElementClasses>;
+  classes?: Partial<LineClasses>;
 }
-
-export function getAreaElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiAreaElement', slot);
-}
-
-export const areaElementClasses: AreaElementClasses = generateUtilityClasses('MuiAreaElement', [
-  'root',
-  'highlighted',
-  'faded',
-  'series',
-]);
-
-const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
-  const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
-  };
-
-  return composeClasses(slots, getAreaElementUtilityClass, classes);
-};
 
 export interface AreaElementSlots {
   /**
@@ -69,9 +33,10 @@ export interface AreaElementSlotProps {
 }
 
 export interface AreaElementProps
-  extends Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
+  extends
+    Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedAreaProps, 'skipAnimation'>,
-    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color'> {
   d: string;
   /**
    * The props used for each component slot.
@@ -97,7 +62,7 @@ export interface AreaElementProps
  */
 function AreaElement(props: AreaElementProps) {
   const {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
@@ -107,31 +72,40 @@ function AreaElement(props: AreaElementProps) {
     ...other
   } = props;
 
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
-  });
+  const store = useStore();
+  const enablePositionBasedPointerInteraction = store.use(
+    selectorChartExperimentalFeaturesState,
+  )?.enablePositionBasedPointerInteraction;
+  const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
+  const interactionProps = useInteractionItemProps(identifier);
+  const highlightState = useItemHighlightState(identifier);
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
 
   const ownerState = {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
     isFaded,
     isHighlighted,
   };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useLineUtilityClasses();
 
   const Area = slots?.area ?? AnimatedArea;
   const areaProps = useSlotProps({
     elementType: Area,
     externalSlotProps: slotProps?.area,
     additionalProps: {
-      ...interactionProps,
+      ...(enablePositionBasedPointerInteraction ? {} : interactionProps),
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
+      'data-highlighted': isHighlighted || undefined,
+      'data-faded': isFaded || undefined,
+      'data-series-id': seriesId,
+      'data-series': seriesId,
     },
-    className: classes.root,
+    className: classes.area,
     ownerState,
   });
 
@@ -147,7 +121,7 @@ AreaElement.propTypes = {
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
   gradientId: PropTypes.string,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

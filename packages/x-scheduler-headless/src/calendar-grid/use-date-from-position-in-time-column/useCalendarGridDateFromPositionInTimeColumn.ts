@@ -1,21 +1,20 @@
 'use client';
 import * as React from 'react';
-import { SchedulerValidDate } from '../../models';
-import { useAdapter } from '../../use-adapter/useAdapter';
+import { TemporalSupportedObject } from '../../models';
+import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 
 export function useCalendarGridGetDateFromPositionInColumn(
   parameters: useCalendarGridGetDateFromPositionInColumn.Parameters,
 ): useCalendarGridGetDateFromPositionInColumn.ReturnValue {
   const { elementRef, snapMinutes } = parameters;
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { getCursorPositionInElementMs, start } = useCalendarGridTimeColumnContext();
 
   return React.useCallback(
-    (clientY: number): SchedulerValidDate => {
+    (clientY: number): TemporalSupportedObject => {
       const offsetMs = getCursorPositionInElementMs({ input: { clientY }, elementRef });
-      const offsetMin = Math.floor(offsetMs / 60000);
-      const anchor = adapter.addMinutes(start, offsetMin);
+      const anchor = adapter.addMilliseconds(start, offsetMs);
       return adapter.addMinutes(anchor, -(adapter.getMinutes(anchor) % snapMinutes));
     },
     [adapter, getCursorPositionInElementMs, elementRef, snapMinutes, start],
@@ -36,5 +35,5 @@ export namespace useCalendarGridGetDateFromPositionInColumn {
   /**
    * Returns the snapped date within the current column for a given mouse clientY.
    */
-  export type ReturnValue = (clientY: number) => SchedulerValidDate;
+  export type ReturnValue = (clientY: number) => TemporalSupportedObject;
 }

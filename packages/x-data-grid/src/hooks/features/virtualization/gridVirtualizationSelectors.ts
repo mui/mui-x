@@ -4,7 +4,7 @@ import {
   createSelectorMemoized,
 } from '../../../utils/createSelector';
 import type { GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 /**
  * Get the columns state
@@ -40,6 +40,16 @@ export const gridVirtualizationColumnEnabledSelector = createSelector(
 export const gridVirtualizationRowEnabledSelector = createSelector(
   gridVirtualizationSelector,
   (state) => state.enabledForRows,
+);
+
+/**
+ * Get the layout mode
+ * @category Virtualization
+ * @ignore - do not document.
+ */
+export const gridVirtualizationLayoutModeSelector = createSelector(
+  gridVirtualizationSelector,
+  (state) => state.layoutMode,
 );
 
 /**

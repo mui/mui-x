@@ -1,8 +1,8 @@
-import { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_RADIUS_AXIS_KEY, DEFAULT_ROTATION_AXIS_KEY } from '../../../../constants';
-import { ScaleName } from '../../../../models';
-import { AxisId, PolarAxisConfig } from '../../../../models/axis';
-import { DatasetType } from '../../../../models/seriesType/config';
+import { type ScaleName } from '../../../../models';
+import { type AxisId, type PolarAxisConfig } from '../../../../models/axis';
+import { type DatasetType } from '../../../../models/seriesType/config';
 
 export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
   inAxis: MakeOptional<PolarAxisConfig<TScale, any>, 'id'>[] | undefined,
@@ -19,7 +19,7 @@ export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
     const id = `defaultized-${axisName}-axis-${index}`;
     const dataKey = axisConfig.dataKey;
 
-    if (dataKey === undefined || axisConfig.data !== undefined) {
+    if (axisConfig.data !== undefined || (dataKey === undefined && !axisConfig.valueGetter)) {
       return {
         id,
         ...axisConfig,
@@ -27,13 +27,17 @@ export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
     }
     if (dataset === undefined) {
       throw new Error(
-        `MUI X Charts: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`,
+        `MUI X Charts: The ${axisName}-axis uses \`dataKey\` or \`valueGetter\` but no \`dataset\` is provided. ` +
+          'When using dataKey or valueGetter, a dataset must be provided to retrieve the axis data. ' +
+          `Either provide a dataset prop or use the data property directly on the ${axisName}-axis.`,
       );
     }
 
     return {
       id,
-      data: dataset.map((d) => d[dataKey]),
+      data: axisConfig.valueGetter
+        ? dataset.map((d) => axisConfig.valueGetter!(d))
+        : dataset.map((d) => d[dataKey!]),
       ...axisConfig,
     } as PolarAxisConfig<TScale, any>;
   });

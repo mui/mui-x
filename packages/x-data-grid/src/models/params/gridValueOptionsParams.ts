@@ -1,4 +1,4 @@
-import { GridRowId, GridValidRowModel } from '../gridRows';
+import type { GridRowId, GridValidRowModel } from '../gridRows';
 
 /**
  * Object passed as parameter of the valueOptions function for singleSelect column.

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
@@ -119,10 +120,12 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar(
     >
       <Typography
         data-testid="picker-toolbar-title"
-        color="text.secondary"
         variant="overline"
         id={titleId}
         className={classes.title}
+        sx={{
+          color: 'text.secondary',
+        }}
       >
         {toolbarTitle}
       </Typography>

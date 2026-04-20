@@ -1,16 +1,17 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   RadarAxisHighlight,
-  RadarChartProps,
+  type RadarChartProps,
   RadarDataProvider,
-  RadarDataProviderProps,
+  type RadarDataProviderProps,
   RadarGrid,
   RadarMetricLabels,
   RadarSeriesArea,
   RadarSeriesMarks,
-  RadarChartSlotProps,
-  RadarChartSlots,
+  type RadarChartSlotProps,
+  type RadarChartSlots,
 } from '@mui/x-charts/RadarChart';
 import { useThemeProps } from '@mui/material/styles';
 import { useRadarChartProps } from '@mui/x-charts/internals';
@@ -19,29 +20,29 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { RADAR_CHART_PRO_PLUGINS, RadarChartProPluginSignatures } from './RadarChartPro.plugins';
+import {
+  RADAR_CHART_PRO_PLUGINS,
+  type RadarChartProPluginSignatures,
+} from './RadarChartPro.plugins';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
-  ChartsToolbarProSlotProps,
-  ChartsToolbarProSlots,
+  type ChartsToolbarProSlotProps,
+  type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
-import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 
 export interface RadarChartProSlots
-  extends Omit<RadarChartSlots, 'toolbar'>,
-    ChartsToolbarProSlots,
-    Partial<ChartsSlotsPro> {}
+  extends Omit<RadarChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
 export interface RadarChartProSlotProps
-  extends Omit<RadarChartSlotProps, 'toolbar'>,
+  extends
+    Omit<RadarChartSlotProps, 'toolbar'>,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {}
 
 export interface RadarChartProProps
-  extends Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
-    Omit<
-      RadarDataProviderProps<RadarChartProPluginSignatures>,
-      'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
-    > {
+  extends
+    Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
+    Omit<RadarDataProviderProps<RadarChartProPluginSignatures>, 'slots' | 'slotProps'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -65,7 +66,7 @@ export interface RadarChartProProps
  */
 const RadarChartPro = React.forwardRef(function RadarChartPro(
   inProps: RadarChartProProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiRadarChartPro' });
   const {
@@ -91,10 +92,10 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
 
   return (
     <RadarDataProvider<RadarChartProPluginSignatures> {...radarDataProviderProProps}>
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+        <ChartsSurface {...chartsSurfaceProps}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
           <RadarSeriesArea />
@@ -120,12 +121,19 @@ RadarChartPro.propTypes = {
       exportAsPrint: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
    * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -134,14 +142,56 @@ RadarChartPro.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
    * The number of divisions in the radar grid.
    * @default 5
    */
   divisions: PropTypes.number,
   /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['radar']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['radar']),
+      }),
+    ]).isRequired,
+  ),
   /**
    * If `true`, the legend is not rendered.
    */
@@ -155,15 +205,57 @@ RadarChartPro.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['radar']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['radar']),
+      }),
+    ]).isRequired,
+  ),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -202,9 +294,14 @@ RadarChartPro.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -213,6 +310,12 @@ RadarChartPro.propTypes = {
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onMarkClick: PropTypes.func,
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
   /**
    * The configuration of the radar scales.
    */
@@ -275,7 +378,26 @@ RadarChartPro.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

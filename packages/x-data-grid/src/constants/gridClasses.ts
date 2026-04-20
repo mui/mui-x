@@ -140,6 +140,30 @@ export interface GridClasses {
    */
   'cell--rangeRight': string;
   /**
+   * Styles applied to the cell element when it displays the fill handle.
+   */
+  'cell--withFillHandle': string;
+  /**
+   * Styles applied to the cell element when it is in the fill preview range.
+   */
+  'cell--fillPreview': string;
+  /**
+   * Styles applied to the cell element if it is at the top edge of the fill preview range.
+   */
+  'cell--fillPreviewTop': string;
+  /**
+   * Styles applied to the cell element if it is at the bottom edge of the fill preview range.
+   */
+  'cell--fillPreviewBottom': string;
+  /**
+   * Styles applied to the cell element if it is at the left edge of the fill preview range.
+   */
+  'cell--fillPreviewLeft': string;
+  /**
+   * Styles applied to the cell element if it is at the right edge of the fill preview range.
+   */
+  'cell--fillPreviewRight': string;
+  /**
    * Styles applied to the cell element if it is pinned to the left.
    */
   'cell--pinnedLeft': string;
@@ -340,6 +364,11 @@ export interface GridClasses {
    */
   columnsManagementEmptyText: string;
   /**
+   * Styles applied to the content filler.
+   * @ignore - do not document.
+   */
+  contentFiller: string;
+  /**
    * Styles applied to the top container.
    */
   'container--top': string;
@@ -412,6 +441,11 @@ export interface GridClasses {
    */
   'filler--pinnedRight': string;
   /**
+   * Styles applied to the horizontal filler element.
+   * @ignore - do not document.
+   */
+  'filler--horizontal': string;
+  /**
    * Styles applied to the root of the filter form component.
    */
   filterForm: string;
@@ -439,6 +473,50 @@ export interface GridClasses {
    * Styles applied to the root of the input component.
    */
   editInputCell: string;
+  /**
+   * Styles applied to the long text cell root element.
+   */
+  longTextCell: string;
+  /**
+   * Styles applied to the long text cell content element.
+   */
+  longTextCellContent: string;
+  /**
+   * Styles applied to the long text cell expand button.
+   */
+  longTextCellExpandButton: string;
+  /**
+   * Styles applied to the long text cell collapse button.
+   */
+  longTextCellCollapseButton: string;
+  /**
+   * Styles applied to the long text cell popup.
+   */
+  longTextCellPopup: string;
+  /**
+   * Styles applied to the long text cell popper content.
+   */
+  longTextCellPopperContent: string;
+  /**
+   * Styles applied to the edit long text cell root element.
+   */
+  editLongTextCell: string;
+  /**
+   * Styles applied to the edit long text cell value element.
+   */
+  editLongTextCellValue: string;
+  /**
+   * Styles applied to the edit long text cell popup.
+   */
+  editLongTextCellPopup: string;
+  /**
+   * Styles applied to the edit long text cell popper content.
+   */
+  editLongTextCellPopperContent: string;
+  /**
+   * Styles applied to the edit long text cell textarea.
+   */
+  editLongTextCellTextarea: string;
   /**
    * Styles applied to the filter icon element.
    */
@@ -564,6 +642,11 @@ export interface GridClasses {
    */
   'root--noToolbar': string;
   /**
+   * Styles applied to the root element when layout mode is "controlled".
+   * @ignore - do not document.
+   */
+  'virtualizer--layoutControlled': string;
+  /**
    * Styles applied to the row element if the row is editable.
    */
   'row--editable': string;
@@ -575,14 +658,6 @@ export interface GridClasses {
    * Styles applied to the floating special row reorder cell element when it is dragged.
    */
   'row--dragging': string;
-  /**
-   * Styles applied to the row element when it is a drop target above.
-   */
-  'row--dropAbove': string;
-  /**
-   * Styles applied to the row element when it is a drop target below.
-   */
-  'row--dropBelow': string;
   /**
    * Styles applied to the row element when it is being dragged (entire row).
    */
@@ -932,7 +1007,140 @@ export function getDataGridUtilityClass(slot: string): string {
   return generateUtilityClass('MuiDataGrid', slot);
 }
 
+/**
+ * Class groups for the MuiDataGrid component used in GridRootStyles overridesResolver.
+ *
+ * Splits classes into two groups to support style overrides:
+ * - `root`: classes applied directly to the root element (use `&.className` selector)
+ * - `children`: classes applied to child elements (use `& .className` selector)
+ *
+ * These are spread into the gridClasses utility object and used for CSS-in-JS overrides.
+ *
+ * Only include class names here that are NOT applied via `styled` components.
+ * For `styled` components, declare overrides directly in the component definition.
+ */
+export const gridClassesOverrides = {
+  root: [
+    'autoHeight',
+    'autosizing',
+    'root--densityStandard',
+    'root--densityComfortable',
+    'root--densityCompact',
+    'root--disableUserSelection',
+    'root--noToolbar',
+    'withVerticalBorder',
+  ],
+  children: [
+    'actionsCell',
+    'booleanCell',
+    'cell',
+    'cell--editable',
+    'cell--editing',
+    'cell--flex',
+    'cell--pinnedLeft',
+    'cell--pinnedRight',
+    'cell--rangeBottom',
+    'cell--rangeLeft',
+    'cell--rangeRight',
+    'cell--rangeTop',
+    'cell--withFillHandle',
+    'cell--fillPreview',
+    'cell--fillPreviewTop',
+    'cell--fillPreviewBottom',
+    'cell--fillPreviewLeft',
+    'cell--fillPreviewRight',
+    'cell--selectionMode',
+    'cell--textCenter',
+    'cell--textLeft',
+    'cell--textRight',
+    'cell--withLeftBorder',
+    'cell--withRightBorder',
+    'cellCheckbox',
+    'cellEmpty',
+    'cellOffsetLeft',
+    'cellSkeleton',
+    'checkboxInput',
+    'columnHeader',
+    'columnHeader--alignCenter',
+    'columnHeader--alignLeft',
+    'columnHeader--alignRight',
+    'columnHeader--dragging',
+    'columnHeader--emptyGroup',
+    'columnHeader--filledGroup',
+    'columnHeader--filtered',
+    'columnHeader--last',
+    'columnHeader--moving',
+    'columnHeader--numeric',
+    'columnHeader--pinnedLeft',
+    'columnHeader--pinnedRight',
+    'columnHeader--siblingFocused',
+    'columnHeader--sortable',
+    'columnHeader--sorted',
+    'columnHeader--withLeftBorder',
+    'columnHeader--withRightBorder',
+    'columnHeaderCheckbox',
+    'columnHeaderDraggableContainer',
+    'columnHeaderTitleContainer',
+    'columnHeaderTitleContainerContent',
+    'columnSeparator',
+    'columnSeparator--resizable',
+    'columnSeparator--resizing',
+    'columnSeparator--sideLeft',
+    'columnSeparator--sideRight',
+    'container--bottom',
+    'container--top',
+    'detailPanelToggleCell',
+    'detailPanelToggleCell--expanded',
+    'editBooleanCell',
+    'filterIcon',
+    'filler--borderBottom',
+    'filler--pinnedLeft',
+    'filler--pinnedRight',
+    'groupingCriteriaCell',
+    'groupingCriteriaCellLoadingContainer',
+    'groupingCriteriaCellToggle',
+    'headerFilterRow',
+    'iconSeparator',
+    'menuIcon',
+    'menuIconButton',
+    'menuList',
+    'menuOpen',
+    'overlayWrapperInner',
+    'pinnedRows',
+    'pinnedRows--bottom',
+    'pinnedRows--top',
+    'row',
+    'row--borderBottom',
+    'row--detailPanelExpanded',
+    // TODO v9: Rename to `cell--dragging`
+    'row--dragging',
+    'row--dynamicHeight',
+    'row--editable',
+    'row--editing',
+    'row--firstVisible',
+    'row--lastVisible',
+    'rowReorderCell',
+    'rowReorderCell--draggable',
+    'rowReorderCellContainer',
+    'rowReorderCellPlaceholder',
+    'rowSkeleton',
+    'scrollbar',
+    'scrollbar--horizontal',
+    'scrollbar--vertical',
+    'scrollbarFiller',
+    'scrollbarFiller--pinnedRight',
+    'sortIcon',
+    'treeDataGroupingCell',
+    'treeDataGroupingCellLoadingContainer',
+    'treeDataGroupingCellToggle',
+    'withBorderColor',
+    'row--beingDragged',
+  ],
+} as const satisfies { root: GridClassKey[]; children: GridClassKey[] };
+
 export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
+  ...gridClassesOverrides.root,
+  ...gridClassesOverrides.children,
   'aiAssistantPanel',
   'aiAssistantPanelHeader',
   'aiAssistantPanelTitleContainer',
@@ -947,71 +1155,23 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aiAssistantPanelSuggestionsList',
   'aiAssistantPanelSuggestionsItem',
   'aiAssistantPanelSuggestionsLabel',
-  'actionsCell',
   'aggregationColumnHeader',
   'aggregationColumnHeader--alignLeft',
   'aggregationColumnHeader--alignCenter',
   'aggregationColumnHeader--alignRight',
   'aggregationColumnHeaderLabel',
   'aggregationRowOverlayWrapper',
-  'autoHeight',
-  'autosizing',
   'mainContent',
   'withSidePanel',
-  'booleanCell',
-  'cell--editable',
-  'cell--editing',
-  'cell--flex',
-  'cell--textCenter',
-  'cell--textLeft',
-  'cell--textRight',
-  'cell--rangeTop',
-  'cell--rangeBottom',
-  'cell--rangeLeft',
-  'cell--rangeRight',
-  'cell--pinnedLeft',
-  'cell--pinnedRight',
-  'cell--selectionMode',
-  'cell',
-  'cellCheckbox',
-  'cellEmpty',
-  'cellSkeleton',
-  'cellOffsetLeft',
-  'checkboxInput',
   'collapsible',
   'collapsibleTrigger',
   'collapsibleIcon',
   'collapsiblePanel',
-  'columnHeader',
-  'columnHeader--alignCenter',
-  'columnHeader--alignLeft',
-  'columnHeader--alignRight',
-  'columnHeader--dragging',
-  'columnHeader--moving',
-  'columnHeader--numeric',
-  'columnHeader--sortable',
-  'columnHeader--sorted',
-  'columnHeader--filtered',
-  'columnHeader--pinnedLeft',
-  'columnHeader--pinnedRight',
-  'columnHeader--last',
-  'columnHeader--siblingFocused',
   'columnHeader--filter',
   'columnHeaderFilterInput',
   'columnHeaderFilterOperatorLabel',
-  'columnHeaderCheckbox',
-  'columnHeaderDraggableContainer',
   'columnHeaderTitle',
-  'columnHeaderTitleContainer',
-  'columnHeaderTitleContainerContent',
-  'columnHeader--filledGroup',
-  'columnHeader--emptyGroup',
   'columnHeaders',
-  'columnSeparator--resizable',
-  'columnSeparator--resizing',
-  'columnSeparator--sideLeft',
-  'columnSeparator--sideRight',
-  'columnSeparator',
   'columnsManagement',
   'columnsManagementRow',
   'columnsManagementHeader',
@@ -1019,11 +1179,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnsManagementFooter',
   'columnsManagementScrollArea',
   'columnsManagementEmptyText',
-  'container--top',
-  'container--bottom',
+  'contentFiller',
   'detailPanel',
-  'detailPanelToggleCell',
-  'detailPanelToggleCell--expanded',
   'footerCell',
   'panel',
   'panelHeader',
@@ -1031,76 +1188,48 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'panelContent',
   'panelFooter',
   'paper',
-  'editBooleanCell',
   'editInputCell',
+  'longTextCell',
+  'longTextCellContent',
+  'longTextCellExpandButton',
+  'longTextCellCollapseButton',
+  'longTextCellPopup',
+  'longTextCellPopperContent',
+  'editLongTextCell',
+  'editLongTextCellValue',
+  'editLongTextCellPopup',
+  'editLongTextCellPopperContent',
+  'editLongTextCellTextarea',
   'filler',
-  'filler--borderBottom',
-  'filler--pinnedLeft',
-  'filler--pinnedRight',
   'filterForm',
   'filterFormDeleteIcon',
   'filterFormLogicOperatorInput',
   'filterFormColumnInput',
   'filterFormOperatorInput',
   'filterFormValueInput',
-  'filterIcon',
+  'filler--horizontal',
   'footerContainer',
-  'headerFilterRow',
   'iconButtonContainer',
-  'iconSeparator',
   'main',
   'main--hasPinnedRight',
   'main--hiddenContent',
   'menu',
-  'menuIcon',
-  'menuIconButton',
-  'menuOpen',
-  'menuList',
   'overlay',
   'overlayWrapper',
-  'overlayWrapperInner',
   'root',
-  'root--densityStandard',
-  'root--densityComfortable',
-  'root--densityCompact',
-  'root--disableUserSelection',
-  'root--noToolbar',
-  'row',
-  'row--editable',
-  'row--editing',
-  'row--firstVisible',
-  'row--lastVisible',
-  // TODO v9: Rename to `cell--dragging`
-  'row--dragging',
-  'row--dropAbove',
-  'row--dropBelow',
-  'row--beingDragged',
-  'row--dynamicHeight',
-  'row--detailPanelExpanded',
-  'row--borderBottom',
-  'rowReorderCellPlaceholder',
+  'virtualizer--layoutControlled',
   'rowCount',
-  'rowReorderCellContainer',
-  'rowReorderCell',
-  'rowReorderCell--draggable',
   'rowReorderIcon',
-  'rowSkeleton',
   'scrollArea--left',
   'scrollArea--right',
   'scrollArea--up',
   'scrollArea--down',
   'scrollArea',
-  'scrollbar',
-  'scrollbar--vertical',
-  'scrollbar--horizontal',
-  'scrollbarFiller',
-  'scrollbarFiller--pinnedRight',
   'scrollShadow',
   'scrollShadow--vertical',
   'scrollShadow--horizontal',
   'selectedRowCount',
   'sortButton',
-  'sortIcon',
   'shadowScrollArea',
   'sidebar',
   'sidebarHeader',
@@ -1117,21 +1246,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
-  'withVerticalBorder',
-  'withBorderColor',
-  'cell--withRightBorder',
-  'cell--withLeftBorder',
-  'columnHeader--withRightBorder',
-  'columnHeader--withLeftBorder',
-  'treeDataGroupingCell',
-  'treeDataGroupingCellToggle',
-  'treeDataGroupingCellLoadingContainer',
-  'groupingCriteriaCell',
-  'groupingCriteriaCellToggle',
-  'groupingCriteriaCellLoadingContainer',
-  'pinnedRows',
-  'pinnedRows--top',
-  'pinnedRows--bottom',
   'pivotPanelAvailableFields',
   'pivotPanelField',
   'pivotPanelField--sorted',
@@ -1160,4 +1274,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'promptIconContainer',
   'promptError',
   'promptAction',
+  'resizablePanelHandle',
+  'resizablePanelHandle--horizontal',
+  'resizablePanelHandle--vertical',
 ]);

@@ -32,7 +32,7 @@ export default function CustomLineMarks() {
             showMark: ({ index }) => index % 2 === 0,
           },
         ]}
-        xAxis={[{ scaleType: 'point', data: xLabels }]}
+        xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}
         margin={margin}
       />

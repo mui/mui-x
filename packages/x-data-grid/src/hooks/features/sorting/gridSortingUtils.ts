@@ -1,10 +1,10 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
-import { GridSortingModelApplier } from './gridSortingState';
+import type { GridSortingModelApplier } from './gridSortingState';
 import type { GridRowId, GridTreeNode } from '../../../models';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import {
+import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type {
   GridComparatorFn,
   GridSortDirection,
   GridSortItem,
@@ -25,15 +25,13 @@ interface GridParsedSortItem {
 
 export const sanitizeSortModel = (model: GridSortModel, disableMultipleColumnsSorting: boolean) => {
   if (disableMultipleColumnsSorting && model.length > 1) {
-    if (process.env.NODE_ENV !== 'production') {
-      warnOnce(
-        [
-          'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
-          'If you are using the community version of the Data Grid, this prop is always `true`.',
-        ],
-        'error',
-      );
-    }
+    warnOnce(
+      [
+        'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
+        'If you are using the community version of the Data Grid, this prop is always `true`.',
+      ],
+      'error',
+    );
     return [model[0]];
   }
 

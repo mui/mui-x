@@ -1,17 +1,18 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import {
   RecurringEventPresetKey,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
   SchedulerProcessedDate,
-  SchedulerValidDate,
+  TemporalSupportedObject,
 } from '../models';
-import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
+import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import {
   computeMonthlyOrdinal,
   getWeekDayCode,
   serializeRRule,
-} from '../utils/recurring-event-utils';
+} from '../internals/utils/recurring-events';
+import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 export const schedulerRecurringEventSelectors = {
   /**
@@ -22,7 +23,7 @@ export const schedulerRecurringEventSelectors = {
     (
       adapter,
       date: SchedulerProcessedDate,
-    ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
+    ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule> => {
       return {
         DAILY: {
           freq: 'DAILY',
@@ -52,12 +53,14 @@ export const schedulerRecurringEventSelectors = {
    */
   defaultPresetKey: createSelectorMemoized(
     (state: State) => state.adapter,
+    (state: State) => state.plan,
     (
       adapter,
-      rule: RecurringEventRecurrenceRule | undefined,
+      plan,
+      rule: SchedulerProcessedEventRecurrenceRule | undefined,
       occurrenceStart: SchedulerProcessedDate,
     ): RecurringEventPresetKey | 'custom' | null => {
-      if (!rule) {
+      if (plan !== 'premium' || !rule) {
         return null;
       }
 
@@ -123,8 +126,8 @@ export const schedulerRecurringEventSelectors = {
     (state: State) => state.adapter,
     (
       adapter,
-      rruleA: RecurringEventRecurrenceRule | undefined,
-      rruleB: RecurringEventRecurrenceRule | undefined,
+      rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
+      rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
     ): boolean => {
       if (!rruleA && !rruleB) {
         return true;
@@ -140,8 +143,11 @@ export const schedulerRecurringEventSelectors = {
    */
   weeklyDays: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.visibleDate,
-    (adapter, visibleDate): { code: RecurringEventWeekDayCode; date: SchedulerValidDate }[] => {
+    schedulerOtherSelectors.visibleDate,
+    (
+      adapter,
+      visibleDate,
+    ): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[] => {
       const start = adapter.startOfWeek(visibleDate);
       return Array.from({ length: 7 }, (_, i) => {
         const date = adapter.addDays(start, i);
@@ -162,7 +168,7 @@ export const schedulerRecurringEventSelectors = {
       dayOfMonth: number;
       code: RecurringEventWeekDayCode;
       ord: number;
-      date: SchedulerValidDate;
+      date: TemporalSupportedObject;
     } => {
       return {
         dayOfMonth: adapter.getDate(date.value),

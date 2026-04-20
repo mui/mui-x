@@ -24,23 +24,17 @@ import {
 
 export interface UseFieldParameters<
   TValue extends PickerValidValue,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TValidationProps extends {},
-  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
+  TProps extends UseFieldProps,
 > {
-  manager: PickerManager<TValue, TEnableAccessibleFieldDOMStructure, TError, TValidationProps, any>;
+  manager: PickerManager<TValue, TError, TValidationProps, any>;
   props: TProps;
   skipContextFieldRefAssignment?: boolean;
 }
 
-export interface UseFieldInternalProps<
-  TValue extends PickerValidValue,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
-> extends TimezoneProps,
-    FormProps,
-    OnErrorProps<TValue, TError> {
+export interface UseFieldInternalProps<TValue extends PickerValidValue, TError>
+  extends TimezoneProps, FormProps, OnErrorProps<TValue, TError> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -107,11 +101,7 @@ export interface UseFieldInternalProps<
   /**
    * The ref object used to imperatively interact with the field.
    */
-  unstableFieldRef?: React.Ref<FieldRef<TValue>>;
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
+  fieldRef?: React.Ref<FieldRef<TValue>>;
   /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
@@ -123,74 +113,41 @@ export interface UseFieldInternalProps<
   focused?: boolean;
 }
 
-export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  TEnableAccessibleFieldDOMStructure extends false
-    ? {
-        clearable?: boolean;
-        error?: boolean;
-        placeholder?: string;
-        inputRef?: React.Ref<HTMLInputElement>;
-        onClick?: React.MouseEventHandler;
-        onFocus?: React.FocusEventHandler;
-        onKeyDown?: React.KeyboardEventHandler;
-        onBlur?: React.FocusEventHandler;
-        onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
-        onClear?: React.MouseEventHandler;
-      }
-    : {
-        clearable?: boolean;
-        error?: boolean;
-        focused?: boolean;
-        sectionListRef?: React.Ref<PickersSectionListRef>;
-        onClick?: React.MouseEventHandler;
-        onKeyDown?: React.KeyboardEventHandler;
-        onFocus?: React.FocusEventHandler;
-        onBlur?: React.FocusEventHandler;
-        onInput?: React.FormEventHandler<HTMLDivElement>;
-        onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
-        onClear?: React.MouseEventHandler;
-      };
+export interface UseFieldForwardedProps {
+  clearable?: boolean;
+  error?: boolean;
+  focused?: boolean;
+  sectionListRef?: React.Ref<PickersSectionListRef>;
+  onClick?: React.MouseEventHandler;
+  onKeyDown?: React.KeyboardEventHandler;
+  onFocus?: React.FocusEventHandler;
+  onBlur?: React.FocusEventHandler;
+  onInput?: React.FormEventHandler<HTMLDivElement>;
+  onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+  onClear?: React.MouseEventHandler;
+}
 
-type UseFieldAdditionalProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  TEnableAccessibleFieldDOMStructure extends false
-    ? {
-        /**
-         * The aria label to set on the button that opens the Picker.
-         */
-        openPickerAriaLabel: string;
-        enableAccessibleFieldDOMStructure: false;
-        focused: boolean | undefined;
-        inputMode: 'text' | 'numeric';
-        placeholder: string;
-        value: string;
-        onChange: React.ChangeEventHandler<HTMLInputElement>;
-        autoComplete: 'off';
-      }
-    : {
-        /**
-         * The aria label to set on the button that opens the Picker.
-         */
-        openPickerAriaLabel: string;
-        enableAccessibleFieldDOMStructure: true;
-        elements: PickersSectionElement[];
-        tabIndex: number | undefined;
-        contentEditable: boolean;
-        value: string;
-        onChange: React.ChangeEventHandler<HTMLInputElement>;
-        areAllSectionsEmpty: boolean;
-        focused: boolean;
-      };
+interface UseFieldAdditionalProps {
+  /**
+   * The aria label to set on the button that opens the Picker.
+   */
+  openPickerAriaLabel: string;
+  elements: PickersSectionElement[];
+  tabIndex: number | undefined;
+  contentEditable: boolean;
+  value: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  areAllSectionsEmpty: boolean;
+  focused: boolean;
+}
 
-export type UseFieldReturnValue<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
-> =
+export type UseFieldReturnValue<TProps extends {}> =
   // Some internal props are returned with a default value applied.
-  Required<Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly' | 'autoFocus'>> &
+  Required<Pick<UseFieldInternalProps<any, any>, 'disabled' | 'readOnly' | 'autoFocus'>> &
     // All the forwarded props the useField hooks is able to handled are returned with a default value applied.
-    Required<UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>> &
+    Required<UseFieldForwardedProps> &
     // Some additional props are generated internally and returned.
-    UseFieldAdditionalProps<TEnableAccessibleFieldDOMStructure> &
+    UseFieldAdditionalProps &
     Omit<TProps, InternalPropNames<PickerValueType>>;
 
 export type FieldSectionValueBoundaries<SectionType extends FieldSectionType> = {
@@ -238,25 +195,12 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
     getSectionsFromDate: (date: PickerValidDate | null) => FieldSection[],
   ) => InferFieldSection<TValue>[];
   /**
-   * Creates the string value to render in the input based on the current section list.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {InferFieldSection<TValue>[]} sections The current section list.
-   * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
-   * @param {boolean} isRtl `true` if the current orientation is "right to left"
-   * @returns {string} The string value to render in the input.
-   */
-  getV6InputValueFromSections: (
-    sections: InferFieldSection<TValue>[],
-    localizedDigits: string[],
-    isRtl: boolean,
-  ) => string;
-  /**
-   * Creates the string value to render in the input based on the current section list.
+   * Creates the string value to render in the hidden input based on the current section list.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {InferFieldSection<TValue>[]} sections The current section list.
    * @returns {string} The string value to render in the input.
    */
-  getV7HiddenInputValueFromSections: (sections: InferFieldSection<TValue>[]) => string;
+  getHiddenInputValueFromSections: (sections: InferFieldSection<TValue>[]) => string;
   /**
    * Parses a string version (most of the time coming from the input).
    * This method should only be used when the change does not come from a single section.
@@ -405,10 +349,7 @@ export interface CharacterEditingQuery {
   sectionType: FieldSectionType;
 }
 
-export type UseFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure> & {
-    enableAccessibleFieldDOMStructure?: boolean;
-  };
+export type UseFieldProps = UseFieldForwardedProps;
 
 export interface UseFieldDOMGetters {
   isReady: () => boolean;

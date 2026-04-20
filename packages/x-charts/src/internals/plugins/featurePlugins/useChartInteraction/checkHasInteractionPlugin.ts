@@ -1,5 +1,5 @@
-import { ChartAnyPluginSignature, ChartUsedInstance } from '../../models/plugin';
-import { UseChartInteractionInstance } from './useChartInteraction.types';
+import { type ChartAnyPluginSignature, type ChartUsedInstance } from '../../models/plugin';
+import { type UseChartInteractionInstance } from './useChartInteraction.types';
 
 export function checkHasInteractionPlugin<T extends ChartAnyPluginSignature>(
   instance: ChartUsedInstance<T>,

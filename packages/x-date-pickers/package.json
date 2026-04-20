@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "8.18.0",
+  "version": "9.0.2",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Date and Time Picker components.",
   "license": "MIT",
@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
+    "build": "code-infra build --flat",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -41,7 +41,7 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-internals": "workspace:*",
+    "@mui/x-internals": "workspace:^",
     "@types/react-transition-group": "catalog:",
     "clsx": "catalog:",
     "prop-types": "catalog:",
@@ -50,8 +50,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
-    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/material": "^7.3.0 || ^9.0.0",
+    "@mui/system": "^7.3.0 || ^9.0.0",
     "date-fns": "^2.25.0 || ^3.2.0 || ^4.0.0",
     "date-fns-jalali": "^2.13.0-0 || ^3.2.0-0 || ^4.0.0-0",
     "dayjs": "^1.10.7",
@@ -116,6 +116,11 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./icons": "./src/icons/index.tsx",
+    "./internals/demo": "./src/internals/demo/index.ts",
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

@@ -50,6 +50,8 @@ You can browse the documentation, find an example close to your use case, and th
 You can use a starter template to build a reproduction case with:
 
 <!-- #target-branch-reference -->
+<!-- Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch -->
+<!-- For example, when creating v9 from v8, `master -> v8.x` -->
 
 - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
 - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
@@ -96,9 +98,10 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 | MUI X version | Release    | Supported                                                                       |
 | ------------: | :--------- | :------------------------------------------------------------------------------ |
-|        ^8.0.0 | 2025-04-17 | ✅ Stable major (Continuous support).                                           |
+|        ^9.0.0 | 2026-04-08 | ✅ Current stable major (Continuous support).                                   |
+|        ^8.0.0 | 2025-04-17 | ⚠️ LTS - Support for security issues and regressions **until April 8th 2028**.  |
 |        ^7.0.0 | 2024-03-23 | ⚠️ LTS - Support for security issues and regressions **until April 17th 2027**. |
-|        ^6.0.0 | 2023-03-03 | ⚠️ LTS - Support for security issues and regressions **until March 23th 2026**. |
+|        ^6.0.0 | 2023-03-03 | ❌                                                                              |
 |        ^5.0.0 | 2021-11-23 | ❌                                                                              |
 |        ^4.0.0 | 2021-09-28 | ❌                                                                              |
 
@@ -108,17 +111,6 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 The MUI X community is active on both [X/Twitter](https://x.com/MUI_hq) and [LinkedIn](https://www.linkedin.com/company/mui/).
 These are great platforms to share what you're working on and connect with other developers.
-
-### Discord
-
-We have a [Discord Server](https://mui.com/r/discord/) to bring the MUI X community together.
-Our tools are used by thousands of developers and teams all around the world, many of whom actively engage with the community.
-
-You can join Discord to engage in lively discussions, share your projects, and interact with developers just like you from all around the world. We'd love for you to join us!
-
-:::warning
-How-to questions are not accepted on Discord, they should be asked on [Stack Overflow](#stack-overflow).
-:::
 
 ## Custom work
 

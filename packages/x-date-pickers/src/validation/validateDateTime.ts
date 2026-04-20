@@ -20,9 +20,7 @@ import { PickerValue } from '../internals/models';
  * Validation props used by the Date Time Picker and Date Time Field components.
  */
 export interface ExportedValidateDateTimeProps
-  extends ExportedValidateDateProps,
-    ExportedValidateTimeProps,
-    DateTimeValidationProps {}
+  extends ExportedValidateDateProps, ExportedValidateTimeProps, DateTimeValidationProps {}
 
 /**
  * Validation props as received by the validateDateTime method.

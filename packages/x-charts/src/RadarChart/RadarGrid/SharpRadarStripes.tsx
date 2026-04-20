@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RadarGridStripeRenderProps } from './RadarGrid.types';
+import { type RadarGridStripeRenderProps } from './RadarGrid.types';
 
 const getPath = (
   corners: RadarGridStripeRenderProps['corners'],
@@ -45,7 +45,7 @@ export function SharpRadarStripes(props: RadarGridStripeRenderProps) {
             stroke="none"
             fill={stripeColor?.(index) ?? 'none'}
             fillOpacity={0.1}
-            className={classes?.stripe}
+            className={classes?.gridStripe}
           />
         );
       })}

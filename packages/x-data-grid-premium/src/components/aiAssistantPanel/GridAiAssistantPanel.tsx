@@ -2,14 +2,14 @@ import * as React from 'react';
 import { useGridSelector, getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
   gridAiAssistantActiveConversationSelector,
   gridAiAssistantConversationsSelector,
 } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridAiAssistantPanelConversation } from './GridAiAssistantPanelConversation';
 import { GridPromptField } from '../promptField/GridPromptField';
 import { GridAiAssistantPanelSuggestions } from './GridAiAssistantPanelSuggestions';

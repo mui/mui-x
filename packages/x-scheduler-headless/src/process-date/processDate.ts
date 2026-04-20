@@ -1,14 +1,21 @@
-import { SchedulerProcessedDate, SchedulerValidDate } from '../models';
+import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
 import { Adapter } from '../use-adapter';
-import { getDateKey } from '../utils/date-utils';
+import { getDateKey } from '../internals/utils/date-utils';
 
 /**
- * Creates a CalendarProcessedDate object from a date object.
+ * Creates a processed date object from a date object.
  */
-export function processDate(date: SchedulerValidDate, adapter: Adapter): SchedulerProcessedDate {
+export function processDate(
+  date: TemporalSupportedObject,
+  adapter: Adapter,
+): SchedulerProcessedDate {
+  const hours = adapter.getHours(date);
+  const minutes = adapter.getMinutes(date);
+
   return {
     value: date,
     key: getDateKey(date, adapter),
-    timestamp: adapter.toJsDate(date).getTime(),
+    timestamp: adapter.getTime(date),
+    minutesInDay: hours * 60 + minutes,
   };
 }

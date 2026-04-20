@@ -1,0 +1,103 @@
+import * as React from 'react';
+import {
+  gridRowTreeSelector,
+  gridExpandedSortedRowIdsSelector,
+  gridRowNodeSelector,
+  gridExpandedSortedRowIndexLookupSelector,
+  type GridRowProApi,
+} from '@mui/x-data-grid';
+import { useGridRowsOverridableMethodsCommunity } from '@mui/x-data-grid/internals';
+import type { RefObject } from '@mui/x-internals/types';
+import type { ReorderExecutionContext } from '../rowReorder/types';
+import { treeDataReorderExecutor } from '../treeData/treeDataReorderExecutor';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+
+export const useGridRowsOverridableMethods = (
+  apiRef: RefObject<GridPrivateApiPro>,
+  props: Pick<
+    DataGridProProcessedProps,
+    'processRowUpdate' | 'onProcessRowUpdateError' | 'setTreeDataPath' | 'treeData'
+  >,
+) => {
+  const { processRowUpdate, onProcessRowUpdateError, setTreeDataPath, treeData } = props;
+  const { setRowIndex: setRowIndexFlat, setRowPosition: setRowPositionFlat } =
+    useGridRowsOverridableMethodsCommunity(apiRef);
+
+  const setRowPosition = React.useCallback<GridRowProApi['setRowPosition']>(
+    async (sourceRowId, targetRowId, position) => {
+      const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
+      const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
+      const rowTree = gridRowTreeSelector(apiRef);
+
+      const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
+      const targetNode = gridRowNodeSelector(apiRef, targetRowId);
+
+      if (!sourceNode) {
+        throw new Error(
+          `MUI X Data Grid: No row with id "${sourceRowId}" found. ` +
+            'The source row for reordering does not exist in the grid. ' +
+            'Verify the row id is correct and the row exists.',
+        );
+      }
+
+      if (!targetNode) {
+        throw new Error(
+          `MUI X Data Grid: No row with id "${targetRowId}" found. ` +
+            'The target row for reordering does not exist in the grid. ' +
+            'Verify the row id is correct and the row exists.',
+        );
+      }
+
+      if (sourceNode.type === 'footer') {
+        throw new Error(
+          'MUI X Data Grid: Row reordering does not support reordering of footer rows. ' +
+            'Footer rows are special rows that cannot be moved. ' +
+            'Only data rows can be reordered.',
+        );
+      }
+
+      // Get the target index from the targetRowId using the lookup selector
+      const targetIndexUnadjusted = sortedFilteredRowIndexLookup[targetRowId];
+
+      if (targetIndexUnadjusted === undefined) {
+        throw new Error(
+          `MUI X Data Grid: Target row with id "${targetRowId}" not found in current view. ` +
+            'The target row may be filtered out or not visible. ' +
+            'Ensure the target row is visible in the current grid view.',
+        );
+      }
+
+      const targetIndex = position === 'below' ? targetIndexUnadjusted + 1 : targetIndexUnadjusted;
+
+      const executionContext: ReorderExecutionContext = {
+        sourceRowId,
+        dropPosition: position,
+        placeholderIndex: targetIndex,
+        sortedFilteredRowIds,
+        sortedFilteredRowIndexLookup,
+        rowTree,
+        apiRef,
+        processRowUpdate,
+        onProcessRowUpdateError,
+        setTreeDataPath,
+      };
+
+      return treeDataReorderExecutor.execute(executionContext);
+    },
+    [apiRef, processRowUpdate, onProcessRowUpdateError, setTreeDataPath],
+  );
+
+  const setRowIndex = React.useCallback<GridRowProApi['setRowIndex']>(async () => {
+    throw new Error(
+      'MUI X Data Grid: setRowIndex() is not supported for tree data. ' +
+        'Tree data uses hierarchical positioning which requires setRowPosition(). ' +
+        'Use setRowPosition() instead to reorder rows in tree data mode.',
+    );
+  }, []);
+
+  return {
+    setRowIndex: treeData ? setRowIndex : setRowIndexFlat,
+    setRowPosition: treeData ? setRowPosition : setRowPositionFlat,
+  };
+};

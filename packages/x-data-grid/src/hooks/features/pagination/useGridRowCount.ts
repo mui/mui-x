@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPaginationRowCountApi, GridPaginationState } from './gridPaginationInterfaces';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridPaginationRowCountApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridFilteredTopLevelRowCountSelector } from '../filter';
 import { useGridLogger, useGridApiMethod, useGridEvent } from '../../utils';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   gridPaginationRowCountSelector,
   gridPaginationMetaSelector,
@@ -26,10 +26,12 @@ export const useGridRowCount = (
 
   const previousPageSize = useLazyRef(() => gridPaginationModelSelector(apiRef).pageSize);
 
+  const onRowCountChangeProp = props.onRowCountChange;
+
   apiRef.current.registerControlState({
     stateId: 'paginationRowCount',
     propModel: props.rowCount,
-    propOnChange: props.onRowCountChange,
+    propOnChange: onRowCountChangeProp,
     stateSelector: gridPaginationRowCountSelector,
     changeEvent: 'rowCountChange',
   });
@@ -45,6 +47,23 @@ export const useGridRowCount = (
       }
       logger.debug("Setting 'rowCount' to", newRowCount);
 
+      if (rowCountState == null || rowCountState === -1) {
+        const newState = {
+          ...apiRef.current.state,
+          pagination: {
+            ...apiRef.current.state.pagination,
+            rowCount: newRowCount,
+          },
+        };
+        apiRef.current.state = newState;
+        apiRef.current.store.update(newState);
+        apiRef.current.publishEvent('rowCountChange', newRowCount);
+        if (onRowCountChangeProp) {
+          onRowCountChangeProp(newRowCount);
+        }
+        return;
+      }
+
       apiRef.current.setState((state) => ({
         ...state,
         pagination: {
@@ -53,7 +72,7 @@ export const useGridRowCount = (
         },
       }));
     },
-    [apiRef, logger],
+    [apiRef, logger, onRowCountChangeProp],
   );
 
   const paginationRowCountApi: GridPaginationRowCountApi = {
@@ -157,7 +176,8 @@ export const useGridRowCount = (
       return undefined;
     },
     (_, isLastPageOrRowCount) => {
-      if (isLastPageOrRowCount === true && gridPaginationRowCountSelector(apiRef) !== -1) {
+      const rowCount = gridPaginationRowCountSelector(apiRef);
+      if (isLastPageOrRowCount === true && (rowCount == null || rowCount === -1)) {
         const visibleTopLevelRowCount = gridFilteredTopLevelRowCountSelector(apiRef);
         const paginationModel = gridPaginationModelSelector(apiRef);
         apiRef.current.setRowCount(

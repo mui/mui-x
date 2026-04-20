@@ -1,15 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
 import { useChartProApiContext } from '../context';
-import { ChartImageExportOptions } from '../internals/plugins/useChartProExport';
-import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import { type ChartImageExportOptions } from '../internals/plugins/useChartProExport';
+import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 
 export interface ChartsToolbarImageExportOptions
-  extends Omit<ChartImageExportOptions, 'type'>,
-    Required<Pick<ChartImageExportOptions, 'type'>> {}
+  extends Omit<ChartImageExportOptions, 'type'>, Required<Pick<ChartImageExportOptions, 'type'>> {}
 
 export type ChartsToolbarImageExportTriggerProps = ChartsSlotPropsPro['baseButton'] & {
   /**
@@ -80,6 +79,7 @@ ChartsToolbarImageExportTrigger.propTypes = {
    * A function to customize the rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
   style: PropTypes.object,
   tabIndex: PropTypes.number,
 } as any;

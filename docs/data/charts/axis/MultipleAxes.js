@@ -13,8 +13,8 @@ export default function MultipleAxes() {
           { id: 'logAxis', scaleType: 'log', position: 'left' },
         ]}
         series={[
-          { yAxisId: 'linearAxis', data: sample, label: 'linear' },
-          { yAxisId: 'logAxis', data: sample, label: 'log' },
+          { yAxisId: 'linearAxis', data: sample, label: 'linear', showMark: true },
+          { yAxisId: 'logAxis', data: sample, label: 'log', showMark: true },
         ]}
         height={400}
       />

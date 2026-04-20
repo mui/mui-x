@@ -1,4 +1,4 @@
-import type { TooltipItemPositionGetter } from '../../internals/plugins/models/seriesConfig/tooltipItemPositionGetter.types';
+import type { TooltipItemPositionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'line'> = (params) => {
   const { series, identifier, axesConfig } = params;
@@ -17,7 +17,10 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'line'> = (params) =>
   }
 
   const xValue = axesConfig.x.data?.[identifier.dataIndex];
-  const yValue = itemSeries.data[identifier.dataIndex];
+  const yValue =
+    itemSeries.data[identifier.dataIndex] == null
+      ? null
+      : itemSeries.visibleStackedData[identifier.dataIndex][1];
 
   if (xValue == null || yValue == null) {
     return null;

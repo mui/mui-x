@@ -1,11 +1,11 @@
-import { ChartsBaseSlots } from '@mui/x-charts/models';
-import * as React from 'react';
+import { type ChartsBaseSlots } from '@mui/x-charts/models';
+import type * as React from 'react';
 import {
-  ChartBaseDividerProps,
-  ChartBaseMenuItemProps,
-  ChartBaseMenuListProps,
-  ChartBasePopperProps,
-  ChartBaseTooltipProps,
+  type ChartBaseDividerProps,
+  type ChartBaseMenuItemProps,
+  type ChartBaseMenuListProps,
+  type ChartBasePopperProps,
+  type ChartBaseTooltipProps,
 } from './chartBaseSlotProps';
 
 export interface ChartsBaseSlotsPro extends ChartsBaseSlots {

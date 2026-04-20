@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { ScaleBand, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
-import { AxisConfig, D3Scale, type AxisGroup } from '../models/axis';
+import { type AxisConfig, type D3Scale, type AxisGroup } from '../models/axis';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import type { TickParams } from './useTicks';
 

@@ -1,3 +1,4 @@
+'use client';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
@@ -7,11 +8,13 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isHideMenuKey } from '../../../utils/keyboardUtils';
 import { NotRendered } from '../../../utils/assert';
 import { gridClasses } from '../../../constants/gridClasses';
-import { GridSlotProps } from '../../../models/gridSlotsComponent';
+import type { GridSlotProps } from '../../../models/gridSlotsComponent';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
+import type { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 
-const StyledMenuList = styled(NotRendered<GridSlotProps['baseMenuList']>)(() => ({
+const StyledMenuList = styled(NotRendered<GridSlotProps['baseMenuList']>, {
+  slot: 'internal',
+})(() => ({
   minWidth: 248,
 }));
 

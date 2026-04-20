@@ -1,20 +1,20 @@
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store/useStore';
-import { SchedulerValidDate } from '../../models';
+import { useStore } from '@base-ui/utils/store/useStore';
+import { TemporalSupportedObject } from '../../models';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
-import { useAdapter } from '../../use-adapter';
-import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
+import { useAdapterContext } from '../../use-adapter-context';
+import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
   parameters: useCalendarGridPlaceholderInRange.Parameters,
-): useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition | null {
+): useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null {
   const { start, end, occurrences, maxIndex } = parameters;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
 
   const rawPlaceholder = useStore(
@@ -34,17 +34,23 @@ export function useCalendarGridPlaceholderInRange(
       return null;
     }
 
+    const startProcessed = processDate(rawPlaceholder.start, adapter);
+    const endProcessed = processDate(rawPlaceholder.end, adapter);
+    const timezone = adapter.getTimezone(rawPlaceholder.start);
     const sharedProperties = {
       key: 'occurrence-placeholder',
-      start: processDate(rawPlaceholder.start, adapter),
-      end: processDate(rawPlaceholder.end, adapter),
-      modelInBuiltInFormat: null,
+      id: originalEventId ?? 'occurrence-placeholder',
+      title: originalEvent ? originalEvent.title : '',
+      displayTimezone: {
+        start: startProcessed,
+        end: endProcessed,
+        timezone,
+      },
     };
 
     if (rawPlaceholder.type === 'creation') {
       return {
         ...sharedProperties,
-        id: 'occurrence-placeholder',
         title: '',
         position: {
           firstIndex: 1,
@@ -56,7 +62,6 @@ export function useCalendarGridPlaceholderInRange(
     if (rawPlaceholder.type === 'external-drag') {
       return {
         ...sharedProperties,
-        id: 'occurrence-placeholder',
         title: rawPlaceholder.eventData.title ?? '',
         position: {
           firstIndex: 1,
@@ -73,16 +78,15 @@ export function useCalendarGridPlaceholderInRange(
     };
 
     return {
-      ...originalEvent!,
       ...sharedProperties,
       position,
     };
-  }, [adapter, rawPlaceholder, occurrences, maxIndex, originalEvent]);
+  }, [rawPlaceholder, adapter, originalEvent, originalEventId, occurrences, maxIndex]);
 }
 
 export namespace useCalendarGridPlaceholderInRange {
   export interface Parameters extends useEventOccurrencesWithTimelinePosition.ReturnValue {
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
   }
 }

@@ -1,11 +1,14 @@
 'use client';
 import * as React from 'react';
-import { ChartsXAxisProps, type AxisGroup } from '../models/axis';
+import { type ChartsXAxisProps, type AxisGroup } from '../models/axis';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../context/ChartsProvider/useChartsContext';
 import { TICK_LABEL_GAP } from './utilities';
 import { useTicksGrouped } from '../hooks/useTicksGrouped';
 import { useAxisTicksProps } from './useAxisTicksProps';
+import { useStore } from '../internals/store/useStore';
+import { selectorChartXAxisAutoSizeResults } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartAxisAutoSize.selectors';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 
 const DEFAULT_GROUPING_CONFIG = {
   tickSize: 6,
@@ -15,6 +18,7 @@ const getGroupingConfig = (
   groups: AxisGroup[],
   groupIndex: number,
   tickSize: number | undefined,
+  computedGroupTickSizes?: number[],
 ) => {
   const config = groups[groupIndex] ?? ({} as AxisGroup);
 
@@ -24,7 +28,7 @@ const getGroupingConfig = (
   return {
     ...DEFAULT_GROUPING_CONFIG,
     ...config,
-    tickSize: config.tickSize ?? calculatedTickSize,
+    tickSize: computedGroupTickSizes?.[groupIndex] ?? config.tickSize ?? calculatedTickSize,
   };
 };
 
@@ -47,7 +51,9 @@ function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
 
   if (!isOrdinalScale(xScale)) {
     throw new Error(
-      'MUI X Charts: ChartsGroupedXAxis only supports the `band` and `point` scale types.',
+      'MUI X Charts: ChartsGroupedXAxis only supports the `band` and `point` scale types. ' +
+        'Grouped axis ticks require an ordinal scale to display category groupings. ' +
+        'Use a band or point scale type for the x-axis, or use a non-grouped axis component.',
     );
   }
 
@@ -62,8 +68,15 @@ function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
   } = defaultizedProps;
 
   const groups = (defaultizedProps as { groups: AxisGroup[] }).groups;
+  const axisId = defaultizedProps.id;
 
-  const { instance } = useChartContext();
+  const { instance } = useChartsContext();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
+
+  // Get computed group tick sizes from auto-sizing (if available)
+  const autoSizeResults = store.use(selectorChartXAxisAutoSizeResults);
+  const axisAutoSizeResult = axisId ? autoSizeResults[axisId] : undefined;
+  const computedGroupTickSizes = axisAutoSizeResult?.groupTickSizes;
 
   const xTicks = useTicksGrouped({
     scale: xScale,
@@ -86,7 +99,7 @@ function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
         const tickLabel = item.formattedValue;
         const ignoreTick = item.ignoreTick ?? false;
         const groupIndex = item.groupIndex ?? 0;
-        const groupConfig = getGroupingConfig(groups, groupIndex, tickSize);
+        const groupConfig = getGroupingConfig(groups, groupIndex, tickSize, computedGroupTickSizes);
 
         const tickYSize = positionSign * groupConfig.tickSize;
         const labelPositionY = positionSign * (groupConfig.tickSize + TICK_LABEL_GAP);

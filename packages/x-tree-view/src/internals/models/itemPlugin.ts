@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/utils/types';
+import { TreeViewItemId } from '../../models';
 import type {
   UseTreeItemContentSlotOwnProps,
   UseTreeItemDragAndDropOverlaySlotOwnProps,
@@ -10,6 +11,8 @@ import type {
 } from '../../useTreeItem';
 import type { UseTreeItemInteractions } from '../../hooks/useTreeItemUtils/useTreeItemUtils';
 import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
+import { TreeViewAnyStore } from './treeView';
+import { TreeViewStoreInContext } from '../TreeViewProvider';
 
 export interface TreeViewItemPluginSlotPropsEnhancerParams {
   rootRefObject: React.RefObject<HTMLLIElement | null>;
@@ -50,11 +53,20 @@ export interface TreeViewItemPluginResponse {
   propsEnhancers?: TreeViewItemPluginSlotPropsEnhancers;
 }
 
-export interface TreeViewItemPluginOptions
-  extends Omit<TreeViewItemPluginResponse, 'propsEnhancers'> {
+export interface TreeViewItemPluginOptions extends Omit<
+  TreeViewItemPluginResponse,
+  'propsEnhancers'
+> {
   props: TreeItemProps;
 }
 
 export type TreeViewItemPlugin = (
   options: TreeViewItemPluginOptions,
 ) => void | TreeViewItemPluginResponse;
+
+export type TreeItemWrapper<TStore extends TreeViewAnyStore> = (params: {
+  itemId: TreeViewItemId;
+  children: React.ReactNode;
+  store: TreeViewStoreInContext<TStore>;
+  idAttribute: string;
+}) => React.ReactNode;

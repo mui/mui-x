@@ -1,6 +1,6 @@
 import {
   GRID_STRING_COL_DEF,
-  GridColDef,
+  type GridColDef,
   gridRowIdSelector,
   gridRowNodeSelector,
 } from '@mui/x-data-grid';

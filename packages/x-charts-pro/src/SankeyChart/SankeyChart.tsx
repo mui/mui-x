@@ -5,26 +5,25 @@ import { useThemeProps } from '@mui/material/styles';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
-import { type ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { ChartContainerProProps } from '../ChartContainerPro';
-import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
 import { useSankeyChartProps } from './useSankeyChartProps';
-import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 import type { SankeySeriesType } from './sankey.types';
-import { sankeySeriesConfig } from './seriesConfig';
 import { SankeyTooltip } from './SankeyTooltip';
 import type { SankeyChartSlotExtension } from './sankeySlots.types';
+import { FocusedSankeyNode } from './FocusedSankeyNode';
+import { FocusedSankeyLink } from './FocusedSankeyLink';
+import { SankeyDataProvider } from './SankeyDataProvider';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
+import type { SankeyChartPluginSignatures } from './SankeyChart.plugins';
 
 export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
 
-const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig };
-
 export interface SankeyChartProps
-  extends Omit<
-      ChartContainerProProps<'sankey', SankeyChartPluginSignatures>,
+  extends
+    Omit<
+      ChartsContainerProProps<'sankey', SankeyChartPluginSignatures>,
       'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
     >,
     Omit<SankeyPlotProps, 'data'>,
@@ -53,34 +52,32 @@ export interface SankeyChartProps
  */
 const SankeyChart = React.forwardRef(function SankeyChart(
   props: SankeyChartProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themedProps = useThemeProps({ props, name: 'MuiSankeyChart' });
 
-  const { chartContainerProps, sankeyPlotProps, overlayProps, chartsWrapperProps, children } =
+  const { chartsContainerProps, sankeyPlotProps, overlayProps, chartsWrapperProps, children } =
     useSankeyChartProps(themedProps);
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    chartContainerProps,
-    ref,
-  );
+  const {
+    chartsDataProviderProProps: { series, ...chartsDataProviderProProps },
+    chartsSurfaceProps,
+  } = useChartsContainerProProps<'sankey', SankeyChartPluginSignatures>(chartsContainerProps);
 
   const Tooltip = themedProps.slots?.tooltip ?? SankeyTooltip;
 
   return (
-    <ChartDataProviderPro<'sankey', SankeyChartPluginSignatures>
-      {...chartDataProviderProProps}
-      seriesConfig={seriesConfig}
-      plugins={SANKEY_CHART_PLUGINS}
-    >
-      <ChartsWrapper {...chartsWrapperProps}>
+    <SankeyDataProvider series={series as SankeySeriesType[]} {...chartsDataProviderProProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         <ChartsSurface {...chartsSurfaceProps}>
           <SankeyPlot {...sankeyPlotProps} />
           <ChartsOverlay {...overlayProps} />
+          <FocusedSankeyNode />
+          <FocusedSankeyLink />
           {children}
         </ChartsSurface>
         {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </SankeyDataProvider>
   );
 });
 
@@ -105,13 +102,19 @@ SankeyChart.propTypes = {
    * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.shape({
-    preferStrictDomainInLineCharts: PropTypes.bool,
-  }),
+  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -123,7 +126,7 @@ SankeyChart.propTypes = {
   highlightedItem: PropTypes.oneOfType([
     PropTypes.shape({
       nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       subType: PropTypes.oneOf([
         /**
          * Subtype to differentiate between node and link
@@ -133,7 +136,7 @@ SankeyChart.propTypes = {
       type: PropTypes.oneOf(['sankey']).isRequired,
     }),
     PropTypes.shape({
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       subType: PropTypes.oneOf([
         /**
@@ -143,6 +146,27 @@ SankeyChart.propTypes = {
       ]).isRequired,
       targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     }),
   ]),
   /**
@@ -177,7 +201,7 @@ SankeyChart.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {SankeyHighlightItemData | null} highlightedItem The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -192,6 +216,12 @@ SankeyChart.propTypes = {
    * @param {SankeyNodeIdentifierWithData} node The sankey node identifier.
    */
   onNodeClick: PropTypes.func,
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
   /**
    * The series to display in the Sankey chart.
    * A single object is expected.
@@ -213,7 +243,61 @@ SankeyChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

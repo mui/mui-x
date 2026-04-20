@@ -1,5 +1,5 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridRowId } from './gridRows';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridRowId } from './gridRows';
 import type { GridApiCommon } from './api';
 import type { GridApiCommunity } from './api/gridApiCommunity';
 
@@ -22,8 +22,9 @@ export interface GridExportOptions {
 /**
  * The options applicable to any document export format (CSV and Excel).
  */
-export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommunity>
-  extends GridExportOptions {
+export interface GridFileExportOptions<
+  Api extends GridApiCommon = GridApiCommunity,
+> extends GridExportOptions {
   /**
    * The string used as the file name.
    * @default document.title
@@ -56,11 +57,13 @@ export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCo
   apiRef: RefObject<Api>;
 }
 
-export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
-  extends GridGetRowsToExportParams<Api> {}
+export interface GridCsvGetRowsToExportParams<
+  Api extends GridApiCommon = GridApiCommunity,
+> extends GridGetRowsToExportParams<Api> {}
 
-export interface GridPrintGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
-  extends GridGetRowsToExportParams<Api> {}
+export interface GridPrintGetRowsToExportParams<
+  Api extends GridApiCommon = GridApiCommunity,
+> extends GridGetRowsToExportParams<Api> {}
 
 /**
  * The options to apply on the CSV export.

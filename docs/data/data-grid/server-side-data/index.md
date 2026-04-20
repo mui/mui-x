@@ -9,6 +9,10 @@ Challenges include manual data fetching, pagination, sorting, filtering, and per
 A dedicated module can help abstract these complexities to improve the developer experience.
 The Data Grid provides the Data Source layer for this purpose.
 
+:::success
+If you prefer to learn by example, the [server-side data tutorial](/x/react-data-grid/tutorials/server-side-data/) shows you how to implement the Data Source layer in a full-stack app.
+:::
+
 ### The problem: compounding complexity
 
 Consider a Data Grid displaying a list of users that supports pagination, sorting by column headers, and filtering.
@@ -260,6 +264,15 @@ apiRef.current.dataSource.fetchRows(GRID_ROOT_GROUP_ID, { skipCache: true });
 
 The response will be used to refresh the cache.
 :::
+
+### Handle dynamic data updates
+
+To keep retrieving new values for the dynamic server-side data, use the `dataSourceRevalidateMs` prop.
+This starts a polling timer that revalidates the current server-side query in the background and updates the Data Grid with the latest data.
+
+The demo below uses `dataSourceRevalidateMs="2_000"` and disables the cache to make the periodic updates visible.
+
+{{"demo": "ServerSideDataGridRevalidation.js", "bg": "inline"}}
 
 ## Updating server-side data
 

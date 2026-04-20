@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -18,6 +18,7 @@ import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 import type { GridBottomContainerProps } from '../components/virtualization/GridBottomContainer';
+import type { GridRowId } from './gridRows';
 import type {
   AutocompleteProps,
   BadgeProps,
@@ -37,6 +38,7 @@ import type {
   SelectOptionProps,
   SkeletonProps,
   SwitchProps,
+  TextareaProps,
   TooltipProps,
   TextFieldProps,
   IconProps,
@@ -68,11 +70,13 @@ export interface BasePaginationPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
+export interface BaseTextareaPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseSkeletonPropsOverrides {}
 export interface BaseIconPropsOverrides {}
 export interface BaseToggleButtonPropsOverrides {}
 
+export interface RowCheckboxPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -115,6 +119,7 @@ interface BaseSlotProps {
   basePopper: PopperProps & BasePopperPropsOverrides;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
   baseInput: InputProps & BaseInputPropsOverrides;
+  baseTextarea: TextareaProps & BaseTextareaPropsOverrides;
   baseSelect: SelectProps & BaseSelectPropsOverrides;
   baseSelectOption: SelectOptionProps & BaseSelectOptionPropsOverrides;
   baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
@@ -144,6 +149,7 @@ interface ElementSlotProps {
   panel: GridPanelProps & PanelPropsOverrides;
   pinnedRows: GridPinnedRowsProps & PinnedRowsPropsOverrides;
   row: GridRowProps & RowPropsOverrides;
+  rowCheckbox: GridRowCheckboxProps;
   skeletonCell: GridSkeletonCellProps & SkeletonCellPropsOverrides;
   toolbar: GridToolbarProps & ToolbarPropsOverrides;
   /**
@@ -157,6 +163,13 @@ interface ElementSlotProps {
 }
 
 export type GridSlotProps = BaseSlotProps & ElementSlotProps;
+
+export interface GridRowCheckboxProps extends CheckboxProps, RowCheckboxPropsOverrides {
+  /**
+   * The grid row id.
+   */
+  rowId: GridRowId;
+}
 
 /**
  * Overridable components props dynamically passed to the component at rendering.

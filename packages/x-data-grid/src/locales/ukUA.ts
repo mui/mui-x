@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization, formatNumber } from '../utils/getGridLocalization';
 
 type PluralForm = {
   one: string;
@@ -35,6 +35,10 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Компактний',
   toolbarDensityStandard: 'Стандартний',
   toolbarDensityComfortable: 'Комфортний',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Скасувати',
+  toolbarRedo: 'Повторити',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Стовпці',
@@ -88,7 +92,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'І',
   filterPanelOperatorOr: 'Або',
-  filterPanelColumns: 'Стовпці',
+  filterPanelColumn: 'Стовпці',
   filterPanelInputLabel: 'Значення',
   filterPanelInputPlaceholder: 'Значення фільтра',
 
@@ -193,6 +197,10 @@ const ukUAGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'так',
   booleanCellFalseLabel: 'ні',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Показати',
+  longTextCellCollapseLabel: 'Приховати',
+
   // Actions cell more text
   actionsCellMore: 'більше',
 
@@ -218,18 +226,17 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Рядків на сторінці:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    const unknownRowCount = count == null || count === -1;
+    if (!estimated) {
+      return `${formatNumber(from)}–${formatNumber(to)} з ${!unknownRowCount ? formatNumber(count) : `більше ніж ${formatNumber(to)}`}`;
+    }
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `близько ${formatNumber(estimated)}`
+        : `більше ніж ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} з ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Перейти на першу сторінку';

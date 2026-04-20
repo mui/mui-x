@@ -1,26 +1,21 @@
 import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+import { ApiPage } from '@mui/internal-core-docs/ApiPage';
+import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
 import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
 import jsonPageContent from './quick-filter-control.json';
 
 export default function Page(props) {
-  const { descriptions, pageContent } = props;
-  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={pageContent} />;
+  const { descriptions } = props;
+  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
 }
 
 export async function getStaticProps() {
   const req = require.context(
     'docsx/translations/api-docs/data-grid/quick-filter-control',
     false,
-    /\.\/quick-filter-control.*.json$/,
+    /\.\/quick-filter-control.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
-  return {
-    props: {
-      descriptions,
-      pageContent: jsonPageContent,
-    },
-  };
+  return { props: { descriptions } };
 }

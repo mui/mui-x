@@ -1,36 +1,34 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import useForkRef from '@mui/utils/useForkRef';
+import { styled, type SxProps, type Theme } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { useChartRootRef } from '../hooks/useChartRootRef';
-import { Direction } from '../ChartsLegend';
-import { Position } from '../models';
+import { type Direction } from '../ChartsLegend';
+import { type Position } from '../models';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import {
   selectorChartPropsHeight,
   selectorChartPropsWidth,
 } from '../internals/plugins/corePlugins/useChartDimensions';
 import { chartsToolbarClasses } from '../Toolbar';
 
-export interface ChartsWrapperProps {
+export interface ChartsWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The position of the legend.
    * @default { horizontal: 'center', vertical: 'bottom' }
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   legendPosition?: Position;
   /**
    * The direction of the legend.
    * @default 'horizontal'
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   legendDirection?: Direction;
   /**
    * If `true`, the legend is not rendered.
    * @default false
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   hideLegend?: boolean;
   /**
    * If `true`, the chart wrapper set `height: 100%`.
@@ -40,6 +38,11 @@ export interface ChartsWrapperProps {
   children: React.ReactNode;
   sx?: SxProps<Theme>;
 }
+
+export interface ChartsWrapperOwnerState extends Pick<
+  ChartsWrapperProps,
+  'hideLegend' | 'legendDirection' | 'legendPosition'
+> {}
 
 const getJustifyItems = (position: Position | undefined) => {
   if (position?.horizontal === 'start') {
@@ -122,7 +125,7 @@ const Root = styled('div', {
   slot: 'Root',
   shouldForwardProp: (prop) =>
     shouldForwardProp(prop) && prop !== 'extendVertically' && prop !== 'width',
-})<{ ownerState: ChartsWrapperProps; extendVertically: boolean; width?: number }>(({
+})<{ ownerState: ChartsWrapperOwnerState; extendVertically: boolean; width?: number }>(({
   ownerState,
   width,
 }) => {
@@ -180,27 +183,49 @@ const Root = styled('div', {
  * Wrapper for the charts components.
  * Its main purpose is to position the HTML legend in the correct place.
  */
-function ChartsWrapper(props: ChartsWrapperProps) {
-  const { children, sx, extendVertically } = props;
-  const chartRootRef = useChartRootRef();
+const ChartsWrapper = React.forwardRef<HTMLDivElement, ChartsWrapperProps>(
+  function ChartsWrapper(props, ref) {
+    const {
+      children,
+      sx,
+      extendVertically,
+      hideLegend,
+      legendDirection,
+      legendPosition,
+      ...other
+    } = props;
 
-  const store = useStore();
+    const chartRootRef = useChartRootRef();
+    const handleRef = useForkRef(chartRootRef, ref);
 
-  const propsWidth = useSelector(store, selectorChartPropsWidth);
-  const propsHeight = useSelector(store, selectorChartPropsHeight);
+    const store = useStore();
 
-  return (
-    <Root
-      ref={chartRootRef}
-      ownerState={props}
-      sx={sx}
-      extendVertically={extendVertically ?? propsHeight === undefined}
-      width={propsWidth}
-    >
-      {children}
-    </Root>
-  );
-}
+    const propsWidth = store.use(selectorChartPropsWidth);
+    const propsHeight = store.use(selectorChartPropsHeight);
+
+    const ownerState = React.useMemo(
+      () => ({
+        hideLegend,
+        legendDirection,
+        legendPosition,
+      }),
+      [hideLegend, legendDirection, legendPosition],
+    );
+
+    return (
+      <Root
+        ref={handleRef}
+        ownerState={ownerState}
+        sx={sx}
+        extendVertically={extendVertically ?? propsHeight === undefined}
+        width={propsWidth}
+        {...other}
+      >
+        {children}
+      </Root>
+    );
+  },
+);
 
 ChartsWrapper.propTypes = {
   // ----------------------------- Warning --------------------------------

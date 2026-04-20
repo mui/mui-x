@@ -1,11 +1,11 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import {
+import type {
   GridColumnSpanningApi,
   GridColumnSpanningPrivateApi,
 } from '../../../models/api/gridColumnSpanning';
 import { useGridEvent } from '../../utils/useGridEvent';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
  * @requires useGridColumns (method, event)

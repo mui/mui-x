@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const bnBDGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const bnBDGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'সংকুচিত',
   toolbarDensityStandard: 'মানক',
   toolbarDensityComfortable: 'স্বাচ্ছন্দ্যদায়ক',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'পূর্বাবস্থায় ফেরান',
+  toolbarRedo: 'পুনরায় করুন',
 
   // Columns selector toolbar button text
   toolbarColumns: 'কলাম',
@@ -64,7 +68,7 @@ const bnBDGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'অপারেটর',
   filterPanelOperatorAnd: 'এবং',
   filterPanelOperatorOr: 'অথবা',
-  filterPanelColumns: 'কলাম',
+  filterPanelColumn: 'কলাম',
   filterPanelInputLabel: 'মান',
   filterPanelInputPlaceholder: 'ফিল্টার মান',
 
@@ -163,6 +167,10 @@ const bnBDGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'হ্যাঁ',
   booleanCellFalseLabel: 'না',
 
+  // Long text cell
+  longTextCellExpandLabel: 'সম্প্রসারিত করুন',
+  longTextCellCollapseLabel: 'সংকুচিত করুন',
+
   // Actions cell more text
   actionsCellMore: 'আরও',
 
@@ -194,11 +202,12 @@ const bnBDGrid: Partial<GridLocaleText> = {
   //   count,
   //   estimated
   // }) => {
+  //   const unknownRowCount = count == null || count === -1;
   //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
   //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
+  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   // },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

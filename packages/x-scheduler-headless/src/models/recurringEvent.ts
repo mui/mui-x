@@ -1,4 +1,4 @@
-import type { SchedulerValidDate } from './date';
+import type { TemporalSupportedObject } from '../base-ui-copy/types';
 
 export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 /**
@@ -40,10 +40,10 @@ export type RecurringEventByDayValue =
 
 /**
  * The recurrence rule to convert a single event into a series of occurrences.
- * This is a subset of the RFC 5545 RRULE specification that only contains the properties supported by the Event Calendar and the Timeline components.
+ * This is a subset of the RFC 5545 RRULE specification that only contains the properties supported by the Event Calendar and the Event Timeline Premium components.
  * (read the full specification for more information: https://datatracker.ietf.org/doc/html/rfc5545).
  */
-export interface RecurringEventRecurrenceRule {
+export interface SchedulerProcessedEventRecurrenceRule {
   /**
    * Base frequency of the rule.
    * Corresponds to the FREQ property of the string-based RRULE.
@@ -79,7 +79,7 @@ export interface RecurringEventRecurrenceRule {
    * Must not be specified when the count property is set.
    * Corresponds to the UNTIL property of the string-based RRULE.
    */
-  until?: SchedulerValidDate;
+  until?: TemporalSupportedObject;
   /**
    * The number of occurrences at which to range-bound the recurrence.
    * Must not be specified when the until property is set.
@@ -87,3 +87,15 @@ export interface RecurringEventRecurrenceRule {
    */
   count?: number;
 }
+
+/**
+ * User-facing recurrence rule type used in `SchedulerEvent`.
+ * Same as `SchedulerProcessedEventRecurrenceRule` but with `until` as a `string`.
+ */
+export type SchedulerEventRecurrenceRule = Omit<SchedulerProcessedEventRecurrenceRule, 'until'> & {
+  /**
+   * A date time value that bounds the recurrence rule in an inclusive manner.
+   * Same string semantics as `SchedulerEvent.start` / `end`.
+   */
+  until?: string;
+};

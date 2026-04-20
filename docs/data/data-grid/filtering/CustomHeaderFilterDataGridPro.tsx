@@ -21,7 +21,9 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
       const focusableElement =
         cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || cellRef.current;
-      elementToFocus?.focus();
+      elementToFocus?.focus({
+        preventScroll: true,
+      });
     }
   }, [apiRef, hasFocus]);
 
@@ -69,7 +71,20 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
 
   return (
     <Stack
+      tabIndex={tabIndex}
+      ref={cellRef}
+      data-field={colDef.field}
+      role="columnheader"
+      aria-colindex={colIndex + 1}
+      aria-label={colDef.headerName ?? colDef.field}
+      {...mouseEventsHandlers}
       sx={[
+        {
+          width,
+          height,
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
         {
           borderBottom: `1px solid var(--DataGrid-rowBorderColor)`,
         },
@@ -83,17 +98,6 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
               outlineOffset: 0,
             },
       ]}
-      tabIndex={tabIndex}
-      ref={cellRef}
-      data-field={colDef.field}
-      width={width}
-      height={height}
-      justifyContent="center"
-      alignItems="center"
-      role="columnheader"
-      aria-colindex={colIndex + 1}
-      aria-label={colDef.headerName ?? colDef.field}
-      {...mouseEventsHandlers}
     >
       <Button
         centerRipple={false}

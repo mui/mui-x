@@ -46,6 +46,7 @@ const initialRows: GridRowsProp = [
     age: 25,
     joinDate: randomCreatedDate(),
     role: randomRole(),
+    bio: 'A passionate developer with 5 years of experience in building scalable web applications.',
   },
   {
     id: randomId(),
@@ -53,6 +54,7 @@ const initialRows: GridRowsProp = [
     age: 36,
     joinDate: randomCreatedDate(),
     role: randomRole(),
+    bio: 'Senior analyst specializing in market trends and financial forecasting.',
   },
   {
     id: randomId(),
@@ -60,6 +62,7 @@ const initialRows: GridRowsProp = [
     age: 19,
     joinDate: randomCreatedDate(),
     role: randomRole(),
+    bio: 'Junior team member eager to learn and contribute to innovative projects.',
   },
   {
     id: randomId(),
@@ -67,6 +70,7 @@ const initialRows: GridRowsProp = [
     age: 28,
     joinDate: randomCreatedDate(),
     role: randomRole(),
+    bio: 'Project manager with expertise in agile methodologies and team leadership.',
   },
   {
     id: randomId(),
@@ -74,6 +78,7 @@ const initialRows: GridRowsProp = [
     age: 23,
     joinDate: randomCreatedDate(),
     role: randomRole(),
+    bio: 'Creative designer focused on user experience and interface design.',
   },
 ];
 
@@ -93,7 +98,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
     const id = randomId();
     setRows((oldRows) => [
       ...oldRows,
-      { id, name: '', age: '', role: '', isNew: true },
+      { id, name: '', age: '', role: '', bio: '', isNew: true },
     ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
@@ -175,6 +180,13 @@ function ActionsCell(props: GridRenderCellParams) {
 
 const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
+  {
+    field: 'bio',
+    headerName: 'Bio',
+    type: 'longText',
+    width: 200,
+    editable: true,
+  },
   {
     field: 'age',
     headerName: 'Age',

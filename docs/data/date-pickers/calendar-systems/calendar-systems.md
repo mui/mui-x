@@ -53,6 +53,14 @@ The demo is based on the [Custom Field—Using a Button](/x/react-date-pickers/c
 You can have a look at the other demos in the [Custom Field—With a custom editing experience](/x/react-date-pickers/custom-field/#with-a-custom-editing-experience) section if you want a different editing experience that works with `AdapterMomentHijri`.
 :::
 
+## Buddhist
+
+You can use the `AdapterDayjsBuddhist` adapter, which is based on [dayjs](https://www.npmjs.com/package/dayjs). The adapter extends the [buddhistEra](https://day.js.org/docs/en/plugin/buddhist-era) plugin under the hood.
+
+{{"demo": "AdapterBuddhist.js"}}
+
+The Buddhist Era calendar is used in Thailand and other Southeast Asian countries. It uses the same months and days as the Gregorian calendar but with a year offset of 543, for example, 2024 CE = 2567 BE.
+
 ## Unsupported libraries
 
 If you need to use a date library that is not supported yet, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repository.

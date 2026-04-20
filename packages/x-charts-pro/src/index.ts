@@ -20,10 +20,11 @@ export * from '@mui/x-charts/SparkLineChart';
 export * from '@mui/x-charts/Gauge';
 export * from '@mui/x-charts/RadarChart';
 export * from '@mui/x-charts/ChartsSurface';
-export * from '@mui/x-charts/ChartDataProvider';
+export * from '@mui/x-charts/ChartsDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
 export * from '@mui/x-charts/ChartsOverlay';
 export * from '@mui/x-charts/ChartsWrapper';
+export * from '@mui/x-charts/ChartsBrushOverlay';
 
 // Pro utilities
 export * from './constants';
@@ -37,9 +38,13 @@ export * from './colorPalettes';
 
 // Pro components
 export * from './Heatmap';
-export { ChartContainerPro } from './ChartContainerPro';
-export type { ChartContainerProProps } from './ChartContainerPro';
-export * from './ChartDataProviderPro';
+export { ChartsContainerPro } from './ChartsContainerPro';
+export type {
+  ChartsContainerProProps,
+  ChartsContainerProSlots,
+  ChartsContainerProSlotProps,
+} from './ChartsContainerPro';
+export * from './ChartsDataProviderPro';
 export * from './ScatterChartPro';
 export * from './SankeyChart';
 export * from './BarChartPro';
@@ -48,6 +53,7 @@ export * from './PieChartPro';
 export * from './FunnelChart';
 export * from './RadarChartPro';
 export * from './ChartZoomSlider';
+export * from './ChartsZoomSlider';
 export * from './ChartsToolbarPro';
 
 export type {

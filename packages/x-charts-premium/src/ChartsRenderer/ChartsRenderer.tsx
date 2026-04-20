@@ -5,6 +5,7 @@ import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 import { configurationOptions } from './configuration';
 import { colorPaletteLookup } from './colors';
+import { type BarSeries } from '../BarChart';
 
 const getLegendPosition = (position: string) => {
   let horizontal: 'start' | 'center' | 'end' | undefined = 'center';
@@ -65,7 +66,7 @@ function ChartsRenderer({
   chartType,
   configuration,
   onRender,
-}: ChartsRendererProps) {
+}: ChartsRendererProps): React.ReactNode {
   const hasMultipleDimensions = dimensions.length > 1;
   const dimensionRawData = dimensions.length > 0 ? dimensions[dimensions.length - 1].data : [];
   const dimensionLabel = [...dimensions.map((dimension) => dimension.label)].reverse().join(' - ');
@@ -99,10 +100,10 @@ function ChartsRenderer({
     return String(value);
   };
 
-  const sections = (configurationOptions as any)[chartType]?.customization || [];
+  const sections = configurationOptions[chartType]?.customization || [];
   const defaultOptions = Object.fromEntries(
-    sections.flatMap((section: any) =>
-      Object.entries(section.controls).map(([key, value]) => [key, (value as any).default]),
+    sections.flatMap((section) =>
+      Object.entries(section.controls).map(([key, value]) => [key, value.default]),
     ),
   );
 
@@ -155,11 +156,20 @@ function ChartsRenderer({
       [seriesAxis]: [seriesAxisConfig],
     };
 
-    const seriesProp = chartConfiguration.stacked
-      ? values.map((value) => ({ ...value, stack: 'stack' }))
+    const seriesProp: BarSeries[] = chartConfiguration.stacked
+      ? values.map((value) => ({
+          ...value,
+          stack: 'stack',
+        }))
       : values;
 
     const barLabel = chartConfiguration.itemLabel === 'value' ? ('value' as const) : undefined;
+    if (barLabel) {
+      seriesProp.forEach((series) => {
+        series.barLabel = series.barLabel ?? barLabel;
+      });
+    }
+
     const legendPosition = getLegendPosition(
       chartConfiguration.legendDirection === 'vertical'
         ? chartConfiguration.legendPositionVertical
@@ -179,7 +189,6 @@ function ChartsRenderer({
       },
       skipAnimation: chartConfiguration.skipAnimation,
       showToolbar: chartConfiguration.showToolbar,
-      barLabel,
       slotProps: {
         tooltip: {
           trigger: chartConfiguration.tooltipTrigger,
@@ -335,16 +344,25 @@ ChartsRenderer.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  categories: PropTypes.arrayOf(
+  chartType: PropTypes.string.isRequired,
+  configuration: PropTypes.object.isRequired,
+  dimensions: PropTypes.arrayOf(
     PropTypes.shape({
-      data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])).isRequired,
+      data: PropTypes.arrayOf(
+        PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
+      ).isRequired,
       id: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
     }),
   ).isRequired,
-  chartType: PropTypes.string.isRequired,
-  configuration: PropTypes.object.isRequired,
-  series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onRender: PropTypes.func,
+  values: PropTypes.arrayOf(
+    PropTypes.shape({
+      data: PropTypes.arrayOf(PropTypes.number).isRequired,
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 } as any;
 
 export { ChartsRenderer };

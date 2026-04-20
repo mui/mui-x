@@ -1,9 +1,10 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
-  GridFilterItem,
-  GridFilterOperator,
-  GridColDef,
+  type GridFilterItem,
+  type GridFilterOperator,
+  type GridColDef,
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid';

@@ -1,13 +1,13 @@
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsGrid, chartsGridClasses } from '@mui/x-charts/ChartsGrid';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 
 describe('<ChartsGrid />', () => {
   const { render } = createRenderer();
 
   it('should render grid at millisecond level without warnings', () => {
     render(
-      <ChartContainer
+      <ChartsContainer
         series={[]}
         width={500}
         height={500}
@@ -27,13 +27,16 @@ describe('<ChartsGrid />', () => {
         ]}
       >
         <ChartsGrid vertical horizontal />
-      </ChartContainer>,
+      </ChartsContainer>,
     );
+
+    const gridLines = document.querySelectorAll(`.${chartsGridClasses.line}`);
+    expect(gridLines.length).to.be.greaterThan(0);
   });
 
   it('should render grid on band scale without error', () => {
     render(
-      <ChartContainer
+      <ChartsContainer
         series={[]}
         width={500}
         height={500}
@@ -41,7 +44,27 @@ describe('<ChartsGrid />', () => {
         yAxis={[{ scaleType: 'band', data: ['A', 'B', 'C'] }]}
       >
         <ChartsGrid vertical horizontal />
-      </ChartContainer>,
+      </ChartsContainer>,
     );
+
+    const gridLines = document.querySelectorAll(`.${chartsGridClasses.line}`);
+    expect(gridLines.length).to.be.greaterThan(0);
+  });
+
+  it('should apply className to root element', () => {
+    const { container } = render(
+      <ChartsContainer
+        series={[]}
+        width={100}
+        height={100}
+        xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+        yAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+      >
+        <ChartsGrid className="custom-grid" vertical horizontal />
+      </ChartsContainer>,
+    );
+
+    const root = container.querySelector(`.${chartsGridClasses.root}.custom-grid`);
+    expect(root).not.to.equal(null);
   });
 });

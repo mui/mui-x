@@ -3,19 +3,14 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import type { PanEvent } from '@mui/x-internal-gestures/core';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { getSVGPoint } from '../../../getSVGPoint';
-import { ChartPlugin } from '../../models';
-import { UseChartBrushSignature, type Point } from './useChartBrush.types';
-import { useSelector } from '../../../store/useSelector';
+import { getChartPoint } from '../../../getChartPoint';
+import { type ChartPlugin } from '../../models';
+import { type UseChartBrushSignature, type Point } from './useChartBrush.types';
 import { selectorIsBrushEnabled } from './useChartBrush.selectors';
 
-export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
-  store,
-  svgRef,
-  instance,
-  params,
-}) => {
-  const isEnabled = useSelector(store, selectorIsBrushEnabled);
+export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, instance, params }) => {
+  const { chartsLayerContainerRef } = instance;
+  const isEnabled = store.use(selectorIsBrushEnabled);
 
   useEnhancedEffect(() => {
     store.set('brush', {
@@ -58,7 +53,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
   });
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     if (element === null || !isEnabled) {
       return () => {};
     }
@@ -68,7 +63,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
         return;
       }
 
-      const point = getSVGPoint(element, {
+      const point = getChartPoint(element, {
         clientX: event.detail.initialCentroid.x,
         clientY: event.detail.initialCentroid.y,
       });
@@ -77,7 +72,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
     };
 
     const handleBrush = (event: PanEvent) => {
-      const currentPoint = getSVGPoint(element, {
+      const currentPoint = getChartPoint(element, {
         clientX: event.detail.centroid.x,
         clientY: event.detail.centroid.y,
       });
@@ -96,7 +91,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
       brushEndHandler.cleanup();
       brushCancelHandler.cleanup();
     };
-  }, [svgRef, instance, store, clearBrush, setBrushCoordinates, isEnabled]);
+  }, [chartsLayerContainerRef, instance, store, clearBrush, setBrushCoordinates, isEnabled]);
 
   return {
     instance: {

@@ -1,18 +1,18 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridHeaderFilteringState } from '../../../models/gridHeaderFilteringModel';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridHeaderFilteringState } from '../../../models/gridHeaderFilteringModel';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridLogger } from '../../utils';
 import {
   gridColumnLookupSelector,
   gridColumnVisibilityModelSelector,
   gridColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
-import {
+import type {
   GridHeaderFilteringApi,
   GridHeaderFilteringPrivateApi,
 } from '../../../models/api/gridHeaderFilteringApi';

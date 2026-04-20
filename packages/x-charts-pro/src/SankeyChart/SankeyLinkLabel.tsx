@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { SankeyLayoutLink } from './sankey.types';
-import { useSankeySeriesContext } from '../hooks/useSankeySeries';
+import { type SankeyLayoutLink } from './sankey.types';
+import { useSankeySeries } from '../hooks/useSankeySeries';
+import { useUtilityClasses } from './sankeyClasses';
 
 export interface SankeyLinkLabelProps {
   /**
@@ -35,7 +36,8 @@ export const SankeyLinkLabel = React.forwardRef<SVGTextElement, SankeyLinkLabelP
   function SankeyLinkLabel(props, ref) {
     const { link } = props;
     const theme = useTheme();
-    const seriesContext = useSankeySeriesContext();
+    const series = useSankeySeries()[0];
+    const classes = useUtilityClasses();
 
     if (!link.path || link.y0 === undefined || link.y1 === undefined) {
       return null; // No path defined or invalid coordinates, nothing to render
@@ -44,7 +46,6 @@ export const SankeyLinkLabel = React.forwardRef<SVGTextElement, SankeyLinkLabelP
     const midpoint = getLinkMidpoint(link);
 
     // Get the series data and valueFormatter
-    const series = seriesContext?.series[seriesContext.seriesOrder?.[0]];
     const formattedValue = series?.valueFormatter
       ? series.valueFormatter(link.value, {
           type: 'link',
@@ -57,6 +58,7 @@ export const SankeyLinkLabel = React.forwardRef<SVGTextElement, SankeyLinkLabelP
     return (
       <text
         ref={ref}
+        className={classes.linkLabel}
         x={midpoint.x}
         y={midpoint.y}
         textAnchor="middle"

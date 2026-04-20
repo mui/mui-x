@@ -1,26 +1,32 @@
-import { BarLabelProps } from '../BarChart/BarLabel';
-import { BarChartProps } from '../BarChart/BarChart';
-import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsLegendProps } from '../ChartsLegend';
-import { ChartsSurfaceProps } from '../ChartsSurface';
-import { ChartsTooltipProps } from '../ChartsTooltip';
-import { LineChartProps } from '../LineChart/LineChart';
-import { ScatterChartProps } from '../ScatterChart/ScatterChart';
-import { PieChartProps } from '../PieChart/PieChart';
-import { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
-import { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
-import { ChartDataProviderProps } from '../ChartDataProvider';
+import { type BarLabelProps } from '../BarChart/BarLabel';
+import { type BarChartProps } from '../BarChart/BarChart';
+import { type ChartsGridProps } from '../ChartsGrid';
+import { type ChartsLegendProps } from '../ChartsLegend';
+import { type ChartsSurfaceProps } from '../ChartsSurface';
+import { type ChartsTooltipProps } from '../ChartsTooltip';
+import { type LineChartProps } from '../LineChart/LineChart';
+import { type ScatterChartProps } from '../ScatterChart/ScatterChart';
+import { type PieChartProps } from '../PieChart/PieChart';
+import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models/axis';
+import { type ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
+import { type ChartsDataProviderProps } from '../ChartsDataProvider';
+import { type ChartsLayerContainerProps } from '../ChartsLayerContainer';
+import { type ChartsSvgLayerProps } from '../ChartsSvgLayer';
+import { type ChartsRadialGridProps } from '../ChartsRadialGrid';
 
 export interface ChartsComponentsPropsList {
   MuiChartsXAxis: ChartsXAxisProps;
   MuiChartsYAxis: ChartsYAxisProps;
   MuiChartsGrid: ChartsGridProps;
+  MuiRadialChartsGrid: ChartsRadialGridProps;
   MuiChartsLegend: ChartsLegendProps;
   MuiChartsLocalizationProvider: ChartsLocalizationProviderProps;
   MuiChartsTooltip: ChartsTooltipProps;
   MuiChartsSurface: ChartsSurfaceProps;
+  MuiChartsLayerContainer: ChartsLayerContainerProps;
+  MuiChartsSvgLayer: ChartsSvgLayerProps;
 
-  MuiChartDataProvider: ChartDataProviderProps;
+  MuiChartsDataProvider: ChartsDataProviderProps;
 
   // BarChart components
   MuiBarChart: BarChartProps;

@@ -2,25 +2,29 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
-import { ChartProvider } from '../context/ChartProvider';
-import { MergeSignaturesProperty } from '../internals/plugins/models';
-import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
+import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
+import { GaugeProvider, type GaugeProviderProps } from './GaugeProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
+import { type MergeSignaturesProperty } from '../internals/plugins/models';
+import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface GaugeContainerProps
-  extends Omit<ChartsSurfaceProps, 'children'>,
+  extends
+    Omit<ChartsSurfaceProps, 'children'>,
     Omit<
       MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
-      'series' | 'dataset' | 'colors' | 'theme' | 'experimentalFeatures'
+      'series' | 'dataset' | 'colors' | 'theme' | 'seriesConfig' | 'experimentalFeatures'
     >,
     Omit<GaugeProviderProps, 'children'>,
     Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
   children?: React.ReactNode;
 }
 
-const GStyled = styled('g')(({ theme }) => ({
+const GStyled = styled('g', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})(({ theme }) => ({
   '& text': {
     fill: (theme.vars || theme).palette.text.primary,
   },
@@ -28,7 +32,7 @@ const GStyled = styled('g')(({ theme }) => ({
 
 const GaugeContainer = React.forwardRef(function GaugeContainer(
   props: GaugeContainerProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const {
     width: inWidth,
@@ -51,13 +55,14 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
   } = props;
 
   return (
-    <ChartProvider
+    <ChartsProvider
       pluginParams={{
         width: inWidth,
         height: inHeight,
         margin: defaultizeMargin(margin, { left: 10, right: 10, top: 10, bottom: 10 }),
       }}
-      plugins={[]}
+      // We just use some of the core plugins for dimension management.
+      plugins={[] as any}
     >
       <GaugeProvider
         value={value}
@@ -84,7 +89,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
           <GStyled aria-hidden="true">{children}</GStyled>
         </ChartsSurface>
       </GaugeProvider>
-    </ChartProvider>
+    </ChartsProvider>
   );
 });
 
@@ -113,6 +118,10 @@ GaugeContainer.propTypes = {
    * The '100%' is the height the drawing area.
    */
   cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * The end angle (deg).
@@ -172,6 +181,10 @@ GaugeContainer.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The value of the gauge.

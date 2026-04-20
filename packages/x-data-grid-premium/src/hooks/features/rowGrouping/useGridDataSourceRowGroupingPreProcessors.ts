@@ -1,22 +1,26 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridRowId, gridRowTreeSelector, gridColumnLookupSelector } from '@mui/x-data-grid-pro';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  GridStrategyProcessor,
+  type GridRowId,
+  gridRowTreeSelector,
+  gridColumnLookupSelector,
+} from '@mui/x-data-grid-pro';
+import {
+  type GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
   createRowTree,
   updateRowTree,
   getVisibleRowsLookup,
   skipSorting,
   skipFiltering,
-  GridRowsPartialUpdates,
+  type GridRowsPartialUpdates,
   getParentPath,
   RowGroupingStrategy,
   gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { getGroupingRules } from './gridRowGroupingUtils';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
 export const useGridDataSourceRowGroupingPreProcessors = (

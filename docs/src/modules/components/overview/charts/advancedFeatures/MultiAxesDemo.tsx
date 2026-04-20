@@ -1,6 +1,6 @@
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LineHighlightPlot, LinePlot } from '@mui/x-charts/LineChart';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
@@ -53,9 +53,9 @@ const series: (BarSeriesType | LineSeriesType)[] = [
 
 function MultiAxes() {
   return (
-    <Stack height="100%">
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center">Weather stats for Quebec city</Typography>
-      <ChartContainer
+      <ChartsContainer
         series={series}
         xAxis={[
           {
@@ -82,7 +82,7 @@ function MultiAxes() {
         <ChartsYAxis axisId="leftAxis" label="Temperature (°C)" />
         <ChartsYAxis axisId="rightAxis" label="Precipitation (mm)" />
         <ChartsTooltip />
-      </ChartContainer>
+      </ChartsContainer>
     </Stack>
   );
 }

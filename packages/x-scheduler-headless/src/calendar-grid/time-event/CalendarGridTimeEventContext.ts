@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { CalendarGridTimeEvent } from './CalendarGridTimeEvent';
-import type { useDraggableEvent } from '../../utils/useDraggableEvent';
+import type { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 
 export interface CalendarGridTimeEventContext extends useDraggableEvent.ContextValue {
   /**
@@ -20,7 +20,7 @@ export function useCalendarGridTimeEventContext() {
   const context = React.useContext(CalendarGridTimeEventContext);
   if (context === undefined) {
     throw new Error(
-      'Scheduler: `CalendarGridTimeEventContext` is missing. CalendarGrid TimeEvent parts must be placed within <CalendarGrid.TimeEvent />.',
+      'MUI: `CalendarGridTimeEventContext` is missing. CalendarGrid TimeEvent parts must be placed within <CalendarGrid.TimeEvent />.',
     );
   }
   return context;

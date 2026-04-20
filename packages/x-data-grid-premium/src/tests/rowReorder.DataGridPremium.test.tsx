@@ -8,17 +8,16 @@ import {
   waitFor,
   act,
 } from '@mui/internal-test-utils';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { getCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import {
   DataGridPremium,
-  DataGridPremiumProps,
-  gridClasses,
-  GridRowsProp,
-  GridGroupNode,
-  GridApi,
-  GridDataSource,
-  GridValidRowModel,
+  type DataGridPremiumProps,
+  type GridRowsProp,
+  type GridGroupNode,
+  type GridApi,
+  type GridDataSource,
+  type GridValidRowModel,
   gridRowTreeSelector,
   gridRowsLookupSelector,
 } from '@mui/x-data-grid-premium';
@@ -193,10 +192,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
     };
 
     describe('Valid reorder cases', () => {
-      it('should reorder leaves within same parent group', () => {
+      it('should reorder leaves within same parent group', async () => {
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} />
+            <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
           </div>,
         );
 
@@ -213,6 +213,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Drag Item A1 to Item A3 position (below)
         performDragReorder(itemA1Row, itemA3Row, 'below');
 
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
+
         // Verify new order: A2, A3, A1
         const newValues = getColumnValues(3);
         const a2Index = newValues.indexOf('Item A2');
@@ -223,10 +228,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(a3Index).to.be.lessThan(a1Index);
       });
 
-      it('should move leaf between different parent groups', () => {
+      it('should move leaf between different parent groups', async () => {
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} />
+            <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
           </div>,
         );
 
@@ -241,6 +247,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         // Drag Item A1 to Item B1 position (above)
         performDragReorder(itemA1Row, itemB1Row, 'above');
+
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
 
         // Verify group counts updated
         const newGroupingValues = getColumnValues(1);
@@ -258,10 +269,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(a1Index).to.be.greaterThan(a3Index); // A1 is after A3
       });
 
-      it('should reorder groups at the same level when groups are expanded and the source group is drop on "above" portion of the target group', () => {
+      it('should reorder groups at the same level when groups are expanded and the source group is drop on "above" portion of the target group', async () => {
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} />
+            <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
           </div>,
         );
 
@@ -271,6 +283,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         // Drag Category A to Category C position
         performDragReorder(groupARow, groupCRow, 'above');
+
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
 
         // Verify new group order: B, A, C
         const groupingValues = getColumnValues(1);
@@ -282,10 +299,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(groupAIndex).to.be.lessThan(groupCIndex);
       });
 
-      it('should handle leaf to group "above" when previous leaf exists', () => {
+      it('should handle leaf to group "above" when previous leaf exists', async () => {
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} />
+            <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
           </div>,
         );
 
@@ -297,6 +315,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // This should place C1 as the last child of Category A
         performDragReorder(itemC1Row, groupBRow, 'above');
 
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
+
         // Verify Item C1 is now the last item in Category A
         const nameValues = getColumnValues(3);
         const c1Index = nameValues.indexOf('Item C1');
@@ -307,10 +330,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(c1Index).to.be.lessThan(b1Index); // Before B group items
       });
 
-      it('should handle leaf to group "below" when group is expanded', () => {
+      it('should handle leaf to group "below" when group is expanded', async () => {
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} />
+            <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
           </div>,
         );
 
@@ -322,6 +346,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // This should place A1 as the first child of Category B
         performDragReorder(itemA1Row, groupBRow, 'below');
 
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
+
         // Verify Item A1 is now the first item in Category B
         const nameValues = getColumnValues(3);
         const a1Index = nameValues.indexOf('Item A1');
@@ -332,7 +361,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(a1Index).to.be.lessThan(b1Index); // Before original B items
       });
 
-      it('should reorder group rows with collapsed groups', () => {
+      it('should reorder group rows with collapsed groups', async () => {
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium
@@ -342,6 +372,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
                 // Expand only category B
                 return node.groupingKey === 'B';
               }}
+              onRowOrderChange={onRowOrderChange}
             />
           </div>,
         );
@@ -359,6 +390,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         performDragReorder(groupARow, groupCRow, 'below');
 
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
+
         // Verify new order: B, C, A
         const newGroupingValues = getColumnValues(1);
         const newGroupBIndex = newGroupingValues.findIndex((v) => v?.includes('B ('));
@@ -374,6 +410,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const groupCRowUpdated = getRow(newGroupCIndex);
 
         performDragReorder(groupCRowUpdated, groupBRow, 'above');
+
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(2);
+        });
 
         // Verify new order: C, B, A
         const finalGroupingValues = getColumnValues(1);
@@ -496,41 +537,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(newValues).to.deep.equal(initialValues);
       });
 
-      it('should show drop indicator during valid drag but remove on invalid drop', () => {
-        render(
-          <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} />
-          </div>,
-        );
-
-        // Get row elements
-        const itemA1Row = getRow(3);
-        const itemB1Row = getRow(7);
-
-        const sourceCell = itemA1Row.querySelector('[role="gridcell"]')!.firstChild!;
-        const targetCell = itemB1Row.querySelector('[role="gridcell"]')!;
-
-        // Start drag with dataTransfer
-        fireDragStart(sourceCell);
-        fireEvent.dragEnter(targetCell);
-
-        // Drag over - should show indicator
-        const dragOverEvent = createDragOverEvent(targetCell, 'above');
-        fireEvent(targetCell, dragOverEvent);
-
-        const targetRow = targetCell.closest('[data-id]');
-        // Check for drop indicator class
-        expect(targetRow).to.have.class(gridClasses['row--dropAbove']);
-
-        // End drag outside grid
-        const dragEndEvent = createDragEndEvent(sourceCell, true);
-        fireEvent(sourceCell, dragEndEvent);
-
-        // Verify indicator removed
-        expect(itemB1Row).not.to.have.class(gridClasses['row--dropAbove']);
-        expect(itemB1Row).not.to.have.class(gridClasses['row--dropBelow']);
-      });
-
       it('should not allow group to be dropped on collapsed group', async () => {
         render(
           <div style={{ width: 500, height: 500 }}>
@@ -562,12 +568,17 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         const targetRow = targetCell.closest('[data-id]');
         // Check for drop indicator class
-        expect(targetRow).not.to.have.class(gridClasses['row--dropBelow']);
+        const rowDragPlaceholder = targetRow?.lastElementChild;
+
+        expect(rowDragPlaceholder).not.to.be.oneOf([null, undefined]);
+
+        // The placeholder should not be rendering
+        expect(rowDragPlaceholder).not.to.have.style('position', 'absolute');
       });
     });
 
     describe('Usage with `groupingValueSetter`', () => {
-      it('should call groupingValueSetter when moving leaf between groups with complex category data', () => {
+      it('should call groupingValueSetter when moving leaf between groups with complex category data', async () => {
         const groupingValueSetter = spy((groupingValue, row, _column, _apiRef) => {
           // Update category with complex nested data structure
           return {
@@ -615,10 +626,15 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           autoHeight: isJSDOM,
         };
 
+        const onRowOrderChange = spy();
         const apiRef = React.createRef<GridApi>();
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...complexProps} apiRef={apiRef} />
+            <DataGridPremium
+              {...complexProps}
+              apiRef={apiRef}
+              onRowOrderChange={onRowOrderChange}
+            />
           </div>,
         );
 
@@ -640,6 +656,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         // Drag iPhone from Electronics to Clothing group (drop above T-Shirt)
         performDragReorder(iPhoneRow, tShirtRow, 'above');
+
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
 
         // Verify groupingValueSetter was called
         expect(groupingValueSetter.callCount).to.equal(1);
@@ -686,10 +707,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
     };
 
     describe('Valid reorder cases', () => {
-      it('should reorder leaves within same department', () => {
+      it('should reorder leaves within same department', async () => {
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} />
+            <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
           </div>,
         );
 
@@ -706,6 +728,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Drag John to Jane position (below)
         performDragReorder(johnRow, janeRow, 'below');
 
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
+
         // Verify new order
         const newNameValues = getColumnValues(5);
         const newJohnIndex = newNameValues.indexOf('John');
@@ -714,10 +741,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(newJaneIndex).to.be.lessThan(newJohnIndex);
       });
 
-      it('should move leaf between departments in same company', () => {
+      it('should move leaf between departments in same company', async () => {
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} />
+            <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
           </div>,
         );
 
@@ -737,6 +765,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Drag John to Alice position (above)
         performDragReorder(johnRow, aliceRow, 'above');
 
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
+
         // Verify John is now before Alice in Sales
         const newNameValues = getColumnValues(5);
         const newJohnIndex = newNameValues.indexOf('John');
@@ -747,10 +780,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(newJohnIndex).to.be.greaterThan(newBobIndex);
       });
 
-      it('should reorder department groups within company', () => {
+      it('should reorder department groups within company', async () => {
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} />
+            <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
           </div>,
         );
 
@@ -768,6 +802,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Drag Engineering to Sales position by dropping above the next group
         performDragReorder(engRow, googleRow, 'above');
 
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
+
         // Verify department order changed
         const newDeptValues = getColumnValues(1);
         const newEngIndex = newDeptValues.indexOf('Engineering (3)');
@@ -777,7 +816,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(newSalesIndex).to.be.lessThan(newEngIndex);
       });
 
-      it('should reorder group rows with collapsed groups', () => {
+      it('should reorder group rows with collapsed groups', async () => {
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium
@@ -796,6 +836,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
                 }
                 return false;
               }}
+              onRowOrderChange={onRowOrderChange}
             />
           </div>,
         );
@@ -814,6 +855,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(googleIndex).to.be.lessThan(appleIndex);
 
         performDragReorder(googleRow, appleRow, 'below');
+
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
 
         // Verify new order: Microsoft, Apple, Google
         const newValues = getColumnValues(1);
@@ -945,7 +991,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
     });
 
     describe('Usage with `groupingValueSetter`', () => {
-      it('should call groupingValueSetter for multiple grouping levels when moving between groups', () => {
+      it('should call groupingValueSetter for multiple grouping levels when moving between groups', async () => {
         const companyValueSetter = spy((groupingValue, row, _column, _apiRef) => {
           return {
             ...row,
@@ -992,9 +1038,14 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         };
 
         const apiRef = React.createRef<GridApi>();
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...multiLevelProps} apiRef={apiRef} />
+            <DataGridPremium
+              {...multiLevelProps}
+              apiRef={apiRef}
+              onRowOrderChange={onRowOrderChange}
+            />
           </div>,
         );
 
@@ -1017,6 +1068,10 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         // Drag Microsoft employee from Engineering to Google/Engineering (drop above Bob)
         performDragReorder(johnRow, bobRow, 'above');
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
 
         // Verify both setters were called in the correct order
         expect(companyValueSetter.callCount).to.equal(1);
@@ -1048,7 +1103,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
   });
 
   describe('Edge cases', () => {
-    it('should handle null grouping values', () => {
+    it('should handle null grouping values', async () => {
+      const onRowOrderChange = spy();
       render(
         <div style={{ width: 500, height: 500 }}>
           <DataGridPremium
@@ -1065,6 +1121,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
             }}
             defaultGroupingExpansionDepth={-1}
             rowReordering
+            onRowOrderChange={onRowOrderChange}
             disableVirtualization
             autoHeight={isJSDOM}
           />
@@ -1085,6 +1142,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       // Reorder within null group
       performDragReorder(null1Row, null2Row, 'below');
 
+      await waitFor(() => {
+        // Verify callback was called
+        expect(onRowOrderChange.callCount).to.equal(1);
+      });
+
       // Verify order changed
       const newNameValues = getColumnValues(3);
       const newNull1Index = newNameValues.indexOf('Item Null1');
@@ -1093,7 +1155,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       expect(newNull2Index).to.be.lessThan(newNull1Index);
     });
 
-    it('should call onRowOrderChange with correct parameters', () => {
+    it('should call onRowOrderChange with correct parameters', async () => {
       const onRowOrderChange = spy();
 
       render(
@@ -1125,8 +1187,10 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
       performDragReorder(itemA1Row, itemA3Row, 'below');
 
-      // Verify callback was called
-      expect(onRowOrderChange.callCount).to.equal(1);
+      await waitFor(() => {
+        // Verify callback was called
+        expect(onRowOrderChange.callCount).to.equal(1);
+      });
 
       const params = onRowOrderChange.firstCall.args[0];
       expect(params.row.id).to.equal(1); // Item A1
@@ -1434,12 +1498,16 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(error.message).to.equal('Async validation failed');
       });
 
-      it('should not call processRowUpdate when reordering within same parent group', () => {
+      it('should not call processRowUpdate when reordering within same parent group', async () => {
         const processRowUpdate = spy();
-
+        const onRowOrderChange = spy();
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} processRowUpdate={processRowUpdate} />
+            <DataGridPremium
+              {...baselineProps}
+              processRowUpdate={processRowUpdate}
+              onRowOrderChange={onRowOrderChange}
+            />
           </div>,
         );
 
@@ -1449,13 +1517,18 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         performDragReorder(itemA1Row, itemA3Row, 'below');
 
+        await waitFor(() => {
+          // Verify callback was called
+          expect(onRowOrderChange.callCount).to.equal(1);
+        });
+
         // processRowUpdate should not be called for same-parent reorders
         expect(processRowUpdate.callCount).to.equal(0);
       });
     });
 
-    describe.skip('dataSource.editRow integration', () => {
-      // Remove `.skip` when `editRows` and `getGroupKey()` are implemented in the `dataSource`
+    // TODO: Implement `editRows` and `getGroupKey()` in the `dataSource`
+    describe.todo('dataSource.editRow integration', () => {
       const baselineProps: DataGridPremiumProps = {
         columns: [
           { field: 'category', width: 150 },
@@ -2022,6 +2095,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           const companyA = apiRef.current!.getRowNode('Company A');
           if (companyA && companyA.type === 'group') {
             const children = (companyA as GridGroupNode).children;
+            // eslint-disable-next-line vitest/no-conditional-expect
             expect(children).to.not.include('Sales');
           }
 
@@ -2029,6 +2103,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           const companyB = apiRef.current!.getRowNode('Company B');
           if (companyB && companyB.type === 'group') {
             const children = (companyB as GridGroupNode).children;
+            // eslint-disable-next-line vitest/no-conditional-expect
             expect(children).to.include('Sales');
           }
 

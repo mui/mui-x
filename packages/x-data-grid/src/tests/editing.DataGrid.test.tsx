@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { DataGrid, gridClasses, GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import { DataGrid, gridClasses, type GridColDef, type GridRowsProp } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Cell editable state', () => {

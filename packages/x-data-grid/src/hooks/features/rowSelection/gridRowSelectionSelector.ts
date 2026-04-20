@@ -4,8 +4,8 @@ import {
   createSelectorMemoized,
 } from '../../../utils/createSelector';
 import { gridDataRowIdsSelector, gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { gridFilteredRowCountSelector } from '../filter/gridFilterSelector';
 import { createRowSelectionManager } from '../../../models/gridRowSelectionManager';
 

@@ -1,4 +1,4 @@
-import { GridColDef, GridValidRowModel } from '@mui/x-data-grid';
+import type { GridColDef, GridValidRowModel } from '@mui/x-data-grid';
 
 export type GridRowGroupingModel = string[];
 

@@ -1,7 +1,7 @@
 import {
-  CartesianExtremumFilter,
-  CartesianExtremumGetter,
-} from '../../internals/plugins/models/seriesConfig';
+  type CartesianExtremumFilter,
+  type CartesianExtremumGetter,
+} from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { findMinMax } from '../../internals/findMinMax';
 
 export const getExtremumX: CartesianExtremumGetter<'line'> = (params) => {

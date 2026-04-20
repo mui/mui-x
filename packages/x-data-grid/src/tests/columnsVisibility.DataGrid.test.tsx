@@ -3,10 +3,10 @@ import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import {
   DataGrid,
-  DataGridProps,
-  GridRowsProp,
-  GridColDef,
-  GridColumnVisibilityModel,
+  type DataGridProps,
+  type GridRowsProp,
+  type GridColDef,
+  type GridColumnVisibilityModel,
 } from '@mui/x-data-grid';
 import { getColumnHeadersTextContent, grid } from 'test/utils/helperFn';
 

@@ -1,5 +1,6 @@
 {
   "componentDescription": "",
+  "deprecationInfo": "The <code>Scatter</code> component is an internal implementation detail of <code>ScatterPlot</code> and will be removed from the public API in v10. Use <code>ScatterPlot</code> instead.<br>Demos:<br>- <a href=\"https://mui.com/x/react-charts/scatter/\">Scatter</a> - <a href=\"https://mui.com/x/react-charts/scatter-demo/\">Scatter demonstration</a><br>API:<br>- <a href=\"https://mui.com/x/api/charts/scatter/\">Scatter API</a>",
   "propDescriptions": {
     "colorGetter": {
       "description": "Function to get the color of a scatter item given its data index. The data index argument is optional. If not provided, the color for the entire series is returned. If provided, the color for the specific scatter item is returned."
@@ -18,6 +19,19 @@
       }
     }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "classDescriptions": {
+    "focusedMark": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the focused scatter mark element"
+    },
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scatter plot element"
+    },
+    "series": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group surrounding a series&#39; scatter elements"
+    }
+  },
   "slotDescriptions": { "marker": "The component that renders the marker for a scatter point." }
 }

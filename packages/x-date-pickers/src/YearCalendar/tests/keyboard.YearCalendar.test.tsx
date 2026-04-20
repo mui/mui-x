@@ -3,7 +3,7 @@ import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-/* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+/* eslint-disable mui/disallow-active-element-as-key-event-target */
 describe('<YearCalendar /> - Keyboard', () => {
   const { render } = createPickerRenderer();
 

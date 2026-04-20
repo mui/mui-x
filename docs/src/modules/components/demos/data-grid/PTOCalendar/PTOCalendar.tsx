@@ -54,7 +54,7 @@ function EmployeeHeader() {
   const apiRef = useGridApiContext();
   const filteredRowCount = useGridSelector(apiRef, gridFilteredRowCountSelector);
   return (
-    <Typography fontWeight="medium" fontSize="0.875rem">
+    <Typography sx={{ fontWeight: 'medium', fontSize: '0.875rem' }}>
       Employees ({filteredRowCount})
     </Typography>
   );
@@ -150,12 +150,7 @@ function renderCellIconLabel({
           component="img"
           src={`https://flagcdn.com/w40/${params.row.nationality.toLowerCase()}.png`}
           alt={`${params.row.nationality} flag`}
-          sx={{
-            width: 18,
-            height: 18,
-            margin: '1px',
-            borderRadius: '50%',
-          }}
+          sx={{ width: 18, height: 18, margin: '1px', borderRadius: '50%' }}
         />
         {showLabel && 'Holiday'}
       </React.Fragment>
@@ -409,11 +404,7 @@ function PTOCalendar() {
           if (params.row.id === 'summary') {
             return (
               <Typography
-                sx={{
-                  color: 'text.secondary',
-                  fontSize: '0.8125rem',
-                  fontWeight: 'medium',
-                }}
+                sx={{ color: 'text.secondary', fontSize: '0.8125rem', fontWeight: 'medium' }}
               >
                 {params.value}
               </Typography>
@@ -742,7 +733,10 @@ function PTOCalendar() {
   const todayStr = format(new Date(), 'yyyy-MM-dd');
 
   return (
-    <DemoContainer theme={ptoCalendarTheme}>
+    <DemoContainer
+      theme={ptoCalendarTheme}
+      href="https://github.com/mui/mui-x/tree/master/docs/src/modules/components/demos/data-grid/PTOCalendar"
+    >
       <CalendarContext.Provider value={calendarState}>
         <Box
           sx={(theme) => ({

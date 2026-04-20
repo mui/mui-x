@@ -1,11 +1,12 @@
+'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import {
-  GridStrategyProcessor,
-  GridStrategyProcessorName,
-  GridStrategyProcessingApi,
-  GridStrategyGroupValue,
+  type GridStrategyProcessor,
+  type GridStrategyProcessorName,
+  type GridStrategyProcessingApi,
+  type GridStrategyGroupValue,
   GridStrategyGroup,
 } from './gridStrategyProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -114,13 +115,15 @@ export const useGridStrategyProcessing = (apiRef: RefObject<GridPrivateApiCommon
         GRID_STRATEGIES_PROCESSORS[processorName],
       );
       if (activeStrategy == null) {
-        throw new Error("Can't apply a strategy processor before defining an active strategy");
+        throw new Error(
+          "MUI X: Can't apply a strategy processor before defining an active strategy",
+        );
       }
 
       const groupCache = strategiesCache.current[processorName];
       if (!groupCache || !groupCache[activeStrategy]) {
         throw new Error(
-          `No processor found for processor "${processorName}" on strategy "${activeStrategy}"`,
+          `MUI X: No processor found for processor "${processorName}" on strategy "${activeStrategy}"`,
         );
       }
 

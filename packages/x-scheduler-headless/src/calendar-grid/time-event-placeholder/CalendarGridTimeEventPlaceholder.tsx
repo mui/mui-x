@@ -4,8 +4,8 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { CalendarGridTimeEventPlaceholderCssVars } from './CalendarGridTimeEventPlaceholderCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
-import { useEvent } from '../../utils/useEvent';
-import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
+import { useEvent } from '../../internals/utils/useEvent';
+import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 
 export const CalendarGridTimeEventPlaceholder = React.forwardRef(
   function CalendarGridTimeEventPlaceholder(
@@ -16,6 +16,7 @@ export const CalendarGridTimeEventPlaceholder = React.forwardRef(
       // Rendering props
       className,
       render,
+      style,
       // Internal props
       start,
       end,
@@ -32,23 +33,20 @@ export const CalendarGridTimeEventPlaceholder = React.forwardRef(
       collectionEnd: columnEnd,
     });
 
-    const style = React.useMemo(
-      () =>
-        ({
-          [CalendarGridTimeEventPlaceholderCssVars.yPosition]: `${position * 100}%`,
-          [CalendarGridTimeEventPlaceholderCssVars.height]: `${duration * 100}%`,
-        }) as React.CSSProperties,
-      [position, duration],
-    );
-
-    const props = { style };
-
     const { state } = useEvent({ start, end });
 
     return useRenderElement('div', componentProps, {
       state,
       ref: [forwardedRef],
-      props: [props, elementProps],
+      props: [
+        elementProps,
+        {
+          style: {
+            [CalendarGridTimeEventPlaceholderCssVars.yPosition]: `${position * 100}%`,
+            [CalendarGridTimeEventPlaceholderCssVars.height]: `${duration * 100}%`,
+          } as React.CSSProperties,
+        },
+      ],
     });
   },
 );

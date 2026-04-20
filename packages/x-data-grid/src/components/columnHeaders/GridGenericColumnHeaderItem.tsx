@@ -3,18 +3,20 @@ import * as React from 'react';
 import clsx from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { GridStateColDef } from '../../models/colDef/gridColDef';
-import { GridSortDirection } from '../../models/gridSortModel';
+import type { GridStateColDef } from '../../models/colDef/gridColDef';
+import type { GridSortDirection } from '../../models/gridSortModel';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import {
   GridColumnHeaderSeparator,
-  GridColumnHeaderSeparatorProps,
+  type GridColumnHeaderSeparatorProps,
 } from './GridColumnHeaderSeparator';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridColumnGroup } from '../../models/gridColumnGrouping';
+import type { GridColumnGroup } from '../../models/gridColumnGrouping';
 
-interface GridGenericColumnHeaderItemProps
-  extends Pick<GridStateColDef, 'headerClassName' | 'description' | 'resizable'> {
+interface GridGenericColumnHeaderItemProps extends Pick<
+  GridStateColDef,
+  'headerClassName' | 'description' | 'resizable'
+> {
   classes: Record<
     'root' | 'draggableContainer' | 'titleContainer' | 'titleContainerContent',
     string

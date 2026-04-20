@@ -1,5 +1,7 @@
 {
   "props": {
+    "borderRadius": { "type": { "name": "number" } },
+    "className": { "type": { "name": "string" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -12,7 +14,17 @@
     "import { HeatmapPlot } from '@mui/x-charts-pro/Heatmap';",
     "import { HeatmapPlot } from '@mui/x-charts-pro';"
   ],
+  "slots": [
+    {
+      "name": "cell",
+      "description": "The component that renders the heatmap cell.",
+      "default": "HeatmapCell",
+      "class": null
+    }
+  ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiHeatmapPlot",
   "filename": "/packages/x-charts-pro/src/Heatmap/HeatmapPlot.tsx",
   "inheritance": null,

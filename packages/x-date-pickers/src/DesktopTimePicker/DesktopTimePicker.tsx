@@ -19,9 +19,8 @@ import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
 import { TimeView, PickerOwnerState } from '../models';
 
-type DesktopTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopTimePickerComponent = ((
+  props: DesktopTimePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -34,10 +33,8 @@ type DesktopTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends b
  *
  * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
  */
-const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopTimePicker = React.forwardRef(function DesktopTimePicker(
+  inProps: DesktopTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
@@ -45,7 +42,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
     TimeViewWithMeridiem,
-    DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>
+    DesktopTimePickerProps
   >(inProps, 'MuiDesktopTimePicker');
 
   const {
@@ -102,11 +99,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     },
   };
 
-  const { renderPicker } = useDesktopPicker<
-    TimeViewWithMeridiem,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopPicker<TimeViewWithMeridiem, typeof props>({
     ref,
     props,
     valueManager: singleItemValueManager,
@@ -179,10 +172,6 @@ DesktopTimePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
-  /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */
@@ -197,6 +186,13 @@ DesktopTimePicker.propTypes = {
    * Pass a ref to the `input` element.
    */
   inputRef: refType,
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus: PropTypes.bool,
   /**
    * The label content.
    */
@@ -232,7 +228,7 @@ DesktopTimePicker.propTypes = {
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
    * - `validationError`: validation result of the current value
-   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
+   * - `source`: source of the acceptance. One of 'field' | 'view' | 'unknown'
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,

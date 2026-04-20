@@ -1,0 +1,51 @@
+{
+  "props": {},
+  "name": "ChatConversationSubtitle",
+  "imports": [
+    "import { ChatConversationSubtitle } from '@mui/x-chat/ChatConversation';",
+    "import { ChatConversationSubtitle } from '@mui/x-chat';"
+  ],
+  "classes": [
+    {
+      "key": "header",
+      "className": "MuiChatConversationSubtitle-header",
+      "description": "Styles applied to the conversation header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerActions",
+      "className": "MuiChatConversationSubtitle-headerActions",
+      "description": "Styles applied to the conversation header actions element.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerInfo",
+      "className": "MuiChatConversationSubtitle-headerInfo",
+      "description": "Styles applied to the conversation header info element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChatConversationSubtitle-root",
+      "description": "Styles applied to the conversation root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "subtitle",
+      "className": "MuiChatConversationSubtitle-subtitle",
+      "description": "Styles applied to the conversation subtitle element.",
+      "isGlobal": false
+    },
+    {
+      "key": "title",
+      "className": "MuiChatConversationSubtitle-title",
+      "description": "Styles applied to the conversation title element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChatConversationSubtitle",
+  "filename": "/packages/x-chat/src/ChatConversation/ChatConversationSubtitle.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/multi-conversation/conversation-header/\">Chat - Conversation Header</a></li></ul>",
+  "cssComponent": false
+}

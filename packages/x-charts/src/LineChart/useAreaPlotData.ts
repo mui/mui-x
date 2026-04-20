@@ -2,12 +2,12 @@ import * as React from 'react';
 import { area as d3Area } from '@mui/x-charts-vendor/d3-shape';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { getCurveFactory } from '../internals/getCurve';
-import { ChartsXAxisProps, ChartsYAxisProps } from '../models';
+import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
 import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { SeriesId } from '../models/seriesType/common';
+import { type SeriesId } from '../models/seriesType/common';
 
 interface AreaPlotDataPoint {
   d: string;
@@ -43,6 +43,7 @@ export function useAreaPlotData(
         const {
           xAxisId = defaultXAxisId,
           yAxisId = defaultYAxisId,
+          visibleStackedData,
           stackedData,
           data,
           connectNulls,
@@ -73,12 +74,16 @@ export function useAreaPlotData(
                 xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisId}"`
-              } should have data property to be able to display a line plot.`,
+              } should have a data property to be able to display a line plot. ` +
+                'The x-axis data defines the positions for each point in the line. ' +
+                'Provide a data array to the x-axis configuration.',
             );
           }
           if (xData.length < stackedData.length) {
             throw new Error(
-              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+              `MUI X Charts: The data length of the x-axis (${xData.length} items) is less than the length of series data (${stackedData.length} items). ` +
+                'Some data points will not be displayed because they have no corresponding x-axis value. ' +
+                'Ensure the x-axis data has at least as many items as the series data.',
             );
           }
         }
@@ -94,11 +99,11 @@ export function useAreaPlotData(
           xData?.flatMap((x, index) => {
             const nullData = data[index] == null;
             if (shouldExpand) {
-              const rep = [{ x, y: stackedData[index], nullData, isExtension: false }];
+              const rep = [{ x, y: visibleStackedData[index], nullData, isExtension: false }];
               if (!nullData && (index === 0 || data[index - 1] == null)) {
                 rep.unshift({
                   x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
-                  y: stackedData[index],
+                  y: visibleStackedData[index],
                   nullData,
                   isExtension: true,
                 });
@@ -106,14 +111,14 @@ export function useAreaPlotData(
               if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
                 rep.push({
                   x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
-                  y: stackedData[index],
+                  y: visibleStackedData[index],
                   nullData,
                   isExtension: true,
                 });
               }
               return rep;
             }
-            return { x, y: stackedData[index], nullData };
+            return { x, y: visibleStackedData[index], nullData };
           }) ?? [];
 
         const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;

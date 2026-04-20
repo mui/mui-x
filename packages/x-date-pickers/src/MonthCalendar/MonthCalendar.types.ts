@@ -36,7 +36,8 @@ export interface ExportedMonthCalendarProps {
   monthsPerRow?: 3 | 4;
 }
 export interface MonthCalendarProps
-  extends ExportedMonthCalendarProps,
+  extends
+    ExportedMonthCalendarProps,
     MonthValidationProps,
     BaseDateValidationProps,
     TimezoneProps,

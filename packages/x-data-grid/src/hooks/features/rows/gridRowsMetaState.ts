@@ -1,4 +1,4 @@
-import { RowsMetaState } from '@mui/x-virtualizer/models';
+import type { RowsMetaState } from '@mui/x-virtualizer/models';
 
 /**
  * The grid rows total height and row positions.

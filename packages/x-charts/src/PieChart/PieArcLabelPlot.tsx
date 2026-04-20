@@ -1,14 +1,15 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import {
-  ComputedPieRadius,
-  DefaultizedPieSeriesType,
-  DefaultizedPieValueType,
-  PieSeriesType,
+  type ComputedPieRadius,
+  type DefaultizedPieSeriesType,
+  type DefaultizedPieValueType,
+  type PieSeriesType,
 } from '../models/seriesType/pie';
 import { useTransformData } from './dataTransform/useTransformData';
-import { PieArcLabel, PieArcLabelProps } from './PieArcLabel';
+import { PieArcLabel, type PieArcLabelProps } from './PieArcLabel';
 import { getLabel } from '../internals/getLabel';
 
 const RATIO = 180 / Math.PI;
@@ -50,7 +51,8 @@ export interface PieArcLabelPlotSlotProps {
 }
 
 export interface PieArcLabelPlotProps
-  extends Pick<
+  extends
+    Pick<
       DefaultizedPieSeriesType,
       | 'data'
       | 'faded'
@@ -59,9 +61,12 @@ export interface PieArcLabelPlotProps
       | 'paddingAngle'
       | 'arcLabel'
       | 'arcLabelMinAngle'
-      | 'id'
     >,
     ComputedPieRadius {
+  /**
+   * The id of this series.
+   */
+  seriesId: string;
   /**
    * Override the arc attributes when it is faded.
    * @default { additionalRadius: -5 }
@@ -84,6 +89,11 @@ export interface PieArcLabelPlotProps
   skipAnimation?: boolean;
 }
 
+const PieArcLabelPlotRoot = styled('g', {
+  name: 'MuiPieArcLabelPlot',
+  slot: 'Root',
+})();
+
 function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   const {
     arcLabel,
@@ -93,7 +103,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     data,
     faded = { additionalRadius: -5 },
     highlighted,
-    id,
+    seriesId,
     innerRadius,
     outerRadius,
     paddingAngle = 0,
@@ -109,7 +119,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     arcLabelRadius,
     cornerRadius,
     paddingAngle,
-    id,
+    id: seriesId,
     highlighted,
     faded,
     data,
@@ -122,18 +132,17 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   const ArcLabel = slots?.pieArcLabel ?? PieArcLabel;
 
   return (
-    <g {...other}>
+    <PieArcLabelPlotRoot {...other}>
       {transformedData.map((item) => (
         <ArcLabel
           key={item.id ?? item.dataIndex}
           startAngle={item.startAngle}
           endAngle={item.endAngle}
           paddingAngle={item.paddingAngle}
-          innerRadius={item.innerRadius}
-          outerRadius={item.outerRadius}
           arcLabelRadius={item.arcLabelRadius}
           cornerRadius={item.cornerRadius}
-          id={id}
+          hidden={item.hidden}
+          seriesId={seriesId}
           color={item.color}
           isFaded={item.isFaded}
           isHighlighted={item.isHighlighted}
@@ -142,7 +151,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
           {...slotProps?.pieArcLabel}
         />
       ))}
-    </g>
+    </PieArcLabelPlotRoot>
   );
 }
 
@@ -218,7 +227,7 @@ PieArcLabelPlot.propTypes = {
   /**
    * The id of this series.
    */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * The radius between circle center and the beginning of the arc.
    * @default 0

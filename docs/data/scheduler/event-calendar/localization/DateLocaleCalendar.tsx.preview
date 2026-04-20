@@ -1,0 +1,9 @@
+<ThemeProvider theme={theme}>
+  <EventCalendar
+    events={events}
+    resources={resources}
+    defaultVisibleDate={defaultVisibleDate}
+    onEventsChange={setEvents}
+    defaultPreferences={{ isSidePanelOpen: false }}
+  />
+</ThemeProvider>

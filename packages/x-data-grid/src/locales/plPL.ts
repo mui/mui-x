@@ -1,5 +1,11 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('pl-PL');
 
 const plPLGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +21,10 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Komfort',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Cofnij',
+  toolbarRedo: 'Ponów',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolumny',
@@ -63,7 +73,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Lub',
-  filterPanelColumns: 'Kolumny',
+  filterPanelColumn: 'Kolumny',
   filterPanelInputLabel: 'Wartość',
   filterPanelInputPlaceholder: 'Filtrowana wartość',
 
@@ -158,6 +168,10 @@ const plPLGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'tak',
   booleanCellFalseLabel: 'nie',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Rozwiń',
+  longTextCellCollapseLabel: 'Zwiń',
+
   // Actions cell more text
   actionsCellMore: 'więcej',
 
@@ -185,10 +199,13 @@ const plPLGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Wierszy na stronę:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} z ${count !== -1 ? count : `więcej niż ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} z ${count !== -1 ? formatNumber(count) : `więcej niż ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `około ${estimated}` : `więcej niż ${to}`;
-    return `${from}–${to} z ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `około ${formatNumber(estimated)}`
+        : `więcej niż ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} z ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

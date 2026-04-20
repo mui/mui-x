@@ -1,6 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
-import { PieChart } from '@mui/x-charts/PieChart';
+import { vi } from 'vitest';
+import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 
 const config = {
   width: 400,
@@ -29,8 +29,7 @@ describe('PieChart - click event', () => {
           onItemClick={() => {}}
         />,
       );
-      // eslint-disable-next-line testing-library/no-container
-      const slices = container.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
+      const slices = container.querySelectorAll<HTMLElement>(`path.${pieClasses.arc}`);
 
       expect(Array.from(slices).map((slice) => slice.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -39,7 +38,7 @@ describe('PieChart - click event', () => {
     });
 
     it('should provide the right context as second argument', async () => {
-      const onItemClick = spy();
+      const onItemClick = vi.fn();
       const { user } = render(
         <PieChart
           {...config}
@@ -55,17 +54,17 @@ describe('PieChart - click event', () => {
           onItemClick={onItemClick}
         />,
       );
-      const slices = document.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
+      const slices = document.querySelectorAll<HTMLElement>(`path.${pieClasses.arc}`);
 
       await user.click(slices[0]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'pie',
         seriesId: 's1',
         dataIndex: 0,
       });
 
       await user.click(slices[1]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'pie',
         seriesId: 's1',
         dataIndex: 1,

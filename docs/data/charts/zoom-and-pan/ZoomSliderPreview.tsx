@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { LineChartPro, LineChartProProps } from '@mui/x-charts-pro/LineChartPro';
-import { ScatterValueType, XAxis } from '@mui/x-charts/models';
+import {
+  AxisValueFormatterContext,
+  ScatterValueType,
+  XAxis,
+} from '@mui/x-charts/models';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -10,6 +14,12 @@ import {
   ScatterChartProProps,
 } from '@mui/x-charts-pro/ScatterChartPro';
 import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
+import {
+  BarChartPremium,
+  BarChartPremiumProps,
+} from '@mui/x-charts-premium/BarChartPremium';
+import { Unstable_CandlestickChart as CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
+import { OHLCValueType } from '@mui/x-charts-premium/models';
 import {
   dateAxisFormatter,
   usUnemploymentRate,
@@ -23,6 +33,8 @@ import {
 } from '../dataset/countryData';
 import { shareOfRenewables } from '../dataset/shareOfRenewables';
 import { populationPrediction2050 } from '../dataset/populationPrediction2050';
+import { temperatureBerlinPorto } from '../dataset/temperatureBerlinPorto';
+import sp500 from '../dataset/sp500-intraday.json';
 
 const lineData = usUnemploymentRate.map((d) => d.rate / 100);
 
@@ -37,6 +49,21 @@ const gdpPerCapitaFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
 });
 const populationFormatter = new Intl.NumberFormat('en-US', { notation: 'compact' });
+const dayFormatter = new Intl.DateTimeFormat(undefined, {
+  day: 'numeric',
+  month: '2-digit',
+  year: 'numeric',
+});
+
+const commonXAxisProps = {
+  id: 'x',
+  zoom: { filterMode: 'discard', slider: { enabled: true, preview: true } },
+} as const;
+
+const commonProps = {
+  initialZoom: [{ axisId: 'x', start: 20, end: 80 }],
+  height: 400,
+} as const;
 
 const lineXAxis = {
   scaleType: 'time',
@@ -57,11 +84,9 @@ const lineSettings = {
   series: [
     {
       data: lineData,
-      showMark: false,
       valueFormatter: (v: number | null) => percentageFormatter.format(v!),
     },
   ],
-  height: 400,
 } satisfies Partial<LineChartProProps>;
 
 const areaXAxis = {
@@ -84,13 +109,12 @@ const areaSettings = {
     data: populationPrediction2050
       .filter((point) => point.location === continent)
       .map((point) => point.value),
-    showMark: false,
+
     area: true,
     label: continent,
     stack: 'population',
     valueFormatter: (v: number | null) => populationFormatter.format(v!),
   })),
-  height: 400,
 } satisfies Partial<LineChartProProps>;
 
 const scatterXAxis = {
@@ -113,7 +137,6 @@ const scatterSettings = {
     valueFormatter: (value: ScatterValueType | null) =>
       `${countryData[value!.id as keyof typeof countryData].country} - Birth rate: ${value!.y} - GDP per capita: ${gdpPerCapitaFormatter.format(value!.x)}`,
   })),
-  height: 400,
 } satisfies Partial<ScatterChartProProps>;
 
 const sortedShareOfRenewables = shareOfRenewables.toSorted(
@@ -131,8 +154,42 @@ const barSettings = {
       valueFormatter: (v: number | null) => percentageFormatter.format(v!),
     },
   ],
-  height: 400,
 } satisfies Partial<BarChartProProps>;
+
+const rangeBarXAxis = {
+  data: temperatureBerlinPorto.months,
+  valueFormatter: (v: string, context: AxisValueFormatterContext) =>
+    context.location === 'tick' ? v.slice(0, 3) : v,
+} satisfies XAxis<'band'>;
+const rangeBarSettings = {
+  yAxis: [{ valueFormatter: (value: number) => `${value}°C` }],
+  series: [
+    {
+      id: 'porto',
+      type: 'rangeBar',
+      label: 'Porto, Portugal',
+      valueFormatter: (value) =>
+        value === null ? null : `${value[0]}°C - ${value[1]}°C`,
+      data: temperatureBerlinPorto.porto,
+    },
+    {
+      id: 'berlin',
+      type: 'rangeBar',
+      label: 'Berlin, Germany',
+      valueFormatter: (value) =>
+        value === null ? null : `${value[0]}°C - ${value[1]}°C`,
+      data: temperatureBerlinPorto.berlin,
+    },
+  ],
+} satisfies BarChartPremiumProps;
+
+const candlestickXData = sp500.map((entry) => new Date(Date.parse(entry.date)));
+const candlestickData: Array<OHLCValueType> = sp500.map((entry) => [
+  entry.open,
+  entry.high,
+  entry.low,
+  entry.close,
+]);
 
 export default function ZoomSliderPreview() {
   const [chartType, setChartType] = React.useState('bar');
@@ -144,7 +201,7 @@ export default function ZoomSliderPreview() {
   };
 
   return (
-    <Stack width="100%" gap={2}>
+    <Stack sx={{ width: '100%', gap: 2 }}>
       <ToggleButtonGroup
         value={chartType}
         exclusive
@@ -152,16 +209,20 @@ export default function ZoomSliderPreview() {
         aria-label="chart type"
         fullWidth
       >
-        {['bar', 'line', 'area', 'scatter'].map((type) => (
-          <ToggleButton key={type} value={type} aria-label="left aligned">
-            {type}
-          </ToggleButton>
-        ))}
+        {['bar', 'rangeBar', 'line', 'area', 'scatter', 'candlestick'].map(
+          (type) => (
+            <ToggleButton key={type} value={type}>
+              {type}
+            </ToggleButton>
+          ),
+        )}
       </ToggleButtonGroup>
       {chartType === 'bar' && <BarChartPreview />}
+      {chartType === 'rangeBar' && <RangeBarChartPreview />}
       {chartType === 'line' && <LineChartPreview />}
       {chartType === 'area' && <AreaChartPreview />}
       {chartType === 'scatter' && <ScatterChartPreview />}
+      {chartType === 'candlestick' && <CandlestickChartPreview />}
     </Stack>
   );
 }
@@ -173,10 +234,9 @@ function LineChartPreview() {
         Unemployment Rate in United States (1948-2025)
       </Typography>
       <LineChartPro
+        {...commonProps}
         {...lineSettings}
-        xAxis={[
-          { ...lineXAxis, zoom: { slider: { enabled: true, preview: true } } },
-        ]}
+        xAxis={[{ ...lineXAxis, ...commonXAxisProps }]}
       />
       <Typography variant="caption">
         Source: Federal Reserve Bank of St. Louis. Updated: Jun 6, 2025 7:46 AM CDT.
@@ -192,10 +252,9 @@ function AreaChartPreview() {
         Population by Age Group in 2050 (Projected)
       </Typography>
       <LineChartPro
+        {...commonProps}
         {...areaSettings}
-        xAxis={[
-          { ...areaXAxis, zoom: { slider: { enabled: true, preview: true } } },
-        ]}
+        xAxis={[{ ...areaXAxis, ...commonXAxisProps }]}
       />
       <Typography variant="caption">
         Source: World Population Prospects: The 2024 Revision, United Nations.
@@ -211,11 +270,30 @@ function BarChartPreview() {
         Share of Primary Energy Consumption from Renewables (2023)
       </Typography>
       <BarChartPro
+        {...commonProps}
         {...barSettings}
-        xAxis={[{ ...barXAxis, zoom: { slider: { enabled: true, preview: true } } }]}
+        xAxis={[{ ...barXAxis, ...commonXAxisProps }]}
       />
       <Typography variant="caption">
         Source: Our World in Data. Updated: 2023.
+      </Typography>
+    </React.Fragment>
+  );
+}
+
+function RangeBarChartPreview() {
+  return (
+    <React.Fragment>
+      <Typography variant="h6" sx={{ alignSelf: 'center' }}>
+        Average monthly temperature ranges in °C for Porto and Berlin in 1991-2020
+      </Typography>
+      <BarChartPremium
+        {...commonProps}
+        {...rangeBarSettings}
+        xAxis={[{ ...rangeBarXAxis, ...commonXAxisProps }]}
+      />
+      <Typography variant="caption">
+        Source: IPMA (Porto), climate-data.org (Berlin)
       </Typography>
     </React.Fragment>
   );
@@ -228,15 +306,41 @@ function ScatterChartPreview() {
         Births per woman vs GDP per capita (USD, 2023)
       </Typography>
       <ScatterChartPro
+        {...commonProps}
         {...scatterSettings}
-        xAxis={[
-          { ...scatterXAxis, zoom: { slider: { enabled: true, preview: true } } },
-        ]}
+        xAxis={[{ ...scatterXAxis, ...commonXAxisProps }]}
       />
       <Typography variant="caption">
         GDP per capita is expressed in international dollars at 2021 prices. <br />
         Source: Our World in Data. Updated: 2023.
       </Typography>
+    </React.Fragment>
+  );
+}
+
+function CandlestickChartPreview() {
+  return (
+    <React.Fragment>
+      <Typography variant="h6" sx={{ alignSelf: 'center' }}>
+        S&P 500 Intraday Price
+      </Typography>
+      <CandlestickChart
+        series={[{ data: candlestickData }]}
+        xAxis={[
+          {
+            data: candlestickXData,
+            valueFormatter: (v: Date | null) =>
+              v === null ? '' : dayFormatter.format(new Date(v)),
+            zoom: {
+              minSpan: 1,
+              filterMode: 'discard',
+              slider: { enabled: true, preview: true },
+            },
+          },
+        ]}
+        height={400}
+      />
+      <Typography variant="caption">Source: Yahoo Finance</Typography>
     </React.Fragment>
   );
 }

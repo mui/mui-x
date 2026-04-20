@@ -1,4 +1,4 @@
-import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
+import { type CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 
 export type CurveOptions = {
   /**
@@ -71,7 +71,6 @@ export interface FunnelCurveGenerator extends CurveGenerator {
 export type PositionGetter = (
   value: number,
   bandIndex: number,
-  bandIdentifier: string | number,
   stackOffset?: number,
   useBand?: boolean,
 ) => number;

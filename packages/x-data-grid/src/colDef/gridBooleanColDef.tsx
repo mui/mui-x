@@ -1,5 +1,5 @@
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
-import { GridColTypeDef, GridValueFormatter } from '../models/colDef/gridColDef';
+import type { GridColTypeDef, GridValueFormatter } from '../models/colDef/gridColDef';
 import { renderBooleanCell } from '../components/cell/GridBooleanCell';
 import { renderEditBooleanCell } from '../components/cell/GridEditBooleanCell';
 import { gridNumberComparator } from '../hooks/features/sorting/gridSortingUtils';
@@ -43,7 +43,6 @@ export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
   filterOperators: getGridBooleanOperators(),
   getApplyQuickFilterFn: () => null,
   // @ts-ignore
-  aggregable: false,
   chartable: false,
   // @ts-ignore
   pastedValueParser: (value) => stringToBoolean(value),

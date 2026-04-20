@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { GridCellEditStopReasons } from '../../models/params/gridEditCellParams';
-import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import type { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
 import {

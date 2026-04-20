@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["@mui/internal-test-utils/initMatchers", "vitest/globals", "node"],
+    "noImplicitAny": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*",
+    "../../test/utils/addChaiAssertions.ts",
+    "../x-scheduler-headless-premium/src/use-event-timeline-premium/plugins"
+  ]
+}

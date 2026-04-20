@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { RenderProp } from '@mui/x-data-grid';
+import type { RenderProp } from '@mui/x-data-grid';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { PromptFieldContext, PromptFieldState } from './PromptFieldContext';
+import { PromptFieldContext, type PromptFieldState } from './PromptFieldContext';
 
 export type PromptFieldProps = Omit<
   React.HTMLAttributes<HTMLDivElement>,
@@ -24,7 +24,7 @@ export type PromptFieldProps = Omit<
    */
   lang?: string;
   /**
-   * Called when an speech recognition error occurs.
+   * Called when a speech recognition error occurs.
    * @param {string} error The error message
    */
   onRecordError?: (error: string) => void;
@@ -108,7 +108,7 @@ PromptField.propTypes = {
    */
   className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
-   * Called when an speech recognition error occurs.
+   * Called when a speech recognition error occurs.
    * @param {string} error The error message
    */
   onRecordError: PropTypes.func,

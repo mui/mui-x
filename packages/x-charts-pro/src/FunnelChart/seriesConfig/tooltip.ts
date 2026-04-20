@@ -1,4 +1,4 @@
-import { getLabel, TooltipGetter } from '@mui/x-charts/internals';
+import { getLabel, type TooltipGetter } from '@mui/x-charts/internals';
 
 const tooltipGetter: TooltipGetter<'funnel'> = (params) => {
   const { series, getColor, identifier } = params;

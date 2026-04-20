@@ -6,19 +6,14 @@ import {
 import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
 import { DateTimeRangeManagerFieldInternalProps } from '../managers/useDateTimeRangeManager';
 
-export interface UseSingleInputDateTimeRangeFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    // TODO v8: Remove once the range fields open with a button.
-    Omit<ExportedPickerFieldUIProps, 'openPickerButtonPosition'> {}
+export interface UseSingleInputDateTimeRangeFieldProps
+  extends DateTimeRangeManagerFieldInternalProps, ExportedPickerFieldUIProps {}
 
-export type SingleInputDateTimeRangeFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> = Omit<
-  BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>,
-  keyof UseSingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>
+export type SingleInputDateTimeRangeFieldProps = Omit<
+  BuiltInFieldTextFieldProps,
+  keyof UseSingleInputDateTimeRangeFieldProps
 > &
-  UseSingleInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
+  UseSingleInputDateTimeRangeFieldProps & {
     /**
      * Overridable component slots.
      * @default {}

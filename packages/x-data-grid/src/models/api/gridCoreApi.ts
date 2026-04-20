@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { EventManager, EventListenerOptions } from '@mui/x-internals/EventManager';
+import type * as React from 'react';
+import type { EventManager, EventListenerOptions } from '@mui/x-internals/EventManager';
 import type { Store } from '@mui/x-internals/store';
 import type { GridEventPublisher, GridEventListener, GridEvents } from '../events';
 import type { GridApiCaches } from '../gridApiCaches';

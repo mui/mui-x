@@ -1,14 +1,15 @@
-import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { ChartDrawingArea } from '@mui/x-charts/hooks';
+import { type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import {
-  ComputedAxisConfig,
-  ChartSeriesType,
-  ProcessedSeries,
-  ChartSeriesConfig,
-  DefaultedYAxis,
-  DefaultedXAxis,
-  DefaultedAxis,
-  CartesianChartSeriesType,
+  type ComputedAxisConfig,
+  type ChartSeriesType,
+  type ProcessedSeries,
+  type ChartSeriesConfig,
+  type DefaultedYAxis,
+  type DefaultedXAxis,
+  type DefaultedAxis,
+  type CartesianChartSeriesType,
+  type AxisId,
   getAxisExtrema,
   isBandScaleConfig,
   isPointScaleConfig,
@@ -23,8 +24,15 @@ import {
   createDateFormatter,
   getDefaultTickNumber,
   scaleBand,
+  resolveAxisSize,
+  type ComputedAxis,
 } from '@mui/x-charts/internals';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/x-charts/models';
+import {
+  type AxisConfig,
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
+  type ScaleName,
+} from '@mui/x-charts/models';
 
 export const xRangeGetter = (
   drawingArea: ChartDrawingArea,
@@ -66,11 +74,12 @@ export type ComputeResult<T extends ChartsAxisProps> = {
   axisIds: string[];
 };
 
-type ComputeCommonParams<T extends ChartSeriesType = 'funnel'> = {
+type ComputeCommonParams<SeriesType extends ChartSeriesType = 'funnel'> = {
   drawingArea: ChartDrawingArea;
-  formattedSeries: ProcessedSeries<T>;
-  seriesConfig: ChartSeriesConfig<T>;
+  formattedSeries: ProcessedSeries<SeriesType>;
+  seriesConfig: ChartSeriesConfig<SeriesType>;
   gap: number;
+  autoSizes?: Record<AxisId, number>;
 };
 
 export function computeAxisValue(
@@ -92,6 +101,7 @@ export function computeAxisValue({
   seriesConfig,
   axisDirection,
   gap,
+  autoSizes,
 }: ComputeCommonParams<'funnel'> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -135,13 +145,17 @@ export function computeAxisValue({
       const N = axis.data!.length;
       const bandWidth = (rangeSpace - gap * (N - 1)) / N;
       const step = bandWidth + gap;
+
+      const resolvedSize = resolveAxisSize(axis, autoSizes, axisDirection);
+
       completeAxis[axis.id] = {
         offset: 0,
-        height: 0,
         categoryGapRatio: 0,
         barGapRatio: 0,
         triggerTooltip,
         ...axis,
+        // Set height/width as a number (resolved from 'auto' if needed)
+        ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
         data,
         scale: scaleBand(axis.data!, scaleRange)
           .paddingInner(gap / step)
@@ -152,7 +166,7 @@ export function computeAxisValue({
           (axis.colorMap.type === 'ordinal'
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
             : getColorScale(axis.colorMap)),
-      };
+      } as ComputedAxis<'band', any, ChartsAxisProps>;
 
       if (isDateData(axis.data)) {
         const dateFormatter = createDateFormatter(axis.data, scaleRange, axis.tickNumber);
@@ -166,7 +180,7 @@ export function computeAxisValue({
 
     if (isPointScaleConfig(axis)) {
       throw new Error(
-        'Point scale is not supported in FunnelChart. Please use band scale instead.',
+        'MUI X Charts: Point scale is not supported in FunnelChart. Please use band scale instead.',
       );
     }
 
@@ -205,17 +219,20 @@ export function computeAxisValue({
       const [minDomain, maxDomain] = finalScale.domain();
       const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
+      const resolvedSize = resolveAxisSize(axis, autoSizes, axisDirection);
+
       completeAxis[axis.id] = {
         offset: 0,
-        height: 0,
         triggerTooltip,
         ...axis,
+        // Set height/width as a number (resolved from 'auto' if needed)
+        ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
         data,
         scaleType: scaleType as any,
         scale: finalScale.domain(domain) as any,
         tickNumber,
         colorScale: axis.colorMap && getColorScale(axis.colorMap),
-      };
+      } as ComputedAxis<'linear', any, ChartsAxisProps>;
     }
   });
   return {

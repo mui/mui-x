@@ -1,5 +1,6 @@
-import { createRenderer } from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
 import { DataGrid } from '@mui/x-data-grid';
+import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Accessibility', () => {
   const { render } = createRenderer();
@@ -34,5 +35,67 @@ describe('<DataGrid /> - Accessibility', () => {
       'Grid aria-labelledby',
     );
     expect(document.querySelector('div[role="grid"]')).not.to.have.attribute('aria-label');
+  });
+
+  describe('column type: longText', () => {
+    const longTextProps = {
+      rows: [{ id: 0, bio: 'Long text content' }],
+      columns: [{ field: 'bio', type: 'longText' as const, headerName: 'Biography' }],
+    };
+
+    it('expand button should have aria-haspopup and aria-expanded', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextProps} />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await user.click(cell);
+
+      const expandButton = cell.querySelector(
+        'button[aria-haspopup="dialog"]',
+      ) as HTMLButtonElement;
+      expect(expandButton).to.have.attribute('aria-haspopup', 'dialog');
+      expect(expandButton).to.have.attribute('aria-expanded', 'false');
+      expect(expandButton).not.to.have.attribute('aria-controls');
+    });
+
+    it('edit popup should have role="dialog" with aria-label', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={[{ id: 0, bio: 'Long text content' }]}
+            columns={[{ field: 'bio', type: 'longText', headerName: 'Biography', editable: true }]}
+          />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await openLongTextEditPopup(cell, user);
+
+      const popup = screen.getByRole('dialog');
+      expect(popup).to.have.attribute('aria-label', 'Biography');
+
+      const textarea = screen.getByRole('textbox');
+      expect(textarea.tagName).to.equal('TEXTAREA');
+    });
+
+    it('expand button should set aria-controls when view popup is open', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextProps} />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await openLongTextViewPopup(cell, user, 'spacebar');
+
+      const expandButton = cell.querySelector(
+        'button[aria-haspopup="dialog"]',
+      ) as HTMLButtonElement;
+      expect(expandButton).to.have.attribute('aria-expanded', 'true');
+      expect(expandButton).to.have.attribute('aria-controls');
+    });
   });
 });

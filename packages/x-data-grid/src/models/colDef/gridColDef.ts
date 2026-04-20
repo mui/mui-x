@@ -1,22 +1,22 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridCellClassNamePropType } from '../gridCellClass';
-import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
+import type * as React from 'react';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridCellClassNamePropType } from '../gridCellClass';
+import type { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import type { GridFilterOperator } from '../gridFilterOperator';
-import {
+import type {
   GridRenderCellParams,
   GridRenderEditCellParams,
   GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
-import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
-import { GridComparatorFn, GridSortDirection } from '../gridSortModel';
-import { GridColType } from './gridColType';
-import { GridRowParams } from '../params/gridRowParams';
-import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
-import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
-import { GridEditCellProps } from '../gridEditRowModel';
+import type { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
+import type { GridComparatorFn, GridSortDirection } from '../gridSortModel';
+import type { GridColType } from './gridColType';
+import type { GridRowParams } from '../params/gridRowParams';
+import type { GridValueOptionsParams } from '../params/gridValueOptionsParams';
+import type { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
+import type { GridEditCellProps } from '../gridEditRowModel';
 import type { GridValidRowModel } from '../gridRows';
-import { GridApiCommunity } from '../api/gridApiCommunity';
+import type { GridApiCommunity } from '../api/gridApiCommunity';
 /**
  * Alignment used in position elements in Cells.
  */
@@ -295,8 +295,11 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
  * @demos
  *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
  */
-export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridBaseColDef<R, V, F> {
+export interface GridActionsColDef<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+> extends GridBaseColDef<R, V, F> {
   /**
    * The type of the column.
    * @default 'actions'
@@ -329,8 +332,11 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
  * @demos
  *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
  */
-export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridBaseColDef<R, V, F> {
+export interface GridSingleSelectColDef<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+> extends GridBaseColDef<R, V, F> {
   /**
    * The type of the column.
    * @default 'singleSelect'
@@ -374,6 +380,22 @@ export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
 export type GridListViewColDef<R extends GridValidRowModel = any, V = any, F = V> = Pick<
   GridBaseColDef<R, V, F>,
   'field' | 'renderCell' | 'align' | 'cellClassName' | 'display'
+>;
+
+/**
+ * Column Definition interface used for the checkbox selection column.
+ *
+ * @warning
+ * Be careful when overriding `renderHeader` or `renderCell` in the `checkboxColDef` prop.
+ * The default implementation of these properties includes the logic for selecting all rows and selecting a single row, respectively.
+ * Overriding them without providing the same functionality will break the row selection.
+ *
+ * @demos
+ *   - [Row selection](/x/react-data-grid/row-selection/)
+ */
+export type GridCheckboxSelectionColDef<R extends GridValidRowModel = any, V = any, F = V> = Omit<
+  GridColDef<R, V, F>,
+  'field' | 'type'
 >;
 
 export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'>;

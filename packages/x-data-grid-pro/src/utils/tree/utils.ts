@@ -1,17 +1,17 @@
 import {
   GRID_ROOT_GROUP_ID,
-  GridChildrenFromPathLookup,
-  GridFilterState,
-  GridGroupNode,
-  GridLeafNode,
-  GridRowId,
-  GridRowTreeConfig,
-  GridRowsState,
-  GridTreeNode,
+  type GridChildrenFromPathLookup,
+  type GridFilterState,
+  type GridGroupNode,
+  type GridLeafNode,
+  type GridRowId,
+  type GridRowTreeConfig,
+  type GridRowsState,
+  type GridTreeNode,
 } from '@mui/x-data-grid';
-import { GridTreeDepths } from '@mui/x-data-grid/internals';
-import { RowTreeBuilderGroupingCriterion } from './models';
-import { DataGridProProps } from '../../models/dataGridProProps';
+import type { GridTreeDepths } from '@mui/x-data-grid/internals';
+import type { RowTreeBuilderGroupingCriterion } from './models';
+import type { DataGridProProps } from '../../models/dataGridProProps';
 import type { GridStatePro } from '../../models/gridStatePro';
 
 export const getGroupRowIdFromPath = (path: RowTreeBuilderGroupingCriterion[]) => {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -11,11 +11,11 @@ import {
 import { stub, spy } from 'sinon';
 import {
   DataGrid,
-  DataGridProps,
-  GridColDef,
+  type DataGridProps,
+  type GridColDef,
   gridClasses,
   useGridApiRef,
-  GridApi,
+  type GridApi,
 } from '@mui/x-data-grid';
 import { ptBR } from '@mui/x-data-grid/locales';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
@@ -926,7 +926,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
   describe('warnings', () => {
     // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
-    it.skip('should raise a warning if trying to use an enterprise feature', () => {
+    it.todo('should raise a warning if trying to use an enterprise feature', () => {
       expect(() => {
         render(
           <div style={{ width: 150, height: 300 }}>
@@ -937,9 +937,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       }).toErrorDev('MUI X: `<DataGrid pagination={false} />` is not a valid prop.');
     });
 
-    // can't catch render errors in the browser for unknown reason
-    // tried try-catch + error boundary + window onError preventDefault
-    it.skipIf(!isJSDOM)('should throw if the rows has no id', () => {
+    it('should throw if the rows has no id', () => {
       const rows = [
         {
           brand: 'Nike',
@@ -956,7 +954,8 @@ describe('<DataGrid /> - Layout & warnings', () => {
       }).toErrorDev([
         reactMajor >= 19 &&
           'The Data Grid component requires all rows to have a unique `id` property',
-        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid2)> component',
+        // `ForwardRef(DataGrid)` on newer `@vitejs/plugin-react`, `ForwardRef(DataGrid2)` on older ones.
+        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(
@@ -974,7 +973,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>
         </ThemeProvider>,
       );
-      expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
+      expect(document.querySelector('[aria-label="Ordenar"]')).not.to.equal(null);
     });
 
     it('should allow to change localeText on the fly', () => {
@@ -997,7 +996,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   describe('non-strict mode', () => {
     const { render: innerRender } = createRenderer({ strict: false });
 
-    it.skipIf(!isJSDOM)('should render in JSDOM', () => {
+    it('should render in JSDOM', () => {
       innerRender(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} />

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RadarGridStripeRenderProps } from './RadarGrid.types';
+import { type RadarGridStripeRenderProps } from './RadarGrid.types';
 
 const getPath = (
   center: RadarGridStripeRenderProps['center'],
@@ -36,7 +36,7 @@ export function CircularRadarStripes(props: RadarGridStripeRenderProps) {
             fillRule="evenodd"
             fill={stripeColor?.(index) ?? 'none'}
             fillOpacity={0.1}
-            className={classes?.stripe}
+            className={classes?.gridStripe}
           />
         );
       })}

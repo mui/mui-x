@@ -32,17 +32,21 @@ const OutlineRoot = styled('fieldset', {
     overflow: 'hidden',
     minWidth: '0%',
     borderColor: theme.vars
-      ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.23)`
+      ? theme.alpha(theme.vars.palette.common.onBackground, 0.23)
       : borderColor,
   };
 });
 
-const OutlineLabel = styled('span')(({ theme }) => ({
+const OutlineLabel = styled('span', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
 }));
 
 const OutlineLegend = styled('legend', {
+  slot: 'internal',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'notched',
 })<{ ownerState: PickerTextFieldOwnerState; notched: boolean }>(({ theme }) => ({
   float: 'unset', // Fix conflict with bootstrap

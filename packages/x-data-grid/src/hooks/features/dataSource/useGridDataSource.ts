@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridRegisterStrategyProcessor } from '../../core/strategyProcessing/useGridRegisterStrategyProcessor';
 import { useGridEvent as addEventHandler } from '../../utils/useGridEvent';

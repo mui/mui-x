@@ -1,21 +1,21 @@
 'use client';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import { ChartsAxisProps } from '../ChartsAxis';
-import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsClipPathProps } from '../ChartsClipPath';
-import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsLegendSlotExtension } from '../ChartsLegend';
-import { ChartsOverlayProps } from '../ChartsOverlay';
+import { type ChartsAxisProps } from '../ChartsAxis';
+import { type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { type ChartsClipPathProps } from '../ChartsClipPath';
+import { type ChartsGridProps } from '../ChartsGrid';
+import { type ChartsLegendSlotExtension } from '../ChartsLegend';
+import { type ChartsOverlayProps } from '../ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { ChartContainerProps } from '../ChartContainer';
-import { AreaPlotProps } from './AreaPlot';
+import { type ChartsContainerProps } from '../ChartsContainer';
+import { type AreaPlotProps } from './AreaPlot';
 import type { LineChartProps } from './LineChart';
-import { LineHighlightPlotProps } from './LineHighlightPlot';
-import { LinePlotProps } from './LinePlot';
-import { MarkPlotProps } from './MarkPlot';
+import { type LineHighlightPlotProps } from './LineHighlightPlot';
+import { type LinePlotProps } from './LinePlot';
+import { type MarkPlotProps } from './MarkPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import { LINE_CHART_PLUGINS, LineChartPluginSignatures } from './LineChart.plugins';
+import { LINE_CHART_PLUGINS, type LineChartPluginSignatures } from './LineChart.plugins';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -67,7 +67,7 @@ export const useLineChartProps = (props: LineChartProps) => {
       })),
     [disableLineItemHighlight, series],
   );
-  const chartContainerProps: ChartContainerProps<'line', LineChartPluginSignatures> = {
+  const chartsContainerProps: ChartsContainerProps<'line', LineChartPluginSignatures> = {
     ...other,
     series: seriesWithDefault,
     width,
@@ -92,7 +92,6 @@ export const useLineChartProps = (props: LineChartProps) => {
       slotProps?.tooltip?.trigger !== 'axis' &&
       axisHighlight?.x === 'none' &&
       axisHighlight?.y === 'none',
-    className,
     skipAnimation,
     brushConfig,
     plugins: LINE_CHART_PLUGINS,
@@ -161,11 +160,12 @@ export const useLineChartProps = (props: LineChartProps) => {
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
     hideLegend: props.hideLegend ?? false,
+    className,
   };
 
   return {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,

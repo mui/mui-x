@@ -273,7 +273,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
         }
 
         default:
-          throw new Error('not supported');
+          throw /* minify-error-disabled */ new Error('not supported');
       }
     },
     [
@@ -388,7 +388,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
         }
 
         default:
-          throw new Error(`Unknown view: ${viewToBuild} found.`);
+          throw new Error(
+            `MUI X Date Pickers: Unknown view "${viewToBuild}" found in MultiSectionDigitalClock. ` +
+              'This view is not supported by the component. ' +
+              'Use valid view values: "hours", "minutes", "seconds", or "meridiem".',
+          );
       }
     },
     [

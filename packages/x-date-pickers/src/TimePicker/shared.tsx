@@ -38,8 +38,7 @@ export type TimePickerViewRenderers<TView extends TimeViewWithMeridiem> = Picker
 >;
 
 export interface BaseTimePickerProps<TView extends TimeViewWithMeridiem>
-  extends BasePickerInputProps<PickerValue, TView, TimeValidationError>,
-    ExportedBaseClockProps {
+  extends BasePickerInputProps<PickerValue, TView, TimeValidationError>, ExportedBaseClockProps {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default true on desktop, false on mobile

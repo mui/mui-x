@@ -27,10 +27,10 @@ module.exports = function getBabelConfig(api) {
   const useESModules = api.env(['stable', 'rollup']);
 
   return {
-    only: [/node_modules\/(d3-.*|internmap)\/.*\.js/],
+    only: [/node_modules\/(d3-.*|internmap|flatqueue)\/.*\.js/],
     plugins: [
       [
-        '@babel/transform-modules-commonjs',
+        '@babel/plugin-transform-modules-commonjs',
         {
           strict: false,
           allowTopLevelThis: true,
@@ -42,7 +42,7 @@ module.exports = function getBabelConfig(api) {
           // Convert all imports for _other_ d3 dependencies to the relative
           // path in our vendor package.
           resolvePath(sourcePath, currentFile) {
-            const d3pattern = /^(?<pkg>(d3-[^\/]+|internmap))(?<path>.*)/;
+            const d3pattern = /^(?<pkg>(d3-[^\/]+|internmap|flatqueue))(?<path>.*)/;
             const match = d3pattern.exec(sourcePath);
             if (match) {
               // We're assuming a common shape of d3 packages:
@@ -52,21 +52,23 @@ module.exports = function getBabelConfig(api) {
                 throw new Error(`Unable to process ${sourcePath} import in ${currentFile}`);
               }
 
-              // Get Vendor package path.
-              const vendorPkg = path.resolve(
-                __dirname,
-                `./lib-vendor/${match.groups.pkg}/src/index.js`,
-              );
+              // Get Vendor package path (just the package structure, no lib-vendor prefix).
+              const vendorPkg = `${match.groups.pkg}/src/index.js`;
 
               // Derive relative path to vendor lib to have a file like move from:
               // - 'node_modules/d3-interpolate/src/rgb.js'
-              // - 'lib-vendor/d3-interpolate/src/rgb.js'
+              // - 'd3-interpolate/src/rgb.js'
               // and have an import transform like:
               // - `d3-color` (d3 color is imported by d3-interpolate)
-              // - `../../d3-color`
-              const currentFileVendor = currentFile.replace(/^node_modules/, 'lib-vendor');
+              // - `../../d3-color/src/index.js`
+              // Extract just the package-relative path from the full file path
+              const nodeModulesIndex = currentFile.indexOf('node_modules/');
+              const relativePath =
+                nodeModulesIndex !== -1
+                  ? currentFile.slice(nodeModulesIndex + 'node_modules/'.length)
+                  : currentFile;
               const relPathToPkg = path
-                .relative(path.dirname(currentFileVendor), vendorPkg)
+                .relative(path.dirname(relativePath), vendorPkg)
                 .replace(/\\/g, '/');
 
               return relPathToPkg;

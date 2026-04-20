@@ -8,7 +8,6 @@ import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   PickerAnyManager,
-  PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerError,
   PickerRangeValue,
   PickerValue,
@@ -33,13 +32,8 @@ export function useTextFieldProps<
   TForwardedProps extends UseTextFieldBaseForwardedProps,
 >(
   parameters: UseTextFieldPropsParameters<TManager, TForwardedProps>,
-): UseMultiInputRangeFieldTextFieldProps<
-  PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
-  TForwardedProps
-> {
+): UseMultiInputRangeFieldTextFieldProps<TForwardedProps> {
   type TError = PickerManagerError<TManager>;
-  type TEnableAccessibleFieldDOMStructure =
-    PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
 
   const pickerContext = useNullablePickerContext();
   const fieldPrivateContext = useNullableFieldPrivateContext();
@@ -62,11 +56,7 @@ export function useTextFieldProps<
     validation,
   } = parameters;
 
-  let useManager: ({
-    enableAccessibleFieldDOMStructure,
-  }: {
-    enableAccessibleFieldDOMStructure: boolean | undefined;
-  }) => PickerAnyManager;
+  let useManager: () => PickerAnyManager;
   switch (valueType) {
     case 'date': {
       useManager = useDateManager;
@@ -81,13 +71,11 @@ export function useTextFieldProps<
       break;
     }
     default: {
-      throw new Error(`Unknown valueType: ${valueType}`);
+      throw new Error(`MUI X: Unknown valueType: ${valueType}`);
     }
   }
 
-  const manager = useManager({
-    enableAccessibleFieldDOMStructure: sharedInternalProps.enableAccessibleFieldDOMStructure,
-  });
+  const manager = useManager();
 
   const openPickerIfPossible = (event: React.UIEvent) => {
     if (!pickerContext) {
@@ -155,16 +143,16 @@ export function useTextFieldProps<
     manager,
     props: allProps,
     skipContextFieldRefAssignment: rangePosition !== position,
-  }) as unknown as UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, typeof allProps>;
+  }) as unknown as UseFieldReturnValue<typeof allProps>;
 
   React.useEffect(() => {
     if (!pickerContext?.open || pickerContext?.variant === 'mobile') {
       return;
     }
 
-    fieldPrivateContext?.fieldRef.current?.focusField();
+    fieldPrivateContext?.fieldRef?.current?.focusField();
     if (
-      !fieldPrivateContext?.fieldRef.current ||
+      !fieldPrivateContext?.fieldRef?.current ||
       pickerContext.view === pickerContext.initialView
     ) {
       // could happen when the user is switching between the inputs
@@ -213,18 +201,7 @@ export interface UseTextFieldBaseForwardedProps {
   [key: string]: any;
 }
 
-interface UseTextFieldSharedInternalProps<TManager extends PickerAnyRangeManager>
-  extends Pick<
-    UseFieldInternalProps<
-      PickerValue,
-      PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
-      PickerManagerError<TManager>
-    >,
-    | 'enableAccessibleFieldDOMStructure'
-    | 'disabled'
-    | 'readOnly'
-    | 'timezone'
-    | 'format'
-    | 'formatDensity'
-    | 'shouldRespectLeadingZeros'
-  > {}
+interface UseTextFieldSharedInternalProps<TManager extends PickerAnyRangeManager> extends Pick<
+  UseFieldInternalProps<PickerValue, PickerManagerError<TManager>>,
+  'disabled' | 'readOnly' | 'timezone' | 'format' | 'formatDensity' | 'shouldRespectLeadingZeros'
+> {}

@@ -1,15 +1,15 @@
 import {
-  UseChartSeriesSignature,
-  ChartPluginSignature,
-  UseChartCartesianAxisSignature,
-  UseChartCartesianAxisDefaultizedParameters,
-  ZoomData,
-  AxisId,
+  type UseChartSeriesSignature,
+  type ChartPluginSignature,
+  type UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisDefaultizedParameters,
+  type ZoomData,
+  type AxisId,
   type UseChartBrushSignature,
 } from '@mui/x-charts/internals';
 import {
-  ZoomInteractionConfig,
-  DefaultizedZoomInteractionConfig,
+  type ZoomInteractionConfig,
+  type DefaultizedZoomInteractionConfig,
 } from './ZoomInteractionConfig.types';
 
 export interface UseChartProZoomParameters {
@@ -56,6 +56,11 @@ export interface UseChartProZoomState {
      * Configuration for zoom interactions.
      */
     zoomInteractionConfig: DefaultizedZoomInteractionConfig;
+    /**
+     * The key of the currently active range button, or `null` if no range button is active.
+     * Cleared when the user manually zooms or pans the chart.
+     */
+    activeRangeButtonKey: string | null;
   };
 }
 
@@ -90,6 +95,11 @@ export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {
    * Zoom out the chart.
    */
   zoomOut: () => void;
+  /**
+   * Set the active range button key. Pass `null` to clear.
+   * @param {string | null} key The key of the active range button.
+   */
+  setActiveRangeButtonKey: (key: string | null) => void;
 }
 
 export type UseChartProZoomSignature = ChartPluginSignature<{

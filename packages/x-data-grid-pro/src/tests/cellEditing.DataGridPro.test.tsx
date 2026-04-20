@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  GridApi,
-  DataGridProProps,
+  type GridApi,
+  type DataGridProProps,
   useGridApiRef,
   DataGridPro,
-  GridRenderEditCellParams,
-  GridValueSetter,
-  GridPreProcessEditCellProps,
+  type GridRenderEditCellParams,
+  type GridValueSetter,
+  type GridPreProcessEditCellProps,
   GridCellModes,
-  GridColDef,
+  type GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
@@ -60,7 +60,9 @@ describe('<DataGridPro /> - Cell editing', () => {
         await act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(() => {
           apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' });
-        }).to.throw('MUI X: The cell with id=0 and field=currencyPair is not in view mode.');
+        }).to.throw(
+          'MUI X Data Grid: The cell with id=0 and field=currencyPair is not in view mode. The operation requires the cell to be in a specific editing mode. Ensure the cell is in view mode before performing this operation.',
+        );
       });
 
       it('should update the CSS class of the cell', () => {
@@ -384,7 +386,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       it('should throw an error when the cell is not in edit mode', () => {
         render(<TestCase />);
         expect(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' })).to.throw(
-          'MUI X: The cell with id=0 and field=currencyPair is not in edit mode.',
+          'MUI X Data Grid: The cell with id=0 and field=currencyPair is not in edit mode. The operation requires the cell to be in a specific editing mode. Ensure the cell is in edit mode before performing this operation.',
         );
       });
 
@@ -863,6 +865,19 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStartCellEditMode.callCount).to.equal(1);
+      });
+
+      it('should prevent the default behavior to avoid the key affecting the edit component', () => {
+        const handleKeyDown = spy((event: React.KeyboardEvent) => event.defaultPrevented);
+        render(
+          <div onKeyDown={handleKeyDown}>
+            <TestCase />
+          </div>,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'Enter' });
+        expect(handleKeyDown.returnValues).to.deep.equal([true]);
       });
     });
 

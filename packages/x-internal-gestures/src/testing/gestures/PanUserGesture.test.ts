@@ -1,4 +1,3 @@
-import { server } from 'vitest/browser';
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { PointerManager } from '../PointerManager';
 import { pan } from './PanUserGesture';
@@ -36,7 +35,7 @@ describe('PanUserGesture', () => {
   it('should throw an error if no target is provided', async () => {
     // @ts-expect-error, testing a missing target
     const panGesture = () => pan(pointerManager, { distance: 50 });
-    await expect(panGesture).rejects.toThrow('Target element is required for pan gesture');
+    await expect(panGesture).rejects.toThrow('MUI X: Target element is required for pan gesture');
   });
 
   it('should perform a pan gesture', async () => {
@@ -108,12 +107,10 @@ describe('PanUserGesture', () => {
     expect(down.mock.lastCall?.[0].x).toBeCloseTo(50);
     expect(down.mock.lastCall?.[0].y).toBeCloseTo(50);
     // 50 * cos(45) = ~35.36
-    // Webkit does not support fractional pixels
-    const isWebkit = server.browser === 'webkit';
-    expect(move.mock.lastCall?.[0].x).toBeCloseTo(isWebkit ? 85 : 85.36);
-    expect(move.mock.lastCall?.[0].y).toBeCloseTo(isWebkit ? 85 : 85.36);
-    expect(up.mock.lastCall?.[0].x).toBeCloseTo(isWebkit ? 85 : 85.36);
-    expect(up.mock.lastCall?.[0].y).toBeCloseTo(isWebkit ? 85 : 85.36);
+    expect(move.mock.lastCall?.[0].x).toBeCloseTo(85.36);
+    expect(move.mock.lastCall?.[0].y).toBeCloseTo(85.36);
+    expect(up.mock.lastCall?.[0].x).toBeCloseTo(85.36);
+    expect(up.mock.lastCall?.[0].y).toBeCloseTo(85.36);
   });
 
   it('should perform a pan gesture using a custom starting point', async () => {

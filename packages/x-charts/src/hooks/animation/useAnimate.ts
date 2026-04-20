@@ -1,6 +1,6 @@
 'use client';
 import useForkRef from '@mui/utils/useForkRef';
-import * as React from 'react';
+import type * as React from 'react';
 import { useAnimateInternal } from '../../internals/animation/useAnimateInternal';
 
 export interface UseAnimateParams<Props extends {}, Elem extends Element, T extends {} = Props> {

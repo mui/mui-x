@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
+import { type GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
 import { gridChartsPanelOpenSelector } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
@@ -15,7 +15,7 @@ export function GridColumnMenuChartsItem(props: GridColumnMenuItemProps) {
     apiRef.current.setChartsPanelOpen(true);
   };
 
-  if (!rootProps.experimentalFeatures?.charts || !rootProps.chartsIntegration) {
+  if (!rootProps.chartsIntegration) {
     return null;
   }
 

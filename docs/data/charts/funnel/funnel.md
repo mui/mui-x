@@ -1,65 +1,76 @@
 ---
 title: React Funnel chart
 productId: x-charts
-components: FunnelChart, FunnelPlot
+components: FunnelChart, FunnelPlot, FocusedFunnelSection
 ---
 
 # Charts - Funnel [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Funnel charts let you express quantity evolution along a process, such as audience engagement, population education levels, or yields of multiple processes.</p>
+<p class="description">Use funnel charts to show how quantities change through sequential steps, such as conversion or engagement stages.</p>
 
-## Basics
+## Overview
 
-Funnel charts series must contain a `data` property containing an array of objects.
-Each object corresponds to a section of the funnel.
-It must contain a property `value` and can have other optional properties, like `label` and `id`.
+A funnel chart shows how a quantity narrows or grows through sequential steps.
+Use it for flows like audience engagement, education levels, or conversion pipelines.
+
+The demo below shows a simple funnel with four decreasing values.
 
 {{"demo": "BasicFunnel.js"}}
 
-### Display legends
+## Basics
 
-The funnel chart displays a legend by default.
-The only requirement is to provide a `label` value in the data objects.
+A funnel chart series must include a `data` property with an array of objects.
+Each object is one section and must have a `value` property.
+You can add optional properties such as `label` and `id`.
 
-To hide the legend, set the `hideLegend` prop to `true`.
+### Legend
+
+The funnel shows a legend by default.
+Provide a `label` in each data object for the legend text.
+
+Set `hideLegend` to `true` to hide the legend.
 
 {{"demo": "FunnelLegend.js"}}
 
-## Pyramid Chart
+## Pyramid chart
 
-The pyramid chart is a variation of the funnel chart.
+A pyramid chart is a funnel with an inverted profile.
 
-To create a pyramid chart, set the `curve` property to `pyramid` in the series.
+Set the `curve` property to `'pyramid'` on the series.
 
 {{"demo": "PyramidFunnel.js"}}
 
 ## Labels
 
-The funnel chart displays labels by default.
-It shows the `value` of the data item in each section.
-To format the labels, a `valueFormatter` function can be provided.
+The funnel shows labels by default (each section's `value`).
+Use the `valueFormatter` prop to format them.
 
 {{"demo": "FunnelLabels.js"}}
 
 ### Styling labels
 
-The labels can be styled by using the `funnelSectionClasses.label` helper.
+Use the `funnelSectionClasses.label` class to style labels.
 
 {{"demo": "FunnelLabelStyling.js"}}
 
 ### Positioning labels
 
-The labels can be positioned relative to the section they represent.
-The `sectionLabel` property accepts an object with the following properties:
+The `sectionLabel` property controls label position.
+It accepts an object with:
 
-- `position.vertical`: The vertical position of the label. It can be `top`, `center` or `bottom`.
-- `position.horizontal`: The horizontal position of the label. It can be `start`, `middle` or `end`.
-- `margin`: The margin between the label and the section.
-- `dominantBaseline`: The vertical alignment of the text. It can be `auto`, `baseline`, `text-before-edge`, `text-after-edge`, `central`, `hanging`, or `middle`.
-- `textAnchor`: The horizontal alignment of the text. It can be `start`, `middle` or `end`.
+- `position.vertical`: `'top'`, `'middle'`, or `'bottom'`
+- `position.horizontal`: `'start'`, `'center'`, or `'end'`
+- `offset`: space between the label and the section anchor. Pass a number for both axes, or `{ x?, y? }`.
 
-The `sectionLabel` property can be set to `false` to hide the labels.
-It also accepts a function that receives the data object and should return the label configuration.
+`textAnchor` and `dominantBaseline` are forwarded to the SVG `text` element.
+They behave like the SVG attributes of the same names, not like CSS properties, and the funnel chart only accepts the values below.
+See [text-anchor](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor) and [dominant-baseline](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/dominant-baseline) on MDN for what each keyword does.
+
+- `textAnchor`: `'start'`, `'middle'`, or `'end'`
+- `dominantBaseline`: `'auto'`, `'baseline'`, `'hanging'`, `'middle'`, `'central'`, `'text-after-edge'`, or `'text-before-edge'`
+
+Set `sectionLabel` to `false` to hide labels.
+You can also pass a function that receives the data object and returns the label config.
 
 {{"demo": "FunnelLabelPositioning.js"}}
 
@@ -67,101 +78,94 @@ It also accepts a function that receives the data object and should return the l
 
 ### Curve interpolation
 
-The interpolation between data points can be customized by the `curve` property.
-This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'linear-sharp'`, `'bump'`, `'pyramid'`, `'step'` and `'step-pyramid'`.
-
-This series property adds the option to control the interpolation of a series.
+Use the `curve` property to choose the shape between sections.
+It accepts `'linear'`, `'linear-sharp'`, `'bump'`, `'pyramid'`, `'step'`, or `'step-pyramid'`.
 
 {{"demo": "FunnelCurves.js"}}
 
 ### Gap
 
-The gap between the sections can be customized by the `gap` property.
-It accepts a number that represents the gap in pixels.
+Use the `gap` property to set the space between sections (in pixels).
 
 {{"demo": "FunnelGap.js"}}
 
 ### Border radius
 
-The border radius of the sections can be customized by the `borderRadius` property.
-It accepts a number that represents the radius in pixels.
+Use the `borderRadius` property to round section corners (in pixels).
 
-- The `bump` curve interpolation will not respect the border radius.
-- The `linear`, `linear-sharp` and `pyramid` curves respect the border radius to some extent due to the angle of the sections.
-- The `step` and `step-pyramid` curves respect the border radius.
+The `bump` curve ignores border radius.
+The `linear`, `linear-sharp`, and `pyramid` curves respect it partly, depending on section angles.
+The `step` and `step-pyramid` curves respect it fully.
 
-To understand how the border radius interacts with the `curve` prop, see the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
+See [Curve interpolation](#curve-interpolation) for how `curve` and `borderRadius` interact.
 
-The `borderRadius` property will also behave differently depending on whether the `gap` property is greater than 0.
-
-- If the `gap` is 0, the border radius will be applied to the corners of the sections that are not connected to another section.
-- If the `gap` is greater than 0, the border radius will be applied to all the corners of the sections.
+If `gap` is 0, radius applies only to corners not connected to another section.
+If `gap` is greater than 0, radius applies to all corners.
 
 {{"demo": "FunnelBorderRadius.js"}}
 
 ### Variant
 
-The funnel sections can be displayed in two different styles using the `variant` property:
+Use the `variant` property to switch between styles:
 
-- `'filled'` (default): Sections have a solid fill and no stroke.
-- `'outlined'`: Sections have a translucent fill with a colored stroke around them.
+- `'filled'` (default): solid fill, no stroke
+- `'outlined'`: translucent fill with a colored stroke
 
-The `outlined` variant creates a more lightweight visual style.
+The `outlined` variant is lighter visually.
 
 {{"demo": "FunnelVariant.js"}}
 
 ### Colors
 
-The funnel colors can be customized in two ways.
+You can customize funnel colors in two ways:
 
-1. You can provide a [color palette](/x/react-charts/styling/#color-palette). Each section of the funnel will be colored according to this palette.
-2. You can provide a `color` property in `data` objects, which overrides the palette.
+1. Pass a [color palette](/x/react-charts/styling/#built-in-color-palettes). Each section uses a color from the palette.
+2. Set a `color` property on each data object to override the palette for that section.
 
 {{"demo": "FunnelColor.js"}}
 
 ### CSS
 
-The funnel chart can be styled using CSS.
-
-Each section group has a `data-series` attribute that can be used to target specific series sections.
-
-In order to target specific sections, you can use the `:nth-child` or `:nth-child-of-type` selectors as shown in the example below.
+You can style the funnel with CSS.
+Each section group has a `data-series` attribute for targeting.
+Use `:nth-child` or `:nth-of-type` to target specific sections, as in the demo below.
 
 {{"demo": "FunnelDataAttributes.js"}}
 
 ## Multiple funnels
 
-By default, multiple series are displayed on top of each other.
-
-Simply provide multiple series to the funnel chart and make sure that they have different colors or styles to differentiate them.
-
-The order of the series determines the display order.
-The first series is at the bottom and the last is at the top.
+By default, multiple series are stacked.
+Pass multiple series and use different colors or styles to tell them apart.
+The first series is at the bottom, the last at the top.
 
 {{"demo": "FunnelStacked.js"}}
 
 ## Highlight
 
-The hovered element can be highlighted by setting `highlightScope.highlight` property to one of the possible values.
-
-To fade elements which are not hovered, set the `highlightScope.fade` property.
+Set `highlightScope.highlight` to `'item'` to highlight the hovered section.
+Set `highlightScope.fade` to `'global'` to fade the other sections.
 
 {{"demo": "HighlightFunnel.js"}}
 
 ## Category axis
 
-The funnel chart uses a category axis as the default axis.
-This axis always follows the orientation of the chart.
+The funnel uses a category axis that follows the chart orientation.
+By default, the axis is hidden.
 
-The funnel chart does not display an axis by default.
-To display a category axis, pass a `position` and a list of `categories` to the `categoryAxis` props.
+To show it, pass `position` and `categories` to the `categoryAxis` prop.
 
 {{"demo": "FunnelCategoryAxis.js"}}
 
 ### Scaled sections
 
-By default, the sections have the same size because they use the `band` scale type.
-A linear scale is also available, and scales the sections based on their values.
-To do so, set the `scaleType` property to `linear` in the `categoryAxis`.
+By default, sections use the `band` scale (equal width).
+Set `scaleType` to `'linear'` in the `categoryAxis` configuration to scale section width by value.
 
 {{"demo": "FunnelLinearScale.js"}}
+
+### Auto-sizing axis
+
+You can set the axis `size` to `'auto'` to automatically calculate the axis dimension based on tick label measurements.
+This is useful when your tick labels have varying lengths.
+
+{{"demo": "FunnelAxisAutoSize.js"}}

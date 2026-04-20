@@ -3,7 +3,7 @@ import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-picke
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   getFieldSectionsContainer,
   openPicker,
@@ -39,13 +39,13 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
       const expectedStartValueStr = expectedValues[0]
         ? adapterToUse.format(expectedValues[0], hasMeridiem ? 'fullTime12h' : 'fullTime24h')
         : expectedPlaceholder;
-      expectFieldValueV7(startSectionsContainer, expectedStartValueStr);
+      expectFieldValue(startSectionsContainer, expectedStartValueStr);
 
       const endSectionsContainer = getFieldSectionsContainer(1);
       const expectedEndValueStr = expectedValues[1]
         ? adapterToUse.format(expectedValues[1], hasMeridiem ? 'fullTime12h' : 'fullTime24h')
         : expectedPlaceholder;
-      expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
+      expectFieldValue(endSectionsContainer, expectedEndValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
@@ -84,7 +84,7 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
       }
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       } else {
         const toolbarHourButtons = screen.getAllByRole('button', {

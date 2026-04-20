@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const faIRGrid: Partial<GridLocaleText> = {
   // Root
@@ -16,6 +16,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'استاندارد',
   toolbarDensityComfortable: 'راحت',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'واگرد',
+  toolbarRedo: 'ازنو',
+
   // Columns selector toolbar button text
   toolbarColumns: 'ستون‌ها',
   toolbarColumnsLabel: 'ستون‌ها را انتخاب کنید',
@@ -29,7 +33,7 @@ const faIRGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} فیلترهای فعال` : `${count} فیلتر فعال`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'جستجو...',
+  toolbarQuickFilterPlaceholder: 'جستجو…',
   toolbarQuickFilterLabel: 'جستجو',
   toolbarQuickFilterDeleteIconLabel: 'حذف',
 
@@ -64,7 +68,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'عملگرها',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'یا',
-  filterPanelColumns: 'ستون‌ها',
+  filterPanelColumn: 'ستون‌ها',
   filterPanelInputLabel: 'مقدار',
   filterPanelInputPlaceholder: 'فیلتر مقدار',
 
@@ -163,6 +167,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'صحیح',
   booleanCellFalseLabel: 'غلط',
 
+  // Long text cell
+  longTextCellExpandLabel: 'بازکردن پنل جزئیات',
+  longTextCellCollapseLabel: 'بستن پنل جزئیات',
+
   // Actions cell more text
   actionsCellMore: 'بیشتر',
 
@@ -194,11 +202,12 @@ const faIRGrid: Partial<GridLocaleText> = {
   //   count,
   //   estimated
   // }) => {
+  //   const unknownRowCount = count == null || count === -1;
   //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
   //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
+  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   // },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

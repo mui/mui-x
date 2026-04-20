@@ -1,5 +1,5 @@
 import { act, createRenderer } from '@mui/internal-test-utils';
-import { DataGridPremium, DataGridPremiumProps } from '@mui/x-data-grid-premium';
+import { DataGridPremium, type DataGridPremiumProps } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Row spanning', () => {
@@ -106,7 +106,7 @@ describe('<DataGridPremium /> - Row spanning', () => {
   }
 
   // See https://github.com/mui/mui-x/issues/14691
-  it.skipIf(isJSDOM)('should not throw when initializing an aggregation model', async () => {
+  it('should not throw when initializing an aggregation model', async () => {
     expect(() =>
       render(
         <TestDataGrid

@@ -1,4 +1,4 @@
-import { findMinMax, TooltipItemPositionGetter } from '@mui/x-charts/internals';
+import { findMinMax, type TooltipItemPositionGetter } from '@mui/x-charts/internals';
 import { createPositionGetter } from '../coordinateMapper';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'funnel'> = (params) => {
@@ -24,26 +24,24 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'funnel'> = (params) 
   // Maybe moving it to the series would be a good idea similar to what we do with bar charts and their stackingGroups
   const gap = 0;
 
-  const xPosition = createPositionGetter(axesConfig.x.scale, isHorizontal, gap);
-  const yPosition = createPositionGetter(axesConfig.y.scale, !isHorizontal, gap);
+  const xPosition = createPositionGetter(
+    axesConfig.x.scale,
+    isHorizontal,
+    gap,
+    baseScaleConfig.data,
+  );
+  const yPosition = createPositionGetter(
+    axesConfig.y.scale,
+    !isHorizontal,
+    gap,
+    baseScaleConfig.data,
+  );
 
   const allY = itemSeries.dataPoints[identifier.dataIndex].map((v) =>
-    yPosition(
-      v.y,
-      identifier.dataIndex,
-      baseScaleConfig.data?.[identifier.dataIndex],
-      v.stackOffset,
-      v.useBandWidth,
-    ),
+    yPosition(v.y, identifier.dataIndex, v.stackOffset, v.useBandWidth),
   );
   const allX = itemSeries.dataPoints[identifier.dataIndex].map((v) =>
-    xPosition(
-      v.x,
-      identifier.dataIndex,
-      baseScaleConfig.data?.[identifier.dataIndex],
-      v.stackOffset,
-      v.useBandWidth,
-    ),
+    xPosition(v.x, identifier.dataIndex, v.stackOffset, v.useBandWidth),
   );
 
   const [x0, x1] = findMinMax(allX);

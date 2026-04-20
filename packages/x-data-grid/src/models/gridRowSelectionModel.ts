@@ -1,4 +1,4 @@
-import { GridRowId } from './gridRows';
+import type { GridRowId } from './gridRows';
 
 export type GridRowSelectionPropagation = {
   descendants?: boolean;

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx, { ClassValue } from 'clsx';
+import clsx, { type ClassValue } from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import ownerDocument from '@mui/utils/ownerDocument';
@@ -15,15 +15,15 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
-  GridCellEventLookup,
-  GridEvents,
+  type GridCellEventLookup,
+  type GridEvents,
   GridCellModes,
-  GridRowId,
-  GridEditCellProps,
+  type GridRowId,
+  type GridEditCellProps,
 } from '../../models';
-import { GridRenderEditCellParams, GridCellParams } from '../../models/params/gridCellParams';
-import { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
-import { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
+import type { GridRenderEditCellParams, GridCellParams } from '../../models/params/gridCellParams';
+import type { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
+import type { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
@@ -34,6 +34,7 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { PinnedColumnPosition } from '../../internals/constants';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { usePinnedScrollOffset } from '../../hooks/utils/usePinnedScrollOffset';
 import { gridEditCellStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import { attachPinnedStyle } from '../../internals/utils';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
@@ -312,6 +313,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const isCellRowSpanned = hiddenCells[rowId]?.[colIndex] ?? false;
   const rowSpan = spannedCells[rowId]?.[colIndex] ?? 1;
 
+  const pinnedScrollOffset = usePinnedScrollOffset(apiRef, pinnedPosition);
+
   const style = React.useMemo(() => {
     if (isNotVisible) {
       return {
@@ -330,7 +333,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       } as React.CSSProperties,
       isRtl,
       pinnedPosition,
-      pinnedOffset,
+      pinnedOffset !== undefined ? pinnedOffset + pinnedScrollOffset : undefined,
     );
 
     const isLeftPinned = pinnedPosition === PinnedColumnPosition.LEFT;
@@ -346,7 +349,16 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     }
 
     return cellStyle;
-  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition, isRtl, rowSpan]);
+  }, [
+    width,
+    isNotVisible,
+    styleProp,
+    pinnedOffset,
+    pinnedPosition,
+    pinnedScrollOffset,
+    isRtl,
+    rowSpan,
+  ]);
 
   useEnhancedEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {

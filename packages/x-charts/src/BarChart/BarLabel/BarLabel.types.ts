@@ -1,5 +1,6 @@
-import { SeriesId } from '../../models/seriesType/common';
-import type { BarLabelClasses } from './barLabelClasses';
+import { type SeriesId } from '../../models/seriesType/common';
+import type { BarClasses } from '../barClasses';
+import { type BarValueType } from '../../models';
 
 export interface BarLabelOwnerState {
   seriesId: SeriesId;
@@ -9,7 +10,7 @@ export interface BarLabelOwnerState {
   isHighlighted: boolean;
   skipAnimation: boolean;
   layout: 'vertical' | 'horizontal';
-  classes?: Partial<BarLabelClasses>;
+  classes?: Partial<BarClasses>;
 }
 
 export type BarItem = {
@@ -24,7 +25,7 @@ export type BarItem = {
   /**
    * The value of the data point.
    */
-  value: number | null;
+  value: BarValueType | null;
 };
 
 export type BarLabelContext = {

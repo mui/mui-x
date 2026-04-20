@@ -1,4 +1,4 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { getRowValue } from './gridRowsUtils';
 import type { GridRenderContext } from '../../../models';
 import type { GridValidRowModel } from '../../../models/gridRows';

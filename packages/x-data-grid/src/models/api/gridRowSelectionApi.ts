@@ -1,6 +1,6 @@
 import type { GridRowId, GridRowModel } from '../gridRows';
 import type { GridRowSelectionModel } from '../gridRowSelectionModel';
-import { GridControlledStateReasonLookup } from '../events';
+import type { GridControlledStateReasonLookup } from '../events';
 
 /**
  * The selection API interface that is available in the grid [[apiRef]].

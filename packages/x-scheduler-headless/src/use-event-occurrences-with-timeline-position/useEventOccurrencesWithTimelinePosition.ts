@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { SchedulerEventOccurrence } from '../models';
-import { useAdapter } from '../use-adapter/useAdapter';
-import { Adapter } from '../use-adapter/useAdapter.types';
-import { sortEventOccurrences } from '../utils/event-utils';
+import { sortEventOccurrences } from '../sort-event-occurrences';
+import { SchedulerEventOccurrence, SchedulerEventOccurrencePlaceholder } from '../models';
+import { Adapter } from '../use-adapter';
+import { useAdapterContext } from '../use-adapter-context';
 
 /**
  * Places event occurrences for a timeline UI.
@@ -11,10 +11,10 @@ export function useEventOccurrencesWithTimelinePosition(
   parameters: useEventOccurrencesWithTimelinePosition.Parameters,
 ): useEventOccurrencesWithTimelinePosition.ReturnValue {
   const { occurrences, maxSpan } = parameters;
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
 
   return React.useMemo(() => {
-    const sortedOccurrences = sortEventOccurrences(occurrences, adapter);
+    const sortedOccurrences = sortEventOccurrences(occurrences);
     const conflicts = buildOccurrenceConflicts(adapter, sortedOccurrences);
 
     const { firstIndexLookup, maxIndex } = buildFirstIndexLookup(conflicts);
@@ -38,7 +38,7 @@ export namespace useEventOccurrencesWithTimelinePosition {
     /**
      * The occurrences without the position information
      */
-    occurrences: SchedulerEventOccurrence[];
+    occurrences: readonly SchedulerEventOccurrence[];
     /**
      * Maximum amount of columns an event can span across.
      */
@@ -59,6 +59,14 @@ export namespace useEventOccurrencesWithTimelinePosition {
   export interface EventOccurrenceWithPosition extends SchedulerEventOccurrence {
     position: EventOccurrencePosition;
   }
+
+  export interface EventOccurrencePlaceholderWithPosition extends SchedulerEventOccurrencePlaceholder {
+    position: EventOccurrencePosition;
+  }
+
+  export type EventRenderableOccurrenceWithPosition =
+    | EventOccurrenceWithPosition
+    | EventOccurrencePlaceholderWithPosition;
 
   export interface ReturnValue {
     /**
@@ -89,9 +97,8 @@ function buildOccurrenceConflicts(
   // Group occurrences in non-overlapping blocks to reduce the number of comparisons when looking for conflicts.
   // Computes the properties needed for each occurrence.
   for (const occurrence of occurrences) {
-    // TODO: Avoid JS Date conversion
-    const startTimestamp = occurrence.start.timestamp;
-    const endTimestamp = occurrence.end.timestamp;
+    const startTimestamp = occurrence.displayTimezone.start.timestamp;
+    const endTimestamp = occurrence.displayTimezone.end.timestamp;
     const occurrenceDurationMs = endTimestamp - startTimestamp;
 
     if (startTimestamp >= lastEndTimestamp) {

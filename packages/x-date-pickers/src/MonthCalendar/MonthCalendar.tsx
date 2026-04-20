@@ -214,7 +214,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, adapter],
   );
 
-  const handleMonthSelection = useEventCallback((event: React.MouseEvent, month: number) => {
+  const handleMonthSelection = useEventCallback((_event: React.UIEvent, month: number) => {
     if (readOnly) {
       return;
     }
@@ -223,7 +223,11 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       value && currentMonth && !adapter.isSameYear(value, currentMonth)
         ? adapter.setYear(value, adapter.getYear(currentMonth))
         : value;
-    const newDate = adapter.setMonth(currentValue ?? referenceDate, month);
+    // When no value is selected yet but a year was chosen (via YearCalendar),
+    // prefer using currentMonth (which carries the selected year) over the initial referenceDate.
+    // Fix for: https://github.com/mui/mui-x/issues/20624
+    const baseDateForMonth = currentValue ?? currentMonth ?? referenceDate;
+    const newDate = adapter.setMonth(baseDateForMonth, month);
     handleValueChange(newDate);
   });
 
@@ -265,7 +269,11 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
         break;
       case 'ArrowRight':
         focusMonth((monthsInYear + month + (isRtl ? -1 : 1)) % monthsInYear);
-
+        event.preventDefault();
+        break;
+      case 'Enter':
+      case ' ':
+        handleMonthSelection(event, month);
         event.preventDefault();
         break;
       default:

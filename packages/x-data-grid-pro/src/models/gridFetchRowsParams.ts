@@ -1,4 +1,4 @@
-import { GridFilterModel, GridSortModel } from '@mui/x-data-grid/models';
+import type { GridFilterModel, GridSortModel } from '@mui/x-data-grid/models';
 
 /**
  * Object passed as parameter to the [[onFetchRows]] option.

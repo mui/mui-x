@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store/useStore';
-import { SchedulerValidDate } from '../../models';
+import { useStore } from '@base-ui/utils/store/useStore';
+import { TemporalSupportedObject } from '../../models';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
-import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
-import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
+import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInDay(
-  day: SchedulerValidDate,
+  day: TemporalSupportedObject,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
-): useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition | null {
-  const adapter = useAdapter();
+  maxEvents?: number,
+): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
+  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
 
@@ -37,62 +38,82 @@ export function useCalendarGridPlaceholderInDay(
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
-      modelInBuiltInFormat: null,
+      id: originalEventId ?? 'occurrence-placeholder',
+      title: originalEvent ? originalEvent.title : '',
     };
 
     // Creation mode
     if (rawPlaceholder.type === 'creation') {
+      const startProcessed = processDate(day, adapter);
+      const endProcessed = processDate(
+        adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
+        adapter,
+      );
+      const timezone = adapter.getTimezone(day);
       return {
         ...sharedProperties,
-        id: 'occurrence-placeholder',
         title: '',
         allDay: true,
-        start: processDate(day, adapter),
-        end: processDate(
-          adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
-          adapter,
-        ),
+        displayTimezone: {
+          start: startProcessed,
+          end: endProcessed,
+          timezone,
+        },
         position: {
           index: 1,
-          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+          daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
       };
     }
 
     if (rawPlaceholder.type === 'external-drag') {
+      const startProcessed = processDate(rawPlaceholder.start, adapter);
+      const endProcessed = processDate(rawPlaceholder.end, adapter);
+      const timezone = adapter.getTimezone(rawPlaceholder.start);
+
       return {
         ...sharedProperties,
-        id: 'occurrence-placeholder',
         title: rawPlaceholder.eventData.title ?? '',
-        start: processDate(rawPlaceholder.start, adapter),
-        end: processDate(rawPlaceholder.end, adapter),
+        displayTimezone: {
+          start: startProcessed,
+          end: endProcessed,
+          timezone,
+        },
         position: {
           index: 1,
-          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+          daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
       };
     }
 
     let positionIndex = 1;
-    for (const rowDay of row.days) {
-      const found = rowDay.withPosition.find(
-        (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
+    const targetDay = row.days.find((rowDay) => adapter.isSameDay(rowDay.value, day));
+    if (targetDay) {
+      const usedIndexes = new Set(
+        targetDay.withPosition
+          .filter((occ) => occ.key !== rawPlaceholder.occurrenceKey)
+          .map((occ) => occ.position.index),
       );
-      if (found) {
-        positionIndex = found.position.index;
-        break;
+      while (usedIndexes.has(positionIndex)) {
+        positionIndex += 1;
       }
     }
 
+    // If the position exceeds the available event rows, clamp it so the
+    // placeholder renders on top of an existing event instead of overflowing.
+    if (maxEvents != null && positionIndex > maxEvents) {
+      positionIndex = maxEvents;
+    }
+
     return {
-      ...originalEvent!,
       ...sharedProperties,
       start: processDate(rawPlaceholder.start, adapter),
       end: processDate(rawPlaceholder.end, adapter),
+      displayTimezone: { ...originalEvent!.displayTimezone },
       position: {
         index: positionIndex,
-        daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+        daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
       },
     };
-  }, [adapter, day, originalEvent, rawPlaceholder, row.days, rowEnd]);
+  }, [adapter, day, maxEvents, originalEvent, originalEventId, rawPlaceholder, row.days, rowEnd]);
 }

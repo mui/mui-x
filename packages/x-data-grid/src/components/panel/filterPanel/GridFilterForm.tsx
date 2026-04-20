@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -13,12 +14,12 @@ import {
 } from '../../../hooks/features/columns/gridColumnsSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
-import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
+import { type GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
-import {
+import type {
   GridColDef,
   GridSingleSelectColDef,
   GridStateColDef,
@@ -519,7 +520,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
           size="small"
           labelId={columnSelectLabelId}
           id={columnSelectId}
-          label={apiRef.current.getLocaleText('filterPanelColumns')}
+          label={apiRef.current.getLocaleText('filterPanelColumn')}
           value={selectedField ?? ''}
           onChange={changeColumn}
           native={isBaseSelectNative}

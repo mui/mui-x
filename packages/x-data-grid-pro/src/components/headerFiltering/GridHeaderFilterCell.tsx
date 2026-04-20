@@ -8,17 +8,17 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import {
-  GridFilterItem,
-  GridFilterOperator,
-  GridHeaderFilterEventLookup,
-  GridColDef,
+  type GridFilterItem,
+  type GridFilterOperator,
+  type GridHeaderFilterEventLookup,
+  type GridColDef,
   gridVisibleColumnFieldsSelector,
   getDataGridUtilityClass,
   useGridSelector,
   GridFilterInputValue,
   GridFilterInputDate,
   GridFilterInputBoolean,
-  GridColType,
+  type GridColType,
   GridFilterInputSingleSelect,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
@@ -26,20 +26,21 @@ import {
 } from '@mui/x-data-grid';
 import {
   PinnedColumnPosition,
-  GridStateColDef,
-  GridFilterInputValueProps,
+  type GridStateColDef,
+  type GridFilterInputValueProps,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
   attachPinnedStyle,
+  usePinnedScrollOffset,
   vars,
 } from '@mui/x-data-grid/internals';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProProcessedProps } from '../../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
 
@@ -80,7 +81,7 @@ const StyledInputComponent = styled(GridFilterInputValue, {
   flex: 1,
   marginRight: vars.spacing(0.5),
   marginBottom: vars.spacing(-0.25),
-  '& input[type="number"], & input[type="date"], & input[type="datetime-local"]': {
+  '& input[type="date"], & input[type="datetime-local"]': {
     '&[value=""]:not(:focus)': {
       color: 'transparent',
     },
@@ -89,9 +90,9 @@ const StyledInputComponent = styled(GridFilterInputValue, {
     fontSize: '14px',
   },
   [`.${gridClasses['root--densityCompact']} & .${inputBaseClasses.input}`]: {
-    paddingTop: vars.spacing(0.5),
-    paddingBottom: vars.spacing(0.5),
-    height: 23,
+    paddingTop: vars.spacing(0.25),
+    paddingBottom: vars.spacing(0.25),
+    height: 20,
   },
 });
 
@@ -114,9 +115,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     root: [
       'columnHeader',
       'columnHeader--filter',
-      colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
-      colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
-      colDef.headerAlign === 'right' && 'columnHeader--alignRight',
+      colDef.headerAlign && `columnHeader--align${capitalize(colDef.headerAlign)}`,
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',
@@ -141,6 +140,7 @@ const DEFAULT_INPUT_COMPONENTS: {
   singleSelect: GridFilterInputSingleSelect,
   actions: null,
   custom: null,
+  longText: GridFilterInputValue,
 };
 
 const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProps>((props, ref) => {
@@ -223,10 +223,10 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
         focusableElement = inputRef.current;
       }
       const elementToFocus = focusableElement || cellRef.current;
+
+      const scrollPosition = apiRef.current.getScrollPosition();
       elementToFocus?.focus();
-      if (apiRef.current.columnHeadersContainerRef.current) {
-        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
-      }
+      apiRef.current.scroll(scrollPosition);
     }
   }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen]);
 
@@ -363,6 +363,8 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
       <GridHeaderFilterClearButton onClick={clearFilterItem} disabled={isFilterReadOnly} />
     ) : null;
 
+  const pinnedScrollOffset = usePinnedScrollOffset(apiRef, pinnedPosition);
+
   return (
     <div
       className={clsx(classes.root, headerClassName)}
@@ -374,7 +376,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
         },
         isRtl,
         pinnedPosition,
-        pinnedOffset,
+        pinnedOffset !== undefined ? pinnedOffset + pinnedScrollOffset : undefined,
       )}
       role="columnheader"
       aria-colindex={colIndex + 1}

@@ -1,4 +1,4 @@
-import { GridPrintExportOptions } from '../gridExport';
+import type { GridPrintExportOptions } from '../gridExport';
 
 /**
  * The Print export API interface that is available in the grid [[apiRef]].

@@ -1,22 +1,22 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
-  CursorCoordinates,
+  type CursorCoordinates,
   useGridEvent,
   getDataGridUtilityClass,
-  GridEventListener,
+  type GridEventListener,
   useGridLogger,
   useGridEventPriority,
-  GridColumnOrderChangeParams,
+  type GridColumnOrderChangeParams,
 } from '@mui/x-data-grid';
-import { GridStateInitializer } from '@mui/x-data-grid/internals';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { GridStateInitializer } from '@mui/x-data-grid/internals';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';

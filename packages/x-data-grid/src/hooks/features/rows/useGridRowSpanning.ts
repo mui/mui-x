@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { RowSpanningState } from '@mui/x-virtualizer/models';
+import type { RefObject } from '@mui/x-internals/types';
+import type { RowSpanningState } from '@mui/x-virtualizer/models';
 import { Rowspan } from '@mui/x-virtualizer/features';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
-import { GridRenderContext } from '../../../models';
+import type { GridRenderContext } from '../../../models';
 import type { GridColDef } from '../../../models/colDef';
 import type { GridValidRowModel, GridRowEntry } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -247,6 +247,7 @@ export const useGridRowSpanning = (
   useGridEvent(apiRef, 'paginationModelChange', runIf(props.rowSpanning, resetRowSpanningState));
   useGridEvent(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
   useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'rowExpansionChange', runIf(props.rowSpanning, resetRowSpanningState));
 
   React.useEffect(() => {
     const store = apiRef.current.virtualizer?.store;

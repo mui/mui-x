@@ -1,6 +1,5 @@
 'use client';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 export type ChartDrawingArea = {
@@ -39,5 +38,5 @@ export type ChartDrawingArea = {
  */
 export function useDrawingArea(): ChartDrawingArea {
   const store = useStore();
-  return useSelector(store, selectorChartDrawingArea);
+  return store.use(selectorChartDrawingArea);
 }

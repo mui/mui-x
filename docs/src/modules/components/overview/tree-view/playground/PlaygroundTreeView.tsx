@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { animated, useSpring } from '@react-spring/web';
 import {
   ThemeOptions,
@@ -25,6 +24,7 @@ import {
   UseTreeItemParameters,
   UseTreeItemContentSlotOwnProps,
   UseTreeItemGroupTransitionSlotOwnProps,
+  UseTreeItemStatus,
 } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemCheckbox,
@@ -82,6 +82,7 @@ function TransitionComponent(
 interface CustomTreeItemContentProps extends UseTreeItemContentSlotOwnProps {
   corner: Corner;
   density: Density;
+  status: UseTreeItemStatus;
 }
 
 const CustomTreeItemContent = styled(TreeItemContent)(({
@@ -189,19 +190,14 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
       <CustomTreeItemRoot
         {...getRootProps({
           ...other,
-          className: clsx(treeItemClasses.root, {
-            'Mui-selected': status.selected,
-            'Mui-disabled': status.disabled,
-          }),
+          className: treeItemClasses.root,
         })}
       >
-        <CustomTreeItemContent {...getContentProps({ corner, density })}>
+        <CustomTreeItemContent {...getContentProps({ corner, density })} status={status}>
           <Stack
             direction="row"
             spacing={1}
-            alignItems="center"
-            flexGrow={1}
-            justifyContent="flex-start"
+            sx={{ alignItems: 'center', flexGrow: 1, justifyContent: 'flex-start' }}
           >
             <TreeItemIconContainer
               {...getIconContainerProps({ sx: { '& svg': { fontSize: 13 } } })}
@@ -226,13 +222,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
                 })}
               />
               {showSecondaryLabel && (
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                   {item.secondaryLabel}
                 </Typography>
               )}
             </Stack>
           </Stack>
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             {showDisableButton && (
               <IconButton
                 size="small"
@@ -240,10 +236,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
                   event.stopPropagation();
                   publicAPI.setIsItemDisabled({ itemId });
                 }}
-                sx={{
-                  color: 'inherit',
-                  padding: density === 'compact' ? 0.2 : 0.6,
-                }}
+                sx={{ color: 'inherit', padding: density === 'compact' ? 0.2 : 0.6 }}
               >
                 {status.disabled ? (
                   <Tooltip title="Unlock" arrow>
@@ -405,11 +398,11 @@ export default function PlaygroundTreeView({
 
   return (
     <Stack
-      justifyContent="center"
-      alignItems="center"
-      pl={1}
-      py={1}
       sx={(theme) => ({
+        justifyContent: 'center',
+        alignItems: 'center',
+        pl: 1,
+        py: 1,
         borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
         height: '100%',
         width: '100%',

@@ -23,19 +23,17 @@ export default function DemoRadarSeriesHighlight() {
     series.map((item) => ({
       ...item,
       fillArea,
-      type: 'radar',
     }));
 
   const handleHighLightedSeries = (event, newHighLightedSeries) => {
     if (newHighLightedSeries !== null) {
-      setHighlightedItem((prev) => ({
-        ...prev,
+      setHighlightedItem({
         seriesId: newHighLightedSeries,
-      }));
+      });
     }
   };
   return (
-    <Stack sx={{ width: '100%' }} spacing={2} alignItems={'center'}>
+    <Stack spacing={2} sx={{ alignItems: 'center', width: '100%' }}>
       <ToggleButtonGroup
         value={highlightedItem?.seriesId ?? null}
         exclusive

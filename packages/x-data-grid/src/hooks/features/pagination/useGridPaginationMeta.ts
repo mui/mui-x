@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPaginationMetaApi } from './gridPaginationInterfaces';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridPaginationMetaApi } from './gridPaginationInterfaces';
 import { useGridLogger, useGridApiMethod } from '../../utils';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPaginationMetaSelector } from './gridPaginationSelector';
 
 export const useGridPaginationMeta = (

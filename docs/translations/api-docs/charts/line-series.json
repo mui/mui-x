@@ -34,7 +34,7 @@
       "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
     },
     "shape": {
-      "description": "The shape of the mark elements.<br />Using &#39;circle&#39; renders a <code>&amp;lt;circle /&amp;gt;</code> element, while all other options render a <code>&amp;lt;path /&amp;gt;</code> instead. The path causes a small decrease in performance."
+      "description": "The shape of the mark elements.<br />Using &#39;circle&#39; renders a <code>&amp;lt;circle /&amp;gt;</code> element, while all other options render a <code>&amp;lt;path /&amp;gt;</code> instead. The path causes a small decrease in performance.<br />By default, each series has a different shape, cycling through <code>&#39;circle&#39;</code>, <code>&#39;square&#39;</code>, <code>&#39;diamond&#39;</code>, <code>&#39;cross&#39;</code>, <code>&#39;star&#39;</code>, <code>&#39;triangle&#39;</code>, <code>&#39;wye&#39;</code>.<br />If there are more than 7 series, the shapes will repeat."
     },
     "showMark": {
       "description": "Define which items of the series should display a mark.<br />If can be a boolean that applies to all items.<br />Or a callback that gets some item properties and returns true if the item should be displayed."
@@ -51,6 +51,9 @@
     },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
+    },
+    "valueGetter": {
+      "description": "A function to extract and transform the value from the <code>dataset</code> item.<br />It receives the full dataset item and should return the series value.<br />Can be used as an alternative to <code>dataKey</code>."
     },
     "xAxisId": { "description": "The id of the x-axis used to render the series." },
     "yAxisId": { "description": "The id of the y-axis used to render the series." }

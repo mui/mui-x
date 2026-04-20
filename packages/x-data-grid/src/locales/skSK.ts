@@ -1,5 +1,11 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('sk-SK');
 
 const skSKGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +21,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompaktná',
   toolbarDensityStandard: 'Štandartná',
   toolbarDensityComfortable: 'Komfortná',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Späť',
+  toolbarRedo: 'Znova',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Stĺpce',
@@ -71,7 +81,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Alebo',
-  filterPanelColumns: 'Stĺpce',
+  filterPanelColumn: 'Stĺpce',
   filterPanelInputLabel: 'Hodnota',
   filterPanelInputPlaceholder: 'Hodnota filtra',
 
@@ -189,6 +199,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'áno',
   booleanCellFalseLabel: 'nie',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Rozbaliť',
+  longTextCellCollapseLabel: 'Zbaliť',
+
   // Actions cell more text
   actionsCellMore: 'viac',
 
@@ -216,11 +230,13 @@ const skSKGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Riadkov na stránke:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} z ${count !== -1 ? count : `viac ako ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} z ${count !== -1 ? formatNumber(count) : `viac ako ${formatNumber(to)}`}`;
     }
     const estimatedLabel =
-      estimated && estimated > to ? `približne ${estimated}` : `viac ako ${to}`;
-    return `${from}–${to} z ${count !== -1 ? count : estimatedLabel}`;
+      estimated && estimated > to
+        ? `približne ${formatNumber(estimated)}`
+        : `viac ako ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} z ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

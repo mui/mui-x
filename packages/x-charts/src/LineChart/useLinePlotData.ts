@@ -3,18 +3,19 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { getCurveFactory } from '../internals/getCurve';
-import { ChartsXAxisProps, ChartsYAxisProps } from '../models';
+import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
 import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { SeriesId } from '../models/seriesType/common';
+import { type SeriesId } from '../models/seriesType/common';
 
 interface LinePlotDataPoint {
   d: string;
   seriesId: SeriesId;
   color: string;
   gradientId?: string;
+  hidden: boolean;
 }
 
 export function useLinePlotData(
@@ -44,6 +45,7 @@ export function useLinePlotData(
           xAxisId = defaultXAxisId,
           yAxisId = defaultYAxisId,
           stackedData,
+          visibleStackedData,
           data,
           connectNulls,
           curve,
@@ -71,7 +73,9 @@ export function useLinePlotData(
                 xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisId}"`
-              } should have data property to be able to display a line plot.`,
+              } should have a data property to be able to display a line plot. ` +
+                'The x-axis data defines the positions for each point in the line. ' +
+                'Provide a data array to the x-axis configuration.',
             );
           }
           if (xData.length < stackedData.length) {
@@ -93,11 +97,11 @@ export function useLinePlotData(
           xData?.flatMap((x, index) => {
             const nullData = data[index] == null;
             if (shouldExpand) {
-              const rep = [{ x, y: stackedData[index], nullData, isExtension: false }];
+              const rep = [{ x, y: visibleStackedData[index], nullData, isExtension: false }];
               if (!nullData && (index === 0 || data[index - 1] == null)) {
                 rep.unshift({
                   x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
-                  y: stackedData[index],
+                  y: visibleStackedData[index],
                   nullData,
                   isExtension: true,
                 });
@@ -105,17 +109,18 @@ export function useLinePlotData(
               if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
                 rep.push({
                   x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
-                  y: stackedData[index],
+                  y: visibleStackedData[index],
                   nullData,
                   isExtension: true,
                 });
               }
               return rep;
             }
-            return { x, y: stackedData[index], nullData };
+            return { x, y: visibleStackedData[index], nullData };
           }) ?? [];
 
         const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
+        const hidden = series[seriesId].hidden;
 
         const linePath = d3Line<{
           x: any;
@@ -125,7 +130,13 @@ export function useLinePlotData(
         }>()
           .x((d) => (d.isExtension ? d.x : xPosition(d.x)))
           .defined((d) => connectNulls || !d.nullData || !!d.isExtension)
-          .y((d) => yScale(d.y[1])!);
+          .y((d) => {
+            if (hidden) {
+              return yScale(d.y[0])!;
+            }
+
+            return yScale(d.y[1])!;
+          });
 
         const d = linePath.curve(getCurveFactory(curve))(d3Data) || '';
         linePlotData.push({
@@ -133,6 +144,7 @@ export function useLinePlotData(
           gradientId,
           d,
           seriesId,
+          hidden: series[seriesId].hidden,
         });
       }
     }

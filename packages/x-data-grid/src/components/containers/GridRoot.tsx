@@ -1,11 +1,12 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import capitalize from '@mui/utils/capitalize';
 import composeClasses from '@mui/utils/composeClasses';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
+import type { SxProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRootStyles } from './GridRootStyles';
@@ -15,8 +16,8 @@ import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiCon
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridDensity } from '../../models/gridDensity';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { GridDensity } from '../../models/gridDensity';
 import { useIsSSR } from '../../hooks/utils/useIsSSR';
 import { GridHeader } from '../GridHeader';
 import { GridBody, GridFooterPlaceholder } from '../base';

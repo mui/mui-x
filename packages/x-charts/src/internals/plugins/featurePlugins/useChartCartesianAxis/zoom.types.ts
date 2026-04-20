@@ -1,5 +1,6 @@
 // This file is here only to fix typing. The full typing of zoom states is defined in the pro library.
-import { AxisId } from '../../../../models/axis';
+import { type AxisId } from '../../../../models/axis';
+import { type SeriesId } from '../../../../models/seriesType/common';
 import type { ExtremumFilter } from './useChartCartesianAxis.types';
 
 export type ZoomData = {
@@ -101,8 +102,17 @@ export interface ZoomSliderOptions {
   showTooltip?: ZoomSliderShowTooltip;
   /**
    * If `true`, a preview of the chart will be shown in the slider.
+   * Can also be an object to configure which series are shown in the preview.
    */
-  preview?: boolean;
+  preview?: boolean | ZoomSliderPreviewOptions;
+}
+
+export interface ZoomSliderPreviewOptions {
+  /**
+   * The series IDs to display in the preview.
+   * If not provided, all series attached to this axis will be shown.
+   */
+  seriesIds?: SeriesId[];
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;

@@ -1,6 +1,7 @@
+'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridApiCommunity } from '../../models/api/gridApiCommunity';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
 /**
  * Hook that instantiate a [[GridApiRef]].

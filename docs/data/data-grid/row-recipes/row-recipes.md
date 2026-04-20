@@ -21,7 +21,7 @@ The following demo shows how to create a custom header element that expands or c
 Here's how it works:
 
 The custom header uses `gridRowsLookupSelector` to find all rows with a detail panel.
-It checks the status of open panels using the [`useGridSelector` hook](/x/react-data-grid/state/#with-usegridselector) to access the grid's state.
+It checks the status of open panels using the [`useGridSelector()` hook](/x/react-data-grid/state/#with-usegridselector) to access the grid's state.
 When clicked, it uses [`setExpandedDetailPanels`](/x/api/data-grid/grid-api/#grid-api-prop-setExpandedDetailPanels) from the [Grid API](/x/react-data-grid/api-object/#how-to-use-the-api-object) to expand or collapse all detail panels.
 
 {{"demo": "DetailPanelExpandCollapseAll.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -31,6 +31,13 @@ When clicked, it uses [`setExpandedDetailPanels`](/x/api/data-grid/grid-api/#gri
 In the demo below, you can toggle the detail panel by clicking anywhere on the row:
 
 {{"demo": "DetailPanelExpandOnRowClick.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Lazy loading detail panels with auto height
+
+In the demo below, detail panels have a height based on content (auto height) and are lazy loaded.
+To prevent scrolling issues, panel heights are cached once they are loaded and the cached height is returned from the `getDetailPanelHeight()` callback.
+
+{{"demo": "LazyLoadingAutoHeightDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Access Data Grid internal loading state
 

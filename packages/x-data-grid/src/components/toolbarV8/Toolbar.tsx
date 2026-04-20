@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { ToolbarContext } from './ToolbarContext';
@@ -41,7 +41,7 @@ const ToolbarRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Toolbar',
 })({
-  flex: 0,
+  flex: '0 1 1px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'end',

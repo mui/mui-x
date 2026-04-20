@@ -1,14 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import { useFocusedItem } from '../hooks/useFocusedItem';
-import { PieArc, PieArcProps, pieArcClasses } from './PieArc';
+import { styled } from '@mui/material/styles';
+import { PieArc, type PieArcProps } from './PieArc';
 import {
-  ComputedPieRadius,
-  DefaultizedPieSeriesType,
-  DefaultizedPieValueType,
-  PieItemIdentifier,
+  type ComputedPieRadius,
+  type DefaultizedPieSeriesType,
+  type DefaultizedPieValueType,
+  type PieItemIdentifier,
 } from '../models/seriesType/pie';
 import { useTransformData } from './dataTransform/useTransformData';
 
@@ -21,11 +20,16 @@ export interface PieArcPlotSlotProps {
 }
 
 export interface PieArcPlotProps
-  extends Pick<
+  extends
+    Pick<
       DefaultizedPieSeriesType,
-      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id'
+      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle'
     >,
     ComputedPieRadius {
+  /**
+   * The id of this series.
+   */
+  seriesId: string;
   /**
    * Override the arc attributes when it is faded.
    * @default { additionalRadius: -5 }
@@ -59,6 +63,11 @@ export interface PieArcPlotProps
   skipAnimation?: boolean;
 }
 
+const PieArcPlotRoot = styled('g', {
+  name: 'MuiPieArcPlot',
+  slot: 'Root',
+})();
+
 function PieArcPlot(props: PieArcPlotProps) {
   const {
     slots,
@@ -67,7 +76,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     outerRadius,
     cornerRadius = 0,
     paddingAngle = 0,
-    id,
+    seriesId,
     highlighted,
     faded = { additionalRadius: -5 },
     data,
@@ -76,24 +85,16 @@ function PieArcPlot(props: PieArcPlotProps) {
     ...other
   } = props;
 
-  const theme = useTheme();
-
   const transformedData = useTransformData({
     innerRadius,
     outerRadius,
     cornerRadius,
     paddingAngle,
-    id,
+    id: seriesId,
     highlighted,
     faded,
     data,
   });
-
-  const { dataIndex, seriesId, seriesType } = useFocusedItem() ?? {};
-  const focusedItem =
-    dataIndex !== undefined && seriesId === id && seriesType === 'pie'
-      ? transformedData[dataIndex]
-      : null;
 
   if (data.length === 0) {
     return null;
@@ -102,7 +103,7 @@ function PieArcPlot(props: PieArcPlotProps) {
   const Arc = slots?.pieArc ?? PieArc;
 
   return (
-    <g {...other}>
+    <PieArcPlotRoot {...other}>
       {transformedData.map((item, index) => (
         <Arc
           key={item.dataIndex}
@@ -113,7 +114,7 @@ function PieArcPlot(props: PieArcPlotProps) {
           outerRadius={item.outerRadius}
           cornerRadius={item.cornerRadius}
           skipAnimation={skipAnimation ?? false}
-          id={id}
+          seriesId={seriesId}
           color={item.color}
           dataIndex={index}
           isFaded={item.isFaded}
@@ -122,36 +123,13 @@ function PieArcPlot(props: PieArcPlotProps) {
           onClick={
             onItemClick &&
             ((event) => {
-              onItemClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
+              onItemClick(event, { type: 'pie', seriesId, dataIndex: index }, item);
             })
           }
           {...slotProps?.pieArc}
         />
       ))}
-      {/* Render the focus indicator last, so it can align nicely over all arcs */}
-      {focusedItem && (
-        <Arc
-          startAngle={focusedItem.startAngle}
-          endAngle={focusedItem.endAngle}
-          paddingAngle={focusedItem.paddingAngle}
-          innerRadius={focusedItem.innerRadius}
-          color="transparent"
-          pointerEvents="none"
-          skipInteraction
-          outerRadius={focusedItem.outerRadius}
-          cornerRadius={focusedItem.cornerRadius}
-          skipAnimation
-          stroke={(theme.vars ?? theme).palette.text.primary}
-          id={id}
-          className={pieArcClasses.focusIndicator}
-          dataIndex={focusedItem.dataIndex}
-          isFaded={false}
-          isHighlighted={false}
-          isFocused={false}
-          strokeWidth={3}
-        />
-      )}
-    </g>
+    </PieArcPlotRoot>
   );
 }
 
@@ -215,7 +193,7 @@ PieArcPlot.propTypes = {
   /**
    * The id of this series.
    */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * The radius between circle center and the beginning of the arc.
    * @default 0

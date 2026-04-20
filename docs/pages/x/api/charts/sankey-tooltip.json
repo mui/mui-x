@@ -7,7 +7,7 @@
     "anchorEl": {
       "type": {
         "name": "union",
-        "description": "(props, propName) => {\n  if (props[propName] == null) {\n    return new Error(`Prop '${propName}' is required but wasn't specified`);\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}<br>&#124;&nbsp;func<br>&#124;&nbsp;{ contextElement?: (props, propName) => {\n  if (props[propName] == null) {\n    return null;\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}, getBoundingClientRect: func }"
+        "description": "(props, propName) => {\n  if (props[propName] == null) {\n    return new Error(`MUI X: Prop '${propName}' is required but wasn't specified`);\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`MUI X: Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}<br>&#124;&nbsp;func<br>&#124;&nbsp;{ contextElement?: (props, propName) => {\n  if (props[propName] == null) {\n    return null;\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}, getBoundingClientRect: func }"
       }
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
@@ -27,7 +27,7 @@
     "container": {
       "type": {
         "name": "union",
-        "description": "(props, propName) => {\n  if (props[propName] == null) {\n    return new Error(`Prop '${propName}' is required but wasn't specified`);\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}<br>&#124;&nbsp;func"
+        "description": "(props, propName) => {\n  if (props[propName] == null) {\n    return new Error(`MUI X: Prop '${propName}' is required but wasn't specified`);\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`MUI X: Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}<br>&#124;&nbsp;func"
       }
     },
     "disablePortal": { "type": { "name": "bool" }, "default": "false" },
@@ -89,10 +89,79 @@
     "import { SankeyTooltip } from '@mui/x-charts-pro/SankeyChart';",
     "import { SankeyTooltip } from '@mui/x-charts-pro';"
   ],
-  "classes": [],
+  "slots": [
+    {
+      "name": "tooltip",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "axisValueCell",
+      "className": "MuiSankeyTooltip-axisValueCell",
+      "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell",
+      "className": "MuiSankeyTooltip-cell",
+      "description": "Styles applied to the cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelCell",
+      "className": "MuiSankeyTooltip-labelCell",
+      "description": "Styles applied to the labelCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiSankeyTooltip-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markContainer",
+      "className": "MuiSankeyTooltip-markContainer",
+      "description": "Styles applied to the markContainer element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiSankeyTooltip-paper",
+      "description": "Styles applied to the paper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiSankeyTooltip-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiSankeyTooltip-row",
+      "description": "Styles applied to the row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiSankeyTooltip-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "valueCell",
+      "className": "MuiSankeyTooltip-valueCell",
+      "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiSankeyTooltip",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyTooltip/SankeyTooltip.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a>🧪</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }

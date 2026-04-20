@@ -67,7 +67,6 @@ export const usePicker = <
     readOnly,
     // Field props
     formatDensity,
-    enableAccessibleFieldDOMStructure,
     selectedSections,
     onSelectedSectionsChange,
     format,
@@ -75,6 +74,7 @@ export const usePicker = <
     // Other props
     autoFocus,
     name,
+    keepOpenDuringFieldFocus,
   } = props;
 
   const { className, sx, ...propsToForwardToView } = props;
@@ -93,7 +93,9 @@ export const usePicker = <
    */
   const [triggerElement, triggerRef] = React.useState<HTMLElement | null>(null);
   const popupRef = React.useRef<HTMLElement>(null);
-  const fieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(null);
+  const internalFieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(
+    null,
+  );
   const rootRefObject = React.useRef<HTMLDivElement>(null);
   const rootRef = useForkRef(ref, rootRefObject);
 
@@ -124,7 +126,12 @@ export const usePicker = <
     getStepNavigation,
   });
 
-  const clearValue = useEventCallback(() => setValue(valueManager.emptyValue, { source: 'view' }));
+  const clearValue = useEventCallback(() => {
+    if (value === null && internalFieldRef.current?.clearValue) {
+      internalFieldRef.current.clearValue();
+    }
+    setValue(valueManager.emptyValue, { source: 'view' });
+  });
 
   const setValueToToday = useEventCallback(() =>
     setValue(valueManager.getTodayValue(adapter, timezone, valueType), {
@@ -187,10 +194,10 @@ export const usePicker = <
     if (currentViewMode === 'field' && state.open) {
       setOpen(false);
       setTimeout(() => {
-        fieldRef?.current?.setSelectedSections(view);
+        internalFieldRef?.current?.setSelectedSections(view);
         // focusing the input before the range selection is done
         // calling it outside of timeout results in an inconsistent behavior between Safari And Chrome
-        fieldRef?.current?.focusField(view);
+        internalFieldRef?.current?.focusField(view);
       });
     }
   }, [view]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -306,6 +313,7 @@ export const usePicker = <
       reduceAnimations,
       triggerRef,
       triggerStatus,
+      keepOpenDuringFieldFocus: Boolean(keepOpenDuringFieldFocus),
       hasNextStep,
       fieldFormat: format ?? '',
       name,
@@ -329,6 +337,7 @@ export const usePicker = <
       label,
       sx,
       triggerStatus,
+      keepOpenDuringFieldFocus,
       hasNextStep,
       timezone,
       state.open,
@@ -368,18 +377,11 @@ export const usePicker = <
   const fieldPrivateContextValue = React.useMemo<PickerFieldPrivateContextValue>(
     () => ({
       formatDensity,
-      enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
-      fieldRef,
+      internalFieldRef,
     }),
-    [
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
-      fieldRef,
-    ],
+    [formatDensity, selectedSections, onSelectedSectionsChange, internalFieldRef],
   );
 
   const isValidContextValue = (testedValue: TValue) => {

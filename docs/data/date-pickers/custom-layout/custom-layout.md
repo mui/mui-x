@@ -40,7 +40,7 @@ Here is a demonstration with the 3 main blocks outlined with color borders.
 
 A `<PickersLayoutRoot />` wraps all the subcomponents to provide the structure.
 By default it renders a `div` with `display: grid`.
-Such that all subcomponents are placed in a 3 by 3 [CSS grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout).
+Such that all subcomponents are placed in a 3 by 3 [CSS grid](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout).
 
 ```jsx
 <PickersLayoutRoot>
@@ -74,7 +74,7 @@ It's important to note that by modifying the layout with CSS, the new positions 
 In the previous demonstration, the tab order is broken because the action bar appears before the calendar, whereas in the DOM the action bar is still after.
 
 To modify the DOM structure, you can create a custom `Layout` wrapper.
-Use the `usePickerLayout` hook to get the subcomponents React nodes.
+Use the `usePickerLayout()` hook to get the subcomponents React nodes.
 Then you can fully customize the DOM structure.
 
 ```jsx

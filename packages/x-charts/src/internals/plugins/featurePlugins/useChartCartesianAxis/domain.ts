@@ -1,10 +1,20 @@
-import { NumberValue } from '@mui/x-charts-vendor/d3-scale';
-import { ContinuousScaleName, DefaultedAxis } from '../../../../models/axis';
+import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import {
+  type AxisId,
+  type ChartsAxisProps,
+  type ContinuousScaleName,
+  type DefaultedAxis,
+  type DefaultedXAxis,
+  type DefaultedYAxis,
+  isBandScaleConfig,
+  isPointScaleConfig,
+  type ScaleName,
+} from '../../../../models/axis';
 import { getScale } from '../../../getScale';
-import { ProcessedSeries } from '../../corePlugins/useChartSeries';
+import { type ProcessedSeries } from '../../corePlugins/useChartSeries';
 import { getAxisDomainLimit } from './getAxisDomainLimit';
 import { getTickNumber } from '../../../ticks';
-import { TickParams } from '../../../../hooks/useTicks';
+import { type TickParams } from '../../../../hooks/useTicks';
 
 function niceDomain(
   scaleType: ContinuousScaleName | undefined,
@@ -27,15 +37,8 @@ export function calculateInitialDomainAndTickNumber(
   formattedSeries: ProcessedSeries,
   [minData, maxData]: [number | Date, number | Date],
   defaultTickNumber: number,
-  preferStrictDomainInLineCharts: boolean | undefined,
 ) {
-  const domainLimit = getDomainLimit(
-    axis,
-    axisDirection,
-    axisIndex,
-    formattedSeries,
-    preferStrictDomainInLineCharts,
-  );
+  const domainLimit = getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries);
 
   let axisExtrema = getActualAxisExtrema(axis, minData, maxData);
 
@@ -71,15 +74,8 @@ export function calculateFinalDomain(
   formattedSeries: ProcessedSeries,
   [minData, maxData]: [number | Date, number | Date],
   tickNumber: number,
-  preferStrictDomainInLineCharts: boolean | undefined,
 ) {
-  const domainLimit = getDomainLimit(
-    axis,
-    axisDirection,
-    axisIndex,
-    formattedSeries,
-    preferStrictDomainInLineCharts,
-  );
+  const domainLimit = getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries);
 
   let axisExtrema = getActualAxisExtrema(axis, minData, maxData);
 
@@ -94,18 +90,6 @@ export function calculateFinalDomain(
   }
 
   return [axis.min ?? axisExtrema[0], axis.max ?? axisExtrema[1]];
-}
-
-function getDomainLimit(
-  axis: Pick<DefaultedAxis, 'id' | 'domainLimit'>,
-  axisDirection: 'x' | 'y',
-  axisIndex: number,
-  formattedSeries: ProcessedSeries,
-  preferStrictDomainInLineCharts: boolean | undefined,
-) {
-  return preferStrictDomainInLineCharts
-    ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
-    : (axis.domainLimit ?? 'nice');
 }
 
 /**
@@ -134,4 +118,57 @@ function getActualAxisExtrema(
     return [min, max];
   }
   return [axisExtrema.min ?? min, axisExtrema.max ?? max];
+}
+
+export interface DomainDefinition {
+  domain: ReadonlyArray<string | NumberValue>;
+  tickNumber?: number;
+}
+
+/**
+ * Computes the domain map for a list of axes.
+ * Shared between the rendering selectors and the auto-size domain selectors
+ * to ensure consistent domain computation logic.
+ */
+export function computeAxisDomainsMap(
+  axes: DefaultedXAxis[] | DefaultedYAxis[] | undefined,
+  formattedSeries: ProcessedSeries,
+  defaultTickNumber: number,
+  extremaMap: Record<AxisId, [number, number]>,
+  axisDirection: 'x' | 'y',
+): Record<AxisId, DomainDefinition> {
+  const domains: Record<AxisId, DomainDefinition> = {};
+
+  axes?.forEach((eachAxis, axisIndex) => {
+    const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+    if (isBandScaleConfig(axis) || isPointScaleConfig(axis)) {
+      domains[axis.id] = { domain: axis.data! };
+
+      if (axis.ordinalTimeTicks !== undefined) {
+        domains[axis.id].tickNumber = getTickNumber(
+          axis,
+          [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
+          defaultTickNumber,
+        );
+      }
+      return;
+    }
+
+    const extrema = extremaMap[axis.id];
+    if (!extrema) {
+      return;
+    }
+
+    domains[axis.id] = calculateInitialDomainAndTickNumber(
+      axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
+      axisDirection,
+      axisIndex,
+      formattedSeries,
+      extrema,
+      defaultTickNumber,
+    );
+  });
+
+  return domains;
 }

@@ -1,4 +1,4 @@
-import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
+import type { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
 
 export interface GridPreferencePanelState {
   open: boolean;

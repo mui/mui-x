@@ -1,4 +1,4 @@
-import { GridRowId } from '../gridRows';
+import type { GridRowId } from '../gridRows';
 
 export interface GridRowSelectionCheckboxParams {
   value: boolean;

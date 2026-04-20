@@ -1,6 +1,6 @@
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useRadiusAxes, useRotationAxis } from '../../hooks/useAxis';
-import { ChartsRotationAxisProps, PolarAxisDefaultized } from '../../models/axis';
+import { type ChartsRotationAxisProps, type PolarAxisDefaultized } from '../../models/axis';
 import { rad2deg } from '../../internals/angleConversion';
 
 export function useRadarMetricData() {

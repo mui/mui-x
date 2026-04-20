@@ -1,0 +1,16 @@
+{
+  "props": {},
+  "name": "FocusedRadarMark",
+  "imports": [
+    "import { FocusedRadarMark } from '@mui/x-charts/RadarChart';",
+    "import { FocusedRadarMark } from '@mui/x-charts';",
+    "import { FocusedRadarMark } from '@mui/x-charts-pro';",
+    "import { FocusedRadarMark } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiFocusedRadarMark",
+  "filename": "/packages/x-charts/src/RadarChart/FocusedRadarMark.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
+  "cssComponent": false
+}

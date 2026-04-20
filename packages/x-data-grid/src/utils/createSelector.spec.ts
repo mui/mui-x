@@ -1,7 +1,7 @@
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createSelector } from './createSelector';
-import { GridStateCommunity } from '../models/gridStateCommunity';
-import { GridApiCommunity } from '../models/api/gridApiCommunity';
+import { type GridStateCommunity } from '../models/gridStateCommunity';
+import { type GridApiCommunity } from '../models/api/gridApiCommunity';
 
 interface GridCustomState extends GridStateCommunity {
   customKey: { customKeyBis: number };

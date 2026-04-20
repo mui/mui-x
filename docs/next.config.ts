@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as url from 'url';
+import * as semver from 'semver';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { withDeploymentConfig } from '@mui/internal-docs-infra/withDocsInfra';
@@ -8,10 +9,11 @@ import { findPages } from './src/modules/utils/find';
 import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
+// eslint-disable-next-line import/extensions
+import generateReleaseInfo from '../scripts/generateReleaseInfo.mjs';
 
 declare global {
   interface MUIEnv {
-    DEPLOY_ENV?: string;
     DOCS_STATS_ENABLED?: string;
     PULL_REQUEST?: string;
     PICKERS_ADAPTERS_DEPS?: string;
@@ -23,6 +25,8 @@ declare global {
     DATE_PICKERS_VERSION?: string;
     CHARTS_VERSION?: string;
     TREE_VIEW_VERSION?: string;
+    SCHEDULER_VERSION?: string;
+    CHAT_VERSION?: string;
   }
 }
 
@@ -35,8 +39,7 @@ const require = createRequire(import.meta.url);
 const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
 const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
 const MONOREPO_ALIASES = {
-  '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
-  '@mui/internal-markdown': path.resolve(MONOREPO_PATH, './packages/markdown'),
+  '@mui/internal-core-docs': path.resolve(MONOREPO_PATH, './packages-internal/core-docs/src'),
 };
 
 function loadPkg(pkgPath: string): { version: string } {
@@ -49,6 +52,8 @@ const dataGridPkg = loadPkg('./packages/x-data-grid');
 const datePickersPkg = loadPkg('./packages/x-date-pickers');
 const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');
+const schedulerPkg = loadPkg('./packages/x-scheduler');
+const chatPkg = loadPkg('./packages/x-chat');
 
 const pickersAdaptersDeps = getPickerAdapterDeps();
 
@@ -71,15 +76,15 @@ export default withDeploymentConfig({
   },
   transpilePackages: [
     // TODO, those shouldn't be needed in the first place
-    '@mui/monorepo', // Migrate everything to @mui/docs until the @mui/monorepo dependency becomes obsolete
-    '@mui/docs', // needed to fix slashes in the generated links (https://github.com/mui/mui-x/pull/13713#issuecomment-2205591461, )
-    '@mui/x-license', // build with LICENSE_DISABLE_CHECK
+    '@mui/monorepo', // Migrate everything to @mui/internal-core-docs until the @mui/monorepo dependency becomes obsolete
+    '@mui/internal-core-docs', // needed to fix slashes in the generated links (https://github.com/mui/mui-x/pull/13713#issuecomment-2205591461, )
   ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
     // docs-infra
     LIB_VERSION: pkg.version,
+    SEARCH_INDEX: `material-ui-v${semver.major(pkg.version)}`,
     SOURCE_CODE_REPO,
     SOURCE_GITHUB_BRANCH,
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
@@ -88,6 +93,8 @@ export default withDeploymentConfig({
     DATE_PICKERS_VERSION: datePickersPkg.version,
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
+    SCHEDULER_VERSION: schedulerPkg.version,
+    CHAT_VERSION: chatPkg.version,
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
     MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
     MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
@@ -118,8 +125,8 @@ export default withDeploymentConfig({
           ...config.resolve.alias,
           ...MONOREPO_ALIASES,
           '@mui/x-license': path.resolve(currentDirectory, '../packages/x-license/src'),
-          // TODO: get rid of this, replace with @mui/docs
-          docs: path.resolve(MONOREPO_PATH, './docs'),
+          '@mui/x-chat-headless': path.resolve(currentDirectory, '../packages/x-chat-headless/src'),
+          '@mui/x-chat': path.resolve(currentDirectory, '../packages/x-chat/src'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
       },
@@ -159,8 +166,21 @@ export default withDeploymentConfig({
             test: /\.(ts|tsx)$/,
             loader: 'string-replace-loader',
             options: {
-              search: 'LICENSE_DISABLE_CHECK',
-              replace: 'true',
+              multiple: [
+                {
+                  search: '__RELEASE_INFO__',
+                  replace: generateReleaseInfo(),
+                },
+                {
+                  search: '__ALLOW_TEST_LICENSES__',
+                  replace: 'false',
+                },
+                {
+                  search: String.raw`\(process\.env\s*(as any\s*)?\)\.MUI_VERSION`,
+                  replace: JSON.stringify(pkg.version),
+                  flags: 'g',
+                },
+              ],
             },
           },
         ]),

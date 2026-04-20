@@ -65,7 +65,7 @@ function AutocompleteField(props: AutocompleteFieldProps) {
       className={rootClassName}
       sx={[{ minWidth: 250 }, ...(Array.isArray(rootSx) ? rootSx : [rootSx])]}
       renderInput={(params) => {
-        const endAdornment = params.InputProps
+        const endAdornment = params.slotProps.input
           .endAdornment as React.ReactElement<any>;
         return (
           <TextField
@@ -74,22 +74,25 @@ function AutocompleteField(props: AutocompleteFieldProps) {
             focused={open}
             label={label}
             name={name}
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: React.cloneElement(endAdornment, {
-                children: (
-                  <React.Fragment>
-                    <IconButton
-                      onClick={() => setOpen((prev) => !prev)}
-                      aria-label={openPickerAriaLabel}
-                      size="small"
-                    >
-                      <CalendarIcon />
-                    </IconButton>
-                    {endAdornment.props.children}
-                  </React.Fragment>
-                ),
-              }),
+            slotProps={{
+              ...params.slotProps,
+              input: {
+                ...params.slotProps.input,
+                endAdornment: React.cloneElement(endAdornment, {
+                  children: (
+                    <React.Fragment>
+                      <IconButton
+                        onClick={() => setOpen((prev) => !prev)}
+                        aria-label={openPickerAriaLabel}
+                        size="small"
+                      >
+                        <CalendarIcon />
+                      </IconButton>
+                      {endAdornment.props.children}
+                    </React.Fragment>
+                  ),
+                }),
+              },
             }}
           />
         );

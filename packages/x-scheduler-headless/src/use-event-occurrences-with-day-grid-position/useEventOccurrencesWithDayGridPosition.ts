@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { SchedulerEventOccurrence, SchedulerProcessedDate } from '../models';
+import {
+  SchedulerEventOccurrence,
+  SchedulerEventOccurrencePlaceholder,
+  SchedulerProcessedDate,
+} from '../models';
 import { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import { useAdapter, diffIn } from '../use-adapter/useAdapter';
-import { sortEventOccurrences } from '../utils/event-utils';
+import { useAdapterContext } from '../use-adapter-context';
+import { sortEventOccurrences } from '../sort-event-occurrences';
 
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).
@@ -11,7 +15,7 @@ export function useEventOccurrencesWithDayGridPosition(
   parameters: useEventOccurrencesWithDayGridPosition.Parameters,
 ): useEventOccurrencesWithDayGridPosition.ReturnValue {
   const { days, occurrencesMap, shouldAddPosition } = parameters;
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
 
   return React.useMemo(() => {
     const indexLookup: {
@@ -38,7 +42,7 @@ export function useEventOccurrencesWithDayGridPosition(
       }
 
       // 2. Sort the withPosition occurrences by start and end date
-      const sortedNeedsPosition = sortEventOccurrences(needsPosition, adapter);
+      const sortedNeedsPosition = sortEventOccurrences(needsPosition);
 
       // 3. Assign position to each occurrence
       const withPosition: useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition[] = [];
@@ -62,7 +66,8 @@ export function useEventOccurrencesWithDayGridPosition(
             i += 1;
           }
 
-          const durationInDays = diffIn(adapter, occurrence.end.value, day.value, 'days') + 1;
+          const durationInDays =
+            adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1;
           position = {
             index: i,
             daySpan: Math.min(durationInDays, dayListSize - dayIndex), // Don't go past the day list end
@@ -130,6 +135,14 @@ export namespace useEventOccurrencesWithDayGridPosition {
   export interface EventOccurrenceWithPosition extends SchedulerEventOccurrence {
     position: EventOccurrencePosition;
   }
+
+  export interface EventOccurrencePlaceholderWithPosition extends SchedulerEventOccurrencePlaceholder {
+    position: EventOccurrencePosition;
+  }
+
+  export type EventRenderableOccurrenceWithPosition =
+    | EventOccurrenceWithPosition
+    | EventOccurrencePlaceholderWithPosition;
 
   export interface DayData extends SchedulerProcessedDate {
     /**

@@ -1,16 +1,16 @@
-import { ChartPluginSignature } from '../../models';
-import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
+import { type ChartPluginSignature } from '../../models';
+import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
 import {
-  ScaleName,
-  AxisConfig,
-  ChartsRotationAxisProps,
-  ChartsRadiusAxisProps,
-  RadiusAxis,
-  RotationAxis,
-  ChartsAxisData,
+  type ScaleName,
+  type AxisConfig,
+  type ChartsRotationAxisProps,
+  type ChartsRadiusAxisProps,
+  type RadiusAxis,
+  type RotationAxis,
+  type ChartsAxisData,
 } from '../../../../models/axis';
-import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { UseChartInteractionSignature } from '../useChartInteraction';
+import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import { type UseChartInteractionSignature } from '../useChartInteraction';
 
 export interface UseChartPolarAxisInstance {
   /**

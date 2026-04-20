@@ -1,15 +1,14 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  useSelector,
+  type ChartPlugin,
   selectorChartDrawingArea,
-  ZoomData,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { PanEvent } from '@mui/x-internal-gestures/core';
-import { UseChartProZoomSignature } from '../useChartProZoom.types';
+import { type PanEvent } from '@mui/x-internal-gestures/core';
+import { type UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 import { selectorPanInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
@@ -17,13 +16,13 @@ export const usePanOnDrag = (
   {
     store,
     instance,
-    svgRef,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorPanInteractionConfig, 'drag' as const);
+  const { chartsLayerContainerRef } = instance;
+  const drawingArea = store.use(selectorChartDrawingArea);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
+  const config = store.use(selectorPanInteractionConfig, 'drag' as const);
 
   const isPanOnDragEnabled: boolean =
     Object.values(optionsLookup).some((v) => v.panning) && Boolean(config);
@@ -45,7 +44,7 @@ export const usePanOnDrag = (
 
   // Add event for chart panning
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     let isInteracting = false;
     const accumulatedChange = { x: 0, y: 0 };
 
@@ -101,7 +100,7 @@ export const usePanOnDrag = (
     };
   }, [
     instance,
-    svgRef,
+    chartsLayerContainerRef,
     isPanOnDragEnabled,
     optionsLookup,
     drawingArea.width,

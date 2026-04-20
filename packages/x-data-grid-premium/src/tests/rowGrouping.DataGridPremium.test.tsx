@@ -1,5 +1,5 @@
 import { config } from 'react-transition-group';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   microtasks,
@@ -12,11 +12,11 @@ import {
 } from 'test/utils/helperFn';
 import {
   DataGridPremium,
-  DataGridPremiumProps,
+  type DataGridPremiumProps,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  GridApi,
+  type GridApi,
   GridPreferencePanelsValue,
-  GridRowsProp,
+  type GridRowsProp,
   useGridApiRef,
   GridLogicOperator,
 } from '@mui/x-data-grid-premium';
@@ -1043,7 +1043,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
+        // Corresponds to rows id 0 and 4 (respectively "cat A cat 1" and "cat B cat 1")
         expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
       });
 
@@ -1107,7 +1107,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
+        // Corresponds to rows id 0 and 4 (respectively "cat A cat 1" and "cat B cat 1")
         expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
       });
 

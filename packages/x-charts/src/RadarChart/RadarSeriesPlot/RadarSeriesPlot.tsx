@@ -1,73 +1,78 @@
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { RadarSeriesPlotProps } from './RadarSeriesPlot.types';
-import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
-import { useUtilityClasses } from './radarSeriesPlotClasses';
+import { type RadarSeriesPlotProps } from './RadarSeriesPlot.types';
+import { useInteractionAllItemProps } from './useInteractionAllItemProps';
+import { useUtilityClasses } from '../radarClasses';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
-  const { seriesId: inSeriesId, classes: inClasses, onAreaClick, onMarkClick } = props;
+  const { seriesId: inSeriesId, className, classes: inClasses, onAreaClick, onMarkClick } = props;
   const seriesCoordinates = useRadarSeriesData(inSeriesId);
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightStateGetter();
 
   const classes = useUtilityClasses(inClasses);
 
   return (
-    <g className={classes.root}>
-      {seriesCoordinates?.map(({ seriesId, points, color, hideMark, fillArea }, seriesIndex) => {
-        return (
-          <g key={seriesId}>
-            {
-              <path
-                key={seriesId}
-                {...getPathProps({
-                  seriesId,
-                  points,
-                  color,
-                  fillArea,
-                  isFaded,
-                  isHighlighted,
-                  classes,
-                })}
-                onClick={(event) =>
-                  onAreaClick?.(event, {
-                    type: 'radar',
+    <g className={clsx(classes.seriesRoot, className)}>
+      {seriesCoordinates?.map(
+        ({ seriesId, points, color, hideMark, fillArea, hidden }, seriesIndex) => {
+          if (hidden) {
+            return null;
+          }
+
+          return (
+            <g key={seriesId}>
+              {
+                <path
+                  key={seriesId}
+                  {...getPathProps({
                     seriesId,
-                    dataIndex: getRotationIndex(event),
-                  })
-                }
-                cursor={onAreaClick ? 'pointer' : 'unset'}
-                {...interactionProps[seriesIndex]}
-              />
-            }
-            {!hideMark &&
-              points.map((point, index) => (
-                <circle
-                  key={index}
-                  {...getCircleProps({
-                    seriesId,
-                    point,
-                    color: point.color,
+                    points,
+                    color,
                     fillArea,
-                    isFaded,
-                    isHighlighted,
+                    getHighlightState,
                     classes,
                   })}
                   onClick={(event) =>
-                    onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
+                    onAreaClick?.(event, {
+                      type: 'radar',
+                      seriesId,
+                      dataIndex: getRotationIndex(event),
+                    })
                   }
-                  cursor={onMarkClick ? 'pointer' : 'unset'}
+                  cursor={onAreaClick ? 'pointer' : 'unset'}
+                  {...interactionProps[seriesIndex]}
                 />
-              ))}
-          </g>
-        );
-      })}
+              }
+              {!hideMark &&
+                points.map((point, index) => (
+                  <circle
+                    key={index}
+                    {...getCircleProps({
+                      seriesId,
+                      point,
+                      color: point.color,
+                      fillArea,
+                      getHighlightState,
+                      classes,
+                    })}
+                    onClick={(event) =>
+                      onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
+                    }
+                    cursor={onMarkClick ? 'pointer' : 'unset'}
+                  />
+                ))}
+            </g>
+          );
+        },
+      )}
     </g>
   );
 }

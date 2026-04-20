@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { ChartsSlotProps, ChartsSlots } from '../internals/material';
+import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
 
 type SlotProps<T extends Record<keyof T, React.ComponentType<any>>> = {
   [key in keyof T]: React.ComponentProps<T[key]>;
@@ -16,7 +16,7 @@ export interface ChartsSlotsContextValue<
 export const ChartsSlotsContext = React.createContext<ChartsSlotsContextValue | null>(null);
 
 /**
- * Get the slots and slotProps from the nearest `ChartDataProvider` or `ChartDataProviderPro`.
+ * Get the slots and slotProps from the nearest `ChartsDataProvider` or `ChartsDataProviderPro`.
  * @returns {ChartsSlotsContextValue} The slots and slotProps from the context.
  */
 export function useChartsSlots<
@@ -26,11 +26,11 @@ export function useChartsSlots<
 
   if (context == null) {
     throw new Error(
-      [
-        'MUI X Charts: Could not find the Charts Slots context.',
-        'It looks like you rendered your component outside of a ChartDataProvider.',
+      'MUI X Charts: Could not find the Charts Slots context. ' +
+        'This happens when the component is rendered outside of a ChartsDataProvider or ChartsContainer parent component, ' +
+        'which means the required context is not available. ' +
+        'Wrap your component in a ChartsDataProvider or ChartsContainer. ' +
         'This can also happen if you are bundling multiple versions of the library.',
-      ].join('\n'),
     );
   }
 

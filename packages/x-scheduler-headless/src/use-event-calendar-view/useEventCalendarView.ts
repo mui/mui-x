@@ -1,25 +1,23 @@
-import * as React from 'react';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
-import { CalendarViewConfig } from '../models';
+import { useOnMount } from '@base-ui/utils/useOnMount';
+import { useStore } from '@base-ui/utils/store/useStore';
+import { EventCalendarViewConfig } from '../models';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 
 /**
  * Initializes the view on the event calendar.
- * The initialization is only done during the 1st render. If you need to access variables in a callback you can use a ref:
- * ```ts
- * const { daysPerPage = 12 } = props;
- * const daysPerPageRef = React.useRef(daysPerPage);
- * useEventCalendarView(() => ({
- *   siblingVisibleDateGetter: (date, delta) => adapter.addDays(date, daysPerPageRef.current * delta),
- *  }));
+ * The initialization is only done during the 1st render, the config should be defined statically.
  * ```
  * @param parameters Parameters for the view.
  */
-export function useEventCalendarView(parameters: () => CalendarViewConfig) {
+export function useEventCalendarView(config: EventCalendarViewConfig) {
+  // Context hooks
   const store = useEventCalendarStoreContext();
-  const initialParameters = React.useRef(parameters);
 
-  useIsoLayoutEffect(() => {
-    return store.setViewConfig(initialParameters.current());
-  }, [store]);
+  // Selector hooks
+  const days = useStore(store, config.visibleDaysSelector);
+
+  // Feature hooks
+  useOnMount(() => store.setViewConfig(config));
+
+  return { days };
 }

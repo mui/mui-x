@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: Date and Time Pickers - Custom slots and subcomponents
-components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, PickerDay2, DateRangePickerDay2, PickersCalendarHeader, PickersRangeCalendarHeader, PickersShortcuts, DateRangePickerToolbar, MonthCalendar, YearCalendar, DateCalendar
+components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, PickersCalendarHeader, PickersRangeCalendarHeader, PickersShortcuts, DateRangePickerToolbar, MonthCalendar, YearCalendar, DateCalendar
 ---
 
 # Custom slots and subcomponents
@@ -188,34 +188,6 @@ You can pass a custom component to replace the year button, as shown below:
 
 {{"demo": "YearButtonComponent.js"}}
 
-## Day
-
-:::info
-The examples below use the new components, which might need further changes on your side to adjust to the new structure.
-
-Be sure to check that any custom styling configuration is compatible with the new structure.
-:::
-
-The `day` slot lets users change the selected day in the calendar.
-
-You can use the `<PickerDay2 />` and `<DateRangePickerDay2 />` components to replace the day slot with a simplified DOM structure reduced to a single element.
-
-The `::before` pseudo element is used to create the highlighting effect on the days within the selected range.
-
-The `::after` pseudo element is used to create the previewing effect on hover.
-
-This new structure provides a better theming and customization experience.
-
-{{"demo": "PickerDay2Demo.js"}}
-
-Use the `--PickerDay-horizontalMargin` and `--PickerDay-size` CSS variables to easily customize the dimensions and spacing of the day slot.
-
-{{"demo": "PickerDay2DemoCSSVars.js"}}
-
-Customize the look and feel by creating a custom theme with `styleOverrides`.
-
-{{"demo": "PickerDay2DemoCustomTheme.js"}}
-
 ## Month button
 
 This button lets users change the selected month in the `month` view.
@@ -236,6 +208,37 @@ You can pass a custom component to replace the month button, as shown below:
 
 {{"demo": "MonthButtonComponent.js"}}
 
+## Day
+
+The `day` slot is available on any component that renders a calendar to select a date or a range of dates.
+It lets you customize the appearance and behavior of each individual day cell.
+
+### Component structure change
+
+The `PickerDay` and `DateRangePickerDay` components have been simplified to use a single `ButtonBase` element.
+Previously, they used multiple nested elements to render the selection and preview highlights.
+These highlights are now rendered using `::before` and `::after` pseudo-elements on the root element.
+
+This change brings several benefits:
+
+- **Simpler DOM structure**: Fewer nested elements mean a cleaner DOM and potentially better performance.
+- **Improved consistency**: Both components now follow the same implementation pattern.
+
+However, this might affect your custom styles if you were targeting the nested elements.
+For example, in `DateRangePickerDay`, the `day` class has been removed because there is no longer a separate element for the day content.
+
+For more details on how to adapt your custom styles, check the [Day slot migration guide](/x/migration/migration-pickers-v8/#day-slot).
+
+### Examples
+
+Use the `--PickerDay-horizontalMargin` and `--PickerDay-size` CSS variables to easily customize the dimensions and spacing of the day slot.
+
+{{"demo": "PickerDayDemoCSSVars.js"}}
+
+Customize the look and feel by creating a custom theme with `styleOverrides`.
+
+{{"demo": "PickerDayDemoCustomTheme.js", "defaultCodeOpen": false}}
+
 ## Arrow switcher
 
 The following slots let you customize how to render the buttons and icons for an arrow switcher: the component used
@@ -255,7 +258,7 @@ You can pass custom components to replace the icons, as shown below:
 
 ## Access date adapter
 
-In case you are building a custom component that needs to work with multiple date libraries, you can access the date adapter instance by using the `usePickerAdapter` hook.
+In case you are building a custom component that needs to work with multiple date libraries, you can access the date adapter instance by using the `usePickerAdapter()` hook.
 This hook returns the date adapter instance used by the picker, which you can use to format dates, parse strings, and perform other date-related operations.
 
 :::success

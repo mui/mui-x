@@ -19,19 +19,22 @@ import {
 import { TimeView } from '../models';
 
 export interface DesktopTimePickerSlots
-  extends BaseTimePickerSlots,
+  extends
+    BaseTimePickerSlots,
     MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'>,
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
-export interface DesktopTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends BaseTimePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+export interface DesktopTimePickerSlotProps
+  extends
+    BaseTimePickerSlotProps,
+    ExportedUseDesktopPickerSlotProps,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 
-export interface DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
-  extends BaseTimePickerProps<TimeViewWithMeridiem>,
+export interface DesktopTimePickerProps
+  extends
+    BaseTimePickerProps<TimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
     DigitalTimePickerProps {
   /**
@@ -47,5 +50,5 @@ export interface DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure exten
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopTimePickerSlotProps;
 }

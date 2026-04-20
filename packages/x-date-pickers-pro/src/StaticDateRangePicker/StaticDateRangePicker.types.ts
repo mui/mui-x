@@ -11,15 +11,14 @@ import {
 } from '../DateRangePicker/shared';
 
 export interface StaticDateRangePickerSlots
-  extends BaseDateRangePickerSlots,
-    UseStaticRangePickerSlots {}
+  extends BaseDateRangePickerSlots, UseStaticRangePickerSlots {}
 
 export interface StaticDateRangePickerSlotProps
-  extends BaseDateRangePickerSlotProps,
-    Omit<UseStaticRangePickerSlotProps, 'toolbar'> {}
+  extends BaseDateRangePickerSlotProps, Omit<UseStaticRangePickerSlotProps, 'toolbar'> {}
 
 export interface StaticDateRangePickerProps
-  extends BaseDateRangePickerProps,
+  extends
+    BaseDateRangePickerProps,
     MakeOptional<StaticRangeOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * The number of calendars to render.

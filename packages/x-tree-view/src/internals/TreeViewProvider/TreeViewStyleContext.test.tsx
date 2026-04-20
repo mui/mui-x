@@ -2,9 +2,7 @@ import {
   describeTreeView,
   DescribeTreeViewRendererReturnValue,
 } from 'test/utils/tree-view/describeTreeView';
-
-// TODO #20051: Replace with imported type
-type TreeViewAnyStore = { parameters: any };
+import { TreeViewAnyStore } from '../models';
 
 describeTreeView<TreeViewAnyStore>('TreeViewStyleContext component', ({ render }) => {
   describe('slots (expandIcon, collapseIcon, endIcon, icon)', () => {

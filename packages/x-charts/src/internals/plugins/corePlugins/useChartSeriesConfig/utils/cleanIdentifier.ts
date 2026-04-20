@@ -1,0 +1,28 @@
+import type { SeriesItemIdentifierWithType } from '../../../../../models';
+import type { ChartSeriesType } from '../../../../../models/seriesType/config';
+import type { ChartSeriesConfig } from '../types';
+
+/**
+ * Cleans a series item identifier by extracting only the relevant properties
+ * using the appropriate cleaner from the provided series configuration.
+ *
+ * @param {ChartSeriesConfig<ChartSeriesType>} seriesConfig - The configuration object for chart series.
+ * @param {object} identifier - The series item identifier to clean.
+ * @returns {object} A cleaned identifier object with only the properties relevant to the series type.
+ * @throws Will throw an error if no cleaner is found for the given series type.
+ */
+export const cleanIdentifier = <SeriesType extends ChartSeriesType, U extends { type: SeriesType }>(
+  seriesConfig: ChartSeriesConfig<SeriesType>,
+  identifier: U,
+): SeriesItemIdentifierWithType<SeriesType> => {
+  const cleaner = seriesConfig[identifier.type]?.identifierCleaner;
+  if (!cleaner) {
+    throw new Error(
+      `MUI X Charts: No identifier cleaner found for series type "${identifier.type}". ` +
+        'This internal error occurs when the series configuration is incomplete.',
+    );
+  }
+  // @ts-expect-error identifierCleaner expects the full object,
+  // but this function accepts a partial one in order to be able to clean all identifiers.
+  return cleaner(identifier);
+};

@@ -1,10 +1,7 @@
 {
   "props": {
-    "id": {
-      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
-      "required": true
-    },
     "outerRadius": { "type": { "name": "number" }, "required": true },
+    "seriesId": { "type": { "name": "string" }, "required": true },
     "arcLabelRadius": {
       "type": { "name": "number" },
       "default": "(innerRadius - outerRadius) / 2"

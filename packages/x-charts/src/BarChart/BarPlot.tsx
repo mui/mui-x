@@ -1,19 +1,21 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { barElementClasses } from './barElementClasses';
-import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { BarItemIdentifier } from '../models';
+import { type BarElementSlotProps, type BarElementSlots } from './BarElement';
+import { type BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
-import { BarClipPath } from './BarClipPath';
-import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
+import { type BarLabelSlotProps, type BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useBarPlotData } from './useBarPlotData';
-import { useUtilityClasses } from './barClasses';
-import { BarItem, BarLabelContext } from './BarLabel';
+import { barClasses, useUtilityClasses } from './barClasses';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
+import { IndividualBarPlot } from './IndividualBarPlot';
+import { BatchBarPlot } from './BatchBarPlot';
+import { type RendererType } from '../ScatterChart';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
@@ -21,32 +23,33 @@ export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps
 
 export interface BarPlotProps {
   /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
+  /**
    * If `true`, animations are skipped.
    * @default undefined
    */
   skipAnimation?: boolean;
   /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
-  onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    barItemIdentifier: BarItemIdentifier,
-  ) => void;
+  onItemClick?(event: MouseEvent, barItemIdentifier: BarItemIdentifier): void;
   /**
    * Defines the border radius of the bar element.
    */
   borderRadius?: number;
   /**
-   * @deprecated Use `barLabel` in the chart series instead.
-   * If provided, the function will be used to format the label of the bar.
-   * It can be set to 'value' to display the current value.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
+   * The type of renderer to use for the bar plot.
+   * - `svg-single`: Renders every bar in a `<rect />` element.
+   * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/bars/#performance
+   *
+   * @default 'svg-single'
    */
-  barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
+  renderer?: RendererType;
   /**
    * The props used for each component slot.
    * @default {}
@@ -63,8 +66,10 @@ const BarPlotRoot = styled('g', {
   name: 'MuiBarPlot',
   slot: 'Root',
 })({
-  [`& .${barElementClasses.root}`]: {
-    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  [`& .${barClasses.element}`]: {
+    transitionProperty: 'opacity, fill',
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 });
 
@@ -79,90 +84,44 @@ const BarPlotRoot = styled('g', {
  *
  * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
  */
-function BarPlot(props: BarPlotProps) {
-  const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+function BarPlot(props: BarPlotProps): React.JSX.Element {
+  const {
+    className,
+    skipAnimation: inSkipAnimation,
+    onItemClick,
+    borderRadius,
+    renderer,
+    ...other
+  } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
+  const batchSkipAnimation = useSkipAnimation(inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
   const { yAxis: yAxes } = useYAxes();
   const { completedData, masksData } = useBarPlotData(useDrawingArea(), xAxes, yAxes);
 
-  const withoutBorderRadius = !borderRadius || borderRadius <= 0;
   const classes = useUtilityClasses();
 
+  const BarElementPlot = renderer === 'svg-batch' ? BatchBarPlot : IndividualBarPlot;
+
   return (
-    <BarPlotRoot className={classes.root}>
-      {!withoutBorderRadius &&
-        masksData.map(
-          ({ id, x, y, xOrigin, yOrigin, width, height, hasPositive, hasNegative, layout }) => {
-            return (
-              <BarClipPath
-                key={id}
-                maskId={id}
-                borderRadius={borderRadius}
-                hasNegative={hasNegative}
-                hasPositive={hasPositive}
-                layout={layout}
-                x={x}
-                y={y}
-                xOrigin={xOrigin}
-                yOrigin={yOrigin}
-                width={width}
-                height={height}
-                skipAnimation={skipAnimation ?? false}
-              />
-            );
-          },
-        )}
-      {completedData.map(({ seriesId, data }) => {
-        return (
-          <g key={seriesId} data-series={seriesId} className={classes.series}>
-            {data.map(
-              ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
-                const barElement = (
-                  <BarElement
-                    key={dataIndex}
-                    id={seriesId}
-                    dataIndex={dataIndex}
-                    color={color}
-                    skipAnimation={skipAnimation ?? false}
-                    layout={layout ?? 'vertical'}
-                    x={x}
-                    xOrigin={xOrigin}
-                    y={y}
-                    yOrigin={yOrigin}
-                    width={width}
-                    height={height}
-                    {...other}
-                    onClick={
-                      onItemClick &&
-                      ((event) => {
-                        onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                      })
-                    }
-                  />
-                );
-
-                if (withoutBorderRadius) {
-                  return barElement;
-                }
-
-                return (
-                  <g key={dataIndex} clipPath={`url(#${maskId})`}>
-                    {barElement}
-                  </g>
-                );
-              },
-            )}
-          </g>
-        );
-      })}
+    <BarPlotRoot className={clsx(classes.root, className)}>
+      <BarElementPlot
+        completedData={completedData}
+        masksData={masksData}
+        /* The batch renderer doesn't animate bars after the initial mount. Providing skipAnimation was causing an issue
+         * where bars would animate again after a zoom interaction because skipAnimation would change from true to false. */
+        skipAnimation={renderer === 'svg-batch' ? batchSkipAnimation : skipAnimation}
+        onItemClick={onItemClick}
+        borderRadius={borderRadius}
+        {...other}
+      />
       {completedData.map((processedSeries) => (
         <BarLabelPlot
           key={processedSeries.seriesId}
+          className={classes.seriesLabels}
           processedSeries={processedSeries}
           skipAnimation={skipAnimation}
-          barLabel={barLabel}
           {...other}
         />
       ))}
@@ -176,28 +135,28 @@ BarPlot.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * If provided, the function will be used to format the label of the bar.
-   * It can be set to 'value' to display the current value.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
-   */
-  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
-  /**
-   * The placement of the bar label.
-   * It controls whether the label is rendered inside or outside the bar.
-   */
-  barLabelPlacement: PropTypes.oneOf(['outside', 'inside']),
-  /**
    * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
   /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
+  /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,
+  /**
+   * The type of renderer to use for the bar plot.
+   * - `svg-single`: Renders every bar in a `<rect />` element.
+   * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/bars/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
   /**
    * If `true`, animations are skipped.
    * @default undefined

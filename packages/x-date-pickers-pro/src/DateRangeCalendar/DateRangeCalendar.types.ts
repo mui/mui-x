@@ -9,7 +9,7 @@ import {
   PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
-import { PickerDayOwnerState } from '@mui/x-date-pickers/PickersDay';
+import { PickerDayOwnerState } from '@mui/x-date-pickers/PickerDay';
 import {
   BaseDateValidationProps,
   ExportedDayCalendarProps,
@@ -29,9 +29,7 @@ import { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
 import { ExportedValidateDateRangeProps } from '../validation/validateDateRange';
 
 export interface DateRangeCalendarSlots
-  extends PickersArrowSwitcherSlots,
-    Omit<DayCalendarSlots, 'day'>,
-    PickersCalendarHeaderSlots {
+  extends PickersArrowSwitcherSlots, Omit<DayCalendarSlots, 'day'>, PickersCalendarHeaderSlots {
   /**
    * Custom component for calendar header.
    * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
@@ -40,14 +38,15 @@ export interface DateRangeCalendarSlots
   calendarHeader?: React.ElementType<PickersRangeCalendarHeaderProps>;
   /**
    * Custom component for day in range pickers.
-   * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
-   * @default DateRangePickersDay
+   * Check the [DateRangePickerDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
+   * @default DateRangePickerDay
    */
   day?: React.ElementType<DateRangePickerDayProps>;
 }
 
 export interface DateRangeCalendarSlotProps
-  extends PickersArrowSwitcherSlotProps,
+  extends
+    PickersArrowSwitcherSlotProps,
     Omit<DayCalendarSlotProps, 'day'>,
     PickersCalendarHeaderSlotProps {
   calendarHeader?: SlotComponentProps<
@@ -59,10 +58,7 @@ export interface DateRangeCalendarSlotProps
 }
 
 export interface ExportedDateRangeCalendarProps
-  extends ExportedDayCalendarProps,
-    ExportedValidateDateRangeProps,
-    TimezoneProps,
-    FormProps {
+  extends ExportedDayCalendarProps, ExportedValidateDateRangeProps, TimezoneProps, FormProps {
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -91,7 +87,8 @@ export interface ExportedDateRangeCalendarProps
 }
 
 export interface DateRangeCalendarProps
-  extends ExportedDateRangeCalendarProps,
+  extends
+    ExportedDateRangeCalendarProps,
     UseRangePositionProps,
     ExportedUseViewsOptions<PickerRangeValue, 'day'> {
   /**

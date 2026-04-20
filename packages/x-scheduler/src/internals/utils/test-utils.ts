@@ -1,14 +1,18 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 
 export function getPreferencesMenu() {
   return screen.queryByRole('button', { name: /settings/i });
 }
 
+export async function findPreferencesMenu() {
+  return screen.findByRole('button', { name: /settings/i });
+}
+
 export async function openPreferencesMenu(user) {
-  const button = getPreferencesMenu();
+  const button = await findPreferencesMenu();
   await user.click(button);
+  // MUI Menu doesn't easily expose aria-label, just wait for the menu to appear
   await screen.findByRole('menu');
-  return button;
 }
 
 export async function toggleShowWeekends(user) {
@@ -26,28 +30,12 @@ export async function toggleShowEmptyDaysInAgenda(user) {
   await user.click(menuItem);
 }
 
-async function openTimeFormatSubmenu() {
-  const trigger = await screen.findByRole('menuitem', { name: /Time format/i });
-  fireEvent.click(trigger);
-  await screen.findByRole('group', { name: /Time format/i });
-}
-
 export async function changeTo24HoursFormat(user) {
-  await openTimeFormatSubmenu();
-
-  const h24Radio = screen.getByRole('menuitemradio', {
-    name: /24-hour \(13:00\)/i,
-  });
-
-  await user.click(h24Radio);
+  const h24Option = await screen.findByRole('menuitemradio', { name: /24-hour \(13:00\)/i });
+  await user.click(h24Option);
 }
 
 export async function changeTo12HoursFormat(user) {
-  await openTimeFormatSubmenu();
-
-  const h12Radio = screen.getByRole('menuitemradio', {
-    name: /12-hour \(1:00PM\)/i,
-  });
-
-  await user.click(h12Radio);
+  const h12Option = await screen.findByRole('menuitemradio', { name: /12-hour \(1:00PM\)/i });
+  await user.click(h12Option);
 }

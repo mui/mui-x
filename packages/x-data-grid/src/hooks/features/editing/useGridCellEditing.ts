@@ -1,21 +1,21 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
-import { GridEventListener } from '../../../models/events/gridEventListener';
+import type { GridEventListener } from '../../../models/events/gridEventListener';
 import {
   GridEditModes,
   GridCellModes,
-  GridEditingState,
-  GridEditCellProps,
+  type GridEditingState,
+  type GridEditCellProps,
 } from '../../../models/gridEditRowModel';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import {
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type {
   GridCellEditingApi,
   GridStopCellEditModeParams,
   GridStartCellEditModeParams,
@@ -27,18 +27,18 @@ import {
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
-import { GridRowId } from '../../../models/gridRows';
+import type { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
-  GridCellEditStartParams,
-  GridCellEditStopParams,
+  type GridCellEditStartParams,
+  type GridCellEditStopParams,
   GridCellEditStartReasons,
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
 import { getDefaultCellValue } from './utils';
-import { GridUpdateRowParams } from '../../../models/gridDataSource';
+import type { GridUpdateRowParams } from '../../../models/gridDataSource';
 
 export const useGridCellEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -77,7 +77,11 @@ export const useGridCellEditing = (
     (id: GridRowId, field: string) => {
       const params = apiRef.current.getCellParams(id, field);
       if (!apiRef.current.isCellEditable(params)) {
-        throw new Error(`MUI X: The cell with id=${id} and field=${field} is not editable.`);
+        throw new Error(
+          `MUI X Data Grid: The cell with id=${id} and field=${field} is not editable. ` +
+            'Cell editing requires the cell to be marked as editable. ' +
+            'Check the column definition and ensure editable is set to true, or verify the isCellEditable callback.',
+        );
       }
     },
     [apiRef],
@@ -86,7 +90,11 @@ export const useGridCellEditing = (
   const throwIfNotInMode = React.useCallback(
     (id: GridRowId, field: string, mode: GridCellModes) => {
       if (apiRef.current.getCellMode(id, field) !== mode) {
-        throw new Error(`MUI X: The cell with id=${id} and field=${field} is not in ${mode} mode.`);
+        throw new Error(
+          `MUI X Data Grid: The cell with id=${id} and field=${field} is not in ${mode} mode. ` +
+            'The operation requires the cell to be in a specific editing mode. ' +
+            `Ensure the cell is in ${mode} mode before performing this operation.`,
+        );
       }
     },
     [apiRef],
@@ -167,6 +175,7 @@ export const useGridCellEditing = (
           reason = GridCellEditStartReasons.pasteKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;
+          event.preventDefault();
         } else if (event.key === 'Backspace' || event.key === 'Delete') {
           reason = GridCellEditStartReasons.deleteKeyDown;
         }
@@ -455,7 +464,7 @@ export const useGridCellEditing = (
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
-          } else if (process.env.NODE_ENV !== 'production') {
+          } else {
             warnOnce(
               [
                 'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',

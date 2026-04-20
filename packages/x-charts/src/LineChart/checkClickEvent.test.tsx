@@ -1,8 +1,8 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { vi } from 'vitest';
+import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const config = {
   dataset: [
@@ -24,8 +24,8 @@ describe('LineChart - click event', () => {
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onAxisClick = spy();
-      const { user } = render(
+      const onAxisClick = vi.fn();
+      const { user, container } = render(
         <div
           style={{
             width: 400,
@@ -43,17 +43,19 @@ describe('LineChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
 
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 198, clientY: 60 },
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 1,
         axisValue: 20,
         seriesValues: { s1: 5, s2: 8 },
@@ -62,12 +64,12 @@ describe('LineChart - click event', () => {
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 201, clientY: 60 },
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 2,
         axisValue: 30,
         seriesValues: { s1: 8, s2: 5 },
@@ -76,19 +78,19 @@ describe('LineChart - click event', () => {
   });
 
   describe('onMarkClick', () => {
-    it('should add cursor="pointer" to bar elements', () => {
+    it('should add cursor="pointer" to mark elements', () => {
       render(
         <LineChart
           {...config}
           series={[
-            { dataKey: 'v1', id: 's1' },
-            { dataKey: 'v2', id: 's2' },
+            { dataKey: 'v1', id: 's1', showMark: true },
+            { dataKey: 'v2', id: 's2', showMark: true },
           ]}
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
           onMarkClick={() => {}}
         />,
       );
-      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
+      const marks = document.querySelectorAll<HTMLElement>(`.${lineClasses.mark}`);
 
       expect(Array.from(marks).map((mark) => mark.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -104,7 +106,7 @@ describe('LineChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onMarkClick = spy();
+      const onMarkClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -115,8 +117,8 @@ describe('LineChart - click event', () => {
           <LineChart
             {...config}
             series={[
-              { dataKey: 'v1', id: 's1' },
-              { dataKey: 'v2', id: 's2' },
+              { dataKey: 'v1', id: 's1', showMark: true },
+              { dataKey: 'v2', id: 's2', showMark: true },
             ]}
             xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
             onMarkClick={onMarkClick}
@@ -124,24 +126,24 @@ describe('LineChart - click event', () => {
         </div>,
       );
 
-      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
+      const marks = document.querySelectorAll<HTMLElement>(`.${lineClasses.mark}`);
 
       await user.click(marks[0]);
-      expect(onMarkClick.lastCall.args[1]).to.deep.equal({
+      expect(onMarkClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
         dataIndex: 0,
       });
 
       await user.click(marks[1]);
-      expect(onMarkClick.lastCall.args[1]).to.deep.equal({
+      expect(onMarkClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
         dataIndex: 1,
       });
 
       await user.click(marks[4]);
-      expect(onMarkClick.lastCall.args[1]).to.deep.equal({
+      expect(onMarkClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's2',
         dataIndex: 0,
@@ -162,7 +164,7 @@ describe('LineChart - click event', () => {
           onAreaClick={() => {}}
         />,
       );
-      const areas = document.querySelectorAll<HTMLElement>('path.MuiAreaElement-root');
+      const areas = document.querySelectorAll<HTMLElement>(`path.${lineClasses.area}`);
 
       expect(Array.from(areas).map((area) => area.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -172,7 +174,7 @@ describe('LineChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onAreaClick = spy();
+      const onAreaClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -192,16 +194,16 @@ describe('LineChart - click event', () => {
         </div>,
       );
 
-      const areas = document.querySelectorAll<HTMLElement>('path.MuiAreaElement-root');
+      const areas = document.querySelectorAll<HTMLElement>(`path.${lineClasses.area}`);
 
       await user.click(areas[0]);
-      expect(onAreaClick.lastCall.args[1]).to.deep.equal({
+      expect(onAreaClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
       });
 
       await user.click(areas[1]);
-      expect(onAreaClick.lastCall.args[1]).to.deep.equal({
+      expect(onAreaClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's2',
       });
@@ -221,7 +223,7 @@ describe('LineChart - click event', () => {
           onLineClick={() => {}}
         />,
       );
-      const lines = document.querySelectorAll<HTMLElement>('path.MuiLineElement-root');
+      const lines = document.querySelectorAll<HTMLElement>(`path.${lineClasses.line}`);
 
       expect(Array.from(lines).map((line) => line.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -231,7 +233,7 @@ describe('LineChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onLineClick = spy();
+      const onLineClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -251,16 +253,16 @@ describe('LineChart - click event', () => {
         </div>,
       );
 
-      const lines = document.querySelectorAll<HTMLElement>('path.MuiLineElement-root');
+      const lines = document.querySelectorAll<HTMLElement>(`path.${lineClasses.line}`);
 
       await user.click(lines[0]);
-      expect(onLineClick.lastCall.args[1]).to.deep.equal({
+      expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
       });
 
       await user.click(lines[1]);
-      expect(onLineClick.lastCall.args[1]).to.deep.equal({
+      expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's2',
       });

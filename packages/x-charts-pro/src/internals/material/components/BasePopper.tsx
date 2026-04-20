@@ -1,10 +1,10 @@
 import * as React from 'react';
-import Popper, { PopperProps } from '@mui/material/Popper';
+import Popper, { type PopperProps } from '@mui/material/Popper';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
-import { ChartBasePopperProps } from '../../slots/chartBaseSlotProps';
+import { type ChartBasePopperProps } from '../../slots/chartBaseSlotProps';
 
 function clickAwayWrapper(props: ChartBasePopperProps, content: any) {
   if (props.onClickAway === undefined) {

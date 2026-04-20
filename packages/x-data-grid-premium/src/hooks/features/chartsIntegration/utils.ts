@@ -1,6 +1,6 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
-import { GridRowGroupingModel } from '../rowGrouping/gridRowGroupingInterfaces';
-import { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
+import type { GridColDef } from '@mui/x-data-grid-pro';
+import type { GridRowGroupingModel } from '../rowGrouping/gridRowGroupingInterfaces';
+import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 
 export const getBlockedSections = (

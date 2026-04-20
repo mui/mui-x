@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { useDataset } from './useDataset';
-import { ChartProvider } from '../context/ChartProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
+import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
 
 function UseDataset() {
   const dataset = useDataset();
@@ -13,15 +14,16 @@ describe('useDataset', () => {
 
   it('should return undefined when no dataset is provided', () => {
     render(
-      <ChartProvider
+      <ChartsProvider<'bar'>
         pluginParams={{
           series: [{ type: 'bar', id: 'test-id', data: [1, 2] }],
           width: 200,
           height: 200,
+          seriesConfig: defaultSeriesConfig,
         }}
       >
         <UseDataset />
-      </ChartProvider>,
+      </ChartsProvider>,
     );
 
     expect(screen.getByText('no-dataset')).toBeVisible();
@@ -35,7 +37,7 @@ describe('useDataset', () => {
     ];
 
     render(
-      <ChartProvider
+      <ChartsProvider<'line'>
         pluginParams={{
           dataset,
           series: [
@@ -47,10 +49,11 @@ describe('useDataset', () => {
           ],
           width: 200,
           height: 200,
+          seriesConfig: defaultSeriesConfig,
         }}
       >
         <UseDataset />
-      </ChartProvider>,
+      </ChartsProvider>,
     );
 
     expect(screen.getByText('3')).toBeVisible();

@@ -69,18 +69,19 @@ const resolveViews = <TView extends DateOrTimeViewWithMeridiem = DateOrTimeViewW
 const resolveShouldRenderTimeInASingleColumn = (timeSteps: TimeStepOptions, threshold: number) =>
   (24 * 60) / ((timeSteps.hours ?? 1) * (timeSteps.minutes ?? 5)) <= threshold;
 
-interface DefaultizedTimeViewsProps<TView = DateOrTimeView>
-  extends DefaultizedProps<DigitalTimePickerProps, 'ampm'> {
+interface DefaultizedTimeViewsProps<TView = DateOrTimeView> extends DefaultizedProps<
+  DigitalTimePickerProps,
+  'ampm'
+> {
   views: readonly TView[];
 }
 
-interface DefaultizedTimeViewsResponse<TView = DateOrTimeViewWithMeridiem>
-  extends Required<
-    Pick<
-      DefaultizedTimeViewsProps<TView>,
-      'thresholdToRenderTimeInASingleColumn' | 'timeSteps' | 'views'
-    >
-  > {
+interface DefaultizedTimeViewsResponse<TView = DateOrTimeViewWithMeridiem> extends Required<
+  Pick<
+    DefaultizedTimeViewsProps<TView>,
+    'thresholdToRenderTimeInASingleColumn' | 'timeSteps' | 'views'
+  >
+> {
   shouldRenderTimeInASingleColumn: boolean;
 }
 

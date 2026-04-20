@@ -183,5 +183,36 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
         'aria-disabled',
       );
     });
+
+    it('should apply minutesStep', () => {
+      render(
+        <ElementToTest
+          {...defaultProps}
+          value={adapterToUse.date('2019-06-15T11:15:00')}
+          minutesStep={15}
+        />,
+      );
+      expect(screen.getByRole('option', { name: toMinutesLabel('0') })).not.to.have.attribute(
+        'aria-disabled',
+      );
+      expect(screen.getByRole('option', { name: toMinutesLabel('5') })).to.have.attribute(
+        'aria-disabled',
+      );
+      expect(screen.getByRole('option', { name: toMinutesLabel('10') })).to.have.attribute(
+        'aria-disabled',
+      );
+      expect(screen.getByRole('option', { name: toMinutesLabel('15') })).not.to.have.attribute(
+        'aria-disabled',
+      );
+      expect(screen.getByRole('option', { name: toMinutesLabel('20') })).to.have.attribute(
+        'aria-disabled',
+      );
+      expect(screen.getByRole('option', { name: toMinutesLabel('30') })).not.to.have.attribute(
+        'aria-disabled',
+      );
+      expect(screen.getByRole('option', { name: toMinutesLabel('45') })).not.to.have.attribute(
+        'aria-disabled',
+      );
+    });
   });
 };

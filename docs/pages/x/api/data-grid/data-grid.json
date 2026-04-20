@@ -22,6 +22,7 @@
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
+    "checkboxColDef": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
@@ -36,6 +37,7 @@
     "dataSourceCache": {
       "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
     },
+    "dataSourceRevalidateMs": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {
         "name": "enum",
@@ -64,7 +66,10 @@
     },
     "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
+      }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
@@ -630,6 +635,12 @@
       "class": "MuiDataGrid-row"
     },
     {
+      "name": "rowCheckbox",
+      "description": "Component rendered for each row selection checkbox.",
+      "default": "GridRowCheckbox",
+      "class": null
+    },
+    {
       "name": "baseAutocomplete",
       "description": "The custom Autocomplete component used in the grid for both header and cells.",
       "default": "Autocomplete",
@@ -714,6 +725,12 @@
       "class": null
     },
     {
+      "name": "baseTextarea",
+      "description": "The custom Textarea component used in the grid for multiline text editing.",
+      "default": "InputBase with multiline",
+      "class": null
+    },
+    {
       "name": "baseToggleButton",
       "description": "The custom ToggleButton component used in the grid.",
       "default": "ToggleButton",
@@ -771,6 +788,18 @@
       "name": "booleanCellFalseIcon",
       "description": "Icon displayed on the boolean cell to represent the false value.",
       "default": "GridCloseIcon",
+      "class": null
+    },
+    {
+      "name": "undoIcon",
+      "description": "Icon displayed on the undo button in the toolbar.",
+      "default": "GridUndoIcon",
+      "class": null
+    },
+    {
+      "name": "redoIcon",
+      "description": "Icon displayed on the redo button in the toolbar.",
+      "default": "GridRedoIcon",
       "class": null
     },
     {
@@ -982,6 +1011,18 @@
       "description": "Icon displayed to indicate that a menu item is selected.",
       "default": "GridCheckIcon",
       "class": null
+    },
+    {
+      "name": "longTextCellExpandIcon",
+      "description": "Icon displayed on the long text cell to expand the content.",
+      "default": "GridLongTextCellExpandIcon",
+      "class": null
+    },
+    {
+      "name": "longTextCellCollapseIcon",
+      "description": "Icon displayed on the long text cell popup to collapse the content.",
+      "default": "GridLongTextCellCollapseIcon",
+      "class": null
     }
   ],
   "classes": [
@@ -1142,6 +1183,36 @@
       "isGlobal": false
     },
     {
+      "key": "cell--fillPreview",
+      "className": "MuiDataGrid-cell--fillPreview",
+      "description": "Styles applied to the cell element when it is in the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewBottom",
+      "className": "MuiDataGrid-cell--fillPreviewBottom",
+      "description": "Styles applied to the cell element if it is at the bottom edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewLeft",
+      "className": "MuiDataGrid-cell--fillPreviewLeft",
+      "description": "Styles applied to the cell element if it is at the left edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewRight",
+      "className": "MuiDataGrid-cell--fillPreviewRight",
+      "description": "Styles applied to the cell element if it is at the right edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewTop",
+      "className": "MuiDataGrid-cell--fillPreviewTop",
+      "description": "Styles applied to the cell element if it is at the top edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--flex",
       "className": "MuiDataGrid-cell--flex",
       "description": "Styles applied to the cell element in flex display mode.",
@@ -1205,6 +1276,12 @@
       "key": "cell--textRight",
       "className": "MuiDataGrid-cell--textRight",
       "description": "Styles applied to the cell element if `align=\"right\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--withFillHandle",
+      "className": "MuiDataGrid-cell--withFillHandle",
+      "description": "Styles applied to the cell element when it displays the fill handle.",
       "isGlobal": false
     },
     {
@@ -1526,6 +1603,36 @@
       "isGlobal": false
     },
     {
+      "key": "editLongTextCell",
+      "className": "MuiDataGrid-editLongTextCell",
+      "description": "Styles applied to the edit long text cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellPopperContent",
+      "className": "MuiDataGrid-editLongTextCellPopperContent",
+      "description": "Styles applied to the edit long text cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellPopup",
+      "className": "MuiDataGrid-editLongTextCellPopup",
+      "description": "Styles applied to the edit long text cell popup.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellTextarea",
+      "className": "MuiDataGrid-editLongTextCellTextarea",
+      "description": "Styles applied to the edit long text cell textarea.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellValue",
+      "className": "MuiDataGrid-editLongTextCellValue",
+      "description": "Styles applied to the edit long text cell value element.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGrid-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -1607,6 +1714,42 @@
       "key": "iconSeparator",
       "className": "MuiDataGrid-iconSeparator",
       "description": "Styles applied to the column header separator icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCell",
+      "className": "MuiDataGrid-longTextCell",
+      "description": "Styles applied to the long text cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellCollapseButton",
+      "className": "MuiDataGrid-longTextCellCollapseButton",
+      "description": "Styles applied to the long text cell collapse button.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellContent",
+      "className": "MuiDataGrid-longTextCellContent",
+      "description": "Styles applied to the long text cell content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellExpandButton",
+      "className": "MuiDataGrid-longTextCellExpandButton",
+      "description": "Styles applied to the long text cell expand button.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellPopperContent",
+      "className": "MuiDataGrid-longTextCellPopperContent",
+      "description": "Styles applied to the long text cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellPopup",
+      "className": "MuiDataGrid-longTextCellPopup",
+      "description": "Styles applied to the long text cell popup.",
       "isGlobal": false
     },
     {
@@ -1961,18 +2104,6 @@
       "key": "row--dragging",
       "className": "MuiDataGrid-row--dragging",
       "description": "Styles applied to the floating special row reorder cell element when it is dragged.",
-      "isGlobal": false
-    },
-    {
-      "key": "row--dropAbove",
-      "className": "MuiDataGrid-row--dropAbove",
-      "description": "Styles applied to the row element when it is a drop target above.",
-      "isGlobal": false
-    },
-    {
-      "key": "row--dropBelow",
-      "className": "MuiDataGrid-row--dropBelow",
-      "description": "Styles applied to the row element when it is a drop target below.",
       "isGlobal": false
     },
     {

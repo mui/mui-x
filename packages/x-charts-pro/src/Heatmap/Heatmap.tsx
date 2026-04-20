@@ -2,51 +2,50 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import useId from '@mui/utils/useId';
-import { MakeOptional } from '@mui/x-internals/types';
-import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
-import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { type MakeOptional } from '@mui/x-internals/types';
+import { ChartsAxis, type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import {
-  ChartsAxisSlots,
-  ChartsAxisSlotProps,
-  ChartSeriesConfig,
-  XAxis,
-  YAxis,
+  type ChartsAxisSlots,
+  type ChartsAxisSlotProps,
+  type XAxis,
+  type YAxis,
 } from '@mui/x-charts/internals';
-import { ChartsWrapper, type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
   ChartsOverlay,
-  ChartsOverlayProps,
-  ChartsOverlaySlotProps,
-  ChartsOverlaySlots,
+  type ChartsOverlayProps,
+  type ChartsOverlaySlotProps,
+  type ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 import {
   ChartsLegend,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-  ContinuousColorLegend,
+  type ChartsLegendSlotProps,
+  type ChartsLegendSlots,
 } from '@mui/x-charts/ChartsLegend';
-import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
-import { ChartContainerProProps } from '../ChartContainerPro';
-import { HeatmapSeriesType } from '../models/seriesType/heatmap';
+import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
+import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
+import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import { type HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
-import { heatmapSeriesConfig } from './seriesConfig';
-import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
-import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
-import { HEATMAP_PLUGINS, HeatmapPluginSignatures } from './Heatmap.plugins';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { HeatmapTooltip, type HeatmapTooltipProps } from './HeatmapTooltip';
+import { type HeatmapItemSlotProps, type HeatmapItemSlots } from './HeatmapItem';
+import { type HeatmapPluginSignatures } from './Heatmap.plugins';
+import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
-  ChartsToolbarProSlotProps,
-  ChartsToolbarProSlots,
+  type ChartsToolbarProSlotProps,
+  type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
+import { FocusedHeatmapCell } from './FocusedHeatmapCell';
+import { useHeatmapProps } from './useHeatmapProps';
+import { ChartsSvgLayer } from '../ChartsSvgLayer';
 
 export interface HeatmapSlots
-  extends ChartsAxisSlots,
+  extends
+    ChartsAxisSlots,
     ChartsOverlaySlots,
     HeatmapItemSlots,
     ChartsToolbarProSlots,
@@ -63,7 +62,8 @@ export interface HeatmapSlots
   legend?: ChartsLegendSlots['legend'];
 }
 export interface HeatmapSlotProps
-  extends ChartsAxisSlotProps,
+  extends
+    ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
     HeatmapItemSlotProps,
     ChartsLegendSlotProps,
@@ -73,19 +73,23 @@ export interface HeatmapSlotProps
 }
 
 export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
+
 export interface HeatmapProps
-  extends Omit<
-      ChartContainerProProps<'heatmap', HeatmapPluginSignatures>,
+  extends
+    Omit<
+      ChartsContainerProProps<'heatmap', HeatmapPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'xAxis'
       | 'yAxis'
+      | 'axesGap'
       | 'skipAnimation'
       | 'slots'
       | 'slotProps'
-      | 'experimentalFeatures'
       | 'highlightedAxis'
       | 'onHighlightedAxisChange'
+      | 'seriesConfig'
+      | 'onAxisClick'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -94,13 +98,13 @@ export interface HeatmapProps
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis: Readonly<Omit<MakeOptional<XAxis<'band'>, 'scaleType'>, 'zoom'>[]>;
+  xAxis: Readonly<MakeOptional<XAxis<'band'>, 'scaleType'>[]>;
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis: Readonly<Omit<MakeOptional<YAxis<'band'>, 'scaleType'>, 'zoom'>[]>;
+  yAxis: Readonly<MakeOptional<YAxis<'band'>, 'scaleType'>[]>;
   /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeries]] objects.
@@ -113,7 +117,6 @@ export interface HeatmapProps
   tooltip?: ChartsTooltipProps;
   /**
    * If `true`, the legend is not rendered.
-   * @default true
    */
   hideLegend?: boolean;
   /**
@@ -121,6 +124,10 @@ export interface HeatmapProps
    * @default false
    */
   showToolbar?: boolean;
+  /**
+   * The border radius of the heatmap cells in pixels.
+   */
+  borderRadius?: number;
   /**
    * Overridable component slots.
    * @default {}
@@ -133,154 +140,49 @@ export interface HeatmapProps
   slotProps?: HeatmapSlotProps;
 }
 
-// The GnBu: https://github.com/d3/d3-scale-chromatic/blob/main/src/sequential-multi/GnBu.js
-const defaultColorMap = interpolateRgbBasis([
-  '#f7fcf0',
-  '#e0f3db',
-  '#ccebc5',
-  '#a8ddb5',
-  '#7bccc4',
-  '#4eb3d3',
-  '#2b8cbe',
-  '#0868ac',
-  '#084081',
-]);
-
-const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapSeriesConfig };
-
-function getDefaultDataForAxis(series: HeatmapProps['series'], dimension: number) {
-  if (series?.[0]?.data === undefined || series[0].data.length === 0) {
-    return [];
-  }
-
-  return Array.from(
-    { length: Math.max(...series[0].data.map((dataPoint) => dataPoint[dimension])) + 1 },
-    (_, index) => index,
-  );
-}
-const getDefaultDataForXAxis = (series: HeatmapProps['series']) => getDefaultDataForAxis(series, 0);
-const getDefaultDataForYAxis = (series: HeatmapProps['series']) => getDefaultDataForAxis(series, 1);
-
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
+  const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
+
   const {
-    apiRef,
-    xAxis,
-    yAxis,
-    zAxis,
-    series,
-    width,
-    height,
-    margin,
-    colors,
-    dataset,
-    sx,
-    onAxisClick,
+    chartsDataProviderProProps,
+    chartsWrapperProps,
+    chartsAxisProps,
+    clipPathProps,
+    clipPathGroupProps,
+    legendProps,
+    heatmapPlotProps,
+    overlayProps,
     children,
-    slots,
-    slotProps,
-    loading,
-    highlightedItem,
-    onHighlightChange,
-    hideLegend = true,
-    showToolbar = false,
-  } = props;
+  } = useHeatmapProps(props);
 
-  const id = useId();
-  const clipPathId = `${id}-clip-path`;
-
-  const xAxisWithDefault = React.useMemo(
-    () =>
-      (xAxis && xAxis.length > 0 ? xAxis : [{ id: DEFAULT_X_AXIS_KEY }]).map((axis) => ({
-        scaleType: 'band' as const,
-        categoryGapRatio: 0,
-        ...axis,
-        data: axis.data ?? getDefaultDataForXAxis(series),
-      })),
-    [series, xAxis],
-  );
-
-  const yAxisWithDefault = React.useMemo(
-    () =>
-      (yAxis && yAxis.length > 0 ? yAxis : [{ id: DEFAULT_Y_AXIS_KEY }]).map((axis) => ({
-        scaleType: 'band' as const,
-        categoryGapRatio: 0,
-        ...axis,
-        data: axis.data ?? getDefaultDataForYAxis(series),
-      })),
-    [series, yAxis],
-  );
-
-  const zAxisWithDefault = React.useMemo(
-    () =>
-      zAxis ?? [
-        {
-          colorMap: {
-            type: 'continuous',
-            min: 0,
-            max: 100,
-            color: defaultColorMap,
-          },
-        } as const,
-      ],
-    [zAxis],
-  );
-
-  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
-    sx,
-    legendPosition: props.slotProps?.legend?.position,
-    legendDirection: props.slotProps?.legend?.direction,
-    hideLegend,
-  };
   const Tooltip = slots?.tooltip ?? HeatmapTooltip;
   const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro<'heatmap', HeatmapPluginSignatures>
-      apiRef={apiRef}
-      seriesConfig={seriesConfig}
-      series={series.map((s) => ({
-        type: 'heatmap',
-        ...s,
-      }))}
-      width={width}
-      height={height}
-      margin={margin}
-      xAxis={xAxisWithDefault}
-      yAxis={yAxisWithDefault}
-      zAxis={zAxisWithDefault}
-      colors={colors}
-      dataset={dataset}
-      disableAxisListener
-      highlightedItem={highlightedItem}
-      onHighlightChange={onHighlightChange}
-      onAxisClick={onAxisClick}
-      plugins={HEATMAP_PLUGINS}
-    >
-      <ChartsWrapper {...chartsWrapperProps}>
+    <ChartsDataProviderPro<'heatmap', HeatmapPluginSignatures> {...chartsDataProviderProProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
-        {!hideLegend && (
-          <ChartsLegend
-            slots={{ ...slots, legend: slots?.legend ?? ContinuousColorLegend }}
-            slotProps={{ legend: { labelPosition: 'extremes', ...slotProps?.legend } }}
-            sx={slotProps?.legend?.direction === 'vertical' ? { height: 150 } : { width: '50%' }}
-          />
-        )}
-        <ChartsSurface ref={ref} sx={sx}>
-          <g clipPath={`url(#${clipPathId})`}>
-            <HeatmapPlot slots={slots} slotProps={slotProps} />
-            <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-          </g>
-          <ChartsAxis slots={slots} slotProps={slotProps} />
-          <ChartsClipPath id={clipPathId} />
-          {children}
-        </ChartsSurface>
+        {!hideLegend && <ChartsLegend {...legendProps} />}
+        <ChartsLayerContainer>
+          <ChartsSvgLayer sx={sx}>
+            <g {...clipPathGroupProps}>
+              <HeatmapPlot {...heatmapPlotProps} />
+              <FocusedHeatmapCell />
+              <ChartsOverlay {...overlayProps} />
+            </g>
+            <ChartsAxis {...chartsAxisProps} />
+            <ChartsClipPath {...clipPathProps} />
+            <ChartsBrushOverlay />
+            {children}
+          </ChartsSvgLayer>
+        </ChartsLayerContainer>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </ChartsDataProviderPro>
   );
 });
 
@@ -293,7 +195,21 @@ Heatmap.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      setAxisZoomData: PropTypes.func.isRequired,
+      setZoomData: PropTypes.func.isRequired,
     }),
+  }),
+  /**
+   * The border radius of the heatmap cells in pixels.
+   */
+  borderRadius: PropTypes.number,
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
   }),
   className: PropTypes.string,
   /**
@@ -305,6 +221,10 @@ Heatmap.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -313,27 +233,54 @@ Heatmap.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
   /**
    * If `true`, the legend is not rendered.
-   * @default true
    */
   hideLegend: PropTypes.bool,
   /**
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['heatmap']).isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * The list of zoom data related to each axis.
+   * Used to initialize the zoom in a specific configuration without controlling it.
+   */
+  initialZoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -359,28 +306,43 @@ Heatmap.propTypes = {
     }),
   ]),
   /**
-   * The function called for onClick events.
-   * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
-   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
-   */
-  onAxisClick: PropTypes.func,
-  /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The callback fired when an item is clicked.
+   *
+   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
+   * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onTooltipAxisChange: PropTypes.func,
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
+  /**
+   * Callback fired when the zoom has changed.
+   *
+   * @param {ZoomData[]} zoomData Updated zoom data.
+   */
+  onZoomChange: PropTypes.func,
   /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
-  /**
-   * The configuration helpers used to compute attributes according to the series type.
-   * @ignore Unstable props for internal usage.
-   */
-  seriesConfig: PropTypes.object,
   /**
    * If true, shows the default chart toolbar.
    * @default false
@@ -402,12 +364,43 @@ Heatmap.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
   tooltip: PropTypes.object,
+  /**
+   * The controlled axis tooltip.
+   * Identified by the axis id, and data index.
+   */
+  tooltipAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['heatmap']).isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -423,6 +416,7 @@ Heatmap.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -462,13 +456,23 @@ Heatmap.propTypes = {
           tickSize: PropTypes.number,
         }),
       ),
-      height: PropTypes.number,
+      height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       offset: PropTypes.number,
+      ordinalTimeTicks: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+          PropTypes.shape({
+            format: PropTypes.func.isRequired,
+            getTickNumber: PropTypes.func.isRequired,
+            isTick: PropTypes.func.isRequired,
+          }),
+        ]).isRequired,
+      ),
       position: PropTypes.oneOf(['bottom', 'none', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band']),
@@ -493,7 +497,27 @@ Heatmap.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          slider: PropTypes.shape({
+            enabled: PropTypes.bool,
+            preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+            showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+            size: PropTypes.number,
+          }),
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
     }),
   ).isRequired,
   /**
@@ -507,6 +531,7 @@ Heatmap.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -552,6 +577,16 @@ Heatmap.propTypes = {
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       offset: PropTypes.number,
+      ordinalTimeTicks: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+          PropTypes.shape({
+            format: PropTypes.func.isRequired,
+            getTickNumber: PropTypes.func.isRequired,
+            isTick: PropTypes.func.isRequired,
+          }),
+        ]).isRequired,
+      ),
       position: PropTypes.oneOf(['left', 'none', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band']),
@@ -575,8 +610,28 @@ Heatmap.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
-      width: PropTypes.number,
+      valueGetter: PropTypes.func,
+      width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          slider: PropTypes.shape({
+            enabled: PropTypes.bool,
+            preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+            showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+            size: PropTypes.number,
+          }),
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
     }),
   ).isRequired,
   /**
@@ -616,8 +671,75 @@ Heatmap.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+      valueGetter: PropTypes.func,
     }),
   ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoomData: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
+   * Configuration for zoom interactions.
+   */
+  zoomInteractionConfig: PropTypes.shape({
+    pan: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['drag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['pressAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
+        }),
+      ]).isRequired,
+    ),
+    zoom: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['pinch']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['doubleTapReset']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['brush']).isRequired,
+        }),
+      ]).isRequired,
+    ),
+  }),
 } as any;
 
 export { Heatmap };

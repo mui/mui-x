@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 // It's not publicly exported, so, using a relative import
@@ -19,16 +19,16 @@ describe('useAnimate', () => {
     return (t: number) => ({ width: interpolate(t) });
   }
 
-  const applyProps = spy((element: SVGPathElement, props: { width: number }) => {
+  const applyProps = vi.fn((element: SVGPathElement, props: { width: number }) => {
     element.setAttribute('width', props.width.toString());
   });
 
-  const lastCallWidth = () => applyProps.lastCall?.args[1].width;
-  const firstCallWidth = () => applyProps.firstCall?.args[1].width;
-  const callCount = () => applyProps.callCount;
+  const lastCallWidth = () => applyProps.mock.lastCall?.[1].width;
+  const firstCallWidth = () => applyProps.mock.calls[0]?.[1].width;
+  const callCount = () => applyProps.mock.calls.length;
 
   afterEach(() => {
-    applyProps.resetHistory();
+    applyProps.mockClear();
   });
 
   it('starts animating from initial props', async () => {
@@ -116,7 +116,7 @@ describe('useAnimate', () => {
     await waitNextFrame();
     expect(callCount()).to.be.equal(1);
 
-    const lastIncreasingCall = lastCallWidth();
+    const lastIncreasingCall = lastCallWidth()!;
     // Should be animating from 1000 to 2000
     expect(lastCallWidth()).to.be.greaterThan(1000);
     expect(lastCallWidth()).to.be.lessThan(2000);

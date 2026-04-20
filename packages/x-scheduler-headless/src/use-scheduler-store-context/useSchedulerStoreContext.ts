@@ -1,10 +1,16 @@
 'use client';
 import * as React from 'react';
-import { SchedulerParameters, SchedulerState, SchedulerStore } from '../utils/SchedulerStore';
+import {
+  SchedulerParameters,
+  SchedulerState,
+  SchedulerStore,
+} from '../internals/utils/SchedulerStore';
 
 // TODO: Use Remove `update: any` for the update method once `useStore` uses `ReadonlyStore`
-export interface SchedulerStoreInContext<TEvent extends object, TResource extends object>
-  extends SchedulerStore<any, any, SchedulerState, SchedulerParameters<TEvent, TResource>> {
+export interface SchedulerStoreInContext<
+  TEvent extends object,
+  TResource extends object,
+> extends SchedulerStore<any, any, SchedulerState, SchedulerParameters<TEvent, TResource>> {
   update: any;
 }
 
@@ -24,7 +30,7 @@ export function useSchedulerStoreContext<TEvent extends object, TResource extend
   const context = React.useContext(SchedulerStoreContext);
   if (context == null && !optional) {
     throw new Error(
-      'useSchedulerStoreContext must be used within an <EventCalendar /> or a <Timeline /> component',
+      'MUI: useSchedulerStoreContext must be used within an <EventCalendar /> or a <EventTimelinePremium /> component',
     );
   }
 

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useChartId } from './useChartId';
-import { AxisId } from '../models/axis';
+import { type AxisId } from '../models/axis';
 
 /**
  * Returns a function that generates a gradient id for the given axis id.

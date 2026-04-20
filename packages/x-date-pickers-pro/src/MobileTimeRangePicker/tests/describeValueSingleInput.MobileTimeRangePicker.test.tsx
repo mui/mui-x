@@ -3,7 +3,7 @@ import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-picke
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   openPicker,
   getFieldInputRoot,
@@ -42,7 +42,7 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
 
       const expectedValueStr = `${expectedStartValueStr} – ${expectedEndValueStr}`;
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false, closeMobilePicker }) => {
       if (!isOpened) {
@@ -85,7 +85,7 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
         if (setEndDate) {
           fireEvent.click(screen.getByRole('button', { name: /ok/i }));
         } else {
-          // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+          // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
           fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
         }
       }

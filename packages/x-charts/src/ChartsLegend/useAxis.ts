@@ -1,9 +1,9 @@
 'use client';
-import { ComputedAxis } from '../models/axis';
-import { ZAxisDefaultized } from '../models/z-axis';
+import { type ComputedAxis } from '../models/axis';
+import { type ZAxisDefaultized } from '../models/z-axis';
 import { useZAxes } from '../hooks/useZAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
-import { ColorLegendSelector } from './colorLegend.types';
+import { type ColorLegendSelector } from './colorLegend.types';
 
 /**
  * Helper to select an axis definition according to its direction and id.

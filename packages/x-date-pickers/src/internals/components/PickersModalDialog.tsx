@@ -55,7 +55,9 @@ export interface PickersModalDialogProps {
   slotProps?: PickersModalDialogSlotProps;
 }
 
-const PickersModalDialogRoot = styled(MuiDialog)({
+const PickersModalDialogRoot = styled(MuiDialog, {
+  slot: 'internal',
+})({
   [`& .${dialogClasses.container}`]: {
     outline: 0,
   },
@@ -65,7 +67,9 @@ const PickersModalDialogRoot = styled(MuiDialog)({
   },
 });
 
-const PickersModalDialogContent = styled(DialogContent)({
+const PickersModalDialogContent = styled(DialogContent, {
+  slot: 'internal',
+})({
   '&:first-of-type': {
     padding: 0,
   },
@@ -78,7 +82,6 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
   const { dismissViews, onPopperExited } = usePickerPrivateContext();
 
   const Dialog = slots?.dialog ?? PickersModalDialogRoot;
-  const Transition = slots?.mobileTransition ?? Fade;
 
   return (
     <Dialog
@@ -88,10 +91,16 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
         onPopperExited?.();
       }}
       {...slotProps?.dialog}
-      TransitionComponent={Transition}
-      TransitionProps={slotProps?.mobileTransition}
       PaperComponent={slots?.mobilePaper}
-      PaperProps={slotProps?.mobilePaper}
+      slots={{
+        transition: slots?.mobileTransition ?? Fade,
+        ...slotProps?.dialog?.slots,
+      }}
+      slotProps={{
+        transition: slotProps?.mobileTransition,
+        paper: slotProps?.mobilePaper,
+        ...slotProps?.dialog?.slotProps,
+      }}
     >
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
     </Dialog>

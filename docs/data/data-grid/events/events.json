@@ -128,7 +128,7 @@
     "projects": ["x-data-grid-premium"],
     "name": "clipboardPasteEnd",
     "description": "Fired when the clipboard paste operation ends.",
-    "params": "",
+    "params": "{\n  oldRows: Map<GridRowId, GridValidRowModel>\n  newRows: Map<GridRowId, GridValidRowModel>\n}",
     "event": "MuiEvent<{}>",
     "componentProp": "onClipboardPasteEnd"
   },
@@ -342,6 +342,14 @@
     "componentProp": "onPreferencePanelOpen"
   },
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "redo",
+    "description": "Fired when a redo operation is executed.",
+    "params": "{ eventName: keyof GridEventLookup; data: any }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onRedo"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "renderedRowsIntervalChange",
     "description": "Fired when the rendered rows index interval changes. Called with a <a href=\"/x/api/data-grid/grid-render-context/\">GridRenderContext</a> object.",
@@ -502,6 +510,14 @@
     "description": "Fired when the state of the grid is updated.",
     "params": "any",
     "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "undo",
+    "description": "Fired when an undo operation is executed.",
+    "params": "{ eventName: keyof GridEventLookup; data: any }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onUndo"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

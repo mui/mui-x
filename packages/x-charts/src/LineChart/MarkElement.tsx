@@ -4,26 +4,35 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
-import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
+import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
+import { useStore } from '../internals/store/useStore';
+import { getSymbol } from '../internals/getSymbol';
+import {
+  lineClasses,
+  type MarkElementOwnerState,
+  useUtilityClasses as useLineUtilityClasses,
+} from './lineClasses';
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
   slot: 'Root',
-})<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: MarkElementOwnerState }>(({ theme }) => ({
   fill: (theme.vars || theme).palette.background.paper,
-  stroke: ownerState.color,
-  strokeWidth: 2,
-  [`&.${markElementClasses.animate}`]: {
+  [`&.${lineClasses.markAnimate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionProperty: 'transform, transform-origin',
+    transitionProperty: 'transform, transform-origin, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 }));
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
+  Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
+    /**
+     * If `true`, the marker is hidden.
+     * @default false
+     */
+    hidden?: boolean;
     /**
      * If `true`, animations are skipped.
      * @default false
@@ -63,7 +72,7 @@ function MarkElement(props: MarkElementProps) {
   const {
     x,
     y,
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     shape,
@@ -72,36 +81,49 @@ function MarkElement(props: MarkElementProps) {
     skipAnimation,
     isFaded = false,
     isHighlighted = false,
+    hidden,
+    style,
     ...other
   } = props;
 
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
+  const store = useStore();
+  const enablePositionBasedPointerInteraction = store.use(
+    selectorChartExperimentalFeaturesState,
+  )?.enablePositionBasedPointerInteraction;
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
 
   const ownerState = {
-    id,
+    seriesId,
     classes: innerClasses,
     isHighlighted,
     isFaded,
-    color,
     skipAnimation,
   };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
 
   return (
     <MarkElementPath
       {...other}
+      {...(enablePositionBasedPointerInteraction ? {} : interactionProps)}
       style={{
+        ...style,
         transform: `translate(${x}px, ${y}px)`,
         transformOrigin: `${x}px ${y}px`,
       }}
       ownerState={ownerState}
-      className={classes.root}
+      className={classes.mark}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...interactionProps}
+      pointerEvents={hidden ? 'none' : undefined}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
+      data-series-id={seriesId}
+      data-series={seriesId}
+      data-index={dataIndex}
+      opacity={hidden ? 0 : 1}
+      strokeWidth={2}
+      stroke={color}
     />
   );
 }
@@ -116,7 +138,12 @@ MarkElement.propTypes = {
    * The index to the element in the series' data array.
    */
   dataIndex: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * If `true`, the marker is hidden.
+   * @default false
+   */
+  hidden: PropTypes.bool,
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, the marker is faded.
    * @default false

@@ -70,23 +70,12 @@ When used inside a picker, the `separator` slot is not available directly and mu
 
 You can import the `PickersTextField` component to create custom wrappers:
 
-{{"demo": "MaterialV7FieldWrapped.js"}}
+{{"demo": "MaterialFieldWrapped.js"}}
 
 :::success
 This approach is only recommended if you need complex customizations on your `PickersTextField`.
 
 If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
-:::
-
-### Using Material `TextField`
-
-Pass the `enableAccessibleFieldDOMStructure={false}` to any Field or Picker component to use an `<input />` for the editing instead of the new accessible DOM structure:
-
-{{"demo": "MaterialV6Field.js"}}
-
-:::warning
-The non-accessible DOM structure will be deprecated in a follow-up minor version and removed in `v9.x`.
-If you are unable to migrate for some reason, please open an issue to describe what is missing from the new DOM structure so that we can improve it before dropping the old one.
 :::
 
 ## With another Design System
@@ -100,26 +89,11 @@ You will have access to the `clearable` and `onClear` props using native HTML el
 but the **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
 
-{{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
+{{"demo": "BrowserField.js", "defaultCodeOpen": false}}
 
-{{"demo": "BrowserV7SingleInputRangeField.js", "defaultCodeOpen": false}}
+{{"demo": "BrowserSingleInputRangeField.js", "defaultCodeOpen": false}}
 
-{{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
-
-### Using Joy UI
-
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
-
-{{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6SingleInputRangeField.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
-
-:::warning
-All the Joy UI examples use the non-accessible DOM structure.
-The new accessible DOM structure will become compatible with Joy UI in the future.
-:::
+{{"demo": "BrowserMultiInputRangeField.js", "defaultCodeOpen": false}}
 
 ## With a custom editing experience
 
@@ -196,7 +170,7 @@ function CustomDateRangeField(props: DateRangePickerFieldProps) {
 
 ### Validation
 
-You can use the `useValidation` hook to check if the current value passed to your field is valid or not:
+You can use the `useValidation()` hook to check if the current value passed to your field is valid or not:
 
 ```js
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
@@ -234,14 +208,14 @@ Each Picker component has a validator adapted to its value type:
 
 ### Localized placeholder
 
-You can use the `useParsedFormat` to get a clean placeholder.
+You can use the `useParsedFormat()` to get a clean placeholder.
 This hook applies two main transformations on the format:
 
 1. It replaces all the localized tokens (for example `L` for a date with `dayjs`) with their expanded value (`DD/MM/YYYY` for the same date with `dayjs`).
 2. It replaces each token with its token from the localization object (for example `YYYY` remains `YYYY` for the English locale but becomes `AAAA` for the French locale).
 
 :::warning
-The format returned by `useParsedFormat` cannot be parsed by your date library.
+The format returned by `useParsedFormat()` cannot be parsed by your date library.
 :::
 
 ```js
@@ -262,7 +236,7 @@ The picker can receive some commonly used props that should be forwarded to the 
 <DatePicker label="Birth date" name="birthdate" className="date-picker" sx={{ borderColor: 'red'}}>
 ```
 
-If you are using any of those props in one of your pickers, make sure to retrieve them in your field using the `usePickerContext` hook:
+If you are using any of those props in one of your pickers, make sure to retrieve them in your field using the `usePickerContext()` hook:
 
 ```jsx
 const { label, name, rootClassName, rootSx, rootRef } = usePickerContext();
@@ -281,7 +255,7 @@ return (
 ### Spread props to the DOM
 
 The field receives a lot of props that cannot be forwarded to the DOM element without warnings.
-You can use the `useSplitFieldProps` hook to get the props that can be forwarded safely to the DOM:
+You can use the `useSplitFieldProps()` hook to get the props that can be forwarded safely to the DOM:
 
 ```jsx
 const { internalProps, forwardedProps } = useSplitFieldProps(

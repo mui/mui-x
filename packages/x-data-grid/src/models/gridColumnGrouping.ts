@@ -1,4 +1,4 @@
-import { GridColDef } from './colDef';
+import type { GridColDef } from './colDef';
 import type { GridColumnGroupHeaderParams } from './params/gridColumnGroupHeaderParams';
 
 export interface GridLeafColumn {
@@ -8,7 +8,7 @@ export interface GridLeafColumn {
 export type GridColumnNode = GridColumnGroup | GridLeafColumn;
 
 export function isLeaf(node: GridColumnNode): node is GridLeafColumn {
-  return (<GridLeafColumn>node).field !== undefined;
+  return (node as GridLeafColumn).field !== undefined;
 }
 
 /**
@@ -23,8 +23,10 @@ export type GridColumnGroupHeaderClassFn = (params: GridColumnGroupHeaderParams)
  */
 export type GridColumnGroupHeaderClassNamePropType = string | GridColumnGroupHeaderClassFn;
 
-export interface GridColumnGroup
-  extends Pick<GridColDef, 'headerName' | 'description' | 'headerAlign'> {
+export interface GridColumnGroup extends Pick<
+  GridColDef,
+  'headerName' | 'description' | 'headerAlign'
+> {
   /**
    * A unique string identifying the group.
    */

@@ -2,7 +2,13 @@ import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   ExportedPickersCalendarHeaderProps,
   PickersCalendarHeaderProps,
+  PickersCalendarHeaderSlots,
+  PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
+
+export interface PickersRangeCalendarHeaderSlots extends PickersCalendarHeaderSlots {}
+
+export interface PickersRangeCalendarHeaderSlotProps extends PickersCalendarHeaderSlotProps {}
 
 export interface PickersRangeCalendarHeaderProps extends PickersCalendarHeaderProps {
   /**
@@ -19,5 +25,4 @@ export interface PickersRangeCalendarHeaderProps extends PickersCalendarHeaderPr
   monthIndex: number;
 }
 
-export interface ExportedPickersRangeCalendarHeaderProps
-  extends ExportedPickersCalendarHeaderProps {}
+export interface ExportedPickersRangeCalendarHeaderProps extends ExportedPickersCalendarHeaderProps {}

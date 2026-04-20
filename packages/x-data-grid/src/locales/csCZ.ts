@@ -1,5 +1,11 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('cs-CZ');
 
 const csCZGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +21,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompaktní',
   toolbarDensityStandard: 'Standartní',
   toolbarDensityComfortable: 'Komfortní',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Zpět',
+  toolbarRedo: 'Znovu',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Sloupce',
@@ -71,7 +81,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Nebo',
-  filterPanelColumns: 'Sloupce',
+  filterPanelColumn: 'Sloupce',
   filterPanelInputLabel: 'Hodnota',
   filterPanelInputPlaceholder: 'Hodnota filtru',
 
@@ -134,7 +144,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnMenuManageColumns: 'Spravovat sloupce',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Skrýt',
-  columnMenuUnsort: 'Zrušit filtry',
+  columnMenuUnsort: 'Zrušit řazení',
   columnMenuSortAsc: 'Seřadit vzestupně',
   columnMenuSortDesc: 'Seřadit sestupně',
   // columnMenuManagePivot: 'Manage pivot',
@@ -151,7 +161,7 @@ const csCZGrid: Partial<GridLocaleText> = {
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Zobrazit filtry',
-  columnHeaderSortIconLabel: 'Filtrovat',
+  columnHeaderSortIconLabel: 'Řadit',
 
   // Rows selected footer text
   footerRowSelected: (count) => {
@@ -189,6 +199,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'ano',
   booleanCellFalseLabel: 'ne',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Rozbalit',
+  longTextCellCollapseLabel: 'Sbalit',
+
   // Actions cell more text
   actionsCellMore: 'více',
 
@@ -216,11 +230,13 @@ const csCZGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Řádků na stránce:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} z ${count !== -1 ? count : `více než ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} z ${count !== -1 ? formatNumber(count) : `více než ${formatNumber(to)}`}`;
     }
     const estimatedLabel =
-      estimated && estimated > to ? `přibližně ${estimated}` : `více než ${to}`;
-    return `${from}–${to} z ${count !== -1 ? count : estimatedLabel}`;
+      estimated && estimated > to
+        ? `přibližně ${formatNumber(estimated)}`
+        : `více než ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} z ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

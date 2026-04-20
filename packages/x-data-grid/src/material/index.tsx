@@ -2,22 +2,23 @@ import * as React from 'react';
 import clsx from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import MUIAutocomplete from '@mui/material/Autocomplete';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
-import MUIInputBase, { InputBaseProps as MUIInputBaseProps } from '@mui/material/InputBase';
+import MUIInputBase, { type InputBaseProps as MUIInputBaseProps } from '@mui/material/InputBase';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIListItemText, { listItemTextClasses } from '@mui/material/ListItemText';
-import { MenuProps as MUIMenuProps } from '@mui/material/Menu';
+import type { MenuProps as MUIMenuProps } from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
+import MUITextareaAutosize from '@mui/material/TextareaAutosize';
 import MUIFormControl from '@mui/material/FormControl';
 import MUIFormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
@@ -27,7 +28,7 @@ import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
 import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPagination, { tablePaginationClasses } from '@mui/material/TablePagination';
-import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
+import MUIPopper, { type PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
@@ -44,6 +45,8 @@ import {
   GridArrowUpwardIcon,
   GridCheckIcon,
   GridCloseIcon,
+  GridUndoIcon,
+  GridRedoIcon,
   GridColumnIcon,
   GridDragIcon,
   GridExpandMoreIcon,
@@ -64,6 +67,8 @@ import {
   GridLoadIcon,
   GridDeleteForeverIcon,
   GridDownloadIcon,
+  GridLongTextCellExpandIcon,
+  GridLongTextCellCollapseIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -77,15 +82,18 @@ import './augmentation';
 
 export { useMaterialCSSVariables } from './variables';
 
-/* eslint-disable material-ui/disallow-react-api-in-server-components */
+/* eslint-disable mui/disallow-react-api-in-server-components */
 
-const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
+const InputAdornment = styled(MUIInputAdornment, {
+  slot: 'internal',
+})(({ theme }) => ({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
     marginRight: theme.spacing(-0.75),
   },
 }));
 
 const FormControlLabel = styled(MUIFormControlLabel, {
+  slot: 'internal',
   shouldForwardProp: (prop) => prop !== 'fullWidth',
 })<{ fullWidth?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
@@ -108,6 +116,7 @@ const FormControlLabel = styled(MUIFormControlLabel, {
 }));
 
 const Checkbox = styled(MUICheckbox, {
+  slot: 'internal',
   shouldForwardProp: (prop) => prop !== 'density',
 })<{ density?: P['baseCheckbox']['density'] }>(({ theme }) => ({
   variants: [
@@ -120,7 +129,9 @@ const Checkbox = styled(MUICheckbox, {
   ],
 }));
 
-const ListItemText = styled(MUIListItemText)({
+const ListItemText = styled(MUIListItemText, {
+  slot: 'internal',
+})({
   [`& .${listItemTextClasses.primary}`]: {
     overflowX: 'clip',
     textOverflow: 'ellipsis',
@@ -145,17 +156,28 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
     fullWidth,
     ...other
   } = props;
+  const theme = useTheme();
+  const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
+  const computedSize = (size ?? textFieldDefaults.size) as 'small' | 'medium' | undefined;
+  const computedVariant = (textFieldDefaults.variant ?? 'outlined') as
+    | 'standard'
+    | 'filled'
+    | 'outlined';
   const menuProps = {
-    PaperProps: {
-      onKeyDown,
-    },
+    slotProps: { paper: { onKeyDown } },
   } as Partial<MUIMenuProps>;
   if (onClose) {
     menuProps.onClose = onClose;
   }
   return (
-    <MUIFormControl size={size} fullWidth={fullWidth} style={style} disabled={disabled} ref={ref}>
-      <MUIInputLabel id={labelId} htmlFor={id} shrink variant="outlined">
+    <MUIFormControl
+      size={computedSize}
+      fullWidth={fullWidth}
+      style={style}
+      disabled={disabled}
+      ref={ref}
+    >
+      <MUIInputLabel id={labelId} htmlFor={id} shrink variant={computedVariant}>
         {label}
       </MUIInputLabel>
       <MUISelect
@@ -164,20 +186,21 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
         label={label}
         displayEmpty
         onChange={onChange as any}
-        variant="outlined"
+        variant={computedVariant as any}
         {...other}
-        notched
         inputProps={slotProps?.htmlInput}
         onOpen={onOpen}
         MenuProps={menuProps}
-        size={size}
+        size={computedSize}
         {...material}
       />
     </MUIFormControl>
   );
 });
 
-const StyledPagination = styled(MUIPagination)(({ theme }) => ({
+const StyledPagination = styled(MUIPagination, {
+  slot: 'internal',
+})(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
@@ -199,8 +222,12 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
       return undefined;
     }
     return {
-      backIconButtonProps: { disabled: true },
-      nextIconButtonProps: { disabled: true },
+      slotProps: {
+        actions: {
+          previousButton: { disabled: true },
+          nextButton: { disabled: true },
+        },
+      },
     };
   }, [disabled]);
 
@@ -238,11 +265,16 @@ const BaseBadge = forwardRef<any, P['baseBadge']>(function BaseBadge(props, ref)
 });
 
 const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(props, ref) {
-  const { autoFocus, label, fullWidth, slotProps, className, material, ...other } = props;
+  const { autoFocus, label, fullWidth, slotProps, className, material, inputRef, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
   const rippleRef = React.useRef<any>(null);
+  const combinedInputRef = useForkRef(
+    inputRef,
+    slotProps?.htmlInput?.ref,
+    (material?.slotProps?.input as any)?.ref,
+  );
 
   React.useEffect(() => {
     if (autoFocus) {
@@ -255,13 +287,25 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
     }
   }, [autoFocus]);
 
+  const checkboxSlotProps = React.useMemo(
+    () => ({
+      ...material?.slotProps,
+      input: {
+        ...material?.slotProps?.input,
+        ...slotProps?.htmlInput,
+        ref: combinedInputRef,
+      },
+    }),
+    [material?.slotProps, slotProps?.htmlInput, combinedInputRef],
+  );
+
   if (!label) {
     return (
       <Checkbox
         {...other}
         {...material}
         className={clsx(className, material?.className)}
-        inputProps={slotProps?.htmlInput}
+        slotProps={checkboxSlotProps}
         ref={handleRef}
         touchRippleRef={rippleRef}
       />
@@ -275,7 +319,7 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
         <Checkbox
           {...other}
           {...material}
-          inputProps={slotProps?.htmlInput}
+          slotProps={checkboxSlotProps}
           ref={handleRef}
           touchRippleRef={rippleRef}
         />
@@ -310,7 +354,9 @@ const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, r
   return <MUIButton {...other} {...material} ref={ref} />;
 });
 
-const StyledToggleButton = styled(MUIToggleButton)(({ theme }) => ({
+const StyledToggleButton = styled(MUIToggleButton, {
+  slot: 'internal',
+})(({ theme }) => ({
   gap: theme.spacing(1),
   border: 0,
 }));
@@ -376,19 +422,21 @@ function BaseMenuItem(props: P['baseMenuItem']) {
 }
 
 function BaseTextField(props: P['baseTextField']) {
-  // MaterialUI v5 doesn't support slotProps, until we drop v5 support we need to
-  // translate the pattern.
   const { slotProps, material, ...other } = props;
+  const theme = useTheme();
+  const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
+  const computedVariant = (other as any).variant ?? textFieldDefaults.variant ?? 'outlined';
+  const computedSize = (other as any).size ?? textFieldDefaults.size;
   return (
     <MUITextField
-      variant="outlined"
+      variant={computedVariant as any}
+      size={computedSize as any}
       {...other}
       {...material}
-      inputProps={slotProps?.htmlInput}
-      InputProps={transformInputProps(slotProps?.input as any)}
-      InputLabelProps={{
-        shrink: true,
-        ...(slotProps as any)?.inputLabel,
+      slotProps={{
+        htmlInput: slotProps?.htmlInput,
+        input: transformInputProps(slotProps?.input as any),
+        inputLabel: { shrink: true, ...(slotProps as any)?.inputLabel },
       }}
     />
   );
@@ -422,7 +470,7 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
       isOptionEqualToValue={isOptionEqualToValue}
       value={value}
       onChange={onChange}
-      renderTags={(currentValue, getTagProps) =>
+      renderValue={(currentValue, getTagProps) =>
         currentValue.map((option, index) => {
           const { key, ...tagProps } = getTagProps({ index });
           return (
@@ -437,20 +485,35 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
         })
       }
       renderInput={(params) => {
-        const { inputProps, InputProps, InputLabelProps, ...inputRest } = params;
+        const { slotProps: autocompleteSlotProps, ...inputRest } = params;
+        const { slotProps: textFieldSlotProps, ...textFieldRest } = slotProps?.textField ?? {};
+        const { slotProps: baseTextFieldSlotProps, ...baseTextFieldRest } =
+          rootProps.slotProps?.baseTextField ?? {};
         return (
           <MUITextField
             {...inputRest}
             label={label}
             placeholder={placeholder}
-            inputProps={inputProps}
-            InputProps={transformInputProps(InputProps as any, false)}
-            InputLabelProps={{
-              shrink: true,
-              ...InputLabelProps,
+            {...textFieldRest}
+            {...baseTextFieldRest}
+            slotProps={{
+              htmlInput: {
+                ...autocompleteSlotProps.htmlInput,
+                ...textFieldSlotProps?.htmlInput,
+                ...baseTextFieldSlotProps?.htmlInput,
+              },
+              input: {
+                ...transformInputProps(autocompleteSlotProps.input as any, false),
+                ...textFieldSlotProps?.input,
+                ...baseTextFieldSlotProps?.input,
+              },
+              inputLabel: {
+                shrink: true,
+                ...autocompleteSlotProps.inputLabel,
+                ...textFieldSlotProps?.inputLabel,
+                ...baseTextFieldSlotProps?.inputLabel,
+              },
             }}
-            {...slotProps?.textField}
-            {...rootProps.slotProps?.baseTextField}
           />
         );
       }}
@@ -500,6 +563,11 @@ function transformInputProps(props: P['baseInput'] | undefined, wrapAdornments =
   return result;
 }
 
+const BaseTextarea = forwardRef<any, P['baseTextarea']>(function BaseTextarea(props, ref) {
+  const { material, ...other } = props;
+  return <MUITextareaAutosize {...other} {...material} ref={ref} />;
+});
+
 const transformOrigin = {
   'bottom-start': 'top left',
   'bottom-end': 'top right',
@@ -540,9 +608,6 @@ function BasePopper(props: P['basePopper']) {
       result.push({
         name: 'flip',
         enabled: true,
-        options: {
-          rootBoundary: 'document',
-        },
       });
     }
     if (onDidShow || onDidHide) {
@@ -646,7 +711,7 @@ const StyledTabs = styled(MUITabs, {
   name: 'MuiDataGrid',
   slot: 'Tabs',
 })(({ theme }) => ({
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
 const StyledTab = styled(MUITab, {
@@ -721,6 +786,8 @@ const iconSlots: GridIconSlotsComponent = {
   columnMenuIcon: GridTripleDotsVerticalIcon,
   openFilterButtonIcon: GridFilterListIcon,
   filterPanelDeleteIcon: GridCloseIcon,
+  undoIcon: GridUndoIcon,
+  redoIcon: GridRedoIcon,
   columnFilteredIcon: GridFilterAltIcon,
   columnSelectorIcon: GridColumnIcon,
   columnUnsortedIcon: GridColumnUnsortedIcon,
@@ -753,6 +820,8 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
   menuItemCheckIcon: GridCheckIcon,
+  longTextCellExpandIcon: GridLongTextCellExpandIcon,
+  longTextCellCollapseIcon: GridLongTextCellCollapseIcon,
 };
 
 const baseSlots: GridBaseSlots = {
@@ -763,6 +832,7 @@ const baseSlots: GridBaseSlots = {
   baseCircularProgress: BaseCircularProgress,
   baseDivider: BaseDivider,
   baseInput: BaseInput,
+  baseTextarea: BaseTextarea,
   baseLinearProgress: BaseLinearProgress,
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,

@@ -1,12 +1,13 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import PropTypes from 'prop-types';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { useUtilityClasses } from './barLabelClasses';
-import { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { useUtilityClasses } from '../barClasses';
+import { type BarLabelOwnerState, type BarItem, type BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
-import { BarLabel, BarLabelProps } from './BarLabel';
-import { useItemHighlighted } from '../../hooks/useItemHighlighted';
+import { BarLabel, type BarLabelProps } from './BarLabel';
+import { useItemHighlightState } from '../../hooks/useItemHighlightState';
+import { type BarValueType } from '../../models';
 
 export interface BarLabelSlots {
   /**
@@ -20,7 +21,10 @@ export interface BarLabelSlotProps {
   barLabel?: SlotComponentPropsFromProps<BarLabelProps, {}, BarLabelOwnerState>;
 }
 
-export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'> &
+export type BarLabelItemProps<V extends BarValueType | null> = Omit<
+  BarLabelOwnerState,
+  'isFaded' | 'isHighlighted'
+> &
   Pick<BarLabelProps, 'style'> & {
     /**
      * The props used for each component slot.
@@ -63,7 +67,7 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
     /**
      * The value of the data point.
      */
-    value: number | null;
+    value: V;
     /**
      * If true, no animations should be applied.
      */
@@ -82,12 +86,16 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
      * @default 'center'
      */
     barLabelPlacement?: BarLabelProps['placement'];
+    /** If true, the bar label is hidden. */
+    hidden?: boolean;
   };
 
 /**
  * @ignore - internal component.
  */
-function BarLabelItem(props: BarLabelItemProps) {
+function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
+  props: BarLabelItemProps<V>,
+) {
   const {
     seriesId,
     classes: innerClasses,
@@ -106,12 +114,16 @@ function BarLabelItem(props: BarLabelItemProps) {
     skipAnimation,
     layout,
     barLabelPlacement,
+    hidden,
     ...other
   } = props;
-  const { isFaded, isHighlighted } = useItemHighlighted({
+  const highlightState = useItemHighlightState({
+    type: 'bar',
     seriesId,
     dataIndex,
   });
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
 
   const ownerState = {
     seriesId,
@@ -139,7 +151,9 @@ function BarLabelItem(props: BarLabelItemProps) {
       width,
       height,
       placement: barLabelPlacement,
-      className: classes.root,
+      className: classes.label,
+      'data-highlighted': isHighlighted || undefined,
+      'data-faded': isFaded || undefined,
     },
     ownerState,
   });
@@ -162,7 +176,7 @@ function BarLabelItem(props: BarLabelItemProps) {
   }
 
   return (
-    <Component {...barLabelProps} {...barLabelOwnerState}>
+    <Component {...barLabelProps} {...barLabelOwnerState} hidden={hidden}>
       {formattedLabelText}
     </Component>
   );

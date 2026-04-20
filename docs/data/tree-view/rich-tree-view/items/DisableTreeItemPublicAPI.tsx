@@ -8,6 +8,7 @@ import { TreeItem, TreeItemContent, TreeItemProps } from '@mui/x-tree-view/TreeI
 import {
   useTreeItem,
   UseTreeItemContentSlotOwnProps,
+  UseTreeItemStatus,
 } from '@mui/x-tree-view/useTreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
@@ -15,16 +16,18 @@ interface CustomContentProps extends UseTreeItemContentSlotOwnProps {
   children: React.ReactNode;
   toggleItemDisabled: () => void;
   disabled: boolean;
+  status: UseTreeItemStatus;
 }
 
 function CustomContent({
   children,
   toggleItemDisabled,
   disabled,
+  status,
   ...props
 }: CustomContentProps) {
   return (
-    <TreeItemContent {...props}>
+    <TreeItemContent {...props} status={status}>
       {children}
 
       <IconButton
@@ -66,6 +69,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
         content: {
           toggleItemDisabled,
           disabled: status.disabled,
+          status,
         } as CustomContentProps,
       }}
     />

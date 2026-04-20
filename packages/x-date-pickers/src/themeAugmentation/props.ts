@@ -6,8 +6,7 @@ import {
 import { DayCalendarSkeletonProps } from '../DayCalendarSkeleton';
 import { ClockNumberProps, TimeClockProps, ClockPointerProps, ClockProps } from '../TimeClock';
 import { MonthCalendarProps } from '../MonthCalendar';
-import { PickersDayProps } from '../PickersDay';
-import { PickerDay2Props } from '../PickerDay2';
+import { PickerDayProps } from '../PickerDay';
 import { YearCalendarProps } from '../YearCalendar';
 import { DateFieldProps } from '../DateField';
 import { LocalizationProviderProps } from '../LocalizationProvider';
@@ -59,9 +58,9 @@ export interface PickersComponentsPropsList {
   MuiClockNumber: ClockNumberProps;
   MuiClockPointer: ClockPointerProps;
   MuiDateCalendar: DateCalendarProps;
-  MuiDateField: DateFieldProps<any>;
+  MuiDateField: DateFieldProps;
   MuiDatePickerToolbar: ExportedDatePickerToolbarProps;
-  MuiDateTimeField: DateTimeFieldProps<any>;
+  MuiDateTimeField: DateTimeFieldProps;
   MuiDateTimePickerTabs: DateTimePickerTabsProps;
   MuiDateTimePickerToolbar: ExportedDateTimePickerToolbarProps;
   MuiDayCalendar: DayCalendarProps;
@@ -73,8 +72,7 @@ export interface PickersComponentsPropsList {
   MuiMultiSectionDigitalClockSection: ExportedMultiSectionDigitalClockSectionProps;
   MuiPickersArrowSwitcher: ExportedPickersArrowSwitcherProps;
   MuiPickersCalendarHeader: ExportedPickersCalendarHeaderProps;
-  MuiPickersDay: PickersDayProps;
-  MuiPickerDay2: PickerDay2Props;
+  MuiPickerDay: PickerDayProps;
   MuiPickersFadeTransitionGroup: ExportedPickersFadeTransitionGroupProps;
   MuiPickerPopper: ExportedPickerPopperProps;
   MuiPickersSlideTransition: ExportedSlideTransitionProps;
@@ -83,7 +81,7 @@ export interface PickersComponentsPropsList {
   MuiPickersToolbarText: ExportedPickersToolbarTextProps;
   MuiPickersLayout: PickersLayoutProps<PickerValidValue>;
   MuiTimeClock: TimeClockProps;
-  MuiTimeField: TimeFieldProps<any>;
+  MuiTimeField: TimeFieldProps;
   MuiTimePickerToolbar: ExportedTimePickerToolbarProps;
   MuiYearCalendar: YearCalendarProps;
 
@@ -105,7 +103,7 @@ export interface PickersComponentsPropsList {
   MuiMobileDateTimePicker: MobileDateTimePickerProps;
   MuiStaticDateTimePicker: StaticDateTimePickerProps;
 
-  // V7 Picker's TextField
+  // Picker's TextField
   MuiPickersTextField: PickersTextFieldProps;
   MuiPickersInputBase: PickersInputBaseProps;
   MuiPickersInput: PickersInputProps;

@@ -1,5 +1,5 @@
 import { createSvgIcon as createSvgIconMaterial } from '@mui/material/utils';
-import { GridBaseIconProps } from '../../models/gridSlotsComponentsProps';
+import type { GridBaseIconProps } from '../../models/gridSlotsComponentsProps';
 
 export const createSvgIcon = createSvgIconMaterial as (
   path: React.ReactNode,

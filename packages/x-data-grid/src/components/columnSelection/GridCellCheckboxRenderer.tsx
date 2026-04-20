@@ -8,7 +8,7 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
 import { checkboxPropsSelector } from '../../hooks/features/rowSelection/utils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
@@ -54,6 +54,7 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
         groupId: id,
         autoSelectParents: rootProps.rowSelectionPropagation?.parents ?? false,
       },
+      objectShallowCompare,
     );
 
     const disabled = !isSelectable;
@@ -67,13 +68,13 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
     };
 
     React.useLayoutEffect(() => {
-      if (tabIndex === 0) {
+      if (tabIndex === 0 && !disabled) {
         const element = apiRef.current.getCellElement(id, field);
         if (element) {
           element.tabIndex = -1;
         }
       }
-    }, [apiRef, tabIndex, id, field]);
+    }, [apiRef, tabIndex, id, field, disabled]);
 
     const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
       if (event.key === ' ') {
@@ -109,16 +110,15 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
     );
 
     return (
-      <rootProps.slots.baseCheckbox
-        tabIndex={tabIndex}
+      <rootProps.slots.rowCheckbox
+        rowId={id}
+        tabIndex={disabled ? -1 : tabIndex}
         checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         onClick={handleClick}
         onMouseDown={handleMouseDown}
         className={clsx(classes.root, disabled && 'Mui-disabled')}
-        material={{
-          disableRipple: disabled,
-        }}
+        disabled={disabled}
         slotProps={{
           htmlInput: {
             'aria-disabled': disabled || undefined,
@@ -128,7 +128,7 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
         }}
         onKeyDown={handleKeyDown}
         indeterminate={isIndeterminate}
-        {...rootProps.slotProps?.baseCheckbox}
+        {...rootProps.slotProps?.rowCheckbox}
         {...other}
         ref={ref as any}
       />

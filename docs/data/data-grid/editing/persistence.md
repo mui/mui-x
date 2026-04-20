@@ -4,11 +4,11 @@
 
 ## The `processRowUpdate()` callback
 
-When the user performs an action to [stop editing](#stop-editing), the `processRowUpdate()` callback is triggered.
+When the user performs an action to [stop editing](/x/react-data-grid/editing/#stop-editing), the `processRowUpdate()` callback is triggered.
 Use it to send the new values to the server and save them into a database or other storage method.
 The callback is called with three arguments:
 
-1. The updated row with the new values returned by the [`valueSetter()`](#value-parser-and-value-setter).
+1. The updated row with the new values returned by the [`valueSetter()`](/x/react-data-grid/editing/#value-parser-and-value-setter).
 2. The original values of the row before editing.
 3. An object with additional properties such as `rowId`.
 
@@ -53,7 +53,7 @@ If you need to cancel the save process on `processRowUpdate()`—for instance, w
 2. Resolve the promise with the second argument (original row before editing), so that the internal state is not updated, and the cell exits edit mode.
 
 The following demo implements the first option: rejecting the promise.
-Instead of [validating](#validation) while typing, it simulates validation on the server.
+Instead of [validating](/x/react-data-grid/editing/#validation) while typing, it simulates validation on the server.
 If the new name is empty, the promise responsible for saving the row will be rejected, and the cell will remain in edit mode.
 
 The demo also shows that `processRowUpdate()` can pre-process the row model that will be saved into the internal state.

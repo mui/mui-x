@@ -1,6 +1,6 @@
 import { config } from 'react-transition-group';
 import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
-import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import { gridClasses, DataGridPro, type DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
@@ -201,7 +201,7 @@ describe('<DataGridPro /> - Column headers', () => {
       fireEvent.click(menuIconButton);
       await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+      /* eslint-disable mui/disallow-active-element-as-key-event-target */
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).to.equal(null);

@@ -10,14 +10,15 @@ import {
   STATUS_OPTIONS,
   TAXCODE_OPTIONS,
 } from './static-data';
-import { GridDataGeneratorContext } from './gridColDefGenerator';
+import type { GridDataGeneratorContext } from './gridColDefGenerator';
 
 let chance: Chance.Chance;
 let chanceGuid: Chance.Chance;
 
-declare const DISABLE_CHANCE_RANDOM: any;
+// eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle
+declare const __DISABLE_CHANCE_RANDOM__: any;
 
-if (typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM) {
+if (typeof __DISABLE_CHANCE_RANDOM__ !== 'undefined' && __DISABLE_CHANCE_RANDOM__) {
   chance = new Chance(() => 0.5);
   chanceGuid = new Chance(42);
 } else {

@@ -1,26 +1,30 @@
 import * as React from 'react';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { TreeViewProviderProps } from './TreeViewProvider.types';
 import { TreeViewContext } from './TreeViewContext';
-import { TreeViewAnyPluginSignature } from '../models';
 import { TreeViewSlotProps, TreeViewSlots, TreeViewStyleContext } from './TreeViewStyleContext';
-
-const EMPTY_OBJECT = {};
+import { useTreeViewBuildContext } from './useTreeViewBuildContext';
+import { TreeViewAnyStore } from '../models';
 
 /**
  * Sets up the contexts for the underlying Tree Item components.
  *
  * @ignore - do not document.
  */
-export function TreeViewProvider<TSignatures extends readonly TreeViewAnyPluginSignature[]>(
-  props: TreeViewProviderProps<TSignatures>,
+export function TreeViewProvider<TStore extends TreeViewAnyStore>(
+  props: TreeViewProviderProps<TStore>,
 ) {
   const {
-    contextValue,
+    store,
+    apiRef,
+    rootRef,
     classes = EMPTY_OBJECT,
     slots = EMPTY_OBJECT as TreeViewSlots,
     slotProps = EMPTY_OBJECT as TreeViewSlotProps,
     children,
   } = props;
+
+  const contextValue = useTreeViewBuildContext({ store, apiRef, rootRef });
 
   const styleContextValue = React.useMemo(
     () => ({
@@ -50,7 +54,7 @@ export function TreeViewProvider<TSignatures extends readonly TreeViewAnyPluginS
   return (
     <TreeViewContext.Provider value={contextValue}>
       <TreeViewStyleContext.Provider value={styleContextValue}>
-        {contextValue.wrapRoot({ children })}
+        {children}
       </TreeViewStyleContext.Provider>
     </TreeViewContext.Provider>
   );

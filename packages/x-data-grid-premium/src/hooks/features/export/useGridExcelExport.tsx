@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   useGridApiMethod,
   useGridLogger,
-  GridExportDisplayOptions,
+  type GridExportDisplayOptions,
   useGridEventPriority,
 } from '@mui/x-data-grid';
 import {
@@ -11,18 +11,18 @@ import {
   exportAs,
   getColumnsToExport,
   defaultGetRowsToExport,
-  GridPipeProcessor,
+  type GridPipeProcessor,
 } from '@mui/x-data-grid/internals';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { DataGridPremiumProps } from '../../../models/dataGridPremiumProps';
-import {
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { DataGridPremiumProps } from '../../../models/dataGridPremiumProps';
+import type {
   GridExcelExportApi,
   GridExportExtension,
   GridExcelExportOptions,
 } from './gridExcelExportInterface';
 import {
   buildExcel,
-  ExcelExportInitEvent,
+  type ExcelExportInitEvent,
   getDataForValueOptionsSheet,
   serializeColumns,
   serializeRowUnsafe,

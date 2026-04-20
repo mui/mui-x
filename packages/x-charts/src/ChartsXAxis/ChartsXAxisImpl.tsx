@@ -1,11 +1,12 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import { AxisScaleConfig, ChartsXAxisProps, ComputedAxis } from '../models/axis';
+import type { ChartsXAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
 import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { ChartsText, type ChartsTextProps } from '../ChartsText';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { defaultProps, useUtilityClasses } from './utilities';
@@ -19,21 +20,24 @@ const XAxisRoot = styled(AxisRoot, {
 })({});
 
 interface ChartsXAxisImplProps extends Omit<ChartsXAxisProps, 'axis'> {
-  axis: ComputedAxis<keyof AxisScaleConfig, any, ChartsXAxisProps>;
+  axis: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
 }
 
 /**
  * @ignore - internal component. Use `ChartsXAxis` instead.
  */
 export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
-  const { scale: xScale, tickNumber, reverse, ...settings } = axis;
+  // @ts-expect-error ordinalTimeTicks may not be present on all axis types
+  // Should be set to never, but this causes other issues with proptypes generator.
+  const { scale: xScale, tickNumber, reverse, ordinalTimeTicks, ...settings } = axis;
 
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
   const defaultizedProps = { ...defaultProps, ...themedProps };
 
   const {
     position,
+    className,
     labelStyle,
     offset,
     slots,
@@ -54,7 +58,9 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
 
   const axisLabelProps = useSlotProps({
     elementType: Label,
+    // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     externalSlotProps: slotProps?.axisLabel,
+    // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     additionalProps: {
       style: {
         ...theme.typography.body1,
@@ -84,7 +90,11 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
       'groups' in axis && Array.isArray(axis.groups) ? (
         <ChartsGroupedXAxisTicks {...inProps} />
       ) : (
-        <ChartsSingleXAxisTicks {...inProps} axisLabelHeight={labelHeight} />
+        <ChartsSingleXAxisTicks
+          {...inProps}
+          axisLabelHeight={labelHeight}
+          ordinalTimeTicks={ordinalTimeTicks}
+        />
       );
   }
 
@@ -96,7 +106,8 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
   return (
     <XAxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}
-      className={classes.root}
+      className={clsx(classes.root, className)}
+      data-axis-id={defaultizedProps.id}
       sx={sx}
     >
       {!disableLine && (

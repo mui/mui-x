@@ -77,7 +77,6 @@ export default function TooltipPosition() {
                   props.placement === 'undefined' ? undefined : props.placement,
               },
             }}
-            enableKeyboardNavigation
             {...chartSetting}
           />
         </Box>
@@ -92,17 +91,17 @@ export default function TooltipPosition() {
         props.anchor === 'undefined'
           ? ''
           : `
-        anchor: ${props.anchor},`
+        anchor: '${props.anchor}',`
       }${
         props.position === 'undefined'
           ? ''
           : `
-        position: ${props.position},`
+        position: '${props.position}',`
       }${
         props.placement === 'undefined'
           ? ''
           : `
-        placement: ${props.placement},`
+        placement: '${props.placement}',`
       }
       },
     }}

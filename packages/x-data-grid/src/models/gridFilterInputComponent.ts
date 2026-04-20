@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridFilterItem } from './gridFilterItem';
+import type * as React from 'react';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridFilterItem } from './gridFilterItem';
 import type { GridApiCommon } from './api/gridApiCommon';
 import type { GridApiCommunity } from './api/gridApiCommunity';
 

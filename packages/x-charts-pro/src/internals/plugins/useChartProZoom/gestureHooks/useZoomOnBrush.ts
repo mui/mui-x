@@ -1,15 +1,14 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  useSelector,
-  getSVGPoint,
+  type ChartPlugin,
+  getChartPoint,
   selectorChartDrawingArea,
-  ZoomData,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { PanEvent } from '@mui/x-internal-gestures/core';
-import { UseChartProZoomSignature } from '../useChartProZoom.types';
+import { type PanEvent } from '@mui/x-internal-gestures/core';
+import { type UseChartProZoomSignature } from '../useChartProZoom.types';
 import { getHorizontalCenterRatio, getVerticalCenterRatio, isSpanValid } from './useZoom.utils';
 import { selectorZoomInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
@@ -17,23 +16,40 @@ export const useZoomOnBrush = (
   {
     store,
     instance,
-    svgRef,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<(prev: ZoomData[]) => ZoomData[]>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, 'brush' as const);
+  const { chartsLayerContainerRef } = instance;
+  const drawingArea = store.use(selectorChartDrawingArea);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
+  const config = store.use(selectorZoomInteractionConfig, 'brush' as const);
 
   const isZoomOnBrushEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
-    instance.setZoomBrushEnabled(isZoomOnBrushEnabled);
+    if ('setZoomBrushEnabled' in instance) {
+      instance.setZoomBrushEnabled(isZoomOnBrushEnabled);
+    }
   }, [isZoomOnBrushEnabled, instance]);
+
+  React.useEffect(() => {
+    if (!isZoomOnBrushEnabled) {
+      return;
+    }
+
+    instance.updateZoomInteractionListeners('brush', {
+      requiredKeys: config!.requiredKeys,
+      pointerMode: config!.pointerMode,
+      pointerOptions: {
+        mouse: config!.mouse,
+        touch: config!.touch,
+      },
+    });
+  }, [isZoomOnBrushEnabled, config, instance]);
 
   // Zoom on brush
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     if (element === null || !isZoomOnBrushEnabled) {
       return () => {};
     }
@@ -41,11 +57,11 @@ export const useZoomOnBrush = (
     const handleBrushEnd = (event: PanEvent) => {
       // Convert the brush rectangle to zoom percentages for each axis
       setZoomDataCallback((prev) => {
-        const startPoint = getSVGPoint(element, {
+        const startPoint = getChartPoint(element, {
           clientX: event.detail.initialCentroid.x,
           clientY: event.detail.initialCentroid.y,
         });
-        const endPoint = getSVGPoint(element, {
+        const endPoint = getChartPoint(element, {
           clientX: event.detail.centroid.x,
           clientY: event.detail.centroid.y,
         });
@@ -109,7 +125,7 @@ export const useZoomOnBrush = (
       brushEndHandler.cleanup();
     };
   }, [
-    svgRef,
+    chartsLayerContainerRef,
     drawingArea,
     isZoomOnBrushEnabled,
     optionsLookup,

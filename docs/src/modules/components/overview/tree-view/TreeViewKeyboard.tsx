@@ -10,10 +10,10 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 import KeyboardSvg, { SelectedKey } from '../KeyboardSvg';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {
     id: 'tree-view',
     label: 'Tree View',
@@ -39,7 +39,7 @@ export default function TreeViewKeyboard() {
           sectionContent = (ref.current as HTMLElement).querySelector('li') as HTMLElement;
         } else {
           sectionContent = (ref.current as HTMLElement).querySelector(
-            ' .Mui-focused',
+            '[data-focused]',
           ) as HTMLElement;
         }
       }
@@ -62,15 +62,19 @@ export default function TreeViewKeyboard() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Divider />
-      <Stack spacing={6} py={8} sx={{ width: '100%' }}>
+      <Stack spacing={6} sx={{ py: 8, width: '100%' }}>
         <Stack spacing={1} sx={{ width: '100%', maxWidth: { xs: '500px', md: '100%' } }}>
-          <Typography variant="body2" color="primary" fontWeight="semiBold">
+          <Typography variant="body2" color="primary" sx={{ fontWeight: 'semiBold' }}>
             Accessibility
           </Typography>
-          <Typography variant="h4" component="h2" fontWeight="semiBold" color="text.primary">
+          <Typography
+            variant="h4"
+            component="h2"
+            sx={{ fontWeight: 'semiBold', color: 'text.primary' }}
+          >
             Inclusive by design
           </Typography>
-          <Typography variant="body1" color="text.secondary">
+          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
             The MUI X Tree View feature advanced keyboard support that&apos;s compliant with WCAG
             and WAI-ARIA standards, so users who require assistive technology can navigate your
             interface with ease.
@@ -96,10 +100,13 @@ export default function TreeViewKeyboard() {
         >
           <Stack
             spacing={2}
-            sx={{ width: '100%', maxWidth: { xs: '500px', md: '100%' } }}
             direction={{ lg: 'row', xs: 'column' }}
-            justifyContent="space-evenly"
-            alignItems={{ xs: 'center', lg: 'flex-start' }}
+            sx={{
+              justifyContent: 'space-evenly',
+              alignItems: { xs: 'center', lg: 'flex-start' },
+              width: '100%',
+              maxWidth: { xs: '500px', md: '100%' },
+            }}
           >
             <ThemeProvider theme={theme}>
               <Paper

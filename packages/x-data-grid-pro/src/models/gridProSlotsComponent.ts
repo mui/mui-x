@@ -1,5 +1,5 @@
-import { GridSlotsComponent } from '@mui/x-data-grid';
-import { GridProIconSlotsComponent } from './gridProIconSlotsComponent';
+import type { GridSlotsComponent } from '@mui/x-data-grid';
+import type { GridProIconSlotsComponent } from './gridProIconSlotsComponent';
 
 /**
  * Grid components React prop interface containing all the overridable components

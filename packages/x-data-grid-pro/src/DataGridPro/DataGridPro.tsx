@@ -1,20 +1,20 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
+import { GridRoot, GridContextProvider, type GridValidRowModel } from '@mui/x-data-grid';
 import {
-  GridConfiguration,
+  type GridConfiguration,
   validateProps,
   useGridApiInitialization,
-  useGridRowsOverridableMethods,
   useGridParamsOverridableMethods,
   useIsCellEditable,
 } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { DataGridProProps } from '../models/dataGridProProps';
+import type { DataGridProProcessedProps, DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
 import { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
@@ -23,7 +23,7 @@ import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration = {
+const configuration: GridConfiguration<GridPrivateApiPro, DataGridProProcessedProps> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPro,
@@ -35,8 +35,12 @@ const configuration: GridConfiguration = {
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },
 };
-const releaseInfo = '__RELEASE_INFO__';
-const watermark = <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />;
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-data-grid-pro' as const,
+};
+const watermark = <Watermark packageInfo={packageInfo} />;
 
 const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowModel>(
   inProps: DataGridProProps<R>,
@@ -47,15 +51,19 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
     props.apiRef,
     props,
   );
-  useDataGridProComponent(privateApiRef, props, configuration);
-  useLicenseVerifier('x-data-grid-pro', releaseInfo);
+  useDataGridProComponent(privateApiRef, props, configuration as GridConfiguration);
+  useLicenseVerifier(packageInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGridPro);
   }
 
   return (
-    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
+    <GridContextProvider
+      privateApiRef={privateApiRef}
+      configuration={configuration as GridConfiguration}
+      props={props}
+    >
       <GridRoot
         className={props.className}
         style={props.style}
@@ -129,6 +137,7 @@ DataGridProRaw.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.string),
     disableColumnVirtualization: PropTypes.bool,
     expand: PropTypes.bool,
+    includeHeaderFilters: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,
     outliersFactor: PropTypes.number,
@@ -137,6 +146,66 @@ DataGridProRaw.propTypes = {
    * Controls the modes of the cells.
    */
   cellModesModel: PropTypes.object,
+  /**
+   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   *
+   * @warning
+   * Be careful when overriding `renderHeader` or `renderCell` in the `checkboxColDef` prop.
+   * The default implementation of these properties includes the logic for selecting all rows and selecting a single row, respectively.
+   * Overriding them without providing the same functionality will break the row selection.
+   */
+  checkboxColDef: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    colSpan: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+    description: PropTypes.string,
+    disableColumnMenu: PropTypes.bool,
+    disableExport: PropTypes.bool,
+    disableReorder: PropTypes.bool,
+    display: PropTypes.oneOf(['flex', 'text']),
+    editable: PropTypes.bool,
+    examples: PropTypes.array,
+    filterable: PropTypes.bool,
+    filterOperators: PropTypes.arrayOf(
+      PropTypes.shape({
+        getApplyFilterFn: PropTypes.func.isRequired,
+        getValueAsString: PropTypes.func,
+        headerLabel: PropTypes.string,
+        InputComponent: PropTypes.elementType,
+        InputComponentProps: PropTypes.object,
+        label: PropTypes.string,
+        requiresFilterValue: PropTypes.bool,
+        value: PropTypes.string.isRequired,
+      }),
+    ),
+    flex: PropTypes.number,
+    getApplyQuickFilterFn: PropTypes.func,
+    getSortComparator: PropTypes.func,
+    groupable: PropTypes.bool,
+    headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
+    headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    headerName: PropTypes.string,
+    hideable: PropTypes.bool,
+    hideSortIcons: PropTypes.bool,
+    maxWidth: PropTypes.number,
+    minWidth: PropTypes.number,
+    pinnable: PropTypes.bool,
+    preProcessEditCellProps: PropTypes.func,
+    renderCell: PropTypes.func,
+    renderEditCell: PropTypes.func,
+    renderHeader: PropTypes.func,
+    renderHeaderFilter: PropTypes.func,
+    resizable: PropTypes.bool,
+    rowSpanValueGetter: PropTypes.func,
+    sortable: PropTypes.bool,
+    sortComparator: PropTypes.func,
+    sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])),
+    valueFormatter: PropTypes.func,
+    valueGetter: PropTypes.func,
+    valueParser: PropTypes.func,
+    valueSetter: PropTypes.func,
+    width: PropTypes.number,
+  }),
   /**
    * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
@@ -205,6 +274,13 @@ DataGridProRaw.propTypes = {
     get: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
+  /**
+   * If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.
+   * If the refetched rows are different from the current rows, the grid will update the rows.
+   * Set to `0` to disable polling.
+   * @default 0
+   */
+  dataSourceRevalidateMs: PropTypes.number,
   /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
@@ -327,6 +403,7 @@ DataGridProRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -489,11 +566,28 @@ DataGridProRaw.propTypes = {
    */
   isGroupExpandedByDefault: PropTypes.func,
   /**
+   * Indicates whether a row is reorderable.
+   * @param {object} params With all properties from the row.
+   * @param {R} params.row The row model of the row that the current cell belongs to.
+   * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
+   * @returns {boolean} A boolean indicating if the row is reorderable.
+   */
+  isRowReorderable: PropTypes.func,
+  /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * Indicates if a row reorder attempt is valid.
+   * Can be used to disable certain row reorder operations based on the context.
+   * The internal validation is still applied, preventing unsupported use-cases.
+   * Use `isValidRowReorder()` to add additional validation rules to the default ones.
+   * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
+   * @returns {boolean} A boolean indicating if the reorder operation should go through.
+   */
+  isValidRowReorder: PropTypes.func,
   /**
    * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
    * in a column re-order action will not cause the column to jump back to its original position.
@@ -838,7 +932,7 @@ DataGridProRaw.propTypes = {
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
+   * Prefer to use {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} unless it doesn't fulfill your needs.
    */
   onRowsScrollEnd: PropTypes.func,
   /**
@@ -1015,6 +1109,15 @@ DataGridProRaw.propTypes = {
    * @default 80
    */
   scrollEndThreshold: PropTypes.number,
+  /**
+   * Updates the tree path in a row model.
+   * Used when reordering rows across different parents in tree data.
+   * @template R
+   * @param {string[]} path The new path for the row.
+   * @param {R} row The row model to update.
+   * @returns {R} The updated row model with the new path.
+   */
+  setTreeDataPath: PropTypes.func,
   /**
    * If `true`, vertical borders will be displayed between cells.
    * @default false

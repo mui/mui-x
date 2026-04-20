@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { useRadarGridData } from './useRadarGridData';
 import { SharpRadarGrid } from './SharpRadarGrid';
-import { RadarGridProps } from './RadarGrid.types';
+import { type RadarGridProps } from './RadarGrid.types';
 import { CircularRadarGrid } from './CircularRadarGrid';
 import { SharpRadarStripes } from './SharpRadarStripes';
 import { CircularRadarStripes } from './CircularRadarStripes';
-import { useUtilityClasses } from './radarGridClasses';
+import { useUtilityClasses } from '../radarClasses';
 
 function RadarGrid(props: RadarGridProps) {
   const theme = useTheme();
@@ -20,7 +20,7 @@ function RadarGrid(props: RadarGridProps) {
   } = props;
   const gridData = useRadarGridData();
 
-  const classes = useUtilityClasses(props.classes);
+  const classes = useUtilityClasses();
   if (gridData === null) {
     return null;
   }

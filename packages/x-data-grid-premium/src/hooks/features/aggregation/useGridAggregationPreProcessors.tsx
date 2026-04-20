@@ -1,12 +1,13 @@
+'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import {
-  GridPipeProcessor,
-  GridRestoreStatePreProcessingContext,
+  type GridPipeProcessor,
+  type GridRestoreStatePreProcessingContext,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   getAvailableAggregationFunctions,
   addFooterRows,
@@ -17,10 +18,10 @@ import {
   wrapColumnWithAggregationValue,
   unwrapColumnFromAggregation,
 } from './wrapColumnWithAggregation';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
-import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import { GridAggregationRules } from './gridAggregationInterfaces';
+import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
+import type { GridAggregationRules } from './gridAggregationInterfaces';
 
 export const useGridAggregationPreProcessors = (
   apiRef: RefObject<GridPrivateApiPremium>,

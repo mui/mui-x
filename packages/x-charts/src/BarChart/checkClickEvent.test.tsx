@@ -1,8 +1,9 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { vi } from 'vitest';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
+import { getCenter } from 'test/utils/charts/getCenter';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const config = {
   dataset: [
@@ -30,8 +31,8 @@ describe('BarChart - click event', () => {
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onAxisClick = spy();
-      const { user } = render(
+      const onAxisClick = vi.fn();
+      const { user, container } = render(
         <div
           style={{
             width: 400,
@@ -49,17 +50,19 @@ describe('BarChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
 
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 198, clientY: 60 },
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 0,
         axisValue: 'A',
         seriesValues: { s1: 4, s2: 2 },
@@ -68,12 +71,12 @@ describe('BarChart - click event', () => {
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 201, clientY: 60 },
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 1,
         axisValue: 'B',
         seriesValues: { s1: 1, s2: 1 },
@@ -84,8 +87,8 @@ describe('BarChart - click event', () => {
     it.skipIf(isJSDOM)(
       'should provide the right context as second argument with layout="horizontal"',
       async () => {
-        const onAxisClick = spy();
-        const { user } = render(
+        const onAxisClick = vi.fn();
+        const { user, container } = render(
           <div
             style={{
               width: 400,
@@ -104,17 +107,19 @@ describe('BarChart - click event', () => {
             />
           </div>,
         );
-        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
+        const layerContainer = container.querySelector<HTMLElement>(
+          `.${chartsSvgLayerClasses.root}`,
+        )!.parentElement!;
 
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 60, clientY: 198 },
           },
         ]);
 
-        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
           dataIndex: 0,
           axisValue: 'A',
           seriesValues: { s1: 4, s2: 2 },
@@ -123,12 +128,12 @@ describe('BarChart - click event', () => {
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 60, clientY: 201 },
           },
         ]);
 
-        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
           dataIndex: 1,
           axisValue: 'B',
           seriesValues: { s1: 1, s2: 1 },
@@ -138,7 +143,7 @@ describe('BarChart - click event', () => {
   });
 
   describe('onItemClick', () => {
-    it('should add cursor="pointer" to bar elements', () => {
+    it('should add cursor="pointer" to bar elements when onItemClick is provided', () => {
       render(
         <BarChart
           {...config}
@@ -150,7 +155,7 @@ describe('BarChart - click event', () => {
           onItemClick={() => {}}
         />,
       );
-      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarElement-root');
+      const rectangles = document.querySelectorAll<HTMLElement>(`rect.${barClasses.element}`);
 
       expect(
         Array.from(rectangles).map((rectangle) => rectangle.getAttribute('cursor')),
@@ -159,7 +164,7 @@ describe('BarChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onItemClick = spy();
+      const onItemClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -179,24 +184,30 @@ describe('BarChart - click event', () => {
         </div>,
       );
 
-      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarElement-root');
+      const rectangles = document.querySelectorAll<HTMLElement>(`rect.${barClasses.element}`);
 
-      await user.click(rectangles[0]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      await user.pointer([
+        { keys: '[MouseLeft]', target: rectangles[0], coords: getCenter(rectangles[0]) },
+      ]);
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 0,
       });
 
-      await user.click(rectangles[1]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      await user.pointer([
+        { keys: '[MouseLeft]', target: rectangles[1], coords: getCenter(rectangles[1]) },
+      ]);
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 1,
       });
 
-      await user.click(rectangles[2]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      await user.pointer([
+        { keys: '[MouseLeft]', target: rectangles[2], coords: getCenter(rectangles[2]) },
+      ]);
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's2',
         dataIndex: 0,

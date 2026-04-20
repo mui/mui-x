@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { GridSlotProps } from './gridSlotsComponentsProps';
 import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
 
@@ -75,6 +75,11 @@ export interface GridBaseSlots {
    * @default Input
    */
   baseInput: React.JSXElementConstructor<GridSlotProps['baseInput']>;
+  /**
+   * The custom Textarea component used in the grid for multiline text editing.
+   * @default InputBase with multiline
+   */
+  baseTextarea: React.JSXElementConstructor<GridSlotProps['baseTextarea']>;
   /**
    * The custom ToggleButton component used in the grid.
    * @default ToggleButton
@@ -232,4 +237,9 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * @default GridRow
    */
   row: React.JSXElementConstructor<GridSlotProps['row']>;
+  /**
+   * Component rendered for each row selection checkbox.
+   * @default GridRowCheckbox
+   */
+  rowCheckbox: React.JSXElementConstructor<GridSlotProps['rowCheckbox']>;
 }

@@ -1,14 +1,18 @@
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import { SchedulerEventOccurrence, SchedulerProcessedDate } from '../models';
 import {
   getDaysTheOccurrenceIsVisibleOn,
   getOccurrencesFromEvents,
   GetOccurrencesFromEventsParameters,
-} from '../utils/event-utils';
-import { useAdapter } from '../use-adapter/useAdapter';
+} from '../internals/utils/event-utils';
+import { useAdapterContext } from '../use-adapter-context';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
-import { schedulerEventSelectors, schedulerResourceSelectors } from '../scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+  schedulerResourceSelectors,
+} from '../scheduler-selectors';
 
 /**
  * Gets all the event occurrences for the given days.
@@ -20,11 +24,12 @@ export function useEventOccurrencesGroupedByDay(
   parameters: useEventOccurrencesGroupedByDay.Parameters,
 ): useEventOccurrencesGroupedByDay.ReturnValue {
   const { days } = parameters;
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const events = useStore(store, schedulerEventSelectors.processedEventList);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
-  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const plan = useStore(store, schedulerOtherSelectors.plan);
 
   return React.useMemo(
     () =>
@@ -33,9 +38,10 @@ export function useEventOccurrencesGroupedByDay(
         days,
         events,
         visibleResources,
-        resourceParentIds,
+        displayTimezone,
+        plan,
       }),
-    [adapter, days, events, visibleResources, resourceParentIds],
+    [adapter, days, events, visibleResources, displayTimezone, plan],
   );
 }
 
@@ -57,10 +63,10 @@ export namespace useEventOccurrencesGroupedByDay {
 export function innerGetEventOccurrencesGroupedByDay(
   parameters: Pick<
     GetOccurrencesFromEventsParameters,
-    'adapter' | 'visibleResources' | 'events' | 'resourceParentIds'
+    'adapter' | 'visibleResources' | 'events' | 'displayTimezone' | 'plan'
   > & { days: SchedulerProcessedDate[] },
 ): Map<string, SchedulerEventOccurrence[]> {
-  const { adapter, days, events, visibleResources, resourceParentIds } = parameters;
+  const { adapter, days, events, visibleResources, displayTimezone, plan } = parameters;
 
   const occurrenceMap = new Map<string, SchedulerEventOccurrence[]>(
     days.map((day) => [day.key, []]),
@@ -74,7 +80,8 @@ export function innerGetEventOccurrencesGroupedByDay(
     end,
     events,
     visibleResources,
-    resourceParentIds,
+    displayTimezone,
+    plan,
   });
 
   for (const occurrence of occurrences) {

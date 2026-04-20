@@ -1,24 +1,27 @@
-import { PolarChartSeriesType } from '../../../../models/seriesType/config';
-import { ChartSeriesConfig, AxisTooltipGetter } from '../../models/seriesConfig';
-import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import { type PolarChartSeriesType } from '../../../../models/seriesType/config';
+import {
+  type ChartSeriesConfig,
+  type AxisTooltipGetter,
+} from '../../corePlugins/useChartSeriesConfig';
+import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { isPolarSeriesType } from '../../../isPolar';
-import { AxisId } from '../../../../models/axis';
+import { type AxisId } from '../../../../models/axis';
 
-export const getAxisTriggerTooltip = <TSeriesType extends PolarChartSeriesType>(
+export const getAxisTriggerTooltip = <SeriesType extends PolarChartSeriesType>(
   axisDirection: 'radius' | 'rotation',
-  seriesConfig: ChartSeriesConfig<TSeriesType>,
-  formattedSeries: ProcessedSeries<TSeriesType>,
+  seriesConfig: ChartSeriesConfig<SeriesType>,
+  formattedSeries: ProcessedSeries<SeriesType>,
   defaultAxisId: AxisId,
 ) => {
   const tooltipAxesIds = new Set<AxisId>();
 
-  const chartTypes = Object.keys(seriesConfig).filter(isPolarSeriesType) as TSeriesType[];
+  const chartTypes = Object.keys(seriesConfig).filter(isPolarSeriesType) as SeriesType[];
 
   chartTypes.forEach((chartType) => {
     const series = formattedSeries[chartType]?.series ?? {};
     const tooltipAxes = (
       seriesConfig[chartType].axisTooltipGetter as
-        | AxisTooltipGetter<TSeriesType, 'radius' | 'rotation'>
+        | AxisTooltipGetter<SeriesType, 'radius' | 'rotation'>
         | undefined
     )?.(series);
 

@@ -2,11 +2,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { BarElementOwnerState, useUtilityClasses } from './barElementClasses';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type BarElementOwnerState, useUtilityClasses } from './barClasses';
+import { useItemHighlightState } from '../hooks/useItemHighlightState';
+import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
 import { useIsItemFocused } from '../hooks/useIsItemFocused';
 
 export interface BarElementSlots {
@@ -14,14 +13,17 @@ export interface BarElementSlots {
    * The component that renders the bar.
    * @default BarElementPath
    */
-  bar?: React.ElementType<BarProps>;
+  bar?: React.JSXElementConstructor<BarProps>;
 }
 export interface BarElementSlotProps {
   bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
 }
 
-export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.SVGProps<SVGRectElement>, 'ref' | 'id'> & {
+export type BarElementProps = Omit<
+  BarElementOwnerState,
+  'isFaded' | 'isHighlighted' | 'isFocused'
+> &
+  Omit<React.SVGProps<SVGRectElement>, 'ref'> & {
     /**
      * The props used for each component slot.
      * @default {}
@@ -41,11 +43,12 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
     height: number;
     layout: 'horizontal' | 'vertical';
     skipAnimation: boolean;
+    hidden?: boolean;
   };
 
 function BarElement(props: BarElementProps) {
   const {
-    id,
+    seriesId,
     dataIndex,
     classes: innerClasses,
     color,
@@ -61,27 +64,20 @@ function BarElement(props: BarElementProps) {
     yOrigin,
     width,
     height,
+    hidden,
     ...other
   } = props;
   const itemIdentifier = React.useMemo(
-    () => ({ type: 'bar' as const, seriesId: id, dataIndex }),
-    [id, dataIndex],
+    () => ({ type: 'bar' as const, seriesId, dataIndex }),
+    [seriesId, dataIndex],
   );
-  const interactionProps = useInteractionItemProps(itemIdentifier);
-  const { isFaded, isHighlighted } = useItemHighlighted(itemIdentifier);
-  const isFocused = useIsItemFocused(
-    React.useMemo(
-      () => ({
-        seriesType: 'bar',
-        seriesId: id,
-        dataIndex,
-      }),
-      [id, dataIndex],
-    ),
-  );
+  const highlightState = useItemHighlightState(itemIdentifier);
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
+  const isFocused = useIsItemFocused(itemIdentifier);
 
-  const ownerState = {
-    id,
+  const ownerState: BarElementOwnerState = {
+    seriesId,
     dataIndex,
     classes: innerClasses,
     color,
@@ -99,8 +95,7 @@ function BarElement(props: BarElementProps) {
     externalSlotProps: slotProps?.bar,
     externalForwardedProps: other,
     additionalProps: {
-      ...interactionProps,
-      id,
+      seriesId,
       dataIndex,
       color,
       x,
@@ -111,14 +106,14 @@ function BarElement(props: BarElementProps) {
       height,
       style,
       onClick,
-      cursor: onClick ? 'pointer' : 'unset',
+      cursor: onClick ? 'pointer' : undefined,
       stroke: 'none',
       fill: color,
       skipAnimation,
       layout,
-      'data-focused': isFocused || undefined,
+      hidden,
     },
-    className: classes.root,
+    className: classes.element,
     ownerState,
   });
 
@@ -132,8 +127,8 @@ BarElement.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
+  seriesId: PropTypes.string.isRequired,
   skipAnimation: PropTypes.bool.isRequired,
   /**
    * The props used for each component slot.

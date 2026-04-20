@@ -1,4 +1,4 @@
-import { GridSidebarValue } from './gridSidebarInterfaces';
+import type { GridSidebarValue } from './gridSidebarInterfaces';
 
 export interface GridSidebarState {
   open: boolean;

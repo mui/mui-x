@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -35,9 +35,11 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-const getAllItemsWithChildrenItemIds = (items: TreeViewBaseItem[]) => {
+const getAllItemsWithChildrenItemIds = (
+  items: TreeViewDefaultItemModelProperties[],
+) => {
   const itemIds: string[] = [];
-  const registerItemId = (item: TreeViewBaseItem) => {
+  const registerItemId = (item: TreeViewDefaultItemModelProperties) => {
     if (item.children?.length) {
       itemIds.push(item.id);
       item.children.forEach(registerItemId);
@@ -50,7 +52,7 @@ const getAllItemsWithChildrenItemIds = (items: TreeViewBaseItem[]) => {
 };
 
 export default function SendAllItemsToServer() {
-  const apiRefTreeViewA = useTreeViewApiRef();
+  const apiRefTreeViewA = useRichTreeViewProApiRef();
   const [itemsTreeViewB, setItemsTreeViewB] = React.useState(MUI_X_PRODUCTS);
 
   const handleItemPositionChangeTreeViewA = () => {

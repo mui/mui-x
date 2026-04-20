@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridDensityApi } from '../../../models/api/gridDensityApi';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridDensityApi } from '../../../models/api/gridDensityApi';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridDensitySelector } from './densitySelector';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 
 export const densityStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'initialState' | 'density'>

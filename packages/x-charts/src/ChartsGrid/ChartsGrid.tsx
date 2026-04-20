@@ -1,8 +1,9 @@
 'use client';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps } from '@mui/material/styles';
-import { ChartsGridClasses, getChartsGridUtilityClass } from './chartsGridClasses';
+import { type ChartsGridClasses, getChartsGridUtilityClass } from './chartsGridClasses';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { GridRoot } from './styledComponents';
 import { ChartsGridVertical } from './ChartsVerticalGrid';
@@ -20,6 +21,10 @@ const useUtilityClasses = ({ classes }: ChartsGridProps) => {
 };
 
 export interface ChartsGridProps {
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
   /**
    * Displays vertical grid.
    */
@@ -47,7 +52,7 @@ function ChartsGrid(inProps: ChartsGridProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiChartsGrid' });
 
   const drawingArea = useDrawingArea();
-  const { vertical, horizontal, ...other } = props;
+  const { className, vertical, horizontal, ...other } = props;
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
@@ -57,7 +62,7 @@ function ChartsGrid(inProps: ChartsGridProps) {
   const verticalAxis = xAxis[xAxisIds[0]];
 
   return (
-    <GridRoot {...other} className={classes.root}>
+    <GridRoot {...other} className={clsx(classes.root, className)}>
       {vertical && (
         <ChartsGridVertical
           axis={verticalAxis}

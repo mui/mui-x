@@ -1,8 +1,8 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
-import { RadarChart, RadarChartProps } from '@mui/x-charts/RadarChart';
+import { vi } from 'vitest';
+import { RadarChart, radarClasses, type RadarChartProps } from '@mui/x-charts/RadarChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const config: RadarChartProps = {
   series: [
@@ -23,8 +23,8 @@ describe('RadarChart - click event', () => {
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onAxisClick = spy();
-      const { user } = render(
+      const onAxisClick = vi.fn();
+      const { user, container } = render(
         <div
           style={{
             width: 100,
@@ -34,17 +34,19 @@ describe('RadarChart - click event', () => {
           <RadarChart {...config} onAxisClick={onAxisClick} />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 45, clientY: 15 },
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 0,
         axisValue: 'A',
         seriesValues: { s1: 2, s2: 6 },
@@ -53,12 +55,12 @@ describe('RadarChart - click event', () => {
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 80, clientY: 45 },
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 1,
         axisValue: 'B',
         seriesValues: { s1: 3, s2: 5 },
@@ -69,8 +71,8 @@ describe('RadarChart - click event', () => {
     it.skipIf(isJSDOM)(
       'should provide the right context as second argument with startAngle=90',
       async () => {
-        const onAxisClick = spy();
-        const { user } = render(
+        const onAxisClick = vi.fn();
+        const { user, container } = render(
           <div
             style={{
               width: 100,
@@ -84,17 +86,19 @@ describe('RadarChart - click event', () => {
             />
           </div>,
         );
-        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
+        const layerContainer = container.querySelector<HTMLElement>(
+          `.${chartsSvgLayerClasses.root}`,
+        )!.parentElement!;
 
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 45, clientY: 15 },
           },
         ]);
 
-        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
           dataIndex: 3,
           axisValue: 'D',
           seriesValues: { s1: 5, s2: 1 },
@@ -103,12 +107,12 @@ describe('RadarChart - click event', () => {
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 80, clientY: 45 },
           },
         ]);
 
-        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
           dataIndex: 0,
           axisValue: 'A',
           seriesValues: { s1: 2, s2: 6 },
@@ -120,7 +124,7 @@ describe('RadarChart - click event', () => {
   describe('onMarkClick', () => {
     it('should add cursor="pointer" to mark elements', () => {
       render(<RadarChart {...config} onMarkClick={() => {}} />);
-      const marks = document.querySelectorAll<HTMLElement>('circle.MuiRadarSeriesPlot-mark');
+      const marks = document.querySelectorAll<HTMLElement>(`circle.${radarClasses.seriesMark}`);
 
       expect(Array.from(marks).map((rectangle) => rectangle.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -136,7 +140,7 @@ describe('RadarChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onItemClick = spy();
+      const onItemClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -148,24 +152,24 @@ describe('RadarChart - click event', () => {
         </div>,
       );
 
-      const marks = document.querySelectorAll<HTMLElement>('circle.MuiRadarSeriesPlot-mark');
+      const marks = document.querySelectorAll<HTMLElement>(`circle.${radarClasses.seriesMark}`);
 
       await user.click(marks[0]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's1',
         dataIndex: 0,
       });
 
       await user.click(marks[1]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's1',
         dataIndex: 1,
       });
 
       await user.click(marks[4]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's2',
         dataIndex: 0,
@@ -176,7 +180,7 @@ describe('RadarChart - click event', () => {
   describe('onAreaClick', () => {
     it('should add cursor="pointer" to mark elements', () => {
       render(<RadarChart {...config} onAreaClick={() => {}} />);
-      const marks = document.querySelectorAll<HTMLElement>('path.MuiRadarSeriesPlot-area');
+      const marks = document.querySelectorAll<HTMLElement>(`path.${radarClasses.seriesArea}`);
 
       expect(Array.from(marks).map((rectangle) => rectangle.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -186,7 +190,7 @@ describe('RadarChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onItemClick = spy();
+      const onItemClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -198,7 +202,7 @@ describe('RadarChart - click event', () => {
         </div>,
       );
 
-      const marks = document.querySelectorAll<HTMLElement>('path.MuiRadarSeriesPlot-area');
+      const marks = document.querySelectorAll<HTMLElement>(`path.${radarClasses.seriesArea}`);
 
       await user.pointer([
         {
@@ -207,7 +211,7 @@ describe('RadarChart - click event', () => {
           coords: { clientX: 50, clientY: 45 },
         },
       ]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's1',
         dataIndex: 0,
@@ -220,7 +224,7 @@ describe('RadarChart - click event', () => {
           coords: { clientX: 50, clientY: 55 },
         },
       ]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's2',
         dataIndex: 2,

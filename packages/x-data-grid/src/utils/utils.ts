@@ -29,8 +29,8 @@ export function escapeRegExp(value: string): string {
 }
 
 /**
- * Follows the CSS specification behavior for min and max
- * If min > max, then the min have priority
+ * Follows the CSS specification behavior for min and max.
+ * If min > max, then min has priority.
  */
 export const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));
@@ -80,8 +80,10 @@ export function deepClone(obj: Record<string, any>) {
  */
 export function eslintUseValue(_: any) {}
 
-export const runIf = (condition: boolean, fn: Function) => (params: unknown) => {
-  if (condition) {
-    fn(params);
-  }
-};
+export const runIf =
+  (condition: boolean, fn: Function) =>
+  (...params: unknown[]) => {
+    if (condition) {
+      fn(...params);
+    }
+  };

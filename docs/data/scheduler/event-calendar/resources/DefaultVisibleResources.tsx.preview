@@ -1,0 +1,10 @@
+<EventCalendar
+  events={events}
+  onEventsChange={setEvents}
+  defaultVisibleDate={defaultVisibleDate}
+  resources={resources}
+  defaultVisibleResources={{
+    holidays: false,
+    medical: false,
+  }}
+/>

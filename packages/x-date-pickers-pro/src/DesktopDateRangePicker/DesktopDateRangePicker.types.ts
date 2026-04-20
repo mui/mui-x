@@ -11,17 +11,13 @@ import {
 } from '../DateRangePicker/shared';
 
 export interface DesktopDateRangePickerSlots
-  extends BaseDateRangePickerSlots,
-    MakeOptional<UseDesktopRangePickerSlots, 'field'> {}
+  extends BaseDateRangePickerSlots, MakeOptional<UseDesktopRangePickerSlots, 'field'> {}
 
-export interface DesktopDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends BaseDateRangePickerSlotProps,
-    Omit<UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
+export interface DesktopDateRangePickerSlotProps
+  extends BaseDateRangePickerSlotProps, Omit<UseDesktopRangePickerSlotProps, 'tabs' | 'toolbar'> {}
 
-export interface DesktopDateRangePickerProps<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDateRangePickerProps,
-    DesktopRangeOnlyPickerProps {
+export interface DesktopDateRangePickerProps
+  extends BaseDateRangePickerProps, DesktopRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
    * @default 2
@@ -36,7 +32,7 @@ export interface DesktopDateRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopDateRangePickerSlotProps;
   /**
    * If `true`, the Picker will close after submitting the full date.
    * @default true

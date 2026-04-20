@@ -1,9 +1,12 @@
-import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
-import { AxisId } from '../axis';
+import type { AxisId } from '../axis';
+import type { ChartSeriesType, HighlightScope } from './config';
 
-export type SeriesId = number | string;
+/**
+ * The unique identifier of a series.
+ */
+export type SeriesId = string;
 
 export type SeriesValueFormatterContext = {
   /**
@@ -36,7 +39,10 @@ export interface SeriesColor<TValue> {
   colorGetter?: (data: ColorCallbackValue<TValue>) => string;
 }
 
-export interface CommonSeriesType<TValue> extends SeriesColor<TValue> {
+export interface CommonSeriesType<
+  TValue,
+  SeriesType extends ChartSeriesType,
+> extends SeriesColor<TValue> {
   /**
    * The id of this series.
    */
@@ -51,7 +57,7 @@ export interface CommonSeriesType<TValue> extends SeriesColor<TValue> {
   /**
    * The scope to apply when the series is highlighted.
    */
-  highlightScope?: HighlightScope;
+  highlightScope?: HighlightScope<SeriesType>;
   /**
    * Defines the mark type for the series.
    *

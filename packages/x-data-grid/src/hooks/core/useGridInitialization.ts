@@ -1,6 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRefs } from './useGridRefs';
 import { useGridIsRtl } from './useGridIsRtl';
 import { useGridLoggerFactory } from './useGridLoggerFactory';

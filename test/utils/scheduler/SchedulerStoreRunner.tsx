@@ -4,7 +4,7 @@ export function SchedulerStoreRunner<T>({
   context,
   onMount,
 }: {
-  context: React.Context<T | null>;
+  context: React.Context<any>;
   onMount: (store: T) => void;
 }) {
   const store = React.useContext(context);
@@ -13,7 +13,7 @@ export function SchedulerStoreRunner<T>({
   }
 
   React.useEffect(() => {
-    onMount(store);
+    onMount(store as T);
   }, [store, onMount]);
 
   return null;

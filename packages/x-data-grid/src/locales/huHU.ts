@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const huHUGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Normál',
   toolbarDensityComfortable: 'Kényelmes',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Visszavonás',
+  toolbarRedo: 'Újra',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Oszlopok',
@@ -63,7 +67,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operátorok',
   filterPanelOperatorAnd: 'És',
   filterPanelOperatorOr: 'Vagy',
-  filterPanelColumns: 'Oszlopok',
+  filterPanelColumn: 'Oszlopok',
   filterPanelInputLabel: 'Érték',
   filterPanelInputPlaceholder: 'Érték szűrése',
 
@@ -158,6 +162,10 @@ const huHUGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'igen',
   booleanCellFalseLabel: 'nem',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Kibontás',
+  longTextCellCollapseLabel: 'Összecsukás',
+
   // Actions cell more text
   actionsCellMore: 'további',
 
@@ -189,11 +197,12 @@ const huHUGrid: Partial<GridLocaleText> = {
   //   count,
   //   estimated
   // }) => {
+  //   const unknownRowCount = count == null || count === -1;
   //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
   //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
+  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   // },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

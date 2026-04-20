@@ -1,24 +1,23 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  useSelector,
-  ZoomData,
+  type ChartPlugin,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { UseChartProZoomSignature } from '../useChartProZoom.types';
+import { type UseChartProZoomSignature } from '../useChartProZoom.types';
 import { selectorZoomInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
 export const useZoomOnDoubleTapReset = (
   {
     store,
     instance,
-    svgRef,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, 'doubleTapReset' as const);
+  const { chartsLayerContainerRef } = instance;
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
+  const config = store.use(selectorZoomInteractionConfig, 'doubleTapReset' as const);
 
   const isZoomOnDoubleTapResetEnabled: boolean =
     Object.keys(optionsLookup).length > 0 && Boolean(config);
@@ -40,7 +39,7 @@ export const useZoomOnDoubleTapReset = (
 
   // Reset zoom on double tap
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     if (element === null || !isZoomOnDoubleTapResetEnabled) {
       return () => {};
     }
@@ -72,5 +71,12 @@ export const useZoomOnDoubleTapReset = (
     return () => {
       doubleTapResetHandler.cleanup();
     };
-  }, [svgRef, isZoomOnDoubleTapResetEnabled, optionsLookup, instance, setZoomDataCallback, store]);
+  }, [
+    chartsLayerContainerRef,
+    isZoomOnDoubleTapResetEnabled,
+    optionsLookup,
+    instance,
+    setZoomDataCallback,
+    store,
+  ]);
 };

@@ -13,11 +13,11 @@ import {
 import { extrapolateSeed, deepFreeze } from './useDemoData';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
-import { GridColDefGenerator } from '../services/gridColDefGenerator';
-import { getRealGridData, GridDemoData } from '../services/real-data-service';
+import type { GridColDefGenerator } from '../services/gridColDefGenerator';
+import { getRealGridData, type GridDemoData } from '../services/real-data-service';
 import {
   addTreeDataOptionsToDemoData,
-  AddPathToDemoDataOptions,
+  type AddPathToDemoDataOptions,
 } from '../services/tree-data-generator';
 import {
   loadServerRows,
@@ -69,11 +69,10 @@ interface GridMockServerData {
   initialState?: GridInitialState;
 }
 
-interface ColumnsOptions
-  extends Pick<
-    UseMockServerOptions,
-    'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns'
-  > {}
+interface ColumnsOptions extends Pick<
+  UseMockServerOptions,
+  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns'
+> {}
 
 const GET_DEFAULT_DATASET_OPTIONS: UseMockServerOptions = {
   dataSet: 'Commodity',
@@ -95,7 +94,7 @@ const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] |
       columns = getMovieColumns();
       break;
     default:
-      throw new Error('Unknown dataset');
+      throw new Error('MUI X: Unknown dataset');
   }
 
   if (options.visibleFields) {
@@ -355,7 +354,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
           if (verbose) {
             print('MUI X: DATASOURCE REQUEST FAILURE', params);
           }
-          setTimeout(() => reject(new Error('Could not fetch the data')), delay);
+          setTimeout(() => reject(new Error('MUI X: Could not fetch the data')), delay);
         });
       }
 
@@ -456,7 +455,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
 
         if (shouldRequestsFailRef.current) {
           setTimeout(
-            () => reject(new Error(`Could not update the row with the id ${rowId}`)),
+            () => reject(new Error(`MUI X: Could not update the row with the id ${rowId}`)),
             delay,
           );
           if (verbose) {

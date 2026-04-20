@@ -1,11 +1,28 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { ChartPlugin } from '../../models';
-import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlight.types';
+import type { ChartPluginOptions, ChartResponse, ChartPlugin } from '../../models';
+import type { UseChartHighlightSignature } from './useChartHighlight.types';
+import type {
+  HighlightItemIdentifier,
+  HighlightItemIdentifierWithType,
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import { createIdentifierWithType } from '../../corePlugins/useChartSeries/useChartSeries';
 
-export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ store, params }) => {
+export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+>({
+  store,
+  params,
+  instance,
+}: ChartPluginOptions<UseChartHighlightSignature<SeriesType>>): ChartResponse<
+  UseChartHighlightSignature<SeriesType>
+> => {
   useAssertModelConsistency({
     warningPrefix: 'MUI X Charts',
     componentName: 'Chart',
@@ -16,30 +33,81 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
 
   useEnhancedEffect(() => {
     if (store.state.highlight.item !== params.highlightedItem) {
-      store.set('highlight', { ...store.state.highlight, item: params.highlightedItem });
+      if (params.highlightedItem === null) {
+        store.set('highlight', {
+          ...store.state.highlight,
+          item: null,
+        });
+        return;
+      }
+
+      const cleanItem = instance.identifierWithType(
+        params.highlightedItem,
+        'highlightItem',
+      ) satisfies HighlightItemIdentifierWithType<SeriesType>;
+      const item = instance.cleanIdentifier(cleanItem, 'highlightItem');
+      store.set('highlight', {
+        ...store.state.highlight,
+        item,
+      });
     }
-  }, [store, params.highlightedItem]);
+    if (process.env.NODE_ENV !== 'production') {
+      if (params.highlightedItem !== undefined && !store.state.highlight.isControlled) {
+        warnOnce(
+          [
+            'MUI X Charts: The `highlightedItem` switched between controlled and uncontrolled state.',
+            'To remove the highlight when using controlled state, you must provide `null` to the `highlightedItem` prop instead of `undefined`.',
+          ].join('\n'),
+        );
+      }
+    }
+  }, [store, params.highlightedItem, instance]);
 
   const clearHighlight = useEventCallback(() => {
     params.onHighlightChange?.(null);
-    const prevItem = store.getSnapshot().highlight.item;
-    if (prevItem === null) {
+    const prevHighlight = store.state.highlight;
+    if (prevHighlight.item === null || prevHighlight.isControlled) {
       return;
     }
 
-    store.set('highlight', { item: null, lastUpdate: 'pointer' });
+    store.set('highlight', {
+      item: null,
+      lastUpdate: 'pointer',
+      isControlled: false,
+    });
   });
 
-  const setHighlight = useEventCallback((newItem: HighlightItemData) => {
-    const prevItem = store.getSnapshot().highlight.item;
+  const setHighlight = useEventCallback(
+    (
+      newItem:
+        | HighlightItemIdentifier<SeriesType>
+        | SeriesItemIdentifier<SeriesType>
+        | HighlightItemIdentifierWithType<SeriesType>
+        | SeriesItemIdentifierWithType<SeriesType>,
+    ) => {
+      const prevHighlight = store.state.highlight;
 
-    if (fastObjectShallowCompare(prevItem, newItem)) {
-      return;
-    }
+      const identifierWithType = instance.identifierWithType(
+        newItem,
+        'highlightItem',
+      ) satisfies HighlightItemIdentifierWithType<SeriesType>;
+      const cleanedIdentifier = instance.cleanIdentifier(identifierWithType, 'highlightItem');
+      if (fastObjectShallowCompare(prevHighlight.item, cleanedIdentifier)) {
+        return;
+      }
 
-    params.onHighlightChange?.(newItem);
-    store.set('highlight', { item: newItem, lastUpdate: 'pointer' });
-  });
+      params.onHighlightChange?.(cleanedIdentifier);
+      if (prevHighlight.isControlled) {
+        return;
+      }
+
+      store.set('highlight', {
+        item: cleanedIdentifier,
+        lastUpdate: 'pointer',
+        isControlled: false,
+      });
+    },
+  );
 
   return {
     instance: {
@@ -49,15 +117,17 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
   };
 };
 
-useChartHighlight.getDefaultizedParams = ({ params }) => ({
-  ...params,
-  highlightedItem: params.highlightedItem ?? null,
-});
-
-useChartHighlight.getInitialState = (params) => ({
+useChartHighlight.getInitialState = (params, currentState) => ({
   highlight: {
-    item: params.highlightedItem,
+    item:
+      params.highlightedItem == null
+        ? params.highlightedItem
+        : createIdentifierWithType(currentState)(
+            // Need some as because the generic SeriesType can't be propagated to plugins methods.
+            params.highlightedItem as HighlightItemIdentifier<ChartSeriesType>,
+          ),
     lastUpdate: 'pointer',
+    isControlled: params.highlightedItem !== undefined,
   },
 });
 

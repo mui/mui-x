@@ -1,13 +1,17 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
-import { GridEventListener } from '../../../models/events';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridRowApi, GridRowProApi, GridRowProPrivateApi } from '../../../models/api/gridRowApi';
-import { GridRowId, GridGroupNode, GridLeafNode } from '../../../models/gridRows';
+import type { GridEventListener } from '../../../models/events';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type {
+  GridRowApi,
+  GridRowProApi,
+  GridRowProPrivateApi,
+} from '../../../models/api/gridRowApi';
+import type { GridRowId, GridGroupNode, GridLeafNode } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -26,11 +30,11 @@ import { gridRowIdSelector } from '../../core/gridPropsSelectors';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridSignature } from '../../../constants/signature';
 import { useGridEvent } from '../../utils/useGridEvent';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
-import { GridRowsInternalCache } from './gridRowsInterfaces';
+import type { GridRowsInternalCache } from './gridRowsInterfaces';
 import {
   getTreeNodeDescendants,
   createRowsInternalCache,
@@ -105,7 +109,10 @@ export const useGridRows = (
   const timeout = useTimeout();
 
   // Get overridable methods from configuration
-  const { setRowIndex } = configuration.hooks.useGridRowsOverridableMethods(apiRef, props);
+  const { setRowIndex, setRowPosition } = configuration.hooks.useGridRowsOverridableMethods(
+    apiRef,
+    props as DataGridProcessedProps,
+  );
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => {
@@ -204,10 +211,8 @@ export const useGridRows = (
     (updates) => {
       if (props.signature === GridSignature.DataGrid && updates.length > 1) {
         throw new Error(
-          [
-            'MUI X: You cannot update several rows at once in `apiRef.current.updateRows` on the DataGrid.',
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-          ].join('\n'),
+          `MUI X: You cannot update several rows at once in \`apiRef.current.updateRows\` on the DataGrid.
+You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.`,
         );
       }
 
@@ -408,10 +413,8 @@ export const useGridRows = (
     (firstRowToRender, newRows) => {
       if (props.signature === GridSignature.DataGrid && newRows.length > 1) {
         throw new Error(
-          [
-            'MUI X: You cannot replace rows using `apiRef.current.unstable_replaceRows` on the DataGrid.',
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-          ].join('\n'),
+          `MUI X: You cannot replace rows using \`apiRef.current.unstable_replaceRows\` on the DataGrid.
+You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.`,
         );
       }
 
@@ -423,7 +426,7 @@ export const useGridRows = (
 
       if (treeDepth > 1) {
         throw new Error(
-          '`apiRef.current.unstable_replaceRows` is not compatible with tree data and row grouping',
+          'MUI X: `apiRef.current.unstable_replaceRows` is not compatible with tree data and row grouping',
         );
       }
 
@@ -500,6 +503,7 @@ export const useGridRows = (
 
   const rowProApi: GridRowProApi = {
     setRowIndex,
+    setRowPosition,
     setRowChildrenExpansion,
     getRowGroupChildren,
     expandAllRows,

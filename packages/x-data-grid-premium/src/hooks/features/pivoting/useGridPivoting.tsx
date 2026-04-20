@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  GridColDef,
-  GridRowId,
-  GridRowModel,
+  type GridColDef,
+  type GridRowId,
+  type GridRowModel,
   gridDataRowIdsSelector,
   gridRowIdSelector,
   gridRowsLoadingSelector,
@@ -10,19 +10,19 @@ import {
 } from '@mui/x-data-grid-pro';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useOnMount from '@mui/utils/useOnMount';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  GridStateInitializer,
+  type GridStateInitializer,
   useGridApiMethod,
   useGridRegisterPipeProcessor,
   useGridSelector,
-  GridPipeProcessor,
+  type GridPipeProcessor,
   gridPivotInitialColumnsSelector,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { GridPivotPanel } from '../../../components/pivotPanel';
 import type {
   GridPivotingApi,

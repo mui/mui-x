@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { gridVisibleColumnDefinitionsSelector } from '../features/columns/gridColumnsSelector';
 import { useGridSelector } from './useGridSelector';
 import { useGridRootProps } from './useGridRootProps';

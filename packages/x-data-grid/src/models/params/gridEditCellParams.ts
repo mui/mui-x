@@ -1,5 +1,5 @@
-import { GridRowId, GridValidRowModel } from '../gridRows';
-import { GridCellParams } from './gridCellParams';
+import type { GridRowId, GridValidRowModel } from '../gridRows';
+import type { GridCellParams } from './gridCellParams';
 
 /**
  * Params passed to `apiRef.current.setEditCellValue`.
@@ -38,8 +38,11 @@ enum GridCellEditStartReasons {
 /**
  * Params passed to the `cellEditStart` event.
  */
-export interface GridCellEditStartParams<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridCellParams<R, V, F> {
+export interface GridCellEditStartParams<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+> extends GridCellParams<R, V, F> {
   /**
    * The reason for this event to be triggered.
    */
@@ -62,8 +65,11 @@ enum GridCellEditStopReasons {
 /**
  * Params passed to the `cellEditStop event.
  */
-export interface GridCellEditStopParams<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridCellParams<R, V, F> {
+export interface GridCellEditStopParams<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+> extends GridCellParams<R, V, F> {
   /**
    * The reason for this event to be triggered.
    */

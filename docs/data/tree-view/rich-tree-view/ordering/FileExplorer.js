@@ -19,7 +19,8 @@ import {
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
-import { useTreeItemModel, useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useTreeItemModel } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
 
 const ITEMS = [
   {
@@ -80,6 +81,7 @@ const TreeItemRoot = styled('li')(({ theme }) => ({
   margin: 0,
   padding: 0,
   outline: 0,
+  height: 'var(--TreeView-itemHeight, unset)',
   color: theme.palette.grey[400],
   ...theme.applyStyles('light', {
     color: theme.palette.grey[800],
@@ -157,11 +159,9 @@ function CustomLabel({ icon: Icon, expandable, children, ...other }) {
         <Box
           component={Icon}
           className="labelIcon"
-          color="inherit"
-          sx={{ mr: 1, fontSize: '1.2rem' }}
+          sx={{ color: 'inherit', mr: 1, fontSize: '1.2rem' }}
         />
       )}
-
       <TreeItemLabelText variant="body2">{children}</TreeItemLabelText>
       {expandable && <DotIcon />}
     </TreeItemLabel>
@@ -234,12 +234,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
 });
 
 export default function FileExplorer() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewProApiRef();
 
   return (
     <RichTreeViewPro
       items={ITEMS}
       apiRef={apiRef}
+      itemHeight={28}
       defaultExpandedItems={['1', '1.1']}
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
       slots={{ item: CustomTreeItem }}

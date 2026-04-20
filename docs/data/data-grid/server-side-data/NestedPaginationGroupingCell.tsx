@@ -29,17 +29,20 @@ const IconWrapper = styled('div')({
   marginRight: '8px',
 });
 
-interface NestedPaginationGroupingCellProps
-  extends GridRenderCellParams<any, any, any, GridDataSourceGroupNode> {
+interface NestedPaginationGroupingCellProps extends GridRenderCellParams<
+  any,
+  any,
+  any,
+  GridDataSourceGroupNode
+> {
   setExpandedRows: React.Dispatch<React.SetStateAction<GridValidRowModel[]>>;
   depth: number;
 }
 
-interface GroupingIconProps
-  extends Pick<
-    NestedPaginationGroupingCellProps,
-    'id' | 'field' | 'row' | 'setExpandedRows' | 'depth'
-  > {
+interface GroupingIconProps extends Pick<
+  NestedPaginationGroupingCellProps,
+  'id' | 'field' | 'row' | 'setExpandedRows' | 'depth'
+> {
   descendantCount: number;
   groupingKey: GridBasicGroupNode['groupingKey'];
   expanded: boolean;
@@ -122,10 +125,12 @@ export default function NestedPaginationGroupingCell(
 
   return (
     <Stack
-      alignItems="center"
-      width="100%"
-      flexDirection="row"
-      marginLeft={marginFactor * 2}
+      sx={{
+        alignItems: 'center',
+        width: '100%',
+        flexDirection: 'row',
+        marginLeft: marginFactor * 2,
+      }}
     >
       <GroupingIcon
         id={id}

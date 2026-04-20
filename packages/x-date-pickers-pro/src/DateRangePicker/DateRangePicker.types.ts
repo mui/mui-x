@@ -12,16 +12,13 @@ import {
 import { ValidateDateRangeProps } from '../validation';
 
 export interface DateRangePickerSlots
-  extends DesktopDateRangePickerSlots,
-    MobileDateRangePickerSlots {}
+  extends DesktopDateRangePickerSlots, MobileDateRangePickerSlots {}
 
-export interface DateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends DesktopDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    MobileDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+export interface DateRangePickerSlotProps
+  extends DesktopDateRangePickerSlotProps, MobileDateRangePickerSlotProps {}
 
-export interface DateRangePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
-  extends DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>,
-    MobileDateRangePickerProps<TEnableAccessibleFieldDOMStructure> {
+export interface DateRangePickerProps
+  extends DesktopDateRangePickerProps, MobileDateRangePickerProps {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -37,7 +34,7 @@ export interface DateRangePickerProps<TEnableAccessibleFieldDOMStructure extends
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DateRangePickerSlotProps;
   /**
    * If `true`, the Picker will close after submitting the full date.
    * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).

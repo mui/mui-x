@@ -12,8 +12,8 @@ export default function FunnelStepAndDirection() {
   } as const;
 
   return (
-    <Stack sx={{ width: '100%' }} flexDirection={'row'}>
-      <Stack flex={1}>
+    <Stack sx={{ flexDirection: 'row', width: '100%' }}>
+      <Stack sx={{ flex: 1 }}>
         <div>Linear & decreasing</div>
         <FunnelChart
           series={[
@@ -72,7 +72,7 @@ export default function FunnelStepAndDirection() {
           height={180}
         />
       </Stack>
-      <Stack flex={1}>
+      <Stack sx={{ flex: 1 }}>
         <div>Band & decreasing</div>
         <FunnelChart
           series={[
@@ -127,7 +127,7 @@ export default function FunnelStepAndDirection() {
           height={180}
         />
       </Stack>
-      <Stack flex={1}>
+      <Stack sx={{ flex: 1 }}>
         <div>Linear & increasing</div>
         <FunnelChart
           series={[
@@ -186,7 +186,7 @@ export default function FunnelStepAndDirection() {
           height={180}
         />
       </Stack>
-      <Stack flex={1}>
+      <Stack sx={{ flex: 1 }}>
         <div>Band & increasing</div>
         <FunnelChart
           series={[

@@ -4,12 +4,14 @@ import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } fro
 import { Globals } from '@react-spring/web';
 // eslint-disable-next-line import/no-relative-packages
 import '../utils/setupFakeClock';
-// eslint-disable-next-line import/no-relative-packages
-import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense';
+import { LicenseInfo } from '@mui/x-license';
+import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/internals';
 import TestViewer from './TestViewer';
 import { type Test, testsBySuite } from './testsBySuite';
 
-setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
+(globalThis as any).MUI_TEST_ENV = true;
+
+LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);
 
 Globals.assign({
   skipAnimation: true,
@@ -18,14 +20,20 @@ Globals.assign({
 declare global {
   interface Window {
     muiFixture: {
-      isReady: () => boolean;
+      allTests: { url: string }[];
+      isReady: boolean;
       navigate: (test: string) => void;
     };
   }
 }
 
+const allTests = Object.values(testsBySuite).flatMap((suite) =>
+  suite.map((test) => ({ url: computePath(test) })),
+);
+
 window.muiFixture = {
-  isReady: () => false,
+  allTests,
+  isReady: false,
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);
   },
@@ -44,7 +52,7 @@ function Root() {
   const navigate = useNavigate();
   React.useEffect(() => {
     window.muiFixture.navigate = navigate;
-    window.muiFixture.isReady = () => true;
+    window.muiFixture.isReady = true;
   }, [navigate]);
 
   return (
@@ -136,10 +144,7 @@ function computeIsDev(hash: string) {
   if (hash === '#dev') {
     return true;
   }
-  if (hash === '#no-dev') {
-    return false;
-  }
-  return process.env.NODE_ENV === 'development';
+  return false;
 }
 
 function computePath(test: Test) {

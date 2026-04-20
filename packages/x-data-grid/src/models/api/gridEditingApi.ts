@@ -1,9 +1,9 @@
-import { MuiBaseEvent } from '@mui/x-internals/types';
-import { GridCellMode, GridRowMode } from '../gridCell';
-import { GridCellModes, GridRowModes } from '../gridEditRowModel';
-import { GridRowId, GridRowModel } from '../gridRows';
-import { GridCellParams } from '../params/gridCellParams';
-import { GridEditCellValueParams } from '../params/gridEditCellParams';
+import type { MuiBaseEvent } from '@mui/x-internals/types';
+import type { GridCellMode, GridRowMode } from '../gridCell';
+import type { GridCellModes, GridRowModes } from '../gridEditRowModel';
+import type { GridRowId, GridRowModel } from '../gridRows';
+import type { GridCellParams } from '../params/gridCellParams';
+import type { GridEditCellValueParams } from '../params/gridEditCellParams';
 
 export type GridCellModesModelProps =
   | ({ mode: GridCellModes.View } & Omit<GridStopCellEditModeParams, 'id' | 'field'>)
@@ -132,7 +132,6 @@ export interface GridStartRowEditModeParams {
   /**
    * The initial value for the given `fieldToFocus`.
    * If `deleteValue` is also true, this value is not used.
-   * @deprecated No longer needed.
    */
   initialValue?: string;
 }
@@ -252,5 +251,4 @@ export interface GridEditingApi extends GridCellEditingApi, GridRowEditingApi {}
  * The private editing API interface that is available in the grid `privateApiRef`.
  */
 export interface GridEditingPrivateApi
-  extends GridCellEditingPrivateApi,
-    GridRowEditingPrivateApi {}
+  extends GridCellEditingPrivateApi, GridRowEditingPrivateApi {}

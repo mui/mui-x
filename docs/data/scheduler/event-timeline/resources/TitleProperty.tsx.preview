@@ -1,0 +1,8 @@
+<EventTimelinePremium
+  events={events}
+  onEventsChange={setEvents}
+  defaultVisibleDate={defaultVisibleDate}
+  resourceModelStructure={resourceModelStructure}
+  resources={resources}
+  defaultView="months"
+/>

@@ -1,5 +1,11 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('ca-ES');
 
 const caESGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +21,10 @@ const caESGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Compacta',
   toolbarDensityStandard: 'Estàndard',
   toolbarDensityComfortable: 'Còmoda',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Desfés',
+  toolbarRedo: 'Refés',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Columnes',
@@ -64,7 +74,7 @@ const caESGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operadors',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'O',
-  filterPanelColumns: 'Columnes',
+  filterPanelColumn: 'Columnes',
   filterPanelInputLabel: 'Valor',
   filterPanelInputPlaceholder: 'Valor del filtre',
 
@@ -163,6 +173,10 @@ const caESGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'sí',
   booleanCellFalseLabel: 'no',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Expandeix',
+  longTextCellCollapseLabel: 'Contrau',
+
   // Actions cell more text
   actionsCellMore: 'més',
 
@@ -190,11 +204,13 @@ const caESGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Files per pàgina:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} de ${count !== -1 ? count : `més de ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} de ${count !== -1 ? formatNumber(count) : `més de ${formatNumber(to)}`}`;
     }
     const estimatedLabel =
-      estimated && estimated > to ? `al voltant de ${estimated}` : `més de ${to}`;
-    return `${from}–${to} de ${count !== -1 ? count : estimatedLabel}`;
+      estimated && estimated > to
+        ? `al voltant de ${formatNumber(estimated)}`
+        : `més de ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} de ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

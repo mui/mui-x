@@ -3,10 +3,11 @@ import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
-import { ChartsXAxisProps } from '../models/axis';
+import type { ChartsXAxisProps } from '../models/axis';
+import type { OrdinalTimeTicks } from '../models/timeTicks';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../context/ChartsProvider/useChartsContext';
 import { shortenLabels } from './shortenLabels';
 import { getVisibleLabels } from './getVisibleLabels';
 import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP } from './utilities';
@@ -14,13 +15,14 @@ import { useAxisTicksProps } from './useAxisTicksProps';
 
 interface ChartsSingleXAxisProps extends ChartsXAxisProps {
   axisLabelHeight: number;
+  ordinalTimeTicks?: OrdinalTimeTicks;
 }
 
 /**
  * @ignore - internal component.
  */
 function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
-  const { axisLabelHeight } = inProps;
+  const { axisLabelHeight, ordinalTimeTicks } = inProps;
   const {
     xScale,
     defaultizedProps,
@@ -46,11 +48,12 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     tickLabelMinGap,
+    tickSpacing,
     height: axisHeight,
   } = defaultizedProps;
 
   const drawingArea = useDrawingArea();
-  const { instance } = useChartContext();
+  const { instance } = useChartsContext();
   const isHydrated = useIsHydrated();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
@@ -62,7 +65,9 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
+    tickSpacing,
     direction: 'x',
+    ordinalTimeTicks,
   });
 
   const visibleLabels = getVisibleLabels(xTicks, {

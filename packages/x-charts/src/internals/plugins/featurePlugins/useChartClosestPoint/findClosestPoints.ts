@@ -1,12 +1,10 @@
-import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
-import { ScatterValueType } from '../../../../models/seriesType/scatter';
-import { Flatbush } from '../../../Flatbush';
-import { D3Scale } from '../../../../models/axis';
+import { type ScatterValueType } from '../../../../models/seriesType/scatter';
+import { type Flatbush } from '../../../Flatbush';
+import { type D3Scale } from '../../../../models/axis';
 import { isOrdinalScale } from '../../../scaleGuards';
 
 export function findClosestPoints(
   flatbush: Flatbush,
-  drawingArea: Pick<ChartDrawingArea, 'top' | 'left' | 'width' | 'height'>,
   seriesData: readonly ScatterValueType[],
   xScale: D3Scale,
   yScale: D3Scale,

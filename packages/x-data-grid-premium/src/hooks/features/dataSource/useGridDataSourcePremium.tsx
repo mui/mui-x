@@ -1,22 +1,22 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   useGridEvent as addEventHandler,
   useGridApiMethod,
-  GridEventLookup,
+  type GridEventLookup,
   GRID_ROOT_GROUP_ID,
-  GridValidRowModel,
+  type GridValidRowModel,
   useGridEvent,
-  GridUpdateRowParams,
-  GridRowModel,
+  type GridUpdateRowParams,
+  type GridRowModel,
   gridRowTreeSelector,
 } from '@mui/x-data-grid-pro';
 import {
   useGridDataSourceBasePro,
   useGridRegisterStrategyProcessor,
-  GridPipeProcessor,
+  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   gridPivotInitialColumnsSelector,
   runIf,
@@ -25,8 +25,8 @@ import {
   DataSourceRowsUpdateStrategy,
   getGroupKeys,
 } from '@mui/x-data-grid-pro/internals';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 import type {
   GridDataSourcePremiumPrivateApi,
@@ -63,14 +63,21 @@ export const useGridDataSourcePremium = (
   const aggregationModel = gridAggregationModelSelector(apiRef);
   const groupingModelSize = gridRowGroupingSanitizedModelSelector(apiRef).length;
   const setStrategyAvailability = React.useCallback(() => {
-    const targetStrategy =
+    const currentStrategy =
       props.treeData || (!props.disableRowGrouping && groupingModelSize > 0)
         ? DataSourceRowsUpdateStrategy.GroupedData
         : DataSourceRowsUpdateStrategy.Default;
 
+    const prevStrategy =
+      currentStrategy === DataSourceRowsUpdateStrategy.GroupedData
+        ? DataSourceRowsUpdateStrategy.Default
+        : DataSourceRowsUpdateStrategy.GroupedData;
+
+    apiRef.current.setStrategyAvailability(GridStrategyGroup.DataSource, prevStrategy, () => false);
+
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
-      targetStrategy,
+      currentStrategy,
       props.dataSource && !props.lazyLoading ? () => true : () => false,
     );
   }, [
@@ -140,9 +147,11 @@ export const useGridDataSourcePremium = (
         const pivotingColDef = props.pivotingColDef;
         if (!pivotingColDef || typeof pivotingColDef !== 'function') {
           throw new Error(
-            'MUI X: No `pivotingColDef()` prop provided with to the Data Grid, but response contains `pivotColumns`.\n\n\
-            You need a callback to return at least a field column prop for each generated pivot column.\n\n\
-            See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pivoting/) documentation for more details.',
+            `MUI X: No \`pivotingColDef()\` prop provided with to the Data Grid, but response contains \`pivotColumns\`.
+
+You need a callback to return at least a field column prop for each generated pivot column.
+
+See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pivoting/) documentation for more details.`,
           );
         }
 

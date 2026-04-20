@@ -1,5 +1,11 @@
-import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
+import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
+import {
+  type CartesianSeriesType,
+  type CommonDefaultizedProps,
+  type CommonSeriesType,
+  type SeriesId,
+} from './common';
+import { type DatasetElementType } from './config';
 
 export type ScatterValueType = {
   x: number;
@@ -12,8 +18,7 @@ export type ScatterValueType = {
 };
 
 export interface ScatterSeriesType
-  extends CommonSeriesType<ScatterValueType | null>,
-    CartesianSeriesType {
+  extends CommonSeriesType<ScatterValueType | null, 'scatter'>, CartesianSeriesType {
   type: 'scatter';
   data?: readonly ScatterValueType[];
   /**
@@ -25,17 +30,18 @@ export interface ScatterSeriesType
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
-   * If true, the interaction will not use element hover for this series.
-   * @default false
-   * @deprecated This prop will be removed in a future version because it is ambiguous. You can select what to disable
-   *             on hover by disabling the highlight or the tooltip separately.
-   */
-  disableHover?: boolean;
-  /**
    * The id of the z-axis used to render the series.
    */
   zAxisId?: string;
 
+  /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return a scatter value.
+   * Can be used as an alternative to `datasetKeys`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {ScatterValueType} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => ScatterValueType;
   /**
    * The keys used to retrieve data from the dataset.
    *
@@ -79,7 +85,10 @@ export type ScatterItemIdentifier = {
   dataIndex: number;
 };
 
-export interface DefaultizedScatterSeriesType
-  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps | 'color' | 'markerSize'> {
+export interface DefaultizedScatterSeriesType extends DefaultizedProps<
+  ScatterSeriesType,
+  CommonDefaultizedProps | 'color' | 'markerSize'
+> {
   preview: MakeRequired<NonNullable<ScatterSeriesType['preview']>, 'markerSize'>;
+  hidden: boolean;
 }

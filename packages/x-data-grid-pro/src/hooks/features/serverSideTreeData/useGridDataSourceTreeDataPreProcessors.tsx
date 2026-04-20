@@ -1,19 +1,19 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   gridRowTreeSelector,
   useFirstRender,
-  GridColDef,
-  GridRenderCellParams,
-  GridDataSourceGroupNode,
-  GridRowId,
+  type GridColDef,
+  type GridRenderCellParams,
+  type GridDataSourceGroupNode,
+  type GridRowId,
 } from '@mui/x-data-grid';
 import {
-  GridPipeProcessor,
-  GridRowsPartialUpdates,
+  type GridPipeProcessor,
+  type GridRowsPartialUpdates,
   GridStrategyGroup,
-  GridStrategyProcessor,
+  type GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
 } from '@mui/x-data-grid/internals';
@@ -21,16 +21,16 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from '../treeData/gridTreeDataGroupColDef';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { getParentPath, skipFiltering, skipSorting } from './utils';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import {
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from '../../../models/gridGroupingColDefOverride';
 import { GridDataSourceTreeDataGroupingCell } from '../../../components/GridDataSourceTreeDataGroupingCell';
 import { createRowTree } from '../../../utils/tree/createRowTree';
-import {
+import type {
   GridTreePathDuplicateHandler,
   RowTreeBuilderGroupingCriterion,
 } from '../../../utils/tree/models';
@@ -130,12 +130,20 @@ export const useGridDataSourceTreeDataPreProcessors = (
     (params) => {
       const getGroupKey = props.dataSource?.getGroupKey;
       if (!getGroupKey) {
-        throw new Error('MUI X: No `getGroupKey` method provided with the dataSource.');
+        throw new Error(
+          'MUI X Data Grid: No getGroupKey method provided with the dataSource. ' +
+            'Server-side tree data requires a getGroupKey method to determine row hierarchy. ' +
+            'Add getGroupKey to your dataSource configuration.',
+        );
       }
 
       const getChildrenCount = props.dataSource?.getChildrenCount;
       if (!getChildrenCount) {
-        throw new Error('MUI X: No `getChildrenCount` method provided with the dataSource.');
+        throw new Error(
+          'MUI X Data Grid: No getChildrenCount method provided with the dataSource. ' +
+            'Server-side tree data requires a getChildrenCount method to determine expandable rows. ' +
+            'Add getChildrenCount to your dataSource configuration.',
+        );
       }
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
@@ -153,11 +161,9 @@ export const useGridDataSourceTreeDataPreProcessors = (
 
       const onDuplicatePath: GridTreePathDuplicateHandler = (firstId, secondId, path) => {
         throw new Error(
-          [
-            'MUI X: The values returned by `getGroupKey` for all the sibling rows should be unique.',
-            `The rows with id #${firstId} and #${secondId} have the same.`,
-            `Path: ${JSON.stringify(path.map((step) => step.key))}.`,
-          ].join('\n'),
+          `MUI X Data Grid: The values returned by getGroupKey for sibling rows must be unique. ` +
+            `Rows with id "${firstId}" and "${secondId}" have the same path: ${JSON.stringify(path.map((step) => step.key))}. ` +
+            'Ensure getGroupKey returns unique values for each sibling row.',
         );
       };
 

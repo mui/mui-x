@@ -29,18 +29,19 @@ const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
   function AnimatedLine(props, ref) {
     const { skipAnimation, ownerState, ...other } = props;
 
-    const animateProps = useAnimateLine({ ...props, ref });
+    const animateProps = useAnimateLine({ d: props.d, skipAnimation, ref });
+    const fadedOpacity = ownerState.isFaded ? 0.3 : 1;
 
     return (
-      <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
+      <AppearingMask skipAnimation={skipAnimation} seriesId={`${ownerState.seriesId}-line-clip`}>
         <path
           stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           strokeWidth={2}
           strokeLinejoin="round"
           fill="none"
           filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
-          opacity={ownerState.isFaded ? 0.3 : 1}
-          data-series={ownerState.id}
+          opacity={ownerState.hidden ? 0 : fadedOpacity}
+          data-series={ownerState.seriesId}
           data-highlighted={ownerState.isHighlighted || undefined}
           data-faded={ownerState.isFaded || undefined}
           {...other}
@@ -61,9 +62,10 @@ AnimatedLine.propTypes = {
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
     gradientId: PropTypes.string,
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    hidden: PropTypes.bool,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
+    seriesId: PropTypes.string.isRequired,
   }).isRequired,
   /**
    * If `true`, animations are skipped.

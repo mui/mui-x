@@ -1,0 +1,108 @@
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import { useStore } from '@base-ui/utils/store/useStore';
+import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
+import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
+import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
+import { processDate } from '@mui/x-scheduler-headless/process-date';
+import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
+
+const MonthsHeaderRoot = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'MonthsHeader',
+})({
+  display: 'grid',
+  gridTemplateRows: 'auto auto',
+});
+
+const YearLabel = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'MonthsHeaderYearLabel',
+})(({ theme }) => ({
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  fontSize: theme.typography.body2.fontSize,
+  fontWeight: theme.typography.fontWeightMedium,
+  gridRow: 1,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  '&:not(:last-child)': {
+    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+}));
+
+const MonthLabel = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'MonthsHeaderMonthLabel',
+})(({ theme }) => ({
+  gridRow: 2,
+  width: 'calc(var(--days-in-month) * var(--months-cell-width))',
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  fontSize: theme.typography.body2.fontSize,
+  color: (theme.vars || theme).palette.text.secondary,
+}));
+
+export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
+  // Context hooks
+  const adapter = useAdapterContext();
+  const store = useEventTimelinePremiumStoreContext();
+  const { classes } = useEventTimelinePremiumStyledContext();
+
+  // Selector hooks
+  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+
+  // Feature hooks
+  const months = React.useMemo(
+    () => getMonths(adapter, viewConfig.start, viewConfig.end),
+    [adapter, viewConfig],
+  );
+
+  return (
+    <MonthsHeaderRoot className={classes.monthsHeader} {...props}>
+      {months.map((month, index) => {
+        const monthNumber = adapter.getMonth(month.value);
+
+        return (
+          <React.Fragment key={month.key}>
+            {(monthNumber === 0 || index === 0) && (
+              <YearLabel
+                className={classes.monthsHeaderYearLabel}
+                style={
+                  {
+                    gridColumn: `${index + 1} / span ${Math.min(12 - monthNumber, months.length - index)}`,
+                  } as React.CSSProperties
+                }
+              >
+                {adapter.getYear(month.value)}
+              </YearLabel>
+            )}
+            <MonthLabel
+              className={classes.monthsHeaderMonthLabel}
+              style={
+                { '--days-in-month': adapter.getDaysInMonth(month.value) } as React.CSSProperties
+              }
+            >
+              {adapter.format(month.value, 'month3Letters')}
+            </MonthLabel>
+          </React.Fragment>
+        );
+      })}
+    </MonthsHeaderRoot>
+  );
+}
+
+function getMonths(adapter: Adapter, start: TemporalSupportedObject, end: TemporalSupportedObject) {
+  let current = start;
+  const years: SchedulerProcessedDate[] = [];
+
+  while (adapter.isBefore(current, end)) {
+    years.push(processDate(current, adapter));
+
+    current = adapter.addMonths(current, 1);
+  }
+
+  return years;
+}

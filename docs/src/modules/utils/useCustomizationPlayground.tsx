@@ -133,7 +133,8 @@ export function withStyles(
 }
 
 interface Props
-  extends Pick<
+  extends
+    Pick<
       UseCustomizationPlaygroundReturnType,
       'selectedDemo' | 'selectedSlot' | 'selectedCustomizationOption' | 'selectedTokens'
     >,

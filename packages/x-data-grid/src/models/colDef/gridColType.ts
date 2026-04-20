@@ -7,6 +7,7 @@ export interface GridColumnTypes {
   singleSelect: 'singleSelect';
   actions: 'actions';
   custom: 'custom';
+  longText: 'longText';
 }
 
 export type GridColType = GridColumnTypes[keyof GridColumnTypes];

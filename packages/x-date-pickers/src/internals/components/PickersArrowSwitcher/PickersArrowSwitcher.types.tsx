@@ -28,8 +28,7 @@ export interface ExportedPickersArrowSwitcherProps {
 }
 
 export interface PickersArrowSwitcherProps
-  extends ExportedPickersArrowSwitcherProps,
-    Omit<React.HTMLProps<HTMLDivElement>, 'ref' | 'as'> {
+  extends ExportedPickersArrowSwitcherProps, Omit<React.HTMLProps<HTMLDivElement>, 'ref' | 'as'> {
   children?: React.ReactNode;
   isPreviousDisabled: boolean;
   isPreviousHidden?: boolean;

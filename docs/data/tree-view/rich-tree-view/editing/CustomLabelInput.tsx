@@ -11,7 +11,7 @@ import {
   UseTreeItemLabelSlotOwnProps,
 } from '@mui/x-tree-view/useTreeItem';
 import { useTreeItemUtils, useTreeItemModel } from '@mui/x-tree-view/hooks';
-import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
+import { TreeViewItemId } from '@mui/x-tree-view/models';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({
   ...theme.typography.body1,
@@ -31,9 +31,10 @@ type ExtendedTreeItemProps = {
   id: string;
   firstName: string;
   lastName: string;
+  children?: ExtendedTreeItemProps[];
 };
 
-export const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
+export const ITEMS: ExtendedTreeItemProps[] = [
   {
     id: '1',
     firstName: 'Jane',

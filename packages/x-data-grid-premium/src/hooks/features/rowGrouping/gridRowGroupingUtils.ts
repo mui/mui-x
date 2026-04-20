@@ -1,5 +1,5 @@
-import { RefObject } from '@mui/x-internals/types';
-import {
+import type { RefObject } from '@mui/x-internals/types';
+import type {
   GridRowTreeConfig,
   GridFilterState,
   GridFilterModel,
@@ -12,9 +12,9 @@ import {
 } from '@mui/x-data-grid-pro';
 import {
   passFilterLogic,
-  GridAggregatedFilterItemApplier,
-  GridAggregatedFilterItemApplierResult,
-  GridColumnRawLookup,
+  type GridAggregatedFilterItemApplier,
+  type GridAggregatedFilterItemApplierResult,
+  type GridColumnRawLookup,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   getRowGroupingCriteriaFromGroupingField,
   isGroupingColumn,
@@ -22,15 +22,15 @@ import {
   getRowValue,
   RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import {
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type {
   GridGroupingRule,
   GridGroupingRules,
   GridRowGroupingModel,
 } from './gridRowGroupingInterfaces';
-import { GridStatePremium } from '../../../models/gridStatePremium';
+import type { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export {
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,

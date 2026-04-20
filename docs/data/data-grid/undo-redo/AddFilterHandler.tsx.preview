@@ -1,0 +1,11 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  historyEventHandlers={historyEventHandlers}
+  showToolbar
+  disableRowSelectionOnClick
+  cellSelection
+  disablePivoting
+  disableRowGrouping
+  disableColumnPinning
+/>

@@ -8,13 +8,13 @@ export default function LineChartConnectNulls() {
   return (
     <Stack sx={{ width: '100%', height: 400 }}>
       <LineChart
-        xAxis={[{ data: xData, scaleType: 'point' }]}
-        series={[{ data }]}
+        xAxis={[{ data: xData, scaleType: 'point', height: 28 }]}
+        series={[{ data, showMark: true }]}
         margin={margin}
       />
       <LineChart
-        xAxis={[{ data: xData, scaleType: 'point' }]}
-        series={[{ data, connectNulls: true }]}
+        xAxis={[{ data: xData, scaleType: 'point', height: 28 }]}
+        series={[{ data, connectNulls: true, showMark: true }]}
         margin={margin}
       />
     </Stack>

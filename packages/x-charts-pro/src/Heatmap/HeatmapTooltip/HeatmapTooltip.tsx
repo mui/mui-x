@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';
 import { HeatmapTooltipContent } from './HeatmapTooltipContent';
-import { HeatmapTooltipProps } from './HeatmapTooltip.types';
+import { type HeatmapTooltipProps } from './HeatmapTooltip.types';
 import { useUtilityClasses } from './HeatmapTooltip.classes';
 
 function HeatmapTooltip(props: HeatmapTooltipProps) {
@@ -78,10 +78,10 @@ HeatmapTooltip.propTypes = {
   container: PropTypes.oneOfType([
     (props, propName) => {
       if (props[propName] == null) {
-        return new Error(`Prop '${propName}' is required but wasn't specified`);
+        return new Error(`MUI X: Prop '${propName}' is required but wasn't specified`);
       }
       if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-        return new Error(`Expected prop '${propName}' to be of type Element`);
+        return new Error(`MUI X: Expected prop '${propName}' to be of type Element`);
       }
       return null;
     },

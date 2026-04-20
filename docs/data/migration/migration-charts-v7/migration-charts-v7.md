@@ -203,9 +203,9 @@ The `slotProps.legend.hidden` prop has been removed in favor of the `hideLegend`
  />
 ```
 
-### The `getSeriesToDisplay` function was removed
+### The `getSeriesToDisplay()` function was removed
 
-The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook.
+The `getSeriesToDisplay()` function was removed in favor of the `useLegend()` hook.
 You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
 
 ## Tooltip
@@ -225,7 +225,7 @@ For consistency, the `tooltip` props have been replaced by the `slotProps.toolti
 
 Some helpers are provided to create your custom tooltip:
 
-- To override the **tooltip content**, use the `useItemTooltip` or `useAxesTooltip` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
+- To override the **tooltip content**, use the `useItemTooltip()` or `useAxesTooltip()` to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
 - To override the **tooltip placement**, use the `ChartsAxisTooltipContent` or `ChartsItemTooltipContent` to get the default data display, and place them in your custom tooltip.
 
 ### Update Tooltip DOM structure
@@ -336,11 +336,11 @@ And you can chose another shape by adding a `shape` property to your line series
 The codemod only removes the `experimentalMarkRendering` prop.
 If you relied on the fact that marks were `path` elements, you need to update your logic.
 
-## Replacing `useHighlighted` by `useItemHighlighted` and `useItemHighlightedGetter`
+## Replacing `useHighlighted()` by `useItemHighlighted()` and `useItemHighlightedGetter()`
 
-The `useHighlighted` hook that gave access to the internal highlight state has been removed.
+The `useHighlighted()` hook that gave access to the internal highlight state has been removed.
 
-To know if your item is highlighted, it is recommended to use the `useItemHighlighted` hook instead:
+To know if your item is highlighted, it is recommended to use the `useItemHighlighted()` hook instead:
 
 ```jsx
 const { isFaded, isHighlighted } = useItemHighlighted({
@@ -349,7 +349,7 @@ const { isFaded, isHighlighted } = useItemHighlighted({
 });
 ```
 
-If you're in a case where you have multiple series id to test (for example in the tooltip), you can use the lower level hook `useItemHighlightedGetter`.
+If you're in a case where you have multiple series id to test (for example in the tooltip), you can use the lower level hook `useItemHighlightedGetter()`.
 This hook being lower level only test is the item match with the highlight or fade scope.
 So an item could at the same time have `isFaded` and `isHighlighted` returning `true`.
 
@@ -379,9 +379,9 @@ The `labelFontSize` and `tickFontSize` props have been removed in favor of the s
   />
 ```
 
-## Stabilize `useSeries` and `useXxxSeries` hooks ✅
+## Stabilize `useSeries()` and `use[Type]Series()` hooks ✅
 
-The `useSeries` hook family has been stabilized and renamed accordingly.
+The `useSeries()` hook family has been stabilized and renamed accordingly.
 
 ```diff
   import {

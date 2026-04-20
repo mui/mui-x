@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { TreeViewAnyPluginSignature } from '../models';
+import { TreeViewAnyStore } from '../models';
 import { TreeViewContextValue } from './TreeViewProvider.types';
 
 /**
@@ -8,21 +8,14 @@ import { TreeViewContextValue } from './TreeViewProvider.types';
  */
 export const TreeViewContext = React.createContext<TreeViewContextValue<any> | null>(null);
 
-export const useTreeViewContext = <
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
->() => {
-  const context = React.useContext(TreeViewContext) as TreeViewContextValue<
-    TSignatures,
-    TOptionalSignatures
-  >;
+export const useTreeViewContext = <TStore extends TreeViewAnyStore>() => {
+  const context = React.useContext(TreeViewContext) as TreeViewContextValue<TStore> | null;
   if (context == null) {
     throw new Error(
-      [
-        'MUI X: Could not find the Tree View context.',
-        'It looks like you rendered your component outside of a SimpleTreeView or RichTreeView parent component.',
+      'MUI X Tree View: Could not find the Tree View context. ' +
+        'This happens when a component is rendered outside of a SimpleTreeView or RichTreeView parent component. ' +
+        'Ensure your component is a child of a Tree View component. ' +
         'This can also happen if you are bundling multiple versions of the Tree View.',
-      ].join('\n'),
     );
   }
 

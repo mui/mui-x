@@ -2,15 +2,15 @@ import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import { getCell, getRow } from 'test/utils/helperFn';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
-  DataGridProProps,
-  GridApi,
-  GridDataSource,
-  GridGetRowsParams,
-  GridGetRowsResponse,
-  GridRowSelectionModel,
+  type DataGridProProps,
+  type GridApi,
+  type GridDataSource,
+  type GridGetRowsParams,
+  type GridGetRowsResponse,
+  type GridRowSelectionModel,
   useGridApiRef,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
@@ -46,9 +46,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   }
 
   function TestDataSourceLazyLoader(
-    props: Partial<DataGridProProps> & { mockServerRowCount?: number },
+    props: Partial<DataGridProProps> & {
+      mockServerRowCount?: number;
+      onFetchRows?: typeof fetchRowsSpy;
+    },
   ) {
-    const { mockServerRowCount, ...other } = props;
+    const { mockServerRowCount, onFetchRows, ...other } = props;
+    const effectiveFetchRowsSpy = onFetchRows ?? fetchRowsSpy;
     apiRef = useGridApiRef();
     mockServer = useMockServer(
       { rowLength: mockServerRowCount ?? 100, maxColumns: 1 },
@@ -68,7 +72,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           });
 
           const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
-          fetchRowsSpy(url);
+          effectiveFetchRowsSpy(url);
           const getRowsResponse = await fetchRows(url);
 
           const response = transformGetRowsResponse(getRowsResponse);
@@ -78,7 +82,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           };
         },
       };
-    }, [fetchRows]);
+    }, [fetchRows, effectiveFetchRowsSpy]);
 
     if (!mockServer.isReady) {
       return null;
@@ -252,6 +256,113 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       const afterFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // first row is the start of the first page
       expect(afterFilteringSearchParams.get('start')).to.equal('0');
+    });
+
+    it('should not refetch already fetched rows on scroll-back when cache entry is still valid', async () => {
+      render(<TestDataSourceLazyLoader mockServerRowCount={20} disableVirtualization={false} />);
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      vi.useFakeTimers();
+      fetchRowsSpy.resetHistory();
+
+      await act(async () => {
+        apiRef.current?.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 1,
+          lastRowIndex: 5,
+          firstColumnIndex: 0,
+          lastColumnIndex: 0,
+        });
+        await vi.advanceTimersByTimeAsync(700);
+      });
+
+      expect(fetchRowsSpy.callCount).to.equal(0);
+      vi.useRealTimers();
+    });
+
+    it('should not refetch during polling when cache entry is still valid', async () => {
+      const localFetchRowsSpy = spy();
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={20}
+          disableVirtualization={false}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      vi.useFakeTimers();
+      localFetchRowsSpy.resetHistory();
+
+      await act(async () => {
+        apiRef.current?.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 0,
+          lastRowIndex: 3,
+          firstColumnIndex: 0,
+          lastColumnIndex: 0,
+        });
+        await vi.advanceTimersByTimeAsync(50);
+      });
+
+      expect(localFetchRowsSpy.callCount).to.equal(0);
+      vi.useRealTimers();
+    });
+
+    it('should use the current viewport range when fetchRows is called via the API without params', async () => {
+      render(<TestDataSourceLazyLoader dataSourceCache={null} disableVirtualization={false} />);
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      // Scroll far enough so the viewport start is past the first page boundary
+      // (adjustRowParams aligns to pageSize=10, so firstRowIndex must be >= 10)
+      await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 30 }));
+
+      // Wait for the scroll-triggered fetches to complete
+      await waitFor(() => {
+        const lastUrl = fetchRowsSpy.lastCall?.args[0];
+        if (!lastUrl) {
+          return;
+        }
+        const params = new URL(lastUrl).searchParams;
+        expect(Number(params.get('start'))).to.be.greaterThan(0);
+      });
+
+      fetchRowsSpy.resetHistory();
+
+      // Call fetchRows without explicit params
+      act(() => {
+        apiRef.current?.dataSource.fetchRows();
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      // The request should use viewport-based start, not the default page 0
+      const searchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const start = Number(searchParams.get('start'));
+      expect(start).to.be.greaterThan(0);
+    });
+
+    it('should periodically revalidate the current range when dataSourceRevalidateMs is set', async () => {
+      const localFetchRowsSpy = spy();
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={20}
+          disableVirtualization={false}
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
+      await waitFor(() => expect(getRow(19)).not.to.be.undefined);
+
+      localFetchRowsSpy.resetHistory();
+
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      });
     });
   });
 

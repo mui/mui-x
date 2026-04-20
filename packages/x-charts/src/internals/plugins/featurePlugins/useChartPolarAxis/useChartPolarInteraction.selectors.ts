@@ -1,11 +1,15 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { createSelector, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
-import { AxisId, ChartsAxisProps, AxisItemIdentifier } from '../../../../models/axis';
+import {
+  type AxisId,
+  type ChartsAxisProps,
+  type AxisItemIdentifier,
+} from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
 } from '../useChartInteraction/useChartInteraction.selectors';
-import { ComputeResult } from './computeAxisValue';
+import { type ComputeResult } from './computeAxisValue';
 import { generateSvg2rotation } from './coordinateTransformation';
 import { getAxisIndex } from './getAxisIndex';
 import { selectorChartPolarCenter, selectorChartRotationAxis } from './useChartPolarAxis.selectors';
@@ -48,23 +52,24 @@ export const selectorChartsInteractionRotationAxisIndex = createSelector(
   selectorChartsInteractionRotationAngle,
   selectorChartRotationAxis,
   optionalGetAxisId,
-  (rotation, rotationAxis, id = rotationAxis.axisIds[0]) =>
-    rotation === null ? null : indexGetter(rotation, rotationAxis, id),
+  (rotation, rotationAxis, id) =>
+    rotation === null ? null : indexGetter(rotation, rotationAxis, id ?? rotationAxis.axisIds[0]),
 );
 
 export const selectorChartsInteractionRotationAxisIndexes = createSelector(
   selectorChartsInteractionRotationAngle,
   selectorChartRotationAxis,
   optionalGetAxisIds,
-  (rotation, rotationAxis, ids = rotationAxis.axisIds) =>
-    rotation === null ? null : indexGetter(rotation, rotationAxis, ids),
+  (rotation, rotationAxis, ids) =>
+    rotation === null ? null : indexGetter(rotation, rotationAxis, ids ?? rotationAxis.axisIds),
 );
 
 export const selectorChartsInteractionRotationAxisValue = createSelector(
   selectorChartRotationAxis,
   selectorChartsInteractionRotationAxisIndex,
   optionalGetAxisId,
-  (rotationAxis, rotationIndex, id = rotationAxis.axisIds[0]) => {
+  (rotationAxis, rotationIndex, id) => {
+    id = id ?? rotationAxis.axisIds[0];
     if (rotationIndex === null || rotationIndex === -1 || rotationAxis.axisIds.length === 0) {
       return null;
     }
@@ -81,7 +86,8 @@ export const selectorChartsInteractionRotationAxisValues = createSelector(
   selectorChartRotationAxis,
   selectorChartsInteractionRotationAxisIndexes,
   optionalGetAxisIds,
-  (rotationAxis, rotationIndexes, ids = rotationAxis.axisIds) => {
+  (rotationAxis, rotationIndexes, ids) => {
+    ids = ids ?? rotationAxis.axisIds;
     if (rotationIndexes === null) {
       return null;
     }

@@ -27,7 +27,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedDay: '14' },
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
-      it(key, () => {
+      it(`${key}`, () => {
         render(
           <StaticDatePicker
             autoFocus
@@ -37,7 +37,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
         );
 
         // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
@@ -56,7 +56,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { initialDay: '10', key: 'ArrowLeft', expectFocusedDay: '9' },
       { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10' },
     ].forEach(({ initialDay, key, expectFocusedDay }) => {
-      it(key, () => {
+      it(`${key}`, () => {
         render(
           <StaticDatePicker
             autoFocus
@@ -66,7 +66,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
         );
 
         // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
@@ -90,7 +90,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
 
     for (let i = 0; i < 3; i += 1) {
       // Don't care about what's focused.
-      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+      // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
     }
 
@@ -105,7 +105,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedYear: '2021' },
       { key: 'ArrowDown', expectFocusedYear: '2024' },
     ].forEach(({ key, expectFocusedYear }) => {
-      it(key, () => {
+      it(`${key}`, () => {
         render(
           <StaticDatePicker
             openTo="year"
@@ -131,7 +131,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedMonth: 'Sep' },
       { key: 'ArrowDown', expectFocusedMonth: 'Nov' },
     ].forEach(({ key, expectFocusedMonth }) => {
-      it(key, () => {
+      it(`${key}`, () => {
         render(
           <StaticDatePicker
             openTo="month"
@@ -158,7 +158,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedDay: '14' },
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
-      it(key, () => {
+      it(`${key}`, () => {
         render(
           <StaticDatePicker
             openTo="day"

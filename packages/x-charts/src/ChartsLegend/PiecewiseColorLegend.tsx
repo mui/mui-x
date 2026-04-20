@@ -1,28 +1,27 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, type SxProps, type Theme } from '@mui/material/styles';
 import clsx from 'clsx';
-import { PrependKeys } from '@mui/x-internals/types';
+import { type PrependKeys } from '@mui/x-internals/types';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
-import { ChartsLabelMark, ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
-import { Direction } from './direction';
+import { ChartsLabelMark, type ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
+import { type Direction } from './direction';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import {
   piecewiseColorLegendClasses,
-  PiecewiseColorLegendClasses,
+  type PiecewiseColorLegendClasses,
   useUtilityClasses,
 } from './piecewiseColorLegendClasses';
-import { ColorLegendSelector } from './colorLegend.types';
-import { PiecewiseLabelFormatterParams } from './piecewiseColorLegend.types';
-import { ComputedAxis } from '../models/axis';
+import { type ColorLegendSelector } from './colorLegend.types';
+import { type PiecewiseLabelFormatterParams } from './piecewiseColorLegend.types';
+import { type ComputedAxis } from '../models/axis';
 import { useAxis } from './useAxis';
-import { PiecewiseColorLegendItemContext } from './legendContext.types';
+import { type PiecewiseColorLegendItemContext } from './legendContext.types';
 import { piecewiseColorDefaultLabelFormatter } from './piecewiseColorDefaultLabelFormatter';
 
 export interface PiecewiseColorLegendProps
-  extends ColorLegendSelector,
-    PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
+  extends ColorLegendSelector, PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
   /**
    * The direction of the legend layout.
    * @default 'horizontal'

@@ -1,5 +1,5 @@
 {
-  "props": {},
+  "props": { "desc": { "type": { "name": "string" } }, "title": { "type": { "name": "string" } } },
   "name": "ChartsSurface",
   "imports": [
     "import { ChartsSurface } from '@mui/x-charts/ChartsSurface';",
@@ -20,6 +20,6 @@
   "muiName": "MuiChartsSurface",
   "filename": "/packages/x-charts/src/ChartsSurface/ChartsSurface.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/components/\">Charts - Custom components</a></li>\n<li><a href=\"/x/react-charts/composition/\">Chart composition</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/components/\">Charts - Custom components</a></li>\n<li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li></ul>",
   "cssComponent": false
 }

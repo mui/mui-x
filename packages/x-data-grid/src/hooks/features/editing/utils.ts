@@ -1,4 +1,4 @@
-import { GridColDef } from '../../../models/colDef/gridColDef';
+import type { GridColDef } from '../../../models/colDef/gridColDef';
 
 export const getDefaultCellValue = (colDef: GridColDef) => {
   switch (colDef.type) {

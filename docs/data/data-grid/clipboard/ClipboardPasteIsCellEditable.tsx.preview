@@ -1,0 +1,8 @@
+<DataGridPremium
+  rows={rows}
+  columns={columns}
+  cellSelection
+  disableRowSelectionOnClick
+  ignoreValueFormatterDuringExport
+  isCellEditable={isCellEditable}
+/>

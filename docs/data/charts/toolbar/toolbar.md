@@ -1,54 +1,40 @@
 ---
 title: Charts - Toolbar
 productId: x-charts
-components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger, ChartsToolbarPrintExportTrigger, ChartsToolbarImageExportTrigger
+components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger, ChartsToolbarRangeButtonTrigger, ChartsToolbarPrintExportTrigger, ChartsToolbarImageExportTrigger
 ---
 
 # Charts - Toolbar
 
-<p class="description">Charts can display a toolbar for easier access to certain functionality.</p>
+<p class="description">Add a toolbar to charts for quick access to common features.</p>
 
-Charts provide a toolbar that can be enabled to give users quick access to certain features.
-
+You can enable a toolbar on charts to give users quick access to certain features.
 The toolbar is available on scatter, bar, line, pie, and radar charts.
 
 To enable the toolbar, set the `showToolbar` prop to `true` on the chart component.
 
 :::info
 The toolbar is only displayed if there are actions available.
-
-For example, if the chart is not zoomable, the zoom buttons will not be displayed.
+For example, if the chart doesn't have zooming enabled, then the zoom buttons don't appear.
 :::
 
 {{"demo": "ChartsToolbar.js"}}
 
-## Customization
-
-The toolbar is highly customizable, built to integrate with any design system.
-
-:::info
-If you're replacing the toolbar by a custom one, the container should have the CSS class `chartsToolbarClasses.root`.
-
-This class is used by the `<ChartsWrapper />` to place the toolbar relatively to the legend and the chart.
-If you use composition without `<ChartsWrapper />` you can ignore this info.
-:::
-
-### Slots
+## Custom toolbar elements
 
 You can customize basic components, such as buttons and tooltips, by passing custom elements to the `slots` prop of the chart.
 You can use this to replace the default buttons with components from your design system.
 
-If you're creating a chart using [composition](/x/react-charts/composition/), these basic components can be provided as slots to the `ChartDataProvider`.
+If you're composing a custom component, you can provide these basic components as slots to `ChartsDataProvider`.
 
 {{"demo": "ChartsToolbarCustomElements.js"}}
 
-### Render prop
+## Custom element rendering
 
-The `render` prop can be used to customize the rendering of the toolbar's elements.
+You can use the `render` prop to customize the rendering of the toolbar's elements.
+Pass a React element to the `render` prop of the `ToolbarButton` component to replace the default button with your own component.
 
-You can pass a React element to the `render` prop of the `ToolbarButton` component to replace the default button with your own component.
-
-This is useful when you want to render a custom component but want to use the toolbar's [accessibility](#accessibility) features, such as keyboard navigation and ARIA attributes, without having to implement them yourself.
+This is useful when you want to render a custom component but use the toolbar's [accessibility](#accessibility) features, such as keyboard navigation and ARIA attributes, without implementing them yourself.
 
 ```tsx
 <ToolbarButton render={<MyButton />} />
@@ -60,33 +46,113 @@ Alternatively, you can pass a function to the `render` prop, which receives the 
 <ToolbarButton render={(props, state) => <MyButton {...props} />} />
 ```
 
-You can see an example in the [composition](#composition) section.
+The section below provides an example of this.
 
-### Composition
+### Fully custom toolbar
 
-If you want to further customize the toolbar's functionality, you can also partially or entirely replace it with a custom implementation.
+You can partially or entirely replace the toolbar with a custom implementation to further customize its functionality.
+To do so, provide a custom component to the `toolbar` slot.
 
-You can achieve this by providing a custom component to the `toolbar` slot.
-
-Components such as `Toolbar` and `ToolbarButton` can be used to build your own toolbar using the default components as a base, or you can create your own custom toolbar from scratch.
+You can use components such as `Toolbar` and `ToolbarButton` to build your own toolbar using the default components as a base, or create your own custom toolbar from scratch.
 
 {{"demo": "ChartsToolbarCustomToolbar.js"}}
 
+:::info
+If you're replacing the toolbar with a custom one, the container should have the CSS class `chartsToolbarClasses.root`.
+
+The `ChartsWrapper` component uses this class to place the toolbar relative to the legend and the chart.
+If you're composing a custom component without `ChartsWrapper`, you can ignore this information.
+:::
+
+## Range buttons
+
+Range buttons allow users to quickly zoom to predefined ranges from the toolbar.
+They work with both time-series and ordinal (band/point) axes.
+
+Pass the `rangeButtons` prop to the toolbar to configure the available ranges.
+Each button zooms the chart to show a specific portion of the data.
+
+{{"demo": "ChartsToolbarRangeButtons.js"}}
+
+### Range button values
+
+The `value` property of each range button supports the following formats:
+
+#### Calendar interval
+
+Use `{ unit, step }` to show a time period from the end of the data. The `step` defaults to `1`.
+Supported units: `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, and `'microsecond'`.
+
+```tsx
+{ label: '1M', value: { unit: 'month' } }
+{ label: '3M', value: { unit: 'month', step: 3 } }
+{ label: '1Y', value: { unit: 'year' } }
+```
+
+#### Absolute date range
+
+Use `[startDate, endDate]` to zoom to a fixed date range.
+
+```tsx
+{ label: '2024 H1', value: [new Date(2024, 0, 1), new Date(2024, 6, 1)] }
+```
+
+#### Function
+
+Use a function to compute custom zoom percentages (0–100).
+The function receives a params object with the axis context:
+
+- `scaleType` — The axis scale type (`'time'`, `'band'`, `'linear'`).
+- `data` — The axis data values (available for ordinal axes).
+- `domain` — The full domain bounds (`{ min, max }`). Timestamps for time axes, indices for ordinal.
+
+```tsx
+{ label: 'First half', value: () => ({ start: 0, end: 50 }) }
+{ label: 'Last 5 items', value: ({ data }) => {
+  const count = data.length;
+  return { start: ((count - 5) / (count - 1)) * 100, end: 100 };
+}}
+```
+
+#### Reset
+
+Use `null` to reset zoom to show all data.
+
+```tsx
+{ label: 'All', value: null }
+```
+
+The following demo shows all value types together:
+
+{{"demo": "ChartsToolbarRangeButtonValues.js"}}
+
+### Ordinal axes
+
+Range buttons also work with ordinal (band/point) axes.
+When the axis data contains date-like values, calendar intervals and absolute date ranges are matched against the data points automatically.
+Function values receive index-based domain bounds instead of timestamps.
+
+{{"demo": "ChartsToolbarOrdinalRangeButtons.js"}}
+
+### Custom toolbar with range buttons
+
+You can use `ChartsToolbarRangeButtonTrigger` directly in a custom toolbar to have full control over layout and behavior.
+
+{{"demo": "ChartsToolbarCustomRangeButtons.js"}}
+
 ## Accessibility
 
-(WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)
-
-The component follows the WAI-ARIA authoring practices.
+`Toolbar` follows the [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
 
 ### ARIA
 
-- The element rendered by the `<Toolbar />` component has the `toolbar` role.
-- The element rendered by the `<Toolbar />` component has `aria-orientation` set to `horizontal`.
-- You must apply a text label or an `aria-label` attribute to the `<ToolbarButton />`.
+- The `Toolbar` component renders an element with the `toolbar` role
+- The `Toolbar` component renders an element with `aria-orientation` set to `horizontal`
+- You must apply a text label or an `aria-label` attribute to `ToolbarButton`
 
 ### Keyboard
 
-The Toolbar component supports keyboard navigation.
+The `Toolbar` component supports keyboard navigation.
 It implements the roving tabindex pattern.
 
 |                                                               Keys | Description                              |

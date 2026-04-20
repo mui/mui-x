@@ -82,20 +82,21 @@ const chartSetting = {
       dataKey: 'year',
       valueFormatter: (v: number | null) => (v ? v.toString() : ''),
       domainLimit: 'strict' as const,
+      height: 28,
     },
   ],
 };
 
 function Line() {
   return (
-    <Stack height="100%">
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center">Inflation rates</Typography>
       <LineChart
         dataset={inflationData}
         series={[
-          { dataKey: 'rateDE', label: 'Germany', valueFormatter, showMark: false },
-          { dataKey: 'rateUK', label: 'United Kingdom', valueFormatter, showMark: false },
-          { dataKey: 'rateFR', label: 'France', valueFormatter, showMark: false },
+          { dataKey: 'rateDE', label: 'Germany', valueFormatter },
+          { dataKey: 'rateUK', label: 'United Kingdom', valueFormatter },
+          { dataKey: 'rateFR', label: 'France', valueFormatter },
         ]}
         grid={{ horizontal: true }}
         {...chartSetting}

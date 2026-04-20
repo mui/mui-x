@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';

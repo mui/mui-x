@@ -17,7 +17,7 @@ A typical release goes like this:
 > [!INFO]
 > You can now use the new automated release preparation script by running `pnpm release:prepare`. This script automates steps 1-5 below by:
 >
-> - Asking for the major version to update (v7.x, v6.x, etc.)
+> - Asking for the major version to update (v8.x, v7.x, v6.x, etc.)
 > - Determining the new version based on the selected major version:
 >   - For non-latest major versions: patch/minor/custom
 >   - For latest major version: patch/minor/major/custom and prerelease options:
@@ -119,9 +119,11 @@ pnpm docs:deploy
 ```
 
 <!-- #target-branch-reference -->
+<!-- Replace `docs-vX` with the future new version number -->
+<!-- For example, when creating v9 from v8, `docs-v8 -> docs-v9` -->
 
-You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v8)
-Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v8` deployment.
+You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v9)
+Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v9` deployment.
 
 ### Publish GitHub release
 

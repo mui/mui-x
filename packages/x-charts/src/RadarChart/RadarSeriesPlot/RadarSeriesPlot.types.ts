@@ -1,8 +1,12 @@
-import * as React from 'react';
-import { RadarSeriesPlotClasses } from './radarSeriesPlotClasses';
-import { RadarItemIdentifier } from '../../models/seriesType/radar';
+import type * as React from 'react';
+import { type RadarClasses } from '../radarClasses';
+import { type RadarItemIdentifier } from '../../models/seriesType/radar';
 
 interface CommonRadarSeriesPlotProps {
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
   /**
    * The id of the series to display.
    * If undefined all series are displayed.
@@ -11,7 +15,7 @@ interface CommonRadarSeriesPlotProps {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<RadarSeriesPlotClasses>;
+  classes?: Partial<RadarClasses>;
 }
 
 export interface RadarSeriesPlotProps extends CommonRadarSeriesPlotProps {
@@ -32,8 +36,7 @@ export interface RadarSeriesPlotProps extends CommonRadarSeriesPlotProps {
 type RadarClickIdentifier = Required<RadarItemIdentifier>;
 
 export interface RadarSeriesMarksProps
-  extends CommonRadarSeriesPlotProps,
-    React.SVGAttributes<SVGCircleElement> {
+  extends CommonRadarSeriesPlotProps, React.SVGAttributes<SVGCircleElement> {
   /**
    * Callback fired when a mark is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
@@ -46,8 +49,7 @@ export interface RadarSeriesMarksProps
 }
 
 export interface RadarSeriesAreaProps
-  extends CommonRadarSeriesPlotProps,
-    React.SVGAttributes<SVGPathElement> {
+  extends CommonRadarSeriesPlotProps, React.SVGAttributes<SVGPathElement> {
   /**
    * Callback fired when an area is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

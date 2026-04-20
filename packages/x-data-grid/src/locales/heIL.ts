@@ -1,5 +1,11 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('he-IL');
 
 const heILGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +21,10 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'דחוסה',
   toolbarDensityStandard: 'רגילה',
   toolbarDensityComfortable: 'אוורירית',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'בטל',
+  toolbarRedo: 'בצע שוב',
 
   // Columns selector toolbar button text
   toolbarColumns: 'עמודות',
@@ -64,7 +74,7 @@ const heILGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'אופרטור',
   filterPanelOperatorAnd: 'וגם',
   filterPanelOperatorOr: 'או',
-  filterPanelColumns: 'עמודות',
+  filterPanelColumn: 'עמודות',
   filterPanelInputLabel: 'ערך',
   filterPanelInputPlaceholder: 'ערך מסנן',
 
@@ -161,6 +171,10 @@ const heILGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'כן',
   booleanCellFalseLabel: 'לא',
 
+  // Long text cell
+  longTextCellExpandLabel: 'הרחב',
+  longTextCellCollapseLabel: 'כווץ',
+
   // Actions cell more text
   actionsCellMore: 'עוד',
 
@@ -188,10 +202,11 @@ const heILGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'שורות בעמוד:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}-${to} מתוך ${count !== -1 ? count : `יותר מ־${to}`}`;
+      return `${formatNumber(from)}-${formatNumber(to)} מתוך ${count !== -1 ? formatNumber(count) : `יותר מ־${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `כ־${estimated}` : `יותר מ־${to}`;
-    return `${from}-${to} מתוך ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to ? `כ־${formatNumber(estimated)}` : `יותר מ־${formatNumber(to)}`;
+    return `${formatNumber(from)}-${formatNumber(to)} מתוך ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

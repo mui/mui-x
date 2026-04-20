@@ -1,0 +1,13 @@
+<ChatBox
+  adapter={adapter}
+  initialActiveConversationId={minimalConversation.id}
+  initialConversations={[minimalConversation]}
+  initialMessages={minimalMessages}
+  slots={{ messageActions: RoleBasedActions }}
+  sx={{
+    height: 500,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

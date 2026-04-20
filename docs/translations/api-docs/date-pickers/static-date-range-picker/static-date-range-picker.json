@@ -35,7 +35,7 @@
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
     "disableHighlightToday": {
-      "description": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle."
+      "description": "If <code>true</code>, today&#39;s day is not highlighted."
     },
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
@@ -68,7 +68,7 @@
         },
         "context": {
           "name": "context",
-          "description": "<p>Context about this acceptance: - <code>validationError</code>: validation result of the current value - <code>source</code>: source of the acceptance. One of &#39;field&#39; | &#39;picker&#39; | &#39;unknown&#39; - <code>shortcut</code> (optional): the shortcut metadata if the value was accepted via a shortcut selection</p>\n"
+          "description": "<p>Context about this acceptance: - <code>validationError</code>: validation result of the current value - <code>source</code>: source of the acceptance. One of &#39;field&#39; | &#39;view&#39; | &#39;unknown&#39; - <code>shortcut</code> (optional): the shortcut metadata if the value was accepted via a shortcut selection</p>\n"
         }
       }
     },
@@ -171,7 +171,7 @@
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
     "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
-    "day": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
+    "day": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickerDay</a> component.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "nextIconButton": "Button allowing to switch to the right view.",

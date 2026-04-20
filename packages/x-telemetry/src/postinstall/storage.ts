@@ -1,4 +1,6 @@
 import { randomBytes } from 'crypto';
+import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import notifyAboutMuiXTelemetry from './notify';
 import getEnvironmentInfo from './get-environment-info';
@@ -10,46 +12,72 @@ const TELEMETRY_KEY_NOTIFY_DATE = 'telemetry.notifiedAt';
 // generated from random data and completely anonymous.
 const TELEMETRY_KEY_ID = `telemetry.anonymousId`;
 
-function getStorageDirectory(distDir: string): string | undefined {
+const CONFIG_FILE_NAME = 'config.json';
+const PROJECT_NAME = 'mui-x';
+
+function getConfigDirectory(distDir: string): string {
   const env = getEnvironmentInfo();
   const isLikelyEphemeral = env.isCI || env.isDocker;
 
   if (isLikelyEphemeral) {
-    return path.join(distDir, 'cache');
+    return path.join(distDir, 'cache', PROJECT_NAME);
   }
 
-  return undefined;
+  const { platform } = process;
+  const homedir = os.homedir();
+
+  if (platform === 'darwin') {
+    return path.join(homedir, 'Library', 'Preferences', PROJECT_NAME);
+  }
+  if (platform === 'win32') {
+    const appData = process.env.APPDATA || path.join(homedir, 'AppData', 'Roaming');
+    return path.join(appData, PROJECT_NAME, 'Config');
+  }
+  // Linux / others: follow XDG Base Directory specification
+  const xdgConfig = process.env.XDG_CONFIG_HOME || path.join(homedir, '.config');
+  return path.join(xdgConfig, PROJECT_NAME);
 }
 
-interface ConfStorage {
-  get: (key: string, defaultValue?: string) => string | undefined;
-  set: (key: string, value: string) => void;
-  path: string;
+type ConfigData = Record<string, unknown>;
+
+function readConfigFile(configPath: string): ConfigData {
+  try {
+    return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  } catch {
+    return {};
+  }
+}
+
+function writeConfigFile(configPath: string, data: ConfigData): void {
+  const dir = path.dirname(configPath);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(configPath, JSON.stringify(data, null, '\t'));
 }
 
 export class TelemetryStorage {
+  private readonly configPath: string | null;
+
   public static async init({ distDir }: { distDir: string }) {
-    const storageDirectory = getStorageDirectory(distDir);
-    let conf: ConfStorage | null = null;
+    const configDirectory = getConfigDirectory(distDir);
+    let configFilePath: string | null = null;
     try {
-      // `conf` incorrectly throws a permission error during initialization
-      // instead of waiting for first use. We need to handle it, otherwise the
-      // process may crash.
-      const { default: Conf } = await import('conf');
-      conf = new Conf({ projectName: 'mui-x', cwd: storageDirectory });
-    } catch (_) {
-      conf = null;
+      configFilePath = path.join(configDirectory, CONFIG_FILE_NAME);
+      // Verify write access by ensuring the directory exists
+      fs.mkdirSync(configDirectory, { recursive: true });
+    } catch {
+      configFilePath = null;
     }
 
-    return new TelemetryStorage(conf);
+    return new TelemetryStorage(configFilePath);
   }
 
-  private constructor(private readonly conf: ConfStorage | null) {
+  private constructor(filePath: string | null) {
+    this.configPath = filePath;
     this.notify();
   }
 
   private notify = () => {
-    if (!this.conf) {
+    if (!this.configPath) {
       return;
     }
 
@@ -57,26 +85,30 @@ export class TelemetryStorage {
     // don't need to constantly annoy them about it.
     // We will re-inform users about the telemetry if significant changes are
     // ever made.
-    if (this.conf.get(TELEMETRY_KEY_NOTIFY_DATE, '')) {
+    const data = readConfigFile(this.configPath);
+    if (data[TELEMETRY_KEY_NOTIFY_DATE]) {
       return;
     }
-    this.conf.set(TELEMETRY_KEY_NOTIFY_DATE, Date.now().toString());
+    data[TELEMETRY_KEY_NOTIFY_DATE] = Date.now().toString();
+    writeConfigFile(this.configPath, data);
 
     notifyAboutMuiXTelemetry();
   };
 
-  get configPath(): string | undefined {
-    return this.conf?.path;
-  }
-
   get anonymousId(): string {
-    const val = this.conf && this.conf.get(TELEMETRY_KEY_ID);
-    if (val) {
-      return val;
+    if (this.configPath) {
+      const data = readConfigFile(this.configPath);
+      const existing = data[TELEMETRY_KEY_ID];
+      if (typeof existing === 'string') {
+        return existing;
+      }
+
+      const generated = randomBytes(32).toString('hex');
+      data[TELEMETRY_KEY_ID] = generated;
+      writeConfigFile(this.configPath, data);
+      return generated;
     }
 
-    const generated = randomBytes(32).toString('hex');
-    this.conf?.set(TELEMETRY_KEY_ID, generated);
-    return generated;
+    return randomBytes(32).toString('hex');
   }
 }

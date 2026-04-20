@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import {
@@ -34,7 +35,9 @@ export interface UsePickerBaseProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerProps<TValue, TView, TError, any>,
-> extends OnErrorProps<TValue, TError>,
+>
+  extends
+    OnErrorProps<TValue, TError>,
     Omit<
       UseViewsOptions<any, TView>,
       'onChange' | 'onFocusedViewChange' | 'focusedView' | 'getStepNavigation'
@@ -69,7 +72,7 @@ export interface UsePickerBaseProps<
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
    * - `validationError`: validation result of the current value
-   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
+   * - `source`: source of the acceptance. One of 'field' | 'view' | 'unknown'
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;
@@ -97,12 +100,22 @@ export interface UsePickerBaseProps<
 /**
  * Props used to handle the value of non-static Pickers.
  */
-export interface UsePickerNonStaticProps extends Omit<PickerFieldPrivateContextValue, 'fieldRef'> {
+export interface UsePickerNonStaticProps extends Omit<
+  PickerFieldPrivateContextValue,
+  'internalFieldRef' | 'fieldRef'
+> {
   /**
    * If `true`, the Picker will close after submitting the full date.
    * @default false
    */
   closeOnSelect?: boolean;
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus?: boolean;
   /**
    * Control the popup or dialog open state.
    * @default false
@@ -149,8 +162,8 @@ export interface UsePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerProps<TValue, TView, TError, any>,
-> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps>,
-    UsePickerNonStaticProps {
+>
+  extends UsePickerBaseProps<TValue, TView, TError, TExternalProps>, UsePickerNonStaticProps {
   // We don't add JSDoc here because we want the `referenceDate` JSDoc to be the one from the view which has more context.
   referenceDate?: TValue extends PickerRangeValue ? TValue | PickerValidDate : PickerValidDate;
   className?: string;
@@ -222,8 +235,10 @@ export interface UsePickerState<TValue extends PickerValidValue> {
   hasBeenModifiedSinceMount: boolean;
 }
 
-export interface PickerViewsRendererBaseExternalProps
-  extends Omit<UsePickerProps<any, any, any, any>, 'openTo' | 'viewRenderers' | 'onChange'> {}
+export interface PickerViewsRendererBaseExternalProps extends Omit<
+  UsePickerProps<any, any, any, any>,
+  'openTo' | 'viewRenderers' | 'onChange'
+> {}
 
 export type PickerViewsRendererProps<
   TValue extends PickerValidValue,

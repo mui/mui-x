@@ -1,7 +1,7 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
-import { applyStyles, createExportIframe } from './common';
-import { ChartImageExportOptions } from './useChartProExport.types';
+import { applyStyles, copyCanvasesContent, createExportIframe } from './common';
+import { type ChartImageExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
 export const getDrawDocument = async () => {
@@ -18,8 +18,8 @@ export const getDrawDocument = async () => {
 };
 
 export async function exportImage(
-  element: HTMLElement | SVGElement,
-  svg: SVGElement,
+  element: Element,
+  svg: HTMLElement | SVGElement,
   params?: ChartImageExportOptions,
 ) {
   const {
@@ -33,6 +33,7 @@ export async function exportImage(
   const drawDocumentPromise = getDrawDocument();
   const doc = ownerDocument(element);
 
+  const ratio = Math.max(window.devicePixelRatio || 1, 1);
   const iframe = createExportIframe(fileName);
   /* We apply the min/max width and height to ensure the SVG doesn't resize in the export.
    * We apply to the original SVG so that the cloned tree will contain the styles and revert these
@@ -46,10 +47,14 @@ export async function exportImage(
 
   iframe.onload = async () => {
     const exportDoc = iframe.contentDocument!;
-    const elementClone = element.cloneNode(true) as HTMLElement;
+    const elementClone = element.cloneNode(true) as Element;
     applyStyles(svg, previousStyles);
     exportDoc.body.replaceChildren(elementClone);
     exportDoc.body.style.margin = '0px';
+    /* Set display block through styles to ensure that CSS rules that target `body` don't accidentally target this
+     * iframe's body, which might cause the body to have no intrinsic width or height, leading to the canvas having a
+     * size of 0px, which causes the `toBlob` call to return null. */
+    exportDoc.body.style.display = 'block';
     /* The body's parent has a width of 0, so we use fit-content to ensure that the body adjusts its width to the width
      * of its children. */
     exportDoc.body.style.width = 'fit-content';
@@ -61,6 +66,8 @@ export async function exportImage(
     if (copyStyles) {
       await Promise.all(loadStyleSheets(exportDoc, root, nonce));
     }
+
+    await copyCanvasesContent(element, elementClone);
 
     resolve();
   };
@@ -75,11 +82,17 @@ export async function exportImage(
   /* Use the size from the export body in case `onBeforeExport` adds some elements that should be in the export. */
   const exportDocBodySize = iframe.contentDocument!.body.getBoundingClientRect();
   const canvas = document.createElement('canvas');
-  const ratio = window.devicePixelRatio || 1;
   canvas.width = exportDocBodySize.width * ratio;
   canvas.height = exportDocBodySize.height * ratio;
   canvas.style.width = `${exportDocBodySize.width}px`;
   canvas.style.height = `${exportDocBodySize.height}px`;
+
+  if (canvas.width === 0 || canvas.height === 0) {
+    doc.body.removeChild(iframe);
+    throw new Error(
+      `MUI X Charts: Cannot export an image with zero width or height. Width: ${canvas.width}px. Height: ${canvas.height}px.`,
+    );
+  }
 
   try {
     await drawDocument(iframe.contentDocument!, canvas, {

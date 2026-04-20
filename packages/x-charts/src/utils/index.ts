@@ -3,3 +3,4 @@
  */
 
 export * from './niceDomain';
+export { tickFrequencies } from './timeTicks';

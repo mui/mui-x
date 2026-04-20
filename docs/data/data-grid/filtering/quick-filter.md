@@ -75,7 +75,7 @@ With the default settings, quick filter will only consider columns with types `'
 - For `'number'` columns, the cell's formatted value must **equal** the value
 
 To modify or add the quick filter operators, add the property `getApplyQuickFilterFn` to the column definition.
-This function is quite similar to `getApplyFilterFn`.
+This function is quite similar to `getApplyFilterFn()`.
 This function takes as an input a value of the quick filter and returns another function that takes the cell value as an input and returns `true` if it satisfies the operator condition.
 
 In the example below, a custom filter is created for the `date` column to check if it contains the correct year.

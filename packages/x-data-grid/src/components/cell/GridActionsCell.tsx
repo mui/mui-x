@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
 import useId from '@mui/utils/useId';
 import { warnOnce } from '@mui/x-internals/warning';
-import { GridRenderCellParams } from '../../models/params/gridCellParams';
+import type { GridRowParams } from '../../models/params/gridRowParams';
+import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
-import { GridMenu, GridMenuProps } from '../menu/GridMenu';
-import { GridActionsColDef } from '../../models/colDef/gridColDef';
+import { GridMenu, type GridMenuProps } from '../menu/GridMenu';
+import type { GridActionsColDef } from '../../models/colDef/gridColDef';
+import type { GridValidRowModel, GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridActionsCellItem, type GridActionsCellItemProps } from './GridActionsCellItem';
@@ -19,7 +21,12 @@ interface TouchRippleActions {
   stop: (event: any, callback?: () => void) => void;
 }
 
-interface GridActionsCellProps extends Omit<GridRenderCellParams, 'api'> {
+interface GridActionsCellProps<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+  N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
+> extends Omit<GridRenderCellParams<R, V, F, N>, 'api'> {
   api?: GridRenderCellParams['api'];
   position?: GridMenuProps['position'];
   children: React.ReactNode;
@@ -30,9 +37,40 @@ interface GridActionsCellProps extends Omit<GridRenderCellParams, 'api'> {
    * @default false
    */
   suppressChildrenValidation?: boolean;
+  /**
+   * Callback to fire before the menu gets opened.
+   * Use this callback to prevent the menu from opening.
+   *
+   * @param {GridRowParams<R>} params Row parameters.
+   * @param {React.MouseEvent<HTMLElement>} event The event triggering this callback.
+   * @returns {boolean} if the menu should be opened.
+   */
+  onMenuOpen?: (params: GridRowParams<R>, event: React.MouseEvent<HTMLElement>) => boolean;
+  /**
+   * Callback to fire before the menu gets closed.
+   * Use this callback to prevent the menu from closing.
+   *
+   * @param {GridRowParams<R>} params Row parameters.
+   * @param {React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent | undefined} event The event triggering this callback.
+   * @returns {boolean} if the menu should be closed.
+   */
+  onMenuClose?: (
+    params: GridRowParams<R>,
+    event:
+      | React.MouseEvent<HTMLElement>
+      | React.KeyboardEvent
+      | MouseEvent
+      | TouchEvent
+      | undefined,
+  ) => boolean;
 }
 
-function GridActionsCell(props: GridActionsCellProps) {
+function GridActionsCell<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+  N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
+>(props: GridActionsCellProps<R, V, F, N>) {
   const {
     api,
     colDef,
@@ -47,6 +85,8 @@ function GridActionsCell(props: GridActionsCellProps) {
     cellMode,
     tabIndex,
     position = 'bottom-end',
+    onMenuOpen,
+    onMenuClose,
     children,
     suppressChildrenValidation,
     ...other
@@ -62,6 +102,7 @@ function GridActionsCell(props: GridActionsCellProps) {
   const menuId = useId();
   const buttonId = useId();
   const rootProps = useGridRootProps();
+  const rowParams = apiRef.current.getRowParams(id);
 
   const actions: React.ReactElement<GridActionsCellItemProps>[] = [];
   React.Children.forEach(children, (child) => {
@@ -130,22 +171,31 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
     }
   }, [focusedButtonIndex, numberOfButtons]);
 
-  const showMenu = () => {
+  const showMenu = (event: React.MouseEvent<HTMLElement>) => {
+    if (onMenuOpen && !onMenuOpen(rowParams, event)) {
+      return;
+    }
     setOpen(true);
     setFocusedButtonIndex(numberOfButtons - 1);
     ignoreCallToFocus.current = true;
   };
 
-  const hideMenu = () => {
+  const hideMenu = (
+    event?: React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent,
+  ) => {
+    if (onMenuClose && !onMenuClose(rowParams, event)) {
+      return;
+    }
     setOpen(false);
   };
+
   const toggleMenu = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     event.preventDefault();
     if (open) {
-      hideMenu();
+      hideMenu(event);
     } else {
-      showMenu();
+      showMenu(event);
     }
   };
 

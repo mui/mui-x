@@ -2,17 +2,19 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import {
   DataGrid,
-  DataGridProps,
+  type DataGridProps,
   GridFilterInputValue,
-  GridFilterInputValueProps,
-  GridFilterOperator,
+  type GridFilterInputValueProps,
+  type GridFilterOperator,
   GridPreferencePanelsValue,
+  getGridStringOperators,
+  getGridSingleSelectOperators,
 } from '@mui/x-data-grid';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getSelectByName } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
-  fireEvent.change(getSelectByName('Columns'), {
+  fireEvent.change(getSelectByName('Column'), {
     target: { value: columnValue },
   });
 }
@@ -491,8 +493,44 @@ describe('<DataGrid /> - Filter panel', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 
     // check that the filter is still in the model
-    expect(getSelectByName('Columns').value).to.equal('brand');
+    expect(getSelectByName('Column').value).to.equal('brand');
     expect(getSelectByName('Operator').value).to.equal('isEmpty');
+  });
+
+  // See https://github.com/mui/mui-x/issues/21404
+  (['string', 'singleSelect'] as const).forEach((type) => {
+    it(`should forward InputComponentProps for ${type} isAnyOf operator`, () => {
+      const operators =
+        type === 'string' ? getGridStringOperators() : getGridSingleSelectOperators();
+      render(
+        <TestCase
+          columns={[
+            {
+              field: 'brand',
+              type,
+              ...(type === 'singleSelect' && { valueOptions: ['Nike', 'Adidas', 'Puma'] }),
+              filterOperators: operators.map((op) =>
+                op.value === 'isAnyOf'
+                  ? { ...op, InputComponentProps: { 'data-testid': 'custom-autocomplete' } }
+                  : op,
+              ),
+            },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'brand', operator: 'isAnyOf' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+      expect(screen.getByTestId('custom-autocomplete')).to.not.equal(null);
+    });
   });
 
   // See https://github.com/mui/mui-x/issues/7901#issuecomment-1427058922
@@ -516,7 +554,7 @@ describe('<DataGrid /> - Filter panel', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 
     // check that the filter is changed to default one (`is`)
-    expect(getSelectByName('Columns').value).to.equal('country');
+    expect(getSelectByName('Column').value).to.equal('country');
     expect(getSelectByName('Operator').value).to.equal('is');
   });
 });

@@ -49,5 +49,28 @@
       "description": "Select the kind of tooltip to display - &#39;item&#39;: Shows data about the item below the mouse; - &#39;axis&#39;: Shows values associated with the hovered x value; - &#39;none&#39;: Does not display tooltip."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "axisValueCell": {
+      "description": "Styles applied to {{nodeName}}. Only available for axis tooltip.",
+      "nodeName": "the axisValueCell element"
+    },
+    "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
+    "labelCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the labelCell element"
+    },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
+    "markContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the markContainer element"
+    },
+    "paper": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the paper element" },
+    "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
+    "table": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the table element" },
+    "valueCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the valueCell element"
+    }
+  },
+  "slotDescriptions": { "root": "The component that renders the root." }
 }

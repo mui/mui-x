@@ -27,7 +27,7 @@
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
     "disableHighlightToday": {
-      "description": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle."
+      "description": "If <code>true</code>, today&#39;s day is not highlighted."
     },
     "disableOpenPicker": {
       "description": "If <code>true</code>, the button to open the Picker will not be rendered (it will only render the field)."
@@ -48,6 +48,9 @@
       "description": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
     },
     "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
+    "keepOpenDuringFieldFocus": {
+      "description": "If <code>true</code>, keep the picker open when the value is edited from the field. Useful to prevent the popper/dialog from closing while typing in the input. This only affects changes with <code>source = &quot;field&quot;</code> and does not alter view interactions."
+    },
     "label": { "description": "The label content." },
     "loading": {
       "description": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar. Can be used to preload information and show it in calendar."
@@ -72,7 +75,7 @@
         },
         "context": {
           "name": "context",
-          "description": "<p>Context about this acceptance: - <code>validationError</code>: validation result of the current value - <code>source</code>: source of the acceptance. One of &#39;field&#39; | &#39;picker&#39; | &#39;unknown&#39; - <code>shortcut</code> (optional): the shortcut metadata if the value was accepted via a shortcut selection</p>\n"
+          "description": "<p>Context about this acceptance: - <code>validationError</code>: validation result of the current value - <code>source</code>: source of the acceptance. One of &#39;field&#39; | &#39;view&#39; | &#39;unknown&#39; - <code>shortcut</code> (optional): the shortcut metadata if the value was accepted via a shortcut selection</p>\n"
         }
       }
     },
@@ -224,7 +227,7 @@
     "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
     "clearButton": "Button to clear the value.",
     "clearIcon": "Icon to display in the button used to clean the value.",
-    "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+    "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/picker-day/\">PickerDay</a> component.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "field": "Component used to enter the date with the keyboard.",
     "inputAdornment": "Component displayed on the start or end input adornment used to open the Picker.",

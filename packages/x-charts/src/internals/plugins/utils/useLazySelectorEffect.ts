@@ -3,7 +3,7 @@
 import * as React from 'react';
 import type { Store } from '@mui/x-internals/store';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { ChartAnyPluginSignature, ChartState } from '../models';
+import { type ChartAnyPluginSignature, type ChartState } from '../models';
 
 const noop = () => {};
 

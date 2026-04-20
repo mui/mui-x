@@ -13,13 +13,10 @@ import { ValidateDateProps } from '../validation/validateDate';
 
 export interface DatePickerSlots extends DesktopDatePickerSlots, MobileDatePickerSlots {}
 
-export interface DatePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends DesktopDatePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    MobileDatePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+export interface DatePickerSlotProps
+  extends DesktopDatePickerSlotProps, MobileDatePickerSlotProps {}
 
-export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
-  extends DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>,
-    MobileDatePickerProps<TEnableAccessibleFieldDOMStructure> {
+export interface DatePickerProps extends DesktopDatePickerProps, MobileDatePickerProps {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -35,7 +32,7 @@ export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends bool
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DatePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DatePickerSlotProps;
   /**
    * Years rendered per row.
    * @default 4 on desktop, 3 on mobile

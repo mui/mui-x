@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const urPKGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'تنگ',
   toolbarDensityStandard: 'درمیانہ',
   toolbarDensityComfortable: 'مناسب',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'واپس',
+  toolbarRedo: 'دوبارہ',
 
   // Columns selector toolbar button text
   toolbarColumns: 'کالمز',
@@ -64,7 +68,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'آپریٹر',
   filterPanelOperatorAnd: 'اور',
   filterPanelOperatorOr: 'یا',
-  filterPanelColumns: 'کالمز',
+  filterPanelColumn: 'کالمز',
   filterPanelInputLabel: 'ویلیو',
   filterPanelInputPlaceholder: 'ویلیو کو فلٹر کریں',
 
@@ -161,6 +165,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'ہاں',
   booleanCellFalseLabel: 'نہیں',
 
+  // Long text cell
+  longTextCellExpandLabel: 'پھیلائیں',
+  longTextCellCollapseLabel: 'تنگ کریں',
+
   // Actions cell more text
   actionsCellMore: 'ذیادہ',
 
@@ -192,11 +200,12 @@ const urPKGrid: Partial<GridLocaleText> = {
   //   count,
   //   estimated
   // }) => {
+  //   const unknownRowCount = count == null || count === -1;
   //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
   //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
+  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   // },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

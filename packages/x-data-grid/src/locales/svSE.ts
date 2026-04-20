@@ -1,12 +1,12 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const svSEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Inga rader',
   noResultsOverlayLabel: 'Inga resultat funna.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Inga kolumner',
+  noColumnsOverlayManageColumns: 'Hantera kolumner',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
@@ -15,6 +15,10 @@ const svSEGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Luftig',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Ångra',
+  toolbarRedo: 'Gör om',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolumner',
@@ -64,7 +68,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Och',
   filterPanelOperatorOr: 'Eller',
-  filterPanelColumns: 'Kolumner',
+  filterPanelColumn: 'Kolumner',
   filterPanelInputLabel: 'Värde',
   filterPanelInputPlaceholder: 'Filtervärde',
 
@@ -163,6 +167,10 @@ const svSEGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'ja',
   booleanCellFalseLabel: 'nej',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Expandera',
+  longTextCellCollapseLabel: 'Kollapsa',
+
   // Actions cell more text
   actionsCellMore: 'mer',
 
@@ -194,11 +202,12 @@ const svSEGrid: Partial<GridLocaleText> = {
   //   count,
   //   estimated
   // }) => {
+  //   const unknownRowCount = count == null || count === -1;
   //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
   //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
+  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   // },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

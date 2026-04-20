@@ -39,7 +39,6 @@ describe('<ChartsBrushOverlay />', () => {
       </BarChart>,
     );
 
-    // eslint-disable-next-line testing-library/no-container
     const overlay = container.querySelector(`.${brushOverlayClasses.root}`);
     expect(overlay).to.equal(null);
   });
@@ -53,7 +52,6 @@ describe('<ChartsBrushOverlay />', () => {
         </BarChart>,
       );
 
-      // eslint-disable-next-line testing-library/no-container
       const svg = container.querySelector('svg')!;
 
       await user.pointer([
@@ -70,7 +68,6 @@ describe('<ChartsBrushOverlay />', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      // eslint-disable-next-line testing-library/no-container
       const overlay = container.querySelector(`.${brushOverlayClasses.root}`);
       expect(overlay).not.to.equal(null);
     },

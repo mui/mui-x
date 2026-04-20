@@ -1,5 +1,8 @@
 'use client';
-import { FocusedItemData, useFocusedItem } from './useFocusedItem';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
+import type { FocusedItemIdentifier } from '../models/seriesType';
+import type { ChartSeriesType } from '../models/seriesType/config';
+import { useFocusedItem } from './useFocusedItem';
 
 /**
  * A hook to check focus state of multiple items.
@@ -10,9 +13,6 @@ import { FocusedItemData, useFocusedItem } from './useFocusedItem';
 export function useIsItemFocusedGetter() {
   const focusedItem = useFocusedItem();
 
-  return (item: FocusedItemData) =>
-    focusedItem !== null &&
-    focusedItem.seriesType === item.seriesType &&
-    focusedItem.seriesId === item.seriesId &&
-    focusedItem.dataIndex === item.dataIndex;
+  return (item: FocusedItemIdentifier<ChartSeriesType>) =>
+    focusedItem !== null && fastObjectShallowCompare(focusedItem, item);
 }

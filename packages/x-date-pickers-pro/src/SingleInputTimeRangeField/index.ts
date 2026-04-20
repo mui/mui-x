@@ -3,4 +3,6 @@ export { useSingleInputTimeRangeField as unstable_useSingleInputTimeRangeField }
 export type {
   UseSingleInputTimeRangeFieldProps,
   SingleInputTimeRangeFieldProps,
+  SingleInputTimeRangeFieldSlots,
+  SingleInputTimeRangeFieldSlotProps,
 } from './SingleInputTimeRangeField.types';

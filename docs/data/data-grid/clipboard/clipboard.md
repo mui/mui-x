@@ -39,7 +39,6 @@ so that the values can be parsed correctly during the paste operation.
 
 :::
 
-You can paste data from clipboard using the <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">V</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">V</kbd></kbd> on macOS) keyboard shortcut.
 The paste operation only affects cells in the columns that are [`editable`](/x/react-data-grid/editing/#making-a-column-editable).
 
 Same as with editing, you can use `valueParser` to modify the pasted value and `valueSetter` to update the row with new values.
@@ -54,11 +53,51 @@ The priority is the following, from highest to lowest:
 
 {{"demo": "ClipboardPaste.js", "bg": "inline"}}
 
+### Keyboard shortcuts
+
+The paste operation can be triggered by the following keyboard shortcuts:
+
+- <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">V</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">V</kbd></kbd> on macOS) pastes clipboard content into the selected cells.
+- <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">D</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">D</kbd></kbd> on macOS) fills down—copies the value of the selected cell into the cell below. If multiple cells are selected in a column, the top cell's value is copied into the cells below it.
+- <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">R</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">R</kbd></kbd> on macOS) copies the value from the leftmost cell of each selected row into the cells to its right. When a single cell is selected, the value is copied to the cell directly to the right, and the selection moves right. When a single column with multiple rows is selected, the values are copied to the column to the right.
+
+### Drag to fill
+
+To let the users copy the values using dragging, similar to the spreadsheet applications like "Excel", pass the `cellSelectionFillHandle` prop to the Data Grid.
+
+When passed, a small handle appears at the bottom-right corner of the selected [`editable`](/x/react-data-grid/editing/#making-a-column-editable) cell.
+Drag it up or down to fill rows, or left and right to fill adjacent columns.
+
+{{"demo": "CellSelectionFillHandle.js", "bg": "inline"}}
+
+:::info
+
+You can use the `GridColDef['pastedValueParser']` prop to handle how copying different types of data across columns, for example pasting a string into a number column, is handled.
+The above demo uses a `pastedValueParser` to convert the pasted value to a number if it is not a valid number, if the value is not cnvertible to a number, it falls back to the previous valid value.
+
+:::
+
 ### Disable clipboard paste
 
 To disable clipboard paste, set the `disableClipboardPaste` prop to `true`:
 
 {{"demo": "ClipboardPasteDisabled.js", "bg": "inline"}}
+
+### Disable pasting to the specific cells within a row
+
+The clipboard paste operation respects the [cell editing rules](/x/react-data-grid/editing/#disable-editing-of-specific-cells-within-a-row).
+Use this to prevent pasting into certain cells based on row data or other conditions.
+
+The demo below shows a product inventory grid with the following paste restrictions:
+
+- **Price column:** Cannot be pasted in archived products
+- **Status column:** Cannot be pasted in any row
+- **Last Modified column:** Cannot be pasted in any row
+
+Try selecting multiple cells and pasting data.
+Cells marked as non-editable by `isCellEditable` will not be updated.
+
+{{"demo": "ClipboardPasteIsCellEditable.js", "bg": "inline"}}
 
 ### Persisting pasted data
 

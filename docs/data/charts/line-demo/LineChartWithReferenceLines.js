@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
-import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
+import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 
@@ -21,17 +21,16 @@ const xLabels = [
 export default function LineChartWithReferenceLines() {
   return (
     <Box sx={{ width: '100%', height: 300 }}>
-      <ChartContainer
+      <ChartsContainer
         series={[
           { data: pData, label: 'pv', type: 'line' },
           { data: uData, label: 'uv', type: 'line' },
         ]}
-        xAxis={[{ scaleType: 'point', data: xLabels }]}
+        xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}
         margin={margin}
       >
         <LinePlot />
-        <MarkPlot />
         <ChartsReferenceLine
           x="Page C"
           label="Max PV PAGE"
@@ -40,7 +39,7 @@ export default function LineChartWithReferenceLines() {
         <ChartsReferenceLine y={9800} label="Max" lineStyle={{ stroke: 'red' }} />
         <ChartsXAxis />
         <ChartsYAxis />
-      </ChartContainer>
+      </ChartsContainer>
     </Box>
   );
 }

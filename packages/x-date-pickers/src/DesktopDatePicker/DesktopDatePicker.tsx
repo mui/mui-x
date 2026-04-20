@@ -14,9 +14,8 @@ import { DateField } from '../DateField';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type DesktopDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopDatePickerComponent = ((
+  props: DesktopDatePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -29,18 +28,17 @@ type DesktopDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends b
  *
  * - [DesktopDatePicker API](https://mui.com/x/api/date-pickers/desktop-date-picker/)
  */
-const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopDatePicker = React.forwardRef(function DesktopDatePicker(
+  inProps: DesktopDatePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all date pickers
-  const defaultizedProps = useDatePickerDefaultizedProps<
-    DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopDatePicker');
+  const defaultizedProps = useDatePickerDefaultizedProps<DesktopDatePickerProps>(
+    inProps,
+    'MuiDesktopDatePicker',
+  );
 
   const viewRenderers: DatePickerViewRenderers<DateView> = {
     day: renderDateViewCalendar,
@@ -73,11 +71,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     },
   };
 
-  const { renderPicker } = useDesktopPicker<
-    DateView,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopPicker<DateView, typeof props>({
     ref,
     props,
     valueManager: singleItemValueManager,
@@ -131,7 +125,7 @@ DesktopDatePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -150,10 +144,6 @@ DesktopDatePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -174,6 +164,13 @@ DesktopDatePicker.propTypes = {
    * Pass a ref to the `input` element.
    */
   inputRef: refType,
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus: PropTypes.bool,
   /**
    * The label content.
    */
@@ -215,7 +212,7 @@ DesktopDatePicker.propTypes = {
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
    * - `validationError`: validation result of the current value
-   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
+   * - `source`: source of the acceptance. One of 'field' | 'view' | 'unknown'
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,

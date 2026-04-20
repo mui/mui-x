@@ -3,12 +3,21 @@ import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
-import { ChartsTooltipContainer, ChartsTooltipContainerProps } from './ChartsTooltipContainer';
+import { ChartsTooltipContainer, type ChartsTooltipContainerProps } from './ChartsTooltipContainer';
 import { useUtilityClasses } from './chartsTooltipClasses';
-import { TriggerOptions } from './utils';
+import { type TriggerOptions } from './utils';
 
-export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions>
-  extends Omit<ChartsTooltipContainerProps<T>, 'children'> {}
+export type ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> = T extends TriggerOptions
+  ? Omit<ChartsTooltipContainerProps<T>, 'children'> & {
+      /**
+       * Defines the sort order in which series items are displayed in the axis tooltip.
+       * When set to `none`, series are displayed in the same order they are provided in the series property. Otherwise they are sorted by their value.
+       * Only applies when `trigger='axis'`.
+       * @default 'none'
+       */
+      sort?: T extends 'axis' ? 'none' | 'asc' | 'desc' : never;
+    }
+  : never;
 
 /**
  * Demos:
@@ -19,15 +28,15 @@ export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions>
  *
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
-function ChartsTooltip(props: ChartsTooltipProps) {
-  const { classes: propClasses, trigger = 'axis' } = props;
+function ChartsTooltip<T extends TriggerOptions>(props: ChartsTooltipProps<T>) {
+  const { classes: propClasses, trigger = 'axis', sort, ...containerProps } = props;
 
   const classes = useUtilityClasses(propClasses);
 
   return (
-    <ChartsTooltipContainer {...props} classes={propClasses}>
+    <ChartsTooltipContainer {...containerProps} trigger={trigger} classes={propClasses}>
       {trigger === 'axis' ? (
-        <ChartsAxisTooltipContent classes={classes} />
+        <ChartsAxisTooltipContent classes={classes} sort={sort} />
       ) : (
         <ChartsItemTooltipContent classes={classes} />
       )}
@@ -97,10 +106,10 @@ ChartsTooltip.propTypes = {
   container: PropTypes.oneOfType([
     (props, propName) => {
       if (props[propName] == null) {
-        return new Error(`Prop '${propName}' is required but wasn't specified`);
+        return new Error(`MUI X: Prop '${propName}' is required but wasn't specified`);
       }
       if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-        return new Error(`Expected prop '${propName}' to be of type Element`);
+        return new Error(`MUI X: Expected prop '${propName}' to be of type Element`);
       }
       return null;
     },
@@ -154,6 +163,13 @@ ChartsTooltip.propTypes = {
    * If `true`, the component is shown.
    */
   open: PropTypes.bool,
+  /**
+   * The sort in which series items are displayed in the axis tooltip.
+   * When set to `none`, series are sorted as they are provided in the series property. Otherwise they are sorted by their value.
+   * Only applies when `trigger='axis'`.
+   * @default 'none'
+   */
+  sort: PropTypes.oneOf(['none', 'asc', 'desc']),
   /**
    * Popper placement.
    * @default 'bottom'

@@ -1,4 +1,4 @@
-import { PromptResponse } from '@mui/x-data-grid-premium';
+import type { PromptResponse } from '@mui/x-data-grid-premium';
 import { mockPrompts } from '../constants/prompts';
 
 export const mockPromptResolver = (query: string, _: string) => {
@@ -10,7 +10,7 @@ export const mockPromptResolver = (query: string, _: string) => {
         resolve(resolved);
       } else {
         console.error(`Unsupported query: ${query}`);
-        reject(new Error('Could not process prompt'));
+        reject(new Error('MUI X: Could not process prompt'));
       }
     }, 1000);
   });

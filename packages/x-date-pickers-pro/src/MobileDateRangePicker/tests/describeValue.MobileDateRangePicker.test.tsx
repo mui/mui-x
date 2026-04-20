@@ -5,7 +5,7 @@ import {
   adapterToUse,
   createPickerRenderer,
   openPicker,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   getFieldSectionsContainer,
   getFieldInputRoot,
@@ -37,13 +37,13 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       const expectedStartValueStr = expectedValues[0]
         ? adapterToUse.format(expectedValues[0], 'keyboardDate')
         : 'MM/DD/YYYY';
-      expectFieldValueV7(startSectionsContainer, expectedStartValueStr);
+      expectFieldValue(startSectionsContainer, expectedStartValueStr);
 
       const endFieldRoot = getFieldSectionsContainer(1);
       const expectedEndValueStr = expectedValues[1]
         ? adapterToUse.format(expectedValues[1], 'keyboardDate')
         : 'MM/DD/YYYY';
-      expectFieldValueV7(endFieldRoot, expectedEndValueStr);
+      expectFieldValue(endFieldRoot, expectedEndValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
       let newValue: PickerNonNullableRangeValue;
@@ -67,7 +67,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       }
 
@@ -103,7 +103,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       const expectedValueStr = `${expectedStartValueStr} – ${expectedEndValueStr}`;
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
     setNewValue: (
       value,

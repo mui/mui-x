@@ -1,6 +1,6 @@
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { RadarChart, RadarSeries, radarSeriesPlotClasses } from '@mui/x-charts/RadarChart';
+import { RadarChart, RadarSeries, radarClasses } from '@mui/x-charts/RadarChart';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 // Taken from https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_base_stats_in_Generation_I
@@ -12,14 +12,14 @@ const series = [
 
 function Radar() {
   return (
-    <Stack height="100%">
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center">Pokémon base stats</Typography>
       <RadarChart
         series={series}
         radar={{
           metrics: ['HP', 'Attack', 'Defense', 'Speed', 'Special'],
         }}
-        sx={{ [`& .${radarSeriesPlotClasses.area}`]: { strokeWidth: 2 } }}
+        sx={{ [`& .${radarClasses.seriesArea}`]: { strokeWidth: 2 } }}
       />
     </Stack>
   );

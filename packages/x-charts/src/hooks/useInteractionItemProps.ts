@@ -1,12 +1,13 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { SeriesItemIdentifierWithData } from '../models';
-import { useChartContext } from '../context/ChartProvider';
-import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { ChartSeriesType, type ChartItemIdentifierWithData } from '../models/seriesType/config';
-import { ChartInstance } from '../internals/plugins/models';
+import { useChartsContext } from '../context/ChartsProvider';
+import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import type { ChartSeriesType } from '../models/seriesType/config';
+import type { SeriesItemIdentifierWithType } from '../models/seriesType';
+import type { ChartInstance } from '../internals/plugins/models';
+import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 
 function onPointerDown(event: React.PointerEvent) {
   if (
@@ -17,26 +18,32 @@ function onPointerDown(event: React.PointerEvent) {
   }
 }
 
-export const useInteractionItemProps = (
-  data: SeriesItemIdentifierWithData,
-  skip?: boolean,
+export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
+  data: SeriesItemIdentifierWithType<SeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
   onPointerDown?: (event: React.PointerEvent) => void;
 } => {
   const { instance } =
-    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+    useChartsContext<
+      [
+        UseChartInteractionSignature,
+        UseChartHighlightSignature<SeriesType>,
+        UseChartTooltipSignature,
+      ]
+    >();
   const interactionActive = React.useRef(false);
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
-    instance.setItemInteraction(data, { interaction: 'pointer' });
+    instance.setLastUpdateSource('pointer');
+    instance.setTooltipItem(data);
     instance.setHighlight(data);
   });
 
   const onPointerLeave = useEventCallback(() => {
     interactionActive.current = false;
-    instance.removeItemInteraction(data);
+    instance.removeTooltipItem(data);
     instance.clearHighlight();
   });
 
@@ -50,37 +57,20 @@ export const useInteractionItemProps = (
   }, [onPointerLeave]);
 
   return React.useMemo(
-    () =>
-      skip
-        ? {}
-        : {
-            onPointerEnter,
-            onPointerLeave,
-            onPointerDown,
-          },
-    [skip, onPointerEnter, onPointerLeave],
+    () => ({
+      onPointerEnter,
+      onPointerLeave,
+      onPointerDown,
+    }),
+    [onPointerEnter, onPointerLeave],
   );
 };
 
-export const useInteractionAllItemProps = (
-  data: SeriesItemIdentifierWithData[],
-  skip?: boolean,
-) => {
-  const { instance } =
-    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
-
-  const results = React.useMemo(() => {
-    return data.map((item) => {
-      return skip ? {} : getInteractionItemProps(instance, item);
-    });
-  }, [data, instance, skip]);
-
-  return results;
-};
-
-export function getInteractionItemProps(
-  instance: ChartInstance<[UseChartInteractionSignature, UseChartHighlightSignature]>,
-  item: ChartItemIdentifierWithData<ChartSeriesType>,
+export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
+  instance: ChartInstance<
+    [UseChartInteractionSignature, UseChartHighlightSignature<SeriesType>, UseChartTooltipSignature]
+  >,
+  item: SeriesItemIdentifierWithType<SeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
@@ -90,7 +80,8 @@ export function getInteractionItemProps(
     if (!item) {
       return;
     }
-    instance.setItemInteraction(item, { interaction: 'pointer' });
+    instance.setLastUpdateSource('pointer');
+    instance.setTooltipItem(item);
     instance.setHighlight(item);
   }
 
@@ -98,7 +89,7 @@ export function getInteractionItemProps(
     if (!item) {
       return;
     }
-    instance.removeItemInteraction(item);
+    instance.removeTooltipItem(item);
     instance.clearHighlight();
   }
 

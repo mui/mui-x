@@ -22,36 +22,6 @@ export interface TreeItemClasses {
   errorIcon: string;
   /** Styles applied to the loading icon element */
   loadingIcon: string;
-  /**
-   * State class applied to the content element when the item is expanded.
-   * @deprecated Use the `data-expanded` attribute instead.
-   */
-  expanded: string;
-  /**
-   * State class applied to the content element when the item is selected.
-   * @deprecated Use the `data-selected` attribute instead.
-   */
-  selected: string;
-  /**
-   * State class applied to the content element when the item is focused.
-   * @deprecated Use the `data-focused` attribute instead.
-   */
-  focused: string;
-  /**
-   * State class applied to the content element when the item is disabled.
-   * @deprecated Use the `data-disabled` attribute instead.
-   */
-  disabled: string;
-  /**
-   * State class applied to the content element when the item is editable.
-   * @deprecated Use the `data-editable` attribute instead.
-   */
-  editable: string;
-  /**
-   * State class applied to the content element when the item is being edited.
-   * @deprecated Use the `data-editing` attribute instead.
-   */
-  editing: string;
 }
 
 export type TreeItemClassKey = keyof TreeItemClasses;
@@ -71,11 +41,4 @@ export const treeItemClasses: TreeItemClasses = generateUtilityClasses('MuiTreeI
   'dragAndDropOverlay',
   'errorIcon',
   'loadingIcon',
-  // State classes, will be replaced by data-attrs in the next major
-  'expanded',
-  'selected',
-  'focused',
-  'disabled',
-  'editable',
-  'editing',
 ]);

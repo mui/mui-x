@@ -13,9 +13,7 @@ import {
   AdapterClassToUse,
   openPickerAsync,
   getFieldSectionsContainer,
-  getTextbox,
 } from 'test/utils/pickers';
-import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -101,35 +99,17 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   it('should add focused class to the field when it is focused', async () => {
-    // Test with accessible DOM structure
-    const { unmount } = render(<DesktopDateRangePicker />);
+    render(<DesktopDateRangePicker />);
 
     const sectionsContainer = getFieldSectionsContainer();
     await act(async () => sectionsContainer.focus());
 
     expect(sectionsContainer.parentElement).to.have.class('Mui-focused');
-
-    await act(async () => unmount());
-
-    // Test with non-accessible DOM structure
-    render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure={false} />);
-
-    const input = getTextbox();
-    await act(async () => input.focus());
-
-    expect(input.parentElement).to.have.class('Mui-focused');
   });
 
   it('should render the input with a given `name`', () => {
-    // Test with accessible DOM structure
-    const { unmount } = render(<DesktopDateRangePicker name="test" />);
+    render(<DesktopDateRangePicker name="test" />);
     expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
-
-    unmount();
-
-    // Test with non-accessible DOM structure
-    render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure={false} name="test" />);
-    expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
   });
 
   describe('Component slot: Popper', () => {
@@ -481,43 +461,40 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     // test:unit does not call `blur` when focusing another element.
-    it.skipIf(isJSDOM)(
-      'should call onClose when blur the current field without prior change (multi input field)',
-      async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+    it('should call onClose when blur the current field without prior change (multi input field)', async () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
 
-        const { user } = render(
-          <React.Fragment>
-            <DesktopDateRangePicker
-              onChange={onChange}
-              onAccept={onAccept}
-              onClose={onClose}
-              slots={{ field: MultiInputDateRangeField }}
-            />
-            <button type="button" id="test">
-              focus me
-            </button>
-          </React.Fragment>,
-        );
+      const { user } = render(
+        <React.Fragment>
+          <DesktopDateRangePicker
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+            slots={{ field: MultiInputDateRangeField }}
+          />
+          <button type="button" id="test">
+            focus me
+          </button>
+        </React.Fragment>,
+      );
 
-        await openPickerAsync(user, {
-          type: 'date-range',
-          initialFocus: 'start',
-          fieldType: 'multi-input',
-        });
-        expect(screen.getByRole('tooltip')).toBeVisible();
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'start',
+        fieldType: 'multi-input',
+      });
+      expect(screen.getByRole('tooltip')).toBeVisible();
 
-        await act(async () => document.querySelector<HTMLButtonElement>('#test')!.focus());
+      await act(async () => document.querySelector<HTMLButtonElement>('#test')!.focus());
 
-        expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(0);
-        await waitFor(() => {
-          expect(onClose.callCount).to.equal(1);
-        });
-      },
-    );
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      await waitFor(() => {
+        expect(onClose.callCount).to.equal(1);
+      });
+    });
 
     it('should call onClose and onAccept when blur the current field (multi input field)', async () => {
       const onChange = spy();
@@ -625,9 +602,13 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    // TODO: Write test
-    // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
-    // })
+    it.todo(
+      'should call onClose and onAccept with the live value when clicking outside of the picker',
+      () => {
+        // TODO: Write test
+      },
+    );
+
     it('should not close picker when switching focus from start to end input (multi input field)', async () => {
       const onChange = spy();
       const onAccept = spy();
@@ -784,5 +765,27 @@ describe('<DesktopDateRangePicker />', () => {
       expect(getPickerDay('16')).to.have.attribute('disabled');
       expect(getPickerDay('17')).to.have.attribute('disabled');
     });
+  });
+
+  it('should close the Picker and move focus to the text field when clicking it', async () => {
+    const { user } = render(
+      <React.Fragment>
+        <input aria-label="decoy" />
+        <DesktopDateRangePicker />
+      </React.Fragment>,
+    );
+
+    await openPickerAsync(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
+
+    const decoyInput = screen.getByRole('textbox', { name: 'decoy' });
+    await user.click(decoyInput);
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
+    // the input should be focused—the new active element
+    expect(document.activeElement!).to.equal(decoyInput);
   });
 });

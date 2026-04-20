@@ -1,4 +1,4 @@
-import type { MuiPage } from 'docs/src/MuiPage';
+import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
 const chartsApiPages: MuiPage[] = [
   {
@@ -22,6 +22,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarChart',
   },
   {
+    pathname: '/x/api/charts/bar-chart-premium',
+    title: 'BarChartPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/bar-chart-pro',
     title: 'BarChartPro',
     plan: 'pro',
@@ -39,22 +44,14 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
-    pathname: '/x/api/charts/chart-container',
-    title: 'ChartContainer',
+    pathname: '/x/api/charts/candlestick-chart',
+    title: 'CandlestickChart',
+    plan: 'premium',
   },
   {
-    pathname: '/x/api/charts/chart-container-pro',
-    title: 'ChartContainerPro',
-    plan: 'pro',
-  },
-  {
-    pathname: '/x/api/charts/chart-data-provider',
-    title: 'ChartDataProvider',
-  },
-  {
-    pathname: '/x/api/charts/chart-data-provider-pro',
-    title: 'ChartDataProviderPro',
-    plan: 'pro',
+    pathname: '/x/api/charts/candlestick-plot',
+    title: 'CandlestickPlot',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/charts-axis',
@@ -77,6 +74,34 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsClipPath',
   },
   {
+    pathname: '/x/api/charts/charts-container',
+    title: 'ChartsContainer',
+  },
+  {
+    pathname: '/x/api/charts/charts-container-premium',
+    title: 'ChartsContainerPremium',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/charts-container-pro',
+    title: 'ChartsContainerPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider',
+    title: 'ChartsDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider-premium',
+    title: 'ChartsDataProviderPremium',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider-pro',
+    title: 'ChartsDataProviderPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-grid',
     title: 'ChartsGrid',
   },
@@ -91,6 +116,14 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-localization-provider',
     title: 'ChartsLocalizationProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-radial-data-provider',
+    title: 'ChartsRadialDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-radial-grid',
+    title: 'ChartsRadialGrid',
   },
   {
     pathname: '/x/api/charts/charts-reference-line',
@@ -117,6 +150,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-toolbar-pro',
     title: 'ChartsToolbarPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-range-button-trigger',
+    title: 'ChartsToolbarRangeButtonTrigger',
     plan: 'pro',
   },
   {
@@ -150,13 +188,42 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsYAxis',
   },
   {
-    pathname: '/x/api/charts/chart-zoom-slider',
-    title: 'ChartZoomSlider',
+    pathname: '/x/api/charts/charts-zoom-slider',
+    title: 'ChartsZoomSlider',
     plan: 'pro',
   },
   {
     pathname: '/x/api/charts/continuous-color-legend',
     title: 'ContinuousColorLegend',
+  },
+  {
+    pathname: '/x/api/charts/focused-funnel-section',
+    title: 'FocusedFunnelSection',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-heatmap-cell',
+    title: 'FocusedHeatmapCell',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-radar-mark',
+    title: 'FocusedRadarMark',
+  },
+  {
+    pathname: '/x/api/charts/focused-range-bar',
+    title: 'FocusedRangeBar',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/focused-sankey-link',
+    title: 'FocusedSankeyLink',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-sankey-node',
+    title: 'FocusedSankeyNode',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/funnel-chart',
@@ -182,9 +249,19 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/heatmap-cell',
+    title: 'HeatmapCell',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/heatmap-plot',
     title: 'HeatmapPlot',
     plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-premium',
+    title: 'HeatmapPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/heatmap-tooltip',
@@ -300,8 +377,18 @@ const chartsApiPages: MuiPage[] = [
     title: 'RadarSeriesPlot',
   },
   {
+    pathname: '/x/api/charts/range-bar-plot',
+    title: 'RangeBarPlot',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/sankey-chart',
     title: 'SankeyChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-data-provider',
+    title: 'SankeyDataProvider',
     plan: 'pro',
   },
   {

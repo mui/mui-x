@@ -5,7 +5,7 @@ import {
   gridClasses,
   gridColumnLookupSelector,
   useGridSelector,
-  GridSingleSelectColDef,
+  type GridSingleSelectColDef,
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
@@ -14,8 +14,11 @@ import { keyframes, styled } from '@mui/system';
 import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { Prompt, PromptResponse } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type {
+  Prompt,
+  PromptResponse,
+} from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type GridPromptProps = Prompt & { onRerun: () => void };

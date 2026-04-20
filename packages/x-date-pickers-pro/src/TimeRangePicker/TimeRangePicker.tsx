@@ -9,9 +9,8 @@ import { DesktopTimeRangePicker } from '../DesktopTimeRangePicker';
 import { MobileTimeRangePicker } from '../MobileTimeRangePicker';
 import { TimeRangePickerProps } from './TimeRangePicker.types';
 
-type TimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: TimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type TimePickerComponent = ((
+  props: TimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -24,10 +23,8 @@ type TimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean 
  *
  * - [TimeRangePicker API](https://mui.com/x/api/date-pickers/time-range-picker/)
  */
-const TimeRangePicker = React.forwardRef(function TimeRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: TimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const TimeRangePicker = React.forwardRef(function TimeRangePicker(
+  inProps: TimeRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimeRangePicker' });
@@ -112,10 +109,6 @@ TimeRangePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
-  /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */
@@ -130,6 +123,13 @@ TimeRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    */
   inputRef: refType,
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus: PropTypes.bool,
   /**
    * The label content.
    */
@@ -165,7 +165,7 @@ TimeRangePicker.propTypes = {
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
    * - `validationError`: validation result of the current value
-   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
+   * - `source`: source of the acceptance. One of 'field' | 'view' | 'unknown'
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,

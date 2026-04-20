@@ -1,5 +1,7 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('zh-HK');
 
 const zhHKGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +17,10 @@ const zhHKGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: '袖珍的',
   toolbarDensityStandard: '標準',
   toolbarDensityComfortable: '舒服的',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: '復原',
+  toolbarRedo: '重做',
 
   // Columns selector toolbar button text
   toolbarColumns: '列',
@@ -64,7 +70,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
   filterPanelOperator: '操作員',
   filterPanelOperatorAnd: '和',
   filterPanelOperatorOr: '或者',
-  filterPanelColumns: '列',
+  filterPanelColumn: '列',
   filterPanelInputLabel: '價值',
   filterPanelInputPlaceholder: '過濾值',
 
@@ -161,6 +167,10 @@ const zhHKGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: '是的',
   booleanCellFalseLabel: '不',
 
+  // Long text cell
+  longTextCellExpandLabel: '擴張',
+  longTextCellCollapseLabel: '坍塌',
+
   // Actions cell more text
   actionsCellMore: '更多的',
 
@@ -188,10 +198,11 @@ const zhHKGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: '每頁行數:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} 共 ${count !== -1 ? count : `超過 ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} 共 ${count !== -1 ? formatNumber(count) : `超過 ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `約 ${estimated}` : `超過 ${to}`;
-    return `${from}–${to} 共 ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to ? `約 ${formatNumber(estimated)}` : `超過 ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} 共 ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

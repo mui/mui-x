@@ -44,12 +44,50 @@
     "import { ChartsYAxis } from '@mui/x-charts-pro';",
     "import { ChartsYAxis } from '@mui/x-charts-premium';"
   ],
+  "slots": [
+    {
+      "name": "axisLabel",
+      "description": "Custom component for axis label.",
+      "default": "ChartsText",
+      "class": null
+    },
+    {
+      "name": "axisLine",
+      "description": "Custom component for the axis main line.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTick",
+      "description": "Custom component for the axis tick.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTickLabel",
+      "description": "Custom component for tick label.",
+      "default": "ChartsText",
+      "class": null
+    },
+    {
+      "name": "xAxis",
+      "description": "Custom component for the x-axis.",
+      "default": "ChartsXAxis",
+      "class": null
+    },
+    {
+      "name": "yAxis",
+      "description": "Custom component for the y-axis.",
+      "default": "ChartsYAxis",
+      "class": null
+    }
+  ],
   "classes": [],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiChartsYAxis",
   "filename": "/packages/x-charts/src/ChartsYAxis/ChartsYAxis.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li>\n<li><a href=\"/x/react-charts/axis-customization/\">Charts - Axis customization</a></li>\n<li><a href=\"/x/react-charts/axis-ticks/\">Charts - Axis ticks and grid</a></li></ul>",
   "cssComponent": false
 }

@@ -1,10 +1,10 @@
-import { warn } from '@base-ui-components/utils/warn';
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { warn } from '@base-ui/utils/warn';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
   EventCalendarPreferences,
   CalendarView,
-  CalendarViewConfig,
-  SchedulerValidDate,
+  EventCalendarViewConfig,
+  TemporalSupportedObject,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
@@ -12,10 +12,12 @@ import {
   DEFAULT_SCHEDULER_PREFERENCES,
   SchedulerParametersToStateMapper,
   SchedulerStore,
-} from '../utils/SchedulerStore';
-import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
+  SchedulerInstanceName,
+} from '../internals/utils/SchedulerStore';
+import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
+import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
-export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
+export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
 
 export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
@@ -68,7 +70,11 @@ const mapper: SchedulerParametersToStateMapper<
   },
 };
 
-export class EventCalendarStore<
+/**
+ * Base class that can be extended by premium stores.
+ * Accepts instanceName as a parameter to allow subclasses to provide their own instance name.
+ */
+export class ExtendableEventCalendarStore<
   TEvent extends object,
   TResource extends object,
 > extends SchedulerStore<
@@ -77,8 +83,12 @@ export class EventCalendarStore<
   EventCalendarState,
   EventCalendarParameters<TEvent, TResource>
 > {
-  public constructor(parameters: EventCalendarParameters<TEvent, TResource>, adapter: Adapter) {
-    super(parameters, adapter, 'Event Calendar', mapper);
+  public constructor(
+    parameters: EventCalendarParameters<TEvent, TResource>,
+    adapter: Adapter,
+    instanceName: SchedulerInstanceName,
+  ) {
+    super(parameters, adapter, instanceName, mapper);
 
     if (process.env.NODE_ENV !== 'production') {
       // Add listeners to assert the state validity (not applied in prod)
@@ -93,16 +103,13 @@ export class EventCalendarStore<
     const views = this.state.views;
     if (!views.includes(view)) {
       throw new Error(
-        [
-          `Event Calendar: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
-          'Please ensure that the requested view is included in the views array.',
-        ].join('\n'),
+        `MUI: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.\nPlease ensure that the requested view is included in the views array.`,
       );
     }
   }
 
   private setVisibleDateAndView = (
-    visibleDate: SchedulerValidDate,
+    visibleDate: TemporalSupportedObject,
     view: CalendarView,
     event: React.UIEvent,
   ) => {
@@ -120,22 +127,26 @@ export class EventCalendarStore<
     }
 
     this.assertViewValidity(view);
+    const eventDetails = createChangeEventDetails('none', event.nativeEvent);
+
+    if (hasVisibleDateChange) {
+      onVisibleDateChange?.(visibleDate, eventDetails);
+    }
+    if (hasViewChange) {
+      onViewChange?.(view, eventDetails);
+    }
+
+    if (eventDetails.isCanceled) {
+      return;
+    }
 
     const canSetVisibleDate = visibleDateProp === undefined && hasVisibleDateChange;
     const canSetView = viewProp === undefined && hasViewChange;
-
     if (canSetVisibleDate || canSetView) {
       this.update({
         ...(canSetVisibleDate ? { visibleDate } : undefined),
         ...(canSetView ? { view } : undefined),
       });
-    }
-
-    if (hasVisibleDateChange) {
-      onVisibleDateChange?.(visibleDate, event);
-    }
-    if (hasViewChange) {
-      onViewChange?.(view, event);
     }
   };
 
@@ -143,25 +154,31 @@ export class EventCalendarStore<
     const siblingVisibleDateGetter = this.state.viewConfig?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
       warn(
-        'Event Calendar: No config found for the current view. Please use useInitializeView in your custom view.',
+        'MUI: No config found for the current view. Please use useInitializeView in your custom view.',
       );
       return;
     }
 
-    this.setVisibleDate(siblingVisibleDateGetter(this.state.visibleDate, delta), event);
+    this.setVisibleDate({
+      visibleDate: siblingVisibleDateGetter({ delta, state: this.state }),
+      event,
+    });
   };
 
   /**
    * Sets the view of the calendar.
    */
-  public setView = (view: CalendarView, event: React.UIEvent | Event) => {
+  public setView = (view: CalendarView, event: Event) => {
     const { view: viewProp, onViewChange } = this.parameters;
     if (view !== this.state.view) {
       this.assertViewValidity(view);
-      if (viewProp === undefined) {
+
+      const eventDetails = createChangeEventDetails('none', event);
+      onViewChange?.(view, eventDetails);
+
+      if (!eventDetails.isCanceled && viewProp === undefined) {
         this.set('view', view);
       }
-      onViewChange?.(view, event);
     }
   };
 
@@ -178,17 +195,14 @@ export class EventCalendarStore<
   /**
    * Goes to a specific day and set the view to 'day'.
    */
-  public switchToDay = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
+  public switchToDay = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
     this.setVisibleDateAndView(visibleDate, 'day', event);
   };
 
   /**
    * Updates some preferences of the calendar.
    */
-  public setPreferences = (
-    partialPreferences: Partial<EventCalendarPreferences>,
-    event: React.UIEvent | Event,
-  ) => {
+  public setPreferences = (partialPreferences: Partial<EventCalendarPreferences>, event: Event) => {
     const { preferences: preferencesProp, onPreferencesChange } = this.parameters;
 
     const updated = {
@@ -196,19 +210,38 @@ export class EventCalendarStore<
       ...partialPreferences,
     };
 
-    if (preferencesProp === undefined) {
+    const eventDetails = createChangeEventDetails('none', event);
+    onPreferencesChange?.(updated, eventDetails);
+
+    if (!eventDetails.isCanceled && preferencesProp === undefined) {
       this.set('preferences', updated);
     }
-
-    onPreferencesChange?.(updated, event);
   };
 
   /**
    * Sets the method used to determine the previous / next visible date.
    * Returns the cleanup function.
    */
-  public setViewConfig = (config: CalendarViewConfig) => {
+  public setViewConfig = (config: EventCalendarViewConfig) => {
     this.set('viewConfig', config);
     return () => this.set('viewConfig', null);
   };
+
+  public buildPublicAPI() {
+    return {
+      ...super.buildPublicAPI(),
+    };
+  }
+}
+
+/**
+ * Store for the EventCalendar component.
+ */
+export class EventCalendarStore<
+  TEvent extends object,
+  TResource extends object,
+> extends ExtendableEventCalendarStore<TEvent, TResource> {
+  public constructor(parameters: EventCalendarParameters<TEvent, TResource>, adapter: Adapter) {
+    super(parameters, adapter, 'EventCalendarStore');
+  }
 }

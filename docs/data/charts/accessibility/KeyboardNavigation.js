@@ -33,18 +33,15 @@ const series = [
 
 export default function KeyboardNavigation() {
   const [chartType, setChartType] = React.useState('line');
-  const svgRef = React.useRef(null);
+  const chartRef = React.useRef(null);
 
   const handleChange = (event) => setChartType(event.target.value);
 
   return (
-    <Stack width="100%" sx={{ display: 'block' }}>
+    <Stack sx={{ width: '100%', display: 'block' }}>
       <Stack
-        width="100%"
         direction="row"
-        gap={2}
-        justifyContent="center"
-        sx={{ mb: 1 }}
+        sx={{ width: '100%', gap: 2, justifyContent: 'center', mb: 1 }}
       >
         <FormControl sx={{ minWidth: 200 }}>
           <InputLabel id="chart-type-label">Chart Type</InputLabel>
@@ -61,32 +58,29 @@ export default function KeyboardNavigation() {
             <MenuItem value="pie">Pie</MenuItem>
           </Select>
         </FormControl>
-        <Button onClick={() => svgRef.current?.focus()} variant="contained">
+        <Button
+          onClick={() => {
+            const element = chartRef.current?.querySelector('[tabindex="0"]');
+            element?.focus();
+          }}
+          variant="contained"
+        >
           Focus chart
         </Button>
       </Stack>
-      <Chart key={chartType} svgRef={svgRef} type={chartType} />
+      <Chart key={chartType} chartRef={chartRef} type={chartType} />
     </Stack>
   );
 }
 
-function Chart({ svgRef, type }) {
+function Chart({ chartRef, type }) {
   switch (type) {
     case 'scatter':
-      return (
-        <ScatterChart
-          ref={svgRef}
-          enableKeyboardNavigation
-          height={300}
-          series={scatterSeries}
-        />
-      );
-
+      return <ScatterChart ref={chartRef} height={300} series={scatterSeries} />;
     case 'line':
       return (
         <LineChart
-          ref={svgRef}
-          enableKeyboardNavigation
+          ref={chartRef}
           height={300}
           xAxis={[{ data: data.map((p) => p.x1).toSorted((a, b) => a - b) }]}
           series={series}
@@ -97,8 +91,7 @@ function Chart({ svgRef, type }) {
     case 'bar':
       return (
         <BarChart
-          ref={svgRef}
-          enableKeyboardNavigation
+          ref={chartRef}
           height={300}
           xAxis={[
             { data: data.map((p) => Math.round(p.x1)).toSorted((a, b) => a - b) },
@@ -111,8 +104,7 @@ function Chart({ svgRef, type }) {
     case 'pie':
       return (
         <PieChart
-          ref={svgRef}
-          enableKeyboardNavigation
+          ref={chartRef}
           series={[
             {
               arcLabel: 'value',

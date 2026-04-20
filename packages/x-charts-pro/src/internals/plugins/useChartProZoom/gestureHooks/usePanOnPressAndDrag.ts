@@ -1,15 +1,14 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  useSelector,
+  type ChartPlugin,
   selectorChartDrawingArea,
-  ZoomData,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { PressAndDragEvent } from '@mui/x-internal-gestures/core';
-import { UseChartProZoomSignature } from '../useChartProZoom.types';
+import { type PressAndDragEvent } from '@mui/x-internal-gestures/core';
+import { type UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 import { selectorPanInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
@@ -17,15 +16,15 @@ export const usePanOnPressAndDrag = (
   {
     store,
     instance,
-    svgRef,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const { chartsLayerContainerRef } = instance;
+  const drawingArea = store.use(selectorChartDrawingArea);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const isInteracting = React.useRef<boolean>(false);
   const accumulatedChange = React.useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const config = useSelector(store, selectorPanInteractionConfig, 'pressAndDrag' as const);
+  const config = store.use(selectorPanInteractionConfig, 'pressAndDrag' as const);
 
   const isPanOnPressAndDragEnabled: boolean =
     Object.values(optionsLookup).some((v) => v.panning) && Boolean(config);
@@ -47,7 +46,7 @@ export const usePanOnPressAndDrag = (
 
   // Add event for chart panning with press and drag
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
 
     if (element === null || !isPanOnPressAndDragEnabled) {
       return () => {};
@@ -112,7 +111,7 @@ export const usePanOnPressAndDrag = (
     };
   }, [
     instance,
-    svgRef,
+    chartsLayerContainerRef,
     isPanOnPressAndDragEnabled,
     optionsLookup,
     drawingArea.width,

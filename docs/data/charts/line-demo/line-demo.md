@@ -6,7 +6,7 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 
 # Charts - Line demos
 
-<p class="description">This page groups demos using line charts.</p>
+<p class="description">Demos that use line charts for basic plots, live data, reference lines, and custom styling.</p>
 
 ## SimpleLineChart
 
@@ -32,40 +32,42 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 
 {{"demo": "LineChartConnectNulls.js"}}
 
+## CustomLabelLineChart
+
+{{"demo": "CustomLabelChart.js"}}
+
 ## Line chart with live data
 
 {{"demo": "LiveLineChartNoSnap.js"}}
 
 ## Line with forecast
 
-To show that parts of the data have different meanings, you can render stylised lines for each of them.
+To show that parts of the data have different meanings, you can style each part differently.
 
-In the following example, the chart shows a dotted line to exemplify that the data is estimated.
-To do so, the `slots.line` is set with a custom component that render the default line twice.
+In the demo below, a dotted line indicates estimated or predicted values.
+Set the `slots.line` prop to a custom component that renders the default line twice.
 
-- The first one is clipped to show known values (from the left of the chart to the limit).
-- The second one is clipped to show predictions (from the limit to the right of the chart) with dash styling.
+- The first path is clipped to show known values (from the left of the chart up to the limit).
+- The second path is clipped to show predictions (from the limit to the right of the chart) with dash styling.
 
-Additionally, an uncertainty area is shown to represent the uncertainty of the forecast.
+An uncertainty area illustrates the forecast uncertainty.
 
 {{"demo": "LineWithUncertaintyArea.js"}}
 
 ## CustomLineMarks
 
-Notice that using another shape than "circle" renders a `<path />` instead of the `<circle />` for mark elements.
-This modification implies a small drop of rendering performances (around +50ms to render 1.000 marks).
+Using a shape other than `"circle"` renders a `<path />` instead of a `<circle />` for mark elements.
+That change can reduce rendering performance (for example, around 50 ms to render 1,000 marks).
 
 {{"demo": "CustomLineMarks.js"}}
 
 ## Larger interaction area
 
-A line is highlighted when a pointer is hovering over it.
-Which is a narrow interaction area.
-While a permanent solution isn't implemented, it's possible to define a larger interaction area with slots.
+A line highlights when the pointer hovers over it, but the interaction area is narrow.
+Until a built-in solution exists, you can define a larger hit area with slots.
 
-The idea is to have two paths:
-A small one to display the line, and a larger invisible one that handles the interactions.
+Use two paths: a thin visible one for the line and a wider invisible one for pointer events.
 
-This solution has an issue when lines cross over each other, as the highlight is not on the closest line to the pointer, but by the last defined series.
+When lines cross, the highlighted series is the last one defined in the slots, not necessarily the one closest to the pointer.
 
 {{"demo": "LargerHighlightLineNoSnap.js"}}

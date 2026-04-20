@@ -13,6 +13,7 @@
     "src/**/*",
     "../../test/utils/addChaiAssertions.ts",
     // We include this file in development so to ensure the type overloads don't cause issues.
-    "../x-charts-pro/src/typeOverloads/index.ts"
+    "../x-charts-pro/src/typeOverloads/index.ts",
+    "../x-charts-premium/src/typeOverloads/index.ts"
   ]
 }

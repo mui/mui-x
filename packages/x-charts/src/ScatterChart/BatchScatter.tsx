@@ -1,20 +1,22 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
-import { D3Scale } from '../models/axis';
-import { ScatterClasses, useUtilityClasses } from './scatterClasses';
-import { useChartContext } from '../context/ChartProvider';
-import { getValueToPositionMapper } from '../hooks/useScale';
-import { ColorGetter } from '../internals/plugins/models/seriesConfig';
-import { useSelector } from '../internals/store/useSelector';
+import { type DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
+import { type D3Scale } from '../models/axis';
+import { useUtilityClasses } from './scatterClasses';
+import type { ScatterClasses } from './scatterClasses';
+import { useChartsContext } from '../context/ChartsProvider';
+import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
+import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
   selectorChartSeriesUnfadedItem,
   selectorChartSeriesHighlightedItem,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { appendAtKey } from '../internals/appendAtKey';
 
 export interface BatchScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -22,24 +24,15 @@ export interface BatchScatterProps {
   yScale: D3Scale;
   color: string;
   colorGetter?: ColorGetter<'scatter'>;
+  // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ScatterClasses>;
+  className?: string;
 }
 
 const MAX_POINTS_PER_PATH = 1000;
 /* In an SVG arc, if the arc starts and ends at the same point, it is not rendered, so we add a tiny
  * value to one of the coordinates to ensure that the arc is rendered. */
 const ALMOST_ZERO = 0.01;
-
-function appendAtKey(map: Map<string, string[]>, key: string, value: string) {
-  let bucket = map.get(key);
-  if (!bucket) {
-    bucket = [value];
-    map.set(key, bucket);
-  } else {
-    bucket.push(value);
-  }
-  return bucket;
-}
 
 function createPath(x: number, y: number, markerSize: number) {
   return `M${x - markerSize} ${y} a${markerSize} ${markerSize} 0 1 1 0 ${ALMOST_ZERO}`;
@@ -53,7 +46,7 @@ function useCreatePaths(
   color: string,
   colorGetter?: ColorGetter<'scatter'>,
 ) {
-  const { instance } = useChartContext();
+  const { instance } = useChartsContext();
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
 
@@ -118,7 +111,10 @@ function BatchScatterPaths(props: BatchScatterPathsProps) {
 
 const MemoBatchScatterPaths = React.memo(BatchScatterPaths);
 
-const Group = styled('g')({
+const Group = styled('g', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   '&[data-faded="true"]': {
     opacity: 0.3,
   },
@@ -144,16 +140,16 @@ const Group = styled('g')({
  * You can read about all the limitations [here](https://mui.com/x/react-charts/scatter/#performance).
  */
 export function BatchScatter(props: BatchScatterProps) {
-  const { series, xScale, yScale, color, colorGetter, classes: inClasses } = props;
+  const { series, xScale, yScale, color, colorGetter, className } = props;
 
-  const { store } = useChartContext<[UseChartHighlightSignature]>();
-  const isSeriesHighlighted = useSelector(store, selectorChartIsSeriesHighlighted, series.id);
-  const isSeriesFaded = useSelector(store, selectorChartIsSeriesFaded, series.id);
-  const seriesHighlightedItem = useSelector(store, selectorChartSeriesHighlightedItem, series.id);
-  const seriesUnfadedItem = useSelector(store, selectorChartSeriesUnfadedItem, series.id);
+  const { store } = useChartsContext<[UseChartHighlightSignature<'scatter'>]>();
+  const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.id);
+  const isSeriesFaded = store.use(selectorChartIsSeriesFaded, series.id);
+  const seriesHighlightedItem = store.use(selectorChartSeriesHighlightedItem, series.id);
+  const seriesUnfadedItem = store.use(selectorChartSeriesUnfadedItem, series.id);
   const highlightedModifier = 1.2;
   const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
-  const classes = useUtilityClasses(inClasses);
+  const classes = useUtilityClasses(props);
 
   const siblings: React.ReactNode[] = [];
   if (seriesHighlightedItem != null) {
@@ -192,7 +188,7 @@ export function BatchScatter(props: BatchScatterProps) {
   return (
     <React.Fragment>
       <Group
-        className={classes.root}
+        className={clsx(classes.series, className)}
         data-series={series.id}
         data-faded={isSeriesFaded || undefined}
         data-highlighted={isSeriesHighlighted || undefined}

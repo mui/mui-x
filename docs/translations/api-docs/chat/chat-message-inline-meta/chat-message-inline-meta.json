@@ -1,0 +1,5 @@
+{
+  "componentDescription": "Wrapper that renders a spacer + the MessageMeta absolutely positioned at the\nbottom-right of the parent bubble. Uses the Telegram-style \"spacer + absolute\npositioning\" trick so the meta appears inline with short text and at the\nbottom-right for long text.\n\nMust be rendered inside a bubble with `position: relative`.",
+  "propDescriptions": {},
+  "classDescriptions": {}
+}

@@ -1,5 +1,11 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('id-ID');
 
 export const idIDGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +21,10 @@ export const idIDGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Ringkas',
   toolbarDensityStandard: 'Standar',
   toolbarDensityComfortable: 'Nyaman',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Urungkan',
+  toolbarRedo: 'Ulangi',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolom',
@@ -63,7 +73,7 @@ export const idIDGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Dan',
   filterPanelOperatorOr: 'Atau',
-  filterPanelColumns: 'Kolom',
+  filterPanelColumn: 'Kolom',
   filterPanelInputLabel: 'Nilai',
   filterPanelInputPlaceholder: 'Nilai filter',
 
@@ -158,6 +168,10 @@ export const idIDGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'ya',
   booleanCellFalseLabel: 'tidak',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Perluas',
+  longTextCellCollapseLabel: 'Ciutkan',
+
   // Actions cell more text
   actionsCellMore: 'lainnya',
 
@@ -185,11 +199,13 @@ export const idIDGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Baris per halaman:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} dari ${count !== -1 ? count : `lebih dari ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} dari ${count !== -1 ? formatNumber(count) : `lebih dari ${formatNumber(to)}`}`;
     }
     const estimatedLabel =
-      estimated && estimated > to ? `sekitar ${estimated}` : `lebih dari ${to}`;
-    return `${from}–${to} dari ${count !== -1 ? count : estimatedLabel}`;
+      estimated && estimated > to
+        ? `sekitar ${formatNumber(estimated)}`
+        : `lebih dari ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} dari ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

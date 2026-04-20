@@ -2,12 +2,11 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { ChartPlugin } from '../../models';
-import { SeriesId } from '../../../../models/seriesType/common';
-import { UseChartClosestPointSignature } from './useChartClosestPoint.types';
-import { getSVGPoint } from '../../../getSVGPoint';
-import { useSelector } from '../../../store/useSelector';
+import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import { type ChartPlugin } from '../../models';
+import { type SeriesId } from '../../../../models/seriesType/common';
+import { type UseChartClosestPointSignature } from './useChartClosestPoint.types';
+import { getChartPoint } from '../../../getChartPoint';
 import {
   selectorChartAxisZoomData,
   selectorChartSeriesEmptyFlatbushMap,
@@ -17,25 +16,25 @@ import {
   selectorChartZoomIsInteracting,
 } from '../useChartCartesianAxis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
-import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { findClosestPoints } from './findClosestPoints';
 
 export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = ({
-  svgRef,
   params,
   store,
   instance,
 }) => {
-  const { disableVoronoi, voronoiMaxRadius, onItemClick } = params;
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const { chartsLayerContainerRef } = instance;
+  const { disableHitArea, hitAreaRadius, onItemClick } = params;
 
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
-  const zoomIsInteracting = useSelector(store, selectorChartZoomIsInteracting);
+  const resolvedDisableHitArea = disableHitArea;
+  const resolvedHitAreaRadius = hitAreaRadius;
 
-  const { series, seriesOrder } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
-  const flatbushMap = useSelector(
-    store,
+  const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = store.use(selectorChartYAxis);
+  const zoomIsInteracting = store.use(selectorChartZoomIsInteracting);
+
+  const { series, seriesOrder } = store.use(selectorChartSeriesProcessed)?.scatter ?? {};
+  const flatbushMap = store.use(
     zoomIsInteracting ? selectorChartSeriesEmptyFlatbushMap : selectorChartSeriesFlatbushMap,
   );
 
@@ -43,14 +42,14 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
   const defaultYAxisId = yAxisIds[0];
 
   useEnhancedEffect(() => {
-    store.set('voronoi', { isVoronoiEnabled: !disableVoronoi });
-  }, [store, disableVoronoi]);
+    store.set('voronoi', { isVoronoiEnabled: !resolvedDisableHitArea });
+  }, [store, resolvedDisableHitArea]);
 
   React.useEffect(() => {
-    if (svgRef.current === null || disableVoronoi) {
+    if (chartsLayerContainerRef.current === null || resolvedDisableHitArea) {
       return undefined;
     }
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
 
     function getClosestPoint(
       event: MouseEvent,
@@ -60,7 +59,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       | 'outside-voronoi-max-radius'
       | 'no-point-found' {
       // Get mouse coordinate in global SVG space
-      const svgPoint = getSVGPoint(element, event);
+      const svgPoint = getChartPoint(element, event);
 
       if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
         return 'outside-chart';
@@ -80,9 +79,10 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
         const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
 
-        const xAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), xAxisId);
-        const yAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), yAxisId);
-        const maxRadius = voronoiMaxRadius === 'item' ? aSeries.markerSize : voronoiMaxRadius;
+        const xAxisZoom = selectorChartAxisZoomData(store.state, xAxisId);
+        const yAxisZoom = selectorChartAxisZoomData(store.state, yAxisId);
+        const maxRadius =
+          resolvedHitAreaRadius === 'item' ? aSeries.markerSize : resolvedHitAreaRadius;
 
         const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
         const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
@@ -94,7 +94,6 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
         const closestPointIndex = findClosestPoints(
           flatbush,
-          drawingArea,
           aSeries.data,
           xScale,
           yScale,
@@ -138,18 +137,21 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       if (!event.detail.activeGestures.pan) {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
+        instance.removeTooltipItem?.();
       }
     });
     const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
       if (!event.detail.activeGestures.move) {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
+        instance.removeTooltipItem?.();
       }
     });
     const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
       if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
+        instance.removeTooltipItem?.();
       }
     });
 
@@ -159,21 +161,22 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       if (closestPoint === 'outside-chart') {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
+        instance.removeTooltipItem?.();
         return;
       }
 
       if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
-        instance.removeItemInteraction?.();
+        instance.removeTooltipItem?.();
         instance.clearHighlight?.();
+        instance.removeTooltipItem?.();
         return;
       }
 
       const { seriesId, dataIndex } = closestPoint;
-      instance.setItemInteraction?.(
-        { type: 'scatter', seriesId, dataIndex },
-        { interaction: 'pointer' },
-      );
+      instance.setTooltipItem?.({ type: 'scatter', seriesId, dataIndex });
+      instance.setLastUpdateSource?.('pointer');
       instance.setHighlight?.({
+        type: 'scatter',
         seriesId,
         dataIndex,
       });
@@ -202,13 +205,12 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       pressEndHandler.cleanup();
     };
   }, [
-    svgRef,
+    chartsLayerContainerRef,
     yAxis,
     xAxis,
-    voronoiMaxRadius,
+    resolvedHitAreaRadius,
     onItemClick,
-    disableVoronoi,
-    drawingArea,
+    resolvedDisableHitArea,
     instance,
     seriesOrder,
     series,
@@ -237,17 +239,17 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
 useChartClosestPoint.getDefaultizedParams = ({ params }) => ({
   ...params,
-  disableVoronoi: params.disableVoronoi ?? !params.series.some((item) => item.type === 'scatter'),
+  disableHitArea: params.disableHitArea ?? !params.series.some((item) => item.type === 'scatter'),
 });
 
 useChartClosestPoint.getInitialState = (params) => ({
   voronoi: {
-    isVoronoiEnabled: !params.disableVoronoi,
+    isVoronoiEnabled: !params.disableHitArea,
   },
 });
 
 useChartClosestPoint.params = {
-  disableVoronoi: true,
-  voronoiMaxRadius: true,
+  disableHitArea: true,
+  hitAreaRadius: true,
   onItemClick: true,
 };

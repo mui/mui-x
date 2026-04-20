@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
@@ -14,7 +15,9 @@ import {
 
 type PaginationProps = GridSlotProps['basePagination'];
 
-const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>)({
+const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>, {
+  slot: 'internal',
+})({
   maxHeight: 'calc(100% + 1px)', // border width
   flexGrow: 1,
 });
@@ -28,16 +31,17 @@ function GridPagination() {
 
   const { paginationMode, loading } = rootProps;
 
-  const disabled = rowCount === -1 && paginationMode === 'server' && loading;
+  const unknownRowCount = rowCount == null || rowCount === -1;
+  const disabled = unknownRowCount && paginationMode === 'server' && loading;
 
   const lastPage = React.useMemo(() => Math.max(0, pageCount - 1), [pageCount]);
 
   const computedPage = React.useMemo(() => {
-    if (rowCount === -1) {
+    if (unknownRowCount) {
       return paginationModel.page;
     }
     return paginationModel.page <= lastPage ? paginationModel.page : lastPage;
-  }, [lastPage, paginationModel.page, rowCount]);
+  }, [lastPage, paginationModel.page, unknownRowCount]);
 
   const handlePageSizeChange = React.useCallback(
     (pageSize: number) => {
@@ -95,7 +99,7 @@ function GridPagination() {
   return (
     <GridPaginationRoot
       as={rootProps.slots.basePagination}
-      count={rowCount}
+      count={rowCount ?? -1}
       page={computedPage}
       rowsPerPageOptions={pageSizeOptions}
       rowsPerPage={paginationModel.pageSize}

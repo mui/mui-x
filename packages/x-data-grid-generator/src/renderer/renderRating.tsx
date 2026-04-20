@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { GridRenderCellParams } from '@mui/x-data-grid-premium';
+import type { GridRenderCellParams } from '@mui/x-data-grid-premium';
 import Rating from '@mui/material/Rating';
 
 interface RatingValueProps {

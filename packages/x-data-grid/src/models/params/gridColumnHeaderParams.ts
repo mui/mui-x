@@ -1,5 +1,5 @@
 import type { GridStateColDef } from '../colDef/gridColDef';
-import { GridValidRowModel } from '../gridRows';
+import type { GridValidRowModel } from '../gridRows';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] header renderer.

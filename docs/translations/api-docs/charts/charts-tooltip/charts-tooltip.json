@@ -38,6 +38,9 @@
     "slots": {
       "description": "The components used for each slot inside the Popper. Either a string to use a HTML element or a component."
     },
+    "sort": {
+      "description": "The sort in which series items are displayed in the axis tooltip. When set to <code>none</code>, series are sorted as they are provided in the series property. Otherwise they are sorted by their value. Only applies when <code>trigger=&#39;axis&#39;</code>."
+    },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },

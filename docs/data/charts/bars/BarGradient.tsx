@@ -1,20 +1,14 @@
 import * as React from 'react';
-import {
-  BarChart,
-  barClasses,
-  barElementClasses,
-  barLabelClasses,
-} from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 
 const settings = {
   xAxis: [{ data: ['group A', 'group B', 'group C'] }],
   series: [
-    { id: '1', data: [4, 3, 5] },
-    { id: '2', data: [1, 6, 3] },
-    { id: '3', data: [2, 5, 6] },
+    { id: '1', data: [4, 3, 5], barLabel: 'value' },
+    { id: '2', data: [1, 6, 3], barLabel: 'value' },
+    { id: '3', data: [2, 5, 6], barLabel: 'value' },
   ],
   height: 300,
-  barLabel: 'value',
   margin: { left: 0 },
 } as const;
 
@@ -23,13 +17,12 @@ export default function BarGradient() {
     <BarChart
       {...settings}
       sx={{
-        [`& .${barClasses.series}[data-series="2"] .${barElementClasses.root}`]: {
+        [`& .${barClasses.series}[data-series="2"] .${barClasses.element}`]: {
           fill: 'url(#bar-gradient)',
         },
-        [`& .${barClasses.seriesLabels}[data-series="2"] .${barLabelClasses.root}`]:
-          {
-            fontWeight: 'bold',
-          },
+        [`& .${barClasses.seriesLabels}[data-series="2"] .${barClasses.label}`]: {
+          fontWeight: 'bold',
+        },
       }}
     >
       <defs>

@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import { selectorChartZoomOptionsLookup } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import type { UseChartBrushSignature } from './useChartBrush.types';
@@ -31,7 +31,7 @@ export const selectorBrushCurrentY = createSelector(
   (brush) => brush?.current?.y ?? null,
 );
 
-export const selectorBrushState = createSelector(
+export const selectorBrushState = createSelectorMemoized(
   selectorBrushStartX,
   selectorBrushStartY,
   selectorBrushCurrentX,

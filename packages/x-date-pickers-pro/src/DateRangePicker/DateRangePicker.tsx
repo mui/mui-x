@@ -9,9 +9,8 @@ import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
 import { DateRangePickerProps } from './DateRangePicker.types';
 
-type DatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DatePickerComponent = ((
+  props: DateRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -24,10 +23,8 @@ type DatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean 
  *
  * - [DateRangePicker API](https://mui.com/x/api/date-pickers/date-range-picker/)
  */
-const DateRangePicker = React.forwardRef(function DateRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DateRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DateRangePicker = React.forwardRef(function DateRangePicker(
+  inProps: DateRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
@@ -118,7 +115,7 @@ DateRangePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -137,10 +134,6 @@ DateRangePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -161,6 +154,13 @@ DateRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    */
   inputRef: refType,
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus: PropTypes.bool,
   /**
    * The label content.
    */
@@ -197,7 +197,7 @@ DateRangePicker.propTypes = {
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
    * - `validationError`: validation result of the current value
-   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
+   * - `source`: source of the acceptance. One of 'field' | 'view' | 'unknown'
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,

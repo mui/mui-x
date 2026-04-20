@@ -1,18 +1,25 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useStore } from '@mui/x-internals/store';
 import composeClasses from '@mui/utils/composeClasses';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import useSlotProps from '@mui/utils/useSlotProps';
-import { useTreeView, TreeViewProvider, RichTreeViewItems } from '@mui/x-tree-view/internals';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
+import {
+  TreeViewProvider,
+  RichTreeViewItems,
+  TreeViewItemDepthContext,
+  itemsSelectors,
+  useTreeViewStore,
+} from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
-import {
-  RICH_TREE_VIEW_PRO_PLUGINS,
-  RichTreeViewProPluginSignatures,
-} from './RichTreeViewPro.plugins';
+import { useExtractRichTreeViewProParameters } from './useExtractRichTreeViewProParameters';
+import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
+import { RichTreeViewVirtualizedItems } from '../components/RichTreeViewVirtualizedItems';
+import { virtualizationSelectors } from '../internals/plugins/virtualization';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -48,13 +55,21 @@ export const RichTreeViewProRoot = styled('ul', {
   listStyle: 'none',
   outline: 0,
   position: 'relative',
+  '&[data-virtualized]': {
+    height: '100%',
+    width: '100%',
+  },
 });
 
 type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const releaseInfo = '__RELEASE_INFO__';
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-tree-view-pro' as const,
+};
 
 /**
  *
@@ -69,11 +84,10 @@ const releaseInfo = '__RELEASE_INFO__';
 const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   R extends {},
   Multiple extends boolean | undefined = undefined,
->(inProps: RichTreeViewProProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
+>(inProps: RichTreeViewProProps<R, Multiple>, forwardedRef: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
-  const { slots, slotProps, ...other } = props;
 
-  useLicenseVerifier('x-tree-view-pro', releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
@@ -85,36 +99,58 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     }
   }
 
-  const { getRootProps, contextValue } = useTreeView<RichTreeViewProPluginSignatures, typeof props>(
-    {
-      plugins: RICH_TREE_VIEW_PRO_PLUGINS,
-      rootRef: ref,
-      props: other,
-    },
-  );
+  const {
+    slots: inSlots,
+    slotProps,
+    apiRef,
+    parameters,
+    forwardedProps,
+  } = useExtractRichTreeViewProParameters(props);
 
+  if (process.env.NODE_ENV !== 'production') {
+    if (parameters.itemHeight === null && !parameters.disableVirtualization) {
+      warnOnce([
+        'MUI X: `itemHeight={null}` is not compatible with virtualization.',
+        'Please use `disableVirtualization` when using `itemHeight={null}`.',
+      ]);
+    }
+  }
+
+  // Context hooks
+  const store = useTreeViewStore(RichTreeViewProStore, parameters);
+
+  // Ref hooks
+  const ref = React.useRef<HTMLUListElement | null>(null);
+  const handleRef = useMergedRefs(forwardedRef, ref);
+
+  // Selector hooks
+  const isVirtualizationEnabled = useStore(store, virtualizationSelectors.enabled);
+
+  // Feature hooks
   const classes = useUtilityClasses(props);
+  const slots = React.useMemo(() => ({ root: RichTreeViewProRoot, ...inSlots }), [inSlots]);
 
-  const Root = slots?.root ?? RichTreeViewProRoot;
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
-    className: classes.root,
-    getSlotProps: getRootProps,
-    ownerState: props as RichTreeViewProProps<any, any>,
-  });
+  const Renderer = isVirtualizationEnabled ? RichTreeViewVirtualizedItems : RichTreeViewItems;
 
   return (
     <TreeViewProvider
-      contextValue={contextValue}
+      store={store}
       classes={classes}
       slots={slots}
       slotProps={slotProps}
+      apiRef={apiRef}
+      rootRef={ref}
     >
-      <Root {...rootProps}>
-        <RichTreeViewItems slots={slots} slotProps={slotProps} />
-        <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
-      </Root>
+      <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
+        <Renderer
+          slots={slots}
+          slotProps={slotProps}
+          forwardedProps={forwardedProps}
+          ownerState={props}
+          rootRef={handleRef}
+        />
+        <Watermark packageInfo={packageInfo} />
+      </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );
 }) as RichTreeViewProComponent;
@@ -125,7 +161,7 @@ RichTreeViewPro.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useRichTreeViewApiProRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
@@ -201,6 +237,18 @@ RichTreeViewPro.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
+   * If `true`, virtualization is disabled.
+   * @default false
+   */
+  disableVirtualization: PropTypes.bool,
+  /**
+   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
+   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
+   * Nested DOM structure is not compatible with collapse / expansion animations.
+   * @default 'flat'
+   */
+  domStructure: PropTypes.oneOf(['flat', 'nested']),
+  /**
    * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
@@ -265,11 +313,24 @@ RichTreeViewPro.propTypes = {
    */
   isItemReorderable: PropTypes.func,
   /**
+   * Used to determine if a given item should have selection disabled.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should have selection disabled.
+   */
+  isItemSelectionDisabled: PropTypes.func,
+  /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
    * @default 12px
    */
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * Sets the height in pixel of an item.
+   * Set to `null` to explicitly remove any item height restriction when items have different heights (not compatible with virtualization).
+   * @default 32
+   */
+  itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
   /**
    * If `true`, the reordering of items is enabled.
@@ -327,6 +388,15 @@ RichTreeViewPro.propTypes = {
    * @param {boolean} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
+  /**
+   * Callback fired when the children of an item are loaded from the data source.
+   * Only relevant for lazy-loaded tree views.
+   * @param {object} parameters The parameters of the callback.
+   * @param {R[]} parameters.items The items that were loaded.
+   * @param {TreeViewItemId | null} parameters.parentId The id of the parent item whose children were loaded. `null` if the root items were loaded.
+   * @param {boolean} parameters.isCacheHit `true` if the items were loaded from the cache, `false` if they were fetched from the data source.
+   */
+  onItemsLazyLoaded: PropTypes.func,
   /**
    * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.

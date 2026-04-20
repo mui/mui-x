@@ -29,7 +29,7 @@ If the built-in filter operators are not enough, creating a custom operator is a
 A custom operator is defined by creating a `GridFilterOperator` object.
 This object needs to be added to the `filterOperators` attribute of the `GridColDef`.
 
-The main part of an operator is the `getApplyFilterFn` function.
+The main part of an operator is the `getApplyFilterFn()` function.
 When applying the filters, the Data Grid will call this function with the filter item and the column on which the item must be applied.
 This function must return another function that takes the cell value as an input and return `true` if it satisfies the operator condition.
 
@@ -60,7 +60,7 @@ If the column has a [`valueGetter`](/x/react-data-grid/column-definition/#value-
 :::
 
 :::info
-The filter button displays a tooltip on hover if there are active filters. Pass [`getValueAsString`](/x/api/data-grid/grid-filter-operator/) in the filter operator to customize or convert the value to a more human-readable form.
+The filter button displays a tooltip on hover if there are active filters. Pass [`getValueAsString()`](/x/api/data-grid/grid-filter-operator/) in the filter operator to customize or convert the value to a more human-readable form.
 :::
 
 In the demo below, you can see how to create a completely new operator for the Rating column.
@@ -80,7 +80,7 @@ In the demo below, the selected rows are always visible even when they don't mat
 You can create a custom operator which accepts multiple values. To do this, provide an array of values to the `value` property of the `filterItem`.
 The `valueParser` of the `GridColDef` will be applied to each item of the array.
 
-The filtering function `getApplyFilterFn` must be adapted to handle `filterItem.value` as an array.
+The filtering function `getApplyFilterFn()` must be adapted to handle `filterItem.value` as an array.
 Below is an example for a "between" operator, applied on the "Quantity" column.
 
 ```ts

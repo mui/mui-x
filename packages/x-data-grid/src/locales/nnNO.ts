@@ -1,5 +1,11 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('nn-NO');
 
 const nnNOGrid: Partial<GridLocaleText> = {
   // Root
@@ -16,6 +22,10 @@ const nnNOGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Komfortabelt',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Angre',
+  toolbarRedo: 'Gjer om',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolonner',
@@ -65,7 +75,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
-  filterPanelColumns: 'Kolonner',
+  filterPanelColumn: 'Kolonner',
   filterPanelInputLabel: 'Verdi',
   filterPanelInputPlaceholder: 'Filter verdi',
 
@@ -162,6 +172,10 @@ const nnNOGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'sant',
   booleanCellFalseLabel: 'usant',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Vis',
+  longTextCellCollapseLabel: 'Gøym',
+
   // Actions cell more text
   actionsCellMore: 'meir',
 
@@ -189,10 +203,13 @@ const nnNOGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Rader per side:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} av ${count !== -1 ? count : `flere enn ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} av ${count !== -1 ? formatNumber(count) : `flere enn ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `omtrent ${estimated}` : `flere enn ${to}`;
-    return `${from}–${to} av ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `omtrent ${formatNumber(estimated)}`
+        : `flere enn ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} av ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

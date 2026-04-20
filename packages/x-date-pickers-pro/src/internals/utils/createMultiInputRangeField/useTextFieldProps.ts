@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { PickersTextField, PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
@@ -41,21 +42,23 @@ export function useTextFieldProps({
     ownerState: { ...ownerState, position },
   });
 
-  if (!textFieldProps.InputProps) {
-    textFieldProps.InputProps = {};
+  if (!textFieldProps.slotProps) {
+    textFieldProps.slotProps = {};
   }
+  const inputSlotProps: Record<string, any> = { ...textFieldProps.slotProps.input };
 
   if (pickerContext) {
     if (!allowTriggerShifting) {
       if (position === 'start') {
-        textFieldProps.InputProps.ref = pickerContext.triggerRef;
+        inputSlotProps.ref = pickerContext.triggerRef;
       }
     } else if (rangePositionContext?.rangePosition === position) {
-      textFieldProps.InputProps.ref = pickerContext.triggerRef;
+      inputSlotProps.ref = pickerContext.triggerRef;
     }
   }
 
-  textFieldProps.InputProps['data-multi-input'] = position;
+  inputSlotProps['data-multi-input'] = position;
+  textFieldProps.slotProps.input = inputSlotProps;
 
   return textFieldProps;
 }

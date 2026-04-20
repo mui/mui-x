@@ -26,101 +26,101 @@ function App() {
 
   // prettier-ignore
   <div>
-  <PieChart
-    hideLegend={true} />
-  <PieChart
-    slotProps={{
-      tooltip: { trigger: 'axis' }
-    }}
-    hideLegend={true} />
-  <ChartContainer onAxisClick={onAxisClickHandler}>
+    <PieChart
+      hideLegend={true} />
+    <PieChart
+      slotProps={{
+        tooltip: { trigger: 'axis' }
+      }}
+      hideLegend={true} />
+    <ChartContainer onAxisClick={onAxisClickHandler}>
 
-    <BarPlot />
-  </ChartContainer>
-  <ChartsXAxis
-    labelStyle={{
-      fontSize: 18
-    }}
-    tickStyle={{
-      fontSize: 20
-    }} />
-  <ChartsXAxis
-    labelStyle={{
-      fontWeight: 'bold',
-      fontSize: 18
-    }}
-    tickStyle={{
-      fontWeight: 'bold',
-      fontSize: 20
-    }} />
-  <ChartsXAxis
-    labelStyle={{
-      fontWeight: 'bold',
-      fontSize: 10
-    }}
-    tickStyle={{
-      fontWeight: 'bold',
-      fontSize: 12
-    }} />
-  <LineChart series={[{}]} />
-  <BarChart
-    slotProps={{
-      legend: {
-        direction: "horizontal"
-      }
-    }} />
-  <BarChart
-    slotProps={{
-      legend: {
-        direction: "vertical",
+      <BarPlot />
+    </ChartContainer>
+    <ChartsXAxis
+      labelStyle={{
+        fontSize: 18
+      }}
+      tickStyle={{
+        fontSize: 20
+      }} />
+    <ChartsXAxis
+      labelStyle={{
+        fontWeight: 'bold',
+        fontSize: 18
+      }}
+      tickStyle={{
+        fontWeight: 'bold',
+        fontSize: 20
+      }} />
+    <ChartsXAxis
+      labelStyle={{
+        fontWeight: 'bold',
+        fontSize: 10
+      }}
+      tickStyle={{
+        fontWeight: 'bold',
+        fontSize: 12
+      }} />
+    <LineChart series={[{}]} />
+    <BarChart
+      slotProps={{
+        legend: {
+          direction: "horizontal"
+        }
+      }} />
+    <BarChart
+      slotProps={{
+        legend: {
+          direction: "vertical",
 
-        position: {
-          vertical: 'top',
-          horizontal: "center"
+          position: {
+            vertical: 'top',
+            horizontal: "center"
+          }
         }
-      }
-    }} />
-  <BarChart
-    slotProps={{
-      legend: {
-        direction: 'wrong'
-      }
-    }} />
-  <BarChart
-    slotProps={{
-      legend: {
-        position: {
-          vertical: 'middle',
-          horizontal: "start"
+      }} />
+    <BarChart
+      slotProps={{
+        legend: {
+          direction: 'wrong'
         }
-      }
-    }} />
-  <BarChart
-    slotProps={{
-      legend: {
-        position: {
-          vertical: 'top',
-          horizontal: "center"
+      }} />
+    <BarChart
+      slotProps={{
+        legend: {
+          position: {
+            vertical: 'middle',
+            horizontal: "start"
+          }
         }
-      }
-    }} />
-  <BarChart
-    slotProps={{
-      legend: {
-        position: {
-          vertical: 'bottom',
-          horizontal: "end"
+      }} />
+    <BarChart
+      slotProps={{
+        legend: {
+          position: {
+            vertical: 'top',
+            horizontal: "center"
+          }
         }
-      }
-    }} />
-  <BarChart
-    slotProps={{
-      legend: {
-        position: {
-          vertical: 'wrong',
-          horizontal: 'wrong'
+      }} />
+    <BarChart
+      slotProps={{
+        legend: {
+          position: {
+            vertical: 'bottom',
+            horizontal: "end"
+          }
         }
-      }
-    }} />
+      }} />
+    <BarChart
+      slotProps={{
+        legend: {
+          position: {
+            vertical: 'wrong',
+            horizontal: 'wrong'
+          }
+        }
+      }} />
   </div>;
 }

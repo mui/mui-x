@@ -74,23 +74,21 @@ const rendererInterceptor = function RendererInterceptor(
   );
 };
 
-type DesktopTimeRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopTimeRangePickerComponent = ((
+  props: DesktopTimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker(
+  inProps: DesktopTimeRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all time range pickers
-  const defaultizedProps = useTimeRangePickerDefaultizedProps<
-    DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopTimeRangePicker');
+  const defaultizedProps = useTimeRangePickerDefaultizedProps<DesktopTimeRangePickerProps>(
+    inProps,
+    'MuiDesktopTimeRangePicker',
+  );
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -150,11 +148,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<
-    TimeViewWithMeridiem,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopRangePicker<TimeViewWithMeridiem, typeof props>({
     ref,
     props,
     valueManager: rangeValueManager,
@@ -229,10 +223,6 @@ DesktopTimeRangePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
-  /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */
@@ -252,6 +242,13 @@ DesktopTimeRangePicker.propTypes = {
       current: PropTypes.object,
     }),
   ]),
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus: PropTypes.bool,
   /**
    * The label content.
    */
@@ -287,7 +284,7 @@ DesktopTimeRangePicker.propTypes = {
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
    * - `validationError`: validation result of the current value
-   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
+   * - `source`: source of the acceptance. One of 'field' | 'view' | 'unknown'
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,

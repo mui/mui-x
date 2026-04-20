@@ -22,7 +22,7 @@ export default function PositiveAndNegativeBarChart() {
           { data: pData, label: 'pv' },
           { data: uData, label: 'uv' },
         ]}
-        xAxis={[{ data: xLabels }]}
+        xAxis={[{ data: xLabels, height: 28 }]}
         yAxis={[{ width: 60, max: 10000 }]}
       />
     </Box>

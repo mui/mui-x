@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const bgBGGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Компактна',
   toolbarDensityStandard: 'Стандартна',
   toolbarDensityComfortable: 'Комфортна',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Отмяна',
+  toolbarRedo: 'Повтори',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Колони',
@@ -63,7 +67,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
-  filterPanelColumns: 'Колони',
+  filterPanelColumn: 'Колони',
   filterPanelInputLabel: 'Стойност',
   filterPanelInputPlaceholder: 'Стойност на филтъра',
 
@@ -161,6 +165,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'да',
   booleanCellFalseLabel: 'не',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Разгъване',
+  longTextCellCollapseLabel: 'Свиване',
+
   // Actions cell more text
   actionsCellMore: 'още',
 
@@ -192,11 +200,12 @@ const bgBGGrid: Partial<GridLocaleText> = {
   //   count,
   //   estimated
   // }) => {
+  //   const unknownRowCount = count == null || count === -1;
   //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
   //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
+  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   // },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

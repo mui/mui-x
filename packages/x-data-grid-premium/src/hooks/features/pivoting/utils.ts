@@ -1,13 +1,13 @@
 import {
-  GridColDef,
-  GridColumnGroup,
-  GridColumnNode,
-  GridRowModel,
+  type GridColDef,
+  type GridColumnGroup,
+  type GridColumnNode,
+  type GridRowModel,
   isLeaf,
-  GridSingleSelectColDef,
+  type GridSingleSelectColDef,
   gridStringOrNumberComparator,
-  GridLocaleTextApi,
-  GridGroupingColDefOverrideParams,
+  type GridLocaleTextApi,
+  type GridGroupingColDefOverrideParams,
 } from '@mui/x-data-grid-pro';
 import { getDefaultColTypeDef } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
@@ -244,7 +244,13 @@ export const createPivotPropsFromRows = ({
         if (!column) {
           continue;
         }
-        let colValue = apiRef.current.getRowValue(row, column) ?? '(No value)';
+        const noValueString = '(No value)';
+        let colValue = apiRef.current.getRowValue(row, column) ?? noValueString;
+        // Handle empty strings to prevent issues with column grouping model
+        // https://github.com/mui/mui-x/issues/20552
+        if (colValue === '') {
+          colValue = noValueString;
+        }
 
         if (column.type === 'singleSelect') {
           const singleSelectColumn = column as GridSingleSelectColDef;

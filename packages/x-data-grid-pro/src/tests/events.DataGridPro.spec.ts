@@ -1,9 +1,9 @@
-import * as React from 'react';
+import type * as React from 'react';
 import {
   useGridApiContext,
   useGridEvent,
-  GridRowParams,
-  GridCellParams,
+  type GridRowParams,
+  type GridCellParams,
 } from '@mui/x-data-grid-pro';
 
 function TestEvents() {

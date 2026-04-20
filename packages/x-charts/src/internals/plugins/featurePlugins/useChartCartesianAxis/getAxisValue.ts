@@ -1,5 +1,5 @@
 import { isOrdinalScale } from '../../../scaleGuards';
-import { ComputedAxis, D3Scale } from '../../../../models/axis';
+import { type ComputedAxis, type D3Scale } from '../../../../models/axis';
 
 function getAsANumber(value: number | Date) {
   return value instanceof Date ? value.getTime() : value;

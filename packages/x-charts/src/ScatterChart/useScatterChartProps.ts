@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
-import { ChartsAxisProps } from '../ChartsAxis';
-import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsLegendSlotExtension } from '../ChartsLegend';
-import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartContainerProps } from '../ChartContainer';
+import { type ChartsAxisProps } from '../ChartsAxis';
+import { type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { type ChartsGridProps } from '../ChartsGrid';
+import { type ChartsLegendSlotExtension } from '../ChartsLegend';
+import { type ChartsOverlayProps } from '../ChartsOverlay';
+import { type ChartsContainerProps } from '../ChartsContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import { SCATTER_CHART_PLUGINS, ScatterChartPluginSignatures } from './ScatterChart.plugins';
-import { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import { SCATTER_CHART_PLUGINS, type ScatterChartPluginSignatures } from './ScatterChart.plugins';
+import { type UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -26,8 +26,8 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     zAxis,
     series,
     axisHighlight,
-    voronoiMaxRadius,
-    disableVoronoi,
+    hitAreaRadius,
+    disableHitArea,
     hideLegend,
     width,
     height,
@@ -53,8 +53,9 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     () => series.map((s) => ({ type: 'scatter' as const, ...s })),
     [series],
   );
-  const useVoronoiOnItemClick = disableVoronoi !== true || renderer === 'svg-batch';
-  const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginSignatures> = {
+  const resolvedDisableHitArea = disableHitArea;
+  const useVoronoiOnItemClick = resolvedDisableHitArea !== true || renderer === 'svg-batch';
+  const chartsContainerProps: ChartsContainerProps<'scatter', ScatterChartPluginSignatures> = {
     ...other,
     series: seriesWithDefault,
     width,
@@ -66,12 +67,11 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     zAxis,
     highlightedItem,
     onHighlightChange,
-    disableVoronoi,
-    voronoiMaxRadius,
+    disableHitArea,
+    hitAreaRadius,
     onItemClick: useVoronoiOnItemClick
       ? (onItemClick as UseChartClosestPointSignature['params']['onItemClick'])
       : undefined,
-    className,
     plugins: SCATTER_CHART_PLUGINS,
     slots,
     slotProps,
@@ -119,11 +119,12 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
     hideLegend: props.hideLegend ?? false,
+    className,
   };
 
   return {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     chartsAxisProps,
     gridProps,
     scatterPlotProps,

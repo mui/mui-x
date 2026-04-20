@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  GridApi,
+  type GridApi,
   useGridApiRef,
   DataGridPremium,
-  DataGridPremiumProps,
-  GridColDef,
+  type DataGridPremiumProps,
+  type GridColDef,
 } from '@mui/x-data-grid-premium';
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { SinonSpy, spy, stub, SinonStub } from 'sinon';
+import { type SinonSpy, spy, stub, type SinonStub } from 'sinon';
 import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
+import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -193,8 +194,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
   });
 
-  // These test are flaky in JSDOM
-  describe.skipIf(isJSDOM)('paste', () => {
+  describe('paste', () => {
     function paste(cell: HTMLElement, pasteText: string) {
       const pasteEvent = new Event('paste');
 
@@ -634,7 +634,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(processRowUpdateSpy.args[0]).to.deep.equal([
         { id: 1, firstName: 'John', lastName: 'Doe' },
         { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
-        { rowId: '1' },
+        { rowId: 1 },
       ]);
     });
 
@@ -721,6 +721,62 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(getColumnValues(4)).to.deep.equal(['4.0', '4.0', '4.9']);
     });
 
+    it('should respect the cell editable state when pasting', async () => {
+      const rows = [
+        { id: 0, brand: 'Nike', category: 'Shoes', price: '$120', rating: '4.0' },
+        { id: 1, brand: 'Adidas', category: 'Sneakers', price: '$100', rating: '4.2' },
+        { id: 2, brand: 'Puma', category: 'Shoes', price: '$90', rating: '4.9' },
+      ];
+      const columns: GridColDef[] = [
+        { field: 'id' },
+        { field: 'brand', editable: true },
+        { field: 'category', editable: true },
+        { field: 'price', editable: true },
+        { field: 'rating', editable: false },
+      ];
+
+      function Component() {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={columns}
+              rows={rows}
+              rowSelection={false}
+              cellSelection
+              disableVirtualization
+              isCellEditable={(params) => {
+                // Make price cell non-editable for row with id 1 via isCellEditable
+                if (params.field === 'price' && params.id === 1) {
+                  return false;
+                }
+                return true;
+              }}
+            />
+          </div>
+        );
+      }
+
+      const { user } = render(<Component />);
+
+      const cell = getCell(1, 0);
+      await act(() => cell.focus());
+      await user.click(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(1, 4), { shiftKey: true });
+
+      paste(cell, ['0', 'Nike', 'Shoes', '$120', '4.0'].join('\t'));
+
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['Nike', 'Nike', 'Puma']);
+      });
+      expect(getColumnValues(2)).to.deep.equal(['Shoes', 'Shoes', 'Shoes']);
+      // Price should not be updated for row 1 due to isCellEditable returning false
+      expect(getColumnValues(3)).to.deep.equal(['$120', '$100', '$90']);
+      // Rating should not be updated because column is not editable
+      expect(getColumnValues(4)).to.deep.equal(['4.0', '4.2', '4.9']);
+    });
+
     it('should call `processRowUpdate` with each row impacted by the paste', async () => {
       const processRowUpdateSpy = spy((newRow) => {
         return newRow;
@@ -745,17 +801,17 @@ describe('<DataGridPremium /> - Clipboard', () => {
         [
           { id: 0, currencyPair: '12', price1M: '12' }, // new row
           { id: 0, currencyPair: 'USDGBP', price1M: 1 }, // old row
-          { rowId: '0' }, // row id
+          { rowId: 0 }, // row id
         ],
         [
           { id: 1, currencyPair: '12', price1M: '12' }, // new row
           { id: 1, currencyPair: 'USDEUR', price1M: 11 }, // old row
-          { rowId: '1' }, // row id
+          { rowId: 1 }, // row id
         ],
         [
           { id: 2, currencyPair: '12', price1M: '12' }, // new row
           { id: 2, currencyPair: 'GBPEUR', price1M: 21 }, // old row
-          { rowId: '2' }, // row id
+          { rowId: 2 }, // row id
         ],
       ]);
     });
@@ -1203,5 +1259,59 @@ describe('<DataGridPremium /> - Clipboard', () => {
       // Should not be empty
       expect(getCell(2, 1)).to.have.text('GBPEUR');
     });
+
+    // https://github.com/mui/mui-x/issues/21891
+    it.skipIf(isJSDOM)(
+      'should not intercept paste shortcuts from portaled elements inside a cell',
+      async () => {
+        function PortalCell() {
+          return (
+            <Portal>
+              <input type="text" name="portal-input" />
+            </Portal>
+          );
+        }
+
+        const columns: GridColDef[] = [
+          { field: 'id', renderCell: () => <PortalCell />, editable: true },
+          { field: 'name', editable: true },
+        ];
+        const rows = [
+          { id: 1, name: 'Alice' },
+          { id: 2, name: 'Bob' },
+        ];
+
+        const { user } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={columns}
+              rows={rows}
+              cellSelection
+              disableRowSelectionOnClick
+            />
+          </div>,
+        );
+
+        const portalInput = document.querySelector(
+          'input[name="portal-input"]',
+        ) as HTMLInputElement;
+
+        // First click on a cell to establish grid focus, then focus the portal input
+        const cell = getCell(0, 0);
+        await user.click(cell);
+        await act(() => portalInput.focus());
+        expect(portalInput).toHaveFocus();
+
+        // Simulate Ctrl+V on the portal input — the grid should ignore this.
+        // fireEvent is used because isPasteShortcut() requires keyCode (deprecated),
+        // which user.keyboard does not set.
+        fireEvent.keyDown(portalInput, { key: 'v', keyCode: 86, ctrlKey: true });
+
+        // Without the fix, getTextFromClipboard() creates a hidden <input> inside the grid
+        // root element and steals focus from the portal input.
+        // With the fix, the portal input retains focus.
+        expect(portalInput).toHaveFocus();
+      },
+    );
   });
 });

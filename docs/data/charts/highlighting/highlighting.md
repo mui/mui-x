@@ -1,21 +1,22 @@
 ---
 productId: x-charts
+title: Charts - Highlighting
 components: ChartsAxisHighlight
 ---
 
 # Charts - Highlighting
 
-<p class="description">Highlighting data offers quick visual feedback for chart users.</p>
+<p class="description">Highlight data points and series to provide quick visual feedback.</p>
 
-It can be used to emphasize a specific data point or series, or to fade out the rest of the chart.
-And it can be controlled by the user or synchronized across multiple charts.
+Highlighting can emphasize specific data points or series, or fade out the rest of the chart.
+Control it programmatically or synchronize it across multiple charts.
 
 ## Highlighting axis
 
-You can highlight data based on mouse position.
-By default, those highlights are lines, but it can also be a vertical band if your x-axis use `scaleType: 'band'`.
+Highlight data based on mouse position.
+By default, highlights appear as lines, but you can also display them as a vertical band if your x-axis uses `scaleType: 'band'`.
 
-On the chart, to customize this behavior, you can use:
+To customize this behavior, use the `axisHighlight` prop:
 
 ```jsx
 axisHighlight={{
@@ -28,54 +29,52 @@ axisHighlight={{
 
 ## Highlighting series
 
-In parallel with the tooltip, you can highlight and fade elements.
+When hovering over elements, a tooltip is shown by default.
+You can also configure highlighting and fading independently of the tooltip.
 
-This kind of interaction is controlled by series properties `highlightScope` which contains two options:
+This interaction is controlled by the `highlightScope` property on `series`, which contains two options:
 
-- `highlighted` Indicates which item to highlight. Its value can be
-  - `'none'` Do nothing (default one).
-  - `'item'` Only highlight the item itself.
-  - `'series'` Highlight all items of the series.
-- `faded` Indicates which item to fade (if they are not already highlighted). Its value can be
-  - `'none'` Do nothing (default one).
-  - `'series'` Fade all the items of the series.
-  - `'global'` Fade all the items of the chart.
+- `highlighted`: Indicates which item to highlight. Its value can be:
+  - `'none'`: Do nothing (default)
+  - `'item'`: Only highlight the item itself
+  - `'series'`: Highlight all items in the series
+- `faded`: Indicates which item to fade (if they're not already highlighted). Its value can be:
+  - `'none'`: Do nothing (default)
+  - `'series'`: Fade all items in the series
+  - `'global'`: Fade all items in the chart
 
 :::info
-For line chart, you can increase the interaction area by using slots.
-Detailed explanations are available in a [dedicated line interaction demo](/x/react-charts/line-demo/#larger-interaction-area).
+For Line charts, you can increase the interaction area by using slots.
+See [Line demos—Larger interaction area](/x/react-charts/line-demo/#larger-interaction-area) for an example of this.
 :::
 
 {{"demo": "ElementHighlights.js"}}
 
 ## Controlled item highlight
 
-The highlighted item can be controlled by using `highlightedItem` and `onHighlightChange`.
-
-You can set the `highlightedItem` value based on inputs, and sync it when the user hover over an item themselves.
+You can control the highlighted item using the `highlightedItem` and `onHighlightChange` props.
+You can set the `highlightedItem` value based on inputs, and sync it when the user hovers over an item.
 
 {{"demo": "ControlledHighlight.js"}}
 
 ## Controlled axis highlight
 
-The highlighted axis item can be controlled by using `highlightedAxis` prop.
+Control the highlighted axis item using the `highlightedAxis` prop.
 Its value is an array of `{ axisId: string, dataIndex: number }` objects.
-An empty array means no highlight.
+When the array is empty, nothing is highlighted.
 
-The `onHighlightedAxisChange` handler is triggered each time the pointer crosses the boundaries between two axis values.
-Its parameter is an array of one `{ axisId, dataIndex }` object per axis.
-Axes without a `data` property are ignored by the handler.
+The `onHighlightedAxisChange` handler triggers each time the pointer crosses the boundaries between two axis values.
+It receives an array of one `{ axisId, dataIndex }` object per axis containing at least one data point.
 
 :::warning
-The `onHighlightedAxisChange` can be triggered at a high frequency when the user moves their pointer over the chart.
+The `onHighlightedAxisChange` handler can trigger at a high frequency when the user moves their pointer over the chart.
 
-To avoid performance issues, avoid re-creating objects that are passed to props on every render.
-Prefer defining them outside the component, or memoizing them.
-
-This suggestion is especially useful for axes and series which, when updated, impact a lot of computation.
+To avoid performance issues, avoid recreating objects that are passed to props on every render.
+Instead, define them outside the component, or memoize them.
+This is especially important for axes and series, which, when updated, trigger significant computation.
 
 ```jsx
-// ❌ The chart gets a new axis on each render, leading to useless computation.
+// ❌ The chart gets a new axis on each render, leading to redundant computation.
 const Component = () => <BarChart xAxis={[{ data: [1, 2, 3]}]}>
 
 // ✅ For static settings, define them outside the component.
@@ -95,7 +94,7 @@ const Component = ({ data }) => {
 
 ## Synchronizing highlights
 
-Having a controlled highlight lets you control it in multiple charts at the same time.
-You need to ensure that the `series` has the same `ids` and the data is in the same order.
+With controlled highlights, you can synchronize them across multiple charts.
+Ensure that the `series` have the same IDs and that the data is in the same order.
 
 {{"demo": "SyncHighlight.js"}}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColumnMenuItemProps } from '@mui/x-data-grid-pro';
+import type { GridColumnMenuItemProps } from '@mui/x-data-grid-pro';
 import { GridColumnMenuPivotItem } from './GridColumnMenuPivotItem';
 import { GridColumnMenuChartsItem } from './GridColumnMenuChartsItem';
 

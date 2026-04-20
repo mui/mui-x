@@ -2,7 +2,7 @@ import { screen, fireEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   openPicker,
   describeValue,
   getFieldInputRoot,
@@ -27,7 +27,7 @@ describe('<MobileDatePicker /> - Describe Value', () => {
         ? adapterToUse.format(expectedValue, 'keyboardDate')
         : 'MM/DD/YYYY';
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
@@ -41,7 +41,7 @@ describe('<MobileDatePicker /> - Describe Value', () => {
 
       // Close the Picker to return to the initial state
       if (!isOpened) {
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       }
 

@@ -1,32 +1,32 @@
 import type * as Excel from '@mui/x-internal-exceljs-fork';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  GridRowId,
-  GridColDef,
-  GridApi,
-  ValueOptions,
+  type GridRowId,
+  type GridColDef,
+  type GridApi,
+  type ValueOptions,
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
-  GridValidRowModel,
+  type GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import {
-  GridStateColDef,
-  GridSingleSelectColDef,
+  type GridStateColDef,
+  type GridSingleSelectColDef,
   isObject,
   isSingleSelectColDef,
   gridHasColSpanSelector,
 } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
-import { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
-import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
+import type { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
+import type { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 import {
   addColumnGroupingHeaders,
   addSerializedRowToWorksheet,
   createValueOptionsSheetIfNeeded,
   getExcelJs,
-  SerializedColumns,
-  SerializedRow,
-  ValueOptionsData,
+  type SerializedColumns,
+  type SerializedRow,
+  type ValueOptionsData,
 } from './utils';
 
 export type { ExcelExportInitEvent } from './utils';
@@ -82,7 +82,7 @@ export const serializeRowUnsafe = (
   const row = apiRef.current.getRow(id);
   const rowNode = apiRef.current.getRowNode(id);
   if (!row || !rowNode) {
-    throw new Error(`No row with id #${id} found`);
+    throw new Error(`MUI X: No row with id #${id} found`);
   }
   const outlineLevel = rowNode.depth;
   const hasColSpan = gridHasColSpanSelector(apiRef);
@@ -300,7 +300,8 @@ export async function getDataForValueOptionsSheet(
   return record;
 }
 interface BuildExcelOptions
-  extends Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,
+  extends
+    Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,
     Pick<
       Required<GridExcelExportOptions>,
       'valueOptionsSheetName' | 'includeHeaders' | 'includeColumnGroupsHeaders' | 'escapeFormulas'

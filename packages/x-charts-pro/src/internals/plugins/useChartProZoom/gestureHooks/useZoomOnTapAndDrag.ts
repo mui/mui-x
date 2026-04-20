@@ -1,16 +1,15 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  useSelector,
-  getSVGPoint,
+  type ChartPlugin,
+  getChartPoint,
   selectorChartDrawingArea,
-  ZoomData,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { type TapAndDragEvent } from '@mui/x-internal-gestures/core';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { UseChartProZoomSignature } from '../useChartProZoom.types';
+import { type UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
   getHorizontalCenterRatio,
   getVerticalCenterRatio,
@@ -23,13 +22,13 @@ export const useZoomOnTapAndDrag = (
   {
     store,
     instance,
-    svgRef,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, 'tapAndDrag' as const);
+  const { chartsLayerContainerRef } = instance;
+  const drawingArea = store.use(selectorChartDrawingArea);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
+  const config = store.use(selectorZoomInteractionConfig, 'tapAndDrag' as const);
 
   const isZoomOnTapAndDragEnabled: boolean =
     Object.keys(optionsLookup).length > 0 && Boolean(config);
@@ -51,7 +50,7 @@ export const useZoomOnTapAndDrag = (
 
   // Zoom on tap and drag
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     if (element === null || !isZoomOnTapAndDragEnabled) {
       return () => {};
     }
@@ -72,7 +71,7 @@ export const useZoomOnTapAndDrag = (
           const isZoomIn = event.detail.deltaY > 0;
           const scaleRatio = 1 + event.detail.deltaY / 100;
 
-          const point = getSVGPoint(element, {
+          const point = getChartPoint(element, {
             clientX: event.detail.initialCentroid.x,
             clientY: event.detail.initialCentroid.y,
           });
@@ -99,7 +98,7 @@ export const useZoomOnTapAndDrag = (
       rafThrottledCallback.clear();
     };
   }, [
-    svgRef,
+    chartsLayerContainerRef,
     drawingArea,
     isZoomOnTapAndDragEnabled,
     optionsLookup,

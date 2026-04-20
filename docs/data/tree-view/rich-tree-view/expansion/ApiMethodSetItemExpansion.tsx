@@ -3,10 +3,10 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
+import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -37,7 +37,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
 ];
 
 export default function ApiMethodSetItemExpansion() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewApiRef();
 
   const handleExpandClick = (event: React.MouseEvent) => {
     apiRef.current!.setItemExpansion({

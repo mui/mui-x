@@ -34,6 +34,11 @@
     "defaultSelectedItems": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
+    "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
+    "domStructure": {
+      "type": { "name": "enum", "description": "'flat'<br>&#124;&nbsp;'nested'" },
+      "default": "'flat'"
+    },
     "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "expansionTrigger": {
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
@@ -88,10 +93,19 @@
         "returned": "boolean"
       }
     },
+    "isItemSelectionDisabled": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(item: R) => boolean",
+        "describedArgs": ["item"],
+        "returned": "boolean"
+      }
+    },
     "itemChildrenIndentation": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"
     },
+    "itemHeight": { "type": { "name": "number" }, "default": "32" },
     "itemsReordering": { "type": { "name": "bool" }, "default": "false" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
@@ -146,6 +160,18 @@
       "signature": {
         "type": "function(event: React.SyntheticEvent, itemId: TreeViewItemId, isSelected: boolean) => void",
         "describedArgs": ["event", "itemId", "isSelected"]
+      }
+    },
+    "onItemsLazyLoaded": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(parameters: object, parameters.items: Array<R>, parameters.parentId: TreeViewItemId | null, parameters.isCacheHit: boolean) => void",
+        "describedArgs": [
+          "parameters",
+          "parameters.items",
+          "parameters.parentId",
+          "parameters.isCacheHit"
+        ]
       }
     },
     "onSelectedItemsChange": {

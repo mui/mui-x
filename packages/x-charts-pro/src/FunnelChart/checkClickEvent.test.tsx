@@ -1,8 +1,8 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
-import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { vi } from 'vitest';
+import { FunnelChart, funnelClasses } from '@mui/x-charts-pro/FunnelChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const config = {
   series: [
@@ -50,8 +50,8 @@ describe('FunnelChart - click event', () => {
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onAxisClick = spy();
-      const { user } = render(
+      const onAxisClick = vi.fn();
+      const { user, container } = render(
         <div
           style={{
             width: 400,
@@ -61,17 +61,18 @@ describe('FunnelChart - click event', () => {
           <FunnelChart {...config} onAxisClick={onAxisClick} />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
-
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 90, clientY: 100 },
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 0,
         axisValue: 0,
         seriesValues: { big: 200, small: 100 },
@@ -80,12 +81,12 @@ describe('FunnelChart - click event', () => {
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 120, clientY: 300 },
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 1,
         axisValue: 1,
         seriesValues: { big: 100, small: 50 },
@@ -96,8 +97,8 @@ describe('FunnelChart - click event', () => {
     it.skipIf(isJSDOM)(
       'should provide the right context as second argument with layout="horizontal"',
       async () => {
-        const onAxisClick = spy();
-        const { user } = render(
+        const onAxisClick = vi.fn();
+        const { user, container } = render(
           <div
             style={{
               width: 400,
@@ -111,17 +112,19 @@ describe('FunnelChart - click event', () => {
             />
           </div>,
         );
-        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
+        const layerContainer = container.querySelector<HTMLElement>(
+          `.${chartsSvgLayerClasses.root}`,
+        )!.parentElement!;
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 50, clientY: 100 },
           },
         ]);
 
-        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
           dataIndex: 0,
           axisValue: 0,
           seriesValues: { big: 200, small: 100 },
@@ -130,12 +133,12 @@ describe('FunnelChart - click event', () => {
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 300, clientY: 140 },
           },
         ]);
 
-        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
           dataIndex: 1,
           axisValue: 1,
           seriesValues: { big: 100, small: 50 },
@@ -147,8 +150,8 @@ describe('FunnelChart - click event', () => {
     it.skipIf(isJSDOM)(
       'should provide the correct axis values when using category axis',
       async () => {
-        const onAxisClick = spy();
-        const { user } = render(
+        const onAxisClick = vi.fn();
+        const { user, container } = render(
           <div
             style={{
               width: 400,
@@ -162,17 +165,20 @@ describe('FunnelChart - click event', () => {
             />
           </div>,
         );
-        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
+
+        const layerContainer = container.querySelector<HTMLElement>(
+          `.${chartsSvgLayerClasses.root}`,
+        )!.parentElement!;
 
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 90, clientY: 100 },
           },
         ]);
 
-        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
           dataIndex: 0,
           axisValue: 'First',
           seriesValues: { big: 200, small: 100 },
@@ -181,12 +187,12 @@ describe('FunnelChart - click event', () => {
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 120, clientY: 300 },
           },
         ]);
 
-        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
           dataIndex: 1,
           axisValue: 'Second',
           seriesValues: { big: 100, small: 50 },
@@ -198,7 +204,7 @@ describe('FunnelChart - click event', () => {
   describe('onItemClick', () => {
     it('should add cursor="pointer" to bar elements', () => {
       render(<FunnelChart {...config} onItemClick={() => {}} />);
-      const paths = document.querySelectorAll<HTMLElement>('path.MuiFunnelSection-root');
+      const paths = document.querySelectorAll<HTMLElement>(`path.${funnelClasses.section}`);
 
       expect(Array.from(paths).map((rectangle) => rectangle.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -210,7 +216,7 @@ describe('FunnelChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onItemClick = spy();
+      const onItemClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -222,33 +228,35 @@ describe('FunnelChart - click event', () => {
         </div>,
       );
 
-      const pathsBig = document.querySelectorAll<HTMLElement>('path.MuiFunnelSection-series-big');
+      const pathsBig = document.querySelectorAll<HTMLElement>(
+        `[data-series="big"] path.${funnelClasses.section}`,
+      );
       const pathsSmall = document.querySelectorAll<HTMLElement>(
-        'path.MuiFunnelSection-series-small',
+        `[data-series="small"] path.${funnelClasses.section}`,
       );
 
       await user.click(pathsBig[0]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'funnel',
         seriesId: 'big',
         dataIndex: 0,
       });
 
       await user.click(pathsBig[1]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'funnel',
         seriesId: 'big',
         dataIndex: 1,
       });
 
       await user.click(pathsSmall[0]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'funnel',
         seriesId: 'small',
         dataIndex: 0,
       });
       await user.click(pathsSmall[1]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'funnel',
         seriesId: 'small',
         dataIndex: 1,

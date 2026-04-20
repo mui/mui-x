@@ -12,7 +12,12 @@ import type {
   AxisItemIdentifier,
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import type { ZoomData, ZoomOptions, ZoomSliderShowTooltip } from './zoom.types';
+import type {
+  ZoomData,
+  ZoomOptions,
+  ZoomSliderPreviewOptions,
+  ZoomSliderShowTooltip,
+} from './zoom.types';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
 import type { UseChartBrushSignature } from '../useChartBrush';
@@ -63,22 +68,44 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    */
   highlightedAxis?: AxisItemIdentifier[];
   /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onTooltipAxisChange?: (axisItems: AxisItemIdentifier[]) => void;
+  /**
+   * The controlled axis tooltip.
+   * Identified by the axis id, and data index.
+   */
+  tooltipAxis?: AxisItemIdentifier[];
+  /**
    * If `true`, the charts will not listen to the mouse move event.
    * It might break interactive features, but will improve performance.
    * @default false
    */
   disableAxisListener?: boolean;
+  /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap?: number;
 }
 
 export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = ScaleName> =
-  UseChartCartesianAxisParameters<S> & {
-    defaultizedXAxis: DefaultedXAxis<S>[];
-    defaultizedYAxis: DefaultedYAxis<S>[];
-  };
+  UseChartCartesianAxisParameters<S> &
+    Required<Pick<UseChartCartesianAxisParameters<S>, 'axesGap'>> & {
+      defaultizedXAxis: DefaultedXAxis<S>[];
+      defaultizedYAxis: DefaultedYAxis<S>[];
+    };
 
-export interface DefaultedZoomSliderOptions
-  extends Omit<NonNullable<Required<ZoomOptions['slider']>>, 'showTooltip'> {
+export interface DefaultedZoomSliderOptions extends Omit<
+  NonNullable<Required<ZoomOptions['slider']>>,
+  'showTooltip' | 'preview'
+> {
   showTooltip: ZoomSliderShowTooltip;
+  preview: boolean | ZoomSliderPreviewOptions;
 }
 
 export interface DefaultizedZoomOptions extends Required<Omit<ZoomOptions, 'slider'>> {
@@ -97,6 +124,7 @@ export interface UseChartCartesianAxisState {
     zoomData: readonly ZoomData[];
   };
   cartesianAxis: {
+    axesGap: number;
     x: DefaultedXAxis[];
     y: DefaultedYAxis[];
   };
@@ -104,6 +132,10 @@ export interface UseChartCartesianAxisState {
    * The controlled axis item highlighted.
    */
   controlledCartesianAxisHighlight?: AxisItemIdentifier[];
+  /**
+   * The controlled axis tooltip.
+   */
+  controlledCartesianAxisTooltip?: AxisItemIdentifier[];
 }
 
 export type ExtremumFilter = (

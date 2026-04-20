@@ -109,9 +109,8 @@ const rendererInterceptor = function RendererInterceptor(
   });
 };
 
-type MobileDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = ((
+  props: MobileDateTimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -124,17 +123,16 @@ type MobileDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure exten
  *
  * - [MobileDateTimeRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-range-picker/)
  */
-const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangePicker(
+  inProps: MobileDateTimeRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
   // Props with the default values common to all date time range pickers
-  const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
-    MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileDateTimeRangePicker');
+  const defaultizedProps = useDateTimeRangePickerDefaultizedProps<MobileDateTimeRangePickerProps>(
+    inProps,
+    'MuiMobileDateTimeRangePicker',
+  );
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -184,11 +182,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     },
   };
 
-  const { renderPicker } = useMobileRangePicker<
-    DateTimeRangePickerView,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useMobileRangePicker<DateTimeRangePickerView, typeof props>({
     ref,
     props,
     valueManager: rangeValueManager,
@@ -269,7 +263,7 @@ MobileDateTimeRangePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -294,10 +288,6 @@ MobileDateTimeRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
-  /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    */
@@ -317,6 +307,13 @@ MobileDateTimeRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    */
   inputRef: refType,
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus: PropTypes.bool,
   /**
    * The label content.
    */
@@ -376,7 +373,7 @@ MobileDateTimeRangePicker.propTypes = {
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
    * - `validationError`: validation result of the current value
-   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
+   * - `source`: source of the acceptance. One of 'field' | 'view' | 'unknown'
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,

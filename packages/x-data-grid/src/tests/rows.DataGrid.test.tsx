@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -7,20 +7,21 @@ import {
   ErrorBoundary,
   reactMajor,
   waitFor,
+  fireEvent,
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
 import { spy, stub } from 'sinon';
 import Portal from '@mui/material/Portal';
 import {
   DataGrid,
-  DataGridProps,
+  type DataGridProps,
   GridActionsCellItem,
-  GridRowIdGetter,
-  GridRowClassNameParams,
-  GridRowModel,
-  GridRenderCellParams,
+  type GridRowIdGetter,
+  type GridRowClassNameParams,
+  type GridRowModel,
+  type GridRenderCellParams,
   useGridApiRef,
-  GridApi,
+  type GridApi,
   gridClasses,
   GridActionsCell,
 } from '@mui/x-data-grid';
@@ -38,7 +39,7 @@ import Dialog from '@mui/material/Dialog';
 import { isJSDOM } from 'test/utils/skipIf';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
-import { GridApiCommunity } from '../models/api/gridApiCommunity';
+import { type GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
@@ -133,6 +134,47 @@ describe('<DataGrid /> - Rows', () => {
     expect(handleRowClick.callCount).to.equal(0);
     await user.click(document.querySelector('input[name="input"]')!);
     expect(handleRowClick.callCount).to.equal(1);
+  });
+
+  // https://github.com/mui/mui-x/issues/21063
+  it('should not steal focus from input elements in Dialog', async () => {
+    function DialogCell() {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <div>
+          <button onClick={() => setOpen(true)} data-testid="open-dialog">
+            Open
+          </button>
+          <Dialog open={open} onClose={() => setOpen(false)}>
+            <input type="text" data-testid="dialog-input" />
+          </Dialog>
+        </div>
+      );
+    }
+
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          rows={[{ id: 1 }]}
+          columns={[{ field: 'id', renderCell: () => <DialogCell /> }]}
+        />
+      </div>,
+    );
+
+    // Open the dialog
+    await user.click(screen.getByTestId('open-dialog'));
+
+    // Focus the input in the dialog
+    const dialogInput = screen.getByTestId('dialog-input');
+    dialogInput.focus();
+    expect(dialogInput).toHaveFocus();
+
+    // Simulate typing - this should NOT cause focus loss
+    fireEvent.keyDown(dialogInput, { key: 'a' });
+    expect(dialogInput).toHaveFocus();
+
+    fireEvent.keyDown(dialogInput, { key: 'b' });
+    expect(dialogInput).toHaveFocus();
   });
 
   // https://github.com/mui/mui-x/issues/8042
@@ -242,7 +284,7 @@ describe('<DataGrid /> - Rows', () => {
         );
       }
 
-      it.skipIf(!isJSDOM)('should throw an error if getActions is missing', () => {
+      it('should throw an error if getActions is missing', () => {
         expect(() => {
           render(
             <ErrorBoundary>
@@ -266,8 +308,8 @@ describe('<DataGrid /> - Rows', () => {
         render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="delete" />,
-              <GridActionsCellItem label="print" showInMenu />,
+              <GridActionsCellItem key={1} icon={<span />} label="delete" />,
+              <GridActionsCellItem key={2} label="print" showInMenu />,
             ]}
           />,
         );
@@ -277,7 +319,9 @@ describe('<DataGrid /> - Rows', () => {
 
       it('should show in a menu the actions marked as showInMenu', async () => {
         const { user } = render(
-          <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
+          <TestCase
+            getActions={() => [<GridActionsCellItem key={1} label="print" showInMenu />]}
+          />,
         );
         expect(screen.queryByText('print')).to.equal(null);
         await user.click(screen.getByRole('menuitem', { name: 'more' }));
@@ -477,7 +521,9 @@ describe('<DataGrid /> - Rows', () => {
         );
         await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
         expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
-        setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
+        await act(async () => {
+          setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
+        });
         expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
       });
     });
@@ -760,13 +806,15 @@ describe('<DataGrid /> - Rows', () => {
         );
         await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
         expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
-        setProps({
-          renderCell: (params: GridRenderCellParams) => (
-            <GridActionsCell {...params}>
-              <GridActionsCellItem icon={<span />} label="print" />
-            </GridActionsCell>
-          ),
-        }); // Sets focusedButtonIndex=0
+        await act(async () => {
+          setProps({
+            renderCell: (params: GridRenderCellParams) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+              </GridActionsCell>
+            ),
+          }); // Sets focusedButtonIndex=0
+        });
         expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
       });
 
@@ -1017,16 +1065,12 @@ describe('<DataGrid /> - Rows', () => {
         const border = 1;
         const contentHeight = 100;
         render(<TestCase getBioContentHeight={() => contentHeight} getRowHeight={() => 'auto'} />);
-        const virtualScrollerContent = document.querySelector(
-          '.MuiDataGrid-virtualScrollerContent',
-        );
+        const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone');
         const expectedHeight = baselineProps.rows.length * (contentHeight + border);
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+          expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
         });
-
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
       it('should use the default row height to calculate the content size when the row has not been measured yet', async () => {
@@ -1043,19 +1087,15 @@ describe('<DataGrid /> - Rows', () => {
             rowBufferPx={0}
           />,
         );
-        const virtualScrollerContent = document.querySelector(
-          '.MuiDataGrid-virtualScrollerContent',
-        );
+        const element = document.querySelector('.MuiDataGrid-contentFiller');
         const expectedHeight =
           measuredRowHeight +
           border + // Measured rows also include the border
           (baselineProps.rows.length - 1) * defaultRowHeight;
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+          expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
         });
-
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
       it('should use the value from getEstimatedRowHeight to estimate the content size', async () => {
@@ -1073,18 +1113,14 @@ describe('<DataGrid /> - Rows', () => {
             rowBufferPx={0}
           />,
         );
-        const virtualScrollerContent = document.querySelector(
-          '.MuiDataGrid-virtualScrollerContent',
-        );
+        const element = document.querySelector('.MuiDataGrid-contentFiller');
         const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+          expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
         });
-
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
       it('should recalculate the content size when the rows prop changes', async () => {
@@ -1096,21 +1132,16 @@ describe('<DataGrid /> - Rows', () => {
             rowBufferPx={0}
           />,
         );
-        const virtualScrollerContent = document.querySelector(
-          '.MuiDataGrid-virtualScrollerContent',
-        );
+        const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone');
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({ height: '101px' });
+          expect(element).toHaveComputedStyle({ height: '101px' });
         });
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
         setProps({ rows: [{ clientId: 'c1', expanded: true }] });
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({ height: '201px' });
+          expect(element).toHaveComputedStyle({ height: '201px' });
         });
-
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
       it('should set minHeight to "auto" in all rows with dynamic row height', () => {
@@ -1186,16 +1217,13 @@ describe('<DataGrid /> - Rows', () => {
             columnHeaderHeight={columnHeaderHeight}
           />,
         );
-        const virtualScrollerContent = document.querySelector(
-          '.MuiDataGrid-virtualScrollerContent',
-        )!;
+        const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({
+          expect(element).toHaveComputedStyle({
             height: `${Math.floor(expectedHeight)}px`,
           });
         });
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
       const { userAgent } = window.navigator;
@@ -1225,7 +1253,7 @@ describe('<DataGrid /> - Rows', () => {
           await user.click(screen.getByRole('button', { name: /next page/i }));
 
           await waitFor(() => {
-            expect(gridOffsetTop()).to.equal(0);
+            expect(gridOffsetTop()).to.equal(columnHeaderHeight);
           });
         },
       );
@@ -1251,9 +1279,9 @@ describe('<DataGrid /> - Rows', () => {
             {...data}
           />,
         );
-        expect(gridOffsetTop()).to.equal(0);
+        expect(gridOffsetTop()).to.equal(columnHeaderHeight);
         await act(async () => apiRefPage.current?.setPageSize(5));
-        expect(gridOffsetTop()).to.equal(0);
+        expect(gridOffsetTop()).to.equal(columnHeaderHeight);
       });
 
       // In Chrome non-headless and Edge this test is flaky
@@ -1285,7 +1313,7 @@ describe('<DataGrid /> - Rows', () => {
             />,
           );
 
-          expect(gridOffsetTop()).to.equal(0);
+          expect(gridOffsetTop()).to.equal(columnHeaderHeight);
 
           const virtualScroller = grid('virtualScroller')!;
           // Scroll to measure all cells
@@ -1301,7 +1329,7 @@ describe('<DataGrid /> - Rows', () => {
           await user.click(screen.getByRole('button', { name: /next page/i }));
 
           await waitFor(() => {
-            expect(gridOffsetTop()).to.equal(0);
+            expect(gridOffsetTop()).to.equal(columnHeaderHeight);
           });
         },
       );
@@ -1374,10 +1402,9 @@ describe('<DataGrid /> - Rows', () => {
           disableVirtualization
         />,
       );
-      const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent');
+      const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone');
       const expectedHeight = rows.length * (rowHeight + spacingTop + spacingBottom);
-      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
-      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
+      expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
     });
 
     // Needs layout
@@ -1392,15 +1419,13 @@ describe('<DataGrid /> - Rows', () => {
           disableVirtualization
         />,
       );
-      const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent');
+      const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone');
       const expectedHeight = rows.length * (rowHeight + spacingTop + spacingBottom);
-      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
-      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
+      expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
       setProps({ getRowSpacing: null });
-      expect(virtualScrollerContent).toHaveComputedStyle({
+      expect(element).toHaveComputedStyle({
         height: `${rows.length * rowHeight}px`,
       });
-      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
     });
 
     it('should set the row margin to the value returned by getRowSpacing if rowSpacingType is not defined', () => {

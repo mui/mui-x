@@ -1,7 +1,7 @@
-import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useSankeySeries, useSankeySeriesContext } from './useSankeySeries';
-import { Unstable_SankeyChart as SankeyChart, SankeySeriesType } from '../SankeyChart';
+import { Unstable_SankeyChart as SankeyChart, type SankeySeriesType } from '../SankeyChart';
 import type { DefaultizedSankeySeriesType } from '../SankeyChart/sankey.types';
 
 const mockSeries: SankeySeriesType = {
@@ -70,5 +70,10 @@ describe('useSankeySeries', () => {
     }).toWarnDev(message);
 
     expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries.id]);
+  });
+
+  it('should return empty array when empty seriesIds array is provided', () => {
+    const { result } = renderHook(() => useSankeySeries([]), options);
+    expect(result.current).to.deep.equal([]);
   });
 });

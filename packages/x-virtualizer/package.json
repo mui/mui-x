@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-virtualizer",
-  "version": "0.2.8",
+  "version": "9.0.0-alpha.0",
   "author": "MUI Team",
   "description": "MUI virtualization library",
   "license": "MIT",
@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
+    "build": "code-infra build --flat",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -35,18 +35,18 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-internals": "workspace:*"
+    "@mui/x-internals": "workspace:^"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.15",
-    "@mui/types": "^7.4.8",
+    "@mui/internal-test-utils": "catalog:",
+    "@mui/types": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rimraf": "^6.1.0"
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"
@@ -55,5 +55,8 @@
     ".": "./src/index.ts",
     "./useVirtualizer": "./src/useVirtualizer.ts",
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography, { TypographyProps } from '@mui/material/Typography';
@@ -8,14 +9,15 @@ import {
   PickersToolbarTextClasses,
 } from './pickersToolbarTextClasses';
 
-export interface ExportedPickersToolbarTextProps
-  extends Omit<TypographyProps, 'classes' | 'variant' | 'align'> {
+export interface ExportedPickersToolbarTextProps extends Omit<
+  TypographyProps,
+  'classes' | 'variant' | 'align'
+> {
   classes?: Partial<PickersToolbarTextClasses>;
 }
 
 export interface PickersToolbarTextProps
-  extends Omit<TypographyProps, 'classes'>,
-    Pick<ExportedPickersToolbarTextProps, 'classes'> {
+  extends Omit<TypographyProps, 'classes'>, Pick<ExportedPickersToolbarTextProps, 'classes'> {
   selected?: boolean;
   value: React.ReactNode;
 }

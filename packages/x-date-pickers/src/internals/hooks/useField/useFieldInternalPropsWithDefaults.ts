@@ -30,7 +30,8 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
   const fieldPrivateContext = useNullableFieldPrivateContext();
 
   const handleFieldRef = useForkRef(
-    internalProps.unstableFieldRef,
+    internalProps.fieldRef,
+    skipContextFieldRefAssignment ? null : fieldPrivateContext?.internalFieldRef,
     skipContextFieldRefAssignment ? null : fieldPrivateContext?.fieldRef,
   );
 
@@ -62,10 +63,9 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
         focused: pickerContext.open ? true : undefined,
         format: pickerContext.fieldFormat,
         formatDensity: fieldPrivateContext.formatDensity,
-        enableAccessibleFieldDOMStructure: fieldPrivateContext.enableAccessibleFieldDOMStructure,
         selectedSections: fieldPrivateContext.selectedSections,
         onSelectedSectionsChange: fieldPrivateContext.onSelectedSectionsChange,
-        unstableFieldRef: handleFieldRef,
+        fieldRef: handleFieldRef,
         ...internalProps,
       };
     }

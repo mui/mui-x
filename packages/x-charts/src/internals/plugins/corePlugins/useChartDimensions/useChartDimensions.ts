@@ -3,9 +3,8 @@ import * as React from 'react';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
-import { useSelector } from '../../../store/useSelector';
 import { DEFAULT_MARGINS } from '../../../../constants';
-import { ChartPlugin } from '../../models';
+import { type ChartPlugin } from '../../models';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDrawingArea } from './useChartDimensions.selectors';
 import { defaultizeMargin } from '../../../defaultizeMargin';
@@ -15,8 +14,9 @@ const MAX_COMPUTE_RUN = 10;
 export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   params,
   store,
-  svgRef,
+  instance,
 }) => {
+  const { chartsLayerContainerRef } = instance;
   const hasInSize = params.width !== undefined && params.height !== undefined;
   const stateRef = React.useRef({ displayError: false, initialCompute: true, computeRun: 0 });
   // States only used for the initialization of the size.
@@ -24,7 +24,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   const [innerHeight, setInnerHeight] = React.useState(0);
 
   const computeSize = React.useCallback(() => {
-    const mainEl = svgRef?.current;
+    const mainEl = chartsLayerContainerRef?.current;
 
     if (!mainEl) {
       return {};
@@ -56,7 +56,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     };
   }, [
     store,
-    svgRef,
+    chartsLayerContainerRef,
     params.height,
     params.width,
     // Margin is an object, so we need to include all the properties to prevent infinite loops.
@@ -131,7 +131,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     }
     computeSize();
 
-    const elementToObserve = svgRef.current;
+    const elementToObserve = chartsLayerContainerRef.current;
     if (typeof ResizeObserver === 'undefined') {
       return () => {};
     }
@@ -157,24 +157,24 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
         observer.unobserve(elementToObserve);
       }
     };
-  }, [computeSize, hasInSize, svgRef]);
+  }, [computeSize, hasInSize, chartsLayerContainerRef]);
 
   if (process.env.NODE_ENV !== 'production') {
     if (stateRef.current.displayError && params.width === undefined && innerWidth === 0) {
       console.error(
-        `MUI X Charts: ChartContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
+        `MUI X Charts: ChartsContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
       );
       stateRef.current.displayError = false;
     }
     if (stateRef.current.displayError && params.height === undefined && innerHeight === 0) {
       console.error(
-        `MUI X Charts: ChartContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
+        `MUI X Charts: ChartsContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
       );
       stateRef.current.displayError = false;
     }
   }
 
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const drawingArea = store.use(selectorChartDrawingArea);
   const isXInside = React.useCallback(
     (x: number) => x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width,
     [drawingArea.left, drawingArea.width],

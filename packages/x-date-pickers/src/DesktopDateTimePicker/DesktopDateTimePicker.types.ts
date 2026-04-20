@@ -14,16 +14,16 @@ import { DigitalTimePickerProps } from '../internals/models/props/time';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDateTimePickerSlots
-  extends BaseDateTimePickerSlots,
+  extends
+    BaseDateTimePickerSlots,
     MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'> {}
 
-export interface DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends BaseDateTimePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+export interface DesktopDateTimePickerSlotProps
+  extends BaseDateTimePickerSlotProps, ExportedUseDesktopPickerSlotProps {}
 
-export interface DesktopDateTimePickerProps<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDateTimePickerProps,
+export interface DesktopDateTimePickerProps
+  extends
+    BaseDateTimePickerProps,
     DesktopOnlyPickerProps,
     DigitalTimePickerProps,
     ExportedYearCalendarProps {
@@ -36,7 +36,7 @@ export interface DesktopDateTimePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopDateTimePickerSlotProps;
   /**
    * Available views.
    */

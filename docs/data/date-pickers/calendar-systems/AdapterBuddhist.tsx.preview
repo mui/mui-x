@@ -1,0 +1,4 @@
+<DateTimePicker
+  label="AdapterDayjsBuddhist"
+  defaultValue={dayjs(new Date(2022, 1, 1, 12))}
+/>

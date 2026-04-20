@@ -266,11 +266,18 @@ export function findGridHeader(api: GridPrivateApiCommunity, field: string) {
   );
 }
 
+export function findGridHeaderFilter(api: GridPrivateApiCommunity, field: string) {
+  const headers = api.columnHeadersContainerRef!.current!;
+  return headers.querySelector(
+    `:scope > .${gridClasses.headerFilterRow} > [data-field="${escapeOperandAttributeSelector(field)}"]`,
+  );
+}
+
 export function findGridCells(api: GridPrivateApiCommunity, field: string) {
   const container = api.virtualScrollerRef!.current!;
   return Array.from(
     container.querySelectorAll(
-      `:scope > div > div > div > [data-field="${escapeOperandAttributeSelector(field)}"][role="gridcell"]`,
+      `:scope > div > div > div > div > [data-field="${escapeOperandAttributeSelector(field)}"][role="gridcell"]`,
     ),
   );
 }
@@ -278,7 +285,8 @@ export function findGridCells(api: GridPrivateApiCommunity, field: string) {
 function queryRows(api: GridPrivateApiCommunity) {
   return api.virtualScrollerRef.current!.querySelectorAll(
     // Use > to ignore rows from nested Data Grids (for example in detail panel)
-    `:scope > div > div > .${gridClasses.row}`,
+    `:scope > div > div > div > .${gridClasses.row},
+     :scope > div > div > div > div > .${gridClasses.row}`,
   );
 }
 

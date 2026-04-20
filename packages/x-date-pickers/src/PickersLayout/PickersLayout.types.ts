@@ -63,8 +63,9 @@ export interface ExportedPickersLayoutSlotProps<TValue extends PickerValidValue>
   layout?: Partial<PickersLayoutProps<TValue>>;
 }
 
-export interface PickersLayoutSlots<TValue extends PickerValidValue>
-  extends ExportedPickersLayoutSlots<TValue> {
+export interface PickersLayoutSlots<
+  TValue extends PickerValidValue,
+> extends ExportedPickersLayoutSlots<TValue> {
   /**
    * Tabs enabling toggling between views.
    */
@@ -76,8 +77,9 @@ export interface PickersLayoutSlots<TValue extends PickerValidValue>
   toolbar?: React.JSXElementConstructor<BaseToolbarProps>;
 }
 
-export interface PickersLayoutSlotProps<TValue extends PickerValidValue>
-  extends ExportedPickersLayoutSlotProps<TValue> {
+export interface PickersLayoutSlotProps<
+  TValue extends PickerValidValue,
+> extends ExportedPickersLayoutSlotProps<TValue> {
   /**
    * Props passed down to the tabs component.
    */

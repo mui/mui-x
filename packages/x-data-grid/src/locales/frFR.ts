@@ -1,5 +1,11 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('fr-FR');
 
 const frFRGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +21,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Compacte',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Confortable',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Annuler',
+  toolbarRedo: 'Rétablir',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Colonnes',
@@ -64,7 +74,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Opérateur',
   filterPanelOperatorAnd: 'Et',
   filterPanelOperatorOr: 'Ou',
-  filterPanelColumns: 'Colonne',
+  filterPanelColumn: 'Colonne',
   filterPanelInputLabel: 'Valeur',
   filterPanelInputPlaceholder: 'Filtrer la valeur',
 
@@ -163,6 +173,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'vrai',
   booleanCellFalseLabel: 'faux',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Afficher',
+  longTextCellCollapseLabel: 'Masquer',
+
   // Actions cell more text
   actionsCellMore: 'Plus',
 
@@ -190,10 +204,13 @@ const frFRGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Lignes par page :',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} sur ${count !== -1 ? count : `plus de ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} sur ${count !== -1 ? formatNumber(count) : `plus de ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `environ ${estimated}` : `plus de ${to}`;
-    return `${from}–${to} sur ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `environ ${formatNumber(estimated)}`
+        : `plus de ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} sur ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

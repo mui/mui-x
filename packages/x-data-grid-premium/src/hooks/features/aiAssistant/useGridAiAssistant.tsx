@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
-  GridRowSelectionModel,
+  type GridRowSelectionModel,
   gridColumnLookupSelector,
   GridLogicOperator,
   gridRowsLookupSelector,
-  GridSingleSelectColDef,
+  type GridSingleSelectColDef,
   useGridApiMethod,
   GRID_CHECKBOX_SELECTION_FIELD,
   GridPreferencePanelsValue,
@@ -17,18 +17,18 @@ import {
 import {
   getValueOptions,
   getVisibleRows,
-  GridPipeProcessor,
-  GridStateInitializer,
+  type GridPipeProcessor,
+  type GridStateInitializer,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import {
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type {
   GridAiAssistantApi,
   GridAiAssistantState,
   Prompt,
   PromptResponse,
 } from './gridAiAssistantInterfaces';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   gridAiAssistantConversationsSelector,
   gridAiAssistantActiveConversationSelector,
@@ -81,7 +81,6 @@ export const useGridAiAssistant = (
     | 'disableColumnSorting'
     | 'disablePivoting'
     | 'chartsIntegration'
-    | 'experimentalFeatures'
     | 'getPivotDerivedColumns'
   >,
 ) => {
@@ -96,7 +95,6 @@ export const useGridAiAssistant = (
     disableColumnSorting,
     disablePivoting,
     chartsIntegration,
-    experimentalFeatures,
     getPivotDerivedColumns,
   } = props;
   const previousUnwrappedGroupingModel = React.useRef<string[]>([]);
@@ -313,7 +311,7 @@ export const useGridAiAssistant = (
         result.sorting = [];
       }
 
-      if (experimentalFeatures?.charts && chartsIntegration && activeChartId && result.chart) {
+      if (chartsIntegration && activeChartId && result.chart) {
         if (appliedPivoting) {
           const unsubscribe = apiRef.current.subscribeEvent('rowsSet', () => {
             const unwrappedGroupingModel = Object.keys(
@@ -378,7 +376,6 @@ export const useGridAiAssistant = (
       isAiAssistantAvailable,
       activeChartId,
       chartsIntegration,
-      experimentalFeatures?.charts,
     ],
   );
 
@@ -526,7 +523,7 @@ export const useGridAiAssistant = (
 
       const conversation = gridAiAssistantActiveConversationSelector(apiRef);
       if (!conversation) {
-        throw new Error('Conversation not found');
+        throw new Error('MUI X: Conversation not found');
       }
       return conversation;
     },

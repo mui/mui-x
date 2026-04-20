@@ -1,5 +1,5 @@
-import { AxisConfig, ScaleName } from '@mui/x-charts/models';
-import { MakeOptional } from '@mui/x-internals/types';
+import { type AxisConfig, type ScaleName } from '@mui/x-charts/models';
+import { type MakeOptional } from '@mui/x-internals/types';
 
 export type FunnelScaleName = Exclude<ScaleName, 'point'>;
 
@@ -23,8 +23,9 @@ export type CategoryAxis<S extends FunnelScaleName = FunnelScaleName> = S extend
        * The size of the axis.
        * - If the axis is horizontal, the size is the height of the axis.
        * - If the axis is vertical, the size is the width of the axis.
+       * - If set to `'auto'`, the size is automatically calculated based on tick label measurements.
        */
-      size?: number;
+      size?: number | 'auto';
       scaleType?: S;
     } & MakeOptional<
       Pick<

@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "FocusedFunnelSection",
+  "imports": [
+    "import { FocusedFunnelSection } from '@mui/x-charts-pro/FunnelChart';",
+    "import { FocusedFunnelSection } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiFocusedFunnelSection",
+  "filename": "/packages/x-charts-pro/src/FunnelChart/FocusedFunnelSection.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

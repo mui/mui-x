@@ -248,7 +248,6 @@ async function initializeEnvironment(
       );
 
       // this test sometimes fails on webkit for some reason
-      // @ts-expect-error
       it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
         'should reorder columns by dropping into the grid row column',
         async () => {
@@ -761,44 +760,6 @@ async function initializeEnvironment(
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
         });
 
-        it('should focus the first field section after clearing a value with the non-accessible DOM structure', async () => {
-          await renderFixture('DatePicker/BasicDesktopDatePickerNonAccessibleDOMStructure');
-
-          const textbox = page.getByRole('textbox');
-          // locator.fill('2') does not work reliably for this case in all browsers
-          await textbox.focus();
-          await textbox.press('2');
-          await page.getByRole('button', { name: 'Clear' }).click();
-
-          // firefox does not support document.getSelection().toString() on input elements
-          if (browserType.name() === 'firefox') {
-            expect(
-              await page.evaluate(() => {
-                return (
-                  document.activeElement?.tagName === 'INPUT' &&
-                  // only focused input has value set
-                  (document.activeElement as HTMLInputElement)?.value === 'MM/DD/YYYY'
-                );
-              }),
-            ).to.equal(true);
-          } else {
-            expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('MM');
-          }
-        });
-
-        it('should submit a form when clicking "Enter" key', async () => {
-          await renderFixture('DatePicker/DesktopDatePickerFormNonAccessibleDOMStructure');
-
-          const textbox = page.getByRole('textbox');
-          await textbox.focus();
-          await textbox.press('Enter');
-
-          expect(await page.getByRole('textbox').inputValue()).to.equal('04/17/2022');
-          const status = page.getByRole('status');
-          expect(await status.isVisible()).to.equal(true);
-          expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
-        });
-
         // TODO: enable when v7 fields form submitting is fixed
         // it('should submit a form when clicking "Enter" key with v7 field', async () => {
         //   await renderFixture('DatePicker/DesktopDatePickerFormV7');
@@ -853,21 +814,6 @@ async function initializeEnvironment(
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
             '04/11/2022',
           );
-        });
-
-        it('should have consistent `placeholder` and `value` behavior in the non-accessible DOM structure', async () => {
-          await renderFixture(
-            'DatePicker/MobileDatePickerWithClearActionNonAccessibleDOMStructure',
-          );
-
-          const input = page.getByRole('textbox');
-
-          await page.getByRole('button').click();
-          await page.getByRole('button', { name: 'Clear' }).click();
-
-          await input.blur();
-          expect(await input.getAttribute('placeholder')).to.equal('MM/DD/YYYY');
-          expect(await input.inputValue()).to.equal('');
         });
       });
     });
@@ -959,33 +905,6 @@ async function initializeEnvironment(
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
         });
       });
-
-      it('should correctly select hours section when there are no time renderers on v6', async () => {
-        // The test is flaky on webkit
-        if (browserType.name() === 'webkit') {
-          return;
-        }
-        await renderFixture(
-          'DatePicker/DesktopDateTimePickerNoTimeRenderers?enableAccessibleFieldDOMStructure=false',
-        );
-
-        await page.getByRole('button').click();
-        await page.getByRole('gridcell', { name: '11' }).click();
-
-        // assert that the hours section has been selected using two APIs
-        await waitFor(async () => {
-          // firefox does not support document.getSelection().toString() on input elements
-          if (browserType.name() === 'firefox') {
-            expect(
-              await page.evaluate(
-                () => (document.activeElement as HTMLInputElement | null)?.selectionStart,
-              ),
-            ).to.equal(11);
-          } else {
-            expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
-          }
-        });
-      });
     });
 
     describe('<DateRangePicker />', () => {
@@ -1058,29 +977,6 @@ async function initializeEnvironment(
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
           '04/11/2022 – 04/13/2022',
         );
-      });
-
-      it('should have the same selection process as a non-range picker when using a single input field with a non-accessible DOM structure', async () => {
-        // firefox in CI is not happy with this test
-        if (browserType.name() === 'firefox') {
-          return;
-        }
-
-        await renderFixture(
-          'DatePicker/ReadonlyDesktopDateRangePickerSingleNonAccessibleDOMStructure',
-        );
-        await page.getByRole('button').click();
-
-        // assert that the tooltip has been opened
-        await page.waitForSelector('[role="dialog"]', { state: 'attached' });
-
-        await page.getByRole('gridcell', { name: '11' }).first().click();
-        await page.getByRole('gridcell', { name: '13' }).first().click();
-
-        // assert that the tooltip closes after selection is complete
-        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
-
-        expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
       });
 
       it('should not change timezone when changing the start date from non DST to DST', async () => {

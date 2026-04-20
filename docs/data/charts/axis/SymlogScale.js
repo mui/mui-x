@@ -15,7 +15,7 @@ export default function SymlogScale() {
   };
 
   return (
-    <Stack width="100%" gap={2}>
+    <Stack sx={{ width: '100%', gap: 2 }}>
       <ToggleButtonGroup
         value={chartType}
         exclusive
@@ -24,7 +24,7 @@ export default function SymlogScale() {
         fullWidth
       >
         {['bar', 'area'].map((type) => (
-          <ToggleButton key={type} value={type} aria-label="left aligned">
+          <ToggleButton key={type} value={type}>
             {type}
           </ToggleButton>
         ))}

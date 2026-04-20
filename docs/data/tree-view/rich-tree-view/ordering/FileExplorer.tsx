@@ -19,18 +19,19 @@ import {
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
-import { useTreeItemModel, useTreeViewApiRef } from '@mui/x-tree-view/hooks';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { useTreeItemModel } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
 
 type FileType = 'image' | 'pdf' | 'doc' | 'video' | 'folder' | 'pinned' | 'trash';
 
-type ExtendedTreeItemProps = {
+type FileItem = {
   fileType: FileType;
   id: string;
   label: string;
+  children?: FileItem[];
 };
 
-const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
+const ITEMS: FileItem[] = [
   {
     id: '1',
     label: 'Documents',
@@ -95,6 +96,7 @@ const TreeItemRoot = styled('li')(({ theme }) => ({
   margin: 0,
   padding: 0,
   outline: 0,
+  height: 'var(--TreeView-itemHeight, unset)',
   color: theme.palette.grey[400],
   ...theme.applyStyles('light', {
     color: theme.palette.grey[800],
@@ -183,11 +185,9 @@ function CustomLabel({
         <Box
           component={Icon}
           className="labelIcon"
-          color="inherit"
-          sx={{ mr: 1, fontSize: '1.2rem' }}
+          sx={{ color: 'inherit', mr: 1, fontSize: '1.2rem' }}
         />
       )}
-
       <TreeItemLabelText variant="body2">{children}</TreeItemLabelText>
       {expandable && <DotIcon />}
     </TreeItemLabel>
@@ -214,7 +214,8 @@ const getIconFromFileType = (fileType: FileType) => {
 };
 
 interface CustomTreeItemProps
-  extends Omit<UseTreeItemParameters, 'rootRef'>,
+  extends
+    Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -235,7 +236,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     status,
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
-  const item = useTreeItemModel<ExtendedTreeItemProps>(itemId)!;
+  const item = useTreeItemModel<FileItem>(itemId)!;
 
   let icon;
   if (status.expandable) {
@@ -267,12 +268,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 });
 
 export default function FileExplorer() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewProApiRef<FileItem>();
 
   return (
     <RichTreeViewPro
       items={ITEMS}
       apiRef={apiRef}
+      itemHeight={28}
       defaultExpandedItems={['1', '1.1']}
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
       slots={{ item: CustomTreeItem }}

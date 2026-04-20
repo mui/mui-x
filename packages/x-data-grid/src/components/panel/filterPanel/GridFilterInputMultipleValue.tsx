@@ -2,9 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
-import { AutocompleteProps } from '../../../models/gridBaseSlots';
+import type { AutocompleteProps } from '../../../models/gridBaseSlots';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
+import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
 export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<
   Omit<AutocompleteProps<string, true, false, true>, 'options'>
@@ -13,7 +13,7 @@ export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<
 };
 
 function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, slotProps } = props;
+  const { item, applyValue, type, apiRef, focusElementRef, slotProps, ...other } = props;
 
   const id = useId();
   const [options, setOptions] = React.useState<string[]>([]);
@@ -76,6 +76,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
           inputRef: focusElementRef,
         },
       }}
+      {...other}
       {...slotProps?.root}
     />
   );

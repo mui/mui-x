@@ -9,18 +9,20 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { Store, useStore, createSelectorMemoized } from '@mui/x-internals/store';
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
 export type DimensionsParams = {
   rowHeight: number;
-  columnsTotalWidth: number;
-  leftPinnedWidth: number;
-  rightPinnedWidth: number;
-  topPinnedHeight: number;
-  bottomPinnedHeight: number;
+  columnsTotalWidth?: number;
+  leftPinnedWidth?: number;
+  rightPinnedWidth?: number;
+  topPinnedHeight?: number;
+  bottomPinnedHeight?: number;
+  autoHeight?: boolean;
+  minimalContentHeight?: number | string;
   scrollbarSize?: number;
 };
 
@@ -41,14 +43,20 @@ const EMPTY_DIMENSIONS: DimensionsState = {
   rightPinnedWidth: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
+  autoHeight: false,
+  minimalContentHeight: undefined,
 };
 
 const selectors = {
   rootSize: (state: BaseState) => state.rootSize,
   dimensions: (state: BaseState) => state.dimensions,
   rowHeight: (state: BaseState) => state.dimensions.rowHeight,
+  columnsTotalWidth: (state: BaseState) => state.dimensions.columnsTotalWidth,
   contentHeight: (state: BaseState) => state.dimensions.contentSize.height,
+  autoHeight: (state: BaseState) => state.dimensions.autoHeight,
+  minimalContentHeight: (state: BaseState) => state.dimensions.minimalContentHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
+  rowPositions: (state: BaseState) => state.rowsMeta.positions,
   columnPositions: createSelectorMemoized((_, columns: ColumnWithWidth[]) => {
     const positions: number[] = [];
     let currentPosition = 0;
@@ -61,8 +69,11 @@ const selectors = {
     return positions;
   }),
   needsHorizontalScrollbar: (state: BaseState) =>
-    state.dimensions.viewportOuterSize.width > 0 &&
-    state.dimensions.columnsTotalWidth > state.dimensions.viewportOuterSize.width,
+    state.dimensions.viewportInnerSize.width > 0 &&
+    state.dimensions.columnsTotalWidth > state.dimensions.viewportInnerSize.width,
+  needsVerticalScrollbar: (state: BaseState) =>
+    state.dimensions.viewportInnerSize.height > 0 &&
+    state.dimensions.contentSize.height > state.dimensions.viewportInnerSize.height,
 };
 
 export const Dimensions = {
@@ -80,17 +91,24 @@ export namespace Dimensions {
   export type API = ReturnType<typeof useDimensions>;
 }
 
-function initializeState(params: VirtualizerParams): Dimensions.State {
+function initializeState(params: ParamsWithDefaults): Dimensions.State {
+  const { rowCount, dimensions: dimensionsParams } = params;
+  const { columnsTotalWidth, rowHeight, autoHeight, minimalContentHeight } = dimensionsParams;
+  const currentPageTotalHeight = rowCount * rowHeight;
+
   const dimensions = {
     ...EMPTY_DIMENSIONS,
-    ...params.dimensions,
+    ...dimensionsParams,
+    autoHeight,
+    minimalContentHeight,
+    contentSize: {
+      width: columnsTotalWidth,
+      height: roundToDecimalPlaces(currentPageTotalHeight, 1),
+    },
   };
 
-  const { rowCount } = params;
-  const { rowHeight } = dimensions;
-
   const rowsMeta = {
-    currentPageTotalHeight: rowCount * rowHeight,
+    currentPageTotalHeight,
     positions: Array.from({ length: rowCount }, (_, i) => i * rowHeight),
     pinnedTopRowsTotalHeight: 0,
     pinnedBottomRowsTotalHeight: 0,
@@ -106,11 +124,22 @@ function initializeState(params: VirtualizerParams): Dimensions.State {
   };
 }
 
-function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api: {}) {
+function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
+  // Vertical scrollbar oscillation detector.
+  // Counts consecutive hasScrollY flips that happen with no row-height change.
+  // After 2 flips it is certainly a layout feedback loop, so every further flip
+  // is forced to false (no scrollbar). The counter resets when row heights change.
+  // Only vertical scrollbar can oscillate because column widths are never 'auto'.
+  // https://github.com/mui/mui-x/issues/20539
+  const scrollYOscillation = React.useRef({
+    counter: 0,
+    heights: { content: 0, pinnedTop: 0, pinnedBottom: 0 },
+  });
+
   const {
-    refs,
+    layout,
     dimensions: {
       rowHeight,
       columnsTotalWidth,
@@ -131,7 +160,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
         return;
       }
 
-      const containerNode = refs.container.current;
+      const containerNode = layout.refs.container.current;
       const rootSize = selectors.rootSize(store.state);
       const rowsMeta = selectors.rowsMeta(store.state);
 
@@ -148,12 +177,14 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
         height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
       };
 
+      const prevDimensions = store.state.dimensions;
+
       let viewportOuterSize: Size;
       let viewportInnerSize: Size;
       let hasScrollX = false;
       let hasScrollY = false;
 
-      if (params.autoHeight) {
+      if (params.dimensions.autoHeight) {
         hasScrollY = false;
         hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
 
@@ -191,6 +222,41 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
           // We recalculate the scroll y to consider the size of the x scrollbar.
           if (hasScrollX) {
             hasScrollY = content.height + scrollbarSize > container.height;
+          }
+        }
+
+        // Detect vertical scrollbar oscillation.
+        // Track consecutive hasScrollY flips with no row-height change.
+        // Once confirmed (≥ 2 flips), force hasScrollY off — the scrollbar is
+        // not genuinely needed, it is a layout feedback loop caused by stale
+        // rootSize or the horizontal scrollbar's height cascading.
+        {
+          const osc = scrollYOscillation.current;
+          const heightsChanged =
+            rowsMeta.currentPageTotalHeight !== osc.heights.content ||
+            rowsMeta.pinnedTopRowsTotalHeight !== osc.heights.pinnedTop ||
+            rowsMeta.pinnedBottomRowsTotalHeight !== osc.heights.pinnedBottom;
+
+          if (heightsChanged) {
+            osc.counter = 0;
+            osc.heights = {
+              content: rowsMeta.currentPageTotalHeight,
+              pinnedTop: rowsMeta.pinnedTopRowsTotalHeight,
+              pinnedBottom: rowsMeta.pinnedBottomRowsTotalHeight,
+            };
+          }
+
+          if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
+            if (!heightsChanged) {
+              osc.counter += 1;
+            }
+            if (osc.counter >= 2) {
+              hasScrollY = false;
+              // Recompute hasScrollX without the vertical scrollbar's width impact,
+              // otherwise the cascade (hasScrollY → narrower viewport → hasScrollX)
+              // keeps the horizontal scrollbar/filler alive and the root keeps resizing.
+              hasScrollX = hasScrollXIfNoYScrollBar;
+            }
           }
         }
 
@@ -237,9 +303,9 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
         rightPinnedWidth,
         topContainerHeight,
         bottomContainerHeight,
+        autoHeight: params.dimensions.autoHeight,
+        minimalContentHeight: params.dimensions.minimalContentHeight,
       };
-
-      const prevDimensions = store.state.dimensions;
 
       if (isDeepEqual(prevDimensions as any, newDimensions)) {
         return;
@@ -250,9 +316,10 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     },
     [
       store,
-      refs.container,
+      layout.refs.container,
       params.dimensions.scrollbarSize,
-      params.autoHeight,
+      params.dimensions.autoHeight,
+      params.dimensions.minimalContentHeight,
       params.disableHorizontalScroll,
       params.disableVerticalScroll,
       onResize,
@@ -275,6 +342,16 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
+  useLayoutEffect(() => {
+    store.update({
+      dimensions: {
+        ...store.state.dimensions,
+        autoHeight: params.dimensions.autoHeight,
+        minimalContentHeight: params.dimensions.minimalContentHeight,
+      },
+    });
+  }, [store, params.dimensions.autoHeight, params.dimensions.minimalContentHeight]);
+
   const rowsMeta = useRowsMeta(store, params, updateDimensions);
 
   return {
@@ -286,7 +363,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
 
 function useRowsMeta(
   store: Store<BaseState>,
-  params: VirtualizerParams,
+  params: ParamsWithDefaults,
   updateDimensions: Function,
 ) {
   const heightCache = store.state.rowHeights;

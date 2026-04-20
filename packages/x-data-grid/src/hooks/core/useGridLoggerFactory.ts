@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { Logger } from '../../models';
-import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridLoggerApi } from '../../models/api/gridLoggerApi';
+import type { RefObject } from '@mui/x-internals/types';
+import type { Logger } from '../../models';
+import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { GridLoggerApi } from '../../models/api/gridLoggerApi';
 import { localStorageAvailable } from '../../utils/utils';
 import { useGridApiMethod } from '../utils';
 

@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
-import { useAdapter, diffIn } from '../../use-adapter';
-import { SchedulerEvent, SchedulerValidDate } from '../../models';
-import { mergeDateAndTime } from '../../utils/date-utils';
-import { useDropTarget } from '../../utils/useDropTarget';
+import { useAdapterContext } from '../../use-adapter-context';
+import { SchedulerEvent, TemporalSupportedObject } from '../../models';
+import { mergeDateAndTime } from '../../internals/utils/date-utils';
+import { useDropTarget } from '../../internals/utils/useDropTarget';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',
@@ -18,7 +18,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
   const { value, addPropertiesToDroppedEvent } = parameters;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
@@ -32,7 +32,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
       // Move a Day Grid Event within the Day Grid
       if (data.source === 'CalendarGridDayEvent') {
-        const offset = diffIn(adapter, value, data.draggedDay, 'days');
+        const offset = adapter.differenceInDays(value, data.draggedDay);
         return getDataFromInside(
           data,
           offset === 0 ? data.start : adapter.addDays(data.start, offset),
@@ -47,7 +47,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
             return undefined;
           }
 
-          let newStart: SchedulerValidDate;
+          let newStart: TemporalSupportedObject;
           if (adapter.isSameDay(value, data.end)) {
             newStart = adapter.startOfDay(data.end);
           } else {
@@ -61,7 +61,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
             return undefined;
           }
 
-          let draggedDay: SchedulerValidDate;
+          let draggedDay: TemporalSupportedObject;
           if (adapter.isSameDay(value, data.start)) {
             draggedDay = adapter.endOfDay(data.start);
           } else {
@@ -74,12 +74,10 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
       // Move a Time Grid Event into the Day Grid
       if (data.source === 'CalendarGridTimeEvent') {
-        // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
-        const cursorDate = adapter.addSeconds(
-          data.start,
-          data.initialCursorPositionInEventMs / 1000,
+        const cursorDate = adapter.startOfDay(
+          adapter.addMilliseconds(data.start, data.initialCursorPositionInEventMs),
         );
-        const offset = diffIn(adapter, value, cursorDate, 'days');
+        const offset = adapter.differenceInDays(value, cursorDate);
         return getDataFromInside(
           data,
           offset === 0 ? data.start : adapter.addDays(data.start, offset),
@@ -112,7 +110,7 @@ export namespace useDayCellDropTarget {
     /**
      * The value of the cell.
      */
-    value: SchedulerValidDate;
+    value: TemporalSupportedObject;
     /**
      * Add properties to the event dropped in the cell before storing it in the store.
      */

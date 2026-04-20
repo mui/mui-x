@@ -1,0 +1,30 @@
+import type { ChartSeriesType } from '../../../../../models/seriesType/config';
+import type { ChartSeriesConfig } from '../types';
+
+/**
+ * Serializes a series item identifier into a unique string using the appropriate serializer
+ * from the provided series configuration.
+ *
+ * @param {ChartSeriesConfig<ChartSeriesType>} seriesConfig - The configuration object for chart series.
+ * @param {SeriesItemIdentifier<ChartSeriesType>} identifier - The series item identifier to serialize.
+ * @returns {string} A unique string representation of the identifier.
+ * @throws Will throw an error if no serializer is found for the given series type.
+ */
+export const serializeIdentifier = <
+  SeriesType extends ChartSeriesType,
+  U extends { type: SeriesType },
+>(
+  seriesConfig: ChartSeriesConfig<SeriesType>,
+  identifier: U,
+): string => {
+  const serializer = seriesConfig[identifier.type]?.identifierSerializer;
+  if (!serializer) {
+    throw new Error(
+      `MUI X Charts: No identifier serializer found for series type "${identifier.type}". ` +
+        'This internal error occurs when the series configuration is incomplete.',
+    );
+  }
+  // @ts-expect-error identifierSerializer expects the full object,
+  // but this function accepts a partial one in order be able to serialize all identifiers.
+  return serializer(identifier);
+};

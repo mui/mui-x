@@ -1,26 +1,26 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import {
   GridRoot,
   GridContextProvider,
-  GridValidRowModel,
+  type GridValidRowModel,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
-  PropValidator,
+  type PropValidator,
   validateProps,
-  GridConfiguration,
+  type GridConfiguration,
   useGridApiInitialization,
   getRowValue,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
-import {
+import type {
   DataGridPremiumProcessedProps,
   DataGridPremiumProps,
 } from '../models/dataGridPremiumProps';
@@ -59,8 +59,12 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
     useGridParamsOverridableMethods,
   },
 };
-const releaseInfo = '__RELEASE_INFO__';
-const watermark = <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />;
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-data-grid-premium' as const,
+};
+const watermark = <Watermark packageInfo={packageInfo} />;
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
 
@@ -78,8 +82,12 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     initialProps,
   );
 
-  const props = useDataGridPremiumComponent(privateApiRef, initialProps, configuration);
-  useLicenseVerifier('x-data-grid-premium', releaseInfo);
+  const props = useDataGridPremiumComponent(
+    privateApiRef,
+    initialProps,
+    configuration as GridConfiguration,
+  );
+  useLicenseVerifier(packageInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
@@ -221,6 +229,7 @@ DataGridPremiumRaw.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.string),
     disableColumnVirtualization: PropTypes.bool,
     expand: PropTypes.bool,
+    includeHeaderFilters: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,
     outliersFactor: PropTypes.number,
@@ -235,6 +244,13 @@ DataGridPremiumRaw.propTypes = {
    */
   cellSelection: PropTypes.bool,
   /**
+   * If `true`, a fill handle is shown at the bottom-right corner of the cell selection.
+   * Dragging the fill handle fills target cells with the values from selected cells.
+   * Requires `cellSelection` to be enabled.
+   * @default false
+   */
+  cellSelectionFillHandle: PropTypes.bool,
+  /**
    * Set the cell selection model of the grid.
    */
   cellSelectionModel: PropTypes.object,
@@ -243,6 +259,73 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   chartsIntegration: PropTypes.bool,
+  /**
+   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   *
+   * @warning
+   * Be careful when overriding `renderHeader` or `renderCell` in the `checkboxColDef` prop.
+   * The default implementation of these properties includes the logic for selecting all rows and selecting a single row, respectively.
+   * Overriding them without providing the same functionality will break the row selection.
+   */
+  checkboxColDef: PropTypes.shape({
+    aggregable: PropTypes.bool,
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    availableAggregationFunctions: PropTypes.arrayOf(PropTypes.string),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    chartable: PropTypes.bool,
+    colSpan: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+    description: PropTypes.string,
+    disableColumnMenu: PropTypes.bool,
+    disableExport: PropTypes.bool,
+    disableReorder: PropTypes.bool,
+    display: PropTypes.oneOf(['flex', 'text']),
+    editable: PropTypes.bool,
+    examples: PropTypes.array,
+    filterable: PropTypes.bool,
+    filterOperators: PropTypes.arrayOf(
+      PropTypes.shape({
+        getApplyFilterFn: PropTypes.func.isRequired,
+        getValueAsString: PropTypes.func,
+        headerLabel: PropTypes.string,
+        InputComponent: PropTypes.elementType,
+        InputComponentProps: PropTypes.object,
+        label: PropTypes.string,
+        requiresFilterValue: PropTypes.bool,
+        value: PropTypes.string.isRequired,
+      }),
+    ),
+    flex: PropTypes.number,
+    getApplyQuickFilterFn: PropTypes.func,
+    getSortComparator: PropTypes.func,
+    groupable: PropTypes.bool,
+    groupingValueGetter: PropTypes.func,
+    groupingValueSetter: PropTypes.func,
+    headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
+    headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    headerName: PropTypes.string,
+    hideable: PropTypes.bool,
+    hideSortIcons: PropTypes.bool,
+    maxWidth: PropTypes.number,
+    minWidth: PropTypes.number,
+    pastedValueParser: PropTypes.func,
+    pinnable: PropTypes.bool,
+    pivotable: PropTypes.bool,
+    preProcessEditCellProps: PropTypes.func,
+    renderCell: PropTypes.func,
+    renderEditCell: PropTypes.func,
+    renderHeader: PropTypes.func,
+    renderHeaderFilter: PropTypes.func,
+    resizable: PropTypes.bool,
+    rowSpanValueGetter: PropTypes.func,
+    sortable: PropTypes.bool,
+    sortComparator: PropTypes.func,
+    sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])),
+    valueFormatter: PropTypes.func,
+    valueGetter: PropTypes.func,
+    valueParser: PropTypes.func,
+    valueSetter: PropTypes.func,
+    width: PropTypes.number,
+  }),
   /**
    * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
@@ -312,6 +395,13 @@ DataGridPremiumRaw.propTypes = {
     get: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
+  /**
+   * If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.
+   * If the refetched rows are different from the current rows, the grid will update the rows.
+   * Set to `0` to disable polling.
+   * @default 0
+   */
+  dataSourceRevalidateMs: PropTypes.number,
   /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
@@ -454,7 +544,7 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    charts: PropTypes.bool,
+    virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -596,6 +686,139 @@ DataGridPremiumRaw.propTypes = {
    */
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
+   * Map of grid events to their undo/redo handlers.
+   * @default Handlers for `rowEditStop`, `cellEditStop` and `clipboardPasteEnd` events
+   */
+  historyEventHandlers: PropTypes.object,
+  /**
+   * The maximum size of the history stack.
+   * Set to 0 to disable the undo/redo feature.
+   * @default 30
+   */
+  historyStackSize: PropTypes.number,
+  /**
+   * List of grid events after which the history stack items should be re-validated.
+   * @default ['columnsChange', 'rowsSet', 'sortedRowsSet', 'filteredRowsSet', 'paginationModelChange']
+   */
+  historyValidationEvents: PropTypes.arrayOf(
+    PropTypes.oneOf([
+      'activeChartIdChange',
+      'activeStrategyProcessorChange',
+      'aggregationLookupSet',
+      'aggregationModelChange',
+      'aiAssistantActiveConversationIndexChange',
+      'aiAssistantConversationsChange',
+      'cellClick',
+      'cellDoubleClick',
+      'cellDragEnter',
+      'cellDragOver',
+      'cellEditStart',
+      'cellEditStop',
+      'cellFocusIn',
+      'cellFocusOut',
+      'cellKeyDown',
+      'cellKeyUp',
+      'cellModeChange',
+      'cellModesModelChange',
+      'cellMouseDown',
+      'cellMouseOver',
+      'cellMouseUp',
+      'cellSelectionChange',
+      'chartSynchronizationStateChange',
+      'clipboardCopy',
+      'clipboardPasteEnd',
+      'clipboardPasteStart',
+      'columnGroupHeaderBlur',
+      'columnGroupHeaderFocus',
+      'columnGroupHeaderKeyDown',
+      'columnHeaderBlur',
+      'columnHeaderClick',
+      'columnHeaderContextMenu',
+      'columnHeaderDoubleClick',
+      'columnHeaderDragEnd',
+      'columnHeaderDragEndNative',
+      'columnHeaderDragEnter',
+      'columnHeaderDragOver',
+      'columnHeaderDragStart',
+      'columnHeaderEnter',
+      'columnHeaderFocus',
+      'columnHeaderKeyDown',
+      'columnHeaderLeave',
+      'columnHeaderOut',
+      'columnHeaderOver',
+      'columnIndexChange',
+      'columnOrderChange',
+      'columnResize',
+      'columnResizeStart',
+      'columnResizeStop',
+      'columnsChange',
+      'columnSeparatorDoubleClick',
+      'columnSeparatorMouseDown',
+      'columnVisibilityModelChange',
+      'columnWidthChange',
+      'debouncedResize',
+      'densityChange',
+      'detailPanelsExpandedRowIdsChange',
+      'excelExportStateChange',
+      'fetchRows',
+      'filteredRowsSet',
+      'filterModelChange',
+      'headerFilterBlur',
+      'headerFilterClick',
+      'headerFilterKeyDown',
+      'headerFilterMouseDown',
+      'headerSelectionCheckboxChange',
+      'menuClose',
+      'menuOpen',
+      'paginationMetaChange',
+      'paginationModelChange',
+      'pinnedColumnsChange',
+      'pivotModeChange',
+      'pivotModelChange',
+      'pivotPanelOpenChange',
+      'preferencePanelClose',
+      'preferencePanelOpen',
+      'redo',
+      'renderedRowsIntervalChange',
+      'resize',
+      'rootMount',
+      'rowClick',
+      'rowCountChange',
+      'rowDoubleClick',
+      'rowDragEnd',
+      'rowDragOver',
+      'rowDragStart',
+      'rowEditStart',
+      'rowEditStop',
+      'rowExpansionChange',
+      'rowGroupingModelChange',
+      'rowModesModelChange',
+      'rowMouseEnter',
+      'rowMouseLeave',
+      'rowMouseOut',
+      'rowMouseOver',
+      'rowOrderChange',
+      'rowSelectionChange',
+      'rowSelectionCheckboxChange',
+      'rowsScrollEnd',
+      'rowsScrollEndIntersection',
+      'rowsSet',
+      'scrollPositionChange',
+      'sidebarClose',
+      'sidebarOpen',
+      'sortedRowsSet',
+      'sortModelChange',
+      'stateChange',
+      'strategyAvailabilityChange',
+      'undo',
+      'unmount',
+      'viewportInnerSizeChange',
+      'virtualScrollerContentSizeChange',
+      'virtualScrollerTouchMove',
+      'virtualScrollerWheel',
+    ]).isRequired,
+  ),
+  /**
    * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
    * E.g. when filter value is `cafe`, the rows with `café` will be visible.
    * @default false
@@ -633,11 +856,28 @@ DataGridPremiumRaw.propTypes = {
    */
   isGroupExpandedByDefault: PropTypes.func,
   /**
+   * Indicates whether a row is reorderable.
+   * @param {object} params With all properties from the row.
+   * @param {R} params.row The row model of the row that the current cell belongs to.
+   * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
+   * @returns {boolean} A boolean indicating if the row is reorderable.
+   */
+  isRowReorderable: PropTypes.func,
+  /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * Indicates if a row reorder attempt is valid.
+   * Can be used to disable certain row reorder operations based on the context.
+   * The internal validation is still applied, preventing unsupported use-cases.
+   * Use `isValidRowReorder()` to add additional validation rules to the default ones.
+   * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
+   * @returns {boolean} A boolean indicating if the reorder operation should go through.
+   */
+  isValidRowReorder: PropTypes.func,
   /**
    * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
    * in a column re-order action will not cause the column to jump back to its original position.
@@ -992,6 +1232,10 @@ DataGridPremiumRaw.propTypes = {
    */
   onPrompt: PropTypes.func,
   /**
+   * Callback fired when a redo operation is executed.
+   */
+  onRedo: PropTypes.func,
+  /**
    * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
@@ -1060,7 +1304,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
+   * Prefer to use {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} unless it doesn't fulfill your needs.
    */
   onRowsScrollEnd: PropTypes.func,
   /**
@@ -1091,6 +1335,10 @@ DataGridPremiumRaw.propTypes = {
    * @ignore - do not document.
    */
   onStateChange: PropTypes.func,
+  /**
+   * Callback fired when an undo operation is executed.
+   */
+  onUndo: PropTypes.func,
   /**
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
@@ -1320,6 +1568,15 @@ DataGridPremiumRaw.propTypes = {
    * @default 80
    */
   scrollEndThreshold: PropTypes.number,
+  /**
+   * Updates the tree path in a row model.
+   * Used when reordering rows across different parents in tree data.
+   * @template R
+   * @param {string[]} path The new path for the row.
+   * @param {R} row The row model to update.
+   * @returns {R} The updated row model with the new path.
+   */
+  setTreeDataPath: PropTypes.func,
   /**
    * If `true`, vertical borders will be displayed between cells.
    * @default false

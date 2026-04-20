@@ -1,5 +1,11 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('ko-KR');
 
 const koKRGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +21,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: '좁게',
   toolbarDensityStandard: '기본',
   toolbarDensityComfortable: '넓게',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: '실행 취소',
+  toolbarRedo: '다시 실행',
 
   // Columns selector toolbar button text
   toolbarColumns: '열 목록',
@@ -63,7 +73,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: '연산자',
   filterPanelOperatorAnd: '그리고',
   filterPanelOperatorOr: '또는',
-  filterPanelColumns: '목록',
+  filterPanelColumn: '목록',
   filterPanelInputLabel: '값',
   filterPanelInputPlaceholder: '값 입력',
 
@@ -158,6 +168,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: '참',
   booleanCellFalseLabel: '거짓',
 
+  // Long text cell
+  longTextCellExpandLabel: '열기',
+  longTextCellCollapseLabel: '접기',
+
   // Actions cell more text
   actionsCellMore: '더보기',
 
@@ -185,10 +199,11 @@ const koKRGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: '페이지 당 행:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} of ${count !== -1 ? count : `${to} 이상`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} of ${count !== -1 ? formatNumber(count) : `${formatNumber(to)} 이상`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `약 ${estimated}` : `${to} 이상`;
-    return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to ? `약 ${formatNumber(estimated)}` : `${formatNumber(to)} 이상`;
+    return `${formatNumber(from)}–${formatNumber(to)} of ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

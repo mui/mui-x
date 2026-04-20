@@ -4,7 +4,7 @@
  * MUI-X Release Preparation Script
  *
  * This script automates the release preparation process for MUI-X:
- * 1. Asking for the major version to update (v7.x, v6.x, etc.)
+ * 1. Asking for the major version to update (v8.x, v7.x, v6.x, etc.)
  * 2. Creating a release branch
  * 3. Determining the new version:
  *    - For non-latest major versions: patch/minor/custom
@@ -23,6 +23,7 @@
  *     with a checklist of all release steps
  */
 
+import { persistentAuthStrategy } from '@mui/internal-code-infra/github';
 import { execa } from 'execa';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
@@ -54,6 +55,8 @@ const REPO = 'mui-x';
 // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
 const getRemoteRegex = (owner) =>
   new RegExp(String.raw`([\/:])${owner}\/${REPO}(\.git)?\s+\(push\)`);
+
+const majorVersionBranch = (majorVersion) => `v${majorVersion}.x`;
 
 /**
  * Command line arguments for the script
@@ -150,6 +153,35 @@ async function findForkOwner() {
   } catch (error) {
     console.error('Error finding authenticated user:', error);
     process.exit(1);
+  }
+}
+
+/**
+ * Check if version branch exists and asks the user to confirm if we should target branch or master
+ *
+ * @param {string} majorVersion - The major version to check
+ * @returns {Promise<boolean>} Whether the branch exists
+ */
+async function selectTargetBranch(majorVersion) {
+  try {
+    const response = await octokit.rest.repos.getBranch({
+      owner: ORG,
+      repo: REPO,
+      branch: majorVersionBranch(majorVersion),
+    });
+    const useVersionBranch = await confirm({
+      message: `The branch ${response.data.name} exists. Do you want to use it as the base for the release? (No will use master)`,
+      default: true,
+    });
+    return useVersionBranch;
+  } catch (error) {
+    if (error.status === 404) {
+      console.log(
+        `Branch ${majorVersionBranch(majorVersion)} does not exist. Using master as the base.`,
+      );
+      return false;
+    }
+    throw error;
   }
 }
 
@@ -676,93 +708,6 @@ function createPrBody(newVersion) {
 }
 
 /**
- * Get all members of the mui/x team from GitHub
- * @param {string} [excludeUsername] - Username to exclude from the results (e.g., PR author)
- * @returns {Promise<string[]>} Array of GitHub usernames
- */
-async function getTeamMembers(excludeUsername) {
-  try {
-    console.log('Fetching members of the mui/x team...');
-
-    // Get team members
-    const { data: teams } = await octokit.rest.teams.list({
-      org: ORG,
-    });
-
-    // Find the x team
-    const xTeam = teams.find((team) => team.name.toLowerCase() === 'x');
-
-    if (!xTeam) {
-      console.warn('Warning: Could not find the mui/x team.');
-      return [];
-    }
-
-    // Get team members
-    const { data: members } = await octokit.rest.teams.listMembersInOrg({
-      org: ORG,
-      team_slug: xTeam.slug,
-    });
-
-    let usernames = members.map((member) => member.login);
-
-    // Filter out the excluded username if provided
-    if (excludeUsername) {
-      usernames = usernames.filter((username) => username !== excludeUsername);
-      console.log(`Filtered out PR author (${excludeUsername}) from team members.`);
-    }
-
-    console.log(`Found ${usernames.length} members in the mui/x team.`);
-
-    return usernames;
-  } catch (error) {
-    if (error.status === 403) {
-      console.error(
-        'Error: You do not have permission to access the mui/x team members.',
-        'You need admin permissions on the repo to view teams and team members.',
-        'Please add reviewers manually.',
-      );
-      return [];
-    }
-    console.error('Error fetching team members:', error.message);
-    if (error.response) {
-      console.error(`Status: ${error.response.status}`);
-      console.error('Response data:', error.response.data);
-    }
-    return [];
-  }
-}
-
-/**
- * Assign reviewers to a pull request
- * @param {number} prNumber - The PR number
- * @param {string[]} reviewers - Array of GitHub usernames to assign as reviewers
- * @returns {Promise<boolean>} Whether the operation was successful
- */
-async function assignReviewers(prNumber, reviewers) {
-  try {
-    console.log(`Assigning ${reviewers.length} reviewers to PR #${prNumber}...`);
-
-    // Assign reviewers
-    await octokit.rest.pulls.requestReviewers({
-      owner: ORG,
-      repo: REPO,
-      pull_number: prNumber,
-      reviewers,
-    });
-
-    console.log('Reviewers assigned successfully.');
-    return true;
-  } catch (error) {
-    console.error('Error assigning reviewers:', error.message);
-    if (error.response) {
-      console.error(`Status: ${error.response.status}`);
-      console.error('Response data:', error.response.data);
-    }
-    return false;
-  }
-}
-
-/**
  * Add labels to a pull request
  * @param {number} prNumber - The PR number
  * @param {string[]} labels - Array of label names to add to the PR
@@ -832,7 +777,7 @@ async function createPullRequest(title, body, head, base) {
 /**
  * Main function
  */
-async function main({ githubToken }) {
+async function main() {
   try {
     // Check if we're in the repository root
     try {
@@ -848,16 +793,8 @@ async function main({ githubToken }) {
     console.log('package.json and CHANGELOG.md found, proceeding...');
     console.log(`Current package version: ${packageVersion}`);
 
-    // If no token is provided, throw an error
-    if (!githubToken) {
-      console.error(
-        'Unable to authenticate. Make sure you either call the script with `--githubToken $token` or set `process.env.GITHUB_TOKEN`. The token needs `public_repo` permissions.',
-      );
-      process.exit(1);
-    }
-
     octokit = new MyOctokit({
-      auth: githubToken,
+      authStrategy: persistentAuthStrategy,
     });
 
     const { findLatestTaggedVersionForMajor, generateChangelog: generator } =
@@ -896,6 +833,8 @@ async function main({ githubToken }) {
     const latestTag = await findLatestTaggedVersionForMajor(majorVersion);
     const previousVersion = latestTag.startsWith('v') ? latestTag.slice(1) : latestTag;
     console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
+
+    const shouldUseVersionBranch = await selectTargetBranch(majorVersion);
 
     // If no arguments provided, use interactive menu to select version type
     // Initialize prerelease variables (used for alpha/beta versions)
@@ -940,12 +879,12 @@ async function main({ githubToken }) {
     console.log(`New version: ${newVersion}`);
 
     // Determine which branch to update based on the selected major version
-    if (majorVersion === latestMajorVersion) {
+    if (shouldUseVersionBranch) {
+      console.log(`Updating the upstream ${majorVersionBranch(majorVersion)} branch...`);
+      await execa('git', ['fetch', upstreamRemote, majorVersionBranch(majorVersion)]);
+    } else {
       console.log('Updating the upstream master branch for current major version...');
       await execa('git', ['fetch', upstreamRemote, 'master']);
-    } else {
-      console.log(`Updating the upstream v${majorVersion}.x branch...`);
-      await execa('git', ['fetch', upstreamRemote, `v${majorVersion}.x`]);
     }
 
     // Create a new branch with the new version
@@ -957,12 +896,12 @@ async function main({ githubToken }) {
 
     // Determine the source branch based on the selected major version
     let branchSource;
-    if (majorVersion === latestMajorVersion) {
+    if (shouldUseVersionBranch) {
+      branchSource = `${upstreamRemote}/${majorVersionBranch(majorVersion)}`;
+      console.log(`Creating branch from version branch: ${branchSource}`);
+    } else {
       branchSource = `${upstreamRemote}/master`;
       console.log(`Creating branch from master for current major version: ${branchSource}`);
-    } else {
-      branchSource = `${upstreamRemote}/v${majorVersion}.x`;
-      console.log(`Creating branch from version branch: ${branchSource}`);
     }
 
     await execa('git', ['checkout', '-b', branchName, '--no-track', branchSource]);
@@ -994,7 +933,7 @@ async function main({ githubToken }) {
       generator,
       newVersion,
       previousVersion,
-      majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`,
+      shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master',
     );
 
     // Add the new changelog entry to the CHANGELOG.md file
@@ -1015,15 +954,8 @@ async function main({ githubToken }) {
 
     // Push the committed changes to fork remote
     console.log('Pushing committed changes to fork remote...');
-    try {
-      await execa('git', ['push', forkRemote, branchName]);
-      console.log(`Changes pushed to ${forkRemote}/${branchName}`);
-    } catch (error) {
-      console.error('Error pushing to fork remote:', error);
-      console.error('Falling back to pushing to origin...');
-      await execa('git', ['push', 'origin', branchName]);
-      console.log(`Changes pushed to origin/${branchName}`);
-    }
+    await execa('git', ['push', forkRemote, branchName]);
+    console.log(`Changes pushed to ${forkRemote}/${branchName}`);
 
     // Create PR body with checklist
     const prBody = createPrBody(newVersion);
@@ -1032,7 +964,7 @@ async function main({ githubToken }) {
     console.log('Opening a PR...');
     try {
       // Determine the base branch based on the selected major version
-      const baseBranch = majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`;
+      const baseBranch = shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master';
 
       // Get the origin owner (username or organization)
       const forkOwner = await findForkOwner();
@@ -1049,22 +981,8 @@ async function main({ githubToken }) {
 
       // Step 1: Apply labels to the PR
       // Add 'release' label and a version label in the format 'v8.x'
-      const versionLabel = `v${majorVersion}.x`;
+      const versionLabel = majorVersionBranch(majorVersion);
       await addLabelsToPR(prNumber, ['release', versionLabel]);
-
-      // Step 2: Get all members of the 'mui/x' team from GitHub (excluding the PR author)
-      const teamMembers = await getTeamMembers(forkOwner);
-
-      if (teamMembers.length > 0) {
-        // Randomly select up to 15 team members as reviewers
-        const shuffledMembers = [...teamMembers].sort(() => 0.5 - Math.random());
-        const selectedReviewers = shuffledMembers.slice(0, Math.min(15, shuffledMembers.length));
-
-        console.log(`Randomly selected ${selectedReviewers.length} team members as reviewers.`);
-
-        // Assign the selected reviewers to the PR
-        await assignReviewers(prNumber, selectedReviewers);
-      }
     } catch (error) {
       console.error('Failed to create PR with Octokit or assign reviewers.');
       console.error(
@@ -1086,14 +1004,6 @@ yargs(hideBin(process.argv))
   .command({
     command: '$0',
     description: 'Prepares a release PR for MUI X',
-    builder: (command) => {
-      return command.option('githubToken', {
-        default: process.env.GITHUB_TOKEN,
-        describe:
-          'The personal access token to use for authenticating with GitHub. Needs public_repo permissions.',
-        type: 'string',
-      });
-    },
     handler: main,
   })
   .help()

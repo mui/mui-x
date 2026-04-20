@@ -5,7 +5,7 @@ import {
   PiecewiseColorLegend,
   PiecewiseLabelFormatterParams,
 } from '@mui/x-charts/ChartsLegend';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsAxesGradients } from '@mui/x-charts/internals';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -18,7 +18,7 @@ export default function LegendLabelPositions() {
       : '';
 
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       series={[]}
       width={200}
       height={200}
@@ -48,15 +48,17 @@ export default function LegendLabelPositions() {
         },
       ]}
     >
-      <Stack direction="column" width="100%" height="100%" gap={4} spacing={2}>
-        <Stack direction="column" width="100%" height="100%" gap={2}>
+      <Stack
+        direction="column"
+        spacing={2}
+        sx={{ width: '100%', height: '100%', gap: 4 }}
+      >
+        <Stack direction="column" sx={{ width: '100%', height: '100%', gap: 2 }}>
           <Typography variant="h4">Continuous</Typography>
           <Typography variant="h5">Horizontal</Typography>
           <Stack
             direction="row"
-            flexWrap="wrap"
-            gap={2}
-            sx={{ '&>div': { flex: 1 } }}
+            sx={{ flexWrap: 'wrap', gap: 2, '&>div': { flex: 1 } }}
           >
             <div>
               <Typography>start</Typography>
@@ -87,16 +89,18 @@ export default function LegendLabelPositions() {
           <Typography variant="h5">Vertical</Typography>
           <Stack
             direction="row"
-            flexWrap="wrap"
-            height={150}
-            gap={2}
             sx={{
+              flexWrap: 'wrap',
+              height: 150,
+              gap: 2,
+
               '&>div': {
                 flex: 1,
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
               },
+
               '& .MuiContinuousColorLegend-root': { flex: 1 },
             }}
           >
@@ -126,14 +130,12 @@ export default function LegendLabelPositions() {
             </div>
           </Stack>
         </Stack>
-        <Stack direction="column" width="100%" height="100%" gap={2}>
+        <Stack direction="column" sx={{ width: '100%', height: '100%', gap: 2 }}>
           <Typography variant="h4">Piecewise</Typography>
           <Typography variant="h5">Horizontal</Typography>
           <Stack
             direction="row"
-            flexWrap="wrap"
-            gap={2}
-            sx={{ '&>div': { flex: 1 } }}
+            sx={{ flexWrap: 'wrap', gap: 2, '&>div': { flex: 1 } }}
           >
             <div>
               <Typography>start</Typography>
@@ -183,9 +185,10 @@ export default function LegendLabelPositions() {
           <Typography variant="h5">Vertical</Typography>
           <Stack
             direction="row"
-            flexWrap="wrap"
-            gap={2}
             sx={{
+              flexWrap: 'wrap',
+              gap: 2,
+
               '&>div': {
                 flex: 1,
                 height: '100%',
@@ -241,6 +244,6 @@ export default function LegendLabelPositions() {
       <svg width={0} height={0}>
         <ChartsAxesGradients />
       </svg>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 }

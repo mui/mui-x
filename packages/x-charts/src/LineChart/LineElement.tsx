@@ -1,60 +1,26 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
-import { SeriesId } from '../models/seriesType/common';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
-
-export interface LineElementClasses {
-  /** Styles applied to the root element. */
-  root: string;
-  /** Styles applied to the root element when highlighted. */
-  highlighted: string;
-  /** Styles applied to the root element when faded. */
-  faded: string;
-  /**
-   * Styles applied to the root element for a specified series.
-   * Needs to be suffixed with the series ID: `.${lineElementClasses.series}-${seriesId}`.
-   */
-  series: string;
-}
-
-export type LineElementClassKey = keyof LineElementClasses;
+import { AnimatedLine, type AnimatedLineProps } from './AnimatedLine';
+import { type SeriesId } from '../models/seriesType/common';
+import { useItemHighlightState } from '../hooks/useItemHighlightState';
+import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
+import { useStore } from '../internals/store/useStore';
+import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 export interface LineElementOwnerState {
-  id: SeriesId;
+  seriesId: SeriesId;
   color: string;
   gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
-  classes?: Partial<LineElementClasses>;
+  classes?: Partial<LineClasses>;
+  /** If `true`, the line is hidden. */
+  hidden?: boolean;
 }
-
-export function getLineElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiLineElement', slot);
-}
-
-export const lineElementClasses: LineElementClasses = generateUtilityClasses('MuiLineElement', [
-  'root',
-  'highlighted',
-  'faded',
-  'series',
-]);
-
-const useUtilityClasses = (ownerState: LineElementOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
-  const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
-  };
-
-  return composeClasses(slots, getLineElementUtilityClass, classes);
-};
 
 export interface LineElementSlots {
   /**
@@ -69,10 +35,13 @@ export interface LineElementSlotProps {
 }
 
 export interface LineElementProps
-  extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
+  extends
+    Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedLineProps, 'skipAnimation'>,
-    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color'> {
   d: string;
+  /** If `true`, the line is hidden. */
+  hidden?: boolean;
   /**
    * The props used for each component slot.
    * @default {}
@@ -97,40 +66,53 @@ export interface LineElementProps
  */
 function LineElement(props: LineElementProps) {
   const {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
     slots,
     slotProps,
     onClick,
+    hidden,
     ...other
   } = props;
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
-  });
+
+  const store = useStore();
+  const enablePositionBasedPointerInteraction = store.use(
+    selectorChartExperimentalFeaturesState,
+  )?.enablePositionBasedPointerInteraction;
+  const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
+  const interactionProps = useInteractionItemProps(identifier);
+
+  const highlightState = useItemHighlightState(identifier);
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
 
   const ownerState = {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
     isFaded,
     isHighlighted,
+    hidden,
   };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useLineUtilityClasses();
 
   const Line = slots?.line ?? AnimatedLine;
   const lineProps = useSlotProps({
     elementType: Line,
     externalSlotProps: slotProps?.line,
     additionalProps: {
-      ...interactionProps,
+      ...(enablePositionBasedPointerInteraction ? {} : interactionProps),
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
+      'data-highlighted': isHighlighted || undefined,
+      'data-faded': isFaded || undefined,
+      'data-series-id': seriesId,
+      'data-series': seriesId,
     },
-    className: classes.root,
+    className: classes.line,
     ownerState,
   });
 
@@ -146,7 +128,9 @@ LineElement.propTypes = {
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
   gradientId: PropTypes.string,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /** If `true`, the line is hidden. */
+  hidden: PropTypes.bool,
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

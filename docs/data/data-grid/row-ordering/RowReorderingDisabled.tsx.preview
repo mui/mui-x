@@ -1,0 +1,6 @@
+<DataGridPro
+  {...data}
+  loading={loading}
+  rowReordering
+  isRowReorderable={isRowReorderable}
+/>

@@ -3,11 +3,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
-import { GaugeContainer, GaugeContainerProps } from './GaugeContainer';
+import { GaugeContainer, type GaugeContainerProps } from './GaugeContainer';
 import { GaugeValueArc } from './GaugeValueArc';
 import { GaugeReferenceArc } from './GaugeReferenceArc';
-import { GaugeClasses, getGaugeUtilityClass } from './gaugeClasses';
-import { GaugeValueText, GaugeValueTextProps } from './GaugeValueText';
+import { type GaugeClasses, getGaugeUtilityClass } from './gaugeClasses';
+import { GaugeValueText, type GaugeValueTextProps } from './GaugeValueText';
 
 export interface GaugeProps extends GaugeContainerProps, Pick<GaugeValueTextProps, 'text'> {
   classes?: Partial<GaugeClasses>;
@@ -22,7 +22,7 @@ const useUtilityClasses = (props: GaugeProps) => {
   return composeClasses(slots, getGaugeUtilityClass, classes);
 };
 
-const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref: React.Ref<SVGSVGElement>) {
+const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref: React.Ref<HTMLDivElement>) {
   const { text, children, classes: propsClasses, className, skipAnimation, ...other } = props;
   const classes = useUtilityClasses(props);
 
@@ -62,6 +62,10 @@ Gauge.propTypes = {
    * The '100%' is the height the drawing area.
    */
   cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * The end angle (deg).
@@ -122,6 +126,10 @@ Gauge.propTypes = {
     PropTypes.object,
   ]),
   text: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The value of the gauge.

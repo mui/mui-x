@@ -5,6 +5,7 @@
       "description": "The id of the axis to render. If undefined, it will be the first defined axis."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "className": { "description": "A CSS class name applied to the root element." },
     "disableLine": { "description": "If true, the axis line is disabled." },
     "disableTicks": { "description": "If true, the ticks are disabled." },
     "label": { "description": "The label of the axis." },
@@ -36,7 +37,18 @@
     "tickPlacement": {
       "description": "The placement of ticks in regard to the band interval. Only used if scale is &#39;band&#39;."
     },
-    "tickSize": { "description": "The size of the ticks." }
+    "tickSize": { "description": "The size of the ticks." },
+    "tickSpacing": {
+      "description": "The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
+    }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis."
+  }
 }

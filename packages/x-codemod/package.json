@@ -1,9 +1,10 @@
 {
   "name": "@mui/x-codemod",
-  "version": "8.18.0",
+  "version": "9.0.0",
   "author": "MUI Team",
   "description": "Codemod scripts for MUI X.",
-  "bin": "./codemod.js",
+  "license": "MIT",
+  "bin": "./src/codemod.ts",
   "keywords": [
     "react",
     "react-component",
@@ -15,14 +16,13 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "prebuild": "rimraf build",
-    "build": "code-infra build --bundle cjs --buildTypes false --ignore 'src/types.ts'"
+    "build": "code-infra build --flat --bundle cjs --buildTypes false --ignore 'src/types.ts'"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mui/mui-x.git",
     "directory": "packages/x-codemod"
   },
-  "license": "MIT",
   "homepage": "https://github.com/mui/mui-x/tree/master/packages/x-codemod",
   "funding": {
     "type": "opencollective",
@@ -32,12 +32,12 @@
     "@babel/core": "catalog:",
     "@babel/runtime": "catalog:",
     "@babel/traverse": "catalog:",
-    "@mui/x-internals": "workspace:*",
+    "@mui/x-internals": "workspace:^",
     "jscodeshift": "catalog:",
     "yargs": "catalog:"
   },
   "devDependencies": {
-    "@types/jscodeshift": "^17.3.0",
+    "@types/jscodeshift": "17.3.0",
     "dayjs": "catalog:",
     "moment-timezone": "catalog:",
     "rimraf": "catalog:"

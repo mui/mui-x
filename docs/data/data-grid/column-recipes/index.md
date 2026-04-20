@@ -28,3 +28,14 @@ To keep the column width of the pivoted grid after `columns` reference is change
 The demo below uses modified version of the `useColumnsState()` from the previous example in combination with a callbacks for grouping and pivoting columns.
 
 {{"demo": "ColumnSizingPersistWidthPivoting.js", "disableAd": true, "bg": "inline"}}
+
+## Custom long text popup content
+
+The default rendered cell of the `longText` column type uses `GridLongTextCell` component to show the popup with the full text content when the expand button is clicked. To customize the popup content, use the `renderContent` prop of the `GridLongTextCell` component.
+
+The example below demonstrates two customizations:
+
+- **Character count**: Shows character count below the text
+- **Markdown preview**: Renders markdown content as formatted HTML
+
+{{"demo": "LongTextCustomPopupContent.js", "disableAd": true, "bg": "inline"}}

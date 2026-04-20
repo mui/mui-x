@@ -1,11 +1,16 @@
-import { GRID_ROOT_GROUP_ID, GridGroupNode, GridRowId, GridRowTreeConfig } from '@mui/x-data-grid';
 import {
-  GridRowTreeCreationValue,
-  GridTreeDepths,
+  GRID_ROOT_GROUP_ID,
+  type GridGroupNode,
+  type GridRowId,
+  type GridRowTreeConfig,
+} from '@mui/x-data-grid';
+import {
+  type GridRowTreeCreationValue,
+  type GridTreeDepths,
   getTreeNodeDescendants,
 } from '@mui/x-data-grid/internals';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { GridTreePathDuplicateHandler, RowTreeBuilderNode } from './models';
+import type { GridTreePathDuplicateHandler, RowTreeBuilderNode } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
 import { removeDataRowFromTree } from './removeDataRowFromTree';
 import { getNodePathInTree } from './utils';

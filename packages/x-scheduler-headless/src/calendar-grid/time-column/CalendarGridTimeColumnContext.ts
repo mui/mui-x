@@ -1,20 +1,26 @@
 'use client';
 import * as React from 'react';
-import { SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 
 export interface CalendarGridTimeColumnContext {
   /**
    * The start date and time of the column.
    */
-  start: SchedulerValidDate;
+  start: TemporalSupportedObject;
   /**
    * The end date and time of the column.
    */
-  end: SchedulerValidDate;
+  end: TemporalSupportedObject;
   /**
    * The index of the column in the grid.
    */
   index: number;
+  /**
+   * Whether this column currently has keyboard focus.
+   * When `true`, interactive children (e.g. events) should use `tabIndex={0}`
+   * so they are reachable via Tab. When `false`, they should use `tabIndex={-1}`.
+   */
+  hasFocus: boolean;
   /**
    * Gets the cursor position in the element in milliseconds.
    * @param {Object} parameters The parameters of the method.
@@ -39,7 +45,7 @@ export function useCalendarGridTimeColumnContext() {
   const context = React.useContext(CalendarGridTimeColumnContext);
   if (context === undefined) {
     throw new Error(
-      'Scheduler: `CalendarGridTimeColumnContext` is missing. <CalendarGrid.TimeEvent /> must be placed within <CalendarGrid.TimeColumn />.',
+      'MUI: `CalendarGridTimeColumnContext` is missing. <CalendarGrid.TimeEvent /> must be placed within <CalendarGrid.TimeColumn />.',
     );
   }
   return context;

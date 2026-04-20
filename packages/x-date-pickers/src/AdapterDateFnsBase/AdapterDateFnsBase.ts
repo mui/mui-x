@@ -72,6 +72,12 @@ const formatTokenMap: FieldFormatTokenMap = {
   HH: 'hours',
   h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   hh: 'hours',
+  // Hour [0-11] (12h cycle, 0-based) — date-fns only
+  K: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
+  KK: 'hours',
+  // Hour [1-24] (24h cycle, 1-based) — date-fns only
+  k: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
+  kk: 'hours',
 
   // Minutes
   m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
@@ -145,21 +151,18 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
-  implements
-    Pick<
-      MuiPickersAdapter<DateFnsLocale>,
-      | 'date'
-      | 'getInvalidDate'
-      | 'getTimezone'
-      | 'setTimezone'
-      | 'toJsDate'
-      | 'getCurrentLocaleCode'
-      | 'is12HourCycleInCurrentLocale'
-      | 'expandFormat'
-      | 'formatNumber'
-    >
-{
+export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase> implements Pick<
+  MuiPickersAdapter<DateFnsLocale>,
+  | 'date'
+  | 'getInvalidDate'
+  | 'getTimezone'
+  | 'setTimezone'
+  | 'toJsDate'
+  | 'getCurrentLocaleCode'
+  | 'is12HourCycleInCurrentLocale'
+  | 'expandFormat'
+  | 'formatNumber'
+> {
   public isMUIAdapter = true;
 
   public isTimezoneCompatible = false;

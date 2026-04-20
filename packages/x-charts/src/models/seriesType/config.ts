@@ -1,21 +1,30 @@
-import { DefaultizedProps, MakeOptional, MakeRequired } from '@mui/x-internals/types';
-import {
+import type { DefaultizedProps, MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type {
   ScatterSeriesType,
   DefaultizedScatterSeriesType,
   ScatterItemIdentifier,
   ScatterValueType,
 } from './scatter';
-import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
-import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
-import {
+import type { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
+import type { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
+import type {
   PieSeriesType,
   DefaultizedPieSeriesType,
   PieItemIdentifier,
   PieValueType,
   DefaultizedPieValueType,
+  PieSeriesLayout,
 } from './pie';
-import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
-import { SeriesColor } from './common';
+import type { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
+import type { SeriesColor, SeriesId } from './common';
+import type {
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
+  ComputedXAxis,
+  ComputedYAxis,
+  PolarAxisDefaultized,
+} from '../axis';
+import type { CommonHighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -29,35 +38,84 @@ export interface ChartsSeriesConfig {
      */
     series: DefaultizedBarSeriesType;
     /**
+     * Additional data computed from the series plus drawing area.
+     * Useful for special charts like sankey where the series data is not sufficient to draw the series.
+     * */
+    seriesLayout: {};
+    /**
      * Series typing such that the one user need to provide
      */
     seriesProp: BarSeriesType;
+    /**
+     * The minimal information to identify a specific item in the series.
+     */
     itemIdentifier: BarItemIdentifier;
+    /**
+     * The minimal information to identify a specific item in the series. Plus the data associated to it.
+     */
     itemIdentifierWithData: BarItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
     axisType: 'cartesian';
+    highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: BarItemIdentifier;
+      xAxis: ComputedXAxis;
+      yAxis: ComputedYAxis;
+      series: DefaultizedBarSeriesType;
+    };
+    highlightIdentifier: {
+      type: 'bar';
+      seriesId: SeriesId;
+      dataIndex?: number | undefined;
+    };
   };
   line: {
     seriesInput: DefaultizedProps<LineSeriesType, 'id'> &
       MakeRequired<SeriesColor<number | null>, 'color'>;
     series: DefaultizedLineSeriesType;
+    seriesLayout: {};
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
     itemIdentifierWithData: LineItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
     axisType: 'cartesian';
+    highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: LineItemIdentifier;
+      xAxis: ComputedXAxis;
+      yAxis: ComputedYAxis;
+      series: DefaultizedLineSeriesType;
+    };
+    highlightIdentifier: {
+      type: 'line';
+      seriesId: SeriesId;
+      dataIndex?: number;
+    };
   };
   scatter: {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
       MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
     series: DefaultizedScatterSeriesType;
+    seriesLayout: {};
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
     itemIdentifier: ScatterItemIdentifier;
     itemIdentifierWithData: ScatterItemIdentifier;
     axisType: 'cartesian';
+    highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: ScatterItemIdentifier;
+      xAxis: ComputedXAxis;
+      yAxis: ComputedYAxis;
+      series: DefaultizedScatterSeriesType;
+    };
+    highlightIdentifier: {
+      type: 'scatter';
+      seriesId: SeriesId;
+      dataIndex?: number;
+    };
   };
   pie: {
     seriesInput: Omit<DefaultizedProps<PieSeriesType, 'id'>, 'data'> & {
@@ -66,23 +124,50 @@ export interface ChartsSeriesConfig {
       >;
     };
     series: DefaultizedPieSeriesType;
+    seriesLayout: PieSeriesLayout;
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
     itemIdentifierWithData: PieItemIdentifier;
     valueType: DefaultizedPieValueType;
+    highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: PieItemIdentifier;
+      series: DefaultizedPieSeriesType;
+    };
+    highlightIdentifier: {
+      type: 'pie';
+      seriesId: SeriesId;
+      dataIndex?: number;
+    };
   };
   radar: {
     seriesInput: DefaultizedProps<RadarSeriesType, 'id'> &
       MakeRequired<SeriesColor<number>, 'color'>;
     series: DefaultizedRadarSeriesType;
+    seriesLayout: {};
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;
     itemIdentifierWithData: RadarItemIdentifier;
     valueType: number;
     axisType: 'polar';
+    highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: RadarItemIdentifier;
+      rotationAxis: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
+      radiusAxis: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
+      series: DefaultizedRadarSeriesType;
+    };
+    highlightIdentifier: {
+      type: 'radar';
+      seriesId: SeriesId;
+      dataIndex?: number;
+    };
   };
 }
 
+/**
+ * All the existing series types.
+ */
 export type ChartSeriesType = keyof ChartsSeriesConfig;
 
 export type CartesianChartSeriesType = keyof Pick<
@@ -93,6 +178,17 @@ export type CartesianChartSeriesType = keyof Pick<
       : never;
   }[ChartSeriesType]
 >;
+
+/**
+ * Extracts series types whose itemIdentifier includes a `dataIndex` property.
+ * This prevents accidentally using dataIndex-based cleaners/serializers
+ * for series types that use different identifier properties (e.g., heatmap uses xIndex/yIndex).
+ */
+export type SeriesTypeWithDataIndex = {
+  [K in ChartSeriesType]: 'dataIndex' extends keyof ChartsSeriesConfig[K]['itemIdentifier']
+    ? K
+    : never;
+}[ChartSeriesType];
 
 export type PolarChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
@@ -108,21 +204,30 @@ export type StackableChartSeriesType = keyof Pick<
   }[ChartSeriesType]
 >;
 
-export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T]['seriesInput'];
+export type ChartSeries<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType]['seriesInput'];
 
-export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
-  canBeStacked: true;
-}
-  ? ChartsSeriesConfig[T]['series'] & { stackedData: [number, number][] }
-  : ChartsSeriesConfig[T]['series'];
+export type ChartSeriesDefaultized<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType] extends {
+    canBeStacked: true;
+  }
+    ? ChartsSeriesConfig[SeriesType]['series'] & {
+        visibleStackedData: [number, number][];
+        stackedData: [number, number][];
+      }
+    : ChartsSeriesConfig[SeriesType]['series'];
 
-export type ChartItemIdentifier<T extends ChartSeriesType> =
-  ChartsSeriesConfig[T]['itemIdentifier'];
-
-export type ChartItemIdentifierWithData<T extends ChartSeriesType> =
-  ChartsSeriesConfig[T]['itemIdentifierWithData'];
+export type ChartSeriesLayout<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType] extends any
+    ? ChartsSeriesConfig[SeriesType]['seriesLayout']
+    : never;
 
 export type DatasetElementType<T> = {
   [key: string]: T;
 };
 export type DatasetType<T = unknown> = DatasetElementType<T>[];
+
+export type HighlightScope<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType] extends any
+    ? ChartsSeriesConfig[SeriesType]['highlightScope']
+    : never;

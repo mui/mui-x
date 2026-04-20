@@ -2,6 +2,7 @@ import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 
 export interface MoreEventsPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
+  open: boolean;
   /**
    * The event occurrence to display in the popover.
    */
@@ -19,16 +20,11 @@ export interface MoreEventsPopoverProps extends React.HTMLAttributes<HTMLDivElem
    */
   anchor: HTMLElement;
   /**
-   * The container element for the popover portal.
-   */
-  container: HTMLElement | null;
-  /**
    * Handles the close action of the popover.
    */
   onClose: () => void;
 }
 
 export interface MoreEventsPopoverProviderProps {
-  containerRef: React.RefObject<HTMLElement | null>;
   children: React.ReactNode;
 }

@@ -2,12 +2,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useTheme } from '@mui/material/styles';
-import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
+import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
+import { useStore } from '../internals/store/useStore';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
+import {
+  lineClasses,
+  type MarkElementOwnerState,
+  useUtilityClasses as useLineUtilityClasses,
+} from './lineClasses';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
+  Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
+    /**
+     * If `true`, the marker is hidden.
+     * @default false
+     */
+    hidden?: boolean;
     /**
      * If `true`, animations are skipped.
      * @default false
@@ -29,10 +40,13 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
     isHighlighted?: boolean;
   };
 
-const Circle = styled('circle')({
-  [`&.${markElementClasses.animate}`]: {
+const Circle = styled('circle', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
+  [`&.${lineClasses.markAnimate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionProperty: 'cx, cy',
+    transitionProperty: 'cx, cy, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 });
@@ -53,7 +67,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const {
     x,
     y,
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     dataIndex,
@@ -61,37 +75,41 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     skipAnimation,
     isFaded = false,
     isHighlighted = false,
+    // @ts-expect-error, prevents it from being passed to the svg element
+    shape,
+    hidden,
     ...other
   } = props;
 
+  const store = useStore();
+  const enablePositionBasedPointerInteraction = store.use(
+    selectorChartExperimentalFeaturesState,
+  )?.enablePositionBasedPointerInteraction;
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
   const theme = useTheme();
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
 
-  const ownerState = {
-    id,
-    classes: innerClasses,
-    isHighlighted,
-    isFaded,
-    color,
-    skipAnimation,
-  };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
 
   return (
     <Circle
       {...other}
+      {...(enablePositionBasedPointerInteraction ? {} : interactionProps)}
       cx={x}
       cy={y}
       r={5}
       fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
       strokeWidth={2}
-      className={classes.root}
+      className={classes.mark}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...interactionProps}
+      pointerEvents={hidden ? 'none' : undefined}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
+      data-series-id={seriesId}
+      data-series={seriesId}
+      data-index={dataIndex}
+      opacity={hidden ? 0 : 1}
     />
   );
 }
@@ -106,7 +124,7 @@ CircleMarkElement.propTypes = {
    * The index to the element in the series' data array.
    */
   dataIndex: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * The shape of the marker.
    */

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
-import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridColDef } from '../../../models/colDef/gridColDef';
+import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { getDataGridUtilityClass } from '../../../constants';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -37,6 +37,9 @@ export const useGridRowSelectionPreProcessors = (
         cellClassName: classes.cellCheckbox,
         headerClassName: classes.columnHeaderCheckbox,
         headerName: apiRef.current.getLocaleText('checkboxSelectionHeaderName'),
+        ...props.checkboxColDef,
+        field: GRID_CHECKBOX_SELECTION_COL_DEF.field,
+        type: GRID_CHECKBOX_SELECTION_COL_DEF.type,
       };
 
       const shouldHaveSelectionColumn = props.checkboxSelection;
@@ -68,7 +71,7 @@ export const useGridRowSelectionPreProcessors = (
 
       return columnsState;
     },
-    [apiRef, classes, props.columns, props.checkboxSelection],
+    [apiRef, classes, props.columns, props.checkboxSelection, props.checkboxColDef],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);

@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemContent,
@@ -23,8 +22,9 @@ type Editable = {
   editable?: boolean;
   id: string;
   label: string;
+  children?: Editable[];
 };
-const ITEMS: TreeViewBaseItem<Editable>[] = [
+const ITEMS: Editable[] = [
   {
     id: '1',
     label: 'An item',
@@ -88,7 +88,8 @@ const CustomTreeItemCheckbox = styled(TreeItemCheckbox)(({ theme }) => ({
 }));
 
 interface CustomTreeItemProps
-  extends Omit<UseTreeItemParameters, 'rootRef'>,
+  extends
+    Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -134,6 +135,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             {...getContentProps({
               'data-name': 'TreeItemContent',
             })}
+            status={status}
           >
             <CustomTreeItemIconContainer
               {...getIconContainerProps({

@@ -1,6 +1,6 @@
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import { Link } from '@mui/docs/Link';
+import { Link } from '@mui/internal-core-docs/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -15,6 +15,11 @@ function getComponents() {
     {
       title: 'Bubble Chart',
       href: 'https://github.com/mui/mui-x/issues/17275',
+    },
+    {
+      title: 'Range Area',
+      href: 'https://github.com/mui/mui-x/issues/13988',
+      premium: true,
     },
     {
       title: 'Treemap',
@@ -37,18 +42,13 @@ function getComponents() {
       pro: true,
     },
     {
-      title: 'Gantt Chart',
-      href: '/x/react-charts/gantt/',
-      premium: true,
-    },
-    {
       title: 'Waterfall Chart',
       href: 'https://github.com/mui/mui-x/issues/11318',
       premium: true,
     },
     {
-      title: 'Candlestick Chart',
-      href: 'https://github.com/mui/mui-x/issues/13044',
+      title: 'Gantt Chart',
+      href: '/x/react-charts/gantt/',
       premium: true,
     },
     {
@@ -81,13 +81,22 @@ export default function ChartComponentsGrid() {
         <ListItem key={component.title}>
           <ListItemText
             primary={
-              <Stack direction="row" alignItems="center" spacing={1}>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{
+                  alignItems: 'center',
+                }}
+              >
                 <CircleIcon sx={{ fontSize: 10 }} />
                 <Link
                   href={component.href}
                   underline="hover"
-                  sx={{ fontWeight: 500, fontSize: 16 }}
-                  pl={0.5}
+                  sx={{
+                    pl: 0.5,
+                    fontWeight: 500,
+                    fontSize: 16,
+                  }}
                 >
                   {component.title}
                 </Link>

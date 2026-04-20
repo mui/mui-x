@@ -1,7 +1,7 @@
-import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { usePieSeries, usePieSeriesContext } from './usePieSeries';
-import { DefaultizedPieSeriesType, PieSeriesType } from '../models';
+import { type DefaultizedPieSeriesType, type PieSeriesType } from '../models';
 import { PieChart } from '../PieChart';
 
 const mockSeries: PieSeriesType[] = [
@@ -66,5 +66,10 @@ describe('usePieSeries', () => {
     }).toWarnDev(message);
 
     expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+  });
+
+  it('should return empty array when empty seriesIds array is provided', () => {
+    const { result } = renderHook(() => usePieSeries([]), options);
+    expect(result.current).to.deep.equal([]);
   });
 });

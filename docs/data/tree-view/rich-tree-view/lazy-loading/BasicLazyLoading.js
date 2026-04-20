@@ -37,7 +37,7 @@ export default function BasicLazyLoading() {
   };
 
   return (
-    <Box sx={{ width: '300px' }}>
+    <Box sx={{ width: 300 }}>
       <Box sx={{ width: 250 }}>
         <Typography id="latency-slider" gutterBottom>
           Loading latency: {latency} (ms)
@@ -55,13 +55,15 @@ export default function BasicLazyLoading() {
           valueLabelDisplay="auto"
         />
       </Box>
-      <RichTreeViewPro
-        items={[]}
-        dataSource={{
-          getChildrenCount: (item) => item?.childrenCount,
-          getTreeItems: fetchData,
-        }}
-      />
+      <div style={{ height: 240, width: '100%' }}>
+        <RichTreeViewPro
+          items={[]}
+          dataSource={{
+            getChildrenCount: (item) => item?.childrenCount,
+            getTreeItems: fetchData,
+          }}
+        />
+      </div>
     </Box>
   );
 }

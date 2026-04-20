@@ -26,7 +26,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', cu
 
 function ZoomAndPan() {
   return (
-    <Stack height="100%">
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center">Google vs Meta stock price</Typography>
       <LineChartPro
         dataset={formattedDataset}
@@ -34,14 +34,12 @@ function ZoomAndPan() {
           {
             label: 'Google',
             dataKey: 'google',
-            showMark: false,
             valueFormatter: (value: number | null) =>
               value === null ? '' : currencyFormatter(value),
           },
           {
             label: 'Meta',
             dataKey: 'meta',
-            showMark: false,
             valueFormatter: (value: number | null) =>
               value === null ? '' : currencyFormatter(value),
           },

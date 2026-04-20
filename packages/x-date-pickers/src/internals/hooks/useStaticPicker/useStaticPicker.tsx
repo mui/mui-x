@@ -1,3 +1,4 @@
+'use client';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
@@ -9,7 +10,9 @@ import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { mergeSx } from '../../utils/utils';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 
-const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
+const PickerStaticLayout = styled(PickersLayout, {
+  slot: 'internal',
+})(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,

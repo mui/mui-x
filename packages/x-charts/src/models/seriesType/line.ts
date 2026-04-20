@@ -1,13 +1,14 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { type DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
 import {
-  CartesianSeriesType,
-  CommonDefaultizedProps,
-  CommonSeriesType,
-  SeriesId,
-  StackableSeriesType,
+  type CartesianSeriesType,
+  type CommonDefaultizedProps,
+  type CommonSeriesType,
+  type SeriesId,
+  type StackableSeriesType,
 } from './common';
-import { CurveType } from '../curve';
+import { type DatasetElementType } from './config';
+import { type CurveType } from '../curve';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**
@@ -32,10 +33,10 @@ export interface ShowMarkParams<AxisValue = number | Date> {
   value: number;
 }
 
+export type MarkShape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
+
 export interface LineSeriesType
-  extends CommonSeriesType<number | null>,
-    CartesianSeriesType,
-    StackableSeriesType {
+  extends CommonSeriesType<number | null, 'line'>, CartesianSeriesType, StackableSeriesType {
   type: 'line';
   /**
    * Data associated to the line.
@@ -45,6 +46,14 @@ export interface LineSeriesType
    * The key used to retrieve data from the dataset.
    */
   dataKey?: string;
+  /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return the series value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {number | null} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => number | null;
   /**
    * If `true`, the series is rendered as an area instead of a line.
    */
@@ -73,9 +82,10 @@ export interface LineSeriesType
   /**
    * The shape of the mark elements.
    * Using 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.
-   * @default 'circle'
+   * By default, each series has a different shape, cycling through `'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, `'wye'`.
+   * If there are more than 7 series, the shapes will repeat.
    */
-  shape?: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
+  shape?: MarkShape;
   /**
    * Do not render the line highlight item if set to `true`.
    * @default false
@@ -116,5 +126,9 @@ export type LineItemIdentifier = {
   dataIndex?: number;
 };
 
-export interface DefaultizedLineSeriesType
-  extends DefaultizedProps<LineSeriesType, CommonDefaultizedProps | 'color'> {}
+export interface DefaultizedLineSeriesType extends DefaultizedProps<
+  LineSeriesType,
+  CommonDefaultizedProps | 'color'
+> {
+  hidden: boolean;
+}

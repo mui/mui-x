@@ -1,6 +1,7 @@
+'use client';
 import * as React from 'react';
 import { GridConfigurationContext } from '../../components/GridConfigurationContext';
-import { GridConfiguration } from '../../models/configuration/gridConfiguration';
+import type { GridConfiguration } from '../../models/configuration/gridConfiguration';
 import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import type { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 
@@ -11,11 +12,10 @@ export const useGridConfiguration = <
 
   if (configuration === undefined) {
     throw new Error(
-      [
-        'MUI X: Could not find the Data Grid configuration context.',
-        'It looks like you rendered your component outside of a DataGrid, DataGridPro or DataGridPremium parent component.',
+      'MUI X Data Grid: Could not find the Data Grid configuration context. ' +
+        'This happens when a component is rendered outside of a DataGrid, DataGridPro, or DataGridPremium parent component. ' +
+        'Ensure your component is a child of a Data Grid component. ' +
         'This can also happen if you are bundling multiple versions of the Data Grid.',
-      ].join('\n'),
     );
   }
 

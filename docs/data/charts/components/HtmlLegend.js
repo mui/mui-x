@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import { useLegend } from '@mui/x-charts/hooks';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -16,13 +16,13 @@ function MyCustomLegend() {
       }}
     >
       <tbody>
-        {items.map((v) => {
+        {items.map((item) => {
           return (
-            <tr key={v.id}>
+            <tr key={item.seriesId}>
               <td aria-hidden>
                 <div
                   style={{
-                    background: v.color,
+                    background: item.color,
                     height: 10,
                     width: 10,
                     marginRight: 10,
@@ -31,7 +31,7 @@ function MyCustomLegend() {
                   }}
                 />
               </td>
-              <td>{`${v.label}`}</td>
+              <td>{`${item.label}`}</td>
             </tr>
           );
         })}
@@ -46,12 +46,12 @@ const veryLongText =
 export default function HtmlLegend() {
   return (
     <Box sx={{ height: 400, display: 'flex', flexDirection: 'column' }}>
-      <ChartDataProvider
+      <ChartsDataProvider
         series={[
           { label: 'First Series', type: 'bar', data: [100, 200] },
           { label: veryLongText, type: 'bar', data: [45, 333] },
         ]}
-        xAxis={[{ data: ['A', 'B'], scaleType: 'band', id: 'x-axis' }]}
+        xAxis={[{ data: ['A', 'B'], scaleType: 'band', id: 'x-axis', height: 28 }]}
       >
         <ChartsSurface>
           <BarPlot />
@@ -59,7 +59,7 @@ export default function HtmlLegend() {
           <ChartsYAxis />
         </ChartsSurface>
         <MyCustomLegend />
-      </ChartDataProvider>
+      </ChartsDataProvider>
     </Box>
   );
 }

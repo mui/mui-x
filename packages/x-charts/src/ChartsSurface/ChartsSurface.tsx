@@ -1,78 +1,37 @@
 'use client';
-import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
+import clsx from 'clsx';
+import { type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
-import clsx from 'clsx';
-import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { useSvgRef } from '../hooks/useSvgRef';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
-import {
-  selectorChartPropsHeight,
-  selectorChartPropsWidth,
-  selectorChartSvgWidth,
-  selectorChartSvgHeight,
-} from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
-import {
-  selectorChartsHasFocusedItem,
-  selectorChartsIsKeyboardNavigationEnabled,
-} from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useUtilityClasses } from './chartsSurfaceClasses';
-import { selectorChartHasZoom } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import { ChartsSvgLayer } from '../ChartsSvgLayer';
+// eslint-disable-next-line import/no-cycle
+import { ChartsLayerContainer, type ChartsLayerContainerProps } from '../ChartsLayerContainer';
 
 export interface ChartsSurfaceProps
-  extends Omit<
-    React.SVGProps<SVGSVGElement>,
-    'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
-  > {
+  extends
+    Omit<
+      React.SVGProps<SVGSVGElement>,
+      | 'id'
+      | 'children'
+      | 'className'
+      | 'height'
+      | 'width'
+      | 'cx'
+      | 'cy'
+      | 'viewBox'
+      | 'color'
+      | 'ref'
+    >,
+    Pick<ChartsLayerContainerProps, 'title' | 'desc'> {
   className?: string;
-  title?: string;
-  desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
 }
 
-const ChartsSurfaceStyles = styled('svg', {
-  name: 'MuiChartsSurface',
-  slot: 'Root',
-})<{ ownerState: { width?: number; height?: number; hasZoom: boolean } }>(
-  ({ ownerState, theme }) => ({
-    width: ownerState.width ?? '100%',
-    height: ownerState.height ?? '100%',
-    display: 'flex',
-    position: 'relative',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    // This prevents default touch actions when using the svg on mobile devices.
-    // For example, prevent page scroll & zoom.
-    touchAction: ownerState.hasZoom ? 'pan-y' : undefined,
-    userSelect: 'none',
-    gridArea: 'chart',
-    '&:focus': {
-      outline: 'none', // By default don't show focus on the SVG container
-    },
-    '&:focus-visible': {
-      // Show focus outline on the SVG container only when using keyboard navigation
-      outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
-      '&[data-has-focused-item=true]': {
-        // But not if the chart has a focused children item
-        outline: 'none',
-      },
-    },
-    '& [data-focused=true]': {
-      outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
-    },
-  }),
-);
-
 /**
- * It provides the drawing area for the chart elements.
- * It is the root `<svg>` of all the chart elements.
- *
- * It also provides the `title` and `desc` elements for the chart.
+ * A helper component that combines `<ChartsLayerContainer>` and `<ChartsSvgLayer>` to provide a surface for drawing charts.
+ * If you need more control over the layers, you can use `<ChartsLayerContainer>` and `<ChartsSvgLayer>` separately.
  *
  * Demos:
  *
@@ -82,45 +41,25 @@ const ChartsSurfaceStyles = styled('svg', {
  *
  * - [ChartsSurface API](https://mui.com/x/api/charts/charts-surface/)
  */
-const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
+const ChartsSurface = React.forwardRef<HTMLDivElement, ChartsSurfaceProps>(function ChartsSurface(
   inProps: ChartsSurfaceProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
-  const store = useStore();
-
-  const svgWidth = useSelector(store, selectorChartSvgWidth);
-  const svgHeight = useSelector(store, selectorChartSvgHeight);
-
-  const propsWidth = useSelector(store, selectorChartPropsWidth);
-  const propsHeight = useSelector(store, selectorChartPropsHeight);
-  const isKeyboardNavigationEnabled = useSelector(store, selectorChartsIsKeyboardNavigationEnabled);
-  const hasFocusedItem = useSelector(store, selectorChartsHasFocusedItem);
-  const hasZoom = useSelector(store, selectorChartHasZoom);
-
-  const svgRef = useSvgRef();
-  const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
   const { children, className, title, desc, ...other } = themeProps;
 
   const classes = useUtilityClasses();
-  const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
   return (
-    <ChartsSurfaceStyles
-      ownerState={{ width: propsWidth, height: propsHeight, hasZoom }}
-      viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
+    <ChartsLayerContainer
       className={clsx(classes.root, className)}
-      tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
-      data-has-focused-item={hasFocusedItem || undefined}
-      {...other}
-      ref={handleRef}
+      ref={ref}
+      title={title}
+      desc={desc}
     >
-      {title && <title>{title}</title>}
-      {desc && <desc>{desc}</desc>}
-      <ChartsAxesGradients />
-      {hasIntrinsicSize && children}
-    </ChartsSurfaceStyles>
+      <ChartsSvgLayer {...other}>{children}</ChartsSvgLayer>
+    </ChartsLayerContainer>
   );
 });
 
@@ -131,12 +70,20 @@ ChartsSurface.propTypes = {
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   className: PropTypes.string,
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
 } as any;
 

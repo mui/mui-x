@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import * as sinon from 'sinon';
+import { vi } from 'vitest';
+import { lineClasses } from '@mui/x-charts/LineChart';
 import { LineChartPro } from './LineChartPro';
-import { CHART_SELECTOR } from '../tests/constants';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const getAxisTickValues = (axis: 'x' | 'y', container: HTMLElement): string[] => {
   const axisData = Array.from(
@@ -50,7 +51,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
   };
 
   it('should zoom on wheel', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,
       options,
@@ -58,55 +59,56 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
-    // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector(CHART_SELECTOR)!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
 
     await user.pointer([
       {
-        target: svg,
+        target: layerContainer,
         coords: { x: 15, y: 50 },
       },
     ]);
 
-    fireEvent.wheel(svg, { deltaY: -10, clientX: 15, clientY: 50 });
+    fireEvent.wheel(layerContainer, { deltaY: -10, clientX: 15, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    expect(onZoomChange.mock.calls.length).to.equal(1);
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C']);
 
     // scroll back
-    fireEvent.wheel(svg, { deltaY: 10, clientX: 15, clientY: 50 });
+    fireEvent.wheel(layerContainer, { deltaY: 10, clientX: 15, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(2);
+    expect(onZoomChange.mock.calls.length).to.equal(2);
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
     // zoom on the right side
     // TODO: Fix this test. When zooming on the right side, D should stay visible and A disappear.
     await user.pointer([
       {
-        target: svg,
+        target: layerContainer,
         coords: { x: 90, y: 50 },
       },
     ]);
 
-    fireEvent.wheel(svg, { deltaY: -10, clientX: 90, clientY: 50 });
+    fireEvent.wheel(layerContainer, { deltaY: -10, clientX: 90, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(3);
+    expect(onZoomChange.mock.calls.length).to.equal(3);
     expect(getAxisTickValues('x', container)).to.deep.equal(['B', 'C']);
 
     // scroll back
-    fireEvent.wheel(svg, { deltaY: 10, clientX: 90, clientY: 50 });
+    fireEvent.wheel(layerContainer, { deltaY: 10, clientX: 90, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(4);
+    expect(onZoomChange.mock.calls.length).to.equal(4);
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
   });
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
     it(`should pan on ${pointerName} drag`, async () => {
-      const onZoomChange = sinon.spy();
+      const onZoomChange = vi.fn();
       const { user, container } = render(
         <LineChartPro
           {...lineChartProps}
@@ -118,61 +120,62 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
       expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
-      // eslint-disable-next-line testing-library/no-container
-      const svg = container.querySelector(CHART_SELECTOR)!;
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
 
       // we drag one position so C should be visible
       await user.pointer([
         {
           keys: `[${pointerName}>]`,
-          target: svg,
+          target: layerContainer,
           coords: { x: 15, y: 20 },
         },
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
-          target: svg,
+          target: layerContainer,
           coords: { x: 135, y: 20 },
         },
         {
           keys: `[/${pointerName}]`,
-          target: svg,
+          target: layerContainer,
           coords: { x: 135, y: 20 },
         },
       ]);
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(1);
+      expect(onZoomChange.mock.calls.length).to.equal(1);
       expect(getAxisTickValues('x', container)).to.deep.equal(['C']);
 
       // we drag all the way to the left so A should be visible
       await user.pointer([
         {
           keys: `[${pointerName}>]`,
-          target: svg,
+          target: layerContainer,
           coords: { x: 15, y: 20 },
         },
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
-          target: svg,
+          target: layerContainer,
           coords: { x: 400, y: 20 },
         },
         {
           keys: `[/${pointerName}]`,
-          target: svg,
+          target: layerContainer,
           coords: { x: 400, y: 20 },
         },
       ]);
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(2);
+      expect(onZoomChange.mock.calls.length).to.equal(2);
       expect(getAxisTickValues('x', container)).to.deep.equal(['A']);
     });
   });
 
   it('should pan with area series enabled', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro
         {...lineChartProps}
@@ -190,8 +193,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
-    // eslint-disable-next-line testing-library/no-container
-    const target = container.querySelector('.MuiAreaElement-root')!;
+    const target = container.querySelector(`.${lineClasses.area}`)!;
 
     // We drag from right to left to pan the view
     await user.pointer([
@@ -213,7 +215,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // Wait the animation frame
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    expect(onZoomChange.mock.calls.length).to.equal(1);
     expect(getAxisTickValues('x', container)).to.deep.equal(['C']);
 
     // Continue dragging to see more data points
@@ -236,12 +238,12 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // Wait the animation frame
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(2);
+    expect(onZoomChange.mock.calls.length).to.equal(2);
     expect(getAxisTickValues('x', container)).to.deep.equal(['A']);
   });
 
   it('should zoom on pinch', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,
       options,
@@ -249,49 +251,50 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
-    // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector(CHART_SELECTOR)!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
 
     await user.pointer([
       {
         keys: '[TouchA>]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 55, y: 45 },
       },
       {
         keys: '[TouchB>]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 45, y: 55 },
       },
       {
         pointerName: 'TouchA',
-        target: svg,
+        target: layerContainer,
         coords: { x: 65, y: 25 },
       },
       {
         pointerName: 'TouchB',
-        target: svg,
+        target: layerContainer,
         coords: { x: 25, y: 65 },
       },
       {
         keys: '[/TouchA]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 65, y: 25 },
       },
       {
         keys: '[/TouchB]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 25, y: 65 },
       },
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.be.above(0);
+    expect(onZoomChange.mock.calls.length).to.be.above(0);
     expect(getAxisTickValues('x', container)).to.deep.equal(['B', 'C']);
   });
 
   it('should zoom on tap and drag', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro
         {...lineChartProps}
@@ -305,45 +308,46 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
-    // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector(CHART_SELECTOR)!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
 
     // Perform tap and drag gesture - tap once, then drag vertically up to zoom in
     await user.pointer([
       {
         keys: '[MouseLeft>]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[/MouseLeft]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[MouseLeft>]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 50 },
       },
       {
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 80 },
       },
       {
         keys: '[/MouseLeft]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 80 },
       },
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.be.above(0);
+    expect(onZoomChange.mock.calls.length).to.be.above(0);
     // Should have zoomed in to show fewer ticks
     expect(getAxisTickValues('x', container).length).to.be.lessThan(4);
   });
 
   it('should handle extreme deltaY values without breaking zoom (regression test for deltaY < -100)', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro
         {...lineChartProps}
@@ -357,34 +361,35 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
-    // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector(CHART_SELECTOR)!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
 
     // Simulate the problematic scenario:
     // 1. Small drag down (positive deltaY) - this should zoom out slightly
     await user.pointer([
       {
         keys: '[MouseLeft>]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[/MouseLeft]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[MouseLeft>]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 50 },
       },
       {
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 60 }, // Small drag down
       },
       {
         keys: '[/MouseLeft]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 60 },
       },
     ]);
@@ -398,26 +403,26 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     await user.pointer([
       {
         keys: '[MouseLeft>]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[/MouseLeft]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[MouseLeft>]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: 50 },
       },
       {
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: -1000 }, // Very large drag up
       },
       {
         keys: '[/MouseLeft]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 50, y: -1000 },
       },
     ]);
@@ -428,7 +433,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
   });
 
   it('should pan on press and drag', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro
         {...lineChartProps}
@@ -443,13 +448,14 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
-    // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector(CHART_SELECTOR)!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
 
     await user.pointer([
       {
         keys: '[MouseLeft>]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 15, y: 20 },
       },
     ]);
@@ -459,24 +465,24 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // we drag one position so C should be visible
     await user.pointer([
       {
-        target: svg,
+        target: layerContainer,
         coords: { x: 135, y: 20 },
       },
       {
         keys: '[/MouseLeft]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 135, y: 20 },
       },
     ]);
     // Wait the animation frame
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    expect(onZoomChange.mock.calls.length).to.equal(1);
     expect(getAxisTickValues('x', container)).to.deep.equal(['C']);
   });
 
   it('should not pan on press and drag if there is no press', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro
         {...lineChartProps}
@@ -491,30 +497,31 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
-    // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector(CHART_SELECTOR)!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
 
     // we drag one position so C should be visible
     await user.pointer([
       {
         keys: '[MouseLeft>]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 15, y: 20 },
       },
       {
-        target: svg,
+        target: layerContainer,
         coords: { x: 135, y: 20 },
       },
       {
         keys: '[/MouseLeft]',
-        target: svg,
+        target: layerContainer,
         coords: { x: 135, y: 20 },
       },
     ]);
     // Wait the animation frame
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(0);
+    expect(onZoomChange.mock.calls.length).to.equal(0);
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']); // no change
   });
 });

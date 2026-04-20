@@ -2,12 +2,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useGridPanelContext } from '@mui/x-data-grid-pro/internals';
 import {
   gridPreferencePanelStateSelector,
   GridPreferencePanelsValue,
-  GridSlotProps,
+  type GridSlotProps,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import { useForkRef } from '@mui/material/utils';

@@ -4,8 +4,11 @@ import PropTypes from 'prop-types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import { useChartsSlots } from '@mui/x-charts/internals';
-import { ChartsSlotsPro } from '../../internals/material';
-import { ChartBasePopperProps, Placement } from '../../internals/slots/chartBaseSlotProps';
+import { type ChartsSlotsPro } from '../../internals/material';
+import {
+  type ChartBasePopperProps,
+  type Placement,
+} from '../../internals/slots/chartBaseSlotProps';
 
 export interface ChartsMenuProps extends Pick<ChartBasePopperProps, 'className' | 'onExited'> {
   open: boolean;

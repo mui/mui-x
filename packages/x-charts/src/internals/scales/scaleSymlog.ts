@@ -1,6 +1,6 @@
 import {
-  NumberValue,
-  ScaleSymLog,
+  type NumberValue,
+  type ScaleSymLog,
   scaleSymlog as originalScaleSymlog,
   scaleLog,
   scaleLinear,

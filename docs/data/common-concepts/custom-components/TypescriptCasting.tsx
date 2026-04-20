@@ -33,8 +33,9 @@ function DisplayWeekNumberToggle({
   );
 }
 
-interface CustomCalendarHeaderProps
-  extends PropsFromSlot<DateCalendarSlots['calendarHeader']> {
+interface CustomCalendarHeaderProps extends PropsFromSlot<
+  DateCalendarSlots['calendarHeader']
+> {
   displayWeekNumber: boolean;
   setDisplayWeekNumber: (displayWeekNumber: boolean) => void;
 }

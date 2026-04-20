@@ -1,8 +1,11 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "borderRadius": { "description": "The border radius of the heatmap cells in pixels." },
+    "className": { "description": "A CSS class name applied to the root element." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": { "cell": "The component that renders the heatmap cell." }
 }

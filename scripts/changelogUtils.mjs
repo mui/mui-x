@@ -11,15 +11,19 @@
  */
 import fs from 'fs';
 import path from 'path';
+import {
+  findLatestTaggedVersion,
+  fetchCommitsBetweenRefs,
+} from '@mui/internal-code-infra/changelog';
+import { $ } from 'execa';
 
-const ORG = 'mui';
 const REPO = 'mui-x';
 
 /**
  * @type {string[]}
  * Labels to exclude from the changelog
  */
-const excludeLabels = ['dependencies', 'scope: scheduler'];
+const excludeLabels = ['dependencies'];
 
 /**
  * @type {string[]}
@@ -107,38 +111,9 @@ function parseTags(commitMessage) {
     .join(',');
 }
 
-/**
- * Find the latest tagged version from GitHub
- * @param {number} major - The major version to find the latest tagged version for
- * @returns {Promise<string>} The latest tagged version
- */
-async function findLatestTaggedVersionForMajor(major) {
-  // Fetch all tags from the GitHub API (pagination > 100) and return the last one after optional filtering
-  const tags = await octokit.paginate(octokit.rest.repos.listTags, {
-    owner: ORG,
-    repo: REPO,
-    per_page: 100,
-  });
-
-  if (!tags || tags.length === 0) {
-    throw new Error('No tags found in repository');
-  }
-
-  if (major != null) {
-    const majorStr = String(major);
-    const filteredTags = tags.filter((tag) => tag.name && tag.name.startsWith(`v${majorStr}.`));
-    if (filteredTags.length > 0) {
-      // GitHub returns tags in reverse chronological order, so first is the latest
-      return filteredTags[0].name.trim();
-    }
-  }
-
-  return tags[0].name.trim();
-}
-
-function resolvePackagesByLabels(labels) {
+function resolvePackagesByLabels(labels = []) {
   const resolvedPackages = [];
-  labels.forEach((label) => {
+  for (const label of labels) {
     switch (label.name) {
       case 'scope: data grid':
         resolvedPackages.push('DataGrid');
@@ -158,8 +133,53 @@ function resolvePackagesByLabels(labels) {
       default:
         break;
     }
-  });
+  }
   return resolvedPackages;
+}
+
+function getContributors(commits = []) {
+  const community = {
+    firstTimers: new Set(),
+    contributors: new Set(),
+    team: new Set(),
+  };
+  const warnUsers = new Map();
+  for (const commitItem of commits) {
+    const { author, commit } = commitItem;
+    if (!author || author.login === 'renovate[bot]') {
+      continue;
+    }
+    if (author.login === 'github-actions[bot]') {
+      // extract author name from commit message if the commit is made by github-actions bot
+      const authorNameMatch = commit.message.match(/@([a-zA-Z0-9-]+)/);
+      if (authorNameMatch) {
+        const username = `@${authorNameMatch[1]}`;
+        community.team.add(username);
+        warnUsers.set(commit.message.split('\n')[0].trim(), username);
+      }
+      continue;
+    }
+    const username = `@${author.login}`;
+    if (author.association === 'team') {
+      community.team.add(username);
+    } else if (author.association === 'first_timer') {
+      community.firstTimers.add(username);
+    } else {
+      community.contributors.add(username);
+    }
+  }
+  if (warnUsers.size > 0) {
+    console.warn(
+      `The following commits were made by github-actions[bot] and attributed to users based on the commit message:\n${Array.from(
+        warnUsers.entries(),
+      )
+        .map(([commitMessage, username]) => `- ${commitMessage}: ${username}`)
+        .join('\n')}
+Please verify that these attributions are correct. They have been added to the team members group.
+`,
+    );
+  }
+  return community;
 }
 
 /**
@@ -178,107 +198,36 @@ async function generateChangelog({
   returnEntry = false,
 }) {
   // fetch the last tag and chose the one to use for the release
-  const latestTaggedVersion = await findLatestTaggedVersionForMajor();
-  const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
+  const latestTaggedVersion = await findLatestTaggedVersion({
+    cwd: process.cwd(),
+    fetchAll: true,
+  });
+  const lastRelease = lastReleaseInput ?? latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
       `Creating changelog for ${lastRelease}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
     );
   }
 
-  // Now We will fetch all the commits between the chosen tag and release branch
-  /**
-   * @type {AsyncIterableIterator<import('@octokit/rest').Octokit.Response<import('@octokit/rest').Octokit.ReposCompareCommitsResponse>>}
-   */
-  const timeline = octokit.paginate.iterator(
-    octokit.repos.compareCommits.endpoint.merge({
-      owner: ORG,
+  const commitsItems = (
+    await fetchCommitsBetweenRefs({
+      octokit,
       repo: REPO,
-      base: lastRelease,
-      head: release,
-    }),
-  );
+      lastRelease,
+      release,
+    })
+  )
+    .filter((commit) => commit.author?.login !== 'renovate[bot]')
+    .map((commit) => ({
+      ...commit,
+      commit: {
+        message: commit.message,
+      },
+    }));
 
-  /**
-   * @type {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]}
-   */
-  const commitsItems = [];
-  for await (const response of timeline) {
-    const { data: compareCommits } = response;
-    commitsItems.push(...compareCommits.commits);
-  }
-
-  // Fetch all the pull Request and check if there is a section named changelog
   const changeLogMessages = {};
   const prsLabelsMap = {};
-  const community = {
-    firstTimers: new Set(),
-    contributors: new Set(),
-    team: new Set(),
-  };
-  await Promise.all(
-    commitsItems.map(async (commitsItem) => {
-      const searchPullRequestId = commitsItem.commit.message.match(/\(#([0-9]+)\)/);
-      if (!searchPullRequestId || !searchPullRequestId[1]) {
-        return;
-      }
-
-      const {
-        data: {
-          body: bodyMessage,
-          labels,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          author_association,
-          user: { login },
-        },
-      } = await octokit.rest.pulls.get({
-        owner: ORG,
-        repo: REPO,
-        pull_number: Number(searchPullRequestId[1]),
-      });
-
-      // Skip bot accounts
-      if (!login.includes('[bot]')) {
-        switch (author_association) {
-          case 'CONTRIBUTOR':
-            community.contributors.add(`@${login}`);
-            break;
-          case 'FIRST_TIMER':
-            community.firstTimers.add(`@${login}`);
-            break;
-          case 'MEMBER':
-            community.team.add(`@${login}`);
-            break;
-          default:
-        }
-      }
-
-      prsLabelsMap[commitsItem.sha] = labels;
-
-      if (!bodyMessage) {
-        return;
-      }
-
-      const changelogMotif = '## changelog';
-      const lowercaseBody = bodyMessage.toLowerCase();
-      // Check if the body contains a line starting with '## changelog'
-      const matchedChangelog = lowercaseBody.matchAll(new RegExp(`^${changelogMotif}`, 'gim'));
-      const changelogMatches = Array.from(matchedChangelog);
-      if (changelogMatches.length > 0) {
-        const prLabels = prsLabelsMap[commitsItem.sha];
-        const resolvedPackage = resolvePackagesByLabels(prLabels)[0];
-        const changelogIndex = changelogMatches[0].index;
-        const message = `From https://github.com/${ORG}/${REPO}/pull/${
-          searchPullRequestId[1]
-        }\n${bodyMessage.slice(changelogIndex + changelogMotif.length)}`;
-        if (changeLogMessages[resolvedPackage || 'general']) {
-          changeLogMessages[resolvedPackage || 'general'].push(message);
-        } else {
-          changeLogMessages[resolvedPackage || 'general'] = [message];
-        }
-      }
-    }),
-  );
+  const community = getContributors(commitsItems);
 
   // Dispatch commits in different sections
   const dataGridCommits = [];
@@ -292,7 +241,7 @@ async function generateChangelog({
   const treeViewCommits = [];
   const treeViewProCommits = [];
   const schedulerCommits = [];
-  const schedulerProCommits = [];
+  const schedulerPremiumCommits = [];
   const internalCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -350,8 +299,8 @@ async function generateChangelog({
         case 'scheduler':
           schedulerCommits.push(commitItem);
           break;
-        case 'scheduler-pro':
-          schedulerProCommits.push(commitItem);
+        case 'scheduler-premium':
+          schedulerPremiumCommits.push(commitItem);
           break;
         case 'docs':
           docsCommits.push(commitItem);
@@ -473,11 +422,15 @@ async function generateChangelog({
     if (hasPremiumVersion) {
       lines.push(`#### \`@mui/${packageName}-premium@${packageVersion}\` ${premiumIcon}`);
 
+      // Reference the Pro tier if it exists, otherwise fall back to the base
+      // package. Products like Scheduler ship Premium without a Pro tier.
+      const previousTierPackage = hasProVersion ? `@mui/${packageName}-pro` : `@mui/${packageName}`;
+
       if (premiumCommits?.length > 0) {
-        lines.push(`Same changes as in \`@mui/${packageName}-pro@${packageVersion}\`, plus:`);
+        lines.push(`Same changes as in \`${previousTierPackage}@${packageVersion}\`, plus:`);
         lines.push(logCommitEntries(premiumCommits));
       } else {
-        lines.push(`Same changes as in \`@mui/${packageName}-pro@${packageVersion}\`.`);
+        lines.push(`Same changes as in \`${previousTierPackage}@${packageVersion}\`.`);
       }
     }
 
@@ -594,6 +547,14 @@ ${logProductSection({
 })}
 
 ${logProductSection({
+  productName: 'Scheduler',
+  packageName: 'x-scheduler',
+  baseCommits: schedulerCommits,
+  premiumCommits: schedulerPremiumCommits,
+  changelogKey: 'scheduler',
+})}
+
+${logProductSection({
   productName: 'Codemod',
   packageName: 'x-codemod',
   baseCommits: codemodCommits,
@@ -632,6 +593,17 @@ ${logOtherSection({
     }
     return null;
   }
+}
+
+/**
+ * Fetches and returns the latest tagged version for a given major version.
+ * @param {string | undefined} majorVersion
+ */
+async function findLatestTaggedVersionForMajor(majorVersion) {
+  // Fetch all tags from all remotes to ensure we have the latest tags.
+  await $`git fetch --tags --all`;
+  const { stdout } = await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`}`; // only include "version-tags"
+  return stdout.trim();
 }
 
 /**

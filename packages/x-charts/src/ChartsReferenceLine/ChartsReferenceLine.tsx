@@ -1,8 +1,8 @@
 'use client';
 import PropTypes from 'prop-types';
-import { ChartsXReferenceLine, ChartsXReferenceLineProps } from './ChartsXReferenceLine';
-import { ChartsYReferenceLine, ChartsYReferenceLineProps } from './ChartsYReferenceLine';
-import { XOR } from '../internals/ts-generic';
+import { ChartsXReferenceLine, type ChartsXReferenceLineProps } from './ChartsXReferenceLine';
+import { ChartsYReferenceLine, type ChartsYReferenceLineProps } from './ChartsYReferenceLine';
+import { type XOR } from '../internals/ts-generic';
 
 type ChartsReferenceLineProps<TValue extends string | number | Date = string | number | Date> = XOR<
   ChartsXReferenceLineProps<TValue>,
@@ -13,13 +13,17 @@ function ChartsReferenceLine(props: ChartsReferenceLineProps) {
   const { x, y } = props;
   if (x !== undefined && y !== undefined) {
     throw new Error(
-      'MUI X Charts: The ChartsReferenceLine cannot have both `x` and `y` props set.',
+      'MUI X Charts: The ChartsReferenceLine cannot have both `x` and `y` props set. ' +
+        'A reference line can only be vertical (x) or horizontal (y), not both. ' +
+        'Remove either the `x` or `y` prop.',
     );
   }
 
   if (x === undefined && y === undefined) {
     throw new Error(
-      'MUI X Charts: The ChartsReferenceLine should have a value in `x` or `y` prop.',
+      'MUI X Charts: The ChartsReferenceLine requires either an `x` or `y` prop. ' +
+        'Without a value, the reference line cannot be positioned on the chart. ' +
+        'Provide either an `x` value for a vertical line or a `y` value for a horizontal line.',
     );
   }
 

@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { createRenderer, act } from '@mui/internal-test-utils';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import {
+  type GridApi,
+  useGridApiRef,
+  DataGridPro,
+  type DataGridProProps,
+} from '@mui/x-data-grid-pro';
 import { ptBR } from '@mui/x-data-grid-pro/locales';
 import { grid } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -160,7 +165,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
         </div>
       </ThemeProvider>,
     );
-    expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
+    expect(document.querySelector('[aria-label="Ordenar"]')).not.to.equal(null);
   });
 
   it('should support the sx prop', () => {

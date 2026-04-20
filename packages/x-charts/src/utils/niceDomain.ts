@@ -1,5 +1,5 @@
-import { NumberValue } from '@mui/x-charts-vendor/d3-scale';
-import { ContinuousScaleName } from '../models';
+import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import { type ContinuousScaleName } from '../models';
 import { getScale } from '../internals/getScale';
 
 /**

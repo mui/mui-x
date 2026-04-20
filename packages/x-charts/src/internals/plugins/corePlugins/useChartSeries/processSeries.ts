@@ -1,41 +1,47 @@
-import { SeriesId } from '../../../../models/seriesType/common';
-import { AllSeriesType } from '../../../../models/seriesType';
-import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
-import { ChartSeriesConfig } from '../../models/seriesConfig';
+import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { type SeriesId } from '../../../../models/seriesType/common';
+import { type AllSeriesType } from '../../../../models/seriesType';
+import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
+import { type ChartSeriesConfig, type SeriesProcessorParams } from '../useChartSeriesConfig';
 import {
-  SeriesProcessorParams,
-  SeriesProcessorResult,
-} from '../../models/seriesConfig/seriesProcessor.types';
+  type DefaultizedSeriesGroups,
+  type ProcessedSeries,
+  type SeriesIdToType,
+  type SeriesLayout,
+} from './useChartSeries.types';
+import type { IsItemVisibleFunction } from '../../featurePlugins/useChartVisibilityManager';
 
 /**
- * This methods is the interface between what the developer is providing and what components receives
- * To simplify the components behaviors, it groups series by type, such that LinePlots props are not updated if some line data are modified
- * It also add defaultized values such as the ids, colors
+ * This method groups series by type and adds defaultized values such as the ids and colors.
+ * It does NOT apply the series processors - that happens in a selector.
  * @param series The array of series provided by the developer
  * @param colors The color palette used to defaultize series colors
- * @returns An object structuring all the series by type.
+ * @returns An object structuring all the series by type with default values.
  */
-export const preprocessSeries = <TSeriesType extends ChartSeriesType>({
+export const defaultizeSeries = <SeriesType extends ChartSeriesType>({
   series,
   colors,
+  theme,
   seriesConfig,
-  dataset,
 }: {
-  series: Readonly<AllSeriesType<TSeriesType>[]>;
+  series: Readonly<AllSeriesType<SeriesType>[]>;
   colors: readonly string[];
-  seriesConfig: ChartSeriesConfig<TSeriesType>;
-  dataset?: Readonly<DatasetType>;
-}) => {
+  theme: 'light' | 'dark';
+  seriesConfig: ChartSeriesConfig<SeriesType>;
+}): {
+  defaultizedSeries: DefaultizedSeriesGroups<SeriesType>;
+  idToType: SeriesIdToType;
+} => {
   // Group series by type
-  const seriesGroups: { [type in ChartSeriesType]?: SeriesProcessorParams<type> } = {};
-  // Notice the line about uses `ChartSeriesType` instead of TSeriesType.
-  // That's probably because the series.type is not propagated from the generic but hardcoded in the config.
+  const seriesGroups: { [type in ChartSeriesType]?: SeriesProcessorParams<type> | undefined } = {};
+  const idToType = new Map<SeriesId, ChartSeriesType>();
 
-  series.forEach(<T extends TSeriesType>(seriesData: AllSeriesType<T>, seriesIndex: number) => {
+  series.forEach(<T extends SeriesType>(seriesData: AllSeriesType<T>, seriesIndex: number) => {
     const seriesWithDefaultValues = seriesConfig[seriesData.type as T].getSeriesWithDefaultValues(
       seriesData,
       seriesIndex,
       colors,
+      theme,
     );
 
     const id: SeriesId = seriesWithDefaultValues.id;
@@ -45,22 +51,87 @@ export const preprocessSeries = <TSeriesType extends ChartSeriesType>({
     }
 
     if (seriesGroups[seriesData.type]?.series[id] !== undefined) {
-      throw new Error(`MUI X Charts: series' id "${id}" is not unique.`);
+      throw new Error(
+        `MUI X Charts: Series id "${id}" is not unique. ` +
+          'Each series must have a unique id to be properly identified and rendered. ' +
+          'Provide a unique id for each series in your chart configuration.',
+      );
     }
 
     seriesGroups[seriesData.type]!.series[id] = seriesWithDefaultValues;
     seriesGroups[seriesData.type]!.seriesOrder.push(id);
+    if (idToType.has(id)) {
+      throw new Error(
+        `MUI X Charts: Series id "${id}" is not unique across series types. ` +
+          'Each series must have a unique id even across different series types. ' +
+          'Provide a unique id for each series in your chart configuration.',
+      );
+    }
+    idToType.set(id, seriesData.type);
   });
 
-  const processedSeries: { [type in TSeriesType]?: SeriesProcessorResult<TSeriesType> } = {};
+  return { defaultizedSeries: seriesGroups, idToType };
+};
+
+/**
+ * Applies series processors to the defaultized series groups.
+ * This should be called in a selector to compute processed series on-demand.
+ * @param defaultizedSeries The defaultized series groups
+ * @param seriesConfig The series configuration
+ * @param dataset The optional dataset
+ * @returns Processed series with all transformations applied
+ */
+export const applySeriesProcessors = <SeriesType extends ChartSeriesType>(
+  defaultizedSeries: DefaultizedSeriesGroups<SeriesType>,
+  seriesConfig: ChartSeriesConfig<SeriesType>,
+  dataset?: Readonly<DatasetType>,
+  isItemVisible?: IsItemVisibleFunction,
+): ProcessedSeries<SeriesType> => {
+  const processedSeries: ProcessedSeries<SeriesType> = {};
+
   // Apply formatter on a type group
-  (Object.keys(seriesConfig) as TSeriesType[]).forEach((type) => {
-    const group = seriesGroups[type];
+  (Object.keys(seriesConfig) as SeriesType[]).forEach((type) => {
+    const group = defaultizedSeries[type];
     if (group !== undefined) {
       processedSeries[type] =
-        seriesConfig[type]?.seriesProcessor?.(group, dataset) ?? seriesGroups[type];
+        seriesConfig[type]?.seriesProcessor?.(group, dataset, isItemVisible) ?? group;
     }
   });
 
   return processedSeries;
+};
+
+/**
+ * Applies series processors with drawing area to series if defined.
+ * @param processedSeries The processed series groups
+ * @param seriesConfig The series configuration
+ * @param drawingArea The drawing area
+ * @returns Processed series with all transformations applied
+ */
+export const applySeriesLayout = <SeriesType extends ChartSeriesType>(
+  processedSeries: ProcessedSeries<SeriesType>,
+  seriesConfig: ChartSeriesConfig<SeriesType>,
+  drawingArea: ChartDrawingArea,
+): SeriesLayout<SeriesType> => {
+  let processingDetected = false;
+  const seriesLayout: SeriesLayout<SeriesType> = {};
+
+  // Apply processors on series type per group
+  (Object.keys(processedSeries) as SeriesType[]).forEach((type) => {
+    const processor = seriesConfig[type]?.seriesLayout;
+    const thisSeries = processedSeries[type];
+    if (processor !== undefined && thisSeries !== undefined) {
+      const newValue = processor(thisSeries, drawingArea);
+
+      if (newValue && newValue !== processedSeries[type]) {
+        processingDetected = true;
+        seriesLayout[type] = newValue;
+      }
+    }
+  });
+
+  if (!processingDetected) {
+    return {};
+  }
+  return seriesLayout;
 };

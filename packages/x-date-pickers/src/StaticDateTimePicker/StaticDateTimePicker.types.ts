@@ -13,12 +13,10 @@ import {
 export interface StaticDateTimePickerSlots extends BaseDateTimePickerSlots, UseStaticPickerSlots {}
 
 export interface StaticDateTimePickerSlotProps
-  extends BaseDateTimePickerSlotProps,
-    UseStaticPickerSlotProps {}
+  extends BaseDateTimePickerSlotProps, UseStaticPickerSlotProps {}
 
 export interface StaticDateTimePickerProps
-  extends BaseDateTimePickerProps,
-    MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
+  extends BaseDateTimePickerProps, MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overridable component slots.
    * @default {}

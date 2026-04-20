@@ -1,0 +1,5 @@
+<Typography variant="h6" sx={{ alignSelf: 'center', textAlign: 'center' }}>
+  Yellow Taxi Trip Count - 2024
+</Typography>
+<HeatmapPremium renderer="webgl" {...settings} />
+<Typography variant="caption">Source: NYC.gov</Typography>

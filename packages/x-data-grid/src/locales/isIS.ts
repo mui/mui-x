@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const isISGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const isISGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Þétt',
   toolbarDensityStandard: 'Staðlað',
   toolbarDensityComfortable: 'Rúmlegt',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Afturkalla',
+  toolbarRedo: 'Endurgera',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Dálkar',
@@ -64,7 +68,7 @@ const isISGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Virkir',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eða',
-  filterPanelColumns: 'Dálkar',
+  filterPanelColumn: 'Dálkar',
   filterPanelInputLabel: 'Gildi',
   filterPanelInputPlaceholder: 'Síu gildi',
 
@@ -161,6 +165,10 @@ const isISGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'já',
   booleanCellFalseLabel: 'nei',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Stækka',
+  longTextCellCollapseLabel: 'Minnka',
+
   // Actions cell more text
   actionsCellMore: 'meira',
 
@@ -192,11 +200,12 @@ const isISGrid: Partial<GridLocaleText> = {
   //   count,
   //   estimated
   // }) => {
+  //   const unknownRowCount = count == null || count === -1;
   //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
   //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
+  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   // },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

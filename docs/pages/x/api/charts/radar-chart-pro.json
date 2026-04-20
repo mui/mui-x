@@ -11,13 +11,23 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "className": { "type": { "name": "string" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
+    "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "height": { "type": { "name": "number" } },
+    "hiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
+      }
+    },
     "hideLegend": { "type": { "name": "bool" } },
     "highlight": {
       "type": {
@@ -28,11 +38,17 @@
     },
     "highlightedItem": {
       "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
+        "name": "union",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
       }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
+      }
+    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
@@ -55,10 +71,17 @@
         "describedArgs": ["event", "data"]
       }
     },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifierWithType>) => void",
+        "describedArgs": ["hiddenItems"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },
@@ -67,6 +90,13 @@
       "signature": {
         "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, radarItemIdentifier: RadarItemIdentifier) => void",
         "describedArgs": ["event", "radarItemIdentifier"]
+      }
+    },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<SeriesType> | null) => void",
+        "describedArgs": ["tooltipItem"]
       }
     },
     "shape": {
@@ -90,6 +120,13 @@
         "returned": "string"
       }
     },
+    "title": { "type": { "name": "string" } },
+    "tooltipItem": {
+      "type": {
+        "name": "union",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+      }
+    },
     "width": { "type": { "name": "number" } }
   },
   "name": "RadarChartPro",
@@ -104,6 +141,12 @@
     { "name": "baseMenuItem", "description": "", "class": null },
     { "name": "baseMenuList", "description": "", "class": null },
     { "name": "basePopper", "description": "", "class": null },
+    {
+      "name": "baseToggleButton",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps>`.",
+      "class": null
+    },
+    { "name": "baseToggleButtonGroup", "description": "", "class": null },
     { "name": "baseTooltip", "description": "", "class": null },
     {
       "name": "exportIcon",

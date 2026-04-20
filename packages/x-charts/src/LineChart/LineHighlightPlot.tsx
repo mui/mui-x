@@ -1,17 +1,16 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
-import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
-import { getValueToPositionMapper } from '../hooks/useScale';
+import { LineHighlightElement, type LineHighlightElementProps } from './LineHighlightElement';
+import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
 import getColor from './seriesConfig/getColor';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import {
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
   selectorChartsHighlightXAxisIndex,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
@@ -55,10 +54,10 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
-  const { instance } = useChartContext();
+  const { instance } = useChartsContext();
 
   const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
-  const highlightedIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
+  const highlightedIndexes = store.use(selectorChartsHighlightXAxisIndex);
 
   if (highlightedIndexes.length === 0) {
     return null;
@@ -81,13 +80,14 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             const {
               xAxisId = defaultXAxisId,
               yAxisId = defaultYAxisId,
-              stackedData,
+              visibleStackedData,
               data,
               disableHighlight,
               shape = 'circle',
+              hidden,
             } = series[seriesId];
 
-            if (disableHighlight || data[highlightedIndex] == null) {
+            if (hidden || disableHighlight || data[highlightedIndex] == null) {
               return null;
             }
             if (highlightedAxisId !== xAxisId) {
@@ -103,12 +103,14 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
                   xAxisId === DEFAULT_X_AXIS_KEY
                     ? 'The first `xAxis`'
                     : `The x-axis with id "${xAxisId}"`
-                } should have data property to be able to display a line plot.`,
+                } should have a data property to be able to display a line plot. ` +
+                  'The x-axis data defines the positions for each point in the line. ' +
+                  'Provide a data array to the x-axis configuration.',
               );
             }
 
             const x = xScale(xData[highlightedIndex]);
-            const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
+            const y = yScale(visibleStackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
 
             if (!instance.isPointInside(x, y)) {
               return null;
@@ -118,7 +120,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             return (
               <Element
                 key={`${seriesId}`}
-                id={seriesId}
+                seriesId={seriesId}
                 color={colorGetter(highlightedIndex)}
                 x={x}
                 y={y}

@@ -1,24 +1,27 @@
-import { AxisConfig, ScaleName } from '../../../../models';
+import { type AxisConfig, type ScaleName } from '../../../../models';
 import {
-  ChartsAxisProps,
+  type ChartsAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
-  ChartsRotationAxisProps,
-  ChartsRadiusAxisProps,
-  PolarAxisDefaultized,
-  AxisId,
-  PolarAxisConfig,
+  type ChartsRotationAxisProps,
+  type ChartsRadiusAxisProps,
+  type PolarAxisDefaultized,
+  type AxisId,
+  type PolarAxisConfig,
   isContinuousScaleConfig,
 } from '../../../../models/axis';
-import { ChartSeriesType, PolarChartSeriesType } from '../../../../models/seriesType/config';
+import {
+  type ChartSeriesType,
+  type PolarChartSeriesType,
+} from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
-import { getDefaultTickNumber, getTickNumber, scaleTickNumberByRange } from '../../../ticks';
+import { getDefaultTickNumber, getTickNumber } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
-import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import { type ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { deg2rad } from '../../../angleConversion';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { scaleBand, scalePoint } from '../../../scales';
@@ -30,6 +33,7 @@ export type DefaultizedAxisConfig<
 };
 
 type RotationConfig = PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>;
+type RadiusConfig = PolarAxisConfig<ScaleName, any, ChartsRadiusAxisProps>;
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -54,7 +58,11 @@ function getRange(
       deg2rad((axis as RotationConfig).endAngle, 2 * Math.PI),
     ];
   }
-  return [0, Math.min(drawingArea.height, drawingArea.width) / 2];
+  const availableRadius = Math.min(drawingArea.height, drawingArea.width) / 2;
+  return [
+    (axis as RadiusConfig).minRadius ?? 0,
+    (axis as RadiusConfig).maxRadius ?? availableRadius,
+  ];
 }
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
@@ -65,31 +73,31 @@ export type ComputeResult<T extends ChartsAxisProps> = {
   axisIds: string[];
 };
 
-type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
+type ComputeCommonParams<SeriesType extends ChartSeriesType = ChartSeriesType> = {
   drawingArea: ChartDrawingArea;
-  formattedSeries: ProcessedSeries<T>;
-  seriesConfig: ChartSeriesConfig<T>;
+  formattedSeries: ProcessedSeries<SeriesType>;
+  seriesConfig: ChartSeriesConfig<SeriesType>;
 };
 
-export function computeAxisValue<T extends ChartSeriesType>(
-  options: ComputeCommonParams<T> & {
+export function computeAxisValue<SeriesType extends ChartSeriesType>(
+  options: ComputeCommonParams<SeriesType> & {
     axis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
     axisDirection: 'radius';
   },
 ): ComputeResult<ChartsRadiusAxisProps>;
-export function computeAxisValue<T extends ChartSeriesType>(
-  options: ComputeCommonParams<T> & {
+export function computeAxisValue<SeriesType extends ChartSeriesType>(
+  options: ComputeCommonParams<SeriesType> & {
     axis?: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
     axisDirection: 'rotation';
   },
 ): ComputeResult<ChartsRotationAxisProps>;
-export function computeAxisValue<T extends ChartSeriesType>({
+export function computeAxisValue<SeriesType extends ChartSeriesType>({
   drawingArea,
   formattedSeries,
   axis: allAxis,
   seriesConfig,
   axisDirection,
-}: ComputeCommonParams<T> & {
+}: ComputeCommonParams<SeriesType> & {
   axis?: AxisConfig<ScaleName, any, ChartsAxisProps>[];
   axisDirection: 'radius' | 'rotation';
 }) {
@@ -189,15 +197,19 @@ export function computeAxisValue<T extends ChartSeriesType>({
       axisExtremums[1] = max;
     }
 
-    const rawTickNumber = getTickNumber(
-      axis,
-      axisExtremums,
-      getDefaultTickNumber(Math.abs(range[1] - range[0])),
-    );
-    const tickNumber = scaleTickNumberByRange(rawTickNumber, range);
+    // Use degrees to display more ticks by default
+    const ratio = axisDirection === 'rotation' ? 180 / 3 : 1;
+
+    const tickNumber =
+      axis.tickNumber ??
+      getTickNumber(
+        axis,
+        axisExtremums,
+        getDefaultTickNumber(ratio * Math.abs(range[1] - range[0])),
+      );
 
     const scale = getScale(scaleType, axisExtremums, range);
-    const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
+    const finalScale = domainLimit === 'nice' ? scale.nice(tickNumber) : scale;
     const [minDomain, maxDomain] = finalScale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 

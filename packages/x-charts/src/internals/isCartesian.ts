@@ -1,7 +1,7 @@
 import {
-  CartesianChartSeriesType,
-  ChartSeriesDefaultized,
-  ChartSeriesType,
+  type CartesianChartSeriesType,
+  type ChartSeriesDefaultized,
+  type ChartSeriesType,
 } from '../models/seriesType/config';
 import { cartesianSeriesTypes } from './configInit';
 
