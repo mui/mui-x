@@ -39,8 +39,6 @@ describeAdapters(
 
       // Should still be invalid despite cycling 3 times, must not flash to valid between spins
       expect(inputRoot).to.have.attribute('aria-invalid', 'true');
-
-      view.unmount();
     });
   },
 );

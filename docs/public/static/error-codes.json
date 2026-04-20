@@ -254,5 +254,6 @@
   "253": "MUI X Chat: useChatStore must be used within a <ChatProvider> component",
   "254": "Stream processing failed.",
   "255": "MUI X Chat: useChatRuntimeContext must be used within a <ChatProvider> component",
-  "256": "MUI X Chat: useChatStoreContext must be used within a <ChatProvider> component"
+  "256": "MUI X Chat: useChatStoreContext must be used within a <ChatProvider> component",
+  "257": "MUI X Scheduler: CalendarGridDayRowContext is missing. <CalendarGrid.DayCell /> and <CalendarGrid.DayEvent /> must be placed within <CalendarGrid.DayRow />. Ensure the component hierarchy is correct."
 }

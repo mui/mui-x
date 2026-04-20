@@ -52,6 +52,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     start: columnStart,
     end: columnEnd,
     index: columnIndex,
+    hasFocus: columnHasFocus,
     getCursorPositionInElementMs,
   } = useCalendarGridTimeColumnContext();
 
@@ -112,6 +113,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const { getButtonProps, buttonRef } = useButton({
     disabled: !isInteractive,
     native: nativeButton,
+    tabIndex: columnHasFocus ? 0 : -1,
   });
 
   const { position, duration } = useElementPositionInCollection({

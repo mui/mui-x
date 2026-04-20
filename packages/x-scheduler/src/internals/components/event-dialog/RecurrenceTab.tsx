@@ -176,7 +176,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -416,18 +416,18 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   return (
     <EventDialogTabPanel
       role="tabpanel"
-      id="recurrence-tabpanel"
-      aria-labelledby="recurrence-tab"
+      id={`${schedulerId}-recurrence-tabpanel`}
+      aria-labelledby={`${schedulerId}-recurrence-tab`}
       className={classes.eventDialogTabPanel}
       hidden={tabValue !== 'recurrence'}
     >
       <EventDialogTabContent className={classes.eventDialogTabContent}>
         <FormControl fullWidth size="small">
-          <InputLabel id="recurrence-preset-label">
+          <InputLabel id={`${schedulerId}-recurrence-preset-label`}>
             {localeText.recurrenceMainSelectCustomLabel}
           </InputLabel>
           <Select
-            labelId="recurrence-preset-label"
+            labelId={`${schedulerId}-recurrence-preset-label`}
             name="recurrencePreset"
             label={localeText.recurrenceMainSelectCustomLabel}
             value={controlled.recurrenceSelection ?? 'no-repeat'}
