@@ -160,7 +160,7 @@ export namespace TimelineGridEventRow {
      */
     resourceId: SchedulerResourceId;
     /**
-     * Whether event creation is disabled for this row.
+     * Whether event creation is disabled.
      */
     creationDisabled: boolean;
   }

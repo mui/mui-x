@@ -4,7 +4,7 @@ export enum TimelineGridEventRowDataAttributes {
    */
   resourceId = 'data-resource-id',
   /**
-   * Present when event creation is disabled for this row.
+   * Present when event creation is disabled.
    */
   creationDisabled = 'data-creation-disabled',
 }
