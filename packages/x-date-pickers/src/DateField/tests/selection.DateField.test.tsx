@@ -20,7 +20,6 @@ describe('<DateField /> - Selection', () => {
       });
       expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM');
-      view.unmount();
     });
 
     it('should select 1st section (`autoFocus = true`) with start separator', () => {
@@ -30,7 +29,6 @@ describe('<DateField /> - Selection', () => {
       });
       expectFieldValue(view.getSectionsContainer(), '- YYYY');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
-      view.unmount();
     });
 
     it('should not select 1st section on mount (`autoFocus = true` and `disabled = true`)', () => {
@@ -40,7 +38,6 @@ describe('<DateField /> - Selection', () => {
       });
       expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('');
-      view.unmount();
     });
   });
 
@@ -53,8 +50,6 @@ describe('<DateField /> - Selection', () => {
 
       await view.selectSectionAsync('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
-
-      view.unmount();
     });
 
     it('should not change the selection when clicking on the only already selected section', async () => {
@@ -65,8 +60,6 @@ describe('<DateField /> - Selection', () => {
 
       await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
-
-      view.unmount();
     });
 
     it('should not select section on click (`disabled = true`)', async () => {
@@ -76,8 +69,6 @@ describe('<DateField /> - Selection', () => {
 
       await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('');
-
-      view.unmount();
     });
   });
 
@@ -91,8 +82,6 @@ describe('<DateField /> - Selection', () => {
         ctrlKey: true,
       });
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
-
-      view.unmount();
     });
 
     it('should select all sections with start separator', async () => {
@@ -106,8 +95,6 @@ describe('<DateField /> - Selection', () => {
         ctrlKey: true,
       });
       expect(getCleanedSelectedContent()).to.equal('- YYYY');
-
-      view.unmount();
     });
   });
 
@@ -118,7 +105,6 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('DD');
       fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
-      view.unmount();
     });
 
     it('should stay on the current section when the last section is selected', async () => {
@@ -127,7 +113,6 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('YYYY');
       fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
-      view.unmount();
     });
 
     it('should select the last section when all the sections are selected', async () => {
@@ -144,8 +129,6 @@ describe('<DateField /> - Selection', () => {
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
-
-      view.unmount();
     });
 
     it('should select the next section when editing after all the sections were selected', async () => {
@@ -165,8 +148,6 @@ describe('<DateField /> - Selection', () => {
 
       fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('DD');
-
-      view.unmount();
     });
   });
 
@@ -177,7 +158,6 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('DD');
       fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('MM');
-      view.unmount();
     });
 
     it('should stay on the current section when the first section is selected', async () => {
@@ -186,7 +166,6 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM');
       fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('MM');
-      view.unmount();
     });
 
     it('should select the first section when all the sections are selected', async () => {
@@ -203,8 +182,6 @@ describe('<DateField /> - Selection', () => {
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('MM');
-
-      view.unmount();
     });
 
     it('should select the first section when `inputRef.current` is focused', () => {

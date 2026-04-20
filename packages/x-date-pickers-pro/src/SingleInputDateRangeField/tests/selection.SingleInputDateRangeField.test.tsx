@@ -22,8 +22,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       });
       expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY – MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM');
-
-      view.unmount();
     });
   });
 
@@ -46,8 +44,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
       await view.selectSectionAsync('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
-
-      view.unmount();
     });
 
     it('should not change the selection when clicking on the only already selected section', async () => {
@@ -68,8 +64,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
       await view.selectSectionAsync('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
-
-      view.unmount();
     });
   });
 
@@ -94,8 +88,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
       fireEvent.keyDown(view.getActiveSection(4), { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
-
-      view.unmount();
     });
 
     it('should stay on the current section when the last section is selected', async () => {
@@ -105,8 +97,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('YYYY');
       fireEvent.keyDown(view.getActiveSection(5), { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
-
-      view.unmount();
     });
   });
 
@@ -130,8 +120,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
       fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('MM');
-
-      view.unmount();
     });
 
     it('should stay on the current section when the first section is selected', async () => {
@@ -141,8 +129,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM');
       fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('MM');
-
-      view.unmount();
     });
   });
 });
