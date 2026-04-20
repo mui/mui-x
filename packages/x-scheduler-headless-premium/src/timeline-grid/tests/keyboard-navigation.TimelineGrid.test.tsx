@@ -4,6 +4,7 @@ import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-headless-premium/event-timeline-premium-provider';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
+import type { TimelineGridColumnType } from '@mui/x-scheduler-headless-premium/models';
 import {
   adapter,
   createSchedulerRenderer,
@@ -25,22 +26,26 @@ describe('TimelineGrid keyboard navigation', () => {
     ResourceBuilder.new().build(),
   ];
 
-  let store: AnyEventCalendarStore | null = null;
-
-  function Grid() {
+  function Grid({
+    onStoreMount,
+    columnTypes,
+    eventCreation,
+  }: {
+    onStoreMount?: (store: AnyEventCalendarStore) => void;
+    columnTypes?: TimelineGridColumnType[];
+    eventCreation?: boolean;
+  } = {}) {
     return (
       <EventTimelinePremiumProvider
         events={[]}
         resources={resources}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        eventCreation={eventCreation}
       >
-        <TimelineGrid.Root>
+        <TimelineGrid.Root columnTypes={columnTypes}>
           <TimelineGrid.SubGrid>
             {(resourceId) => (
-              <TimelineGrid.TitleRow
-                key={resourceId}
-                data-testid={`title-${resourceId}`}
-              >
+              <TimelineGrid.TitleRow key={resourceId} data-testid={`title-${resourceId}`}>
                 <TimelineGrid.Cell>{resourceId}</TimelineGrid.Cell>
               </TimelineGrid.TitleRow>
             )}
@@ -66,12 +71,12 @@ describe('TimelineGrid keyboard navigation', () => {
             )}
           </TimelineGrid.SubGrid>
         </TimelineGrid.Root>
-        <SchedulerStoreRunner<AnyEventCalendarStore>
-          context={SchedulerStoreContext as any}
-          onMount={(s) => {
-            store = s;
-          }}
-        />
+        {onStoreMount && (
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={onStoreMount}
+          />
+        )}
       </EventTimelinePremiumProvider>
     );
   }
@@ -174,11 +179,56 @@ describe('TimelineGrid keyboard navigation', () => {
       await user.keyboard('{ArrowLeft}');
       expect(getTitleRows()[1]).toHaveFocus();
     });
+
+    it('should not move past the leftmost column on ArrowLeft', async () => {
+      const { user } = render(<Grid />);
+
+      act(() => {
+        getTitleRows()[0].focus();
+      });
+      await user.keyboard('{ArrowLeft}');
+
+      expect(getTitleRows()[0]).toHaveFocus();
+    });
+
+    it('should not move past the rightmost column on ArrowRight', async () => {
+      const { user } = render(<Grid />);
+
+      act(() => {
+        getEventsRows()[0].focus();
+      });
+      await user.keyboard('{ArrowRight}');
+
+      expect(getEventsRows()[0]).toHaveFocus();
+    });
+
+    it('should follow the order defined by a custom `columnTypes` prop', async () => {
+      const { user } = render(<Grid columnTypes={['events', 'title']} />);
+
+      act(() => {
+        getEventsRows()[0].focus();
+      });
+      await user.keyboard('{ArrowRight}');
+      expect(getTitleRows()[0]).toHaveFocus();
+
+      await user.keyboard('{ArrowLeft}');
+      expect(getEventsRows()[0]).toHaveFocus();
+
+      await user.keyboard('{ArrowLeft}');
+      expect(getEventsRows()[0]).toHaveFocus();
+    });
   });
 
   describe('event creation', () => {
     it('should create a timeline event placeholder on Enter keypress', async () => {
-      const { user } = render(<Grid />);
+      let store: AnyEventCalendarStore | null = null;
+      const { user } = render(
+        <Grid
+          onStoreMount={(s) => {
+            store = s;
+          }}
+        />,
+      );
 
       const rows = getEventsRows();
       act(() => {
@@ -189,6 +239,107 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
       expect(store!.state.occurrencePlaceholder?.surfaceType).to.equal('timeline');
+    });
+
+    it('should not create a placeholder on Enter from a title row', async () => {
+      let store: AnyEventCalendarStore | null = null;
+      const { user } = render(
+        <Grid
+          onStoreMount={(s) => {
+            store = s;
+          }}
+        />,
+      );
+
+      act(() => {
+        getTitleRows()[0].focus();
+      });
+      await user.keyboard('{Enter}');
+
+      expect(store!.state.occurrencePlaceholder).to.equal(null);
+    });
+
+    it('should not create a placeholder on Enter from a child of the EventRow', async () => {
+      let store: AnyEventCalendarStore | null = null;
+      const { user } = render(
+        <Grid
+          onStoreMount={(s) => {
+            store = s;
+          }}
+        />,
+      );
+
+      const event = getEventsRows()[0].querySelector(
+        '[data-testid^="event-"]',
+      ) as HTMLElement | null;
+      expect(event).not.to.equal(null);
+      act(() => {
+        event!.focus();
+      });
+      await user.keyboard('{Enter}');
+
+      expect(store!.state.occurrencePlaceholder).to.equal(null);
+    });
+
+    it('should not create a placeholder on Enter when event creation is disabled', async () => {
+      let store: AnyEventCalendarStore | null = null;
+      const { user } = render(
+        <Grid
+          eventCreation={false}
+          onStoreMount={(s) => {
+            store = s;
+          }}
+        />,
+      );
+
+      act(() => {
+        getEventsRows()[0].focus();
+      });
+      await user.keyboard('{Enter}');
+
+      expect(store!.state.occurrencePlaceholder).to.equal(null);
+    });
+  });
+
+  describe('focus state', () => {
+    it('should reset the focused cell state when focus leaves the grid', async () => {
+      render(
+        <React.Fragment>
+          <Grid />
+          <button type="button" data-testid="outside">
+            outside
+          </button>
+        </React.Fragment>,
+      );
+
+      const eventsRows = getEventsRows();
+      const events = eventsRows.map(
+        (row) => row.querySelector('[data-testid^="event-"]') as HTMLElement,
+      );
+
+      act(() => {
+        eventsRows[0].focus();
+      });
+      expect(events[0]).to.have.attribute('tabindex', '0');
+
+      act(() => {
+        screen.getByTestId('outside').focus();
+      });
+      expect(events[0]).to.have.attribute('tabindex', '-1');
+      expect(events[1]).to.have.attribute('tabindex', '-1');
+    });
+  });
+
+  describe('aria-rowindex', () => {
+    it('should set `aria-rowindex` on title and event rows', async () => {
+      render(<Grid />);
+
+      getTitleRows().forEach((row, i) => {
+        expect(row).to.have.attribute('aria-rowindex', String(i + 1));
+      });
+      getEventsRows().forEach((row, i) => {
+        expect(row).to.have.attribute('aria-rowindex', String(i + 1));
+      });
     });
   });
 
