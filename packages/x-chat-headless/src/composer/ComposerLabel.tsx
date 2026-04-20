@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useComposerContext } from './internals/ComposerContext';
 import { type ComposerOwnerState } from './composer.types';
@@ -11,7 +11,7 @@ export interface ComposerLabelSlots {
 }
 
 export interface ComposerLabelSlotProps {
-  label?: SlotComponentProps<'label', {}, ComposerOwnerState>;
+  label?: SlotComponentPropsFromProps<'label', {}, ComposerOwnerState>;
 }
 
 export interface ComposerLabelProps extends Omit<

@@ -268,7 +268,7 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
       onMouseDown={handleMouseDown}
       {...other}
       // compat with PickerDay for tests
-      data-testid={(other as any)['data-testid'] ?? 'day'}
+      data-testid={other['data-testid'] ?? 'day'}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
     >

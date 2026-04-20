@@ -132,7 +132,7 @@ describeTreeView<TreeViewAnyStore>(
                 item: ConditionallyMountedItem,
               }}
               slotProps={{
-                item: (ownerState) => ({ 'data-testid': ownerState.itemId }) as any,
+                item: (ownerState) => ({ 'data-testid': ownerState.itemId }),
               }}
               getItemLabel={(item) => item.id}
             />

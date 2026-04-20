@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import type { ChatPartRenderer, ChatPartRendererProps } from '../../renderers/chatPartRenderer';
 import type { ChatReasoningMessagePart } from '../../types/chat-message-parts';
 import type { ChatRole } from '../../types/chat-entities';
@@ -20,9 +20,9 @@ export interface ReasoningPartSlots {
 }
 
 export interface ReasoningPartSlotProps {
-  root?: SlotComponentProps<'details', {}, ReasoningPartOwnerState>;
-  summary?: SlotComponentProps<'summary', {}, ReasoningPartOwnerState>;
-  content?: SlotComponentProps<'div', {}, ReasoningPartOwnerState>;
+  root?: SlotComponentPropsFromProps<'details', {}, ReasoningPartOwnerState>;
+  summary?: SlotComponentPropsFromProps<'summary', {}, ReasoningPartOwnerState>;
+  content?: SlotComponentPropsFromProps<'div', {}, ReasoningPartOwnerState>;
 }
 
 export interface ReasoningPartProps extends ChatPartRendererProps<ChatReasoningMessagePart> {

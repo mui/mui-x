@@ -266,7 +266,7 @@ describeTreeView<TreeViewAnyStore>(
               setState(Math.random);
             }}
             slotProps={{
-              item: (ownerState) => ({ 'data-testid': ownerState.itemId }) as any,
+              item: (ownerState) => ({ 'data-testid': ownerState.itemId }),
             }}
             getItemLabel={getItemLabel}
           />

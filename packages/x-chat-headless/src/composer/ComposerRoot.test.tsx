@@ -344,9 +344,7 @@ describe('ComposerRoot', () => {
       render(
         <ChatRoot adapter={createAdapter()}>
           <ComposerRoot>
-            <ComposerAttachButton
-              slotProps={{ attachInput: { 'data-testid': 'attach-input' } as any }}
-            >
+            <ComposerAttachButton slotProps={{ attachInput: { 'data-testid': 'attach-input' } }}>
               Attach
             </ComposerAttachButton>
             <AttachmentCountIndicator />

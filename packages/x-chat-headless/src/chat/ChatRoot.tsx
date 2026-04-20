@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { ChatProvider, type ChatProviderProps } from '../ChatProvider';
 import type { ChatLocaleText } from './internals/chatLocaleText';
 import { ChatLocaleProvider } from './internals/ChatLocaleContext';
@@ -15,7 +15,7 @@ export interface ChatRootSlots {
 export interface ChatRootOwnerState {}
 
 export interface ChatRootSlotProps {
-  root?: SlotComponentProps<'div', {}, ChatRootOwnerState>;
+  root?: SlotComponentPropsFromProps<'div', {}, ChatRootOwnerState>;
 }
 
 export interface ChatRootProps<Cursor = string>

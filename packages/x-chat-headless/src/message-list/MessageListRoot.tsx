@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useChat } from '../hooks/useChat';
 import { useMessageIds } from '../hooks/useMessage';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
@@ -34,12 +34,12 @@ export interface MessageListRootSlots {
 }
 
 export interface MessageListRootSlotProps {
-  messageList?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
-  messageListScroller?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
-  messageListContent?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
-  messageListOverlay?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
-  messageListScrollbar?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
-  messageListScrollbarThumb?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageList?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
+  messageListScroller?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
+  messageListContent?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
+  messageListOverlay?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
+  messageListScrollbar?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
+  messageListScrollbarThumb?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
 }
 
 export interface MessageListRootAutoScrollConfig {

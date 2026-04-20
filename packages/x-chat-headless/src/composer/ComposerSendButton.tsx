@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { useComposerContext } from './internals/ComposerContext';
@@ -12,7 +12,7 @@ export interface ComposerSendButtonSlots {
 }
 
 export interface ComposerSendButtonSlotProps {
-  sendButton?: SlotComponentProps<'button', {}, ComposerSendButtonOwnerState>;
+  sendButton?: SlotComponentPropsFromProps<'button', {}, ComposerSendButtonOwnerState>;
 }
 
 export interface ComposerSendButtonProps extends Omit<

@@ -62,6 +62,33 @@ export function innerDescribeSlotsConformance(params: DescribeSlotsConformancePa
         // Make sure that the default class has not been removed
         expect(slotElement).to.have.class(slotConfig.className);
       });
+
+      it('should forward data-* and aria-* attributes via slotProps', () => {
+        const slotConfig = slots[slotName];
+        const response = render(
+          getElement({
+            slotName,
+            props: {
+              slotProps: {
+                [slotName]: {
+                  'data-testid': `slot-${slotName}`,
+                  'data-custom': 'forwarded',
+                  'aria-label': 'slot aria label',
+                },
+              },
+            },
+          }),
+        );
+
+        const slotElement =
+          response.container.querySelector(`.${slotConfig.className}`) ??
+          response.queryByTestId(`slot-${slotName}`);
+
+        expect(slotElement).not.to.equal(null);
+        expect(slotElement).to.have.attribute('data-testid', `slot-${slotName}`);
+        expect(slotElement).to.have.attribute('data-custom', 'forwarded');
+        expect(slotElement).to.have.attribute('aria-label', 'slot aria label');
+      });
     });
   });
 }

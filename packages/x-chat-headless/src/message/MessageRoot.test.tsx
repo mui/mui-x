@@ -409,7 +409,7 @@ describe('MessageRoot', () => {
           />
           <MessageMeta
             data-testid="meta-slot"
-            slotProps={{ edited: { 'data-extra': 'edited' } as any }}
+            slotProps={{ edited: { 'data-extra': 'edited' } }}
             slots={{
               edited: CustomEdited,
               meta: CustomMeta,

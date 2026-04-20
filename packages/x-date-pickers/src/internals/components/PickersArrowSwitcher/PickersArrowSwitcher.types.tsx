@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
 import { PickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
@@ -74,22 +74,22 @@ export interface PickersArrowSwitcherSlots {
 }
 
 export interface PickersArrowSwitcherSlotProps {
-  previousIconButton?: SlotComponentProps<
+  previousIconButton?: SlotComponentPropsFromProps<
     typeof IconButton,
     PickersArrowSwitcherSlotPropsOverrides,
     PickersArrowSwitcherOwnerState
   >;
-  nextIconButton?: SlotComponentProps<
+  nextIconButton?: SlotComponentPropsFromProps<
     typeof IconButton,
     PickersArrowSwitcherSlotPropsOverrides,
     PickersArrowSwitcherOwnerState
   >;
-  leftArrowIcon?: SlotComponentProps<
+  leftArrowIcon?: SlotComponentPropsFromProps<
     typeof SvgIcon,
     PickersArrowSwitcherSlotPropsOverrides,
     PickerOwnerState
   >;
-  rightArrowIcon?: SlotComponentProps<
+  rightArrowIcon?: SlotComponentPropsFromProps<
     typeof SvgIcon,
     PickersArrowSwitcherSlotPropsOverrides,
     PickerOwnerState
