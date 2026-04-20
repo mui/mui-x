@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import { selectorChartSvgHeight, selectorChartSvgWidth, useStore } from '@mui/x-charts/internals';
 import { useDrawingArea, useChartRootRef } from '@mui/x-charts/hooks';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
 import { ChartsWebGLContext } from './ChartsWebGLContext';
 import { ChartsWebGLOrderContext } from './ChartsWebGLOrderContext';
-import { CanvasPositioner } from './CanvasPositioner';
 import type { ChartsWebGLContextValue, DrawEntry } from './ChartsWebGLLayer.types';
 
 export const ChartsWebGLLayer = React.forwardRef<
@@ -148,3 +148,31 @@ export const ChartsWebGLLayer = React.forwardRef<
   );
 });
 
+function CanvasPositioner({
+  children,
+  ...other
+}: React.PropsWithChildren<React.ComponentProps<'div'>>) {
+  const store = useStore();
+  const svgWidth = store.use(selectorChartSvgWidth);
+  const svgHeight = store.use(selectorChartSvgHeight);
+
+  return (
+    <div
+      {...other}
+      style={{
+        position: 'absolute',
+        inset: 0,
+        pointerEvents: 'none',
+        /* Ensures the canvas occupies the same space as the SVG */
+        maxWidth: svgWidth,
+        maxHeight: svgHeight,
+        width: '100%',
+        height: '100%',
+        margin: 'auto',
+      }}
+      aria-hidden
+    >
+      {children}
+    </div>
+  );
+}
