@@ -18,10 +18,10 @@ export interface TimelineGridRootContext {
   /**
    * The ordered list of column types that are rendered in the grid.
    */
-  columnTypes: TimelineGridColumnType[];
+  columnTypes: readonly TimelineGridColumnType[];
 }
 
-export const DEFAULT_COLUMN_TYPES: TimelineGridColumnType[] = ['title', 'events'];
+export const DEFAULT_COLUMN_TYPES = ['title', 'events'] as const satisfies readonly TimelineGridColumnType[];
 
 export const TimelineGridRootContext = React.createContext<TimelineGridRootContext | undefined>(
   undefined,
