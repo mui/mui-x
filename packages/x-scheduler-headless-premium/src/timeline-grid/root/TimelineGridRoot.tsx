@@ -46,7 +46,11 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   );
 
   const setFocusedCell = React.useCallback((coordinates: TimelineGridCellCoordinates) => {
-    setFocusedCellState(coordinates);
+    setFocusedCellState((prev) =>
+      prev?.columnType === coordinates.columnType && prev.rowIndex === coordinates.rowIndex
+        ? prev
+        : coordinates,
+    );
   }, []);
 
   const handleBlur = React.useCallback((event: React.FocusEvent<HTMLDivElement>) => {
@@ -54,6 +58,12 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
       setFocusedCellState(null);
     }
   }, []);
+
+  React.useEffect(() => {
+    if (focusedCell !== null && focusedCell.rowIndex >= resources.length) {
+      setFocusedCellState(null);
+    }
+  }, [focusedCell, resources.length]);
 
   const contextValue: TimelineGridRootContext = React.useMemo(
     () => ({ focusedCell, setFocusedCell, columnTypes }),
