@@ -11,9 +11,7 @@ import { useTimelineGridSubGridContext } from '../../timeline-grid/sub-grid/Time
 /**
  * Handles arrow-key navigation and focus syncing for a timeline grid row.
  */
-export function useTimelineGridRowKeyboard(params: {
-  columnType: TimelineGridColumnType;
-}): {
+export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridColumnType }): {
   rowRef: React.RefObject<HTMLDivElement | null>;
   listItemRef: (node: HTMLDivElement | null) => void;
   index: number;
