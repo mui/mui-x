@@ -54,7 +54,8 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   }, []);
 
   const handleBlur = React.useCallback((event: React.FocusEvent<HTMLDivElement>) => {
-    if (!rootRef.current?.contains(event.relatedTarget as Node)) {
+    const nextTarget = event.relatedTarget;
+    if (!nextTarget || !rootRef.current?.contains(nextTarget)) {
       setFocusedCellState(null);
     }
   }, []);
