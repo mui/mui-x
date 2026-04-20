@@ -176,6 +176,15 @@ The example below uses the `renderer` prop to render 16,000 points with better p
 
 {{"demo": "ScatterBatchRenderer.js"}}
 
+### WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+For very large datasets, `ScatterChartPremium` supports a `webgl` renderer that draws points into a dedicated WebGL canvas layered behind the SVG.
+This bypasses per-point SVG entirely and trades item-level interactivity for throughput.
+
+The example below renders 200,000 points.
+
+{{"demo": "ScatterWebGLRenderer.js"}}
+
 ## Composition
 
 Use `ChartsDataProvider` to supply `series`, `xAxis`, and `yAxis` when composing a custom chart.

@@ -55,5 +55,6 @@ export * from './ChartsDataProviderPremium';
 export * from './ChartsContainerPremium';
 export * from './BarChartPremium';
 export * from './HeatmapPremium';
+export * from './ScatterChartPremium';
 export * from './ChartsWebGLLayer';
 export * from './CandlestickChart';
