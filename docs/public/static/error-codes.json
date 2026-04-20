@@ -256,5 +256,6 @@
   "255": "MUI X Chat: useChatRuntimeContext must be used within a <ChatProvider> component",
   "256": "MUI X Chat: useChatStoreContext must be used within a <ChatProvider> component",
   "257": "MUI X Scheduler: CalendarGridDayRowContext is missing. <CalendarGrid.DayCell /> and <CalendarGrid.DayEvent /> must be placed within <CalendarGrid.DayRow />. Ensure the component hierarchy is correct.",
-  "258": "MUI X Scheduler: TimelineGridRootContext is missing. TimelineGrid parts must be placed within <TimelineGrid.Root />."
+  "258": "MUI X Scheduler: TimelineGridRootContext is missing. TimelineGrid parts must be placed within <TimelineGrid.Root />.",
+  "259": "MUI X Scheduler: TimelineGridSubGridContext is missing. <TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be placed within <TimelineGrid.SubGrid />."
 }

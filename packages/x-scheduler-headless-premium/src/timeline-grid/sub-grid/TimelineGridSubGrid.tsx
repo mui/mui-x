@@ -10,6 +10,9 @@ import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/schedule
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { TimelineGridSubGridContext } from './TimelineGridSubGridContext';
+
+const subGridContextValue: TimelineGridSubGridContext = {};
 
 export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid(
   componentProps: TimelineGridSubGrid.Props,
@@ -53,7 +56,11 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
     props: [elementProps, { role: 'rowgroup', children }],
   });
 
-  return <CompositeList elementsRef={rowsRef}>{element}</CompositeList>;
+  return (
+    <TimelineGridSubGridContext.Provider value={subGridContextValue}>
+      <CompositeList elementsRef={rowsRef}>{element}</CompositeList>
+    </TimelineGridSubGridContext.Provider>
+  );
 });
 
 export namespace TimelineGridSubGrid {
