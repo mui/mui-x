@@ -59,19 +59,16 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     null,
   );
 
-  const setFocusedCell = React.useCallback(
-    (coordinates: TimelineGridCellCoordinates | null) => {
-      setFocusedCellState((prev) => {
-        if (coordinates === null) {
-          return null;
-        }
-        return prev?.columnType === coordinates.columnType && prev.rowIndex === coordinates.rowIndex
-          ? prev
-          : coordinates;
-      });
-    },
-    [],
-  );
+  const setFocusedCell = React.useCallback((coordinates: TimelineGridCellCoordinates | null) => {
+    setFocusedCellState((prev) => {
+      if (coordinates === null) {
+        return null;
+      }
+      return prev?.columnType === coordinates.columnType && prev.rowIndex === coordinates.rowIndex
+        ? prev
+        : coordinates;
+    });
+  }, []);
 
   const handleBlur = React.useCallback((event: React.FocusEvent<HTMLDivElement>) => {
     const nextTarget = event.relatedTarget;
