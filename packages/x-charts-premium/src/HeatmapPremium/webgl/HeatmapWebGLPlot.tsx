@@ -69,9 +69,12 @@ function HeatmapWebGLPlotImpl(props: {
   const dataLength = series.data.length;
 
   const drawRef = React.useRef<(() => void) | null>(null);
-  drawRef.current = () => {
-    gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, dataLength);
-  };
+
+  React.useEffect(() => {
+    drawRef.current = () => {
+      gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, dataLength);
+    };
+  }, [gl, dataLength]);
 
   React.useEffect(() => {
     return registerDraw(drawRef);

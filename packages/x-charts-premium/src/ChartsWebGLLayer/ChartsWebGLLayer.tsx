@@ -5,16 +5,22 @@ import { selectorChartSvgHeight, selectorChartSvgWidth, useStore } from '@mui/x-
 import { useDrawingArea, useChartRootRef } from '@mui/x-charts/hooks';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
 
+type DrawEntry = {
+  drawRef: React.RefObject<(() => void) | null>;
+  order: number;
+};
+
 export interface ChartsWebGLContextValue {
   gl: WebGL2RenderingContext;
   /**
    * Register a draw callback ref. Returns an unregister function.
-   * Callbacks are called in registration order (DOM order, since React effects fire top-to-bottom).
-   * Use a ref so the draw function can change without re-registration.
+   * Callbacks are sorted by the provided `order` number so z-order follows the children's position
+   * in `ChartsWebGLLayer`, stable across unmount/remount (e.g. toggled via series visibility).
    * @param {React.RefObject} drawRef A ref object whose current property is a draw callback function. The callback will be called with the WebGL context already set to this layer's canvas. Set to null to temporarily disable drawing without unregistering.
+   * @param {number} order Z-order index. Lower values draw first (behind higher values).
    * @returns {Function} Unregister function to remove the draw callback from the layer.
    */
-  registerDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
+  registerDraw: (drawRef: React.RefObject<(() => void) | null>, order: number) => () => void;
   /**
    * Request a render frame. The layer will clear once, then call all registered draw callbacks in order.
    */
@@ -23,12 +29,35 @@ export interface ChartsWebGLContextValue {
 
 const ChartsWebGLContext = React.createContext<ChartsWebGLContextValue | null>(null);
 
+/**
+ * Provides the z-order index for a plot based on its position in `ChartsWebGLLayer`'s children.
+ * `useWebGLLayer` reads this and auto-binds it to `registerDraw` so consumers don't pass it manually.
+ */
+const WebGLOrderContext = React.createContext<number>(0);
+
 export function useWebGLContext(): WebGL2RenderingContext | null {
   return React.useContext(ChartsWebGLContext)?.gl ?? null;
 }
 
-export function useWebGLLayer(): ChartsWebGLContextValue | null {
-  return React.useContext(ChartsWebGLContext);
+export function useWebGLLayer(): {
+  gl: WebGL2RenderingContext;
+  registerDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
+  requestRender: () => void;
+} | null {
+  const layer = React.useContext(ChartsWebGLContext);
+  const order = React.useContext(WebGLOrderContext);
+
+  return React.useMemo(() => {
+    if (!layer) {
+      return null;
+    }
+    return {
+      gl: layer.gl,
+      registerDraw: (drawRef: React.RefObject<(() => void) | null>) =>
+        layer.registerDraw(drawRef, order),
+      requestRender: layer.requestRender,
+    };
+  }, [layer, order]);
 }
 
 export const ChartsWebGLLayer = React.forwardRef<
@@ -42,7 +71,7 @@ export const ChartsWebGLLayer = React.forwardRef<
   const drawingArea = useDrawingArea();
   const [, rerender] = React.useReducer((s) => s + 1, 0);
 
-  const drawRefsRef = React.useRef<Array<React.RefObject<(() => void) | null>>>([]);
+  const drawEntriesRef = React.useRef<Array<DrawEntry>>([]);
   const renderScheduledRef = React.useRef(false);
 
   const renderAll = React.useCallback(() => {
@@ -52,18 +81,22 @@ export const ChartsWebGLLayer = React.forwardRef<
     renderScheduledRef.current = false;
     glContext.clearColor(0, 0, 0, 0.0);
     glContext.clear(glContext.COLOR_BUFFER_BIT);
-    for (const drawRef of drawRefsRef.current) {
+    // Sort by order so z-order matches children's position in ChartsWebGLLayer,
+    // stable across remount.
+    const sorted = [...drawEntriesRef.current].sort((a, b) => a.order - b.order);
+    for (const { drawRef } of sorted) {
       drawRef.current?.();
     }
   }, [glContext]);
 
   const registerDraw = React.useCallback(
-    (drawRef: React.RefObject<(() => void) | null>) => {
-      drawRefsRef.current.push(drawRef);
+    (drawRef: React.RefObject<(() => void) | null>, order: number) => {
+      const entry: DrawEntry = { drawRef, order };
+      drawEntriesRef.current.push(entry);
       return () => {
-        const idx = drawRefsRef.current.indexOf(drawRef);
+        const idx = drawEntriesRef.current.indexOf(entry);
         if (idx >= 0) {
-          drawRefsRef.current.splice(idx, 1);
+          drawEntriesRef.current.splice(idx, 1);
         }
       };
     },
@@ -157,7 +190,14 @@ export const ChartsWebGLLayer = React.forwardRef<
           }}
         />
       </CanvasPositioner>
-      {children}
+      {React.Children.map(children, (child, index) => {
+        if (!React.isValidElement(child)) {
+          return child;
+        }
+        return (
+          <WebGLOrderContext.Provider value={index}>{child}</WebGLOrderContext.Provider>
+        );
+      })}
     </ChartsWebGLContext.Provider>
   );
 });

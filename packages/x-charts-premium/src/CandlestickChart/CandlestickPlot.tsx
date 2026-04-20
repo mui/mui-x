@@ -62,9 +62,12 @@ function CandlestickWebGLPlotImpl({
   const dataLength = series.data.length;
 
   const drawRef = React.useRef<(() => void) | null>(null);
-  drawRef.current = () => {
-    program?.render(dataLength);
-  };
+
+  React.useEffect(() => {
+    drawRef.current = () => {
+      program?.render(dataLength);
+    };
+  }, [program, dataLength]);
 
   React.useEffect(() => {
     return registerDraw(drawRef);
