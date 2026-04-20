@@ -49,5 +49,14 @@ describe('Core - EventTimelinePremiumStore', () => {
 
       expect(store.state).to.deep.equal(expectedState);
     });
+
+    it('should sort the presets array into the canonical zoom order regardless of input order', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, presets: ['year', 'dayAndHour', 'monthAndYear'] },
+        adapter,
+      );
+
+      expect(store.state.presets).to.deep.equal(['dayAndHour', 'monthAndYear', 'year']);
+    });
   });
 });

@@ -340,9 +340,10 @@ EventTimelinePremium.propTypes = {
    */
   preset: PropTypes.oneOf(['day', 'dayAndHour', 'dayAndWeek', 'monthAndYear', 'year']),
   /**
-   * The presets available in the timeline, ordered from most-zoomed-in to most-zoomed-out.
-   * A future zoom API will rely on this order: `zoomIn()` moves toward index 0,
-   * `zoomOut()` toward `presets.length - 1`.
+   * The presets available in the timeline.
+   * The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally,
+   * so a future zoom API (`zoomIn()` / `zoomOut()`) behaves consistently regardless of the order
+   * in which the presets are provided.
    * @default ["dayAndHour", "day", "dayAndWeek", "monthAndYear", "year"]
    */
   presets: PropTypes.arrayOf(

@@ -36,23 +36,35 @@ const PRESET_NAVIGATION_STEP: Record<
 };
 
 /**
- * Default presets available in the timeline, ordered from most-zoomed-in to most-zoomed-out.
- * A future zoom API will rely on this order: `zoomIn()` moves toward index 0,
- * `zoomOut()` toward `presets.length - 1`.
+ * Canonical zoom order for the built-in presets, from most-zoomed-in to most-zoomed-out.
+ * The `presets` array in state is always sorted against this order so a future zoom API
+ * (`zoomIn()` moves toward index 0, `zoomOut()` toward the end) behaves consistently
+ * regardless of the order the user provides.
+ *
+ * TODO: when custom presets land (see `PresetConfig` in PR #21827), replace this hardcoded
+ * list with a `zoomLevel` field on the preset config and sort by that instead.
  */
-export const DEFAULT_PRESETS: EventTimelinePremiumPreset[] = [
+const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = [
   'dayAndHour',
   'day',
   'dayAndWeek',
   'monthAndYear',
   'year',
 ];
+
+export const DEFAULT_PRESETS: EventTimelinePremiumPreset[] = PRESET_ZOOM_ORDER;
 export const DEFAULT_PRESET: EventTimelinePremiumPreset = 'dayAndHour';
+
+function sortPresetsByZoomOrder(
+  presets: EventTimelinePremiumPreset[],
+): EventTimelinePremiumPreset[] {
+  return [...presets].sort((a, b) => PRESET_ZOOM_ORDER.indexOf(a) - PRESET_ZOOM_ORDER.indexOf(b));
+}
 
 const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
   parameters: EventTimelinePremiumParameters<TEvent, TResource>,
 ) => ({
-  presets: parameters.presets ?? DEFAULT_PRESETS,
+  presets: sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS),
 });
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
