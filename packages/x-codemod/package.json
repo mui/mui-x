@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-codemod",
-  "version": "9.0.0-alpha.4",
+  "version": "9.0.0",
   "author": "MUI Team",
   "description": "Codemod scripts for MUI X.",
   "license": "MIT",
@@ -32,7 +32,7 @@
     "@babel/core": "catalog:",
     "@babel/runtime": "catalog:",
     "@babel/traverse": "catalog:",
-    "@mui/x-internals": "workspace:*",
+    "@mui/x-internals": "workspace:^",
     "jscodeshift": "catalog:",
     "yargs": "catalog:"
   },

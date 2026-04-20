@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
@@ -26,7 +26,7 @@ describe('<DesktopDatePicker /> - Describe Value', () => {
         ? adapterToUse.format(expectedValue, 'keyboardDate')
         : 'MM/DD/YYYY';
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);

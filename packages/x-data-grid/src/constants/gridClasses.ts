@@ -140,6 +140,30 @@ export interface GridClasses {
    */
   'cell--rangeRight': string;
   /**
+   * Styles applied to the cell element when it displays the fill handle.
+   */
+  'cell--withFillHandle': string;
+  /**
+   * Styles applied to the cell element when it is in the fill preview range.
+   */
+  'cell--fillPreview': string;
+  /**
+   * Styles applied to the cell element if it is at the top edge of the fill preview range.
+   */
+  'cell--fillPreviewTop': string;
+  /**
+   * Styles applied to the cell element if it is at the bottom edge of the fill preview range.
+   */
+  'cell--fillPreviewBottom': string;
+  /**
+   * Styles applied to the cell element if it is at the left edge of the fill preview range.
+   */
+  'cell--fillPreviewLeft': string;
+  /**
+   * Styles applied to the cell element if it is at the right edge of the fill preview range.
+   */
+  'cell--fillPreviewRight': string;
+  /**
    * Styles applied to the cell element if it is pinned to the left.
    */
   'cell--pinnedLeft': string;
@@ -340,6 +364,11 @@ export interface GridClasses {
    */
   columnsManagementEmptyText: string;
   /**
+   * Styles applied to the content filler.
+   * @ignore - do not document.
+   */
+  contentFiller: string;
+  /**
    * Styles applied to the top container.
    */
   'container--top': string;
@@ -411,6 +440,11 @@ export interface GridClasses {
    * @ignore - do not document.
    */
   'filler--pinnedRight': string;
+  /**
+   * Styles applied to the horizontal filler element.
+   * @ignore - do not document.
+   */
+  'filler--horizontal': string;
   /**
    * Styles applied to the root of the filter form component.
    */
@@ -639,6 +673,11 @@ export interface GridClasses {
    * @ignore - do not document.
    */
   'root--noToolbar': string;
+  /**
+   * Styles applied to the root element when layout mode is "controlled".
+   * @ignore - do not document.
+   */
+  'virtualizer--layoutControlled': string;
   /**
    * Styles applied to the row element if the row is editable.
    */
@@ -1036,6 +1075,12 @@ export const gridClassesOverrides = {
     'cell--rangeLeft',
     'cell--rangeRight',
     'cell--rangeTop',
+    'cell--withFillHandle',
+    'cell--fillPreview',
+    'cell--fillPreviewTop',
+    'cell--fillPreviewBottom',
+    'cell--fillPreviewLeft',
+    'cell--fillPreviewRight',
     'cell--selectionMode',
     'cell--textCenter',
     'cell--textLeft',
@@ -1166,6 +1211,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnsManagementFooter',
   'columnsManagementScrollArea',
   'columnsManagementEmptyText',
+  'contentFiller',
   'detailPanel',
   'footerCell',
   'panel',
@@ -1201,6 +1247,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'filterFormColumnInput',
   'filterFormOperatorInput',
   'filterFormValueInput',
+  'filler--horizontal',
   'footerContainer',
   'iconButtonContainer',
   'main',
@@ -1210,6 +1257,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'overlay',
   'overlayWrapper',
   'root',
+  'virtualizer--layoutControlled',
   'rowCount',
   'rowReorderIcon',
   'scrollArea--left',

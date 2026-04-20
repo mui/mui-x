@@ -4,6 +4,7 @@ import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 
 export interface EventTimelinePremiumStyledContextValue {
+  schedulerId: string | undefined;
   classes: EventTimelinePremiumClasses;
   localeText: EventTimelineLocaleText;
   resourceColumnLabel?: string;

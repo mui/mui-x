@@ -12,8 +12,8 @@ import {
 } from '../internals/components/PickerFieldUI';
 import { CalendarIcon } from '../icons';
 
-type DateFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DateFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
+type DateFieldComponent = ((
+  props: DateFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -26,9 +26,10 @@ type DateFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean =
  *
  * - [DateField API](https://mui.com/x/api/date-pickers/date-field/)
  */
-const DateField = React.forwardRef(function DateField<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(inProps: DateFieldProps<TEnableAccessibleFieldDOMStructure>, inRef: React.Ref<HTMLDivElement>) {
+const DateField = React.forwardRef(function DateField(
+  inProps: DateFieldProps,
+  inRef: React.Ref<HTMLDivElement>,
+) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiDateField',
@@ -36,17 +37,13 @@ const DateField = React.forwardRef(function DateField<
 
   const { slots, slotProps, ...other } = themeProps;
 
-  const textFieldProps = useFieldTextFieldProps<DateFieldProps<TEnableAccessibleFieldDOMStructure>>(
-    {
-      slotProps,
-      ref: inRef,
-      externalForwardedProps: other,
-    },
-  );
+  const textFieldProps = useFieldTextFieldProps<DateFieldProps>({
+    slotProps,
+    ref: inRef,
+    externalForwardedProps: other,
+  });
 
-  const fieldResponse = useDateField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
-    textFieldProps,
-  );
+  const fieldResponse = useDateField<typeof textFieldProps>(textFieldProps);
 
   return (
     <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={other.inputRef}>
@@ -60,6 +57,12 @@ DateField.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Is `true` if the current values equals the empty value.
+   * For a single item value, it means that `value === null`
+   * For a range value, it means that `value === [null, null]`
+   */
+  areAllSectionsEmpty: PropTypes.bool,
   /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
@@ -106,9 +109,14 @@ DateField.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default true
+   * End `InputAdornment` for this component.
    */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
+  endAdornment: PropTypes.node,
+  /**
+   * If `true`, the `input` will indicate an error.
+   * @default false
+   */
+  error: PropTypes.bool,
   /**
    * The ref object used to imperatively interact with the field.
    */
@@ -145,17 +153,8 @@ DateField.propTypes = {
   hiddenLabel: PropTypes.bool,
   /**
    * The id of the `input` element.
-   * Use this prop to make `label` and `helperText` accessible for screen readers.
    */
   id: PropTypes.string,
-  /**
-   * @deprecated Use `slotProps.htmlInput` instead.
-   */
-  inputProps: PropTypes.object,
-  /**
-   * @deprecated Use `slotProps.input` instead.
-   */
-  InputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
    */
@@ -196,6 +195,7 @@ DateField.propTypes = {
    * Callback fired when the clear button is clicked.
    */
   onClear: PropTypes.func,
+  onClick: PropTypes.func,
   /**
    * Callback fired when the error associated with the current value changes.
    * When a validation error is detected, the `error` parameter contains a non-null value.
@@ -207,6 +207,9 @@ DateField.propTypes = {
    */
   onError: PropTypes.func,
   onFocus: PropTypes.func,
+  onInput: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  onPaste: PropTypes.func,
   /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
@@ -231,7 +234,7 @@ DateField.propTypes = {
    */
   referenceDate: PropTypes.object,
   /**
-   * If `true`, the label is displayed as required and the `input` element is required.
+   * If `true`, the label will indicate that the `input` is required.
    * @default false
    */
   required: PropTypes.bool,
@@ -310,6 +313,10 @@ DateField.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Start `InputAdornment` for this component.
+   */
+  startAdornment: PropTypes.node,
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

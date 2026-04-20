@@ -4,6 +4,7 @@ import type { EventDialogClasses } from './eventDialogClasses';
 import type { EventDialogLocaleText } from '../../../models/translations';
 
 export interface EventDialogStyledContextValue {
+  schedulerId: string | undefined;
   classes: EventDialogClasses;
   localeText: EventDialogLocaleText;
 }

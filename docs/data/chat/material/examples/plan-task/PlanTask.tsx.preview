@@ -1,0 +1,13 @@
+<ChatBox
+  adapter={adapter}
+  partRenderers={partRenderers}
+  members={[youUser, agentUser]}
+  messages={messages}
+  onMessagesChange={setMessages}
+  sx={{
+    height: 560,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>
