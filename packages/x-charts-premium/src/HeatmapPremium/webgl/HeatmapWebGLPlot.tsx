@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { type DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
-import { useWebGLLayer } from '../../ChartsWebGLLayer/ChartsWebGLLayer';
+import { useWebGLLayer } from '../../ChartsWebGLLayer/ChartsWebGLContext';
 import { useHeatmapSeriesContext } from '../../hooks';
 import {
   heatmapFragmentShaderSourceNoBorderRadius,

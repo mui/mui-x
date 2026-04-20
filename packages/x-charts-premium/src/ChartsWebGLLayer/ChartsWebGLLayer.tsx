@@ -1,64 +1,12 @@
 'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { selectorChartSvgHeight, selectorChartSvgWidth, useStore } from '@mui/x-charts/internals';
 import { useDrawingArea, useChartRootRef } from '@mui/x-charts/hooks';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
-
-type DrawEntry = {
-  drawRef: React.RefObject<(() => void) | null>;
-  order: number;
-};
-
-export interface ChartsWebGLContextValue {
-  gl: WebGL2RenderingContext;
-  /**
-   * Register a draw callback ref. Returns an unregister function.
-   * Callbacks are sorted by the provided `order` number so z-order follows the children's position
-   * in `ChartsWebGLLayer`, stable across unmount/remount (e.g. toggled via series visibility).
-   * @param {React.RefObject} drawRef A ref object whose current property is a draw callback function. The callback will be called with the WebGL context already set to this layer's canvas. Set to null to temporarily disable drawing without unregistering.
-   * @param {number} order Z-order index. Lower values draw first (behind higher values).
-   * @returns {Function} Unregister function to remove the draw callback from the layer.
-   */
-  registerDraw: (drawRef: React.RefObject<(() => void) | null>, order: number) => () => void;
-  /**
-   * Request a render frame. The layer will clear once, then call all registered draw callbacks in order.
-   */
-  requestRender: () => void;
-}
-
-const ChartsWebGLContext = React.createContext<ChartsWebGLContextValue | null>(null);
-
-/**
- * Provides the z-order index for a plot based on its position in `ChartsWebGLLayer`'s children.
- * `useWebGLLayer` reads this and auto-binds it to `registerDraw` so consumers don't pass it manually.
- */
-const WebGLOrderContext = React.createContext<number>(0);
-
-export function useWebGLContext(): WebGL2RenderingContext | null {
-  return React.useContext(ChartsWebGLContext)?.gl ?? null;
-}
-
-export function useWebGLLayer(): {
-  gl: WebGL2RenderingContext;
-  registerDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
-  requestRender: () => void;
-} | null {
-  const layer = React.useContext(ChartsWebGLContext);
-  const order = React.useContext(WebGLOrderContext);
-
-  return React.useMemo(() => {
-    if (!layer) {
-      return null;
-    }
-    return {
-      gl: layer.gl,
-      registerDraw: (drawRef: React.RefObject<(() => void) | null>) =>
-        layer.registerDraw(drawRef, order),
-      requestRender: layer.requestRender,
-    };
-  }, [layer, order]);
-}
+import { ChartsWebGLContext } from './ChartsWebGLContext';
+import { ChartsWebGLOrderContext } from './ChartsWebGLOrderContext';
+import { CanvasPositioner } from './CanvasPositioner';
+import type { ChartsWebGLContextValue, DrawEntry } from './ChartsWebGLLayer.types';
 
 export const ChartsWebGLLayer = React.forwardRef<
   HTMLCanvasElement,
@@ -194,37 +142,9 @@ export const ChartsWebGLLayer = React.forwardRef<
         if (!React.isValidElement(child)) {
           return child;
         }
-        return <WebGLOrderContext.Provider value={index}>{child}</WebGLOrderContext.Provider>;
+        return <ChartsWebGLOrderContext.Provider value={index}>{child}</ChartsWebGLOrderContext.Provider>;
       })}
     </ChartsWebGLContext.Provider>
   );
 });
 
-function CanvasPositioner({
-  children,
-  ...other
-}: React.PropsWithChildren<React.ComponentProps<'div'>>) {
-  const store = useStore();
-  const svgWidth = store.use(selectorChartSvgWidth);
-  const svgHeight = store.use(selectorChartSvgHeight);
-
-  return (
-    <div
-      {...other}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        pointerEvents: 'none',
-        /* Ensures the canvas occupies the same space as the SVG */
-        maxWidth: svgWidth,
-        maxHeight: svgHeight,
-        width: '100%',
-        height: '100%',
-        margin: 'auto',
-      }}
-      aria-hidden
-    >
-      {children}
-    </div>
-  );
-}
