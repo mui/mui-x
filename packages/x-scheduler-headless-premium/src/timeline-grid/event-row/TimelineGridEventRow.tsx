@@ -20,6 +20,8 @@ const stateAttributesMapping = {
   resourceId: (value: SchedulerResourceId) => ({
     [TimelineGridEventRowDataAttributes.resourceId]: String(value),
   }),
+  creationDisabled: (value: boolean) =>
+    value ? { [TimelineGridEventRowDataAttributes.creationDisabled]: '' } : null,
 };
 
 export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventRow(
@@ -121,7 +123,10 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     [childrenProp, placeholder, occurrencesWithPosition],
   );
 
-  const state: TimelineGridEventRow.State = { resourceId };
+  const state: TimelineGridEventRow.State = {
+    resourceId,
+    creationDisabled: !triggerKeyboardCreation,
+  };
 
   const keyboardProps = {
     tabIndex: 0,
@@ -154,6 +159,10 @@ export namespace TimelineGridEventRow {
      * The ID of the resource for this event row.
      */
     resourceId: SchedulerResourceId;
+    /**
+     * Whether event creation is disabled for this row.
+     */
+    creationDisabled: boolean;
   }
 
   export interface Props

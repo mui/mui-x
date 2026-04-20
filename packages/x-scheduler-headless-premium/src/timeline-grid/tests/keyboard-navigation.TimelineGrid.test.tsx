@@ -299,6 +299,22 @@ describe('TimelineGrid keyboard navigation', () => {
 
       expect(store!.state.occurrencePlaceholder).to.equal(null);
     });
+
+    it('should expose `data-creation-disabled` on event rows when event creation is disabled', () => {
+      render(<Grid eventCreation={false} />);
+
+      getEventsRows().forEach((row) => {
+        expect(row).to.have.attribute('data-creation-disabled');
+      });
+    });
+
+    it('should not expose `data-creation-disabled` when event creation is enabled', () => {
+      render(<Grid />);
+
+      getEventsRows().forEach((row) => {
+        expect(row).not.to.have.attribute('data-creation-disabled');
+      });
+    });
   });
 
   describe('focus state', () => {
