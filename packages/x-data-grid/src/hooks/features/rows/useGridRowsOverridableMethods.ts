@@ -60,17 +60,34 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
         const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
         const allRows = group.children;
 
-        if (allRows.indexOf(sourceRowId) === -1 || allRows.indexOf(targetRowId) === -1) {
-          return state;
+        // Single pass: skip source and inline-insert it adjacent to the target
+        // anchor id so filtered-out rows between source and target keep their
+        // position next to the anchor.
+        const updatedRows: GridRowId[] = [];
+        let sourceFound = false;
+        let targetFound = false;
+
+        for (let i = 0; i < allRows.length; i += 1) {
+          const id = allRows[i];
+          if (id === sourceRowId) {
+            sourceFound = true;
+            continue;
+          }
+          if (id === targetRowId) {
+            targetFound = true;
+            if (position === 'above') {
+              updatedRows.push(sourceRowId, id);
+            } else {
+              updatedRows.push(id, sourceRowId);
+            }
+            continue;
+          }
+          updatedRows.push(id);
         }
 
-        // Remove source, then insert next to target anchor id so filtered-out
-        // rows between source and target keep their relative position.
-        const updatedRows = allRows.filter((id) => id !== sourceRowId);
-        const anchorIndex = updatedRows.indexOf(targetRowId);
-        const insertAt = position === 'above' ? anchorIndex : anchorIndex + 1;
-
-        updatedRows.splice(insertAt, 0, sourceRowId);
+        if (!sourceFound || !targetFound) {
+          return state;
+        }
 
         return {
           ...state,
