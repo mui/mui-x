@@ -28,9 +28,8 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
   if (process.env.NODE_ENV !== 'production') {
     if (columnTypes.indexOf(columnType) === -1) {
       throw new Error(
-        `MUI X Scheduler: The column type "${columnType}" is not included in the \`columnTypes\` prop of <TimelineGrid.Root />. ` +
-          'Arrow-key navigation will not work for this row. ' +
-          'Ensure every row type rendered inside the grid is listed in `columnTypes`.',
+        `MUI X Scheduler: The column type "${columnType}" is not listed in the \`columnTypes\` prop of <TimelineGrid.Root />. ` +
+          `Add "${columnType}" to \`columnTypes\` so the row can participate in arrow-key navigation.`,
       );
     }
   }
@@ -43,6 +42,16 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
       rowRef.current.focus({ preventScroll: true });
     }
   }, [hasFocus]);
+
+  const hasFocusRef = React.useRef(hasFocus);
+  hasFocusRef.current = hasFocus;
+  React.useEffect(() => {
+    return () => {
+      if (hasFocusRef.current) {
+        setFocusedCell(null);
+      }
+    };
+  }, [setFocusedCell]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): boolean => {
     const totalRows = elementsRef.current.length;

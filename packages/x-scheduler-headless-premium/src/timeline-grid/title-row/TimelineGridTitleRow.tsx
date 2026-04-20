@@ -28,9 +28,7 @@ export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleR
         role: 'row',
         'aria-rowindex': index + 1,
         tabIndex: 0,
-        onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => {
-          handleKeyDown(event);
-        },
+        onKeyDown: handleKeyDown,
         onFocus: handleFocus,
       },
     ],
