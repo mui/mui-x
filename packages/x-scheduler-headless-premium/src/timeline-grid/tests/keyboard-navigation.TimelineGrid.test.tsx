@@ -4,7 +4,11 @@ import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-headless-premium/event-timeline-premium-provider';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
-import type { TimelineGridColumnType } from '@mui/x-scheduler-headless-premium/models';
+import type {
+  TimelineGridColumnType,
+  TimelineGridCellCoordinates,
+} from '@mui/x-scheduler-headless-premium/models';
+import { useTimelineGridRootContext } from '../root/TimelineGridRootContext';
 import {
   adapter,
   createSchedulerRenderer,
@@ -21,9 +25,9 @@ describe('TimelineGrid keyboard navigation', () => {
   });
 
   const resources = [
-    ResourceBuilder.new().build(),
-    ResourceBuilder.new().build(),
-    ResourceBuilder.new().build(),
+    ResourceBuilder.new().title('a-resource-1').build(),
+    ResourceBuilder.new().title('b-resource-2').build(),
+    ResourceBuilder.new().title('c-resource-3').build(),
   ];
 
   function Grid({
@@ -31,11 +35,13 @@ describe('TimelineGrid keyboard navigation', () => {
     columnTypes,
     eventCreation,
     resources: resourcesProp = resources,
+    children,
   }: {
     onStoreMount?: (store: AnyEventCalendarStore) => void;
     columnTypes?: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
     eventCreation?: boolean;
     resources?: typeof resources;
+    children?: React.ReactNode;
   } = {}) {
     return (
       <EventTimelinePremiumProvider
@@ -76,6 +82,7 @@ describe('TimelineGrid keyboard navigation', () => {
               </TimelineGrid.EventRow>
             )}
           </TimelineGrid.SubGrid>
+          {children}
         </TimelineGrid.Root>
         {onStoreMount && (
           <SchedulerStoreRunner<AnyEventCalendarStore>
@@ -351,21 +358,30 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(events[1]).to.have.attribute('tabindex', '-1');
     });
 
-    it('should preserve the focused cell state when a non-focused row is removed', () => {
-      const { setProps } = render(<Grid resources={resources} />);
-
-      const rows = getEventsRows();
-      act(() => {
-        rows[0].focus();
-      });
-      expect(rows[0].querySelector('[data-testid^="event-"]')).to.have.attribute('tabindex', '0');
-
-      setProps({ resources: resources.slice(0, -1) });
-
-      expect(getEventsRows()[0].querySelector('[data-testid^="event-"]')).to.have.attribute(
-        'tabindex',
-        '0',
+    it('should not clobber a sibling row state when a previously focused row unmounts', async () => {
+      const focusedCellRef: { current: TimelineGridCellCoordinates | null } = { current: null };
+      function FocusedCellInspector() {
+        focusedCellRef.current = useTimelineGridRootContext().focusedCell;
+        return null;
+      }
+      const { setProps, user } = render(
+        <Grid resources={resources}>
+          <FocusedCellInspector />
+        </Grid>,
       );
+
+      // Focus row 0, then arrow-down so focusedCell points to row 1.
+      act(() => {
+        getEventsRows()[0].focus();
+      });
+      await user.keyboard('{ArrowDown}');
+      expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 1 });
+
+      // Remove the first resource (the row we originally focused before navigating away).
+      // The cleanup of that row must not clobber focusedCell, since it no longer matches.
+      setProps({ resources: resources.slice(1) });
+
+      expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 1 });
     });
   });
 
