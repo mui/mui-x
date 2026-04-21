@@ -1,8 +1,12 @@
 import path from 'path';
 import fs from 'fs';
 import { LANGUAGES } from 'docsx/config';
-import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
-import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
+import {
+  ProjectSettings,
+  ComponentReactApi,
+  HookReactApi,
+  findApiPages,
+} from '@mui/internal-api-docs-builder';
 import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
