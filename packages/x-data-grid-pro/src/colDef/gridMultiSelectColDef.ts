@@ -106,14 +106,20 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
     const valueOptions = getValueOptions(colDef) || [];
     const getOptionValue = colDef.getOptionValue!;
     const getOptionLabel = colDef.getOptionLabel!;
-    const separator = colDef.separator ?? ', ';
 
-    const pastedValues = value.split(separator).map((v: string) => v.trim());
+    const pastedValues = value
+      .split(/[,;\t\n|]+/)
+      .map((v) => v.trim())
+      .filter((v) => v.length > 0);
+
     const validValues = pastedValues
       .map((v: string) => {
-        const matchingOption = valueOptions.find(
-          (option) => String(getOptionValue(option)) === v || getOptionLabel(option) === v,
-        );
+        const lower = v.toLowerCase();
+        const matchingOption = valueOptions.find((option) => {
+          const optValue = String(getOptionValue(option)).toLowerCase();
+          const optLabel = String(getOptionLabel(option)).toLowerCase();
+          return optValue === lower || optLabel === lower;
+        });
         return matchingOption ? getOptionValue(matchingOption) : null;
       })
       .filter((v): v is string | number => v !== null);
