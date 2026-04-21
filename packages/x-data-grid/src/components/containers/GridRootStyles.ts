@@ -603,6 +603,20 @@ export const GridRootStyles = styled('div', {
         flexWrap: 'wrap',
       },
     },
+    [`& .${c.cell}[aria-rowspan]:not([aria-rowspan="1"])`]: {
+      [`& .${c.multiSelectCell}`]: {
+        alignItems: 'flex-start',
+        alignContent: 'flex-start',
+        flexWrap: 'wrap',
+        paddingTop: 8,
+      },
+      [`& .${c['multiSelectCellChip--hidden']}`]: {
+        display: 'inline-flex',
+      },
+      [`& .${c.multiSelectCellOverflow}`]: {
+        display: 'none',
+      },
+    },
     [`& .${c.cellEmpty}`]: {
       flex: 1,
       padding: 0,
