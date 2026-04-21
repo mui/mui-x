@@ -471,7 +471,7 @@ describe('TimelineGrid keyboard navigation', () => {
               visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
             >
               <TimelineGrid.SubGrid>
-                {(resourceId) => <TimelineGrid.TitleRow key={resourceId} />}
+                <TimelineGrid.TitleRow />
               </TimelineGrid.SubGrid>
             </EventTimelinePremiumProvider>
           </ErrorBoundary>,
