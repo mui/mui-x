@@ -430,8 +430,7 @@ describe('TimelineGrid keyboard navigation', () => {
       const errorMessage =
         'MUI X Scheduler: TimelineGridSubGridContext is missing. ' +
         '<TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be placed within <TimelineGrid.SubGrid />.';
-      const expectedError =
-        reactMajor < 19 ? ['The above error occurred in the'] : [errorMessage];
+      const expectedError = reactMajor < 19 ? ['The above error occurred in the'] : [errorMessage];
 
       expect(() =>
         render(
@@ -458,8 +457,7 @@ describe('TimelineGrid keyboard navigation', () => {
       const errorMessage =
         'MUI X Scheduler: TimelineGridRootContext is missing. ' +
         'TimelineGrid parts must be placed within <TimelineGrid.Root />.';
-      const expectedError =
-        reactMajor < 19 ? ['The above error occurred in the'] : [errorMessage];
+      const expectedError = reactMajor < 19 ? ['The above error occurred in the'] : [errorMessage];
 
       expect(() =>
         render(
