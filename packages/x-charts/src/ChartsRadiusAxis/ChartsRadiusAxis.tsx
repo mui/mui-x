@@ -8,7 +8,7 @@ import {
   selectorChartPolarCenter,
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import type { AxisId } from '../models/axis';
+import type { AxisId, D3Scale } from '../models/axis';
 import { type ChartsRadiusAxisClasses, useUtilityClasses } from './chartsRadiusAxisClasses';
 import { getLabelTransform } from './getLabelTransform';
 import { RadialAxisLabel } from '../internals/components/RadialAxisLabel';
@@ -73,7 +73,7 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
   const rotationAxis = useRotationAxis();
 
   const ticks = useTicks({
-    scale: radiusAxis?.scale as any,
+    scale: radiusAxis!.scale satisfies D3Scale,
     tickNumber: radiusAxis?.tickNumber ?? 5,
     tickInterval: radiusAxis?.tickInterval,
     tickSpacing: radiusAxis?.tickSpacing,
