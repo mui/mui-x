@@ -10,7 +10,7 @@ title: Ask Your Table - AI Assistant
 The AI Assistant requires a prompt processing backend to interpret natural language queries.
 You can [build your own service](#with-a-custom-service) using any AI provider—no additional add-on is required beyond the Premium license.
 Alternatively, MUI offers a [hosted processing service](#with-muis-service) as a paid add-on.
-Contact [sales@mui.com](mailto:sales@mui.com) to learn more.
+Visit the [MUI Console](https://console.mui.com) to grab a free API key or manage your plan.
 :::
 
 The AI Assistant feature lets users interact with the Data Grid component using natural language.
@@ -76,7 +76,7 @@ You can use MUI's processing service or build your own.
 
 The Data Grid provides all the necessary elements for integration with MUI's service.
 
-1. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.
+1. Get an API key from the [MUI Console](https://console.mui.com)—a free tier is available, and you can manage your plan there as well.
 
    :::warning
    Do not expose the API key to the public.
