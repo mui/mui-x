@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
+import { useId } from '@base-ui/utils/useId';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
@@ -54,19 +55,21 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
   const { localeText, apiRef, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
+  const schedulerId = useId();
+
   const mergedLocaleText = React.useMemo(
     () => ({ ...EVENT_CALENDAR_DEFAULT_LOCALE_TEXT, ...localeText }),
     [localeText],
   );
 
   const calendarStyledContextValue = React.useMemo(
-    () => ({ classes, localeText: mergedLocaleText }),
-    [classes, mergedLocaleText],
+    () => ({ schedulerId, classes, localeText: mergedLocaleText }),
+    [schedulerId, classes, mergedLocaleText],
   );
 
   const dialogStyledContextValue = React.useMemo(
-    () => ({ classes, localeText: mergedLocaleText }),
-    [classes, mergedLocaleText],
+    () => ({ schedulerId, classes, localeText: mergedLocaleText }),
+    [schedulerId, classes, mergedLocaleText],
   );
 
   return (

@@ -37,7 +37,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
-  const { classes, localeText } = useEventCalendarStyledContext();
+  const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -60,8 +60,8 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
       <Button
         className={classes.viewSwitcherButton}
         size="medium"
-        id="view-switcher-button"
-        aria-controls={open ? 'view-switcher-menu' : undefined}
+        id={`${schedulerId}-view-switcher-button`}
+        aria-controls={open ? `${schedulerId}-view-switcher-menu` : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         aria-label="Switch View"
@@ -72,13 +72,13 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
       </Button>
       <Menu
         className={classes.viewSwitcherMenu}
-        id="view-switcher-menu"
+        id={`${schedulerId}-view-switcher-menu`}
         anchorEl={anchorEl}
         open={open}
         onClose={handleMenuClose}
         slotProps={{
           list: {
-            'aria-labelledby': 'view-switcher-button',
+            'aria-labelledby': `${schedulerId}-view-switcher-button`,
             role: 'listbox',
           },
         }}

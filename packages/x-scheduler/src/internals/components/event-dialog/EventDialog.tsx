@@ -125,7 +125,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   const { style, anchorRef, occurrence, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
-  const { classes } = useEventDialogStyledContext();
+  const { schedulerId, classes } = useEventDialogStyledContext();
 
   // Selector hooks
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
@@ -139,7 +139,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       open={open}
       onClose={onClose}
       PaperComponent={PaperComponent}
-      aria-labelledby="event-dialog-title"
+      aria-labelledby={`${schedulerId}-event-dialog-title`}
       aria-modal="false"
       className={classes.eventDialog}
       slotProps={{

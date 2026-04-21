@@ -8,6 +8,7 @@ import {
 } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
+import { useId } from '@base-ui/utils/useId';
 import { EventCalendarProps } from './EventCalendar.types';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
@@ -35,19 +36,21 @@ const EventCalendar = React.forwardRef(function EventCalendar<
   const { localeText, apiRef, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
+  const schedulerId = useId();
+
   const mergedLocaleText = React.useMemo(
     () => ({ ...EVENT_CALENDAR_DEFAULT_LOCALE_TEXT, ...localeText }),
     [localeText],
   );
 
   const calendarStyledContextValue = React.useMemo(
-    () => ({ classes, localeText: mergedLocaleText }),
-    [classes, mergedLocaleText],
+    () => ({ schedulerId, classes, localeText: mergedLocaleText }),
+    [schedulerId, classes, mergedLocaleText],
   );
 
   const dialogStyledContextValue = React.useMemo(
-    () => ({ classes, localeText: mergedLocaleText }),
-    [classes, mergedLocaleText],
+    () => ({ schedulerId, classes, localeText: mergedLocaleText }),
+    [schedulerId, classes, mergedLocaleText],
   );
 
   return (
