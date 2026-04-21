@@ -9,7 +9,7 @@ import {
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import type { AxisId, D3Scale } from '../models/axis';
-import { type ChartsRadiusAxisClasses, useUtilityClasses } from './chartsRadiusAxisClasses';
+import { type ChartsRadialAxisClasses, useUtilityClasses } from './chartsRadiusAxisClasses';
 import { getLabelTransform } from './getLabelTransform';
 import { RadialAxisLabel } from '../internals/components/RadialAxisLabel';
 
@@ -47,7 +47,7 @@ export interface ChartsRadiusAxisProps {
    * A CSS class name applied to the root element.
    */
   className?: string;
-  classes?: Partial<ChartsRadiusAxisClasses>;
+  classes?: Partial<ChartsRadialAxisClasses>;
 }
 
 const TICK_LABEL_GAP = 4;
