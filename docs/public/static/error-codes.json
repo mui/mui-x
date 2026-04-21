@@ -256,5 +256,6 @@
   "255": "MUI X Chat: useChatRuntimeContext must be used within a <ChatProvider> component",
   "256": "MUI X Chat: useChatStoreContext must be used within a <ChatProvider> component",
   "257": "MUI X Scheduler: CalendarGridDayRowContext is missing. <CalendarGrid.DayCell /> and <CalendarGrid.DayEvent /> must be placed within <CalendarGrid.DayRow />. Ensure the component hierarchy is correct.",
-  "258": "MUI X Charts: Radial line series with id=\"%s\" has no data. The chart cannot render this series without data. Provide a data property to the series or use the dataset prop."
+  "258": "MUI X Charts: Radial line series with id=\"%s\" has no data. The chart cannot render this series without data. Provide a data property to the series or use the dataset prop.",
+  "259": "MUI: The component tried to switch to the \"%s\" preset but it is not compatible with the available presets: %s.\nPlease ensure that the requested preset is included in the presets array."
 }
