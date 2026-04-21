@@ -1,5 +1,7 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { buildLocaleFormat, getGridLocalization, type Localization } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('sv-SE');
 
 const svSEGrid: Partial<GridLocaleText> = {
   // Root
@@ -196,19 +198,19 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Rader per sida:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   const unknownRowCount = count == null || count === -1;
-  //   if (!estimated) {
-  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
-  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({
+    from,
+    to,
+    count,
+    estimated
+  }) => {
+    const unknownRowCount = count == null || count === -1;
+    if (!estimated) {
+      return `${formatNumber(from)}–${formatNumber(to)} av ${!unknownRowCount ? formatNumber(count) : `fler än ${formatNumber(to)}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `omkring ${formatNumber(estimated)}` : `fler än ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} av ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Gå till första sidan';
