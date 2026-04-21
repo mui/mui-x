@@ -1,8 +1,26 @@
-type HasDataIndexSignature<V> = V extends { [key: `data-${string}`]: any } ? true : false;
+// `V extends any` is the "force-distribution" idiom: it keeps `V` naked in the outer
+// conditional so the check distributes across union variants. That matters for slot
+// types shaped as `T | (T & DataAttributes)` (the `WithDataAttributes` widening) — the
+// assertion passes as soon as one branch exposes both keys, while a non-widened branch
+// failing on its own is fine.
+//
+// `'data-x'` and `'aria-label'` are used as marker keys. `'data-x'` matches the
+// ` [k: `data-${string}`]: ... ` template-literal index signature exposed by
+// `DataAttributes`, and `'aria-label'` stands in for the `React.AriaAttributes` shape
+// (whose keys are otherwise all optional, which would make a direct structural check
+// trivially satisfied). Both markers are present iff the variant has been widened via
+// `DataAttributes`.
+type AcceptsDataAndAria<V> = V extends any
+  ? 'data-x' extends keyof V
+    ? 'aria-label' extends keyof V
+      ? true
+      : false
+    : false
+  : never;
 
 type CheckVariant<V> = V extends (...args: any[]) => infer R
-  ? HasDataIndexSignature<R>
-  : HasDataIndexSignature<V>;
+  ? AcceptsDataAndAria<R>
+  : AcceptsDataAndAria<V>;
 
 type SlotAcceptsDataAttributes<T> = true extends CheckVariant<NonNullable<T>> ? true : false;
 
@@ -10,10 +28,13 @@ type SlotAcceptsDataAttributes<T> = true extends CheckVariant<NonNullable<T>> ? 
  * Maps each slot of a `*SlotProps` type to either `true` or a failure message
  * identifying the slot that does not accept `data-*` / `aria-*` attributes.
  *
- * The check works by probing for the `` [key: `data-${string}`]: ... `` index
- * signature on each slot's value type (distributing across union variants and
- * unwrapping function variants to their return type). Any variant providing
- * the signature — typically via an intersection with `DataAttributes` — passes.
+ * The check probes each slot's value type for both the
+ * `` [key: `data-${string}`]: ... `` index signature (covering arbitrary
+ * `data-*` keys) and `'aria-label'` as the marker aria attribute (standing in
+ * for the full `React.AriaAttributes` surface). The check distributes across
+ * union variants and unwraps function variants to their return type; any
+ * variant providing both signatures — typically via an intersection with
+ * `DataAttributes` — passes.
  */
 export type AssertAllSlotsAcceptDataAttributes<T, Name extends string = 'Component'> = {
   [K in keyof T]-?: SlotAcceptsDataAttributes<T[K]> extends true

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
+import type { WithDataAttributes } from '@mui/x-internals/types';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import {
   type ScatterChartProps,
@@ -44,7 +45,7 @@ export interface ScatterChartProSlotProps
    * Slot props for the tooltip component.
    * @default {}
    */
-  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>>;
+  tooltip?: WithDataAttributes<Partial<ChartsTooltipProps<'item' | 'none'>>>;
 }
 
 export interface ScatterChartProProps
