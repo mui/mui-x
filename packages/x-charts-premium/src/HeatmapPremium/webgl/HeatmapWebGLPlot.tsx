@@ -77,7 +77,8 @@ function HeatmapWebGLPlotImpl(props: {
   }, [gl, dataLength]);
 
   React.useEffect(() => {
-    return registerDraw(drawRef);
+    const unregister = registerDraw(drawRef);
+    return unregister;
   }, [registerDraw]);
 
   React.useEffect(() => {

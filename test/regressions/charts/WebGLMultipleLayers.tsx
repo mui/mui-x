@@ -64,10 +64,10 @@ export default function WebGLMultipleLayers() {
       <ChartsWrapper>
         <ChartsLayerContainer>
           <ChartsWebGLLayer>
-            <ScissorPlot color={[0.2, 0.4, 0.9]} x={0} y={0} size={40} />
+            <ScissorPlot color={[0.2, 0.4, 0.9]} x={20} y={20} size={80} />
           </ChartsWebGLLayer>
           <ChartsWebGLLayer>
-            <ScissorPlot color={[0.9, 0.2, 0.2]} x={80} y={80} size={40} />
+            <ScissorPlot color={[0.9, 0.2, 0.2]} x={80} y={80} size={80} />
           </ChartsWebGLLayer>
         </ChartsLayerContainer>
       </ChartsWrapper>

@@ -70,7 +70,8 @@ function CandlestickWebGLPlotImpl({
   }, [program, dataLength]);
 
   React.useEffect(() => {
-    return registerDraw(drawRef);
+    const unregister = registerDraw(drawRef);
+    return unregister;
   }, [registerDraw]);
 
   React.useEffect(() => {
