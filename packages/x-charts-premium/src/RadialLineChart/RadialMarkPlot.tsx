@@ -2,13 +2,13 @@ import { styled } from '@mui/material/styles';
 import { useRadialLinePlotData } from './useRadialLinePlotData';
 import { type RadialLineClasses, useUtilityClasses } from './radialLineClasses';
 
-const RadialLinePlotRoot = styled('g', {
-  name: 'MuiRadialLinePlot',
+const RadialMarkPlotRoot = styled('g', {
+  name: 'MuiRadialMarkPlot',
   slot: 'Root',
 })();
 
 export interface RadialMarkPlotProps {
-  classes?: Partial<RadialLineClasses>;
+  classes?: Partial<Pick<RadialLineClasses, 'mark' | 'markPlot'>>;
 }
 
 export function RadialMarkPlot(props: RadialMarkPlotProps) {
@@ -18,7 +18,7 @@ export function RadialMarkPlot(props: RadialMarkPlotProps) {
   const classes = useUtilityClasses({ classes: inClasses });
 
   return (
-    <RadialLinePlotRoot className={classes.markPlot}>
+    <RadialMarkPlotRoot className={classes.markPlot}>
       {completedData.map(({ points, seriesId, color, hidden }) => {
         return (
           <g data-series={seriesId}>
@@ -36,6 +36,6 @@ export function RadialMarkPlot(props: RadialMarkPlotProps) {
           </g>
         );
       })}
-    </RadialLinePlotRoot>
+    </RadialMarkPlotRoot>
   );
 }

@@ -10,6 +10,7 @@ interface RadialLinePlotDataPoint {
   seriesId: SeriesId;
   color: string;
   hidden: boolean;
+  area?: boolean;
 }
 
 export function useRadialLinePlotData() {
@@ -32,6 +33,7 @@ export function useRadialLinePlotData() {
           stackedData,
           data,
           hidden,
+          area = false,
           rotationAxisId = rotationAxisIds[0],
           radiusAxisId = radiusAxisIds[0],
         } = series[seriesId];
@@ -63,6 +65,7 @@ export function useRadialLinePlotData() {
           points,
           seriesId,
           hidden,
+          area,
         });
       }
     }

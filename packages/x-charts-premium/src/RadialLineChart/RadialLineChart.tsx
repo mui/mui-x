@@ -23,9 +23,9 @@ import {
 } from '../ChartsTooltip';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { type RadialLineChartPluginSignatures } from './RadialLineChart.plugins';
-// import { RadialLinePlot } from './RadialLinePlot';
+import { RadialLinePlot } from './RadialLinePlot';
 import { RadialMarkPlot } from './RadialMarkPlot';
-// import { RadialAreaPlot } from './RadialAreaPlot';
+import { RadialAreaPlot } from './RadialAreaPlot';
 import { ChartsClipPath } from '../ChartsClipPath';
 import {
   ChartsOverlay,
@@ -144,6 +144,8 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsRadialGrid {...gridProps} />
           <g {...clipPathGroupProps}>
+            <RadialAreaPlot />
+            <RadialLinePlot />
             <ChartsOverlay {...overlayProps} />
           </g>
           <RadialMarkPlot />
