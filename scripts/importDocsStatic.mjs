@@ -3,7 +3,9 @@ import fs from 'node:fs/promises';
 
 async function run() {
   const importFiles = [
+    'docs/public/static/apple-touch-icon.png',
     'docs/public/static/favicon.ico',
+    'docs/public/static/favicon.svg',
     'docs/public/static/icons/*',
     'docs/public/static/logo.png',
     'docs/public/static/logo.svg',
