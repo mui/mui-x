@@ -513,8 +513,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
       centerRipple
       // compat with DateRangePickerDay for tests
       data-testid={
-        (other as any)['data-testid'] ??
-        (isHighlighting ? 'DateRangeHighlight' : 'DateRangePickerDay')
+        other['data-testid'] ?? (isHighlighting ? 'DateRangeHighlight' : 'DateRangePickerDay')
       }
       disabled={disabled}
       tabIndex={selected ? 0 : -1}

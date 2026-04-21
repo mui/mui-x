@@ -23,7 +23,7 @@ describe('<PickersTextField /> - slot forwarding', () => {
     render(
       <PickersTextField
         {...STUB_PROPS}
-        slotProps={{ htmlInput: { 'data-testid': 'html-input' } as any }}
+        slotProps={{ htmlInput: { 'data-testid': 'html-input' } }}
       />,
     );
 
@@ -35,7 +35,7 @@ describe('<PickersTextField /> - slot forwarding', () => {
       <PickersTextField
         {...STUB_PROPS}
         label="My label"
-        slotProps={{ inputLabel: { 'data-testid': 'input-label' } as any }}
+        slotProps={{ inputLabel: { 'data-testid': 'input-label' } }}
       />,
     );
 
@@ -47,7 +47,7 @@ describe('<PickersTextField /> - slot forwarding', () => {
       <PickersTextField
         {...STUB_PROPS}
         helperText="Helper"
-        slotProps={{ formHelperText: { 'data-testid': 'helper-text' } as any }}
+        slotProps={{ formHelperText: { 'data-testid': 'helper-text' } }}
       />,
     );
 

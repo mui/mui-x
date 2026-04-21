@@ -23,7 +23,7 @@ describe('<MultiInputDateRangeField /> - slotProps', () => {
         slotProps={{
           textField: {
             slotProps: {
-              input: { 'data-custom': 'forwarded' } as any,
+              input: { 'data-custom': 'forwarded' },
             },
           },
         }}

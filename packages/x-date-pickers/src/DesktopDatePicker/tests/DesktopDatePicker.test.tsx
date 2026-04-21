@@ -475,7 +475,7 @@ describe('<DesktopDatePicker />', () => {
           slotProps={{
             textField: {
               slotProps: {
-                htmlInput: { 'data-testid': 'test-html-input' } as any,
+                htmlInput: { 'data-testid': 'test-html-input' },
               },
             },
           }}

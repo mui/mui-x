@@ -2,8 +2,25 @@ import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 
+// Intentionally loose: the `props` object is built inside the helper with a dynamic slot-name
+// key, which cannot be statically matched against a component's typed `slotProps` shape without
+// an internal cast. Per-slot type-level coverage is enforced instead by the per-package
+// `slotDataAttributes.spec.ts` files that run `AssertAllSlotsAcceptDataAttributes` on every
+// typed slot-props interface.
+interface DescribeSlotsConformanceSlotProps {
+  [slotName: string]: unknown;
+}
+
+interface DescribeSlotsConformanceProps {
+  slots?: { [slotName: string]: React.ElementType };
+  slotProps?: DescribeSlotsConformanceSlotProps;
+}
+
 interface DescribeSlotsConformanceParams {
-  getElement: (params: { slotName: string; props: any }) => React.ReactElement<any>;
+  getElement: (params: {
+    slotName: string;
+    props: DescribeSlotsConformanceProps;
+  }) => React.ReactElement<any>;
   render: (node: React.ReactElement<any>) => MuiRenderResult;
   slots: { [slotName: string]: { className: string } };
 }
