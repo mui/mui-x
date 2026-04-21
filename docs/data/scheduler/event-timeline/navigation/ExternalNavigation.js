@@ -17,6 +17,14 @@ import {
 
 const resources = allResources.slice(0, 5);
 
+const presetOptions = [
+  { value: 'dayAndHour', label: 'Time' },
+  { value: 'day', label: 'Days' },
+  { value: 'dayAndWeek', label: 'Weeks' },
+  { value: 'monthAndYear', label: 'Months' },
+  { value: 'year', label: 'Years' },
+];
+
 export default function ExternalNavigation() {
   const [events, setEvents] = React.useState(initialEvents);
   const [preset, setPreset] = React.useState('monthAndYear');
@@ -47,13 +55,11 @@ export default function ExternalNavigation() {
           <ChevronRightIcon />
         </IconButton>
         <Select value={preset} onChange={handlePresetChange} size="small">
-          {['dayAndHour', 'day', 'dayAndWeek', 'monthAndYear', 'year'].map(
-            (value) => (
-              <MenuItem key={value} value={value}>
-                {value}
-              </MenuItem>
-            ),
-          )}
+          {presetOptions.map(({ value, label }) => (
+            <MenuItem key={value} value={value}>
+              {label}
+            </MenuItem>
+          ))}
         </Select>
       </Stack>
       <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
