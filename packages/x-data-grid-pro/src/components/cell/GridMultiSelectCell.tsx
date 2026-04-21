@@ -441,6 +441,9 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
 
 export { GridMultiSelectCell };
 
-export const renderMultiSelectCell = (params: GridMultiSelectCellProps) => (
-  <GridMultiSelectCell {...params} />
-);
+export const renderMultiSelectCell = (params: GridMultiSelectCellProps) => {
+  if ((params as any).aggregation) {
+    return params.formattedValue ?? (params.value as any);
+  }
+  return <GridMultiSelectCell {...params} />;
+};

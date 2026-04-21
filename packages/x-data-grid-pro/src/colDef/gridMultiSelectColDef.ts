@@ -44,7 +44,7 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   display: 'flex',
   groupable: false,
   // @ts-ignore premium-only
-  aggregable: false,
+  availableAggregationFunctions: ['size'],
   // @ts-ignore premium-only
   pivotable: false,
   // @ts-ignore premium-only

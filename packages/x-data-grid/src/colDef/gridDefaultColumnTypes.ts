@@ -25,7 +25,7 @@ export const getGridDefaultColumnTypes = () => {
       ...GRID_STRING_COL_DEF,
       groupable: false,
       // @ts-ignore premium-only
-      aggregable: false,
+      availableAggregationFunctions: ['size'],
       // @ts-ignore premium-only
       pivotable: false,
       // @ts-ignore premium-only
