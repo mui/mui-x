@@ -26,7 +26,8 @@ export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleR
       elementProps,
       {
         role: 'row',
-        'aria-rowindex': index + 1,
+        // Reserve aria-rowindex=1 for the grid header row.
+        'aria-rowindex': index + 2,
         tabIndex: 0,
         onKeyDown: handleKeyDown,
         onFocus: handleFocus,

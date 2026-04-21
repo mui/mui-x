@@ -43,6 +43,10 @@ describe('TimelineGrid keyboard navigation', () => {
         eventCreation={eventCreation}
       >
         <TimelineGrid.Root columnTypes={columnTypes}>
+          <TimelineGrid.Row data-testid="header-row" aria-rowindex={1}>
+            <TimelineGrid.Cell>title header</TimelineGrid.Cell>
+            <TimelineGrid.Cell>events header</TimelineGrid.Cell>
+          </TimelineGrid.Row>
           <TimelineGrid.SubGrid>
             {(resourceId) => (
               <TimelineGrid.TitleRow key={resourceId} data-testid={`title-${resourceId}`}>
@@ -347,14 +351,15 @@ describe('TimelineGrid keyboard navigation', () => {
   });
 
   describe('aria-rowindex', () => {
-    it('should set `aria-rowindex` on title and event rows', async () => {
+    it('should set `aria-rowindex` on the header and shift data rows to reserve row 1', async () => {
       render(<Grid />);
 
+      expect(screen.getByTestId('header-row')).to.have.attribute('aria-rowindex', '1');
       getTitleRows().forEach((row, i) => {
-        expect(row).to.have.attribute('aria-rowindex', String(i + 1));
+        expect(row).to.have.attribute('aria-rowindex', String(i + 2));
       });
       getEventsRows().forEach((row, i) => {
-        expect(row).to.have.attribute('aria-rowindex', String(i + 1));
+        expect(row).to.have.attribute('aria-rowindex', String(i + 2));
       });
     });
   });
