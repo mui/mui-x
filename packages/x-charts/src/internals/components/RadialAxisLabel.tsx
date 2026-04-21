@@ -7,7 +7,7 @@ export const RadialAxisLabel = styled(Typography, {
 })<{
   verticalAlign: 'start' | 'middle' | 'end';
   horizontalAlign: 'start' | 'middle' | 'end';
-}>(({ theme }) => ({
+}>({
   position: 'absolute',
   top: 0,
   left: 0,
@@ -16,12 +16,6 @@ export const RadialAxisLabel = styled(Typography, {
   translate: 'var(--dx, -50%) var(--dy, -50%)',
 
   variants: [
-    // Add opaque background when centered to improve readability
-    {
-      props: { verticalAlign: 'middle', horizontalAlign: 'middle' },
-      style: { backgroundColor: (theme.vars ?? theme).palette.background.paper },
-    },
-
     // Handle the vertical alignment
     {
       props: { verticalAlign: 'start' },
@@ -52,4 +46,4 @@ export const RadialAxisLabel = styled(Typography, {
       style: { '--dx': '-100%' },
     },
   ],
-}));
+});
