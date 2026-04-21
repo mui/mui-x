@@ -44,19 +44,13 @@ describe('<ChartsToolbarRangeButtonTrigger />', () => {
       'aria-pressed',
       'false',
     );
-    expect(screen.getByRole('button', { name: 'All' })).to.have.attribute(
-      'aria-pressed',
-      'false',
-    );
+    expect(screen.getByRole('button', { name: 'All' })).to.have.attribute('aria-pressed', 'false');
   });
 
   it('selects the null-value button when `initialZoom` covers the full range', () => {
     render(<LineChartPro {...baselineProps} slotProps={{ toolbar: { rangeButtons } }} />);
 
-    expect(screen.getByRole('button', { name: 'All' })).to.have.attribute(
-      'aria-pressed',
-      'true',
-    );
+    expect(screen.getByRole('button', { name: 'All' })).to.have.attribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: 'Last quarter' })).to.have.attribute(
       'aria-pressed',
       'false',
@@ -80,10 +74,6 @@ describe('<ChartsToolbarRangeButtonTrigger />', () => {
       'aria-pressed',
       'false',
     );
-    expect(screen.getByRole('button', { name: 'All' })).to.have.attribute(
-      'aria-pressed',
-      'false',
-    );
+    expect(screen.getByRole('button', { name: 'All' })).to.have.attribute('aria-pressed', 'false');
   });
-
 });

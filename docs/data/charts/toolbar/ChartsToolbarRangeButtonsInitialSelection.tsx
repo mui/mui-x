@@ -8,7 +8,9 @@ export default function ChartsToolbarRangeButtonsInitialSelection() {
   return (
     <LineChartPro
       dataset={dataset}
-      xAxis={[{ id: 'x', scaleType: 'time', dataKey: 'date', zoom: true, tickNumber: 5 }]}
+      xAxis={[
+        { id: 'x', scaleType: 'time', dataKey: 'date', zoom: true, tickNumber: 5 },
+      ]}
       yAxis={[
         { width: 60, valueFormatter: (v: number) => `$${(v / 1000).toFixed(0)}k` },
       ]}
