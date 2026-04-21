@@ -45,7 +45,6 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  // Keyboard navigation + focus sync
   const { rowRef, listItemRef, index, hasFocus, handleKeyDown, handleFocus } =
     useTimelineGridRowKeyboard({ columnType: 'events' });
 

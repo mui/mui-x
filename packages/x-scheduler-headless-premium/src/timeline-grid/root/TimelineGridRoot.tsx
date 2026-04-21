@@ -21,7 +21,6 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     className,
     render,
     style,
-    // Internal props
     columnTypes = DEFAULT_COLUMN_TYPES,
     // Props forwarded to the DOM element
     ...elementProps
