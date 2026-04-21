@@ -7,30 +7,16 @@
     "axisId": {
       "description": "Id of the radius axis to render. If not provided, it will use the first defined radius axis."
     },
-    "center": {
-      "description": "If <code>true</code>, the tick labels are centered on the axis line instead of being offset away from it."
-    },
     "className": { "description": "A CSS class name applied to the root element." },
     "disableLine": { "description": "If <code>true</code>, the axis line is not rendered." },
     "disableTicks": { "description": "If <code>true</code>, the ticks are not rendered." },
+    "tickLabelPosition": {
+      "description": "Set the position of the tick labels relative to the axis line. The before/after is defined based on clockwise direction."
+    },
+    "tickPosition": {
+      "description": "Set the position of the tick relative to the axis line. The before/after is defined based on clockwise direction."
+    },
     "tickSize": { "description": "The size (in pixels) of the tick marks." }
   },
-  "classDescriptions": {
-    "centered": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the tick label",
-      "conditions": "centered"
-    },
-    "line": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the main line element"
-    },
-    "root": { "description": "Styles applied to the root element." },
-    "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
-    "tickContainer": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the group including the tick and its label"
-    },
-    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tick label" }
-  }
+  "classDescriptions": {}
 }
