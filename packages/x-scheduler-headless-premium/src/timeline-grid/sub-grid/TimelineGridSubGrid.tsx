@@ -12,8 +12,6 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridSubGridContext } from './TimelineGridSubGridContext';
 
-const subGridContextValue: TimelineGridSubGridContext = {};
-
 export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid(
   componentProps: TimelineGridSubGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -57,7 +55,7 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
   });
 
   return (
-    <TimelineGridSubGridContext.Provider value={subGridContextValue}>
+    <TimelineGridSubGridContext.Provider value>
       <CompositeList elementsRef={rowsRef}>{element}</CompositeList>
     </TimelineGridSubGridContext.Provider>
   );

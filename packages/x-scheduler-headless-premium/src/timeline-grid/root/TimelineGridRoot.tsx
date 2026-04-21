@@ -78,6 +78,9 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     [],
   );
 
+  // Clears focusedCell when focus leaves the grid entirely; the per-row unmount cleanup
+  // in `useTimelineGridRowKeyboard` handles the complementary case where the focused row
+  // itself disappears.
   const handleBlur = React.useCallback((event: React.FocusEvent<HTMLDivElement>) => {
     const nextTarget = event.relatedTarget;
     if (!nextTarget || !rootRef.current?.contains(nextTarget)) {
