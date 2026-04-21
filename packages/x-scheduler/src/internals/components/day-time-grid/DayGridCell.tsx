@@ -14,6 +14,7 @@ import { EventDialogTrigger } from '../event-dialog';
 import { useEventDialogContext } from '../event-dialog/EventDialog';
 import { EventSkeleton } from '../event-skeleton';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
+import { getCellFocusBackground } from '../../utils/tokens';
 
 const EVENT_HEIGHT = 22;
 
@@ -36,6 +37,10 @@ const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
   '&[data-weekend]': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
+  '&:focus-visible': {
+    outline: 'none',
+    backgroundColor: getCellFocusBackground(theme),
+  },
 }));
 
 const DayTimeGridAllDayEventsCellEvents = styled('div', {
@@ -57,7 +62,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
-  const { classes } = useEventCalendarStyledContext();
+  const { schedulerId, classes } = useEventCalendarStyledContext();
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -91,7 +96,7 @@ export function DayGridCell(props: DayGridCellProps) {
           '--row-count': rowCount,
         } as React.CSSProperties
       }
-      aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
+      aria-labelledby={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
       role="gridcell"
       data-weekend={isWeekend(adapter, day.value) || undefined}
     >
