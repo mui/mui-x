@@ -21,7 +21,8 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
 } {
   const { columnType } = params;
   useTimelineGridSubGridContext();
-  const { focusedCell, setFocusedCell, columnTypes } = useTimelineGridRootContext();
+  const { focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes } =
+    useTimelineGridRootContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const { elementsRef } = useCompositeListContext();
 
@@ -43,45 +44,48 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
     }
   }, [hasFocus]);
 
-  const hasFocusRef = React.useRef(hasFocus);
-  hasFocusRef.current = hasFocus;
+  const indexRef = React.useRef(index);
+  indexRef.current = index;
   React.useEffect(() => {
     return () => {
-      if (hasFocusRef.current) {
-        setFocusedCell(null);
-      }
+      clearFocusedCellIfMatches(columnType, indexRef.current);
     };
-  }, [setFocusedCell]);
+    // Cleanup must only run on unmount: `clearFocusedCellIfMatches` is stable and
+    // `columnType` is a compile-time constant per hook caller (TitleRow/EventRow).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): boolean => {
     const totalRows = elementsRef.current.length;
-    if (event.key === 'ArrowUp' && index > 0) {
+    if (event.key === 'ArrowUp') {
       event.preventDefault();
-      setFocusedCell({ columnType, rowIndex: index - 1 });
+      if (index > 0) {
+        setFocusedCell({ columnType, rowIndex: index - 1 });
+      }
       return true;
     }
-    if (event.key === 'ArrowDown' && index < totalRows - 1) {
+    if (event.key === 'ArrowDown') {
       event.preventDefault();
-      setFocusedCell({ columnType, rowIndex: index + 1 });
+      if (index < totalRows - 1) {
+        setFocusedCell({ columnType, rowIndex: index + 1 });
+      }
       return true;
     }
     if (event.key === 'ArrowLeft') {
+      event.preventDefault();
       const typeIndex = columnTypes.indexOf(columnType);
       if (typeIndex > 0) {
-        event.preventDefault();
         setFocusedCell({ columnType: columnTypes[typeIndex - 1], rowIndex: index });
-        return true;
       }
-      return false;
+      return true;
     }
     if (event.key === 'ArrowRight') {
+      event.preventDefault();
       const typeIndex = columnTypes.indexOf(columnType);
       if (typeIndex >= 0 && typeIndex < columnTypes.length - 1) {
-        event.preventDefault();
         setFocusedCell({ columnType: columnTypes[typeIndex + 1], rowIndex: index });
-        return true;
       }
-      return false;
+      return true;
     }
     return false;
   };

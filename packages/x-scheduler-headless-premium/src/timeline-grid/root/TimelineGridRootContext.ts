@@ -16,15 +16,20 @@ export interface TimelineGridRootContext {
    */
   setFocusedCell: (coordinates: TimelineGridCellCoordinates | null) => void;
   /**
+   * Clears the focused cell only if it still matches the given coordinates.
+   * Used by rows on unmount to avoid clobbering a sibling that already took focus.
+   */
+  clearFocusedCellIfMatches: (columnType: TimelineGridColumnType, rowIndex: number) => void;
+  /**
    * The ordered list of column types that are rendered in the grid.
    */
-  columnTypes: readonly TimelineGridColumnType[];
+  columnTypes: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
 }
 
 export const DEFAULT_COLUMN_TYPES = [
   'title',
   'events',
-] as const satisfies readonly TimelineGridColumnType[];
+] as const satisfies readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
 
 export const TimelineGridRootContext = React.createContext<TimelineGridRootContext | undefined>(
   undefined,

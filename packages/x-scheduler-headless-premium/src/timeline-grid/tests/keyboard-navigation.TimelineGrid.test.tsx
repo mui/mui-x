@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, act } from '@mui/internal-test-utils';
+import { screen, act, ErrorBoundary, reactMajor } from '@mui/internal-test-utils';
 import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-headless-premium/event-timeline-premium-provider';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -30,15 +30,17 @@ describe('TimelineGrid keyboard navigation', () => {
     onStoreMount,
     columnTypes,
     eventCreation,
+    resources: resourcesProp = resources,
   }: {
     onStoreMount?: (store: AnyEventCalendarStore) => void;
-    columnTypes?: TimelineGridColumnType[];
+    columnTypes?: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
     eventCreation?: boolean;
+    resources?: typeof resources;
   } = {}) {
     return (
       <EventTimelinePremiumProvider
         events={[]}
-        resources={resources}
+        resources={resourcesProp}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         eventCreation={eventCreation}
       >
@@ -348,6 +350,23 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(events[0]).to.have.attribute('tabindex', '-1');
       expect(events[1]).to.have.attribute('tabindex', '-1');
     });
+
+    it('should preserve the focused cell state when a non-focused row is removed', () => {
+      const { setProps } = render(<Grid resources={resources} />);
+
+      const rows = getEventsRows();
+      act(() => {
+        rows[0].focus();
+      });
+      expect(rows[0].querySelector('[data-testid^="event-"]')).to.have.attribute('tabindex', '0');
+
+      setProps({ resources: resources.slice(0, -1) });
+
+      expect(getEventsRows()[0].querySelector('[data-testid^="event-"]')).to.have.attribute(
+        'tabindex',
+        '0',
+      );
+    });
   });
 
   describe('aria-rowindex', () => {
@@ -386,6 +405,64 @@ describe('TimelineGrid keyboard navigation', () => {
       await user.keyboard('{ArrowDown}');
       expect(events[0]).to.have.attribute('tabindex', '-1');
       expect(events[1]).to.have.attribute('tabindex', '0');
+    });
+  });
+
+  describe('dev-mode errors', () => {
+    it('should throw when a row is rendered outside <TimelineGrid.SubGrid />', () => {
+      const errorRef = React.createRef<any>();
+      const errorMessage =
+        'MUI X Scheduler: TimelineGridSubGridContext is missing. ' +
+        '<TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be placed within <TimelineGrid.SubGrid />.';
+      const expectedError =
+        reactMajor < 19 ? ['The above error occurred in the'] : [errorMessage];
+
+      expect(() =>
+        render(
+          <ErrorBoundary ref={errorRef}>
+            <EventTimelinePremiumProvider
+              events={[]}
+              resources={resources}
+              visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            >
+              <TimelineGrid.Root>
+                <TimelineGrid.TitleRow />
+              </TimelineGrid.Root>
+            </EventTimelinePremiumProvider>
+          </ErrorBoundary>,
+        ),
+      ).toErrorDev(expectedError);
+
+      expect((errorRef.current as any).errors).to.have.length(1);
+      expect((errorRef.current as any).errors[0].toString()).to.include(errorMessage);
+    });
+
+    it('should throw when a row is rendered outside <TimelineGrid.Root />', () => {
+      const errorRef = React.createRef<any>();
+      const errorMessage =
+        'MUI X Scheduler: TimelineGridRootContext is missing. ' +
+        'TimelineGrid parts must be placed within <TimelineGrid.Root />.';
+      const expectedError =
+        reactMajor < 19 ? ['The above error occurred in the'] : [errorMessage];
+
+      expect(() =>
+        render(
+          <ErrorBoundary ref={errorRef}>
+            <EventTimelinePremiumProvider
+              events={[]}
+              resources={resources}
+              visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            >
+              <TimelineGrid.SubGrid>
+                {(resourceId) => <TimelineGrid.TitleRow key={resourceId} />}
+              </TimelineGrid.SubGrid>
+            </EventTimelinePremiumProvider>
+          </ErrorBoundary>,
+        ),
+      ).toErrorDev(expectedError);
+
+      expect((errorRef.current as any).errors).to.have.length(1);
+      expect((errorRef.current as any).errors[0].toString()).to.include(errorMessage);
     });
   });
 });

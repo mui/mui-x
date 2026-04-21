@@ -70,6 +70,15 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     });
   }, []);
 
+  const clearFocusedCellIfMatches = React.useCallback(
+    (columnType: TimelineGridColumnType, rowIndex: number) => {
+      setFocusedCellState((prev) =>
+        prev?.columnType === columnType && prev.rowIndex === rowIndex ? null : prev,
+      );
+    },
+    [],
+  );
+
   const handleBlur = React.useCallback((event: React.FocusEvent<HTMLDivElement>) => {
     const nextTarget = event.relatedTarget;
     if (!nextTarget || !rootRef.current?.contains(nextTarget)) {
@@ -78,8 +87,8 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   }, []);
 
   const contextValue: TimelineGridRootContext = React.useMemo(
-    () => ({ focusedCell, setFocusedCell, columnTypes }),
-    [focusedCell, setFocusedCell, columnTypes],
+    () => ({ focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes }),
+    [focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes],
   );
 
   const element = useRenderElement('div', componentProps, {
@@ -113,6 +122,6 @@ export namespace TimelineGridRoot {
      * Used for horizontal arrow-key navigation.
      * @default ['title', 'events']
      */
-    columnTypes?: readonly TimelineGridColumnType[];
+    columnTypes?: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
   }
 }
