@@ -16,6 +16,7 @@ import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useCompo
 import {
   type UseChartProZoomSignature,
   selectorChartActiveRangeButtonKey,
+  selectorChartAxisZoomData,
   selectorChartCanZoomOut,
 } from '../internals/plugins/useChartProZoom';
 import { type RangeButtonValue, rangeButtonValueToZoom } from './rangeButtonValueToZoom';
@@ -81,6 +82,8 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     return rawXAxes.find((axis) => zoomOptionsLookup[axis.id] !== undefined)?.id;
   }, [axisIdProp, rawXAxes, zoomOptionsLookup]);
 
+  const currentAxisZoom = store.use(selectorChartAxisZoomData, resolvedAxisId as AxisId);
+
   // Determine if the resolved axis is ordinal (band/point) to use index-based domain.
   const resolvedAxis = React.useMemo(
     () => rawXAxes?.find((axis) => axis.id === resolvedAxisId),
@@ -125,10 +128,25 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
 
   // Determine if this button is selected.
   // When explicitly clicked, activeRangeButtonKey matches the label.
-  // When no button has been clicked and zoom is at full range, the null-value button is active.
+  // Otherwise, a button is active when the current zoom range matches its computed range
+  // (e.g., on first render when `initialZoom` aligns with a button's range).
+  const matchesCurrentZoom = React.useMemo(() => {
+    if (axisDomain === undefined) {
+      return value === null && !canZoomOut;
+    }
+    const target = rangeButtonValueToZoom(value, {
+      scaleType: resolvedAxis?.scaleType ?? 'linear',
+      data: resolvedAxis?.data,
+      domain: axisDomain,
+    });
+    const start = currentAxisZoom?.start ?? 0;
+    const end = currentAxisZoom?.end ?? 100;
+    const epsilon = 0.01;
+    return Math.abs(start - target.start) < epsilon && Math.abs(end - target.end) < epsilon;
+  }, [axisDomain, value, resolvedAxis, currentAxisZoom, canZoomOut]);
+
   const isActive =
-    activeRangeButtonKey === label ||
-    (activeRangeButtonKey === null && value === null && !canZoomOut);
+    activeRangeButtonKey === label || (activeRangeButtonKey === null && matchesCurrentZoom);
 
   const element = useComponentRenderer(slots.baseToggleButton, render, {
     ...slotProps.baseToggleButton,
