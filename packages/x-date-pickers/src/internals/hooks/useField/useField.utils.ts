@@ -17,6 +17,7 @@ import {
   InferFieldSection,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
+import { convertToMeridiem } from '../../utils/time-utils';
 import { PickerValidValue } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = (
@@ -546,18 +547,8 @@ const transferDateSectionValue = (
     }
 
     case 'meridiem': {
-      const isAM = adapter.getHours(dateToTransferFrom) < 12;
-      const mergedDateHours = adapter.getHours(dateToTransferTo);
-
-      if (isAM && mergedDateHours >= 12) {
-        return adapter.addHours(dateToTransferTo, -12);
-      }
-
-      if (!isAM && mergedDateHours < 12) {
-        return adapter.addHours(dateToTransferTo, 12);
-      }
-
-      return dateToTransferTo;
+      const meridiem = adapter.getHours(dateToTransferFrom) < 12 ? 'am' : 'pm';
+      return convertToMeridiem(dateToTransferTo, meridiem, true, adapter);
     }
 
     case 'hours': {
