@@ -49,11 +49,7 @@ describe('GRID_MULTI_SELECT_COL_DEF', () => {
     });
 
     it('collapses runs of separators and drops empties', () => {
-      expect(parse('React,,TypeScript;;Node.js')).to.deep.equal([
-        'React',
-        'TypeScript',
-        'Node.js',
-      ]);
+      expect(parse('React,,TypeScript;;Node.js')).to.deep.equal(['React', 'TypeScript', 'Node.js']);
     });
 
     it('matches case-insensitively against option values', () => {

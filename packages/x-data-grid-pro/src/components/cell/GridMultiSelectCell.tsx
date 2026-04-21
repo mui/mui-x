@@ -14,6 +14,7 @@ import {
   gridClasses,
   useGridRootProps,
   useGridApiContext,
+  useGridEvent,
   useGridSelector,
 } from '@mui/x-data-grid';
 import {
@@ -198,10 +199,11 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
   // Create a stable key for the array values to detect when chips need remeasuring
   const arrayKey = React.useMemo(() => arrayValue.join('\0'), [arrayValue]);
 
-  // Store previous computedWidth to detect column resize
-  const prevComputedWidthRef = React.useRef(colDef.computedWidth);
   // Track previous arrayKey to detect actual changes (not initial mount)
   const prevArrayKeyRef = React.useRef<string | null>(null);
+  // Stable count used for asymmetric hysteresis: upward transitions need headroom,
+  // downward transitions fire immediately. Updated in a layout effect below.
+  const prevVisibleCountRef = React.useRef<number>(arrayValue.length);
 
   // Clear chip width cache when array values change
   React.useEffect(() => {
@@ -218,32 +220,66 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
     prevArrayKeyRef.current = arrayKey;
   }, [arrayKey, isAutoHeight]);
 
-  // Update container width when column is resized
+  // Re-read container width when the column's committed width changes (drag-stop state
+  // commit or programmatic `apiRef.setColumnWidth`). Active-drag updates flow through
+  // the throttled `columnResize` handler below; this only covers the state-driven path.
   React.useEffect(() => {
-    if (isAutoHeight) {
+    if (isAutoHeight || !cellRef.current) {
       return;
     }
-    if (containerWidth !== null && prevComputedWidthRef.current !== colDef.computedWidth) {
-      const delta = colDef.computedWidth - prevComputedWidthRef.current;
-      setContainerWidth((prev) => (prev !== null ? prev + delta : null));
+    setContainerWidth(cellRef.current.getBoundingClientRect().width);
+  }, [colDef.computedWidth, isAutoHeight]);
+
+  // Live resize: throttle updates from `columnResize` so visibility doesn't flicker
+  // when a slow drag oscillates around a chip-fit boundary. `columnResizeStop` flushes
+  // the trailing value so the final width is exact.
+  const RESIZE_THROTTLE_MS = 32;
+  const resizeTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const commitContainerWidth = React.useCallback(() => {
+    resizeTimerRef.current = null;
+    if (cellRef.current) {
+      setContainerWidth(cellRef.current.getBoundingClientRect().width);
     }
-    prevComputedWidthRef.current = colDef.computedWidth;
-  }, [colDef.computedWidth, containerWidth, isAutoHeight]);
+  }, []);
+  useGridEvent(apiRef, 'columnResize', (params) => {
+    if (isAutoHeight || params.colDef.field !== colDef.field) {
+      return;
+    }
+    if (resizeTimerRef.current !== null) {
+      return;
+    }
+    resizeTimerRef.current = setTimeout(commitContainerWidth, RESIZE_THROTTLE_MS);
+  });
+  useGridEvent(apiRef, 'columnResizeStop', () => {
+    if (resizeTimerRef.current !== null) {
+      clearTimeout(resizeTimerRef.current);
+    }
+    commitContainerWidth();
+  });
+  React.useEffect(
+    () => () => {
+      if (resizeTimerRef.current !== null) {
+        clearTimeout(resizeTimerRef.current);
+      }
+    },
+    [],
+  );
 
   // Measure chips and container width after render (synchronous to avoid flicker)
   React.useLayoutEffect(() => {
     if (isAutoHeight) {
       return;
     }
-    // Measure container width once
+    // Measure container width once. Use getBoundingClientRect for sub-pixel precision
+    // — clientWidth/offsetWidth round to integer, which biases the chip-fit math.
     if (containerWidth === null && cellRef.current) {
-      setContainerWidth(cellRef.current.clientWidth);
+      setContainerWidth(cellRef.current.getBoundingClientRect().width);
     }
 
     let newMeasurements = 0;
     chipsRef.current.forEach((chipEl, index) => {
       if (chipEl && !chipWidthsRef.current.has(index)) {
-        chipWidthsRef.current.set(index, chipEl.offsetWidth);
+        chipWidthsRef.current.set(index, chipEl.getBoundingClientRect().width);
         newMeasurements += 1;
       }
     });
@@ -252,11 +288,11 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
     }
   }, [containerWidth, isAutoHeight]);
 
-  // Calculate visible count based on container width and cached chip widths
-  // This recalculates when:
-  // - Container width changes (measured or column resize)
-  // - Array values change (arrayValue.length)
-  // - More chips are measured (measuredCount)
+  // Asymmetric hysteresis: natural pointer drag produces ±1-3 px jitter every frame.
+  // At a chip-fit boundary that jitter flips visibleCount between N and N+1 and the
+  // chips flash. Upward transitions require `HYSTERESIS_PX` of headroom past the real
+  // boundary; downward transitions apply immediately so chips never overflow the cell.
+  const HYSTERESIS_PX = 4;
   const visibleCount = React.useMemo(() => {
     if (isAutoHeight || arrayValue.length === 0) {
       return arrayValue.length;
@@ -269,9 +305,32 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
       return arrayValue.length;
     }
 
-    // All measurements complete, calculate based on container width
-    return calculateVisibleCount(arrayValue.length, containerWidth, chipWidthsRef.current);
+    const calculated = calculateVisibleCount(
+      arrayValue.length,
+      containerWidth,
+      chipWidthsRef.current,
+    );
+    const prev = prevVisibleCountRef.current;
+
+    if (calculated > prev) {
+      // Require HYSTERESIS_PX of headroom before revealing new chips.
+      const conservative = calculateVisibleCount(
+        arrayValue.length,
+        containerWidth - HYSTERESIS_PX,
+        chipWidthsRef.current,
+      );
+      if (conservative < calculated) {
+        return prev;
+      }
+    }
+    return calculated;
   }, [arrayValue.length, measuredCount, containerWidth, isAutoHeight]);
+
+  // Commit the latest visibleCount so the next render's hysteresis uses an up-to-date
+  // baseline. Layout effect so the commit is synchronous with paint.
+  React.useLayoutEffect(() => {
+    prevVisibleCountRef.current = visibleCount;
+  }, [visibleCount]);
 
   const hiddenCount = arrayValue.length - visibleCount;
 

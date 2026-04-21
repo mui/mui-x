@@ -45,9 +45,9 @@ export function calculateVisibleCount(
       (count > 0 ? GAP : 0) +
       (hiddenIfStopHere > 0 ? overflowChipWidth + GAP : 0);
 
-    // Allow 1px tolerance per chip to handle CSS subpixel rendering
-    const tolerance = i + 1;
-    if (spaceNeeded <= containerWidth + tolerance || i === 0) {
+    // Both `containerWidth` and chip widths are read via getBoundingClientRect (sub-
+    // pixel), so no tolerance needed — the math matches the laid-out widths exactly.
+    if (spaceNeeded <= containerWidth || i === 0) {
       usedWidth += chipWidth + (count > 0 ? GAP : 0);
       count += 1;
     } else {

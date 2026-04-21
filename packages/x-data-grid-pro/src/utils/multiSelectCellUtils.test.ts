@@ -44,15 +44,16 @@ describe('multiSelectCellUtils', () => {
       expect(calculateVisibleCount(3, 213, chipWidths)).to.equal(3);
     });
 
-    it('should show all chips when container is slightly smaller due to subpixel rendering', () => {
-      // 3 chips: 68 + 4 + 66 + 4 + 71 = 213, containerWidth = 212.3
-      // Tolerance: 3px (1px per chip), so 213 <= 212.3 + 3 = 215.3
+    it('should collapse the last chip into +1 when the row would overflow', () => {
+      // Sub-pixel widths from getBoundingClientRect — sum = 213, container = 212.3.
+      // No tolerance: last chip is dropped, +1 takes its place.
+      // 2 chips: 68 + 4 + 66 = 138, plus overflow chip (32) + gap (4) = 174 ≤ 212.3
       const chipWidths = new Map<number, number>([
         [0, 68],
         [1, 66],
         [2, 71],
       ]);
-      expect(calculateVisibleCount(3, 212.3, chipWidths)).to.equal(3);
+      expect(calculateVisibleCount(3, 212.3, chipWidths)).to.equal(2);
     });
 
     it('should always show at least first chip', () => {
