@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { expectFieldValue, describeAdapters } from 'test/utils/pickers';
+import { expectFieldValueV7, describeAdapters } from 'test/utils/pickers';
 
 describe('<TimeField /> - Timezone', () => {
   describeAdapters('DST meridiem toggling', TimeField, ({ adapter, renderWithProps }) => {
@@ -22,6 +22,7 @@ describe('<TimeField /> - Timezone', () => {
           format: adapter.formats.fullTime12h,
           timezone,
           onChange,
+          enableAccessibleFieldDOMStructure: true,
         });
 
         await view.selectSectionAsync('meridiem');
@@ -30,7 +31,7 @@ describe('<TimeField /> - Timezone', () => {
 
         // Old code (addHours(-12)) would have produced "11:00 PM" (wrong).
         // New code (setHours) correctly produces "12:00 AM" (midnight).
-        expectFieldValue(view.getSectionsContainer(), '12:00 AM');
+        expectFieldValueV7(view.getSectionsContainer(), '12:00 AM');
 
         // Verify the onChange value is midnight on March 10 (2024-03-10T08:00:00Z),
         // not 11:00 PM on March 9 (2024-03-09T07:00:00Z).
@@ -48,6 +49,7 @@ describe('<TimeField /> - Timezone', () => {
           format: adapter.formats.fullTime12h,
           timezone,
           onChange,
+          enableAccessibleFieldDOMStructure: true,
         });
 
         await view.selectSectionAsync('meridiem');
@@ -56,7 +58,7 @@ describe('<TimeField /> - Timezone', () => {
 
         // Old code (addHours(+12)) would have produced "01:00 PM" (wrong).
         // New code (setHours) correctly produces "12:00 PM" (noon).
-        expectFieldValue(view.getSectionsContainer(), '12:00 PM');
+        expectFieldValueV7(view.getSectionsContainer(), '12:00 PM');
 
         // Verify the onChange value is noon on March 10 (2024-03-10T19:00:00Z),
         // not 1:00 PM (2024-03-10T20:00:00Z).
