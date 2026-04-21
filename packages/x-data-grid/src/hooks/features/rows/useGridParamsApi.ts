@@ -16,7 +16,7 @@ import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { gridRowNodeSelector } from './gridRowsSelector';
 import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
-export class MissingRowIdError extends Error {}
+class MissingRowIdError extends Error {}
 
 /**
  * @requires useGridColumns (method)
