@@ -2,33 +2,33 @@
  * Return the vertical/horizontal alignment for a tick label at a given position.
  * @param px The normalized x position to the axis line (between -1 and 1).
  * @param py The normalized y position to the axis line (between -1 and 1).
- * @param center If true, the tick labels are centered on it's position.
+ * @param tickLabelPosition The position of the tick label relative to the axis line.
  * @returns The vertical and horizontal alignment for the tick label.
  */
 export function getLabelTransform(
   px: number,
   py: number,
-  center: boolean,
+  tickLabelPosition: 'center' | 'after' | 'before',
 ): {
   verticalAlign: 'start' | 'middle' | 'end';
   horizontalAlign: 'start' | 'middle' | 'end';
 } {
-  if (center) {
+  if (tickLabelPosition === 'center') {
     return { verticalAlign: 'middle', horizontalAlign: 'middle' };
   }
 
   let verticalAlign: 'start' | 'middle' | 'end' = 'middle';
   let horizontalAlign: 'start' | 'middle' | 'end' = 'middle';
   if (px > 0.3) {
-    verticalAlign = 'start';
+    verticalAlign = tickLabelPosition === 'after' ? 'start' : 'end';
   } else if (px < -0.3) {
-    verticalAlign = 'end';
+    verticalAlign = tickLabelPosition === 'after' ? 'end' : 'start';
   }
 
   if (py > 0.3) {
-    horizontalAlign = 'end';
+    horizontalAlign = tickLabelPosition === 'after' ? 'end' : 'start';
   } else if (py < -0.3) {
-    horizontalAlign = 'start';
+    horizontalAlign = tickLabelPosition === 'after' ? 'start' : 'end';
   }
 
   return { verticalAlign, horizontalAlign };

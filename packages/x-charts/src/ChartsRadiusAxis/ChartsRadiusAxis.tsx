@@ -40,9 +40,17 @@ export interface ChartsRadiusAxisProps {
    */
   tickSize?: number;
   /**
-   * If `true`, the tick labels are centered on the axis line instead of being offset away from it.
+   * Set the position of the tick labels relative to the axis line.
+   * The before/after is defined based on clockwise direction.
+   * @default 'after'
    */
-  center?: boolean;
+  tickLabelPosition?: 'center' | 'after' | 'before';
+  /**
+   * Set the position of the tick relative to the axis line.
+   * The before/after is defined based on clockwise direction.
+   * @default 'after'
+   */
+  tickPosition?: 'after' | 'before';
   /**
    * A CSS class name applied to the root element.
    */
@@ -50,21 +58,21 @@ export interface ChartsRadiusAxisProps {
   classes?: Partial<ChartsRadialAxisClasses>;
 }
 
-const TICK_LABEL_GAP = 4;
-
 export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
   const {
     axisId,
     angle: angleProp,
     disableLine,
     disableTicks,
-    center,
+    tickLabelPosition = 'after',
+    tickPosition = 'after',
     tickSize = 6,
     className,
     classes: classesProp,
   } = props;
 
-  const classes = useUtilityClasses({ classes: classesProp, center });
+  const isCentered = tickLabelPosition === 'center';
+  const classes = useUtilityClasses({ classes: classesProp, isCentered });
   const theme = useTheme();
   const { store } = useChartsContext<[UseChartPolarAxisSignature]>();
   const { cx, cy } = store.use(selectorChartPolarCenter);
@@ -99,6 +107,9 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
 
   const stroke = (theme.vars ?? theme).palette.text.primary;
 
+  const tickDx = (tickPosition === 'after' ? 1 : -1) * px * tickSize;
+  const tickDy = (tickPosition === 'after' ? 1 : -1) * py * tickSize;
+
   return (
     <g className={clsx(classes.root, className)}>
       {!disableLine && (
@@ -118,16 +129,24 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
 
         const tx = cx + dx * radius;
         const ty = cy + dy * radius;
-        const labelX = tx + (center ? 0 : px * (tickSize + TICK_LABEL_GAP));
-        const labelY = ty + (center ? 0 : py * (tickSize + TICK_LABEL_GAP));
+
+        // Compute the label position.
+        let labelX = tx;
+        let labelY = ty;
+        if (!isCentered && tickLabelPosition === tickPosition) {
+          // Add the size of the tick if they are in the same direction.
+          labelX += tickDx;
+          labelY += tickDy;
+        }
+
         return (
           <g key={index} className={classes.tickContainer}>
             {!disableTicks && (
               <line
                 x1={tx}
                 y1={ty}
-                x2={tx + px * tickSize}
-                y2={ty + py * tickSize}
+                x2={tx + tickDx}
+                y2={ty + tickDy}
                 stroke={stroke}
                 className={classes.tick}
               />
@@ -147,7 +166,7 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
                 <RadialAxisLabel
                   className={classes.tickLabel}
                   variant="caption"
-                  {...getLabelTransform(dx, dy, Boolean(center))}
+                  {...getLabelTransform(dx, dy, tickLabelPosition)}
                 >
                   {formattedValue}
                 </RadialAxisLabel>

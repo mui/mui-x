@@ -14,8 +14,17 @@ export default function RadiusAxisPlayground() {
         {
           disableLine: { knob: 'switch', defaultValue: true },
           disableTicks: { knob: 'switch', defaultValue: true },
-          center: { knob: 'switch', defaultValue: true },
-          tickSize: { knob: 'number', defaultValue: 6, min: 0, max: 20 },
+          tickPosition: {
+            knob: 'select',
+            options: ['after', 'before'],
+            defaultValue: 'after',
+          },
+          tickLabelPosition: {
+            knob: 'select',
+            options: ['center', 'after', 'before'],
+            defaultValue: 'center',
+          },
+          tickSize: { knob: 'number', defaultValue: 6, min: -20, max: 20 },
           angle: {
             knob: 'number',
             defaultValue: -90,
@@ -78,7 +87,8 @@ export default function RadiusAxisPlayground() {
                   disableLine={props.disableLine}
                   disableTicks={props.disableTicks}
                   tickSize={props.tickSize}
-                  center={props.center}
+                  tickLabelPosition={props.tickLabelPosition}
+                  tickPosition={props.tickPosition}
                 />
               </ChartsSvgLayer>
             </ChartsLayerContainer>
@@ -103,7 +113,8 @@ ${[
   `tickSize={${props.tickSize}}`,
   props.disableLine && 'disableLine',
   props.disableTicks && 'disableTicks',
-  props.center && 'center',
+  props.tickPosition && `tickPosition="${props.tickPosition}"`,
+  props.tickLabelPosition && `tickLabelPosition="${props.tickLabelPosition}"`,
 ]
   .filter(Boolean)
   .map((line) => `    ${line}`)

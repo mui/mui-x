@@ -3,15 +3,15 @@ import { type ChartsRadialAxisClasses, getRadialAxisUtilityClass } from './share
 
 export const useUtilityClasses = (props: {
   classes?: Partial<ChartsRadialAxisClasses>;
-  center?: boolean;
+  isCentered?: boolean;
 }) => {
-  const { classes, center } = props;
+  const { classes, isCentered } = props;
   const slots = {
     root: ['root', 'radiusAxis'],
     line: ['line'],
     tickContainer: ['tickContainer'],
     tick: ['tick'],
-    tickLabel: ['tickLabel', center && 'centered'],
+    tickLabel: ['tickLabel', isCentered && 'centered'],
   };
 
   return composeClasses(slots, getRadialAxisUtilityClass, classes);
