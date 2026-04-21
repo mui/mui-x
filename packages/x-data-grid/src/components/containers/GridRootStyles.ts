@@ -231,6 +231,10 @@ export const GridRootStyles = styled('div', {
         flex: 'none !important',
         width: 'unset !important',
       },
+      [`& .${c.multiSelectCell}`]: {
+        width: 'max-content',
+        overflow: 'visible',
+      },
       [`& .${c['multiSelectCellChip--hidden']}`]: {
         display: 'inline-flex',
       },
