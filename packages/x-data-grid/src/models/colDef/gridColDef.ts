@@ -394,7 +394,7 @@ export interface GridMultiSelectColDef<
   getOptionValue: (value: ValueOptions) => string | number;
   /**
    * The separator used to join array values for display and export.
-   * @default ', '
+   * @default ','
    */
   separator?: string;
 }

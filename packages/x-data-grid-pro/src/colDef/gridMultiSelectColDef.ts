@@ -85,7 +85,7 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
     }
 
     const valueOptions = getValueOptions(colDef, { id: rowId, row });
-    const separator = colDef.separator ?? ', ';
+    const separator = colDef.separator ?? ',';
 
     if (!valueOptions || !isArrayOfObjects(valueOptions)) {
       return value.map((v) => colDef.getOptionLabel!(v)).join(separator);
