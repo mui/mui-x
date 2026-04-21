@@ -3,7 +3,6 @@ import {
   SchedulerParameters,
   SchedulerChangeEventDetails,
 } from '@mui/x-scheduler-headless/internals';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-headless/base-ui-copy';
 import { EventTimelinePremiumPreset } from '../models/preset';
 import { EventTimelinePremiumPreferences } from '../models/preferences';
 
@@ -68,14 +67,4 @@ export interface EventTimelinePremiumParameters<
     preferences: Partial<EventTimelinePremiumPreferences>,
     event: React.UIEvent | Event,
   ) => void;
-  /**
-   * The date currently used to determine the visible date range in each preset.
-   */
-  visibleDate?: TemporalSupportedObject;
-  /**
-   * The date initially used to determine the visible date range in each preset.
-   * To render a controlled timeline, use the `visibleDate` prop.
-   * @default today
-   */
-  defaultVisibleDate?: TemporalSupportedObject;
 }

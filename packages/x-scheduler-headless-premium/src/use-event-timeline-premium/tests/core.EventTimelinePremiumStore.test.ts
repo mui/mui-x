@@ -58,5 +58,19 @@ describe('Core - EventTimelinePremiumStore', () => {
 
       expect(store.state.presets).to.deep.equal(['dayAndHour', 'monthAndYear', 'year']);
     });
+
+    it('should re-sort the presets array when parameters update', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, presets: ['dayAndHour', 'day'] },
+        adapter,
+      );
+
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, presets: ['year', 'day', 'dayAndHour'] },
+        adapter,
+      );
+
+      expect(store.state.presets).to.deep.equal(['dayAndHour', 'day', 'year']);
+    });
   });
 });
