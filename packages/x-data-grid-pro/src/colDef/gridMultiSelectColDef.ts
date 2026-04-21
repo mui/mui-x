@@ -42,6 +42,13 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   ...GRID_STRING_COL_DEF,
   type: 'multiSelect',
   display: 'flex',
+  groupable: false,
+  // @ts-ignore premium-only
+  aggregable: false,
+  // @ts-ignore premium-only
+  pivotable: false,
+  // @ts-ignore premium-only
+  chartable: false,
   getOptionLabel: defaultGetOptionLabel,
   getOptionValue: defaultGetOptionValue,
   sortComparator: (v1, v2) => {
