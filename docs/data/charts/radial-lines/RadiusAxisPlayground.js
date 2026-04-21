@@ -3,7 +3,7 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { Unstable_ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
-import { ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
+import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
 import { Unstable_ChartsRadialDataProvider } from '@mui/x-charts/ChartsRadialDataProvider';
 
 export default function RadiusAxisPlayground() {
