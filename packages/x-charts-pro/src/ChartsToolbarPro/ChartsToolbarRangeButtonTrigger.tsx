@@ -15,7 +15,6 @@ import {
 import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import {
   type UseChartProZoomSignature,
-  selectorChartActiveRangeButtonKey,
   selectorChartAxisZoomData,
   selectorChartCanZoomOut,
 } from '../internals/plugins/useChartProZoom';
@@ -65,7 +64,6 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartsContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
-  const activeRangeButtonKey = store.use(selectorChartActiveRangeButtonKey);
   const canZoomOut = store.use(selectorChartCanZoomOut);
   const zoomOptionsLookup = store.use(selectorChartZoomOptionsLookup);
   const rawXAxes = store.use(selectorChartRawXAxis);
@@ -123,14 +121,10 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
       start: zoom.start,
       end: zoom.end,
     });
-    instance.setActiveRangeButtonKey(label);
-  }, [resolvedAxisId, resolvedAxis, axisDomain, value, instance, label]);
+  }, [resolvedAxisId, resolvedAxis, axisDomain, value, instance]);
 
-  // Determine if this button is selected.
-  // When explicitly clicked, activeRangeButtonKey matches the label.
-  // Otherwise, a button is active when the current zoom range matches its computed range
-  // (e.g., on first render when `initialZoom` aligns with a button's range).
-  const matchesCurrentZoom = React.useMemo(() => {
+  // A button is selected when the current zoom range matches its computed range.
+  const isActive = React.useMemo(() => {
     if (axisDomain === undefined) {
       return value === null && !canZoomOut;
     }
@@ -144,9 +138,6 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     const epsilon = 0.01;
     return Math.abs(start - target.start) < epsilon && Math.abs(end - target.end) < epsilon;
   }, [axisDomain, value, resolvedAxis, currentAxisZoom, canZoomOut]);
-
-  const isActive =
-    activeRangeButtonKey === label || (activeRangeButtonKey === null && matchesCurrentZoom);
 
   const element = useComponentRenderer(slots.baseToggleButton, render, {
     ...slotProps.baseToggleButton,

@@ -96,14 +96,12 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
         store.set('zoom', {
           ...store.state.zoom,
           isInteracting: true,
-          activeRangeButtonKey: null,
         });
       } else {
         store.set('zoom', {
           ...store.state.zoom,
           isInteracting: true,
           zoomData: newZoomData,
-          activeRangeButtonKey: null,
         });
         removeIsInteracting();
       }
@@ -199,16 +197,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   const zoomIn = React.useCallback(() => zoom(0.1), [zoom]);
   const zoomOut = React.useCallback(() => zoom(-0.1), [zoom]);
 
-  const setActiveRangeButtonKey = React.useCallback(
-    (key: string | null) => {
-      store.set('zoom', {
-        ...store.state.zoom,
-        activeRangeButtonKey: key,
-      });
-    },
-    [store],
-  );
-
   return {
     publicAPI: {
       setZoomData: setZoomDataCallback,
@@ -222,7 +210,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
       moveZoomRange,
       zoomIn,
       zoomOut,
-      setActiveRangeButtonKey,
     },
   };
 };
@@ -254,7 +241,6 @@ useChartProZoom.getInitialState = (params) => {
         params.zoomInteractionConfig,
         optionsLookup,
       ),
-      activeRangeButtonKey: null,
     },
   };
 };
