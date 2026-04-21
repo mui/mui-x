@@ -46,6 +46,9 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
 
   const indexRef = React.useRef(index);
   indexRef.current = index;
+  // Unlike CalendarGrid, TimelineGrid rows can unmount while focused (e.g. programmatic
+  // resource removal), so we clear focusedCell from the unmounting row to avoid a stale
+  // pointer. `clearFocusedCellIfMatches` skips clearing when a sibling already took focus.
   React.useEffect(() => {
     return () => {
       clearFocusedCellIfMatches(columnType, indexRef.current);
