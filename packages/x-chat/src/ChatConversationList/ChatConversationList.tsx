@@ -381,12 +381,7 @@ const ChatConversationListUnreadBadgeStyled = React.forwardRef<HTMLDivElement>(
 
 function DefaultMoreIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
       <circle cx="6" cy="12" r="2" />
       <circle cx="12" cy="12" r="2" />
       <circle cx="18" cy="12" r="2" />
