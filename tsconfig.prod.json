@@ -37,10 +37,6 @@
       "@mui/internal-core-docs/*": [
         "./node_modules/@mui/monorepo/packages-internal/core-docs/src/*"
       ],
-      "@mui-internal/api-docs-builder": ["./node_modules/@mui/monorepo/packages/api-docs-builder"],
-      "@mui-internal/api-docs-builder/*": [
-        "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
-      ],
       "test/*": ["./test/*"],
       "docs/src/modules/utils/mapApiPageTranslations": [
         "./docs/src/modules/utils/mapApiPageTranslations.js"

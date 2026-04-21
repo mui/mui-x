@@ -59,18 +59,6 @@
       "@mui/internal-core-docs/*": [
         "./node_modules/@mui/monorepo/packages-internal/core-docs/src/*"
       ],
-      "@mui-internal/api-docs-builder": [
-        "./node_modules/@mui/monorepo/packages-internal/api-docs-builder"
-      ],
-      "@mui-internal/api-docs-builder/*": [
-        "./node_modules/@mui/monorepo/packages-internal/api-docs-builder/*"
-      ],
-      "@mui-internal-scripts/generate-llms-txt": [
-        "./node_modules/@mui/monorepo/packages-internal/scripts/generate-llms-txt/src"
-      ],
-      "@mui-internal-scripts/generate-llms-txt/*": [
-        "./node_modules/@mui/monorepo/packages-internal/scripts/generate-llms-txt/src/*"
-      ],
       "test/*": ["./test/*"],
       "docsx/*": ["./docs/*"]
     },

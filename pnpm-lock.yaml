@@ -229,11 +229,6 @@ catalogs:
 overrides:
   stylis: ^4.3.6
 
-patchedDependencies:
-  '@mui/internal-markdown@3.0.6':
-    hash: c3d78138268b761747c5c7439b8eeedcfcd0adc38019a77b572b336546cb0b6e
-    path: patches/@mui__internal-markdown@3.0.6.patch
-
 importers:
 
   .:
@@ -262,6 +257,9 @@ importers:
       '@inquirer/prompts':
         specifier: 8.1.0
         version: 8.1.0(@types/node@22.19.3)
+      '@mui/internal-api-docs-builder':
+        specifier: 1.0.1-canary.0
+        version: 1.0.1-canary.0
       '@mui/internal-babel-plugin-display-name':
         specifier: 1.0.4-canary.17
         version: 1.0.4-canary.17(@babel/core@7.29.0)(@babel/preset-react@7.28.5(@babel/core@7.29.0))
@@ -275,11 +273,14 @@ importers:
         specifier: 0.0.4-canary.25
         version: 0.0.4-canary.25(@next/eslint-plugin-next@16.2.1)(@types/node@22.19.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint@9.39.2)(jest-diff@30.2.0)(postcss@8.5.8)(prettier@3.8.1)(stylelint@17.1.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.18)
       '@mui/internal-markdown':
-        specifier: 3.0.6
-        version: 3.0.6(patch_hash=c3d78138268b761747c5c7439b8eeedcfcd0adc38019a77b572b336546cb0b6e)
+        specifier: 3.0.8-canary.2
+        version: 3.0.8-canary.2
       '@mui/internal-netlify-cache':
         specifier: 0.0.3-canary.5
         version: 0.0.3-canary.5
+      '@mui/internal-scripts':
+        specifier: 3.0.7-canary.1
+        version: 3.0.7-canary.1
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.18-canary.20(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@7.3.1(@types/node@22.19.3)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
@@ -287,8 +288,8 @@ importers:
         specifier: 'catalog:'
         version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#c973a09653bcadfd6a2b4841d8b2ae821e4614ee
-        version: https://codeload.github.com/mui/material-ui/tar.gz/c973a09653bcadfd6a2b4841d8b2ae821e4614ee(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
+        specifier: github:mui/material-ui#c11f4ee1aec564bef4d94e62ea87e83b7d0a8c79
+        version: https://codeload.github.com/mui/material-ui/tar.gz/c11f4ee1aec564bef4d94e62ea87e83b7d0a8c79(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.0.0(@types/react@19.2.14)(react@19.2.4)
@@ -648,7 +649,7 @@ importers:
         version: 19.2.4
       react-docgen:
         specifier: ^8.0.2
-        version: 8.0.2
+        version: 8.0.3
       react-dom:
         specifier: 'catalog:'
         version: 19.2.4(react@19.2.4)
@@ -693,11 +694,8 @@ importers:
         specifier: 'catalog:'
         version: 7.28.5(@babel/core@7.29.0)
       '@mui/internal-docs-utils':
-        specifier: 2.0.6
-        version: 2.0.6
-      '@mui/internal-scripts':
-        specifier: 2.0.19
-        version: 2.0.19
+        specifier: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@cee33f5
+        version: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@cee33f5
       '@types/chance':
         specifier: 'catalog:'
         version: 1.1.7
@@ -4222,6 +4220,10 @@ packages:
       '@types/react':
         optional: true
 
+  '@mui/internal-api-docs-builder@1.0.1-canary.0':
+    resolution: {integrity: sha512-B6cNH+inTbo7RjM6eytj6r0iGNkywsP+e+xW0ehdodkKYqgAjI/0iVajZ01qbC0AqP+YUmv5zsp85kJ/701SBQ==}
+    engines: {node: '>=22'}
+
   '@mui/internal-babel-plugin-display-name@1.0.4-canary.17':
     resolution: {integrity: sha512-QP+VWS6Vr4MZmrvLvivll4cSiaXHti9UU5NZ2lq3SJqJFi1eYLGN5X7KeHZOUCdDwDjZPjL/Jj7MuoruvZqCtw==}
     peerDependencies:
@@ -4276,17 +4278,21 @@ packages:
       prettier:
         optional: true
 
-  '@mui/internal-docs-utils@2.0.6':
-    resolution: {integrity: sha512-IeLb3ItTXl1DrAYKdI/LlmjlAGbUd3RaWvzs9yOipIestyvkmw0jxjarUQSSjVXJgcoDjzd+drr2k1ucH9Amkw==}
+  '@mui/internal-docs-utils@3.0.4-canary.2':
+    resolution: {integrity: sha512-PfPho23bhD7UkceV8bVjdZ8fkTvU/gaWDVe3Jo/DMB3JzElvcJqspeYLl7GCLN6VO84hztPFm6B3hn7TWidpEg==}
 
-  '@mui/internal-markdown@3.0.6':
-    resolution: {integrity: sha512-7Vvojwd3VuHCKDXkRoMbCApHvd7PtTw6FusKc/OKw+/iNvCnQXKqPAF7KgJvZFtMdE2zUByJf/C2SQBA/9cZDw==}
+  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@cee33f5':
+    resolution: {tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@cee33f5}
+    version: 3.0.3
+
+  '@mui/internal-markdown@3.0.8-canary.2':
+    resolution: {integrity: sha512-SUHeTS+bvTuFGe1hbCGM289c7X+fSddDRKuU8iT/RSSxYKjvFmqhC/XtUSrpX574xjMsYf/bZ1T8H6zHSXf9+A==}
 
   '@mui/internal-netlify-cache@0.0.3-canary.5':
     resolution: {integrity: sha512-3HiXaQ2x8nwwvXxMjXcy1uHVnhbCpWTAbyjkrpNeycJ2afSNnmHVLFq5Nu7K7QOJnYGwlcKjX9kBVGUv1aJp1w==}
 
-  '@mui/internal-scripts@2.0.19':
-    resolution: {integrity: sha512-EjDzWbgaOMRYSJaPOuy1JXAPOraqUb6KyAhrEgXc4sTZ/AbEhkJZnopQBxHKl1Z+8n2wkbitPX2Y/dIKxbMaAw==}
+  '@mui/internal-scripts@3.0.7-canary.1':
+    resolution: {integrity: sha512-kyRM74Ytts+92w/lPZO1T4Qlra1oHXvrQahtbB+3JoH1Wdhru6H0dKnKtNTr7+TCft8I7nf8Y63/mcJEf3csMg==}
 
   '@mui/internal-test-utils@2.0.18-canary.20':
     resolution: {integrity: sha512-U7PFoTkovwVlXX5bmqmRnmUWSa6vn0J+wbkfM9s1vds0lyy5QCiRuqZUtFV9z1Ih3V1JkYQbR7ZsLadS2fvOsg==}
@@ -4362,8 +4368,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/c973a09653bcadfd6a2b4841d8b2ae821e4614ee':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/c973a09653bcadfd6a2b4841d8b2ae821e4614ee}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/c11f4ee1aec564bef4d94e62ea87e83b7d0a8c79':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/c11f4ee1aec564bef4d94e62ea87e83b7d0a8c79}
     version: 9.0.0
     engines: {node: '>=22.18.0', pnpm: 10.33.0}
 
@@ -10231,8 +10237,8 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  react-docgen@8.0.2:
-    resolution: {integrity: sha512-+NRMYs2DyTP4/tqWz371Oo50JqmWltR1h2gcdgUMAWZJIAvrd0/SqlCfx7tpzpl/s36rzw6qH2MjoNrxtRNYhA==}
+  react-docgen@8.0.3:
+    resolution: {integrity: sha512-aEZ9qP+/M+58x2qgfSFEWH1BxLyHe5+qkLNJOZQb5iGS017jpbRnoKhNRrXPeA6RfBrZO5wZrT9DMC1UqE1f1w==}
     engines: {node: ^20.9.0 || >=22}
 
   react-dom@19.2.4:
@@ -13852,6 +13858,26 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.14
 
+  '@mui/internal-api-docs-builder@1.0.1-canary.0':
+    dependencies:
+      '@babel/core': 7.29.0
+      '@babel/preset-typescript': 7.28.5(@babel/core@7.29.0)
+      '@babel/traverse': 7.29.0
+      '@babel/types': 7.29.0
+      '@mui/internal-docs-utils': 3.0.4-canary.2
+      '@mui/internal-markdown': 3.0.8-canary.2
+      doctrine: 3.0.0
+      es-toolkit: 1.45.1
+      fast-glob: 3.3.3
+      prettier: 3.8.1
+      react-docgen: 8.0.3
+      recast: 0.23.11
+      remark: 15.0.1
+      typescript: 5.9.3
+      unist-util-visit: 5.1.0
+    transitivePeerDependencies:
+      - supports-color
+
   '@mui/internal-babel-plugin-display-name@1.0.4-canary.17(@babel/core@7.29.0)(@babel/preset-react@7.28.5(@babel/core@7.29.0))':
     dependencies:
       '@babel/core': 7.29.0
@@ -14036,12 +14062,17 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-docs-utils@2.0.6':
+  '@mui/internal-docs-utils@3.0.4-canary.2':
     dependencies:
       rimraf: 6.1.3
       typescript: 5.9.3
 
-  '@mui/internal-markdown@3.0.6(patch_hash=c3d78138268b761747c5c7439b8eeedcfcd0adc38019a77b572b336546cb0b6e)':
+  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@cee33f5':
+    dependencies:
+      rimraf: 6.1.3
+      typescript: 5.9.3
+
+  '@mui/internal-markdown@3.0.8-canary.2':
     dependencies:
       '@babel/runtime': 7.29.2
       es-toolkit: 1.45.1
@@ -14050,14 +14081,14 @@ snapshots:
 
   '@mui/internal-netlify-cache@0.0.3-canary.5': {}
 
-  '@mui/internal-scripts@2.0.19':
+  '@mui/internal-scripts@3.0.7-canary.1':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.29.0)
       '@babel/plugin-syntax-jsx': 7.28.6(@babel/core@7.29.0)
       '@babel/plugin-syntax-typescript': 7.28.6(@babel/core@7.29.0)
       '@babel/types': 7.29.0
-      '@mui/internal-docs-utils': 2.0.6
+      '@mui/internal-docs-utils': 3.0.4-canary.2
       doctrine: 3.0.0
       es-toolkit: 1.45.1
       typescript: 5.9.3
@@ -14168,7 +14199,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@types/react': 19.2.14
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/c973a09653bcadfd6a2b4841d8b2ae821e4614ee(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/c11f4ee1aec564bef4d94e62ea87e83b7d0a8c79(@babel/core@7.29.0)(@types/express@5.0.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
     dependencies:
       '@netlify/functions': 5.1.5
       '@slack/bolt': 4.6.0(@types/express@5.0.3)
@@ -20851,7 +20882,7 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
-  react-docgen@8.0.2:
+  react-docgen@8.0.3:
     dependencies:
       '@babel/core': 7.29.0
       '@babel/traverse': 7.29.0

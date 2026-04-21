@@ -1,19 +1,16 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
-import { getStackingGroups } from '../../internals/stacking';
-import {
-  type ChartSeriesDefaultized,
-  type DatasetElementType,
-  type DatasetType,
-} from '../../models/seriesType/config';
-import { type SeriesId } from '../../models/seriesType/common';
+import { getStackingGroups } from '@mui/x-charts/internals';
 import type {
   SeriesProcessorParams,
   SeriesProcessorResult,
-} from '../../internals/plugins/corePlugins/useChartSeriesConfig';
-import type { IsItemVisibleFunction } from '../../internals/plugins/featurePlugins/useChartVisibilityManager';
-import type { DefaultizedLineSeriesType } from '../../models';
-import type { MarkShape } from '../../models/seriesType/line';
+  IsItemVisibleFunction,
+  ChartSeriesDefaultized,
+  DatasetElementType,
+  DatasetType,
+} from '@mui/x-charts/internals';
+import type { SeriesId, MarkShape } from '@mui/x-charts/models';
+import type { DefaultizedRadialLineSeriesType } from '../../models/seriesType/radialLine';
 
 const defaultShapes: MarkShape[] = [
   'circle',
@@ -26,13 +23,13 @@ const defaultShapes: MarkShape[] = [
 ];
 
 const lineValueFormatter = ((v) =>
-  v == null ? '' : v.toLocaleString()) as DefaultizedLineSeriesType['valueFormatter'];
+  v == null ? '' : v.toLocaleString()) as DefaultizedRadialLineSeriesType['valueFormatter'];
 
 function seriesProcessor(
-  params: SeriesProcessorParams<'line'>,
+  params: SeriesProcessorParams<'radialLine'>,
   dataset?: Readonly<DatasetType>,
   isItemVisible?: IsItemVisibleFunction,
-): SeriesProcessorResult<'line'> {
+): SeriesProcessorResult<'radialLine'> {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
@@ -62,7 +59,7 @@ function seriesProcessor(
       });
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
       throw new Error(
-        `MUI X Charts: Line series with id="${id}" has no data. ` +
+        `MUI X Charts: Radial line series with id="${id}" has no data. ` +
           'The chart cannot render this series without data. ' +
           'Provide a data property to the series or use the dataset prop.',
       );
@@ -74,7 +71,7 @@ function seriesProcessor(
 
         if (!dataKey && !series[id].valueGetter) {
           throw new Error(
-            `MUI X Charts: Line series with id="${id}" has no data, no dataKey, and no valueGetter. ` +
+            `MUI X Charts: Radial line series with id="${id}" has no data, no dataKey, and no valueGetter. ` +
               'When using the dataset prop, each series must have a dataKey or valueGetter to identify which dataset values to use. ' +
               'Add a dataKey or valueGetter property to the series configuration.',
           );
@@ -85,8 +82,8 @@ function seriesProcessor(
             const value = entry[dataKey];
             if (value != null && typeof value !== 'number') {
               warnOnce(
-                `MUI X Charts: your dataset key "${dataKey}" is used for plotting lines, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
-Line plots only support numeric and null values.`,
+                `MUI X Charts: your dataset key "${dataKey}" is used for plotting radial lines, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
+Radial line plots only support numeric and null values.`,
               );
             }
           });
@@ -95,7 +92,7 @@ Line plots only support numeric and null values.`,
     }
   });
 
-  const completedSeries: Record<SeriesId, ChartSeriesDefaultized<'line'>> = {};
+  const completedSeries: Record<SeriesId, ChartSeriesDefaultized<'radialLine'>> = {};
 
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;
@@ -121,7 +118,7 @@ Line plots only support numeric and null values.`,
         const keyIndex = keys.indexOf(key);
         const seriesId = ids[keyIndex];
 
-        if (!isItemVisible?.({ type: 'line', seriesId })) {
+        if (!isItemVisible?.({ type: 'radialLine', seriesId })) {
           // For hidden series, return 0 so they don't contribute to the stack
           return 0;
         }
@@ -144,7 +141,7 @@ Line plots only support numeric and null values.`,
       } else {
         data = series[id].data!;
       }
-      const hidden = !isItemVisible?.({ type: 'line', seriesId: id });
+      const hidden = !isItemVisible?.({ type: 'radialLine', seriesId: id });
       completedSeries[id] = {
         labelMarkType: 'line+mark',
         ...series[id],
