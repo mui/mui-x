@@ -21,7 +21,7 @@ export function RadialMarkPlot(props: RadialMarkPlotProps) {
     <RadialMarkPlotRoot className={classes.markPlot}>
       {completedData.map(({ points, seriesId, color, hidden }) => {
         return (
-          <g data-series={seriesId}>
+          <g data-series={seriesId} key={seriesId}>
             {points.map(({ x, y, dataIndex }) => (
               <circle
                 key={dataIndex}

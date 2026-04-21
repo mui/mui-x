@@ -5,7 +5,6 @@ import { type SeriesId } from '@mui/x-charts/models';
 import { useRadialLineSeriesContext } from '../hooks/useRadialLineSeries';
 
 interface RadialLinePlotDataPoint {
-  d: string;
   points: { x: number; y: number; dataIndex: number }[];
   seriesId: SeriesId;
   color: string;
@@ -55,13 +54,8 @@ export function useRadialLinePlotData() {
           const [x, y] = instance.polar2svg(r, angle);
           points.push({ x, y, dataIndex });
         }
-
-        // Build a closed polygon path.
-        const d = points.length > 0 ? `M ${points.map((p) => `${p.x} ${p.y}`).join(' L ')} Z` : '';
-
         plotData.push({
           color: series[seriesId].color,
-          d,
           points,
           seriesId,
           hidden,

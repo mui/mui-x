@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { useRadialLinePlotData } from './useRadialLinePlotData';
 import { type RadialLineClasses, useUtilityClasses } from './radialLineClasses';
+import { RadialArea } from './RadialArea';
 
 const RadialAreaPlotRoot = styled('g', {
   name: 'MuiRadialAreaPlot',
@@ -20,15 +21,14 @@ export function RadialAreaPlot(props: RadialAreaPlotProps) {
   return (
     <RadialAreaPlotRoot className={classes.areaPlot}>
       {completedData.map(
-        ({ d, seriesId, color, hidden, area }) =>
+        ({ seriesId, color, hidden, area, points }) =>
           area && (
-            <path
+            <RadialArea
               key={seriesId}
-              data-series={seriesId}
-              d={d}
-              fill={color}
-              stroke="none"
-              opacity={hidden ? 0 : 1}
+              seriesId={seriesId}
+              color={color}
+              hidden={hidden}
+              points={points}
               className={classes.area}
             />
           ),
