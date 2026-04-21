@@ -2,5 +2,5 @@ export {
   type ChartsRadiusAxisProps,
   ChartsRadiusAxis as Unstable_ChartsRadiusAxis,
 } from './ChartsRadiusAxis';
-export { chartsRadiusAxisClasses } from './chartsRadiusAxisClasses';
-export type { ChartsRadiusAxisClasses, ChartsRadiusAxisClassKey } from './chartsRadiusAxisClasses';
+export { chartsRadialAxisClasses } from './chartsRadiusAxisClasses';
+export type { ChartsRadialAxisClasses, ChartsRadialAxisClassKey } from './chartsRadiusAxisClasses';
