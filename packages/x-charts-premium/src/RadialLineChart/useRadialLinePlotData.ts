@@ -50,8 +50,6 @@ export function useRadialLinePlotData() {
           const r = radiusAxis.scale(value as number)!;
           const angle = rotationAxis.scale(rotationAxis.data![dataIndex])!;
 
-          // console.log(radiusAxis, value, r, angle)
-
           const [x, y] = instance.polar2svg(r, angle);
           points.push({ x, y, dataIndex });
         }
@@ -59,7 +57,6 @@ export function useRadialLinePlotData() {
         // Build a closed polygon path.
         const d = points.length > 0 ? `M ${points.map((p) => `${p.x} ${p.y}`).join(' L ')} Z` : '';
 
-        // console.log(points)
         plotData.push({
           color: series[seriesId].color,
           d,
