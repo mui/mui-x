@@ -4,7 +4,6 @@ import * as React from 'react';
 const DefaultFileIcon = React.memo(function DefaultFileIcon() {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"

@@ -27,6 +27,7 @@ export * from '@mui/x-charts/ChartsWrapper';
 export * from '@mui/x-charts/ChartsBrushOverlay';
 
 // Pro utilities
+// eslint-disable-next-line import/export
 export * from './constants';
 export * from './hooks';
 export * from './context';
@@ -34,6 +35,7 @@ export * from './models';
 export * from './plugins';
 // Locales should be imported from `@mui/x-charts-pro/locales`
 // export * from './locales';
+// eslint-disable-next-line import/export
 export * from './colorPalettes';
 
 // Pro components
