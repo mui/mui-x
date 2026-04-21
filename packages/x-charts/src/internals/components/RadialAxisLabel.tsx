@@ -1,20 +1,19 @@
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
-export const RadialAxisLabel = styled('span', {
+export const RadialAxisLabel = styled(Typography, {
   slot: 'internal',
   shouldForwardProp: (prop) => prop !== 'verticalAlign' && prop !== 'horizontalAlign',
 })<{
   verticalAlign: 'start' | 'middle' | 'end';
   horizontalAlign: 'start' | 'middle' | 'end';
 }>(({ theme }) => ({
-  position: 'fixed',
-  fontSize: 12,
-  lineHeight: 1,
-  padding: '2px 4px',
-  borderRadius: 2,
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  padding: 0.5,
   whiteSpace: 'nowrap',
   translate: 'var(--dx, -50%) var(--dy, -50%)',
-  color: theme.palette.text.primary,
 
   variants: [
     // Add opaque background when centered to improve readability

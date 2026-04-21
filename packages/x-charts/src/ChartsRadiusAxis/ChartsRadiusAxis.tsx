@@ -146,6 +146,7 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
               >
                 <RadialAxisLabel
                   className={classes.tickLabel}
+                  variant='caption'
                   {...getLabelTransform(dx, dy, Boolean(center))}
                 >
                   {formattedValue}
