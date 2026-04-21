@@ -8,12 +8,12 @@ import { EventTimelinePremiumPreset } from '@mui/x-scheduler-headless-premium/mo
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { timelineEvents, timelineResources, timelineDefaultVisibleDate } from './data';
 
-const presetOptions: EventTimelinePremiumPreset[] = [
-  'dayAndHour',
-  'day',
-  'dayAndWeek',
-  'monthAndYear',
-  'year',
+const presetOptions: { value: EventTimelinePremiumPreset; label: string }[] = [
+  { value: 'dayAndHour', label: 'Time' },
+  { value: 'day', label: 'Days' },
+  { value: 'dayAndWeek', label: 'Weeks' },
+  { value: 'monthAndYear', label: 'Months' },
+  { value: 'year', label: 'Years' },
 ];
 
 export default function TimelineDemo() {
@@ -32,9 +32,9 @@ export default function TimelineDemo() {
       sx={{ height: 600, width: '100%', p: 1, display: 'flex', flexDirection: 'column', gap: 1 }}
     >
       <Select value={preset} onChange={handlePresetChange} size="small" sx={{ width: 140 }}>
-        {presetOptions.map((value) => (
+        {presetOptions.map(({ value, label }) => (
           <MenuItem key={value} value={value}>
-            {value.charAt(0).toUpperCase() + value.slice(1)}
+            {label}
           </MenuItem>
         ))}
       </Select>

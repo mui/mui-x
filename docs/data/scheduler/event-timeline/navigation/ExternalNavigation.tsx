@@ -17,6 +17,14 @@ import {
 
 const resources = allResources.slice(0, 5);
 
+const presetOptions: { value: EventTimelinePremiumPreset; label: string }[] = [
+  { value: 'dayAndHour', label: 'Time' },
+  { value: 'day', label: 'Days' },
+  { value: 'dayAndWeek', label: 'Weeks' },
+  { value: 'monthAndYear', label: 'Months' },
+  { value: 'year', label: 'Years' },
+];
+
 export default function ExternalNavigation() {
   const [events, setEvents] = React.useState(initialEvents);
   const [preset, setPreset] =
@@ -48,11 +56,9 @@ export default function ExternalNavigation() {
           <ChevronRightIcon />
         </IconButton>
         <Select value={preset} onChange={handlePresetChange} size="small">
-          {(
-            ['dayAndHour', 'day', 'dayAndWeek', 'monthAndYear', 'year'] as const
-          ).map((value) => (
+          {presetOptions.map(({ value, label }) => (
             <MenuItem key={value} value={value}>
-              {value}
+              {label}
             </MenuItem>
           ))}
         </Select>
