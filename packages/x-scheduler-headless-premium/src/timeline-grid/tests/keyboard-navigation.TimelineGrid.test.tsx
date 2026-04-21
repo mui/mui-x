@@ -8,7 +8,6 @@ import type {
   TimelineGridColumnType,
   TimelineGridCellCoordinates,
 } from '@mui/x-scheduler-headless-premium/models';
-import { useTimelineGridRootContext } from '../root/TimelineGridRootContext';
 import {
   adapter,
   createSchedulerRenderer,
@@ -18,6 +17,7 @@ import {
   SchedulerStoreRunner,
   AnyEventCalendarStore,
 } from 'test/utils/scheduler';
+import { useTimelineGridRootContext } from '../root/TimelineGridRootContext';
 
 describe('TimelineGrid keyboard navigation', () => {
   const { render } = createSchedulerRenderer({
@@ -361,7 +361,10 @@ describe('TimelineGrid keyboard navigation', () => {
     it('should not clobber a sibling row state when a previously focused row unmounts', async () => {
       const focusedCellRef: { current: TimelineGridCellCoordinates | null } = { current: null };
       function FocusedCellInspector() {
-        focusedCellRef.current = useTimelineGridRootContext().focusedCell;
+        const { focusedCell } = useTimelineGridRootContext();
+        React.useEffect(() => {
+          focusedCellRef.current = focusedCell;
+        }, [focusedCell]);
         return null;
       }
       const { setProps, user } = render(

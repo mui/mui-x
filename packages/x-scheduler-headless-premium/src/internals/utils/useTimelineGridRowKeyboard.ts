@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import {
   useCompositeListItem,
   useCompositeListContext,
@@ -44,21 +45,11 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
     }
   }, [hasFocus]);
 
-  const indexRef = React.useRef(index);
-  React.useEffect(() => {
-    indexRef.current = index;
-  }, [index]);
-  // Unlike CalendarGrid, TimelineGrid rows can unmount while focused (e.g. programmatic
-  // resource removal), so we clear focusedCell from the unmounting row to avoid a stale
-  // pointer. `clearFocusedCellIfMatches` skips clearing when a sibling already took focus.
-  React.useEffect(() => {
-    return () => {
-      clearFocusedCellIfMatches(columnType, indexRef.current);
-    };
-    // Cleanup must only run on unmount: `clearFocusedCellIfMatches` is stable and
-    // `columnType` is a compile-time constant per hook caller (TitleRow/EventRow).
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Clear focusedCell on unmount if this row still owns it.
+  const clearOnUnmount = useStableCallback(() => {
+    clearFocusedCellIfMatches(columnType, index);
+  });
+  React.useEffect(() => clearOnUnmount, [clearOnUnmount]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): boolean => {
     const totalRows = elementsRef.current.length;
