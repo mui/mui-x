@@ -10,6 +10,7 @@ import {
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { useButton } from '@mui/x-scheduler-headless/base-ui-copy';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
@@ -166,6 +167,7 @@ export const EventItem = React.forwardRef(function EventItem(
     id: idProp,
     variant = 'regular',
     className,
+    onClick,
     ...other
   } = props;
 
@@ -187,6 +189,15 @@ export const EventItem = React.forwardRef(function EventItem(
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const formatTime = useFormatTime();
+
+  // TODO: Expose a real `interactive` prop
+  // to control whether the event should behave like a button
+  const isInteractive = true;
+
+  const { getButtonProps } = useButton({
+    disabled: !isInteractive,
+    native: false,
+  });
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -285,8 +296,8 @@ export const EventItem = React.forwardRef(function EventItem(
   }, [variant, resource?.title, localeText, formatTime, occurrence, isRecurring, classes]);
 
   return (
-    // TODO: Use button
     <EventItemCard
+      {...getButtonProps({ onClick })}
       ref={forwardedRef}
       id={id}
       data-variant={variant}
