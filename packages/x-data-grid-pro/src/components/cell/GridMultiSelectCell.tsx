@@ -19,6 +19,7 @@ import {
 import {
   gridRowHeightSelector,
   gridFilterModelSelector,
+  GridFooterCell,
   NotRendered,
   vars,
   isMultiSelectColDef,
@@ -442,7 +443,11 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
 export { GridMultiSelectCell };
 
 export const renderMultiSelectCell = (params: GridMultiSelectCellProps) => {
-  if ((params as any).aggregation) {
+  const aggregation = (params as any).aggregation;
+  if (aggregation) {
+    if (aggregation.position === 'footer') {
+      return <GridFooterCell {...(params as any)} />;
+    }
     return params.formattedValue ?? (params.value as any);
   }
   return <GridMultiSelectCell {...params} />;
