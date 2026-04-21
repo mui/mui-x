@@ -17,7 +17,6 @@ export interface TimelineGridRootContext {
   setFocusedCell: (coordinates: TimelineGridCellCoordinates | null) => void;
   /**
    * Clears the focused cell only if it still matches the given coordinates.
-   * Used by rows on unmount to avoid clobbering a sibling that already took focus.
    */
   clearFocusedCellIfMatches: (columnType: TimelineGridColumnType, rowIndex: number) => void;
   /**
