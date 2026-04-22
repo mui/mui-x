@@ -73,14 +73,42 @@ describe('Core - EventTimelinePremiumStore', () => {
       expect(store.state.presets).to.deep.equal(['dayAndHour', 'day', 'year']);
     });
 
+    it('should dedupe the presets array', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, presets: ['day', 'day', 'dayAndHour', 'day'] },
+        adapter,
+      );
+
+      expect(store.state.presets).to.deep.equal(['dayAndHour', 'day']);
+    });
+
+    it('should throw when the presets array is empty', () => {
+      expect(
+        () => new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, presets: [] }, adapter),
+      ).to.throw(/empty `presets` prop/i);
+    });
+
+    it('should throw when the presets array contains unknown values', () => {
+      expect(
+        () =>
+          new EventTimelinePremiumStore(
+            {
+              ...DEFAULT_PARAMS,
+              presets: ['dayAndHour', 'notAPreset' as any, 'day'],
+            },
+            adapter,
+          ),
+      ).to.throw(/unknown preset\(s\)/i);
+    });
+
     it('should throw at init when the initial preset is not included in the presets array', () => {
-      expect(() => {
-        // eslint-disable-next-line no-new
-        new EventTimelinePremiumStore(
-          { ...DEFAULT_PARAMS, preset: 'year', presets: ['dayAndHour', 'day'] },
-          adapter,
-        );
-      }).to.throw(/is not part of the `presets` prop/i);
+      expect(
+        () =>
+          new EventTimelinePremiumStore(
+            { ...DEFAULT_PARAMS, preset: 'year', presets: ['dayAndHour', 'day'] },
+            adapter,
+          ),
+      ).to.throw(/is not part of the `presets` prop/i);
     });
   });
 });

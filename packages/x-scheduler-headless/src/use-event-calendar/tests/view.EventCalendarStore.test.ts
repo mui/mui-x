@@ -146,13 +146,13 @@ describe('View - EventCalendarStore', () => {
 
   describe('Init validation', () => {
     it('should throw at init when the initial view is not included in the views array', () => {
-      expect(() => {
-        // eslint-disable-next-line no-new
-        new EventCalendarStore(
-          { ...DEFAULT_PARAMS, defaultView: 'week', views: ['day', 'agenda'] },
-          adapter,
-        );
-      }).to.throw(/is not part of the `views` prop/i);
+      expect(
+        () =>
+          new EventCalendarStore(
+            { ...DEFAULT_PARAMS, defaultView: 'week', views: ['day', 'agenda'] },
+            adapter,
+          ),
+      ).to.throw(/is not part of the `views` prop/i);
     });
   });
 
