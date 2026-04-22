@@ -13,7 +13,7 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
   if (!isOrdinalScale(scale)) {
     throw new Error(
       'MUI X Charts: getAxisIndex is not implemented for polar continuous axes. ' +
-      'This function only supports ordinal (band/point) scales.',
+        'This function only supports ordinal (band/point) scales.',
     );
   }
 
@@ -21,14 +21,13 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
     return -1;
   }
 
-
   const [startAngle, endAngle] = scale.range();
-
 
   const angleGap = clampAngleRad(pointerValue - startAngle);
 
   const maxAngleGap = clampAngleRad(endAngle - startAngle);
-  const isFullCircle = Math.abs(maxAngleGap + (scale.bandwidth() === 0 ? scale.step() : 0) - 2 * Math.PI) < EPSILON;
+  const isFullCircle =
+    Math.abs(maxAngleGap + (scale.bandwidth() === 0 ? scale.step() : 0) - 2 * Math.PI) < EPSILON;
 
   if (!isFullCircle && (angleGap < 0 || angleGap > maxAngleGap)) {
     // If not a full circle we only consider pointer insider the rotation range.
@@ -37,7 +36,6 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
   let dataIndex: number;
 
   if (scale.bandwidth() === 0) {
-
     dataIndex = Math.floor((angleGap + scale.step() / 2) / scale.step());
     if (isFullCircle) {
       // To show dataIndex 0 when we are before the startAngle
@@ -52,5 +50,4 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
   }
 
   return reverse ? axisData.length - 1 - dataIndex : dataIndex;
-
 }

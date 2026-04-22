@@ -14,7 +14,6 @@ import {
 import { evaluateCurveAtAngle } from '@mui/x-charts/internals';
 import type { SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
-
 /**
  * For a continuous rotation axis, find the two data indices that bracket the pointer's angle position.
  * For ordinal axes, returns the single matching index (left === right).
@@ -100,12 +99,12 @@ function getBaselineRadius(
 // When connectNulls is false, only the contiguous run containing [left, right] is returned.
 function collectCurvePoints(
   data: ArrayLike<number | null | undefined>,
-  getPosition: (index: number) => { x: number; y: number, radius: number, rotation: number } | null,
+  getPosition: (index: number) => { x: number; y: number; radius: number; rotation: number } | null,
   left: number,
   right: number,
   connectNulls: boolean | undefined,
-): Array<{ x: number; y: number, radius: number, rotation: number }> {
-  const points: Array<{ x: number; y: number, radius: number, rotation: number }> = [];
+): Array<{ x: number; y: number; radius: number; rotation: number }> {
+  const points: Array<{ x: number; y: number; radius: number; rotation: number }> = [];
 
   if (connectNulls) {
     // All non-null points form one continuous curve.
@@ -149,7 +148,6 @@ export default function getItemAtPosition(
   state: ChartState<[UseChartPolarAxisSignature]>,
   point: { x: number; y: number },
 ): SeriesItemIdentifierWithType<'radialLine'> | undefined {
-
   const { axis: rotationAxes, axisIds: rotationAxisIds } = selectorChartRotationAxis(state);
   const { axis: radiusAxes, axisIds: radiusAxisIds } = selectorChartRadiusAxis(state);
   const center = selectorChartPolarCenter(state);
@@ -185,16 +183,13 @@ export default function getItemAtPosition(
     const rotationAxis = rotationAxes[rotationAxisId];
     const radiusAxis = radiusAxes[radiusAxisId];
 
-
     const bracket = getBracketIndices(rotationAxis, pointerAngle);
     if (!bracket) {
       continue;
     }
 
-
     const { left, right } = bracket;
     const { visibleStackedData, data, connectNulls, curve } = seriesItem;
-
 
     const dataIndex = getPolarAxisIndex(rotationAxis, pointerAngle);
     if (dataIndex === -1) {
@@ -219,7 +214,6 @@ export default function getItemAtPosition(
       continue;
     }
 
-
     // Evaluate the actual curve at the pointer's angle for precise distance.
     const rotationData = rotationAxis.data;
     if (!rotationData) {
@@ -231,7 +225,7 @@ export default function getItemAtPosition(
     const getRadius = (idx: number) => {
       const stacked = visibleStackedData[idx];
       return stacked ? (radiusAxis.scale(stacked[1]) as number) : null;
-    }
+    };
     const getPosition = (idx: number) => {
       const rotation = getRotation(idx);
       const radius = getRadius(idx);
@@ -243,32 +237,20 @@ export default function getItemAtPosition(
         rotation,
         // coordinate centered at (0, 0)
         x: radius * Math.sin(rotation),
-        y: - radius * Math.cos(rotation),
+        y: -radius * Math.cos(rotation),
       };
-    }
+    };
 
-
-
-
-    const curvePoints = collectCurvePoints(
-      data,
-      getPosition,
-      left,
-      right,
-      connectNulls,
-    );
-
+    const curvePoints = collectCurvePoints(data, getPosition, left, right, connectNulls);
 
     if (curvePoints.length < 2) {
       continue;
     }
 
-
     const closestPoint = evaluateCurveAtAngle(curvePoints, pointerAngle, curve);
     if (closestPoint == null) {
       continue;
     }
-
 
     const distance = Math.abs(pointerRadius - Math.sqrt(closestPoint.x ** 2 + closestPoint.y ** 2));
     if (distance < closestDistance) {
@@ -303,7 +285,6 @@ export default function getItemAtPosition(
 
       const rotationAxis = rotationAxes[rotationAxisId];
       const radiusAxis = radiusAxes[radiusAxisId];
-
 
       if (!rotationAxis || !radiusAxis) {
         continue;
@@ -362,7 +343,7 @@ export default function getItemAtPosition(
       const getRadius = (idx: number) => {
         const stacked = visibleStackedData[idx];
         return stacked ? (radiusAxis.scale(stacked[1]) as number) : null;
-      }
+      };
       const getPosition = (idx: number) => {
         const rotation = getRotation(idx);
         const radius = getRadius(idx);
@@ -374,28 +355,15 @@ export default function getItemAtPosition(
           rotation,
           // coordinate centered at (0, 0)
           x: radius * Math.sin(rotation),
-          y: - radius * Math.cos(rotation),
+          y: -radius * Math.cos(rotation),
         };
-      }
-
+      };
 
       // Build pixel-coordinate points for the top and bottom curves,
       // then evaluate them at the pointer's x using the actual d3 curve.
-      const topPoints = collectCurvePoints(
-        data,
-        getPosition,
-        left,
-        right,
-        connectNulls,
-      );
+      const topPoints = collectCurvePoints(data, getPosition, left, right, connectNulls);
 
-      const bottomPoints = collectCurvePoints(
-        data,
-        getPosition,
-        left,
-        right,
-        connectNulls,
-      );
+      const bottomPoints = collectCurvePoints(data, getPosition, left, right, connectNulls);
 
       if (topPoints.length < 2 || bottomPoints.length < 2) {
         continue;

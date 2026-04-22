@@ -156,10 +156,7 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
             <ChartsOverlay {...overlayProps} />
           </g>
           <RadialMarkPlot />
-          <RadialLineHighlightPlot
-            slots={props.slots}
-            slotProps={props.slotProps}
-          />
+          <RadialLineHighlightPlot slots={props.slots} slotProps={props.slotProps} />
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>

@@ -70,7 +70,7 @@ class SegmentCapture {
     this.cy = y;
   }
 
-  closePath() { }
+  closePath() {}
 }
 
 /** Evaluate a cubic Bezier at parameter t. */
@@ -113,7 +113,6 @@ function findTForX(segment: CurveSegment, targetX: number): number {
 
   return -1;
 }
-
 
 /**
  * Find parameter t such that the segment's x(t) ≈ targetX using bisection.
@@ -209,9 +208,8 @@ export function evaluateCurveY(
   return null;
 }
 
-
-
-const vectorProduct = (a: { x: number; y: number }, b: { x: number; y: number }) => a.x * b.y - a.y * b.x;
+const vectorProduct = (a: { x: number; y: number }, b: { x: number; y: number }) =>
+  a.x * b.y - a.y * b.x;
 /**
  * Build the curve segments for a set of pixel-coordinate points
  * using d3's curve factory, then evaluate y at the given pixel x.
@@ -219,10 +217,10 @@ const vectorProduct = (a: { x: number; y: number }, b: { x: number; y: number })
  * Returns null if targetX is outside the curve's x range.
  */
 export function evaluateCurveAtAngle(
-  points: Array<{ x: number; y: number, rotation: number }>,
+  points: Array<{ x: number; y: number; rotation: number }>,
   targetAngle: number,
   curveType?: CurveType,
-): { x: number; y: number; } | null {
+): { x: number; y: number } | null {
   if (points.length === 0) {
     return null;
   }
@@ -250,10 +248,7 @@ export function evaluateCurveAtAngle(
     const directionTargetX1 = vectorProduct(pointTarget, { x: segment.x1, y: segment.y1 });
 
     // Test if x0 => target and target => x1 rotate in the same direction.
-    if (
-      directionX0Target *
-      directionTargetX1 > 0
-    ) {
+    if (directionX0Target * directionTargetX1 > 0) {
       const t = findTForAngle(segment, targetAngle);
       return { x: evaluateSegmentX(segment, t), y: evaluateSegmentY(segment, t) };
     }
