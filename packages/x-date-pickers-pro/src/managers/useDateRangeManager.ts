@@ -2,12 +2,13 @@
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerManager } from '@mui/x-date-pickers/models';
-import { usePickerAdapter, usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import {
   PickerManagerFieldInternalPropsWithDefaults,
   PickerRangeValue,
   UseFieldInternalProps,
   useApplyDefaultValuesToDateValidationProps,
+  createUseOpenPickerButtonAriaLabel,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
@@ -17,6 +18,11 @@ import {
   ValidateDateRangeProps,
 } from '../validation/validateDateRange';
 import { formatRange } from '../internals/utils/date-utils';
+
+const useOpenPickerButtonAriaLabel = createUseOpenPickerButtonAriaLabel<PickerRangeValue>({
+  formatValue: (adapter, value) => formatRange(adapter, value, 'fullDate'),
+  translationKey: 'openRangePickerDialogue',
+});
 
 export function useDateRangeManager(
   parameters: UseDateRangeManagerParameters = {},
@@ -35,15 +41,6 @@ export function useDateRangeManager(
     }),
     [dateSeparator],
   );
-}
-
-function useOpenPickerButtonAriaLabel(value: PickerRangeValue) {
-  const adapter = usePickerAdapter();
-  const translations = usePickerTranslations();
-
-  return React.useMemo(() => {
-    return translations.openRangePickerDialogue(formatRange(adapter, value, 'fullDate'));
-  }, [value, translations, adapter]);
 }
 
 function useApplyDefaultValuesToDateRangeFieldInternalProps(

@@ -11,7 +11,8 @@ import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { AmPmProps } from '../internals/models/props/time';
 import { ExportedValidateTimeProps, ValidateTimeProps } from '../validation/validateTime';
 import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
-import { usePickerAdapter, usePickerTranslations } from '../hooks';
+import { usePickerAdapter } from '../hooks';
+import { createUseOpenPickerButtonAriaLabel } from './useOpenPickerButtonAriaLabel';
 
 export function useTimeManager(
   parameters: UseTimeManagerParameters = {},
@@ -26,24 +27,17 @@ export function useTimeManager(
       internal_fieldValueManager: singleItemFieldValueManager,
       internal_useApplyDefaultValuesToFieldInternalProps:
         useApplyDefaultValuesToTimeFieldInternalProps,
-      internal_useOpenPickerButtonAriaLabel: createUseOpenPickerButtonAriaLabel(ampm),
+      internal_useOpenPickerButtonAriaLabel: createUseOpenPickerButtonAriaLabel<PickerValue>({
+        formatValue: (adapter, value) => {
+          const formatKey =
+            (ampm ?? adapter.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
+          return adapter.isValid(value) ? adapter.format(value, formatKey) : null;
+        },
+        translationKey: 'openTimePickerDialogue',
+      }),
     }),
     [ampm],
   );
-}
-
-function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
-  return function useOpenPickerButtonAriaLabel(value: PickerValue) {
-    const adapter = usePickerAdapter();
-    const translations = usePickerTranslations();
-
-    return React.useMemo(() => {
-      const formatKey =
-        (ampm ?? adapter.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
-      const formattedValue = adapter.isValid(value) ? adapter.format(value, formatKey) : null;
-      return translations.openTimePickerDialogue(formattedValue);
-    }, [value, translations, adapter]);
-  };
 }
 
 function useApplyDefaultValuesToTimeFieldInternalProps(

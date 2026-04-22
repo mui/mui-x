@@ -16,7 +16,14 @@ import {
 } from '../validation/validateDateTime';
 import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
 import { useDefaultDates } from '../internals/hooks/useUtils';
-import { usePickerAdapter, usePickerTranslations } from '../hooks';
+import { usePickerAdapter } from '../hooks';
+import { createUseOpenPickerButtonAriaLabel } from './useOpenPickerButtonAriaLabel';
+
+const useOpenPickerButtonAriaLabel = createUseOpenPickerButtonAriaLabel<PickerValue>({
+  formatValue: (adapter, value) =>
+    adapter.isValid(value) ? adapter.format(value, 'fullDate') : null,
+  translationKey: 'openDatePickerDialogue',
+});
 
 export function useDateTimeManager(): UseDateTimeManagerReturnValue {
   return React.useMemo(
@@ -31,16 +38,6 @@ export function useDateTimeManager(): UseDateTimeManagerReturnValue {
     }),
     [],
   );
-}
-
-function useOpenPickerButtonAriaLabel(value: PickerValue) {
-  const adapter = usePickerAdapter();
-  const translations = usePickerTranslations();
-
-  return React.useMemo(() => {
-    const formattedValue = adapter.isValid(value) ? adapter.format(value, 'fullDate') : null;
-    return translations.openDatePickerDialogue(formattedValue);
-  }, [value, translations, adapter]);
 }
 
 function useApplyDefaultValuesToDateTimeFieldInternalProps(

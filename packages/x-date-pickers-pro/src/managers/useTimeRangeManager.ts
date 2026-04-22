@@ -2,13 +2,14 @@
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerManager } from '@mui/x-date-pickers/models';
-import { usePickerAdapter, usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import {
   AmPmProps,
   PickerManagerFieldInternalPropsWithDefaults,
   PickerRangeValue,
   UseFieldInternalProps,
   useApplyDefaultValuesToTimeValidationProps,
+  createUseOpenPickerButtonAriaLabel,
 } from '@mui/x-date-pickers/internals';
 import { TimeRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
@@ -32,24 +33,17 @@ export function useTimeRangeManager(
       internal_fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
       internal_useApplyDefaultValuesToFieldInternalProps:
         useApplyDefaultValuesToTimeRangeFieldInternalProps,
-      internal_useOpenPickerButtonAriaLabel: createUseOpenPickerButtonAriaLabel(ampm),
+      internal_useOpenPickerButtonAriaLabel: createUseOpenPickerButtonAriaLabel<PickerRangeValue>({
+        formatValue: (adapter, value) => {
+          const formatKey =
+            (ampm ?? adapter.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
+          return formatRange(adapter, value, formatKey);
+        },
+        translationKey: 'openRangePickerDialogue',
+      }),
     }),
     [dateSeparator, ampm],
   );
-}
-
-function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
-  return function useOpenPickerButtonAriaLabel(value: PickerRangeValue) {
-    const adapter = usePickerAdapter();
-    const translations = usePickerTranslations();
-
-    return React.useMemo(() => {
-      const formatKey =
-        (ampm ?? adapter.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
-
-      return translations.openRangePickerDialogue(formatRange(adapter, value, formatKey));
-    }, [value, translations, adapter]);
-  };
 }
 
 function useApplyDefaultValuesToTimeRangeFieldInternalProps(

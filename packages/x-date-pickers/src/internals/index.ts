@@ -206,3 +206,4 @@ export { usePickerDayOwnerState } from './hooks/usePickerDayOwnerState';
 export { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 export { useApplyDefaultValuesToTimeValidationProps } from '../managers/useTimeManager';
 export { useApplyDefaultValuesToDateTimeValidationProps } from '../managers/useDateTimeManager';
+export { createUseOpenPickerButtonAriaLabel } from '../managers/useOpenPickerButtonAriaLabel';
