@@ -5,9 +5,9 @@ export interface ChartsRadialAxisClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the root element of radius axis. */
-  radiusAxis: string;
+  radius: string;
   /** Styles applied to the root element of rotation axis. */
-  rotationAxis: string;
+  rotation: string;
   /** Styles applied to the main line element. */
   line: string;
   /** Styles applied to the group including the tick and its label. */
@@ -28,5 +28,5 @@ export function getRadialAxisUtilityClass(slot: string) {
 
 export const chartsRadialAxisClasses: ChartsRadialAxisClasses = generateUtilityClasses(
   'MuiChartsRadialAxis',
-  ['root', 'radiusAxis', 'rotationAxis', 'line', 'tickContainer', 'tick', 'tickLabel', 'centered'],
+  ['root', 'radius', 'rotation', 'line', 'tickContainer', 'tick', 'tickLabel', 'centered'],
 );

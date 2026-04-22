@@ -7,7 +7,7 @@ export const useUtilityClasses = (props: {
 }) => {
   const { classes, isCentered } = props;
   const slots = {
-    root: ['root', 'radiusAxis'],
+    root: ['root', 'radius'],
     line: ['line'],
     tickContainer: ['tickContainer'],
     tick: ['tick'],
