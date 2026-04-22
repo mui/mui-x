@@ -18,10 +18,6 @@ describe('<StaticDatePicker /> - Describe Conformance', () => {
       'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
-      // Static pickers render through `PickersLayout`, which does not forward
-      // unknown props to its root `div`. Enabling `propsSpread` here requires
-      // a separate change to either `PickersLayout` or `useStaticPicker`.
-      'propsSpread',
     ],
   }));
 });
