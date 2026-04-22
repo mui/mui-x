@@ -128,7 +128,10 @@ function CustomRowCheckbox(props: GridRowCheckboxProps) {
           {...props}
           slotProps={{
             ...props.slotProps,
-            htmlInput: { ...props.slotProps?.htmlInput, 'aria-label': `Select row ${row.name}` },
+            htmlInput: {
+              ...props.slotProps?.htmlInput,
+              'aria-label': `Select row ${row.name}`
+            },
           }} />
       </span>
     </Tooltip>
