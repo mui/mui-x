@@ -99,8 +99,8 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
         ref: context.scrollerRef,
         style: {
           // TODO: fall back to overflow: 'auto' if no overflowX or overflowY is set?
-          overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
-          overflowY: autoHeight ? 'hidden' : undefined,
+          overflowX: !needsHorizontalScrollbar ? ('hidden' as const) : undefined,
+          overflowY: autoHeight ? ('hidden' as const) : undefined,
           // TODO: should include display: 'flex', flexDirection: 'column' since the Content has flexBasis and flexShrink?
         },
         role: 'presentation',
@@ -231,46 +231,6 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       }),
     ),
   };
-}
-
-// The current virtualizer API is exposed on one of the DataGrid slots, so we need to keep
-// the old API for backward compatibility. This API prevents using fine-grained reactivity
-// as all props are returned in a single object, so everything re-renders on any change.
-//
-// TODO(v9): Remove the legacy API.
-export class LayoutDataGridLegacy extends LayoutDataGrid {
-  use(
-    store: Store<BaseState>,
-    _params: ParamsWithDefaults,
-    _api: RequiredAPI,
-    layoutParams: VirtualizationLayoutParams,
-  ) {
-    super.use(store, _params, _api, layoutParams);
-
-    const containerProps = store.use(LayoutDataGrid.selectors.containerProps);
-    const scrollerProps = store.use(LayoutDataGrid.selectors.scrollerProps);
-    const scrollerContentProps = store.use(LayoutDataGrid.selectors.scrollerContentProps);
-    const viewportProps = store.use(LayoutDataGrid.selectors.viewportProps);
-    const contentProps = store.use(LayoutDataGrid.selectors.contentProps);
-    const positionerProps = store.use(LayoutDataGrid.selectors.positionerProps);
-    const scrollbarVerticalProps = store.use(LayoutDataGrid.selectors.scrollbarVerticalProps);
-    const scrollbarHorizontalProps = store.use(LayoutDataGrid.selectors.scrollbarHorizontalProps);
-    const scrollAreaProps = store.use(LayoutDataGrid.selectors.scrollAreaProps);
-    const containerVerticalProps = store.use(LayoutDataGrid.selectors.containerVerticalProps);
-
-    return {
-      getContainerProps: () => containerProps,
-      getScrollerProps: () => scrollerProps,
-      getScrollerContentProps: () => scrollerContentProps,
-      getViewportProps: () => viewportProps,
-      getContentProps: () => contentProps,
-      getPositionerProps: () => positionerProps,
-      getScrollbarVerticalProps: () => scrollbarVerticalProps,
-      getScrollbarHorizontalProps: () => scrollbarHorizontalProps,
-      getScrollAreaProps: () => scrollAreaProps,
-      getContainerVerticalProps: () => containerVerticalProps,
-    };
-  }
 }
 
 type ListElements = BaseElements;
