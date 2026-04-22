@@ -138,14 +138,9 @@ export const ChartsWebGLLayer = React.forwardRef<
           }}
         />
       </CanvasPositioner>
-      {React.Children.map(children, (child, index) => {
-        if (!React.isValidElement(child)) {
-          return child;
-        }
-        return (
-          <ChartsWebGLOrderContext.Provider value={index}>{child}</ChartsWebGLOrderContext.Provider>
-        );
-      })}
+      {React.Children.map(children, (child, index) => (
+        <ChartsWebGLOrderContext.Provider value={index}>{child}</ChartsWebGLOrderContext.Provider>
+      ))}
     </ChartsWebGLContext.Provider>
   );
 });
