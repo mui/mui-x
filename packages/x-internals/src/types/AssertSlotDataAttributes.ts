@@ -8,7 +8,7 @@
 // ` [k: `data-${string}`]: ... ` template-literal index signature exposed by
 // `DataAttributes`, and `'aria-label'` stands in for the `React.AriaAttributes` shape
 // (whose keys are otherwise all optional, which would make a direct structural check
-// trivially satisfied). Both markers are present iff the variant has been widened via
+// trivially satisfied). Both markers are present only when the variant has been widened via
 // `DataAttributes`.
 type AcceptsDataAndAria<V> = V extends any
   ? 'data-x' extends keyof V
@@ -43,7 +43,7 @@ export type AssertAllSlotsAcceptDataAttributes<T, Name extends string = 'Compone
 };
 
 /**
- * Collapses a mapping into `true` iff every value is `true`, or surfaces the
+ * Collapses a mapping into `true` if every value is `true`, or surfaces the
  * first failure string. Used together with `AssertAllSlotsAcceptDataAttributes`.
  */
 export type AllTrue<T> = { [K in keyof T]: T[K] extends true ? true : T[K] }[keyof T];
