@@ -36,9 +36,18 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig
 
 const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
   parameters: EventCalendarParameters<TEvent, TResource>,
-) => ({
-  views: parameters.views ?? DEFAULT_VIEWS,
-});
+) => {
+  const views = parameters.views ?? DEFAULT_VIEWS;
+  if (process.env.NODE_ENV !== 'production' && views.length === 0) {
+    throw new Error(
+      `MUI X Scheduler: EventCalendar received an empty \`views\` prop. ` +
+        `This leaves the calendar without any view to render. ` +
+        `Pass at least one view, or omit the prop to use the default set. ` +
+        `See https://mui.com/x/react-scheduler/event-calendar/views/ for more details.`,
+    );
+  }
+  return { views };
+};
 
 const mapper: SchedulerParametersToStateMapper<
   EventCalendarState,
