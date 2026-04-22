@@ -48,6 +48,9 @@ catalogs:
     '@mui/icons-material':
       specifier: 9.0.0
       version: 9.0.0
+    '@mui/internal-core-docs':
+      specifier: 9.0.1-canary.2
+      version: 9.0.1-canary.2
     '@mui/internal-test-utils':
       specifier: 2.0.18-canary.20
       version: 2.0.18-canary.20
@@ -273,7 +276,7 @@ importers:
         specifier: 0.0.4-canary.29
         version: 0.0.4-canary.29(@next/eslint-plugin-next@16.2.1)(@types/node@22.19.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(@typescript-eslint/parser@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint@9.39.2)(jest-diff@30.2.0)(postcss@8.5.8)(prettier@3.8.1)(stylelint@17.1.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.18)
       '@mui/internal-core-docs':
-        specifier: 9.0.1-canary.2
+        specifier: 'catalog:'
         version: 9.0.1-canary.2(f58454ea0bdb6dcf054eacf50cc615d4)
       '@mui/internal-markdown':
         specifier: 3.0.8-canary.3
@@ -503,6 +506,9 @@ importers:
       '@mui/icons-material':
         specifier: 'catalog:'
         version: 9.0.0(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+      '@mui/internal-core-docs':
+        specifier: 'catalog:'
+        version: 9.0.1-canary.2(f58454ea0bdb6dcf054eacf50cc615d4)
       '@mui/internal-docs-infra':
         specifier: ^0.8.1-canary.0
         version: 0.8.1-canary.0(@types/react@19.2.14)(next@16.2.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(prettier@3.8.1)(react@19.2.4)(typescript@5.9.3)

@@ -9,7 +9,7 @@ import { persistentAuthStrategy } from '@mui/internal-code-infra/github';
 
 const OWNER = 'mui';
 const REPO = 'material-ui';
-// Commit ref in mui/material-ui to import the static docs assets from.
+// Git ref (commit SHA / tag / branch) in mui/material-ui to import the static docs assets from.
 // Override with IMPORT_DOCS_STATIC_REF env var when needed.
 const DEFAULT_REF = 'master';
 const BASE_DIR = 'docs/public/static';
@@ -56,15 +56,28 @@ async function resolveTreeSha(ref, dirPath) {
   return sha;
 }
 
+const CONCURRENCY = 8;
+
 const isMatch = picomatch(PATTERNS);
 
-async function downloadFile(filePath, ref) {
-  const url = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${ref}/${filePath}`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`GET ${url} -> ${res.status} ${res.statusText}`);
-  }
-  return Buffer.from(await res.arrayBuffer());
+async function mapWithConcurrency(items, limit, worker) {
+  const queue = items.entries();
+  const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    for (const [, item] of queue) {
+      // eslint-disable-next-line no-await-in-loop
+      await worker(item);
+    }
+  });
+  await Promise.all(runners);
+}
+
+async function downloadBlob(fileSha) {
+  const { data } = await octokit.rest.git.getBlob({
+    owner: OWNER,
+    repo: REPO,
+    file_sha: fileSha,
+  });
+  return Buffer.from(data.content, data.encoding);
 }
 
 async function run() {
@@ -77,15 +90,13 @@ async function run() {
     .filter((entry) => entry.type === 'blob')
     .filter((entry) => isMatch(entry.path));
 
-  await Promise.all(
-    matched.map(async (entry) => {
-      const filePath = `${BASE_DIR}/${entry.path}`;
-      const buf = await downloadFile(filePath, ref);
-      await fs.mkdir(path.dirname(filePath), { recursive: true });
-      await fs.writeFile(filePath, buf);
-      console.log(`fetched ${filePath}`);
-    }),
-  );
+  await mapWithConcurrency(matched, CONCURRENCY, async (entry) => {
+    const filePath = `${BASE_DIR}/${entry.path}`;
+    const buf = await downloadBlob(entry.sha);
+    await fs.mkdir(path.dirname(filePath), { recursive: true });
+    await fs.writeFile(filePath, buf);
+    console.log(`fetched ${filePath}`);
+  });
 }
 
 run().catch((err) => {
