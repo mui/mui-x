@@ -1,13 +1,15 @@
 /* eslint-disable no-console */
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import readline from 'node:readline/promises';
+import { fileURLToPath } from 'node:url';
 import { Octokit } from '@octokit/rest';
 import { persistentAuthStrategy } from '@mui/internal-code-infra/github';
 
 const OWNER = 'mui';
 const REPO = 'material-ui';
 // Pinned commit ref in mui/material-ui to import the static docs assets from.
-// Override with IMPORT_DOCS_STATIC_REF env var only when intentionally bumping.
+// Self updates after confirmation on the next run.
 const DEFAULT_REF = '2dc145f2d2bece8f30293137e276bdbdb4cda294';
 const BASE_DIR = 'docs/public/static';
 // Patterns are relative to BASE_DIR. Trailing `/*` or a bare dir means "all files under".
@@ -67,8 +69,61 @@ async function downloadFile(filePath, ref) {
   return Buffer.from(await res.arrayBuffer());
 }
 
+async function getLatestMasterSha() {
+  const { data } = await octokit.rest.git.getRef({
+    owner: OWNER,
+    repo: REPO,
+    ref: 'heads/master',
+  });
+  return data.object.sha;
+}
+
+async function promptYesNo(question) {
+  if (!process.stdin.isTTY) {
+    return false;
+  }
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  try {
+    const answer = await rl.question(question);
+    return /^y(es)?$/i.test(answer.trim());
+  } finally {
+    rl.close();
+  }
+}
+
+async function updateDefaultRefInSource(newSha) {
+  const selfPath = fileURLToPath(import.meta.url);
+  const src = await fs.readFile(selfPath, 'utf8');
+  const updated = src.replace(
+    /const DEFAULT_REF = '[0-9a-f]+';/,
+    `const DEFAULT_REF = '${newSha}';`,
+  );
+  if (updated === src) {
+    throw new Error(`Failed to update DEFAULT_REF in ${selfPath}`);
+  }
+  await fs.writeFile(selfPath, updated);
+  console.log(`updated DEFAULT_REF in ${path.relative(process.cwd(), selfPath)}`);
+}
+
+async function resolveRef() {
+  const latest = await getLatestMasterSha();
+  if (latest === DEFAULT_REF) {
+    return DEFAULT_REF;
+  }
+  console.log(
+    `Pinned ref ${DEFAULT_REF.slice(0, 7)} is behind ${OWNER}/${REPO}@master (${latest.slice(0, 7)}).`,
+  );
+  const useLatest = await promptYesNo('Use latest master and update the pinned ref? [y/N] ');
+  if (!useLatest) {
+    console.log(`Keeping pinned ref ${DEFAULT_REF.slice(0, 7)}.`);
+    return DEFAULT_REF;
+  }
+  await updateDefaultRefInSource(latest);
+  return latest;
+}
+
 async function run() {
-  const ref = process.env.IMPORT_DOCS_STATIC_REF || DEFAULT_REF;
+  const ref = await resolveRef();
   console.log(`Importing static docs assets from ${OWNER}/${REPO}@${ref}`);
 
   const baseSha = await resolveTreeSha(ref, BASE_DIR);
