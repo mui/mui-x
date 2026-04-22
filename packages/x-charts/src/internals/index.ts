@@ -44,6 +44,7 @@ export * from './plugins/featurePlugins/useChartItemClick';
 export * from './plugins/utils/selectors';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
 export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
+export { getAxisIndex as getPolarAxisIndex } from './plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
 
 export * from './store/useCharts';
 export * from './store/useStore';
@@ -106,3 +107,5 @@ export * from './constants';
 export * from './scales';
 export * from './identifierSerializer';
 export * from './identifierCleaner';
+
+export { evaluateCurveAtAngle } from '../LineChart/seriesConfig/curveEvaluation';

@@ -1,5 +1,7 @@
 import type { CurveType } from '../../models/curve';
 import { getCurveFactory } from '../../internals/getCurve';
+import { clampAngleRad } from '../../internals/clampAngle';
+import { cubicRoots } from '../../internals/cubiqSolver';
 
 /**
  * A straight line segment.
@@ -68,7 +70,7 @@ class SegmentCapture {
     this.cy = y;
   }
 
-  closePath() {}
+  closePath() { }
 }
 
 /** Evaluate a cubic Bezier at parameter t. */
@@ -78,8 +80,20 @@ function cubicBezier(t: number, p0: number, p1: number, p2: number, p3: number):
 }
 
 /**
- * Find parameter t such that the segment's x(t) ≈ targetX using bisection.
- * 20 iterations gives ~1e-6 precision relative to the segment's x range.
+ * Get polynomials coefficient of a cubic Bezier curve.
+ * P(t) = rep[0] * t**3  + rep[1] * t**2 + rep[2] * t + rep[3]
+ */
+function cubicBezierCoeffs(
+  p0: number,
+  p1: number,
+  p2: number,
+  p3: number,
+): [number, number, number, number] {
+  return [-p0 + 3 * p1 - 3 * p2 + p3, 3 * p0 - 6 * p1 + 3 * p2, -3 * p0 + 3 * p1, p0];
+}
+
+/**
+ * Find parameter t such that the segment's x(t) ≈ targetX
  */
 function findTForX(segment: CurveSegment, targetX: number): number {
   if (!isBezierSegment(segment)) {
@@ -87,23 +101,54 @@ function findTForX(segment: CurveSegment, targetX: number): number {
     const dx = segment.x1 - segment.x0;
     return dx === 0 ? 0 : (targetX - segment.x0) / dx;
   }
+  const xBezierCoeffs = cubicBezierCoeffs(segment.x0, segment.cpx1, segment.cpx2, segment.x1);
 
-  // Cubic bezier — bisect.
-  let lo = 0;
-  let hi = 1;
-  for (let iter = 0; iter < 20; iter += 1) {
-    const mid = (lo + hi) / 2;
-    const x = cubicBezier(mid, segment.x0, segment.cpx1, segment.cpx2, segment.x1);
-    if (x < targetX) {
-      lo = mid;
-    } else {
-      hi = mid;
-    }
-    if (Math.abs(x - targetX) < 1) {
-      return (lo + hi) / 2;
-    }
+  const polyToSolve: [number, number, number, number] = [...xBezierCoeffs];
+  polyToSolve[3] -= targetX;
+
+  const roots = cubicRoots(polyToSolve);
+  if (roots.length > 0) {
+    return roots[0];
   }
-  return (lo + hi) / 2;
+
+  return -1;
+}
+
+
+/**
+ * Find parameter t such that the segment's x(t) ≈ targetX using bisection.
+ * 20 iterations gives ~1e-6 precision relative to the segment's x range.
+ */
+function findTForAngle(segment: CurveSegment, targetAngle: number): number {
+  if (!isBezierSegment(segment)) {
+    // Linear segment.
+
+    const angle0 = Math.atan2(segment.x0, -segment.y0);
+    const angle1 = Math.atan2(segment.x1, -segment.y1);
+    const dAngle = clampAngleRad(angle1 - angle0);
+
+    return dAngle === 0 ? 0 : clampAngleRad(targetAngle - angle0) / dAngle;
+  }
+
+  const xBezierCoeffs = cubicBezierCoeffs(segment.x0, segment.cpx1, segment.cpx2, segment.x1);
+  const yBezierCoeffs = cubicBezierCoeffs(segment.y0, segment.cpy1, segment.cpy2, segment.y1);
+
+  const targetX = Math.sin(targetAngle);
+  const targetY = -Math.cos(targetAngle);
+
+  const polyToSolve: [number, number, number, number] = [
+    targetY * xBezierCoeffs[0] - targetX * yBezierCoeffs[0],
+    targetY * xBezierCoeffs[1] - targetX * yBezierCoeffs[1],
+    targetY * xBezierCoeffs[2] - targetX * yBezierCoeffs[2],
+    targetY * xBezierCoeffs[3] - targetX * yBezierCoeffs[3],
+  ];
+
+  const roots = cubicRoots(polyToSolve);
+  if (roots.length > 0) {
+    return roots[0];
+  }
+
+  return -1;
 }
 
 /** Evaluate the segment's y at parameter t. */
@@ -112,6 +157,14 @@ function evaluateSegmentY(segment: CurveSegment, t: number): number {
     return segment.y0 + t * (segment.y1 - segment.y0);
   }
   return cubicBezier(t, segment.y0, segment.cpy1, segment.cpy2, segment.y1);
+}
+
+/** Evaluate the segment's x at parameter t. */
+function evaluateSegmentX(segment: CurveSegment, t: number): number {
+  if (!isBezierSegment(segment)) {
+    return segment.x0 + t * (segment.x1 - segment.x0);
+  }
+  return cubicBezier(t, segment.x0, segment.cpx1, segment.cpx2, segment.x1);
 }
 
 /**
@@ -150,6 +203,59 @@ export function evaluateCurveY(
     if (targetX >= xMin - 0.5 && targetX <= xMax + 0.5) {
       const t = findTForX(segment, targetX);
       return evaluateSegmentY(segment, t);
+    }
+  }
+
+  return null;
+}
+
+
+
+const vectorProduct = (a: { x: number; y: number }, b: { x: number; y: number }) => a.x * b.y - a.y * b.x;
+/**
+ * Build the curve segments for a set of pixel-coordinate points
+ * using d3's curve factory, then evaluate y at the given pixel x.
+ *
+ * Returns null if targetX is outside the curve's x range.
+ */
+export function evaluateCurveAtAngle(
+  points: Array<{ x: number; y: number, rotation: number }>,
+  targetAngle: number,
+  curveType?: CurveType,
+): { x: number; y: number; } | null {
+  if (points.length === 0) {
+    return null;
+  }
+  if (points.length === 1) {
+    return points[0];
+  }
+
+  const capture = new SegmentCapture();
+  const factory = getCurveFactory(curveType);
+  const curveInstance = factory(capture as any);
+
+  curveInstance.lineStart();
+  for (const p of points) {
+    curveInstance.point(p.x, p.y);
+  }
+  curveInstance.lineEnd();
+
+  const xTarget = Math.sin(targetAngle);
+  const yTarget = -Math.cos(targetAngle);
+  const pointTarget = { x: xTarget, y: yTarget };
+
+  // Find the segment containing targetAngle.
+  for (const segment of capture.segments) {
+    const directionX0Target = vectorProduct({ x: segment.x0, y: segment.y0 }, pointTarget);
+    const directionTargetX1 = vectorProduct(pointTarget, { x: segment.x1, y: segment.y1 });
+
+    // Test if x0 => target and target => x1 rotate in the same direction.
+    if (
+      directionX0Target *
+      directionTargetX1 > 0
+    ) {
+      const t = findTForAngle(segment, targetAngle);
+      return { x: evaluateSegmentX(segment, t), y: evaluateSegmentY(segment, t) };
     }
   }
 
