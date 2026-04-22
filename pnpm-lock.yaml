@@ -706,8 +706,8 @@ importers:
         specifier: 'catalog:'
         version: 7.28.5(@babel/core@7.29.0)
       '@mui/internal-docs-utils':
-        specifier: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@cee33f5
-        version: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@cee33f5
+        specifier: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@86b1f5f
+        version: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@86b1f5f
       '@types/chance':
         specifier: 'catalog:'
         version: 1.1.7
@@ -4321,12 +4321,12 @@ packages:
       prettier:
         optional: true
 
-  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@86b1f5ff92730c92f7a50eea82f8278c7553e63e':
-    resolution: {tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@86b1f5ff92730c92f7a50eea82f8278c7553e63e}
+  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@86b1f5f':
+    resolution: {integrity: sha512-8snbkCqKR1auL8S6/43qdklC2knXxZUMTKjQFzp0mMRgyzJpAu40XEbkxyr+PpXPGZ/BMf8oxXYyOLtWh7bMGg==, tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@86b1f5f}
     version: 3.0.3
 
-  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@cee33f5':
-    resolution: {tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@cee33f5}
+  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@86b1f5ff92730c92f7a50eea82f8278c7553e63e':
+    resolution: {tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@86b1f5ff92730c92f7a50eea82f8278c7553e63e}
     version: 3.0.3
 
   '@mui/internal-markdown@https://pkg.pr.new/mui/material-ui/@mui/internal-markdown@86b1f5f':
@@ -13883,12 +13883,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@86b1f5ff92730c92f7a50eea82f8278c7553e63e':
+  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@86b1f5f':
     dependencies:
       rimraf: 6.1.3
       typescript: 5.9.3
 
-  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@cee33f5':
+  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@86b1f5ff92730c92f7a50eea82f8278c7553e63e':
     dependencies:
       rimraf: 6.1.3
       typescript: 5.9.3

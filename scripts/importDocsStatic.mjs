@@ -6,38 +6,56 @@ import { persistentAuthStrategy } from '@mui/internal-code-infra/github';
 
 const OWNER = 'mui';
 const REPO = 'material-ui';
-// Commit ref in mui/material-ui to import the static docs assets from.
-// Override with IMPORT_DOCS_STATIC_REF env var when bumping.
-const DEFAULT_REF = 'master';
+// Pinned commit ref in mui/material-ui to import the static docs assets from.
+// Override with IMPORT_DOCS_STATIC_REF env var only when intentionally bumping.
+const DEFAULT_REF = '2dc145f2d2bece8f30293137e276bdbdb4cda294';
+const BASE_DIR = 'docs/public/static';
+// Patterns are relative to BASE_DIR. Trailing `/*` or a bare dir means "all files under".
 const PATTERNS = [
-  'docs/public/static/apple-touch-icon.png',
-  'docs/public/static/favicon.ico',
-  'docs/public/static/favicon.svg',
-  'docs/public/static/icons/*',
-  'docs/public/static/logo.png',
-  'docs/public/static/logo.svg',
-  'docs/public/static/manifest.json',
-  'docs/public/static/styles',
+  'apple-touch-icon.png',
+  'favicon.ico',
+  'favicon.svg',
+  'icons/*',
+  'logo.png',
+  'logo.svg',
+  'manifest.json',
+  'styles',
 ];
 
 const octokit = new Octokit({ authStrategy: persistentAuthStrategy });
 
-async function getTree(ref) {
+async function getTree(treeSha, { recursive = false } = {}) {
   const { data } = await octokit.rest.git.getTree({
     owner: OWNER,
     repo: REPO,
-    tree_sha: ref,
-    recursive: '1',
+    tree_sha: treeSha,
+    ...(recursive ? { recursive: '1' } : {}),
   });
   if (data.truncated) {
-    throw new Error(`Tree for ${OWNER}/${REPO}@${ref} was truncated; cannot list all files.`);
+    throw new Error(`Tree ${treeSha} was truncated; cannot list all files.`);
   }
-  return data.tree.filter((entry) => entry.type === 'blob');
+  return data.tree;
 }
 
-function matchesPattern(filePath, pattern) {
+async function resolveTreeSha(ref, dirPath) {
+  let sha = ref;
+  for (const part of dirPath.split('/')) {
+    // eslint-disable-next-line no-await-in-loop
+    const entries = await getTree(sha);
+    const match = entries.find((entry) => entry.path === part && entry.type === 'tree');
+    if (!match) {
+      throw new Error(
+        `Directory ${dirPath} not found at segment '${part}' in ${OWNER}/${REPO}@${ref}`,
+      );
+    }
+    sha = match.sha;
+  }
+  return sha;
+}
+
+function matchesPattern(relPath, pattern) {
   const dirPrefix = pattern.endsWith('/*') ? pattern.slice(0, -2) : pattern;
-  return filePath === pattern || filePath.startsWith(`${dirPrefix}/`);
+  return relPath === pattern || relPath.startsWith(`${dirPrefix}/`);
 }
 
 async function downloadFile(filePath, ref) {
@@ -53,15 +71,19 @@ async function run() {
   const ref = process.env.IMPORT_DOCS_STATIC_REF || DEFAULT_REF;
   console.log(`Importing static docs assets from ${OWNER}/${REPO}@${ref}`);
 
-  const tree = await getTree(ref);
-  const matched = tree.filter((entry) => PATTERNS.some((p) => matchesPattern(entry.path, p)));
+  const baseSha = await resolveTreeSha(ref, BASE_DIR);
+  const subtree = await getTree(baseSha, { recursive: true });
+  const matched = subtree
+    .filter((entry) => entry.type === 'blob')
+    .filter((entry) => PATTERNS.some((p) => matchesPattern(entry.path, p)));
 
   await Promise.all(
     matched.map(async (entry) => {
-      const buf = await downloadFile(entry.path, ref);
-      await fs.mkdir(path.dirname(entry.path), { recursive: true });
-      await fs.writeFile(entry.path, buf);
-      console.log(`fetched ${entry.path}`);
+      const filePath = `${BASE_DIR}/${entry.path}`;
+      const buf = await downloadFile(filePath, ref);
+      await fs.mkdir(path.dirname(filePath), { recursive: true });
+      await fs.writeFile(filePath, buf);
+      console.log(`fetched ${filePath}`);
     }),
   );
 }
