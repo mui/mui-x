@@ -73,6 +73,21 @@ export const getFocusedListItemIndex = (listElement: HTMLUListElement): number =
 
 export const DEFAULT_DESKTOP_MODE_MEDIA_QUERY = '@media (pointer: fine)';
 
+/**
+ * Picks any `data-*` and `aria-*` properties from `props` so they can be
+ * forwarded to the root DOM element rendered by the Picker. Other props stay
+ * owned by the Picker and are handled explicitly elsewhere.
+ */
+export function extractRootForwardedProps<T extends object>(props: T): Record<string, unknown> {
+  const forwardedProps: Record<string, unknown> = {};
+  for (const key of Object.keys(props)) {
+    if (key.startsWith('data-') || key.startsWith('aria-')) {
+      forwardedProps[key] = (props as Record<string, unknown>)[key];
+    }
+  }
+  return forwardedProps;
+}
+
 export function mergeSx(
   ...sxProps: (SxProps<Theme> | undefined)[]
 ): ReadonlyArray<

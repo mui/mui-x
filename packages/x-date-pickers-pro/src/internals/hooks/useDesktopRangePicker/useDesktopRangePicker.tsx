@@ -8,6 +8,7 @@ import {
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
+  extractRootForwardedProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerParams,
@@ -69,6 +70,10 @@ export const useDesktopRangePicker = <
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: slotProps?.field,
+    // Forward `data-*` and `aria-*` attributes set on the Picker to the field
+    // so they land on the rendered text field root, matching standard HTML
+    // element behavior.
+    externalForwardedProps: extractRootForwardedProps(props),
     ownerState,
     additionalProps: {
       'data-active-range-position': providerProps.contextValue.open
