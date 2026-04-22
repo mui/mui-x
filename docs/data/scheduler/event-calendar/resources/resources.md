@@ -89,7 +89,6 @@ The available color palettes are shown below:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
 Event colors can also be defined on the event or at the component levels.
 The effective color resolves in the following order:
 
@@ -113,8 +112,6 @@ The effective color resolves in the following order:
 
 4. The default color palette, `"teal"`
 
-:::
-
 ### Drag interactions
 
 Use the `areEventsDraggable` property to prevent dragging a resource's events to another point in time:
@@ -137,9 +134,7 @@ const resource = {
 };
 ```
 
-:::success
 See [Drag interactions](/x/react-scheduler/event-calendar/drag-interactions/) for details.
-:::
 
 ### Read-only
 
@@ -152,9 +147,7 @@ const resource = {
 };
 ```
 
-:::success
 See [Editing—Read-only](/x/react-scheduler/event-calendar/editing/#read-only) for details.
-:::
 
 ## Store data in custom properties
 

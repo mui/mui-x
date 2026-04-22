@@ -143,9 +143,7 @@ const resource = {
 };
 ```
 
-:::success
 See [Drag interactions](/x/react-scheduler/event-timeline/drag-interactions/) for details.
-:::
 
 ### Read-only
 
@@ -158,9 +156,7 @@ const resource = {
 };
 ```
 
-:::success
 See [Editing—Read-only](/x/react-scheduler/event-timeline/editing/#read-only) for details.
-:::
 
 ## Resource column label
 

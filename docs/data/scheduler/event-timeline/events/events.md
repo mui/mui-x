@@ -55,9 +55,7 @@ const event = {
 };
 ```
 
-:::success
 See [Timezone](/x/react-scheduler/timezone/) for details.
-:::
 
 ### Color
 
@@ -141,9 +139,7 @@ const event = {
 };
 ```
 
-:::success
 See [Drag interactions](/x/react-scheduler/event-timeline/drag-interactions/) for details.
-:::
 
 ### Read-only
 
@@ -156,9 +152,7 @@ const event = {
 };
 ```
 
-:::success
 See [Editing—Read-only](/x/react-scheduler/event-timeline/editing/#read-only) for details.
-:::
 
 ### Recurring events
 
@@ -171,9 +165,7 @@ const event = {
 };
 ```
 
-:::success
 See [Recurring events](/x/react-scheduler/recurring-events/) for details.
-:::
 
 ## Store data in custom properties
 
