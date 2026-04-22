@@ -9,13 +9,15 @@ import { alpha } from '@mui/material/styles';
 import { Translate, useTranslate, useUserLanguage } from '@mui/internal-core-docs/i18n';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { MarkdownElement } from '@mui/internal-core-docs/MarkdownDocs';
-import { LayoutStorageKeys } from '@mui/internal-core-docs/ApiPage';
-import type { PropertyDefinition } from '@mui/internal-core-docs/ApiPage/definitions';
 import {
   DEFAULT_API_LAYOUT_STORAGE_KEYS,
-  type ApiDisplayLayout,
-} from '@mui/internal-core-docs/ApiPage/sections/ToggleDisplayOption';
-import { PropertiesSection } from '@mui/internal-core-docs/ApiPage/sections/PropertiesSection';
+  PropertiesSection,
+} from '@mui/internal-core-docs/ApiPage';
+import type {
+  ApiDisplayLayout,
+  PropertyDefinition,
+  LayoutStorageKeys,
+} from '@mui/internal-core-docs/ApiPage';
 import { AppLayoutDocs } from '@mui/internal-core-docs/AppLayout';
 import { SectionTitle, SectionTitleProps } from '@mui/internal-core-docs/SectionTitle';
 import {
