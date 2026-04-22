@@ -47,9 +47,6 @@ export const useMobilePicker = <
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
-    // Forward `data-*` and `aria-*` attributes set on the Picker to the field
-    // so they land on the rendered text field root, matching standard HTML
-    // element behavior.
     externalForwardedProps: extractRootForwardedProps(props),
     additionalProps: {
       // Forwarded props

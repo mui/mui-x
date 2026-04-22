@@ -82,7 +82,7 @@ export function extractRootForwardedProps<T extends object>(props: T): Record<st
   const forwardedProps: Record<string, unknown> = {};
   for (const key of Object.keys(props)) {
     if (key.startsWith('data-') || key.startsWith('aria-')) {
-      forwardedProps[key] = (props as Record<string, unknown>)[key];
+      forwardedProps[key] = props[key as keyof T];
     }
   }
   return forwardedProps;
