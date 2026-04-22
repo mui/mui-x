@@ -69,7 +69,7 @@ class SegmentCapture {
     this.cy = y;
   }
 
-  closePath() { }
+  closePath() {}
 }
 
 /** Evaluate a cubic Bezier at parameter t. */
@@ -82,14 +82,13 @@ function cubicBezier(t: number, p0: number, p1: number, p2: number, p3: number):
  * Get polynomials coefficient of a cubic Bezier curve.
  * P(t) = rep[0] * t**3  + rep[1] * t**2 + rep[2] * t + rep[3]
  */
-function cubicBezierCoeffs(p0: number, p1: number, p2: number, p3: number): [number, number, number, number] {
-  return [
-    -p0 + 3 * p1 - 3 * p2 + p3,
-    3 * p0 - 6 * p1 + 3 * p2,
-    -3 * p0 + 3 * p1,
-    p0,
-  ]
-
+function cubicBezierCoeffs(
+  p0: number,
+  p1: number,
+  p2: number,
+  p3: number,
+): [number, number, number, number] {
+  return [-p0 + 3 * p1 - 3 * p2 + p3, 3 * p0 - 6 * p1 + 3 * p2, -3 * p0 + 3 * p1, p0];
 }
 
 /**
@@ -104,7 +103,7 @@ function findTForX(segment: CurveSegment, targetX: number): number {
 
   const xBezierCoeffs = cubicBezierCoeffs(segment.x0, segment.cpx1, segment.cpx2, segment.x1);
 
-  const polyToSolve: [number, number, number, number] = [...xBezierCoeffs]
+  const polyToSolve: [number, number, number, number] = [...xBezierCoeffs];
   polyToSolve[3] -= targetX;
 
   const roots = cubicRoots(polyToSolve);
