@@ -77,6 +77,7 @@ export * from './findMinMax';
 export * from './commonNextFocusItem';
 export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
 export { getSeriesColorFn } from './getSeriesColorFn';
+export { getSymbol, type SymbolsTypes } from './getSymbol';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
 export * from './plugins/utils/defaultSeriesConfig';
