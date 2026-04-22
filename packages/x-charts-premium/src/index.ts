@@ -58,3 +58,4 @@ export * from './HeatmapPremium';
 export * from './ScatterChartPremium';
 export * from './ChartsWebGLLayer';
 export * from './CandlestickChart';
+export * from './RadialLineChart';

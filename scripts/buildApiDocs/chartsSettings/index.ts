@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docsx/config';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
 import {
   ProjectSettings,
   ComponentReactApi,
@@ -125,6 +125,8 @@ export default chartsApiPages;
       'x-charts-pro/src/ChartDataProviderPro/ChartDataProviderPro.tsx',
       'x-charts-premium/src/ChartDataProviderPremium/ChartDataProviderPremium.tsx',
       'x-charts-premium/src/CandlestickChart/seriesConfig/OHLCTooltipContent.tsx',
+      'x-charts-premium/src/RadialLineChart/RadialLine.tsx',
+      'x-charts-premium/src/RadialLineChart/RadialArea.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
