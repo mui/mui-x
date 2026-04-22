@@ -2,6 +2,7 @@ import type * as React from 'react';
 import type { DataAttributes } from '@mui/x-internals/types';
 
 export type ChartBaseCommonProps<T = HTMLElement> = React.DOMAttributes<T> &
+  React.AriaAttributes &
   DataAttributes & {
     className?: string;
     style?: React.CSSProperties;

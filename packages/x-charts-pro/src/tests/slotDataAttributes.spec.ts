@@ -9,7 +9,7 @@ import type { SankeyChartSlotProps } from '@mui/x-charts-pro/SankeyChart';
 import type { ScatterChartProSlotProps } from '@mui/x-charts-pro/ScatterChartPro';
 
 // Compile-time assertion: every slot in every exported SlotProps type of `x-charts-pro`
-// must accept `data-*` and `aria-*` attributes. The test compiles iff the assertion holds.
+// must accept `data-*` attributes. The test compiles if and only if the assertion holds.
 
 type AssertBarChartPro = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<BarChartProSlotProps, 'BarChartPro'>>

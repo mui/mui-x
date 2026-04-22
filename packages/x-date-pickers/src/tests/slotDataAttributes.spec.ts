@@ -30,7 +30,7 @@ import type { TimePickerSlotProps } from '@mui/x-date-pickers/TimePicker';
 import type { YearCalendarSlotProps } from '@mui/x-date-pickers/YearCalendar';
 
 // Compile-time assertion: every slot in every exported SlotProps type of `x-date-pickers`
-// must accept `data-*` and `aria-*` attributes. The test compiles iff the assertion holds.
+// must accept `data-*` attributes. The test compiles if and only if the assertion holds.
 // A regression on any slot surfaces as a TS error pointing at the offending slot by name.
 
 type AssertDateCalendar = Assert<

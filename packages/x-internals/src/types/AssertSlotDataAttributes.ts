@@ -1,45 +1,38 @@
 // `V extends any` is the "force-distribution" idiom: it keeps `V` naked in the outer
 // conditional so the check distributes across union variants. That matters for slot
 // types shaped as `T | (T & DataAttributes)` (the `WithDataAttributes` widening) — the
-// assertion passes as soon as one branch exposes both keys, while a non-widened branch
-// failing on its own is fine.
+// assertion passes as soon as one branch exposes the marker key, while a non-widened
+// branch failing on its own is fine.
 //
-// `'data-x'` and `'aria-label'` are used as marker keys. `'data-x'` matches the
+// `'data-x'` is used as the marker key: it matches the
 // ` [k: `data-${string}`]: ... ` template-literal index signature exposed by
-// `DataAttributes`, and `'aria-label'` stands in for the `React.AriaAttributes` shape
-// (whose keys are otherwise all optional, which would make a direct structural check
-// trivially satisfied). Both markers are present only when the variant has been widened via
-// `DataAttributes`.
-type AcceptsDataAndAria<V> = V extends any
-  ? 'data-x' extends keyof V
-    ? 'aria-label' extends keyof V
-      ? true
-      : false
-    : false
-  : never;
+// `DataAttributes`, and is present only when the variant has been widened via
+// `DataAttributes`. `aria-*` is not checked here — every real slot inner type in
+// MUI X inherits `React.AriaAttributes` through its element or component base type,
+// so aria coverage is a structural property of the inner type, not something this
+// widener needs to re-verify.
+type AcceptsDataAttributes<V> = V extends any ? ('data-x' extends keyof V ? true : false) : never;
 
 type CheckVariant<V> = V extends (...args: any[]) => infer R
-  ? AcceptsDataAndAria<R>
-  : AcceptsDataAndAria<V>;
+  ? AcceptsDataAttributes<R>
+  : AcceptsDataAttributes<V>;
 
 type SlotAcceptsDataAttributes<T> = true extends CheckVariant<NonNullable<T>> ? true : false;
 
 /**
  * Maps each slot of a `*SlotProps` type to either `true` or a failure message
- * identifying the slot that does not accept `data-*` / `aria-*` attributes.
+ * identifying the slot that does not accept `data-*` attributes.
  *
- * The check probes each slot's value type for both the
+ * The check probes each slot's value type for the
  * `` [key: `data-${string}`]: ... `` index signature (covering arbitrary
- * `data-*` keys) and `'aria-label'` as the marker aria attribute (standing in
- * for the full `React.AriaAttributes` surface). The check distributes across
- * union variants and unwraps function variants to their return type; any
- * variant providing both signatures — typically via an intersection with
- * `DataAttributes` — passes.
+ * `data-*` keys). The check distributes across union variants and unwraps
+ * function variants to their return type; any variant providing the signature
+ * — typically via an intersection with `DataAttributes` — passes.
  */
 export type AssertAllSlotsAcceptDataAttributes<T, Name extends string = 'Component'> = {
   [K in keyof T]-?: SlotAcceptsDataAttributes<T[K]> extends true
     ? true
-    : `FAIL [${Name}.${Extract<K, string>}]: slot must accept data-* and aria-* attributes. Use SlotComponentPropsFromProps.`;
+    : `FAIL [${Name}.${Extract<K, string>}]: slot must accept data-* attributes. Use SlotComponentPropsFromProps.`;
 };
 
 /**

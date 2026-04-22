@@ -5,7 +5,7 @@ import {
   Assert,
 } from './index';
 
-// A typical slot-props interface using the helper — every slot must accept data-*/aria-*.
+// A typical slot-props interface using the helper — every slot must accept data-*.
 interface GoodSlotProps {
   day?: SlotComponentPropsFromProps<{ onClick?: () => void }>;
   calendarHeader?: SlotComponentPropsFromProps<'div'>;
@@ -22,5 +22,5 @@ interface BadSlotProps {
   legacy?: { required: string };
 }
 
-// @ts-expect-error FAIL [Bad.legacy]: slot must accept data-* and aria-* attributes. Use SlotComponentPropsFromProps.
+// @ts-expect-error FAIL [Bad.legacy]: slot must accept data-* attributes. Use SlotComponentPropsFromProps.
 type AssertBadSlotProps = Assert<AllTrue<AssertAllSlotsAcceptDataAttributes<BadSlotProps, 'Bad'>>>;

@@ -5,7 +5,7 @@ import type { TreeItemSlotProps } from '@mui/x-tree-view/TreeItem';
 import type { TreeItemIconSlotProps } from '@mui/x-tree-view/TreeItemIcon';
 
 // Compile-time assertion: every slot in every exported SlotProps type of `x-tree-view`
-// must accept `data-*` and `aria-*` attributes. The test compiles iff the assertion holds.
+// must accept `data-*` attributes. The test compiles if and only if the assertion holds.
 
 type AssertRichTreeView = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<RichTreeViewSlotProps<{}, false>, 'RichTreeView'>>

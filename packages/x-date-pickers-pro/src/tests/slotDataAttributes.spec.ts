@@ -16,7 +16,7 @@ import type { StaticDateRangePickerSlotProps } from '@mui/x-date-pickers-pro/Sta
 import type { TimeRangePickerSlotProps } from '@mui/x-date-pickers-pro/TimeRangePicker';
 
 // Compile-time assertion: every slot in every exported SlotProps type of `x-date-pickers-pro`
-// must accept `data-*` and `aria-*` attributes. The test compiles iff the assertion holds.
+// must accept `data-*` attributes. The test compiles if and only if the assertion holds.
 // A regression on any slot surfaces as a TS error pointing at the offending slot by name.
 
 type AssertDateRangeCalendar = Assert<
