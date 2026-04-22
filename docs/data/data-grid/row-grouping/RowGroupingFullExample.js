@@ -25,7 +25,7 @@ export default function RowGroupingFullExample() {
       ...data.initialState,
       rowGrouping: {
         ...data.initialState?.rowGrouping,
-        model: ['commodity'],
+        model: ['commodity', 'tags'],
       },
       sorting: {
         sortModel: [{ field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, sort: 'asc' }],

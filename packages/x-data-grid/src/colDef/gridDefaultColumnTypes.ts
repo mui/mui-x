@@ -19,11 +19,10 @@ export const getGridDefaultColumnTypes = () => {
     [GRID_ACTIONS_COLUMN_TYPE]: GRID_ACTIONS_COL_DEF,
     custom: GRID_STRING_COL_DEF,
     longText: GRID_LONG_TEXT_COL_DEF,
-    // Stub so pivot/grouping/charts/aggregation panels see the gates before the
+    // Stub so pivot/charts/aggregation panels see the gates before the
     // Pro `useGridMultiSelectPreProcessors` hook hydrates the full column def.
     multiSelect: {
       ...GRID_STRING_COL_DEF,
-      groupable: false,
       // @ts-ignore premium-only
       availableAggregationFunctions: ['size'],
       // @ts-ignore premium-only

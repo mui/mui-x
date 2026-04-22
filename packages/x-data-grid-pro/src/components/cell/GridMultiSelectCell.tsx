@@ -509,5 +509,9 @@ export const renderMultiSelectCell = (params: GridMultiSelectCellProps) => {
     }
     return params.formattedValue ?? (params.value as any);
   }
+  // On group rows, `value` is the grouping key (string) from `groupingValueGetter`, not the array.
+  if (params.rowNode.type === 'group') {
+    return params.formattedValue ?? (params.value as any);
+  }
   return <GridMultiSelectCell {...params} />;
 };

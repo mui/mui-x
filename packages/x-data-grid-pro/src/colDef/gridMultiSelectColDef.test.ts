@@ -2,6 +2,36 @@ import type { GridMultiSelectColDef } from '@mui/x-data-grid';
 import { GRID_MULTI_SELECT_COL_DEF } from './gridMultiSelectColDef';
 
 describe('GRID_MULTI_SELECT_COL_DEF', () => {
+  describe('groupingValueGetter', () => {
+    // @ts-ignore premium-only field
+    const groupingValueGetter = GRID_MULTI_SELECT_COL_DEF.groupingValueGetter as (
+      value: any,
+    ) => string | null;
+
+    it('joins sorted values with comma', () => {
+      expect(groupingValueGetter(['React', 'TypeScript'])).to.equal('React,TypeScript');
+    });
+
+    it('produces same key regardless of input order', () => {
+      expect(groupingValueGetter(['TypeScript', 'React'])).to.equal(
+        groupingValueGetter(['React', 'TypeScript']),
+      );
+    });
+
+    it('returns null for an empty array', () => {
+      expect(groupingValueGetter([])).to.equal(null);
+    });
+
+    it('returns null for non-array values', () => {
+      expect(groupingValueGetter(null)).to.equal(null);
+      expect(groupingValueGetter(undefined)).to.equal(null);
+    });
+
+    it('handles numeric values', () => {
+      expect(groupingValueGetter([3, 1, 2])).to.equal('1,2,3');
+    });
+  });
+
   describe('pastedValueParser', () => {
     const pastedValueParser = GRID_MULTI_SELECT_COL_DEF.pastedValueParser!;
 

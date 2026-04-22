@@ -42,13 +42,19 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   ...GRID_STRING_COL_DEF,
   type: 'multiSelect',
   display: 'flex',
-  groupable: false,
   // @ts-ignore premium-only
   availableAggregationFunctions: ['size'],
   // @ts-ignore premium-only
   pivotable: false,
   // @ts-ignore premium-only
   chartable: false,
+  // @ts-ignore premium-only
+  groupingValueGetter: ((value: (string | number)[]) => {
+    if (!Array.isArray(value) || value.length === 0) {
+      return null;
+    }
+    return [...value].sort().join(',');
+  }) as any,
   getOptionLabel: defaultGetOptionLabel,
   getOptionValue: defaultGetOptionValue,
   sortComparator: (v1, v2) => {
@@ -101,7 +107,7 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   filterOperators: getGridMultiSelectOperators(),
   getApplyQuickFilterFn: getGridMultiSelectQuickFilterFn,
   // @ts-ignore premium-only
-  pastedValueParser: (value: string, row: any, column: any) => {
+  pastedValueParser: (value: string, _row: any, column: any) => {
     const colDef = column as GridMultiSelectColDef;
     const valueOptions = getValueOptions(colDef) || [];
     const getOptionValue = colDef.getOptionValue!;
