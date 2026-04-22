@@ -29,7 +29,7 @@
     "@emotion/styled": "catalog:",
     "@mui/icons-material": "catalog:",
     "@mui/base": "^5.0.0-beta.70",
-    "@mui/internal-docs-infra": "^0.7.1-canary.5",
+    "@mui/internal-docs-infra": "^0.8.1-canary.0",
     "@mui/lab": "^9.0.0-beta.2",
     "@mui/material": "catalog:",
     "@mui/material-nextjs": "^9.0.0",
@@ -96,8 +96,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",
-    "@mui/internal-docs-utils": "2.0.6",
-    "@mui/internal-scripts": "2.0.19",
+    "@mui/internal-docs-utils": "https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@cee33f5",
     "@types/chance": "catalog:",
     "@types/d3-scale-chromatic": "3.1.0",
     "@types/doctrine": "0.0.9",
