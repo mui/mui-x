@@ -20,6 +20,8 @@ import getItemAtPosition from './getItemAtPosition';
 
 polarSeriesTypes.addType('radialLine');
 
+polarSeriesTypes.addType('radialLine');
+
 export const radialLineSeriesConfig: ChartSeriesTypeConfig<'radialLine'> = {
   colorProcessor,
   seriesProcessor,

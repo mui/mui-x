@@ -4,6 +4,7 @@
 .vscode
 .cursor
 .claude/settings.local.json
+.claude/worktrees
 .junie
 
 __diff_output__
