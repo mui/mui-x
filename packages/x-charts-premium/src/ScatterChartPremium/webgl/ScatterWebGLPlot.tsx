@@ -1,13 +1,12 @@
 'use client';
 import * as React from 'react';
 import { useDrawingArea, useScatterSeriesContext } from '@mui/x-charts/hooks';
-import { useWebGLResizeObserver } from '../../utils/webgl/useWebGLResizeObserver';
-import { useWebGLContext } from '../../ChartsWebGLLayer/ChartsWebGLLayer';
+import { useWebGLLayer } from '../../ChartsWebGLLayer/ChartsWebGLContext';
 import { ScatterWebGLProgram } from './ScatterWebGLProgram';
 import { useScatterWebGLPlotData } from './useScatterWebGLPlotData';
 
 export function ScatterWebGLPlot() {
-  const gl = useWebGLContext();
+  const layer = useWebGLLayer();
   const seriesData = useScatterSeriesContext();
 
   const hasVisibleSeries = React.useMemo(() => {
@@ -17,24 +16,27 @@ export function ScatterWebGLPlot() {
     return seriesData.seriesOrder.some((id) => !seriesData.series[id].hidden);
   }, [seriesData]);
 
-  React.useEffect(() => {
-    if (gl && !hasVisibleSeries) {
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-    }
-  }, [gl, hasVisibleSeries]);
-
-  if (!gl || !hasVisibleSeries) {
+  if (!layer || !hasVisibleSeries) {
     return null;
   }
 
-  return <ScatterWebGLPlotImpl gl={gl} />;
+  return (
+    <ScatterWebGLPlotImpl
+      gl={layer.gl}
+      registerDraw={layer.registerDraw}
+      requestRender={layer.requestRender}
+    />
+  );
 }
 
-function ScatterWebGLPlotImpl({ gl }: { gl: WebGL2RenderingContext }) {
+function ScatterWebGLPlotImpl(props: {
+  gl: WebGL2RenderingContext;
+  registerDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
+  requestRender: () => void;
+}) {
+  const { gl, registerDraw, requestRender } = props;
   const drawingArea = useDrawingArea();
   const [program, setProgram] = React.useState<ScatterWebGLProgram | null>(null);
-  const renderScheduledRef = React.useRef<boolean>(false);
 
   React.useEffect(() => {
     const prog = new ScatterWebGLProgram(gl);
@@ -47,33 +49,27 @@ function ScatterWebGLPlotImpl({ gl }: { gl: WebGL2RenderingContext }) {
 
   const plotData = useScatterWebGLPlotData();
 
-  const render = React.useCallback(() => {
-    renderScheduledRef.current = false;
-    program?.render(plotData);
+  const drawRef = React.useRef<(() => void) | null>(null);
+
+  React.useEffect(() => {
+    drawRef.current = () => {
+      program?.render(plotData);
+    };
   }, [program, plotData]);
 
-  const scheduleRender = React.useCallback(() => {
-    renderScheduledRef.current = true;
-  }, []);
-
-  // On resize render directly to avoid a frame where the canvas is blank.
-  useWebGLResizeObserver(render);
+  React.useEffect(() => {
+    return registerDraw(drawRef);
+  }, [registerDraw]);
 
   React.useEffect(() => {
     program?.setResolution(drawingArea.width, drawingArea.height);
-    scheduleRender();
-  }, [drawingArea.height, drawingArea.width, program, scheduleRender]);
+    requestRender();
+  }, [drawingArea.height, drawingArea.width, program, requestRender]);
 
   React.useEffect(() => {
     program?.plot(plotData);
-    scheduleRender();
-  }, [plotData, program, scheduleRender]);
-
-  React.useEffect(() => {
-    if (renderScheduledRef.current) {
-      render();
-    }
-  });
+    requestRender();
+  }, [plotData, program, requestRender]);
 
   return null;
 }

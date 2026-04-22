@@ -52,14 +52,11 @@ export class ScatterWebGLProgram {
   }
 
   render(plotData: ScatterWebGLPlotData) {
-    const { gl } = this;
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
     if (plotData.pointCount === 0) {
       return;
     }
 
+    const { gl } = this;
     gl.useProgram(this.program);
     logWebGLErrors(gl);
     gl.bindVertexArray(this.vao);
