@@ -51,7 +51,7 @@ describe('View - EventCalendarStore', () => {
         adapter,
       );
 
-      expect(() => store.setView('week', {} as any)).to.throw(/not compatible/i);
+      expect(() => store.setView('week', {} as any)).to.throw(/is not part of the `views` prop/i);
     });
 
     it('should NOT mutate store when onViewChange cancels the change', () => {
@@ -141,6 +141,18 @@ describe('View - EventCalendarStore', () => {
       store.switchToDay(adapter.date('2025-07-01', 'default'), {} as any);
       expect(store.state.view).to.equal('week');
       expect(store.state.visibleDate).toEqualDateTime('2025-06-15');
+    });
+  });
+
+  describe('Init validation', () => {
+    it('should throw at init when the initial view is not included in the views array', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventCalendarStore(
+          { ...DEFAULT_PARAMS, defaultView: 'week', views: ['day', 'agenda'] },
+          adapter,
+        );
+      }).to.throw(/is not part of the `views` prop/i);
     });
   });
 

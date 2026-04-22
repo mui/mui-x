@@ -72,5 +72,15 @@ describe('Core - EventTimelinePremiumStore', () => {
 
       expect(store.state.presets).to.deep.equal(['dayAndHour', 'day', 'year']);
     });
+
+    it('should throw at init when the initial preset is not included in the presets array', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore(
+          { ...DEFAULT_PARAMS, preset: 'year', presets: ['dayAndHour', 'day'] },
+          adapter,
+        );
+      }).to.throw(/is not part of the `presets` prop/i);
+    });
   });
 });

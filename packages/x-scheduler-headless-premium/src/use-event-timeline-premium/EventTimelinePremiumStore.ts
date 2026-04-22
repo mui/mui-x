@@ -113,7 +113,8 @@ export class EventTimelinePremiumStore<
     super(parameters, adapter, 'EventTimelinePremiumStore', mapper);
 
     if (process.env.NODE_ENV !== 'production') {
-      // Add listeners to assert the state validity (not applied in prod)
+      // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
+      this.assertPresetValidity(this.state.preset);
       this.subscribe((state) => {
         this.assertPresetValidity(state.preset);
         return null;
@@ -127,7 +128,10 @@ export class EventTimelinePremiumStore<
     const presets = this.state.presets;
     if (!presets.includes(preset)) {
       throw new Error(
-        `MUI: The component tried to switch to the "${preset}" preset but it is not compatible with the available presets: ${presets.join(', ')}.\nPlease ensure that the requested preset is included in the presets array.`,
+        `MUI X Scheduler: EventTimelinePremium received the preset "${preset}", which is not part of the \`presets\` prop (received: ${presets.join(', ')}). ` +
+          `This leaves the timeline in an inconsistent state where the current preset is not one of the allowed options. ` +
+          `Add "${preset}" to the \`presets\` prop, or pass a preset that is already included. ` +
+          `See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.`,
       );
     }
   }
