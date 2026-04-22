@@ -54,12 +54,14 @@ The dialog has two tabs:
 - **Recurrence**: frequency, interval, days of the week, and end condition.
   Only available with the Premium package (`@mui/x-scheduler-premium`).
 
-Click any event in the demo below to open the dialog. From there you can edit the event details or delete it.
+Click any event in the demo below to open the dialog.
+From there you can edit the event details or delete it.
 
 {{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::success
-This demo uses `EventCalendarPremium` to showcase the Recurrence tab. All other dialog features (editing title, dates, resources, colors, description, and deleting events) are available in the standard `EventCalendar` component.
+This demo uses `EventCalendarPremium` to showcase the Recurrence tab.
+All other dialog features (editing title, dates, resources, colors, description, and deleting events) are available in the standard `EventCalendar` component.
 :::
 
 :::info

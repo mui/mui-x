@@ -34,7 +34,9 @@ rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] }
 :::
 
 :::info
-**Standards compliance**: This scheduler follows the iCalendar **RRULE** standard from **RFC 5545**. We do not support every rule or combination yet. If you want more information about a specific rule, see **[RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10)**.
+**Standards compliance**: This scheduler follows the iCalendar **RRULE** standard from **RFC 5545**.
+We do not support every rule or combination yet.
+If you want more information about a specific rule, see **[RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10)**.
 :::
 
 The `EventCalendarPremium` and `EventTimelinePremium` expand recurring events only for the visible range, keep the original duration, and handle all-day and multi-day spans.
@@ -142,5 +144,6 @@ Use either the `COUNT` or the `UNTIL` property if you want to put an end boundar
   ```
 
   :::success
-  The `UNTIL` property is inclusive. This means that if it matches the date of an event occurrence, this occurrence will be included.
+  The `UNTIL` property is inclusive.
+  This means that if it matches the date of an event occurrence, this occurrence will be included.
   :::
