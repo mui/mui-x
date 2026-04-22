@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/charts-toolbar-image-export-trigger',
+    'docs/translations/api-docs/charts/charts-toolbar-image-export-trigger',
     false,
     /\.\/charts-toolbar-image-export-trigger.*\.json$/,
   );

@@ -118,7 +118,7 @@ export default withDeploymentConfig({
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
-          docsx: path.resolve(currentDirectory, '../docs'),
+          docs: path.resolve(currentDirectory, '../docs'),
         },
       },
       module: {

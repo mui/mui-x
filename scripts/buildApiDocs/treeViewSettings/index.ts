@@ -80,7 +80,7 @@ export default treeViewApiPages;
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/tree-view',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/tree-view',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/tree-view',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: [],

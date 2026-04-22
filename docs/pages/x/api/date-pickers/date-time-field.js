@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers/date-time-field',
+    'docs/translations/api-docs/date-pickers/date-time-field',
     false,
     /\.\/date-time-field.*\.json$/,
   );

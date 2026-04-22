@@ -131,7 +131,7 @@ export default chartsApiPages;
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/charts',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/charts',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/charts',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: ['stripeColor'],

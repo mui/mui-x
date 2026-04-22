@@ -1,4 +1,4 @@
-import 'docsx/src/bootstrap';
+import 'docs/src/bootstrap';
 // --- Post bootstrap -----
 import * as React from 'react';
 import type { DocsAppProps } from '@mui/internal-core-docs/DocsApp';
@@ -15,8 +15,8 @@ import { pathnameToLanguage } from '@mui/internal-core-docs/helpers';
 import { Translations } from '@mui/internal-core-docs/i18n';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
-import xPages from 'docsx/data/pages'; // DO NOT REMOVE
-import { postProcessImport } from 'docsx/src/modules/utils/postProcessImport';
+import xPages from 'docs/data/pages'; // DO NOT REMOVE
+import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 

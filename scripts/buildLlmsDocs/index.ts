@@ -79,7 +79,7 @@ import type { ComponentInfo, ProjectSettings } from '@mui/internal-api-docs-buil
 import { getHeaders } from '@mui/internal-markdown';
 import { pageToTitleI18n } from '@mui/internal-core-docs/helpers';
 import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
-import pages from 'docsx/data/pages';
+import pages from 'docs/data/pages';
 
 function processApiFile(filePath: string): string {
   const content = fs.readFileSync(filePath, 'utf-8');
