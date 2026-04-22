@@ -17,8 +17,11 @@ function ScissorPlot({
   size,
 }: {
   color: [number, number, number];
+  /** x offset as fraction of canvas width [0, 1] */
   x: number;
+  /** y offset as fraction of canvas height [0, 1] */
   y: number;
+  /** side length as fraction of the smaller canvas dimension [0, 1] */
   size: number;
 }) {
   const layer = useWebGLLayer();
@@ -27,12 +30,13 @@ function ScissorPlot({
   React.useEffect(() => {
     drawRef.current = () => {
       const { gl } = layer!;
-      // Canvas buffer is in device pixels (canvas.width = CSS width × devicePixelRatio).
-      // Scissor coordinates are in canvas buffer space, so we scale CSS-intent values by DPR
-      // to keep the painted region the same visual size regardless of DPR.
-      const dpr = window.devicePixelRatio || 1;
+      // Use fractions of the actual canvas buffer so the region stays the same visual size
+      // regardless of DPR, drawing area, or axis margins.
+      const w = gl.canvas.width;
+      const h = gl.canvas.height;
+      const side = Math.min(w, h) * size;
       gl.enable(gl.SCISSOR_TEST);
-      gl.scissor(x * dpr, y * dpr, size * dpr, size * dpr);
+      gl.scissor(Math.round(w * x), Math.round(h * y), Math.round(side), Math.round(side));
       gl.clearColor(color[0], color[1], color[2], 1.0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.disable(gl.SCISSOR_TEST);
@@ -69,10 +73,10 @@ export default function WebGLMultipleLayers() {
       <ChartsWrapper>
         <ChartsLayerContainer>
           <ChartsWebGLLayer>
-            <ScissorPlot color={[0.2, 0.4, 0.9]} x={20} y={20} size={80} />
+            <ScissorPlot color={[0.2, 0.4, 0.9]} x={0.1} y={0.1} size={0.5} />
           </ChartsWebGLLayer>
           <ChartsWebGLLayer>
-            <ScissorPlot color={[0.9, 0.2, 0.2]} x={80} y={80} size={80} />
+            <ScissorPlot color={[0.9, 0.2, 0.2]} x={0.4} y={0.4} size={0.5} />
           </ChartsWebGLLayer>
         </ChartsLayerContainer>
       </ChartsWrapper>

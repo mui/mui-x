@@ -16,10 +16,13 @@ function BluePlot() {
   React.useEffect(() => {
     drawRef.current = () => {
       const { gl } = layer!;
-      // Scissor is in canvas-buffer (device) pixels; scale from CSS pixels by DPR.
-      const dpr = window.devicePixelRatio || 1;
+      // Scissor values are fractions of the canvas buffer so the painted region stays
+      // the same visual size regardless of DPR, drawing area, or axis margins.
+      const w = gl.canvas.width;
+      const h = gl.canvas.height;
+      const side = Math.min(w, h) * 0.5;
       gl.enable(gl.SCISSOR_TEST);
-      gl.scissor(10 * dpr, 10 * dpr, 80 * dpr, 80 * dpr);
+      gl.scissor(Math.round(w * 0.1), Math.round(h * 0.1), Math.round(side), Math.round(side));
       gl.clearColor(0.2, 0.4, 0.9, 1.0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.disable(gl.SCISSOR_TEST);
@@ -52,10 +55,11 @@ function RedPlot() {
   React.useEffect(() => {
     drawRef.current = () => {
       const { gl } = layer!;
-      // Scissor is in canvas-buffer (device) pixels; scale from CSS pixels by DPR.
-      const dpr = window.devicePixelRatio || 1;
+      const w = gl.canvas.width;
+      const h = gl.canvas.height;
+      const side = Math.min(w, h) * 0.5;
       gl.enable(gl.SCISSOR_TEST);
-      gl.scissor(50 * dpr, 50 * dpr, 80 * dpr, 80 * dpr);
+      gl.scissor(Math.round(w * 0.4), Math.round(h * 0.4), Math.round(side), Math.round(side));
       gl.clearColor(0.9, 0.2, 0.2, 1.0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.disable(gl.SCISSOR_TEST);
