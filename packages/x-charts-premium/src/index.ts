@@ -60,3 +60,4 @@ export * from './BarChartPremium';
 export * from './HeatmapPremium';
 export * from './ChartsWebGLLayer';
 export * from './CandlestickChart';
+export * from './RadialLineChart';
