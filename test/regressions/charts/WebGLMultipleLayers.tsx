@@ -27,8 +27,12 @@ function ScissorPlot({
   React.useEffect(() => {
     drawRef.current = () => {
       const { gl } = layer!;
+      // Canvas buffer is in device pixels (canvas.width = CSS width × devicePixelRatio).
+      // Scissor coordinates are in canvas buffer space, so we scale CSS-intent values by DPR
+      // to keep the painted region the same visual size regardless of DPR.
+      const dpr = window.devicePixelRatio || 1;
       gl.enable(gl.SCISSOR_TEST);
-      gl.scissor(x, y, size, size);
+      gl.scissor(x * dpr, y * dpr, size * dpr, size * dpr);
       gl.clearColor(color[0], color[1], color[2], 1.0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.disable(gl.SCISSOR_TEST);
