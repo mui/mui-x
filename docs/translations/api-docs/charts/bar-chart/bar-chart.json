@@ -92,7 +92,10 @@
     "onItemClick": {
       "description": "Callback fired when a bar item is clicked.",
       "typeDescriptions": {
-        "event": { "name": "event", "description": "The event source of the callback." },
+        "event": {
+          "name": "event",
+          "description": "The event source of the callback.        It is a native MouseEvent for <code>svg-batch</code> renderer and a React MouseEvent for <code>svg-single</code> renderer."
+        },
         "barItemIdentifier": {
           "name": "barItemIdentifier",
           "description": "The bar item identifier."
@@ -150,6 +153,8 @@
     "barLabel": "The component that renders the bar label.",
     "baseButton": "",
     "baseIconButton": "",
+    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps&gt;</code>.",
+    "baseToggleButtonGroup": "",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",

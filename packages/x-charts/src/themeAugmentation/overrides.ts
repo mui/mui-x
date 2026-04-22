@@ -4,6 +4,7 @@ import { type ScatterClassKey } from '../ScatterChart/scatterClasses';
 import { type ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
 import { type ChartsGridClassKey } from '../ChartsGrid';
 import { type ChartsTooltipClassKey } from '../ChartsTooltip';
+import { type ChartsRadialGridClassKey } from '../ChartsRadialGrid';
 
 export interface ChartsComponentNameToClassKey {
   MuiChartsAxis: 'root'; //  Only the root component of axes is styled. We should probably remove this one in v8
@@ -13,6 +14,7 @@ export interface ChartsComponentNameToClassKey {
   MuiChartsAxisHighlight: ChartsAxisHighlightClassKey;
   MuiChartsLegend: 'root';
   MuiChartsGrid: ChartsGridClassKey;
+  MuiRadialChartsGrid: ChartsRadialGridClassKey;
   MuiChartsTooltip: ChartsTooltipClassKey;
 
   MuiChartsSurface: 'root';

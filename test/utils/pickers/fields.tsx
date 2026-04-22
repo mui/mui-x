@@ -258,7 +258,6 @@ export const buildFieldInteractions = <P extends {}>({
     response.selectSection(selectedSection);
     response.pressKey(undefined, key);
     expectFieldValue(response.getSectionsContainer(), expectedValue);
-    response.unmount();
   };
 
   const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
@@ -278,7 +277,6 @@ export const buildFieldInteractions = <P extends {}>({
         (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
       );
     });
-    response.unmount();
   };
 
   return { testFieldKeyPress, testFieldChange, renderWithProps };
