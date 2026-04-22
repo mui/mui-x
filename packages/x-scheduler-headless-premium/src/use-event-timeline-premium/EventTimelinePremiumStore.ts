@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { warn } from '@base-ui/utils/warn';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
@@ -7,10 +8,6 @@ import {
   SchedulerStore,
 } from '@mui/x-scheduler-headless/internals';
 import { createChangeEventDetails } from '@mui/x-scheduler-headless/base-ui-copy';
-import type {
-  TemporalAdapter,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-headless/base-ui-copy';
 import { EventTimelinePremiumPreferences, EventTimelinePremiumPreset } from '../models';
 import {
   EventTimelinePremiumState,
@@ -19,34 +16,11 @@ import {
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
 import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../event-timeline-premium-selectors/eventTimelinePremiumPresetSelectors';
 
-// TODO(#21359): In the future, this config should become a prop so users can customize step sizes per preset.
-const PRESET_NAVIGATION_STEP: Record<
-  EventTimelinePremiumPreset,
-  (
-    adapter: TemporalAdapter,
-    date: TemporalSupportedObject,
-    amount: number,
-  ) => TemporalSupportedObject
-> = {
-  dayAndHour: (adapter, date, amount) => adapter.addDays(date, amount),
-  day: (adapter, date, amount) => adapter.addDays(date, amount),
-  dayAndWeek: (adapter, date, amount) => adapter.addWeeks(date, amount),
-  monthAndYear: (adapter, date, amount) => adapter.addMonths(date, amount),
-  year: (adapter, date, amount) => adapter.addYears(date, amount),
-};
-
-/**
- * Canonical zoom order for the built-in presets, from most-zoomed-in to most-zoomed-out.
- * The `presets` array in state is always sorted against this order so a future zoom API
- * (`zoomIn()` moves toward index 0, `zoomOut()` toward the end) behaves consistently
- * regardless of the order the user provides.
- *
- * TODO: once the extended `PresetConfig` lands (see #21827) — with `tickWidth`, `timeResolution`
- * and multi-level `headers` — replace this hardcoded list with a data-driven sort derived from
- * the config itself (Bryntum's `PresetStore` approach: sort by `msPerPixel` = milliseconds per
- * pixel, computed from `tickWidth` and the bottom header's unit/increment). That removes the
- * need for any external ranking when custom presets are registered.
- */
+// Canonical zoom order for the built-in presets, from most-zoomed-in to most-zoomed-out.
+// The `presets` array in state is always sorted against this order so a future zoom API
+// (`zoomIn()` moves toward index 0, `zoomOut()` toward the end) behaves consistently
+// regardless of the order the user provides.
+// TODO(#21827): replace with a data-driven sort once the extended `PresetConfig` lands.
 const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = [
   'dayAndHour',
   'day',
@@ -172,8 +146,7 @@ export class EventTimelinePremiumStore<
    */
   public goToNextVisibleDate = (event: React.UIEvent) => {
     const { adapter, visibleDate, preset } = this.state;
-    const { unitCount } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
-    const navigate = PRESET_NAVIGATION_STEP[preset];
+    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, unitCount),
       event,
@@ -185,8 +158,7 @@ export class EventTimelinePremiumStore<
    */
   public goToPreviousVisibleDate = (event: React.UIEvent) => {
     const { adapter, visibleDate, preset } = this.state;
-    const { unitCount } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
-    const navigate = PRESET_NAVIGATION_STEP[preset];
+    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, -unitCount),
       event,
@@ -198,6 +170,11 @@ export class EventTimelinePremiumStore<
    */
   public setPreset = (preset: EventTimelinePremiumPreset, event: Event) => {
     const { preset: presetProp, onPresetChange } = this.parameters;
+    if (process.env.NODE_ENV !== 'production' && presetProp !== undefined && !onPresetChange) {
+      warn(
+        'MUI X Scheduler: EventTimelinePremium is controlled (received a `preset` prop) but `onPresetChange` is not provided. Preset changes will be silently ignored.',
+      );
+    }
     if (preset !== this.state.preset) {
       this.assertPresetValidity(preset);
       const eventDetails = createChangeEventDetails('none', event);

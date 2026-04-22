@@ -67,6 +67,14 @@ describe('View - EventCalendarStore', () => {
       store.setView('day', {} as any);
       expect(store.state.view).to.equal('week');
     });
+
+    it('should warn in dev when controlled without an onViewChange handler', () => {
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'week' }, adapter);
+
+      expect(() => store.setView('day', {} as any)).toWarnDev(
+        'MUI X Scheduler: EventCalendar is controlled (received a `view` prop) but `onViewChange` is not provided',
+      );
+    });
   });
 
   describe('Method: switchToDay', () => {

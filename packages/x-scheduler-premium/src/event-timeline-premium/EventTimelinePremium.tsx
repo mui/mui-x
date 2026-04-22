@@ -91,7 +91,7 @@ const EventTimelinePremiumRoot = styled('div', {
   '--dayAndHour-cell-width': '64px',
   '--day-cell-width': '120px',
   '--dayAndWeek-cell-width': 'calc(64px * 7)',
-  // The monthAndYear preset uses per-day units instead of per-month, so each column width = days in month × 6px
+  // Each CSS unit is 1 day (6px); a month column therefore spans (days in that month) × 6px.
   '--monthAndYear-cell-width': '6px',
   '--year-cell-width': '200px',
   boxSizing: 'border-box',

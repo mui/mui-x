@@ -58,6 +58,17 @@ describe('Preset - EventTimelinePremiumStore', () => {
       store.setPreset('day', {} as any);
       expect(store.state.preset).to.equal('dayAndWeek');
     });
+
+    it('should warn in dev when controlled without an onPresetChange handler', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, preset: 'dayAndWeek' },
+        adapter,
+      );
+
+      expect(() => store.setPreset('day', {} as any)).toWarnDev(
+        'MUI X Scheduler: EventTimelinePremium is controlled (received a `preset` prop) but `onPresetChange` is not provided',
+      );
+    });
   });
 
   describe('Navigation', () => {

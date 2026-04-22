@@ -183,6 +183,11 @@ export class ExtendableEventCalendarStore<
    */
   public setView = (view: CalendarView, event: Event) => {
     const { view: viewProp, onViewChange } = this.parameters;
+    if (process.env.NODE_ENV !== 'production' && viewProp !== undefined && !onViewChange) {
+      warn(
+        'MUI X Scheduler: EventCalendar is controlled (received a `view` prop) but `onViewChange` is not provided. View changes will be silently ignored.',
+      );
+    }
     if (view !== this.state.view) {
       this.assertViewValidity(view);
 
