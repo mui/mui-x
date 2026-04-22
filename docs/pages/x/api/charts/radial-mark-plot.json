@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "RadialMarkPlot",
+  "imports": [
+    "import { RadialMarkPlot } from '@mui/x-charts-premium/RadialLineChart';",
+    "import { RadialMarkPlot } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiRadialMarkPlot",
+  "filename": "/packages/x-charts-premium/src/RadialLineChart/RadialMarkPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
+  "cssComponent": false
+}
