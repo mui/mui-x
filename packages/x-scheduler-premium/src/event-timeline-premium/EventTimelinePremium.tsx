@@ -241,8 +241,8 @@ EventTimelinePremium.propTypes = {
    */
   defaultPreset: PropTypes.oneOf(['day', 'dayAndHour', 'dayAndWeek', 'monthAndYear', 'year']),
   /**
-   * The date initially used to determine the visible date range in each view.
-   * To render a controlled calendar, use the `visibleDate` prop.
+   * The date initially used to determine the visible date range.
+   * To render a controlled component, use the `visibleDate` prop.
    * @default today
    */
   defaultVisibleDate: PropTypes.instanceOf(Date),
@@ -383,7 +383,7 @@ EventTimelinePremium.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * The date currently used to determine the visible date range in each view.
+   * The date currently used to determine the visible date range.
    */
   visibleDate: PropTypes.instanceOf(Date),
   /**
