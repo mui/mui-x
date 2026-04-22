@@ -100,7 +100,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",
-    "@mui/internal-docs-utils": "https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@975aa3d",
+    "@mui/internal-docs-utils": "https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@d8ab92d",
     "@types/chance": "catalog:",
     "@types/d3-scale-chromatic": "3.1.0",
     "@types/doctrine": "0.0.9",
