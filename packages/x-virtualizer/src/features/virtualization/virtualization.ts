@@ -159,7 +159,10 @@ function initializeState(params: ParamsWithDefaults) {
       enabledForRows: !platform.isJSDOM,
       enabledForColumns: !platform.isJSDOM,
       renderContext,
-      props: {} as Record<string, Record<string, any>>,
+      props: (params.layout.constructor as typeof Layout).elements.reduce(
+        (acc, key) => (acc[key as string], acc),
+        {} as Record<string, Record<string, any>>,
+      ),
       context: {},
       scrollPosition: { current: ScrollPosition.EMPTY },
       layoutMode: params.virtualization.layoutMode ?? 'uncontrolled',
@@ -184,19 +187,6 @@ type AbstractAPI = {
 };
 
 type RequiredAPI = Dimensions.API & AbstractAPI;
-
-/** Placeholder API functions for colspan & rowspan to re-implement */
-const SPANNING_API: AbstractAPI = {
-  getCellColSpanInfo() {
-    throw new Error('MUI X: Unimplemented: colspan feature is required');
-  },
-  calculateColSpan() {
-    throw new Error('MUI X: Unimplemented: colspan feature is required');
-  },
-  getHiddenCellsOrigin() {
-    throw new Error('MUI X: Unimplemented: rowspan feature is required');
-  },
-};
 
 export type VirtualizationLayoutParams = {
   containerRef: (node: HTMLDivElement | null) => void;
@@ -767,7 +757,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     setPanels,
     forceUpdateRenderContext,
     scheduleUpdateRenderContext,
-    ...SPANNING_API,
+    ...createSpanningAPI(),
   };
 }
 
@@ -1005,7 +995,7 @@ type SearchOptions = {
 function binarySearch(
   offset: number,
   positions: number[],
-  options?: SearchOptions,
+  options: SearchOptions | undefined = undefined,
   sliceStart = 0,
   sliceEnd = positions.length,
 ): number {
@@ -1013,30 +1003,25 @@ function binarySearch(
     return -1;
   }
 
-  let lo = sliceStart;
-  let hi = sliceEnd;
-
-  while (lo < hi) {
-    const mid = lo + ((hi - lo) >> 1);
-    const position = positions[mid];
-
-    let isBefore: boolean;
-    if (options?.atStart) {
-      const width =
-        (mid === positions.length - 1 ? options.lastPosition : positions[mid + 1]) - position;
-      isBefore = offset - width < position;
-    } else {
-      isBefore = offset <= position;
-    }
-
-    if (isBefore) {
-      hi = mid;
-    } else {
-      lo = mid + 1;
-    }
+  if (sliceStart >= sliceEnd) {
+    return sliceStart;
   }
 
-  return lo;
+  const pivot = sliceStart + Math.floor((sliceEnd - sliceStart) / 2);
+  const position = positions[pivot];
+
+  let isBefore: boolean;
+  if (options?.atStart) {
+    const width =
+      (pivot === positions.length - 1 ? options.lastPosition : positions[pivot + 1]) - position;
+    isBefore = offset - width < position;
+  } else {
+    isBefore = offset <= position;
+  }
+
+  return isBefore
+    ? binarySearch(offset, positions, options, sliceStart, pivot)
+    : binarySearch(offset, positions, options, pivot + 1, sliceEnd);
 }
 
 function exponentialSearch(
@@ -1207,12 +1192,7 @@ function createScrollCache(
 type ScrollCache = ReturnType<typeof createScrollCache>;
 
 function createRange(from: number, to: number) {
-  const length = to - from;
-  const arr = new Array<number>(length);
-  for (let i = 0; i < length; i += 1) {
-    arr[i] = from + i;
-  }
-  return arr;
+  return Array.from({ length: to - from }).map((_, i) => from + i);
 }
 
 function getFirstNonSpannedColumnToRender({
@@ -1257,6 +1237,22 @@ function getFirstNonSpannedColumnToRender({
   return firstNonSpannedColumnToRender;
 }
 
+/** Placeholder API functions for colspan & rowspan to re-implement */
+function createSpanningAPI(): AbstractAPI {
+  const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
+    throw new Error('MUI X: Unimplemented: colspan feature is required');
+  };
+
+  const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {
+    throw new Error('MUI X: Unimplemented: colspan feature is required');
+  };
+
+  const getHiddenCellsOrigin: AbstractAPI['getHiddenCellsOrigin'] = () => {
+    throw new Error('MUI X: Unimplemented: rowspan feature is required');
+  };
+
+  return { getCellColSpanInfo, calculateColSpan, getHiddenCellsOrigin };
+}
 
 export function roundToDecimalPlaces(value: number, decimals: number) {
   return Math.round(value * 10 ** decimals) / 10 ** decimals;
