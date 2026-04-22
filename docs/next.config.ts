@@ -69,9 +69,9 @@ export default withDeploymentConfig({
   },
   experimental: {
     esmExternals: undefined,
-    externalDir: true,
   },
-  transpilePackages: ['@mui/internal-core-docs', '@mui/base', '@mui/utils'],
+  // This is needed because the package has next.js imports like `next/script` that need to be transpiled.
+  transpilePackages: ['@mui/internal-core-docs'],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {

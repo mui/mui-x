@@ -10,11 +10,13 @@ import { Translate, useTranslate, useUserLanguage } from '@mui/internal-core-doc
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { MarkdownElement } from '@mui/internal-core-docs/MarkdownDocs';
 import {
-  LayoutStorageKeys,
-  PropertyDefinition,
   DEFAULT_API_LAYOUT_STORAGE_KEYS,
-  type ApiDisplayLayout,
   PropertiesSection,
+} from '@mui/internal-core-docs/ApiPage';
+import type {
+  ApiDisplayLayout,
+  PropertyDefinition,
+  LayoutStorageKeys,
 } from '@mui/internal-core-docs/ApiPage';
 import { AppLayoutDocs } from '@mui/internal-core-docs/AppLayout';
 import { SectionTitle, SectionTitleProps } from '@mui/internal-core-docs/SectionTitle';
