@@ -609,6 +609,8 @@ export type PolarAxisDefaultized<
      * If true, the contents of the axis will be displayed by a tooltip with `trigger='axis'`.
      */
     triggerTooltip?: boolean;
+    /** @ignore - internal. True when a point-scale rotation axis covers a full circle. */
+    isPointScaleFullCircle?: boolean;
   };
 
 export type ComputedAxis<
@@ -626,6 +628,8 @@ export type ComputedAxis<
      * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
      */
     triggerTooltip?: boolean;
+    /** @ignore - internal. True when a point-scale rotation axis covers a full circle. */
+    isPointScaleFullCircle?: boolean;
   } & (AxisProps extends ChartsXAxisProps
     ? AxisSideConfig<AxisProps> & { height: number }
     : AxisProps extends ChartsYAxisProps
