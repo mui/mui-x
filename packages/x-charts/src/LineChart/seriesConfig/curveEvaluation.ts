@@ -70,7 +70,7 @@ class SegmentCapture {
     this.cy = y;
   }
 
-  closePath() {}
+  closePath() { }
 }
 
 /** Evaluate a cubic Bezier at parameter t. */
