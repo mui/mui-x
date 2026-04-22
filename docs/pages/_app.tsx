@@ -19,8 +19,13 @@ import xPages from 'docs/data/pages'; // DO NOT REMOVE
 import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-
-import * as config from '../config';
+import {
+  LANGUAGES,
+  LANGUAGES_SSR,
+  LANGUAGES_IGNORE_PAGES,
+  LANGUAGES_IN_PROGRESS,
+} from '@mui/internal-core-docs/constants';
+import { DocsConfig } from '@mui/internal-core-docs/DocsProvider';
 
 export { fontClasses } from '@mui/internal-core-docs/nextFonts';
 
@@ -239,6 +244,13 @@ const CSB_CONFIG = {
   postProcessImport,
 };
 
+const DOCS_CONFIG: DocsConfig = {
+  LANGUAGES,
+  LANGUAGES_SSR,
+  LANGUAGES_IN_PROGRESS,
+  LANGUAGES_IGNORE_PAGES,
+};
+
 function useThemeWrapper() {
   const router = useRouter();
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
@@ -259,7 +271,7 @@ export default function MyApp(
       {...props}
       Component={Component}
       pageProps={pageProps}
-      docsConfig={config}
+      docsConfig={DOCS_CONFIG}
       serviceWorkerPath="/x/sw.js"
       activePage={activePage}
       activePageParents={activePageParents}
