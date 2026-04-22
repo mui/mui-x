@@ -4,6 +4,9 @@ import path from 'node:path';
 import readline from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import { Octokit } from '@octokit/rest';
+// picomatch is the matcher engine globby uses internally (already a transitive dep via globby → fast-glob → micromatch).
+// globby itself is not used to avoid the overhead of scanning the local filesystem for matching files, since we already have a complete listing of the remote files from the GitHub API.
+import picomatch from 'picomatch';
 import { persistentAuthStrategy } from '@mui/internal-code-infra/github';
 
 const OWNER = 'mui';
@@ -12,7 +15,7 @@ const REPO = 'material-ui';
 // Self updates after confirmation on the next run.
 const DEFAULT_REF = '2dc145f2d2bece8f30293137e276bdbdb4cda294';
 const BASE_DIR = 'docs/public/static';
-// Patterns are relative to BASE_DIR. Trailing `/*` or a bare dir means "all files under".
+// Globby/picomatch patterns relative to BASE_DIR. `*` matches one segment, `**` matches any depth.
 const PATTERNS = [
   'apple-touch-icon.png',
   'favicon.ico',
@@ -21,7 +24,7 @@ const PATTERNS = [
   'logo.png',
   'logo.svg',
   'manifest.json',
-  'styles',
+  'styles/**',
 ];
 
 const octokit = new Octokit({ authStrategy: persistentAuthStrategy });
@@ -55,10 +58,7 @@ async function resolveTreeSha(ref, dirPath) {
   return sha;
 }
 
-function matchesPattern(relPath, pattern) {
-  const dirPrefix = pattern.endsWith('/*') ? pattern.slice(0, -2) : pattern;
-  return relPath === pattern || relPath.startsWith(`${dirPrefix}/`);
-}
+const isMatch = picomatch(PATTERNS);
 
 async function downloadFile(filePath, ref) {
   const url = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${ref}/${filePath}`;
@@ -130,7 +130,7 @@ async function run() {
   const subtree = await getTree(baseSha, { recursive: true });
   const matched = subtree
     .filter((entry) => entry.type === 'blob')
-    .filter((entry) => PATTERNS.some((p) => matchesPattern(entry.path, p)));
+    .filter((entry) => isMatch(entry.path));
 
   await Promise.all(
     matched.map(async (entry) => {
