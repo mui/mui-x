@@ -14,6 +14,12 @@ The `RadialLineChart` component accepts `series`, `rotationAxis`, and `radiusAxi
 
 {{"demo": "BasicRadialLineChart.js", "bg": "outline"}}
 
+## Highlight
+
+Like other series the radial line series have a `highlightScope` property which accept an objects with `highlight` and `fade` properties.
+
+{{"demo": "ElementHighlights.js", "bg": "outline"}}
+
 ## Radial grid
 
 Similarly to the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates
