@@ -2,7 +2,8 @@ import * as React from 'react';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
-import { ChartsWebGLLayer, useWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
+import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
+import { useWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer/ChartsWebGLContext';
 
 /**
  * Paints a scissored region with the given color on the WebGL canvas.
