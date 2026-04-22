@@ -64,18 +64,28 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
       backgroundColor: theme.vars ? theme.vars.palette.FilledInput.disabledBg : disabledBackground,
     },
     variants: [
-      ...Object.keys((theme.vars ?? theme).palette)
-        // @ts-ignore
-        .filter((key) => (theme.vars ?? theme).palette[key].main)
-        .map((color) => ({
-          props: { inputColor: color, disableUnderline: false },
-          style: {
-            '&::after': {
-              // @ts-ignore
-              borderBottom: `2px solid ${(theme.vars || theme).palette[color]?.main}`,
+      ...Object.keys((theme.vars ?? theme).palette).reduce<
+        {
+          props: { inputColor: string; disableUnderline: boolean };
+          style: { '&::after': { borderBottom: string } };
+        }[]
+      >((acc, key) => {
+        const palette = (theme.vars ?? theme).palette;
+        const colorObj = palette[key];
+
+        if (colorObj?.main) {
+          acc.push({
+            props: { inputColor: key, disableUnderline: false },
+            style: {
+              '&::after': {
+                borderBottom: `2px solid ${colorObj.main}`,
+              },
             },
-          },
-        })),
+          });
+        }
+
+        return acc;
+      }, []),
       {
         props: { disableUnderline: false },
         style: {
