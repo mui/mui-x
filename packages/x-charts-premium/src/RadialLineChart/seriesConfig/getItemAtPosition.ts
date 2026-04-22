@@ -11,7 +11,7 @@ import {
   getPolarAxisIndex,
   isOrdinalScale,
 } from '@mui/x-charts/internals';
-import { evaluateCurveAtAngle } from '@mui/x-charts/internals';
+import { evaluateCurveAtAngle, clampAngleRad } from '@mui/x-charts/internals';
 import type { SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
 /**
@@ -34,7 +34,14 @@ function getBracketIndices(
     if (index === -1) {
       return null;
     }
-    return { left: index, right: index };
+
+    const valueAngle = scale(axisData[index])!;
+
+    const gapAngle = clampAngleRad(angle - valueAngle);
+
+    return gapAngle > Math.PI
+      ? { left: index - 1, right: index }
+      : { left: index, right: index + 1 };
   }
 
   // For continuous axes, find the two adjacent data points surrounding pointX.
@@ -260,7 +267,11 @@ export default function getItemAtPosition(
   }
 
   // Step 2: If the closest line is within the proximity threshold, pick it.
-  if (closestItem && closestDistance <= LINE_PROXIMITY_THRESHOLD) {
+  if (
+    closestItem &&
+    closestDistance <= LINE_PROXIMITY_THRESHOLD &&
+    !series.series[closestItem.seriesId].area
+  ) {
     return closestItem;
   }
 
@@ -321,32 +332,16 @@ export default function getItemAtPosition(
 
       const getRotation = (idx: number) => rotationPosition(rotationData[idx]);
 
-      if (left === right) {
-        // Ordinal axis or pointer exactly on a data point.
-        const stacked = visibleStackedData[left];
-        if (!stacked) {
-          continue;
-        }
-        const innerRadius = getBaselineRadius(baseline, radiusScale, stacked[0]);
-        const outerRadius = radiusScale(stacked[1]) as number;
-        if ([innerRadius, outerRadius].some((v) => v == null || Number.isNaN(v))) {
-          continue;
-        }
-        const radiusMin = Math.min(innerRadius, outerRadius);
-        const radiusMax = Math.max(innerRadius, outerRadius);
-        if (pointerRadius >= radiusMin && pointerRadius <= radiusMax) {
-          return { type: 'radialLine', seriesId, dataIndex: left };
-        }
-        continue;
-      }
-
-      const getRadius = (idx: number) => {
+      const getRadius = (idx: number, position: 0 | 1) => {
         const stacked = visibleStackedData[idx];
-        return stacked ? (radiusAxis.scale(stacked[1]) as number) : null;
+
+        return position === 0
+          ? getBaselineRadius(baseline, radiusScale, stacked ? stacked[0] : 0)
+          : (radiusScale(stacked[1]) as number);
       };
-      const getPosition = (idx: number) => {
+      const getPosition = (position: 0 | 1) => (idx: number) => {
         const rotation = getRotation(idx);
-        const radius = getRadius(idx);
+        const radius = getRadius(idx, position);
         if (rotation == null || radius == null) {
           return null;
         }
@@ -361,9 +356,9 @@ export default function getItemAtPosition(
 
       // Build pixel-coordinate points for the top and bottom curves,
       // then evaluate them at the pointer's x using the actual d3 curve.
-      const topPoints = collectCurvePoints(data, getPosition, left, right, connectNulls);
+      const topPoints = collectCurvePoints(data, getPosition(1), left, right, connectNulls);
 
-      const bottomPoints = collectCurvePoints(data, getPosition, left, right, connectNulls);
+      const bottomPoints = collectCurvePoints(data, getPosition(0), left, right, connectNulls);
 
       if (topPoints.length < 2 || bottomPoints.length < 2) {
         continue;

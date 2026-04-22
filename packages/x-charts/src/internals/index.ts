@@ -58,6 +58,7 @@ export * from '../PieChart/PieChart.plugins';
 
 // utils
 export * from './configInit';
+export * from './clampAngle';
 export * from './getLabel';
 export * from './legendUtils';
 export * from './getChartPoint';

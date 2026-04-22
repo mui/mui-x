@@ -70,7 +70,7 @@ class SegmentCapture {
     this.cy = y;
   }
 
-  closePath() { }
+  closePath() {}
 }
 
 /** Evaluate a cubic Bezier at parameter t. */
@@ -252,6 +252,11 @@ export function evaluateCurveAtAngle(
       const t = findTForAngle(segment, targetAngle);
       return { x: evaluateSegmentX(segment, t), y: evaluateSegmentY(segment, t) };
     }
+  }
+
+  if (points.some((p) => p.x === 0 && p.y === 0)) {
+    // Frequent edge case when handling area. If the curve his only made of (0, 0) points. So we can return (0, 0) for any angle.
+    return { x: 0, y: 0 };
   }
 
   return null;
