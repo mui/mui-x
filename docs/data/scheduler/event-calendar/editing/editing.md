@@ -51,7 +51,8 @@ Clicking an event or creating a new one opens the event dialog.
 The dialog has two tabs:
 
 - **General**: title, start/end date and time, all-day toggle, resource and color selectors, and description.
-- **Recurrence**: frequency, interval, days of the week, and end condition. Only available with the Premium package (`@mui/x-scheduler-premium`).
+- **Recurrence**: frequency, interval, days of the week, and end condition.
+  Only available with the Premium package (`@mui/x-scheduler-premium`).
 
 Click any event in the demo below to open the dialog. From there you can edit the event details or delete it.
 
@@ -155,7 +156,7 @@ function App() {
 ## Copy & paste events 🚧
 
 :::warning
-This feature isn't available yet, but it is planned — you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/19986) to help us prioritize it.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/19986) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
@@ -164,7 +165,7 @@ With this feature, users would be able to copy and paste events within the calen
 ## Undo / Redo 🚧
 
 :::warning
-This feature isn't available yet, but it is planned — you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21583) to help us prioritize it.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21583) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 

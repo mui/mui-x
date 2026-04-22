@@ -63,10 +63,10 @@ This event always happens at 09:00 in New York, regardless of DST changes.
 
 The `timezone` field on an event determines:
 
-1. **How wall-time strings are interpreted** — a start of `"2024-01-10T09:00:00"` with `timezone: "America/New_York"` means 09:00 in New York (14:00 UTC in winter, 13:00 UTC in summer).
-2. **How recurring event rules are evaluated** — a daily event at 09:00 in `Europe/Paris` stays at 09:00 local time even across DST boundaries.
+1. **How wall-time strings are interpreted**: a start of `"2024-01-10T09:00:00"` with `timezone: "America/New_York"` means 09:00 in New York (14:00 UTC in winter, 13:00 UTC in summer).
+2. **How recurring event rules are evaluated**: a daily event at 09:00 in `Europe/Paris` stays at 09:00 local time even across DST boundaries.
 
-For instant strings (ending with `"Z"`), the `timezone` field does not affect how the start/end are resolved — they are already absolute points in time.
+For instant strings (ending with `"Z"`), the `timezone` field does not affect how the start/end are resolved—they are already absolute points in time.
 However, it is still used for recurring event calculations.
 
 :::success

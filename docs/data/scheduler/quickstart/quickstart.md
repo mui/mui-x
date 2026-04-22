@@ -11,7 +11,7 @@ githubLabel: 'scope: scheduler'
 
 ## Installation
 
-Install the Scheduler package that best suits your needs — Community, or Premium:
+Install the Scheduler package that best suits your needs—Community, or Premium:
 
 {{"component": "modules/components/SchedulerInstallationInstructions.js"}}
 

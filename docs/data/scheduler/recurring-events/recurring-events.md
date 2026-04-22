@@ -46,8 +46,9 @@ The `EventCalendarPremium` and `EventTimelinePremium` expand recurring events on
 The RRULE string is composed of semicolon-separated `KEY=VALUE` pairs.
 The two fundamental properties are:
 
-- **`FREQ`** — the base frequency of the rule: `DAILY`, `WEEKLY`, `MONTHLY`, or `YEARLY`.
-- **`INTERVAL`** _(optional, defaults to `1`)_ — at which intervals the recurrence repeats. For example, within a `DAILY` rule, a value of `8` means every eight days.
+- **`FREQ`**: the base frequency of the rule: `DAILY`, `WEEKLY`, `MONTHLY`, or `YEARLY`.
+- **`INTERVAL`** _(optional, defaults to `1`)_: at which intervals the recurrence repeats.
+  For example, within a `DAILY` rule, a value of `8` means every eight days.
 
 ### Daily frequency
 
