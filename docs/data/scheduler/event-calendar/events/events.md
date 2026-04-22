@@ -56,7 +56,7 @@ const event = {
 ```
 
 :::success
-Learn more about _timezone support_ in the [dedicated doc page](/x/react-scheduler/timezone/).
+See [Timezone](/x/react-scheduler/timezone/) for details.
 :::
 
 ### Color
@@ -140,7 +140,7 @@ const event = {
 ```
 
 :::success
-Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-calendar/drag-interactions/).
+See [Drag interactions](/x/react-scheduler/event-calendar/drag-interactions/) for details.
 :::
 
 ### Read-only
@@ -155,7 +155,7 @@ const event = {
 ```
 
 :::success
-Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-calendar/editing/#read-only).
+See [Editing—Read-only](/x/react-scheduler/event-calendar/editing/#read-only) for details.
 :::
 
 ### Recurring events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
@@ -170,7 +170,7 @@ const event = {
 ```
 
 :::success
-Learn more about _recurring events_ in the [dedicated doc page](/x/react-scheduler/recurring-events/).
+See [Recurring events](/x/react-scheduler/recurring-events/) for details.
 :::
 
 ## Store data in custom properties
