@@ -56,7 +56,7 @@ const event = {
 ```
 
 :::success
-Learn more about _timeone support_ in the [dedicated doc page](/x/react-scheduler/timezone/).
+Learn more about _timezone support_ in the [dedicated doc page](/x/react-scheduler/timezone/).
 :::
 
 ### Color
@@ -70,7 +70,7 @@ const event = {
 };
 ```
 
-Here is the list of all the available color palettes:
+The available color palettes are shown below:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -116,7 +116,7 @@ const event = {
 {{"demo": "ClassNameProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::success
-When defined, the class is applied to the event root DOM element in all views (Week, Month, Day, and Agenda views).
+When defined, the class is applied to the event root DOM element across all views.
 :::
 
 ### Drag interactions

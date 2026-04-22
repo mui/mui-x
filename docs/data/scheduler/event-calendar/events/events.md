@@ -56,7 +56,7 @@ const event = {
 ```
 
 :::success
-Learn more about _timeone support_ in the [dedicated doc page](/x/react-scheduler/timezone/).
+Learn more about _timezone support_ in the [dedicated doc page](/x/react-scheduler/timezone/).
 :::
 
 ### Color
@@ -70,7 +70,7 @@ const event = {
 };
 ```
 
-Here is the list of all the available color palettes:
+The available color palettes are shown below:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 

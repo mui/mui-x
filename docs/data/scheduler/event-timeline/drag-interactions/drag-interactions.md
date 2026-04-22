@@ -47,7 +47,7 @@ Set the `areEventsResizable` property to `"start"` or `"end"` to enable resizing
 :::
 
 :::success
-For now, the editing form is not customizable, but in the future devs should be able to apply the same logic there.
+For now, the editing form is not customizable, but in the future developers should be able to apply the same logic there.
 :::
 
 ## Only disable on some events
@@ -150,8 +150,8 @@ function App() {
 
 ## External drag and drop
 
-You can enable the dragging from and to the outside of the Event Timeline using the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props.
-When `canDragEventsFromTheOutside` is `true`, the events created with `<StandaloneEvent />` can be dropped inside the Event Timeline.
-When `canDropEventsToTheOutside` is `true`, the events from within the Event Timeline can be dropped outside of it.
+You can enable dragging events from and to the outside of the Event Timeline using the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props.
+When `canDragEventsFromTheOutside` is `true`, you can drop events created with `StandaloneEvent` inside the Event Timeline.
+When `canDropEventsToTheOutside` is `true`, you can drop events from within the Event Timeline outside of it.
 
 {{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}

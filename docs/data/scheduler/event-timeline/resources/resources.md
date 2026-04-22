@@ -8,7 +8,7 @@ components: EventTimelinePremium
 
 # Event Timeline - Resources
 
-<p class="description">Define the properties of your events.</p>
+<p class="description">Organize events by assigning them to resources in the Event Timeline.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -89,7 +89,7 @@ return (
 ### Color
 
 Use the `eventColor` property to define a resource's color.
-Here is the list of all the available color palettes:
+The available color palettes are shown below:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 

@@ -94,7 +94,7 @@ const events: SchedulerEvent[] = [
 
 ### Render the component
 
-With the component imported, and events defined, you're now ready to render the render the Event Timeline as shown below:
+With the component imported and events defined, you're now ready to render the Event Calendar as shown below:
 
 {{"demo": "RenderEventCalendar.js", "defaultCodeOpen": true, "bg": "inline"}}
 
@@ -102,7 +102,7 @@ With the component imported, and events defined, you're now ready to render the 
 
 ### Import the component
 
-Import the `<EventTimelinePremium />` component along with the `SchedulerEvent` and `SchedulerResource` types:
+Import the `EventTimelinePremium` component along with the `SchedulerEvent` and `SchedulerResource` types:
 
 ```js
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -134,7 +134,7 @@ const events: SchedulerEvent[] = [
 ];
 ```
 
-The event passed to the Event Timeline component need to have a resource that represents the entities (people, rooms, equipment) that it is are assigned to:
+Each event passed to the Event Timeline component needs a resource that represents the entities (people, rooms, equipment) it's assigned to:
 
 ```ts
 const resources: SchedulerResource[] = [
@@ -145,7 +145,7 @@ const resources: SchedulerResource[] = [
 
 ### Render the component
 
-With the component imported, and events and resources defined, you're now ready to render the render the Event Timeline as shown below:
+With the component imported and events and resources defined, you're now ready to render the Event Timeline as shown below:
 
 {{"demo": "RenderEventTimelinePremium.js", "defaultCodeOpen": true, "bg": "inline"}}
 
