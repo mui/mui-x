@@ -20,7 +20,7 @@ catalog:
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.0.0
-  '@mui/internal-test-utils': 2.0.18-canary.19
+  '@mui/internal-test-utils': 2.0.18-canary.20
   '@mui/material': 9.0.0
   '@mui/stylis-plugin-rtl': 9.0.0
   '@mui/system': 9.0.0
@@ -102,7 +102,3 @@ overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.3.6
-
-patchedDependencies:
-  # Temporary fix till next release of @mui/internal-markdown
-  '@mui/internal-markdown@3.0.6': patches/@mui__internal-markdown@3.0.6.patch
