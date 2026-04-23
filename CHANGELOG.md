@@ -79,7 +79,7 @@ Same changes as in `@mui/x-tree-view@9.0.2`.
 ### Scheduler
 
 #### Breaking changes
-- 
+
 - The `views` of `EventTimelinePremium` have been renamed to `presets`, with names that describe the header layout. The props `view`/`defaultView`/`views`/`onViewChange` are now `preset`/`defaultPreset`/`presets`/`onPresetChange`, and the type `EventTimelinePremiumView` is now `EventTimelinePremiumPreset`.
 
 | Old      | New            |
