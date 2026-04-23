@@ -1,11 +1,6 @@
 'use client';
 import * as React from 'react';
-import {
-  useDrawingArea,
-  useScatterSeriesContext,
-  useXAxes,
-  useYAxes,
-} from '@mui/x-charts/hooks';
+import { useDrawingArea, useScatterSeriesContext, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { parseColor } from '../../utils/webgl/parseColor';
 
 const DEFAULT_MARKER_SIZE = 4;

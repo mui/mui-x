@@ -8,4 +8,4 @@ export {
   SCATTER_CHART_PREMIUM_PLUGINS,
   type ScatterChartPremiumPluginSignatures,
 } from './ScatterChartPremium.plugins';
-export { ScatterWebGLPlot } from './webgl/ScatterWebGLPlot';
+export { ScatterPlotPremium, type ScatterPlotPremiumProps } from './ScatterPlotPremium';

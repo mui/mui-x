@@ -5,6 +5,9 @@ import { useWebGLLayer } from '../../ChartsWebGLLayer/ChartsWebGLContext';
 import { ScatterWebGLProgram } from './ScatterWebGLProgram';
 import { useScatterWebGLPlotData } from './useScatterWebGLPlotData';
 
+/**
+ * @ignore - Internal component used for rendering the scatter plot using WebGL. Not exported from the package.
+ */
 export function ScatterWebGLPlot() {
   const layer = useWebGLLayer();
   const seriesData = useScatterSeriesContext();
