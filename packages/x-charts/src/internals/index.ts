@@ -99,6 +99,8 @@ export * from '../models/axis';
 export * from '../models/seriesType/composition';
 
 export * from './plugins/models';
+export * from './plugins/corePlugins';
+
 export * from './material';
 export * from './createSvgIcon';
 

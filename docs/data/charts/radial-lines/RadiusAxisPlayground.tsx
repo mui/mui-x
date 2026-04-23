@@ -4,7 +4,22 @@ import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { Unstable_ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
 import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
-import { Unstable_ChartsRadialDataProvider } from '@mui/x-charts/ChartsRadialDataProvider';
+import { Unstable_ChartsRadialDataProviderPro } from '@mui/x-charts-pro/ChartsRadialDataProviderPro';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import {
+  ChartsToolbarPrintExportTrigger,
+  ChartsToolbarImageExportTrigger,
+} from '@mui/x-charts-pro/ChartsToolbarPro';
+import PrintIcon from '@mui/icons-material/Print';
+import PhotoIcon from '@mui/icons-material/Photo';
+import { Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
+import { useChartRootRef } from '@mui/x-charts-pro/hooks';
+
+function Wrapper({ children }: { children: React.ReactNode }) {
+  const chartRootRef = useChartRootRef();
+  return <div ref={chartRootRef}>{children}</div>;
+}
 
 export default function RadiusAxisPlayground() {
   return (
@@ -58,7 +73,7 @@ export default function RadiusAxisPlayground() {
             height: 400,
           }}
         >
-          <Unstable_ChartsRadialDataProvider
+          <Unstable_ChartsRadialDataProviderPro
             width={400}
             height={400}
             rotationAxis={[
@@ -79,23 +94,43 @@ export default function RadiusAxisPlayground() {
               },
             ]}
           >
-            <ChartsLayerContainer>
-              <ChartsSvgLayer>
-                <Unstable_ChartsRadialGrid rotation radius />
-                <ChartsRadiusAxis
-                  angle={props.angle}
-                  disableLine={props.disableLine}
-                  disableTicks={props.disableTicks}
-                  tickSize={props.tickSize}
-                  tickLabelPosition={props.tickLabelPosition}
-                  tickPosition={props.tickPosition}
-                />
-              </ChartsSvgLayer>
-            </ChartsLayerContainer>
-          </Unstable_ChartsRadialDataProvider>
+            <Toolbar>
+              <Tooltip title="Print">
+                <ChartsToolbarPrintExportTrigger
+                  render={<ToolbarButton render={<IconButton size="small" />} />}
+                  options={{ fileName: 'ChartWithCustomToolbar' }}
+                >
+                  <PrintIcon />
+                </ChartsToolbarPrintExportTrigger>
+              </Tooltip>
+              <Tooltip title="Export as PNG">
+                <ChartsToolbarImageExportTrigger
+                  render={<ToolbarButton render={<IconButton size="small" />} />}
+                  options={{ type: 'image/png', fileName: 'ChartWithCustomToolbar' }}
+                >
+                  <PhotoIcon />
+                </ChartsToolbarImageExportTrigger>
+              </Tooltip>
+            </Toolbar>
+            <Wrapper>
+              <ChartsLayerContainer>
+                <ChartsSvgLayer>
+                  <Unstable_ChartsRadialGrid rotation radius />
+                  <ChartsRadiusAxis
+                    angle={props.angle}
+                    disableLine={props.disableLine}
+                    disableTicks={props.disableTicks}
+                    tickSize={props.tickSize}
+                    tickLabelPosition={props.tickLabelPosition}
+                    tickPosition={props.tickPosition}
+                  />
+                </ChartsSvgLayer>
+              </ChartsLayerContainer>
+            </Wrapper>
+          </Unstable_ChartsRadialDataProviderPro>
         </Box>
       )}
-      getCode={({ props }) => `<Unstable_ChartsRadialDataProvider
+      getCode={({ props }) => `<Unstable_ChartsRadialDataProviderPro
   rotationAxis={[{
     startAngle: ${props.startAngle},
     endAngle: ${props.endAngle},
@@ -120,7 +155,7 @@ ${[
   .map((line) => `    ${line}`)
   .join('\n')}
   />
-</Unstable_ChartsRadialDataProvider>`}
+</Unstable_ChartsRadialDataProviderPro>`}
     />
   );
 }

@@ -45,6 +45,7 @@ const ChartsToolbarPrintExportTrigger = forwardRef<
   const apiRef = useChartProApiContext();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(options);
     apiRef.current.exportAsPrint(options);
     onClick?.(event);
   };

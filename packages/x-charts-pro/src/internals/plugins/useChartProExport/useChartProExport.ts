@@ -25,7 +25,7 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ ins
   const { chartRootRef, chartsLayerContainerRef } = instance;
   const exportAsPrint = async (options?: ChartPrintExportOptions) => {
     const chartRoot = chartRootRef.current;
-
+console.log(chartRoot);
     if (chartRoot) {
       const enableAnimation = instance.disableAnimation();
       try {
