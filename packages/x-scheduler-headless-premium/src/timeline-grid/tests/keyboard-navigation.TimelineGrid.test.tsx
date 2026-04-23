@@ -538,7 +538,17 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(() =>
         render(
           <ErrorBoundary ref={errorRef}>
-            <Grid columnTypes={['events']} />
+            <EventTimelinePremiumProvider
+              events={[]}
+              resources={resources}
+              visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            >
+              <TimelineGrid.Root columnTypes={['events']}>
+                <TimelineGrid.SubGrid>
+                  <TimelineGrid.TitleRow />
+                </TimelineGrid.SubGrid>
+              </TimelineGrid.Root>
+            </EventTimelinePremiumProvider>
           </ErrorBoundary>,
         ),
       ).toErrorDev(expectedError);
