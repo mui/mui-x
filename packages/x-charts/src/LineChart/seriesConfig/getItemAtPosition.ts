@@ -33,7 +33,13 @@ function getBracketIndices(
     if (index === -1) {
       return null;
     }
-    return { left: index, right: index };
+
+    const axisPointValue = getValueToPositionMapper(xAxis.scale)(axisData[index]);
+
+    if (axisPointValue <= pointX) {
+      return index === axisData.length - 1 ? null : { left: index, right: index + 1 };
+    }
+    return index === 0 ? null : { left: index - 1, right: index };
   }
 
   // For continuous axes, find the two adjacent data points surrounding pointX.
