@@ -265,5 +265,6 @@
   "265": "MUI X Scheduler: `TimelineGridEventContext` is missing. TimelineGrid Event parts must be placed within <TimelineGrid.Event />.",
   "266": "MUI X Scheduler: `TimelineGridEventRowContext` is missing. <TimelineGrid.Event /> part must be placed within <TimelineGrid.EventRow />.",
   "267": "MUI X Scheduler: TimelineGridRootContext is missing. TimelineGrid parts must be placed within <TimelineGrid.Root />.",
-  "268": "MUI X Scheduler: TimelineGridSubGridContext is missing. <TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be placed within <TimelineGrid.SubGrid />."
+  "268": "MUI X Scheduler: TimelineGridSubGridContext is missing. <TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be placed within <TimelineGrid.SubGrid />.",
+  "269": "MUI X Charts: getAxisIndex is not implemented for polar continuous axes. This function only supports ordinal (band/point) scales."
 }
