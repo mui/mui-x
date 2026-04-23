@@ -85,8 +85,8 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
 
   const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => ({
     surfaceType: 'timeline' as const,
-    start: viewConfig.start,
-    end: adapter.addMinutes(viewConfig.start, creationConfig.duration),
+    start: presetConfig.start,
+    end: adapter.addMinutes(presetConfig.start, creationConfig.duration),
     resourceId,
     lockSurfaceType: true,
   }));
