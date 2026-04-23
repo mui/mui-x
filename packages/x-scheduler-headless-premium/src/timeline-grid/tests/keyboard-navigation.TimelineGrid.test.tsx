@@ -358,6 +358,66 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(events[1]).to.have.attribute('tabindex', '-1');
     });
 
+    it('should update `focusedCell` when focus lands on a descendant of the row', () => {
+      const focusedCellRef: { current: TimelineGridCellCoordinates | null } = { current: null };
+      function FocusedCellInspector() {
+        const { focusedCell } = useTimelineGridRootContext();
+        React.useEffect(() => {
+          focusedCellRef.current = focusedCell;
+        }, [focusedCell]);
+        return null;
+      }
+      render(
+        <Grid>
+          <FocusedCellInspector />
+        </Grid>,
+      );
+
+      const event = getEventsRows()[1].querySelector('[data-testid^="event-"]') as HTMLElement;
+      act(() => {
+        event.focus();
+      });
+
+      expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 1 });
+    });
+
+    it('should not reset `focusedCell` on a null-relatedTarget blur when focus stays inside the grid', async () => {
+      const focusedCellRef: { current: TimelineGridCellCoordinates | null } = { current: null };
+      function FocusedCellInspector() {
+        const { focusedCell } = useTimelineGridRootContext();
+        React.useEffect(() => {
+          focusedCellRef.current = focusedCell;
+        }, [focusedCell]);
+        return null;
+      }
+      render(
+        <Grid>
+          <FocusedCellInspector />
+          <button type="button" data-testid="inside-button">
+            inside
+          </button>
+        </Grid>,
+      );
+
+      const eventsRows = getEventsRows();
+      act(() => {
+        eventsRows[0].focus();
+      });
+      expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 0 });
+
+      // Programmatic blur yields `relatedTarget === null` (same shape as portal
+      // transitions and window-blur). Focus moves to an element inside the grid
+      // that does not update `focusedCell`, so only the deferred recheck can
+      // prevent clearing.
+      act(() => {
+        eventsRows[0].blur();
+        screen.getByTestId('inside-button').focus();
+      });
+      await Promise.resolve();
+
+      expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 0 });
+    });
+
     it('should not clobber a sibling row state when a previously focused row unmounts', async () => {
       const focusedCellRef: { current: TimelineGridCellCoordinates | null } = { current: null };
       function FocusedCellInspector() {
@@ -447,6 +507,42 @@ describe('TimelineGrid keyboard navigation', () => {
                 <TimelineGrid.TitleRow />
               </TimelineGrid.Root>
             </EventTimelinePremiumProvider>
+          </ErrorBoundary>,
+        ),
+      ).toErrorDev(expectedError);
+
+      expect((errorRef.current as any).errors).to.have.length(1);
+      expect((errorRef.current as any).errors[0].toString()).to.include(errorMessage);
+    });
+
+    it('should throw when `columnTypes` contains a duplicate entry', () => {
+      const errorRef = React.createRef<any>();
+      const errorMessage =
+        'MUI X Scheduler: The `columnTypes` prop of <TimelineGrid.Root /> contains a duplicate entry "events".';
+      const expectedError = reactMajor < 19 ? ['The above error occurred in the'] : [errorMessage];
+
+      expect(() =>
+        render(
+          <ErrorBoundary ref={errorRef}>
+            <Grid columnTypes={['events', 'events']} />
+          </ErrorBoundary>,
+        ),
+      ).toErrorDev(expectedError);
+
+      expect((errorRef.current as any).errors).to.have.length(1);
+      expect((errorRef.current as any).errors[0].toString()).to.include(errorMessage);
+    });
+
+    it('should throw when a row uses a `columnType` not listed in `columnTypes`', () => {
+      const errorRef = React.createRef<any>();
+      const errorMessage =
+        'MUI X Scheduler: The column type "title" is not listed in the `columnTypes` prop of <TimelineGrid.Root />.';
+      const expectedError = reactMajor < 19 ? ['The above error occurred in the'] : [errorMessage];
+
+      expect(() =>
+        render(
+          <ErrorBoundary ref={errorRef}>
+            <Grid columnTypes={['events']} />
           </ErrorBoundary>,
         ),
       ).toErrorDev(expectedError);
