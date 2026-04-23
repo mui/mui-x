@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/gauge-container',
+    'docs/translations/api-docs/charts/gauge-container',
     false,
     /\.\/gauge-container.*\.json$/,
   );
