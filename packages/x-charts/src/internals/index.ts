@@ -111,3 +111,4 @@ export * from './identifierSerializer';
 export * from './identifierCleaner';
 
 export { evaluateCurveAtAngle } from '../LineChart/seriesConfig/curveEvaluation';
+export { default as getLineItemAtPosition } from '../LineChart/seriesConfig/getItemAtPosition';
