@@ -366,7 +366,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiDesktopDateTimeRangePicker",
   "forwardsRefTo": "HTMLDivElement",
