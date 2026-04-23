@@ -26,9 +26,6 @@ describeAdapters(
       expect(inputRoot).to.have.attribute('aria-invalid', 'true');
 
       await view.selectSectionAsync('day');
-
-      // Returns to valid after refocusing (incomplete date)
-      expect(inputRoot).to.have.attribute('aria-invalid', 'false');
       await view.user.keyboard('05');
 
       await view.selectSectionAsync('year');

@@ -38,12 +38,13 @@ export const validateDateTime: Validator<
   PickerValue,
   DateTimeValidationError,
   ValidateDateTimeProps
-> = ({ adapter, value, timezone, props }) => {
+> = ({ adapter, value, timezone, props, isPartiallyFilled }) => {
   const dateValidationResult = validateDate({
     adapter,
     value,
     timezone,
     props,
+    isPartiallyFilled,
   });
 
   if (dateValidationResult !== null) {
@@ -55,6 +56,7 @@ export const validateDateTime: Validator<
     value,
     timezone,
     props,
+    isPartiallyFilled,
   });
 };
 

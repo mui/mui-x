@@ -17,10 +17,7 @@ describeAdapters(
 
       const fieldRoot = getFieldInputRoot();
 
-      // While focused and partially filled, it should not be invalid yet
-      expect(fieldRoot).to.have.attribute('aria-invalid', 'false');
-
-      // Blur the sections container to trigger validation
+      // Blur the sections container to trigger validation in accessible DOM
       await view.user.tab();
 
       expect(fieldRoot).to.have.attribute('aria-invalid', 'true');

@@ -1,9 +1,12 @@
 'use client';
+import * as React from 'react';
 import {
+  PickerManagerError,
   PickerManagerFieldInternalProps,
   useControlledValue,
   useFieldInternalPropsWithDefaults,
   UseFieldReturnValue,
+  usePickerPrivateContext,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import { UseTextFieldBaseForwardedProps, useTextFieldProps } from './useTextFieldProps';
@@ -58,6 +61,7 @@ export function useMultiInputRangeField<
 >(
   parameters: UseMultiInputRangeFieldParameters<TManager, TTextFieldProps, TRootProps>,
 ): UseMultiInputRangeFieldReturnValue<TTextFieldProps, TRootProps> {
+  type TError = PickerManagerError<TManager>;
   const { manager, internalProps, rootProps, startTextFieldProps, endTextFieldProps } = parameters;
 
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
@@ -93,11 +97,14 @@ export function useMultiInputRangeField<
     valueManager: manager.internal_valueManager,
   });
 
+  const { isPartiallyFilled } = usePickerPrivateContext();
+
   const validation = useValidation({
     props: internalPropsWithDefaults,
     value,
     timezone,
     validator: manager.validator,
+    isPartiallyFilled,
     onError: internalPropsWithDefaults.onError,
   });
 
@@ -119,7 +126,27 @@ export function useMultiInputRangeField<
 
   const rootResponse = useMultiInputRangeFieldRootProps(rootProps);
 
-  const startTextFieldResponse = useTextFieldProps<TManager, TTextFieldProps>({
+  const startOnError = React.useCallback(
+    (error: any, val: any) => {
+      internalPropsWithDefaults.onError?.(
+        [error, validation.validationError[1]],
+        [val, internalPropsWithDefaults.value?.[1] ?? null],
+      );
+    },
+    [internalPropsWithDefaults, validation.validationError],
+  );
+
+  const endOnError = React.useCallback(
+    (error: any, val: any) => {
+      internalPropsWithDefaults.onError?.(
+        [validation.validationError[0], error],
+        [internalPropsWithDefaults.value?.[0] ?? null, val],
+      );
+    },
+    [internalPropsWithDefaults, validation.validationError],
+  );
+
+  const startTextFieldResponse = useTextFieldProps<TManager, TTextFieldProps, TError>({
     valueType: manager.valueType,
     position: 'start',
     value,
@@ -129,9 +156,11 @@ export function useMultiInputRangeField<
     forwardedProps: startTextFieldProps,
     selectedSectionProps: selectedSectionsResponse.start,
     sharedInternalProps,
+    isPartiallyFilled,
+    onError: startOnError,
   });
 
-  const endTextFieldResponse = useTextFieldProps<TManager, TTextFieldProps>({
+  const endTextFieldResponse = useTextFieldProps<TManager, TTextFieldProps, TError>({
     valueType: manager.valueType,
     position: 'end',
     value,
@@ -141,6 +170,8 @@ export function useMultiInputRangeField<
     forwardedProps: endTextFieldProps,
     selectedSectionProps: selectedSectionsResponse.end,
     sharedInternalProps,
+    isPartiallyFilled,
+    onError: endOnError,
   });
 
   return {

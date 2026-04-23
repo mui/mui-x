@@ -165,6 +165,22 @@ export const getRangeFieldValueManager = ({
       ...dateRangeSections.endDate.map((section) => ({ ...section, value: '' })),
     ];
   },
+  getIsPartiallyFilled: (sections) => {
+    const startSections = sections.filter(
+      (section) => (section as FieldRangeSection).dateName === 'start',
+    );
+    const endSections = sections.filter(
+      (section) => (section as FieldRangeSection).dateName === 'end',
+    );
+
+    const startFilled = startSections.filter((section) => section.value !== '').length;
+    const endFilled = endSections.filter((section) => section.value !== '').length;
+
+    return [
+      startFilled > 0 && startFilled < startSections.length,
+      endFilled > 0 && endFilled < endSections.length,
+    ] as [boolean, boolean];
+  },
 });
 
 function getActiveDateIndex(activeSection: FieldRangeSection | null): 0 | 1 {

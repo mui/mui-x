@@ -30,11 +30,10 @@ import type { UseMultiInputRangeFieldTextFieldProps } from './useMultiInputRange
 export function useTextFieldProps<
   TManager extends PickerAnyRangeManager,
   TForwardedProps extends UseTextFieldBaseForwardedProps,
+  TError,
 >(
-  parameters: UseTextFieldPropsParameters<TManager, TForwardedProps>,
+  parameters: UseTextFieldPropsParameters<TManager, TForwardedProps, TError>,
 ): UseMultiInputRangeFieldTextFieldProps<TForwardedProps> {
-  type TError = PickerManagerError<TManager>;
-
   const pickerContext = useNullablePickerContext();
   const fieldPrivateContext = useNullableFieldPrivateContext();
   const pickerPrivateContext = usePickerPrivateContext();
@@ -54,6 +53,8 @@ export function useTextFieldProps<
     onChange,
     autoFocus,
     validation,
+    isPartiallyFilled,
+    onError,
   } = parameters;
 
   let useManager: () => PickerAnyManager;
@@ -118,16 +119,19 @@ export function useTextFieldProps<
 
       const context: FieldChangeHandlerContext<TError> = {
         ...rawContext,
-        validationError: validation.getValidationErrorForNewValue(newRange),
+        validationError: validation.getValidationErrorForNewValue(newRange, isPartiallyFilled),
       };
 
       onChange(newRange, context);
     },
   );
 
+  const positionIndex = position === 'start' ? 0 : 1;
+  const rangeValidationError = validation.validationError[positionIndex];
+
   const allProps = {
     value: position === 'start' ? value[0] : value[1],
-    error: position === 'start' ? !!validation.validationError[0] : !!validation.validationError[1],
+    error: rangeValidationError ? true : undefined,
     id: `${pickerPrivateContext.labelId}-${position}`,
     autoFocus: position === 'start' ? autoFocus : undefined,
     ...forwardedProps,
@@ -137,6 +141,7 @@ export function useTextFieldProps<
     onFocus: handleFocus,
     onKeyDown: handleKeyDown,
     onChange: handleChange,
+    onError,
   };
 
   const { clearable, onClear, openPickerAriaLabel, ...fieldResponse } = useField({
@@ -182,6 +187,7 @@ export function useTextFieldProps<
 interface UseTextFieldPropsParameters<
   TManager extends PickerAnyRangeManager,
   TForwardedProps extends UseTextFieldBaseForwardedProps,
+  TError,
 > {
   valueType: PickerValueType;
   value: PickerRangeValue;
@@ -192,6 +198,8 @@ interface UseTextFieldPropsParameters<
   selectedSectionProps: UseMultiInputFieldSelectedSectionsResponseItem;
   position: RangePosition;
   validation: UseValidationReturnValue<PickerRangeValue, PickerManagerError<TManager>>;
+  isPartiallyFilled: boolean | [boolean, boolean];
+  onError: TError;
 }
 
 export interface UseTextFieldBaseForwardedProps {
