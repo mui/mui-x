@@ -113,7 +113,7 @@ export default chatApiPages;
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/chat',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/chat',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/chat',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: [],

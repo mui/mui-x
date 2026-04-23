@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/pie-chart-pro',
+    'docs/translations/api-docs/charts/pie-chart-pro',
     false,
     /\.\/pie-chart-pro.*\.json$/,
   );
