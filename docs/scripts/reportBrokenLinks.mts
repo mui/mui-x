@@ -11,10 +11,7 @@ async function main() {
       // TODO: Seed crawler with stored links from e.g. mui.com/x/link-structure.json
       // /^\/(base-ui|joy-ui|store|toolpad)(\/|$)/,
     ],
-    knownTargetsDownloadUrl: [
-      // TODO: replace with https://mui.com/material-ui/link-structure.json when available
-      'https://material-ui.netlify.app/material-ui/link-structure.json',
-    ],
+    knownTargetsDownloadUrl: ['https://v7.mui.com/material-ui/link-structure.json'],
   });
 
   process.exit(issues.length);
