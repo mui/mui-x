@@ -1,8 +1,12 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docs/config';
-import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
-import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
+import {
+  ProjectSettings,
+  ComponentReactApi,
+  HookReactApi,
+  findApiPages,
+} from '@mui/internal-api-docs-builder';
 import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
@@ -109,7 +113,7 @@ export default chatApiPages;
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/chat',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/chat',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/chat',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: [],

@@ -1,4 +1,4 @@
-import 'docsx/src/bootstrap';
+import 'docs/src/bootstrap';
 // --- Post bootstrap -----
 import * as React from 'react';
 import type { DocsAppProps } from '@mui/internal-core-docs/DocsApp';
@@ -10,17 +10,22 @@ import {
 } from '@mui/internal-core-docs/DocsApp';
 import { ThemeProvider } from '@mui/internal-core-docs/ThemeContext';
 import findActivePage from '@mui/internal-core-docs/findActivePage';
-import getProductInfoFromUrl from '@mui/internal-core-docs/getProductInfoFromUrl';
+import { getProductInfoFromUrl } from '@mui/internal-core-docs/utils';
 import { pathnameToLanguage } from '@mui/internal-core-docs/helpers';
 import { Translations } from '@mui/internal-core-docs/i18n';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
-import xPages from 'docsx/data/pages'; // DO NOT REMOVE
-import { postProcessImport } from 'docsx/src/modules/utils/postProcessImport';
+import xPages from 'docs/data/pages'; // DO NOT REMOVE
+import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-
-import * as config from '../config';
+import {
+  LANGUAGES,
+  LANGUAGES_SSR,
+  LANGUAGES_IGNORE_PAGES,
+  LANGUAGES_IN_PROGRESS,
+} from '@mui/internal-core-docs/constants';
+import { DocsConfig } from '@mui/internal-core-docs/DocsProvider';
 
 export { fontClasses } from '@mui/internal-core-docs/nextFonts';
 
@@ -239,6 +244,13 @@ const CSB_CONFIG = {
   postProcessImport,
 };
 
+const DOCS_CONFIG: DocsConfig = {
+  LANGUAGES,
+  LANGUAGES_SSR,
+  LANGUAGES_IN_PROGRESS,
+  LANGUAGES_IGNORE_PAGES,
+};
+
 function useThemeWrapper() {
   const router = useRouter();
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
@@ -259,7 +271,7 @@ export default function MyApp(
       {...props}
       Component={Component}
       pageProps={pageProps}
-      docsConfig={config}
+      docsConfig={DOCS_CONFIG}
       serviceWorkerPath="/x/sw.js"
       activePage={activePage}
       activePageParents={activePageParents}

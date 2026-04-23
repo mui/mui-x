@@ -8,8 +8,8 @@ import {
   getMuiName,
   parseFile,
   toGitHubPath,
-} from '@mui-internal/api-docs-builder/buildApiUtils';
-import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
+  findPagesMarkdown,
+} from '@mui/internal-api-docs-builder';
 
 export function getComponentInfo(filename: string): ComponentInfo {
   const { name } = extractPackageFile(filename);
@@ -80,7 +80,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         },
       ];
     },
-    layoutConfigPath: 'docsx/src/modules/utils/dataGridLayoutConfig',
+    layoutConfigPath: 'docs/src/modules/utils/dataGridLayoutConfig',
   };
 }
 

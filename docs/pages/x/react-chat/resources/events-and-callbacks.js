@@ -1,5 +1,5 @@
-import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import * as pageProps from 'docsx/data/chat/resources/events-and-callbacks/events-and-callbacks.md?muiMarkdown';
+import { MarkdownDocs } from '@mui/internal-core-docs/MarkdownDocs';
+import * as pageProps from 'docs/data/chat/resources/events-and-callbacks/events-and-callbacks.md?muiMarkdown';
 
 export default function Page() {
   return <MarkdownDocs {...pageProps} />;

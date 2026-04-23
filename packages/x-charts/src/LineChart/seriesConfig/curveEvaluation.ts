@@ -1,5 +1,6 @@
 import type { CurveType } from '../../models/curve';
 import { getCurveFactory } from '../../internals/getCurve';
+import { cubicRoots } from '../../internals/cubiqSolver';
 
 /**
  * A straight line segment.
@@ -78,8 +79,20 @@ function cubicBezier(t: number, p0: number, p1: number, p2: number, p3: number):
 }
 
 /**
- * Find parameter t such that the segment's x(t) ≈ targetX using bisection.
- * 20 iterations gives ~1e-6 precision relative to the segment's x range.
+ * Get polynomials coefficient of a cubic Bezier curve.
+ * P(t) = rep[0] * t**3  + rep[1] * t**2 + rep[2] * t + rep[3]
+ */
+function cubicBezierCoeffs(
+  p0: number,
+  p1: number,
+  p2: number,
+  p3: number,
+): [number, number, number, number] {
+  return [-p0 + 3 * p1 - 3 * p2 + p3, 3 * p0 - 6 * p1 + 3 * p2, -3 * p0 + 3 * p1, p0];
+}
+
+/**
+ * Find parameter t such that the segment's x(t) ≈ targetX
  */
 function findTForX(segment: CurveSegment, targetX: number): number {
   if (!isBezierSegment(segment)) {
@@ -88,22 +101,17 @@ function findTForX(segment: CurveSegment, targetX: number): number {
     return dx === 0 ? 0 : (targetX - segment.x0) / dx;
   }
 
-  // Cubic bezier — bisect.
-  let lo = 0;
-  let hi = 1;
-  for (let iter = 0; iter < 20; iter += 1) {
-    const mid = (lo + hi) / 2;
-    const x = cubicBezier(mid, segment.x0, segment.cpx1, segment.cpx2, segment.x1);
-    if (x < targetX) {
-      lo = mid;
-    } else {
-      hi = mid;
-    }
-    if (Math.abs(x - targetX) < 1) {
-      return (lo + hi) / 2;
-    }
+  const xBezierCoeffs = cubicBezierCoeffs(segment.x0, segment.cpx1, segment.cpx2, segment.x1);
+
+  const polyToSolve: [number, number, number, number] = [...xBezierCoeffs];
+  polyToSolve[3] -= targetX;
+
+  const roots = cubicRoots(polyToSolve);
+  if (roots.length > 0) {
+    return roots[0];
   }
-  return (lo + hi) / 2;
+
+  return -1;
 }
 
 /** Evaluate the segment's y at parameter t. */

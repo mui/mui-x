@@ -5,8 +5,13 @@ import * as semver from 'semver';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { withDeploymentConfig } from '@mui/internal-docs-infra/withDocsInfra';
+import {
+  LANGUAGES,
+  LANGUAGES_SSR,
+  LANGUAGES_IGNORE_PAGES,
+  LANGUAGES_IN_PROGRESS,
+} from '@mui/internal-core-docs/constants';
 import { findPages } from './src/modules/utils/find';
-import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
 // eslint-disable-next-line import/extensions
@@ -37,10 +42,6 @@ const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
 
 const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
-const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
-const MONOREPO_ALIASES = {
-  '@mui/internal-core-docs': path.resolve(MONOREPO_PATH, './packages-internal/core-docs/src'),
-};
 
 function loadPkg(pkgPath: string): { version: string } {
   const pkgContent = fs.readFileSync(path.resolve(WORKSPACE_ROOT, pkgPath, 'package.json'), 'utf8');
@@ -75,9 +76,8 @@ export default withDeploymentConfig({
     esmExternals: undefined,
   },
   transpilePackages: [
-    // TODO, those shouldn't be needed in the first place
-    '@mui/monorepo', // Migrate everything to @mui/internal-core-docs until the @mui/monorepo dependency becomes obsolete
-    '@mui/internal-core-docs', // needed to fix slashes in the generated links (https://github.com/mui/mui-x/pull/13713#issuecomment-2205591461, )
+    // This is needed because the package has next.js imports like `next/script` that need to be transpiled.
+    '@mui/internal-core-docs',
   ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
@@ -119,21 +119,6 @@ export default withDeploymentConfig({
     return {
       ...config,
       plugins,
-      resolve: {
-        ...config.resolve,
-        alias: {
-          ...config.resolve.alias,
-          ...MONOREPO_ALIASES,
-          '@mui/x-license': path.resolve(currentDirectory, '../packages/x-license/src'),
-          '@mui/x-chat-headless': path.resolve(currentDirectory, '../packages/x-chat-headless/src'),
-          '@mui/x-chat': path.resolve(currentDirectory, '../packages/x-chat/src'),
-          'docs/src/modules/utils/mapApiPageTranslations': path.resolve(
-            'src/modules/utils/mapApiPageTranslations.js',
-          ),
-          docs: path.resolve(MONOREPO_PATH, './docs'),
-          docsx: path.resolve(currentDirectory, '../docs'),
-        },
-      },
       module: {
         ...config.module,
         rules: config.module.rules.concat([
@@ -160,11 +145,6 @@ export default withDeploymentConfig({
                 ],
               },
             ],
-          },
-          {
-            test: /\.+(js|jsx|mjs|ts|tsx)$/,
-            include: [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/],
-            use: options.defaultLoaders.babel,
           },
           {
             test: /\.(ts|tsx)$/,

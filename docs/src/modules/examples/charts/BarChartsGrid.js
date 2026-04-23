@@ -1,10 +1,10 @@
-import SimpleBarChart from 'docsx/data/charts/bar-demo/SimpleBarChart';
-import StackedBarChart from 'docsx/data/charts/bar-demo/StackedBarChart';
-import MixedBarChart from 'docsx/data/charts/bar-demo/MixedBarChart';
-import PositiveAndNegativeBarChart from 'docsx/data/charts/bar-demo/PositiveAndNegativeBarChart';
-import BarChartStackedBySign from 'docsx/data/charts/bar-demo/BarChartStackedBySign';
-import BiaxialBarChart from 'docsx/data/charts/bar-demo/BiaxialBarChart';
-import PopulationPyramidBarChart from 'docsx/data/charts/bar-demo/PopulationPyramidBarChart';
+import SimpleBarChart from 'docs/data/charts/bar-demo/SimpleBarChart';
+import StackedBarChart from 'docs/data/charts/bar-demo/StackedBarChart';
+import MixedBarChart from 'docs/data/charts/bar-demo/MixedBarChart';
+import PositiveAndNegativeBarChart from 'docs/data/charts/bar-demo/PositiveAndNegativeBarChart';
+import BarChartStackedBySign from 'docs/data/charts/bar-demo/BarChartStackedBySign';
+import BiaxialBarChart from 'docs/data/charts/bar-demo/BiaxialBarChart';
+import PopulationPyramidBarChart from 'docs/data/charts/bar-demo/PopulationPyramidBarChart';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
 
 const chartData = [

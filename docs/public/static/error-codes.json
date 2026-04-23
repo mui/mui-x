@@ -254,5 +254,7 @@
   "253": "MUI X Chat: useChatStore must be used within a <ChatProvider> component",
   "254": "Stream processing failed.",
   "255": "MUI X Chat: useChatRuntimeContext must be used within a <ChatProvider> component",
-  "256": "MUI X Chat: useChatStoreContext must be used within a <ChatProvider> component"
+  "256": "MUI X Chat: useChatStoreContext must be used within a <ChatProvider> component",
+  "257": "MUI X Scheduler: CalendarGridDayRowContext is missing. <CalendarGrid.DayCell /> and <CalendarGrid.DayEvent /> must be placed within <CalendarGrid.DayRow />. Ensure the component hierarchy is correct.",
+  "258": "MUI X Charts: Radial line series with id=\"%s\" has no data. The chart cannot render this series without data. Provide a data property to the series or use the dataset prop."
 }

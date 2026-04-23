@@ -1,11 +1,11 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
-import {
-  type CartesianSeriesType,
-  type CommonDefaultizedProps,
-  type CommonSeriesType,
-  type SeriesId,
-  type StackableSeriesType,
+import type {
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  SeriesId,
+  StackableSeriesType,
 } from './common';
 import { type DatasetElementType } from './config';
 import { type CurveType } from '../curve';
@@ -35,9 +35,10 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 
 export type MarkShape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
 
-export interface LineSeriesType
-  extends CommonSeriesType<number | null, 'line'>, CartesianSeriesType, StackableSeriesType {
-  type: 'line';
+/**
+ * @internal The series type shared by the line and radialLine charts
+ */
+export interface CommonLineSeriesType {
   /**
    * Data associated to the line.
    */
@@ -97,11 +98,6 @@ export interface LineSeriesType
    */
   connectNulls?: boolean;
   /**
-   * Defines how stacked series handle negative values.
-   * @default 'none'
-   */
-  stackOffset?: StackOffsetType;
-  /**
    * The value of the line at the base of the series area.
    *
    * - `'min'` the area will fill the space **under** the line.
@@ -111,6 +107,20 @@ export interface LineSeriesType
    * @default 0
    */
   baseline?: number | 'min' | 'max';
+}
+
+export interface LineSeriesType
+  extends
+    CommonSeriesType<number | null, 'line'>,
+    CartesianSeriesType,
+    StackableSeriesType,
+    CommonLineSeriesType {
+  type: 'line';
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'none'
+   */
+  stackOffset?: StackOffsetType;
 }
 
 /**

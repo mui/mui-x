@@ -9,7 +9,7 @@ import {
   randomTraderName,
 } from '@mui/x-data-grid-generator';
 import * as ReactDOM from 'react-dom';
-import { GridData } from 'docsx/data/data-grid/virtualization/ColumnVirtualizationGrid';
+import { GridData } from 'docs/data/data-grid/virtualization/ColumnVirtualizationGrid';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Brand ID' },

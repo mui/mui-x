@@ -82,6 +82,7 @@ ChartsToolbarPrintExportTrigger.propTypes = {
    * A function to customize the rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
   style: PropTypes.object,
   tabIndex: PropTypes.number,
 } as any;

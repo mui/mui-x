@@ -1,6 +1,6 @@
 import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+import { ApiPage } from '@mui/internal-core-docs/ApiPage';
+import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
 import jsonPageContent from './message-list-root.json';
 
 export default function Page(props) {
@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/message-list-root',
+    'docs/translations/api-docs/chat/message-list-root',
     false,
     /\.\/message-list-root.*\.json$/,
   );

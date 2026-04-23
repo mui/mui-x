@@ -15,7 +15,7 @@
     "@fontsource/roboto": "^5.2.6",
     "@mui/icons-material": "^9.0.0",
     "@mui/material": "^9.0.0",
-    "@mui/x-data-grid": "^9.0.0",
+    "@mui/x-data-grid": "^9.0.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
