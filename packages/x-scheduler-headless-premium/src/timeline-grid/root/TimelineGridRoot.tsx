@@ -4,7 +4,7 @@ import { useStore } from '@base-ui/utils/store';
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridRootCssVars } from './TimelineGridRootCssVars';
 import type {
   TimelineGridCellCoordinates,
@@ -44,12 +44,12 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const resources = useStore(
     store,
     schedulerOccurrenceSelectors.groupedByResourceList,
-    viewConfig.start,
-    viewConfig.end,
+    presetConfig.start,
+    presetConfig.end,
   );
 
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -99,7 +99,7 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
         role: 'grid',
         onBlur: handleBlur,
         style: {
-          [TimelineGridRootCssVars.unitCount]: viewConfig.unitCount,
+          [TimelineGridRootCssVars.unitCount]: presetConfig.unitCount,
           [TimelineGridRootCssVars.rowCount]: resources.length,
         } as React.CSSProperties,
       },

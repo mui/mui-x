@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/message-author-label',
+    'docs/translations/api-docs/chat/message-author-label',
     false,
     /\.\/message-author-label.*\.json$/,
   );

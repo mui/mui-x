@@ -426,6 +426,61 @@ In the example below, `onChange` will only be called if the date is valid and it
 
 {{"demo": "LifeCycleIgnoreInvalidValue.js"}}
 
+## Picker inside a Dialog
+
+When a picker is rendered inside a MUI `Dialog`, clicking outside the picker's popup to close it may stop working.
+This happens because of how React portals interact with event propagation.
+
+### Why this happens
+
+`Dialog` renders its content into a portal attached to `document.body`.
+React's synthetic event system, however, bubbles events through the **component tree**, not the DOM tree.
+This means a click inside the Dialog still propagates up through any ancestor components in React — including a parent with an `onClick` handler — even though those ancestors are DOM-siblings of the Dialog, not parents of it.
+
+A common reaction is to add `onClick={e => e.stopPropagation()}` to the Dialog itself to prevent those ancestor handlers from firing.
+That stops the propagation globally, which also prevents the picker's click-away detection from working.
+Beyond the picker, it silently breaks any other document-level listener on the page: `ClickAwayListener`, global keyboard-shortcut libraries, analytics, Radix/Floating UI dismiss behavior, and so on.
+
+### Recommended fixes
+
+Instead of stopping propagation on the Dialog, address the problem at the source.
+
+#### 1. Filter inside the ancestor handler (preferred)
+
+Check whether the click originated from inside a dialog before running the handler:
+
+```tsx
+<ParentComponent
+  onClick={(event) => {
+    if ((event.target as Element).closest('[role="dialog"]')) {
+      return;
+    }
+    // your handler
+  }}
+>
+  <EditInDialogButton />
+</ParentComponent>
+```
+
+This is scoped, non-destructive, and leaves all document-level listeners intact.
+
+#### 2. Scope stopPropagation to the trigger button only
+
+If you control the trigger, stop propagation on the button itself rather than on the whole Dialog:
+
+```tsx
+<span onClick={(e) => e.stopPropagation()}>
+  <EditInDialogButton />
+</span>
+```
+
+The Dialog content is then never involved in propagation handling.
+
+:::warning
+Avoid placing `onClick={e => e.stopPropagation()}` on a Dialog or any large container.
+It will suppress click events for every listener registered above that element — including the picker's own close logic.
+:::
+
 ## Server interaction
 
 If the selected value is used to interact with the server, you might want to avoid sending all the intermediate states.

@@ -16,7 +16,7 @@ import {
 } from '@mui/x-scheduler-headless/constants';
 import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'TimelineGridEvent',
@@ -35,10 +35,10 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
-  const collectionStartTimestamp = adapter.getTime(viewConfig.start);
-  const collectionEndTimestamp = adapter.getTime(viewConfig.end);
+  const collectionStartTimestamp = adapter.getTime(presetConfig.start);
+  const collectionEndTimestamp = adapter.getTime(presetConfig.end);
   const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
 
   const getCursorPositionInElementMs: TimelineGridEventRowContext['getCursorPositionInElementMs'] =
@@ -74,7 +74,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
         const newStartDate = addOffsetToDate(
-          viewConfig.start,
+          presetConfig.start,
           cursorOffsetMs - data.initialCursorPositionInEventMs,
         );
 
@@ -87,7 +87,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       if (data.source === 'TimelineGridEventResizeHandler') {
         if (data.side === 'start') {
           const cursorDate = addOffsetToDate(
-            viewConfig.start,
+            presetConfig.start,
             cursorOffsetMs - data.initialCursorPositionInEventMs,
           );
 
@@ -104,7 +104,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
           const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
           const cursorDate = addOffsetToDate(
-            viewConfig.start,
+            presetConfig.start,
             cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
           );
 
@@ -118,7 +118,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
       // Move a Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        return getDataFromOutside(data, addOffsetToDate(viewConfig.start, cursorOffsetMs));
+        return getDataFromOutside(data, addOffsetToDate(presetConfig.start, cursorOffsetMs));
       }
 
       return undefined;

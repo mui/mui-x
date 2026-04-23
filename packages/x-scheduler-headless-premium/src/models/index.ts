@@ -2,4 +2,4 @@ export type { TemporalSupportedObject } from '@mui/x-scheduler-headless/base-ui-
 
 export * from './preferences';
 export * from './timelineGrid';
-export * from './view';
+export * from './preset';

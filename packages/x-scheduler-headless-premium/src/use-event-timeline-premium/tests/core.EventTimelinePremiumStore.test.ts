@@ -39,8 +39,8 @@ describe('Core - EventTimelinePremiumStore', () => {
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
-        view: 'time',
-        views: ['time', 'days', 'weeks', 'months', 'years'],
+        preset: 'dayAndHour',
+        presets: ['dayAndHour', 'day', 'dayAndWeek', 'monthAndYear', 'year'],
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
         isLoading: false,
@@ -48,6 +48,86 @@ describe('Core - EventTimelinePremiumStore', () => {
       };
 
       expect(store.state).to.deep.equal(expectedState);
+    });
+
+    it('should sort the presets array into the canonical zoom order regardless of input order', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, presets: ['year', 'dayAndHour', 'monthAndYear'] },
+        adapter,
+      );
+
+      expect(store.state.presets).to.deep.equal(['dayAndHour', 'monthAndYear', 'year']);
+    });
+
+    it('should re-sort the presets array when parameters update', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, presets: ['dayAndHour', 'day'] },
+        adapter,
+      );
+
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, presets: ['year', 'day', 'dayAndHour'] },
+        adapter,
+      );
+
+      expect(store.state.presets).to.deep.equal(['dayAndHour', 'day', 'year']);
+    });
+
+    it('should dedupe the presets array', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, presets: ['day', 'day', 'dayAndHour', 'day'] },
+        adapter,
+      );
+
+      expect(store.state.presets).to.deep.equal(['dayAndHour', 'day']);
+    });
+
+    it('should throw when the presets array is empty', () => {
+      expect(
+        () => new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, presets: [] }, adapter),
+      ).to.throw(/empty `presets` prop/i);
+    });
+
+    it('should throw when the presets array contains unknown values', () => {
+      expect(
+        () =>
+          new EventTimelinePremiumStore(
+            {
+              ...DEFAULT_PARAMS,
+              presets: ['dayAndHour', 'notAPreset' as any, 'day'],
+            },
+            adapter,
+          ),
+      ).to.throw(/unknown preset\(s\)/i);
+    });
+
+    it('should throw at init when the initial preset is not included in the presets array', () => {
+      expect(
+        () =>
+          new EventTimelinePremiumStore(
+            { ...DEFAULT_PARAMS, preset: 'year', presets: ['dayAndHour', 'day'] },
+            adapter,
+          ),
+      ).to.throw(/is not part of the `presets` prop/i);
+    });
+
+    it('should throw via the subscribe listener when a later state mutation makes the current preset fall out of the presets array', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, defaultPreset: 'day', presets: ['dayAndHour', 'day'] },
+        adapter,
+      );
+
+      expect(() =>
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, defaultPreset: 'day', presets: ['dayAndHour'] },
+          adapter,
+        ),
+      ).to.throw(/is not part of the `presets` prop/i);
+
+      // Dispose the store's pending timers; otherwise the `nowUpdatedEveryMinute` interval
+      // would fire later, re-trigger the subscribe listener against the intentionally invalid
+      // state left by this test, and leak an unhandled error into the test run.
+      store.disposeEffect()();
     });
   });
 });

@@ -356,7 +356,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiMobileDateTimeRangePicker",
   "forwardsRefTo": "HTMLDivElement",

@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docsx/config';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
 import {
   ProjectSettings,
   ComponentReactApi,
@@ -112,7 +112,7 @@ export default dataGridApiPages;
     COMPONENT_API_PAGES.every((validPath) => !filename.endsWith(validPath)),
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/data-grid',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/data-grid',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/data-grid',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: ['debounceMs', 'quickFilterParser'],
