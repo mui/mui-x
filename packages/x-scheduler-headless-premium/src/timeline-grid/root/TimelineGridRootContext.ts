@@ -21,6 +21,7 @@ export interface TimelineGridRootContext {
   clearFocusedCellIfMatches: (columnType: TimelineGridColumnType, rowIndex: number) => void;
   /**
    * The ordered list of column types that are rendered in the grid.
+   * The non-empty tuple shape guarantees at least one column type at the type level.
    */
   columnTypes: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
 }

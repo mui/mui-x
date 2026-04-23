@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, act, ErrorBoundary, reactMajor } from '@mui/internal-test-utils';
+import { screen, within, act, ErrorBoundary, reactMajor } from '@mui/internal-test-utils';
 import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-headless-premium/event-timeline-premium-provider';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -95,15 +95,11 @@ describe('TimelineGrid keyboard navigation', () => {
   }
 
   function getTitleRows() {
-    return screen
-      .getAllByRole('row')
-      .filter((r) => r.getAttribute('data-testid')?.startsWith('title-'));
+    return within(screen.getAllByRole('rowgroup')[0]).getAllByRole('row');
   }
 
   function getEventsRows() {
-    return screen
-      .getAllByRole('row')
-      .filter((r) => r.getAttribute('data-testid')?.startsWith('events-'));
+    return within(screen.getAllByRole('rowgroup')[1]).getAllByRole('row');
   }
 
   describe('vertical navigation (ArrowUp / ArrowDown)', () => {
