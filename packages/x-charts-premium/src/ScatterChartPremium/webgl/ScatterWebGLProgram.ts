@@ -34,9 +34,19 @@ export class ScatterWebGLProgram {
     this.shaders.push(prog.vertexShader, prog.fragmentShader);
 
     this.vao = gl.createVertexArray();
+    gl.bindVertexArray(this.vao);
+
+    // a_position references the shared quad; bind it once while the VAO is active.
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.quadBuffer);
+    const aPosition = gl.getAttribLocation(this.program, 'a_position');
+    gl.enableVertexAttribArray(aPosition);
+    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+
     this.centers = this.setupInstancedAttribute('a_center', 2);
     this.sizes = this.setupInstancedAttribute('a_size', 1);
     this.colors = this.setupInstancedAttribute('a_color', 4);
+
+    gl.bindVertexArray(null);
   }
 
   setResolution(width: number, height: number) {
@@ -75,24 +85,16 @@ export class ScatterWebGLProgram {
     this.shaders.forEach((shader) => gl.deleteShader(shader));
   }
 
+  // Assumes the owning VAO is already bound.
   private setupInstancedAttribute(name: string, size: 1 | 2 | 4): InstancedBuffer {
-    const { gl, program, vao } = this;
+    const { gl, program } = this;
     const buffer = gl.createBuffer();
-
-    gl.bindVertexArray(vao);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.quadBuffer);
-    const aPosition = gl.getAttribLocation(program, 'a_position');
-    gl.enableVertexAttribArray(aPosition);
-    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     const location = gl.getAttribLocation(program, name);
     gl.enableVertexAttribArray(location);
     gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(location, 1);
-
-    gl.bindVertexArray(null);
 
     return { buffer, size, capacity: 0, lastUploaded: null };
   }
