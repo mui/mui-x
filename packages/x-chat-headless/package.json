@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-chat-headless",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0-alpha.1",
   "author": "MUI Team",
   "description": "The community edition of the headless MUI X Chat components, including core logic and unstyled UI.",
   "license": "MIT",

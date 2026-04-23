@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/f709101a0ec2bf0f9de40196669863653bf0979f/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/99fb0c874daeabc34c61c849cfea313a45a2466a/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -226,7 +226,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Build packages
-          command: pnpm release:build --concurrency 6
+          command: pnpm release:build --concurrency 5
       - run:
           name: Run e2e tests
           command: pnpm test:e2e

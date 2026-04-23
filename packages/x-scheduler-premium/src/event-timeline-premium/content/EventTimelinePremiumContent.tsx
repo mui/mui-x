@@ -218,6 +218,7 @@ function EventRowContent({
   placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
 }) {
   const store = useEventTimelinePremiumStoreContext();
+  const { schedulerId } = useEventTimelinePremiumStyledContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -240,7 +241,7 @@ function EventRowContent({
         <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
           <EventTimelinePremiumEvent
             occurrence={occurrence}
-            ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
+            ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
             variant="regular"
           />
         </EventDialogTrigger>
@@ -249,7 +250,7 @@ function EventRowContent({
         <EventTimelinePremiumEvent
           ref={placeholderRef}
           occurrence={placeholder}
-          ariaLabelledBy={`EventTimelinePremiumTitleCell-${placeholder.resource}`}
+          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${placeholder.resource}`}
           variant="placeholder"
         />
       )}
@@ -360,6 +361,15 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const syncCircleScroll = React.useCallback((scrollLeft: number) => {
     eventsHeaderCellRef.current?.style.setProperty('--events-scroll-left', String(scrollLeft));
   }, []);
+
+  // Reset horizontal scroll position to the left edge when navigating to a new time period
+  React.useEffect(() => {
+    for (const ref of [eventsScrollerRef, eventsScrollbarRef, eventsHeaderRef]) {
+      if (ref.current) {
+        ref.current.scrollLeft = 0;
+      }
+    }
+  }, [viewConfig.start]);
 
   // Sync horizontal scroll: events body ↔ events scrollbar + events header
   useSyncedHorizontalScroll(

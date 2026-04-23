@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/composer-helper-text',
+    'docs/translations/api-docs/chat/composer-helper-text',
     false,
     /\.\/composer-helper-text.*\.json$/,
   );
