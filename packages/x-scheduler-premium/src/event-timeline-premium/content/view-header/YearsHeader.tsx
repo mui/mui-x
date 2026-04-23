@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store/useStore';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
@@ -14,7 +14,7 @@ const YearsHeaderRoot = styled('div', {
   slot: 'YearsHeader',
 })({
   display: 'grid',
-  gridTemplateColumns: 'repeat(var(--unit-count), minmax(var(--years-cell-width), 1fr))',
+  gridTemplateColumns: 'repeat(var(--unit-count), minmax(var(--year-cell-width), 1fr))',
   gridTemplateRows: 'auto',
   height: '100%',
 });
@@ -39,12 +39,12 @@ export function YearsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Feature hooks
   const years = React.useMemo(
-    () => getYears(adapter, viewConfig.start, viewConfig.end),
-    [adapter, viewConfig],
+    () => getYears(adapter, presetConfig.start, presetConfig.end),
+    [adapter, presetConfig],
   );
 
   return (

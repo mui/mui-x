@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   initialEvents,
   resources,
   defaultVisibleDate,
-} from '../../datasets/tv-series';
+} from '../../datasets/apartment-bookings';
 
-export default function YearsView() {
-  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
+export default function DayPreset() {
+  const [events, setEvents] = React.useState(initialEvents);
 
   return (
     <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
@@ -17,8 +17,8 @@ export default function YearsView() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="years"
-        views={['years']}
+        defaultPreset="day"
+        presets={['day']}
       />
     </div>
   );

@@ -88,12 +88,12 @@ const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
-  '--time-cell-width': '64px',
-  '--days-cell-width': '120px',
-  '--weeks-cell-width': 'calc(64px * 7)',
-  // Months view uses per-day units instead of per-month, so each column width = days in month × 6px
-  '--months-cell-width': '6px',
-  '--years-cell-width': '200px',
+  '--dayAndHour-cell-width': '64px',
+  '--day-cell-width': '120px',
+  '--dayAndWeek-cell-width': 'calc(64px * 7)',
+  // Each CSS unit is 1 day (6px); a month column therefore spans (days in that month) × 6px.
+  '--monthAndYear-cell-width': '6px',
+  '--year-cell-width': '200px',
   boxSizing: 'border-box',
   '*, *::before, *::after': {
     boxSizing: 'inherit',
@@ -235,14 +235,14 @@ EventTimelinePremium.propTypes = {
     ampm: PropTypes.bool,
   }),
   /**
-   * The view initially displayed in the timeline.
-   * To render a controlled timeline, use the `view` prop.
-   * @default "time"
+   * The preset initially displayed in the timeline.
+   * To render a controlled timeline, use the `preset` prop.
+   * @default "dayAndHour"
    */
-  defaultView: PropTypes.oneOf(['days', 'months', 'time', 'weeks', 'years']),
+  defaultPreset: PropTypes.oneOf(['day', 'dayAndHour', 'dayAndWeek', 'monthAndYear', 'year']),
   /**
-   * The date initially used to determine the visible date range in each view.
-   * To render a controlled calendar, use the `visibleDate` prop.
+   * The date initially used to determine the visible date range.
+   * To render a controlled component, use the `visibleDate` prop.
    * @default today
    */
   defaultVisibleDate: PropTypes.instanceOf(Date),
@@ -318,9 +318,9 @@ EventTimelinePremium.propTypes = {
    */
   onPreferencesChange: PropTypes.func,
   /**
-   * Event handler called when the view changes.
+   * Event handler called when the preset changes.
    */
-  onViewChange: PropTypes.func,
+  onPresetChange: PropTypes.func,
   /**
    * Event handler called when the visible date changes.
    */
@@ -335,6 +335,20 @@ EventTimelinePremium.propTypes = {
   preferences: PropTypes.shape({
     ampm: PropTypes.bool,
   }),
+  /**
+   * The preset currently displayed in the timeline.
+   */
+  preset: PropTypes.oneOf(['day', 'dayAndHour', 'dayAndWeek', 'monthAndYear', 'year']),
+  /**
+   * The presets available in the timeline.
+   * The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally,
+   * so a future zoom API (`zoomIn()` / `zoomOut()`) behaves consistently regardless of the order
+   * in which the presets are provided.
+   * @default ["dayAndHour", "day", "dayAndWeek", "monthAndYear", "year"]
+   */
+  presets: PropTypes.arrayOf(
+    PropTypes.oneOf(['day', 'dayAndHour', 'dayAndWeek', 'monthAndYear', 'year']).isRequired,
+  ),
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -369,18 +383,7 @@ EventTimelinePremium.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * The view currently displayed in the timeline.
-   */
-  view: PropTypes.oneOf(['days', 'months', 'time', 'weeks', 'years']),
-  /**
-   * The views available in the timeline.
-   * @default ["time", "days", "weeks", "months", "years"]
-   */
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['days', 'months', 'time', 'weeks', 'years']).isRequired,
-  ),
-  /**
-   * The date currently used to determine the visible date range in each view.
+   * The date currently used to determine the visible date range.
    */
   visibleDate: PropTypes.instanceOf(Date),
   /**

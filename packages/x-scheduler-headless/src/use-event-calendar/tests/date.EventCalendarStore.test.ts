@@ -174,7 +174,7 @@ describe('Date - EventCalendarStore', () => {
       );
       const newDate = adapter.date('2025-08-02T00:00:00Z', 'default');
       expect(() => store.switchToDay(newDate, {} as any)).to.throw(
-        /not compatible with the available views/i,
+        /is not part of the `views` prop/i,
       );
     });
   });

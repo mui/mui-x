@@ -5,9 +5,9 @@ import {
   initialEvents,
   resources,
   defaultVisibleDate,
-} from '../../datasets/apartment-bookings';
+} from '../../datasets/tv-series';
 
-export default function DaysView() {
+export default function YearPreset() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
@@ -17,8 +17,8 @@ export default function DaysView() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="days"
-        views={['days']}
+        defaultPreset="year"
+        presets={['year']}
       />
     </div>
   );
