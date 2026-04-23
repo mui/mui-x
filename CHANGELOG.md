@@ -5,6 +5,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.28.4
+
+_Apr 23, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@LukasTy, @michelengelen
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.28.2`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.28.2`.
+
+#### `@mui/x-data-grid-premium@8.28.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.28.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.28.4`
+
+- [pickers] Fix `DateRangeCalendar` drag with `AdapterDayjs` plain-constructor values (@LukasTy) (#22170) @github-actions[bot]
+- [pickers] Use `convertToMeridiem` utility in `transferDateSectionValue` (#22062) (#22132) @michelengelen
+
+#### `@mui/x-date-pickers-pro@8.28.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.28.4`.
+
+### Charts
+
+#### `@mui/x-charts@8.28.2`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.28.2`.
+
+#### `@mui/x-charts-premium@8.28.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.28.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.28.3`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.28.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.28.3`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.27.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Remove obsolete v7 deprecation warning for `dayOfWeekFormatter` (@LukasTy) (#22120) @github-actions[bot]
+- [docs] Use mui.com for broken links checker known targets (#22129) (#22171) @LukasTy
+
 ## 8.28.3
 
 _Apr 15, 2026_
