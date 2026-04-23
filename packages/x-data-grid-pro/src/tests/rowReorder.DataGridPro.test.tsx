@@ -1,7 +1,14 @@
+import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, createEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues, getRowsFieldContent } from 'test/utils/helperFn';
-import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  gridClasses,
+  useGridApiRef,
+  type GridApi,
+  gridDataRowIdsSelector,
+} from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
@@ -434,5 +441,94 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
 
     // Verify that the row order has changed (Nike should now be between Adidas and Puma)
     expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+  });
+
+  // Regression test for https://github.com/mui/mui-x/issues/22057
+  it('should reorder rows correctly when a filter hides rows between source and target', async () => {
+    const initialRows = [
+      { id: 0, brand: 'Nike', status: 'active' },
+      { id: 1, brand: 'Adidas', status: 'inactive' },
+      { id: 2, brand: 'Puma', status: 'active' },
+      { id: 3, brand: 'Skechers', status: 'inactive' },
+      { id: 4, brand: 'Vans', status: 'active' },
+    ];
+    const columns = [{ field: 'brand' }, { field: 'status' }];
+
+    function Test() {
+      const [rows, setRows] = React.useState(initialRows);
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            rows={rows}
+            columns={columns}
+            rowReordering
+            filterModel={{ items: [{ field: 'status', operator: 'equals', value: 'active' }] }}
+            onRowOrderChange={(params) => {
+              setRows((prev) => {
+                const next = [...prev];
+                const [moved] = next.splice(params.oldIndex, 1);
+                next.splice(params.targetIndex, 0, moved);
+                return next;
+              });
+            }}
+          />
+        </div>
+      );
+    }
+
+    render(<Test />);
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Puma', 'Vans']);
+
+    // Drag Nike (visible row 0) below Vans (visible row 2). Hidden rows Adidas/Skechers
+    // should stay between them in the underlying order.
+    const rowReorderCell = getCell(0, 0).firstChild! as Element;
+    const targetCell = getCell(2, 0);
+    fireDragStart(rowReorderCell);
+    fireEvent(targetCell, createDragOverEvent(targetCell, 'below'));
+    fireEvent(rowReorderCell, createDragEndEvent(rowReorderCell));
+
+    await waitFor(() => {
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Puma', 'Vans', 'Nike']);
+    });
+  });
+
+  // Regression test for https://github.com/mui/mui-x/issues/22057 — hidden-row
+  // preservation. A filtered no-op drop must not reshuffle filtered-out rows
+  // in the underlying tree.
+  it('setRowPosition should be a no-op when the visible order does not change with a filter applied', () => {
+    const columns = [{ field: 'brand' }, { field: 'status' }];
+    const initialRows = [
+      { id: 0, brand: 'A', status: 'active' },
+      { id: 1, brand: 'X', status: 'inactive' },
+      { id: 2, brand: 'B', status: 'active' },
+    ];
+    let apiRef!: React.RefObject<GridApi | null>;
+
+    function Test() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={initialRows}
+            columns={columns}
+            filterModel={{ items: [{ field: 'status', operator: 'equals', value: 'active' }] }}
+          />
+        </div>
+      );
+    }
+
+    render(<Test />);
+    expect(getRowsFieldContent('brand')).to.deep.equal(['A', 'B']);
+    // Underlying tree still has X between A and B.
+    expect(gridDataRowIdsSelector(apiRef)).to.deep.equal([0, 1, 2]);
+
+    // "Move A above B" is already true in the visible view → no-op.
+    apiRef.current!.setRowPosition(0, 2, 'above');
+    expect(gridDataRowIdsSelector(apiRef)).to.deep.equal([0, 1, 2]);
+
+    // "Move B below A" is also already true → no-op.
+    apiRef.current!.setRowPosition(2, 0, 'below');
+    expect(gridDataRowIdsSelector(apiRef)).to.deep.equal([0, 1, 2]);
   });
 });

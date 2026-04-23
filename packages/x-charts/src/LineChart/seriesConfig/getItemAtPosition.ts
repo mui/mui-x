@@ -33,7 +33,13 @@ function getBracketIndices(
     if (index === -1) {
       return null;
     }
-    return { left: index, right: index };
+
+    const axisPointValue = getValueToPositionMapper(xAxis.scale)(axisData[index]);
+
+    if (axisPointValue <= pointX) {
+      return index === axisData.length - 1 ? null : { left: index, right: index + 1 };
+    }
+    return index === 0 ? null : { left: index - 1, right: index };
   }
 
   // For continuous axes, find the two adjacent data points surrounding pointX.
@@ -58,7 +64,11 @@ function getBracketIndices(
   }
 
   if (leftIndex === axisData.length - 1) {
-    // Pointer is at or after the last data point — check if it's close enough.
+    if (getAsNumber(axisData[leftIndex]) < xAsNumber) {
+      // Pointer is strictly past the last data point — out of range.
+      return null;
+    }
+    // Pointer is exactly on the last data point.
     return { left: leftIndex, right: leftIndex };
   }
 

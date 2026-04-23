@@ -12,7 +12,7 @@ import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventRowDropTarget } from './useEventRowDropTarget';
 import { usePlaceholderInRow } from './usePlaceholderInRow';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventRowDataAttributes } from './TimelineGridEventRowDataAttributes';
 
 const stateAttributesMapping = {
@@ -43,12 +43,12 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const occurrences = useStore(
     store,
     schedulerOccurrenceSelectors.resourceOccurrences,
-    viewConfig.start,
-    viewConfig.end,
+    presetConfig.start,
+    presetConfig.end,
     resourceId,
   );
 
@@ -63,7 +63,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
       input: { clientX: event.clientX },
       elementRef: dropTargetRef,
     });
-    const anchor = adapter.addMilliseconds(viewConfig.start, offsetMs);
+    const anchor = adapter.addMilliseconds(presetConfig.start, offsetMs);
     const startDate = adapter.addMinutes(
       anchor,
       -(adapter.getMinutes(anchor) % EVENT_CREATION_PRECISION_MINUTE),

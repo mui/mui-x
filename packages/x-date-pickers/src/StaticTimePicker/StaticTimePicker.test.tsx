@@ -27,7 +27,6 @@ describe('<StaticTimePicker />', () => {
       'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
-      'propsSpread',
     ],
   }));
 

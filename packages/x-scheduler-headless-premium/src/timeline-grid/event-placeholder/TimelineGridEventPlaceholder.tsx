@@ -5,7 +5,7 @@ import { useElementPositionInCollection, useEvent } from '@mui/x-scheduler-headl
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { TimelineGridEventPlaceholderCssVars } from './TimelineGridEventPlaceholderCssVars';
-import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventPlaceholderDataAttributes } from './TimelineGridEventPlaceholderDataAttributes';
 
 const overflowStateAttributesMapping = {
@@ -35,15 +35,15 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Feature hooks
   const { position, duration, startingBeforeEdge, endingAfterEdge } =
     useElementPositionInCollection({
       start,
       end,
-      collectionStart: viewConfig.start,
-      collectionEnd: viewConfig.end,
+      collectionStart: presetConfig.start,
+      collectionEnd: presetConfig.end,
     });
 
   const { state: eventState } = useEvent({ start, end });
