@@ -132,7 +132,7 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
           </ChartsSvgLayer>
           {renderer === 'webgl' &&
             <ChartsWebGLLayer>
-              <ScatterPlotPremium renderer={renderer} {...scatterPlotProps} />
+              <ScatterPlotPremium {...scatterPlotProps} renderer={renderer} />
             </ChartsWebGLLayer>
           }
           <ChartsSvgLayer {...chartsSvgLayerProps}>
@@ -140,7 +140,7 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
             <ChartsZoomSlider />
             {renderer !== 'webgl' && (
               <g data-drawing-container>
-                <ScatterPlotPremium renderer={renderer} {...scatterPlotProps} />
+                <ScatterPlotPremium {...scatterPlotProps} renderer={renderer} />
               </g>
             )}
             <ChartsOverlay {...overlayProps} />
