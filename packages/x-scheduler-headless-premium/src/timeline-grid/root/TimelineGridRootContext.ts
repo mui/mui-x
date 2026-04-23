@@ -12,9 +12,9 @@ export interface TimelineGridRootContext {
    */
   focusedCell: TimelineGridCellCoordinates | null;
   /**
-   * Updates the focused cell coordinates, or clears them when passed `null`.
+   * Updates the focused cell coordinates.
    */
-  setFocusedCell: (coordinates: TimelineGridCellCoordinates | null) => void;
+  setFocusedCell: (coordinates: TimelineGridCellCoordinates) => void;
   /**
    * Clears the focused cell only if it still matches the given coordinates.
    */

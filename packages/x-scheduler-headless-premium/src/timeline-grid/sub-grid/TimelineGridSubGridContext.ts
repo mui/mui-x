@@ -1,7 +1,13 @@
 'use client';
 import * as React from 'react';
 
-export const TimelineGridSubGridContext = React.createContext<true | undefined>(undefined);
+export interface TimelineGridSubGridContext {}
+
+export const TIMELINE_GRID_SUB_GRID_CONTEXT_VALUE: TimelineGridSubGridContext = {};
+
+export const TimelineGridSubGridContext = React.createContext<TimelineGridSubGridContext | undefined>(
+  undefined,
+);
 
 export function useTimelineGridSubGridContext() {
   const context = React.useContext(TimelineGridSubGridContext);
