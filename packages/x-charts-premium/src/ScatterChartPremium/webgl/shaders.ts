@@ -12,8 +12,8 @@ export const scatterVertexShader = /* glsl */ `
   attribute mediump vec4 a_color;
 
   varying mediump vec4 v_color;
-  varying vec2 v_offset;
-  varying float v_radius;
+  varying mediump vec2 v_offset;
+  varying mediump float v_radius;
 
   uniform highp vec2 u_resolution;
 
@@ -35,8 +35,8 @@ export const scatterFragmentShader = /* glsl */ `
   precision mediump float;
 
   varying mediump vec4 v_color;
-  varying vec2 v_offset;
-  varying float v_radius;
+  varying mediump vec2 v_offset;
+  varying mediump float v_radius;
 
   void main() {
     float dist = length(v_offset);
