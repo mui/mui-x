@@ -2,13 +2,12 @@ import * as React from 'react';
 import { Chance } from 'chance';
 import { ScatterChartPremium } from '@mui/x-charts-premium/ScatterChartPremium';
 
-const POINTS_PER_SERIES = 100_000;
+const POINTS_PER_SERIES = 200_000;
 const chance = new Chance(42);
 
 function generateSeries(offset: number, spread: number) {
   const data = new Array(POINTS_PER_SERIES);
   for (let i = 0; i < POINTS_PER_SERIES; i += 1) {
-    // Box-Muller for a gaussian-ish cluster.
     const u1 = chance.floating({ min: 1e-6, max: 1 });
     const u2 = chance.floating({ min: 0, max: 1 });
     const r = Math.sqrt(-2 * Math.log(u1));
@@ -23,8 +22,8 @@ function generateSeries(offset: number, spread: number) {
 }
 
 const series = [
-  { label: 'Cluster A', data: generateSeries(0, 1), markerSize: 10 },
-  { label: 'Cluster B', data: generateSeries(4, 1.5), markerSize: 10 },
+  { label: 'Cluster A', data: generateSeries(0, 1), markerSize: 1 },
+  { label: 'Cluster B', data: generateSeries(4, 1.5), markerSize: 1 },
 ];
 
 export default function ScatterWebGLRenderer() {

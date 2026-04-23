@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Chance } from 'chance';
 import { ScatterChartPremium } from '@mui/x-charts-premium/ScatterChartPremium';
 
-const POINTS_PER_SERIES = 100_000;
+const POINTS_PER_SERIES = 200_000;
 const chance = new Chance(42);
 
 function generateSeries(offset, spread) {
@@ -22,19 +22,23 @@ function generateSeries(offset, spread) {
 }
 
 const series = [
-  { label: 'Cluster A', data: generateSeries(0, 1), markerSize: 2 },
-  { label: 'Cluster B', data: generateSeries(4, 1.5), markerSize: 2 },
+  { label: 'Cluster A', data: generateSeries(0, 1), markerSize: 1 },
+  { label: 'Cluster B', data: generateSeries(4, 1.5), markerSize: 1 },
 ];
 
 export default function ScatterWebGLRenderer() {
   return (
     <ScatterChartPremium
       series={series}
-      xAxis={[{ min: -6, max: 12 }]}
-      yAxis={[{ min: -6, max: 12 }]}
+      xAxis={[{ min: -6, max: 12, zoom: true }]}
+      yAxis={[{ min: -6, max: 12, zoom: true }]}
       height={400}
       renderer="webgl"
-      hideLegend={false}
+      slotProps={{
+        legend: {
+          toggleVisibilityOnClick: true,
+        },
+      }}
     />
   );
 }
