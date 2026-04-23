@@ -47,6 +47,16 @@ describe('<AdapterDayjs />', () => {
       const date = modifiedAdapter.date(TEST_DATE_ISO_STRING) as Dayjs;
       expect(() => modifiedAdapter.setTimezone(date, 'Europe/London')).to.throw();
     });
+
+    it('should recognize system-timezone dates as same day as plain dayjs dates', () => {
+      const adapter = new AdapterDayjs();
+      const plainDate = dayjs('2026-04-10');
+      const timestamp = adapter.toJsDate(plainDate).valueOf();
+      const resolvedDate = adapter.date(new Date(timestamp).toISOString(), 'system') as Dayjs;
+
+      expect(adapter.getTimezone(resolvedDate)).to.equal('system');
+      expect(adapter.isSameDay(resolvedDate, plainDate)).to.equal(true);
+    });
   });
 
   describe('Adapter localization', () => {
