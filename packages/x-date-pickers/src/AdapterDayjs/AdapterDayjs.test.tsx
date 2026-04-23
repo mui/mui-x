@@ -48,14 +48,26 @@ describe('<AdapterDayjs />', () => {
       expect(() => modifiedAdapter.setTimezone(date, 'Europe/London')).to.throw();
     });
 
-    it('should recognize system-timezone dates as same day as plain dayjs dates', () => {
+    it('should not stamp `$x.$timezone` on system-timezone dates when `dayjs.tz.guess()` is non-UTC', () => {
+      // Regression: before the fix, `createSystemDate` called
+      // `dayjs.tz(value, dayjs.tz.guess())` when the guessed zone was not UTC,
+      // which set `$x.$timezone` on the result. That made `getTimezone()` return
+      // the guessed zone name (e.g. `America/New_York`) instead of `'system'`, so
+      // comparisons against plain `dayjs()` dates (for which `getTimezone()`
+      // returns `'system'`) went through an unnecessary `setTimezone` conversion
+      // that could shift the day across midnight. CI runs in UTC, so the non-UTC
+      // branch is only reachable by stubbing `dayjs.tz.guess()`.
       const adapter = new AdapterDayjs();
-      const plainDate = dayjs('2026-04-10');
-      const timestamp = adapter.toJsDate(plainDate).valueOf();
-      const resolvedDate = adapter.date(new Date(timestamp).toISOString(), 'system') as Dayjs;
-
-      expect(adapter.getTimezone(resolvedDate)).to.equal('system');
-      expect(adapter.isSameDay(resolvedDate, plainDate)).to.equal(true);
+      const originalGuess = dayjs.tz.guess;
+      // @ts-ignore
+      dayjs.tz.guess = () => 'America/New_York';
+      try {
+        const resolvedDate = adapter.date(TEST_DATE_ISO_STRING, 'system') as Dayjs;
+        expect(adapter.getTimezone(resolvedDate)).to.equal('system');
+      } finally {
+        // @ts-ignore
+        dayjs.tz.guess = originalGuess;
+      }
     });
   });
 
