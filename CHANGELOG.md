@@ -6,7 +6,7 @@ _Apr 23, 2026_
 
 We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- ⌨️ Keyboard support for creating events in the Scheduler
 
 The following team members contributed to this release:
 @alexfauquette, @arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @rita-codes, @romgrk, @sai6855, @siriwatknp
@@ -50,13 +50,13 @@ Same changes as in `@mui/x-date-pickers@9.0.3`.
 - [charts] Centralize WebGL clear/render cycle (context-based) (#22127) @JCQuintas
 - [charts] Fix closest series detection for line charts (#22168) @alexfauquette
 - [charts] Fix radius grid lines when axis uses point scale (#22134) @alexfauquette
-- [charts] use cubic solver for berzier intersection (#22152) @alexfauquette
+- [charts] Use cubic solver for berzier intersection (#22152) @alexfauquette
 
 #### `@mui/x-charts-pro@9.0.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@9.0.3`, plus:
 
-- [charts-pro] Fix wheel zoom clamping with custom minStart/maxEnd (#22159) @JCQuintas
+- [charts-pro] Fix wheel zoom clamping with custom `minStart`/`maxEnd` (#22159) @JCQuintas
 
 #### `@mui/x-charts-premium@9.0.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -64,7 +64,7 @@ Same changes as in `@mui/x-charts-pro@9.0.3`, plus:
 
 - [charts] Create a `'radialLine'` series type (#22066) @alexfauquette
 - [charts] Plot radial line (#22133) @alexfauquette
-- [charts] Remove HeatmapWebGLRenderer indirection (#22169) @JCQuintas
+- [charts] Remove `HeatmapWebGLRenderer` indirection (#22169) @JCQuintas
 
 ### Tree View
 
@@ -77,17 +77,29 @@ Internal changes.
 Same changes as in `@mui/x-tree-view@9.0.2`.
 
 ### Scheduler
+#### Breaking changes
+- The `views` of `EventTimelinePremium` have been renamed to `presets`, with names that describe the header layout. The props `view`/`defaultView`/`views`/`onViewChange` are now `preset`/`defaultPreset`/`presets`/`onPresetChange`, and the type `EventTimelinePremiumView` is now `EventTimelinePremiumPreset`.
+
+| Old      | New            |
+| -------- | -------------- |
+| `time`   | `dayAndHour`   |
+| `days`   | `day`          |
+| `weeks`  | `dayAndWeek`   |
+| `months` | `monthAndYear` |
+| `years`  | `year`         |
+    
+CSS variables (`--time-cell-width`, etc.) and headless store state (`state.view`, `setView`) follow the same rename. The `presets` array is now sorted internally against a canonical zoom order.
 
 #### `@mui/x-scheduler@9.0.0-9.0.0-alpha.4.0`
-
 - [scheduler] Allow creating events via keyboard - EventCalendar (#21967) @rita-codes
-- [scheduler] Allow creating events via keyboard - EventTimeline (#22119) @rita-codes
 - [scheduler] Prefix element IDs with a unique Scheduler instance ID (#22109) @rita-codes
-- [scheduler] Rename EventTimeline views to ordered presets (#22130) @rita-codes
 
 #### `@mui/x-scheduler-premium@9.0.0-9.0.0-alpha.4.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-scheduler@9.0.0-9.0.0-alpha.4.0`.
+
+- [scheduler] Allow creating events via keyboard - `EventTimeline` (#22119) @rita-codes
+- [scheduler] Rename `EventTimeline` `views` to ordered presets (#22130) @rita-codes
 
 ### Codemod
 
@@ -98,22 +110,22 @@ Internal changes.
 ### Docs
 
 - [docs] Cleanup generated llm md files for chat (#22163) @brijeshb42
-- [docs] Fix highlightScope description (#22154) @alexfauquette
+- [docs] Fix `highlightScope` description (#22154) @alexfauquette
 - [docs] Remove obsolete v7 deprecation warning for `dayOfWeekFormatter` (#22111) @LukasTy
 - [docs] Use mui.com for broken links checker known targets (#22129) @JCQuintas
-- [docs][pickers] Document picker behavior inside MUI `Dialog` and provide recommended solutions (#22144) @michelengelen
+- [docs] Document picker behavior inside MUI `Dialog` and provide recommended solutions (#22144) @michelengelen
 
 ### Core
 
 - [code-infra] Reduce concurrency for package build to 5 (#22115) @Janpot
-- [code-infra] Rename docsx alias to docs (#22155) @brijeshb42
+- [code-infra] Rename `docsx` alias to `docs` (#22155) @brijeshb42
 - [docs-infra] Remove monorepo dependency (#22025) @brijeshb42
 - [docs-infra] Use latest published packages (#22086) @brijeshb42
 
 ### Miscellaneous
 
-- [infra] Update .gitignore to exclude `.claude/worktrees` (#22145) @michelengelen
-- [license] Add MIT license to x-virtualizer package (#22164) @michelengelen
+- [infra] Update `.gitignore` to exclude `.claude/worktrees` (#22145) @michelengelen
+- [license] Add MIT license to `x-virtualizer` package (#22164) @michelengelen
 - [website] Fix outdated MUI logos (#22117) @oliviertassinari
 - [internal] Try avoiding store update when virtualization is disabled (#22093) @arminmeh
 
