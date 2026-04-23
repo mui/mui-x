@@ -79,10 +79,6 @@ async function main() {
         return 6000;
       }
 
-      if (route.url.includes('ScatterWebGLRenderer')) {
-        return 30000;
-      }
-
       return undefined;
     };
 
