@@ -77,7 +77,9 @@ Internal changes.
 Same changes as in `@mui/x-tree-view@9.0.2`.
 
 ### Scheduler
+
 #### Breaking changes
+- 
 - The `views` of `EventTimelinePremium` have been renamed to `presets`, with names that describe the header layout. The props `view`/`defaultView`/`views`/`onViewChange` are now `preset`/`defaultPreset`/`presets`/`onPresetChange`, and the type `EventTimelinePremiumView` is now `EventTimelinePremiumPreset`.
 
 | Old      | New            |
@@ -91,6 +93,7 @@ Same changes as in `@mui/x-tree-view@9.0.2`.
 CSS variables (`--time-cell-width`, etc.) and headless store state (`state.view`, `setView`) follow the same rename. The `presets` array is now sorted internally against a canonical zoom order.
 
 #### `@mui/x-scheduler@9.0.0-9.0.0-alpha.4.0`
+
 - [scheduler] Allow creating events via keyboard - EventCalendar (#21967) @rita-codes
 - [scheduler] Prefix element IDs with a unique Scheduler instance ID (#22109) @rita-codes
 
