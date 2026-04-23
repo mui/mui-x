@@ -81,9 +81,19 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   // Clears focusedCell when focus leaves the grid.
   const handleBlur = React.useCallback((event: React.FocusEvent<HTMLDivElement>) => {
     const nextTarget = event.relatedTarget;
-    if (!nextTarget || !rootRef.current?.contains(nextTarget)) {
-      setFocusedCellState(null);
+    if (nextTarget) {
+      if (!rootRef.current?.contains(nextTarget)) {
+        setFocusedCellState(null);
+      }
+      return;
     }
+    // `relatedTarget` is null with portals, programmatic blur, or window-blur.
+    // Defer to let focus settle, then recheck whether focus truly left the grid.
+    queueMicrotask(() => {
+      if (!rootRef.current?.contains(document.activeElement)) {
+        setFocusedCellState(null);
+      }
+    });
   }, []);
 
   const contextValue: TimelineGridRootContext = React.useMemo(

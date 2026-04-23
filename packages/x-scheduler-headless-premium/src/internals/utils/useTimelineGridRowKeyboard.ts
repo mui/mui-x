@@ -87,7 +87,7 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
   };
 
   const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
+    if (rowRef.current?.contains(event.target)) {
       setFocusedCell({ columnType, rowIndex: index });
     }
   };
