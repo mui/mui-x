@@ -16,6 +16,7 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
       // Rendering props
       className,
       render,
+      style,
       // Internal props
       side,
       // Props forwarded to the DOM element

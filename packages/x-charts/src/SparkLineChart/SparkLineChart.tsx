@@ -428,7 +428,9 @@ SparkLineChart.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    enablePositionBasedPointerInteraction: PropTypes.bool,
+  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -901,6 +903,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
     }),
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
@@ -988,6 +991,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
     }),
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
@@ -1051,6 +1055,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
     }),
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
@@ -1115,6 +1120,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
     }),
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
@@ -1178,6 +1184,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
     }),
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
@@ -1241,6 +1248,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
     }),
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
@@ -1314,6 +1322,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
     }),
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
@@ -1387,6 +1396,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
     }),
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
@@ -1450,6 +1460,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
     }),
   ]),
   /**
@@ -1543,6 +1554,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
       width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
     }),
     PropTypes.shape({
@@ -1629,6 +1641,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
       width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
     }),
     PropTypes.shape({
@@ -1691,6 +1704,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
       width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
     }),
     PropTypes.shape({
@@ -1754,6 +1768,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
       width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
     }),
     PropTypes.shape({
@@ -1816,6 +1831,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
       width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
     }),
     PropTypes.shape({
@@ -1878,6 +1894,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
       width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
     }),
     PropTypes.shape({
@@ -1950,6 +1967,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
       width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
     }),
     PropTypes.shape({
@@ -2022,6 +2040,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
       width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
     }),
     PropTypes.shape({
@@ -2084,6 +2103,7 @@ SparkLineChart.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      valueGetter: PropTypes.func,
       width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
     }),
   ]),

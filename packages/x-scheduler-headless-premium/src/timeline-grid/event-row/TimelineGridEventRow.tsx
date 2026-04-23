@@ -5,20 +5,23 @@ import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headles
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventCreation } from '@mui/x-scheduler-headless/internals';
+import { useEventCreation, useKeyboardEventCreation } from '@mui/x-scheduler-headless/internals';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-headless/constants';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventRowDropTarget } from './useEventRowDropTarget';
 import { usePlaceholderInRow } from './usePlaceholderInRow';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventRowDataAttributes } from './TimelineGridEventRowDataAttributes';
+import { useTimelineGridRowKeyboard } from '../../internals/utils/useTimelineGridRowKeyboard';
 
 const stateAttributesMapping = {
   resourceId: (value: SchedulerResourceId) => ({
     [TimelineGridEventRowDataAttributes.resourceId]: String(value),
   }),
+  creationDisabled: (value: boolean) =>
+    value ? { [TimelineGridEventRowDataAttributes.creationDisabled]: '' } : null,
 };
 
 export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventRow(
@@ -29,6 +32,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     resourceId,
     addPropertiesToDroppedEvent,
@@ -41,13 +45,16 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
+  const { rowRef, listItemRef, index, hasFocus, handleKeyDown, handleFocus } =
+    useTimelineGridRowKeyboard({ columnType: 'events' });
+
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const occurrences = useStore(
     store,
     schedulerOccurrenceSelectors.resourceOccurrences,
-    viewConfig.start,
-    viewConfig.end,
+    presetConfig.start,
+    presetConfig.end,
     resourceId,
   );
 
@@ -62,7 +69,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
       input: { clientX: event.clientX },
       elementRef: dropTargetRef,
     });
-    const anchor = adapter.addMilliseconds(viewConfig.start, offsetMs);
+    const anchor = adapter.addMilliseconds(presetConfig.start, offsetMs);
     const startDate = adapter.addMinutes(
       anchor,
       -(adapter.getMinutes(anchor) % EVENT_CREATION_PRECISION_MINUTE),
@@ -76,9 +83,27 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     };
   });
 
+  const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => ({
+    surfaceType: 'timeline' as const,
+    start: presetConfig.start,
+    end: adapter.addMinutes(presetConfig.start, creationConfig.duration),
+    resourceId,
+    lockSurfaceType: true,
+  }));
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (handleKeyDown(event)) {
+      return;
+    }
+    if (event.key === 'Enter' && event.target === event.currentTarget && triggerKeyboardCreation) {
+      event.preventDefault();
+      triggerKeyboardCreation();
+    }
+  };
+
   const contextValue: TimelineGridEventRowContext = React.useMemo(
-    () => ({ getCursorPositionInElementMs }),
-    [getCursorPositionInElementMs],
+    () => ({ hasFocus, getCursorPositionInElementMs }),
+    [hasFocus, getCursorPositionInElementMs],
   );
 
   const occurrencesWithPosition = useEventOccurrencesWithTimelinePosition({
@@ -97,16 +122,28 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     [childrenProp, placeholder, occurrencesWithPosition],
   );
 
-  const state: TimelineGridEventRow.State = { resourceId };
+  const state: TimelineGridEventRow.State = {
+    resourceId,
+    creationDisabled: !triggerKeyboardCreation,
+  };
 
-  // TODO: Add aria-rowindex using Composite.
-  const props = { role: 'row', children };
+  const keyboardProps = {
+    tabIndex: 0,
+    onKeyDown,
+    onFocus: handleFocus,
+  };
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, dropTargetRef],
+    ref: [forwardedRef, dropTargetRef, listItemRef, rowRef],
     state,
     stateAttributesMapping,
-    props: [props, eventCreationProps, elementProps],
+    props: [
+      elementProps,
+      // Reserve aria-rowindex=1 for the grid header row.
+      { role: 'row', 'aria-rowindex': index + 2, children },
+      keyboardProps,
+      eventCreationProps,
+    ],
   });
 
   return (
@@ -122,6 +159,10 @@ export namespace TimelineGridEventRow {
      * The ID of the resource for this event row.
      */
     resourceId: SchedulerResourceId;
+    /**
+     * Whether event creation is disabled.
+     */
+    creationDisabled: boolean;
   }
 
   export interface Props

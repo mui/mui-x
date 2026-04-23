@@ -1,11 +1,19 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
+import {
+  useRenderElement,
+  BaseUIComponentProps,
+  CompositeList,
+} from '@mui/x-scheduler-headless/base-ui-copy';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import {
+  TimelineGridSubGridContext,
+  TIMELINE_GRID_SUB_GRID_CONTEXT_VALUE,
+} from './TimelineGridSubGridContext';
 
 export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid(
   componentProps: TimelineGridSubGrid.Props,
@@ -15,6 +23,7 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     children: childrenProp,
     // Props forwarded to the DOM element
@@ -25,12 +34,12 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const resources = useStore(
     store,
     schedulerOccurrenceSelectors.groupedByResourceList,
-    viewConfig.start,
-    viewConfig.end,
+    presetConfig.start,
+    presetConfig.end,
   );
 
   const children = React.useMemo(() => {
@@ -41,12 +50,18 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
     return childrenProp;
   }, [childrenProp, resources]);
 
-  const props = { role: 'rowgroup', children };
+  const rowsRef = React.useRef<(HTMLDivElement | null)[]>([]);
 
-  return useRenderElement('div', componentProps, {
+  const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [props, elementProps],
+    props: [elementProps, { role: 'rowgroup', children }],
   });
+
+  return (
+    <TimelineGridSubGridContext.Provider value={TIMELINE_GRID_SUB_GRID_CONTEXT_VALUE}>
+      <CompositeList elementsRef={rowsRef}>{element}</CompositeList>
+    </TimelineGridSubGridContext.Provider>
+  );
 });
 
 export namespace TimelineGridSubGrid {

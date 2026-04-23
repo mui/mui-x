@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { EventCalendarState as State } from '../use-event-calendar';
+import type { EventCalendarState as State } from '../use-event-calendar';
 import { DEFAULT_EVENT_CALENDAR_PREFERENCES } from '../use-event-calendar/EventCalendarStore';
 
 const allPreferencesSelector = createSelectorMemoized(

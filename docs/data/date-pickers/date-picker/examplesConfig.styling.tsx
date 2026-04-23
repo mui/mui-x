@@ -10,7 +10,7 @@ import {
 } from '@mui/x-date-pickers/DesktopDatePicker';
 import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { PickersSubcomponentType } from 'docsx/src/modules/utils/useCustomizationPlayground';
+import { PickersSubcomponentType } from 'docs/src/modules/utils/useCustomizationPlayground';
 
 type PickerExamplesType<TComponent, TComponentProps> = {
   name: string;
@@ -83,7 +83,7 @@ export const staticDatePickerExamples: PickersSubcomponentType = {
       'weekNumber',
     ],
   },
-  PickersDay: {
+  PickerDay: {
     examples: {
       customTheme: {
         type: 'success',
@@ -200,7 +200,7 @@ export const datePickerExamples: PickersSubcomponentType = {
       'weekNumber',
     ],
   },
-  PickersDay: {
+  PickerDay: {
     examples: {
       customTheme: {
         type: 'success',

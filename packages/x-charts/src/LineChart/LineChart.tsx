@@ -23,7 +23,7 @@ import {
   type MarkPlotSlotProps,
   type MarkPlotSlots,
 } from './MarkPlot';
-import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
+import { ChartsAxis } from '../ChartsAxis/ChartsAxis';
 import { type LineSeriesType } from '../models/seriesType/line';
 import { ChartsTooltip } from '../ChartsTooltip';
 import {
@@ -84,7 +84,6 @@ export type LineSeries = MakeOptional<LineSeriesType, 'type'>;
 export interface LineChartProps
   extends
     Omit<ChartsContainerProps<'line', LineChartPluginSignatures>, 'series' | 'plugins' | 'zAxis'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the line chart.
@@ -272,7 +271,9 @@ LineChart.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    enablePositionBasedPointerInteraction: PropTypes.bool,
+  }),
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -625,6 +626,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
@@ -714,6 +716,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
@@ -779,6 +782,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
@@ -845,6 +849,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
@@ -910,6 +915,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
@@ -975,6 +981,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
@@ -1050,6 +1057,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
@@ -1125,6 +1133,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
       }),
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
@@ -1190,6 +1199,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
       }),
     ]).isRequired,
   ),
@@ -1288,6 +1298,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
@@ -1376,6 +1387,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
@@ -1440,6 +1452,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
@@ -1505,6 +1518,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
@@ -1569,6 +1583,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
@@ -1633,6 +1648,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
@@ -1707,6 +1723,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
@@ -1781,6 +1798,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
       PropTypes.shape({
@@ -1845,6 +1863,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
       }),
     ]).isRequired,

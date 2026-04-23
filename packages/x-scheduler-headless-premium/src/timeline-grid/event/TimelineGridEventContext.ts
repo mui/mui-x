@@ -20,7 +20,7 @@ export function useTimelineGridEventContext() {
   const context = React.useContext(TimelineGridEventContext);
   if (context === undefined) {
     throw new Error(
-      'MUI: `TimelineGridEventContext` is missing. TimelineGrid Event parts must be placed within <TimelineGrid.Event />.',
+      'MUI X Scheduler: `TimelineGridEventContext` is missing. TimelineGrid Event parts must be placed within <TimelineGrid.Event />.',
     );
   }
   return context;

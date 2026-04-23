@@ -10,16 +10,14 @@ export const TimelineGridRow = React.forwardRef(function TimelineGridRow(
     // Rendering props
     className,
     render,
+    style,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  // TODO: Add aria-rowindex using Composite.
-  const props = { role: 'row' };
-
   return useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [props, elementProps],
+    props: [elementProps, { role: 'row' }],
   });
 });
 

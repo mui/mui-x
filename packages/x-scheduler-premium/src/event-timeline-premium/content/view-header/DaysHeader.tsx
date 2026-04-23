@@ -4,7 +4,7 @@ import { useStore } from '@base-ui/utils/store/useStore';
 import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
-import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
@@ -13,14 +13,14 @@ const DaysHeaderRoot = styled('div', {
   slot: 'DaysHeader',
 })({
   display: 'flex',
-  width: 'calc(var(--unit-count) * var(--days-cell-width))',
+  width: 'calc(var(--unit-count) * var(--day-cell-width))',
 });
 
 const DayHeaderCell = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'DaysHeaderCell',
 })(({ theme }) => ({
-  width: 'var(--days-cell-width)',
+  width: 'var(--day-cell-width)',
   textAlign: 'center',
   padding: theme.spacing(1),
   position: 'relative',
@@ -79,7 +79,7 @@ const MonthStart = styled('div', {
   bottom: 0,
   left: 0,
   ...theme.applyStyles('dark', {
-    background: theme.palette.grey[800],
+    background: (theme.vars || theme).palette.grey[800],
   }),
 }));
 
@@ -97,12 +97,12 @@ export function DaysHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Feature hooks
   const days = React.useMemo(
-    () => getDayList({ adapter, start: viewConfig.start, end: viewConfig.end }),
-    [adapter, viewConfig],
+    () => getDayList({ adapter, start: presetConfig.start, end: presetConfig.end }),
+    [adapter, presetConfig],
   );
 
   return (

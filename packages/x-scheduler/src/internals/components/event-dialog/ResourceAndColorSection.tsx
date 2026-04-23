@@ -129,7 +129,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
   const { readOnly, resourceId, onResourceChange, onColorChange, color } = props;
 
   // Context hooks
-  const { classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -189,9 +189,11 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
   return (
     <React.Fragment>
       <FormControl size="small" fullWidth>
-        <InputLabel id="resource-select-label">{localeText.resourceLabel}</InputLabel>
+        <InputLabel id={`${schedulerId}-resource-select-label`}>
+          {localeText.resourceLabel}
+        </InputLabel>
         <Select
-          labelId="resource-select-label"
+          labelId={`${schedulerId}-resource-select-label`}
           label={localeText.resourceLabel}
           value={resourceId ?? NO_RESOURCE_VALUE}
           displayEmpty

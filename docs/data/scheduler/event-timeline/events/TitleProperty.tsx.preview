@@ -4,5 +4,5 @@
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
   eventModelStructure={eventModelStructure}
-  defaultView="days"
+  defaultPreset="day"
 />

@@ -14,27 +14,29 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     start,
     end,
+    rowIndex = 0,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const props = { role: 'row' };
   const cellsRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
   const contextValue: CalendarGridDayRowContext = React.useMemo(
     () => ({
       start,
       end,
+      rowIndex,
     }),
-    [start, end],
+    [start, end, rowIndex],
   );
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [props, elementProps],
+    props: [elementProps, { role: 'row' }],
   });
 
   return (
@@ -58,5 +60,12 @@ export namespace CalendarGridDayRow {
      * The data and time at which the row ends.
      */
     end: TemporalSupportedObject;
+    /**
+     * The index of this row within its row type.
+     * Used to uniquely identify the row for keyboard navigation when there are
+     * multiple rows of the same type (e.g., multiple weeks in the month view).
+     * @default 0
+     */
+    rowIndex?: number;
   }
 }

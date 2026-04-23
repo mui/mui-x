@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
-import data from 'docsx/data/charts/dataset/transistorCPUdata';
+import data from 'docs/data/charts/dataset/transistorCPUdata';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const chartSetting = {
@@ -78,7 +78,7 @@ function CustomTooltip() {
 
 function Scatter() {
   return (
-    <Stack height="100%">
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center">Processor density (in transistor/mm²)</Typography>
       <ScatterChart
         series={series}

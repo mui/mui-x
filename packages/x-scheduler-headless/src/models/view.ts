@@ -1,8 +1,8 @@
-import { EventCalendarState } from '../use-event-calendar';
+import type { EventCalendarState } from '../use-event-calendar';
 import type { TemporalSupportedObject } from '../base-ui-copy/types';
 import { SchedulerProcessedDate } from './event';
 
-export type CalendarView = 'week' | 'day' | 'month' | 'agenda';
+export type CalendarView = 'day' | 'week' | 'month' | 'agenda';
 
 /**
  * Configuration defined by each view.
