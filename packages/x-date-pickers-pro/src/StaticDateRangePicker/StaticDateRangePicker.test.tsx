@@ -18,7 +18,6 @@ describe('<StaticDateRangePicker />', () => {
       'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
-      'propsSpread',
     ],
   }));
 

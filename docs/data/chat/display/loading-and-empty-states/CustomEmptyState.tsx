@@ -11,8 +11,8 @@ import {
   ChatComposer,
 } from '@mui/x-chat';
 import { ChatProvider, useChat } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation } from 'docsx/data/chat/material/examples/shared/demoData';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { minimalConversation } from 'docs/data/chat/material/examples/shared/demoData';
 
 function EmptyStateContent() {
   const { messages, sendMessage } = useChat();

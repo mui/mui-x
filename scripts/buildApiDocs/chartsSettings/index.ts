@@ -112,7 +112,6 @@ export default chartsApiPages;
       'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
       'x-charts-premium/src/HeatmapPremium/HeatmapPlotPremium.tsx',
       'x-charts-premium/src/HeatmapPremium/webgl/HeatmapWebGLPlot.tsx',
-      'x-charts-premium/src/HeatmapPremium/webgl/HeatmapWebGLRenderer.tsx',
       'x-charts-premium/src/ChartsWebGLLayer/ChartsWebGLLayer.tsx',
       'x-charts/src/ChartsLayerContainer/ChartsLayerContainer.tsx',
       'x-charts/src/ChartsSvgLayer/ChartsSvgLayer.tsx',
@@ -132,7 +131,7 @@ export default chartsApiPages;
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/charts',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/charts',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/charts',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: ['stripeColor'],

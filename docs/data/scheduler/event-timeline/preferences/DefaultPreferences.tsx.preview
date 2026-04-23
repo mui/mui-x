@@ -3,5 +3,5 @@
   resources={resources}
   defaultPreferences={defaultPreferences}
   onEventsChange={setEvents}
-  defaultView="months"
+  defaultPreset="monthAndYear"
 />

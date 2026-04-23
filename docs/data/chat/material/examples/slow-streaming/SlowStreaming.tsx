@@ -4,12 +4,12 @@ import { ChatBox } from '@mui/x-chat';
 import {
   createTextResponseChunks,
   createChunkStream,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
   demoUsers,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const slowAdapter: ChatAdapter = {
