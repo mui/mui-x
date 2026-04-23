@@ -20,7 +20,8 @@ interface PresetConfig {
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) => number;
-  // Step size for `goToNextVisibleDate` / `goToPreviousVisibleDate`; the `amount` is multiplied by the preset's `unitCount`.
+  // Adds `amount` units (of the preset's base unit) to `date`.
+  // Called by `goToNextVisibleDate` / `goToPreviousVisibleDate` with `amount = ±unitCount`.
   navigate: (
     adapter: TemporalAdapter,
     date: TemporalSupportedObject,
