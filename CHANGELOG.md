@@ -92,14 +92,14 @@ Same changes as in `@mui/x-tree-view@9.0.2`.
     
 CSS variables (`--time-cell-width`, etc.) and headless store state (`state.view`, `setView`) follow the same rename. The `presets` array is now sorted internally against a canonical zoom order.
 
-#### `@mui/x-scheduler@9.0.0-9.0.0-alpha.4.0`
+#### `@mui/x-scheduler@9.0.0-alpha.3`
 
 - [scheduler] Allow creating events via keyboard - EventCalendar (#21967) @rita-codes
 - [scheduler] Prefix element IDs with a unique Scheduler instance ID (#22109) @rita-codes
 
-#### `@mui/x-scheduler-premium@9.0.0-9.0.0-alpha.4.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-scheduler-premium@9.0.0-alpha.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-scheduler@9.0.0-9.0.0-alpha.4.0`.
+Same changes as in `@mui/x-scheduler@9.0.0-alpha.3`.
 
 - [scheduler] Allow creating events via keyboard - `EventTimeline` (#22119) @rita-codes
 - [scheduler] Rename `EventTimeline` `views` to ordered presets (#22130) @rita-codes
