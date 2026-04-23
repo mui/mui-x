@@ -10,7 +10,7 @@ export function useEventTimelinePremiumStoreContext<
 
   if (context.instanceName !== 'EventTimelinePremiumStore') {
     throw new Error(
-      'MUI: useEventTimelinePremiumStoreContext must be used within an <EventTimelinePremium /> component',
+      'MUI X Scheduler: useEventTimelinePremiumStoreContext must be used within an <EventTimelinePremium /> component',
     );
   }
 

@@ -259,5 +259,11 @@
   "259": "MUI X Scheduler: EventTimelinePremium received the preset \"%s\", which is not part of the `presets` prop (received: %s). This leaves the timeline in an inconsistent state where the current preset is not one of the allowed options. Add \"%s\" to the `presets` prop, or pass a preset that is already included. See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.",
   "260": "MUI X Scheduler: EventCalendar received the view \"%s\", which is not part of the `views` prop (received: %s). This leaves the calendar in an inconsistent state where the current view is not one of the allowed options. Add \"%s\" to the `views` prop, or pass a view that is already included. See https://mui.com/x/react-scheduler/event-calendar/views/ for more details.",
   "261": "MUI X Scheduler: EventCalendar received an empty `views` prop. This leaves the calendar without any view to render. Pass at least one view, or omit the prop to use the default set. See https://mui.com/x/react-scheduler/event-calendar/views/ for more details.",
-  "262": "MUI X Scheduler: EventTimelinePremium received an empty `presets` prop. This leaves the timeline without any preset to render. Pass at least one preset, or omit the prop to use the default set. See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details."
+  "262": "MUI X Scheduler: EventTimelinePremium received an empty `presets` prop. This leaves the timeline without any preset to render. Pass at least one preset, or omit the prop to use the default set. See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.",
+  "263": "MUI X Scheduler: useEventCalendarPremiumStoreContext must be used within an <EventCalendarPremium /> component",
+  "264": "MUI X Scheduler: useEventTimelinePremiumStoreContext must be used within an <EventTimelinePremium /> component",
+  "265": "MUI X Scheduler: `TimelineGridEventContext` is missing. TimelineGrid Event parts must be placed within <TimelineGrid.Event />.",
+  "266": "MUI X Scheduler: `TimelineGridEventRowContext` is missing. <TimelineGrid.Event /> part must be placed within <TimelineGrid.EventRow />.",
+  "267": "MUI X Scheduler: TimelineGridRootContext is missing. TimelineGrid parts must be placed within <TimelineGrid.Root />.",
+  "268": "MUI X Scheduler: TimelineGridSubGridContext is missing. <TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be placed within <TimelineGrid.SubGrid />."
 }

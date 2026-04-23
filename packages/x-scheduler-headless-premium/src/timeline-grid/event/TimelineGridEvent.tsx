@@ -62,7 +62,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
-  const { getCursorPositionInElementMs } = useTimelineGridEventRowContext();
+  const { hasFocus: rowHasFocus, getCursorPositionInElementMs } = useTimelineGridEventRowContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
@@ -124,6 +124,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const { getButtonProps, buttonRef } = useButton({
     disabled: !isInteractive,
     native: nativeButton,
+    tabIndex: rowHasFocus ? 0 : -1,
   });
 
   const { position, duration, startingBeforeEdge, endingAfterEdge } =
