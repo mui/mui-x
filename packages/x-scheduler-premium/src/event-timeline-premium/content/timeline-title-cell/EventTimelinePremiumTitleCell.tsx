@@ -8,7 +8,7 @@ import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-p
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
-const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.Row, {
+const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.TitleRow, {
   name: 'MuiEventTimeline',
   slot: 'TitleCellRow',
 })(({ theme }) => ({
@@ -17,6 +17,11 @@ const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.Row, {
   alignContent: 'start',
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+  '&:focus-visible': {
+    outline: 'none',
+    boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
+    borderRadius: theme.shape.borderRadius,
   },
 }));
 
