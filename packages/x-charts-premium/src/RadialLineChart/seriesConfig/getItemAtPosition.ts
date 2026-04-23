@@ -146,7 +146,10 @@ function collectCurvePoints(
   return points;
 }
 
-function isInRadiusRange(pointerRadius: number, radiusAxis: ComputedAxis<ScaleName, any, ChartsRadiusAxisProps>): boolean {
+function isInRadiusRange(
+  pointerRadius: number,
+  radiusAxis: ComputedAxis<ScaleName, any, ChartsRadiusAxisProps>,
+): boolean {
   const range = radiusAxis.scale.range();
   const minRadius = Math.min(range[0] as number, range[1] as number);
   const maxRadius = Math.max(range[0] as number, range[1] as number);
