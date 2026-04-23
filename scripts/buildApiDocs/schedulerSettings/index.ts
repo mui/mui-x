@@ -108,7 +108,7 @@ export default schedulerApiPages;
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/scheduler',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/scheduler',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/scheduler',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: [],

@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers/year-calendar',
+    'docs/translations/api-docs/date-pickers/year-calendar',
     false,
     /\.\/year-calendar.*\.json$/,
   );

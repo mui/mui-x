@@ -1,7 +1,7 @@
 import { createSelector } from '@base-ui/utils/store';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
-import { eventTimelinePremiumViewSelectors } from './eventTimelinePremiumViewSelectors';
+import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 
 export const timelineOccurrencePlaceholderSelectors = {
   placeholderInResource: createSelector((state: State, resourceId: SchedulerResourceId | null) => {
@@ -14,10 +14,10 @@ export const timelineOccurrencePlaceholderSelectors = {
       return null;
     }
 
-    const viewConfig = eventTimelinePremiumViewSelectors.config(state);
+    const presetConfig = eventTimelinePremiumPresetSelectors.config(state);
     if (
-      state.adapter.isBefore(state.occurrencePlaceholder.end, viewConfig.start) ||
-      state.adapter.isAfter(state.occurrencePlaceholder.start, viewConfig.end)
+      state.adapter.isBefore(state.occurrencePlaceholder.end, presetConfig.start) ||
+      state.adapter.isAfter(state.occurrencePlaceholder.start, presetConfig.end)
     ) {
       return null;
     }
