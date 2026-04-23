@@ -1,3 +1,4 @@
+import { EPSILON } from '@mui/x-charts/internals';
 import type { CurveType } from '../../models/curve';
 import { getCurveFactory } from '../../internals/getCurve';
 import { clampAngleRad } from '../../internals/clampAngle';
@@ -70,7 +71,7 @@ class SegmentCapture {
     this.cy = y;
   }
 
-  closePath() {}
+  closePath() { }
 }
 
 /** Evaluate a cubic Bezier at parameter t. */
@@ -217,6 +218,7 @@ export function evaluateCurveY(
 
 const vectorProduct = (a: { x: number; y: number }, b: { x: number; y: number }) =>
   a.x * b.y - a.y * b.x;
+
 /**
  * Build the curve segments for a set of pixel-coordinate points
  * using d3's curve factory, then evaluate y at the given pixel x.

@@ -82,6 +82,7 @@ export { getSymbol, type SymbolsTypes } from './getSymbol';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
 export * from './plugins/utils/defaultSeriesConfig';
+export { EPSILON } from '../utils/epsilon';
 export {
   useUtilityClasses as useChartsTooltipUtilityClasses,
   getChartsTooltipUtilityClass,
