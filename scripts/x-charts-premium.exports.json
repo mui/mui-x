@@ -349,6 +349,7 @@
   { "name": "HeatmapTooltipSlotProps", "kind": "Interface" },
   { "name": "HeatmapTooltipSlots", "kind": "Interface" },
   { "name": "HeatmapValueType", "kind": "TypeAlias" },
+  { "name": "HighlightedScatterMark", "kind": "Function" },
   { "name": "HighlightItemIdentifier", "kind": "TypeAlias" },
   { "name": "HighlightItemIdentifierWithType", "kind": "TypeAlias" },
   { "name": "HighlightOptions", "kind": "TypeAlias" },

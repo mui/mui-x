@@ -34,6 +34,7 @@ import {
   type ScatterChartPremiumPluginSignatures,
 } from './ScatterChartPremium.plugins';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
+import { HighlightedScatterMark } from './HighlightedScatterMark';
 
 export interface ScatterChartPremiumSlots
   extends Omit<ScatterChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
@@ -141,6 +142,11 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
             {renderer !== 'webgl' && (
               <g data-drawing-container>
                 <ScatterPlotPremium {...scatterPlotProps} renderer={renderer} />
+              </g>
+            )}
+            {renderer === 'webgl' && (
+              <g data-drawing-container>
+                <HighlightedScatterMark />
               </g>
             )}
             <ChartsOverlay {...overlayProps} />

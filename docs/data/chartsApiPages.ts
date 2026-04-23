@@ -274,6 +274,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/highlighted-scatter-mark',
+    title: 'HighlightedScatterMark',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/line-chart',
     title: 'LineChart',
   },

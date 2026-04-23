@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "HighlightedScatterMark",
+  "imports": [
+    "import { HighlightedScatterMark } from '@mui/x-charts-premium/ScatterChartPremium';",
+    "import { HighlightedScatterMark } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiHighlightedScatterMark",
+  "filename": "/packages/x-charts-premium/src/ScatterChartPremium/HighlightedScatterMark.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>",
+  "cssComponent": false
+}
