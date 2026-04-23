@@ -49,7 +49,7 @@ function getRange(
     ];
     const diff = angles[1] - angles[0];
     const isFullCircle = diff >= Math.PI * 2 - EPSILON;
-    if (axis.scaleType === 'point' && diff > Math.PI * 2 - 0.1) {
+    if (axis.scaleType === 'point' && isFullCircle) {
       // For point scale, remove a slice to avoid overlapping first and last points.
       angles[1] -= diff / axis.data!.length;
     }
