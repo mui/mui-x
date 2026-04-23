@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docsx/config';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
 import {
   ProjectSettings,
   ComponentReactApi,
@@ -76,7 +76,7 @@ export default datePickersApiPages;
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/date-pickers',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/date-pickers',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/date-pickers',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: [

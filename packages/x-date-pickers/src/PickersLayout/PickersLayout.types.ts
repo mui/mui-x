@@ -90,7 +90,10 @@ export interface PickersLayoutSlotProps<
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface PickersLayoutProps<TValue extends PickerValidValue> {
+export interface PickersLayoutProps<TValue extends PickerValidValue> extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children' | 'className'
+> {
   className?: string;
   children?: React.ReactNode;
   /**

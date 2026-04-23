@@ -80,7 +80,7 @@ async function run() {
     const interfacesWithDedicatedPage = await buildInterfacesDocumentationPage({
       projects: subProjects,
       translationPagesDirectory: `docs/translations/api-docs/${folder}`,
-      importTranslationPagesDirectory: `docsx/translations/api-docs/${folder}`,
+      importTranslationPagesDirectory: `docs/translations/api-docs/${folder}`,
       apiPagesDirectory: path.join(process.cwd(), `docs/pages/x/api/${folder}`),
       folder,
       interfaces: documentedInterfaces,
