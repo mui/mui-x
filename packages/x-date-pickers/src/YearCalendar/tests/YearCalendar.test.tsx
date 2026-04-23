@@ -82,11 +82,15 @@ describe('<YearCalendar />', () => {
         <YearCalendar value={adapterToUse.date('2017-02-15')} onChange={onChange} disabled />,
       );
 
+      // Hoist the user-event instance so we don't recreate it on every
+      // iteration; all we need is to bypass the pointer-events check on
+      // disabled buttons.
+      const userWithoutPointerEventsCheck = user.setup({ pointerEventsCheck: 0 });
       const yearButtons = screen.getAllByRole('radio');
       for (const yearButton of yearButtons) {
         expect(yearButton).to.have.attribute('disabled');
         // eslint-disable-next-line no-await-in-loop
-        await user.setup({ pointerEventsCheck: 0 }).click(yearButton);
+        await userWithoutPointerEventsCheck.click(yearButton);
         expect(onChange.callCount).to.equal(0);
       }
     });

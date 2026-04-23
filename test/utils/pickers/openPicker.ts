@@ -18,18 +18,15 @@ export type OpenPickerParams =
 // user-event refuses to click elements with `pointer-events: none` (e.g.
 // disabled/readOnly pickers). Tests that intentionally try to open such
 // pickers — to verify the `onOpen` callback is not called — need the click
-// to go through anyway. Falling back to `fireEvent.click` keeps the assertion
-// meaningful without tripping user-event's check.
+// to dispatch anyway. Detect the condition up-front via `getComputedStyle`
+// and drop down to `fireEvent.click` for those targets, avoiding user-event
+// error-message matching.
 const clickTarget = async (user: MuiRenderResult['user'], target: Element) => {
-  try {
-    await user.click(target);
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('pointer-events: none')) {
-      fireEvent.click(target);
-      return;
-    }
-    throw error;
+  if (window.getComputedStyle(target).pointerEvents === 'none') {
+    fireEvent.click(target);
+    return;
   }
+  await user.click(target);
 };
 
 export const openPicker = async (user: MuiRenderResult['user'], params: OpenPickerParams) => {
