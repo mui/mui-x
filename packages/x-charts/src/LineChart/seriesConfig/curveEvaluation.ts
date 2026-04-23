@@ -152,10 +152,17 @@ export function evaluateCurveY(
 
   // Find the segment containing targetX.
   for (const segment of capture.segments) {
+    if (targetX < segment.x0 + 0.5 && targetX > segment.x0 - 0.5) {
+      return segment.y0;
+    }
+    if (targetX < segment.x1 + 0.5 && targetX > segment.x1 - 0.5) {
+      return segment.y1;
+    }
+
     const xMin = Math.min(segment.x0, segment.x1);
     const xMax = Math.max(segment.x0, segment.x1);
 
-    if (targetX >= xMin - 0.5 && targetX <= xMax + 0.5) {
+    if (targetX >= xMin && targetX <= xMax) {
       const t = findTForX(segment, targetX);
       return evaluateSegmentY(segment, t);
     }
