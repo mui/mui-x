@@ -33,33 +33,34 @@ import {
   SCATTER_CHART_PREMIUM_PLUGINS,
   type ScatterChartPremiumPluginSignatures,
 } from './ScatterChartPremium.plugins';
+import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 
 export interface ScatterChartPremiumSlots
-  extends Omit<ScatterChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
+  extends Omit<ScatterChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> { }
 
 export interface ScatterChartPremiumSlotProps
   extends
-    Omit<ScatterChartSlotProps, 'toolbar' | 'tooltip'>,
-    ChartsToolbarProSlotProps,
-    Partial<ChartsSlotPropsPro> {
+  Omit<ScatterChartSlotProps, 'toolbar' | 'tooltip'>,
+  ChartsToolbarProSlotProps,
+  Partial<ChartsSlotPropsPro> {
   tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>>;
 }
 
 export interface ScatterChartPremiumProps
   extends
-    Omit<
-      ScatterChartProps,
-      'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig' | 'renderer'
-    >,
-    Omit<
-      ChartsContainerPremiumProps<'scatter', ScatterChartPremiumPluginSignatures>,
-      | 'series'
-      | 'onItemClick'
-      | 'slots'
-      | 'slotProps'
-      | 'highlightedAxis'
-      | 'onHighlightedAxisChange'
-    > {
+  Omit<
+    ScatterChartProps,
+    'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig' | 'renderer'
+  >,
+  Omit<
+    ChartsContainerPremiumProps<'scatter', ScatterChartPremiumPluginSignatures>,
+    | 'series'
+    | 'onItemClick'
+    | 'slots'
+    | 'slotProps'
+    | 'highlightedAxis'
+    | 'onHighlightedAxisChange'
+  > {
   /**
    * The renderer to use for drawing the scatter points.
    * - `svg-single`: Renders each point as its own SVG element (full interactivity).
@@ -129,7 +130,11 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
           <ChartsSvgLayer>
             <ChartsGrid {...gridProps} />
           </ChartsSvgLayer>
-          {renderer === 'webgl' && <ScatterPlotPremium renderer={renderer} {...scatterPlotProps} />}
+          {renderer === 'webgl' &&
+            <ChartsWebGLLayer>
+              <ScatterPlotPremium renderer={renderer} {...scatterPlotProps} />
+            </ChartsWebGLLayer>
+          }
           <ChartsSvgLayer {...chartsSvgLayerProps}>
             <ChartsAxis {...chartsAxisProps} />
             <ChartsZoomSlider />
