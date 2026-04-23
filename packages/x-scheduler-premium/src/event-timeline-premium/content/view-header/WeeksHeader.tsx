@@ -49,6 +49,9 @@ const WeekDaysRow = styled('div', {
   slot: 'WeeksHeaderDaysRow',
 })({
   display: 'grid',
+  // Intentionally borrows the `dayAndHour` preset's cell width (64px) to size the 7-day sub-row:
+  // `--dayAndWeek-cell-width` (the week column) equals `7 × 64px`, so each day takes 64px.
+  // This cross-preset token will go away with the generic header in #21827.
   gridTemplateColumns: 'repeat(7, var(--dayAndHour-cell-width))',
 });
 

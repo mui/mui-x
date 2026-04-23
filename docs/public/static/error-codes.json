@@ -209,7 +209,6 @@
   "208": "MUI X Scheduler: Unsupported variant provided to DayGridEvent component. The DayGridEvent component only supports specific variant values. Check the component documentation for supported variants.",
   "209": "MUI X Scheduler: Unsupported variant provided to EventItem component. The EventItem component only supports specific variant values. Check the component documentation for supported variants.",
   "210": "MUI X Scheduler: Event with id=\"%s\" was not found. The requested event does not exist in the scheduler state. Verify the event id is correct and the event has been added.",
-  "211": "MUI: The component tried to switch to the \"%s\" view but it is not compatible with the available views: %s.\nPlease ensure that the requested view is included in the views array.",
   "212": "MUI: useEventCalendarStoreContext must be used within an <EventCalendar /> component",
   "213": "MUI: useSchedulerStoreContext must be used within an <EventCalendar /> or a <EventTimelinePremium /> component",
   "214": "Base UI: Render element or function are not defined.",
