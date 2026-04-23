@@ -4,6 +4,7 @@ import {
   type ProcessedSeries,
   type UseChartPolarAxisSignature,
   type ComputedAxis,
+  type ChartsRadiusAxisProps,
   selectorAllSeriesOfType,
   selectorChartPolarCenter,
   selectorChartRadiusAxis,
@@ -12,7 +13,7 @@ import {
   isOrdinalScale,
 } from '@mui/x-charts/internals';
 import { evaluateCurveAtAngle, clampAngleRad } from '@mui/x-charts/internals';
-import type { SeriesItemIdentifierWithType } from '@mui/x-charts/models';
+import type { ScaleName, SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
 /**
  * For a continuous rotation axis, find the two data indices that bracket the pointer's angle position.
@@ -145,6 +146,12 @@ function collectCurvePoints(
   return points;
 }
 
+function isInRadiusRange(pointerRadius: number, radiusAxis: ComputedAxis<ScaleName, any, ChartsRadiusAxisProps>): boolean {
+  const range = radiusAxis.scale.range();
+  const minRadius = Math.min(range[0] as number, range[1] as number);
+  const maxRadius = Math.max(range[0] as number, range[1] as number);
+  return pointerRadius >= minRadius && pointerRadius <= maxRadius;
+}
 /**
  * The maximum pixel distance (in the radial direction) from a line at which
  * the line is still considered "close enough" to be selected over an area.
@@ -190,6 +197,9 @@ export default function getItemAtPosition(
     const rotationAxis = rotationAxes[rotationAxisId];
     const radiusAxis = radiusAxes[radiusAxisId];
 
+    if (!isInRadiusRange(pointerRadius, radiusAxis)) {
+      continue;
+    }
     const bracket = getBracketIndices(rotationAxis, pointerAngle);
     if (!bracket) {
       continue;
