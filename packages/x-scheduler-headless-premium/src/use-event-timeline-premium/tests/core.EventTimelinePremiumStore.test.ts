@@ -110,5 +110,19 @@ describe('Core - EventTimelinePremiumStore', () => {
           ),
       ).to.throw(/is not part of the `presets` prop/i);
     });
+
+    it('should throw via the subscribe listener when a later state mutation makes the current preset fall out of the presets array', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, defaultPreset: 'day', presets: ['dayAndHour', 'day'] },
+        adapter,
+      );
+
+      expect(() =>
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, defaultPreset: 'day', presets: ['dayAndHour'] },
+          adapter,
+        ),
+      ).to.throw(/is not part of the `presets` prop/i);
+    });
   });
 });
