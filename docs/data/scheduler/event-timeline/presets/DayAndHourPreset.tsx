@@ -5,9 +5,9 @@ import {
   initialEvents,
   resources,
   defaultVisibleDate,
-} from '../../datasets/company-roadmap';
+} from '../../datasets/car-rental';
 
-export default function WeeksView() {
+export default function DayAndHourPreset() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
@@ -17,8 +17,8 @@ export default function WeeksView() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="weeks"
-        views={['weeks']}
+        defaultPreset="dayAndHour"
+        presets={['dayAndHour']}
       />
     </div>
   );

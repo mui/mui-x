@@ -3,6 +3,6 @@
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
-  defaultView="time"
-  views={['time']}
+  defaultPreset="day"
+  presets={['day']}
 />

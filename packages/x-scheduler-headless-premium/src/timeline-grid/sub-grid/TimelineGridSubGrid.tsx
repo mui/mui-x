@@ -5,7 +5,7 @@ import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headles
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 
 export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid(
   componentProps: TimelineGridSubGrid.Props,
@@ -26,12 +26,12 @@ export const TimelineGridSubGrid = React.forwardRef(function TimelineGridSubGrid
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const resources = useStore(
     store,
     schedulerOccurrenceSelectors.groupedByResourceList,
-    viewConfig.start,
-    viewConfig.end,
+    presetConfig.start,
+    presetConfig.end,
   );
 
   const children = React.useMemo(() => {
