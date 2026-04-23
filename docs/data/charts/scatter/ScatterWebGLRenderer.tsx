@@ -36,11 +36,14 @@ function generateSeries(offset: number, spread: number, seed: number) {
   return data;
 }
 
+const DATA_1 = generateSeries(0, 1, 42);
+const DATA_2 = generateSeries(4, 1.5, 7);
+
 export default function ScatterWebGLRenderer() {
   const series = React.useMemo(
     () => [
-      { label: 'Cluster A', data: generateSeries(0, 1, 42), markerSize: 1 },
-      { label: 'Cluster B', data: generateSeries(4, 1.5, 7), markerSize: 1 },
+      { label: 'Cluster A', data: DATA_1, markerSize: 1 },
+      { label: 'Cluster B', data: DATA_2, markerSize: 1 },
     ],
     [],
   );
