@@ -8,6 +8,7 @@ const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'radialLine'> = (
   ...seriesData,
   id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
   color: seriesData.color ?? colors[seriesIndex % colors.length],
+  curve: seriesData.curve ?? 'natural',
 });
 
 export default getSeriesWithDefaultValues;
