@@ -26,6 +26,7 @@ import { deg2rad } from '../../../angleConversion';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { scaleBand, scalePoint } from '../../../scales';
 import { type ComputedAxisConfig } from '../useChartCartesianAxis';
+import { EPSILON } from '../../../../utils/epsilon';
 
 export type DefaultizedAxisConfig<
   AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps,
@@ -40,28 +41,19 @@ function getRange(
   drawingArea: ChartDrawingArea,
   axisDirection: 'rotation' | 'radius',
   axis: PolarAxisConfig<ScaleName, any>,
-): { range: number[]; isPointScaleFullCircle: boolean } {
+): { range: number[]; isFullCircle: boolean } {
   if (axisDirection === 'rotation') {
-    if (axis.scaleType === 'point') {
-      const angles = [
-        deg2rad((axis as RotationConfig).startAngle, 0),
-        deg2rad((axis as RotationConfig).endAngle, 2 * Math.PI),
-      ];
-      const diff = angles[1] - angles[0];
-      const isPointScaleFullCircle = diff > Math.PI * 2 - 0.1;
-      if (isPointScaleFullCircle) {
-        // If we cover a full circle, we remove a slice to avoid having data point at the same place.
-        angles[1] -= diff / axis.data!.length;
-      }
-      return { range: angles, isPointScaleFullCircle };
+    const angles = [
+      deg2rad((axis as RotationConfig).startAngle, 0),
+      deg2rad((axis as RotationConfig).endAngle, 2 * Math.PI),
+    ];
+    const diff = angles[1] - angles[0];
+    const isFullCircle = diff >= Math.PI * 2 - EPSILON;
+    if (axis.scaleType === 'point' && diff > Math.PI * 2 - 0.1) {
+      // For point scale, remove a slice to avoid overlapping first and last points.
+      angles[1] -= diff / axis.data!.length;
     }
-    return {
-      range: [
-        deg2rad((axis as RotationConfig).startAngle, 0),
-        deg2rad((axis as RotationConfig).endAngle, 2 * Math.PI),
-      ],
-      isPointScaleFullCircle: false,
-    };
+    return { range: angles, isFullCircle };
   }
   const availableRadius = Math.min(drawingArea.height, drawingArea.width) / 2;
   return {
@@ -69,7 +61,7 @@ function getRange(
       (axis as RadiusConfig).minRadius ?? 0,
       (axis as RadiusConfig).maxRadius ?? availableRadius,
     ],
-    isPointScaleFullCircle: false,
+    isFullCircle: false,
   };
 }
 
@@ -126,7 +118,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
-    const { range, isPointScaleFullCircle } = getRange(drawingArea, axisDirection, axis);
+    const { range, isFullCircle } = getRange(drawingArea, axisDirection, axis);
 
     const [minData, maxData] = getAxisExtremum(
       axis,
@@ -160,6 +152,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
           (axis.colorMap.type === 'ordinal'
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
             : getColorScale(axis.colorMap)),
+        isFullCircle,
       };
 
       if (isDateData(axis.data)) {
@@ -180,7 +173,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
           (axis.colorMap.type === 'ordinal'
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
             : getColorScale(axis.colorMap)),
-        isPointScaleFullCircle,
+        isFullCircle,
       };
 
       if (isDateData(axis.data)) {
@@ -231,6 +224,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
       scale: finalScale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
+      isFullCircle,
     };
   });
   return {
