@@ -196,21 +196,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   private createSystemDate = (value: string | undefined): Dayjs => {
-    let date: Dayjs;
-    if (this.hasUTCPlugin() && this.hasTimezonePlugin()) {
-      const timezone = dayjs.tz.guess();
-
-      if (timezone === 'UTC') {
-        date = dayjs(value);
-      } /* v8 ignore next 3 */ else {
-        // We can't change the system timezone in the tests
-        date = dayjs.tz(value, timezone);
-      }
-    } else {
-      date = dayjs(value);
-    }
-
-    return this.setLocaleToValue(date);
+    return this.setLocaleToValue(dayjs(value));
   };
 
   private createUTCDate = (value: string | undefined): Dayjs => {
