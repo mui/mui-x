@@ -255,7 +255,20 @@ export function evaluateCurveAtAngle(
     const directionTargetX1 = vectorProduct(pointTarget, { x: segment.x1, y: segment.y1 });
 
     // Test if x0 => target and target => x1 rotate in the same direction.
-    if (directionX0Target * directionTargetX1 > 0) {
+    if (directionX0Target > 0 && directionTargetX1 > 0) {
+      // console.log(directionX0Target, directionTargetX1)
+      const angle0 = Math.atan2(segment.x0, -segment.y0);
+      const angle1 = Math.atan2(segment.x1, -segment.y1);
+
+      const clampedAngleGap0 = clampAngleRad(targetAngle - angle0);
+      if (clampedAngleGap0 < EPSILON || clampedAngleGap0 > Math.PI * 2 - EPSILON) {
+        return { x: segment.x0, y: segment.y0 };
+      }
+      const clampedAngleGap1 = clampAngleRad(targetAngle - angle1);
+      if (clampedAngleGap1 < EPSILON || clampedAngleGap1 > Math.PI * 2 - EPSILON) {
+        return { x: segment.x1, y: segment.y1 };
+      }
+
       const t = findTForAngle(segment, targetAngle);
       return { x: evaluateSegmentX(segment, t), y: evaluateSegmentY(segment, t) };
     }
