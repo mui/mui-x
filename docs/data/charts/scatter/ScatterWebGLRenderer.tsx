@@ -39,7 +39,6 @@ export default function ScatterWebGLRenderer() {
           toggleVisibilityOnClick: true,
         },
       }}
-
     />
   );
 }

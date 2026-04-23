@@ -1,0 +1,9 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "renderer": {
+      "description": "<p>The type of renderer to use for the scatter plot.</p>\n<ul>\n<li><code>svg-single</code>: Renders every scatter item in its own <code>&lt;circle /&gt;</code> element.</li>\n<li><code>svg-batch</code>: Renders all scatter items in a single batched SVG path.</li>\n<li><code>webgl</code>: Renders scatter items using WebGL for better performance, at the cost of some limitations.</li>\n</ul>\n"
+    }
+  },
+  "classDescriptions": {}
+}
