@@ -36,6 +36,12 @@ export function useScatterWebGLPlotData(): ScatterWebGLPlotData {
     colors: Float32Array;
   } | null>(null);
 
+  // Centers change on every zoom/axis update, but the underlying ArrayBuffer
+  // can be reused to avoid allocating ~1.6 MB per zoom frame at 200k points.
+  // We return a fresh Float32Array VIEW over the pooled buffer so the WebGL
+  // program's reference-equality short-circuit still treats it as new data.
+  const centersPoolRef = React.useRef<Float32Array | null>(null);
+
   return React.useMemo(() => {
     if (!seriesData) {
       return EMPTY_DATA;
@@ -63,7 +69,16 @@ export function useScatterWebGLPlotData(): ScatterWebGLPlotData {
       cached.sizes.length === maxPoints &&
       cached.colors.length === maxPoints * 4;
 
-    const centers = new Float32Array(maxPoints * 2);
+    const centersLength = maxPoints * 2;
+    let pool = centersPoolRef.current;
+    if (pool === null || pool.length < centersLength) {
+      pool = new Float32Array(centersLength);
+      centersPoolRef.current = pool;
+    }
+    // New view over the shared buffer — reference identity differs each call so
+    // the GPU upload path treats the centers as dirty, but no heap allocation
+    // of the underlying buffer is incurred.
+    const centers = new Float32Array(pool.buffer, 0, centersLength);
     const sizes = reuseStyles ? cached!.sizes : new Float32Array(maxPoints);
     const colors = reuseStyles ? cached!.colors : new Float32Array(maxPoints * 4);
 
