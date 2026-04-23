@@ -1,17 +1,21 @@
 // language=Glsl
+// Positions and resolution carry drawing-area pixel coordinates that can
+// exceed the ~1024 range where mediump loses sub-pixel precision on mobile
+// GPUs. They must be highp. v_color stays lowp/mediump to save interpolants.
 export const scatterVertexShader = /* glsl */ `
-  precision mediump float;
+  precision highp float;
+  precision mediump int;
 
   attribute vec2 a_position;
-  attribute vec2 a_center;
+  attribute highp vec2 a_center;
   attribute float a_size;
-  attribute vec4 a_color;
+  attribute mediump vec4 a_color;
 
-  varying vec4 v_color;
+  varying mediump vec4 v_color;
   varying vec2 v_offset;
   varying float v_radius;
 
-  uniform vec2 u_resolution;
+  uniform highp vec2 u_resolution;
 
   void main() {
     float radius = a_size * 0.5;
@@ -30,7 +34,7 @@ export const scatterVertexShader = /* glsl */ `
 export const scatterFragmentShader = /* glsl */ `
   precision mediump float;
 
-  varying vec4 v_color;
+  varying mediump vec4 v_color;
   varying vec2 v_offset;
   varying float v_radius;
 
