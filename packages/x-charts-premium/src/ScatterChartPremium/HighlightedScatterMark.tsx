@@ -24,7 +24,7 @@ export function HighlightedScatterMark(props: React.SVGAttributes<SVGCircleEleme
   const { yAxis, yAxisIds } = useYAxes();
 
   if (
-    highlightedItem === null ||
+    !highlightedItem ||
     highlightedItem.type !== 'scatter' ||
     highlightedItem.dataIndex === undefined ||
     !scatterSeries
