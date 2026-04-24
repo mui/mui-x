@@ -34,8 +34,8 @@ Same changes as in `@mui/x-data-grid-pro@8.28.2`.
 
 #### `@mui/x-date-pickers@8.28.4`
 
-- [pickers] Fix `DateRangeCalendar` drag with `AdapterDayjs` plain-constructor values (@LukasTy) (#22170) @github-actions[bot]
-- [pickers] Use `convertToMeridiem` utility in `transferDateSectionValue` (#22062) (#22132) @michelengelen
+- [pickers] Fix `DateRangeCalendar` drag with `AdapterDayjs` plain-constructor values (#22170) @LukasTy
+- [pickers] Use `convertToMeridiem` utility in `transferDateSectionValue` (#22132) @michelengelen
 
 #### `@mui/x-date-pickers-pro@8.28.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -73,8 +73,8 @@ Internal changes.
 
 ### Docs
 
-- [docs] Remove obsolete v7 deprecation warning for `dayOfWeekFormatter` (@LukasTy) (#22120) @github-actions[bot]
-- [docs] Use mui.com for broken links checker known targets (#22129) (#22171) @LukasTy
+- [docs] Remove obsolete v7 deprecation warning for `dayOfWeekFormatter` (#22120) @LukasTy
+- [docs] Use mui.com for broken links checker known targets (#22171) @LukasTy
 
 ## 8.28.3
 
