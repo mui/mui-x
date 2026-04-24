@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## __VERSION__
+
+_Apr 24, 2026_
+
+We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+The following are all team members who have contributed to this release:
+@arminmeh, @dav-is, @LukasTy, @michelengelen
+
+### Data Grid
+
+#### `@mui/x-data-grid@__VERSION__`
+
+- [DataGrid] Prevent repeated `hasScrollbar` state updates (#21849) @arminmeh
+
+#### `@mui/x-data-grid-pro@__VERSION__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@__VERSION__`.
+
+#### `@mui/x-data-grid-premium@__VERSION__` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@__VERSION__`.
+
+### Docs
+
+- [docs] Add `v9` as root path link and move `v8` under subpath (#22037) @LukasTy
+- [docs] Add check for auto-generated group rows in renderCountry (#22143) @michelengelen
+- [docs] Remove obsolete v7 deprecation warning for `dayOfWeekFormatter` (@LukasTy) (#22121) @github-actions[bot]
+
+### Miscellaneous
+
+- [docs-infra] Set SEARCH_INDEX Env for v7 (#21876) @dav-is
+
 ## 7.29.12
 
 _Nov 26, 2025_
