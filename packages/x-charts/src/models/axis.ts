@@ -609,8 +609,6 @@ export type PolarAxisDefaultized<
      * If true, the contents of the axis will be displayed by a tooltip with `trigger='axis'`.
      */
     triggerTooltip?: boolean;
-    /** @ignore - internal. True when a rotation axis covers a full circle. */
-    isFullCircle?: boolean;
   };
 
 export type ComputedAxis<

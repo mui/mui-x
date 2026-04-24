@@ -1,14 +1,15 @@
-import { type AxisConfig, type ScaleName } from '../../../../models';
+import type { ContinuousScaleName, AxisConfig, ScaleName } from '../../../../models';
 import {
   type ChartsAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
+  isContinuousScaleConfig,
   type ChartsRotationAxisProps,
   type ChartsRadiusAxisProps,
   type PolarAxisDefaultized,
   type AxisId,
   type PolarAxisConfig,
-  isContinuousScaleConfig,
+  type ComputedAxis,
 } from '../../../../models/axis';
 import {
   type ChartSeriesType,
@@ -115,7 +116,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
     allAxis[0].id,
   );
 
-  const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
+  const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const { range, isFullCircle } = getRange(drawingArea, axisDirection, axis);
@@ -153,7 +154,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
             : getColorScale(axis.colorMap)),
         isFullCircle,
-      };
+      } as ComputedAxis<'band', any, ChartsAxisProps>;
 
       if (isDateData(axis.data)) {
         const dateFormatter = createDateFormatter(axis.data, range, axis.tickNumber);
@@ -174,7 +175,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
             : getColorScale(axis.colorMap)),
         isFullCircle,
-      };
+      } as ComputedAxis<'point', any, ChartsAxisProps>;
 
       if (isDateData(axis.data)) {
         const dateFormatter = createDateFormatter(axis.data, range, axis.tickNumber);
@@ -224,8 +225,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
       scale: finalScale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
-      isFullCircle,
-    };
+    } as ComputedAxis<ContinuousScaleName, any, ChartsAxisProps>;
   });
   return {
     axis: completeAxis,
