@@ -4,9 +4,7 @@ import {
   getRadialAxisUtilityClass,
 } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 
-export const useUtilityClasses = (props: {
-  classes?: Partial<ChartsRadialAxisClasses>;
-}) => {
+export const useUtilityClasses = (props: { classes?: Partial<ChartsRadialAxisClasses> }) => {
   const { classes } = props;
   const slots = {
     root: ['root', 'rotation'],
