@@ -72,7 +72,7 @@ export function useFieldRootProps(
     switch (true) {
       // Select all
       case (event.ctrlKey || event.metaKey) &&
-        String.fromCharCode(event.keyCode) === 'A' &&
+        (event.key?.toUpperCase() === 'A' || String.fromCharCode(event.keyCode) === 'A') &&
         !event.shiftKey &&
         !event.altKey: {
         // prevent default to make sure that the next line "select all" while updating

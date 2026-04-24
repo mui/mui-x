@@ -81,19 +81,19 @@ describe('<DateRangeCalendar />', () => {
       expect(rangeOn2ndCall[1]).to.toEqualDateTime(new Date(2019, 2, 19));
     });
 
-    it('should continue start selection if selected "end" date is before start', () => {
+    it('should continue start selection if selected "end" date is before start', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateRangeCalendar onChange={onChange} referenceDate={adapterToUse.date('2019-01-01')} />,
       );
 
-      fireEvent.click(getPickerDay('30', 'January 2019'));
-      fireEvent.click(getPickerDay('19', 'January 2019'));
+      await user.click(getPickerDay('30', 'January 2019'));
+      await user.click(getPickerDay('19', 'January 2019'));
 
       expect(screen.queryByTestId('DateRangeHighlight')).to.equal(null);
 
-      fireEvent.click(getPickerDay('30', 'January 2019'));
+      await user.click(getPickerDay('30', 'January 2019'));
 
       expect(onChange.callCount).to.equal(3);
       const range = onChange.lastCall.firstArg;
@@ -533,14 +533,14 @@ describe('<DateRangeCalendar />', () => {
     });
 
     it('should not go to the month of the end date when changing the start date and props.disableAutoMonthSwitching = true', async () => {
-      render(
+      const { user } = render(
         <DateRangeCalendar
           defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
           disableAutoMonthSwitching
         />,
       );
 
-      fireEvent.click(getPickerDay('5', 'January 2018'));
+      await user.click(getPickerDay('5', 'January 2018'));
       await waitFor(() => {
         expect(getPickerDay('1', 'January 2018')).not.to.equal(null);
       });
@@ -582,9 +582,9 @@ describe('<DateRangeCalendar />', () => {
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {
-    it(`prop: ${prop}="true" should not allow date editing`, () => {
+    it(`prop: ${prop}="true" should not allow date editing`, async () => {
       const handleChange = spy();
-      render(
+      const { user } = render(
         <DateRangeCalendar
           value={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-10')]}
           onChange={handleChange}
@@ -603,7 +603,7 @@ describe('<DateRangeCalendar />', () => {
           'disabled',
         );
       }
-      fireEvent.click(getPickerDay('2'));
+      await user.setup({ pointerEventsCheck: 0 }).click(getPickerDay('2'));
       expect(handleChange.callCount).to.equal(0);
     });
   });
@@ -628,6 +628,7 @@ describe('<DateRangeCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
+      // sticking with `fireEvent` for simplified performance test
       fireEvent.click(getPickerDay('2'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
@@ -647,6 +648,7 @@ describe('<DateRangeCalendar />', () => {
       fireEvent.click(getPickerDay('2'));
 
       const renderCountBeforeChange = RenderCount.callCount;
+      // sticking with `fireEvent` for simplified performance test
       fireEvent.click(getPickerDay('4'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
     });
