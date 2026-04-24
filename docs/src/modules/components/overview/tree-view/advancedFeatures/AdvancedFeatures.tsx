@@ -2,7 +2,7 @@ import * as React from 'react';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import SectionHeadline from '@mui/docs/SectionHeadline';
+import SectionHeadline from '@mui/internal-core-docs/SectionHeadline';
 import InfoCard from '../../InfoCard';
 import LabelEditingDemo from './LabelEditingDemo';
 import DragAndDropDemo from './DragAndDropDemo';
@@ -32,18 +32,16 @@ export default function AdvancedFeatures() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={6} py={8} alignItems="center">
-        <Stack
-          spacing={2}
-          sx={{
-            minWidth: '260px',
-            maxWidth: { xs: '500px', md: '400px' },
-          }}
-        >
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        spacing={6}
+        sx={{ py: 8, alignItems: 'center' }}
+      >
+        <Stack spacing={2} sx={{ minWidth: '260px', maxWidth: { xs: '500px', md: '400px' } }}>
           <SectionHeadline
             overline="Advanced features"
             title={
-              <Typography variant="h2" fontSize="1.625rem">
+              <Typography variant="h2" sx={{ fontSize: '1.625rem' }}>
                 {advancedFeatures[activeItem].title}
               </Typography>
             }
@@ -61,9 +59,9 @@ export default function AdvancedFeatures() {
           ))}
         </Stack>
         <Stack
-          justifyContent="center"
-          alignItems="center"
           sx={{
+            justifyContent: 'center',
+            alignItems: 'center',
             width: { xs: '100%' },
             maxWidth: { xs: '500px', md: '100%' },
           }}

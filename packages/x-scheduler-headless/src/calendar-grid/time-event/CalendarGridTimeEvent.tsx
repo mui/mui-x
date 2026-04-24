@@ -26,6 +26,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     start,
     end,
@@ -51,6 +52,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     start: columnStart,
     end: columnEnd,
     index: columnIndex,
+    hasFocus: columnHasFocus,
     getCursorPositionInElementMs,
   } = useCalendarGridTimeColumnContext();
 
@@ -111,6 +113,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const { getButtonProps, buttonRef } = useButton({
     disabled: !isInteractive,
     native: nativeButton,
+    tabIndex: columnHasFocus ? 0 : -1,
   });
 
   const { position, duration } = useElementPositionInCollection({
@@ -120,19 +123,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     collectionEnd: columnEnd,
   });
 
-  // Rendering hooks
-  const style = React.useMemo(
-    () =>
-      ({
-        [CalendarGridTimeEventCssVars.yPosition]: `${position * 100}%`,
-        [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
-      }) as React.CSSProperties,
-    [position, duration],
-  );
-
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
-
-  const props = { id, style, 'aria-labelledby': `${columnHeaderId} ${id}` };
 
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
@@ -142,7 +133,18 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, buttonRef, ref],
-    props: [props, elementProps, getButtonProps],
+    props: [
+      elementProps,
+      {
+        id,
+        'aria-labelledby': `${columnHeaderId} ${id}`,
+        style: {
+          [CalendarGridTimeEventCssVars.yPosition]: `${position * 100}%`,
+          [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
+        } as React.CSSProperties,
+      },
+      getButtonProps,
+    ],
   });
 
   return (

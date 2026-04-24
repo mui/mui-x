@@ -38,7 +38,7 @@ If your data is stored in an array of objects, you can use the `dataset` helper 
 It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
 
 You can reuse this data when defining the series and axes by using the `dataKey` property.
-For example, `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
+For example, `xAxis={[{ dataKey: 'x' }]}` or `series={[{ dataKey: 'y' }]}`.
 
 {{"demo": "BarsDataset.js"}}
 
@@ -94,7 +94,7 @@ You can test all configuration options in the following demo:
 ### Date axis
 
 If your band axis represents dates that are sorted and evenly spaced (as is typical), you can set `ordinalTimeTicks` to pick certain date frequencies.
-This modifies the [tick management](/x/react-charts/axis/#ordinal-tick-management).
+This modifies the [tick management](/x/react-charts/axis-ticks/#ordinal-tick-management).
 
 Instead of one tick per band, the axis renders ticks according to the provided frequencies and the tick number.
 
@@ -120,7 +120,7 @@ You can work around this limitation by using a [symlog scale](/x/react-charts/ax
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) for details.
+See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
 {{"demo": "GridDemo.js"}}
 

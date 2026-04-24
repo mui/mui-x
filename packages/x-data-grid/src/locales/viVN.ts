@@ -68,7 +68,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Toán tử',
   filterPanelOperatorAnd: 'Và',
   filterPanelOperatorOr: 'Hoặc',
-  filterPanelColumns: 'Cột',
+  filterPanelColumn: 'Cột',
   filterPanelInputLabel: 'Giá trị',
   filterPanelInputPlaceholder: 'Lọc giá trị',
 

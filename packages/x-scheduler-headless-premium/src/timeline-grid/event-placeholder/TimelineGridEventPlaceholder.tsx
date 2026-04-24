@@ -5,7 +5,7 @@ import { useElementPositionInCollection, useEvent } from '@mui/x-scheduler-headl
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { TimelineGridEventPlaceholderCssVars } from './TimelineGridEventPlaceholderCssVars';
-import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventPlaceholderDataAttributes } from './TimelineGridEventPlaceholderDataAttributes';
 
 const overflowStateAttributesMapping = {
@@ -23,6 +23,7 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     start,
     end,
@@ -34,28 +35,16 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Feature hooks
   const { position, duration, startingBeforeEdge, endingAfterEdge } =
     useElementPositionInCollection({
       start,
       end,
-      collectionStart: viewConfig.start,
-      collectionEnd: viewConfig.end,
+      collectionStart: presetConfig.start,
+      collectionEnd: presetConfig.end,
     });
-
-  // Rendering hooks
-  const style = React.useMemo(
-    () =>
-      ({
-        [TimelineGridEventPlaceholderCssVars.xPosition]: `${position * 100}%`,
-        [TimelineGridEventPlaceholderCssVars.width]: `${duration * 100}%`,
-      }) as React.CSSProperties,
-    [position, duration],
-  );
-
-  const props = React.useMemo(() => ({ style }), [style]);
 
   const { state: eventState } = useEvent({ start, end });
 
@@ -64,7 +53,15 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
-    props: [props, elementProps],
+    props: [
+      elementProps,
+      {
+        style: {
+          [TimelineGridEventPlaceholderCssVars.xPosition]: `${position * 100}%`,
+          [TimelineGridEventPlaceholderCssVars.width]: `${duration * 100}%`,
+        } as React.CSSProperties,
+      },
+    ],
     stateAttributesMapping: overflowStateAttributesMapping,
   });
 });

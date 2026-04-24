@@ -475,7 +475,7 @@ export type SchedulerEventModelStructure<TEvent extends object> = {
 export interface SchedulerEventCreationConfig {
   /**
    * The interaction required to create an event.
-   * @default 'double-click'
+   * @default 'click'
    */
   interaction: 'click' | 'double-click';
   /**

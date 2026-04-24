@@ -1,8 +1,12 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docsx/config';
-import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
-import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
+import {
+  ProjectSettings,
+  ComponentReactApi,
+  HookReactApi,
+  findApiPages,
+} from '@mui/internal-api-docs-builder';
 import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
@@ -78,7 +82,7 @@ export const projectGridSettings: ProjectSettings = {
       .filter((page): page is PageType => page !== null)
       .sort((a: PageType, b: PageType) => a.title.localeCompare(b.title));
 
-    return `import type { MuiPage } from '@mui/docs/MuiPage';
+    return `import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
 const dataGridApiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
 export default dataGridApiPages;
@@ -108,7 +112,7 @@ export default dataGridApiPages;
     COMPONENT_API_PAGES.every((validPath) => !filename.endsWith(validPath)),
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/data-grid',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/data-grid',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/data-grid',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: ['debounceMs', 'quickFilterParser'],

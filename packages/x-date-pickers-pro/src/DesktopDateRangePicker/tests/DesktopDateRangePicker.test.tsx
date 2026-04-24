@@ -13,7 +13,6 @@ import {
   AdapterClassToUse,
   openPickerAsync,
   getFieldSectionsContainer,
-  getTextbox,
 } from 'test/utils/pickers';
 import { vi } from 'vitest';
 
@@ -100,35 +99,17 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   it('should add focused class to the field when it is focused', async () => {
-    // Test with accessible DOM structure
-    const { unmount } = render(<DesktopDateRangePicker />);
+    render(<DesktopDateRangePicker />);
 
     const sectionsContainer = getFieldSectionsContainer();
     await act(async () => sectionsContainer.focus());
 
     expect(sectionsContainer.parentElement).to.have.class('Mui-focused');
-
-    await act(async () => unmount());
-
-    // Test with non-accessible DOM structure
-    render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure={false} />);
-
-    const input = getTextbox();
-    await act(async () => input.focus());
-
-    expect(input.parentElement).to.have.class('Mui-focused');
   });
 
   it('should render the input with a given `name`', () => {
-    // Test with accessible DOM structure
-    const { unmount } = render(<DesktopDateRangePicker name="test" />);
+    render(<DesktopDateRangePicker name="test" />);
     expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
-
-    unmount();
-
-    // Test with non-accessible DOM structure
-    render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure={false} name="test" />);
-    expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
   });
 
   describe('Component slot: Popper', () => {

@@ -17,7 +17,7 @@ const arrayShallowCompare = (a: any[], b: any[]) => {
   return a.length === b.length && a.every((v, i) => v === b[i]);
 };
 
-export const argsEqual = (prev: any, curr: any) => {
+const argsEqual = (prev: any, curr: any) => {
   let fn = Object.is;
   if (curr instanceof Array) {
     fn = arrayShallowCompare;

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Check from '@mui/icons-material/Check';
 
 import { alpha } from '@mui/material/styles';
 import ReplayRoundedIcon from '@mui/icons-material/ReplayRounded';
@@ -7,17 +6,16 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
 import FormControl from '@mui/material/FormControl';
-import FormLabel, { formLabelClasses } from '@mui/material/FormLabel';
+import FormLabel from '@mui/material/FormLabel';
 import IconButton from '@mui/material/IconButton';
 import Input, { inputClasses } from '@mui/material/Input';
 import MenuItem from '@mui/material/MenuItem';
 import Slider from '@mui/material/Slider';
 
-import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Select from '@mui/material/Select';
-import Paper from '@mui/material/Paper';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 
@@ -92,7 +90,7 @@ type NumberDataType = {
   Pick<ConditionalTypes, 'step' | 'min' | 'max'>;
 
 type SelectDataType = {
-  knob: 'select' | 'color';
+  knob: 'select';
   /**
    * The default value to be used by the components.
    */
@@ -129,22 +127,13 @@ type TitleDataType = {
   knob: 'title';
 } & DefaultTypes;
 
-type PlacementDataType = {
-  knob: 'placement';
-  /**
-   * The default value to be used by the components.
-   */
-  defaultValue?: Placement;
-} & DefaultTypes;
-
 export type DataType =
   | NumberDataType
   | SelectDataType
   | RadioDataType
   | SwitchDataType
   | InputDataType
-  | TitleDataType
-  | PlacementDataType;
+  | TitleDataType;
 
 export type PropsFromData<Data extends Record<string, DataType>> = {
   [K in keyof Data]: Data[K] extends { options: readonly (infer T)[] }
@@ -230,8 +219,7 @@ export default function ChartDemoPropsForm<
         <Typography
           id="usage-props"
           component="h3"
-          fontWeight="bold"
-          sx={{ scrollMarginTop: 160, fontFamily: 'General Sans' }}
+          sx={{ fontWeight: 'bold', scrollMarginTop: 160, fontFamily: 'General Sans' }}
         >
           Playground
         </Typography>
@@ -255,9 +243,6 @@ export default function ChartDemoPropsForm<
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
-          [`& .${formLabelClasses.root}`]: {
-            fontWeight: 'lg',
-          },
           '&& > *': {
             px: 3,
           },
@@ -355,42 +340,6 @@ export default function ChartDemoPropsForm<
               </FormControl>
             );
           }
-          if (knob === 'color') {
-            const { options } = propData;
-            return (
-              <FormControl key={propName} sx={{ mb: 1 }} size="small">
-                <FormLabel>{title}</FormLabel>
-                <RadioGroup
-                  name={`${componentName}-color`}
-                  value={resolvedValue || ''}
-                  onChange={(event) =>
-                    onPropsChange((latestProps) => ({
-                      ...latestProps,
-                      [propName]: event.target.value,
-                    }))
-                  }
-                  sx={{ flexWrap: 'wrap', gap: 1.5, display: 'flex', flexDirection: 'row' }}
-                >
-                  {options.map((value) => {
-                    return (
-                      <FormControlLabel
-                        control={<ControlledColorRadio />}
-                        label={value}
-                        value={value}
-                        labelPlacement="bottom"
-                        sx={{
-                          [`& .${formControlLabelClasses.label}`]: {
-                            fontSize: '10px',
-                            color: 'text.secondary',
-                          },
-                        }}
-                      />
-                    );
-                  })}
-                </RadioGroup>
-              </FormControl>
-            );
-          }
           if (knob === 'select') {
             const { options } = propData;
             return (
@@ -440,7 +389,7 @@ export default function ChartDemoPropsForm<
           if (knob === 'title') {
             return (
               <React.Fragment key={propName}>
-                <Typography variant="body2" fontWeight="bold" sx={{ pt: i !== 0 ? 2 : 0 }}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', pt: i !== 0 ? 2 : 0 }}>
                   {title}
                 </Typography>
                 <Divider sx={{ opacity: 0.5 }} />
@@ -482,150 +431,9 @@ export default function ChartDemoPropsForm<
               </FormControl>
             );
           }
-          if (knob === 'placement') {
-            return (
-              <FormControl key={propName}>
-                <FormLabel>{displayName ?? 'Placement'}</FormLabel>
-                <RadioGroup
-                  name="placement"
-                  value={resolvedValue}
-                  onChange={(event) =>
-                    onPropsChange((latestProps) => ({
-                      ...latestProps,
-                      [propName]: event.target.value,
-                    }))
-                  }
-                >
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: '40px 1fr 1fr 1fr 40px',
-                      gridTemplateRows: 'repeat(5, 20px)',
-                      gridAutoFlow: 'row dense',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        gridRow: '2 / -2',
-                        gridColumn: '2 / -2',
-                        fontSize: 'sm',
-                        border: '1px solid',
-                        borderColor: 'divider',
-                        borderRadius: 'sm',
-                        alignSelf: 'stretch',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        fontWeight: 'md',
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {`${resolvedValue}`}
-                    </Box>
-                    {/* void */}
-                    <div />
-                    <Box sx={{ gridColumn: '-1 / -2', gridRow: '1' }} />
-                    <Box sx={{ gridRow: '-1 / -2', gridColumn: '1' }} />
-                    {/* void */}
-                    {[
-                      'top-start',
-                      'top',
-                      'top-end',
-                      'left-start',
-                      'right-start',
-                      'left',
-                      'right',
-                      'left-end',
-                      'right-end',
-                      'bottom-start',
-                      'bottom',
-                      'bottom-end',
-                    ].map((placement) => (
-                      <Paper
-                        key={placement}
-                        // variant="soft"
-                        color="primary"
-                        sx={[
-                          {
-                            position: 'relative',
-                            height: '14px',
-                            width: 32,
-                            borderRadius: 'xs',
-                            mx: 0.5,
-                          },
-                          placement.match(/^(top|bottom)$/) && {
-                            justifySelf: 'center',
-                          },
-                          placement.match(/^(top-end|bottom-end)$/) && {
-                            justifySelf: 'flex-end',
-                          },
-                        ]}
-                      >
-                        <Radio
-                          value={placement}
-                          // overlay
-                          // disableIcon
-                          // slotProps={{
-                          //   action: ({ checked }) => ({
-                          //     sx: (theme) => ({
-                          //       ...(checked && {
-                          //         ...theme.variants.solid.primary,
-                          //         '&:hover': theme.variants.solid.primary,
-                          //       }),
-                          //     }),
-                          //   }),
-                          // }}
-                        />
-                      </Paper>
-                    ))}
-                  </Box>
-                </RadioGroup>
-              </FormControl>
-            );
-          }
           return null;
         })}
       </Box>
     </Box>
-  );
-}
-
-function ControlledColorRadio(props: any) {
-  const { value, ...other } = props;
-  return (
-    <Paper
-      color={value}
-      sx={{
-        width: 28,
-        height: 28,
-        borderRadius: 'sm',
-        textTransform: 'capitalize',
-        position: 'relative',
-        bgcolor: value,
-      }}
-    >
-      <Radio
-        {...other}
-        value={value}
-        icon={<Check sx={{ opacity: 0 }} />}
-        checkedIcon={
-          <Check
-            fontSize="medium"
-            color="inherit"
-            sx={(theme) => ({
-              zIndex: 1,
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              pointerEvents: 'none',
-              color: theme.palette.background.default,
-            })}
-          />
-        }
-        sx={{ width: '100%', height: '100%', margin: 0 }}
-      />
-    </Paper>
   );
 }

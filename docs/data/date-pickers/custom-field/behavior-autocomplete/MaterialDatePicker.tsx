@@ -65,7 +65,7 @@ function AutocompleteField(props: AutocompleteFieldProps) {
       className={rootClassName}
       sx={[{ minWidth: 250 }, ...(Array.isArray(rootSx) ? rootSx : [rootSx])]}
       renderInput={(params) => {
-        const endAdornment = params.InputProps
+        const endAdornment = params.slotProps.input
           .endAdornment as React.ReactElement<any>;
         return (
           <TextField
@@ -75,8 +75,9 @@ function AutocompleteField(props: AutocompleteFieldProps) {
             label={label}
             name={name}
             slotProps={{
+              ...params.slotProps,
               input: {
-                ...params.InputProps,
+                ...params.slotProps.input,
                 endAdornment: React.cloneElement(endAdornment, {
                   children: (
                     <React.Fragment>

@@ -9,7 +9,7 @@ import {
   randomTraderName,
 } from '@mui/x-data-grid-generator';
 import * as ReactDOM from 'react-dom';
-import { GridData } from 'docsx/data/data-grid/virtualization/ColumnVirtualizationGrid';
+import { GridData } from 'docs/data/data-grid/virtualization/ColumnVirtualizationGrid';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Brand ID' },
@@ -85,10 +85,12 @@ export default function ColumnAutosizingAsync() {
       <Stack
         spacing={1}
         direction="row"
-        alignItems="center"
-        sx={{ mb: 1 }}
         useFlexGap
-        flexWrap="wrap"
+        sx={{
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          mb: 1,
+        }}
       >
         <Button variant="outlined" onClick={fetchData}>
           Refetch data

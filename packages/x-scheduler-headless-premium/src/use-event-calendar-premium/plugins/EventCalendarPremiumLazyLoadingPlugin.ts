@@ -1,4 +1,4 @@
-import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
+import type { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
 import {
   EventCalendarPremiumState,

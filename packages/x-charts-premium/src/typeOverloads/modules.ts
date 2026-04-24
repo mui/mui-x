@@ -5,6 +5,9 @@ import type {
   SeriesId,
   ComputedXAxis,
   ComputedYAxis,
+  PolarAxisDefaultized,
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
 } from '@mui/x-charts/internals';
 import type {
   RangeBarValueType,
@@ -13,6 +16,9 @@ import type {
   OHLCItemIdentifier,
   OHLCSeriesType,
   OHLCValueType,
+  RadialLineSeriesType,
+  DefaultizedRadialLineSeriesType,
+  RadialLineItemIdentifier,
 } from '../models';
 import type {
   DefaultizedRangeBarSeriesType,
@@ -51,7 +57,8 @@ declare module '@mui/x-charts/internals' {
     };
     ohlc: {
       seriesInput: DefaultizedProps<OHLCSeriesType, 'id'> &
-        MakeRequired<SeriesColor<OHLCValueType | null>, 'color'>;
+        MakeRequired<SeriesColor<OHLCValueType | null>, 'color'> &
+        Pick<DefaultizedOHLCSeriesType, 'upColor' | 'downColor'>;
       series: DefaultizedOHLCSeriesType;
       seriesLayout: {};
       seriesProp: OHLCSeriesType;
@@ -68,6 +75,30 @@ declare module '@mui/x-charts/internals' {
       };
       highlightIdentifier: {
         type: 'ohlc';
+        seriesId: SeriesId;
+        dataIndex?: number;
+      };
+    };
+    radialLine: {
+      seriesInput: DefaultizedProps<RadialLineSeriesType, 'id'> &
+        MakeRequired<SeriesColor<number | null>, 'color'>;
+      series: DefaultizedRadialLineSeriesType;
+      seriesLayout: {};
+      seriesProp: RadialLineSeriesType;
+      itemIdentifier: RadialLineItemIdentifier;
+      itemIdentifierWithData: RadialLineItemIdentifier;
+      valueType: number | null;
+      canBeStacked: true;
+      axisType: 'polar';
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: RadialLineItemIdentifier;
+        rotationAxis: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
+        radiusAxis: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
+        series: DefaultizedRadialLineSeriesType;
+      };
+      highlightIdentifier: {
+        type: 'radialLine';
         seriesId: SeriesId;
         dataIndex?: number;
       };

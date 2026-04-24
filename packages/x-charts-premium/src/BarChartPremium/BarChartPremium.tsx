@@ -20,7 +20,7 @@ import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { seriesPreviewPlotMap, useChartsContainerProProps } from '@mui/x-charts-pro/internals';
+import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
@@ -32,11 +32,8 @@ import {
 } from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
-import { RangeBarPreviewPlot } from '../ChartsZoomSlider/internals/previews/RangeBarPreviewPlot';
 
 import type {} from '../typeOverloads/modules';
-
-seriesPreviewPlotMap.set('rangeBar', RangeBarPreviewPlot);
 
 export type RangeBarSeries = RangeBarSeriesType;
 
@@ -596,6 +593,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -606,7 +604,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -703,6 +701,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -713,7 +712,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -786,6 +785,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -796,7 +796,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -870,6 +870,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -880,7 +881,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -953,6 +954,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -963,7 +965,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1036,6 +1038,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1046,7 +1049,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1129,6 +1132,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1139,7 +1143,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1222,6 +1226,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1232,7 +1237,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1305,6 +1310,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
             filterMode: PropTypes.oneOf(['discard', 'keep']),
@@ -1315,7 +1321,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1421,6 +1427,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1432,7 +1439,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1527,6 +1534,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1538,7 +1546,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1609,6 +1617,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1620,7 +1629,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1692,6 +1701,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1703,7 +1713,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1774,6 +1784,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1785,7 +1796,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1856,6 +1867,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1867,7 +1879,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1948,6 +1960,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1959,7 +1972,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -2040,6 +2053,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -2051,7 +2065,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -2122,6 +2136,7 @@ BarChartPremium.propTypes = {
         tickSize: PropTypes.number,
         tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
+        valueGetter: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -2133,7 +2148,7 @@ BarChartPremium.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              preview: PropTypes.bool,
+              preview: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -2181,6 +2196,7 @@ BarChartPremium.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+      valueGetter: PropTypes.func,
     }),
   ),
   /**

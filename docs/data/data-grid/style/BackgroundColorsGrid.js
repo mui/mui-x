@@ -68,7 +68,7 @@ export default function BackgroundColorsGrid() {
   const theme = React.useMemo(() => getTheme(mode), [mode]);
 
   return (
-    <Stack direction="column" gap={1} style={{ width: '100%', height: 400 }}>
+    <Stack direction="column" style={{ width: '100%', height: 400 }} sx={{ gap: 1 }}>
       <ToggleButtonGroup
         size="small"
         color="primary"
@@ -83,7 +83,6 @@ export default function BackgroundColorsGrid() {
           <DarkModeIcon fontSize="small" /> Dark
         </ToggleButton>
       </ToggleButtonGroup>
-
       <ThemeProvider theme={theme}>
         <DataGridPremium
           rows={rows}

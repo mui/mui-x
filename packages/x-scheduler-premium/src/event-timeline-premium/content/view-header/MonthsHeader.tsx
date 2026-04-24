@@ -4,7 +4,7 @@ import { useStore } from '@base-ui/utils/store/useStore';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
-import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
@@ -37,7 +37,7 @@ const MonthLabel = styled('div', {
   slot: 'MonthsHeaderMonthLabel',
 })(({ theme }) => ({
   gridRow: 2,
-  width: 'calc(var(--days-in-month) * var(--months-cell-width))',
+  width: 'calc(var(--days-in-month) * var(--monthAndYear-cell-width))',
   padding: theme.spacing(1),
   textAlign: 'center',
   borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
@@ -52,12 +52,12 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Feature hooks
   const months = React.useMemo(
-    () => getMonths(adapter, viewConfig.start, viewConfig.end),
-    [adapter, viewConfig],
+    () => getMonths(adapter, presetConfig.start, presetConfig.end),
+    [adapter, presetConfig],
   );
 
   return (

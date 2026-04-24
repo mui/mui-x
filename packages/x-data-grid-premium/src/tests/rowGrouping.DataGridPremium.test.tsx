@@ -1043,7 +1043,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
+        // Corresponds to rows id 0 and 4 (respectively "cat A cat 1" and "cat B cat 1")
         expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
       });
 
@@ -1107,7 +1107,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
+        // Corresponds to rows id 0 and 4 (respectively "cat A cat 1" and "cat B cat 1")
         expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
       });
 

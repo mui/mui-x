@@ -34,6 +34,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     start,
     end,
@@ -56,7 +57,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const store = useEventCalendarStoreContext();
   const { id: rootId } = useCalendarGridRootContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
-  const { index: cellIndex } = useCalendarGridDayCellContext();
+  const { index: cellIndex, hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
@@ -136,17 +137,12 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const { getButtonProps, buttonRef } = useButton({
     disabled: !isInteractive,
     native: nativeButton,
+    tabIndex: cellHasFocus ? 0 : -1,
   });
 
   // Rendering hooks
 
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, cellIndex);
-
-  const props = {
-    id,
-    'aria-labelledby': `${columnHeaderId} ${id}`,
-    style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
-  };
 
   const contextValue: CalendarGridDayEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
@@ -156,7 +152,15 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const element = useRenderElement('div', componentProps, {
     state: mergedState,
     ref: [forwardedRef, buttonRef, ref],
-    props: [props, elementProps, getButtonProps],
+    props: [
+      elementProps,
+      {
+        id,
+        'aria-labelledby': `${columnHeaderId} ${id}`,
+        style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
+      },
+      getButtonProps,
+    ],
     stateAttributesMapping: overflowStateAttributesMapping,
   });
 

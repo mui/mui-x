@@ -825,6 +825,60 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         // Verify all paths maintain correct hierarchy
         expect(updatedRows.length).to.equal(2); // Project + File.doc
       });
+
+      it('should allow dropping inside when initial data has no children (all rows at root level)', async () => {
+        // Regression test for https://github.com/mui/mui-x/issues/21347
+        // When treeData is enabled but all rows are flat (no parent-child relationships),
+        // the "inside" drop position should still work.
+        const handleRowOrderChange = spy();
+        const processedRows: GridRowModel[] = [];
+
+        const handleProcessRowUpdate = (newRow: GridRowModel) => {
+          processedRows.push(newRow);
+          return newRow;
+        };
+
+        render(
+          <Test
+            onRowOrderChange={handleRowOrderChange}
+            processRowUpdate={handleProcessRowUpdate}
+            rows={[
+              { id: 1, path: ['Folder'], name: 'Folder' },
+              { id: 2, path: ['FileA'], name: 'FileA' },
+              { id: 3, path: ['FileB'], name: 'FileB' },
+            ]}
+          />,
+        );
+
+        const allValues = getColumnValues(0);
+        const fileAIndex = findRowIndex(allValues, 'FileA', 2);
+        const folderIndex = findRowIndex(allValues, 'Folder', 1);
+
+        expect(fileAIndex).to.be.greaterThan(
+          -1,
+          `FileA should be found in: ${allValues.join(', ')}`,
+        );
+        expect(folderIndex).to.be.greaterThan(
+          -1,
+          `Folder should be found in: ${allValues.join(', ')}`,
+        );
+
+        const sourceCell = getCell(fileAIndex, 0).firstChild!;
+        const targetCell = getCell(folderIndex, 0);
+
+        performDragOperation(sourceCell, targetCell, 'inside');
+
+        await waitFor(() => {
+          expect(handleRowOrderChange.callCount).to.equal(1);
+        });
+
+        // Verify FileA is now a child of Folder
+        const rowTree = gridRowTreeSelector(apiRef!);
+        const fileANode = rowTree[2];
+        const folderNode = rowTree[1];
+        expect(folderNode.type).to.equal('group');
+        expect(fileANode.parent).to.equal(folderNode.id);
+      });
     });
   });
 

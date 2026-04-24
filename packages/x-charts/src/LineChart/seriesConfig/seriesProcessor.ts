@@ -7,7 +7,11 @@ import {
   type DatasetType,
 } from '../../models/seriesType/config';
 import { type SeriesId } from '../../models/seriesType/common';
-import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type {
+  SeriesProcessorParams,
+  SeriesProcessorResult,
+} from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { IsItemVisibleFunction } from '../../internals/plugins/featurePlugins/useChartVisibilityManager';
 import type { DefaultizedLineSeriesType } from '../../models';
 import type { MarkShape } from '../../models/seriesType/line';
 
@@ -24,7 +28,11 @@ const defaultShapes: MarkShape[] = [
 const lineValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedLineSeriesType['valueFormatter'];
 
-const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible) => {
+function seriesProcessor(
+  params: SeriesProcessorParams<'line'>,
+  dataset?: Readonly<DatasetType>,
+  isItemVisible?: IsItemVisibleFunction,
+): SeriesProcessorResult<'line'> {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
@@ -36,6 +44,16 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
     const data = series[id].data;
     if (data !== undefined) {
       data.forEach((value, dataIndex) => {
+        if (d3Dataset.length <= dataIndex) {
+          d3Dataset.push({ [id]: value });
+        } else {
+          d3Dataset[dataIndex][id] = value;
+        }
+      });
+    } else if (series[id].valueGetter && dataset) {
+      // When valueGetter is used without dataKey, populate d3Dataset with the series id as key
+      dataset.forEach((entry, dataIndex) => {
+        const value = series[id].valueGetter!(entry);
         if (d3Dataset.length <= dataIndex) {
           d3Dataset.push({ [id]: value });
         } else {
@@ -54,23 +72,25 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
       if (!data && dataset) {
         const dataKey = series[id].dataKey;
 
-        if (!dataKey) {
+        if (!dataKey && !series[id].valueGetter) {
           throw new Error(
-            `MUI X Charts: Line series with id="${id}" has no data and no dataKey. ` +
-              'When using the dataset prop, each series must have a dataKey to identify which dataset column to use. ' +
-              'Add a dataKey property to the series configuration.',
+            `MUI X Charts: Line series with id="${id}" has no data, no dataKey, and no valueGetter. ` +
+              'When using the dataset prop, each series must have a dataKey or valueGetter to identify which dataset values to use. ' +
+              'Add a dataKey or valueGetter property to the series configuration.',
           );
         }
 
-        dataset.forEach((entry, index) => {
-          const value = entry[dataKey];
-          if (value != null && typeof value !== 'number') {
-            warnOnce(
-              `MUI X Charts: your dataset key "${dataKey}" is used for plotting lines, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
+        if (dataKey) {
+          dataset.forEach((entry, index) => {
+            const value = entry[dataKey];
+            if (value != null && typeof value !== 'number') {
+              warnOnce(
+                `MUI X Charts: your dataset key "${dataKey}" is used for plotting lines, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
 Line plots only support numeric and null values.`,
-            );
-          }
-        });
+              );
+            }
+          });
+        }
       }
     }
   });
@@ -111,13 +131,19 @@ Line plots only support numeric and null values.`,
       .offset(stackingOffset)(d3Dataset);
 
     ids.forEach((id, index) => {
-      const dataKey = series[id].dataKey;
-      const data = dataKey
-        ? dataset!.map((d) => {
-            const value = d[dataKey];
-            return typeof value === 'number' ? value : null;
-          })
-        : series[id].data!;
+      const { dataKey, valueGetter } = series[id];
+
+      let data: readonly (number | null)[];
+      if (valueGetter) {
+        data = dataset!.map((d) => valueGetter(d));
+      } else if (dataKey) {
+        data = dataset!.map((d) => {
+          const value = d[dataKey];
+          return typeof value === 'number' ? value : null;
+        });
+      } else {
+        data = series[id].data!;
+      }
       const hidden = !isItemVisible?.({ type: 'line', seriesId: id });
       completedSeries[id] = {
         labelMarkType: 'line+mark',
@@ -137,6 +163,6 @@ Line plots only support numeric and null values.`,
     stackingGroups,
     series: completedSeries,
   };
-};
+}
 
 export default seriesProcessor;
