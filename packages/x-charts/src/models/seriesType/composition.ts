@@ -19,10 +19,11 @@ export const composableCartesianSeriesTypes: Set<ComposableCartesianChartSeriesT
 
 // Idem for radial series
 
-export type ComposableRadialChartSeriesType = 'radialLine';
+export type ComposableRadialChartSeriesType = 'radialLine' | 'radialBar';
 
 export const composableRadialSeriesTypes: Set<ComposableRadialChartSeriesType> = new Set([
   'radialLine',
+  'radialBar',
 ] as ComposableRadialChartSeriesType[]);
 
 export type ComposableChartSeriesType<SeriesType extends ChartSeriesType> =

@@ -12,9 +12,10 @@ import { type BarItem, type BarLabelContext } from '../../BarChart';
 
 export type BarValueType = number;
 
-export interface BarSeriesType
-  extends CommonSeriesType<BarValueType | null, 'bar'>, CartesianSeriesType, StackableSeriesType {
-  type: 'bar';
+/**
+ * @internal The series type shared by the bar and radialBar charts
+ */
+export interface CommonBarSeriesType {
   /**
    * Data associated to each bar.
    */
@@ -63,6 +64,15 @@ export interface BarSeriesType
    * @returns {string} The formatted label.
    */
   barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
+}
+
+export interface BarSeriesType
+  extends
+    CommonSeriesType<BarValueType | null, 'bar'>,
+    CartesianSeriesType,
+    StackableSeriesType,
+    CommonBarSeriesType {
+  type: 'bar';
   /**
    * The placement of the bar label. It accepts the following values:
    * - 'center': the label is centered on the bar
