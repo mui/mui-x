@@ -31,7 +31,7 @@ export default function ClosestPointLine() {
               series={[
                 {
                   type: 'line',
-                  data: [2, 5, 6.5, 3, 8, 10, 9.5, 2.5, 6, 10, 8],
+                  data: [2, 5, 6.5, 3, 8, 10, 9.5, 0, 6, 10, 8],
                 },
                 {
                   type: 'line',
@@ -42,7 +42,7 @@ export default function ClosestPointLine() {
 
                 {
                   type: 'line',
-                  data: [null, null, 5.5, 2, null, null, 8.5, 1.5, 5],
+                  data: [null, null, 5.5, 2, null, null, 8.5, 4.5, 5],
                   connectNulls: true,
                   area: true,
                   stack: 'stack1',
