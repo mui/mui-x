@@ -10,8 +10,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import type { AxisId, D3Scale } from '../models/axis';
 import { type ChartsRadialAxisClasses, useUtilityClasses } from './chartsRadiusAxisClasses';
-import { getLabelTransform } from './getLabelTransform';
-import { RadialAxisLabel } from '../internals/components/RadialAxisLabel';
+import { getLabelTextAnchors } from './getLabelTransform';
 
 export interface ChartsRadiusAxisProps {
   /**
@@ -57,6 +56,9 @@ export interface ChartsRadiusAxisProps {
   className?: string;
   classes?: Partial<ChartsRadialAxisClasses>;
 }
+
+/* Gap between a tick and its label. */
+export const TICK_LABEL_GAP = 3;
 
 export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
   const {
@@ -110,6 +112,10 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
   const tickDx = (tickPosition === 'after' ? 1 : -1) * px * tickSize;
   const tickDy = (tickPosition === 'after' ? 1 : -1) * py * tickSize;
 
+  const tickLabelGap = isCentered ? 0 : TICK_LABEL_GAP;
+  const tickLabelGapDx = (tickLabelPosition === 'after' ? 1 : -1) * px * tickLabelGap;
+  const tickLabelGapDy = (tickLabelPosition === 'after' ? 1 : -1) * py * tickLabelGap;
+
   return (
     <g className={clsx(classes.root, className)}>
       {!disableLine && (
@@ -133,7 +139,12 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
         // Compute the label position.
         let labelX = tx;
         let labelY = ty;
-        if (!isCentered && tickLabelPosition === tickPosition) {
+
+        if (tickLabelGap !== 0) {
+          labelX += tickLabelGapDx;
+          labelY += tickLabelGapDy;
+        }
+        if (!isCentered && tickLabelPosition === tickPosition && !disableTicks) {
           // Add the size of the tick if they are in the same direction.
           labelX += tickDx;
           labelY += tickDy;
@@ -151,27 +162,17 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
                 className={classes.tick}
               />
             )}
-            <foreignObject
+            <text
               x={labelX}
               y={labelY}
-              width={1}
-              height={1}
-              style={{ overflow: 'visible', pointerEvents: 'none' }}
+              fill={stroke}
+              fontSize={12}
+              className={classes.tickLabel}
+              pointerEvents="none"
+              {...getLabelTextAnchors(dx, dy, tickLabelPosition)}
             >
-              <div
-                style={{
-                  position: 'relative',
-                }}
-              >
-                <RadialAxisLabel
-                  className={classes.tickLabel}
-                  variant="caption"
-                  {...getLabelTransform(dx, dy, tickLabelPosition)}
-                >
-                  {formattedValue}
-                </RadialAxisLabel>
-              </div>
-            </foreignObject>
+              {formattedValue}
+            </text>
           </g>
         );
       })}

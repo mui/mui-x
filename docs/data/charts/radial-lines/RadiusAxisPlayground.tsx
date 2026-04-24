@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
+import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { Unstable_ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
