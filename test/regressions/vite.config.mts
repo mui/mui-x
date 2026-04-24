@@ -14,7 +14,7 @@ export default defineConfig({
     alias: [
       ...alias,
       {
-        find: 'docsx',
+        find: 'docs',
         replacement: path.resolve(import.meta.dirname, '../../docs'),
       },
     ],

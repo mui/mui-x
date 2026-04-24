@@ -15,8 +15,8 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { demoUsers } from 'docsx/data/chat/core/examples/shared/demoData';
-import { createChunkStream } from 'docsx/data/chat/core/examples/shared/demoUtils';
+import { demoUsers } from 'docs/data/chat/core/examples/shared/demoData';
+import { createChunkStream } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 declare module '@mui/x-chat-headless/types' {
   interface ChatCustomMessagePartMap {

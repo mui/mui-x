@@ -5,8 +5,13 @@ import * as semver from 'semver';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { withDeploymentConfig } from '@mui/internal-docs-infra/withDocsInfra';
+import {
+  LANGUAGES,
+  LANGUAGES_SSR,
+  LANGUAGES_IGNORE_PAGES,
+  LANGUAGES_IN_PROGRESS,
+} from '@mui/internal-core-docs/constants';
 import { findPages } from './src/modules/utils/find';
-import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
 // eslint-disable-next-line import/extensions
@@ -114,13 +119,6 @@ export default withDeploymentConfig({
     return {
       ...config,
       plugins,
-      resolve: {
-        ...config.resolve,
-        alias: {
-          ...config.resolve.alias,
-          docsx: path.resolve(currentDirectory, '../docs'),
-        },
-      },
       module: {
         ...config.module,
         rules: config.module.rules.concat([

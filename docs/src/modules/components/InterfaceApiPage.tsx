@@ -23,7 +23,7 @@ import { SectionTitle, SectionTitleProps } from '@mui/internal-core-docs/Section
 import {
   InterfaceApiTranslation,
   InterfaceApiContent,
-} from 'docsx/scripts/api/buildInterfacesDocumentation';
+} from 'docs/scripts/api/buildInterfacesDocumentation';
 import { TableOfContentsEntry } from '@mui/internal-markdown';
 import { kebabCase } from 'es-toolkit/string';
 

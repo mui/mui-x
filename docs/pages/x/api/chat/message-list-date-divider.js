@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/message-list-date-divider',
+    'docs/translations/api-docs/chat/message-list-date-divider',
     false,
     /\.\/message-list-date-divider.*\.json$/,
   );

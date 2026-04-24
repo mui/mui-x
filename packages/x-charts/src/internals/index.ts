@@ -106,3 +106,5 @@ export * from './constants';
 export * from './scales';
 export * from './identifierSerializer';
 export * from './identifierCleaner';
+
+export { default as getLineItemAtPosition } from '../LineChart/seriesConfig/getItemAtPosition';
