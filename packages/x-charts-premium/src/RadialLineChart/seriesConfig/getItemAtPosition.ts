@@ -11,6 +11,7 @@ import {
   selectorChartRotationAxis,
   getPolarAxisIndex,
   isOrdinalScale,
+  EPSILON,
 } from '@mui/x-charts/internals';
 import { evaluateCurveAtAngle, clampAngleRad } from '@mui/x-charts/internals';
 import type { ScaleName, SeriesItemIdentifierWithType } from '@mui/x-charts/models';
@@ -36,23 +37,28 @@ function getBracketIndices(
       return null;
     }
 
-    const valueAngle = scale(axisData[index])!;
-
+    const valueAngle = getValueToPositionMapper(scale)(axisData[index]);
     const gapAngle = clampAngleRad(angle - valueAngle);
+
+    const [startAngle, endAngle] = scale.range();
+
+    const isFullCircle =
+      Math.abs(endAngle - startAngle + (scale.bandwidth() === 0 ? scale.step() : 0)) >=
+      2 * Math.PI - EPSILON;
 
     if (gapAngle > Math.PI) {
       // We are between the previous and current rotation point.
-      if (index === 0) {
+      if (index === 0 && !isFullCircle) {
         return null; // Only relevant for band scales.
       }
-      return { left: index - 1, right: index };
+      return { left: index > 0 ? index - 1 : axisData.length - 1, right: index };
     }
 
     // We are between the next and current rotation point.
-    if (index === rotationAxis.data!.length - 1) {
+    if (index === rotationAxis.data!.length - 1 && !isFullCircle) {
       return null; // Only relevant for band scales.
     }
-    return { left: index, right: index + 1 };
+    return { left: index, right: (index + 1) % axisData.length };
   }
 
   // For continuous axes, find the two adjacent data points surrounding pointX.
