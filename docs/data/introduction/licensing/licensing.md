@@ -1,7 +1,5 @@
 # Licensing
 
-{{"component": "modules/components/V9LicenseUpgradeWarning.js"}}
-
 <p class="description">MUI X is an open-core, MIT-licensed library. Purchase a commercial license for advanced features and support.</p>
 
 ## MIT vs. commercial licenses
@@ -125,6 +123,8 @@ This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#req
 
 When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
+
+{{"component": "modules/components/V9LicenseUpgradeWarning.js"}}
 
 :::warning
 Orders placed after **May 13, 2022** come with a license key by default that is only compatible with MUI X from `v5.11.0` and upwards.

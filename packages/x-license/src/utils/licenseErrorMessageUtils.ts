@@ -63,6 +63,7 @@ export function showLicenseKeyVersionMismatchError() {
   showError([
     'MUI X: License key version mismatch.',
     '',
+    // #npm-tag-reference
     'The license key you are using was issued for an older major version of MUI X (e.g. a v8 license with v9 packages installed).',
     'Each major version uses a different license key format, so the key needs to be regenerated — your existing license is not lost.',
     '',
