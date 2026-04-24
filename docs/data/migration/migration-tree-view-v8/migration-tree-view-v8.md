@@ -5,6 +5,8 @@ productId: x-tree-view
 
 # Migration from v8 to v9
 
+{{"component": "modules/components/V9LicenseUpgradeWarning.js"}}
+
 <p class="description">This guide describes the changes needed to migrate the Tree View from v8 to v9.</p>
 
 ## Introduction

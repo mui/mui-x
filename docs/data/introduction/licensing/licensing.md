@@ -1,5 +1,7 @@
 # Licensing
 
+{{"component": "modules/components/V9LicenseUpgradeWarning.js"}}
+
 <p class="description">MUI X is an open-core, MIT-licensed library. Purchase a commercial license for advanced features and support.</p>
 
 ## MIT vs. commercial licenses
@@ -123,14 +125,6 @@ This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#req
 
 When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
-
-:::warning
-If you're upgrading from v8 to v9, you'll need to generate a new license key from your [MUI Store account](https://mui.com/store/account/orders/).
-The new v9 key will have the same expiration date as your existing v8 key.
-
-Upon renewal, you'll need to choose which license key to renew.
-Note that renewing a v9 license key is priced differently from a v8 renewal.
-:::
 
 :::warning
 Orders placed after **May 13, 2022** come with a license key by default that is only compatible with MUI X from `v5.11.0` and upwards.
