@@ -24,7 +24,7 @@ describe('<TimeField /> - Timezone', () => {
           onChange,
         });
 
-        await view.selectSectionAsync('meridiem');
+        await view.selectSection('meridiem');
         // Toggle PM → AM
         await view.user.keyboard('{ArrowDown}');
 
@@ -50,7 +50,7 @@ describe('<TimeField /> - Timezone', () => {
           onChange,
         });
 
-        await view.selectSectionAsync('meridiem');
+        await view.selectSection('meridiem');
         // Toggle AM → PM
         await view.user.keyboard('{ArrowUp}');
 
