@@ -317,6 +317,20 @@ describe('<DataGrid /> - Rows', () => {
         expect(screen.queryByText('print')).to.equal(null);
       });
 
+      it('should pass fontSize="inherit" to the icon so it scales with the IconButton size', () => {
+        function ProbeIcon(props: { fontSize?: string }) {
+          return <span data-testid="probe-icon" data-font-size={props.fontSize} />;
+        }
+        render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem key={1} icon={<ProbeIcon />} label="delete" size="large" />,
+            ]}
+          />,
+        );
+        expect(screen.getByTestId('probe-icon')).to.have.attribute('data-font-size', 'inherit');
+      });
+
       it('should show in a menu the actions marked as showInMenu', async () => {
         const { user } = render(
           <TestCase
