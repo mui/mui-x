@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## __VERSION__
+## 7.29.13
 
 _Apr 24, 2026_
 
@@ -16,17 +16,17 @@ The following are all team members who have contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@__VERSION__`
+#### `@mui/x-data-grid@7.29.13`
 
 - [DataGrid] Prevent repeated `hasScrollbar` state updates (#21849) @arminmeh
 
-#### `@mui/x-data-grid-pro@__VERSION__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+#### `@mui/x-data-grid-pro@7.29.13` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
-Same changes as in `@mui/x-data-grid@__VERSION__`.
+Same changes as in `@mui/x-data-grid@7.29.13`.
 
-#### `@mui/x-data-grid-premium@__VERSION__` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+#### `@mui/x-data-grid-premium@7.29.13` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
 
-Same changes as in `@mui/x-data-grid-pro@__VERSION__`.
+Same changes as in `@mui/x-data-grid-pro@7.29.13`.
 
 ### Docs
 
