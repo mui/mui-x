@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/charts-brush-overlay',
+    'docs/translations/api-docs/charts/charts-brush-overlay',
     false,
     /\.\/charts-brush-overlay.*\.json$/,
   );

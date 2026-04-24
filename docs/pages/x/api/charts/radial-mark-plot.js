@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/radial-mark-plot',
+    'docs/translations/api-docs/charts/radial-mark-plot',
     false,
     /\.\/radial-mark-plot.*\.json$/,
   );

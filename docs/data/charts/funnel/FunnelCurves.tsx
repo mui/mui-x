@@ -1,5 +1,5 @@
 import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
-import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
+import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
 

@@ -4,7 +4,7 @@ import { useStore } from '@base-ui/utils/store/useStore';
 import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
-import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { formatWeekDayMonthAndDayOfMonth } from '@mui/x-scheduler/internals';
@@ -16,7 +16,7 @@ const WeeksHeaderRoot = styled('div', {
 })({
   display: 'flex',
   // TODO: update this calculation when we add the option to hide weekends
-  minWidth: 'calc(var(--unit-count) * var(--weeks-cell-width))',
+  minWidth: 'calc(var(--unit-count) * var(--dayAndWeek-cell-width))',
 });
 
 const TimeHeaderCell = styled('div', {
@@ -49,7 +49,10 @@ const WeekDaysRow = styled('div', {
   slot: 'WeeksHeaderDaysRow',
 })({
   display: 'grid',
-  gridTemplateColumns: 'repeat(7, var(--time-cell-width))',
+  // Intentionally borrows the `dayAndHour` preset's cell width (64px) to size the 7-day sub-row:
+  // `--dayAndWeek-cell-width` (the week column) equals `7 × 64px`, so each day takes 64px.
+  // This cross-preset token will go away with the generic header in #21827.
+  gridTemplateColumns: 'repeat(7, var(--dayAndHour-cell-width))',
 });
 
 const WeekDayCell = styled('time', {
@@ -76,14 +79,14 @@ export function WeeksHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Feature hooks
   const weeks = React.useMemo(() => {
     const days = getDayList({
       adapter,
-      start: viewConfig.start,
-      end: adapter.endOfWeek(viewConfig.end),
+      start: presetConfig.start,
+      end: adapter.endOfWeek(presetConfig.end),
     });
     const tempWeeks: SchedulerProcessedDate[][] = [];
     let weekNumber: number | null = null;
@@ -98,7 +101,7 @@ export function WeeksHeader(props: React.HTMLAttributes<HTMLDivElement>) {
       }
     }
     return tempWeeks;
-  }, [adapter, viewConfig]);
+  }, [adapter, presetConfig]);
 
   return (
     <WeeksHeaderRoot className={classes.weeksHeader} {...props}>

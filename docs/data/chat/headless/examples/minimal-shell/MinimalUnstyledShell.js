@@ -8,16 +8,16 @@ import {
   MessageGroup,
   MessageList,
 } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
+} from 'docs/data/chat/headless/examples/shared/demoData';
 import {
   demoLocaleText,
   demoSlotProps,
   demoSurfaceStyles,
-} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 
 const adapter = createEchoAdapter();
 

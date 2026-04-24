@@ -25,7 +25,7 @@ import {
   cloneConversations,
   cloneMessages,
   syncConversationPreview,
-} from 'docsx/data/chat/headless/examples/shared/demoUtils';
+} from 'docs/data/chat/headless/examples/shared/demoUtils';
 
 // ---------------------------------------------------------------------------
 // ChatGPT-style brand tokens
