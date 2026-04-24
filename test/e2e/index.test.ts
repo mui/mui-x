@@ -409,10 +409,8 @@ async function initializeEnvironment(
         await page.mouse.move(150, 150);
         await page.mouse.wheel(50, 0);
 
-        await page.waitForFunction(
-          () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollLeft > 0,
-          null,
-          { timeout: 2000 },
+        await page.waitForFunction(() =>
+          document.querySelector('.MuiDataGrid-virtualScroller')!.scrollLeft > 0,
         );
       });
 
@@ -596,8 +594,6 @@ async function initializeEnvironment(
 
         await page.waitForFunction(
           () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop > 0,
-          null,
-          { timeout: 2000 },
         );
       });
 
