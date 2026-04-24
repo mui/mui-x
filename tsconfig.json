@@ -62,7 +62,7 @@
       "@mui/x-virtualizer": ["./packages/x-virtualizer/src"],
       "@mui/x-virtualizer/*": ["./packages/x-virtualizer/src/*"],
       "test/*": ["./test/*"],
-      "docsx/*": ["./docs/*"]
+      "docs/*": ["./docs/*"]
     },
     "types": []
   },
