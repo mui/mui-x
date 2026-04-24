@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/unread-marker',
+    'docs/translations/api-docs/chat/unread-marker',
     false,
     /\.\/unread-marker.*\.json$/,
   );

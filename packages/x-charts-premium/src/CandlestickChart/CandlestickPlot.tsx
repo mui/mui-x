@@ -5,8 +5,7 @@ import { useXScale, useYScale } from '@mui/x-charts/hooks';
 import { type DefaultizedOHLCSeriesType } from '../models';
 import { useOHLCSeriesContext } from '../hooks/useOHLCSeries';
 import { useCandlestickPlotData } from './useCandlestickPlotData';
-import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
-import { useWebGLContext } from '../ChartsWebGLLayer/ChartsWebGLLayer';
+import { useWebGLLayer } from '../ChartsWebGLLayer/ChartsWebGLContext';
 import { checkCandlestickScaleErrors } from './checkCandlestickScaleErrors';
 import { CandlestickWebGLProgram } from './CandlestickWebGLProgram';
 
@@ -17,31 +16,41 @@ export function CandlestickPlot() {
 }
 
 function CandlestickWebGLPlot() {
-  const gl = useWebGLContext();
+  const layer = useWebGLLayer();
   const series = useOHLCSeriesContext();
 
   const seriesToDisplay = series?.series[series.seriesOrder[0]];
   const isHidden = !seriesToDisplay || seriesToDisplay.hidden;
 
   React.useEffect(() => {
-    if (gl && isHidden) {
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
+    if (layer && isHidden) {
+      layer.requestRender();
     }
-  }, [gl, isHidden]);
+  }, [layer, isHidden]);
 
-  if (!gl || isHidden) {
+  if (!layer || isHidden) {
     return null;
   }
 
-  return <CandlestickWebGLPlotImpl gl={gl} series={seriesToDisplay} />;
+  return (
+    <CandlestickWebGLPlotImpl
+      gl={layer.gl}
+      registerDraw={layer.registerDraw}
+      requestRender={layer.requestRender}
+      series={seriesToDisplay}
+    />
+  );
 }
 
 function CandlestickWebGLPlotImpl({
   gl,
+  registerDraw,
+  requestRender,
   series,
 }: {
   gl: WebGL2RenderingContext;
+  registerDraw: (drawRef: React.RefObject<(() => void) | null>) => () => void;
+  requestRender: () => void;
   series: DefaultizedOHLCSeriesType;
 }) {
   const drawingArea = useDrawingArea();
@@ -51,7 +60,19 @@ function CandlestickWebGLPlotImpl({
 
   const [program, setProgram] = React.useState<CandlestickWebGLProgram | null>(null);
   const dataLength = series.data.length;
-  const renderScheduledRef = React.useRef<boolean>(false);
+
+  const drawRef = React.useRef<(() => void) | null>(null);
+
+  React.useEffect(() => {
+    drawRef.current = () => {
+      program?.render(dataLength);
+    };
+  }, [program, dataLength]);
+
+  React.useEffect(() => {
+    const unregister = registerDraw(drawRef);
+    return unregister;
+  }, [registerDraw]);
 
   React.useEffect(() => {
     const prog = new CandlestickWebGLProgram(gl);
@@ -62,44 +83,25 @@ function CandlestickWebGLPlotImpl({
     };
   }, [gl]);
 
-  const render = React.useCallback(() => {
-    renderScheduledRef.current = false;
-
-    program?.render(dataLength);
-  }, [program, dataLength]);
-
-  const scheduleRender = React.useCallback(() => {
-    renderScheduledRef.current = true;
-  }, []);
-
-  // On resize render directly to avoid a frame where the canvas is blank
-  useWebGLResizeObserver(render);
-
   React.useEffect(() => {
     program?.setResolution(drawingArea.width, drawingArea.height);
 
-    scheduleRender();
-  }, [drawingArea.height, drawingArea.width, gl, scheduleRender, program]);
+    requestRender();
+  }, [drawingArea.height, drawingArea.width, gl, requestRender, program]);
 
   const candleWidth = xScale.bandwidth();
   React.useEffect(() => {
     program?.setCandleWidth(candleWidth);
 
-    scheduleRender();
-  }, [candleWidth, gl, program, scheduleRender]);
+    requestRender();
+  }, [candleWidth, gl, program, requestRender]);
 
   const plotData = useCandlestickPlotData(drawingArea, series, xScale, yScale);
   React.useEffect(() => {
     program?.plot(plotData);
 
-    scheduleRender();
-  }, [gl, plotData, program, scheduleRender]);
-
-  React.useEffect(() => {
-    if (renderScheduledRef.current) {
-      render();
-    }
-  });
+    requestRender();
+  }, [gl, plotData, program, requestRender]);
 
   return null;
 }

@@ -33,20 +33,8 @@
       "@mui/x-telemetry/*": ["./packages/x-telemetry/src/*"],
       "@mui/x-virtualizer": ["./packages/x-virtualizer/src"],
       "@mui/x-virtualizer/*": ["./packages/x-virtualizer/src/*"],
-      "@mui/internal-core-docs": ["./node_modules/@mui/monorepo/packages-internal/core-docs/src"],
-      "@mui/internal-core-docs/*": [
-        "./node_modules/@mui/monorepo/packages-internal/core-docs/src/*"
-      ],
-      "@mui-internal/api-docs-builder": ["./node_modules/@mui/monorepo/packages/api-docs-builder"],
-      "@mui-internal/api-docs-builder/*": [
-        "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
-      ],
       "test/*": ["./test/*"],
-      "docs/src/modules/utils/mapApiPageTranslations": [
-        "./docs/src/modules/utils/mapApiPageTranslations.js"
-      ],
-      "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
-      "docsx/*": ["./docs/*"]
+      "docs/*": ["./docs/*"]
     },
     "skipLibCheck": true,
     "incremental": true,

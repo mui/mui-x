@@ -10,7 +10,7 @@ export function useEventCalendarPremiumStoreContext<
 
   if (context.instanceName !== 'EventCalendarPremiumStore') {
     throw new Error(
-      'MUI: useEventCalendarPremiumStoreContext must be used within an <EventCalendarPremium /> component',
+      'MUI X Scheduler: useEventCalendarPremiumStoreContext must be used within an <EventCalendarPremium /> component',
     );
   }
 

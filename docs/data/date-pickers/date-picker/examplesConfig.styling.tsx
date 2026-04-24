@@ -10,7 +10,7 @@ import {
 } from '@mui/x-date-pickers/DesktopDatePicker';
 import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { PickersSubcomponentType } from 'docsx/src/modules/utils/useCustomizationPlayground';
+import { PickersSubcomponentType } from 'docs/src/modules/utils/useCustomizationPlayground';
 
 type PickerExamplesType<TComponent, TComponentProps> = {
   name: string;

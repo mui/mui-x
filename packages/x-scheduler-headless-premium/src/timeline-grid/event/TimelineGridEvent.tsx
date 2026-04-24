@@ -24,7 +24,7 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
-import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
 
 const overflowStateAttributesMapping = {
@@ -62,18 +62,21 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
-  const { getCursorPositionInElementMs } = useTimelineGridEventRowContext();
+  const { hasFocus: rowHasFocus, getCursorPositionInElementMs } = useTimelineGridEventRowContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Feature hooks
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
-      const offsetBeforeRowStart = Math.max(adapter.getTime(viewConfig.start) - start.timestamp, 0);
+      const offsetBeforeRowStart = Math.max(
+        adapter.getTime(presetConfig.start) - start.timestamp,
+        0,
+      );
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
       const originalOccurrence = generateOccurrenceFromEvent({
@@ -114,21 +117,22 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     isDraggable,
     renderDragPreview,
     getDragData,
-    collectionStart: viewConfig.start,
-    collectionEnd: viewConfig.end,
+    collectionStart: presetConfig.start,
+    collectionEnd: presetConfig.end,
   });
 
   const { getButtonProps, buttonRef } = useButton({
     disabled: !isInteractive,
     native: nativeButton,
+    tabIndex: rowHasFocus ? 0 : -1,
   });
 
   const { position, duration, startingBeforeEdge, endingAfterEdge } =
     useElementPositionInCollection({
       start,
       end,
-      collectionStart: viewConfig.start,
-      collectionEnd: viewConfig.end,
+      collectionStart: presetConfig.start,
+      collectionEnd: presetConfig.end,
     });
 
   const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };

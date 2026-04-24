@@ -11,7 +11,7 @@ import type { ChatMessage, ChatUser } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   formatMessageTime,
-} from 'docsx/data/chat/headless/examples/shared/demoUtils';
+} from 'docs/data/chat/headless/examples/shared/demoUtils';
 
 // ---------------------------------------------------------------------------
 // Intercom-style brand tokens

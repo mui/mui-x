@@ -1,7 +1,13 @@
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { fireEvent } from '@mui/internal-test-utils';
-import { expectFieldValue, getCleanedSelectedContent, describeAdapters } from 'test/utils/pickers';
+import {
+  expectFieldValue,
+  getCleanedSelectedContent,
+  describeAdapters,
+  createPickerRenderer,
+  buildFieldInteractions,
+} from 'test/utils/pickers';
 
 describe('<TimeField /> - Editing', () => {
   describeAdapters('key: ArrowDown', TimeField, ({ adapter, testFieldKeyPress }) => {
@@ -498,8 +504,6 @@ describe('<TimeField /> - Editing', () => {
       view.pressKey(0, '2');
       expectFieldValue(view.getSectionsContainer(), '02:mm aa');
       expect(getCleanedSelectedContent()).to.equal('mm');
-
-      view.unmount();
     });
 
     it('should go to the next section when pressing `1` then `3` in a 12-hours format', async () => {
@@ -517,8 +521,6 @@ describe('<TimeField /> - Editing', () => {
       view.pressKey(0, '3');
       expectFieldValue(view.getSectionsContainer(), '03:mm aa');
       expect(getCleanedSelectedContent()).to.equal('mm');
-
-      view.unmount();
     });
   });
 
@@ -602,8 +604,6 @@ describe('<TimeField /> - Editing', () => {
         fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
-
-        view.unmount();
       });
 
       it('should not loose date information when cleaning the date then filling it again', async () => {
@@ -630,8 +630,6 @@ describe('<TimeField /> - Editing', () => {
         view.pressKey(1, '4');
         expectFieldValue(view.getSectionsContainer(), '03:04');
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
-
-        view.unmount();
       });
 
       it('should not loose time information when using the hour format and value is provided', async () => {
@@ -647,8 +645,6 @@ describe('<TimeField /> - Editing', () => {
         fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
-
-        view.unmount();
       });
     },
   );
@@ -709,6 +705,131 @@ describe('<TimeField /> - Editing', () => {
         key: 'ArrowUp',
         minutesStep: 5,
         expectedValue: '05',
+      });
+    });
+  });
+
+  describe('K / KK format tokens (hour 0-11, date-fns only)', () => {
+    const { render, adapter } = createPickerRenderer({ adapterName: 'date-fns' });
+    const { renderWithProps, testFieldKeyPress, testFieldChange } = buildFieldInteractions({
+      render,
+      Component: TimeField,
+    });
+
+    it('should render the correct hour value with K format', () => {
+      // 14:xx = 2 PM → K=2, displayed with leading zero as "02"
+      const view = renderWithProps({
+        format: 'K:mm aa',
+        defaultValue: adapter.date('2022-06-15T14:12:00'),
+      });
+      expectFieldValue(view.getSectionsContainer(), '02:12 PM');
+    });
+
+    it('should render the correct hour value with KK format', () => {
+      const view = renderWithProps({
+        format: 'KK:mm aa',
+        defaultValue: adapter.date('2022-06-15T14:12:00'),
+      });
+      expectFieldValue(view.getSectionsContainer(), '02:12 PM');
+    });
+
+    it('should wrap from 11 to 0 when pressing ArrowUp at the maximum', () => {
+      testFieldKeyPress({
+        format: 'K:mm aa',
+        defaultValue: adapter.date('2022-06-15T23:12:00'),
+        key: 'ArrowUp',
+        expectedValue: '00:12 PM',
+      });
+    });
+
+    it('should produce noon (12:xx) when wrapping K from 11 to 0 with PM meridiem', async () => {
+      const onChange = spy();
+
+      const view = renderWithProps({
+        format: 'K:mm aa',
+        defaultValue: adapter.date('2022-06-15T23:12:00'),
+        onChange,
+      });
+
+      await view.selectSectionAsync('hours');
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
+
+      // K=0 + PM = noon (12:xx), not midnight (00:xx)
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 5, 15, 12, 12, 0));
+    });
+
+    it('should wrap from 0 to 11 when pressing ArrowDown at the minimum', () => {
+      testFieldKeyPress({
+        format: 'K:mm aa',
+        defaultValue: adapter.date('2022-06-15T12:12:00'),
+        key: 'ArrowDown',
+        expectedValue: '11:12 PM',
+      });
+    });
+
+    it('should accept typed digit input for K format', () => {
+      testFieldChange({
+        format: 'K:mm aa',
+        keyStrokes: [
+          // "1" stays in the section because "10" and "11" are still valid
+          { value: '1', expected: '01:mm aa' },
+          // "1" again → K=11 (maximum), commits and advances to minutes
+          { value: '1', expected: '11:mm aa' },
+        ],
+      });
+    });
+  });
+
+  (['date-fns', 'moment'] as const).forEach((adapterName) => {
+    describe(`k / kk format tokens (hour 1-24, ${adapterName})`, () => {
+      const { render, adapter } = createPickerRenderer({ adapterName });
+      const { renderWithProps, testFieldKeyPress, testFieldChange } = buildFieldInteractions({
+        render,
+        Component: TimeField,
+      });
+
+      it('should render 24 for midnight with k format', () => {
+        const view = renderWithProps({
+          format: 'k:mm',
+          defaultValue: adapter.date('2022-06-15T00:12:00'),
+        });
+        expectFieldValue(view.getSectionsContainer(), '24:12');
+      });
+
+      it('should render the correct hour value with kk format', () => {
+        const view = renderWithProps({
+          format: 'kk:mm',
+          defaultValue: adapter.date('2022-06-15T14:12:00'),
+        });
+        expectFieldValue(view.getSectionsContainer(), '14:12');
+      });
+
+      it('should wrap from 24 to 1 when pressing ArrowUp at the maximum', () => {
+        testFieldKeyPress({
+          format: 'k:mm',
+          defaultValue: adapter.date('2022-06-15T00:12:00'),
+          key: 'ArrowUp',
+          expectedValue: '01:12',
+        });
+      });
+
+      it('should wrap from 1 to 24 when pressing ArrowDown at the minimum', () => {
+        testFieldKeyPress({
+          format: 'k:mm',
+          defaultValue: adapter.date('2022-06-15T01:12:00'),
+          key: 'ArrowDown',
+          expectedValue: '24:12',
+        });
+      });
+
+      it('should accept two-digit input for kk format', () => {
+        testFieldChange({
+          format: 'kk:mm',
+          keyStrokes: [
+            { value: '1', expected: '01:mm' },
+            { value: '4', expected: '14:mm' },
+          ],
+        });
       });
     });
   });

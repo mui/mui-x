@@ -122,6 +122,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsRadialDataProvider',
   },
   {
+    pathname: '/x/api/charts/charts-radial-grid',
+    title: 'ChartsRadialGrid',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },
@@ -146,6 +150,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-toolbar-pro',
     title: 'ChartsToolbarPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-range-button-trigger',
+    title: 'ChartsToolbarRangeButtonTrigger',
     plan: 'pro',
   },
   {
@@ -366,6 +375,26 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/radar-series-plot',
     title: 'RadarSeriesPlot',
+  },
+  {
+    pathname: '/x/api/charts/radial-area-plot',
+    title: 'RadialAreaPlot',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-line-chart',
+    title: 'RadialLineChart',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-line-plot',
+    title: 'RadialLinePlot',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-mark-plot',
+    title: 'RadialMarkPlot',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/range-bar-plot',

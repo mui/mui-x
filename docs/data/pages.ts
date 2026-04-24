@@ -58,7 +58,7 @@ const schedulerPages: MuiPage[] = [
           { pathname: '/x/react-scheduler/event-timeline/navigation' },
           { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
           { pathname: '/x/react-scheduler/event-timeline/editing' },
-          { pathname: '/x/react-scheduler/event-timeline/views' },
+          { pathname: '/x/react-scheduler/event-timeline/presets' },
           {
             pathname: '/x/react-scheduler/event-timeline/lazy-loading',
             planned: true,
@@ -703,7 +703,15 @@ const pages: MuiPage[] = [
             children: [
               { pathname: '/x/react-charts/accessibility' },
               { pathname: '/x/react-charts/animation' },
-              { pathname: '/x/react-charts/axis' },
+              {
+                pathname: '/x/react-charts/axis-root',
+                title: 'Axes',
+                children: [
+                  { pathname: '/x/react-charts/axis', title: 'Overview' },
+                  { pathname: '/x/react-charts/axis-ticks', title: 'Ticks and grid' },
+                  { pathname: '/x/react-charts/axis-customization', title: 'Customization' },
+                ],
+              },
               { pathname: '/x/react-charts/brush' },
               { pathname: '/x/react-charts/components', title: 'Custom components' },
               { pathname: '/x/react-charts/composition' },
