@@ -8,6 +8,8 @@
 # should all be prefixed with x-
 
 /r/x-get-license https://mui.com/pricing/ 302
+/r/x-license-account https://mui.com/store/account/licenses/ 302
+/r/x-license-key-upgrade https://support.mui.com/hc/en-us/articles/26762005295516-How-can-I-generate-a-v9-license-key/ 302
 /r/x-license-eula https://mui.com/legal/mui-x-eula/ 302
 /r/x-license-annual https://mui.com/legal/mui-x-eula/#annual-license 302
 /r/x-license-trial https://mui.com/x/introduction/licensing/#evaluation-trial-licenses 302

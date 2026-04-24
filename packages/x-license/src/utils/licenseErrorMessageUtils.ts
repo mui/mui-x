@@ -63,10 +63,12 @@ export function showLicenseKeyVersionMismatchError() {
   showError([
     'MUI X: License key version mismatch.',
     '',
-    'The license key you are using is not compatible with the version of the MUI X packages installed.',
-    'This happens when using a license key from a previous major version (e.g. a v8 license with v9 packages).',
+    'The license key you are using was issued for an older major version of MUI X (e.g. a v8 license with v9 packages installed).',
+    'Each major version uses a different license key format, so the key needs to be regenerated — your existing license is not lost.',
     '',
-    'To resolve this, you can either get an new license key at https://mui.com/r/x-get-license or from your account profile at https://mui.com/store/account/licenses/, or downgrade to an older MUI X version that matches your current license key.',
+    'To resolve this, you can either:',
+    '- Generate a new key compatible with the installed version from your account at https://mui.com/r/x-license-account/ (free for existing customers, the new key inherits your current expiration date). More details at https://mui.com/r/x-license-key-upgrade/.',
+    '- Or downgrade the MUI X packages to the major version that matches your current license key.',
   ]);
 }
 
