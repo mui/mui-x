@@ -17,19 +17,21 @@ export default function JSAnimationCustomization() {
           {
             type: 'bar',
             data: [5, 17, 11],
+            barLabel: 'value',
           },
           {
             type: 'bar',
             data: [0, 12, 15],
+            barLabel: 'value',
           },
           {
             type: 'bar',
             data: [1, 3, 9],
+            barLabel: 'value',
           },
         ]}
         width={300}
         height={400}
-        barLabel="value"
         slots={{ barLabel: AnimatedBarLabel }}
       />
       <Button onClick={() => animate()}>Run Animation</Button>

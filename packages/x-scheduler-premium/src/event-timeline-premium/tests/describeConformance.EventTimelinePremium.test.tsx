@@ -19,8 +19,8 @@ describe('<EventTimelinePremium /> - Describe Conformance', () => {
       resources={[{ id: 'resource-1', title: 'Engineering' }]}
       events={[]}
       visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-      view="days"
-      views={['days']}
+      preset="day"
+      presets={['day']}
     />,
     () => ({
       classes,
@@ -28,7 +28,7 @@ describe('<EventTimelinePremium /> - Describe Conformance', () => {
       render,
       muiName: 'MuiEventTimeline',
       refInstanceof: window.HTMLDivElement,
-      skip: ['componentProp', 'componentsProp', 'themeVariants'],
+      skip: ['componentProp', 'themeVariants'],
     }),
   );
 });

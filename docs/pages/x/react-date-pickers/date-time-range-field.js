@@ -1,5 +1,5 @@
-import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import * as pageProps from 'docsx/data/date-pickers/date-time-range-field/date-time-range-field.md?muiMarkdown';
+import { MarkdownDocs } from '@mui/internal-core-docs/MarkdownDocs';
+import * as pageProps from 'docs/data/date-pickers/date-time-range-field/date-time-range-field.md?muiMarkdown';
 
 export default function Page() {
   return <MarkdownDocs {...pageProps} disableAd />;

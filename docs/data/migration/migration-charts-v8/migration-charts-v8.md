@@ -29,7 +29,7 @@ Items marked with ✅ are handled by the [codemod](#run-codemods).
 
 The `Chart` prefix has been renamed to `Charts` (with an S) to align with other components.
 
-| Deprecated                             | Replacement                             |
+| v8                                     | v9                                      |
 | :------------------------------------- | :-------------------------------------- |
 | `ChartContainer`                       | `ChartsContainer`                       |
 | `ChartContainerProps`                  | `ChartsContainerProps`                  |
@@ -51,10 +51,13 @@ The `Chart` prefix has been renamed to `Charts` (with an S) to align with other 
 | `ChartAxisZoomSliderTrackClassKey`     | `ChartsAxisZoomSliderTrackClassKey`     |
 | `chartAxisZoomSliderTrackClasses`      | `chartsAxisZoomSliderTrackClasses`      |
 
-### CSS class deprecations (`highlighted` / `faded`)
+### CSS class removed (`highlighted` / `faded` / `seriesId`)
 
-The highlighted and faded CSS state classes are deprecated across all chart element types.
+The highlighted and faded CSS state classes are removed across all chart element types.
 Use `[data-highlighted]` and `[data-faded]` attribute selectors instead.
+
+The CSS classes built with `.${classes.series}-${seriesId}` are removed across all chart element types.
+Use `[data-series]` attribute selectors instead.
 
 This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkElement`, `PieArc`, `PieArcLabel`, `RadarSeriesPlot`, `Heatmap`, and `FunnelSection`.
 
@@ -64,7 +67,67 @@ This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkEleme
 
 -`.MuiBarElement-root.MuiBarElement-faded`
 +`.MuiBarElement-root[data-faded]`
+
+-`.MuiBarElement-root.${barElementClasses.series}-seriesA`
++`.MuiBarElement-root[data-series="seriesA"]`
 ```
+
+### CSS class reorganized
+
+The classes per components got replaced by classes per charts.
+Here is the table of the classes renamed.
+
+Run the following command to do the renaming.
+
+```bash
+npx @mui/x-codemod@latest v9.0.0/charts/rename-classes <path|folder>
+```
+
+After running the codemod, make sure the type check are passing.
+This codemod does not handle:
+
+- The `highlighted` / `faded` / `seriesId` classes mentioned in the previous section.
+- The type associated to those classes renaming.
+
+| v8                                 | v9                               |
+| :--------------------------------- | :------------------------------- |
+| `barElementClasses.root`           | `barClasses.element`             |
+| `barLabelClasses.root`             | `barClasses.label`               |
+| `barLabelClasses.animate`          | `barClasses.labelAnimate`        |
+| `areaElementClasses.root`          | `lineClasses.area`               |
+| `lineElementClasses.root`          | `lineClasses.line`               |
+| `lineHighlightElementClasses.root` | `lineClasses.highlight`          |
+| `markElementClasses.root`          | `lineClasses.mark`               |
+| `markElementClasses.animate`       | `lineClasses.markAnimate`        |
+| `pieArcClasses.root`               | `pieClasses.arc`                 |
+| `pieArcClasses.focusIndicator`     | `pieClasses.focusIndicator`      |
+| `pieArcLabelClasses.root`          | `pieClasses.arcLabel`            |
+| `pieArcLabelClasses.animate`       | `pieClasses.animate`             |
+| `funnelSectionClasses.root`        | `funnelClasses.section`          |
+| `funnelSectionClasses.filled`      | `funnelClasses.sectionFilled`    |
+| `funnelSectionClasses.outlined`    | `funnelClasses.sectionOutlined`  |
+| `funnelSectionClasses.label`       | `funnelClasses.sectionLabel`     |
+| `radarSeriesPlotClasses.root`      | `radarClasses.seriesRoot`        |
+| `radarSeriesPlotClasses.area`      | `radarClasses.seriesArea`        |
+| `radarSeriesPlotClasses.mark`      | `radarClasses.seriesMark`        |
+| `chartsAxisHighlightClasses.root`  | `radarClasses.axisHighlightRoot` |
+| `chartsAxisHighlightClasses.line`  | `radarClasses.axisHighlightLine` |
+| `chartsAxisHighlightClasses.dot`   | `radarClasses.axisHighlightDot`  |
+| `chartsAxisClasses.root`           | `radarClasses.axisRoot`          |
+| `chartsAxisClasses.line`           | `radarClasses.axisLine`          |
+| `chartsAxisClasses.label`          | `radarClasses.axisLabel`         |
+| `chartsGridClasses.radial`         | `radarClasses.gridRadial`        |
+| `chartsGridClasses.divider`        | `radarClasses.gridDivider`       |
+| `chartsGridClasses.stripe`         | `radarClasses.gridStripe`        |
+| `sankeyPlotClasses.root`           | `sankeyClasses.root`             |
+| `sankeyPlotClasses.nodes`          | `sankeyClasses.nodes`            |
+| `sankeyPlotClasses.nodeLabels`     | `sankeyClasses.nodeLabels`       |
+| `sankeyPlotClasses.links`          | `sankeyClasses.links`            |
+| `sankeyPlotClasses.linkLabels`     | `sankeyClasses.linkLabels`       |
+| `sankeyPlotClasses.node`           | `sankeyClasses.node`             |
+| `sankeyPlotClasses.link`           | `sankeyClasses.link`             |
+| `sankeyPlotClasses.nodeLabel`      | `sankeyClasses.nodeLabel`        |
+| `sankeyPlotClasses.linkLabel`      | `sankeyClasses.linkLabel`        |
 
 ### Unstable exports are now stable
 
@@ -89,22 +152,39 @@ This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkEleme
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `next`.
+In `package.json`, change the version of the charts package to `^9.0.0`.
 
 ```diff
 -"@mui/x-charts": "^8.x.x",
-+"@mui/x-charts": "next",
++"@mui/x-charts": "^9.0.0",
 
 -"@mui/x-charts-pro": "^8.x.x",
-+"@mui/x-charts-pro": "next",
++"@mui/x-charts-pro": "^9.0.0",
 
 -"@mui/x-charts-premium": "^8.x.x",
-+"@mui/x-charts-premium": "next",
++"@mui/x-charts-premium": "^9.0.0",
 ```
 
 Since `v9` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v8` to `v9`.
+
+## Update `@mui/material` and `@mui/system` packages
+
+The minimum supported version of `@mui/material` and `@mui/system` has been updated to `^7.3.0` or `^9.0.0`.
+This change enables the opt-in [Native Color](/material-ui/customization/css-theme-variables/native-color/) feature, which replaces JavaScript color manipulation with native CSS.
+The v5 and v6 versions are no longer supported.
+
+If you are using `@mui/material` v5 or v6, you need to upgrade to at least v7.3.0.
+Follow the [Material UI migration guide](/material-ui/migration/upgrade-to-v9/) to upgrade your implementation.
+
+```diff
+-"@mui/material": "^5.x.x",
++"@mui/material": "^7.3.0",
+
+-"@mui/system": "^5.x.x",
++"@mui/system": "^7.3.0",
+```
 
 ## Run codemods
 
@@ -116,10 +196,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 # Charts-specific
-npx @mui/x-codemod@next v9.0.0/charts/preset-safe <path>
+npx @mui/x-codemod@latest v9.0.0/charts/preset-safe <path>
 
 # Target the other packages as well
-npx @mui/x-codemod@next v9.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v9.0.0/preset-safe <path>
 ```
 
 :::info
@@ -189,7 +269,7 @@ Here is the list of slots and components that are impacted by the renaming:
 
 The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
 
-### Series types
+### ✅ Series types
 
 The following type aliases have been removed from `@mui/x-charts/models`:
 
@@ -214,7 +294,7 @@ The `ChartApi` type export has been moved from `@mui/x-charts/ChartContainer` to
 +import type { ChartApi } from '@mui/x-charts/context';
 ```
 
-### Series helper functions
+### ✅ Series helper functions
 
 The following helper functions have been removed:
 
@@ -291,7 +371,7 @@ The hook now always returns an array of tooltip data (one entry per active axis)
 Run the following command to do the renaming.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/charts/rename-axis-tooltip-hook <path|folder>
+npx @mui/x-codemod@latest v9.0.0/charts/rename-axis-tooltip-hook <path|folder>
 ```
 
 After running the codemod make sure to adapt the hook returned value to your needs.
@@ -306,6 +386,29 @@ After running the codemod make sure to adapt the hook returned value to your nee
 +  const tooltipData = useAxesTooltip();
  }
 ```
+
+### `useInteractionItemProps` signature changed
+
+The `skip` parameter has been removed from `useInteractionItemProps`.
+If you were using it, you can remove it — the hook now always returns interaction props.
+
+```diff
+-const interactionProps = useInteractionItemProps(identifier, skip);
++const interactionProps = useInteractionItemProps(identifier);
+```
+
+### Removed item-level pointer handlers
+
+Individual chart elements no longer attach `onPointerEnter`/`onPointerLeave` event handlers for highlight and tooltip interactions.
+These interactions are now handled at the container level using position-based hit detection.
+
+This affects the following components:
+
+- **Bar Chart**: `BarElement`
+- **Heatmap**: Custom `cell` slots that received `onPointerEnter` via `slotProps`
+
+If you were relying on these pointer events being attached to individual SVG elements (for example, via custom slots or DOM inspection), note that they are no longer present.
+The highlight and tooltip behavior remains the same from the user's perspective.
 
 ## Line Chart
 
@@ -335,6 +438,29 @@ Now it alternates across series according to the following order:
 This modification improves accessibility for color blind people.
 
 If you want to keep the previous behavior, set the `shape` property to `'circle'` on all series.
+
+### Rename `[data-series-id]` by `[data-series]`
+
+The data attribute used to select a given series by it's id got renamed.
+Replace the `[data-series-id="<SeriesId>"]` by `[data-series="<SeriesId>"]`.
+
+## Bar Chart
+
+### `onItemClick` event type changed
+
+The `onItemClick` callback on `BarPlot` and `BarChart` now receives a native `MouseEvent` instead of a `React.MouseEvent`.
+
+```diff
+ <BarChart
+   onItemClick={(
+-    event: React.MouseEvent<SVGElement, MouseEvent>,
++    event: MouseEvent,
+     barItemIdentifier: BarItemIdentifier,
+   ) => {
+     // ...
+   }}
+ />
+```
 
 ## Heatmap
 
@@ -574,12 +700,43 @@ The `useSvgRef()` is replaced by `useChartsLayerContainerRef()` which returns a 
 
 The `ChartsSurface` `ref` is now propagated to the `<div />` rendered by `ChartsLayerContainer` instead of an `<svg />`.
 
+## Tooltip
+
+### Tooltip now renders inside the chart container
+
+The tooltip is now portaled into the `ChartsLayerContainer` instead of `document.body`.
+This means the tooltip DOM is a child of the chart container, making it easier to style using the chart's `sx` prop.
+
+If you were querying for the tooltip element in the DOM using selectors scoped to `document.body`, you should update them to look inside the chart container instead.
+
+The tooltip uses `position: fixed` to ensure it can still visually overflow the chart boundaries despite being rendered inside the container.
+
 ## Keyboard navigation ✅
 
 The keyboard navigation is no enabled by default.
 If you used `enableKeyboardNavigation` prop, you can remove it.
 
 To disable this feature, use the prop `disableKeyboardNavigation`.
+
+## Stabilized `experimentalFeatures` ✅
+
+The `preferStrictDomainInLineCharts` experimental feature is now the default behavior.
+The x-axis domain limit for line charts defaults to `'strict'`, meaning the axis range matches the data range exactly without extra padding.
+
+If you were using the `experimentalFeatures` prop with `preferStrictDomainInLineCharts`, you can remove it.
+
+```diff
+ <LineChart
+-  experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
+   series={[{ data: [1, 2, 3] }]}
+ />
+```
+
+If you want to revert to the previous behavior (rounded/"nice" domain limits on the x-axis), set `domainLimit` to `'nice'` on the x-axis configuration:
+
+```jsx
+<LineChart xAxis={[{ domainLimit: 'nice' }]} series={[{ data: [1, 2, 3] }]} />
+```
 
 ## Props propagation
 

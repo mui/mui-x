@@ -92,13 +92,13 @@ You can't render HTML elements such as `ChartsLegend` as shown in the previous e
   width={500}
   height={300}
 >
-  {children} // Only SVG component here
+  {children} // Only SVG components here
 </ChartsContainer>
 ```
 
 ### Chart Wrapper usage
 
-Charts are often constructed of a graphic with a legend.
+Charts often consist of a graphic and a legend.
 `ChartsWrapper` helps position those elements in a grid structure.
 
 The children should have a CSS `gridArea` property set to `'chart'`, `'legend'`, or `'toolbar'`.
@@ -277,7 +277,7 @@ If `axisId` is not provided, the first axis is used by default.
 ### Grid
 
 Use `ChartsGrid` to add a grid to the component.
-See [Axis—Grid](/x/react-charts/axis/#grid) for more information.
+See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for more information.
 
 ### Legend
 
@@ -323,6 +323,21 @@ If you're not using the axis highlight or the tooltip, consider disabling this f
 ```
 
 :::
+
+## Layering
+
+Use `ChartsLayerContainer`, `ChartsSvgLayer` and `ChartsWebGLLayer` to create multiple layers of elements that share the same coordinate system.
+This is useful for managing the depth ordering of alternating SVG and WebGL elements.
+
+In the example below, we create three layers:
+
+1. An SVG layer that displays the chart's grid;
+2. A WebGL layer for rendering with `CandlestickPlot`;
+3. An SVG layer that renders the axes and crosshair
+
+{{"demo": "Layering.js"}}
+
+Since all layers are absolutely positioned, they stack on top of each other in the order they are defined.
 
 ## Examples
 

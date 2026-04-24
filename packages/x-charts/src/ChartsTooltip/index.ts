@@ -1,7 +1,7 @@
 export * from './ChartsTooltip';
 export * from './ChartsTooltipContainer';
 export type { ChartsTooltipClasses, ChartsTooltipClassKey } from './chartsTooltipClasses';
-export { getChartsTooltipUtilityClass, chartsTooltipClasses } from './chartsTooltipClasses';
+export { chartsTooltipClasses } from './chartsTooltipClasses';
 
 export * from './ChartsAxisTooltipContent';
 export * from './ChartsItemTooltipContent';
@@ -13,5 +13,4 @@ export type { UseItemTooltipReturnValue, UseRadarItemTooltipReturnValue } from '
 export { useItemTooltip, useRadarItemTooltip } from './useItemTooltip';
 export * from './useAxesTooltip';
 
-export { useMouseTracker } from './utils';
 export * from './ChartTooltip.types';

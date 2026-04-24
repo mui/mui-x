@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { TextFieldProps } from '@mui/material/TextField';
 import { FormControlOwnProps } from '@mui/material/FormControl';
 import type { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldReturnValue } from '../internals/hooks/useField';
@@ -131,6 +130,10 @@ export interface FieldRef<TValue extends PickerValidValue> {
    * @returns {boolean} `true` if the field is focused.
    */
   isFieldFocused: () => boolean;
+  /**
+   * Clears the field.
+   */
+  clearValue: () => void;
 }
 
 export type FieldSelectedSections = number | FieldSectionType | null | 'all';
@@ -159,13 +162,10 @@ export interface FieldOwnerState extends PickerOwnerState {
 /**
  * Props the `slotProps.field` of a Picker can receive.
  */
-export type PickerFieldSlotProps<
-  TValue extends PickerValidValue,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> = ExportedPickerFieldUIProps &
+export type PickerFieldSlotProps<TValue extends PickerValidValue> = ExportedPickerFieldUIProps &
   Pick<
-    UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, unknown>,
-    'shouldRespectLeadingZeros' | 'readOnly'
+    UseFieldInternalProps<TValue, unknown>,
+    'shouldRespectLeadingZeros' | 'readOnly' | 'fieldRef'
   > &
   React.HTMLAttributes<HTMLDivElement> & {
     ref?: React.Ref<HTMLDivElement>;
@@ -175,10 +175,8 @@ export type PickerFieldSlotProps<
  * Props the text field receives when used inside a single input Picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
  */
-export type BaseSingleInputPickersTextFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> = Omit<
-  UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, BaseSingleInputFieldProps>,
+export type BaseSingleInputPickersTextFieldProps = Omit<
+  UseFieldReturnValue<BaseSingleInputFieldProps>,
   | 'slots'
   | 'slotProps'
   | 'clearable'
@@ -191,22 +189,9 @@ export type BaseSingleInputPickersTextFieldProps<
 /**
  * Props the built-in text field component can receive.
  */
-export type BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  TEnableAccessibleFieldDOMStructure extends false
-    ? Omit<
-        TextFieldProps,
-        | 'autoComplete'
-        | 'error'
-        | 'maxRows'
-        | 'minRows'
-        | 'multiline'
-        | 'placeholder'
-        | 'rows'
-        | 'select'
-        | 'SelectProps'
-        | 'type'
-      >
-    : Partial<Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps>>;
+export type BuiltInFieldTextFieldProps = Partial<
+  Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps | 'slots' | 'slotProps'>
+>;
 
 export interface PickerTextFieldOwnerState extends FieldOwnerState {
   // Should be moved to FieldOwnerState once we drop the textField slot.

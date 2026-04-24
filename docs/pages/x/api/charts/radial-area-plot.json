@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "RadialAreaPlot",
+  "imports": [
+    "import { RadialAreaPlot } from '@mui/x-charts-premium/RadialLineChart';",
+    "import { RadialAreaPlot } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiRadialAreaPlot",
+  "filename": "/packages/x-charts-premium/src/RadialLineChart/RadialAreaPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
+  "cssComponent": false
+}

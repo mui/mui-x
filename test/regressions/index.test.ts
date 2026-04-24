@@ -1,10 +1,7 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { type Browser, chromium, Page } from '@playwright/test';
-import { major } from '@mui/material/version';
 import fs from 'node:fs/promises';
-
-const isMaterialUIv6 = major === 6;
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
@@ -98,6 +95,11 @@ async function main() {
             return;
           }
 
+          if (/LineChartPointerInteraction/.test(route.url)) {
+            // Ignore pointer interaction screenshot — dedicated tests handle mouse positioning.
+            return;
+          }
+
           await navigateToTest(route.url);
 
           // Move cursor offscreen to not trigger unwanted hover effects.
@@ -183,6 +185,57 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
+    it('should clamp the horizontal scroll position in the fluid width column dimensions scenario', async () => {
+      const route = '/test-regressions-data-grid/ColumnFluidWidthScrollClamp';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}AfterResize.png`);
+
+      await navigateToTest(route);
+
+      const testcase = await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      await page.getByRole('button', { name: 'Scroll to max' }).click();
+      await page.getByRole('button', { name: 'Shrink username' }).click();
+
+      await page.waitForFunction(() => {
+        const root = document.querySelector<HTMLElement>('.MuiDataGrid-root');
+        const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
+
+        if (!root || !virtualScroller) {
+          return false;
+        }
+
+        const rowWidth = Number.parseFloat(root.style.getPropertyValue('--DataGrid-rowWidth'));
+        const maxScrollLeft = Math.max(0, rowWidth - virtualScroller.clientWidth);
+
+        return maxScrollLeft === 0 && Math.abs(virtualScroller.scrollLeft) === 0;
+      });
+
+      const scrollState = await page.evaluate(() => {
+        const root = document.querySelector<HTMLElement>('.MuiDataGrid-root');
+        const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
+
+        if (!root || !virtualScroller) {
+          throw new Error('missing grid elements');
+        }
+
+        const rowWidth = Number.parseFloat(root.style.getPropertyValue('--DataGrid-rowWidth'));
+
+        return {
+          hasScrollX: root.style.getPropertyValue('--DataGrid-hasScrollX'),
+          maxScrollLeft: Math.max(0, rowWidth - virtualScroller.clientWidth),
+          scrollLeft: Math.abs(virtualScroller.scrollLeft),
+        };
+      });
+
+      expect(scrollState.maxScrollLeft).to.equal(0);
+      expect(scrollState.scrollLeft).to.equal(0);
+      expect(scrollState.hasScrollX).to.equal('0');
+
+      await testcase.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
     it('should position charts axis tooltip 8px away from the pointer', async () => {
       const route = '/docs-charts-tooltip/Interaction';
       const axisScreenshotPath = path.resolve(screenshotDir, `.${route}AxisTooltip.png`);
@@ -202,6 +255,62 @@ async function main() {
       // Need to screenshot the body because the tooltip is outside of the testcase div
       const body = await page.waitForSelector(`body`);
       await body.screenshot({ path: axisScreenshotPath, type: 'png' });
+    });
+
+    it('should highlight line series when pointer is within the proximity threshold', async () => {
+      const route = '/test-regressions-charts/LineChartPointerInteraction';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}LineHighlight.png`);
+
+      await navigateToTest(route);
+
+      const testcase = await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      await sleep(10);
+
+      await enablePointerDot(page);
+
+      // At index 5: Series C (area)=9, Series A=5, Series B=3. yAxis 0-10.
+      // Both tests position the pointer relative to Series A's line.
+      // LINE_PROXIMITY_THRESHOLD = 15px.
+      const drawingArea = await getDrawingArea(page);
+      const pointerX = drawingArea.left + drawingArea.width / 2;
+      const seriesAY = drawingArea.top + (drawingArea.height * (10 - 5)) / 10;
+      // 13px below Series A → inside area fill, within threshold → line highlighted
+      const pointerY = seriesAY + 13;
+
+      await page.mouse.move(pointerX, pointerY);
+      await sleep(300);
+
+      await testcase.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
+    it('should highlight area series when pointer is inside fill but outside line threshold', async () => {
+      const route = '/test-regressions-charts/LineChartPointerInteraction';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}AreaHighlight.png`);
+
+      await navigateToTest(route);
+      await page.reload(); // Ensure a fresh state since we reuse the same page.
+
+      const testcase = await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      await sleep(10);
+
+      await enablePointerDot(page);
+
+      // Same reference point, but 17px below Series A → outside threshold → area highlighted
+      const drawingArea = await getDrawingArea(page);
+      const pointerX = drawingArea.left + drawingArea.width / 2;
+      const seriesAY = drawingArea.top + (drawingArea.height * (10 - 5)) / 10;
+      const pointerY = seriesAY + 17;
+
+      await page.mouse.move(pointerX, pointerY);
+      await sleep(300);
+
+      await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
     it('should export a chart as PNG', async () => {
@@ -346,12 +455,6 @@ async function main() {
 }
 
 function isConsoleWarningIgnored(msg?: string) {
-  const isMuiV6Error =
-    isMaterialUIv6 &&
-    msg?.startsWith(
-      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
-    );
-
   const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
 
   const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
@@ -361,7 +464,7 @@ function isConsoleWarningIgnored(msg?: string) {
     'The browser build of Tailwind CSS should not be used in production.',
   );
 
-  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning) {
+  if (isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning) {
     return true;
   }
   return false;
@@ -389,6 +492,58 @@ function screenshotPrintDialogPreview(
         reject(new Error(`ffmpeg exited with code ${code}`));
       }
     });
+  });
+}
+
+/** Adds a red dot on the body that follows the mouse cursor. */
+async function enablePointerDot(page: Page) {
+  await page.evaluate(() => {
+    const dot = document.createElement('div');
+    Object.assign(dot.style, {
+      position: 'fixed',
+      width: '4px',
+      height: '4px',
+      borderRadius: '50%',
+      background: 'red',
+      pointerEvents: 'none',
+      zIndex: '999999',
+      transform: 'translate(-50%, -50%)',
+    });
+    document.body.appendChild(dot);
+
+    document.addEventListener('pointermove', (event) => {
+      dot.style.left = `${event.clientX}px`;
+      dot.style.top = `${event.clientY}px`;
+    });
+  });
+}
+
+/**
+ * Returns the chart drawing area in viewport coordinates by reading
+ * the MuiLineElement path's bounding box and the container position.
+ * Falls back to the SVG clipPath rect if available.
+ */
+async function getDrawingArea(page: Page) {
+  return page.evaluate(() => {
+    const svg = document.querySelector('svg')!;
+    const svgRect = svg.getBoundingClientRect();
+
+    // The clipPath rect defines the drawing area within the SVG.
+    const clipRect = svg.querySelector('clipPath rect');
+    if (clipRect) {
+      const x = Number(clipRect.getAttribute('x'));
+      const y = Number(clipRect.getAttribute('y'));
+      const width = Number(clipRect.getAttribute('width'));
+      const height = Number(clipRect.getAttribute('height'));
+      return {
+        left: svgRect.left + x,
+        top: svgRect.top + y,
+        width,
+        height,
+      };
+    }
+
+    return { left: svgRect.left, top: svgRect.top, width: svgRect.width, height: svgRect.height };
   });
 }
 

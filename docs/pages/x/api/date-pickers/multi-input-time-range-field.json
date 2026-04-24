@@ -17,6 +17,7 @@
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "divider": { "type": { "name": "node" } },
+    "endFieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
@@ -79,6 +80,7 @@
       },
       "default": "0"
     },
+    "startFieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "sx": {
       "type": {
         "name": "union",
@@ -118,7 +120,7 @@
     {
       "name": "textField",
       "description": "Form control with an input to render a date.\nIt is rendered twice: once for the start date and once for the end date.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     }
   ],

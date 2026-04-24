@@ -6,16 +6,17 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  ResourceBuilder,
   simulateDragAndDrop,
   mockElementBounds,
   getResizeHandle,
 } from 'test/utils/scheduler';
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
 
-const resources: SchedulerResource[] = [
-  { id: 'r1', title: 'Engineering' },
-  { id: 'r2', title: 'Design' },
-];
+const engineering = ResourceBuilder.new().build();
+const design = ResourceBuilder.new().build();
+
+const resources: SchedulerResource[] = [engineering, design];
 
 /**
  * Returns the timeline event row for a given resource id.
@@ -50,10 +51,9 @@ describe('EventTimelinePremium - Drag and Drop', () => {
   it('should move an event to a different resource', async () => {
     const handleEventsChange = spy();
     const event = EventBuilder.new()
-      .id('event-1')
       .title('Team Standup')
       .singleDay('2025-07-03T09:00:00Z', 60)
-      .resource('r1')
+      .resource(engineering)
       .draggable(true)
       .build();
 
@@ -62,8 +62,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        view="days"
-        views={['days']}
+        preset="day"
+        presets={['day']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -73,7 +73,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     const eventElement = screen.getByText('Team Standup');
     mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
 
-    const designRow = getEventRow('r2');
+    const designRow = getEventRow(design.id);
 
     await act(async () => {
       simulateDragAndDrop({
@@ -86,16 +86,15 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
     expect(handleEventsChange.callCount).to.equal(1);
     const updatedEvents = handleEventsChange.firstCall.args[0];
-    expect(updatedEvents[0].resource).to.equal('r2');
+    expect(updatedEvents[0].resource).to.equal(design.id);
   });
 
   it('should move an event to a different position on the same resource', async () => {
     const handleEventsChange = spy();
     const event = EventBuilder.new()
-      .id('event-2')
       .title('Design Review')
       .singleDay('2025-07-03T09:00:00Z', 60)
-      .resource('r1')
+      .resource(engineering)
       .draggable(true)
       .build();
 
@@ -104,8 +103,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        view="days"
-        views={['days']}
+        preset="day"
+        presets={['day']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -115,7 +114,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     const eventElement = screen.getByText('Design Review');
     mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
 
-    const sameRow = getEventRow('r1');
+    const sameRow = getEventRow(engineering.id);
 
     // Drop at a significantly different X position to move the event
     await act(async () => {
@@ -137,10 +136,9 @@ describe('EventTimelinePremium - Drag and Drop', () => {
   it('should resize an event end to a later time', async () => {
     const handleEventsChange = spy();
     const event = EventBuilder.new()
-      .id('event-1')
       .title('Team Standup')
       .singleDay('2025-07-03T09:00:00Z', 60)
-      .resource('r1')
+      .resource(engineering)
       .resizable(true)
       .build();
 
@@ -149,8 +147,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        view="days"
-        views={['days']}
+        preset="day"
+        presets={['day']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -163,7 +161,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
 
     const endHandle = getResizeHandle(eventElement, 'end');
-    const sameRow = getEventRow('r1');
+    const sameRow = getEventRow(engineering.id);
 
     await act(async () => {
       simulateDragAndDrop({
@@ -186,10 +184,9 @@ describe('EventTimelinePremium - Drag and Drop', () => {
   it('should resize an event start to an earlier time', async () => {
     const handleEventsChange = spy();
     const event = EventBuilder.new()
-      .id('event-1')
       .title('Team Standup')
       .singleDay('2025-07-03T09:00:00Z', 60)
-      .resource('r1')
+      .resource(engineering)
       .resizable(true)
       .build();
 
@@ -198,8 +195,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        view="days"
-        views={['days']}
+        preset="day"
+        presets={['day']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -212,10 +209,10 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
 
     const startHandle = getResizeHandle(eventElement, 'start');
-    const sameRow = getEventRow('r1');
+    const sameRow = getEventRow(engineering.id);
 
     // Drag the start handle to an earlier position on the timeline.
-    // The "days" view shows 56 days in 6720px (≈5px per hour).
+    // The "day" preset shows 56 days in 6720px (≈5px per hour).
     // The event at 09:00 is at ~pixel 45. Use targetClientX=20 (~04:00).
     await act(async () => {
       simulateDragAndDrop({

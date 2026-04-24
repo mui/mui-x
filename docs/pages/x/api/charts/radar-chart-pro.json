@@ -11,13 +11,16 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "className": { "type": { "name": "string" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
+    "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
@@ -117,6 +120,7 @@
         "returned": "string"
       }
     },
+    "title": { "type": { "name": "string" } },
     "tooltipItem": {
       "type": {
         "name": "union",
@@ -137,6 +141,12 @@
     { "name": "baseMenuItem", "description": "", "class": null },
     { "name": "baseMenuList", "description": "", "class": null },
     { "name": "basePopper", "description": "", "class": null },
+    {
+      "name": "baseToggleButton",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps>`.",
+      "class": null
+    },
+    { "name": "baseToggleButtonGroup", "description": "", "class": null },
     { "name": "baseTooltip", "description": "", "class": null },
     {
       "name": "exportIcon",

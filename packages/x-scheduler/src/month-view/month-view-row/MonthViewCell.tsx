@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
@@ -26,6 +26,7 @@ import { useEventDialogContext } from '../../internals/components/event-dialog/E
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventSkeleton } from '../../internals/components/event-skeleton';
+import { getCellFocusBackground } from '../../internals/utils/tokens';
 
 const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   name: 'MuiEventCalendar',
@@ -37,17 +38,16 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   padding: theme.spacing(0.5),
   fontSize: theme.typography.body2.fontSize,
   lineHeight: '18px',
+  borderInlineStart: `1px solid transparent`,
   '&:not(:first-of-type)': {
-    borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
+    borderInlineStartColor: (theme.vars || theme).palette.divider,
   },
   '&[data-weekend]': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
     color: (theme.vars || theme).palette.text.primary,
   },
   '&[data-current]': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.05)`
-      : alpha(theme.palette.primary.light, 0.05),
+    backgroundColor: theme.alpha((theme.vars || theme).palette.primary.light, 0.05),
   },
   [`&[data-current] .${eventCalendarClasses.monthViewCellNumber}`]: {
     backgroundColor: (theme.vars || theme).palette.primary.main,
@@ -55,6 +55,10 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   },
   '&[data-other-month]': {
     color: (theme.vars || theme).palette.text.disabled,
+  },
+  '&:focus-visible': {
+    outline: 'none',
+    backgroundColor: getCellFocusBackground(theme),
   },
   // Today button states
   [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton} > .${eventCalendarClasses.monthViewCellNumber}`]:
@@ -115,7 +119,7 @@ const MonthViewCellNumberButton = styled('button', {
     backgroundColor: (theme.vars || theme).palette.action.selected,
   },
   '&:focus-visible': {
-    backgroundColor: (theme.vars || theme).palette.action.focus,
+    backgroundColor: getCellFocusBackground(theme),
     outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
     outlineOffset: 2,
   },
@@ -182,7 +186,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   );
   const isToday = useStore(store, schedulerNowSelectors.isCurrentDay, day.value);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
+  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row, maxEvents);
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -232,7 +236,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           type="button"
           className={classes.monthViewCellNumberButton}
           onClick={(event) => store.switchToDay(day.value, event)}
-          tabIndex={0}
+          tabIndex={-1}
         >
           {cellNumberContent}
         </MonthViewCellNumberButton>

@@ -1,0 +1,9 @@
+<ChatProvider
+  adapter={adapter}
+  initialConversations={cloneConversations(demoConversations.slice(0, 2))}
+  initialActiveConversationId="support"
+  initialMessages={[...demoThreads.support, ...demoThreads.product]}
+  initialComposerValue="Track this with a custom selector."
+>
+  <AdvancedMetrics />
+</ChatProvider>

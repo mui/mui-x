@@ -13,6 +13,9 @@
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
     },
+    "desc": {
+      "description": "The description of the chart. Used to provide an accessible description for the chart."
+    },
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
@@ -118,6 +121,9 @@
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "title": {
+      "description": "The title of the chart. Used to provide an accessible label for the chart."
+    },
     "tooltipAxis": {
       "description": "The controlled axis tooltip. Identified by the axis id, and data index."
     },
@@ -148,6 +154,8 @@
     "baseMenuItem": "",
     "baseMenuList": "",
     "basePopper": "",
+    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps&gt;</code>.",
+    "baseToggleButtonGroup": "",
     "baseTooltip": "",
     "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
     "legend": "Custom rendering of the legend.",

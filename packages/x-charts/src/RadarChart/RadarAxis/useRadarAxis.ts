@@ -1,7 +1,7 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { useRadiusAxes } from '../../hooks/useAxis';
 import { useRotationScale } from '../../hooks/useScale';
-import { useChartContext } from '../../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 import {
   selectorChartPolarCenter,
   type UseChartPolarAxisSignature,
@@ -30,12 +30,12 @@ export interface UseRadarAxisParams {
 }
 
 /**
- * Returns an array with on item par metrics with the different point to label.
+ * Returns an array with one item per metric with the different points to label.
  */
 export function useRadarAxis(params: UseRadarAxisParams) {
   const { metric, angle, divisions = 1 } = params;
 
-  const { instance, store } = useChartContext<[UseChartPolarAxisSignature]>();
+  const { instance, store } = useChartsContext<[UseChartPolarAxisSignature]>();
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis } = useRadiusAxes();
 
@@ -49,8 +49,8 @@ export function useRadarAxis(params: UseRadarAxisParams) {
 
   if (!existingMetrics.includes(metric)) {
     warnOnce([
-      `MUI X Charts: You radar axis try displaying values for the metric "${metric}" which does nto exist.`,
-      `either add this metric to your radar, or pick one from the existing metrics: ${existingMetrics.join(', ')}`,
+      `MUI X Charts: Your radar axis tries to display values for the metric "${metric}" which does not exist.`,
+      `Either add this metric to your radar, or pick one from the existing metrics: ${existingMetrics.join(', ')}`,
     ]);
   }
 

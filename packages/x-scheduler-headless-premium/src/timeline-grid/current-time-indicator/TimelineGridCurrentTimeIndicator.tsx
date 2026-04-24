@@ -7,7 +7,7 @@ import { useElementPositionInCollection } from '@mui/x-scheduler-headless/intern
 import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridCurrentTimeIndicatorCssVars } from './TimelineGridCurrentTimeIndicatorCssVars';
 
 export const TimelineGridCurrentTimeIndicator = React.forwardRef(
@@ -21,13 +21,14 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
       // Rendering props
       className,
       render,
+      style,
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;
 
     const store = useEventTimelinePremiumStoreContext();
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
-    const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+    const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
     const processedNow = React.useMemo(() => processDate(now, adapter), [adapter, now]);
 
@@ -39,26 +40,23 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const { position } = useElementPositionInCollection({
       start: processedNow,
       end: endForCalc,
-      collectionStart: viewConfig.start,
-      collectionEnd: viewConfig.end,
+      collectionStart: presetConfig.start,
+      collectionEnd: presetConfig.end,
     });
 
-    const style = React.useMemo(
-      () =>
-        ({
-          [TimelineGridCurrentTimeIndicatorCssVars.xPosition]: position,
-        }) as React.CSSProperties,
-      [position],
-    );
-
-    const props = { style };
-
     const isOutOfRange =
-      adapter.isBefore(now, viewConfig.start) || adapter.isAfter(now, viewConfig.end);
+      adapter.isBefore(now, presetConfig.start) || adapter.isAfter(now, presetConfig.end);
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],
-      props: [props, elementProps],
+      props: [
+        elementProps,
+        {
+          style: {
+            [TimelineGridCurrentTimeIndicatorCssVars.xPosition]: position,
+          } as React.CSSProperties,
+        },
+      ],
       enabled: !isOutOfRange,
     });
   },

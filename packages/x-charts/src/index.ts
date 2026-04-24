@@ -30,14 +30,9 @@ export type {
   ChartsContainerSlots,
   ChartsContainerSlotProps,
 } from './ChartsContainer';
-export { ChartContainer } from './ChartContainer';
-export type {
-  ChartContainerProps,
-  ChartContainerSlots,
-  ChartContainerSlotProps,
-} from './ChartContainer';
 export * from './ChartsDataProvider';
-export * from './ChartDataProvider';
+export * from './ChartsRadialDataProvider';
+export * from './ChartsRadialGrid';
 export * from './Toolbar';
 export * from './ChartsWrapper';
 export * from './ChartsBrushOverlay';

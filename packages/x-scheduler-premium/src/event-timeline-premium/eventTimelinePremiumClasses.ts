@@ -2,6 +2,12 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { EventDialogClasses, eventDialogClassKeys } from '@mui/x-scheduler/internals';
 
+// Note: the per-preset header class slots (`timeHeader`, `daysHeader`, `weeksHeader`,
+// `monthsHeader`, `yearsHeader` and their children) are intentionally NOT renamed along
+// with the rest of the views → presets migration. They are replaced by a single set of
+// generic slots (`header`, `headerRow`, `headerCell`, `headerCellLabel`) in #21827 when
+// the bespoke headers are unified into a single generic header component.
+
 export interface EventTimelinePremiumClasses extends EventDialogClasses {
   /** Styles applied to the root element. */
   root: string;
@@ -15,6 +21,8 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   titleHeaderCell: string;
   /** Styles applied to the events header cell element. */
   eventsHeaderCell: string;
+  /** Styles applied to the events header cell content element. */
+  eventsHeaderCellContent: string;
   /** Styles applied to the title sub-grid element. */
   titleSubGrid: string;
   /** Styles applied to the events sub-grid wrapper element. */
@@ -41,6 +49,8 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   eventResizeHandler: string;
   /** Styles applied to event lines clamp elements. */
   eventLinesClamp: string;
+  /** Styles applied to event recurring icon elements. */
+  eventRecurringIcon: string;
   /** Styles applied to the time header root element. */
   timeHeader: string;
   /** Styles applied to time header cell elements. */
@@ -104,6 +114,7 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'headerRow',
     'titleHeaderCell',
     'eventsHeaderCell',
+    'eventsHeaderCellContent',
     'titleSubGrid',
     'eventsSubGridWrapper',
     'eventsSubGrid',
@@ -117,6 +128,7 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'eventPlaceholder',
     'eventResizeHandler',
     'eventLinesClamp',
+    'eventRecurringIcon',
     'timeHeader',
     'timeHeaderCell',
     'timeHeaderDayLabel',

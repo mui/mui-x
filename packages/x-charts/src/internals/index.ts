@@ -11,7 +11,7 @@ export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export { useDrawingArea } from '../hooks/useDrawingArea';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useScatterPlotData } from '../ScatterChart/useScatterPlotData';
-export { scatterSeriesConfig as scatterSeriesConfig } from '../ScatterChart/seriesConfig';
+export { scatterSeriesConfig } from '../ScatterChart/seriesConfig';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useAreaPlotData } from '../LineChart/useAreaPlotData';
 export { useLinePlotData } from '../LineChart/useLinePlotData';
@@ -19,9 +19,7 @@ export * from '../BarChart/useBarChartProps';
 export { processBarDataForPlot } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartsContainer/useChartsContainerProps';
-export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartsDataProvider/useChartsDataProviderProps';
-export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './seriesSelectorOfType';
 export { useSkipAnimation } from '../hooks/useSkipAnimation';
 export { useRegisterPointerInteractions } from './plugins/featurePlugins/shared/useRegisterPointerInteractions';
@@ -81,16 +79,20 @@ export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
 export * from './plugins/utils/defaultSeriesConfig';
+export {
+  useUtilityClasses as useChartsTooltipUtilityClasses,
+  getChartsTooltipUtilityClass,
+} from '../ChartsTooltip/chartsTooltipClasses';
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';
 export * from '../context/ChartsProvider';
-export * from '../context/ChartProvider';
 export * from '../context/ChartsSlotsContext';
 
 // series configuration
 export * from '../models/seriesType/config';
 export * from '../models/seriesType/common';
+export * from '../models/seriesType/line';
 
 export * from '../models/z-axis';
 export * from '../models/axis';
@@ -104,3 +106,5 @@ export * from './constants';
 export * from './scales';
 export * from './identifierSerializer';
 export * from './identifierCleaner';
+
+export { default as getLineItemAtPosition } from '../LineChart/seriesConfig/getItemAtPosition';

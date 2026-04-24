@@ -1,8 +1,12 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docs/config';
-import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
-import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
+import {
+  ProjectSettings,
+  ComponentReactApi,
+  HookReactApi,
+  findApiPages,
+} from '@mui/internal-api-docs-builder';
 import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
@@ -46,7 +50,7 @@ export const projectTreeSettings: ProjectSettings = {
       .filter((page): page is PageType => page !== null)
       .sort((a: PageType, b: PageType) => a.title.localeCompare(b.title));
 
-    return `import type { MuiPage } from 'docs/src/MuiPage';
+    return `import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
 const treeViewApiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
 export default treeViewApiPages;
@@ -76,7 +80,7 @@ export default treeViewApiPages;
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/tree-view',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/tree-view',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/tree-view',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: [],

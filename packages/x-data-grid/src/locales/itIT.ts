@@ -74,7 +74,7 @@ const itITGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operatori',
   filterPanelOperatorAnd: 'E (and)',
   filterPanelOperatorOr: 'O (or)',
-  filterPanelColumns: 'Colonne',
+  filterPanelColumn: 'Colonne',
   filterPanelInputLabel: 'Valore',
   filterPanelInputPlaceholder: 'Filtra il valore',
 

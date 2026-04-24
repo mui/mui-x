@@ -42,14 +42,13 @@ describe('<WeekView />', () => {
       );
 
       const getEventsFromDate = (date: number) => {
+        const header = Array.from(
+          document.querySelectorAll<HTMLElement>('[role="columnheader"][aria-label]'),
+        ).find((h) => h.getAttribute('aria-label')?.endsWith(` ${date}`));
+
         return screen
           .getAllByRole('gridcell')
-          .find((cell) => {
-            const labelledBy = cell.getAttribute('aria-labelledby');
-            return labelledBy?.includes(
-              `DayTimeGridHeaderCell-${date} DayTimeGridAllDayEventsHeaderCell`,
-            );
-          })!
+          .find((cell) => cell.getAttribute('aria-labelledby')?.includes(header!.id))!
           .querySelectorAll(`.${eventCalendarClasses.dayGridEvent}`);
       };
 

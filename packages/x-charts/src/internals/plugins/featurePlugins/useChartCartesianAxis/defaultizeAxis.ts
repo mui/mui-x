@@ -39,41 +39,46 @@ export function defaultizeXAxis(
       DEFAULT_AXIS_SIZE_HEIGHT + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 
     const id = axisConfig.id ?? `defaultized-x-axis-${index}`;
+    const height = axisConfig.height ?? defaultHeight;
     const sharedConfig = {
       offset: offsets[position],
       ...axisConfig,
       id,
       position,
-      height: axisConfig.height ?? defaultHeight,
+      height,
       zoom: defaultizeZoom(axisConfig.zoom, id, 'x', axisConfig.reverse),
     };
 
     // Increment the offset for the next axis
+    // For 'auto' height, use default height for initial offset calculation
+    // The actual auto-size will be computed by selectors
     if (position !== 'none') {
-      offsets[position] += sharedConfig.height + axesGap;
+      const heightForOffset = height === 'auto' ? defaultHeight : height;
+      offsets[position] += heightForOffset + axesGap;
 
       if (sharedConfig.zoom?.slider.enabled) {
         offsets[position] += sharedConfig.zoom.slider.size;
       }
     }
 
-    // If `dataKey` is NOT provided
-    if (dataKey === undefined || axisConfig.data !== undefined) {
+    // If data is already provided or no dataset extraction is needed
+    if (axisConfig.data !== undefined || (dataKey === undefined && !axisConfig.valueGetter)) {
       return sharedConfig;
     }
 
     if (dataset === undefined) {
       throw new Error(
-        'MUI X Charts: The x-axis uses `dataKey` but no `dataset` is provided. ' +
-          'When using dataKey, a dataset must be provided to retrieve the axis data. ' +
+        'MUI X Charts: The x-axis uses `dataKey` or `valueGetter` but no `dataset` is provided. ' +
+          'When using dataKey or valueGetter, a dataset must be provided to retrieve the axis data. ' +
           'Either provide a dataset prop or use the data property directly on the x-axis.',
       );
     }
 
-    // If `dataKey` is provided
     return {
       ...sharedConfig,
-      data: dataset.map((d) => d[dataKey]),
+      data: axisConfig.valueGetter
+        ? dataset.map((d) => axisConfig.valueGetter!(d))
+        : dataset.map((d) => d[dataKey!]),
     };
   });
 
@@ -104,41 +109,46 @@ export function defaultizeYAxis(
       DEFAULT_AXIS_SIZE_WIDTH + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 
     const id = axisConfig.id ?? `defaultized-y-axis-${index}`;
+    const width = axisConfig.width ?? defaultWidth;
     const sharedConfig = {
       offset: offsets[position],
       ...axisConfig,
       id,
       position,
-      width: axisConfig.width ?? defaultWidth,
+      width,
       zoom: defaultizeZoom(axisConfig.zoom, id, 'y', axisConfig.reverse),
-    } satisfies DefaultedYAxis;
+    };
 
     // Increment the offset for the next axis
+    // For 'auto' width, use default width for initial offset calculation
+    // The actual auto-size will be computed by selectors
     if (position !== 'none') {
-      offsets[position] += sharedConfig.width + axesGap;
+      const widthForOffset = width === 'auto' ? defaultWidth : width;
+      offsets[position] += widthForOffset + axesGap;
 
       if (sharedConfig.zoom?.slider.enabled) {
         offsets[position] += sharedConfig.zoom.slider.size;
       }
     }
 
-    // If `dataKey` is NOT provided
-    if (dataKey === undefined || axisConfig.data !== undefined) {
+    // If data is already provided or no dataset extraction is needed
+    if (axisConfig.data !== undefined || (dataKey === undefined && !axisConfig.valueGetter)) {
       return sharedConfig;
     }
 
     if (dataset === undefined) {
       throw new Error(
-        'MUI X Charts: The y-axis uses `dataKey` but no `dataset` is provided. ' +
-          'When using dataKey, a dataset must be provided to retrieve the axis data. ' +
+        'MUI X Charts: The y-axis uses `dataKey` or `valueGetter` but no `dataset` is provided. ' +
+          'When using dataKey or valueGetter, a dataset must be provided to retrieve the axis data. ' +
           'Either provide a dataset prop or use the data property directly on the y-axis.',
       );
     }
 
-    // If `dataKey` is provided
     return {
       ...sharedConfig,
-      data: dataset.map((d) => d[dataKey]),
+      data: axisConfig.valueGetter
+        ? dataset.map((d) => axisConfig.valueGetter!(d))
+        : dataset.map((d) => d[dataKey!]),
     };
   });
 

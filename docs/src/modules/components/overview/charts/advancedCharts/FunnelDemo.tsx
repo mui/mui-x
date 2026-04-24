@@ -14,13 +14,13 @@ const commonSeries = {
 
 function Funnel() {
   return (
-    <Stack height="100%">
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center" sx={{ width: '100%', mb: 1 }}>
         World education enrollment in 2000 and 2020
       </Typography>
       <div style={{ flexGrow: 1, minHeight: 0 }}>
         <FunnelChart
-          sx={{ '.MuiFunnelSection-series-2020': { filter: 'brightness(0.7)' } }}
+          sx={{ '& [data-series="2020"]': { filter: 'brightness(0.7)' } }}
           margin={{ left: 50, right: 50 }}
           series={[
             {
@@ -79,7 +79,7 @@ function Funnel() {
           slotProps={{ tooltip: { disablePortal: true } }}
         />
       </div>
-      <Typography variant="caption" textAlign="end">
+      <Typography variant="caption" sx={{ textAlign: 'end' }}>
         Data from{' '}
         <a href="https://ourworldindata.org/grapher/gender-gap-education-levels/">
           ourworldindata.org

@@ -24,7 +24,7 @@ export type PromptFieldProps = Omit<
    */
   lang?: string;
   /**
-   * Called when an speech recognition error occurs.
+   * Called when a speech recognition error occurs.
    * @param {string} error The error message
    */
   onRecordError?: (error: string) => void;
@@ -108,7 +108,7 @@ PromptField.propTypes = {
    */
   className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
-   * Called when an speech recognition error occurs.
+   * Called when a speech recognition error occurs.
    * @param {string} error The error message
    */
   onRecordError: PropTypes.func,

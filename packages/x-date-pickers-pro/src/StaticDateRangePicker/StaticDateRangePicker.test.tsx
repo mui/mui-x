@@ -14,12 +14,10 @@ describe('<StaticDateRangePicker />', () => {
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
-      'componentsProp',
       'themeDefaultProps',
       'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
-      'propsSpread',
     ],
   }));
 
@@ -42,7 +40,7 @@ describe('<StaticDateRangePicker />', () => {
 
     expect(
       screen
-        .getAllByTestId('DateRangePickerDay')
+        .getAllByTestId(/DateRangePickerDay|DateRangeHighlight/)
         .filter((day) => day.getAttribute('disabled') !== undefined),
     ).to.have.length(31);
   });
@@ -57,7 +55,7 @@ describe('<StaticDateRangePicker />', () => {
     // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
     expect(
       document.querySelector(
-        '[role="grid"] [role="rowgroup"] > [role="row"] [role="gridcell"][data-testid="DateRangePickerDay"]',
+        '[role="grid"] [role="rowgroup"] > [role="row"] [role="gridcell"][data-testid="DateRangeHighlight"]',
       ),
     ).to.have.text('1');
   });

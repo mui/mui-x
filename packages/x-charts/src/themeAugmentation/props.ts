@@ -12,11 +12,13 @@ import { type ChartsLocalizationProviderProps } from '../ChartsLocalizationProvi
 import { type ChartsDataProviderProps } from '../ChartsDataProvider';
 import { type ChartsLayerContainerProps } from '../ChartsLayerContainer';
 import { type ChartsSvgLayerProps } from '../ChartsSvgLayer';
+import { type ChartsRadialGridProps } from '../ChartsRadialGrid';
 
 export interface ChartsComponentsPropsList {
   MuiChartsXAxis: ChartsXAxisProps;
   MuiChartsYAxis: ChartsYAxisProps;
   MuiChartsGrid: ChartsGridProps;
+  MuiRadialChartsGrid: ChartsRadialGridProps;
   MuiChartsLegend: ChartsLegendProps;
   MuiChartsLocalizationProvider: ChartsLocalizationProviderProps;
   MuiChartsTooltip: ChartsTooltipProps;
@@ -25,9 +27,6 @@ export interface ChartsComponentsPropsList {
   MuiChartsSvgLayer: ChartsSvgLayerProps;
 
   MuiChartsDataProvider: ChartsDataProviderProps;
-
-  /** @deprecated Use `MuiChartsDataProvider` instead. */
-  MuiChartDataProvider: ChartsDataProviderProps;
 
   // BarChart components
   MuiBarChart: BarChartProps;

@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
-import { areaElementClasses } from '@mui/x-charts/LineChart';
+import { lineClasses } from '@mui/x-charts/LineChart';
 
 export type StatCardProps = {
   title: string;
@@ -29,13 +29,13 @@ export default function StatCard({ title, value, data }: StatCardProps) {
       <CardContent
         sx={{ padding: { xs: 1, md: 1.5 }, '&:last-child': { paddingBottom: { xs: 1, md: 1.5 } } }}
       >
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Typography variant="caption" color="text.secondary" fontWeight={500}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 500 }}>
             {title}
           </Typography>
         </Stack>
-        <Stack direction="row" alignItems="flex-end" spacing={2}>
-          <Typography variant="h4" component="p" fontSize={'1.5rem'} fontWeight={500}>
+        <Stack direction="row" spacing={2} sx={{ alignItems: 'flex-end' }}>
+          <Typography variant="h4" component="p" sx={{ fontSize: '1.5rem', fontWeight: 500 }}>
             {value}
           </Typography>
           <Box sx={{ width: '100%', height: 50 }}>
@@ -45,7 +45,7 @@ export default function StatCard({ title, value, data }: StatCardProps) {
               showHighlight
               showTooltip
               sx={{
-                [`& .${areaElementClasses.root}`]: {
+                [`& .${lineClasses.area}`]: {
                   fill: `url(#area-gradient-${value})`,
                 },
               }}

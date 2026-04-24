@@ -4,26 +4,25 @@ import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
-import { EventCalendarViewConfig, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
+import {
+  EventCalendarViewConfig,
+  GridRowType,
+  SchedulerProcessedDate,
+} from '@mui/x-scheduler-headless/models';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import {
-  useExtractEventCalendarParameters,
-  EventCalendarState as State,
-} from '@mui/x-scheduler-headless/use-event-calendar';
+import type { EventCalendarState as State } from '@mui/x-scheduler-headless/use-event-calendar';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import clsx from 'clsx';
-import { MonthViewProps, StandaloneMonthViewProps } from './MonthView.types';
-import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
+import { MonthViewProps } from './MonthView.types';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
-import { EventDialogProvider } from '../internals/components/event-dialog';
 
 const FIXED_CELL_WIDTH = 28;
 
@@ -78,6 +77,11 @@ const MonthViewHeaderCell = styled(CalendarGrid.HeaderCell, {
   '&:not(:first-of-type)': {
     borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
+  '&:focus-visible': {
+    outline: 'none',
+    borderRadius: theme.shape.borderRadius,
+    boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
+  },
 }));
 
 const MonthViewWeekHeaderCell = styled('div', {
@@ -101,7 +105,10 @@ const MonthViewBody = styled('div', {
   gridAutoRows: 'minmax(0, 1fr)',
   position: 'relative',
   flexGrow: 1,
+  overflow: 'hidden',
 });
+
+const MONTH_VIEW_ROW_TYPES: GridRowType[] = ['header', 'day-grid'];
 
 const CELL_PADDING = 5; // theme.spacing(0.5) * 2
 const DAY_NUMBER_HEADER_HEIGHT = 22; // event height (18px) + gap (4px)
@@ -171,6 +178,11 @@ export const MonthView = React.memo(
       return tempWeeks;
     }, [adapter, days]);
 
+    const monthViewRowsPerType = React.useMemo(
+      () => ({ 'day-grid': weeks.length }) as const,
+      [weeks.length],
+    );
+
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     useResizeObserver(
@@ -191,7 +203,11 @@ export const MonthView = React.memo(
         className={clsx(props.className, classes.monthView)}
       >
         <MoreEventsPopoverProvider>
-          <MonthViewGrid className={classes.monthViewGrid}>
+          <MonthViewGrid
+            className={classes.monthViewGrid}
+            rowTypes={MONTH_VIEW_ROW_TYPES}
+            rowsPerType={monthViewRowsPerType}
+          >
             <MonthViewHeader className={classes.monthViewHeader} ownerState={{ showWeekNumber }}>
               {showWeekNumber && (
                 <MonthViewWeekHeaderCell className={classes.monthViewWeekHeaderCell}>
@@ -213,6 +229,7 @@ export const MonthView = React.memo(
               {weeks.map((week, weekIdx) => (
                 <MonthViewWeekRow
                   key={weekIdx}
+                  rowIndex={weekIdx}
                   maxEvents={maxEvents}
                   days={week}
                   occurrencesMap={occurrencesMap}
@@ -226,34 +243,3 @@ export const MonthView = React.memo(
     );
   }),
 );
-
-/**
- * A Month View that can be used outside of the Event Calendar.
- */
-export const StandaloneMonthView = React.forwardRef(function StandaloneMonthView<
-  TEvent extends object,
-  TResource extends object,
->(
-  props: StandaloneMonthViewProps<TEvent, TResource>,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
-    TEvent,
-    TResource,
-    typeof props
-  >(props);
-
-  return (
-    <EventCalendarProvider {...parameters}>
-      <EventDialogProvider>
-        <MonthView ref={forwardedRef} {...forwardedProps} />
-      </EventDialogProvider>
-    </EventCalendarProvider>
-  );
-}) as StandaloneMonthViewComponent;
-
-type StandaloneMonthViewComponent = <TEvent extends object, TResource extends object>(
-  props: StandaloneMonthViewProps<TEvent, TResource> & {
-    ref?: React.ForwardedRef<HTMLDivElement>;
-  },
-) => React.JSX.Element;

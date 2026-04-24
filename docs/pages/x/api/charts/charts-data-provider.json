@@ -5,9 +5,6 @@
       "default": "rainbowSurgePalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
-    },
     "height": { "type": { "name": "number" } },
     "id": { "type": { "name": "string" } },
     "localeText": { "type": { "name": "object" } },
@@ -32,7 +29,13 @@
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },
-    { "name": "baseIconButton", "description": "", "class": null }
+    { "name": "baseIconButton", "description": "", "class": null },
+    {
+      "name": "baseToggleButton",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps>`.",
+      "class": null
+    },
+    { "name": "baseToggleButtonGroup", "description": "", "class": null }
   ],
   "classes": [],
   "muiName": "MuiChartsDataProvider",

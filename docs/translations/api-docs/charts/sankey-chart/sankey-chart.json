@@ -3,6 +3,9 @@
   "propDescriptions": {
     "classes": { "description": "Classes applied to the various elements." },
     "colors": { "description": "Color palette used to colorize multiple series." },
+    "desc": {
+      "description": "The description of the chart. Used to provide an accessible description for the chart."
+    },
     "disableKeyboardNavigation": {
       "description": "If <code>true</code>, disables keyboard navigation for the chart."
     },
@@ -57,6 +60,9 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "title": {
+      "description": "The title of the chart. Used to provide an accessible label for the chart."
+    },
     "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
@@ -100,6 +106,8 @@
   "slotDescriptions": {
     "baseButton": "",
     "baseIconButton": "",
+    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps&gt;</code>.",
+    "baseToggleButtonGroup": "",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "toolbar": "Custom component for the toolbar.",

@@ -179,6 +179,10 @@ Starting with version `v8.x`, the new DOM structure is the default for all field
 
 #### Fallback to the non-accessible DOM structure
 
+:::info
+The `enableAccessibleFieldDOMStructure` prop has been removed in v9. The accessible DOM structure is now the only supported option.
+:::
+
 ```tsx
 <DateField enableAccessibleFieldDOMStructure={false} />
 <DatePicker enableAccessibleFieldDOMStructure={false} />
@@ -1969,8 +1973,8 @@ const theme = createTheme({
     MuiPickerPopper: {
       defaultProps: {
         // Those are now the props with support for theme default props
-        position: "bottom"
-        classes: { root: "custom-root-class}
+        position: 'bottom',
+        classes: { root: 'custom-root-class' },
       },
     },
   },

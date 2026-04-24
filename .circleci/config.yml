@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/48198a7131b2ee621cc13bc7729cc41c72f370e7/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/99fb0c874daeabc34c61c849cfea313a45a2466a/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -47,7 +47,7 @@ default-job: &default-job
   parameters:
     <<: *default-parameters
   environment:
-    # expose it globally otherwise we have to thread it from each job to the install command
+    &default-environment # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
     # Used by the code-infra orb to diff against the correct base branch for dedupe and prettier checks
@@ -140,6 +140,9 @@ jobs:
           path: test-results
   test_lint:
     <<: *default-job
+    environment:
+      <<: *default-environment
+      NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - checkout
       - install-deps
@@ -181,19 +184,6 @@ jobs:
           name: '`pnpm l10n` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
-          name: '`pnpm @mui/x-charts-vendor build` was run?'
-          command: |
-            # #target-branch-reference
-            # Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
-            # For example, when creating v9 from v8, `master -> v8.x`
-            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
-            then
-              echo "No changes to dependencies detected. Skipping..."
-            else
-              pnpm --filter @mui/x-charts-vendor build
-              git add -A && git diff --exit-code --staged
-            fi
-      - run:
           name: 'No dynamic date library import in the Pickers built types?'
           command: |
             pnpm lerna run --include-dependencies --scope "@mui/x-date-pickers*" build
@@ -210,6 +200,7 @@ jobs:
             git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
+    resource_class: medium+
     steps:
       - checkout
       - install-deps
@@ -223,7 +214,7 @@ jobs:
           name: Tests TypeScript definitions
           command: pnpm typescript:ci
           environment:
-            NODE_OPTIONS: --max-old-space-size=3584
+            NODE_OPTIONS: --max-old-space-size=5120
   test_e2e:
     <<: *default-job
     executor:
@@ -235,7 +226,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Build packages
-          command: pnpm release:build
+          command: pnpm release:build --concurrency 5
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
@@ -259,19 +250,9 @@ jobs:
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
-          name: prepare danger on PRs
-          command: pnpm danger ci
-          environment:
-            DANGER_COMMAND: prepareBundleSizeReport
-      - run:
           name: Build packages
           command: pnpm release:build
       - code-infra/upload-size-snapshot
-      - run:
-          name: Run danger on PRs
-          command: pnpm danger ci --fail-on-errors
-          environment:
-            DANGER_COMMAND: reportBundleSize
   test_regressions:
     <<: *default-job
     executor:

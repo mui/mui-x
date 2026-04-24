@@ -4,6 +4,8 @@
 .vscode
 .cursor
 .claude/settings.local.json
+.claude/worktrees
+.junie
 
 __diff_output__
 .DS_STORE
@@ -17,6 +19,7 @@ __diff_output__
 /docs/.env.local
 /docs/export
 /docs/public/x/
+/docs/public/chat/
 /test/regressions/screenshots
 /test/performance-charts/traces
 build

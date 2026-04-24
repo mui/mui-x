@@ -33,7 +33,7 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   adapter: Adapter;
   /**
-   * The date used to determine the visible date range in each view.
+   * The date used to determine the visible date range.
    */
   visibleDate: TemporalSupportedObject;
   /**
@@ -153,6 +153,11 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
+   * The ID of the event currently active (e.g. open in the event dialog).
+   * `null` when no event is active.
+   */
+  editedEventId: SchedulerEventId | null;
+  /**
    * The event that has been copied or cut, if any.
    */
   copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
@@ -220,12 +225,12 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
     eventDetails: SchedulerChangeEventDetails,
   ) => void;
   /**
-   * The date currently used to determine the visible date range in each view.
+   * The date currently used to determine the visible date range.
    */
   visibleDate?: TemporalSupportedObject;
   /**
-   * The date initially used to determine the visible date range in each view.
-   * To render a controlled calendar, use the `visibleDate` prop.
+   * The date initially used to determine the visible date range.
+   * To render a controlled component, use the `visibleDate` prop.
    * @default today
    */
   defaultVisibleDate?: TemporalSupportedObject;

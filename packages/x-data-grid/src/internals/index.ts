@@ -169,6 +169,7 @@ export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
+export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
 
 export type * as BaseSlots from '../models/gridBaseSlots';
 
@@ -198,6 +199,7 @@ export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSel
 export {
   findParentElementFromClassName,
   getActiveElement,
+  getGridCellElement,
   isEventTargetInPortal,
 } from '../utils/domUtils';
 export {
@@ -206,6 +208,8 @@ export {
   isCopyShortcut,
   isUndoShortcut,
   isRedoShortcut,
+  isFillDownShortcut,
+  isFillRightShortcut,
 } from '../utils/keyboardUtils';
 export * from '../utils/utils';
 export { exportAs } from '../utils/exportAs';

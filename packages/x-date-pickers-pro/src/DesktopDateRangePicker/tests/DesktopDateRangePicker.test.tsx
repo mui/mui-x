@@ -13,7 +13,6 @@ import {
   AdapterClassToUse,
   openPickerAsync,
   getFieldSectionsContainer,
-  getTextbox,
 } from 'test/utils/pickers';
 import { vi } from 'vitest';
 
@@ -100,35 +99,17 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   it('should add focused class to the field when it is focused', async () => {
-    // Test with accessible DOM structure
-    const { unmount } = render(<DesktopDateRangePicker />);
+    render(<DesktopDateRangePicker />);
 
     const sectionsContainer = getFieldSectionsContainer();
     await act(async () => sectionsContainer.focus());
 
     expect(sectionsContainer.parentElement).to.have.class('Mui-focused');
-
-    await act(async () => unmount());
-
-    // Test with non-accessible DOM structure
-    render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure={false} />);
-
-    const input = getTextbox();
-    await act(async () => input.focus());
-
-    expect(input.parentElement).to.have.class('Mui-focused');
   });
 
   it('should render the input with a given `name`', () => {
-    // Test with accessible DOM structure
-    const { unmount } = render(<DesktopDateRangePicker name="test" />);
+    render(<DesktopDateRangePicker name="test" />);
     expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
-
-    unmount();
-
-    // Test with non-accessible DOM structure
-    render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure={false} name="test" />);
-    expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
   });
 
   describe('Component slot: Popper', () => {
@@ -784,5 +765,27 @@ describe('<DesktopDateRangePicker />', () => {
       expect(getPickerDay('16')).to.have.attribute('disabled');
       expect(getPickerDay('17')).to.have.attribute('disabled');
     });
+  });
+
+  it('should close the Picker and move focus to the text field when clicking it', async () => {
+    const { user } = render(
+      <React.Fragment>
+        <input aria-label="decoy" />
+        <DesktopDateRangePicker />
+      </React.Fragment>,
+    );
+
+    await openPickerAsync(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
+
+    const decoyInput = screen.getByRole('textbox', { name: 'decoy' });
+    await user.click(decoyInput);
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
+    // the input should be focused—the new active element
+    expect(document.activeElement!).to.equal(decoyInput);
   });
 });

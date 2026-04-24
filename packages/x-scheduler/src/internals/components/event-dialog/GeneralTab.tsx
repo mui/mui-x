@@ -4,7 +4,7 @@ import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import {
@@ -55,6 +55,17 @@ const DateTimeFieldsRow = styled('div', {
   },
 }));
 
+const AllDayFormControlLabel = styled(FormControlLabel, {
+  name: 'MuiEventDialog',
+  slot: 'AllDayFormControlLabel',
+})({
+  width: '100%',
+  justifyContent: 'space-between',
+  [`&.${formControlLabelClasses.root}`]: {
+    marginLeft: 0,
+  },
+});
+
 interface GeneralTabProps {
   occurrence: SchedulerRenderableEventOccurrence;
   errors: Record<string, string | string[]>;
@@ -69,7 +80,7 @@ export function GeneralTab(props: GeneralTabProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -135,8 +146,8 @@ export function GeneralTab(props: GeneralTabProps) {
   return (
     <EventDialogTabPanel
       role="tabpanel"
-      id="general-tabpanel"
-      aria-labelledby="general-tab"
+      id={`${schedulerId}-general-tabpanel`}
+      aria-labelledby={`${schedulerId}-general-tab`}
       className={classes.eventDialogTabPanel}
       hidden={value !== 'general'}
     >
@@ -207,10 +218,10 @@ export function GeneralTab(props: GeneralTabProps) {
               />
             )}
           </DateTimeFieldsRow>
-          <FormControlLabel
+          <AllDayFormControlLabel
             control={
               <Switch
-                id="enable-all-day-switch"
+                id={`${schedulerId}-enable-all-day-switch`}
                 checked={controlled.allDay}
                 onChange={(event) => handleToggleAllDay(event.target.checked)}
                 disabled={isPropertyReadOnly('allDay')}
@@ -218,7 +229,6 @@ export function GeneralTab(props: GeneralTabProps) {
             }
             label={localeText.allDayLabel}
             labelPlacement="start"
-            sx={{ width: '100%', justifyContent: 'space-between', ml: 0 }}
           />
         </DateTimeFieldsContainer>
         <Divider />
