@@ -594,8 +594,6 @@ async function initializeEnvironment(
 
         await page.waitForFunction(
           () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop > 0,
-          null,
-          { timeout: 2000 },
         );
       });
 
