@@ -25,7 +25,7 @@ export default function LocaleTextTimeline() {
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
-          defaultView="months"
+          defaultPreset="monthAndYear"
         />
       </ThemeProvider>
     </div>

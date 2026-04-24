@@ -22,11 +22,11 @@ import {
   createChunkStream,
   createTextResponseChunks,
   randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const CONVERSATION_ID = 'split-conv';
 

@@ -260,7 +260,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiStaticDatePicker",
   "forwardsRefTo": "HTMLDivElement",

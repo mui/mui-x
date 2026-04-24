@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/focused-range-bar',
+    'docs/translations/api-docs/charts/focused-range-bar',
     false,
     /\.\/focused-range-bar.*\.json$/,
   );

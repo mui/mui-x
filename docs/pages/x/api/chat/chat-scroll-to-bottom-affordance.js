@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/chat-scroll-to-bottom-affordance',
+    'docs/translations/api-docs/chat/chat-scroll-to-bottom-affordance',
     false,
     /\.\/chat-scroll-to-bottom-affordance.*\.json$/,
   );
