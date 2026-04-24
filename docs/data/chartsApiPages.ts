@@ -385,6 +385,26 @@ const chartsApiPages: MuiPage[] = [
     title: 'RadarSeriesPlot',
   },
   {
+    pathname: '/x/api/charts/radial-area-plot',
+    title: 'RadialAreaPlot',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-line-chart',
+    title: 'RadialLineChart',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-line-plot',
+    title: 'RadialLinePlot',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-mark-plot',
+    title: 'RadialMarkPlot',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/range-bar-plot',
     title: 'RangeBarPlot',
     plan: 'premium',

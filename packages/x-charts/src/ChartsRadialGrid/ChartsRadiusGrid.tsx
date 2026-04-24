@@ -8,6 +8,7 @@ import {
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import { type PolarAxisDefaultized } from '../models/axis';
+import { EPSILON } from '../utils/epsilon';
 
 interface ChartsRadiusGridProps {
   axis: PolarAxisDefaultized<any, any, any>;
@@ -34,7 +35,7 @@ export function ChartsRadiusGrid(props: ChartsRadiusGridProps) {
     direction: 'radius',
   });
 
-  const isFullCircle = Math.abs(endAngle - startAngle) >= 2 * Math.PI - 0.0001;
+  const isFullCircle = Math.abs(endAngle - startAngle) >= 2 * Math.PI - EPSILON;
 
   if (isFullCircle) {
     return (
@@ -64,7 +65,7 @@ export function ChartsRadiusGrid(props: ChartsRadiusGridProps) {
         return (
           <GridPath
             key={`radius-${radius}`}
-            d={`M${cx + startDx * radius},${cy + startDy * radius} A ${radius} ${radius} 0 ${isLargeArc ? 1 : 0} ${startAngle < endAngle ? 1 : 0} ${cx + endDx * radius},${cy + endDy * radius}`}
+            d={`M${cx + startDx * radius},${cy + startDy * radius} A ${radius} ${radius} 0 ${isLargeArc ? 1 : 0} 1 ${cx + endDx * radius},${cy + endDy * radius}`}
             className={classes.radiusLine}
           />
         );

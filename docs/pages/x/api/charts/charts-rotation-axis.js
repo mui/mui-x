@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/charts-rotation-axis',
+    'docs/translations/api-docs/charts/charts-rotation-axis',
     false,
     /\.\/charts-rotation-axis.*\.json$/,
   );

@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/chat-conversation-subtitle',
+    'docs/translations/api-docs/chat/chat-conversation-subtitle',
     false,
     /\.\/chat-conversation-subtitle.*\.json$/,
   );

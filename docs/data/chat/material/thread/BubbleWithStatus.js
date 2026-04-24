@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import { ChatBox, ChatMessageContent } from '@mui/x-chat';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const BubbleWithStatusSlot = React.forwardRef(function BubbleWithStatusSlot(
   { ownerState, children, ...props },

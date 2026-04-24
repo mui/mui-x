@@ -158,10 +158,6 @@ export class CandlestickWebGLProgram {
   }
 
   render(dataLength: number) {
-    // Clear and draw
-    this.gl.clearColor(0, 0, 0, 0.0);
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-
     this.gl.useProgram(this.wickProgram);
     logWebGLErrors(this.gl);
     this.gl.bindVertexArray(this.wickVao);
