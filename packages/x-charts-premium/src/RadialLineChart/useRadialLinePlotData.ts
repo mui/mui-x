@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
+import { getValueToPositionMapper, useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
 import { useChartsContext, type UseChartPolarAxisSignature } from '@mui/x-charts/internals';
 import { type CurveType, type SeriesId } from '@mui/x-charts/models';
 import { useRadialLineSeriesContext } from '../hooks/useRadialLineSeries';
@@ -50,6 +50,7 @@ export function useRadialLinePlotData() {
 
         const radiusAxis = radiusAxisMap[radiusAxisId];
         const rotationAxis = rotationAxisMap[rotationAxisId];
+        const rotationPosition = getValueToPositionMapper(rotationAxis.scale);
 
         const points: RadialLinePoint[] = [];
 
@@ -62,7 +63,7 @@ export function useRadialLinePlotData() {
           const baseValue = stackedData[dataIndex]?.[0] ?? radiusAxis.scale.domain()[0];
           const radius = radiusAxis.scale(value as number)!;
           const baseRadius = radiusAxis.scale(baseValue as number)!;
-          const angle = rotationAxis.scale(rotationAxis.data![dataIndex])!;
+          const angle = rotationPosition(rotationAxis.data![dataIndex]);
 
           const [x, y] = instance.polar2svg(radius, angle);
           points.push({ x, y, radius, baseRadius, angle, dataIndex });

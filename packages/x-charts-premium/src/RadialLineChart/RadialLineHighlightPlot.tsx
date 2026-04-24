@@ -6,7 +6,7 @@ import {
   useChartsContext,
   type UseChartPolarAxisSignature,
 } from '@mui/x-charts/internals';
-import { useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
+import { getValueToPositionMapper, useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
 import { useRadialLineSeriesContext } from '../hooks/useRadialLineSeries';
 import {
   RadialLineHighlightElement,
@@ -78,7 +78,7 @@ function RadialLineHighlightPlot(props: RadialLineHighlightPlotProps) {
           }
 
           const radiusScale = radiusAxis[radiusAxisId].scale;
-          const rotationScale = rotationAxis[rotationAxisId].scale;
+          const rotationPosition = getValueToPositionMapper(rotationAxis[rotationAxisId].scale);
           const rotationData = rotationAxis[rotationAxisId].data;
 
           if (rotationData === undefined) {
@@ -87,7 +87,7 @@ function RadialLineHighlightPlot(props: RadialLineHighlightPlotProps) {
 
           const value = stackedData[highlightedIndex]?.[1] ?? data[highlightedIndex];
           const radius = radiusScale(value as number)!;
-          const angle = rotationScale(rotationData[highlightedIndex])!;
+          const angle = rotationPosition(rotationData[highlightedIndex])!;
 
           const [x, y] = instance.polar2svg(radius, angle);
 
