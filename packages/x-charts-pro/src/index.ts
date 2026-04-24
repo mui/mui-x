@@ -48,6 +48,7 @@ export type {
   ChartsContainerProSlotProps,
 } from './ChartsContainerPro';
 export * from './ChartsDataProviderPro';
+export * from './ChartsRadialDataProviderPro';
 export * from './ScatterChartPro';
 export * from './SankeyChart';
 export * from './BarChartPro';
