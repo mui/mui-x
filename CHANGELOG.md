@@ -134,6 +134,7 @@ Internal changes.
 ### Miscellaneous
 
 - [infra] Update `.gitignore` to exclude `.claude/worktrees` (#22145) @michelengelen
+- [infra] Enable branch tracking when creating release branch (#22177) @michelengelen
 - [license] Add MIT license to `x-virtualizer` package (#22164) @michelengelen
 - [website] Fix outdated MUI logos (#22117) @oliviertassinari
 - [internal] Try avoiding store update when virtualization is disabled (#22093) @arminmeh
