@@ -9,8 +9,8 @@ import type { RadialPremiumPluginSignatures } from './ChartsRadialDataProviderPr
 
 export const useChartsRadialDataProviderPremiumProps = <
   SeriesType extends PolarChartSeriesType = PolarChartSeriesType,
-  TSignatures extends
-    readonly ChartAnyPluginSignature[] = RadialPremiumPluginSignatures<SeriesType>,
+  TSignatures extends readonly ChartAnyPluginSignature[] =
+    RadialPremiumPluginSignatures<SeriesType>,
 >(
   props: ChartsRadialDataProviderPremiumProps<SeriesType, TSignatures>,
 ) => {

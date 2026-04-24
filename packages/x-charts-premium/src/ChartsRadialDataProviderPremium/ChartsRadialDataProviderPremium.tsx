@@ -31,8 +31,8 @@ export interface ChartsRadialDataProviderPremiumSlotProps extends ChartsSlotProp
 
 export type ChartsRadialDataProviderPremiumProps<
   SeriesType extends PolarChartSeriesType = PolarChartSeriesType,
-  TSignatures extends
-    readonly ChartAnyPluginSignature[] = RadialPremiumPluginSignatures<SeriesType>,
+  TSignatures extends readonly ChartAnyPluginSignature[] =
+    RadialPremiumPluginSignatures<SeriesType>,
 > = ChartsRadialDataProviderProps<SeriesType, TSignatures> &
   ChartsProviderProps<SeriesType, TSignatures>['pluginParams'] & {
     /**
@@ -61,8 +61,8 @@ export type ChartsRadialDataProviderPremiumProps<
  */
 function ChartsRadialDataProviderPremium<
   SeriesType extends PolarChartSeriesType = PolarChartSeriesType,
-  TSignatures extends
-    readonly ChartAnyPluginSignature[] = RadialPremiumPluginSignatures<SeriesType>,
+  TSignatures extends readonly ChartAnyPluginSignature[] =
+    RadialPremiumPluginSignatures<SeriesType>,
 >(props: ChartsRadialDataProviderPremiumProps<SeriesType, TSignatures>) {
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartsRadialDataProviderPremiumProps({
