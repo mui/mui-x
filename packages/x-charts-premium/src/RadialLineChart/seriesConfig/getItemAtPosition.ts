@@ -40,7 +40,8 @@ function getBracketIndices(
 
     const gapAngle = clampAngleRad(angle - valueAngle);
 
-    if (gapAngle > Math.PI) {// We are between the previous and current rotation point.
+    if (gapAngle > Math.PI) {
+      // We are between the previous and current rotation point.
       if (index === 0) {
         return null; // Only relevant for band scales.
       }
@@ -52,7 +53,6 @@ function getBracketIndices(
       return null; // Only relevant for band scales.
     }
     return { left: index, right: index + 1 };
-
   }
 
   // For continuous axes, find the two adjacent data points surrounding pointX.

@@ -71,7 +71,7 @@ class SegmentCapture {
     this.cy = y;
   }
 
-  closePath() { }
+  closePath() {}
 }
 
 /** Evaluate a cubic Bezier at parameter t. */
@@ -221,7 +221,7 @@ const vectorProduct = (a: { x: number; y: number }, b: { x: number; y: number })
 /**
  * Build the curve segments for a set of pixel-coordinate points using d3's curve factory,
  * then evaluate the point on the curve at the given angle.
- * 
+ *
  * Returns null if no point on the curve matches the target angle.
  */
 export function evaluateCurveAtAngle(
@@ -229,7 +229,7 @@ export function evaluateCurveAtAngle(
    * The points only uses the x/y coordinate system, because internally curve factory only works with x/y coordinates.
    * So angles/radius are lost during the curve generation.
    */
-  points: Array<{ x: number; y: number; }>,
+  points: Array<{ x: number; y: number }>,
   targetAngle: number,
   curveType?: CurveType,
 ): { x: number; y: number } | null {
@@ -248,7 +248,7 @@ export function evaluateCurveAtAngle(
   curveInstance.lineStart();
   for (const p of points) {
     curveInstance.point(p.x, p.y);
-    if(p.x === 0 && p.y === 0) {
+    if (p.x === 0 && p.y === 0) {
       pointsContainsOrigin = true;
     }
   }
@@ -263,7 +263,7 @@ export function evaluateCurveAtAngle(
     const directionX0Target = vectorProduct({ x: segment.x0, y: segment.y0 }, pointTarget);
     const directionTargetX1 = vectorProduct(pointTarget, { x: segment.x1, y: segment.y1 });
 
-    // Test if target angle is between x0 and x1. To do so we check the sign of the vector product.    
+    // Test if target angle is between x0 and x1. To do so we check the sign of the vector product.
     if (directionX0Target > 0 && directionTargetX1 > 0) {
       const angle0 = Math.atan2(segment.x0, -segment.y0);
       const angle1 = Math.atan2(segment.x1, -segment.y1);
