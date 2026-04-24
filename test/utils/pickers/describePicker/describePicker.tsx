@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { screen, createDescribe } from '@mui/internal-test-utils';
+import { fireEvent, screen, createDescribe } from '@mui/internal-test-utils';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { DescribePickerOptions } from './describePicker.types';
 
@@ -50,17 +50,17 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
 
   describe('Component slot: DesktopPaper', () => {
     it.skipIf(hasNoView || variant !== 'desktop')(
-      'should forward onClick and onPointerDown',
+      'should forward onClick and onTouchStart',
       async () => {
         const handleClick = spy();
-        const handlePointerDown = spy();
+        const handleTouchStart = spy();
         const { user } = render(
           <ElementToTest
             {...propsToOpen}
             slotProps={{
               desktopPaper: {
                 onClick: handleClick,
-                onPointerDown: handlePointerDown,
+                onTouchStart: handleTouchStart,
                 'data-testid': 'paper',
               },
             }}
@@ -68,27 +68,31 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         );
         const paper = screen.getByTestId('paper');
 
-        // `userEvent.click` triggers pointer events under the hood
         await user.click(paper);
+        // `userEvent.pointer({ keys: '[TouchA>]' })` doesn't fire a
+        // `touchstart` in jsdom (no native `TouchEvent` support), so use
+        // `fireEvent.touchStart` to cover the `onTouchStart` slot prop.
+        fireEvent.touchStart(paper);
+
         expect(handleClick.callCount).to.equal(1);
-        expect(handlePointerDown.callCount).to.equal(1);
+        expect(handleTouchStart.callCount).to.equal(1);
       },
     );
   });
 
   describe('Component slot: Popper', () => {
     it.skipIf(hasNoView || variant !== 'desktop')(
-      'should forward onClick and onPointerDown',
+      'should forward onClick and onTouchStart',
       async () => {
         const handleClick = spy();
-        const handlePointerDown = spy();
+        const handleTouchStart = spy();
         const { user } = render(
           <ElementToTest
             {...propsToOpen}
             slotProps={{
               popper: {
                 onClick: handleClick,
-                onPointerDown: handlePointerDown,
+                onTouchStart: handleTouchStart,
                 'data-testid': 'popper',
               },
             }}
@@ -96,10 +100,14 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         );
         const popper = screen.getByTestId('popper');
 
-        // `userEvent.click` triggers pointer events under the hood
         await user.click(popper);
+        // `userEvent.pointer({ keys: '[TouchA>]' })` doesn't fire a
+        // `touchstart` in jsdom (no native `TouchEvent` support), so use
+        // `fireEvent.touchStart` to cover the `onTouchStart` slot prop.
+        fireEvent.touchStart(popper);
+
         expect(handleClick.callCount).to.equal(1);
-        expect(handlePointerDown.callCount).to.equal(1);
+        expect(handleTouchStart.callCount).to.equal(1);
       },
     );
   });
