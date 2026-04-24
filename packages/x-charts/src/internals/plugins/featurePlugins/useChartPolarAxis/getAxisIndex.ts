@@ -29,8 +29,8 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
   const isFullCircle =
     Math.abs(maxAngleGap + (scale.bandwidth() === 0 ? scale.step() : 0) - 2 * Math.PI) < EPSILON;
 
-  if (!isFullCircle && (angleGap < 0 || angleGap > maxAngleGap)) {
-    // If not a full circle we only consider pointer insider the rotation range.
+  if (!isFullCircle  || angleGap > maxAngleGap) {
+    // If not a full circle we only consider pointer inside the rotation range.
     return -1;
   }
   let dataIndex: number;

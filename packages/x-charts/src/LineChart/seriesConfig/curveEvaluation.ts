@@ -1,4 +1,4 @@
-import { EPSILON } from '@mui/x-charts/internals';
+import { EPSILON } from '../../utils/epsilon';
 import type { CurveType } from '../../models/curve';
 import { getCurveFactory } from '../../internals/getCurve';
 import { clampAngleRad } from '../../internals/clampAngle';
@@ -71,7 +71,7 @@ class SegmentCapture {
     this.cy = y;
   }
 
-  closePath() {}
+  closePath() { }
 }
 
 /** Evaluate a cubic Bezier at parameter t. */
@@ -116,8 +116,7 @@ function findTForX(segment: CurveSegment, targetX: number): number {
 }
 
 /**
- * Find parameter t such that the segment's x(t) ≈ targetX using bisection.
- * 20 iterations gives ~1e-6 precision relative to the segment's x range.
+ * Find parameter t such that the segment's x(t) ≈ targetX using cubic roots.
  */
 function findTForAngle(segment: CurveSegment, targetAngle: number): number {
   if (!isBezierSegment(segment)) {
@@ -220,13 +219,17 @@ const vectorProduct = (a: { x: number; y: number }, b: { x: number; y: number })
   a.x * b.y - a.y * b.x;
 
 /**
- * Build the curve segments for a set of pixel-coordinate points
- * using d3's curve factory, then evaluate y at the given pixel x.
- *
- * Returns null if targetX is outside the curve's x range.
+ * Build the curve segments for a set of pixel-coordinate points using d3's curve factory,
+ * then evaluate the point on the curve at the given angle.
+ * 
+ * Returns null if no point on the curve matches the target angle.
  */
 export function evaluateCurveAtAngle(
-  points: Array<{ x: number; y: number; rotation: number }>,
+  /**
+   * The points only uses the x/y coordinate system, because internally curve factory only works with x/y coordinates.
+   * So angles/radius are lost during the curve generation.
+   */
+  points: Array<{ x: number; y: number; }>,
   targetAngle: number,
   curveType?: CurveType,
 ): { x: number; y: number } | null {
@@ -241,9 +244,13 @@ export function evaluateCurveAtAngle(
   const factory = getCurveFactory(curveType);
   const curveInstance = factory(capture as any);
 
+  let pointsContainsOrigin = false;
   curveInstance.lineStart();
   for (const p of points) {
     curveInstance.point(p.x, p.y);
+    if(p.x === 0 && p.y === 0) {
+      pointsContainsOrigin = true;
+    }
   }
   curveInstance.lineEnd();
 
@@ -256,9 +263,8 @@ export function evaluateCurveAtAngle(
     const directionX0Target = vectorProduct({ x: segment.x0, y: segment.y0 }, pointTarget);
     const directionTargetX1 = vectorProduct(pointTarget, { x: segment.x1, y: segment.y1 });
 
-    // Test if x0 => target and target => x1 rotate in the same direction.
+    // Test if target angle is between x0 and x1. To do so we check the sign of the vector product.    
     if (directionX0Target > 0 && directionTargetX1 > 0) {
-      // console.log(directionX0Target, directionTargetX1)
       const angle0 = Math.atan2(segment.x0, -segment.y0);
       const angle1 = Math.atan2(segment.x1, -segment.y1);
 
@@ -276,8 +282,9 @@ export function evaluateCurveAtAngle(
     }
   }
 
-  if (points.some((p) => p.x === 0 && p.y === 0)) {
-    // Frequent edge case when handling area. If the curve his only made of (0, 0) points. So we can return (0, 0) for any angle.
+  if (pointsContainsOrigin) {
+    // Frequent edge case when handling area with minRadius set to 0.
+    // The only point on the curve is at the origin, so we can return (0, 0) for any angle.
     return { x: 0, y: 0 };
   }
 

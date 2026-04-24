@@ -16,7 +16,7 @@ The `RadialLineChart` component accepts `series`, `rotationAxis`, and `radiusAxi
 
 ## Highlight
 
-Like other series the radial line series have a `highlightScope` property which accept an objects with `highlight` and `fade` properties.
+Like other series, the radial line series has a `highlightScope` property that accepts an object with `highlight` and `fade` properties.
 
 {{"demo": "ElementHighlights.js", "bg": "outline"}}
 
