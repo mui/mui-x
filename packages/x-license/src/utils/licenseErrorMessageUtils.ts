@@ -59,17 +59,21 @@ export function showNotAvailableInInitialProPlanError() {
   ]);
 }
 
-export function showLicenseKeyVersionMismatchError() {
+export function showLicenseKeyVersionMismatchError({
+  packageMajorVersion,
+}: {
+  packageMajorVersion: number;
+}) {
+  const previousMajorVersion = packageMajorVersion - 1;
   showError([
     'MUI X: License key version mismatch.',
     '',
-    // #npm-tag-reference
-    'The license key you are using was issued for an older major version of MUI X (e.g. a v8 license with v9 packages installed).',
+    `The license key you are using was issued for an older major version of MUI X (e.g. a v${previousMajorVersion} license with v${packageMajorVersion} packages installed).`,
     'Each major version uses a different license key format, so the key needs to be regenerated — your existing license is not lost.',
     '',
     'To resolve this, you can either:',
-    '- Generate a new key compatible with the installed version from your account at https://mui.com/r/x-license-account/ (free for existing customers, the new key inherits your current expiration date). More details at https://mui.com/r/x-license-key-upgrade/.',
-    '- Or downgrade the MUI X packages to the major version that matches your current license key.',
+    `- Generate a new key compatible with v${packageMajorVersion} from your account at https://mui.com/r/x-license-account/ (free for existing customers, the new key inherits your current expiration date). More details at https://mui.com/r/x-license-key-upgrade/.`,
+    `- Or downgrade the MUI X packages to v${previousMajorVersion} to match your current license key.`,
   ]);
 }
 
