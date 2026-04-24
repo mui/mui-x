@@ -2,11 +2,14 @@
 
 ## 9.0.3
 
-_Apr 23, 2026_
+_Apr 24, 2026_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - ⌨️ Keyboard support for creating events in the Scheduler
+
+Special thanks go out to these community members for their valuable contributions:
+@ZAKIURREHMAN
 
 The following team members contributed to this release:
 @alexfauquette, @arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @rita-codes, @romgrk, @sai6855, @siriwatknp
@@ -19,6 +22,7 @@ The following team members contributed to this release:
 - [DataGrid] Fix row reordering when filter hides rows (#22096) @siriwatknp
 - [DataGrid] Remove unused `LayoutDataGridLegacy` class (#22009) @romgrk
 - [DataGrid] Remove unused code, clean up grid-related utilities and deprecate `GridPanelHeader` (#22112) @sai6855
+- [DataGrid] Fix columns cutting off after resizing (#22088) @ZAKIURREHMAN
 
 #### `@mui/x-data-grid-pro@9.0.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -37,11 +41,12 @@ Same changes as in `@mui/x-data-grid-pro@9.0.3`, plus:
 - [pickers] Fix `DateRangeCalendar` drag with `AdapterDayjs` plain-constructor values (#22165) @LukasTy
 - [pickers] Forward `data-*` and `aria-*` attributes to the root (#22147) @LukasTy
 - [pickers] Support `K` and `k` hour format tokens (#22108) @michelengelen
-- [pickers] Remove redundant explicit `unmount()` calls from Pickers tests (#22118) @LukasTy
 
 #### `@mui/x-date-pickers-pro@9.0.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@9.0.3`.
+Same changes as in `@mui/x-date-pickers@9.0.3`, plus:
+
+- [DateRangeCalendar] Ensure date dragging triggers regardless of trigger element (#21868) @michelengelen
 
 ### Charts
 
@@ -124,6 +129,7 @@ Internal changes.
 - [code-infra] Rename `docsx` alias to `docs` (#22155) @brijeshb42
 - [docs-infra] Remove monorepo dependency (#22025) @brijeshb42
 - [docs-infra] Use latest published packages (#22086) @brijeshb42
+- [test] Remove redundant explicit `unmount()` calls from Pickers tests (#22118) @LukasTy
 
 ### Miscellaneous
 
