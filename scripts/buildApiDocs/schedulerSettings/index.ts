@@ -99,11 +99,7 @@ export default schedulerApiPages;
       'x-scheduler-premium/src/event-timeline-premium/content/EventTimelinePremiumContent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-event/EventTimelinePremiumEvent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-title-cell/EventTimelinePremiumTitleCell.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/DaysHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/MonthsHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/TimeHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/WeeksHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/YearsHeader.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-header/TimelineHeader.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

@@ -1,7 +1,19 @@
 import { adapter, getEventTimelinePremiumStateFromParameters } from 'test/utils/scheduler';
+import { EventTimelinePremiumPreset, PresetHeaderUnit } from '@mui/x-scheduler-headless-premium/models';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 
 const VISIBLE_DATE = adapter.date('2025-07-03T00:00:00Z', 'default');
+
+const PRESET_SHAPE: Record<
+  EventTimelinePremiumPreset,
+  { tickWidth: number; headerUnits: PresetHeaderUnit[] }
+> = {
+  dayAndHour: { tickWidth: 64, headerUnits: ['day', 'hour'] },
+  dayAndMonth: { tickWidth: 120, headerUnits: ['month', 'day'] },
+  dayAndWeek: { tickWidth: 64, headerUnits: ['week', 'day'] },
+  monthAndYear: { tickWidth: 6, headerUnits: ['year', 'month'] },
+  year: { tickWidth: 200, headerUnits: ['year'] },
+};
 
 describe('eventTimelinePremiumPresetSelectors', () => {
   describe('preset', () => {
@@ -19,10 +31,10 @@ describe('eventTimelinePremiumPresetSelectors', () => {
     it('should return the presets from state', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
-        presets: ['dayAndHour', 'day'],
+        presets: ['dayAndHour', 'dayAndMonth'],
       });
       const presets = eventTimelinePremiumPresetSelectors.presets(state);
-      expect(presets).to.deep.equal(['dayAndHour', 'day']);
+      expect(presets).to.deep.equal(['dayAndHour', 'dayAndMonth']);
     });
   });
 
@@ -44,7 +56,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
     it('should return the configuration for the day preset', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
-        preset: 'day',
+        preset: 'dayAndMonth',
         visibleDate: VISIBLE_DATE,
       });
 
@@ -64,7 +76,8 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
       const config = eventTimelinePremiumPresetSelectors.config(state);
 
-      expect(config.unitCount).to.equal(16);
+      // CSS ticks use the preset's `timeResolution` (days here); 16 weeks → 112 days.
+      expect(config.unitCount).to.equal(16 * 7);
       // July 3, 2025 is a Thursday → week starts Monday June 30
       expect(config.start).toEqualDateTime(adapter.startOfWeek(VISIBLE_DATE));
       expect(config.end).toEqualDateTime(
@@ -125,7 +138,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
     it('should return the same reference when the dependencies are unchanged', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
-        preset: 'day',
+        preset: 'dayAndMonth',
         visibleDate: VISIBLE_DATE,
       });
 
@@ -133,6 +146,23 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       const second = eventTimelinePremiumPresetSelectors.config(state);
 
       expect(first).to.equal(second);
+    });
+
+    (Object.keys(PRESET_SHAPE) as EventTimelinePremiumPreset[]).forEach((preset) => {
+      it(`should expose tickWidth and headers for the ${preset} preset`, () => {
+        const state = getEventTimelinePremiumStateFromParameters({
+          events: [],
+          preset,
+          visibleDate: VISIBLE_DATE,
+        });
+
+        const config = eventTimelinePremiumPresetSelectors.config(state);
+
+        expect(config.tickWidth).to.equal(PRESET_SHAPE[preset].tickWidth);
+        expect(config.headers.map((level) => level.unit)).to.deep.equal(
+          PRESET_SHAPE[preset].headerUnits,
+        );
+      });
     });
   });
 });

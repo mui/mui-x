@@ -56,8 +56,10 @@ describe('<EventTimelinePremium />', () => {
         resources={options?.resources ?? baseResources}
         events={options?.events ?? baseEvents}
         visibleDate={options?.visibleDate ?? DEFAULT_TESTING_VISIBLE_DATE}
-        preset={options?.preset ?? 'day'}
-        presets={options?.presets ?? ['dayAndHour', 'day', 'dayAndWeek', 'monthAndYear', 'year']}
+        preset={options?.preset ?? 'dayAndMonth'}
+        presets={
+          options?.presets ?? ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']
+        }
         showCurrentTimeIndicator={options?.showCurrentTimeIndicator}
         resourceColumnLabel={options?.resourceColumnLabel}
         localeText={options?.localeText}
@@ -119,8 +121,8 @@ describe('<EventTimelinePremium />', () => {
           resources={baseResources}
           events={baseEvents}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          preset="day"
-          presets={['day', 'dayAndWeek']}
+          preset="dayAndMonth"
+          presets={['dayAndMonth', 'dayAndWeek']}
         />,
       );
       baseEvents.forEach((eventItem) => {
@@ -141,7 +143,7 @@ describe('<EventTimelinePremium />', () => {
         .resource(engineering)
         .build();
 
-      renderTimeline({ events: [recurringEvent, singleEvent], preset: 'day' });
+      renderTimeline({ events: [recurringEvent, singleEvent], preset: 'dayAndMonth' });
 
       const recurringEventElements = screen.getAllByLabelText(recurringEvent.title);
       expect(recurringEventElements.length).to.be.greaterThan(0);
@@ -175,7 +177,7 @@ describe('<EventTimelinePremium />', () => {
     it('should render events correctly in the day preset', () => {
       const totalWidth = 6720; // 56 days * 120px
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
-      renderTimeline({ preset: 'day' });
+      renderTimeline({ preset: 'dayAndMonth' });
 
       const eventElement = screen.getByLabelText(event3.title);
       expect(eventElement).not.to.equal(null);
@@ -333,29 +335,30 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('presets', () => {
-    it('should render the correct header and updates CSS variable when switching presets', async () => {
+    it('should set --unit-width to the preset tickWidth and render one row per header level', async () => {
       renderTimeline({
         preset: 'dayAndHour',
-        presets: ['day', 'dayAndHour'],
+        presets: ['dayAndMonth', 'dayAndHour'],
       });
 
       let rootElement = screen.getByRole('grid');
-      // The dayAndHour header has 24 time cells (one for each hour)
-      expect(rootElement.querySelectorAll('time').length).to.be.greaterThan(0);
-
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain(
-        'dayAndHour-cell-width',
-      );
+      // dayAndHour: tickWidth = 64px, 2 header rows (day + hour).
+      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('64px');
+      expect(
+        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerRow}`).length,
+      ).to.equal(2);
 
       renderTimeline({
-        preset: 'day',
-        presets: ['day', 'dayAndHour'],
+        preset: 'dayAndMonth',
+        presets: ['dayAndMonth', 'dayAndHour'],
       });
 
       rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
-      // The day header also has time elements for each day
-      expect(rootElement.querySelectorAll('time').length).to.be.greaterThan(0);
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('day-cell-width');
+      // day: tickWidth = 120px, 2 header rows (month + day).
+      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('120px');
+      expect(
+        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerRow}`).length,
+      ).to.equal(2);
     });
   });
 });

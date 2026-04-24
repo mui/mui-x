@@ -40,7 +40,7 @@ export interface EventTimelinePremiumParameters<
    * The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally,
    * so a future zoom API (`zoomIn()` / `zoomOut()`) behaves consistently regardless of the order
    * in which the presets are provided.
-   * @default ["dayAndHour", "day", "dayAndWeek", "monthAndYear", "year"]
+   * @default ["dayAndHour", "dayAndMonth", "dayAndWeek", "monthAndYear", "year"]
    */
   presets?: EventTimelinePremiumPreset[];
   /**
