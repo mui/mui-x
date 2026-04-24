@@ -7,10 +7,6 @@ import {
   type ChartsSlotProps,
 } from '@mui/x-charts/internals';
 import {
-  Unstable_ChartsRadialDataProvider as ChartsRadialDataProvider,
-  type ChartsRadialDataProviderProps,
-} from '@mui/x-charts/ChartsRadialDataProvider';
-import {
   Unstable_ChartsRadialGrid as ChartsRadialGrid,
   type ChartsRadialGridProps,
 } from '@mui/x-charts/ChartsRadialGrid';
@@ -37,6 +33,10 @@ import type { LinePlotSlots, LinePlotSlotProps, LineSeries } from '../LineChart'
 import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
 import { useRadialLineChartProps } from './useRadialLineChartProps';
 import { radialLineSeriesConfig } from './seriesConfig';
+import {
+  ChartsRadialDataProviderPremium,
+  type ChartsRadialDataProviderPremiumProps,
+} from '../ChartsRadialDataProviderPremium';
 
 export interface RadialLineChartSlots
   extends
@@ -58,7 +58,7 @@ export interface RadialLineChartSlotProps
 export interface RadialLineChartProps
   extends
     Omit<
-      ChartsRadialDataProviderProps<'radialLine', RadialLineChartPluginSignatures>,
+      ChartsRadialDataProviderPremiumProps<'radialLine', RadialLineChartPluginSignatures>,
       'series' | 'plugins' | 'zAxis' | 'slots' | 'slotProps'
     >,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -134,7 +134,7 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartsRadialDataProvider<'radialLine', RadialLineChartPluginSignatures>
+    <ChartsRadialDataProviderPremium<'radialLine', RadialLineChartPluginSignatures>
       {...chartsDataProviderProps}
       seriesConfig={{ radialLine: radialLineSeriesConfig }}
     >
@@ -154,7 +154,7 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
         </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartsRadialDataProvider>
+    </ChartsRadialDataProviderPremium>
   );
 });
 
