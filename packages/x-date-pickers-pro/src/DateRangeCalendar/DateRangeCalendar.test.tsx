@@ -3,6 +3,7 @@ import { spy } from 'sinon';
 import {
   screen,
   fireEvent,
+  createEvent,
   within,
   fireTouchChangedEvent,
   waitFor,
@@ -20,12 +21,13 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
 
-const dynamicShouldDisableDate = (date, position: RangePosition) => {
+const dynamicShouldDisableDate = (date: PickerValidDate, position: RangePosition) => {
   if (position === 'end') {
     return adapterToUse.getDate(date) % 3 === 0;
   }
@@ -435,6 +437,70 @@ describe('<DateRangeCalendar />', () => {
           ).to.have.lengthOf(10);
         },
       );
+
+      it('should handle drag events targeting child elements inside the day button', () => {
+        // This test validates the fix for when drag events target child elements (e.g., text spans)
+        // inside the day button, rather than the button itself. The fix uses .closest() to find
+        // the ancestor with the data-timestamp attribute.
+        const onChange = spy();
+        const initialValue: [PickerValidDate, PickerValidDate] = [
+          adapterToUse.date('2018-01-10'),
+          adapterToUse.date('2018-01-31'),
+        ];
+        render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
+
+        const startDayButton = screen.getByRole('gridcell', { name: '31', selected: true });
+        const endDayButton = screen.getByRole('gridcell', { name: '29' });
+
+        // Create synthetic child elements inside the buttons to simulate the real browser scenario
+        // where drag events can target child elements (e.g., text spans, TouchRipple).
+        // This ensures the `.closest()` fallback path is exercised.
+        const startDayChild = document.createElement('span');
+        startDayButton.appendChild(startDayChild);
+        const endDayChild = document.createElement('span');
+        endDayButton.appendChild(endDayChild);
+
+        // Execute drag using child elements as targets
+        // This simulates a user clicking on the day number text or ripple effect
+        const createDragEventOnChild = (
+          type: 'dragStart' | 'dragEnter' | 'dragOver' | 'drop' | 'dragEnd' | 'dragLeave',
+          target: Element,
+        ) => {
+          const createdEvent = createEvent[type](target);
+          Object.defineProperty(createdEvent, 'dataTransfer', { value: dataTransfer });
+          return createdEvent;
+        };
+
+        fireEvent(startDayChild, createDragEventOnChild('dragStart', startDayChild));
+        fireEvent(startDayChild, createDragEventOnChild('dragLeave', startDayChild));
+        fireEvent(endDayChild, createDragEventOnChild('dragEnter', endDayChild));
+        fireEvent(endDayChild, createDragEventOnChild('dragOver', endDayChild));
+        fireEvent(endDayChild, createDragEventOnChild('drop', endDayChild));
+        fireEvent(endDayChild, createDragEventOnChild('dragEnd', endDayChild));
+
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+      });
+
+      it('should not initiate drag on non-draggable dates', () => {
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-20')]}
+          />,
+        );
+
+        // Try to drag from a non-selected (non-endpoint) date
+        const middleDay = getPickerDay('15');
+        const targetDay = getPickerDay('25');
+
+        executeDateDrag(middleDay, targetDay);
+
+        // No change should occur since middle day is not draggable
+        expect(onChange.callCount).to.equal(0);
+      });
     });
   });
 
