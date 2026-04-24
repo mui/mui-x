@@ -94,7 +94,7 @@ const events: SchedulerEvent[] = [
 
 ### Render the component
 
-With the component imported and events defined, you're now ready to render the Event Calendar as shown below:
+With the component imported and events defined, you're now ready to render the Event Timeline as shown below:
 
 {{"demo": "RenderEventCalendar.js", "defaultCodeOpen": true, "bg": "inline"}}
 
