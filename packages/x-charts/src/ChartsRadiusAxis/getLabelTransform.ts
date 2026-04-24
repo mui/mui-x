@@ -47,7 +47,6 @@ export function getLabelTextAnchors(
 } {
   const { verticalAlign, horizontalAlign } = getLabelTransform(px, py, tickLabelPosition);
 
-
   let textAnchor: 'start' | 'middle' | 'end';
   let dominantBaseline: 'hanging' | 'middle' | 'auto';
 
