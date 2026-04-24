@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box';
-import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
+import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { Unstable_ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
-import { ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
+import { Unstable_ChartsRotationAxis as ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
 import { Unstable_ChartsRadialDataProvider } from '@mui/x-charts/ChartsRadialDataProvider';
 
 export default function RotationAxisPlayground() {
@@ -13,7 +13,17 @@ export default function RotationAxisPlayground() {
       data={{
         disableLine: { knob: 'switch', defaultValue: false },
         disableTicks: { knob: 'switch', defaultValue: false },
-        tickSize: { knob: 'number', defaultValue: 6, min: 0, max: 20 },
+        tickPosition: {
+          knob: 'select',
+          options: ['after', 'before'],
+          defaultValue: 'after',
+        },
+        tickLabelPosition: {
+          knob: 'select',
+          options: ['after', 'before'],
+          defaultValue: 'after',
+        },
+        tickSize: { knob: 'number', defaultValue: 6, min: -20, max: 20 },
         rotationTickNumber: { knob: 'number', defaultValue: 8, min: 0, max: 20 },
         startAngle: {
           knob: 'number',
@@ -67,6 +77,8 @@ export default function RotationAxisPlayground() {
                   disableLine={props.disableLine}
                   disableTicks={props.disableTicks}
                   tickSize={props.tickSize}
+                  tickLabelPosition={props.tickLabelPosition}
+                  tickPosition={props.tickPosition}
                 />
               </ChartsSvgLayer>
             </ChartsLayerContainer>
@@ -90,6 +102,8 @@ ${[
   `tickSize={${props.tickSize}}`,
   props.disableLine && 'disableLine',
   props.disableTicks && 'disableTicks',
+  props.tickPosition && `tickPosition="${props.tickPosition}"`,
+  props.tickLabelPosition && `tickLabelPosition="${props.tickLabelPosition}"`,
 ]
   .filter(Boolean)
   .map((line) => `    ${line}`)

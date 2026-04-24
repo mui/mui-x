@@ -10,7 +10,8 @@ import {
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import type { AxisId, D3Scale } from '../models/axis';
 import { type ChartsRadialAxisClasses, useUtilityClasses } from './chartsRadiusAxisClasses';
-import { getLabelTextAnchors } from './getLabelTransform';
+import { createGetLabelTextAnchors } from './createGetLabelTextAnchors';
+import { getLabelTransform } from './getLabelTransform';
 
 export interface ChartsRadiusAxisProps {
   /**
@@ -59,6 +60,8 @@ export interface ChartsRadiusAxisProps {
 
 /* Gap between a tick and its label. */
 export const TICK_LABEL_GAP = 3;
+
+const getLabelTextAnchors = createGetLabelTextAnchors(getLabelTransform);
 
 export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
   const {

@@ -7,22 +7,13 @@
     "className": { "description": "A CSS class name applied to the root element." },
     "disableLine": { "description": "If <code>true</code>, the axis line is not rendered." },
     "disableTicks": { "description": "If <code>true</code>, the ticks are not rendered." },
-    "radiusAxisId": {
-      "description": "Id of the radius axis used to compute the axis radius. If not provided, it will use the first defined radius axis."
+    "tickLabelPosition": {
+      "description": "Set the position of the tick labels relative to the axis line. <code>&#39;after&#39;</code> places them outside the arc, <code>&#39;before&#39;</code> inside."
+    },
+    "tickPosition": {
+      "description": "Set the position of the tick relative to the axis line. <code>&#39;after&#39;</code> places them outside the arc, <code>&#39;before&#39;</code> inside."
     },
     "tickSize": { "description": "The size (in pixels) of the tick marks." }
   },
-  "classDescriptions": {
-    "line": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the main line element"
-    },
-    "root": { "description": "Styles applied to the root element." },
-    "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
-    "tickContainer": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the group including the tick and its label"
-    },
-    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tick label" }
-  }
+  "classDescriptions": {}
 }

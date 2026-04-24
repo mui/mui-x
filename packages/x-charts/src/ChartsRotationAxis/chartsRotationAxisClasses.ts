@@ -1,26 +1,27 @@
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import composeClasses from '@mui/utils/composeClasses';
+import {
+  type ChartsRadialAxisClasses,
+  getRadialAxisUtilityClass,
+} from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 
-export interface ChartsRotationAxisClasses {
-  /** Styles applied to the root element. */
-  root: string;
-  /** Styles applied to the main line element. */
-  line: string;
-  /** Styles applied to the group including the tick and its label. */
-  tickContainer: string;
-  /** Styles applied to ticks. */
-  tick: string;
-  /** Styles applied to the tick label. */
-  tickLabel: string;
-}
+export const useUtilityClasses = (props: {
+  classes?: Partial<ChartsRadialAxisClasses>;
+}) => {
+  const { classes } = props;
+  const slots = {
+    root: ['root', 'rotation'],
+    line: ['line'],
+    tickContainer: ['tickContainer'],
+    tick: ['tick'],
+    tickLabel: ['tickLabel'],
+  };
 
-export type ChartsRotationAxisClassKey = keyof ChartsRotationAxisClasses;
+  return composeClasses(slots, getRadialAxisUtilityClass, classes);
+};
 
-export function getRotationAxisUtilityClass(slot: string) {
-  return generateUtilityClass('MuiChartsRotationAxis', slot);
-}
-
-export const rotationAxisClasses: ChartsRotationAxisClasses = generateUtilityClasses(
-  'MuiChartsRotationAxis',
-  ['root', 'line', 'tickContainer', 'tick', 'tickLabel'],
-);
+export {
+  type ChartsRadialAxisClasses,
+  type ChartsRadialAxisClassKey,
+  getRadialAxisUtilityClass,
+  chartsRadialAxisClasses,
+} from '../ChartsRadiusAxis/sharedRadialAxisClasses';

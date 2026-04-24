@@ -1,12 +1,5 @@
 {
-  "props": {
-    "axisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
-    "className": { "type": { "name": "string" } },
-    "disableLine": { "type": { "name": "bool" }, "default": "false" },
-    "disableTicks": { "type": { "name": "bool" }, "default": "false" },
-    "radiusAxisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
-    "tickSize": { "type": { "name": "number" }, "default": "6" }
-  },
+  "props": {},
   "name": "ChartsRotationAxis",
   "imports": [
     "import { ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';",
@@ -14,38 +7,7 @@
     "import { ChartsRotationAxis } from '@mui/x-charts-pro';",
     "import { ChartsRotationAxis } from '@mui/x-charts-premium';"
   ],
-  "classes": [
-    {
-      "key": "line",
-      "className": "MuiChartsRotationAxis-line",
-      "description": "Styles applied to the main line element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChartsRotationAxis-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "tick",
-      "className": "MuiChartsRotationAxis-tick",
-      "description": "Styles applied to ticks.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickContainer",
-      "className": "MuiChartsRotationAxis-tickContainer",
-      "description": "Styles applied to the group including the tick and its label.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickLabel",
-      "className": "MuiChartsRotationAxis-tickLabel",
-      "description": "Styles applied to the tick label.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiChartsRotationAxis",
   "filename": "/packages/x-charts/src/ChartsRotationAxis/ChartsRotationAxis.tsx",
   "inheritance": null,

@@ -20,15 +20,15 @@ export function getLabelTransform(
   let verticalAlign: 'start' | 'middle' | 'end' = 'middle';
   let horizontalAlign: 'start' | 'middle' | 'end' = 'middle';
   if (px > 0.3) {
-    verticalAlign = tickLabelPosition === 'after' ? 'start' : 'end';
+    horizontalAlign = tickLabelPosition === 'after' ? 'start' : 'end';
   } else if (px < -0.3) {
-    verticalAlign = tickLabelPosition === 'after' ? 'end' : 'start';
+    horizontalAlign = tickLabelPosition === 'after' ? 'end' : 'start';
   }
 
   if (py > 0.3) {
-    horizontalAlign = tickLabelPosition === 'after' ? 'end' : 'start';
+    verticalAlign = tickLabelPosition === 'after' ? 'start' : 'end';
   } else if (py < -0.3) {
-    horizontalAlign = tickLabelPosition === 'after' ? 'start' : 'end';
+    verticalAlign = tickLabelPosition === 'after' ? 'end' : 'start';
   }
 
   return { verticalAlign, horizontalAlign };
