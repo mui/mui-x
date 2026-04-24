@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/charts-toolbar-zoom-out-trigger',
+    'docs/translations/api-docs/charts/charts-toolbar-zoom-out-trigger',
     false,
     /\.\/charts-toolbar-zoom-out-trigger.*\.json$/,
   );

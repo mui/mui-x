@@ -25,12 +25,12 @@
       "type": { "name": "shape", "description": "{ ampm?: bool }" },
       "default": "{ ampm: true }"
     },
-    "defaultView": {
+    "defaultPreset": {
       "type": {
         "name": "enum",
-        "description": "'days'<br>&#124;&nbsp;'months'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'weeks'<br>&#124;&nbsp;'years'"
+        "description": "'day'<br>&#124;&nbsp;'dayAndHour'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
       },
-      "default": "\"time\""
+      "default": "\"dayAndHour\""
     },
     "defaultVisibleDate": {
       "type": { "name": "instanceOf", "description": "Date" },
@@ -56,10 +56,23 @@
     "localeText": { "type": { "name": "object" } },
     "onEventsChange": { "type": { "name": "func" } },
     "onPreferencesChange": { "type": { "name": "func" } },
-    "onViewChange": { "type": { "name": "func" } },
+    "onPresetChange": { "type": { "name": "func" } },
     "onVisibleDateChange": { "type": { "name": "func" } },
     "onVisibleResourcesChange": { "type": { "name": "func" } },
     "preferences": { "type": { "name": "shape", "description": "{ ampm?: bool }" } },
+    "preset": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'dayAndHour'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
+      }
+    },
+    "presets": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'day'<br>&#124;&nbsp;'dayAndHour'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'&gt;"
+      },
+      "default": "[\"dayAndHour\", \"day\", \"dayAndWeek\", \"monthAndYear\", \"year\"]"
+    },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "resourceColumnLabel": { "type": { "name": "string" } },
     "resourceModelStructure": { "type": { "name": "object" } },
@@ -71,19 +84,6 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
-    },
-    "view": {
-      "type": {
-        "name": "enum",
-        "description": "'days'<br>&#124;&nbsp;'months'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'weeks'<br>&#124;&nbsp;'years'"
-      }
-    },
-    "views": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;'days'<br>&#124;&nbsp;'months'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'weeks'<br>&#124;&nbsp;'years'&gt;"
-      },
-      "default": "[\"time\", \"days\", \"weeks\", \"months\", \"years\"]"
     },
     "visibleDate": { "type": { "name": "instanceOf", "description": "Date" } },
     "visibleResources": { "type": { "name": "object" } }
@@ -455,6 +455,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventRecurringIcon",
+      "className": "MuiEventTimelinePremium-eventRecurringIcon",
+      "description": "Styles applied to event recurring icon elements.",
+      "isGlobal": false
+    },
+    {
       "key": "eventResizeHandler",
       "className": "MuiEventTimelinePremium-eventResizeHandler",
       "description": "Styles applied to event resize handler elements.",
@@ -641,6 +647,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler-premium/src/event-timeline-premium/EventTimelinePremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interaction</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/views/\">Event Timeline - Views</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interaction</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/presets/\">Event Timeline - Presets</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li></ul>",
   "cssComponent": false
 }

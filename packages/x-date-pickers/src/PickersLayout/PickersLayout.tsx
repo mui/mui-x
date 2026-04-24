@@ -114,7 +114,7 @@ const PickersLayout = React.forwardRef(function PickersLayout<TValue extends Pic
 
   const { toolbar, content, tabs, actionBar, shortcuts, ownerState } = usePickerLayout(props);
   const { orientation, variant } = usePickerContext();
-  const { sx, className, classes: classesProp } = props;
+  const { sx, className, classes: classesProp, children, slots, slotProps, ...other } = props;
 
   const classes = useUtilityClasses(classesProp, ownerState);
 
@@ -124,6 +124,7 @@ const PickersLayout = React.forwardRef(function PickersLayout<TValue extends Pic
       sx={sx}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      {...other}
     >
       {orientation === 'landscape' ? shortcuts : toolbar}
       {orientation === 'landscape' ? toolbar : shortcuts}

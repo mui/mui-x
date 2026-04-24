@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers/mobile-date-range-picker',
+    'docs/translations/api-docs/date-pickers/mobile-date-range-picker',
     false,
     /\.\/mobile-date-range-picker.*\.json$/,
   );
