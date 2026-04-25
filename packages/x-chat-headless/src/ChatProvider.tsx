@@ -14,10 +14,6 @@ import type { ChatOnData, ChatOnFinish, ChatOnToolCall } from './types';
 import type { ChatError } from './types/chat-error';
 import { ChatStoreContext } from './internals/useChatStoreContext';
 
-interface ChatProviderInternalProps {
-  activeConversationIdControlled?: boolean;
-}
-
 export interface ChatProviderProps<Cursor = string>
   extends Omit<ChatStoreParameters<Cursor>, 'activeConversationIdControlled'> {
   children?: React.ReactNode;
@@ -39,15 +35,11 @@ export interface ChatProviderProps<Cursor = string>
   storeClass?: ChatStoreConstructor<Cursor>;
 }
 
-export function ChatProvider<Cursor = string>(
-  props: ChatProviderProps<Cursor> & ChatProviderInternalProps,
-) {
+export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) {
   const isActiveConversationIdControlled = Object.prototype.hasOwnProperty.call(
     props,
-    'activeConversationIdControlled',
-  )
-    ? props.activeConversationIdControlled
-    : Object.prototype.hasOwnProperty.call(props, 'activeConversationId');
+    'activeConversationId',
+  );
   const {
     children,
     adapter,

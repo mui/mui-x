@@ -8,10 +8,6 @@ import { ChatLocaleProvider } from './internals/ChatLocaleContext';
 import { ChatVariantProvider, type ChatVariant } from './internals/ChatVariantContext';
 import { ChatDensityProvider, type ChatDensity } from './internals/ChatDensityContext';
 
-interface ChatRootInternalProps {
-  activeConversationIdControlled?: boolean;
-}
-
 export interface ChatRootSlots {
   root: React.ElementType;
 }
@@ -48,19 +44,17 @@ export interface ChatRootProps<Cursor = string>
 }
 
 type ChatRootComponent = (<Cursor = string>(
-  props: ChatRootProps<Cursor> & ChatRootInternalProps & React.RefAttributes<HTMLDivElement>,
+  props: ChatRootProps<Cursor> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
-  props: ChatRootProps<Cursor> & ChatRootInternalProps,
+  props: ChatRootProps<Cursor>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const isActiveConversationIdControlled = Object.prototype.hasOwnProperty.call(
     props,
-    'activeConversationIdControlled',
-  )
-    ? props.activeConversationIdControlled
-    : Object.prototype.hasOwnProperty.call(props, 'activeConversationId');
+    'activeConversationId',
+  );
   const {
     children,
     slots,
@@ -78,7 +72,6 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     initialConversations,
     onConversationsChange,
     activeConversationId,
-    activeConversationIdControlled,
     initialActiveConversationId,
     onActiveConversationChange,
     composerValue,
@@ -116,8 +109,7 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       conversations={conversations}
       initialConversations={initialConversations}
       onConversationsChange={onConversationsChange}
-      activeConversationId={activeConversationId}
-      activeConversationIdControlled={isActiveConversationIdControlled}
+      {...(isActiveConversationIdControlled ? { activeConversationId } : {})}
       initialActiveConversationId={initialActiveConversationId}
       onActiveConversationChange={onActiveConversationChange}
       composerValue={composerValue}

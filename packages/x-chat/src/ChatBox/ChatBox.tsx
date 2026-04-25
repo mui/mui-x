@@ -115,8 +115,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
       conversations={conversations}
       initialConversations={initialConversations}
       onConversationsChange={onConversationsChange}
-      activeConversationId={activeConversationId}
-      activeConversationIdControlled={isActiveConversationIdControlled}
+      {...(isActiveConversationIdControlled ? { activeConversationId } : {})}
       initialActiveConversationId={initialActiveConversationId}
       onActiveConversationChange={onActiveConversationChange}
       composerValue={composerValue}

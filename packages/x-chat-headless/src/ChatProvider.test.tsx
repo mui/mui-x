@@ -354,7 +354,9 @@ describe('ChatProvider', () => {
         });
       });
 
-      await act(async () => {});
+      await act(async () => {
+        await Promise.resolve();
+      });
 
       expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
       expect(controller).not.toBe(undefined);
@@ -363,7 +365,9 @@ describe('ChatProvider', () => {
         controller!.enqueue({ type: 'start', messageId: 'a1' });
         controller!.enqueue({ type: 'text-delta', id: 'text-1', delta: 'Buffered' });
       });
-      await act(async () => {});
+      await act(async () => {
+        await Promise.resolve();
+      });
 
       expect(result.current.store.state.messagesById.a1.parts).toEqual([]);
 

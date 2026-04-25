@@ -85,9 +85,9 @@ function useContainerWidth(ref: React.RefObject<HTMLElement | null>): number | n
         const contentBoxSize = Array.isArray(entry.contentBoxSize)
           ? entry.contentBoxSize[0]
           : entry.contentBoxSize;
-        const width =
+        const nextWidth =
           borderBoxSize?.inlineSize ?? contentBoxSize?.inlineSize ?? entry.contentRect.width;
-        updateWidth(width);
+        updateWidth(nextWidth);
       }
     });
     ro.observe(el);
@@ -673,6 +673,29 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     !hasConversationList || !isMobileSplitView || Boolean(activeConversationId);
   const showDrawerMenuButton = hasConversationList && isNarrow && !isMobileSplitView;
   const showBackButton = hasConversationList && isMobileSplitView && Boolean(activeConversationId);
+  let conversationsPaneStyle: React.CSSProperties;
+
+  if (isMobileSplitView) {
+    conversationsPaneStyle = {
+      width: '100%',
+      flex: '1 1 100%',
+      minWidth: 0,
+      overflow: 'hidden',
+    };
+  } else if (isNarrow) {
+    conversationsPaneStyle = {
+      width: 0,
+      flex: '0 0 0px',
+      overflow: 'visible',
+    };
+  } else {
+    conversationsPaneStyle = {
+      width: 'var(--ChatBox-conversationListWidth, 260px)',
+      flex: '0 0 var(--ChatBox-conversationListWidth, 260px)',
+      minWidth: 0,
+      overflow: 'hidden',
+    };
+  }
 
   return (
     <ChatLayout
@@ -681,25 +704,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       slotProps={{
         conversationsPane: {
           ...(conversationsPaneClassName ? { className: conversationsPaneClassName } : {}),
-          style: isMobileSplitView
-            ? {
-                width: '100%',
-                flex: '1 1 100%',
-                minWidth: 0,
-                overflow: 'hidden',
-              }
-            : isNarrow
-              ? {
-                  width: 0,
-                  flex: '0 0 0px',
-                  overflow: 'visible',
-                }
-              : {
-                  width: 'var(--ChatBox-conversationListWidth, 260px)',
-                  flex: '0 0 var(--ChatBox-conversationListWidth, 260px)',
-                  minWidth: 0,
-                  overflow: 'hidden',
-                },
+          style: conversationsPaneStyle,
         },
         threadPane: {
           ...(threadPaneClassName ? { className: threadPaneClassName } : {}),
