@@ -14,7 +14,12 @@ import type { ChatOnData, ChatOnFinish, ChatOnToolCall } from './types';
 import type { ChatError } from './types/chat-error';
 import { ChatStoreContext } from './internals/useChatStoreContext';
 
-export interface ChatProviderProps<Cursor = string> extends ChatStoreParameters<Cursor> {
+interface ChatProviderInternalProps {
+  activeConversationIdControlled?: boolean;
+}
+
+export interface ChatProviderProps<Cursor = string>
+  extends Omit<ChatStoreParameters<Cursor>, 'activeConversationIdControlled'> {
   children?: React.ReactNode;
   adapter: ChatAdapter<Cursor>;
   onToolCall?: ChatOnToolCall;
@@ -34,7 +39,15 @@ export interface ChatProviderProps<Cursor = string> extends ChatStoreParameters<
   storeClass?: ChatStoreConstructor<Cursor>;
 }
 
-export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) {
+export function ChatProvider<Cursor = string>(
+  props: ChatProviderProps<Cursor> & ChatProviderInternalProps,
+) {
+  const isActiveConversationIdControlled = Object.prototype.hasOwnProperty.call(
+    props,
+    'activeConversationIdControlled',
+  )
+    ? props.activeConversationIdControlled
+    : Object.prototype.hasOwnProperty.call(props, 'activeConversationId');
   const {
     children,
     adapter,
@@ -70,6 +83,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       conversations,
       initialConversations,
       activeConversationId,
+      activeConversationIdControlled: isActiveConversationIdControlled,
       initialActiveConversationId,
       composerValue,
       initialComposerValue,
@@ -86,6 +100,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       conversations,
       initialConversations,
       activeConversationId,
+      isActiveConversationIdControlled,
       initialActiveConversationId,
       composerValue,
       initialComposerValue,

@@ -1,5 +1,6 @@
 'use client';
 import type { ChatMessage, ChatMessageStatus, ChatRole } from '../types/chat-entities';
+import type { ChatError } from '../types/chat-error';
 import type { ChatVariant } from '../chat/internals/ChatVariantContext';
 import type { ChatDensity } from '../chat/internals/ChatDensityContext';
 
@@ -32,3 +33,19 @@ export interface MessageContentOwnerState extends MessageOwnerState {}
 export interface MessageMetaOwnerState extends MessageOwnerState {}
 
 export interface MessageActionsOwnerState extends MessageOwnerState {}
+
+export interface MessageErrorOwnerState extends MessageOwnerState {
+  /**
+   * The error associated with this message, or `null` when none.
+   * The primitive returns `null` when there is no error, so consumers
+   * rendering the slot can assume this is non-null.
+   */
+  chatError: ChatError | null;
+  /** Whether the chat error is retryable (convenience flag, mirrors `chatError.retryable`). */
+  retryable: boolean;
+  /**
+   * Invoke the `retry(messageId)` action bound to the current message.
+   * @returns {Promise<void> | void} Resolves once the retry has been scheduled, or `void` when no runtime is present.
+   */
+  retry: () => Promise<void> | void;
+}

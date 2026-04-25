@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
@@ -19,11 +18,8 @@ import {
 } from 'docsx/data/chat/material/examples/shared/demoData';
 
 function StatusFooterContent() {
-  const { isStreaming, typingUserIds, error } = useChatStatus();
+  const { isStreaming, typingUserIds } = useChatStatus();
 
-  if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
-  }
   if (isStreaming) {
     return <LinearProgress />;
   }

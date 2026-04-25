@@ -32,6 +32,7 @@ export { useChatStatus } from './hooks/useChatStatus';
 export { useChatStore } from './hooks/useChatStore';
 export { useConversation, useConversations } from './hooks/useConversation';
 export { useMessage, useMessageIds } from './hooks/useMessage';
+export { useMessageError } from './hooks/useMessageError';
 
 export {
   chatSelectors,
@@ -45,6 +46,7 @@ export {
   selectError,
   selectMessages,
   selectMessage,
+  selectMessageError,
   selectConversations,
   selectConversation,
   selectActiveConversation,
@@ -170,6 +172,7 @@ export {
   MessageAuthorLabel,
   MessageAvatar,
   MessageContent,
+  MessageError,
   MessageMeta,
   MessageRoot,
   ReasoningPart,
@@ -311,6 +314,9 @@ export type {
   MessageMetaProps,
   MessageMetaSlotProps,
   MessageMetaSlots,
+  MessageErrorProps,
+  MessageErrorSlotProps,
+  MessageErrorSlots,
   MessageRootProps,
   MessageRootSlotProps,
   MessageRootSlots,
@@ -406,6 +412,7 @@ export type {
   MessageAvatarOwnerState,
   MessageContentOwnerState,
   MessageMetaOwnerState,
+  MessageErrorOwnerState,
   MessageOwnerState,
   MessageRootOwnerState,
 } from './message';

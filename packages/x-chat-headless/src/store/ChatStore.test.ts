@@ -354,6 +354,7 @@ describe('ChatStore', () => {
       messages: [message1],
       conversations: [conversation1],
       activeConversationId: 'c1',
+      activeConversationIdControlled: true,
       composerValue: 'Draft one',
     });
 
@@ -366,6 +367,7 @@ describe('ChatStore', () => {
       messages: [message1],
       conversations: [conversation1],
       activeConversationId: 'c1',
+      activeConversationIdControlled: true,
       composerValue: 'Draft one',
     });
 
@@ -541,6 +543,21 @@ describe('ChatStore', () => {
     store.resetMessages();
 
     expect(store.state.activeStreamAbortController).toBeNull();
+  });
+
+  it('disposeEffect aborts and clears active streaming state', () => {
+    const store = new ChatStore();
+    const abortController = new AbortController();
+
+    store.setActiveStreamAbortController(abortController);
+    store.setStreaming(true);
+
+    const cleanup = store.disposeEffect();
+    cleanup();
+
+    expect(abortController.signal.aborted).toBe(true);
+    expect(store.state.activeStreamAbortController).toBeNull();
+    expect(store.state.isStreaming).toBe(false);
   });
 
   it('setTypingUser is idempotent when called with the same value', () => {

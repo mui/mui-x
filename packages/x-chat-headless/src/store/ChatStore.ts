@@ -23,6 +23,8 @@ export interface ChatStoreParameters<Cursor = string> {
   initialConversations?: ChatConversation[];
   onConversationsChange?: (conversations: ChatConversation[]) => void;
   activeConversationId?: string;
+  /** Internal flag used to distinguish a controlled `undefined` active conversation from an uncontrolled model. */
+  activeConversationIdControlled?: boolean;
   /** The initial active conversation ID when uncontrolled. Ignored after initialization and when `activeConversationId` is provided. */
   initialActiveConversationId?: string;
   onActiveConversationChange?: (conversationId: string | undefined) => void;
@@ -111,11 +113,13 @@ function deriveStateFromParameters<Cursor = string>(parameters: ChatStoreParamet
   return {
     conversationIds,
     conversationsById,
-    activeConversationId: applyModelInitialValue(
-      parameters.activeConversationId,
-      parameters.initialActiveConversationId,
-      undefined,
-    ),
+    activeConversationId: parameters.activeConversationIdControlled
+      ? parameters.activeConversationId
+      : applyModelInitialValue(
+          parameters.activeConversationId,
+          parameters.initialActiveConversationId,
+          undefined,
+        ),
     messageIds,
     messagesById,
     composerValue: applyModelInitialValue(
@@ -226,7 +230,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     }
 
     if (
-      parameters.activeConversationId !== undefined &&
+      parameters.activeConversationIdControlled &&
       (parameters.activeConversationId !== this.parameters.activeConversationId ||
         this.dirtyControlledModels.has('activeConversationId'))
     ) {
@@ -250,12 +254,17 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
   /**
    * Returns a cleanup function to be used as a React effect teardown.
    * Called by `useChatInstance` when the store instance changes or the component unmounts.
-   * Currently a no-op; extend this when the store manages subscriptions or timers
-   * that need explicit teardown on disposal.
    */
   public disposeEffect = (): (() => void) => {
     return () => {
-      // TODO: cancel any pending store subscriptions or timers here
+      this.state.activeStreamAbortController?.abort();
+
+      if (this.state.activeStreamAbortController || this.state.isStreaming) {
+        this.update({
+          activeStreamAbortController: null,
+          isStreaming: false,
+        });
+      }
     };
   };
 

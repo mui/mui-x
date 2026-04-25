@@ -40,6 +40,8 @@ export interface ChatLocaleText {
   messageListLabel: string;
   messageLabel: string;
   conversationHeaderMenuLabel: string;
+  conversationHeaderBackLabel: string;
+  conversationHeaderCloseLabel: string;
   conversationHeaderNewChatLabel: string;
   conversationHeaderSettingsLabel: string;
 }
@@ -138,6 +140,8 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   messageListLabel: 'Message log',
   messageLabel: 'Message',
   conversationHeaderMenuLabel: 'Open conversations',
+  conversationHeaderBackLabel: 'Back to conversations',
+  conversationHeaderCloseLabel: 'Close conversations',
   conversationHeaderNewChatLabel: 'New chat',
   conversationHeaderSettingsLabel: 'Settings',
 };

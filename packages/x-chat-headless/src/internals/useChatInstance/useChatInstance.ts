@@ -55,7 +55,9 @@ export function useChatInstance<Cursor = string>(
     warningPrefix: 'MUI X Chat',
     componentName: 'ChatProvider',
     propName: 'activeConversationId',
-    controlled: parameters.activeConversationId,
+    controlled: parameters.activeConversationIdControlled
+      ? parameters.activeConversationId ?? null
+      : undefined,
     defaultValue: parameters.initialActiveConversationId,
   });
   useAssertModelConsistency({
@@ -78,7 +80,7 @@ export function useChatInstance<Cursor = string>(
       syncingControlledModels.add('conversations');
     }
 
-    if (parameters.activeConversationId !== undefined) {
+    if (parameters.activeConversationIdControlled) {
       syncingControlledModels.add('activeConversationId');
     }
 
@@ -109,7 +111,7 @@ export function useChatInstance<Cursor = string>(
       syncingControlledModels.add('conversations');
     }
 
-    if (parameters.activeConversationId !== undefined) {
+    if (parameters.activeConversationIdControlled) {
       syncingControlledModels.add('activeConversationId');
     }
 

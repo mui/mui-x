@@ -212,6 +212,99 @@ describe('createSendMessageActions', () => {
       );
     });
 
+    it('automatically reconnects once when a stream closes before a terminal chunk', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const reconnectToStream = vi.fn().mockResolvedValue(
+        createStream([
+          { type: 'text-delta', id: 'text-1', delta: ' world' },
+          { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+        ]),
+      );
+      const adapter = createAdapter({
+        sendMessage: vi.fn().mockResolvedValue(
+          createStream([
+            { type: 'start', messageId: 'a1' },
+            { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+          ]),
+        ),
+        reconnectToStream,
+      });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      expect(reconnectToStream).toHaveBeenCalledTimes(1);
+      expect(reconnectToStream).toHaveBeenCalledWith({
+        conversationId: 'c1',
+        messageId: 'a1',
+        signal: expect.any(AbortSignal),
+      });
+      expect(store.state.messagesById.a1.status).toBe('sent');
+      expect(store.state.messagesById.a1.parts).toEqual([
+        { type: 'text', text: 'Hello', state: 'done' },
+        { type: 'text', text: ' world', state: 'done' },
+      ]);
+      expect(store.state.error).toBe(null);
+
+      const userMsg = Object.values(store.state.messagesById).find((m) => m.role === 'user');
+      expect(userMsg!.status).toBe('sent');
+    });
+
+    it('keeps the recoverable stream error when reconnect returns null', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const onError = vi.fn();
+      const adapter = createAdapter({
+        sendMessage: vi.fn().mockResolvedValue(createStream([{ type: 'start', messageId: 'a1' }])),
+        reconnectToStream: vi.fn().mockResolvedValue(null),
+      });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onError } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      const userMsg = Object.values(store.state.messagesById).find((m) => m.role === 'user');
+      expect(userMsg!.status).toBe('error');
+      expect(store.state.messagesById.a1.status).toBe('error');
+      expect(store.state.error?.code).toBe('STREAM_ERROR');
+      expect(store.state.error?.message).toBe(
+        'Stream closed before a terminal chunk was received.',
+      );
+      expect(onError).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not call reconnectToStream after a normal terminal chunk', async () => {
+      const store = new ChatStore();
+      const reconnectToStream = vi.fn();
+      const adapter = createAdapter({ reconnectToStream });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage(userMessageInput);
+
+      expect(reconnectToStream).not.toHaveBeenCalled();
+    });
+
     it('sets user message status to "error" when the adapter throws', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');
@@ -394,6 +487,82 @@ describe('createSendMessageActions', () => {
           message: expect.objectContaining({ id: 'u1' }),
         }),
       );
+    });
+
+    it('does not remove associated assistant messages when retry is blocked by an active stream', async () => {
+      const userMsg: ChatMessage = {
+        id: 'u1',
+        role: 'user',
+        parts: [{ type: 'text', text: 'Hello' }],
+      };
+      const assistantMsg: ChatMessage = {
+        id: 'a1',
+        role: 'assistant',
+        status: 'error',
+        parts: [{ type: 'text', text: 'Oops' }],
+      };
+      const store = new ChatStore({ initialMessages: [userMsg, assistantMsg] });
+      const assistantMessageIdByUserMessageIdRef: { current: Map<string, string> } = {
+        current: new Map([['u1', 'a1']]),
+      };
+      const adapter = createAdapter();
+      store.setStreaming(true);
+
+      const { retry } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef,
+      });
+
+      await retry('u1');
+
+      expect(adapter.sendMessage).not.toHaveBeenCalled();
+      expect(store.state.messagesById.a1).toBe(assistantMsg);
+      expect(assistantMessageIdByUserMessageIdRef.current.get('u1')).toBe('a1');
+    });
+
+    it('reuses the original attachments when retrying a failed user message', async () => {
+      const store = new ChatStore();
+      const attachments = [
+        {
+          localId: 'attachment-1',
+          file: new File(['hello'], 'hello.txt', { type: 'text/plain' }),
+          status: 'queued' as const,
+        },
+      ];
+      const adapter = createAdapter({
+        sendMessage: vi
+          .fn()
+          .mockRejectedValueOnce(new Error('Network failure'))
+          .mockResolvedValueOnce(
+            createStream([
+              { type: 'start', messageId: 'a1' },
+              { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+            ]),
+          ),
+      });
+
+      const { sendMessage, retry } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage({
+        id: 'u1',
+        parts: [{ type: 'text', text: 'Please read this file' }],
+        attachments,
+      });
+      await retry('u1');
+
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(2);
+      expect((adapter.sendMessage as any).mock.calls[0][0].attachments).toBe(attachments);
+      expect((adapter.sendMessage as any).mock.calls[1][0].attachments).toBe(attachments);
+      expect(store.state.messagesById.u1.status).toBe('sent');
     });
   });
 });

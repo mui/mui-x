@@ -23,6 +23,12 @@
     "initialMessages": {
       "description": "The initial messages when uncontrolled. Ignored after initialization and when <code>messages</code> is provided."
     },
+    "layoutMode": {
+      "description": "Forces the responsive layout mode instead of deriving it from the container width. When omitted, ChatBox chooses the mode automatically using <code>layoutModeBreakpoints</code>."
+    },
+    "layoutModeBreakpoints": {
+      "description": "Container-width breakpoints used when <code>layoutMode</code> is not provided."
+    },
     "members": {
       "description": "All participants in the chat. The current (local) user is derived as the first member with <code>role === &#39;user&#39;</code>, unless <code>currentUser</code> is provided explicitly."
     },

@@ -178,6 +178,23 @@ export interface ChatBoxFeatures {
   suggestions?: boolean;
 }
 
+export type ChatBoxLayoutMode = 'standard' | 'overlay' | 'split';
+
+export interface ChatBoxLayoutModeBreakpoints {
+  /**
+   * Container width below which ChatBox switches from the standard side-by-side layout
+   * to the overlay conversations panel.
+   * @default 600
+   */
+  overlay: number;
+  /**
+   * Container width below which ChatBox switches from overlay mode to the split list/thread flow.
+   * This value is clamped so it never exceeds `overlay`.
+   * @default 450
+   */
+  split: number;
+}
+
 export interface ChatBoxProps<Cursor = string> extends Omit<
   ChatRootProps<Cursor>,
   'slots' | 'slotProps'
@@ -215,6 +232,15 @@ export interface ChatBoxProps<Cursor = string> extends Omit<
    * Feature flags to enable or disable built-in ChatBox behaviours.
    */
   features?: ChatBoxFeatures;
+  /**
+   * Forces the responsive layout mode instead of deriving it from the container width.
+   * When omitted, ChatBox chooses the mode automatically using `layoutModeBreakpoints`.
+   */
+  layoutMode?: ChatBoxLayoutMode;
+  /**
+   * Container-width breakpoints used when `layoutMode` is not provided.
+   */
+  layoutModeBreakpoints?: Partial<ChatBoxLayoutModeBreakpoints>;
   /**
    * Prompt suggestions displayed in the empty state.
    * Clicking a suggestion pre-fills the composer.

@@ -61,11 +61,11 @@ const ChatConversationListScrollerStyled = styled('div', {
   borderRight: '1px solid',
   borderRightColor: (theme.vars || theme).palette.divider,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-  width: 'var(--ChatBox-conversationListWidth, 260px)',
+  width: '100%',
   height: '100%',
   overflow: 'hidden',
   flexShrink: 0,
-  '@container (max-width: 599.95px)': {
+  '@container chatbox (max-width: 599.95px)': {
     display: 'none',
   },
 }));

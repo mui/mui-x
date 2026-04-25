@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import { useMessage, useMessageIds, useConversations } from '@mui/x-chat-headless';
-import Drawer from '@mui/material/Drawer';
+import { useChat, useMessage, useMessageIds, useConversations } from '@mui/x-chat-headless';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import {
   ChatLayout,
   useChatLocaleText,
@@ -36,39 +36,65 @@ import { ChatMessageActions } from '../ChatMessage/ChatMessageActions';
 import { ChatMessageInlineMeta } from '../ChatMessage/ChatMessageInlineMeta';
 import { ChatScrollToBottomAffordance } from '../ChatIndicators/ChatScrollToBottomAffordance';
 import { ChatSuggestions } from '../ChatSuggestions/ChatSuggestions';
-import type { ChatBoxSlots, ChatBoxSlotProps, ChatBoxFeatures } from './ChatBox.types';
+import type {
+  ChatBoxSlots,
+  ChatBoxSlotProps,
+  ChatBoxFeatures,
+  ChatBoxLayoutMode,
+  ChatBoxLayoutModeBreakpoints,
+} from './ChatBox.types';
 import DefaultSendIcon from '../icons/DefaultSendIcon';
 import DefaultAttachIcon from '../icons/DefaultAttachIcon';
 import DefaultMenuIcon from '../icons/DefaultMenuIcon';
+import DefaultCloseIcon from '../icons/DefaultCloseIcon';
 
-const NARROW_BREAKPOINT = 600;
+const DEFAULT_OVERLAY_BREAKPOINT = 600;
+const DEFAULT_SPLIT_BREAKPOINT = 450;
 
 /**
- * Observes the ChatBox root element's inline size and returns `true`
- * when it is narrower than the breakpoint. This mirrors the
- * `@container (max-width: 599.95px)` rule used in CSS so the JS
- * side can show/hide the drawer and menu button in sync.
+ * Observes the ChatBox root element's inline size so the JS behavior
+ * can stay aligned with container-query-driven layout changes.
  */
-function useContainerNarrow(ref: React.RefObject<HTMLElement | null>): boolean {
-  const [narrow, setNarrow] = React.useState(false);
+function useContainerWidth(ref: React.RefObject<HTMLElement | null>): number | null {
+  const [width, setWidth] = React.useState<number | null>(null);
 
   React.useEffect(() => {
     const el = ref.current;
-    if (!el || typeof globalThis.ResizeObserver === 'undefined') {
+    if (!el) {
+      return undefined;
+    }
+
+    const updateWidth = (nextWidth: number) => {
+      setWidth(nextWidth);
+    };
+
+    const initialWidth = el.getBoundingClientRect().width;
+    if (initialWidth > 0) {
+      updateWidth(initialWidth);
+    }
+
+    if (typeof globalThis.ResizeObserver === 'undefined') {
       return undefined;
     }
 
     const ro = new globalThis.ResizeObserver((entries) => {
       for (const entry of entries) {
-        const width = entry.contentBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
-        setNarrow(width < NARROW_BREAKPOINT);
+        const borderBoxSize = Array.isArray(entry.borderBoxSize)
+          ? entry.borderBoxSize[0]
+          : entry.borderBoxSize;
+        const contentBoxSize = Array.isArray(entry.contentBoxSize)
+          ? entry.contentBoxSize[0]
+          : entry.contentBoxSize;
+        const width =
+          borderBoxSize?.inlineSize ?? contentBoxSize?.inlineSize ?? entry.contentRect.width;
+        updateWidth(width);
       }
     });
     ro.observe(el);
     return () => ro.disconnect();
   }, [ref]);
 
-  return narrow;
+  return width;
 }
 
 const ChatBoxEmptyState = styled('div', {
@@ -116,17 +142,98 @@ const ChatBoxEmptyStateHelper = styled('p', {
   color: (theme.vars || theme).palette.text.disabled,
 }));
 
+const ChatBoxDrawerContent = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'DrawerContent',
+})({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+  minHeight: 0,
+});
+
+const ChatBoxDrawerHeader = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'DrawerHeader',
+})(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  padding: theme.spacing(1, 1, 0.5),
+  backgroundColor: (theme.vars || theme).palette.background.paper,
+}));
+
+const ChatBoxConversationOverlay = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'ConversationOverlay',
+})({
+  position: 'absolute',
+  inset: 0,
+  zIndex: 1,
+  pointerEvents: 'none',
+});
+
+const ChatBoxConversationOverlayBackdrop = styled('button', {
+  name: 'MuiChatBox',
+  slot: 'ConversationOverlayBackdrop',
+})(({ theme }) => ({
+  position: 'absolute',
+  inset: 0,
+  border: 0,
+  margin: 0,
+  padding: 0,
+  backgroundColor: (theme.vars || theme).palette.action.disabledBackground,
+  cursor: 'pointer',
+  pointerEvents: 'auto',
+}));
+
+const ChatBoxConversationOverlayPanel = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'ConversationOverlayPanel',
+})({
+  position: 'absolute',
+  insetBlock: 0,
+  insetInlineStart: 0,
+  height: '100%',
+  maxWidth: '100%',
+  pointerEvents: 'auto',
+});
+
+const DefaultBackIcon = React.memo(function DefaultBackIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      style={{ width: '1em', height: '1em' }}
+    >
+      <path d="M20 11H7.83l5.58-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z" />
+    </svg>
+  );
+});
+
 interface ChatBoxContentProps {
   variant?: ChatVariant;
   slots?: Partial<ChatBoxSlots>;
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
+  layoutMode?: ChatBoxLayoutMode;
+  layoutModeBreakpoints?: Partial<ChatBoxLayoutModeBreakpoints>;
   rootRef: React.RefObject<HTMLElement | null>;
   layoutClassName?: string;
   conversationsPaneClassName?: string;
   threadPaneClassName?: string;
   suggestions?: Array<ChatSuggestion | string>;
   suggestionsAutoSubmit?: boolean;
+}
+
+function normalizeLayoutModeBreakpoints(
+  breakpoints?: Partial<ChatBoxLayoutModeBreakpoints>,
+): ChatBoxLayoutModeBreakpoints {
+  const overlay = breakpoints?.overlay ?? DEFAULT_OVERLAY_BREAKPOINT;
+  const split = Math.min(breakpoints?.split ?? DEFAULT_SPLIT_BREAKPOINT, overlay);
+
+  return { overlay, split };
 }
 
 function DefaultMessageItem({
@@ -184,12 +291,16 @@ function DefaultConversationHeader({
   slots,
   slotProps,
   features,
+  onBackClick,
+  showBackButton,
   onMenuClick,
   showMenuButton,
 }: {
   slots?: Partial<ChatBoxSlots>;
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
+  onBackClick?: () => void;
+  showBackButton?: boolean;
   onMenuClick?: () => void;
   showMenuButton?: boolean;
 }) {
@@ -211,6 +322,18 @@ function DefaultConversationHeader({
 
   return (
     <ConversationHeaderComponent {...(slotProps?.conversationHeader ?? {})}>
+      {showBackButton && (
+        <Tooltip title={localeText.conversationHeaderBackLabel}>
+          <IconButton
+            size="small"
+            aria-label={localeText.conversationHeaderBackLabel}
+            onClick={onBackClick}
+            sx={{ mr: 1 }}
+          >
+            <DefaultBackIcon />
+          </IconButton>
+        </Tooltip>
+      )}
       {showMenuButton && (
         <Tooltip title={localeText.conversationHeaderMenuLabel}>
           <IconButton
@@ -230,6 +353,68 @@ function DefaultConversationHeader({
       <ConversationHeaderActionsComponent {...(slotProps?.conversationHeaderActions ?? {})} />
     </ConversationHeaderComponent>
   );
+}
+
+function mergeConversationListItemSlotProps(itemSlotProps: any, handleDrawerClose: () => void) {
+  return (params: any) => {
+    const externalProps =
+      typeof itemSlotProps === 'function' ? itemSlotProps(params) : (itemSlotProps ?? {});
+
+    return {
+      ...externalProps,
+      onClick: (event: React.MouseEvent) => {
+        externalProps?.onClick?.(event);
+        handleDrawerClose();
+      },
+    };
+  };
+}
+
+function mergeConversationListLayoutSlotProps(slotProp: any, extraStyle: React.CSSProperties) {
+  return (ownerState: any) => {
+    const externalProps = typeof slotProp === 'function' ? slotProp(ownerState) : (slotProp ?? {});
+
+    return {
+      ...externalProps,
+      style: {
+        ...extraStyle,
+        ...(externalProps?.style ?? {}),
+      },
+    };
+  };
+}
+
+function createConversationListSlotProps(
+  baseSlotProps: any,
+  options: {
+    fullWidth?: boolean;
+    onItemClick?: () => void;
+  } = {},
+) {
+  return {
+    ...baseSlotProps,
+    root: mergeConversationListLayoutSlotProps(baseSlotProps?.root, {
+      flex: 1,
+      minHeight: 0,
+    }),
+    scroller: mergeConversationListLayoutSlotProps(baseSlotProps?.scroller, {
+      display: 'flex',
+      flex: 1,
+      minHeight: 0,
+      width: '100%',
+      borderRight: 0,
+      ...(options.fullWidth ? { maxWidth: '100%' } : {}),
+    }),
+    viewport: mergeConversationListLayoutSlotProps(baseSlotProps?.viewport, {
+      flex: 1,
+      minHeight: 0,
+    }),
+    ...(options.onItemClick
+      ? {
+          item: mergeConversationListItemSlotProps(baseSlotProps?.item, options.onItemClick),
+        }
+      : {}),
+  };
 }
 
 function DefaultComposer({
@@ -331,6 +516,8 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     slots,
     slotProps,
     features,
+    layoutMode,
+    layoutModeBreakpoints,
     rootRef,
     layoutClassName,
     conversationsPaneClassName,
@@ -343,22 +530,98 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     features?.suggestions !== false && !!suggestions && suggestions.length > 0;
 
   const autoScrollProp = features?.autoScroll ?? true;
+  const { activeConversationId, setActiveConversation } = useChat();
 
-  const isNarrow = useContainerNarrow(rootRef);
+  const containerWidth = useContainerWidth(rootRef);
+  const normalizedBreakpoints = React.useMemo(
+    () => normalizeLayoutModeBreakpoints(layoutModeBreakpoints),
+    [layoutModeBreakpoints],
+  );
+  const resolvedLayoutMode = React.useMemo<ChatBoxLayoutMode>(() => {
+    if (layoutMode != null) {
+      return layoutMode;
+    }
+
+    if (containerWidth == null) {
+      return 'standard';
+    }
+
+    if (containerWidth < normalizedBreakpoints.split) {
+      return 'split';
+    }
+
+    if (containerWidth < normalizedBreakpoints.overlay) {
+      return 'overlay';
+    }
+
+    return 'standard';
+  }, [containerWidth, layoutMode, normalizedBreakpoints]);
+  const isNarrow = resolvedLayoutMode !== 'standard';
+  const isFullWidthDrawer =
+    containerWidth == null ? false : containerWidth < normalizedBreakpoints.split;
+  const isMobileSplitView = resolvedLayoutMode === 'split';
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-
+  const drawerCloseButtonRef = React.useRef<HTMLButtonElement | null>(null);
+  const drawerOpenerRef = React.useRef<HTMLElement | null>(null);
+  const wasDrawerOpenRef = React.useRef(false);
   const messageIds = useMessageIds();
   const conversations = useConversations();
   const localeText = useChatLocaleText();
   const hasConversationList = conversations.length > 0;
 
+  const restoreDrawerFocus = React.useCallback(() => {
+    const drawerOpener = drawerOpenerRef.current;
+    drawerOpenerRef.current = null;
+
+    if (drawerOpener && globalThis.document?.contains(drawerOpener)) {
+      drawerOpener.focus();
+    }
+  }, []);
+
   const handleMenuClick = React.useCallback(() => {
+    drawerOpenerRef.current =
+      globalThis.document?.activeElement instanceof HTMLElement
+        ? globalThis.document.activeElement
+        : null;
     setDrawerOpen(true);
   }, []);
 
   const handleDrawerClose = React.useCallback(() => {
     setDrawerOpen(false);
   }, []);
+
+  const handleDrawerKeyDown = React.useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key !== 'Escape') {
+        return;
+      }
+
+      event.stopPropagation();
+      handleDrawerClose();
+    },
+    [handleDrawerClose],
+  );
+
+  const handleBackClick = React.useCallback(() => {
+    void setActiveConversation(undefined);
+  }, [setActiveConversation]);
+
+  React.useEffect(() => {
+    if (!isNarrow || isMobileSplitView) {
+      setDrawerOpen(false);
+    }
+  }, [isMobileSplitView, isNarrow]);
+
+  React.useLayoutEffect(() => {
+    if (drawerOpen) {
+      wasDrawerOpenRef.current = true;
+      drawerCloseButtonRef.current?.focus();
+    } else if (wasDrawerOpenRef.current) {
+      wasDrawerOpenRef.current = false;
+      restoreDrawerFocus();
+    }
+  }, [drawerOpen, restoreDrawerFocus]);
+
   const ScrollToBottomComponent = (slots?.scrollToBottom ??
     ChatScrollToBottomAffordance) as typeof ChatScrollToBottomAffordance;
   const ConversationListComponent = (slots?.conversationList ??
@@ -388,6 +651,29 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     [],
   );
 
+  const drawerConversationListSlotProps = React.useMemo(
+    () =>
+      createConversationListSlotProps(slotProps?.conversationList?.slotProps, {
+        onItemClick: handleDrawerClose,
+      }),
+    [handleDrawerClose, slotProps?.conversationList?.slotProps],
+  );
+
+  const splitConversationListSlotProps = React.useMemo(
+    () =>
+      createConversationListSlotProps(slotProps?.conversationList?.slotProps, {
+        fullWidth: true,
+      }),
+    [slotProps?.conversationList?.slotProps],
+  );
+
+  const showSplitConversationList =
+    hasConversationList && isMobileSplitView && !activeConversationId;
+  const showThreadView =
+    !hasConversationList || !isMobileSplitView || Boolean(activeConversationId);
+  const showDrawerMenuButton = hasConversationList && isNarrow && !isMobileSplitView;
+  const showBackButton = hasConversationList && isMobileSplitView && Boolean(activeConversationId);
+
   return (
     <ChatLayout
       className={layoutClassName}
@@ -395,12 +681,31 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       slotProps={{
         conversationsPane: {
           ...(conversationsPaneClassName ? { className: conversationsPaneClassName } : {}),
-          style: {},
+          style: isMobileSplitView
+            ? {
+                width: '100%',
+                flex: '1 1 100%',
+                minWidth: 0,
+                overflow: 'hidden',
+              }
+            : isNarrow
+              ? {
+                  width: 0,
+                  flex: '0 0 0px',
+                  overflow: 'visible',
+                }
+              : {
+                  width: 'var(--ChatBox-conversationListWidth, 260px)',
+                  flex: '0 0 var(--ChatBox-conversationListWidth, 260px)',
+                  minWidth: 0,
+                  overflow: 'hidden',
+                },
         },
         threadPane: {
           ...(threadPaneClassName ? { className: threadPaneClassName } : {}),
           style: {
             flex: 1,
+            width: isNarrow ? '100%' : undefined,
             minWidth: 0,
             display: 'flex',
             flexDirection: 'column',
@@ -409,99 +714,118 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
         },
       }}
     >
-      {hasConversationList && (
+      {hasConversationList && !isNarrow && (
         <ConversationListComponent variant={variant} {...(slotProps?.conversationList ?? {})} />
       )}
 
-      {hasConversationList && isNarrow && (
-        <Drawer
-          open={drawerOpen}
-          onClose={handleDrawerClose}
-          slotProps={{
-            paper: {
-              sx: {
-                width: 'var(--ChatBox-conversationListWidth, 260px)',
-                maxWidth: '80vw',
-              },
-            },
-          }}
-        >
-          <ConversationListComponent
-            variant={variant}
-            {...(slotProps?.conversationList ?? {})}
-            slotProps={{
-              ...slotProps?.conversationList?.slotProps,
-              item: (params: any) => {
-                const externalSlotProps = slotProps?.conversationList?.slotProps?.item;
-                const externalProps =
-                  typeof externalSlotProps === 'function'
-                    ? externalSlotProps(params)
-                    : externalSlotProps;
-                return {
-                  ...externalProps,
-                  onClick: (event: React.MouseEvent) => {
-                    (externalProps as any)?.onClick?.(event);
-                    handleDrawerClose();
-                  },
-                };
-              },
-            }}
+      {hasConversationList && isNarrow && !isMobileSplitView && drawerOpen && (
+        <ChatBoxConversationOverlay>
+          <ChatBoxConversationOverlayBackdrop
+            type="button"
+            aria-label={localeText.conversationHeaderCloseLabel}
+            onClick={handleDrawerClose}
           />
-        </Drawer>
+          <MUIFocusTrap open={drawerOpen} disableRestoreFocus>
+            <ChatBoxConversationOverlayPanel
+              aria-label={localeText.conversationHeaderMenuLabel}
+              aria-modal="true"
+              role="dialog"
+              onKeyDown={handleDrawerKeyDown}
+              tabIndex={-1}
+              style={{
+                width: isFullWidthDrawer
+                  ? '100%'
+                  : 'min(var(--ChatBox-conversationListWidth, 260px), 100%)',
+              }}
+            >
+              <ChatBoxDrawerContent>
+                <ChatBoxDrawerHeader>
+                  <Tooltip title={localeText.conversationHeaderCloseLabel}>
+                    <IconButton
+                      size="small"
+                      aria-label={localeText.conversationHeaderCloseLabel}
+                      onClick={handleDrawerClose}
+                      ref={drawerCloseButtonRef}
+                    >
+                      <DefaultCloseIcon />
+                    </IconButton>
+                  </Tooltip>
+                </ChatBoxDrawerHeader>
+                <ConversationListComponent
+                  variant={variant}
+                  {...(slotProps?.conversationList ?? {})}
+                  slotProps={drawerConversationListSlotProps}
+                />
+              </ChatBoxDrawerContent>
+            </ChatBoxConversationOverlayPanel>
+          </MUIFocusTrap>
+        </ChatBoxConversationOverlay>
       )}
 
-      <ChatConversation>
-        <DefaultConversationHeader
-          slots={slots}
-          slotProps={slotProps}
-          features={features}
-          onMenuClick={handleMenuClick}
-          showMenuButton={hasConversationList && isNarrow}
+      {showSplitConversationList && (
+        <ConversationListComponent
+          variant={variant}
+          {...(slotProps?.conversationList ?? {})}
+          slotProps={splitConversationListSlotProps}
         />
-        <MessageListComponent
-          renderItem={renderItem}
-          items={messageIds}
-          autoScroll={autoScrollProp}
-          overlay={
-            <React.Fragment>
-              {messageIds.length === 0 && !showSuggestions && (
-                <ChatBoxEmptyState>
-                  <ChatBoxEmptyStateIcon
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </ChatBoxEmptyStateIcon>
-                  <ChatBoxEmptyStateTitle>
-                    {localeText.threadNoMessagesLabel}
-                  </ChatBoxEmptyStateTitle>
-                  <ChatBoxEmptyStateHelper>
-                    {localeText.threadNoMessagesHelperText}
-                  </ChatBoxEmptyStateHelper>
-                </ChatBoxEmptyState>
-              )}
-              {showSuggestions && messageIds.length === 0 && (
-                <SuggestionsComponent
-                  suggestions={suggestions}
-                  autoSubmit={suggestionsAutoSubmit}
-                  {...(slotProps?.suggestions ?? {})}
-                />
-              )}
-              {showScrollToBottom && (
-                <ScrollToBottomComponent {...(slotProps?.scrollToBottom ?? {})} />
-              )}
-            </React.Fragment>
-          }
-          {...(slotProps?.messageList ?? {})}
-        />
-        <DefaultComposer slots={slots} slotProps={slotProps} features={features} />
-      </ChatConversation>
+      )}
+
+      {showThreadView && (
+        <ChatConversation>
+          <DefaultConversationHeader
+            slots={slots}
+            slotProps={slotProps}
+            features={features}
+            onBackClick={handleBackClick}
+            showBackButton={showBackButton}
+            onMenuClick={handleMenuClick}
+            showMenuButton={showDrawerMenuButton}
+          />
+          <MessageListComponent
+            renderItem={renderItem}
+            items={messageIds}
+            autoScroll={autoScrollProp}
+            overlay={
+              <React.Fragment>
+                {messageIds.length === 0 && !showSuggestions && (
+                  <ChatBoxEmptyState>
+                    <ChatBoxEmptyStateIcon
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </ChatBoxEmptyStateIcon>
+                    <ChatBoxEmptyStateTitle>
+                      {localeText.threadNoMessagesLabel}
+                    </ChatBoxEmptyStateTitle>
+                    <ChatBoxEmptyStateHelper>
+                      {localeText.threadNoMessagesHelperText}
+                    </ChatBoxEmptyStateHelper>
+                  </ChatBoxEmptyState>
+                )}
+                {showSuggestions && messageIds.length === 0 && (
+                  <SuggestionsComponent
+                    suggestions={suggestions}
+                    autoSubmit={suggestionsAutoSubmit}
+                    {...(slotProps?.suggestions ?? {})}
+                  />
+                )}
+                {showScrollToBottom && (
+                  <ScrollToBottomComponent {...(slotProps?.scrollToBottom ?? {})} />
+                )}
+              </React.Fragment>
+            }
+            {...(slotProps?.messageList ?? {})}
+          />
+          <DefaultComposer slots={slots} slotProps={slotProps} features={features} />
+        </ChatConversation>
+      )}
     </ChatLayout>
   );
 }

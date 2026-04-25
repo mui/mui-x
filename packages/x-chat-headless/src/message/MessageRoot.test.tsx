@@ -136,6 +136,10 @@ const errorMessage: ChatMessage = {
   id: 'm3',
   role: 'assistant',
   status: 'error',
+  // A createdAt timestamp keeps MessageMeta renderable for the error state.
+  // Without a timestamp, the meta footer still renders the generic error label
+  // when no message-specific runtime error is available.
+  createdAt: '2026-03-14T10:00:00.000Z',
   parts: [
     {
       type: 'text',
@@ -457,6 +461,18 @@ describe('MessageRoot', () => {
     expect(screen.getByTestId('custom-message-root')).to.have.attribute('data-streaming', 'false');
     expect(screen.getByTestId('custom-message-root')).to.have.attribute('data-error', 'true');
     expect(screen.getByTestId('custom-message-meta')).to.have.attribute('data-status', 'error');
+  });
+
+  it('renders the "Error" status label when no message-specific error is available', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[errorMessage]}>
+        <MessageRoot messageId="m3">
+          <MessageMeta data-testid="meta" />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByText('Error')).not.to.equal(null);
   });
 
   it('hides the avatar for grouped follow-up messages in compact variant', () => {

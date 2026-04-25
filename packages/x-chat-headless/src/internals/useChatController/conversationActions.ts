@@ -46,8 +46,8 @@ export function createConversationActions<Cursor = string>(params: {
       return;
     }
 
-    store.resetMessages();
-
+    // Don't reset eagerly — keep the previous thread visible while the new one
+    // loads so rapid conversation switches don't blank the wrong thread (#8/#16).
     try {
       const result = await runtimeRef.current.adapter.listMessages({
         conversationId,

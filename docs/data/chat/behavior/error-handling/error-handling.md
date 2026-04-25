@@ -3,7 +3,7 @@ productId: x-chat
 title: Error Handling
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatBox
+components: ChatBox, ChatMessageError, MessageError
 ---
 
 # Chat - Error Handling
@@ -147,8 +147,9 @@ If a stream closes without a terminal chunk (`finish` or `abort`), the runtime:
 
 1. Records a recoverable stream error.
 2. Sets the message status to `'error'`.
-3. Calls `onError` and `onFinish` with `isDisconnect: true`.
-4. If `reconnectToStream()` is implemented on the adapter, attempts to resume the stream.
+3. Calls `onFinish` with `isDisconnect: true`.
+4. If `reconnectToStream()` is implemented on the adapter, makes one attempt to resume the stream.
+5. Calls `onError` only when the disconnect remains unrecovered.
 
 See [Streaming—Reconnecting to streams](/x/react-chat/behavior/streaming/#reconnecting-to-streams) for implementation details.
 

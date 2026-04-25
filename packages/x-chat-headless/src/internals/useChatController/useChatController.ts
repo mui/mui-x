@@ -142,6 +142,13 @@ export function useChatController<Cursor = string>({
           ),
       );
 
+      // Snapshot the previous parts so we can roll back if the adapter call
+      // rejects (#6). Without this, the optimistic mutation that flipped the
+      // tool invocation to `approval-responded` would persist even though the
+      // adapter never confirmed the response, leaving the UI permanently out
+      // of sync with the server.
+      const previousParts = assistantMessage?.parts;
+
       if (assistantMessage) {
         store.updateMessage(assistantMessage.id, {
           parts: assistantMessage.parts.map((part) => {
@@ -174,6 +181,10 @@ export function useChatController<Cursor = string>({
           reason,
         });
       } catch (error) {
+        if (assistantMessage && previousParts) {
+          store.updateMessage(assistantMessage.id, { parts: previousParts });
+        }
+
         setRuntimeError(
           createRuntimeError(
             'SEND_ERROR',

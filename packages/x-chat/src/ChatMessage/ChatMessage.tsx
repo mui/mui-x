@@ -7,6 +7,7 @@ import { useMessage } from '@mui/x-chat-headless';
 import { MessageRoot, type MessageRootProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { ChatMessageError } from '../ChatMessageError/ChatMessageError';
 
 const useThemeProps = createUseThemeProps('MuiChatMessage');
 
@@ -58,15 +59,18 @@ const ChatMessageStyled = styled('div', {
         ? {
             // Grouped: no avatar/authorName rows — content + meta on the same row.
             // Meta (✓ 10:55) sits top-right, aligned to the start of the content.
+            // A dedicated `error` row hosts the inline error card under the bubble.
             gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
-            gridTemplateAreas: '". content meta"',
+            gridTemplateRows: 'auto auto',
+            gridTemplateAreas: '". content meta" ". error ."',
           }
         : {
             // First in group: avatar spans authorName + content rows.
             // Meta (✓ 10:55) sits top-right on the same row as the author name.
+            // A dedicated `error` row hosts the inline error card under the bubble.
             gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
-            gridTemplateRows: 'auto auto',
-            gridTemplateAreas: '"avatar authorName meta" "avatar content ."',
+            gridTemplateRows: 'auto auto auto',
+            gridTemplateAreas: '"avatar authorName meta" "avatar content ." ". error ."',
           }),
     };
   }
@@ -79,8 +83,10 @@ const ChatMessageStyled = styled('div', {
   return {
     display: 'grid',
     gridTemplateColumns: isGrouped ? 'var(--MuiChatMessage-avatarSize) 1fr' : 'auto 1fr',
-    gridTemplateRows: 'auto auto',
-    gridTemplateAreas: isGrouped ? '". content" ". actions"' : '"avatar content" ". actions"',
+    gridTemplateRows: 'auto auto auto',
+    gridTemplateAreas: isGrouped
+      ? '". content" ". error" ". actions"'
+      : '"avatar content" ". error" ". actions"',
     columnGap: theme.spacing(0.5),
     width: '100%',
     boxSizing: 'border-box',
@@ -97,7 +103,9 @@ const ChatMessageStyled = styled('div', {
     fontFamily: theme.typography.fontFamily,
     ...(isUser && {
       gridTemplateColumns: isGrouped ? '1fr var(--MuiChatMessage-avatarSize)' : '1fr auto',
-      gridTemplateAreas: isGrouped ? '"content ." "actions ."' : '"content avatar" "actions ."',
+      gridTemplateAreas: isGrouped
+        ? '"content ." "error ." "actions ."'
+        : '"content avatar" "error ." "actions ."',
       paddingInlineStart: `calc(${theme.spacing(2)} + var(--MuiChatMessage-avatarSize))`,
       paddingInlineEnd: theme.spacing(2),
     }),
@@ -107,7 +115,16 @@ const ChatMessageStyled = styled('div', {
 const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
   function ChatMessage(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
-    const { slots, slotProps, className, classes: classesProp, sx, messageId, ...other } = props;
+    const {
+      slots,
+      slotProps,
+      className,
+      classes: classesProp,
+      sx,
+      messageId,
+      children,
+      ...other
+    } = props;
     const classes = useChatMessageUtilityClasses(classesProp);
     const message = useMessage(messageId);
 
@@ -135,7 +152,10 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
             ...slotProps?.root,
           } as any,
         }}
-      />
+      >
+        {children}
+        <ChatMessageError />
+      </MessageRoot>
     );
   },
 );

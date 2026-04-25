@@ -46,7 +46,7 @@ ChatComposer                  ← <form> element, border-top divider
   ChatComposerTextArea        ← auto-resizing textarea
   ChatComposerToolbar         ← button row
     ChatComposerAttachButton  ← file attach trigger
-    ChatComposerSendButton    ← submit button (disabled when empty/streaming)
+    ChatComposerSendButton    ← submit button (disabled when empty with no attachments/streaming)
   ChatComposerHelperText      ← disclaimer or character count
 ```
 
@@ -71,13 +71,9 @@ Submission is blocked until composition ends.
 
 `ChatComposerSendButton` disables automatically when:
 
-- The text area is empty (no text content).
+- The text area is empty and there are no queued attachments.
 - A response is currently streaming.
 - The composer is explicitly disabled.
-
-:::info
-The send button's visual disabled state checks only text content, not attachments. However, the underlying `submit()` function sends if either text or attachments are present.
-:::
 
 ## Attach button
 

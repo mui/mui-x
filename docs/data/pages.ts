@@ -878,146 +878,31 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-chat/basics',
-        subheader: 'Basics',
+        pathname: '/x/react-chat/main-features',
+        subheader: 'Main features',
         children: [
           { pathname: '/x/react-chat/basics/chatbox', title: 'ChatBox' },
-          { pathname: '/x/react-chat/basics/messages', title: 'Messages' },
-          { pathname: '/x/react-chat/basics/composer', title: 'Composer' },
-          { pathname: '/x/react-chat/basics/layout', title: 'Layout' },
           {
-            pathname: '/x/react-chat/basics/variants-and-density',
-            title: 'Variants & Density',
-          },
-        ],
-      },
-      {
-        pathname: '/x/react-chat/display',
-        subheader: 'Display',
-        children: [
-          {
-            pathname: '/x/react-chat/display/message-parts-group',
-            title: 'Message Parts',
+            pathname: '/x/react-chat/backend',
+            title: 'Backend Connection',
             children: [
+              { pathname: '/x/react-chat/backend/adapters', title: 'Adapters' },
+              { pathname: '/x/react-chat/behavior/streaming', title: 'Streaming' },
               {
-                pathname: '/x/react-chat/display/message-parts/text-and-markdown',
-                title: 'Text & Markdown',
+                pathname: '/x/react-chat/backend/building-an-adapter',
+                title: 'Building an Adapter',
               },
               {
-                pathname: '/x/react-chat/display/message-parts/code-blocks',
-                title: 'Code Blocks',
+                pathname: '/x/react-chat/backend/real-time-adapters',
+                title: 'Real-Time Adapters',
               },
               {
-                pathname: '/x/react-chat/display/message-parts/files-and-images',
-                title: 'Files & Images',
-              },
-              {
-                pathname: '/x/react-chat/display/message-parts/sources-and-citations',
-                title: 'Sources & Citations',
-              },
-              {
-                pathname: '/x/react-chat/display/message-parts/custom-parts',
-                title: 'Custom Parts',
+                pathname: '/x/react-chat/backend/controlled-state',
+                title: 'Controlled State',
               },
             ],
           },
-          {
-            pathname: '/x/react-chat/display/message-appearance',
-            title: 'Message Appearance',
-          },
-          {
-            pathname: '/x/react-chat/display/message-actions',
-            title: 'Message Actions',
-          },
-          {
-            pathname: '/x/react-chat/display/loading-and-empty-states',
-            title: 'Loading & Empty States',
-          },
-        ],
-      },
-      {
-        pathname: '/x/react-chat/behavior',
-        subheader: 'Behavior',
-        children: [
-          { pathname: '/x/react-chat/behavior/streaming', title: 'Streaming' },
-          { pathname: '/x/react-chat/behavior/attachments', title: 'Attachments' },
-          { pathname: '/x/react-chat/behavior/suggestions', title: 'Suggestions' },
-          { pathname: '/x/react-chat/behavior/scrolling', title: 'Scrolling' },
-          {
-            pathname: '/x/react-chat/behavior/error-handling',
-            title: 'Error Handling',
-          },
-          {
-            pathname: '/x/react-chat/behavior/typing-indicators',
-            title: 'Typing Indicators',
-          },
-        ],
-      },
-      {
-        pathname: '/x/react-chat/multi-conversation',
-        subheader: 'Multi-Conversation',
-        children: [
-          {
-            pathname: '/x/react-chat/multi-conversation/conversation-list',
-            title: 'Conversation List',
-          },
-          {
-            pathname: '/x/react-chat/multi-conversation/conversation-header',
-            title: 'Conversation Header',
-          },
-          {
-            pathname: '/x/react-chat/multi-conversation/history-and-pagination',
-            title: 'History & Pagination',
-          },
-          {
-            pathname: '/x/react-chat/multi-conversation/read-receipts',
-            title: 'Read Receipts',
-          },
-          {
-            pathname: '/x/react-chat/multi-conversation/real-time-sync',
-            title: 'Real-Time Sync',
-          },
-        ],
-      },
-      {
-        pathname: '/x/react-chat/ai-and-agents',
-        subheader: 'AI & Agents',
-        children: [
-          {
-            pathname: '/x/react-chat/ai-and-agents/tool-calling',
-            title: 'Tool Calling',
-          },
-          {
-            pathname: '/x/react-chat/ai-and-agents/tool-approval',
-            title: 'Tool Approval',
-          },
-          {
-            pathname: '/x/react-chat/ai-and-agents/reasoning',
-            title: 'Reasoning',
-          },
-          {
-            pathname: '/x/react-chat/ai-and-agents/step-tracking',
-            title: 'Step Tracking',
-          },
-        ],
-      },
-      {
-        pathname: '/x/react-chat/backend',
-        subheader: 'Backend Integration',
-        children: [
-          { pathname: '/x/react-chat/backend/adapters', title: 'Adapters' },
-          {
-            pathname: '/x/react-chat/backend/building-an-adapter',
-            title: 'Building an Adapter',
-          },
-          {
-            pathname: '/x/react-chat/backend/real-time-adapters',
-            title: 'Real-Time Adapters',
-          },
-          {
-            pathname: '/x/react-chat/backend/controlled-state',
-            title: 'Controlled State',
-          },
+          { pathname: '/x/react-chat/behavior/error-handling', title: 'Error Handling' },
         ],
       },
       {
@@ -1025,28 +910,150 @@ const pages: MuiPage[] = [
         subheader: 'Customization',
         children: [
           {
-            pathname: '/x/react-chat/customization/slots-and-composition',
-            title: 'Slots & Composition',
+            pathname: '/x/react-chat/customization/overview',
+            title: 'Overview',
           },
-          { pathname: '/x/react-chat/customization/styling', title: 'Styling' },
-          { pathname: '/x/react-chat/customization/tailwind', title: 'Tailwind CSS' },
           {
-            pathname: '/x/react-chat/customization/localization',
-            title: 'Localization',
+            pathname: '/x/react-chat/customization/look-and-feel',
+            title: 'Look & Feel',
+          },
+          {
+            pathname: '/x/react-chat/customization/structure',
+            title: 'Structure',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/advanced-features',
+        subheader: 'Advanced',
+        children: [
+          {
+            pathname: '/x/react-chat/basics',
+            title: 'Building Blocks',
+            children: [
+              { pathname: '/x/react-chat/basics/messages', title: 'Messages' },
+              { pathname: '/x/react-chat/basics/composer', title: 'Composer' },
+              { pathname: '/x/react-chat/basics/layout', title: 'Layout' },
+            ],
+          },
+          {
+            pathname: '/x/react-chat/display',
+            title: 'Display',
+            children: [
+              {
+                pathname: '/x/react-chat/display/message-parts-group',
+                title: 'Message Parts',
+                children: [
+                  {
+                    pathname: '/x/react-chat/display/message-parts/text-and-markdown',
+                    title: 'Text & Markdown',
+                  },
+                  {
+                    pathname: '/x/react-chat/display/message-parts/code-blocks',
+                    title: 'Code Blocks',
+                  },
+                  {
+                    pathname: '/x/react-chat/display/message-parts/files-and-images',
+                    title: 'Files & Images',
+                  },
+                  {
+                    pathname: '/x/react-chat/display/message-parts/sources-and-citations',
+                    title: 'Sources & Citations',
+                  },
+                  {
+                    pathname: '/x/react-chat/display/message-parts/custom-parts',
+                    title: 'Custom Parts',
+                  },
+                ],
+              },
+              {
+                pathname: '/x/react-chat/display/message-appearance',
+                title: 'Message Appearance',
+              },
+              {
+                pathname: '/x/react-chat/display/message-actions',
+                title: 'Message Actions',
+              },
+              {
+                pathname: '/x/react-chat/display/loading-and-empty-states',
+                title: 'Loading & Empty States',
+              },
+            ],
+          },
+          {
+            pathname: '/x/react-chat/behavior',
+            title: 'Behavior',
+            children: [
+              { pathname: '/x/react-chat/behavior/suggestions', title: 'Suggestions' },
+              { pathname: '/x/react-chat/behavior/attachments', title: 'Attachments' },
+              { pathname: '/x/react-chat/behavior/scrolling', title: 'Scrolling' },
+              {
+                pathname: '/x/react-chat/behavior/typing-indicators',
+                title: 'Typing Indicators',
+              },
+            ],
+          },
+          {
+            pathname: '/x/react-chat/multi-conversation',
+            title: 'Multi-Conversation',
+            children: [
+              {
+                pathname: '/x/react-chat/multi-conversation/conversation-list',
+                title: 'Conversation List',
+              },
+              {
+                pathname: '/x/react-chat/multi-conversation/conversation-header',
+                title: 'Conversation Header',
+              },
+              {
+                pathname: '/x/react-chat/multi-conversation/history-and-pagination',
+                title: 'History & Pagination',
+              },
+              {
+                pathname: '/x/react-chat/multi-conversation/read-receipts',
+                title: 'Read Receipts',
+              },
+              {
+                pathname: '/x/react-chat/multi-conversation/real-time-sync',
+                title: 'Real-Time Sync',
+              },
+            ],
+          },
+          {
+            pathname: '/x/react-chat/ai-and-agents',
+            title: 'AI & Agents',
+            children: [
+              {
+                pathname: '/x/react-chat/ai-and-agents/tool-calling',
+                title: 'Tool Calling',
+              },
+              {
+                pathname: '/x/react-chat/ai-and-agents/tool-approval',
+                title: 'Tool Approval',
+              },
+              {
+                pathname: '/x/react-chat/ai-and-agents/reasoning',
+                title: 'Reasoning',
+              },
+              {
+                pathname: '/x/react-chat/ai-and-agents/step-tracking',
+                title: 'Step Tracking',
+              },
+            ],
           },
         ],
       },
       {
         pathname: '/x/react-chat/resources',
-        subheader: 'Resources',
+        subheader: 'Reference',
         children: [
           {
             pathname: '/x/react-chat/resources/hooks',
-            title: 'Hooks Reference',
+            title: 'Hooks',
           },
           {
             pathname: '/x/react-chat/resources/selectors',
-            title: 'Selectors Reference',
+            title: 'Selectors',
           },
           {
             pathname: '/x/react-chat/resources/events-and-callbacks',

@@ -206,7 +206,7 @@ When `hasMore` is `true`, `ChatBox` shows a "Load earlier messages" control that
 ### `reconnectToStream(input)`
 
 Implement this to resume an interrupted stream — for example, when an SSE connection drops mid-response.
-The runtime calls it automatically after detecting a disconnected stream.
+The runtime calls it automatically after detecting a disconnected stream, with one reconnect attempt for the interrupted assistant message.
 
 ```ts
 interface ChatReconnectToStreamInput {

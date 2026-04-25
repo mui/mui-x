@@ -195,7 +195,7 @@ async listConversations({ cursor }) {
 ## Step 6: Handle stream reconnection
 
 Implement `reconnectToStream` to resume an interrupted stream — for example, when an SSE connection drops mid-response.
-The runtime calls it automatically after detecting a disconnected stream.
+The runtime calls it automatically after detecting a disconnected stream, with one reconnect attempt for the interrupted assistant message.
 
 ```tsx
 async reconnectToStream({ conversationId, messageId, signal }) {
