@@ -28,7 +28,10 @@ export * from '@mui/x-charts/ChartsBrushOverlay';
 export * from '@mui/x-charts/ChartsRadialDataProvider';
 export * from '@mui/x-charts/ChartsRadialGrid';
 export * from '@mui/x-charts/ChartsRadiusAxis';
-export * from '@mui/x-charts/ChartsRotationAxis';
+export {
+  type ChartsRotationAxisProps,
+  Unstable_ChartsRotationAxis
+} from '@mui/x-charts/ChartsRotationAxis';
 
 // Pro utilities
 export * from './constants';
