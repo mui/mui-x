@@ -6,9 +6,9 @@ import { useChatStore } from './useChatStore';
 
 /**
  * Returns the `ChatError` associated with the given message id, or `null` when
- * there is no error for that message. An error is considered associated with
- * the message when `state.error.details.messageId` matches the id and the
- * corresponding message has `status === 'error'`.
+ * there is no error for that message. Message-scoped errors are stored
+ * independently from the global runtime error so multiple failed messages can
+ * retain their own error state at the same time.
  */
 export function useMessageError(messageId: string): ChatError | null {
   const store = useChatStore();

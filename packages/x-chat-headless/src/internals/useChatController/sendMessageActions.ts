@@ -144,6 +144,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     store.addMessage(nextMessage);
     store.setStreaming(true);
     store.setError(null);
+    store.clearMessageError(nextMessage.id);
 
     if (attachments && attachments.length > 0) {
       attachmentsByUserMessageId.set(nextMessage.id, attachments);
@@ -177,6 +178,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       if (status === 'sent') {
         attachmentsByUserMessageId.delete(nextMessage.id);
+        store.clearMessageError(nextMessage.id);
       }
 
       if (result.messageId) {
@@ -202,7 +204,8 @@ export function createSendMessageActions<Cursor = string>(params: {
       }
 
       setRuntimeError(
-        createRuntimeError(
+        (() => {
+          const runtimeError = createRuntimeError(
           'SEND_ERROR',
           getErrorMessage('Unable to send the message.', error),
           'send',
@@ -212,7 +215,11 @@ export function createSendMessageActions<Cursor = string>(params: {
             messageId: nextMessage.id,
             conversationId,
           },
-        ),
+          );
+
+          store.setMessageError(nextMessage.id, runtimeError);
+          return runtimeError;
+        })(),
       );
       store.setStreaming(false);
     } finally {

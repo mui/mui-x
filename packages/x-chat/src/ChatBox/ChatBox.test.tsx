@@ -353,6 +353,23 @@ describe('ChatBox', () => {
       });
     });
 
+    it('does not expose the backdrop as an extra close button', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={conversations}
+          data-resize-width="480"
+          sx={{ height: 480 }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      fireEvent.click(await screen.findByRole('button', { name: 'Open conversations' }));
+
+      expect(await screen.findAllByRole('button', { name: 'Close conversations' })).toHaveLength(1);
+    });
+
     it('treats the narrow conversation overlay as a modal dialog', async () => {
       render(
         <ChatBox

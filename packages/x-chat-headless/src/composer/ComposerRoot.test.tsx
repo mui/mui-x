@@ -506,6 +506,58 @@ describe('ComposerRoot', () => {
     }
   });
 
+  it('prevents the native form submit before calling the external onSubmit handler', async () => {
+    const onSubmit = vi.fn((event: React.FormEvent<HTMLFormElement>) => {
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialActiveConversationId="c1">
+        <ComposerRoot onSubmit={onSubmit}>
+          <ComposerTextArea />
+          <ComposerSendButton />
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    fireEvent.change(screen.getByRole('textbox', { name: 'Message' }), {
+      target: { value: 'hello' },
+    });
+    fireEvent.submit(screen.getByRole('textbox', { name: 'Message' }).closest('form')!);
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('lets the external onSubmit suppress composer.submit() without allowing native navigation', async () => {
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => createStream()),
+    });
+
+    render(
+      <ChatRoot adapter={adapter} initialActiveConversationId="c1">
+        <ComposerRoot
+          onSubmit={(event) => {
+            event.preventDefault();
+          }}
+        >
+          <ComposerTextArea />
+          <ComposerSendButton />
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    fireEvent.change(screen.getByRole('textbox', { name: 'Message' }), {
+      target: { value: 'hello' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Send message' }));
+
+    await waitFor(() => {
+      expect(adapter.sendMessage).not.toHaveBeenCalled();
+    });
+  });
+
   it('uses localeText for the default composer placeholder and accessible labels', () => {
     render(
       <ChatRoot

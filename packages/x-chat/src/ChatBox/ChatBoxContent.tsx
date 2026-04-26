@@ -172,15 +172,12 @@ const ChatBoxConversationOverlay = styled('div', {
   pointerEvents: 'none',
 });
 
-const ChatBoxConversationOverlayBackdrop = styled('button', {
+const ChatBoxConversationOverlayBackdrop = styled('div', {
   name: 'MuiChatBox',
   slot: 'ConversationOverlayBackdrop',
 })(({ theme }) => ({
   position: 'absolute',
   inset: 0,
-  border: 0,
-  margin: 0,
-  padding: 0,
   backgroundColor: (theme.vars || theme).palette.action.disabledBackground,
   cursor: 'pointer',
   pointerEvents: 'auto',
@@ -724,10 +721,9 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       )}
 
       {hasConversationList && isNarrow && !isMobileSplitView && drawerOpen && (
-        <ChatBoxConversationOverlay>
+          <ChatBoxConversationOverlay>
           <ChatBoxConversationOverlayBackdrop
-            type="button"
-            aria-label={localeText.conversationHeaderCloseLabel}
+            aria-hidden="true"
             onClick={handleDrawerClose}
           />
           <MUIFocusTrap open={drawerOpen} disableRestoreFocus>

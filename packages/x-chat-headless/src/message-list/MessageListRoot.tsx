@@ -129,7 +129,15 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
 
     let frameId = 0;
     const observer = new globalThis.ResizeObserver(() => {
-      cancelAnimationFrame(frameId);
+      if (typeof cancelAnimationFrame === 'function') {
+        cancelAnimationFrame(frameId);
+      }
+
+      if (typeof requestAnimationFrame !== 'function') {
+        onRowResize();
+        return;
+      }
+
       frameId = requestAnimationFrame(() => {
         onRowResize();
       });
@@ -138,7 +146,9 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
     observer.observe(rowRef.current);
 
     return () => {
-      cancelAnimationFrame(frameId);
+      if (typeof cancelAnimationFrame === 'function') {
+        cancelAnimationFrame(frameId);
+      }
       observer.disconnect();
     };
   }, [onRowResize]);

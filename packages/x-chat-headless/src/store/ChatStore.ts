@@ -79,6 +79,26 @@ function normalizeById<T extends { id: string }>(
   return { ids, byId };
 }
 
+function pruneMessageErrorsById(
+  messageErrorsById: Record<string, ChatError | undefined>,
+  messageIds: string[],
+): Record<string, ChatError | undefined> {
+  if (messageIds.length === 0) {
+    return {};
+  }
+
+  const allowedIds = new Set(messageIds);
+  const nextMessageErrorsById: Record<string, ChatError | undefined> = {};
+
+  for (const [messageId, error] of Object.entries(messageErrorsById)) {
+    if (allowedIds.has(messageId) && error != null) {
+      nextMessageErrorsById[messageId] = error;
+    }
+  }
+
+  return nextMessageErrorsById;
+}
+
 /**
  * Returns `prevIds` when the two arrays contain the same strings in the same
  * order, avoiding a new reference that would trigger downstream re-renders
@@ -188,6 +208,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       activeConversationId,
       messageIds,
       messagesById,
+      messageErrorsById: {},
       typingByConversation: {},
       activeStreamAbortController: null,
       isStreaming: false,
@@ -213,6 +234,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       const { ids: messageIds, byId: messagesById } = normalizeById(parameters.messages);
       newState.messageIds = stableIds(this.state.messageIds, messageIds);
       newState.messagesById = messagesById;
+      newState.messageErrorsById = pruneMessageErrorsById(this.state.messageErrorsById, messageIds);
       this.dirtyControlledModels.delete('messages');
     }
 
@@ -323,13 +345,15 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       return;
     }
 
-    const { [id]: removedMessage, ...messagesById } = this.state.messagesById;
-    void removedMessage;
+    const { [id]: _removedMessage, ...messagesById } = this.state.messagesById;
+    const nextMessageErrorsById = { ...this.state.messageErrorsById };
+    delete nextMessageErrorsById[id];
 
     this.dirtyControlledModels.add('messages');
     this.update({
       messageIds: this.state.messageIds.filter((messageId) => messageId !== id),
       messagesById,
+      messageErrorsById: nextMessageErrorsById,
     });
   };
 
@@ -353,9 +377,11 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     }
 
     this.dirtyControlledModels.add('messages');
+    const messageIds = [...nextMessageIds, ...this.state.messageIds];
     this.update({
-      messageIds: [...nextMessageIds, ...this.state.messageIds],
+      messageIds,
       messagesById: nextMessagesById,
+      messageErrorsById: pruneMessageErrorsById(this.state.messageErrorsById, messageIds),
     });
   };
 
@@ -366,6 +392,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.update({
       messageIds,
       messagesById,
+      messageErrorsById: pruneMessageErrorsById(this.state.messageErrorsById, messageIds),
     });
   };
 
@@ -418,8 +445,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       return;
     }
 
-    const { [id]: removedConversation, ...conversationsById } = this.state.conversationsById;
-    void removedConversation;
+    const { [id]: _removedConversation, ...conversationsById } = this.state.conversationsById;
 
     this.dirtyControlledModels.add('conversations');
     this.update({
@@ -501,6 +527,36 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.set('error', error);
   };
 
+  public setMessageError = (messageId: string, error: ChatError | null) => {
+    const currentError = this.state.messageErrorsById[messageId];
+
+    if (currentError === error) {
+      return;
+    }
+
+    const nextMessageErrorsById = { ...this.state.messageErrorsById };
+
+    if (error == null) {
+      delete nextMessageErrorsById[messageId];
+    } else {
+      nextMessageErrorsById[messageId] = error;
+    }
+
+    this.set('messageErrorsById', nextMessageErrorsById);
+  };
+
+  public clearMessageError = (messageId: string) => {
+    this.setMessageError(messageId, null);
+  };
+
+  public clearAllMessageErrors = () => {
+    if (Object.keys(this.state.messageErrorsById).length === 0) {
+      return;
+    }
+
+    this.set('messageErrorsById', {});
+  };
+
   public setHistoryState = ({
     cursor,
     hasMore,
@@ -519,6 +575,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.update({
       messageIds: [],
       messagesById: {},
+      messageErrorsById: {},
       activeStreamAbortController: null,
       isStreaming: false,
       hasMoreHistory: false,
@@ -526,4 +583,12 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       error: null,
     });
   };
+}
+
+/**
+ * Narrows the one intentional cursor-erasure boundary used by helpers that
+ * operate only on message/conversation state and never touch history cursors.
+ */
+export function asCursorAgnosticChatStore<Cursor>(store: ChatStore<Cursor>): ChatStore<unknown> {
+  return store as unknown as ChatStore<unknown>;
 }

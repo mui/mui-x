@@ -280,6 +280,9 @@ describe('createSendMessageActions', () => {
       const userMsg = Object.values(store.state.messagesById).find((m) => m.role === 'user');
       expect(userMsg!.status).toBe('error');
       expect(store.state.messagesById.a1.status).toBe('error');
+      expect(store.state.messageErrorsById.a1?.message).toBe(
+        'Stream closed before a terminal chunk was received.',
+      );
       expect(store.state.error?.code).toBe('STREAM_ERROR');
       expect(store.state.error?.message).toBe(
         'Stream closed before a terminal chunk was received.',
@@ -324,6 +327,7 @@ describe('createSendMessageActions', () => {
 
       const userMsg = Object.values(store.state.messagesById).find((m) => m.role === 'user');
       expect(userMsg!.status).toBe('error');
+      expect(store.state.messageErrorsById[userMsg!.id]?.message).toBe('Network failure');
     });
 
     it('calls setRuntimeError with SEND_ERROR when the adapter throws', async () => {

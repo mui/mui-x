@@ -135,16 +135,24 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
       const localId = createLocalId();
       const previewUrl = createAttachmentPreviewUrl(file);
 
-      if (previewUrl) {
-        ownedPreviewUrlsRef.current.set(localId, previewUrl);
-      }
+      try {
+        store.addComposerAttachment({
+          localId,
+          file,
+          previewUrl,
+          status: 'queued',
+        });
 
-      store.addComposerAttachment({
-        localId,
-        file,
-        previewUrl,
-        status: 'queued',
-      });
+        if (previewUrl) {
+          ownedPreviewUrlsRef.current.set(localId, previewUrl);
+        }
+      } catch (error) {
+        if (previewUrl) {
+          revokeAttachmentPreviewUrl(previewUrl);
+        }
+
+        throw error;
+      }
     },
     [store],
   );

@@ -24,16 +24,16 @@ export const chatSelectors = {
     (messagesById, id: string): ChatMessage | undefined => messagesById[id],
   ),
   messageError: createSelector(
-    (state: State) => state.error,
+    (state: State) => state.messageErrorsById,
     (state: State) => state.messagesById,
-    (error, messagesById, id: string): ChatError | null => {
+    (messageErrorsById, messagesById, id: string): ChatError | null => {
       const message = messagesById[id];
+      const error = messageErrorsById[id];
+
       if (!error || message?.status !== 'error') {
         return null;
       }
-      if ((error.details?.messageId as string | undefined) !== id) {
-        return null;
-      }
+
       return error;
     },
   ),

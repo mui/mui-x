@@ -58,7 +58,7 @@ describe('useMessageError', () => {
     );
 
     act(() => {
-      result.current.store.setError({
+      result.current.store.setMessageError('m-err', {
         code: 'SEND_ERROR',
         message: 'Send failed',
         source: 'send',
@@ -82,7 +82,7 @@ describe('useMessageError', () => {
     );
 
     act(() => {
-      result.current.store.setError({
+      result.current.store.setMessageError('some-other', {
         code: 'SEND_ERROR',
         message: 'Send failed for another message',
         source: 'send',
@@ -104,7 +104,7 @@ describe('useMessageError', () => {
     );
 
     act(() => {
-      result.current.store.setError({
+      result.current.store.setMessageError('m-ok', {
         code: 'SEND_ERROR',
         message: 'Send failed',
         source: 'send',

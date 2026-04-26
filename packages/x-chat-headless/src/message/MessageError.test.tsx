@@ -66,7 +66,7 @@ describe('MessageError', () => {
     );
 
     act(() => {
-      storeRef!.setError({
+      storeRef!.setMessageError('m1', {
         code: 'SEND_ERROR',
         message: 'Network down',
         source: 'send',
@@ -93,7 +93,7 @@ describe('MessageError', () => {
     );
 
     act(() => {
-      storeRef!.setError({
+      storeRef!.setMessageError('other', {
         code: 'SEND_ERROR',
         message: 'Network down',
         source: 'send',
@@ -147,7 +147,7 @@ describe('MessageError', () => {
     );
 
     act(() => {
-      storeRef!.setError({
+      storeRef!.setMessageError('m1', {
         code: 'SEND_ERROR',
         message: 'Network down',
         source: 'send',

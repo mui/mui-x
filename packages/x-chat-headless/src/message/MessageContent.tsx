@@ -106,6 +106,24 @@ const renderDefaultDataPart: ChatPartRenderer<
   Extract<ChatMessagePart, { type: `data-${string}` }>
 > = ({ part }) => <JsonBlock value={part.data} />;
 
+function renderDefaultStepStartMessagePart(props: {
+  part: ChatStepStartMessagePart;
+  index: number;
+  message: NonNullable<MessageContentOwnerState['message']>;
+  onToolCall: ReturnType<typeof useChatOnToolCall>;
+}) {
+  return renderDefaultStepStartPart(props);
+}
+
+function renderDefaultDataMessagePart(props: {
+  part: Extract<ChatMessagePart, { type: `data-${string}` }>;
+  index: number;
+  message: NonNullable<MessageContentOwnerState['message']>;
+  onToolCall: ReturnType<typeof useChatOnToolCall>;
+}) {
+  return renderDefaultDataPart(props);
+}
+
 function MessageRenderedPart(props: {
   part: ChatMessagePart;
   index: number;
@@ -158,10 +176,14 @@ function MessageRenderedPart(props: {
     case 'source-document':
       return <SourceDocumentPart {...partProps?.['source-document']} {...baseProps} part={part} />;
     case 'step-start':
-      return <React.Fragment>{renderDefaultStepStartPart(baseProps as any)}</React.Fragment>;
+      return (
+        <React.Fragment>
+          {renderDefaultStepStartMessagePart({ ...baseProps, part })}
+        </React.Fragment>
+      );
     default:
       if (part.type.startsWith('data-')) {
-        return <React.Fragment>{renderDefaultDataPart(baseProps as any)}</React.Fragment>;
+        return <React.Fragment>{renderDefaultDataMessagePart({ ...baseProps, part })}</React.Fragment>;
       }
 
       return <DefaultPartFallback part={part} />;

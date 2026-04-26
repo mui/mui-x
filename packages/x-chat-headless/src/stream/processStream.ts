@@ -1,4 +1,4 @@
-import type { ChatStore } from '../store/ChatStore';
+import { asCursorAgnosticChatStore, type ChatStore } from '../store/ChatStore';
 import type { ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type {
@@ -92,9 +92,7 @@ export async function processStream<Cursor = string>(
   stream: ReadableStream<ChatMessageChunk | ChatStreamEnvelope>,
   options: ProcessStreamOptions = {},
 ): Promise<ProcessStreamResult> {
-  // Cast to ChatStore<unknown> for cursor-agnostic helper functions.
-  // processStream never calls setHistoryState, so the cursor type is irrelevant here.
-  const storeUnknown = store as unknown as ChatStore<unknown>;
+  const storeUnknown = asCursorAgnosticChatStore(store);
   let targetMessageId = options.messageId;
   let finishReason: string | undefined;
   let didReceiveTerminalChunk = false;
@@ -102,6 +100,7 @@ export async function processStream<Cursor = string>(
   let finishCalled = false;
   let didStartMessage = false;
   let aborted = options.signal?.aborted ?? false;
+  let abortCancelError: unknown = null;
   let expectedSequence: number | undefined =
     options.reconnectFromSequence != null ? options.reconnectFromSequence : undefined;
 
@@ -164,6 +163,7 @@ export async function processStream<Cursor = string>(
 
     if (targetMessageId) {
       finalizeMessage('error');
+      store.setMessageError(targetMessageId, chatError);
     }
 
     store.setStreaming(false);
@@ -188,6 +188,10 @@ export async function processStream<Cursor = string>(
       didStartMessage = true;
       store.setStreaming(true);
       store.setError(null);
+
+      if (targetMessageId) {
+        store.clearMessageError(targetMessageId);
+      }
     }
 
     return message;
@@ -289,6 +293,9 @@ export async function processStream<Cursor = string>(
         finalizeMessage('sent');
         store.setStreaming(false);
         store.setError(null);
+        if (targetMessageId) {
+          store.clearMessageError(targetMessageId);
+        }
         return;
 
       case 'abort':
@@ -297,6 +304,9 @@ export async function processStream<Cursor = string>(
         didReceiveTerminalChunk = true;
         finalizeMessage('cancelled');
         store.setStreaming(false);
+        if (targetMessageId) {
+          store.clearMessageError(targetMessageId);
+        }
         return;
 
       case 'text-start':
@@ -632,7 +642,9 @@ export async function processStream<Cursor = string>(
 
   const abortListener = () => {
     aborted = true;
-    void reader.cancel().catch(() => {});
+    void reader.cancel().catch((error) => {
+      abortCancelError = error;
+    });
   };
 
   options.signal?.addEventListener('abort', abortListener, { once: true });
@@ -705,6 +717,11 @@ export async function processStream<Cursor = string>(
   } catch (error) {
     if (aborted) {
       flushPendingTextLikeDelta();
+
+      if (abortCancelError != null) {
+        abortCancelError = null;
+      }
+
       return handleAbort();
     }
 

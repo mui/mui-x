@@ -63,7 +63,7 @@ describe('ChatMessageError', () => {
     expect(storeRef).not.to.equal(null);
 
     act(() => {
-      storeRef!.setError({
+      storeRef!.setMessageError('m1', {
         code: 'SEND_ERROR',
         message: 'Send failed',
         source: 'send',
@@ -88,17 +88,14 @@ describe('ChatMessageError', () => {
     });
     storeRef = null;
     render(
-      <ChatRoot
-        adapter={createAdapter({ sendMessage })}
-        initialMessages={[errorMessage]}
-      >
+      <ChatRoot adapter={createAdapter({ sendMessage })} initialMessages={[errorMessage]}>
         <StoreCapture />
         <ChatMessageComponent messageId="m1" />
       </ChatRoot>,
     );
 
     act(() => {
-      storeRef!.setError({
+      storeRef!.setMessageError('m1', {
         code: 'SEND_ERROR',
         message: 'Send failed',
         source: 'send',
@@ -126,7 +123,7 @@ describe('ChatMessageError', () => {
     );
 
     act(() => {
-      storeRef!.setError({
+      storeRef!.setMessageError('m1', {
         code: 'SEND_ERROR',
         message: 'Send failed',
         source: 'send',

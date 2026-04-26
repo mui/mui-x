@@ -111,13 +111,20 @@ export const ComposerRoot = React.forwardRef(function ComposerRoot(
       <Root
         {...rootProps}
         onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+          event.preventDefault();
+          const originalPreventDefault = event.preventDefault.bind(event);
+          let submitPreventedByExternal = false;
+
+          event.preventDefault = () => {
+            submitPreventedByExternal = true;
+            originalPreventDefault();
+          };
+
           externalOnSubmit?.(event);
 
-          if (event.defaultPrevented) {
+          if (submitPreventedByExternal) {
             return;
           }
-
-          event.preventDefault();
 
           if (disabled) {
             return;
