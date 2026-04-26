@@ -30,7 +30,7 @@ export * from '@mui/x-charts/ChartsRadialGrid';
 export * from '@mui/x-charts/ChartsRadiusAxis';
 export {
   type ChartsRotationAxisProps,
-  Unstable_ChartsRotationAxis
+  Unstable_ChartsRotationAxis,
 } from '@mui/x-charts/ChartsRotationAxis';
 
 // Pro utilities
