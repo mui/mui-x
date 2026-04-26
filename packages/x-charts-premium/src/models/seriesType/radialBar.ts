@@ -11,10 +11,10 @@ import type { DefaultizedProps } from '@mui/x-internals/types';
 
 export interface RadialBarSeriesType
   extends
-  CommonSeriesType<number | null, 'bar'>,
-  RadialSeriesType,
-  StackableSeriesType,
-  CommonBarSeriesType {
+    CommonSeriesType<number | null, 'bar'>,
+    RadialSeriesType,
+    StackableSeriesType,
+    CommonBarSeriesType {
   type: 'radialBar';
   /**
    * Defines how stacked series handle negative values.
