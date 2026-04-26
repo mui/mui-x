@@ -42,11 +42,6 @@ export interface CommonBarSeriesType {
    */
   layout?: 'horizontal' | 'vertical';
   /**
-   * Defines how stacked series handle negative values.
-   * @default 'diverging'
-   */
-  stackOffset?: StackOffsetType;
-  /**
    * If provided, the value will be used as the minimum size of the bar in pixels.
    * This is useful to avoid bars with a size of 0.
    *
@@ -80,6 +75,11 @@ export interface BarSeriesType
    * @default 'center'
    */
   barLabelPlacement?: 'center' | 'outside';
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'diverging'
+   */
+  stackOffset?: StackOffsetType;
 }
 
 /**
