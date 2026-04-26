@@ -20,6 +20,5 @@ export const useUtilityClasses = (props: { classes?: Partial<ChartsRadialAxisCla
 export {
   type ChartsRadialAxisClasses,
   type ChartsRadialAxisClassKey,
-  getRadialAxisUtilityClass,
   chartsRadialAxisClasses,
 } from '../ChartsRadiusAxis/sharedRadialAxisClasses';

@@ -20,10 +20,11 @@ export interface ChartsRadiusAxisProps {
    */
   axisId?: AxisId;
   /**
-   * The angle (in degrees) along which the tick labels are rendered.
-   * By default, uses the start angle of the rotation axis.
+   * The posiiton of the axis in polar coordinates.
+   * It can be 'start', 'end', or a specific angle in degrees.
+   * @default 'start'
    */
-  angle?: number;
+  position?: 'start' | 'end' | number;
   /**
    * If `true`, the axis line is not rendered.
    * @default false
@@ -59,14 +60,36 @@ export interface ChartsRadiusAxisProps {
 }
 
 /* Gap between a tick and its label. */
-export const TICK_LABEL_GAP = 3;
+const TICK_LABEL_GAP = 3;
 
 const getLabelTextAnchors = createGetLabelTextAnchors(getLabelTransform);
+
+/**
+ * Get the angle to use to display the radius axis.
+ * @param position The position props
+ * @param rotationAxis The default rotation axis
+ * @returns the angle in radians to use.
+ */
+function getAxisAngleInRadians(
+  position: ChartsRadiusAxisProps['position'],
+  rotationAxis: ReturnType<typeof useRotationAxis>,
+) {
+  if (position === 'start') {
+    return rotationAxis?.scale.range()[0] ?? 0;
+  }
+  if (position === 'end') {
+    return rotationAxis?.scale.range()[1] ?? 0;
+  }
+  if (typeof position === 'number') {
+    return (position * Math.PI) / 180;
+  }
+  return 0;
+}
 
 export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
   const {
     axisId,
-    angle: angleProp,
+    position = 'start',
     disableLine,
     disableTicks,
     tickLabelPosition = 'after',
@@ -98,9 +121,7 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
     return null;
   }
 
-  // Angle in radians. 0 = up (north). Default to rotation axis start angle.
-  const angle =
-    angleProp !== undefined ? (angleProp * Math.PI) / 180 : (rotationAxis?.scale.range()[0] ?? 0);
+  const angle = getAxisAngleInRadians(position, rotationAxis);
   // Convert "0 = up" convention to SVG math angle (0 = right, clockwise y-down).
   const dx = Math.sin(angle);
   const dy = -Math.cos(angle);

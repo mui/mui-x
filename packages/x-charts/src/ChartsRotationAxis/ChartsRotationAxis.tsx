@@ -30,6 +30,12 @@ export interface ChartsRotationAxisProps {
    */
   disableTicks?: boolean;
   /**
+   * The position of the rotation axis.
+   * It can be 'inside' or 'outside'.
+   * @default 'outside'
+   */
+  position?: 'inside' | 'outside';
+  /**
    * The size (in pixels) of the tick marks.
    * @default 6
    */
@@ -37,13 +43,13 @@ export interface ChartsRotationAxisProps {
   /**
    * Set the position of the tick labels relative to the axis line.
    * `'after'` places them outside the arc, `'before'` inside.
-   * @default 'after'
+   * @default 'after' if position is 'outside', 'before' if position is 'inside'
    */
   tickLabelPosition?: 'after' | 'before';
   /**
    * Set the position of the tick relative to the axis line.
    * `'after'` places them outside the arc, `'before'` inside.
-   * @default 'after'
+   * @default 'after' if position is 'outside', 'before' if position is 'inside'
    */
   tickPosition?: 'after' | 'before';
   /**
@@ -63,8 +69,9 @@ export function ChartsRotationAxis(props: ChartsRotationAxisProps) {
     axisId,
     disableLine,
     disableTicks,
-    tickLabelPosition = 'after',
-    tickPosition = 'after',
+    position = 'outside',
+    tickLabelPosition = position === 'outside' ? 'after' : 'before',
+    tickPosition = position === 'outside' ? 'after' : 'before',
     tickSize = 6,
     className,
     classes: classesProp,
