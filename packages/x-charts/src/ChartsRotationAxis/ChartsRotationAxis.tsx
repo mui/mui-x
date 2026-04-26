@@ -43,13 +43,13 @@ export interface ChartsRotationAxisProps {
   /**
    * Set the position of the tick labels relative to the axis line.
    * `'after'` places them outside the arc, `'before'` inside.
-   * @default 'after' if position is 'outside', 'before' if position is 'inside'
+   * @default position === 'outside' ? 'after' : 'before'
    */
   tickLabelPosition?: 'after' | 'before';
   /**
    * Set the position of the tick relative to the axis line.
    * `'after'` places them outside the arc, `'before'` inside.
-   * @default 'after' if position is 'outside', 'before' if position is 'inside'
+   * @default position === 'outside' ? 'after' : 'before'
    */
   tickPosition?: 'after' | 'before';
   /**

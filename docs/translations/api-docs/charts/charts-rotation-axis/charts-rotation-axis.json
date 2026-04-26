@@ -7,6 +7,9 @@
     "className": { "description": "A CSS class name applied to the root element." },
     "disableLine": { "description": "If <code>true</code>, the axis line is not rendered." },
     "disableTicks": { "description": "If <code>true</code>, the ticks are not rendered." },
+    "position": {
+      "description": "The position of the rotation axis. It can be &#39;inside&#39; or &#39;outside&#39;."
+    },
     "tickLabelPosition": {
       "description": "Set the position of the tick labels relative to the axis line. <code>&#39;after&#39;</code> places them outside the arc, <code>&#39;before&#39;</code> inside."
     },
