@@ -626,6 +626,8 @@ export type ComputedAxis<
      * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
      */
     triggerTooltip?: boolean;
+    /** @ignore - internal. True when a rotation axis covers a full circle. */
+    isFullCircle?: boolean;
   } & (AxisProps extends ChartsXAxisProps
     ? AxisSideConfig<AxisProps> & { height: number }
     : AxisProps extends ChartsYAxisProps
