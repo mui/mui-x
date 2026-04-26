@@ -33,6 +33,10 @@ const state = (align: 'left' | 'justify') => ({
       },
     },
   },
+  visibilityManager: {
+    visibilityMap: new Map(),
+    isControlled: false,
+  },
 });
 
 // Sankey left aligned

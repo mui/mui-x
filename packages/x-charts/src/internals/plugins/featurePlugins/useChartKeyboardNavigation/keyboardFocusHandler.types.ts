@@ -6,6 +6,7 @@ import type { FocusedItemIdentifier } from '../../../../models/seriesType';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import type { ChartState } from '../../models/chart';
 import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
+import type { UseChartVisibilityManagerSignature } from '../useChartVisibilityManager';
 
 export type FocusedItemUpdater<
   SeriesType extends ChartSeriesType,
@@ -16,12 +17,19 @@ export type FocusedItemUpdater<
     ? Pick<
         ChartState<
           [UseChartKeyboardNavigationSignature],
-          [UseChartCartesianAxisSignature],
+          [UseChartCartesianAxisSignature, UseChartVisibilityManagerSignature<SeriesType>],
           SeriesType
         >,
-        'series' | 'cartesianAxis'
+        'series' | 'cartesianAxis' | 'visibilityManager'
       >
-    : Pick<ChartState<[UseChartKeyboardNavigationSignature], [], SeriesType>, 'series'>,
+    : Pick<
+        ChartState<
+          [UseChartKeyboardNavigationSignature],
+          [UseChartVisibilityManagerSignature<SeriesType>],
+          SeriesType
+        >,
+        'series' | 'visibilityManager'
+      >,
 ) => FocusedItemIdentifier<OutputSeriesType> | null;
 
 /**

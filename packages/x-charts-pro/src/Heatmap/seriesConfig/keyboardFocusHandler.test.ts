@@ -42,6 +42,10 @@ const state = {
       },
     ],
   },
+  visibilityManager: {
+    visibilityMap: new Map(),
+    isControlled: false,
+  },
 };
 
 const cell_00 = {

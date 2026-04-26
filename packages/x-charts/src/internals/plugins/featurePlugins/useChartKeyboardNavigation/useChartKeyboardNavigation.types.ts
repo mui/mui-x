@@ -2,6 +2,7 @@ import type { ChartPluginSignature } from '../../models';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 import type { UseChartHighlightSignature } from '../useChartHighlight';
+import type { UseChartVisibilityManagerSignature } from '../useChartVisibilityManager';
 import type { FocusedItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
@@ -40,5 +41,6 @@ export type UseChartKeyboardNavigationSignature = ChartPluginSignature<{
     UseChartInteractionSignature,
     UseChartHighlightSignature<ChartSeriesType>,
     UseChartCartesianAxisSignature,
+    UseChartVisibilityManagerSignature<ChartSeriesType>,
   ];
 }>;
