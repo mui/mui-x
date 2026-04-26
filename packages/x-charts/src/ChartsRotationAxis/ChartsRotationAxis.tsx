@@ -98,7 +98,7 @@ export function ChartsRotationAxis(props: ChartsRotationAxisProps) {
     return null;
   }
 
-  const radius = radiusAxis.scale.range()[tickLabelPosition === 'before' ? 0 : 1];
+  const radius = radiusAxis.scale.range()[position === 'inside' ? 0 : 1];
   const [startAngle, endAngle] = rotationAxis.scale.range();
 
   const stroke = (theme.vars ?? theme).palette.text.primary;
