@@ -23,6 +23,11 @@ export default function RotationAxisPlayground() {
           options: ['after', 'before'],
           defaultValue: 'after',
         },
+        position: {
+          knob: 'select',
+          options: ['inside', 'outside'],
+          defaultValue: 'outside',
+        },
         tickSize: { knob: 'number', defaultValue: 6, min: -20, max: 20 },
         rotationTickNumber: { knob: 'number', defaultValue: 8, min: 0, max: 20 },
         startAngle: {
@@ -76,6 +81,7 @@ export default function RotationAxisPlayground() {
                 <ChartsRotationAxis
                   disableLine={props.disableLine}
                   disableTicks={props.disableTicks}
+                  position={props.position}
                   tickSize={props.tickSize}
                   tickLabelPosition={props.tickLabelPosition}
                   tickPosition={props.tickPosition}
@@ -102,6 +108,7 @@ ${[
   `tickSize={${props.tickSize}}`,
   props.disableLine && 'disableLine',
   props.disableTicks && 'disableTicks',
+  props.position && `position="${props.position}"`,
   props.tickPosition && `tickPosition="${props.tickPosition}"`,
   props.tickLabelPosition && `tickLabelPosition="${props.tickLabelPosition}"`,
 ]
