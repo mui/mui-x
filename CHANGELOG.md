@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.29.13
 
-_Apr 24, 2026_
+_Apr 27, 2026_
 
 We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
 
@@ -31,12 +31,12 @@ Same changes as in `@mui/x-data-grid-pro@7.29.13`.
 ### Docs
 
 - [docs] Add `v9` as root path link and move `v8` under subpath (#22037) @LukasTy
-- [docs] Add check for auto-generated group rows in renderCountry (#22143) @michelengelen
-- [docs] Remove obsolete v7 deprecation warning for `dayOfWeekFormatter` (@LukasTy) (#22121) @github-actions[bot]
+- [docs] Add check for auto-generated group rows in `renderCountry` (#22143) @michelengelen
+- [docs] Remove obsolete v7 deprecation warning for `dayOfWeekFormatter` (@LukasTy) (#22121)
 
 ### Miscellaneous
 
-- [docs-infra] Set SEARCH_INDEX Env for v7 (#21876) @dav-is
+- [docs-infra] Set `SEARCH_INDEX` Env for v7 (#21876) @dav-is
 
 ## 7.29.12
 
