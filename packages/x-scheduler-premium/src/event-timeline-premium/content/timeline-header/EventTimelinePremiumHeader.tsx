@@ -38,9 +38,6 @@ const StyledTimelineGridHeader = styled(TimelineGrid.Header, {
       fontWeight: theme.typography.fontWeightRegular,
       padding: theme.spacing(1, 0),
     },
-    // `data-weekend` always reflects the date itself (so assistive tech and consumer CSS
-    // can rely on it). Coloring is gated by `data-unit-leaf` so grouping rows (e.g. the day
-    // row in `dayAndHour`, where the tick is the hour) stay neutral.
     '&[data-unit-leaf][data-weekend]': {
       color: (theme.vars || theme).palette.error.main,
     },
