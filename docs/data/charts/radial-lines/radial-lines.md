@@ -1,7 +1,7 @@
 ---
 title: React Radial Line chart
 productId: x-charts
-components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, ChartsRadialGrid, RadialLineChart, RadialMarkPlot, RadialLinePlot, RadialAreaPlot, ChartsRadiusAxis
+components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, ChartsRadialGrid, RadialLineChart, RadialMarkPlot, RadialLinePlot, RadialAreaPlot, ChartsRadiusAxis, ChartsRotationAxis
 ---
 
 # Charts - Radial Lines
@@ -30,7 +30,13 @@ Similarly to the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordin
 
 The `ChartsRadiusAxis` component renders tick labels along a radius direction.
 
-Each label is wrapped in a `foreignObject`, so you can style it with CSS.
-For example, you can give it a background color by targeting the `chartsRadialAxisClasses.tickLabel` class.
+You can style each tick label by targeting the `chartsRadialAxisClasses.tickLabel` class.
 
 {{"demo": "RadiusAxisPlayground.js", "hideToolbar": true, "bg": "playground"}}
+
+## Rotation axis
+
+The `ChartsRotationAxis` component renders an arc along the rotation axis with tick marks and labels.
+The arc radius is taken from the radius axis outer radius, and you can style each tick label via the `chartsRadialAxisClasses.tickLabel` class.
+
+{{"demo": "RotationAxisPlayground.js", "hideToolbar": true, "bg": "playground"}}

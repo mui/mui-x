@@ -26,6 +26,10 @@ export * from '@mui/x-charts/ChartsLabel';
 export * from '@mui/x-charts/ChartsRadialDataProvider';
 export * from '@mui/x-charts/ChartsRadialGrid';
 export * from '@mui/x-charts/ChartsRadiusAxis';
+export {
+  type ChartsRotationAxisProps,
+  Unstable_ChartsRotationAxis,
+} from '@mui/x-charts/ChartsRotationAxis';
 
 // Pro components
 export * from '@mui/x-charts-pro/Heatmap';
