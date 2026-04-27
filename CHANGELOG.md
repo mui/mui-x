@@ -4,12 +4,12 @@
 
 _Apr 24, 2026_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - ⌨️ Keyboard support for creating events in the Scheduler
 
 Special thanks go out to these community members for their valuable contributions:
-@ZAKIURREHMAN
+@supunsathsara, @ZAKIURREHMAN
 
 The following team members contributed to this release:
 @alexfauquette, @arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @rita-codes, @romgrk, @sai6855, @siriwatknp
@@ -39,6 +39,7 @@ Same changes as in `@mui/x-data-grid-pro@9.0.3`, plus:
 #### `@mui/x-date-pickers@9.0.3`
 
 - [pickers] Fix `DateRangeCalendar` drag with `AdapterDayjs` plain-constructor values (#22165) @LukasTy
+- [pickers] Fix disabled state not overriding error border color (#21169) @supunsathsara
 - [pickers] Forward `data-*` and `aria-*` attributes to the root (#22147) @LukasTy
 - [pickers] Support `K` and `k` hour format tokens (#22108) @michelengelen
 
@@ -129,6 +130,7 @@ Internal changes.
 - [code-infra] Rename `docsx` alias to `docs` (#22155) @brijeshb42
 - [docs-infra] Remove monorepo dependency (#22025) @brijeshb42
 - [docs-infra] Use latest published packages (#22086) @brijeshb42
+- [test] Refactor Pickers tests to async user-event (#22043) @LukasTy
 - [test] Remove redundant explicit `unmount()` calls from Pickers tests (#22118) @LukasTy
 
 ### Miscellaneous
