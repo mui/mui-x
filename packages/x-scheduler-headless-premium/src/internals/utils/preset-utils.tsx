@@ -60,8 +60,10 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Record<
     getStartDate: (adapter, visibleDate) => adapter.startOfDay(visibleDate),
     getEndDate: (adapter, start, unitCount) =>
       adapter.endOfDay(adapter.addDays(start, unitCount - 1)),
-    // Use a fixed 24 instead of `differenceInHours` to keep the grid stable across DST days
-    // (which have 23 or 25 real hours but still render 24 hour cells).
+    // Pin the CSS tick count so the grid width stays stable across DST. A tz-aware
+    // `differenceInHours` would return 95 on a spring-forward day, narrowing the
+    // grid by one cell width — `iterate()` still emits 24 hour cells regardless
+    // because it advances via `addHours`.
     getCssUnitCount: () => DAY_AND_HOUR_DAYS * 24,
     navigate: (adapter, date, amount) => adapter.addDays(date, amount),
   },

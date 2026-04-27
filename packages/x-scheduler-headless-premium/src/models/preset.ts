@@ -83,7 +83,13 @@ export interface PresetConfig {
   timeResolution: PresetHeaderUnit;
   /** CSS px per tick (i.e. per `timeResolution` unit). */
   tickWidth: number;
-  /** Number of navigation units per period. Used by `navigate` and by the default tick count. */
+  /**
+   * Step size of one navigation period, expressed in the preset's navigation
+   * unit (e.g. `4` days for `dayAndHour`, `36` months for `monthAndYear`).
+   * Passed to `navigate` on next/previous jumps and to `getEndDate` to
+   * compute the visible range; also used as the CSS tick count when
+   * `getCssUnitCount` is not provided.
+   */
   unitCount: number;
   getStartDate: (
     adapter: TemporalAdapter,
@@ -95,9 +101,12 @@ export interface PresetConfig {
     unitCount: number,
   ) => TemporalSupportedObject;
   /**
-   * For presets where the number of CSS ticks across the visible range varies
-   * (e.g. `monthAndYear`, where the number of days depends on which months are
-   * displayed), returns the exact tick count to use for CSS width.
+   * Returns the exact number of CSS ticks for the visible range. Override
+   * `unitCount` whenever the grid width must differ from the navigation step:
+   * either because the count varies (e.g. `monthAndYear`, where days per
+   * month differ) or because it has to stay stable against runtime drift
+   * (e.g. `dayAndHour` pins it to `4 × 24` so the grid width does not shrink
+   * on DST days).
    */
   getCssUnitCount?: (
     adapter: TemporalAdapter,

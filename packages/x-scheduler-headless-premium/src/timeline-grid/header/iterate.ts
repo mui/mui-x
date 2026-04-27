@@ -23,6 +23,14 @@ export function iterate(
   rangeStart: TemporalSupportedObject,
   rangeEnd: TemporalSupportedObject,
 ): IteratedCell[] {
+  if (process.env.NODE_ENV !== 'production' && adapter.isBefore(rangeEnd, rangeStart)) {
+    throw new Error(
+      `MUI X Scheduler: TimelineGridHeader.iterate() received a range where rangeEnd is before rangeStart. ` +
+        `The iteration would silently produce an empty header, masking the misconfiguration. ` +
+        `Check the preset's \`getStartDate\` / \`getEndDate\` so they return ordered dates.`,
+    );
+  }
+
   const rangeEndExclusive = addUnit(adapter, startOf(adapter, rangeEnd, tickUnit), tickUnit, 1);
 
   const cells: IteratedCell[] = [];

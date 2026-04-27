@@ -150,6 +150,15 @@ describe('iterate()', () => {
       );
     });
 
+    it('should throw when rangeEnd is before rangeStart', () => {
+      const start = adapter.date('2025-07-31T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-01T00:00:00Z', 'default');
+
+      expect(() => iterate(adapter, 'day', 'day', start, end)).to.throw(
+        /rangeEnd is before rangeStart/,
+      );
+    });
+
     it('should throw when the cell count would exceed the 10k safety cap', () => {
       // Hour ticks across 2 years = 17,520 cells, well over the 10k cap.
       const start = adapter.date('2024-01-01T00:00:00Z', 'default');
