@@ -84,7 +84,6 @@ function Pagination() {
 
     return (
       <Button
-        aria-label={getItemAriaLabel(direction)}
         disabled={disabled}
         onClick={() => apiRef.current.setPage(targetPage)}
         onDragLeave={clearPageTurnTimeout}
