@@ -84,7 +84,7 @@
     "@mui/material": "catalog:",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "16.2.1",
-    "@octokit/plugin-retry": "8.0.3",
+    "@octokit/plugin-retry": "8.1.0",
     "@octokit/rest": "22.0.1",
     "@playwright/test": "catalog:",
     "@types/babel__core": "7.20.5",
