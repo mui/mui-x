@@ -129,23 +129,19 @@ describe('<EventTimelinePremiumHeader />', () => {
   });
 
   describe('`dayAndMonth` month row clamping', () => {
-    it('should size the first month row cell to the number of days remaining in the starting month', () => {
-      // visibleDate Jul 03 2025 → first day cell is Jul 3 (startOfDay). July has 31 days,
-      // so the first month cell spans Jul 3 through Jul 31 = 29 days.
+    it('should clamp the first and last month cells to the visible range', () => {
+      // visibleDate Jul 03 2025 → first day cell is Jul 3 (startOfDay). The 56-day window
+      // (8 weeks) ends on Aug 27, so the month row should produce exactly two cells:
+      //   - July: Jul 3 → Jul 31 = 29 days (clamped at the start)
+      //   - August: Aug 1 → Aug 27 = 27 days (clamped at the end)
       renderHeader({ preset: 'dayAndMonth' });
 
       const monthCells = document.querySelectorAll<HTMLElement>(
         `.${classes.headerCell}[data-unit="month"]`,
       );
-      expect(monthCells.length).to.be.greaterThan(1);
-      // Total span across all month cells must equal the 56-day visible range.
-      const total = Array.from(monthCells).reduce(
-        (sum, cell) => sum + Number(cell.style.getPropertyValue('--span')),
-        0,
-      );
-      expect(total).to.equal(8 * 7);
-      // First cell only contains the last 29 days of July.
+      expect(monthCells.length).to.equal(2);
       expect(Number(monthCells[0].style.getPropertyValue('--span'))).to.equal(29);
+      expect(Number(monthCells[1].style.getPropertyValue('--span'))).to.equal(27);
     });
   });
 
