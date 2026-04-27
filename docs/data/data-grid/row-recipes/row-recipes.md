@@ -53,7 +53,7 @@ You could use a [React portal](https://react.dev/reference/react-dom/createPorta
 
 ## Drag rows between pages while reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-By default, [row reordering](/x/react-data-grid/row-ordering/) only works with the rows rendered on the current page.
+By default, [row reordering](/x/react-data-grid/row-ordering/) requires both the dragged row and the drop target to be rendered on the same page.
 You can use a custom [pagination](/x/react-data-grid/components/#pagination) component to switch pages while a row is being dragged.
 
 The following demo listens to the `rowDragStart` and `rowDragEnd` events in a custom pagination component.
