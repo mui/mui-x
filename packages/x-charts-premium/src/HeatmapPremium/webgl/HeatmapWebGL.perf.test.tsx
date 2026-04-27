@@ -25,6 +25,17 @@ function buildColors(n: number) {
   return out;
 }
 
+function buildColorsBytes(n: number) {
+  const out = new Uint8Array(n * 4);
+  for (let i = 0; i < n; i += 1) {
+    out[i * 4] = 76;
+    out[i * 4 + 1] = 178;
+    out[i * 4 + 2] = 127;
+    out[i * 4 + 3] = 255;
+  }
+  return out;
+}
+
 function buildSaturations(n: number) {
   return new Float32Array(n);
 }
@@ -51,7 +62,7 @@ function generatePooledCenters(n: number, frame: number) {
   return centersPool.subarray(0, n * 2);
 }
 
-const cachedColors = buildColors(POINT_COUNT);
+const cachedColors = buildColorsBytes(POINT_COUNT);
 const cachedSaturations = buildSaturations(POINT_COUNT);
 
 type Counters = {

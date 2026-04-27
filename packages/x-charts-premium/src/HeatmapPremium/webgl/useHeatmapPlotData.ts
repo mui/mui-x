@@ -30,9 +30,10 @@ export function useHeatmapPlotData(
   const getHighlightState = store.use(selectorChartsHighlightStateCallback);
 
   /* Colors only change when series data or color scale changes. Cached so resize/highlight
-   * renders don't re-upload the colors buffer. */
+   * renders don't re-upload the colors buffer.
+   * Stored as Uint8 (1 byte per channel) — 4x less GPU traffic than Float32 RGBA. */
   const colors = React.useMemo(() => {
-    const out = new Float32Array(series.data.length * 4);
+    const out = new Uint8Array(series.data.length * 4);
     for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
       const value = series.data[dataIndex][2];
       const color = colorScale?.(value);
@@ -41,10 +42,10 @@ export function useHeatmapPlotData(
         continue;
       }
       const rgbColor = parseColor(color);
-      out[dataIndex * 4] = rgbColor[0];
-      out[dataIndex * 4 + 1] = rgbColor[1];
-      out[dataIndex * 4 + 2] = rgbColor[2];
-      out[dataIndex * 4 + 3] = 1.0;
+      out[dataIndex * 4] = rgbColor[0] * 255;
+      out[dataIndex * 4 + 1] = rgbColor[1] * 255;
+      out[dataIndex * 4 + 2] = rgbColor[2] * 255;
+      out[dataIndex * 4 + 3] = 255;
     }
     return out;
   }, [colorScale, series.data]);

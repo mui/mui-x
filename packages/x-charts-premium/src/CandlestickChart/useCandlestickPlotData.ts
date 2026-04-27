@@ -18,10 +18,12 @@ const HIGHLIGHT_BRIGHTNESS = 1.2;
 export interface CandlestickPlotData {
   candleCenters: Float32Array;
   candleHeights: Float32Array;
-  candleColors: Float32Array;
+  /* RGBA, 1 byte per channel; shader reads normalized [0, 1] floats. Uint8Clamped lets us
+   * apply the highlight brightness multiplier without manual saturation. */
+  candleColors: Uint8ClampedArray;
   wickCenters: Float32Array;
   wickHeights: Float32Array;
-  wickColors: Float32Array;
+  wickColors: Uint8ClampedArray;
 }
 
 type PositionsPool = {
@@ -55,35 +57,42 @@ export function useCandlestickPlotData(
   const colorGetter = React.useMemo(() => getColor(series, undefined), [series]);
 
   /* Colors only change when the series, color getter, or highlight state changes.
-   * Cache them so zoom-only renders return the same Float32Array refs and the GL upload
-   * short-circuit can skip re-uploading colors. */
+   * Cache them so zoom-only renders return the same Uint8ClampedArray refs and the
+   * GL upload short-circuit can skip re-uploading colors.
+   * `parseColor` returns floats in [0, 1]; we scale to bytes [0, 255]. Uint8Clamped
+   * rounds + clamps automatically, so brightness multiplications can't overflow. */
   const colors = React.useMemo(() => {
-    const candleColors = new Float32Array(series.data.length * 4);
-    const wickColors = new Float32Array(series.data.length * 2 * 4);
+    const candleColors = new Uint8ClampedArray(series.data.length * 4);
+    const wickColors = new Uint8ClampedArray(series.data.length * 2 * 4);
+
+    const wickR = wickColor[0] * 255;
+    const wickG = wickColor[1] * 255;
+    const wickB = wickColor[2] * 255;
+    const wickA = wickColor[3] * 255;
 
     for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
       const datum = series.data[dataIndex];
 
       if (datum === null) {
         /* Alpha 0 hides the candle and both wicks; src-alpha blending makes RGB irrelevant. */
-        candleColors[dataIndex * 4 + 3] = 0.0;
-        wickColors[dataIndex * 2 * 4 + 3] = 0.0;
-        wickColors[(dataIndex * 2 + 1) * 4 + 3] = 0.0;
+        candleColors[dataIndex * 4 + 3] = 0;
+        wickColors[dataIndex * 2 * 4 + 3] = 0;
+        wickColors[(dataIndex * 2 + 1) * 4 + 3] = 0;
         continue;
       }
 
       const candleColor = parseColor(colorGetter(dataIndex));
-      candleColors[dataIndex * 4] = candleColor[0];
-      candleColors[dataIndex * 4 + 1] = candleColor[1];
-      candleColors[dataIndex * 4 + 2] = candleColor[2];
-      candleColors[dataIndex * 4 + 3] = candleColor[3];
+      candleColors[dataIndex * 4] = candleColor[0] * 255;
+      candleColors[dataIndex * 4 + 1] = candleColor[1] * 255;
+      candleColors[dataIndex * 4 + 2] = candleColor[2] * 255;
+      candleColors[dataIndex * 4 + 3] = candleColor[3] * 255;
 
       for (let w = 0; w < 2; w += 1) {
         const wickIdx = (dataIndex * 2 + w) * 4;
-        wickColors[wickIdx] = wickColor[0];
-        wickColors[wickIdx + 1] = wickColor[1];
-        wickColors[wickIdx + 2] = wickColor[2];
-        wickColors[wickIdx + 3] = wickColor[3];
+        wickColors[wickIdx] = wickR;
+        wickColors[wickIdx + 1] = wickG;
+        wickColors[wickIdx + 2] = wickB;
+        wickColors[wickIdx + 3] = wickA;
       }
 
       const highlightState = getHighlightState({
@@ -94,20 +103,21 @@ export function useCandlestickPlotData(
 
       if (highlightState === 'highlighted') {
         /* Mimics CSS's filter: brightness(1.2): multiplies RGB by 1.2 without touching alpha. */
-        candleColors[dataIndex * 4] *= HIGHLIGHT_BRIGHTNESS;
-        candleColors[dataIndex * 4 + 1] *= HIGHLIGHT_BRIGHTNESS;
-        candleColors[dataIndex * 4 + 2] *= HIGHLIGHT_BRIGHTNESS;
+        candleColors[dataIndex * 4] = candleColors[dataIndex * 4] * HIGHLIGHT_BRIGHTNESS;
+        candleColors[dataIndex * 4 + 1] = candleColors[dataIndex * 4 + 1] * HIGHLIGHT_BRIGHTNESS;
+        candleColors[dataIndex * 4 + 2] = candleColors[dataIndex * 4 + 2] * HIGHLIGHT_BRIGHTNESS;
 
         for (let w = 0; w < 2; w += 1) {
           const wickIdx = (dataIndex * 2 + w) * 4;
-          wickColors[wickIdx] *= HIGHLIGHT_BRIGHTNESS;
-          wickColors[wickIdx + 1] *= HIGHLIGHT_BRIGHTNESS;
-          wickColors[wickIdx + 2] *= HIGHLIGHT_BRIGHTNESS;
+          wickColors[wickIdx] = wickColors[wickIdx] * HIGHLIGHT_BRIGHTNESS;
+          wickColors[wickIdx + 1] = wickColors[wickIdx + 1] * HIGHLIGHT_BRIGHTNESS;
+          wickColors[wickIdx + 2] = wickColors[wickIdx + 2] * HIGHLIGHT_BRIGHTNESS;
         }
       } else if (highlightState === 'faded') {
-        candleColors[dataIndex * 4 + 3] *= FADE_OPACITY;
+        candleColors[dataIndex * 4 + 3] = candleColors[dataIndex * 4 + 3] * FADE_OPACITY;
         for (let w = 0; w < 2; w += 1) {
-          wickColors[(dataIndex * 2 + w) * 4 + 3] *= FADE_OPACITY;
+          const aIdx = (dataIndex * 2 + w) * 4 + 3;
+          wickColors[aIdx] = wickColors[aIdx] * FADE_OPACITY;
         }
       }
     }

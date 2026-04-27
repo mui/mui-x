@@ -39,13 +39,24 @@ function buildColors(n: number) {
   return out;
 }
 
-function buildWickColors(n: number) {
-  const out = new Float32Array(n * 2 * 4);
+function buildColorsBytes(n: number) {
+  const out = new Uint8ClampedArray(n * 4);
+  for (let i = 0; i < n; i += 1) {
+    out[i * 4] = 51;
+    out[i * 4 + 1] = 153;
+    out[i * 4 + 2] = 204;
+    out[i * 4 + 3] = 255;
+  }
+  return out;
+}
+
+function buildWickColorsBytes(n: number) {
+  const out = new Uint8ClampedArray(n * 2 * 4);
   for (let i = 0; i < out.length; i += 4) {
-    out[i] = 1;
-    out[i + 1] = 1;
-    out[i + 2] = 1;
-    out[i + 3] = 1;
+    out[i] = 255;
+    out[i + 1] = 255;
+    out[i + 2] = 255;
+    out[i + 3] = 255;
   }
   return out;
 }
@@ -119,10 +130,10 @@ function generatePooledFrame(n: number, frame: number) {
   };
 }
 
-/* Cached colors: same Float32Array refs across all frames — the optimized program will
- * short-circuit color uploads when it sees the same identity twice in a row. */
-const cachedCandleColors = buildColors(POINT_COUNT);
-const cachedWickColors = buildWickColors(POINT_COUNT);
+/* Cached colors: same Uint8ClampedArray refs across all frames — the optimized program
+ * will short-circuit color uploads when it sees the same identity twice in a row. */
+const cachedCandleColors = buildColorsBytes(POINT_COUNT);
+const cachedWickColors = buildWickColorsBytes(POINT_COUNT);
 
 type Counters = {
   bufferData: number;

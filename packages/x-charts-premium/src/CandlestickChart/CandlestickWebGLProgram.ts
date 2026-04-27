@@ -83,7 +83,9 @@ export class CandlestickWebGLProgram {
 
     bindAttribute(gl, program, 'a_center', centers.buffer, 2, 1);
     bindAttribute(gl, program, 'a_height', heights.buffer, 1, 1);
-    bindAttribute(gl, program, 'a_color', colors.buffer, 4, 1);
+    /* Colors live in a Uint8(Clamped)Array — 1 byte per channel, normalized to [0, 1]
+     * in the shader. 4x less GPU traffic than Float32 RGBA. */
+    bindAttribute(gl, program, 'a_color', colors.buffer, 4, 1, gl.UNSIGNED_BYTE, true);
 
     gl.bindVertexArray(null);
 
@@ -118,7 +120,7 @@ export class CandlestickWebGLProgram {
 
     bindAttribute(gl, program, 'a_center', centers.buffer, 2, 1);
     bindAttribute(gl, program, 'a_height', heights.buffer, 1, 1);
-    bindAttribute(gl, program, 'a_wick_color', colors.buffer, 4, 1);
+    bindAttribute(gl, program, 'a_wick_color', colors.buffer, 4, 1, gl.UNSIGNED_BYTE, true);
 
     gl.bindVertexArray(null);
 
@@ -208,11 +210,13 @@ function bindAttribute(
   buffer: WebGLBuffer,
   size: number,
   divisor: number,
+  type: GLenum = gl.FLOAT,
+  normalized: boolean = false,
 ) {
   const location = gl.getAttribLocation(program, name);
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.enableVertexAttribArray(location);
-  gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
+  gl.vertexAttribPointer(location, size, type, normalized, 0, 0);
   if (divisor !== 0) {
     gl.vertexAttribDivisor(location, divisor);
   }

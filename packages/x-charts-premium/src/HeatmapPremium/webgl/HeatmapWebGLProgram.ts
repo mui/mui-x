@@ -16,7 +16,8 @@ const QUAD_VERTICES = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
 export interface HeatmapPlotData {
   centers: Float32Array;
-  colors: Float32Array;
+  /* RGBA, 1 byte per channel; shader reads normalized [0, 1] floats. */
+  colors: Uint8Array;
   saturations: Float32Array;
 }
 
@@ -91,7 +92,8 @@ export class HeatmapWebGLProgram {
 
     bindAttribute(gl, program, 'a_position', this.quadBuffer, 2, 0);
     bindAttribute(gl, program, 'a_center', this.centers.buffer, 2, 1);
-    bindAttribute(gl, program, 'a_color', this.colors.buffer, 4, 1);
+    /* Colors are uploaded as Uint8(Clamped)Array; shader sees normalized [0, 1] floats. */
+    bindAttribute(gl, program, 'a_color', this.colors.buffer, 4, 1, gl.UNSIGNED_BYTE, true);
     bindAttribute(gl, program, 'a_saturation', this.saturations.buffer, 1, 1);
 
     gl.bindVertexArray(null);
@@ -170,11 +172,13 @@ function bindAttribute(
   buffer: WebGLBuffer,
   size: number,
   divisor: number,
+  type: GLenum = gl.FLOAT,
+  normalized: boolean = false,
 ) {
   const location = gl.getAttribLocation(program, name);
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.enableVertexAttribArray(location);
-  gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
+  gl.vertexAttribPointer(location, size, type, normalized, 0, 0);
   if (divisor !== 0) {
     gl.vertexAttribDivisor(location, divisor);
   }
