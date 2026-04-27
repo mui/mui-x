@@ -83,8 +83,8 @@ describe('<EventTimelinePremiumHeader />', () => {
             // Guards against a formatter silently returning '' / undefined: every cell
             // must render some visible text so labels never disappear.
             expect((cell.textContent ?? '').trim().length).to.be.greaterThan(0);
-            // `data-index` must be contiguous and zero-based per row so virtualization /
-            // keyboard navigation can rely on the index addressing every cell once.
+            // `data-index` must be contiguous and zero-based per row so virtualization
+            // can rely on the index addressing every cell once.
             expect(cell.dataset.index).to.equal(String(expectedIndex));
           });
         });
