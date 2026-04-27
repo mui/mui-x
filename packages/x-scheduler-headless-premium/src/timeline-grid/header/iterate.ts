@@ -80,7 +80,11 @@ function startOf(
     case 'year':
       return adapter.startOfYear(date);
     default:
-      throw new Error(`MUI X Scheduler: Unsupported header unit ${unit}`);
+      throw new Error(
+        `MUI X Scheduler: Unsupported header unit "${unit}". ` +
+          `TimelineGridHeader cannot iterate cells for an unknown unit, so the header would render incorrectly. ` +
+          `Use one of: 'hour', 'day', 'week', 'month', 'year'.`,
+      );
   }
 }
 
@@ -102,7 +106,11 @@ function addUnit(
     case 'year':
       return adapter.addYears(date, amount);
     default:
-      throw new Error(`MUI X Scheduler: Unsupported header unit ${unit}`);
+      throw new Error(
+        `MUI X Scheduler: Unsupported header unit "${unit}". ` +
+          `TimelineGridHeader cannot iterate cells for an unknown unit, so the header would render incorrectly. ` +
+          `Use one of: 'hour', 'day', 'week', 'month', 'year'.`,
+      );
   }
 }
 
@@ -124,6 +132,10 @@ function differenceInUnits(
     case 'year':
       return adapter.differenceInYears(later, earlier);
     default:
-      throw new Error(`MUI X Scheduler: Unsupported header unit ${unit}`);
+      throw new Error(
+        `MUI X Scheduler: Unsupported header unit "${unit}". ` +
+          `TimelineGridHeader cannot iterate cells for an unknown unit, so the header would render incorrectly. ` +
+          `Use one of: 'hour', 'day', 'week', 'month', 'year'.`,
+      );
   }
 }

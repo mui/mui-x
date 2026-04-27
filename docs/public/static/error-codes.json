@@ -266,6 +266,7 @@
   "266": "MUI X Scheduler: `TimelineGridEventRowContext` is missing. <TimelineGrid.Event /> part must be placed within <TimelineGrid.EventRow />.",
   "267": "MUI X Scheduler: TimelineGridRootContext is missing. TimelineGrid parts must be placed within <TimelineGrid.Root />.",
   "268": "MUI X Scheduler: TimelineGridSubGridContext is missing. <TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be placed within <TimelineGrid.SubGrid />.",
-  "269": "MUI X Scheduler: Unsupported header unit %s",
-  "270": "MUI X Scheduler: useEventTimelinePremiumStyledContext must be used within EventTimelinePremiumStyledContext.Provider"
+  "269": "MUI X Charts: Radial bar series with id=\"%s\" has no data. The chart cannot render this series without data. Provide a data property to the series or use the dataset prop.",
+  "270": "MUI X Scheduler: Unsupported header unit \"%s\". TimelineGridHeader cannot iterate cells for an unknown unit, so the header would render incorrectly. Use one of: 'hour', 'day', 'week', 'month', 'year'.",
+  "271": "MUI X Scheduler: EventTimelinePremiumStyledContext is missing. `useEventTimelinePremiumStyledContext` cannot read the timeline styled context (classes, localeText, resourceColumnLabel) without a provider. Make sure the calling component is rendered inside <EventTimelinePremium />."
 }

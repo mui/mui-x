@@ -65,6 +65,7 @@ export * from './isDefined';
 export * from './getScale';
 export * from './stacking';
 export * from './getCurve';
+export * from './getSymbol';
 export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';
@@ -94,6 +95,7 @@ export * from '../context/ChartsSlotsContext';
 export * from '../models/seriesType/config';
 export * from '../models/seriesType/common';
 export * from '../models/seriesType/line';
+export * from '../models/seriesType/bar';
 
 export * from '../models/z-axis';
 export * from '../models/axis';
