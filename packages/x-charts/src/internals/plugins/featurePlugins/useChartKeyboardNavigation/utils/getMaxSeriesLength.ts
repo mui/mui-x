@@ -17,7 +17,11 @@ export function getMaxSeriesLength<OutSeriesType extends Exclude<ChartSeriesType
             return false;
           }
           return (
-            seriesItem.data.length > 0 && seriesItem.data.some((value: unknown) => value != null)
+            seriesItem.data.length > 0 &&
+            seriesItem.data.some(
+              (value: unknown) =>
+                value != null && !(typeof value === 'object' && 'hidden' in value && value.hidden),
+            )
           );
         })
         .map((seriesId: SeriesId) => seriesOfType.series[seriesId].data.length);

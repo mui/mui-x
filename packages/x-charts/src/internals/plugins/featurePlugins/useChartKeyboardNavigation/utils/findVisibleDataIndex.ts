@@ -33,9 +33,12 @@ export function findVisibleDataIndex({
     return null;
   }
 
-  const seriesData = processedSeries[type]?.series[seriesId]?.data as
-    | ReadonlyArray<unknown>
-    | undefined;
+  const seriesItem = processedSeries[type]?.series[seriesId];
+  if (seriesItem && 'hidden' in seriesItem && seriesItem.hidden) {
+    return null;
+  }
+
+  const seriesData = seriesItem?.data as ReadonlyArray<unknown> | undefined;
 
   const isIndexHidden = (idx: number): boolean => {
     if (!seriesData) {
