@@ -7,7 +7,6 @@ import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
-import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../../internals/utils/preset-utils';
 import { iterate } from './iterate';
 
 export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
@@ -27,10 +26,11 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const preset = useStore(store, eventTimelinePremiumPresetSelectors.preset);
-  const { start, end, headers } = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const { start, end, headers, timeResolution } = useStore(
+    store,
+    eventTimelinePremiumPresetSelectors.config,
+  );
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
-  const { timeResolution } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
 
   const children = headers.map((level, levelIndex) => {
     const cells = iterate(adapter, level.unit, timeResolution, start, end);
