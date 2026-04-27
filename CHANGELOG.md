@@ -31,30 +31,6 @@ The following team members contributed to this release:
 
 Same changes as in `@mui/x-date-pickers@8.28.4`.
 
-### Charts
-
-#### `@mui/x-charts@8.28.2`
-
-Internal changes.
-
-#### `@mui/x-charts-pro@8.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-charts@8.28.2`.
-
-#### `@mui/x-charts-premium@8.28.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
-
-Same changes as in `@mui/x-charts-pro@8.28.2`.
-
-### Tree View
-
-#### `@mui/x-tree-view@8.28.3`
-
-Internal changes.
-
-#### `@mui/x-tree-view-pro@8.28.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@8.28.3`.
-
 ### Codemod
 
 #### `@mui/x-codemod@8.27.0`
