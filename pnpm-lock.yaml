@@ -411,7 +411,7 @@ importers:
         specifier: 4.0.4
         version: 4.0.4
       pkg-pr-new:
-        specifier: ^0.0.66
+        specifier: 0.0.66
         version: 0.0.66
       playwright:
         specifier: 'catalog:'
