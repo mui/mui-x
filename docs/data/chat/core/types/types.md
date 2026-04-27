@@ -10,7 +10,7 @@ githubLabel: 'scope: chat'
 <p class="description">Extend the type system with app-specific metadata, typed tools, data parts, and custom message parts via module augmentation.</p>
 
 The core package uses [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) instead of generic props for type-safe customization.
-This means you declare your app-specific types once, and they flow through the entire stack — messages, stream chunks, selectors, hooks, and renderers.
+This means you declare your app-specific types once, and they flow through the entire stack—messages, stream chunks, selectors, hooks, and renderers.
 
 The following demo shows type augmentation in practice:
 
@@ -152,11 +152,11 @@ With this declaration in place:
 When you add entries to the registry interfaces, TypeScript merges them into the existing types at compile time.
 The effect flows through:
 
-1. **Entity types** — `ChatMessage.metadata`, `ChatUser.metadata`, `ChatConversation.metadata` gain the declared fields.
-2. **Stream chunks** — Tool and data chunks carry the registered input, output, and payload types.
-3. **Message parts** — `ChatMessagePart` union expands to include custom parts.
-4. **Hooks** — `useChat().messages` and `useMessage(id)` return messages with augmented types.
-5. **Renderers** — `useChatPartRenderer('ticket-summary')` returns a renderer typed for the custom part.
+1. **Entity types**: `ChatMessage.metadata`, `ChatUser.metadata`, `ChatConversation.metadata` gain the declared fields.
+2. **Stream chunks**: Tool and data chunks carry the registered input, output, and payload types.
+3. **Message parts**: `ChatMessagePart` union expands to include custom parts.
+4. **Hooks**: `useChat().messages` and `useMessage(id)` return messages with augmented types.
+5. **Renderers**: `useChatPartRenderer('ticket-summary')` returns a renderer typed for the custom part.
 
 No runtime code changes are needed. The augmentation is purely compile-time.
 
@@ -197,7 +197,9 @@ declare module '@mui/x-chat/types' {
 
 ### Multiple augmentation files
 
-You can split augmentations across multiple files. TypeScript merges all declarations for the same module. Just make sure each file is included in your `tsconfig`.
+You can split augmentations across multiple files.
+TypeScript merges all declarations for the same module.
+Just make sure each file is included in your `tsconfig`.
 
 ## See also
 

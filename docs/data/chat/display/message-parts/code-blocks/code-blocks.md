@@ -1,14 +1,14 @@
 ---
 productId: x-chat
-title: Code Blocks
+title: Code blocks
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatCodeBlock
 ---
 
-# Chat - Code Blocks
+# Chat - Code blocks
 
-<p class="description">Display code with a language label and copy-to-clipboard button using the <code>ChatCodeBlock</code> component.</p>
+<p class="description">Display code with a language label and copy-to-clipboard button using the ChatCodeBlock component.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -22,7 +22,8 @@ import { ChatCodeBlock } from '@mui/x-chat';
 
 ## Automatic rendering in chat
 
-When using `ChatBox`, any code fence in a markdown assistant message is automatically rendered as a `ChatCodeBlock`. No extra configuration is needed — the built-in `renderMarkdown` function emits `ChatCodeBlock` for every code fence it encounters.
+When using `ChatBox`, any code fence in a markdown assistant message is automatically rendered as a `ChatCodeBlock`.
+No extra configuration is needed—the built-in `renderMarkdown` function emits `ChatCodeBlock` for every code fence it encounters.
 
 ````text
 ```python
@@ -119,5 +120,5 @@ To customize how code fences render inside `ChatBox`, override `partProps.text.r
 
 ## See also
 
-- [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text part data model and markdown rendering
-- [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers
+- [Text and markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text part data model and markdown rendering
+- [Custom parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers

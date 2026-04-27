@@ -11,7 +11,7 @@ githubLabel: 'scope: chat'
 
 This demo demonstrates how to render the various message part types that the streaming protocol produces.
 Every assistant message has a `parts` array where each entry is a typed object.
-Core does not render these parts for you — you branch on `part.type` and render whatever you want.
+Core does not render these parts for you—you branch on `part.type` and render whatever you want.
 
 ## Key concepts
 
@@ -74,14 +74,14 @@ message.parts.map((part, index) => {
 
 Text and reasoning parts have an optional `state` field:
 
-- `'streaming'` — the part is still receiving deltas
-- `'done'` — the part is complete
+- `'streaming'`: the part is still receiving deltas
+- `'done'`: the part is complete
 
 Use this to show a typing indicator or pulsing cursor while content is arriving.
 
 ## Key takeaways
 
-- Message parts are typed data — you own the rendering completely
+- Message parts are typed data—you own the rendering completely
 - Branch on `part.type` in a switch statement for straightforward rendering
 - Use `part.state` on text and reasoning parts to show streaming indicators
 - For app-specific part types, register renderers via `partRenderers` or use `useChatPartRenderer()`

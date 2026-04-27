@@ -12,12 +12,12 @@ githubLabel: 'scope: chat'
 This demo focuses on collection synchronization through realtime events.
 Unlike the basic realtime demo (which covers typing, presence, and read state), this one demonstrates structural changes to the message and conversation lists:
 
-- `message-added` — a new message appears in the thread
-- `message-updated` — an existing message is modified
-- `message-removed` — a message is deleted from the thread
-- `conversation-added` — a new conversation appears in the sidebar
-- `conversation-updated` — a conversation title or metadata changes
-- `conversation-removed` — a conversation is deleted (active conversation resets if it matched)
+- `message-added`: a new message appears in the thread
+- `message-updated`: an existing message is modified
+- `message-removed`: a message is deleted from the thread
+- `conversation-added`: a new conversation appears in the sidebar
+- `conversation-updated`: a conversation title or metadata changes
+- `conversation-removed`: a conversation is deleted (active conversation resets if it matched)
 
 ## Key concepts
 
@@ -55,9 +55,9 @@ Your UI can respond by showing a placeholder or selecting the next conversation.
 ## Key takeaways
 
 - Collection events (`*-added`, `*-updated`, `*-removed`) drive structural changes to the store
-- The runtime handles normalization — adding, replacing, or removing records in the ID maps
+- The runtime handles normalization—adding, replacing, or removing records in the ID maps
 - Active conversation automatically resets when its conversation is removed
-- These events work alongside the streaming lifecycle — you can push messages while a stream is active
+- These events work alongside the streaming lifecycle—you can push messages while a stream is active
 
 ## See also
 

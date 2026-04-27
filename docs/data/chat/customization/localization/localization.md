@@ -8,11 +8,11 @@ components: ChatRoot
 
 # Chat - Localization
 
-<p class="description">Customize all user-facing strings in the chat UI using the <code>localeText</code> prop on <code>ChatRoot</code> or the <code>useChatLocaleText()</code> hook.</p>
+<p class="description">Customize all user-facing strings in the chat UI using the localeText prop on ChatRoot or the useChatLocaleText() hook.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Every user-facing string in the chat UI — placeholders, button labels, status messages, timestamps — is defined in a locale text object.
+Every user-facing string in the chat UI—placeholders, button labels, status messages, timestamps—is defined in a locale text object.
 You can override any string by passing a partial `localeText` object to `ChatBox`.
 
 ## Default locale
@@ -44,7 +44,7 @@ Unspecified keys fall back to the defaults:
 />
 ```
 
-## The `useChatLocaleText()` hook
+## Reading locale text in custom components
 
 Inside any descendant of `ChatBox`, use the `useChatLocaleText()` hook to read the current locale text:
 
@@ -165,4 +165,4 @@ const frenchLocale = {
 ## See also
 
 - [Styling](/x/react-chat/customization/styling/) for visual customization.
-- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing components that render localized text.
+- [Slots and composition](/x/react-chat/customization/slots-and-composition/) for replacing components that render localized text.

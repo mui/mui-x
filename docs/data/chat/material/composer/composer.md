@@ -105,7 +105,7 @@ The demo below mirrors the current composer value above the chat surface:
 
 {{"demo": "ComposerControlled.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## `useChatComposer()` hook
+## Accessing composer state directly
 
 For deeper control, the `useChatComposer()` hook provides direct access to the composer state:
 
@@ -138,7 +138,7 @@ The hook returns:
 | `submit`           | `() => Promise<void>`       | Submit the current draft      |
 | `isSubmitting`     | `boolean`                   | Whether a send is in progress |
 
-### ChatDraftAttachment
+### Draft attachment type
 
 The attachment type used by the composer:
 

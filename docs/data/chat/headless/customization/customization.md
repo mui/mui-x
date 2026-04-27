@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless customization
 
-<p class="description">Customize the headless primitives through slots, <code>slotProps</code>, and owner state while keeping the built-in structure and behavior.</p>
+<p class="description">Customize the headless primitives through slots, slotProps, and owner state while keeping the built-in structure and behavior.</p>
 
 {{"demo": "../examples/slot-customization/SlotCustomization.js", "hideToolbar": true}}
 
@@ -21,7 +21,7 @@ The main tools are:
 - `slotProps` to pass props into those replacements
 - owner state to style custom slots based on runtime-aware structural state
 
-## `slots`
+## Replacing slots
 
 Use `slots` when you want to replace the element or React component used for a specific region.
 
@@ -41,7 +41,7 @@ Examples:
 />
 ```
 
-## `slotProps`
+## Passing slot props
 
 Use `slotProps` when you want to keep the slot structure but add attributes, styling hooks, or local event behavior.
 

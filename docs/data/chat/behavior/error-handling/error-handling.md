@@ -13,9 +13,9 @@ components: ChatBox
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The chat runtime captures errors from adapters, streams, and history loading, and surfaces them through a unified error model.
-You do not need to catch errors inside adapter methods — the runtime handles them for you.
+You do not need to catch errors inside adapter methods—the runtime handles them for you.
 
-## The `ChatError` type
+## The error model
 
 Every error recorded by the runtime is represented as a `ChatError`:
 
@@ -49,10 +49,10 @@ interface ChatError {
 | `'render'`  | Error during component rendering. |
 | `'adapter'` | Generic adapter error.            |
 
-### `recoverable` vs `retryable`
+### Recoverable and retryable errors
 
-- **`recoverable`** — The runtime can potentially recover from this error automatically (for example, by reconnecting a dropped stream via `reconnectToStream()`).
-- **`retryable`** — The user can reasonably try the operation again (for example, re-sending a failed message).
+- **`recoverable`**: The runtime can potentially recover from this error automatically (for example, by reconnecting a dropped stream via `reconnectToStream()`).
+- **`retryable`**: The user can reasonably try the operation again (for example, re-sending a failed message).
 
 ## Error propagation
 
@@ -62,7 +62,7 @@ When an adapter method throws, the runtime:
 2. Surfaces it through `ChatBox`'s built-in error UI, `useChat().error`, and the `onError` callback.
 3. Marks the error `recoverable` when applicable (for example, stream disconnects) and `retryable` when the user can try again.
 
-## The `onError` callback
+## Handling errors at the application level
 
 Handle errors at the application level using the `onError` prop on `ChatBox`:
 
@@ -121,7 +121,7 @@ function RetryButton({ messageId }: { messageId: string }) {
 
 ## Error from adapter methods
 
-You do not need to wrap adapter methods in try/catch — the runtime handles all thrown errors.
+You do not need to wrap adapter methods in try/catch—the runtime handles all thrown errors.
 If you want to transform or enrich an error before the runtime sees it, throw a plain `Error` with a custom message.
 The runtime wraps it in a `ChatError` with source `'adapter'`:
 
@@ -150,7 +150,7 @@ If a stream closes without a terminal chunk (`finish` or `abort`), the runtime:
 3. Calls `onError` and `onFinish` with `isDisconnect: true`.
 4. If `reconnectToStream()` is implemented on the adapter, attempts to resume the stream.
 
-See [Streaming—Reconnecting to streams](/x/react-chat/behavior/streaming/#reconnecting-to-streams) for implementation details.
+See [Reconnecting to streams](/x/react-chat/behavior/streaming/#reconnecting-to-streams) for implementation details.
 
 ## Message status and errors
 

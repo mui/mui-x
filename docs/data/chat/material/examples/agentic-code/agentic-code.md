@@ -16,11 +16,11 @@ githubLabel: 'scope: chat'
 The demo has three pre-populated conversations, each showcasing a different aspect of the
 agentic loop:
 
-- **Fix test failures** — a complete multi-step task: `glob` finds the files, `read_file`
+- **Fix test failures**: a complete multi-step task: `glob` finds the files, `read_file`
   inspects the broken import, `edit_file` patches it, and `bash` confirms the tests pass.
-- **Add dark mode toggle** — `read_file` inspects the existing component, `write_file`
+- **Add dark mode toggle**: `read_file` inspects the existing component, `write_file`
   creates a new one, then `bash` verifies the build.
-- **Clean build artifacts** — a `bash` command in the `approval-requested` state. Click
+- **Clean build artifacts**: a `bash` command in the `approval-requested` state. Click
   **Approve** or **Deny** to see the state transition live.
 
 Send any new message in any conversation to watch the scripted agentic stream play out from
@@ -118,8 +118,8 @@ renders as a single-line process trace: tool name, a dotted rule, and a state ba
 
 ## See also
 
-- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) — two-pane inbox layout
-- [Split layout](/x/react-chat/material/examples/split-layout/) — place message list and composer in separate DOM zones
+- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/): two-pane inbox layout
+- [Split layout](/x/react-chat/material/examples/split-layout/): place message list and composer in separate DOM zones
 
 ## API
 

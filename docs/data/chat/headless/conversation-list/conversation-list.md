@@ -27,7 +27,7 @@ The conversation list surface is built from:
 - `ConversationList.Timestamp`
 - `ConversationList.UnreadBadge`
 
-## `ConversationList.Root`
+## List root behavior
 
 `ConversationList.Root` reads the current conversation collection from chat state and renders a `listbox` with one `option` per conversation.
 

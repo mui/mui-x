@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">Replicate the look and feel of an Intercom-style chat widget using headless slot customization.</p>
 
-This demo shows how slot replacement can transform the default chat layout into a compact support-widget appearance — rounded corners, branded header, bubble-style messages, and a "Powered by" footer.
+This demo shows how slot replacement can transform the default chat layout into a compact support-widget appearance: rounded corners, branded header, bubble-style messages, and a "Powered by" footer.
 
 - widget-like container with a fixed size and rounded corners
 - custom header with agent info, back, and close buttons

@@ -52,7 +52,7 @@ When a single message updates during streaming:
 - `useMessage(id)` on the updated row triggers a re-render
 - All other rows stay untouched
 
-This means that for a thread with 100 messages where one is streaming, only one component re-renders per delta — not 100.
+This means that for a thread with 100 messages where one is streaming, only one component re-renders per delta—not 100.
 
 ### Conversation-level selectors
 

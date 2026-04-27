@@ -9,13 +9,13 @@ githubLabel: 'scope: chat'
 
 <p class="description">Replicate a ChatGPT-style two-pane layout with a sidebar conversation list and a clean message area.</p>
 
-This demo shows how the same headless primitives can be customized to produce a full-page chat application layout similar to ChatGPT — dark theme, sidebar with conversation history, no message bubbles, and a centered composer.
+This demo shows how the same headless primitives can be customized to produce a full-page chat application layout similar to ChatGPT: dark theme, sidebar with conversation history, no message bubbles, and a centered composer.
 
 - Two-pane layout with a fixed-width dark sidebar and a main thread area
 - Conversation list with title only, unread blue dot indicator, and a 3-dot menu on hover
 - User messages in rounded bubbles aligned to the right, assistant messages as flat text on the left
 - Assistant avatar (sparkle icon), no avatar for user messages
-- No sender names or timestamps — clean, minimal message display
+- No sender names or timestamps: clean, minimal message display
 - Centered content column with a maximum width and a pill-shaped composer
 
 {{"demo": "ChatGptStyleChat.js", "bg": "inline"}}

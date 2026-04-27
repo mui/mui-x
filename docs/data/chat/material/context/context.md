@@ -14,7 +14,7 @@ Every chat component reads its data — messages, conversations, composer state,
 
 When you need more control — sharing state with components outside `ChatBox`, controlling the message list externally, or mounting multiple independent chat instances — you work with `ChatProvider` explicitly.
 
-## ChatBox vs. ChatProvider
+## Choosing between ChatBox and ChatProvider
 
 ### ChatBox (all-in-one)
 

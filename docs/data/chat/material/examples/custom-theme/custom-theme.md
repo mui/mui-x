@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Custom theme
 
-<p class="description">Retheme the entire chat surface by wrapping <code>ChatBox</code> in a <code>ThemeProvider</code> with custom palette and shape values.</p>
+<p class="description">Retheme the entire chat surface by wrapping ChatBox in a ThemeProvider with custom palette and shape values.</p>
 
 `ChatBox` inherits its visual design from the active Material UI theme.
 This demo shows how a single `createTheme` call changes bubble colors, border radius, and typography across the entire surface.
@@ -15,7 +15,7 @@ This demo shows how a single `createTheme` call changes bubble colors, border ra
 - `ThemeProvider` with a custom `palette.primary` (teal) applied to user message bubbles
 - Custom `shape.borderRadius` reflected in bubble and container rounding
 - Custom `typography.fontFamily` propagated to all text elements
-- No extra CSS or style overrides needed — the theme drives everything
+- No extra CSS or style overrides needed: the theme drives everything
 
 {{"demo": "CustomTheme.js", "bg": "inline"}}
 

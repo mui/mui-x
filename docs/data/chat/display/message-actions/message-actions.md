@@ -1,18 +1,19 @@
 ---
 productId: x-chat
-title: Message Actions
+title: Message actions
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageActions
 ---
 
-# Chat - Message Actions
+# Chat - Message actions
 
 <p class="description">Add hover-triggered action buttons to messages for copy, edit, delete, and custom operations.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`ChatMessageActions` renders an action bar that appears when the user hovers over a message or focuses within it. The actions area is positioned in the message grid and transitions from hidden to visible using an opacity animation.
+`ChatMessageActions` renders an action bar that appears when the user hovers over a message or focuses within it.
+The actions area is positioned in the message grid and transitions from hidden to visible using an opacity animation.
 
 ## Import
 
@@ -56,7 +57,8 @@ ChatMessage (grid)
 
 ## Adding custom actions
 
-The `MessageActions` primitive renders a `<div>` (or custom slot element) that you populate with your own action buttons. Override the actions slot through `ChatBox`:
+The `MessageActions` primitive renders a `<div>` (or custom slot element) that you populate with your own action buttons.
+Override the actions slot through `ChatBox`:
 
 {{"demo": "BasicMessageActions.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -86,4 +88,4 @@ The `MessageActions` component receives the message context as owner state, whic
 
 ## See also
 
-- [Message Appearance](/x/react-chat/display/message-appearance/) for the overall message layout and visual presentation
+- [Message appearance](/x/react-chat/display/message-appearance/) for the overall message layout and visual presentation

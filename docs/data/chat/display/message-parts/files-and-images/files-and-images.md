@@ -1,18 +1,20 @@
 ---
 productId: x-chat
-title: Files & Images
+title: Files and images
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent
 ---
 
-# Chat - Files & Images
+# Chat - Files and images
 
-<p class="description">Display file attachments and inline image previews using the <code>ChatFileMessagePart</code> type.</p>
+<p class="description">Display file attachments and inline image previews using the ChatFileMessagePart type.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-File parts represent file attachments within a message. When the file is an image, an inline preview is rendered. For other file types, a compact chip with a document icon and filename is displayed.
+File parts represent file attachments within a message.
+When the file is an image, an inline preview is rendered.
+For other file types, a compact chip with a document icon and filename is displayed.
 
 ## The file part data model
 
@@ -62,8 +64,8 @@ const message: ChatMessage = {
 
 The built-in file part renderer automatically detects images by checking whether `mediaType` starts with `'image/'`:
 
-- **Images** — rendered as an `<img>` element with inline preview, wrapped in a link to the full-size resource.
-- **Other files** — rendered as a compact chip with a document icon and the filename (or URL as fallback), linking to the file.
+- **Images**: rendered as an `<img>` element with inline preview, wrapped in a link to the full-size resource.
+- **Other files**: rendered as a compact chip with a document icon and the filename (or URL as fallback), linking to the file.
 
 Both variants open the file in a new tab (`target="_blank"`) when clicked.
 
@@ -128,6 +130,6 @@ The `FilePart` component computes an owner state that slot components can use fo
 
 ## See also
 
-- [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the most common part type
-- [Sources & Citations](/x/react-chat/display/message-parts/sources-and-citations/) for reference links in RAG applications
-- [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom file viewers
+- [Text and markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the most common part type
+- [Sources and citations](/x/react-chat/display/message-parts/sources-and-citations/) for reference links in RAG applications
+- [Custom parts](/x/react-chat/display/message-parts/custom-parts/) for building custom file viewers

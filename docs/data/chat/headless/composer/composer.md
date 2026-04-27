@@ -46,7 +46,7 @@ function ThreadComposer() {
 
 This pattern gives you a working structural composer while leaving every visual decision in user land.
 
-## `Composer.Root`
+## Building the form wrapper
 
 `Composer.Root` is a structural form wrapper around the headless composer state.
 
@@ -58,7 +58,7 @@ It owns:
 
 That makes it the place to style global draft states such as empty, busy, or attachment-heavy composers.
 
-## `Composer.TextArea`
+## Handling text input
 
 `Composer.TextArea` is a textarea-based primitive that already handles the runtime-specific behaviors that usually make chat inputs fiddly to implement.
 
@@ -90,7 +90,7 @@ That means East Asian IME flows stay intact without requiring extra app-level bo
 
 If you replace the root slot, preserve the textarea-like behavior unless you are intentionally building a different draft surface.
 
-## `Composer.AttachButton`
+## Attaching files
 
 `Composer.AttachButton` pairs a visible trigger with a hidden file input.
 
@@ -116,7 +116,7 @@ The primitive exposes both `root` and `input` slots, which is useful when you wa
 />
 ```
 
-## `Composer.HelperText`
+## Showing helper text and errors
 
 `Composer.HelperText` is the default place for draft-level status and error messaging.
 
@@ -135,7 +135,7 @@ That makes it a good structural slot for validation copy, transport errors, and 
 
 If you omit children, the component falls back to the active runtime error text and returns `null` when there is nothing to show.
 
-## `Composer.SendButton`
+## Submitting the draft
 
 `Composer.SendButton` is a submit button that understands composer state.
 

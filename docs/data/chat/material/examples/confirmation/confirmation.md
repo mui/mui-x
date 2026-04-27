@@ -7,12 +7,12 @@ githubLabel: 'scope: chat'
 
 # Chat - Confirmation
 
-<p class="description">Display a prominent human-in-the-loop checkpoint before the agent takes an irreversible action using <code>ChatConfirmation</code>.</p>
+<p class="description">Display a prominent human-in-the-loop checkpoint before the agent takes an irreversible action using ChatConfirmation.</p>
 
 Click **Delete files** or **Keep files** to see the result.
 
 - `ChatConfirmation` renders as a prominent warning card with a message and two action buttons
-- The card is owned by the consumer via `React.useState` — show it when the agent requests confirmation, hide it after the user responds
+- The card is owned by the consumer via `React.useState`: show it when the agent requests confirmation, hide it after the user responds
 - Default labels are `'Confirm'` and `'Cancel'`; override them with `confirmLabel` and `cancelLabel`
 
 {{"demo": "Confirmation.js", "bg": "inline"}}

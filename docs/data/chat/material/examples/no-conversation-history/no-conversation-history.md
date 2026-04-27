@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - No conversation history
 
-<p class="description"><code>ChatBox</code> hides the conversation list when neither the adapter nor a prop supplies conversation data.</p>
+<p class="description">ChatBox hides the conversation list when neither the adapter nor a prop supplies conversation data.</p>
 
 {{"demo": "NoConversationHistory.js", "bg": "inline"}}
 
@@ -17,8 +17,8 @@ githubLabel: 'scope: chat'
 
 There are exactly two ways to populate that array:
 
-1. **Controlled or uncontrolled state** — pass `conversations` / `initialConversations` props to `ChatBox`.
-2. **Adapter** — implement `listConversations?()` on the adapter so `ChatBox` can fetch history from a backend.
+1. **Controlled or uncontrolled state**: pass `conversations` or `initialConversations` props to `ChatBox`.
+2. **Adapter**: implement `listConversations?()` on the adapter so `ChatBox` can fetch history from a backend.
 
 When neither is present, the array stays empty and `ChatBox` skips rendering the list panel entirely. The thread fills the full width automatically — no extra configuration needed.
 

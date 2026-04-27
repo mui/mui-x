@@ -8,7 +8,7 @@ components: ChatBox
 
 # Chat - Quickstart
 
-<p class="description">Install the MUI X Chat package and start building your React chat interface.</p>
+<p class="description">Install the package and start building your React chat interface.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -34,7 +34,7 @@ yarn add @mui/x-chat
 
 ### Peer dependencies
 
-#### Material UI
+#### Material UI
 
 The Chat package has a peer dependency on `@mui/material`.
 If it is not already in your project, install it now:
@@ -68,7 +68,7 @@ yarn add @mui/material @emotion/react @emotion/styled
 },
 ```
 
-## Rendering a ChatBox
+## Rendering your first chat
 
 Import `ChatBox` and wire it to an adapter.
 The adapter implements `sendMessage` and returns a streaming response:
@@ -99,10 +99,10 @@ export default function App() {
 }
 ```
 
-`ChatBox` renders a full chat surface — conversation list, thread header, message log, and composer — in a single component.
-All visual styles are derived from your active Material UI theme.
+`ChatBox` renders a full chat surface—conversation list, thread header, message log, and composer—in a single component.
+All visual styles are derived from your active Material UI theme.
 
-Only `adapter` is required — it must implement `sendMessage`.
+Only `adapter` is required—it must implement `sendMessage`.
 `initialConversations` and `initialActiveConversationId` are optional conveniences that pre-populate the conversation list on first render.
 Every other prop is optional.
 
@@ -146,7 +146,7 @@ const theme = createTheme({
 ### Feature availability
 
 :::info
-MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
+MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
 See [Licensing](/x/introduction/licensing/) for details.
 :::
 
@@ -156,7 +156,7 @@ All documentation for Community components and features also applies to their Pr
 
 ## Next steps
 
-- [ChatBox](/x/react-chat/basics/chatbox/) — learn about the ChatBox component, its props, and architecture
-- [Customization](/x/react-chat/customization/styling/) — theme overrides, sx, slots, and CSS class names
-- [Demos](/x/react-chat/demos/ai-assistant/) — end-to-end patterns
-- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) — structural composition primitives and slot overrides
+- [ChatBox](/x/react-chat/basics/chatbox/): learn about the ChatBox component, its props, and architecture
+- [Customization](/x/react-chat/customization/styling/): theme overrides, sx, slots, and CSS class names
+- [Demos](/x/react-chat/demos/ai-assistant/): end-to-end patterns
+- [Slots and composition](/x/react-chat/customization/slots-and-composition/): structural composition primitives and slot overrides

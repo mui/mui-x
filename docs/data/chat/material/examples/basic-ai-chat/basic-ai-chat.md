@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Basic AI chat
 
-<p class="description">The smallest working <code>ChatBox</code> setup: an adapter, a conversation, and an initial message.</p>
+<p class="description">The smallest working ChatBox setup: an adapter, a conversation, and an initial message.</p>
 
 This demo shows the minimum required props to render a styled, interactive chat surface using `@mui/x-chat`.
 

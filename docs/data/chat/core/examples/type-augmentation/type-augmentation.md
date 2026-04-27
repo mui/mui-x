@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Type augmentation
 
-<p class="description">Use TypeScript module augmentation to add app-specific metadata, typed tools, typed <code>data-*</code> parts, and custom message parts to the core runtime.</p>
+<p class="description">Use TypeScript module augmentation to add app-specific metadata, typed tools, typed data-* parts, and custom message parts to the core runtime.</p>
 
 The core layer does not use provider props for type overrides.
 Instead, extend `@mui/x-chat/types` with [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
@@ -92,7 +92,7 @@ For the runtime-specific approval flow, see [Tool approval and renderers](/x/rea
 
 ## Key takeaways
 
-- Module augmentation is the core package's type-extension model — no provider props needed
+- Module augmentation is the core package's type-extension model—no provider props needed
 - Types propagate through messages, stream chunks, selectors, hooks, and renderers at compile time
 - Six registry interfaces cover metadata, tools, data parts, and custom message parts
 - Custom renderers pair naturally with custom part types through `partRenderers` and `useChatPartRenderer()`

@@ -71,7 +71,7 @@ const { setActiveConversation } = useChat();
 
 ## Key takeaways
 
-- `listConversations()` and `listMessages()` are optional adapter methods — the runtime skips them if not implemented
+- `listConversations()` and `listMessages()` are optional adapter methods—the runtime skips them if not implemented
 - History pagination is driven by cursors and the `hasMoreHistory` flag
 - Switching conversations triggers automatic thread loading through the adapter
 - New messages can still be sent and streamed within a loaded thread

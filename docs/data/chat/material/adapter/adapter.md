@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Adapter
 
-<p class="description">Connect <code>ChatBox</code> to any backend by implementing the <code>ChatAdapter</code> interface and passing it to the <code>adapter</code> prop.</p>
+<p class="description">Connect ChatBox to any backend by implementing the ChatAdapter interface and passing it to the adapter prop.</p>
 
 `ChatBox` renders a fully styled chat surface, but it knows nothing about your backend on its own.
 The adapter is the single object that bridges them.
@@ -42,7 +42,7 @@ export default function App() {
 The runtime handles streaming, message normalization, error surfacing, and state updates.
 Your adapter only needs to know how to talk to your backend.
 
-## The `ChatAdapter` interface
+## The adapter interface
 
 The full interface is generic over your pagination cursor type.
 The default cursor type is `string`, which covers the majority of REST and cursor-based APIs:
@@ -79,7 +79,7 @@ interface ChatAdapter<Cursor = string> {
 Only `sendMessage` is required.
 Every other method is optional and incrementally adopted — start with just `sendMessage` and add methods as your product grows.
 
-## Required: `sendMessage`
+## Sending a message (required)
 
 `sendMessage` is the heart of the adapter.
 It is called every time a user submits a message in the composer.
@@ -145,7 +145,7 @@ If your backend requires explicit cancellation (for example, sending a separate 
 The optional methods are listed roughly in the order you are likely to add them.
 None are required — the runtime detects which methods exist and activates the corresponding features automatically.
 
-### `listConversations(input?)`
+### Loading conversations
 
 Implement this to populate the conversation sidebar when `ChatBox` mounts.
 The runtime calls it once on startup, before any user interaction.
@@ -173,7 +173,7 @@ async listConversations() {
 },
 ```
 
-### `listMessages(input)`
+### Loading message history
 
 Implement this to load message history when the user opens a conversation.
 The runtime calls it whenever `activeConversationId` changes to a conversation that has no messages in the store yet.
@@ -203,7 +203,7 @@ async listMessages({ conversationId, cursor }) {
 
 When `hasMore` is `true`, `ChatBox` shows a "Load earlier messages" control that calls `listMessages` again with the previous cursor.
 
-### `reconnectToStream(input)`
+### Reconnecting to a stream
 
 Implement this to resume an interrupted stream — for example, when an SSE connection drops mid-response.
 The runtime calls it automatically after detecting a disconnected stream.
@@ -233,7 +233,7 @@ async reconnectToStream({ conversationId, messageId, signal }) {
 },
 ```
 
-### `setTyping(input)`
+### Sending typing indicators
 
 Implement this to send a typing indicator to your backend when the user is composing a message.
 The runtime calls it when the composer value changes from empty to non-empty (and vice versa).
@@ -256,7 +256,7 @@ async setTyping({ conversationId, isTyping }) {
 
 To receive typing indicators from other users in the UI, implement `subscribe()` and emit `typing` events through the `onEvent` callback.
 
-### `markRead(input)`
+### Marking messages as read
 
 Implement this to signal to your backend that the user has seen a conversation or a specific message.
 The runtime does not call this automatically — call `adapter.markRead()` directly from your own UI event handler.
@@ -268,7 +268,7 @@ interface ChatMarkReadInput {
 }
 ```
 
-### `subscribe(input)`
+### Subscribing to realtime events
 
 Implement this to receive real-time events pushed from your backend — new messages, typing indicators, read receipts, or conversation updates.
 The runtime calls `subscribe()` on mount and invokes the returned cleanup function on unmount.
@@ -302,7 +302,7 @@ async subscribe({ onEvent }) {
 
 For the full list of realtime event types, see the realtime events documentation.
 
-### `addToolApprovalResponse(input)`
+### Responding to tool approval requests
 
 Implement this when your backend supports human-in-the-loop tool confirmation.
 The runtime calls it when the user approves or denies a tool call that was flagged with a `tool-approval-request` stream chunk.
@@ -324,7 +324,7 @@ async addToolApprovalResponse({ id, approved, reason }) {
 },
 ```
 
-### `stop()`
+### Stopping the stream
 
 Implement this when aborting the `signal` is not sufficient for server-side cleanup.
 The runtime calls `stop()` at the same moment the abort signal fires.

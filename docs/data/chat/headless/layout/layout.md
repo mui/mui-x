@@ -7,11 +7,11 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless layout
 
-<p class="description">Use <code>Chat.Root</code> and <code>Chat.Layout</code> to define the main chat shell and split the interface into conversation and thread panes.</p>
+<p class="description">Use Chat.Root and Chat.Layout to define the main chat shell and split the interface into conversation and thread panes.</p>
 
 {{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js", "hideToolbar": true}}
 
-## `Chat.Root`
+## Configuring the chat root
 
 `Chat.Root` wraps `ChatProvider` and exposes a root slot for the outer container.
 It accepts the same runtime props as the headless provider, then renders your chat surface inside a structural root element.
@@ -33,7 +33,7 @@ Because `Chat.Root` forwards the headless provider props, it can own:
 
 That keeps runtime setup close to the structural entry point without moving structural guidance into the headless docs.
 
-## `Chat.Layout`
+## Managing the pane layout
 
 `Chat.Layout` is the pane manager for the headless layer.
 It renders a root plus separate pane slots for conversations and the active thread.

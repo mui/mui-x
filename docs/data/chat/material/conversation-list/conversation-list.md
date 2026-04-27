@@ -55,11 +55,11 @@ All visual slots are owned by a single `ChatConversationList` instance. You do n
 
 Because the Material UI layer fills all slot defaults at instantiation, overriding a single slot only affects that region without disturbing the others.
 
-## ownerState and how state flows
+## Owner state and how it flows
 
 The item and all its sub-slots receive an `ownerState` prop that carries the current row's interaction state alongside the full conversation object.
 
-### Item ownerState
+### Item owner state
 
 | Field          | Type               | Description                            |
 | :------------- | :----------------- | :------------------------------------- |
@@ -72,7 +72,7 @@ The `selected` flag drives the row background (`palette.action.selected`). The `
 
 Because the full `conversation` object is included, custom slot components can directly read fields such as `conversation.title`, `conversation.metadata`, `conversation.unreadCount`, and `conversation.lastMessageAt` without additional selectors.
 
-### Root ownerState
+### Root owner state
 
 | Field                  | Type                  | Description                        |
 | :--------------------- | :-------------------- | :--------------------------------- |

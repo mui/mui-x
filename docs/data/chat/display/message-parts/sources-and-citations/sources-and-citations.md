@@ -1,18 +1,19 @@
 ---
 productId: x-chat
-title: Sources & Citations
+title: Sources and citations
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent, ChatMessageSource, ChatMessageSources
 ---
 
-# Chat - Sources & Citations
+# Chat - Sources and citations
 
 <p class="description">Display reference links and document excerpts for retrieval-augmented generation (RAG) applications using source parts.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Source parts allow AI assistants to cite their sources. Two part types cover the common citation patterns: URL references and document excerpts.
+Source parts allow AI assistants to cite their sources.
+Two part types cover the common citation patterns: URL references and document excerpts.
 
 ## Source URL parts
 
@@ -34,7 +35,8 @@ interface ChatSourceUrlMessagePart {
 | `url`      | `string`       | URL of the source                          |
 | `title`    | `string`       | Optional display title (falls back to URL) |
 
-The default renderer displays an external link icon next to a clickable link that opens in a new tab. The link text shows the `title` when available, otherwise the raw `url`.
+The default renderer displays an external link icon next to a clickable link that opens in a new tab.
+The link text shows the `title` when available, otherwise the raw `url`.
 
 ### Rendering
 
@@ -101,7 +103,7 @@ The `SourceDocumentPart` component exposes three slots:
 
 ## Streaming
 
-Source parts arrive as single chunks — they are not delivered incrementally:
+Source parts arrive as single chunks—they are not delivered incrementally:
 
 ```ts
 // URL source chunk
@@ -152,5 +154,5 @@ For fully custom source rendering, register a custom renderer through `partRende
 
 ## See also
 
-- [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text content that references sources
-- [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building fully custom citation UI
+- [Text and markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text content that references sources
+- [Custom parts](/x/react-chat/display/message-parts/custom-parts/) for building fully custom citation UI

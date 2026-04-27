@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Minimal core chat
 
-<p class="description">Start with the smallest working <code>ChatProvider</code> and <code>useChat()</code> setup.</p>
+<p class="description">Start with the smallest working ChatProvider and useChat() setup.</p>
 
 This demo keeps the UI intentionally small to demonstrate the core pattern:
 
@@ -16,7 +16,7 @@ This demo keeps the UI intentionally small to demonstrate the core pattern:
 - a plain input and button trigger `sendMessage()`
 - the assistant response streams back through the adapter
 
-Everything else — layout, styling, message rendering — is plain React with no framework opinions.
+Everything else—layout, styling, message rendering—is plain React with no framework opinions.
 
 ## Key concepts
 
@@ -63,9 +63,9 @@ const { messages, sendMessage, isStreaming } = useChat();
 
 ## Key takeaways
 
-- The adapter is the only backend integration point — the runtime handles everything else
+- The adapter is the only backend integration point—the runtime handles everything else
 - `useChat()` provides both state and actions in a single hook
-- No CSS, no components, no design system required — core is pure runtime
+- No CSS, no components, no design system required—core is pure runtime
 
 ## See also
 

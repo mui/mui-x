@@ -19,7 +19,7 @@ The conversation sidebar is rendered automatically when more than one conversati
 
 {{"demo": "MultiConversation.js", "bg": "inline"}}
 
-## Controlled vs. uncontrolled conversations
+## Controlled and uncontrolled conversations
 
 This demo uses **controlled state** so each conversation keeps its own message history:
 

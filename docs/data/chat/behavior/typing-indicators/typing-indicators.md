@@ -19,13 +19,13 @@ The feature connects the adapter's `setTyping()` method (outbound) with realtime
 
 Typing indicators involve two directions of communication:
 
-1. **Outbound** — When the local user types in the composer, your code calls the adapter's `setTyping()` method to notify your backend.
-2. **Inbound** — When other users type, your backend pushes `typing` events through the adapter's `subscribe()` method, and the runtime updates the store.
+1. **Outbound**: When the local user types in the composer, your code calls the adapter's `setTyping()` method to notify your backend.
+2. **Inbound**: When other users type, your backend pushes `typing` events through the adapter's `subscribe()` method, and the runtime updates the store.
 
 ### Sending typing state
 
 Implement `setTyping()` on your adapter to send typing indicators to your backend.
-The runtime does **not** call `setTyping()` automatically — you must wire it up yourself, for example by listening to `onChange` on the composer text area:
+The runtime does **not** call `setTyping()` automatically—you must wire it up yourself, for example by listening to `onChange` on the composer text area:
 
 ```tsx
 async setTyping({ conversationId, isTyping }) {
@@ -56,7 +56,7 @@ subscribe({ onEvent }) {
 
 The runtime tracks typing state per conversation in the store: `typingByConversation[conversationId][userId]`.
 
-## The `TypingIndicator` component
+## Displaying typing state in the UI
 
 The `TypingIndicator` primitive reads typing state for the active conversation and resolves display names from:
 

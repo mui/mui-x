@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless examples
 
-<p class="description">Demo-first patterns for building chat interfaces with <code>@mui/x-chat/headless</code> structural primitives.</p>
+<p class="description">Demo-first patterns for building chat interfaces with @mui/x-chat/headless structural primitives.</p>
 
 These demos focus on end-to-end composition patterns rather than isolated component references.
 Each demo stays inside the headless layer: the runtime comes from `@mui/x-chat/headless`, but the learning surface is the structural component model exposed by `@mui/x-chat/headless`.

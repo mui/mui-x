@@ -1,18 +1,19 @@
 ---
 productId: x-chat
-title: Custom Parts
+title: Custom parts
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent
 ---
 
-# Chat - Custom Parts
+# Chat - Custom parts
 
-<p class="description">Extend the message part system with app-specific content types using <code>ChatDataMessagePart</code>, the type registry, and custom renderers.</p>
+<p class="description">Extend the message part system with app-specific content types using ChatDataMessagePart, the type registry, and custom renderers.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The built-in part types (text, file, source-url, source-document, tool) cover common chat patterns. When your application needs domain-specific content — ticket cards, approval forms, charts, or product previews — use the extensibility points described on this page.
+The built-in part types (text, file, source-url, source-document, tool) cover common chat patterns.
+When your application needs domain-specific content—ticket cards, approval forms, charts, or product previews—use the extensibility points described on this page.
 
 ## Data parts
 
@@ -70,7 +71,7 @@ Custom parts are included in the `ChatMessagePart` union, so they appear in `mes
 
 ## Registering custom renderers
 
-### With ChatProvider
+### Using the partRenderers prop
 
 Register renderers on `ChatProvider` using the `partRenderers` prop:
 
@@ -111,7 +112,7 @@ function MyMessagePart({ part }) {
 }
 ```
 
-## Selective override with getDefaultMessagePartRenderer
+## Overriding individual part types
 
 When you only need to customize one or two part types and keep defaults for the rest, use `getDefaultMessagePartRenderer()`:
 
@@ -136,10 +137,10 @@ This pattern keeps the override narrow — replace one part type without forking
 
 Once declared, the augmentation affects everything at compile time:
 
-1. **Message parts** — `message.parts` includes custom parts in its union
-2. **Stream chunks** — data chunks carry the registered payload types
-3. **Hooks** — `useChat().messages` returns messages with augmented part types
-4. **Renderers** — `useChatPartRenderer('ticket-summary')` returns a typed renderer
+1. **Message parts**: `message.parts` includes custom parts in its union
+2. **Stream chunks**: data chunks carry the registered payload types
+3. **Hooks**: `useChat().messages` returns messages with augmented part types
+4. **Renderers**: `useChatPartRenderer('ticket-summary')` returns a typed renderer
 
 No runtime code changes are needed. The augmentation is purely compile-time.
 

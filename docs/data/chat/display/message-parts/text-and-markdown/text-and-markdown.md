@@ -1,18 +1,19 @@
 ---
 productId: x-chat
-title: Text & Markdown
+title: Text and markdown
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent
 ---
 
-# Chat - Text & Markdown
+# Chat - Text and markdown
 
-<p class="description">Render plain text and markdown content in chat messages using the <code>ChatTextMessagePart</code> type and the built-in markdown renderer.</p>
+<p class="description">Render plain text and markdown content in chat messages using the ChatTextMessagePart type and the built-in markdown renderer.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Text parts are the most common message part type. Every message with written content — whether from a human user or an AI assistant — uses one or more `text` parts to carry that content.
+Text parts are the most common message part type.
+Every message with written content—whether from a human user or an AI assistant—uses one or more `text` parts to carry that content.
 
 ## The text part data model
 
@@ -47,7 +48,8 @@ const message: ChatMessage = {
 
 ## Markdown rendering
 
-When using `ChatBox` with the Material UI layer (`@mui/x-chat`), text parts are rendered through a built-in markdown parser that converts common markdown syntax into React elements. This happens automatically — no configuration is needed.
+When using `ChatBox` with the Material UI layer (`@mui/x-chat`), text parts are rendered through a built-in markdown parser that converts common markdown syntax into React elements.
+This happens automatically—no configuration is needed.
 
 The built-in parser supports:
 
@@ -118,5 +120,5 @@ The message list auto-scrolls to follow new streaming content as long as the use
 
 ## See also
 
-- [Code Blocks](/x/react-chat/display/message-parts/code-blocks/) for syntax-highlighted code fence rendering
-- [Message Appearance](/x/react-chat/display/message-appearance/) for visual presentation of the message list
+- [Code blocks](/x/react-chat/display/message-parts/code-blocks/) for syntax-highlighted code fence rendering
+- [Message appearance](/x/react-chat/display/message-appearance/) for visual presentation of the message list

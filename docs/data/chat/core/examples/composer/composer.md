@@ -19,7 +19,7 @@ This demo uses `useChatComposer()` directly with plain DOM controls to demonstra
 
 ## Key concepts
 
-### The `useChatComposer()` hook
+### Managing draft state
 
 `useChatComposer()` returns everything needed to build a custom draft area:
 

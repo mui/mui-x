@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">Drive the public chat models from React state while the runtime keeps normalized internals.</p>
 
-This demo demonstrates the controlled state model — the major public design choice of the core package.
+This demo demonstrates the controlled state model—the major public design choice of the core package.
 All four public state models are owned by the parent component while the runtime still streams, normalizes, and derives selectors internally.
 
 ## Key concepts
@@ -54,7 +54,7 @@ Use controlled state when you need to:
 - drive the conversation list from an external data source
 - coordinate the composer value with external UI (for example, slash commands)
 
-Start with `default*` props for prototyping and switch to controlled when the need arises — no other changes are required.
+Start with `default*` props for prototyping and switch to controlled when the need arises—no other changes are required.
 
 {{"demo": "ControlledStateHeadlessChat.js"}}
 

@@ -82,7 +82,7 @@ For standard rendering, the built-in hooks (`useChat()`, `useMessageIds()`, `use
 - `useChatStore()` is the escape hatch for advanced store access
 - `chatSelectors` provides memoized selectors for all store slices
 - Combine with `useStore()` for React subscriptions or use the store directly for imperative access
-- Prefer the built-in hooks for standard use cases — they wrap these selectors with a better developer experience
+- Prefer the built-in hooks for standard use cases—they wrap these selectors with a better developer experience
 
 ## See also
 

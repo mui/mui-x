@@ -25,7 +25,7 @@ The message surface is built from:
 - `Message.Meta`
 - `Message.Actions`
 
-## `MessageGroup`
+## Grouping messages by author
 
 `MessageGroup` is the default row-level composition helper for threaded chats.
 It derives the previous and next message, then decides whether the current message starts or ends a visual group.
@@ -45,7 +45,7 @@ This gives you `isFirst` and `isLast` grouping state without manual row bookkeep
 That is especially useful when the thread mixes authored messages, assistant responses, and sparse metadata.
 The grouping rules stay close to the row composition instead of leaking into application code.
 
-## `Message.Root`
+## Setting up the message root
 
 `Message.Root` resolves a message by id and exposes owner state such as:
 
