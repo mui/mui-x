@@ -40,7 +40,7 @@ function buildColors(n: number) {
 }
 
 function buildColorsBytes(n: number) {
-  const out = new Uint8ClampedArray(n * 4);
+  const out = new Uint8Array(n * 4);
   for (let i = 0; i < n; i += 1) {
     out[i * 4] = 51;
     out[i * 4 + 1] = 153;
@@ -51,7 +51,7 @@ function buildColorsBytes(n: number) {
 }
 
 function buildWickColorsBytes(n: number) {
-  const out = new Uint8ClampedArray(n * 2 * 4);
+  const out = new Uint8Array(n * 2 * 4);
   for (let i = 0; i < out.length; i += 4) {
     out[i] = 255;
     out[i + 1] = 255;
@@ -130,7 +130,7 @@ function generatePooledFrame(n: number, frame: number) {
   };
 }
 
-/* Cached colors: same Uint8ClampedArray refs across all frames — the optimized program
+/* Cached colors: same Uint8Array refs across all frames — the optimized program
  * will short-circuit color uploads when it sees the same identity twice in a row. */
 const cachedCandleColors = buildColorsBytes(POINT_COUNT);
 const cachedWickColors = buildWickColorsBytes(POINT_COUNT);

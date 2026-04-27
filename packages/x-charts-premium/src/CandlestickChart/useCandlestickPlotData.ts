@@ -1,29 +1,21 @@
 'use client';
 import * as React from 'react';
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
-import {
-  type D3ContinuousScale,
-  selectorChartsHighlightStateCallback,
-  useStore,
-} from '@mui/x-charts/internals';
+import { type D3ContinuousScale } from '@mui/x-charts/internals';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
 import type { DefaultizedOHLCSeriesType } from '../models';
 import { parseColor } from '../utils/webgl/parseColor';
 import getColor from './seriesConfig/getColor';
 
-const FADE_OPACITY = 0.3;
-const HIGHLIGHT_BRIGHTNESS = 1.2;
-
 export interface CandlestickPlotData {
   candleCenters: Float32Array;
   candleHeights: Float32Array;
-  /* RGBA, 1 byte per channel; shader reads normalized [0, 1] floats. Uint8Clamped lets us
-   * apply the highlight brightness multiplier without manual saturation. */
-  candleColors: Uint8ClampedArray;
+  /* RGBA, 1 byte per channel; shader reads normalized [0, 1] floats. */
+  candleColors: Uint8Array;
   wickCenters: Float32Array;
   wickHeights: Float32Array;
-  wickColors: Uint8ClampedArray;
+  wickColors: Uint8Array;
 }
 
 type PositionsPool = {
@@ -47,8 +39,6 @@ export function useCandlestickPlotData(
   yScale: D3ContinuousScale,
 ): CandlestickPlotData {
   const theme = useTheme();
-  const store = useStore();
-  const getHighlightState = store.use(selectorChartsHighlightStateCallback);
 
   const wickColor = React.useMemo(
     () => parseColor(theme.palette.text.primary),
@@ -56,14 +46,12 @@ export function useCandlestickPlotData(
   );
   const colorGetter = React.useMemo(() => getColor(series, undefined), [series]);
 
-  /* Colors only change when the series, color getter, or highlight state changes.
-   * Cache them so zoom-only renders return the same Uint8ClampedArray refs and the
-   * GL upload short-circuit can skip re-uploading colors.
-   * `parseColor` returns floats in [0, 1]; we scale to bytes [0, 255]. Uint8Clamped
-   * rounds + clamps automatically, so brightness multiplications can't overflow. */
+  /* Colors only change when the series or color getter changes. Cache them so zoom-only
+   * renders return the same Uint8Array refs and the GL upload short-circuit can skip
+   * re-uploading colors. `parseColor` returns floats in [0, 1]; scaled to bytes [0, 255]. */
   const colors = React.useMemo(() => {
-    const candleColors = new Uint8ClampedArray(series.data.length * 4);
-    const wickColors = new Uint8ClampedArray(series.data.length * 2 * 4);
+    const candleColors = new Uint8Array(series.data.length * 4);
+    const wickColors = new Uint8Array(series.data.length * 2 * 4);
 
     const wickR = wickColor[0] * 255;
     const wickG = wickColor[1] * 255;
@@ -75,9 +63,6 @@ export function useCandlestickPlotData(
 
       if (datum === null) {
         /* Alpha 0 hides the candle and both wicks; src-alpha blending makes RGB irrelevant. */
-        candleColors[dataIndex * 4 + 3] = 0;
-        wickColors[dataIndex * 2 * 4 + 3] = 0;
-        wickColors[(dataIndex * 2 + 1) * 4 + 3] = 0;
         continue;
       }
 
@@ -94,36 +79,10 @@ export function useCandlestickPlotData(
         wickColors[wickIdx + 2] = wickB;
         wickColors[wickIdx + 3] = wickA;
       }
-
-      const highlightState = getHighlightState({
-        type: 'ohlc',
-        seriesId: series.id,
-        dataIndex,
-      });
-
-      if (highlightState === 'highlighted') {
-        /* Mimics CSS's filter: brightness(1.2): multiplies RGB by 1.2 without touching alpha. */
-        candleColors[dataIndex * 4] = candleColors[dataIndex * 4] * HIGHLIGHT_BRIGHTNESS;
-        candleColors[dataIndex * 4 + 1] = candleColors[dataIndex * 4 + 1] * HIGHLIGHT_BRIGHTNESS;
-        candleColors[dataIndex * 4 + 2] = candleColors[dataIndex * 4 + 2] * HIGHLIGHT_BRIGHTNESS;
-
-        for (let w = 0; w < 2; w += 1) {
-          const wickIdx = (dataIndex * 2 + w) * 4;
-          wickColors[wickIdx] = wickColors[wickIdx] * HIGHLIGHT_BRIGHTNESS;
-          wickColors[wickIdx + 1] = wickColors[wickIdx + 1] * HIGHLIGHT_BRIGHTNESS;
-          wickColors[wickIdx + 2] = wickColors[wickIdx + 2] * HIGHLIGHT_BRIGHTNESS;
-        }
-      } else if (highlightState === 'faded') {
-        candleColors[dataIndex * 4 + 3] = candleColors[dataIndex * 4 + 3] * FADE_OPACITY;
-        for (let w = 0; w < 2; w += 1) {
-          const aIdx = (dataIndex * 2 + w) * 4 + 3;
-          wickColors[aIdx] = wickColors[aIdx] * FADE_OPACITY;
-        }
-      }
     }
 
     return { candleColors, wickColors };
-  }, [colorGetter, wickColor, getHighlightState, series.data, series.id]);
+  }, [colorGetter, wickColor, series.data]);
 
   /* Positions change every zoom/drag. Pool the typed arrays in a ref so we don't
    * allocate ~1.5 MB per frame at large series sizes; hand out fresh subarray views

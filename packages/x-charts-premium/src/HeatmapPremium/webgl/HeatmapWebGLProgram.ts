@@ -18,7 +18,6 @@ export interface HeatmapPlotData {
   centers: Float32Array;
   /* RGBA, 1 byte per channel; shader reads normalized [0, 1] floats. */
   colors: Uint8Array;
-  saturations: Float32Array;
 }
 
 type ProgramVariant = {
@@ -38,8 +37,6 @@ export class HeatmapWebGLProgram {
 
   private readonly colors: GrowableBuffer;
 
-  private readonly saturations: GrowableBuffer;
-
   private readonly flatVariant: ProgramVariant;
 
   private readonly roundedVariant: ProgramVariant;
@@ -58,7 +55,6 @@ export class HeatmapWebGLProgram {
 
     this.centers = createGrowableBuffer(gl);
     this.colors = createGrowableBuffer(gl);
-    this.saturations = createGrowableBuffer(gl);
 
     /* Two pre-built programs let us swap border-radius on/off without re-linking. */
     this.flatVariant = this.buildVariant(heatmapFragmentShaderSourceNoBorderRadius);
@@ -92,9 +88,8 @@ export class HeatmapWebGLProgram {
 
     bindAttribute(gl, program, 'a_position', this.quadBuffer, 2, 0);
     bindAttribute(gl, program, 'a_center', this.centers.buffer, 2, 1);
-    /* Colors are uploaded as Uint8(Clamped)Array; shader sees normalized [0, 1] floats. */
+    /* Colors are uploaded as Uint8Array; shader sees normalized [0, 1] floats. */
     bindAttribute(gl, program, 'a_color', this.colors.buffer, 4, 1, gl.UNSIGNED_BYTE, true);
-    bindAttribute(gl, program, 'a_saturation', this.saturations.buffer, 1, 1);
 
     gl.bindVertexArray(null);
 
@@ -135,7 +130,6 @@ export class HeatmapWebGLProgram {
     const { gl } = this;
     uploadGrowableBuffer(gl, this.centers, plotData.centers);
     uploadGrowableBuffer(gl, this.colors, plotData.colors);
-    uploadGrowableBuffer(gl, this.saturations, plotData.saturations);
   }
 
   render(dataLength: number) {
@@ -154,7 +148,6 @@ export class HeatmapWebGLProgram {
     gl.deleteBuffer(this.quadBuffer);
     gl.deleteBuffer(this.centers.buffer);
     gl.deleteBuffer(this.colors.buffer);
-    gl.deleteBuffer(this.saturations.buffer);
 
     gl.deleteProgram(this.flatVariant.program);
     gl.deleteVertexArray(this.flatVariant.vao);

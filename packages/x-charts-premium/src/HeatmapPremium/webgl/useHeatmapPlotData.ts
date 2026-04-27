@@ -3,11 +3,10 @@ import * as React from 'react';
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import { type DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
 import { type ChartDrawingArea, useZColorScale } from '@mui/x-charts/hooks';
-import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
 import { parseColor } from '../../utils/webgl/parseColor';
 
 /* Far enough off-canvas that the rect is never visible; used for invalid x/y entries.
- * Avoids coupling the position pass to the color/saturation passes. */
+ * Avoids coupling the position pass to the color pass. */
 const OFFSCREEN = -1e9;
 
 function ensurePoolFloat32(pool: Float32Array | undefined, n: number) {
@@ -26,11 +25,9 @@ export function useHeatmapPlotData(
   const width = xScale.bandwidth();
   const height = yScale.bandwidth();
   const colorScale = useZColorScale()!;
-  const store = useStore();
-  const getHighlightState = store.use(selectorChartsHighlightStateCallback);
 
-  /* Colors only change when series data or color scale changes. Cached so resize/highlight
-   * renders don't re-upload the colors buffer.
+  /* Colors only change when series data or color scale changes. Cached so resize renders
+   * don't re-upload the colors buffer.
    * Stored as Uint8 (1 byte per channel) — 4x less GPU traffic than Float32 RGBA. */
   const colors = React.useMemo(() => {
     const out = new Uint8Array(series.data.length * 4);
@@ -49,33 +46,6 @@ export function useHeatmapPlotData(
     }
     return out;
   }, [colorScale, series.data]);
-
-  /* Saturations only change with highlight state. Pooled so highlight churn doesn't
-   * allocate per change. */
-  const saturationsPoolRef = React.useRef<Float32Array | null>(null);
-  const saturations = React.useMemo(() => {
-    const n = series.data.length;
-    const pool = ensurePoolFloat32(saturationsPoolRef.current ?? undefined, n);
-    saturationsPoolRef.current = pool;
-    for (let dataIndex = 0; dataIndex < n; dataIndex += 1) {
-      const item = series.data[dataIndex];
-      const highlightState = getHighlightState({
-        type: 'heatmap',
-        seriesId: series.id,
-        xIndex: item[0],
-        yIndex: item[1],
-      });
-      let saturation = 0;
-      if (highlightState === 'highlighted') {
-        saturation = 0.2;
-      } else if (highlightState === 'faded') {
-        saturation = -0.2;
-      }
-      pool[dataIndex] = saturation;
-    }
-    /* Subarray gives a fresh identity over the same bytes — upload short-circuit fires. */
-    return pool.subarray(0, n);
-  }, [getHighlightState, series.data, series.id]);
 
   /* Positions change on resize (drawing area / band width). Pooled to avoid per-frame
    * allocation. Subarray view gives a fresh identity each call so the upload still runs. */
@@ -108,5 +78,5 @@ export function useHeatmapPlotData(
     return pool.subarray(0, n * 2);
   }, [drawingArea.left, drawingArea.top, height, series.data, width, xScale, yScale]);
 
-  return React.useMemo(() => ({ centers, colors, saturations }), [centers, colors, saturations]);
+  return React.useMemo(() => ({ centers, colors }), [centers, colors]);
 }
