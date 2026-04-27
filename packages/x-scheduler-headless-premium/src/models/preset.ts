@@ -38,27 +38,34 @@ export interface PresetHeaderCellState {
   ampm: boolean;
 }
 
-/**
- * Configuration for one header row of a preset.
- */
-export interface PresetHeaderLevelConfig {
+interface PresetHeaderLevelConfigBase {
   /** The time unit this row divides the visible range into. */
   unit: PresetHeaderUnit;
-  /**
-   * Formats the cell's aligned start date into a string label.
-   * Ignored when `renderCell` is provided.
-   */
-  formatDate?: (adapter: TemporalAdapter, date: TemporalSupportedObject) => string;
-  /**
-   * Overrides the default label rendering. Receives the cell state and returns
-   * any React node (string, fragment, element).
-   */
-  renderCell?: (state: PresetHeaderCellState) => React.ReactNode;
-  /**
-   * A custom class name to apply to the cells in this header row.
-   */
+  /** A custom class name to apply to the cells in this header row. */
   className?: string;
 }
+
+/**
+ * Configuration for one header row of a preset. Each level must provide either
+ * `formatDate` (text-only label) or `renderCell` (full React render), never both.
+ */
+export type PresetHeaderLevelConfig = PresetHeaderLevelConfigBase &
+  (
+    | {
+        /** Formats the cell's aligned start date into a string label. */
+        formatDate: (adapter: TemporalAdapter, date: TemporalSupportedObject) => string;
+        renderCell?: undefined;
+      }
+    | {
+        formatDate?: undefined;
+        /**
+         * Renders the cell label from the full cell state. Use this when the
+         * label needs more than the aligned start date (e.g. a range, multiple
+         * spans, or preferences such as `ampm`).
+         */
+        renderCell: (state: PresetHeaderCellState) => React.ReactNode;
+      }
+  );
 
 /**
  * Full configuration of a preset. Bundles header definitions with grid-sizing,
