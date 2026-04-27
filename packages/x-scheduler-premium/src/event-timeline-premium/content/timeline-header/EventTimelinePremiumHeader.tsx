@@ -44,8 +44,6 @@ const StyledTimelineGridHeader = styled(TimelineGrid.Header, {
     '&[data-unit-leaf][data-weekend]': {
       color: (theme.vars || theme).palette.error.main,
     },
-    // Conventions used by the default `dayAndMonth` preset's renderCell: the weekday letter
-    // sits above the day number and only the letter turns red on weekends.
     '& [data-slot="dayCell"]': {
       display: 'inline-flex',
       flexDirection: 'column',
