@@ -30,13 +30,16 @@ const StyledTimelineGridHeader = styled(TimelineGrid.Header, {
     '&:not(:last-child)': {
       borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
     },
-    '&[data-unit="hour"]': {
-      borderRight: 'none',
-    },
     '&[data-level]:not([data-level="0"])': {
       color: (theme.vars || theme).palette.text.secondary,
       fontWeight: theme.typography.fontWeightRegular,
+    },
+    '&[data-unit="hour"]': {
       padding: theme.spacing(1, 0),
+      borderRight: 'none',
+    },
+    '&[data-unit="day"][data-unit-leaf]': {
+      padding: theme.spacing(0.5),
     },
     '&[data-unit-leaf][data-weekend]': {
       color: (theme.vars || theme).palette.error.main,
@@ -47,6 +50,7 @@ const StyledTimelineGridHeader = styled(TimelineGrid.Header, {
       display: 'inline-flex',
       flexDirection: 'column',
       alignItems: 'center',
+      gap: theme.spacing(0.5),
     },
     '& [data-slot="weekday"]': {
       color: (theme.vars || theme).palette.text.secondary,

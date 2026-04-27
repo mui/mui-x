@@ -48,24 +48,27 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
             data-weekend={level.unit === 'day' && isWeekend(adapter, cell.date) ? '' : undefined}
             style={{ '--span': cell.spanInTicks } as React.CSSProperties}
           >
-            {level.renderCell ? (
-              level.renderCell({
-                adapter,
-                ampm,
-                date: cell.date,
-                start: cell.start,
-                end: cell.end,
-                index: cell.index,
-                key: cell.key,
-                level: levelIndex,
-                spanInTicks: cell.spanInTicks,
-                unit: level.unit,
-              })
-            ) : (
-              <span className={classNames?.label}>
-                {level.formatDate ? level.formatDate(adapter, cell.date) : ''}
-              </span>
-            )}
+            <time
+              className={classNames?.label}
+              dateTime={adapter.formatByString(cell.date, "yyyy-MM-dd'T'HH:mm")}
+            >
+              {level.renderCell
+                ? level.renderCell({
+                    adapter,
+                    ampm,
+                    date: cell.date,
+                    start: cell.start,
+                    end: cell.end,
+                    index: cell.index,
+                    key: cell.key,
+                    level: levelIndex,
+                    spanInTicks: cell.spanInTicks,
+                    unit: level.unit,
+                  })
+                : level.formatDate
+                  ? level.formatDate(adapter, cell.date)
+                  : ''}
+            </time>
           </div>
         ))}
       </div>
