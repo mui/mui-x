@@ -154,8 +154,8 @@ catalogs:
       specifier: ^1.11.20
       version: 1.11.20
     es-toolkit:
-      specifier: ^1.45.1
-      version: 1.45.1
+      specifier: ^1.46.0
+      version: 1.46.0
     execa:
       specifier: 9.6.1
       version: 9.6.1
@@ -370,7 +370,7 @@ importers:
         version: date-fns@2.30.0
       es-toolkit:
         specifier: 'catalog:'
-        version: 1.45.1
+        version: 1.46.0
       esbuild:
         specifier: 0.27.3
         version: 0.27.3
@@ -625,7 +625,7 @@ importers:
         version: 1.11.20
       es-toolkit:
         specifier: 'catalog:'
-        version: 1.45.1
+        version: 1.46.0
       fg-loadcss:
         specifier: ^3.1.0
         version: 3.1.0
@@ -7314,8 +7314,8 @@ packages:
     resolution: {integrity: sha512-w+5mJ3GuFL+NjVtJlvydShqE1eN3h3PbI7/5LAsYJP/2qtuMXjfL2LpHSRqo4b4eSF5K/DH1JXKUAHSB2UW50g==}
     engines: {node: '>= 0.4'}
 
-  es-toolkit@1.45.1:
-    resolution: {integrity: sha512-/jhoOj/Fx+A+IIyDNOvO3TItGmlMKhtX8ISAHKE90c4b/k1tqaqEZ+uUqfpU8DMnW5cgNJv606zS55jGvza0Xw==}
+  es-toolkit@1.46.0:
+    resolution: {integrity: sha512-IToJ6ct9OLl5zz6WsC/1vZEwfSZ7Myil+ygl5Tf30Xjn9AEkzNB4kqp2G7VUJKF1DtTx/ra5M5KLlXvzOg51BA==}
 
   esbuild@0.27.3:
     resolution: {integrity: sha512-8VwMnyGCONIs6cWue2IdpHxHnAjzxnw2Zr7MkVxB2vjmQ2ivqGFb4LEG3SMnv0Gb2F/G/2yA8zUaiL1gywDCCg==}
@@ -13656,7 +13656,7 @@ snapshots:
       '@mui/internal-docs-utils': 3.0.4-canary.3
       '@mui/internal-markdown': 3.0.8-canary.3
       doctrine: 3.0.0
-      es-toolkit: 1.45.1
+      es-toolkit: 1.46.0
       fast-glob: 3.3.3
       prettier: 3.8.1
       react-docgen: 8.0.3
@@ -13757,7 +13757,7 @@ snapshots:
       clipboardy: 5.3.1
       content-type: 1.0.5
       env-ci: 11.2.0
-      es-toolkit: 1.45.1
+      es-toolkit: 1.46.0
       eslint: 9.39.2
       eslint-config-prettier: 10.1.8(eslint@9.39.2)
       eslint-import-resolver-typescript: 4.4.4(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.58.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint-plugin-import@2.32.0)(eslint@9.39.2)
@@ -13831,7 +13831,7 @@ snapshots:
       clipboard-copy: 4.0.1
       clsx: 2.1.1
       csstype: 3.2.3
-      es-toolkit: 1.45.1
+      es-toolkit: 1.46.0
       fg-loadcss: 3.1.0
       lz-string: 1.5.0
       next: 16.2.2(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -13855,7 +13855,7 @@ snapshots:
       '@wooorm/starry-night': 3.9.0
       chalk: 5.6.2
       clipboard-copy: 4.0.1
-      es-toolkit: 1.45.1
+      es-toolkit: 1.46.0
       fflate: 0.8.2
       hast-util-to-jsx-runtime: 2.3.6
       hast-util-to-text: 4.0.2
@@ -13893,7 +13893,7 @@ snapshots:
   '@mui/internal-markdown@3.0.8-canary.3':
     dependencies:
       '@babel/runtime': 7.29.2
-      es-toolkit: 1.45.1
+      es-toolkit: 1.46.0
       marked: 17.0.5
       prismjs: 1.30.0
 
@@ -13908,7 +13908,7 @@ snapshots:
       '@babel/types': 7.29.0
       '@mui/internal-docs-utils': 3.0.4-canary.3
       doctrine: 3.0.0
-      es-toolkit: 1.45.1
+      es-toolkit: 1.46.0
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
@@ -13925,7 +13925,7 @@ snapshots:
       chai: 6.2.1
       chai-dom: 1.12.1(chai@6.2.1)
       dom-accessibility-api: 0.7.1
-      es-toolkit: 1.45.1
+      es-toolkit: 1.46.0
       format-util: 1.0.5
       prop-types: 15.8.1
       react: 19.2.4
@@ -13953,7 +13953,7 @@ snapshots:
       chai: 6.2.1
       chai-dom: 1.12.1(chai@6.2.1)
       dom-accessibility-api: 0.7.1
-      es-toolkit: 1.45.1
+      es-toolkit: 1.46.0
       format-util: 1.0.5
       prop-types: 15.8.1
       react: 19.2.4
@@ -17007,7 +17007,7 @@ snapshots:
       is-date-object: 1.1.0
       is-symbol: 1.1.1
 
-  es-toolkit@1.45.1: {}
+  es-toolkit@1.46.0: {}
 
   esbuild@0.27.3:
     optionalDependencies:
@@ -21608,7 +21608,7 @@ snapshots:
 
   typescript-api-extractor@1.0.0-beta.3(typescript@5.9.3):
     dependencies:
-      es-toolkit: 1.45.1
+      es-toolkit: 1.46.0
       typescript: 5.9.3
 
   typescript-eslint@8.58.0(eslint@9.39.2)(typescript@5.9.3):
