@@ -82,7 +82,7 @@ describe('<PieChart /> - keyboard navigation', () => {
     expect(press('ArrowRight', slice('pie-1', 2), state)).to.deep.equal(slice('pie-1', 0));
   });
 
-  it.only('should skip a hidden slice', () => {
+  it('should skip a hidden slice', () => {
     const state = buildState({
       series: [{ id: 'pie-1', data: [{ value: 5 }, { value: 10 }, { value: 20 }] }],
       hiddenItems: [{ type: 'pie', seriesId: 'pie-1', dataIndex: 1 }],
