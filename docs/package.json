@@ -81,7 +81,7 @@
     "motion": "catalog:",
     "next": "^16.2.4",
     "nprogress": "^0.2.0",
-    "postcss": "^8.5.6",
+    "postcss": "^8.5.12",
     "prop-types": "catalog:",
     "react": "catalog:",
     "react-docgen": "^8.0.3",
