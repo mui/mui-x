@@ -127,11 +127,6 @@ const chartsApiPages: MuiPage[] = [
     plan: 'premium',
   },
   {
-    pathname: '/x/api/charts/charts-radial-data-provider-pro',
-    title: 'ChartsRadialDataProviderPro',
-    plan: 'pro',
-  },
-  {
     pathname: '/x/api/charts/charts-radial-grid',
     title: 'ChartsRadialGrid',
   },
