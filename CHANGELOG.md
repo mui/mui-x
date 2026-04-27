@@ -5,6 +5,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.28.4
+
+_Apr 27, 2026_
+
+We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to these community members for their valuable contributions:
+@supunsathsara
+
+The following team members contributed to this release:
+@LukasTy, @michelengelen
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.28.4`
+
+- [pickers] Fix `DateRangeCalendar` drag with `AdapterDayjs` plain-constructor values (#22170) @LukasTy
+- [pickers] Fix disabled state not overriding error border color (#22186) @supunsathsara
+- [pickers] Use `convertToMeridiem` utility in `transferDateSectionValue` (#22132) @michelengelen
+
+#### `@mui/x-date-pickers-pro@8.28.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.28.4`.
+
+### Docs
+
+- [docs] Remove obsolete v7 deprecation warning for `dayOfWeekFormatter` (#22120) @LukasTy
+- [docs] Use mui.com for broken links checker known targets (#22171) @LukasTy
+
 ## 8.28.3
 
 _Apr 15, 2026_
