@@ -81,7 +81,7 @@ export default function ClassNameProperty() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="days"
+        defaultPreset="day"
       />
     </div>
   );

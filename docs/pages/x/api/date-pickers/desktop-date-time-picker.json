@@ -393,7 +393,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiDesktopDateTimePicker",
   "forwardsRefTo": "HTMLDivElement",

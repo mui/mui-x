@@ -7,6 +7,7 @@ import {
   type StackableSeriesType,
   type SeriesId,
 } from './common';
+import { type DatasetElementType } from './config';
 import { type BarItem, type BarLabelContext } from '../../BarChart';
 
 export type BarValueType = number;
@@ -22,6 +23,14 @@ export interface BarSeriesType
    * The key used to retrieve data from the dataset.
    */
   dataKey?: string;
+  /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return the series value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {BarValueType | null} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => BarValueType | null;
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */

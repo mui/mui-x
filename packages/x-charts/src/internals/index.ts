@@ -11,7 +11,7 @@ export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export { useDrawingArea } from '../hooks/useDrawingArea';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useScatterPlotData } from '../ScatterChart/useScatterPlotData';
-export { scatterSeriesConfig as scatterSeriesConfig } from '../ScatterChart/seriesConfig';
+export { scatterSeriesConfig } from '../ScatterChart/seriesConfig';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useAreaPlotData } from '../LineChart/useAreaPlotData';
 export { useLinePlotData } from '../LineChart/useLinePlotData';
@@ -92,6 +92,7 @@ export * from '../context/ChartsSlotsContext';
 // series configuration
 export * from '../models/seriesType/config';
 export * from '../models/seriesType/common';
+export * from '../models/seriesType/line';
 
 export * from '../models/z-axis';
 export * from '../models/axis';
@@ -105,3 +106,5 @@ export * from './constants';
 export * from './scales';
 export * from './identifierSerializer';
 export * from './identifierCleaner';
+
+export { default as getLineItemAtPosition } from '../LineChart/seriesConfig/getItemAtPosition';

@@ -3,5 +3,5 @@
   resources={resourcesWithColors}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
-  defaultView="days"
+  defaultPreset="day"
 />

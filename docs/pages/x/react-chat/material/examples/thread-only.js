@@ -1,5 +1,5 @@
-import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import * as pageProps from 'docsx/data/chat/material/examples/thread-only/thread-only.md?muiMarkdown';
+import { MarkdownDocs } from '@mui/internal-core-docs/MarkdownDocs';
+import * as pageProps from 'docs/data/chat/material/examples/thread-only/thread-only.md?muiMarkdown';
 
 export default function Page() {
   return <MarkdownDocs {...pageProps} />;

@@ -15,48 +15,48 @@ const removeExtension = (filePath: string) => {
 // Also use some of the demos to avoid code duplication.
 const docsImports = import.meta.glob<React.ComponentType>(
   [
-    'docsx/data/**/[A-Z]*.js',
+    'docs/data/**/[A-Z]*.js',
     // Hooks examples
-    'docsx/data/**/use[A-Z]*.js',
+    'docs/data/**/use[A-Z]*.js',
     // ================== Exclusions ==================
-    '!docsx/data/charts/lines/GDPperCapita.js',
-    '!docsx/data/data-grid/list-view/components/*.js',
+    '!docs/data/charts/lines/GDPperCapita.js',
+    '!docs/data/data-grid/list-view/components/*.js',
     // Excludes demos that we don't want
-    '!docsx/data/**/*NoSnap.*',
-    '!docsx/data/data-grid/filtering/RemoveBuiltInOperators', // Needs interaction
-    '!docsx/data/data-grid/filtering/CustomRatingOperator', // Needs interaction
-    '!docsx/data/data-grid/filtering/CustomInputComponent', // Needs interaction
-    '!docsx/data/data-grid/server-side-data/ServerSideLazyLoadingRevalidation', // Flashes cause flaky argos screenshots
-    '!docsx/data/data-grid/server-side-data/ServerSideLazyLoadingFullyReplaced', // Flashes cause flaky argos screenshots
-    '!docsx/data/data-grid/server-side-data/ServerSideDataGridRevalidation', // Flashes cause flaky argos screenshots
-    '!docsx/data/data-grid/server-side-data/ServerSideTreeDataRevalidation', // Flashes cause flaky argos screenshots
-    '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
-    '!docsx/data/charts/tooltip/Custom*', // Composition example
-    '!docsx/data/charts/tooltip/Item*', // Composition example
-    '!docsx/data/charts/tooltip/AxisFormatter',
-    '!docsx/data/charts/tooltip/Formatting',
-    '!docsx/data/charts/tooltip/SeriesFormatter',
-    '!docsx/data/charts/tooltip/TooltipStyle',
-    '!docsx/data/charts/brush/*',
-    '!docsx/data/data-grid/server-side-data/useNestedPagination',
-    '!docsx/data/data-grid/server-side-data/NestedPaginationGroupingCell',
-    '!docsx/data/data-grid/tree-data/utils/TreeDataSyncRowDataGroupingCell',
-    '!docsx/data/data-grid/tree-data/utils/DataStore',
-    '!docsx/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
-    '!docsx/data/charts/axis/SelectTimeFrequency', // sub-component for demo purpose
-    '!docsx/data/charts/sankey/CustomNodeLabelPlot', // sub-component for demo purpose
-    '!docsx/data/charts/references/ReferenceArea', // sub-component for demo purpose
-    '!docsx/data/charts/references/ReferencePoint', // sub-component for demo purpose
+    '!docs/data/**/*NoSnap.*',
+    '!docs/data/data-grid/filtering/RemoveBuiltInOperators', // Needs interaction
+    '!docs/data/data-grid/filtering/CustomRatingOperator', // Needs interaction
+    '!docs/data/data-grid/filtering/CustomInputComponent', // Needs interaction
+    '!docs/data/data-grid/server-side-data/ServerSideLazyLoadingRevalidation', // Flashes cause flaky argos screenshots
+    '!docs/data/data-grid/server-side-data/ServerSideLazyLoadingFullyReplaced', // Flashes cause flaky argos screenshots
+    '!docs/data/data-grid/server-side-data/ServerSideDataGridRevalidation', // Flashes cause flaky argos screenshots
+    '!docs/data/data-grid/server-side-data/ServerSideTreeDataRevalidation', // Flashes cause flaky argos screenshots
+    '!docs/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
+    '!docs/data/charts/tooltip/Custom*', // Composition example
+    '!docs/data/charts/tooltip/Item*', // Composition example
+    '!docs/data/charts/tooltip/AxisFormatter',
+    '!docs/data/charts/tooltip/Formatting',
+    '!docs/data/charts/tooltip/SeriesFormatter',
+    '!docs/data/charts/tooltip/TooltipStyle',
+    '!docs/data/charts/brush/*',
+    '!docs/data/data-grid/server-side-data/useNestedPagination',
+    '!docs/data/data-grid/server-side-data/NestedPaginationGroupingCell',
+    '!docs/data/data-grid/tree-data/utils/TreeDataSyncRowDataGroupingCell',
+    '!docs/data/data-grid/tree-data/utils/DataStore',
+    '!docs/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
+    '!docs/data/charts/axis-ticks/SelectTimeFrequency', // sub-component for demo purpose
+    '!docs/data/charts/sankey/CustomNodeLabelPlot', // sub-component for demo purpose
+    '!docs/data/charts/references/ReferenceArea', // sub-component for demo purpose
+    '!docs/data/charts/references/ReferencePoint', // sub-component for demo purpose
 
     // Exclude shared utility files that don't have a default export
-    '!docsx/data/**/shared/*',
+    '!docs/data/**/shared/*',
 
     // Streaming demos conflict with sinon fake timers (cancelAnimationFrame on native timer)
-    '!docsx/data/chat/core/examples/controlled-state/ControlledStateHeadlessChat',
+    '!docs/data/chat/core/examples/controlled-state/ControlledStateHeadlessChat',
 
     // Exclude codesandbox embedded demos since they're not using packages built from the branch anyway.
-    '!docsx/data/migration/migration-pickers-v5/MobileKeyboardView',
-    '!docsx/data/migration/migration-data-grid-v4/CoreV5WithCoreV4',
+    '!docs/data/migration/migration-pickers-v5/MobileKeyboardView',
+    '!docs/data/migration/migration-data-grid-v4/CoreV5WithCoreV4',
     //
   ],
   { eager: true, import: 'default' },

@@ -16,7 +16,6 @@ describe('<DateTimeRangePicker /> - Describe Conformance', () => {
       'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
-      'propsSpread',
     ],
   }));
 });

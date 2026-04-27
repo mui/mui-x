@@ -17,7 +17,7 @@ export default function DefaultPreferences() {
         resources={resources}
         defaultPreferences={defaultPreferences}
         onEventsChange={setEvents}
-        defaultView="months"
+        defaultPreset="monthAndYear"
       />
     </div>
   );

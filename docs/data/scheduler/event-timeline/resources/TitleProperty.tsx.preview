@@ -4,5 +4,5 @@
   defaultVisibleDate={defaultVisibleDate}
   resourceModelStructure={resourceModelStructure}
   resources={resources}
-  defaultView="months"
+  defaultPreset="monthAndYear"
 />

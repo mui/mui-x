@@ -69,14 +69,22 @@ const datasets = [
   },
 ];
 
+const presetOptions = [
+  { value: 'dayAndHour', label: 'Time' },
+  { value: 'day', label: 'Days' },
+  { value: 'dayAndWeek', label: 'Weeks' },
+  { value: 'monthAndYear', label: 'Months' },
+  { value: 'year', label: 'Years' },
+];
+
 function SchedulerContent({ dataset }) {
   const [events, setEvents] = React.useState(dataset.initialEvents);
-  const [view, setView] = React.useState('months');
+  const [preset, setPreset] = React.useState('monthAndYear');
   const [visibleDate, setVisibleDate] = React.useState(dataset.defaultVisibleDate);
   const apiRef = useEventTimelinePremiumApiRef();
 
-  const handleViewChange = (event) => {
-    setView(event.target.value);
+  const handlePresetChange = (event) => {
+    setPreset(event.target.value);
   };
 
   return (
@@ -100,10 +108,10 @@ function SchedulerContent({ dataset }) {
         <IconButton onClick={(event) => apiRef.current?.goToNextVisibleDate(event)}>
           <ChevronRightIcon />
         </IconButton>
-        <Select value={view} onChange={handleViewChange} size="small">
-          {['time', 'days', 'weeks', 'months', 'years'].map((value) => (
+        <Select value={preset} onChange={handlePresetChange} size="small">
+          {presetOptions.map(({ value, label }) => (
             <MenuItem key={value} value={value}>
-              {value}
+              {label}
             </MenuItem>
           ))}
         </Select>
@@ -113,8 +121,8 @@ function SchedulerContent({ dataset }) {
           apiRef={apiRef}
           events={events}
           resources={dataset.resources}
-          view={view}
-          onViewChange={setView}
+          preset={preset}
+          onPresetChange={setPreset}
           visibleDate={visibleDate}
           onVisibleDateChange={setVisibleDate}
           onEventsChange={setEvents}

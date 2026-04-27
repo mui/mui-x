@@ -14,6 +14,7 @@ import type {
 } from '@mui/x-charts-vendor/d3-scale';
 import { type SxProps } from '@mui/system/styleFunctionSx';
 import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
+import { type DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
@@ -513,6 +514,14 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    */
   dataKey?: string;
   /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return the axis value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {V} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => V;
+  /**
    * Formats the axis value.
    * @param {V} value The value to format.
    * @param {AxisValueFormatterContext} context The rendering context of the value.
@@ -617,6 +626,8 @@ export type ComputedAxis<
      * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
      */
     triggerTooltip?: boolean;
+    /** @ignore - internal. True when a rotation axis covers a full circle. */
+    isFullCircle?: boolean;
   } & (AxisProps extends ChartsXAxisProps
     ? AxisSideConfig<AxisProps> & { height: number }
     : AxisProps extends ChartsYAxisProps
@@ -707,10 +718,10 @@ export type YAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleNam
   ? MakeOptional<AxisConfig<S, V, ChartsYAxisProps>, 'id'>
   : never;
 export type RotationAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
-  ? AxisConfig<S, V, ChartsRotationAxisProps>
+  ? MakeOptional<AxisConfig<S, V, ChartsRotationAxisProps>, 'id'>
   : never;
 export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'linear'
-  ? AxisConfig<S, V, ChartsRadiusAxisProps>
+  ? MakeOptional<AxisConfig<S, V, ChartsRadiusAxisProps>, 'id'>
   : never;
 
 /**

@@ -1,5 +1,5 @@
-import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import * as pageProps from 'docsx/data/chat/headless/examples/chatgpt-style/chatgpt-style.md?muiMarkdown';
+import { MarkdownDocs } from '@mui/internal-core-docs/MarkdownDocs';
+import * as pageProps from 'docs/data/chat/headless/examples/chatgpt-style/chatgpt-style.md?muiMarkdown';
 
 export default function Page() {
   return <MarkdownDocs {...pageProps} />;
