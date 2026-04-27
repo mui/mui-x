@@ -8,13 +8,14 @@ components: ChatMessageContent
 
 # Chat - Tool Calling
 
-<p class="description">Stream tool invocations from the LLM, track their lifecycle through well-defined states, and render custom tool UIs using the part renderer registry.</p>
+<p class="description">Stream, track, and render LLM tool calls through their full lifecycle of input, execution, and output.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Tool calling lets an AI assistant invoke external functions during a conversation. The runtime handles the full tool lifecycle: streaming tool input, making the input available, executing the tool, and displaying the output — all through the streaming chunk protocol.
+Tool calling lets an AI assistant invoke external functions during a conversation.
+The runtime handles the full tool lifecycle: streaming tool input, making the input available, executing the tool, and displaying the output—all through the streaming chunk protocol.
 
-## `ChatToolMessagePart`
+## Tool message part structure
 
 When a tool is invoked during streaming, the runtime creates a `ChatToolMessagePart` on the assistant message:
 
@@ -61,7 +62,8 @@ The `toolInvocation.state` field tracks the tool lifecycle through well-defined 
 | `output-error`       | Tool execution failed                      |
 | `output-denied`      | User denied the tool call                  |
 
-The typical progression is: `input-streaming` -> `input-available` -> `output-available`. When human-in-the-loop approval is required, the flow includes `approval-requested` -> `approval-responded` between input and output.
+The typical progression is: `input-streaming` -> `input-available` -> `output-available`.
+When human-in-the-loop approval is required, the flow includes `approval-requested` -> `approval-responded` between input and output.
 
 ## Stream chunk protocol
 
@@ -79,7 +81,8 @@ Tool chunks in the streaming protocol drive the state transitions:
 
 ### Tool input streaming
 
-Tool input is streamed incrementally as JSON. The `tool-input-start` chunk begins the invocation with the tool name, `tool-input-delta` chunks append partial JSON, and `tool-input-available` delivers the complete parsed input:
+Tool input is streamed incrementally as JSON.
+The `tool-input-start` chunk begins the invocation with the tool name, `tool-input-delta` chunks append partial JSON, and `tool-input-available` delivers the complete parsed input:
 
 ```tsx
 const adapter: ChatAdapter = {
@@ -126,7 +129,7 @@ const adapter: ChatAdapter = {
 };
 ```
 
-## The `onToolCall` callback
+## Observing tool invocations
 
 Register `onToolCall` on `ChatProvider` to observe every tool invocation state change during streaming:
 
@@ -145,9 +148,10 @@ Register `onToolCall` on `ChatProvider` to observe every tool invocation state c
 </ChatProvider>
 ```
 
-The callback fires on every state change — not just when output is available. Use it for side effects outside the store: logging, analytics, and external API calls.
+The callback fires on every state change—not just when output is available.
+Use it for side effects outside the store: logging, analytics, and external API calls.
 
-### The `ChatOnToolCallPayload`
+### Callback payload structure
 
 ```ts
 interface ChatOnToolCallPayload {
@@ -155,11 +159,12 @@ interface ChatOnToolCallPayload {
 }
 ```
 
-The `toolCall` object includes `toolCallId`, `toolName`, `state`, `input`, `output`, `errorText`, and `approval` fields — all typed based on your `ChatToolDefinitionMap` augmentation.
+The `toolCall` object includes `toolCallId`, `toolName`, `state`, `input`, `output`, `errorText`, and `approval` fields—all typed based on your `ChatToolDefinitionMap` augmentation.
 
 ## Tool type registry
 
-Use TypeScript module augmentation to register typed tool definitions. This gives you type-safe `input` and `output` on tool invocations:
+Use TypeScript module augmentation to register typed tool definitions.
+This gives you type-safe `input` and `output` on tool invocations:
 
 ```ts
 declare module '@mui/x-chat/types' {
@@ -236,6 +241,6 @@ function MessagePart({ part, message, index }) {
 
 ## See also
 
-- [Tool Approval](/x/react-chat/ai-and-agents/tool-approval/) for human-in-the-loop approval of tool calls.
+- [Tool approval](/x/react-chat/ai-and-agents/tool-approval/) for human-in-the-loop approval of tool calls.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full stream chunk protocol reference.
-- [Step Tracking](/x/react-chat/ai-and-agents/step-tracking/) for multi-step agent progress tracking.
+- [Step tracking](/x/react-chat/ai-and-agents/step-tracking/) for multi-step agent progress tracking.
