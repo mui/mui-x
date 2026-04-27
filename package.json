@@ -121,7 +121,7 @@
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "picomatch": "4.0.4",
-    "pkg-pr-new": "^0.0.66",
+    "pkg-pr-new": "0.0.66",
     "playwright": "catalog:",
     "prettier": "3.8.3",
     "pretty-quick": "4.2.2",
