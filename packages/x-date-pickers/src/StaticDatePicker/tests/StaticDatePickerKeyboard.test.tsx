@@ -1,4 +1,4 @@
-import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DateView } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
@@ -27,8 +27,8 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedDay: '14' },
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
-      it(`${key}`, () => {
-        render(
+      it(`${key}`, async () => {
+        const { user } = render(
           <StaticDatePicker
             autoFocus
             displayStaticWrapperAs="desktop"
@@ -36,9 +36,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
           />,
         );
 
-        // Don't care about what's focused.
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+        await user.keyboard(`{${key}}`);
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
@@ -56,8 +54,8 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { initialDay: '10', key: 'ArrowLeft', expectFocusedDay: '9' },
       { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10' },
     ].forEach(({ initialDay, key, expectFocusedDay }) => {
-      it(`${key}`, () => {
-        render(
+      it(`${key}`, async () => {
+        const { user } = render(
           <StaticDatePicker
             autoFocus
             displayStaticWrapperAs="desktop"
@@ -65,9 +63,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
           />,
         );
 
-        // Don't care about what's focused.
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+        await user.keyboard(`{${key}}`);
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
@@ -77,7 +73,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
   });
 
   it("doesn't allow to select disabled date from keyboard", async () => {
-    render(
+    const { user } = render(
       <StaticDatePicker
         autoFocus
         displayStaticWrapperAs="desktop"
@@ -88,11 +84,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
 
     expect(document.activeElement).toHaveAccessibleName('13');
 
-    for (let i = 0; i < 3; i += 1) {
-      // Don't care about what's focused.
-      // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
-    }
+    await user.keyboard('{ArrowLeft}{ArrowLeft}{ArrowLeft}');
 
     // leaves focus on the same date
     expect(document.activeElement).toHaveAccessibleName('13');
@@ -105,8 +97,8 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedYear: '2021' },
       { key: 'ArrowDown', expectFocusedYear: '2024' },
     ].forEach(({ key, expectFocusedYear }) => {
-      it(`${key}`, () => {
-        render(
+      it(`${key}`, async () => {
+        const { user } = render(
           <StaticDatePicker
             openTo="year"
             reduceAnimations
@@ -117,7 +109,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
 
         const year = screen.getByText('2020', { selector: 'button' });
         act(() => year.focus());
-        fireEvent.keyDown(year, { key });
+        await user.keyboard(`{${key}}`);
 
         expect(document.activeElement).to.have.text(expectFocusedYear);
       });
@@ -131,8 +123,8 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedMonth: 'Sep' },
       { key: 'ArrowDown', expectFocusedMonth: 'Nov' },
     ].forEach(({ key, expectFocusedMonth }) => {
-      it(`${key}`, () => {
-        render(
+      it(`${key}`, async () => {
+        const { user } = render(
           <StaticDatePicker
             openTo="month"
             views={['month']}
@@ -144,7 +136,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
 
         const aug = screen.getByText('Aug', { selector: 'button' });
         act(() => aug.focus());
-        fireEvent.keyDown(aug, { key });
+        await user.keyboard(`{${key}}`);
 
         expect(document.activeElement).to.have.text(expectFocusedMonth);
       });
@@ -158,8 +150,8 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedDay: '14' },
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
-      it(`${key}`, () => {
-        render(
+      it(`${key}`, async () => {
+        const { user } = render(
           <StaticDatePicker
             openTo="day"
             reduceAnimations
@@ -170,7 +162,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
 
         const startDay = screen.getByText('13', { selector: 'button' });
         act(() => startDay.focus());
-        fireEvent.keyDown(startDay, { key });
+        await user.keyboard(`{${key}}`);
 
         expect(document.activeElement).to.have.text(expectFocusedDay);
       });
@@ -199,8 +191,8 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
     });
   });
 
-  it(`should have one element with tabIndex=0 for day view even if not in current month`, () => {
-    render(
+  it(`should have one element with tabIndex=0 for day view even if not in current month`, async () => {
+    const { user } = render(
       <StaticDatePicker
         openTo="day"
         reduceAnimations
@@ -209,7 +201,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       />,
     );
 
-    fireEvent.click(screen.getByTitle('Next month'));
+    await user.click(screen.getByTitle('Next month'));
     const day13 = screen.getByText('13', { selector: 'button' });
     const day1 = screen.getByText('1', { selector: 'button' });
     expect(day1).to.have.attribute('tabindex', '0');
