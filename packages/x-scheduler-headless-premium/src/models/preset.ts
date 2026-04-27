@@ -66,11 +66,12 @@ export interface PresetHeaderLevelConfig {
  */
 export interface PresetConfig {
   /**
-   * Header rows to render, ordered top → bottom. The last row's `unit` does not
-   * need to match the preset's `timeResolution`: the grid ticks use
-   * `timeResolution`, while each header row iterates over its own `unit`.
+   * Header rows to render, ordered top → bottom. At least one row is required.
+   * The last row's `unit` does not need to match the preset's `timeResolution`:
+   * the grid ticks use `timeResolution`, while each header row iterates over
+   * its own `unit`.
    */
-  headers: PresetHeaderLevelConfig[];
+  headers: readonly [PresetHeaderLevelConfig, ...PresetHeaderLevelConfig[]];
   /** Smallest unit the grid snaps to. A cell's `spanInTicks` is measured in this unit. */
   timeResolution: PresetHeaderUnit;
   /** CSS px per tick (i.e. per `timeResolution` unit). */
