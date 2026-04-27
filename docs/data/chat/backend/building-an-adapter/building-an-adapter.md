@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Building an Adapter
 
-<p class="description">A step-by-step tutorial for implementing a custom <code>ChatAdapter</code> that connects your chat UI to any backend.</p>
+<p class="description">A step-by-step tutorial for connecting your chat UI to any backend.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -47,7 +47,7 @@ Your adapter only needs to know how to talk to your backend.
 If your backend does not return a `ReadableStream` natively (for example, you are using a WebSocket or a custom protocol), you can construct the stream manually.
 
 The stream must begin with a `start` chunk and end with `finish` or `abort`.
-Text arrives in `text-start` / `text-delta` / `text-end` triplets:
+Text arrives in `text-start`, `text-delta`, and `text-end` triplets:
 
 ```tsx
 const adapter: ChatAdapter = {

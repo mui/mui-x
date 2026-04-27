@@ -18,14 +18,14 @@ Tool approval lets you pause the agent when it requests a potentially dangerous 
 
 The approval lifecycle extends the standard tool invocation states with two additional phases:
 
-| State                | Description                             |
-| :------------------- | :-------------------------------------- |
-| `input-streaming`    | Tool input JSON is being streamed       |
-| `input-available`    | Tool input is fully available           |
-| `approval-requested` | Stream pauses—user approval is needed   |
-| `approval-responded` | User has responded, stream continues    |
-| `output-available`   | Tool output is ready (if approved)      |
-| `output-denied`      | User denied the tool call               |
+| State                | Description                           |
+| :------------------- | :------------------------------------ |
+| `input-streaming`    | Tool input JSON is being streamed     |
+| `input-available`    | Tool input is fully available         |
+| `approval-requested` | Stream pauses—user approval is needed |
+| `approval-responded` | User has responded, stream continues  |
+| `output-available`   | Tool output is ready (if approved)    |
+| `output-denied`      | User denied the tool call             |
 
 The stream pauses at `approval-requested` until your UI calls `addToolApprovalResponse()`.
 
