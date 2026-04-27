@@ -20,6 +20,7 @@ export { processBarDataForPlot } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartsDataProvider/useChartsDataProviderProps';
+export * from '../ChartsRadialDataProvider/useChartsRadialDataProviderProps';
 export * from './seriesSelectorOfType';
 export { useSkipAnimation } from '../hooks/useSkipAnimation';
 export { useRegisterPointerInteractions } from './plugins/featurePlugins/shared/useRegisterPointerInteractions';
