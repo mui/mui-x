@@ -1,4 +1,4 @@
-import { describe, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { HeatmapWebGLProgram } from './HeatmapWebGLProgram';
 
@@ -192,103 +192,116 @@ function makeNaiveProgram(gl: WebGL2RenderingContext) {
 }
 
 describe('HeatmapWebGL pipeline (200k × 30 frames)', () => {
-  test.skipIf(isJSDOM)('naive: bufferData every frame, fresh allocs, repeated lookups', async () => {
-    const { canvas, gl, counters } = setupGL();
-    try {
-      const program = makeNaiveProgram(gl);
-      gl.useProgram(program);
+  test.skipIf(isJSDOM)(
+    'naive: bufferData every frame, fresh allocs, repeated lookups',
+    async () => {
+      const { canvas, gl, counters } = setupGL();
+      try {
+        const program = makeNaiveProgram(gl);
+        gl.useProgram(program);
 
-      const t0 = performance.now();
-      for (let frame = 0; frame < FRAME_COUNT; frame += 1) {
-        const centers = generateFreshCenters(POINT_COUNT, frame);
-        const colors = buildColors(POINT_COUNT);
-        const saturations = buildSaturations(POINT_COUNT);
+        const t0 = performance.now();
+        for (let frame = 0; frame < FRAME_COUNT; frame += 1) {
+          const centers = generateFreshCenters(POINT_COUNT, frame);
+          const colors = buildColors(POINT_COUNT);
+          const saturations = buildSaturations(POINT_COUNT);
 
-        const aPos = gl.getAttribLocation(program, 'a_position');
-        const aCenter = gl.getAttribLocation(program, 'a_center');
-        const aColor = gl.getAttribLocation(program, 'a_color');
-        const aSat = gl.getAttribLocation(program, 'a_saturation');
-        const uDim = gl.getUniformLocation(program, 'u_dimensions');
-        const uRes = gl.getUniformLocation(program, 'u_resolution');
-        gl.uniform2f(uDim, 1.2, 1.2);
-        gl.uniform2f(uRes, canvas.width, canvas.height);
+          const aPos = gl.getAttribLocation(program, 'a_position');
+          const aCenter = gl.getAttribLocation(program, 'a_center');
+          const aColor = gl.getAttribLocation(program, 'a_color');
+          const aSat = gl.getAttribLocation(program, 'a_saturation');
+          const uDim = gl.getUniformLocation(program, 'u_dimensions');
+          const uRes = gl.getUniformLocation(program, 'u_resolution');
+          gl.uniform2f(uDim, 1.2, 1.2);
+          gl.uniform2f(uRes, canvas.width, canvas.height);
 
-        const quadBuffer = gl.createBuffer()!;
-        gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, QUAD, gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(aPos);
-        gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+          const quadBuffer = gl.createBuffer()!;
+          gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, QUAD, gl.STATIC_DRAW);
+          gl.enableVertexAttribArray(aPos);
+          gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 
-        const centerBuffer = gl.createBuffer()!;
-        gl.bindBuffer(gl.ARRAY_BUFFER, centerBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, centers, gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(aCenter);
-        gl.vertexAttribPointer(aCenter, 2, gl.FLOAT, false, 0, 0);
-        gl.vertexAttribDivisor(aCenter, 1);
+          const centerBuffer = gl.createBuffer()!;
+          gl.bindBuffer(gl.ARRAY_BUFFER, centerBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, centers, gl.STATIC_DRAW);
+          gl.enableVertexAttribArray(aCenter);
+          gl.vertexAttribPointer(aCenter, 2, gl.FLOAT, false, 0, 0);
+          gl.vertexAttribDivisor(aCenter, 1);
 
-        const colorBuffer = gl.createBuffer()!;
-        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(aColor);
-        gl.vertexAttribPointer(aColor, 4, gl.FLOAT, false, 0, 0);
-        gl.vertexAttribDivisor(aColor, 1);
+          const colorBuffer = gl.createBuffer()!;
+          gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+          gl.enableVertexAttribArray(aColor);
+          gl.vertexAttribPointer(aColor, 4, gl.FLOAT, false, 0, 0);
+          gl.vertexAttribDivisor(aColor, 1);
 
-        const satBuffer = gl.createBuffer()!;
-        gl.bindBuffer(gl.ARRAY_BUFFER, satBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, saturations, gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(aSat);
-        gl.vertexAttribPointer(aSat, 1, gl.FLOAT, false, 0, 0);
-        gl.vertexAttribDivisor(aSat, 1);
+          const satBuffer = gl.createBuffer()!;
+          gl.bindBuffer(gl.ARRAY_BUFFER, satBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, saturations, gl.STATIC_DRAW);
+          gl.enableVertexAttribArray(aSat);
+          gl.vertexAttribPointer(aSat, 1, gl.FLOAT, false, 0, 0);
+          gl.vertexAttribDivisor(aSat, 1);
 
-        gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, POINT_COUNT);
-        gl.finish();
+          gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, POINT_COUNT);
+          gl.finish();
 
-        gl.deleteBuffer(quadBuffer);
-        gl.deleteBuffer(centerBuffer);
-        gl.deleteBuffer(colorBuffer);
-        gl.deleteBuffer(satBuffer);
+          gl.deleteBuffer(quadBuffer);
+          gl.deleteBuffer(centerBuffer);
+          gl.deleteBuffer(colorBuffer);
+          gl.deleteBuffer(satBuffer);
+        }
+        const elapsed = performance.now() - t0;
+        // eslint-disable-next-line no-console
+        console.log(
+          `[NAIVE-HEATMAP] ${POINT_COUNT} pts × ${FRAME_COUNT} frames = ${elapsed.toFixed(1)}ms total, ${(elapsed / FRAME_COUNT).toFixed(2)}ms/frame`,
+        );
+        logCounters('NAIVE-HEATMAP', counters);
+        expect(counters.drawArraysInstanced).toBe(FRAME_COUNT);
+        expect(elapsed).toBeGreaterThan(0);
+      } finally {
+        canvas.remove();
       }
-      const elapsed = performance.now() - t0;
-      // eslint-disable-next-line no-console
-      console.log(
-        `[NAIVE-HEATMAP] ${POINT_COUNT} pts × ${FRAME_COUNT} frames = ${elapsed.toFixed(1)}ms total, ${(elapsed / FRAME_COUNT).toFixed(2)}ms/frame`,
-      );
-      logCounters('NAIVE-HEATMAP', counters);
-    } finally {
-      canvas.remove();
-    }
-  });
+    },
+  );
 
-  test.skipIf(isJSDOM)('optimized: pooled views, growable buffers, cached locations, color short-circuit', async () => {
-    const { canvas, gl, counters } = setupGL();
-    try {
-      const program = new HeatmapWebGLProgram(gl);
-      program.setResolution(canvas.width, canvas.height);
-      program.setRectDimensions(1.2, 1.2);
-      program.setBorderRadius(0);
+  test.skipIf(isJSDOM)(
+    'optimized: pooled views, growable buffers, cached locations, color short-circuit',
+    async () => {
+      const { canvas, gl, counters } = setupGL();
+      try {
+        const program = new HeatmapWebGLProgram(gl);
+        program.setResolution(canvas.width, canvas.height);
+        program.setRectDimensions(1.2, 1.2);
+        program.setBorderRadius(0);
 
-      const t0 = performance.now();
-      for (let frame = 0; frame < FRAME_COUNT; frame += 1) {
-        const centers = generatePooledCenters(POINT_COUNT, frame);
-        program.plot({
-          centers,
-          /* Same refs every frame → upload short-circuit fires after frame 0. */
-          colors: cachedColors,
-          saturations: cachedSaturations,
-        });
-        program.render(POINT_COUNT);
-        gl.finish();
+        const t0 = performance.now();
+        for (let frame = 0; frame < FRAME_COUNT; frame += 1) {
+          const centers = generatePooledCenters(POINT_COUNT, frame);
+          program.plot({
+            centers,
+            /* Same refs every frame → upload short-circuit fires after frame 0. */
+            colors: cachedColors,
+            saturations: cachedSaturations,
+          });
+          program.render(POINT_COUNT);
+          gl.finish();
+        }
+        const elapsed = performance.now() - t0;
+        // eslint-disable-next-line no-console
+        console.log(
+          `[OPTIMIZED-HEATMAP] ${POINT_COUNT} pts × ${FRAME_COUNT} frames = ${elapsed.toFixed(1)}ms total, ${(elapsed / FRAME_COUNT).toFixed(2)}ms/frame`,
+        );
+        logCounters('OPTIMIZED-HEATMAP', counters);
+        /* Sanity-check the structural wins the doc patterns enforce. */
+        expect(counters.createBuffer).toBeLessThan(FRAME_COUNT);
+        expect(counters.getAttribLocation).toBeLessThan(FRAME_COUNT);
+        /* Static colors/saturations short-circuit after frame 0; only `centers` re-uploads. */
+        expect(counters.bufferSubData).toBe(FRAME_COUNT - 1);
+
+        program.dispose();
+      } finally {
+        canvas.remove();
       }
-      const elapsed = performance.now() - t0;
-      // eslint-disable-next-line no-console
-      console.log(
-        `[OPTIMIZED-HEATMAP] ${POINT_COUNT} pts × ${FRAME_COUNT} frames = ${elapsed.toFixed(1)}ms total, ${(elapsed / FRAME_COUNT).toFixed(2)}ms/frame`,
-      );
-      logCounters('OPTIMIZED-HEATMAP', counters);
-
-      program.dispose();
-    } finally {
-      canvas.remove();
-    }
-  });
+    },
+  );
 });

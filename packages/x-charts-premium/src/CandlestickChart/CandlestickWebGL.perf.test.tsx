@@ -1,4 +1,4 @@
-import { describe, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { CandlestickWebGLProgram } from './CandlestickWebGLProgram';
 
@@ -266,7 +266,9 @@ function makeNaiveProgram(gl: WebGL2RenderingContext) {
 const QUAD = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
 describe('CandlestickWebGL pipeline (200k × 30 frames)', () => {
-  test.skipIf(isJSDOM)('naive: bufferData every frame, fresh allocs, repeated lookups', async () => {
+  test.skipIf(isJSDOM)(
+    'naive: bufferData every frame, fresh allocs, repeated lookups',
+    async () => {
       const { canvas, gl, counters } = setupGL();
       try {
         const program = makeNaiveProgram(gl);
@@ -333,12 +335,17 @@ describe('CandlestickWebGL pipeline (200k × 30 frames)', () => {
           `[NAIVE] ${POINT_COUNT} pts × ${FRAME_COUNT} frames = ${elapsed.toFixed(1)}ms total, ${(elapsed / FRAME_COUNT).toFixed(2)}ms/frame`,
         );
         logCounters('NAIVE', counters);
+        expect(counters.drawArraysInstanced).toBe(FRAME_COUNT);
+        expect(elapsed).toBeGreaterThan(0);
       } finally {
         canvas.remove();
       }
-    });
+    },
+  );
 
-  test.skipIf(isJSDOM)('optimized: pooled views, growable buffers, cached locations, color short-circuit', async () => {
+  test.skipIf(isJSDOM)(
+    'optimized: pooled views, growable buffers, cached locations, color short-circuit',
+    async () => {
       const { canvas, gl, counters } = setupGL();
       try {
         const program = new CandlestickWebGLProgram(gl);
@@ -367,10 +374,15 @@ describe('CandlestickWebGL pipeline (200k × 30 frames)', () => {
           `[OPTIMIZED] ${POINT_COUNT} pts × ${FRAME_COUNT} frames = ${elapsed.toFixed(1)}ms total, ${(elapsed / FRAME_COUNT).toFixed(2)}ms/frame`,
         );
         logCounters('OPTIMIZED', counters);
+        /* Sanity-check the structural wins the doc patterns enforce. */
+        expect(counters.createBuffer).toBeLessThan(FRAME_COUNT);
+        expect(counters.getAttribLocation).toBeLessThan(FRAME_COUNT);
+        expect(counters.bufferSubData).toBeGreaterThan(counters.bufferData);
 
         program.dispose();
       } finally {
         canvas.remove();
       }
-    });
+    },
+  );
 });

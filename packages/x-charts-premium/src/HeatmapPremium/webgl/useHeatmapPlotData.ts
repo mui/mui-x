@@ -107,8 +107,5 @@ export function useHeatmapPlotData(
     return pool.subarray(0, n * 2);
   }, [drawingArea.left, drawingArea.top, height, series.data, width, xScale, yScale]);
 
-  return React.useMemo(
-    () => ({ centers, colors, saturations }),
-    [centers, colors, saturations],
-  );
+  return React.useMemo(() => ({ centers, colors, saturations }), [centers, colors, saturations]);
 }
