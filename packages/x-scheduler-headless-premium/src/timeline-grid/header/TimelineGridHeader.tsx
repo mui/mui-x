@@ -36,11 +36,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
     const cells = iterate(adapter, level.unit, timeResolution, start, end);
 
     return (
-      <div
-        key={`${level.unit}:${levelIndex}`}
-        className={classNames?.row}
-        data-level={levelIndex}
-      >
+      <div key={`${level.unit}:${levelIndex}`} className={classNames?.row} data-level={levelIndex}>
         {cells.map((cell) => (
           <div
             key={cell.key}

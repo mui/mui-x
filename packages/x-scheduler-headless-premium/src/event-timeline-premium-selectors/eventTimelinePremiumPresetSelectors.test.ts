@@ -1,5 +1,8 @@
 import { adapter, getEventTimelinePremiumStateFromParameters } from 'test/utils/scheduler';
-import { EventTimelinePremiumPreset, PresetHeaderUnit } from '@mui/x-scheduler-headless-premium/models';
+import {
+  EventTimelinePremiumPreset,
+  PresetHeaderUnit,
+} from '@mui/x-scheduler-headless-premium/models';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 
 const VISIBLE_DATE = adapter.date('2025-07-03T00:00:00Z', 'default');
