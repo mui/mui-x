@@ -17,7 +17,7 @@ export function useEventTimelinePremiumStyledContext(): EventTimelinePremiumStyl
   const value = React.useContext(EventTimelinePremiumStyledContext);
   if (!value) {
     throw new Error(
-      'MUI X: useEventTimelinePremiumStyledContext must be used within EventTimelinePremiumStyledContext.Provider',
+      'MUI X Scheduler: useEventTimelinePremiumStyledContext must be used within EventTimelinePremiumStyledContext.Provider',
     );
   }
   return value;

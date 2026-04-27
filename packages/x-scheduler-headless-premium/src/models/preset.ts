@@ -54,7 +54,9 @@ export interface PresetHeaderLevelConfig {
    * any React node (string, fragment, element).
    */
   renderCell?: (state: PresetHeaderCellState) => React.ReactNode;
-  /** Extra class name applied to every cell in this row. */
+  /**
+   * A custom class name to apply to the cells in this header row.
+   */
   className?: string;
 }
 

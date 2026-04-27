@@ -19,7 +19,7 @@ import {
   useEventDialogContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
-import { TimelineHeader } from './timeline-header';
+import { EventTimelinePremiumHeader } from './timeline-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
@@ -431,7 +431,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                 ref={eventsHeaderRef}
                 className={classes.eventsHeaderCellContent}
               >
-                <TimelineHeader />
+                <EventTimelinePremiumHeader />
               </EventTimelinePremiumEventsHeaderCellContent>
               {showCurrentTimeIndicator && (
                 <EventTimelinePremiumCurrentTimeIndicatorCircle

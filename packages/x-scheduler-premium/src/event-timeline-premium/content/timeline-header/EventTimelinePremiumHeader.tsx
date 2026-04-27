@@ -44,8 +44,8 @@ const StyledTimelineGridHeader = styled(TimelineGrid.Header, {
     '&[data-unit-leaf][data-weekend]': {
       color: (theme.vars || theme).palette.error.main,
     },
-    // Conventions used by the default `day` preset's renderCell: the weekday letter sits
-    // above the day number and only the letter turns red on weekends.
+    // Conventions used by the default `dayAndMonth` preset's renderCell: the weekday letter
+    // sits above the day number and only the letter turns red on weekends.
     '& [data-slot="weekday"]': {
       color: (theme.vars || theme).palette.text.secondary,
       fontWeight: theme.typography.fontWeightRegular,
@@ -65,8 +65,8 @@ const StyledTimelineGridHeader = styled(TimelineGrid.Header, {
   },
 }));
 
-export const TimelineHeader = React.forwardRef(function TimelineHeader(
-  props: TimelineHeader.Props,
+export const EventTimelinePremiumHeader = React.forwardRef(function EventTimelinePremiumHeader(
+  props: EventTimelinePremiumHeader.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { classes: ctxClasses } = useEventTimelinePremiumStyledContext();
@@ -84,6 +84,6 @@ export const TimelineHeader = React.forwardRef(function TimelineHeader(
   );
 });
 
-export namespace TimelineHeader {
+export namespace EventTimelinePremiumHeader {
   export interface Props extends TimelineGrid.Header.Props {}
 }

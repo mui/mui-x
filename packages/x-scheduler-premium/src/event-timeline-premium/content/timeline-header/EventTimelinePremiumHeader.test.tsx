@@ -42,7 +42,7 @@ const PRESET_EXPECTATIONS: PresetExpectations[] = [
   { preset: 'year', rowCount: 1, tickWidth: 200, totalTicks: 30 },
 ];
 
-describe('<TimelineHeader />', () => {
+describe('<EventTimelinePremiumHeader />', () => {
   const { render } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
@@ -78,10 +78,14 @@ describe('<TimelineHeader />', () => {
 
         rows.forEach((row) => {
           expect(getTicksSum(row)).to.equal(totalTicks);
-          // Guards against a formatter silently returning '' / undefined: every cell
-          // must render some visible text so labels never disappear.
-          row.querySelectorAll<HTMLElement>(`.${classes.headerCell}`).forEach((cell) => {
+          const cells = Array.from(row.querySelectorAll<HTMLElement>(`.${classes.headerCell}`));
+          cells.forEach((cell, expectedIndex) => {
+            // Guards against a formatter silently returning '' / undefined: every cell
+            // must render some visible text so labels never disappear.
             expect((cell.textContent ?? '').trim().length).to.be.greaterThan(0);
+            // `data-index` must be contiguous and zero-based per row so virtualization /
+            // keyboard navigation can rely on the index addressing every cell once.
+            expect(cell.dataset.index).to.equal(String(expectedIndex));
           });
         });
       });

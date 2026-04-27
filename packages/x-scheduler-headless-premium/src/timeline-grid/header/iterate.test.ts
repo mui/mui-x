@@ -129,5 +129,15 @@ describe('iterate()', () => {
         /Unsupported header unit/,
       );
     });
+
+    it('should throw when the cell count would exceed the 10k safety cap', () => {
+      // Hour ticks across 2 years = 17,520 cells, well over the 10k cap.
+      const start = adapter.date('2024-01-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-12-31T23:59:59.999Z', 'default');
+
+      expect(() => iterate(adapter, 'hour', 'hour', start, end)).to.throw(
+        /produced more than 10,000 cells/,
+      );
+    });
   });
 });

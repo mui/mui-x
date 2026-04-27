@@ -56,7 +56,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       expect(config.end).toEqualDateTime('2025-07-06T23:59:59.999Z');
     });
 
-    it('should return the configuration for the day preset', () => {
+    it('should return the configuration for the dayAndMonth preset', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
         preset: 'dayAndMonth',

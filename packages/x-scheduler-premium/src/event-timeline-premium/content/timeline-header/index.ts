@@ -1,1 +1,1 @@
-export * from './TimelineHeader';
+export * from './EventTimelinePremiumHeader';
