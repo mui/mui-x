@@ -8,7 +8,7 @@
     "disableLine": { "description": "If <code>true</code>, the axis line is not rendered." },
     "disableTicks": { "description": "If <code>true</code>, the ticks are not rendered." },
     "position": {
-      "description": "The posiiton of the axis in polar coordinates. It can be &#39;start&#39;, &#39;end&#39;, or a specific angle in degrees."
+      "description": "The position of the axis in polar coordinates. It can be &#39;start&#39;, &#39;end&#39;, or a specific angle in degrees."
     },
     "tickLabelPosition": {
       "description": "Set the position of the tick labels relative to the axis line. The before/after is defined based on clockwise direction."
