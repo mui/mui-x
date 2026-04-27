@@ -64,6 +64,7 @@ export * from './isDefined';
 export * from './getScale';
 export * from './stacking';
 export * from './getCurve';
+export * from './getSymbol';
 export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';

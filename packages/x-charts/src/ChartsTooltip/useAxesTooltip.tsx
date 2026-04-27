@@ -288,7 +288,10 @@ export function useAxesTooltip<
             formattedValue,
             formattedLabel,
             markType: seriesToAdd.labelMarkType,
-            markShape: 'showMark' in seriesToAdd && seriesToAdd.showMark ? 'circle' : undefined,
+            markShape:
+              'showMark' in seriesToAdd && seriesToAdd.showMark
+                ? (seriesToAdd.shape ?? 'circle')
+                : undefined,
           });
         }
       });
