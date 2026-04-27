@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui/react": "^1.0.0",
+    "@base-ui/react": "^1.4.1",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*"
   },

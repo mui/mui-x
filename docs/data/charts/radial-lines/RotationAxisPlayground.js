@@ -3,16 +3,16 @@ import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { Unstable_ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
-import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
+import { Unstable_ChartsRotationAxis as ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
 import { Unstable_ChartsRadialDataProvider } from '@mui/x-charts/ChartsRadialDataProvider';
 
-export default function RadiusAxisPlayground() {
+export default function RotationAxisPlayground() {
   return (
     <ChartsUsageDemo
-      componentName="RadiusAxis"
+      componentName="RotationAxis"
       data={{
-        disableLine: { knob: 'switch', defaultValue: true },
-        disableTicks: { knob: 'switch', defaultValue: true },
+        disableLine: { knob: 'switch', defaultValue: false },
+        disableTicks: { knob: 'switch', defaultValue: false },
         tickPosition: {
           knob: 'select',
           options: ['after', 'before'],
@@ -20,18 +20,16 @@ export default function RadiusAxisPlayground() {
         },
         tickLabelPosition: {
           knob: 'select',
-          options: ['center', 'after', 'before'],
-          defaultValue: 'center',
+          options: ['after', 'before'],
+          defaultValue: 'after',
+        },
+        position: {
+          knob: 'select',
+          options: ['inside', 'outside'],
+          defaultValue: 'outside',
         },
         tickSize: { knob: 'number', defaultValue: 6, min: -20, max: 20 },
-        position: {
-          knob: 'number',
-          defaultValue: -90,
-          min: -180,
-          max: 180,
-          step: 10,
-        },
-        radiusTickNumber: { knob: 'number', defaultValue: 5, min: 0, max: 20 },
+        rotationTickNumber: { knob: 'number', defaultValue: 8, min: 0, max: 20 },
         startAngle: {
           knob: 'number',
           defaultValue: -90,
@@ -41,7 +39,7 @@ export default function RadiusAxisPlayground() {
         },
         endAngle: {
           knob: 'number',
-          defaultValue: 90,
+          defaultValue: 180,
           min: -360,
           max: 400,
           step: 10,
@@ -62,9 +60,10 @@ export default function RadiusAxisPlayground() {
             rotationAxis={[
               {
                 min: 0,
-                max: 100,
+                max: 360,
                 startAngle: props.startAngle,
                 endAngle: props.endAngle,
+                tickNumber: props.rotationTickNumber,
               },
             ]}
             radiusAxis={[
@@ -73,17 +72,16 @@ export default function RadiusAxisPlayground() {
                 max: 100,
                 minRadius: props.minRadius,
                 maxRadius: props.maxRadius,
-                tickNumber: props.radiusTickNumber,
               },
             ]}
           >
             <ChartsLayerContainer>
               <ChartsSvgLayer>
                 <Unstable_ChartsRadialGrid rotation radius />
-                <ChartsRadiusAxis
-                  position={props.position}
+                <ChartsRotationAxis
                   disableLine={props.disableLine}
                   disableTicks={props.disableTicks}
+                  position={props.position}
                   tickSize={props.tickSize}
                   tickLabelPosition={props.tickLabelPosition}
                   tickPosition={props.tickPosition}
@@ -97,20 +95,20 @@ export default function RadiusAxisPlayground() {
   rotationAxis={[{
     startAngle: ${props.startAngle},
     endAngle: ${props.endAngle},
+    tickNumber: ${props.rotationTickNumber},
   }]}
   radiusAxis={[{
     minRadius: ${props.minRadius},
     maxRadius: ${props.maxRadius},
-    tickNumber: ${props.radiusTickNumber},
   }]}
 >
   <Unstable_ChartsRadialGrid rotation radius />
-  <ChartsRadiusAxis
+  <ChartsRotationAxis
 ${[
-  `position={${props.position}}`,
   `tickSize={${props.tickSize}}`,
   props.disableLine && 'disableLine',
   props.disableTicks && 'disableTicks',
+  props.position && `position="${props.position}"`,
   props.tickPosition && `tickPosition="${props.tickPosition}"`,
   props.tickLabelPosition && `tickLabelPosition="${props.tickLabelPosition}"`,
 ]
