@@ -20,7 +20,7 @@ export interface ChartsRadiusAxisProps {
    */
   axisId?: AxisId;
   /**
-   * The posiiton of the axis in polar coordinates.
+   * The position of the axis in polar coordinates.
    * It can be 'start', 'end', or a specific angle in degrees.
    * @default 'start'
    */
