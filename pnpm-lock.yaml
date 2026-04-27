@@ -22,7 +22,7 @@ catalogs:
       specifier: ^7.28.5
       version: 7.28.5
     '@babel/runtime':
-      specifier: ^7.28.6
+      specifier: ^7.29.2
       version: 7.29.2
     '@babel/traverse':
       specifier: ^7.29.0
