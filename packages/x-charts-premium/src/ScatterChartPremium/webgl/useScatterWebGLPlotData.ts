@@ -8,14 +8,14 @@ const DEFAULT_MARKER_SIZE = 4;
 export interface ScatterWebGLPlotData {
   centers: Float32Array;
   sizes: Float32Array;
-  colors: Float32Array;
+  colors: Uint8Array;
   pointCount: number;
 }
 
 const EMPTY_DATA: ScatterWebGLPlotData = {
   centers: new Float32Array(0),
   sizes: new Float32Array(0),
-  colors: new Float32Array(0),
+  colors: new Uint8Array(0),
   pointCount: 0,
 };
 
@@ -38,7 +38,7 @@ export function useScatterWebGLPlotData(): ScatterWebGLPlotData {
   const cachedStylesRef = React.useRef<{
     seriesData: typeof seriesData;
     sizes: Float32Array;
-    colors: Float32Array;
+    colors: Uint8Array;
   } | null>(null);
 
   // Centers change on every zoom/axis update, but the underlying ArrayBuffer
@@ -85,7 +85,7 @@ export function useScatterWebGLPlotData(): ScatterWebGLPlotData {
     // of the underlying buffer is incurred.
     const centers = new Float32Array(pool.buffer, 0, centersLength);
     const sizes = reuseStyles ? cached!.sizes : new Float32Array(maxPoints);
-    const colors = reuseStyles ? cached!.colors : new Float32Array(maxPoints * 4);
+    const colors = reuseStyles ? cached!.colors : new Uint8Array(maxPoints * 4);
 
     let pointCount = 0;
     const dx = -drawingArea.left;
@@ -111,7 +111,14 @@ export function useScatterWebGLPlotData(): ScatterWebGLPlotData {
         continue;
       }
 
-      const [cr, cg, cb, ca] = parseColor(s.color);
+      const parsed = parseColor(s.color);
+      // parseColor returns 0..1; the GPU sees this back as a vec4 in 0..1 because
+      // the attribute is uploaded with normalized=true. Uint8Array assignment
+      // truncates non-integers, so round before storing.
+      const cr = Math.round(parsed[0] * 255);
+      const cg = Math.round(parsed[1] * 255);
+      const cb = Math.round(parsed[2] * 255);
+      const ca = Math.round(parsed[3] * 255);
       const markerSize = s.markerSize ?? DEFAULT_MARKER_SIZE;
 
       for (let i = 0; i < data.length; i += 1) {

@@ -7,8 +7,11 @@ const QUAD_VERTICES = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 interface InstancedBuffer {
   buffer: WebGLBuffer;
   size: 1 | 2 | 4;
-  capacity: number;
-  lastUploaded: Float32Array | null;
+  glType: GLenum;
+  // Capacity is tracked in bytes so attributes with different element types
+  // (Float32 vs Uint8) reuse the grow-only logic without comparing apples to oranges.
+  capacityBytes: number;
+  lastUploaded: ArrayBufferView | null;
 }
 
 export class ScatterWebGLProgram {
@@ -42,9 +45,10 @@ export class ScatterWebGLProgram {
     gl.enableVertexAttribArray(aPosition);
     gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
 
-    this.centers = this.setupInstancedAttribute('a_center', 2);
-    this.sizes = this.setupInstancedAttribute('a_size', 1);
-    this.colors = this.setupInstancedAttribute('a_color', 4);
+    this.centers = this.setupInstancedAttribute('a_center', 2, gl.FLOAT, false);
+    this.sizes = this.setupInstancedAttribute('a_size', 1, gl.FLOAT, false);
+    // Colors come in as Uint8 [0, 255]; normalized=true makes the GPU read them back as vec4 in [0, 1].
+    this.colors = this.setupInstancedAttribute('a_color', 4, gl.UNSIGNED_BYTE, true);
 
     gl.bindVertexArray(null);
   }
@@ -86,31 +90,36 @@ export class ScatterWebGLProgram {
   }
 
   // Assumes the owning VAO is already bound.
-  private setupInstancedAttribute(name: string, size: 1 | 2 | 4): InstancedBuffer {
+  private setupInstancedAttribute(
+    name: string,
+    size: 1 | 2 | 4,
+    glType: GLenum,
+    normalized: boolean,
+  ): InstancedBuffer {
     const { gl, program } = this;
     const buffer = gl.createBuffer();
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     const location = gl.getAttribLocation(program, name);
     gl.enableVertexAttribArray(location);
-    gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(location, size, glType, normalized, 0, 0);
     gl.vertexAttribDivisor(location, 1);
 
-    return { buffer, size, capacity: 0, lastUploaded: null };
+    return { buffer, size, glType, capacityBytes: 0, lastUploaded: null };
   }
 
-  private uploadBuffer(target: InstancedBuffer, data: Float32Array) {
+  private uploadBuffer(target: InstancedBuffer, data: ArrayBufferView) {
     if (target.lastUploaded === data) {
       return;
     }
     const { gl } = this;
     gl.bindBuffer(gl.ARRAY_BUFFER, target.buffer);
 
-    if (data.length <= target.capacity) {
+    if (data.byteLength <= target.capacityBytes) {
       gl.bufferSubData(gl.ARRAY_BUFFER, 0, data);
     } else {
       gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
-      target.capacity = data.length;
+      target.capacityBytes = data.byteLength;
     }
     target.lastUploaded = data;
   }
