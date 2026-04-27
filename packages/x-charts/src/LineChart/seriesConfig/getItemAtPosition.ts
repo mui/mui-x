@@ -263,7 +263,11 @@ export default function getItemAtPosition(
   }
 
   // Step 2: If the closest line is within the proximity threshold, pick it.
-  if (closestItem && closestDistance <= LINE_PROXIMITY_THRESHOLD && !series.series[closestItem.seriesId].area) {
+  if (
+    closestItem &&
+    closestDistance <= LINE_PROXIMITY_THRESHOLD &&
+    !series.series[closestItem.seriesId].area
+  ) {
     return closestItem;
   }
 
