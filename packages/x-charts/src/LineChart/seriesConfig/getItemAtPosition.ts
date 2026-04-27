@@ -93,6 +93,7 @@ function getBaselinePixelY(
   if (baseline === 'min') {
     return yScale.range()[0] as number;
   }
+
   // Default: use the stacked baseline value.
   const value = yScale(stackedY0) as number;
   if (Number.isNaN(value)) {
@@ -259,7 +260,7 @@ export default function getItemAtPosition(
   }
 
   // Step 2: If the closest line is within the proximity threshold, pick it.
-  if (closestItem && closestDistance <= LINE_PROXIMITY_THRESHOLD) {
+  if (closestItem && closestDistance <= LINE_PROXIMITY_THRESHOLD && !series.series[closestItem.seriesId].area) {
     return closestItem;
   }
 
