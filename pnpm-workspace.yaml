@@ -69,8 +69,8 @@ catalog:
   playwright: 1.58.2
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
-  react: 19.2.4
-  react-dom: 19.2.4
+  react: 19.2.5
+  react-dom: 19.2.5
   react-router: ^7.13.0
   react-transition-group: ^4.4.5
   reselect: ^5.1.1
