@@ -159,7 +159,7 @@ const renderers: ChatPartRendererMap = {
 ## Reasoning alongside tool calls
 
 Reasoning chunks can appear before, between, or after tool invocations in the same stream.
-The runtime handles interleaving correctly — each chunk type creates its own message part in the order it arrives:
+The runtime handles interleaving correctly—each chunk type creates its own message part in the order it arrives:
 
 ```tsx
 // Stream order:
