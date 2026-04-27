@@ -116,7 +116,7 @@
     "execa": "catalog:",
     "globby": "16.2.0",
     "jsdom": "catalog:",
-    "lerna": "9.0.4",
+    "lerna": "9.0.7",
     "markdownlint-cli2": "0.22.1",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
