@@ -31,12 +31,6 @@ The following team members contributed to this release:
 
 Same changes as in `@mui/x-date-pickers@8.28.4`.
 
-### Codemod
-
-#### `@mui/x-codemod@8.27.0`
-
-Internal changes.
-
 ### Docs
 
 - [docs] Remove obsolete v7 deprecation warning for `dayOfWeekFormatter` (#22120) @LukasTy
