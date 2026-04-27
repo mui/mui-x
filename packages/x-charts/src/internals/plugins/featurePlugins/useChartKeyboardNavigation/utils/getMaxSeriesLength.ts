@@ -11,11 +11,15 @@ export function getMaxSeriesLength<OutSeriesType extends Exclude<ChartSeriesType
     .flatMap((type) => {
       const seriesOfType = series[type]!;
       return seriesOfType.seriesOrder
-        .filter(
-          (seriesId: SeriesId) =>
-            seriesOfType.series[seriesId].data.length > 0 &&
-            seriesOfType.series[seriesId].data.some((value) => value != null),
-        )
+        .filter((seriesId: SeriesId) => {
+          const seriesItem = seriesOfType.series[seriesId];
+          if ('hidden' in seriesItem && seriesItem.hidden) {
+            return false;
+          }
+          return (
+            seriesItem.data.length > 0 && seriesItem.data.some((value: unknown) => value != null)
+          );
+        })
         .map((seriesId: SeriesId) => seriesOfType.series[seriesId].data.length);
     })
     .reduce((maxLengths, length) => Math.max(maxLengths, length), 0);
