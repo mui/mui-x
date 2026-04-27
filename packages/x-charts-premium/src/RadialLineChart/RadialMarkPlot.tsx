@@ -1,4 +1,6 @@
+import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import { styled } from '@mui/material/styles';
+import { getSymbol } from '@mui/x-charts/internals';
 import { useRadialLinePlotData } from './useRadialLinePlotData';
 import { type RadialLineClasses, useUtilityClasses } from './radialLineClasses';
 
@@ -19,20 +21,36 @@ export function RadialMarkPlot(props: RadialMarkPlotProps) {
 
   return (
     <RadialMarkPlotRoot className={classes.markPlot}>
-      {completedData.map(({ points, seriesId, color, hidden }) => {
+      {completedData.map(({ points, seriesId, color, hidden, showMark, shape }) => {
+        if (!showMark) {
+          return null;
+        }
+        const path = shape === 'circle' ? null : d3Symbol(d3SymbolsFill[getSymbol(shape)])()!;
+
         return (
           <g data-series={seriesId} key={seriesId}>
-            {points.map(({ x, y, dataIndex }) => (
-              <circle
-                key={dataIndex}
-                cx={x}
-                cy={y}
-                r={4}
-                fill={color}
-                opacity={hidden ? 0 : 1}
-                className={classes.mark}
-              />
-            ))}
+            {points.map(({ x, y, dataIndex }) =>
+              shape === 'circle' ? (
+                <circle
+                  key={dataIndex}
+                  cx={x}
+                  cy={y}
+                  r={4}
+                  fill={color}
+                  opacity={hidden ? 0 : 1}
+                  className={classes.mark}
+                />
+              ) : (
+                <path
+                  key={dataIndex}
+                  d={path!}
+                  transform={`translate(${x}, ${y})`}
+                  fill={color}
+                  opacity={hidden ? 0 : 1}
+                  className={classes.mark}
+                />
+              ),
+            )}
           </g>
         );
       })}
