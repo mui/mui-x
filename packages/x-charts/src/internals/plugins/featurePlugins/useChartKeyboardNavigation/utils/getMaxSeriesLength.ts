@@ -1,10 +1,7 @@
 import type { SeriesId } from '../../../../../models/seriesType/common';
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 import type { ProcessedSeries } from '../../../corePlugins/useChartSeries/useChartSeries.types';
-import type {
-  IsItemVisibleFunction,
-  VisibilityIdentifierWithType,
-} from '../../useChartVisibilityManager';
+import type { IsItemVisibleFunction } from '../../useChartVisibilityManager';
 
 export function getMaxSeriesLength<OutSeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
   series: ProcessedSeries<ChartSeriesType>,
@@ -23,7 +20,7 @@ export function getMaxSeriesLength<OutSeriesType extends Exclude<ChartSeriesType
           }
           if (
             isItemVisible !== undefined &&
-            !isItemVisible({ type, seriesId } as VisibilityIdentifierWithType)
+            !isItemVisible({ type, seriesId })
           ) {
             return false;
           }

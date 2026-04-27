@@ -23,7 +23,7 @@ export type IsItemVisibleFunction = {
    * @param {VisibilityIdentifierWithType} identifier The identifier of the item to check.
    * @returns {boolean} Whether the item is visible.
    */
-  (identifier: VisibilityIdentifierWithType): boolean;
+  (identifier: VisibilityIdentifier<ChartSeriesType> & { type: ChartSeriesType }): boolean;
 };
 
 export interface UseChartVisibilityManagerInstance<SeriesType extends ChartSeriesType> {

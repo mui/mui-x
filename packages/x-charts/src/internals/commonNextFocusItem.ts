@@ -11,7 +11,6 @@ import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeri
 import {
   selectorIsItemVisibleGetter,
   type UseChartVisibilityManagerSignature,
-  type VisibilityIdentifierWithType,
 } from './plugins/featurePlugins/useChartVisibilityManager';
 
 type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
@@ -57,7 +56,7 @@ export function createGetNextIndexFocusedItem<
       !type ||
       seriesId == null ||
       !seriesHasData(processedSeries, type, seriesId) ||
-      !isItemVisible({ type, seriesId } as VisibilityIdentifierWithType)
+      !isItemVisible({ type, seriesId })
     ) {
       const nextSeries = getNextNonEmptySeries<OutSeriesType>(
         processedSeries,
@@ -137,7 +136,7 @@ export function createGetPreviousIndexFocusedItem<
       !type ||
       seriesId == null ||
       !seriesHasData(processedSeries, type, seriesId) ||
-      !isItemVisible({ type, seriesId } as VisibilityIdentifierWithType)
+      !isItemVisible({ type, seriesId })
     ) {
       const previousSeries = getPreviousNonEmptySeries<OutSeriesType>(
         processedSeries,
