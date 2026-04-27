@@ -1,21 +1,13 @@
 import type { SeriesId } from '../../../../../models/seriesType/common';
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
-import type {
-  IsItemVisibleFunction,
-  VisibilityIdentifierWithType,
-} from '../../useChartVisibilityManager';
+import type { IsItemVisibleFunction } from '../../useChartVisibilityManager';
 
 /**
  * Walk forward (or backward) from `startIndex` and return the first dataIndex
  * the visibility map flags as visible. Returns `null` if every index in the
  * traversed range is hidden.
- *
- * For series types that key visibility by `seriesId` only (bar, line, scatter,
- * radar) the per-`dataIndex` lookup degrades to the series-level result, so
- * this helper is a no-op there. It only filters out individual data points
- * for series types that store per-`dataIndex` visibility (pie).
  */
-export function findVisibleDataIndex({
+export function findVisibleDataIndex<SeriesType extends ChartSeriesType>({
   type,
   seriesId,
   startIndex,
@@ -24,7 +16,7 @@ export function findVisibleDataIndex({
   allowCycles,
   isItemVisible,
 }: {
-  type: ChartSeriesType;
+  type: SeriesType;
   seriesId: SeriesId;
   startIndex: number;
   dataLength: number;
@@ -36,12 +28,17 @@ export function findVisibleDataIndex({
     return null;
   }
 
+  // Early return if the entire series is hidden.
+  if (!isItemVisible({ type, seriesId })) {
+    return null;
+  }
+
   let dataIndex = startIndex;
   for (let attempt = 0; attempt < dataLength; attempt += 1) {
     if (
       dataIndex >= 0 &&
       dataIndex < dataLength &&
-      isItemVisible({ type, seriesId, dataIndex } as VisibilityIdentifierWithType)
+      isItemVisible({ type, seriesId, dataIndex })
     ) {
       return dataIndex;
     }
