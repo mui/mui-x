@@ -199,6 +199,9 @@ export default function getItemAtPosition(
     const { left, right } = bracket;
     const { visibleStackedData, data, connectNulls, curve } = seriesItem;
 
+    if (!connectNulls && (data[left] == null || data[right] == null)) {
+      continue;
+    }
     const dataIndex = getAxisIndex(xAxis, point.x);
     if (dataIndex === -1) {
       continue;
@@ -271,8 +274,8 @@ export default function getItemAtPosition(
   for (let g = stackingGroups.length - 1; g >= 0; g -= 1) {
     const groupIds = stackingGroups[g].ids;
 
-    // Iterate in reverse so the topmost stacked area is checked first.
-    for (let i = groupIds.length - 1; i >= 0; i -= 1) {
+    // Iterate in direct order cause the `useAreaPlotData` is already doing a reverse order.
+    for (let i = 0; i < groupIds.length; i += 1) {
       const seriesId = groupIds[i];
       const seriesItem = series.series[seriesId];
 
@@ -299,14 +302,7 @@ export default function getItemAtPosition(
       const { visibleStackedData, data, connectNulls, baseline, curve } = seriesItem;
 
       // Check for null gaps at bracket points.
-      const leftIsNull = data[left] == null;
-      const rightIsNull = data[right] == null;
-
-      if (leftIsNull && rightIsNull) {
-        continue;
-      }
-
-      if ((leftIsNull || rightIsNull) && !connectNulls) {
+      if ((data[left] == null || data[right] == null) && !connectNulls) {
         continue;
       }
 
@@ -320,25 +316,6 @@ export default function getItemAtPosition(
       }
 
       const getPixelX = (idx: number) => xPosition(xData[idx]);
-
-      if (left === right) {
-        // Ordinal axis or pointer exactly on a data point.
-        const stacked = visibleStackedData[left];
-        if (!stacked) {
-          continue;
-        }
-        const yBottom = getBaselinePixelY(baseline, yScale, stacked[0]);
-        const yTop = yScale(stacked[1]) as number;
-        if ([yBottom, yTop].some((v) => v == null || Number.isNaN(v))) {
-          continue;
-        }
-        const yMin = Math.min(yBottom, yTop);
-        const yMax = Math.max(yBottom, yTop);
-        if (point.y >= yMin && point.y <= yMax) {
-          return { type: 'line', seriesId, dataIndex: left };
-        }
-        continue;
-      }
 
       // Build pixel-coordinate points for the top and bottom curves,
       // then evaluate them at the pointer's x using the actual d3 curve.
