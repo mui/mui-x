@@ -17,7 +17,11 @@ export type PresetHeaderUnit = 'hour' | 'day' | 'week' | 'month' | 'year';
  * State exposed to a header level's `renderCell`.
  */
 export interface PresetHeaderCellState {
-  /** Aligned start of the cell (may sit before the visible range). */
+  /**
+   * Aligned start of the cell at its unit boundary (e.g. first day of month for a
+   * `month` row). Always `<= start`; for a partial first cell it sits before the
+   * visible range, so use `start` / `end` for layout math and `date` for labels.
+   */
   date: TemporalSupportedObject;
   /** Clamped start of the cell, guaranteed to be within the visible range. */
   start: TemporalSupportedObject;

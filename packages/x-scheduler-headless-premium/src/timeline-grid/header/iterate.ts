@@ -2,7 +2,11 @@ import { TemporalAdapter, TemporalSupportedObject } from '@mui/x-scheduler-headl
 import { PresetHeaderUnit } from '../../models';
 
 export interface IteratedCell {
-  /** Aligned start of the cell (e.g. first day of month). May sit before the visible range. */
+  /**
+   * Aligned start of the cell at its unit boundary (e.g. first day of month for a
+   * `month` row). Always `<= start`; for a partial first cell it sits before the
+   * visible range, so use `start` / `end` for layout math and `date` for labels.
+   */
   date: TemporalSupportedObject;
   /** Clamped start, always within the visible range. */
   start: TemporalSupportedObject;
@@ -31,6 +35,9 @@ export function iterate(
     );
   }
 
+  // `rangeEnd` is inclusive (e.g. `endOfDay` = 23:59:59.999). Floor it to the
+  // tick boundary and add one tick to get an exclusive end the loop can compare
+  // against without depending on millisecond precision.
   const rangeEndExclusive = addUnit(adapter, startOf(adapter, rangeEnd, tickUnit), tickUnit, 1);
 
   const cells: IteratedCell[] = [];
@@ -52,6 +59,9 @@ export function iterate(
       break;
     }
     const nextCursor = addUnit(adapter, cursor, unit, 1);
+    // First and last cells can extend past the visible range (e.g. a year cell
+    // aligned to Jan 1 when the range starts mid-year). Clamp them so
+    // `spanInTicks` reflects only the portion within `[rangeStart, rangeEndExclusive)`.
     const clampedStart = adapter.isBefore(cursor, rangeStart) ? rangeStart : cursor;
     const clampedEnd = adapter.isBefore(rangeEndExclusive, nextCursor)
       ? rangeEndExclusive

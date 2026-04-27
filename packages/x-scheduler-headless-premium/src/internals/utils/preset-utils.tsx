@@ -144,9 +144,7 @@ const TICKS_PER_DAY: Record<PresetHeaderUnit, number> = {
 
 /**
  * Returns how many CSS pixels the preset spends representing one calendar day.
- * Higher = more zoomed in. Used to derive the canonical zoom ordering of presets
- * and as the reference value for a future pinch-zoom implementation (multiply by
- * `zoomFactor` to get the current effective px/day, then snap to the nearest preset).
+ * Higher = more zoomed in. Used to derive the canonical zoom ordering of presets.
  */
 export function getPresetPxPerDay(preset: EventTimelinePremiumPreset): number {
   const { timeResolution, tickWidth } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];

@@ -20,9 +20,8 @@ import {
 } from '../internals/utils/preset-utils';
 
 // Canonical zoom order derived from each preset's `(timeResolution, tickWidth)`: more
-// px per day = more zoomed in. A future zoom API (`zoomIn()` moves toward index 0,
-// `zoomOut()` toward the end) relies on this order. Adding a new preset (or tweaking
-// an existing `tickWidth`) automatically places it at the right position.
+// px per day = more zoomed in. Adding a new preset (or tweaking an existing
+// `tickWidth`) automatically places it at the right position.
 const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = (
   Object.keys(EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS) as EventTimelinePremiumPreset[]
 ).sort((a, b) => getPresetPxPerDay(b) - getPresetPxPerDay(a));
