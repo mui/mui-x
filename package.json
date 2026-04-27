@@ -83,7 +83,7 @@
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/utils": "catalog:",
-    "@next/eslint-plugin-next": "16.2.1",
+    "@next/eslint-plugin-next": "16.2.4",
     "@octokit/plugin-retry": "8.1.0",
     "@octokit/rest": "22.0.1",
     "@playwright/test": "catalog:",
