@@ -73,7 +73,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Record<
       {
         unit: 'day',
         renderCell: ({ adapter, date }) => (
-          <span style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
+          <span data-slot="dayCell">
             <span data-slot="weekday">{adapter.format(date, 'weekday1Letter')}</span>
             <span data-slot="dayOfMonth">{adapter.format(date, 'dayOfMonth')}</span>
           </span>
