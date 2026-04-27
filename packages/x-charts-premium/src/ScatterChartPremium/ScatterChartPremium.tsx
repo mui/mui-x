@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import {
+  HighlightedScatterMark,
   type ScatterChartProps,
   type ScatterChartSlots,
   type ScatterChartSlotProps,
@@ -34,7 +35,6 @@ import {
   type ScatterChartPremiumPluginSignatures,
 } from './ScatterChartPremium.plugins';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
-import { HighlightedScatterMark } from './HighlightedScatterMark';
 
 export interface ScatterChartPremiumSlots
   extends Omit<ScatterChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}

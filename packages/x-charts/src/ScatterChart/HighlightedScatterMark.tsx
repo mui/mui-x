@@ -1,27 +1,36 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import {
   getValueToPositionMapper,
   useScatterSeriesContext,
   useXAxes,
   useYAxes,
-} from '@mui/x-charts/hooks';
-import { selectorChartsHighlightedItem, useStore } from '@mui/x-charts/internals';
+} from '../hooks';
+import { useChartsContext } from '../context/ChartsProvider';
+import { selectorChartsHighlightedItem } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { useStore } from '../internals/store/useStore';
+import { useUtilityClasses } from './scatterClasses';
 
 /**
  * Draws an SVG ring around the currently highlighted scatter point.
- * Used by the WebGL renderer, where the point itself is rasterized off the SVG tree —
- * so the highlight has to be drawn in SVG and positioned via the same axis scales the
- * WebGL plot uses.
+ * Used by renderers where the point itself is rasterized off the SVG tree
+ * (for example WebGL or `svg-batch`), so the highlight has to be drawn in SVG
+ * and positioned via the same axis scales the underlying renderer uses.
  */
-export function HighlightedScatterMark(props: React.SVGAttributes<SVGCircleElement>) {
+export function HighlightedScatterMark({
+  className,
+  ...props
+}: React.SVGAttributes<SVGCircleElement>) {
   const theme = useTheme();
   const store = useStore();
   const highlightedItem = store.use(selectorChartsHighlightedItem);
   const scatterSeries = useScatterSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
+  const { instance } = useChartsContext();
+  const classes = useUtilityClasses();
 
   if (
     !highlightedItem ||
@@ -50,16 +59,20 @@ export function HighlightedScatterMark(props: React.SVGAttributes<SVGCircleEleme
 
   const cx = getXPosition(scatterPoint.x);
   const cy = getYPosition(scatterPoint.y);
-  const r = series.markerSize / 2;
+
+  if (!instance.isPointInside(cx, cy)) {
+    return null;
+  }
 
   return (
     <circle
+      className={clsx(classes.highlightedMark, className)}
       fill="none"
       stroke={(theme.vars ?? theme).palette.text.primary}
       strokeWidth={1}
       cx={cx}
       cy={cy}
-      r={r}
+      r={series.markerSize}
       pointerEvents="none"
       {...props}
     />

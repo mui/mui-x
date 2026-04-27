@@ -9,4 +9,3 @@ export {
   type ScatterChartPremiumPluginSignatures,
 } from './ScatterChartPremium.plugins';
 export { ScatterPlotPremium, type ScatterPlotPremiumProps } from './ScatterPlotPremium';
-export { HighlightedScatterMark } from './HighlightedScatterMark';
