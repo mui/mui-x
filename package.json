@@ -1,5 +1,5 @@
 {
-  "version": "9.0.2",
+  "version": "9.0.3",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -83,7 +83,7 @@
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/utils": "catalog:",
-    "@next/eslint-plugin-next": "16.2.1",
+    "@next/eslint-plugin-next": "16.2.4",
     "@octokit/plugin-retry": "8.1.0",
     "@octokit/rest": "22.0.1",
     "@playwright/test": "catalog:",
@@ -121,7 +121,7 @@
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "picomatch": "4.0.4",
-    "pkg-pr-new": "^0.0.66",
+    "pkg-pr-new": "0.0.66",
     "playwright": "catalog:",
     "prettier": "3.8.3",
     "pretty-quick": "4.2.2",
