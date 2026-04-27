@@ -2100,7 +2100,7 @@ importers:
         specifier: 'catalog:'
         version: 7.29.2
       '@base-ui/utils':
-        specifier: 0.2.8
+        specifier: 'catalog:'
         version: 0.2.8(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@emotion/cache':
         specifier: 'catalog:'
