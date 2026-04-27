@@ -7,34 +7,24 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.28.4
 
-_Apr 23, 2026_
+_Apr 27, 2026_
 
-We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 
+Special thanks go out to these community members for their valuable contributions:
+@supunsathsara
+
 The following team members contributed to this release:
 @LukasTy, @michelengelen
-
-### Data Grid
-
-#### `@mui/x-data-grid@8.28.2`
-
-Internal changes.
-
-#### `@mui/x-data-grid-pro@8.28.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-data-grid@8.28.2`.
-
-#### `@mui/x-data-grid-premium@8.28.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
-
-Same changes as in `@mui/x-data-grid-pro@8.28.2`.
 
 ### Date and Time Pickers
 
 #### `@mui/x-date-pickers@8.28.4`
 
 - [pickers] Fix `DateRangeCalendar` drag with `AdapterDayjs` plain-constructor values (#22170) @LukasTy
+- [pickers] Fix disabled state not overriding error border color (#22186) @supunsathsara
 - [pickers] Use `convertToMeridiem` utility in `transferDateSectionValue` (#22132) @michelengelen
 
 #### `@mui/x-date-pickers-pro@8.28.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
