@@ -345,6 +345,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { [id]: _removedMessage, ...messagesById } = this.state.messagesById;
     const nextMessageErrorsById = { ...this.state.messageErrorsById };
     delete nextMessageErrorsById[id];
@@ -445,6 +446,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { [id]: _removedConversation, ...conversationsById } = this.state.conversationsById;
 
     this.dirtyControlledModels.add('conversations');

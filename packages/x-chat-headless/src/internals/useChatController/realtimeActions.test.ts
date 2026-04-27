@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ChatStore } from '../../store/ChatStore';
+import { createConversationActions } from './conversationActions';
 import { createRealtimeActions } from './realtimeActions';
+import type { ChatAdapter } from '../../adapters';
 import type { ChatConversation, ChatMessage } from '../../types/chat-entities';
 
 function asUnknown(store: ChatStore): ChatStore<unknown> {
@@ -227,6 +229,83 @@ describe('createRealtimeActions', () => {
       handleRealtimeEvent({ type: 'typing', conversationId: 'c1', userId: 'u1', isTyping: true });
 
       expect(setTypingUser).toHaveBeenCalledWith('c1', 'u1', true);
+    });
+
+    it('end-to-end: a conversation-removed event mid-flight discards the in-flight loadConversationMessages (#15)', async () => {
+      const store = new ChatStore({
+        initialConversations: [conversation1, conversation2],
+      });
+      store.setActiveConversation('c1');
+
+      // Shared guard refs — wired into both action factories the same way the
+      // controller wires them at runtime.
+      const conversationNavigationRequestIdRef = { current: 0 };
+      const conversationLoadRequestIdRef = { current: 0 };
+
+      let resolveListMessages!: (value: {
+        messages: ChatMessage[];
+        cursor?: string;
+        hasMore: boolean;
+      }) => void;
+      const adapter: ChatAdapter = {
+        sendMessage: vi.fn().mockResolvedValue(
+          new ReadableStream({
+            start(controller) {
+              controller.close();
+            },
+          }),
+        ),
+        listMessages: vi.fn().mockReturnValue(
+          new Promise((resolve) => {
+            resolveListMessages = resolve;
+          }),
+        ),
+      };
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef,
+        conversationLoadRequestIdRef,
+      });
+      const { handleRealtimeEvent } = createRealtimeActions({
+        store: asUnknown(store),
+        conversationNavigationRequestIdRef,
+      });
+
+      // Start a load against the active conversation; the listMessages promise
+      // is intentionally held open so the realtime event can arrive first.
+      const loadPromise = loadConversationMessages('c1');
+
+      // While the load is pending, the active conversation is removed via a
+      // realtime event. The handler bumps the navigation guard counter AND
+      // clears `activeConversationId`, which is the second guard the load
+      // checks after its await resolves.
+      handleRealtimeEvent({ type: 'conversation-removed', conversationId: 'c1' });
+
+      expect(store.state.activeConversationId).toBeUndefined();
+      expect(conversationNavigationRequestIdRef.current).toBe(1);
+
+      // Now the held listMessages resolves with stale data. The load's guard
+      // checks should discard the result.
+      resolveListMessages({
+        messages: [
+          {
+            id: 'm-stale',
+            conversationId: 'c1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Stale thread' }],
+          },
+        ],
+        hasMore: false,
+      });
+      await loadPromise;
+
+      expect(store.state.messageIds).toEqual([]);
+      expect(store.state.messagesById['m-stale']).toBeUndefined();
     });
 
     it('unknown event type: does nothing and does not throw', () => {

@@ -665,6 +665,39 @@ describe('useChat', () => {
     expect(result.current.hasMoreHistory).toBe(false);
   });
 
+  it('does not double-fire loadConversationMessages on initial mount with initialActiveConversationId', async () => {
+    const adapter = createAdapter({
+      listMessages: vi.fn(async () => ({
+        messages: [],
+        cursor: undefined,
+        hasMore: false,
+      })),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      initialActiveConversationId: 'c1',
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(adapter.listMessages).toHaveBeenCalled();
+    });
+
+    // Wait one extra microtask + animation frame so any redundant secondary
+    // effect has a chance to fire before we assert call count.
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+    });
+
+    expect(result.current.activeConversationId).toBe('c1');
+    expect(adapter.listMessages).toHaveBeenCalledTimes(1);
+    expect(adapter.listMessages).toHaveBeenCalledWith(
+      expect.objectContaining({ conversationId: 'c1', direction: 'backward' }),
+    );
+  });
+
   it('switches conversations, aborts active streaming, and loads the new thread', async () => {
     const adapter = createAdapter({
       listMessages: vi.fn(async ({ conversationId }) => {

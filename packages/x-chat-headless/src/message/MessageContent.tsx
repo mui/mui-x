@@ -183,7 +183,12 @@ function MessageRenderedPart(props: {
       );
     default:
       if (part.type.startsWith('data-')) {
-        return <React.Fragment>{renderDefaultDataMessagePart({ ...baseProps, part })}</React.Fragment>;
+        const dataPart = part as Extract<ChatMessagePart, { type: `data-${string}` }>;
+        return (
+          <React.Fragment>
+            {renderDefaultDataMessagePart({ ...baseProps, part: dataPart })}
+          </React.Fragment>
+        );
       }
 
       return <DefaultPartFallback part={part} />;

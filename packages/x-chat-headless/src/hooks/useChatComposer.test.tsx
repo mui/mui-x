@@ -519,6 +519,167 @@ describe('useChatComposer', () => {
     }
   });
 
+  it('keeps the original preview URL when the user types and adds a new attachment mid-flight on a successful send (#7)', async () => {
+    const objectUrls = mockObjectUrlApis();
+    let resolveSend!: (stream: ReadableStream<any>) => void;
+    const sendPromise = new Promise<ReadableStream<any>>((resolve) => {
+      resolveSend = resolve;
+    });
+    const adapter = createAdapter({
+      sendMessage: vi.fn(() => sendPromise),
+    });
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+      });
+      const { result } = renderHook(
+        () => ({ composer: useChatComposer(), store: useChatStore() }),
+        { wrapper: Wrapper },
+      );
+
+      const original = new File(['original'], 'original.png', { type: 'image/png' });
+
+      act(() => {
+        result.current.composer.addAttachment(original);
+      });
+
+      expect(objectUrls.createObjectURL).toHaveBeenCalledTimes(1);
+      expect(result.current.composer.attachments[0].previewUrl).toBe('blob:original.png-1');
+
+      // Submit but don't resolve the send yet — the composer clears
+      // optimistically and transfers preview-URL ownership to the message.
+      let submitPromise!: Promise<void>;
+      act(() => {
+        submitPromise = result.current.composer.submit();
+      });
+
+      await waitFor(() => {
+        expect(result.current.composer.value).toBe('');
+        expect(result.current.composer.attachments).toEqual([]);
+      });
+
+      // While the send is in flight, the user starts typing again and adds a
+      // new attachment. The new attachment must get its OWN preview URL, and
+      // the original URL must NOT be revoked — it now belongs to the in-flight
+      // user message.
+      const second = new File(['second'], 'second.png', { type: 'image/png' });
+      act(() => {
+        result.current.composer.setValue('typing again');
+        result.current.composer.addAttachment(second);
+      });
+
+      expect(objectUrls.createObjectURL).toHaveBeenCalledTimes(2);
+      expect(result.current.composer.attachments).toHaveLength(1);
+      expect(result.current.composer.attachments[0].previewUrl).toBe('blob:second.png-2');
+      expect(objectUrls.revokeObjectURL).not.toHaveBeenCalledWith('blob:original.png-1');
+
+      // Resolve sendMessage successfully.
+      resolveSend(createStream([{ type: 'finish', messageId: 'assistant-1' }]));
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      // After the send completes the composer still holds the user's new draft
+      // and the original URL is still NOT revoked — the failed-send restoration
+      // path doesn't run on success, and the URL belongs to the sent message.
+      expect(result.current.composer.value).toBe('typing again');
+      expect(result.current.composer.attachments).toHaveLength(1);
+      expect(result.current.composer.attachments[0].previewUrl).toBe('blob:second.png-2');
+      expect(objectUrls.revokeObjectURL).not.toHaveBeenCalledWith('blob:original.png-1');
+
+      // Removing the user message from the store releases the transferred URL.
+      const userMessage = Object.values(result.current.store.state.messagesById).find(
+        (message) => message.role === 'user',
+      );
+      expect(userMessage).toBeDefined();
+      act(() => {
+        result.current.store.removeMessage(userMessage!.id);
+      });
+
+      await waitFor(() => {
+        expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith('blob:original.png-1');
+      });
+    } finally {
+      objectUrls.restore();
+    }
+  });
+
+  it('does not restore the original draft when the send fails after the user typed mid-flight (#7)', async () => {
+    const objectUrls = mockObjectUrlApis();
+    let rejectSend!: (reason: Error) => void;
+    const sendPromise = new Promise<ReadableStream<any>>((_, reject) => {
+      rejectSend = reject;
+    });
+    const adapter = createAdapter({
+      sendMessage: vi.fn(() => sendPromise),
+    });
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+      });
+      const { result } = renderHook(
+        () => ({ composer: useChatComposer(), store: useChatStore() }),
+        { wrapper: Wrapper },
+      );
+
+      const original = new File(['original'], 'original.png', { type: 'image/png' });
+      act(() => {
+        result.current.composer.addAttachment(original);
+      });
+
+      let submitPromise!: Promise<void>;
+      act(() => {
+        submitPromise = result.current.composer.submit();
+      });
+
+      await waitFor(() => {
+        expect(result.current.composer.attachments).toEqual([]);
+      });
+
+      // User types something new and adds another attachment before the send
+      // fails — the composer is now non-empty.
+      const second = new File(['second'], 'second.png', { type: 'image/png' });
+      act(() => {
+        result.current.composer.setValue('typing again');
+        result.current.composer.addAttachment(second);
+      });
+
+      // Now the send rejects.
+      rejectSend(new Error('Network down'));
+
+      await act(async () => {
+        await submitPromise;
+      });
+
+      // Restoration is skipped because the composer is no longer empty —
+      // we must NOT clobber the user's in-flight typing. The original URL
+      // also stays alive (it's still owned by the failed user message until
+      // that message is removed from the store).
+      expect(result.current.composer.value).toBe('typing again');
+      expect(result.current.composer.attachments).toHaveLength(1);
+      expect(result.current.composer.attachments[0].file).toBe(second);
+      expect(objectUrls.revokeObjectURL).not.toHaveBeenCalledWith('blob:original.png-1');
+
+      // Removing the failed user message releases the original URL.
+      const userMessage = Object.values(result.current.store.state.messagesById).find(
+        (message) => message.role === 'user',
+      );
+      expect(userMessage?.status).toBe('error');
+      act(() => {
+        result.current.store.removeMessage(userMessage!.id);
+      });
+
+      await waitFor(() => {
+        expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith('blob:original.png-1');
+      });
+    } finally {
+      objectUrls.restore();
+    }
+  });
+
   it('revokes owned preview URLs on unmount', () => {
     const objectUrls = mockObjectUrlApis();
 
