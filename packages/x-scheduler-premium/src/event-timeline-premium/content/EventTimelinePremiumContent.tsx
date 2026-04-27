@@ -416,7 +416,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           className={classes.grid}
           style={{ '--unit-width': `${presetConfig.tickWidth}px` } as React.CSSProperties}
         >
-          <EventTimelinePremiumHeaderRow className={classes.topRow} aria-rowindex={1}>
+          <EventTimelinePremiumHeaderRow className={classes.headerRow} aria-rowindex={1}>
             <EventTimelinePremiumTitleHeaderCell
               ref={titleHeaderRef}
               className={classes.titleHeaderCell}

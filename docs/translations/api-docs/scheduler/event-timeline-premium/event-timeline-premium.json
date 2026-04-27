@@ -332,9 +332,13 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the label element inside a header cell"
     },
-    "headerRow": {
+    "headerLevelRow": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "each level row inside the generic header"
+    },
+    "headerRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the top row of the grid (contains the title and events headers)"
     },
     "root": { "description": "Styles applied to the root element." },
     "titleCell": {
@@ -356,10 +360,6 @@
     "titleSubGrid": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title sub-grid element"
-    },
-    "topRow": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the top row of the grid (contains the title and events headers)"
     }
   }
 }

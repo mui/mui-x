@@ -479,9 +479,15 @@
       "isGlobal": false
     },
     {
+      "key": "headerLevelRow",
+      "className": "MuiEventTimelinePremium-headerLevelRow",
+      "description": "Styles applied to each level row inside the generic header.",
+      "isGlobal": false
+    },
+    {
       "key": "headerRow",
       "className": "MuiEventTimelinePremium-headerRow",
-      "description": "Styles applied to each level row inside the generic header.",
+      "description": "Styles applied to the top row of the grid (contains the title and events headers).",
       "isGlobal": false
     },
     {
@@ -518,12 +524,6 @@
       "key": "titleSubGrid",
       "className": "MuiEventTimelinePremium-titleSubGrid",
       "description": "Styles applied to the title sub-grid element.",
-      "isGlobal": false
-    },
-    {
-      "key": "topRow",
-      "className": "MuiEventTimelinePremium-topRow",
-      "description": "Styles applied to the top row of the grid (contains the title and events headers).",
       "isGlobal": false
     }
   ],

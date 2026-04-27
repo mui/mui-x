@@ -345,7 +345,7 @@ describe('<EventTimelinePremium />', () => {
       // dayAndHour: tickWidth = 64px, 2 header rows (day + hour).
       expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('64px');
       expect(
-        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerRow}`).length,
+        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);
 
       renderTimeline({
@@ -357,7 +357,7 @@ describe('<EventTimelinePremium />', () => {
       // day: tickWidth = 120px, 2 header rows (month + day).
       expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('120px');
       expect(
-        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerRow}`).length,
+        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);
     });
   });

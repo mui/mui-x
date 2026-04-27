@@ -82,7 +82,7 @@ describe('<EventTimelinePremiumHeader />', () => {
         // the sum of header cell spans so a regression in either path is caught independently.
         expect(grid.style.getPropertyValue('--unit-count')).to.equal(String(totalTicks));
 
-        const rows = grid.querySelectorAll(`.${classes.headerRow}`);
+        const rows = grid.querySelectorAll(`.${classes.headerLevelRow}`);
         expect(rows.length).to.equal(rowCount);
 
         rows.forEach((row) => {

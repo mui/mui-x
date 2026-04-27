@@ -9,7 +9,7 @@ const StyledTimelineGridHeader = styled(TimelineGrid.Header, {
   name: 'MuiEventTimeline',
   slot: 'Header',
 })(({ theme }) => ({
-  [`& .${classes.headerRow}`]: {
+  [`& .${classes.headerLevelRow}`]: {
     display: 'flex',
     minWidth: 'calc(var(--unit-count) * var(--unit-width))',
     '&:not(:last-child)': {
@@ -82,7 +82,7 @@ export const EventTimelinePremiumHeader = React.forwardRef(function EventTimelin
       {...props}
       className={ctxClasses.header}
       classNames={{
-        row: ctxClasses.headerRow,
+        row: ctxClasses.headerLevelRow,
         cell: ctxClasses.headerCell,
         label: ctxClasses.headerCellLabel,
       }}
