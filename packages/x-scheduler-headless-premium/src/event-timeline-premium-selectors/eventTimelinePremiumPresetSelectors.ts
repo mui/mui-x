@@ -1,10 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
-import type { PresetHeaderCellState } from '../models';
 import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../internals/utils/preset-utils';
-
-// Re-export so consumers can narrow on the state shape via the selector result without pulling from headless-premium/models.
-export type { PresetHeaderCellState };
 
 export const eventTimelinePremiumPresetSelectors = {
   preset: createSelector((state: State) => state.preset),
