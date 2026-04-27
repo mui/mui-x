@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Adapters
 
-<p class="description">The <code>ChatAdapter</code> interface is the single contract between your backend and the chat runtime. This page is the full interface reference.</p>
+<p class="description">Connect your backend to the chat runtime by implementing the adapter interface.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -15,7 +15,7 @@ githubLabel: 'scope: chat'
 The adapter is the single object that bridges them.
 It receives user messages, communicates with your server, and returns a streaming response that the runtime turns into live UI updates.
 
-## The `ChatAdapter` interface
+## Adapter interface reference
 
 The full interface is generic over your pagination cursor type.
 The default cursor type is `string`, which covers the majority of REST and cursor-based APIs:
@@ -50,12 +50,12 @@ interface ChatAdapter<Cursor = string> {
 ```
 
 Only `sendMessage` is required.
-Every other method is optional and incrementally adopted — start with just `sendMessage` and add methods as your product grows.
+Every other method is optional and incrementally adopted—start with just `sendMessage` and add methods as your product grows.
 
-## Required: `sendMessage`
+## Sending messages
 
 `sendMessage` is the heart of the adapter.
-It is called every time a user submits a message in the composer.
+The runtime calls it every time a user submits a message in the composer.
 
 ```ts
 interface ChatSendMessageInput {
@@ -74,7 +74,7 @@ The runtime reads this stream, processes each chunk type, and updates the UI liv
 ### Streaming protocol
 
 The stream must begin with a `start` chunk and end with `finish` or `abort`.
-Text arrives in `text-start` / `text-delta` / `text-end` triplets:
+Text arrives in `text-start`, `text-delta`, and `text-end` triplets:
 
 ```tsx
 const adapter: ChatAdapter = {
@@ -116,9 +116,9 @@ If your backend requires explicit cancellation (for example, sending a separate 
 ## Optional methods
 
 The optional methods are listed roughly in the order you are likely to add them.
-None are required — the runtime detects which methods exist and activates the corresponding features automatically.
+None are required—the runtime detects which methods exist and activates the corresponding features automatically.
 
-### `listConversations(input?)`
+### Listing conversations
 
 Implement this to populate the conversation sidebar when `ChatBox` mounts.
 The runtime calls it once on startup, before any user interaction.
@@ -136,7 +136,7 @@ interface ChatListConversationsResult<Cursor> {
 }
 ```
 
-### `listMessages(input)`
+### Loading message history
 
 Implement this to load message history when the user opens a conversation.
 The runtime calls it whenever `activeConversationId` changes to a conversation that has no messages in the store yet.
@@ -157,9 +157,9 @@ interface ChatListMessagesResult<Cursor> {
 
 When `hasMore` is `true`, `ChatBox` shows a "Load earlier messages" control that calls `listMessages` again with the previous cursor.
 
-### `reconnectToStream(input)`
+### Reconnecting to an interrupted stream
 
-Implement this to resume an interrupted stream — for example, when an SSE connection drops mid-response.
+Implement this to resume an interrupted stream—for example, when an SSE connection drops mid-response.
 The runtime calls it automatically after detecting a disconnected stream.
 
 ```ts
@@ -172,7 +172,7 @@ interface ChatReconnectToStreamInput {
 
 Return `null` if the interrupted message cannot be resumed.
 
-### `setTyping(input)`
+### Sending typing indicators
 
 Implement this to send a typing indicator to your backend when the user is composing a message.
 The runtime calls it when the composer value changes from empty to non-empty (and vice versa).
@@ -186,10 +186,10 @@ interface ChatSetTypingInput {
 
 To receive typing indicators from other users in the UI, implement `subscribe()` and emit `typing` events through the `onEvent` callback.
 
-### `markRead(input)`
+### Marking messages as read
 
 Implement this to signal to your backend that the user has seen a conversation or a specific message.
-The runtime does not call this automatically — call `adapter.markRead()` directly from your own UI event handler.
+The runtime does not call this automatically—call `adapter.markRead()` directly from your own UI event handler.
 
 ```ts
 interface ChatMarkReadInput {
@@ -198,9 +198,9 @@ interface ChatMarkReadInput {
 }
 ```
 
-### `subscribe(input)`
+### Receiving real-time events
 
-Implement this to receive real-time events pushed from your backend — new messages, typing indicators, read receipts, or conversation updates.
+Implement this to receive real-time events pushed from your backend: new messages, typing indicators, read receipts, or conversation updates.
 The runtime calls `subscribe()` on mount and invokes the returned cleanup function on unmount.
 
 ```ts
@@ -213,9 +213,9 @@ type ChatSubscriptionCleanup = () => void;
 
 The cleanup function can also be returned from a `Promise` for async subscription setups.
 
-For the full list of realtime event types, see [Real-Time Adapters](/x/react-chat/backend/real-time-adapters/).
+For the full list of realtime event types, see [Real-time adapters](/x/react-chat/backend/real-time-adapters/).
 
-### `addToolApprovalResponse(input)`
+### Sending tool approval responses
 
 Implement this when your backend supports human-in-the-loop tool confirmation.
 The runtime calls it when the user approves or denies a tool call that was flagged with a `tool-approval-request` stream chunk.
@@ -228,7 +228,7 @@ interface ChatAddToolApproveResponseInput {
 }
 ```
 
-### `stop()`
+### Stopping an in-flight request
 
 Implement this when aborting the `signal` is not sufficient for server-side cleanup.
 The runtime calls `stop()` at the same moment the abort signal fires.
@@ -239,7 +239,7 @@ stop() {
 },
 ```
 
-Most adapters do not need `stop()` — passing `signal` to `fetch` is enough for HTTP-based transports.
+Most adapters do not need `stop()`—passing `signal` to `fetch` is enough for HTTP-based transports.
 
 ## Cursor generics
 
@@ -278,7 +278,7 @@ The cursor type flows automatically through `ChatBox`, the store, hooks, and all
 ## Error handling
 
 :::info
-You do not need to catch errors inside adapter methods — the runtime handles them for you.
+You do not need to catch errors inside adapter methods—the runtime handles them for you.
 :::
 
 When an adapter method throws, the runtime:
@@ -303,7 +303,7 @@ To handle errors at the application level, use the `onError` callback prop:
 
 ## See also
 
-- [Building an Adapter](/x/react-chat/backend/building-an-adapter/) for a step-by-step tutorial.
-- [Real-Time Adapters](/x/react-chat/backend/real-time-adapters/) for the event types used by `subscribe()`.
+- [Building an adapter](/x/react-chat/backend/building-an-adapter/) for a step-by-step tutorial.
+- [Real-time adapters](/x/react-chat/backend/real-time-adapters/) for the event types used by `subscribe()`.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full stream chunk protocol reference.
-- [Hooks Reference](/x/react-chat/resources/hooks/) to see which runtime actions trigger adapter methods.
+- [Hooks reference](/x/react-chat/resources/hooks/) to see which runtime actions trigger adapter methods.
