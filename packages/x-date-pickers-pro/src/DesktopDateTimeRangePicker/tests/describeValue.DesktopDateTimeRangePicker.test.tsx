@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
@@ -57,9 +57,9 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
         : expectedPlaceholder;
       expectFieldValue(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
-      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
+      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey, user },
     ) => {
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
@@ -79,10 +79,10 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
         const nextButton = screen.queryByRole('button', { name: 'Next' });
         // if we want to set the end date, we firstly need to switch to end date "range position"
         if (setEndDate && nextButton) {
-          fireEvent.click(nextButton);
+          await user.click(nextButton);
         }
 
-        fireEvent.click(
+        await user.click(
           screen.getByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           }),
@@ -93,41 +93,42 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
           hasMeridiem ? 'hours12h' : 'hours24h',
         );
         const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-        fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-        fireEvent.click(
+        await user.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+        await user.click(
           screen.getByRole('option', {
             name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
           }),
         );
         if (hasMeridiem) {
-          fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+          await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
         }
         if (setEndDate) {
           // Switch back to start date "range position" in case we'd need to repeat selection
           let previousViewButton = screen.queryByRole('button', { name: 'Open previous view' });
           while (previousViewButton) {
-            fireEvent.click(previousViewButton);
+            // eslint-disable-next-line no-await-in-loop
+            await user.click(previousViewButton);
             previousViewButton = screen.queryByRole('button', { name: 'Open previous view' });
           }
         }
       } else {
-        selectSection('day');
-        pressKey(undefined, 'ArrowUp');
+        await selectSection('day');
+        await pressKey('ArrowUp');
 
-        selectSection('hours');
-        pressKey(undefined, 'ArrowUp');
+        await selectSection('hours');
+        await pressKey('ArrowUp');
 
-        selectSection('minutes');
-        pressKey(undefined, 'PageUp'); // increment by 5 minutes
+        await selectSection('minutes');
+        await pressKey('PageUp'); // increment by 5 minutes
 
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         if (hasMeridiem) {
-          selectSection('meridiem');
+          await selectSection('meridiem');
           const previousHours = adapterToUse.getHours(value[setEndDate ? 1 : 0]);
           const newHours = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
           // update meridiem section if it changed
           if ((previousHours < 12 && newHours >= 12) || (previousHours >= 12 && newHours < 12)) {
-            pressKey(undefined, 'ArrowUp');
+            await pressKey('ArrowUp');
           }
         }
       }
