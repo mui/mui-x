@@ -72,7 +72,7 @@ export function showLicenseKeyVersionMismatchError({
     'Each major version uses a different license key format, so the key needs to be regenerated — your existing license is not lost.',
     '',
     'To resolve this, you can either:',
-    `- Generate a new key compatible with v${packageMajorVersion} from your account at https://mui.com/r/x-license-account/ (free for existing customers, the new key inherits your current expiration date). More details at https://mui.com/r/x-license-key-upgrade/.`,
+    `- Generate a new key compatible with v${packageMajorVersion} from your account at https://mui.com/r/x-license-account/ (free for existing customers, the new key inherits your current expiration date).`,
     `- Or downgrade the MUI X packages to v${previousMajorVersion} to match your current license key.`,
   ]);
 }

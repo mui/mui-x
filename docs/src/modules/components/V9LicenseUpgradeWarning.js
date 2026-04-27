@@ -15,7 +15,7 @@ export default function V9LicenseUpgradeWarning() {
             from your <a href="https://mui.com/r/x-license-account/">MUI Store account</a>. The new
             v9 key inherits the same expiration date as your existing v8 key, so there&apos;s no
             extra cost during your current term. See{' '}
-            <a href="https://mui.com/r/x-license-key-upgrade/">
+            <a href="https://mui.com/r/x-license-key-v9-upgrade/">
               How can I generate a v9 license key?
             </a>{' '}
             for step-by-step instructions.
