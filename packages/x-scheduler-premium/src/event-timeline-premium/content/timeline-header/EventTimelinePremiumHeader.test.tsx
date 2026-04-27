@@ -47,6 +47,23 @@ describe('<EventTimelinePremiumHeader />', () => {
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
+  function renderHeader(options: {
+    preset: EventTimelinePremiumPreset;
+    presets?: EventTimelinePremiumPreset[];
+    defaultPreferences?: { ampm: boolean };
+  }) {
+    return render(
+      <EventTimelinePremium
+        resources={[engineering]}
+        events={[]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        preset={options.preset}
+        presets={options.presets ?? [options.preset]}
+        defaultPreferences={options.defaultPreferences}
+      />,
+    );
+  }
+
   function getTicksSum(row: Element): number {
     return Array.from(row.querySelectorAll(`.${classes.headerCell}`)).reduce((sum, cell) => {
       const span = (cell as HTMLElement).style.getPropertyValue('--span');
@@ -57,15 +74,7 @@ describe('<EventTimelinePremiumHeader />', () => {
   PRESET_EXPECTATIONS.forEach(({ preset, rowCount, tickWidth, totalTicks }) => {
     describe(`preset "${preset}"`, () => {
       it('should render one level row per preset header and span the full visible range', () => {
-        render(
-          <EventTimelinePremium
-            resources={[engineering]}
-            events={[]}
-            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-            preset={preset}
-            presets={[preset]}
-          />,
-        );
+        renderHeader({ preset });
 
         const grid = screen.getByRole('grid');
         expect(grid.style.getPropertyValue('--unit-width')).to.equal(`${tickWidth}px`);
@@ -95,15 +104,7 @@ describe('<EventTimelinePremiumHeader />', () => {
   describe('weekend marking', () => {
     // DEFAULT_TESTING_VISIBLE_DATE is 2025-07-03 (Thursday); visible range starts Monday Jun 30.
     it('should mark weekend day cells with data-weekend in `dayAndWeek` (where the day row is the leaf)', () => {
-      render(
-        <EventTimelinePremium
-          resources={[engineering]}
-          events={[]}
-          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          preset="dayAndWeek"
-          presets={['dayAndWeek']}
-        />,
-      );
+      renderHeader({ preset: 'dayAndWeek' });
 
       const dayCells = document.querySelectorAll<HTMLElement>(
         `.${classes.headerCell}[data-unit="day"]`,
@@ -121,15 +122,7 @@ describe('<EventTimelinePremiumHeader />', () => {
     it('should still expose data-weekend on day cells even when the day row is a grouping level (accessibility)', () => {
       // dayAndHour: the day row is level 0 (grouping) with hour ticks below. Saturday should
       // still carry `data-weekend` for screen readers / custom CSS, but without data-unit-leaf.
-      render(
-        <EventTimelinePremium
-          resources={[engineering]}
-          events={[]}
-          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          preset="dayAndHour"
-          presets={['dayAndHour']}
-        />,
-      );
+      renderHeader({ preset: 'dayAndHour' });
 
       const dayCells = document.querySelectorAll<HTMLElement>(
         `.${classes.headerCell}[data-unit="day"]`,
@@ -150,15 +143,7 @@ describe('<EventTimelinePremiumHeader />', () => {
     it('should size the first month row cell to the number of days remaining in the starting month', () => {
       // visibleDate Jul 03 2025 → first day cell is Jul 3 (startOfDay). July has 31 days,
       // so the first month cell spans Jul 3 through Jul 31 = 29 days.
-      render(
-        <EventTimelinePremium
-          resources={[engineering]}
-          events={[]}
-          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          preset="dayAndMonth"
-          presets={['dayAndMonth']}
-        />,
-      );
+      renderHeader({ preset: 'dayAndMonth' });
 
       const monthCells = document.querySelectorAll<HTMLElement>(
         `.${classes.headerCell}[data-unit="month"]`,
@@ -177,16 +162,7 @@ describe('<EventTimelinePremiumHeader />', () => {
 
   describe('`dayAndHour` hour row ampm preference', () => {
     it('should format hour labels in 12h with AM/PM when ampm is true', () => {
-      render(
-        <EventTimelinePremium
-          resources={[engineering]}
-          events={[]}
-          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          preset="dayAndHour"
-          presets={['dayAndHour']}
-          defaultPreferences={{ ampm: true }}
-        />,
-      );
+      renderHeader({ preset: 'dayAndHour', defaultPreferences: { ampm: true } });
 
       const hourCell = document.querySelector<HTMLElement>(
         `.${classes.headerCell}[data-unit="hour"][data-index="0"]`,
@@ -196,16 +172,7 @@ describe('<EventTimelinePremiumHeader />', () => {
     });
 
     it('should format hour labels in 24h without AM/PM when ampm is false', () => {
-      render(
-        <EventTimelinePremium
-          resources={[engineering]}
-          events={[]}
-          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          preset="dayAndHour"
-          presets={['dayAndHour']}
-          defaultPreferences={{ ampm: false }}
-        />,
-      );
+      renderHeader({ preset: 'dayAndHour', defaultPreferences: { ampm: false } });
 
       const hourCell = document.querySelector<HTMLElement>(
         `.${classes.headerCell}[data-unit="hour"][data-index="0"]`,
@@ -218,15 +185,7 @@ describe('<EventTimelinePremiumHeader />', () => {
   describe('`dayAndMonth` renderCell escape hatch', () => {
     it('should render the weekday letter and day number as separate data-slot spans', () => {
       // This is the built-in `day` row's custom renderCell — exercising the escape hatch path.
-      render(
-        <EventTimelinePremium
-          resources={[engineering]}
-          events={[]}
-          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          preset="dayAndMonth"
-          presets={['dayAndMonth']}
-        />,
-      );
+      renderHeader({ preset: 'dayAndMonth' });
 
       const dayCells = document.querySelectorAll<HTMLElement>(
         `.${classes.headerCell}[data-unit="day"]`,
