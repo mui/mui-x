@@ -1,4 +1,5 @@
-import { getPresetPxPerDay } from './preset-utils';
+import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS, getPresetPxPerDay } from './preset-utils';
+import { EventTimelinePremiumPreset } from '../../models';
 
 describe('getPresetPxPerDay', () => {
   // Concrete values prove the derivation formula `tickWidth × ticksPerDay[timeResolution]`
@@ -23,5 +24,16 @@ describe('getPresetPxPerDay', () => {
     expect(getPresetPxPerDay('dayAndMonth')).to.be.greaterThan(getPresetPxPerDay('dayAndWeek'));
     expect(getPresetPxPerDay('dayAndWeek')).to.be.greaterThan(getPresetPxPerDay('monthAndYear'));
     expect(getPresetPxPerDay('monthAndYear')).to.be.greaterThan(getPresetPxPerDay('year'));
+  });
+
+  // The store sorts presets by `getPresetPxPerDay` to derive the canonical zoom order; ties
+  // would make the sort non-deterministic. This assertion catches future presets that
+  // accidentally share a px/day with an existing one before they reach the store.
+  it('should produce a unique value for every registered preset', () => {
+    const presets = Object.keys(
+      EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
+    ) as EventTimelinePremiumPreset[];
+    const values = presets.map(getPresetPxPerDay);
+    expect(new Set(values).size).to.equal(presets.length);
   });
 });

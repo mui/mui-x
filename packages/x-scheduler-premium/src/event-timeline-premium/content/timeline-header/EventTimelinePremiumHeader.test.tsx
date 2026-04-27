@@ -17,18 +17,22 @@ type PresetExpectations = {
   rowCount: number;
   tickWidth: number;
   totalTicks: number;
+  // Index of the row whose unit matches `timeResolution`, or `null` if no row does
+  // (e.g. monthAndYear renders year+month rows but ticks in days). The styled wrapper
+  // applies leaf-only padding via `data-unit-leaf`, so these tests pin which row carries it.
+  leafRowIndex: number | null;
 };
 
 const engineering = ResourceBuilder.new().build();
 
 const PRESET_EXPECTATIONS: PresetExpectations[] = [
-  { preset: 'dayAndHour', rowCount: 2, tickWidth: 64, totalTicks: 4 * 24 },
-  { preset: 'dayAndMonth', rowCount: 2, tickWidth: 120, totalTicks: 8 * 7 },
-  { preset: 'dayAndWeek', rowCount: 2, tickWidth: 64, totalTicks: 16 * 7 },
+  { preset: 'dayAndHour', rowCount: 2, tickWidth: 64, totalTicks: 4 * 24, leafRowIndex: 1 },
+  { preset: 'dayAndMonth', rowCount: 2, tickWidth: 120, totalTicks: 8 * 7, leafRowIndex: 1 },
+  { preset: 'dayAndWeek', rowCount: 2, tickWidth: 64, totalTicks: 16 * 7, leafRowIndex: 1 },
   // monthAndYear: 36 months starting July 2025 → July 2025 to June 2028.
   // 184 (Jul-Dec 2025) + 365 + 365 + 182 (Jan-Jun 2028, leap) = 1096 days.
-  { preset: 'monthAndYear', rowCount: 2, tickWidth: 6, totalTicks: 1096 },
-  { preset: 'year', rowCount: 1, tickWidth: 200, totalTicks: 30 },
+  { preset: 'monthAndYear', rowCount: 2, tickWidth: 6, totalTicks: 1096, leafRowIndex: null },
+  { preset: 'year', rowCount: 1, tickWidth: 200, totalTicks: 30, leafRowIndex: 0 },
 ];
 
 describe('<EventTimelinePremiumHeader />', () => {
@@ -60,7 +64,7 @@ describe('<EventTimelinePremiumHeader />', () => {
     }, 0);
   }
 
-  PRESET_EXPECTATIONS.forEach(({ preset, rowCount, tickWidth, totalTicks }) => {
+  PRESET_EXPECTATIONS.forEach(({ preset, rowCount, tickWidth, totalTicks, leafRowIndex }) => {
     describe(`preset "${preset}"`, () => {
       it('should render one level row per preset header and span the full visible range', () => {
         renderHeader({ preset });
@@ -74,16 +78,18 @@ describe('<EventTimelinePremiumHeader />', () => {
         const rows = grid.querySelectorAll(`.${classes.headerLevelRow}`);
         expect(rows.length).to.equal(rowCount);
 
-        rows.forEach((row) => {
+        rows.forEach((row, rowIndex) => {
           expect(getTicksSum(row)).to.equal(totalTicks);
           const cells = Array.from(row.querySelectorAll<HTMLElement>(`.${classes.headerCell}`));
+          const isLeafRow = rowIndex === leafRowIndex;
           cells.forEach((cell, expectedIndex) => {
-            // Guards against a formatter silently returning '' / undefined: every cell
-            // must render some visible text so labels never disappear.
             expect((cell.textContent ?? '').trim().length).to.be.greaterThan(0);
             // `data-index` must be contiguous and zero-based per row so virtualization
             // can rely on the index addressing every cell once.
             expect(cell.dataset.index).to.equal(String(expectedIndex));
+            // The styled wrapper relies on `data-unit-leaf` for leaf-only padding rules,
+            // so the marker must cover every cell of the leaf row and be absent on the rest.
+            expect(cell.dataset.unitLeaf).to.equal(isLeafRow ? '' : undefined);
           });
         });
       });
