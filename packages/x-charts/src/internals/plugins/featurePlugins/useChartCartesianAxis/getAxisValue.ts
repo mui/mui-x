@@ -31,7 +31,7 @@ export function getAxisIndex(axisConfig: ComputedAxis, pointerValue: number): nu
         if (
           index === axisData.length - 1 ||
           Math.abs(getAsNumber(value) - v) <
-          Math.abs(getAsNumber(value) - getAsNumber(axisData[index + 1]))
+            Math.abs(getAsNumber(value) - getAsNumber(axisData[index + 1]))
         ) {
           return true;
         }

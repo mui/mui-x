@@ -32,8 +32,7 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
       if (v <= valueAsNumber) {
         if (
           index === axisData.length - 1 ||
-          Math.abs(valueAsNumber - v) <
-          Math.abs(valueAsNumber - getAsNumber(axisData[index + 1]))
+          Math.abs(valueAsNumber - v) < Math.abs(valueAsNumber - getAsNumber(axisData[index + 1]))
         ) {
           return true;
         }
