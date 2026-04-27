@@ -74,6 +74,7 @@ export function showLicenseKeyVersionMismatchError({
     'To resolve this, you can either:',
     `- Generate a new key compatible with v${packageMajorVersion} from your account at https://mui.com/r/x-license-account/ (free for existing customers, the new key inherits your current expiration date).`,
     `- Or downgrade the MUI X packages to v${previousMajorVersion} to match your current license key.`,
+    `${packageMajorVersion === 9 ? 'More details at https://mui.com/r/x-license-key-v9-upgrade/.' : ''}`,
   ]);
 }
 
