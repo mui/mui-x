@@ -1,9 +1,6 @@
 import { isOrdinalScale } from '../../../scaleGuards';
+import { getAsNumber } from '../../../getAsNumber';
 import { type ComputedAxis, type D3Scale } from '../../../../models/axis';
-
-function getAsANumber(value: number | Date) {
-  return value instanceof Date ? value.getTime() : value;
-}
 
 /**
  * For a pointer coordinate, this function returns the dataIndex associated.
@@ -19,13 +16,13 @@ export function getAxisIndex(axisConfig: ComputedAxis, pointerValue: number): nu
       return -1;
     }
 
-    const valueAsNumber = getAsANumber(value);
+    const valueAsNumber = getAsNumber(value);
     const closestIndex = axisData?.findIndex((pointValue: typeof value, index) => {
-      const v = getAsANumber(pointValue);
+      const v = getAsNumber(pointValue);
       if (v > valueAsNumber) {
         if (
           index === 0 ||
-          Math.abs(valueAsNumber - v) <= Math.abs(valueAsNumber - getAsANumber(axisData[index - 1]))
+          Math.abs(valueAsNumber - v) <= Math.abs(valueAsNumber - getAsNumber(axisData[index - 1]))
         ) {
           return true;
         }
@@ -33,8 +30,8 @@ export function getAxisIndex(axisConfig: ComputedAxis, pointerValue: number): nu
       if (v <= valueAsNumber) {
         if (
           index === axisData.length - 1 ||
-          Math.abs(getAsANumber(value) - v) <
-            Math.abs(getAsANumber(value) - getAsANumber(axisData[index + 1]))
+          Math.abs(getAsNumber(value) - v) <
+          Math.abs(getAsNumber(value) - getAsNumber(axisData[index + 1]))
         ) {
           return true;
         }

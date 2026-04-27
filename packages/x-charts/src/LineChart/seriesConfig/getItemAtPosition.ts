@@ -9,6 +9,7 @@ import type { ProcessedSeries } from '../../internals/plugins/corePlugins/useCha
 import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 import type { SeriesItemIdentifierWithType } from '../../models/seriesType';
 import { isOrdinalScale } from '../../internals/scaleGuards';
+import { getAsNumber } from '../../internals/getAsNumber';
 import { getValueToPositionMapper } from '../../hooks/getValueToPositionMapper';
 import type { ComputedAxis } from '../../models/axis';
 import { evaluateCurveY } from './curveEvaluation';
@@ -44,9 +45,7 @@ function getBracketIndices(
 
   // For continuous axes, find the two adjacent data points surrounding pointX.
   const xValue = scale.invert(pointX);
-  const xAsNumber = xValue instanceof Date ? xValue.getTime() : xValue;
-
-  const getAsNumber = (v: any) => (v instanceof Date ? v.getTime() : v);
+  const xAsNumber = getAsNumber(xValue);
 
   // Find the rightmost index where data[i] <= xValue.
   let leftIndex = -1;
