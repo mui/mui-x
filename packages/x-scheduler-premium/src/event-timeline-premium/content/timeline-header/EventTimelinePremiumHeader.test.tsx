@@ -5,7 +5,6 @@ import {
   eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
-  adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -26,19 +25,9 @@ const PRESET_EXPECTATIONS: PresetExpectations[] = [
   { preset: 'dayAndHour', rowCount: 2, tickWidth: 64, totalTicks: 4 * 24 },
   { preset: 'dayAndMonth', rowCount: 2, tickWidth: 120, totalTicks: 8 * 7 },
   { preset: 'dayAndWeek', rowCount: 2, tickWidth: 64, totalTicks: 16 * 7 },
-  // monthAndYear: 3 years starting July 2025 → July 2025 to June 2028. unitCount is days.
-  {
-    preset: 'monthAndYear',
-    rowCount: 2,
-    tickWidth: 6,
-    totalTicks:
-      adapter.differenceInDays(
-        adapter.endOfMonth(
-          adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 35),
-        ),
-        adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE),
-      ) + 1,
-  },
+  // monthAndYear: 36 months starting July 2025 → July 2025 to June 2028.
+  // 184 (Jul-Dec 2025) + 365 + 365 + 182 (Jan-Jun 2028, leap) = 1096 days.
+  { preset: 'monthAndYear', rowCount: 2, tickWidth: 6, totalTicks: 1096 },
   { preset: 'year', rowCount: 1, tickWidth: 200, totalTicks: 30 },
 ];
 
