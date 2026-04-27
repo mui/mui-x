@@ -8,11 +8,11 @@ components: ChatMessageList, ChatMessageGroup
 
 # Chat - Messages
 
-<p class="description">Understand the ChatMessage data model and how messages render in a scrollable, grouped list.</p>
+<p class="description">Learn how messages are structured and rendered in a scrollable, grouped list.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-## The ChatMessage data model
+## Message data model
 
 Every message in the chat system is represented by the `ChatMessage` interface:
 
@@ -50,7 +50,7 @@ Each part has a `type` discriminant that determines how it renders:
 | `tool`            | A tool call invocation and its result    |
 | `step-start`      | A visual separator between agentic steps |
 
-This part-based model means a single message can contain mixed content — for example, a text explanation followed by a code block and a source citation.
+This part-based model means a single message can contain mixed content—for example, a text explanation followed by a code block and a source citation.
 
 ### Message status lifecycle
 
@@ -62,12 +62,12 @@ pending → sending → streaming → sent
                  \→ cancelled
 ```
 
-- **pending** — the message is queued but not yet dispatched to the adapter.
-- **sending** — the message has been dispatched; waiting for the first response chunk.
-- **streaming** — the assistant is actively generating tokens.
-- **sent** — the response is complete.
-- **error** — the adapter encountered an error.
-- **cancelled** — the user or application cancelled the response.
+- **pending**: the message is queued but not yet dispatched to the adapter.
+- **sending**: the message has been dispatched; waiting for the first response chunk.
+- **streaming**: the assistant is actively generating tokens.
+- **sent**: the response is complete.
+- **error**: the adapter encountered an error.
+- **cancelled**: the user or application cancelled the response.
 
 ## Import
 
@@ -105,13 +105,13 @@ Scroll behavior, overflow, padding, and thin scrollbar are handled out of the bo
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
 Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-See [Message Appearance](/x/react-chat/display/message-appearance/) for grouping configuration and demos.
+See [Message appearance](/x/react-chat/display/message-appearance/) for grouping configuration and demos.
 
 ### Date dividers
 
 When consecutive messages span different calendar dates, the message list renders a date divider automatically between them.
 
-See [Message Appearance](/x/react-chat/display/message-appearance/) for date divider customization.
+See [Message appearance](/x/react-chat/display/message-appearance/) for date divider customization.
 
 ### Auto-scrolling
 

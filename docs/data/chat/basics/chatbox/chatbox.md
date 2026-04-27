@@ -39,7 +39,7 @@ It creates a `ChatProvider` internally, so all hooks work inside any component r
 
 ### ChatProvider (custom layout)
 
-When you need full control over the layout — for example, placing the conversation list in a sidebar and the thread in a main content area — use `ChatProvider` directly and compose the pieces yourself:
+When you need full control over the layout—for example, placing the conversation list in a sidebar and the thread in a main content area—use `ChatProvider` directly and compose the pieces yourself:
 
 {{"demo": "../../material/context/ChatProviderCustomLayout.js", "defaultCodeOpen": false, "bg": "inline"}}
 

@@ -194,7 +194,7 @@ async listConversations({ cursor }) {
 
 ## Step 6: Handle stream reconnection
 
-Implement `reconnectToStream` to resume an interrupted stream — for example, when an SSE connection drops mid-response.
+Implement `reconnectToStream` to resume an interrupted stream—for example, when an SSE connection drops mid-response.
 The runtime calls it automatically after detecting a disconnected stream.
 
 ```tsx
@@ -261,7 +261,7 @@ const adapter: ChatAdapter = {
 ## Error handling
 
 :::info
-You do not need to catch errors inside adapter methods — the runtime handles them for you.
+You do not need to catch errors inside adapter methods—the runtime handles them for you.
 :::
 
 When an adapter method throws, the runtime records a `ChatError`, surfaces it through the built-in error UI and the `onError` callback, and marks the error `recoverable` or `retryable` when applicable.
@@ -281,6 +281,6 @@ To handle errors at the application level:
 
 - [Adapters](/x/react-chat/backend/adapters/) for the full interface reference.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full stream chunk protocol reference.
-- [Real-Time Adapters](/x/react-chat/backend/real-time-adapters/) for adding `subscribe()`, `setTyping()`, and `markRead()`.
+- [Real-time adapters](/x/react-chat/backend/real-time-adapters/) for adding `subscribe()`, `setTyping()`, and `markRead()`.
 
 ## API

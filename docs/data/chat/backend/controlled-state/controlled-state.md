@@ -8,14 +8,14 @@ components: ChatBox
 
 # Chat - Controlled State
 
-<p class="description">Own messages, conversations, active conversation, and composer value externally using the controlled/uncontrolled pattern on <code>ChatProvider</code>.</p>
+<p class="description">Manage messages, conversations, and composer state externally using the controlled and uncontrolled patterns.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 Every chat component reads its data — messages, conversations, composer state, streaming status — from a shared store provided by `ChatProvider`.
 `ChatBox` renders a `ChatProvider` internally, so in the simplest case you never interact with the provider directly.
 
-When you need more control — sharing state with components outside `ChatBox`, controlling the message list externally, or mounting multiple independent chat instances — you work with `ChatProvider` explicitly.
+When you need more control—sharing state with components outside `ChatBox`, controlling the message list externally, or mounting multiple independent chat instances—you work with `ChatProvider` explicitly.
 
 ## Controlled and uncontrolled state
 
@@ -142,7 +142,7 @@ function App() {
 }
 ```
 
-The runtime still streams, normalizes, and derives selectors — you just own the source of truth.
+The runtime still streams, normalizes, and derives selectors—you just own the source of truth.
 
 ## Multiple independent instances
 
@@ -179,5 +179,5 @@ To render multiple independent chat surfaces, use separate `ChatBox` instances �
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the backend adapter interface.
-- [Hooks Reference](/x/react-chat/resources/hooks/) for reading state from the store.
-- [Events & Callbacks](/x/react-chat/resources/events-and-callbacks/) for `onFinish`, `onToolCall`, `onData`, and `onError`.
+- [Hooks reference](/x/react-chat/resources/hooks/) for reading state from the store.
+- [Events and callbacks](/x/react-chat/resources/events-and-callbacks/) for `onFinish`, `onToolCall`, `onData`, and `onError`.

@@ -88,7 +88,7 @@ Set `features={{ attachments: false }}` to hide the attach button:
 
 {{"demo": "../../material/composer/ComposerHiddenAttachButton.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-For full details on attachment configuration — accepted MIME types, file size limits, and upload lifecycle — see [Attachments](/x/react-chat/behavior/attachments/).
+For full details on attachment configuration—accepted MIME types, file size limits, and upload lifecycle—see [Attachments](/x/react-chat/behavior/attachments/).
 
 ## Helper text
 
@@ -109,7 +109,7 @@ The demo below mirrors the current composer value above the chat surface:
 
 {{"demo": "../../material/composer/ComposerControlled.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## `useChatComposer()` hook
+## Accessing composer state
 
 For deeper control, the `useChatComposer()` hook provides direct access to the composer state:
 
