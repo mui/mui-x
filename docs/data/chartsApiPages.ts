@@ -134,6 +134,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsReferenceLine',
   },
   {
+    pathname: '/x/api/charts/charts-rotation-axis',
+    title: 'ChartsRotationAxis',
+  },
+  {
     pathname: '/x/api/charts/charts-surface',
     title: 'ChartsSurface',
   },

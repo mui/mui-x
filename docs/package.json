@@ -110,7 +110,7 @@
     "@types/luxon": "catalog:",
     "@types/moment-hijri": "catalog:",
     "@types/moment-jalaali": "catalog:",
-    "@types/nprogress": "^0.2.3",
+    "@types/nprogress": "0.2.3",
     "@types/prop-types": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/semver": "catalog:",
