@@ -4,7 +4,7 @@
 
 _Apr 27, 2026_
 
-We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 16 contributors who made this release possible. Here are some highlights ✨:
 
 - ⌨️ Keyboard support for creating events in the Scheduler
 
@@ -12,7 +12,7 @@ Special thanks go out to these community members for their valuable contribution
 @supunsathsara, @ZAKIURREHMAN
 
 The following team members contributed to this release:
-@alexfauquette, @arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @rita-codes, @romgrk, @sai6855, @siriwatknp
+@aemartos, @alexfauquette, @arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @rita-codes, @romgrk, @sai6855, @siriwatknp
 
 ### Data Grid
 
@@ -110,12 +110,6 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.3`.
 - [scheduler] Allow creating events via keyboard - `EventTimeline` (#22119) @rita-codes
 - [scheduler] Rename `EventTimeline` `views` to ordered presets (#22130) @rita-codes
 
-### Codemod
-
-#### `@mui/x-codemod@9.0.0`
-
-Internal changes.
-
 ### Docs
 
 - [docs] Cleanup generated llm md files for chat (#22163) @brijeshb42
@@ -123,6 +117,7 @@ Internal changes.
 - [docs] Remove obsolete v7 deprecation warning for `dayOfWeekFormatter` (#22111) @LukasTy
 - [docs] Use mui.com for broken links checker known targets (#22129) @JCQuintas
 - [docs] Document picker behavior inside MUI `Dialog` and provide recommended solutions (#22144) @michelengelen
+- [docs] Improve v9 license key version mismatch error guidance (#22180) @aemartos
 
 ### Core
 
