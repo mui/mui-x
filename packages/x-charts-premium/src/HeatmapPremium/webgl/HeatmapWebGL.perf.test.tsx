@@ -36,6 +36,10 @@ function buildColorsBytes(n: number) {
   return out;
 }
 
+function buildSaturations(n: number) {
+  return new Float32Array(n);
+}
+
 function generateFreshCenters(n: number, frame: number) {
   /* New typed array every frame — what the doc warns against. */
   const out = new Float32Array(n * 2);
@@ -59,6 +63,7 @@ function generatePooledCenters(n: number, frame: number) {
 }
 
 const cachedColors = buildColorsBytes(POINT_COUNT);
+const cachedSaturations = buildSaturations(POINT_COUNT);
 
 type Counters = {
   bufferData: number;
@@ -164,6 +169,7 @@ const NAIVE_VERTEX = /* glsl */ `#version 300 es
 in vec2 a_position;
 in vec2 a_center;
 in vec4 a_color;
+in float a_saturation;
 out vec4 v_color;
 uniform vec2 u_dimensions;
 uniform vec2 u_resolution;
@@ -171,7 +177,7 @@ void main() {
   vec2 position = a_center + a_position * u_dimensions / 2.0;
   vec2 clipSpace = (position / u_resolution) * 2.0 - 1.0;
   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
-  v_color = a_color;
+  v_color = vec4(a_color.rgb * (1.0 + a_saturation), 1.0);
 }
 `;
 
@@ -209,10 +215,12 @@ describe('HeatmapWebGL pipeline (200k × 30 frames)', () => {
         for (let frame = 0; frame < FRAME_COUNT; frame += 1) {
           const centers = generateFreshCenters(POINT_COUNT, frame);
           const colors = buildColors(POINT_COUNT);
+          const saturations = buildSaturations(POINT_COUNT);
 
           const aPos = gl.getAttribLocation(program, 'a_position');
           const aCenter = gl.getAttribLocation(program, 'a_center');
           const aColor = gl.getAttribLocation(program, 'a_color');
+          const aSat = gl.getAttribLocation(program, 'a_saturation');
           const uDim = gl.getUniformLocation(program, 'u_dimensions');
           const uRes = gl.getUniformLocation(program, 'u_resolution');
           gl.uniform2f(uDim, 1.2, 1.2);
@@ -238,12 +246,20 @@ describe('HeatmapWebGL pipeline (200k × 30 frames)', () => {
           gl.vertexAttribPointer(aColor, 4, gl.FLOAT, false, 0, 0);
           gl.vertexAttribDivisor(aColor, 1);
 
+          const satBuffer = gl.createBuffer()!;
+          gl.bindBuffer(gl.ARRAY_BUFFER, satBuffer);
+          gl.bufferData(gl.ARRAY_BUFFER, saturations, gl.STATIC_DRAW);
+          gl.enableVertexAttribArray(aSat);
+          gl.vertexAttribPointer(aSat, 1, gl.FLOAT, false, 0, 0);
+          gl.vertexAttribDivisor(aSat, 1);
+
           gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, POINT_COUNT);
           gl.finish();
 
           gl.deleteBuffer(quadBuffer);
           gl.deleteBuffer(centerBuffer);
           gl.deleteBuffer(colorBuffer);
+          gl.deleteBuffer(satBuffer);
         }
         const elapsed = performance.now() - t0;
         // eslint-disable-next-line no-console
@@ -274,8 +290,9 @@ describe('HeatmapWebGL pipeline (200k × 30 frames)', () => {
           const centers = generatePooledCenters(POINT_COUNT, frame);
           program.plot({
             centers,
-            /* Same ref every frame → upload short-circuit fires after frame 0. */
+            /* Same refs every frame → upload short-circuit fires after frame 0. */
             colors: cachedColors,
+            saturations: cachedSaturations,
           });
           program.render(POINT_COUNT);
           gl.finish();
@@ -289,7 +306,7 @@ describe('HeatmapWebGL pipeline (200k × 30 frames)', () => {
         /* Sanity-check the structural wins the doc patterns enforce. */
         expect(counters.createBuffer).toBeLessThan(FRAME_COUNT);
         expect(counters.getAttribLocation).toBeLessThan(FRAME_COUNT);
-        /* Static colors short-circuit after frame 0; only `centers` re-uploads. */
+        /* Static colors/saturations short-circuit after frame 0; only `centers` re-uploads. */
         expect(counters.bufferSubData).toBe(FRAME_COUNT - 1);
 
         program.dispose();
