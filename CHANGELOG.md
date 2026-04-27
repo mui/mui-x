@@ -2,7 +2,7 @@
 
 ## 9.0.3
 
-_Apr 24, 2026_
+_Apr 27, 2026_
 
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
