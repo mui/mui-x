@@ -90,7 +90,6 @@ function Pagination() {
   const nextPage = page + 1;
   const isPreviousDisabled = page === 0;
   const isNextDisabled = page >= pageCount - 1;
-  const getItemAriaLabel = apiRef.current.getLocaleText('paginationItemAriaLabel');
 
   const renderPageButton = ({
     direction,
