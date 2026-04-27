@@ -30,6 +30,11 @@ export function useScatterWebGLPlotData(): ScatterWebGLPlotData {
   // Colors and sizes depend only on series identity (series color + markerSize).
   // When only the drawing area or axes change we reuse the cached Float32Array
   // references so the WebGL program can skip the GPU upload for them.
+  // Caveat: if the axis scale starts producing non-numeric values for some points
+  // (e.g. NaN after a config change), those points are skipped from the centers
+  // walk while the cached sizes/colors entries for them stay in place — which can
+  // desynchronise styles from positions until the cache is invalidated. Acceptable
+  // for now since seriesData identity changes on any series mutation.
   const cachedStylesRef = React.useRef<{
     seriesData: typeof seriesData;
     sizes: Float32Array;
