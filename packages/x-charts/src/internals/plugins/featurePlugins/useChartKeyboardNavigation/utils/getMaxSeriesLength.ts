@@ -18,10 +18,7 @@ export function getMaxSeriesLength<OutSeriesType extends Exclude<ChartSeriesType
           if (data.length === 0 || !data.some((value) => value != null)) {
             return false;
           }
-          if (
-            isItemVisible !== undefined &&
-            !isItemVisible({ type, seriesId })
-          ) {
+          if (isItemVisible !== undefined && !isItemVisible({ type, seriesId })) {
             return false;
           }
           return true;

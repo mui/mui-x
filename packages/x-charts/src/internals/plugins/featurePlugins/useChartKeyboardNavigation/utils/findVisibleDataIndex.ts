@@ -35,11 +35,7 @@ export function findVisibleDataIndex<SeriesType extends ChartSeriesType>({
 
   let dataIndex = startIndex;
   for (let attempt = 0; attempt < dataLength; attempt += 1) {
-    if (
-      dataIndex >= 0 &&
-      dataIndex < dataLength &&
-      isItemVisible({ type, seriesId, dataIndex })
-    ) {
+    if (dataIndex >= 0 && dataIndex < dataLength && isItemVisible({ type, seriesId, dataIndex })) {
       return dataIndex;
     }
 
