@@ -37,7 +37,8 @@ function formatHourLabel(adapter: TemporalAdapter, date: TemporalSupportedObject
   return adapter.formatByString(date, pattern);
 }
 
-// TODO(#21359): In the future, this config should become a prop so users can customize step sizes per preset.
+// TODO(#21359): Expose as a prop for user-defined preset customization (step sizes,
+// headers, tick widths) and custom preset registration.
 export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Record<
   EventTimelinePremiumPreset,
   PresetConfig
