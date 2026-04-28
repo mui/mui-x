@@ -121,12 +121,21 @@ function findTForX(segment: CurveSegment, targetX: number): number {
 function findTForAngle(segment: CurveSegment, targetAngle: number): number {
   if (!isBezierSegment(segment)) {
     // Linear segment.
+    const DeltaY = segment.y1 - segment.y0;
+    const DeltaX = segment.x1 - segment.x0;
 
-    const angle0 = Math.atan2(segment.x0, -segment.y0);
-    const angle1 = Math.atan2(segment.x1, -segment.y1);
-    const dAngle = clampAngleRad(angle1 - angle0);
+    const dx = Math.sin(targetAngle);
+    const dy = -Math.cos(targetAngle);
 
-    return dAngle === 0 ? 0 : clampAngleRad(targetAngle - angle0) / dAngle;
+    if (Math.abs(dx) < EPSILON) {
+      return -segment.x0 / DeltaX;
+    }
+
+    if (Math.abs(dy) < EPSILON) {
+      return -segment.y0 / DeltaY;
+    }
+
+    return (segment.y0 / dy - segment.x0 / dx) / (DeltaX / dx - DeltaY / dy);
   }
 
   const xBezierCoeffs = cubicBezierCoeffs(segment.x0, segment.cpx1, segment.cpx2, segment.x1);
@@ -264,7 +273,7 @@ export function evaluateCurveAtAngle(
     const directionTargetX1 = vectorProduct(pointTarget, { x: segment.x1, y: segment.y1 });
 
     // Test if target angle is between x0 and x1. To do so we check the sign of the vector product.
-    if (directionX0Target > 0 && directionTargetX1 > 0) {
+    if (directionX0Target >= 0 && directionTargetX1 >= 0) {
       const angle0 = Math.atan2(segment.x0, -segment.y0);
       const angle1 = Math.atan2(segment.x1, -segment.y1);
 
