@@ -95,7 +95,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",
-    "@mui/internal-docs-utils": "3.0.4-canary.3",
+    "@mui/internal-docs-utils": "https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@03027e4",
     "@types/chance": "catalog:",
     "@types/d3-scale-chromatic": "3.1.0",
     "@types/luxon": "catalog:",

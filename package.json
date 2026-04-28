@@ -79,7 +79,7 @@
     "@mui/internal-api-docs-builder": "1.0.1-canary.1",
     "@mui/internal-markdown": "3.0.8-canary.3",
     "@mui/internal-netlify-cache": "0.0.3-canary.5",
-    "@mui/internal-scripts": "3.0.7-canary.2",
+    "@mui/internal-scripts": "https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@b928fc5",
     "@mui/internal-core-docs": "catalog:",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",

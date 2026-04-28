@@ -22,7 +22,7 @@ catalog:
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.0.1
   '@mui/internal-test-utils': 2.0.18-canary.25
-  '@mui/internal-core-docs': 9.0.2-canary.0
+  '@mui/internal-core-docs': 'https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@03027e4'
   '@mui/material': 9.0.1
   '@mui/stylis-plugin-rtl': 9.0.1
   '@mui/system': 9.0.1
@@ -86,20 +86,9 @@ catalog:
 
 engineStrict: true
 updateNotifier: false
-blockExoticSubdeps: true
-minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@mui/*'
   - '@base-ui/*'
-trustPolicy: no-downgrade
-# Skip trust-policy checks for packages published more than 365 days ago.
-# Some widely-used legacy packages (notably semver@6.x — pulled in by @babel/core@7.x — plus
-# reselect@5.1.1 and parts of @octokit/*) dropped provenance attestation for specific releases,
-# triggering false-positive trust-downgrade errors. Packages that old have had ample time for
-# community review; supply-chain risk is most relevant within a shorter window.
-# TODO: drop once @babel/core stops depending on semver@^6.3.1 (no 6.x semver release has
-# provenance), and the other legacy packages restore provenance.
-trustPolicyIgnoreAfter: 525600
 
 enablePrePostScripts: true
 
@@ -121,3 +110,4 @@ overrides:
 
 patchedDependencies:
   eslint-plugin-consistent-default-export-name@0.0.15: patches/eslint-plugin-consistent-default-export-name@0.0.15.patch
+  caniuse-lite: ^1.0.30001793
