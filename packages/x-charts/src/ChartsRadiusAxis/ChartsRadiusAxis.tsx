@@ -9,10 +9,19 @@ import {
   selectorChartPolarCenter,
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import type { ChartsRadiusAxisProps, D3Scale } from '../models/axis';
+import type {
+  ChartsRadiusAxisProps,
+  ChartsAxisSlots,
+  ChartsAxisSlotProps,
+  D3Scale,
+} from '../models/axis';
 import { useUtilityClasses } from './chartsRadiusAxisClasses';
 import { createGetLabelTextAnchors } from './createGetLabelTextAnchors';
 import { getLabelTransform } from './getLabelTransform';
+
+export interface ChartsRadiusAxisSlots extends ChartsAxisSlots {}
+
+export interface ChartsRadiusAxisSlotProps extends ChartsAxisSlotProps {}
 
 /* Gap between a tick and its label. */
 const TICK_LABEL_GAP = 3;
