@@ -202,7 +202,7 @@
   "resolutions": {
     "react-is": "^19.0.0",
     "@types/node": "^20.16.11",
-    "caniuse-lite": "1.0.30001745"
+    "caniuse-lite": "1.0.30001791"
   },
   "packageManager": "pnpm@9.15.1",
   "engines": {
