@@ -218,7 +218,7 @@ RadialLineChart.propTypes = {
    */
   experimentalFeatures: PropTypes.object,
   /**
-   * Option to display a cartesian grid in the background.
+   * Option to display a radial grid in the background.
    */
   grid: PropTypes.shape({
     radius: PropTypes.bool,
