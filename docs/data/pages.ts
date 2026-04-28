@@ -15,6 +15,12 @@ const schedulerPages: MuiPage[] = [
       { pathname: '/x/react-scheduler', title: 'Overview' },
       { pathname: '/x/react-scheduler/quickstart' },
       {
+        pathname: 'https://forms.gle/Ksbc91D3PcMiiK5x9',
+        title: 'Share your feedback',
+        newFeature: true,
+        linkProps: { target: '_blank', rel: 'noopener noreferrer' },
+      },
+      {
         pathname: '/x/react-scheduler/main-features',
         subheader: 'Main features',
         children: [
