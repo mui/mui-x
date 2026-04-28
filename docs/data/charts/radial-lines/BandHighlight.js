@@ -6,9 +6,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import Stack from '@mui/material/Stack';
 import { Unstable_RadialLineChart as RadialLineChart } from '@mui/x-charts-premium/RadialLineChart';
+import { dataset, valueFormatter } from '../dataset/weather';
 
 export default function BandHighlight() {
-  const [scaleType, setScaleType] = React.useState('band');
+  const [scaleType, setScaleType] = React.useState('point');
   const [rotationHighlight, setRotationHighlight] = React.useState('band');
   const [radiusHighlight, setRadiusHighlight] = React.useState('none');
 
@@ -28,14 +29,39 @@ export default function BandHighlight() {
     <Stack direction={{ xs: 'column', md: 'row' }} sx={{ width: '100%', m: 2 }}>
       <div style={{ flexGrow: 1 }}>
         <RadialLineChart
-          rotationAxis={[{ data: [0, 1, 3, 5, 10], scaleType }]}
+          dataset={
+            scaleType === 'linear'
+              ? dataset.map((item, index) => ({ ...item, month: index + 1 }))
+              : dataset
+          }
+          radiusAxis={[{ minRadius: 10, min: 0 }]}
+          rotationAxis={[{ dataKey: 'month', scaleType }]}
           series={[
-            { data: [2, 5, 3, 4, 1], stack: '1', label: 'Series a' },
-            { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series b' },
-            { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series c' },
+            {
+              dataKey: 'london',
+              curve: 'linear',
+              label: 'London',
+              valueFormatter,
+              showMark: true,
+            },
+            {
+              dataKey: 'paris',
+              curve: 'linear',
+              label: 'Paris',
+              valueFormatter,
+              showMark: true,
+            },
+            {
+              dataKey: 'newYork',
+              curve: 'linear',
+              label: 'New York',
+              valueFormatter,
+              showMark: true,
+            },
           ]}
           margin={10}
           height={300}
+          grid={{ rotation: true, radius: true }}
           axisHighlight={{ rotation: rotationHighlight, radius: radiusHighlight }}
         />
       </div>
@@ -51,9 +77,9 @@ export default function BandHighlight() {
             value={scaleType}
             onChange={handleChange('scaleType')}
           >
-            <FormControlLabel value="none" control={<Radio />} label="None" />
-            <FormControlLabel value="line" control={<Radio />} label="Line" />
             <FormControlLabel value="band" control={<Radio />} label="Band" />
+            <FormControlLabel value="point" control={<Radio />} label="Point" />
+            <FormControlLabel value="linear" control={<Radio />} label="Linear" />
           </RadioGroup>
         </FormControl>
         <FormControl>
