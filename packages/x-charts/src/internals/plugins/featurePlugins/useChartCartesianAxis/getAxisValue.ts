@@ -1,5 +1,6 @@
 import { isOrdinalScale } from '../../../scaleGuards';
 import { getAsNumber } from '../../../getAsNumber';
+import { findClosestIndex } from '../../../findClosestIndex';
 import { type ComputedAxis, type D3Scale } from '../../../../models/axis';
 
 /**
@@ -10,36 +11,13 @@ export function getAxisIndex(axisConfig: ComputedAxis, pointerValue: number): nu
   const { scale, data: axisData, reverse } = axisConfig;
 
   if (!isOrdinalScale(scale)) {
-    const value = scale.invert(pointerValue);
-
     if (axisData === undefined) {
       return -1;
     }
 
-    const valueAsNumber = getAsNumber(value);
-    const closestIndex = axisData?.findIndex((pointValue: typeof value, index) => {
-      const v = getAsNumber(pointValue);
-      if (v > valueAsNumber) {
-        if (
-          index === 0 ||
-          Math.abs(valueAsNumber - v) <= Math.abs(valueAsNumber - getAsNumber(axisData[index - 1]))
-        ) {
-          return true;
-        }
-      }
-      if (v <= valueAsNumber) {
-        if (
-          index === axisData.length - 1 ||
-          Math.abs(getAsNumber(value) - v) <
-            Math.abs(getAsNumber(value) - getAsNumber(axisData[index + 1]))
-        ) {
-          return true;
-        }
-      }
-      return false;
-    });
+    const valueAsNumber = getAsNumber(scale.invert(pointerValue));
 
-    return closestIndex;
+    return findClosestIndex(axisData, valueAsNumber);
   }
 
   const dataIndex =
