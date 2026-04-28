@@ -25,6 +25,7 @@ export default function BasicRadialLineChart() {
           data: [3, 5, 7, 9, 12, 15, 18, 16, 13, 9, 6, 4],
           label: 'Temperature',
           curve: 'natural',
+          showMark: true,
         },
       ]}
       rotationAxis={[{ scaleType: 'point', data: months }]}
