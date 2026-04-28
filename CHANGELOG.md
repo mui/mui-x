@@ -4,7 +4,12 @@
 
 _Apr 28, 2026_
 
-This is a hotfix release to ensure the packages use latest `@mui/x-internals` version.
+We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- Fix Pickers previous (v9.0.3) release ensuring the latest `@mui/x-internals` version usage
+
+The following team members contributed to this release:
+@alexfauquette, @JCQuintas, @LukasTy, @mj12albert
 
 ### Data Grid
 
@@ -34,7 +39,8 @@ Same changes as in `@mui/x-date-pickers@9.0.4`.
 
 #### `@mui/x-charts@9.0.4`
 
-Internal changes.
+- [charts] Exclude hidden series and items from keyboard navigation (alt approach) (#22221) @JCQuintas
+- [charts] Fix line interaction with `area` and `conectNulls` (#22227) @alexfauquette
 
 #### `@mui/x-charts-pro@9.0.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -42,7 +48,9 @@ Same changes as in `@mui/x-charts@9.0.4`.
 
 #### `@mui/x-charts-premium@9.0.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@9.0.4`:
+Same changes as in `@mui/x-charts-pro@9.0.4` plus:
+
+- [charts-premium] Add `showMark` and `shape` properties to radial line (#22226) @alexfauquette
 
 ### Tree View
 
@@ -69,6 +77,14 @@ Same changes as in `@mui/x-scheduler@9.0.4`.
 #### `@mui/x-codemod@9.0.4`
 
 Internal changes.
+
+### Docs
+
+- [docs] Update WCAG links (#22234) @mj12albert
+
+### Core
+
+- [code-infra] Avoid overriding `renovate` `ignoredPaths` (#22228) @LukasTy
 
 ## 9.0.3
 
