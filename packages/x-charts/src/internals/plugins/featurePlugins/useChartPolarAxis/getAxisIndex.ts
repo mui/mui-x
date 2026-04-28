@@ -1,5 +1,6 @@
 import { isOrdinalScale } from '../../../scaleGuards';
 import { getAsNumber } from '../../../getAsNumber';
+import { findClosestIndex } from '../../../findClosestIndex';
 import { type PolarAxisDefaultized } from '../../../../models/axis';
 import { clampAngleRad } from '../../../clampAngle';
 
@@ -16,31 +17,9 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
     }
 
     const angle = scale.range()[0] + clampAngleRad(pointerValue - scale.range()[0]);
+    const valueAsNumber = getAsNumber(scale.invert(angle));
 
-    const value = scale.invert(angle);
-    const valueAsNumber = getAsNumber(value);
-    const closestIndex = axisData.findIndex((pointValue: typeof value, index) => {
-      const v = getAsNumber(pointValue);
-      if (v > valueAsNumber) {
-        if (
-          index === 0 ||
-          Math.abs(valueAsNumber - v) <= Math.abs(valueAsNumber - getAsNumber(axisData[index - 1]))
-        ) {
-          return true;
-        }
-      }
-      if (v <= valueAsNumber) {
-        if (
-          index === axisData.length - 1 ||
-          Math.abs(valueAsNumber - v) < Math.abs(valueAsNumber - getAsNumber(axisData[index + 1]))
-        ) {
-          return true;
-        }
-      }
-      return false;
-    });
-
-    return closestIndex;
+    return findClosestIndex(axisData, valueAsNumber);
   }
 
   if (!axisData) {
