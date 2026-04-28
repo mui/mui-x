@@ -18,7 +18,7 @@ The `RadialLineChart` component accepts `series`, `rotationAxis`, and `radiusAxi
 
 Like for line series, the rotation axis can have any scale type.
 
-{{"demo": "ContinuousRadialLineChart", "bg": "outline"}}
+{{"demo": "ContinuousRadialLineChart.js", "bg": "outline"}}
 
 ## Radial coordinates
 

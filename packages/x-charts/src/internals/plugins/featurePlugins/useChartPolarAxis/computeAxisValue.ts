@@ -225,6 +225,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
       scale: finalScale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
+      isFullCircle
     } as ComputedAxis<ContinuousScaleName, any, ChartsAxisProps>;
   });
   return {
