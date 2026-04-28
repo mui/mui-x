@@ -282,6 +282,26 @@ jobs:
     resource_class: medium
     steps:
       - checkout
+      - run:
+          name: Skip when no charts changes
+          command: |
+            if [ "$CIRCLE_BRANCH" = "master" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
+              echo "On $CIRCLE_BRANCH; running benchmarks."
+              exit 0
+            fi
+            BASE="${BASE_BRANCH:-master}"
+            git fetch --no-tags --depth=50 origin "$BASE" || true
+            CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
+              'packages/x-charts*' \
+              'test/performance-charts' \
+              '.circleci/config.yml' || true)
+            if [ -n "$CHANGED" ]; then
+              echo "Relevant changes detected; running benchmarks:"
+              echo "$CHANGED"
+              exit 0
+            fi
+            echo "No changes to packages/x-charts*, test/performance-charts, or CircleCI config; halting job."
+            circleci-agent step halt
       - install-deps
       - run:
           name: Build charts packages
