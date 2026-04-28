@@ -61,13 +61,9 @@ export default function Confirmation() {
       async sendMessage() {
         const messageId = randomId();
         return createChunkStream(
-          createTextResponseChunks(
-            messageId,
-            'Got it—what else can I help with?',
-            {
-              author: demoUsers.agent,
-            },
-          ),
+          createTextResponseChunks(messageId, 'Got it—what else can I help with?', {
+            author: demoUsers.agent,
+          }),
           { delayMs: 60 },
         );
       },
