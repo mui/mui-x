@@ -132,6 +132,7 @@
   { "name": "chartsRadialAxisClasses", "kind": "Variable" },
   { "name": "ChartsRadialAxisClasses", "kind": "Interface" },
   { "name": "ChartsRadialAxisClassKey", "kind": "TypeAlias" },
+  { "name": "ChartsRadialAxisHighlightCircle", "kind": "Variable" },
   { "name": "chartsRadialAxisHighlightClasses", "kind": "Variable" },
   { "name": "ChartsRadialAxisHighlightClasses", "kind": "Interface" },
   { "name": "ChartsRadialAxisHighlightClassKey", "kind": "TypeAlias" },
