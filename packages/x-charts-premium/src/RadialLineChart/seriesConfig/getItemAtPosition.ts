@@ -56,7 +56,7 @@ function getBracketIndices(
   }
 
   // For continuous axes, find the two adjacent data points surrounding pointX.
-  const rotationValue = scale.invert(angle);
+  const rotationValue = scale.invert(scale.range()[0] + clampAngleRad(angle - scale.range()[0]));
   const rotationAsNumber = rotationValue instanceof Date ? rotationValue.getTime() : rotationValue;
 
   const getAsNumber = (v: any) => (v instanceof Date ? v.getTime() : v);
