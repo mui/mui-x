@@ -8,13 +8,13 @@ components: ChatUnreadMarker
 
 # Chat - Read Receipts
 
-<p class="description">Track and display read/unread state for conversations using the <code>markRead</code> adapter method and the conversation list's unread badge.</p>
+<p class="description">Track and display read and unread state for conversations using the markRead adapter method and the conversation list's unread badge.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 Read receipts let users see which conversations have unread messages and mark them as read when opened. The system uses three pieces working together: the `readState` and `unreadCount` fields on `ChatConversation`, the `markRead()` adapter method, and the `read` realtime event.
 
-## Read/unread state on `ChatConversation`
+## Read and unread state
 
 Each `ChatConversation` object carries read state:
 
@@ -53,7 +53,7 @@ The item's `ownerState` includes an `unread` boolean derived from the conversati
 
 This `unread` flag drives both the badge visibility and the bold title weight in the default styled slots.
 
-## The `ChatUnreadMarker` component
+## Showing the unread boundary
 
 `ChatUnreadMarker` is an in-thread divider that appears inside the message list at the boundary between already-read messages and the first unread message. It displays a "New messages" label (localizable via `unreadMarkerLabel`) styled as a horizontal rule with a centered caption.
 
@@ -77,7 +77,7 @@ The boundary is computed as follows:
 - When `unreadCount` is absent but `readState` is `'unread'`, the marker appears before the very first message.
 - When the conversation is fully read (or no conversation is active), the marker renders nothing.
 
-### Customizing `ChatUnreadMarker`
+### Customizing the unread marker
 
 Pass `slotProps.unreadMarker` on `ChatBox` to forward extra props, or swap the component entirely with `slots.unreadMarker`:
 
@@ -106,7 +106,7 @@ const theme = createTheme({
 });
 ```
 
-## The `markRead` adapter method
+## Marking messages as read
 
 Implement `markRead` to signal to your backend that the user has seen a conversation or a specific message:
 
@@ -229,6 +229,6 @@ Or provide initial conversations directly:
 
 ## See also
 
-- [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that displays the unread badge.
-- [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for the full realtime event reference including `read` events.
+- [Conversation list](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that displays the unread badge.
+- [Real-time sync](/x/react-chat/multi-conversation/real-time-sync/) for the full realtime event reference including `read` events.
 - [Adapter](/x/react-chat/backend/adapters/) for the complete adapter interface including `markRead()`.

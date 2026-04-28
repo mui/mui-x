@@ -56,11 +56,11 @@ import {
 } from '@mui/x-chat';
 ```
 
-### ownerState and how state flows
+### Owner state and how it flows
 
-`ChatConversation` owns the conversation-level `ownerState`, and the header subcomponents inherit that same state through the slot system.
+`ChatConversation` owns the conversation-level owner state, and the header subcomponents inherit that same state through the slot system.
 
-### Conversation ownerState
+### Conversation owner state
 
 | Field             | Type                       | Description                                  |
 | :---------------- | :------------------------- | :------------------------------------------- |
@@ -76,7 +76,7 @@ The most targeted customization is to replace the element type on one slot while
 
 {{"demo": "GradientHeader.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### Using ownerState in a custom title
+### Using owner state in a custom title
 
 The `ownerState` prop received by slot components carries the full conversation context. This makes it straightforward to render dynamic content derived from the active conversation:
 
@@ -111,7 +111,7 @@ function CustomConversationTitle(props) {
 import { ChatMessageList, ChatMessageGroup } from '@mui/x-chat';
 ```
 
-### ownerState and how state flows
+### Owner state and how it flows
 
 | Slot key              | Default element | ownerState fields            |
 | :-------------------- | :-------------- | :--------------------------- |
@@ -151,7 +151,7 @@ import {
 } from '@mui/x-chat';
 ```
 
-### `ChatMessageGroup` ownerState
+### ChatMessageGroup owner state
 
 | Field        | Type                    | Description                          |
 | :----------- | :---------------------- | :----------------------------------- |
@@ -160,7 +160,7 @@ import {
 | `authorRole` | `'user' \| 'assistant'` | Role of the group author             |
 | `authorId`   | `string \| undefined`   | Identity of the group author         |
 
-### `ChatMessage` ownerState
+### ChatMessage owner state
 
 | Field        | Type                    | Description                                   |
 | :----------- | :---------------------- | :-------------------------------------------- |
@@ -209,9 +209,9 @@ import {
 } from '@mui/x-chat';
 ```
 
-### ownerState and how state flows
+### Owner state and how it flows
 
-Every composer component shares the same ownerState shape:
+Every composer component shares the same owner state shape:
 
 | Field             | Type      | Description                        |
 | :---------------- | :-------- | :--------------------------------- |
@@ -253,7 +253,7 @@ Custom children placed inside `ChatMessage` receive the message's `ownerState` t
 
 {{"demo": "BubbleWithStatus.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-The `ownerState` includes `role`, `status`, `streaming`, `error`, `isGrouped`, and `showAvatar` — the same fields listed in the `ChatMessage` ownerState table above.
+The `ownerState` includes `role`, `status`, `streaming`, `error`, `isGrouped`, and `showAvatar`, the same fields listed in the ChatMessage owner state table above.
 
 For conversation-level state (the active conversation title, participants, etc.), use the `ownerState` received by header slot components — see the [Header anatomy](#header-anatomy) section above.
 

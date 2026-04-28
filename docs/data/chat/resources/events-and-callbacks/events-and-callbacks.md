@@ -1,14 +1,14 @@
 ---
 productId: x-chat
-title: Events & Callbacks
+title: Events and Callbacks
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Events & Callbacks
+# Chat - Events and Callbacks
 
-<p class="description">Respond to streaming lifecycle events, tool calls, data chunks, and errors using callback props on <code>ChatProvider</code> and <code>ChatBox</code>.</p>
+<p class="description">Respond to streaming lifecycle events, tool calls, data chunks, and errors using callback props on ChatProvider and ChatBox.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 

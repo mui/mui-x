@@ -8,7 +8,7 @@ components: ChatRoot
 
 # Chat - Slot overrides
 
-<p class="description">Replace individual subcomponents inside ChatBox with your own implementations using the <code>slots</code> and <code>slotProps</code> API.</p>
+<p class="description">Replace individual subcomponents inside ChatBox with your own implementations using the slots and slotProps API.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -100,7 +100,7 @@ Return `null` from a slot to remove it entirely:
 />
 ```
 
-For common show/hide needs, prefer the `features` prop which handles the logic cleanly:
+For common visibility needs, prefer the `features` prop which handles the logic cleanly:
 
 {{"demo": "FeatureFlags.js", "defaultCodeOpen": false, "bg": "inline"}}
 

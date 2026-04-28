@@ -69,11 +69,11 @@ const [activeConversationId, setActiveConversationId] = React.useState('thread-a
 
 If only one conversation is provided, `ChatBox` renders the thread pane directly without a sidebar.
 
-## ownerState and how state flows
+## Owner state and how it flows
 
 The item and all its sub-slots receive an `ownerState` prop that carries the current row's interaction state alongside the full conversation object.
 
-### Item ownerState
+### Item owner state
 
 | Field          | Type               | Description                            |
 | :------------- | :----------------- | :------------------------------------- |
@@ -86,7 +86,7 @@ The `selected` flag drives the row background (`palette.action.selected`). The `
 
 Because the full `conversation` object is included, custom slot components can directly read fields such as `conversation.title`, `conversation.metadata`, `conversation.unreadCount`, and `conversation.lastMessageAt` without additional selectors.
 
-### Root ownerState
+### Root owner state
 
 | Field                  | Type                  | Description                        |
 | :--------------------- | :-------------------- | :--------------------------------- |
@@ -138,7 +138,7 @@ The `ownerState` prop arrives directly on the component because the Material UI
 
 ## Overriding the item content layout
 
-Replace `itemContent` when you want to change the structural layout of the title and preview region — for example to add a participant count or an icon:
+Replace `itemContent` when you want to change the structural layout of the title and preview region, for example to add a participant count or an icon:
 
 ```tsx
 import { ChatConversationList } from '@mui/x-chat';
@@ -434,6 +434,6 @@ Pass `aria-label` to the root through `slotProps`:
 
 ## See also
 
-- [Conversation Header](/x/react-chat/multi-conversation/conversation-header/) for the header bar that accompanies the active thread.
+- [Conversation header](/x/react-chat/multi-conversation/conversation-header/) for the header bar that accompanies the active thread.
 - [Multi-conversation demo](/x/react-chat/demos/team-messaging/) for a two-pane inbox layout using controlled state.
-- [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing conversation updates through subscriptions.
+- [Real-time sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing conversation updates through subscriptions.

@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Split layout
 
-<p class="description">Place <code>ChatMessageList</code> and <code>ChatComposer</code> in separate DOM zones. Only <code>ChatRoot</code> is needed to connect them.</p>
+<p class="description">Place ChatMessageList and ChatComposer in separate DOM zones. Only ChatRoot is needed to connect them.</p>
 
 {{"demo": "SplitLayout.js", "bg": "inline"}}
 
@@ -40,8 +40,8 @@ Use split layout when `ChatBox`'s default two-pane structure doesn't fit your pr
 
 ## See also
 
-- [No conversation history](/x/react-chat/material/examples/no-conversation-history/) — compose a thread without `ChatBox`
-- [Message feed](/x/react-chat/material/examples/message-feed/) — display-only embed with no input
+- [No conversation history](/x/react-chat/material/examples/no-conversation-history/): compose a thread without `ChatBox`
+- [Message feed](/x/react-chat/material/examples/message-feed/): display-only embed with no input
 
 ## API
 

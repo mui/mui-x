@@ -1,13 +1,13 @@
 ---
-title: Chat - Plan & task
+title: Chat - Plan and Task
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Plan & task
+# Chat - Plan and Task
 
-<p class="description">Show a live task list inside a tool call by providing a custom component through <code>partRenderers</code>.</p>
+<p class="description">Show a live task list inside a tool call by providing a custom component through partRenderers.</p>
 
 Send any message and watch the agent plan animate through each step inside the conversation.
 

@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Hooks
 
-<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat</code>.</p>
+<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from @mui/x-chat.</p>
 
 `ChatBox` covers most use cases out of the box, but sometimes you need to reach into chat state from components that live outside `ChatBox` — a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
 
@@ -65,7 +65,7 @@ The following demo shows hooks reading chat state from within a `ChatBox` child:
 State hooks give you read access to the normalized chat store.
 Use them to display data without triggering adapter calls.
 
-### `useChat()`
+### Getting all state and actions
 
 The all-in-one hook.
 It returns both the complete current state and every runtime action in a single object.
@@ -115,7 +115,7 @@ function QuickChat() {
 }
 ```
 
-### `useChatStatus()`
+### Reading streaming and error status
 
 A lightweight hook for status indicators.
 It subscribes only to `isStreaming`, `hasMoreHistory`, `error`, and `typingUserIds` — making it ideal for status bars, loading spinners, and error banners that sit outside the message list.
@@ -134,7 +134,7 @@ const {
 Prefer `useChatStatus()` over `useChat()` whenever you only need streaming or error state.
 The component does not re-render when a new message is sent — only when the status fields themselves change.
 
-### `useConversations()`
+### Reading all conversations
 
 Returns the full list of conversations.
 Use it to render a sidebar or drawer that shows all threads.
@@ -145,7 +145,7 @@ const conversations: ChatConversation[] = useConversations();
 
 {{"demo": "ConversationSidebar.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### `useConversation(id)`
+### Reading a single conversation
 
 Returns a single conversation by ID, or `null` if it is not in the store.
 Use this inside a list item component so that each item only re-renders when its own conversation changes — not when an unrelated conversation is added or renamed.
@@ -163,7 +163,7 @@ function ConversationItem({ id }: { id: string }) {
 }
 ```
 
-### `useMessageIds()`
+### Reading message IDs
 
 Returns the ordered array of message IDs for the active conversation.
 Pair it with `useMessage(id)` to implement efficient thread rendering where each message row subscribes to its own slice of state.
@@ -174,7 +174,7 @@ const messageIds: string[] = useMessageIds();
 
 When a message is being streamed, only the row for that message re-renders — the parent thread component and sibling rows stay untouched.
 
-### `useMessage(id)`
+### Reading a single message
 
 Returns a single message by ID, or `null` if it does not exist.
 This is the most granular subscription available: it re-renders only when the specific message changes.
@@ -191,7 +191,7 @@ This pattern scales to threads with hundreds of messages because no unnecessary 
 
 ## Input hook
 
-### `useChatComposer()`
+### Managing draft state
 
 Manages draft text, file attachments, and submission in a single object.
 Use it when you want to build a custom composer instead of using the one built into `ChatBox`.
@@ -211,9 +211,9 @@ const {
 
 The hook handles several details automatically:
 
-- **Object URL lifecycle** — preview URLs for image attachments are created on add and revoked on remove or unmount.
-- **IME safety** — `submit` is a no-op during an active IME composition session (relevant for East Asian input methods).
-- **Double-send prevention** — `submit` is blocked when `isSubmitting` is `true`.
+- **Object URL lifecycle**: preview URLs for image attachments are created on add and revoked on remove or unmount.
+- **IME safety**: `submit` is a no-op during an active IME composition session (relevant for East Asian input methods).
+- **Double-send prevention**: `submit` is blocked when `isSubmitting` is `true`.
 
 {{"demo": "CustomComposer.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -222,7 +222,7 @@ The hook handles several details automatically:
 Config hooks read configuration registered on the `ChatProvider` rather than runtime state.
 They are most useful inside custom message part renderers and custom message components.
 
-### `useChatOnToolCall()`
+### Accessing the tool call callback
 
 Returns the `onToolCall` callback registered on the provider, or `undefined` if none was registered.
 Use it inside a custom tool message part to invoke the same callback that `ChatBox` uses internally — keeping behavior consistent even when you replace message rendering entirely.
@@ -245,7 +245,7 @@ function ToolMessagePart({ invocation }: { invocation: ChatToolInvocation }) {
 }
 ```
 
-### `useChatPartRenderer(partType)`
+### Looking up a part renderer
 
 Looks up a renderer registered in the `partRenderers` map on `ChatProvider`.
 Returns the renderer function, or `null` if none is registered for the given part type.
@@ -281,7 +281,7 @@ function UnknownPart({ part, message, index }) {
 }
 ```
 
-## Advanced: `useChatStore()`
+## Advanced: accessing the store directly
 
 Returns the underlying `ChatStore<Cursor>` instance directly.
 This is the escape hatch for cases that none of the dedicated hooks cover — writing custom selectors, subscribing to store updates outside React render, or integrating with Redux or Zustand.

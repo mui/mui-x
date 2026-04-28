@@ -49,7 +49,7 @@ The message list automatically scrolls to the bottom when:
 - New messages arrive from the assistant while the user is near the bottom.
 - Streaming content grows (token-by-token updates).
 
-The auto-scroll behavior is gated by a **buffer** — if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
+The auto-scroll behavior is gated by a **buffer**: if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
 
 ### Configuration
 
@@ -100,10 +100,10 @@ The demo below sets the window to 1 minute (60,000 ms) — notice how messages m
 Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layout.
 Compact mode applies the following changes to the message list:
 
-- **No bubbles** — messages render as plain text without background colors or padding.
-- **Left-aligned** — all messages are left-aligned regardless of role (no right-aligned user messages).
-- **Group header timestamps** — the timestamp moves from below each message to the group header, displayed next to the author name.
-- **Avatars preserved** — avatars remain visible for the first message in each group.
+- **No bubbles**: messages render as plain text without background colors or padding.
+- **Left-aligned**: all messages are left-aligned regardless of role (no right-aligned user messages).
+- **Group header timestamps**: the timestamp moves from below each message to the group header, displayed next to the author name.
+- **Avatars preserved**: avatars remain visible for the first message in each group.
 
 When set on `ChatBox`, the variant automatically applies to the conversation list as well.
 
@@ -116,7 +116,7 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 ## Density
 
 The `density` prop controls the vertical spacing between messages.
-Three values are available — `compact`, `standard` (default), and `comfortable` — mirroring the density model used in [Data Grid](/x/react-data-grid/accessibility/#density).
+Three values are available: `compact`, `standard` (default), and `comfortable`, mirroring the density model used in [Data Grid](/x/react-data-grid/accessibility/#density).
 
 Use the toggle in the demo below to compare the three density levels:
 
@@ -157,7 +157,7 @@ listRef.current?.scrollToBottom({ behavior: 'smooth' });
 <ChatMessageList ref={listRef} />;
 ```
 
-## MessageListContext
+## Accessing scroll state in child components
 
 Child components inside the message list can access scroll state via context:
 

@@ -36,11 +36,11 @@ ChatConversation                    <- thread shell, derives the active conversa
 
 The header sits at the top of the thread pane and provides the visual identity of the active conversation.
 
-## ownerState and how state flows
+## Owner state and how it flows
 
-`ChatConversation` owns the conversation-level `ownerState`, and the header subcomponents inherit that same state through the slot system.
+`ChatConversation` owns the conversation-level owner state, and the header subcomponents inherit that same state through the slot system.
 
-### Conversation ownerState
+### Conversation owner state
 
 | Field             | Type                       | Description                                  |
 | :---------------- | :------------------------- | :------------------------------------------- |
@@ -143,7 +143,7 @@ Pass `CustomHeader` through `ChatBox`'s `slots.conversationHeader` prop:
 <ChatBox slots={{ conversationHeader: CustomHeader }} />
 ```
 
-## Using ownerState in a custom title
+## Using owner state in a custom title
 
 The `ownerState` prop received by slot components carries the full conversation context. This makes it straightforward to render dynamic content derived from the active conversation:
 
@@ -201,6 +201,6 @@ function CustomThread() {
 
 ## See also
 
-- [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that lists conversations.
-- [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for live updates to conversation metadata displayed in the header.
+- [Conversation list](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that lists conversations.
+- [Real-time sync](/x/react-chat/multi-conversation/real-time-sync/) for live updates to conversation metadata displayed in the header.
 - [Layout](/x/react-chat/basics/layout/) for the full thread anatomy including message list and composer.

@@ -8,7 +8,7 @@ components: ChatBox
 
 # Chat - Real-Time Sync
 
-<p class="description">Push typing, presence, and collection changes into the runtime via the adapter's <code>subscribe()</code> method for live synchronization.</p>
+<p class="description">Push typing, presence, and collection changes into the runtime via the adapter's subscribe() method for live synchronization.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -257,6 +257,6 @@ The runtime calls `setTyping` when the composer value changes from empty to non-
 
 ## See also
 
-- [Read Receipts](/x/react-chat/multi-conversation/read-receipts/) for the `markRead()` adapter method and unread badge display.
-- [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that reflects realtime conversation updates.
+- [Read receipts](/x/react-chat/multi-conversation/read-receipts/) for the `markRead()` adapter method and unread badge display.
+- [Conversation list](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that reflects realtime conversation updates.
 - [Adapter](/x/react-chat/backend/adapters/) for the full `subscribe()` and `setTyping()` method reference.

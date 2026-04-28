@@ -7,11 +7,11 @@ githubLabel: 'scope: chat'
 
 # Chat - Thread-only
 
-<p class="description">A single-pane chat surface with no conversation sidebar — ideal for embedded copilots and focused AI assistants.</p>
+<p class="description">A single-pane chat surface with no conversation sidebar, ideal for embedded copilots and focused AI assistants.</p>
 
 When no `conversations` or `initialConversations` are provided, `ChatBox` automatically hides the left panel and renders the thread full-width.
 
-- Thread-only layout — no conversation list pane
+- Thread-only layout: no conversation list pane
 - Minimal props: just an `adapter` and a container size
 - Automatic layout adaptation based on whether conversations are present
 
