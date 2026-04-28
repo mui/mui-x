@@ -1,4 +1,6 @@
 import { isOrdinalScale } from '../../../scaleGuards';
+import { getAsNumber } from '../../../getAsNumber';
+import { findClosestIndex } from '../../../findClosestIndex';
 import { type PolarAxisDefaultized } from '../../../../models/axis';
 import { clampAngleRad } from '../../../clampAngle';
 import { EPSILON } from '../../../../utils/epsilon';
@@ -8,34 +10,34 @@ import { EPSILON } from '../../../../utils/epsilon';
  * Returns `-1` if the coordinate does not match a value.
  */
 export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: number): number {
-  const { scale, data: axisData, reverse } = axisConfig;
+  const { scale, data: axisData, reverse, isFullCircle } = axisConfig;
+
+  const [startAngle, endAngle] = scale.range();
+
+  const angleGap = clampAngleRad(pointerValue - startAngle);
+  const maxAngleGap = clampAngleRad(endAngle - startAngle);
+
+  if (!isFullCircle && angleGap > maxAngleGap) {
+    // If not a full circle we only consider pointer inside the rotation range.
+    return -1;
+  }
 
   if (!isOrdinalScale(scale)) {
-    throw new Error(
-      'MUI X Charts: getAxisIndex is not implemented for polar continuous axes. ' +
-        'This function only supports ordinal (band/point) scales.',
-    );
+    if (axisData === undefined) {
+      return -1;
+    }
+
+    const angle = startAngle + clampAngleRad(pointerValue - startAngle);
+    const valueAsNumber = getAsNumber(scale.invert(angle));
+
+    return findClosestIndex(axisData, valueAsNumber);
   }
 
   if (!axisData) {
     return -1;
   }
 
-  const [startAngle, endAngle] = scale.range();
-
-  const angleGap = clampAngleRad(pointerValue - startAngle);
-
-  const maxAngleGap = clampAngleRad(endAngle - startAngle);
-  const isFullCircle =
-    Math.abs(endAngle - startAngle + (scale.bandwidth() === 0 ? scale.step() : 0)) >=
-    2 * Math.PI - EPSILON;
-
-  if (!isFullCircle && angleGap > maxAngleGap) {
-    // If not a full circle we only consider pointer inside the rotation range.
-    return -1;
-  }
   let dataIndex: number;
-
   if (scale.bandwidth() === 0) {
     dataIndex = Math.floor((angleGap + scale.step() / 2) / scale.step());
     if (isFullCircle) {
@@ -45,7 +47,6 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
   } else {
     dataIndex = Math.floor(angleGap / scale.step());
   }
-
   if (dataIndex < 0 || dataIndex >= axisData.length) {
     return -1;
   }

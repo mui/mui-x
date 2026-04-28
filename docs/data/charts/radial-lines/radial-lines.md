@@ -20,6 +20,14 @@ Like other series, the radial line series has a `highlightScope` property that a
 
 {{"demo": "ElementHighlights.js", "bg": "outline"}}
 
+### Rotation axis
+
+Like for line series, the rotation axis can have any scale type.
+
+{{"demo": "ContinuousRadialLineChart.js", "bg": "outline"}}
+
+## Radial coordinates
+
 ## Radial grid
 
 Similarly to the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates
