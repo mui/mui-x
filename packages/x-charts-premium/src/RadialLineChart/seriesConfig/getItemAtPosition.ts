@@ -5,13 +5,13 @@ import {
   type UseChartPolarAxisSignature,
   type ComputedAxis,
   type ChartsRadiusAxisProps,
+  type ChartsRotationAxisProps,
   selectorAllSeriesOfType,
   selectorChartPolarCenter,
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
   getPolarAxisIndex,
   isOrdinalScale,
-  EPSILON,
 } from '@mui/x-charts/internals';
 import { evaluateCurveAtAngle, clampAngleRad } from '@mui/x-charts/internals';
 import type { ScaleName, SeriesItemIdentifierWithType } from '@mui/x-charts/models';
@@ -22,10 +22,10 @@ import type { ScaleName, SeriesItemIdentifierWithType } from '@mui/x-charts/mode
  * Returns null if the pointer is outside the data range.
  */
 function getBracketIndices(
-  rotationAxis: ComputedAxis,
+  rotationAxis: ComputedAxis<ScaleName, any, ChartsRotationAxisProps>,
   angle: number,
 ): { left: number; right: number } | null {
-  const { scale, data: axisData } = rotationAxis;
+  const { scale, data: axisData, isFullCircle } = rotationAxis;
 
   if (!axisData || axisData.length === 0) {
     return null;
@@ -39,12 +39,6 @@ function getBracketIndices(
 
     const valueAngle = getValueToPositionMapper(scale)(axisData[index]);
     const gapAngle = clampAngleRad(angle - valueAngle);
-
-    const [startAngle, endAngle] = scale.range();
-
-    const isFullCircle =
-      Math.abs(endAngle - startAngle + (scale.bandwidth() === 0 ? scale.step() : 0)) >=
-      2 * Math.PI - EPSILON;
 
     if (gapAngle > Math.PI) {
       // We are between the previous and current rotation point.

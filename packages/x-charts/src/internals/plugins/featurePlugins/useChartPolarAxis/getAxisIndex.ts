@@ -1,15 +1,14 @@
 import { isOrdinalScale } from '../../../scaleGuards';
 import { getAsNumber } from '../../../getAsNumber';
 import { findClosestIndex } from '../../../findClosestIndex';
-import { type PolarAxisDefaultized } from '../../../../models/axis';
+import type { ChartsRadiusAxisProps, ChartsRotationAxisProps, ComputedAxis, ScaleName } from '../../../../models/axis';
 import { clampAngleRad } from '../../../clampAngle';
-import { EPSILON } from '../../../../utils/epsilon';
 
 /**
  * For a pointer coordinate, this function returns the value and dataIndex associated.
  * Returns `-1` if the coordinate does not match a value.
  */
-export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: number): number {
+export function getAxisIndex(axisConfig: ComputedAxis<ScaleName, any, ChartsRadiusAxisProps> | ComputedAxis<ScaleName, any, ChartsRotationAxisProps>, pointerValue: number): number {
   const { scale, data: axisData, reverse, isFullCircle } = axisConfig;
 
   const [startAngle, endAngle] = scale.range();
