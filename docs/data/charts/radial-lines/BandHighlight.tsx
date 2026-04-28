@@ -45,7 +45,7 @@ export default function BandHighlight() {
         <RadialLineChart
           dataset={
             scaleType === 'linear'
-              ? dataset.map((item, index) => ({ ...item, month: index + 1  }))
+              ? dataset.map((item, index) => ({ ...item, month: index + 1 }))
               : dataset
           }
           radiusAxis={[{ minRadius: 10, min: 0 }]}

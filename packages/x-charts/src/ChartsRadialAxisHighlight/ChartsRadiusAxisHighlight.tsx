@@ -13,7 +13,10 @@ import {
 } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { type ChartsRadialAxisHighlightRadiusType } from './ChartsRadialAxisHighlight.types';
 import { type ChartsRadialAxisHighlightClasses } from './chartsRadialAxisHighlightClasses';
-import { ChartsRadialAxisHighlightCircle, ChartsRadialAxisHighlightPath } from './ChartsRadialAxisHighlightPath';
+import {
+  ChartsRadialAxisHighlightCircle,
+  ChartsRadialAxisHighlightPath,
+} from './ChartsRadialAxisHighlightPath';
 
 function polarToSvg(cx: number, cy: number, radius: number, angle: number) {
   return [cx + radius * Math.sin(angle), cy - radius * Math.cos(angle)] as const;

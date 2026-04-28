@@ -37,7 +37,6 @@ export const ChartsRadialAxisHighlightPath = styled('path', {
   ],
 }));
 
-
 export const ChartsRadialAxisHighlightCircle = styled('circle', {
   name: 'MuiChartsRadialAxisHighlight',
   slot: 'Root',
