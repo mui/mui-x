@@ -1,5 +1,75 @@
 # Changelog
 
+## 9.0.4
+
+_Apr 28, 2026_
+
+This is a hotfix release to ensure the packages use latest `@mui/x-internals` version.
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.0.4`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@9.0.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.0.4`.
+
+#### `@mui/x-data-grid-premium@9.0.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.0.4`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.0.4`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@9.0.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.0.4`.
+
+### Charts
+
+#### `@mui/x-charts@9.0.4`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@9.0.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.0.4`.
+
+#### `@mui/x-charts-premium@9.0.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.0.4`:
+
+### Tree View
+
+#### `@mui/x-tree-view@9.0.4`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.0.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.4`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.4`
+
+Internal changes.
+
+#### `@mui/x-scheduler-premium@9.0.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.4`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.0.4`
+
+Internal changes.
+
 ## 9.0.3
 
 _Apr 27, 2026_
