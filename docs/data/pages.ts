@@ -1,3 +1,4 @@
+import CampaignIcon from '@mui/icons-material/Campaign';
 import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 import chartsComponentApi from './chartsApiPages';
 import chatComponentApi from './chatApiPages';
@@ -17,8 +18,17 @@ const schedulerPages: MuiPage[] = [
       {
         pathname: 'https://forms.gle/Ksbc91D3PcMiiK5x9',
         title: 'Share your feedback',
-        newFeature: true,
-        linkProps: { target: '_blank', rel: 'noopener noreferrer' },
+        icon: CampaignIcon,
+        linkProps: {
+          target: '_blank',
+          rel: 'noopener noreferrer',
+          sx: {
+            paddingLeft: 'calc(10px + (var(--_depth) + 1) * 13px - (var(--_expandable) * 21px))',
+            '& > span:first-of-type': {
+              order: 1,
+            },
+          },
+        },
       },
       {
         pathname: '/x/react-scheduler/main-features',
