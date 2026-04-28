@@ -8,7 +8,11 @@ components: ChartsRadialDataProvider, ChartsRadialGrid, ChartsRadiusAxis, Charts
 
 <p class="description">Display grid and axes in radial coordinates.</p>
 
-## Radial grid
+## Radial grid 🧪
+
+:::info
+This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
+:::
 
 Similarly to the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates.
 
