@@ -14,7 +14,7 @@ githubLabel: 'scope: chat'
 ## How it works
 
 `ChatRoot` sets up a `ChatProvider` context. Any descendant can read from that context
-via hooks — regardless of where it sits in the DOM tree.
+via hooks—regardless of where it sits in the DOM tree.
 
 This means `ChatMessageList` and `ChatComposer` don't need to be siblings
 or share a parent component. Place them wherever your layout requires:

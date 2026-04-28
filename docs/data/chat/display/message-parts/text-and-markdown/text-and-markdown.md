@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Text and markdown
+title: Text and Markdown
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent
 ---
 
-# Chat - Text and markdown
+# Chat - Text and Markdown
 
 <p class="description">Render plain text and markdown content in chat messages using the ChatTextMessagePart type and the built-in markdown renderer.</p>
 

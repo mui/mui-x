@@ -44,7 +44,7 @@ interface ChatStepStartMessagePart {
 }
 ```
 
-The `finish-step` chunk signals the end of the current step but does not create a separate message part — it serves as a boundary marker in the stream.
+The `finish-step` chunk signals the end of the current step but does not create a separate message part—it serves as a boundary marker in the stream.
 
 ## Streaming example
 

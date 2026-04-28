@@ -13,7 +13,7 @@ components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The message list is the scrollable region that renders conversation history.
-`ChatMessageList` provides Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
+`ChatMessageList` provides Material UI styling—scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
 
 ## Import
 
@@ -91,7 +91,7 @@ Consecutive messages from the same author are grouped together into a `ChatMessa
 Within a group only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
 The grouping window defaults to 5 minutes (300,000 ms). Customize it through `slotProps`.
-The demo below sets the window to 1 minute (60,000 ms) — notice how messages more than 1 minute apart start a new group with a fresh avatar:
+The demo below sets the window to 1 minute (60,000 ms)—notice how messages more than 1 minute apart start a new group with a fresh avatar:
 
 {{"demo": "MessageGrouping.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -127,7 +127,7 @@ Use the toggle in the demo below to compare the three density levels:
 <ChatBox density="comfortable" adapter={adapter} />
 ```
 
-The `density` prop is independent of `variant` — you can combine `variant="compact"` with any density value.
+The `density` prop is independent of `variant`—you can combine `variant="compact"` with any density value.
 
 ## Loading and streaming states
 

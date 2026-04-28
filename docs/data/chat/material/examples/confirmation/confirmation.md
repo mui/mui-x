@@ -79,7 +79,7 @@ const adapter = React.useMemo(
 
 ## Relationship to tool-call approval
 
-The built-in tool part `approval-requested` state handles the narrow case of approving a specific tool call — it renders inside the collapsible tool widget. `ChatConfirmation` is a broader, more prominent pattern for any "human-in-the-loop" checkpoint that doesn't require a structured tool invocation.
+The built-in tool part `approval-requested` state handles the narrow case of approving a specific tool call—it renders inside the collapsible tool widget. `ChatConfirmation` is a broader, more prominent pattern for any "human-in-the-loop" checkpoint that doesn't require a structured tool invocation.
 
 ## API
 

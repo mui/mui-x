@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Slots and composition
+title: Slots and Composition
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Slots and composition
+# Chat - Slots and Composition
 
 <p class="description">Replace individual subcomponents inside ChatBox with your own implementations using the slots and slotProps API.</p>
 
@@ -116,7 +116,7 @@ Return `null` from a slot to remove it entirely, or use the `features` prop for 
 
 ## Feature flags and slot rendering
 
-When a feature flag is set to `false`, the corresponding slot is **not rendered at all** — even if you provide a custom component via `slots`. The feature flag takes precedence:
+When a feature flag is set to `false`, the corresponding slot is **not rendered at all**—even if you provide a custom component via `slots`. The feature flag takes precedence:
 
 ```tsx
 {/* The custom button does not render because the feature is disabled */}

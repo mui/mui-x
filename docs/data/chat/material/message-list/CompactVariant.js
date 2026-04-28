@@ -61,7 +61,7 @@ const messages = [
     role: 'assistant',
     author: demoUsers.agent,
     createdAt: '2026-03-15T10:02:00.000Z',
-    text: 'Great work! The compact variant removes message bubbles and aligns everything to the left — perfect for dense message feeds.',
+    text: 'Great work! The compact variant removes message bubbles and aligns everything to the left—perfect for dense message feeds.',
   }),
 ];
 

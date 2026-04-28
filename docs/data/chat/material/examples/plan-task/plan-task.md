@@ -19,7 +19,7 @@ When a tool call named `run_tasks` arrives, the default JSON accordion is replac
 collapsible task list. Each step animates through `pending → running → done` and the
 list collapses automatically when all steps finish.
 
-The whole UI is a plain React component — no dedicated package export required.
+The whole UI is a plain React component—no dedicated package export required.
 
 ## Providing a custom tool renderer
 
@@ -42,12 +42,12 @@ const partRenderers: ChatPartRendererMap = {
 ## Animating steps from outside the renderer
 
 The renderer is a plain function closed over component state, so you can drive it
-from any external source — a WebSocket, server-sent events, or a timer:
+from any external source—a WebSocket, server-sent events, or a timer:
 
 ```tsx
 const [tasks, setTasks] = React.useState(initialTasks);
 
-// partRenderers rebuilds when tasks change — ChatBox picks up the new renderer
+// partRenderers rebuilds when tasks change—ChatBox picks up the new renderer
 const partRenderers = React.useMemo(
   () => ({
     'dynamic-tool': ({ part }) =>

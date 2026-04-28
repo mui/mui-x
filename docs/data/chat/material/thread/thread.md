@@ -181,7 +181,7 @@ Forward `ref` and spread `...props` before your overrides so the wrapping patter
 
 ### Adding custom children to a message row
 
-When you need to insert additional content inside a message row — for example a copy-to-clipboard button — provide custom children to `ChatMessage`:
+When you need to insert additional content inside a message row—for example a copy-to-clipboard button—provide custom children to `ChatMessage`:
 
 ```tsx
 <ChatMessage messageId={id}>
@@ -255,11 +255,11 @@ Custom children placed inside `ChatMessage` receive the message's `ownerState` t
 
 The `ownerState` includes `role`, `status`, `streaming`, `error`, `isGrouped`, and `showAvatar`, the same fields listed in the ChatMessage owner state table above.
 
-For conversation-level state (the active conversation title, participants, etc.), use the `ownerState` received by header slot components — see the [Header anatomy](#header-anatomy) section above.
+For conversation-level state (the active conversation title, participants, etc.), use the `ownerState` received by header slot components—see the [Header anatomy](#header-anatomy) section above.
 
 ## Full recomposition example
 
-When `ChatBox` slots are not enough — for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header instead of above the composer — you can assemble the thread from individual Material UI components directly.
+When `ChatBox` slots are not enough—for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header instead of above the composer—you can assemble the thread from individual Material UI components directly.
 
 The following example shows a fully assembled thread pane without relying on `ChatBox` layout defaults. It inserts a custom warning banner between the header and the message list:
 

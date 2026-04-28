@@ -13,7 +13,7 @@ components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachBu
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The composer is the input region at the bottom of the chat surface.
-`ChatComposer` provides Material UI styling — border, padding, and theme tokens are applied automatically.
+`ChatComposer` provides Material UI styling—border, padding, and theme tokens are applied automatically.
 
 ## Import
 
@@ -100,7 +100,7 @@ Use it for legal disclaimers, character counts, or contextual hints.
 
 ## Controlled composer value
 
-The composer value can be controlled externally through `ChatProvider` (or the `ChatBox` props that forward to it).
+You can control the composer value externally through `ChatProvider` (or the `ChatBox` props that forward to it).
 The demo below mirrors the current composer value above the chat surface:
 
 {{"demo": "ComposerControlled.js", "defaultCodeOpen": false, "bg": "inline"}}
@@ -152,7 +152,7 @@ The attachment type used by the composer:
 
 ## Compact composer ideas
 
-Five design ideas for the compact variant composer — click into the textarea to see the focus state.
+Five design ideas for the compact variant composer—click into the textarea to see the focus state.
 
 {{"demo": "CompactComposerIdeas.js", "defaultCodeOpen": false, "bg": "inline"}}
 

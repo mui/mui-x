@@ -1,14 +1,14 @@
 ---
 productId: x-chat
-title: Chat - Conversation list
+title: Chat - Conversation List
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
 ---
 
-# Chat - Conversation list
+# Chat - Conversation List
 
-<p class="description">Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components.</p>
+<p class="description">Customize the conversation sidebar—from simple slot overrides to fully custom item renderers—using the Material UI conversation list components.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -34,7 +34,7 @@ ChatConversationList              ← scrolling listbox (role="listbox")
     unreadBadge                   ← count badge (primary.main background)
 ```
 
-All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually — instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
+All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually—instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
 
 ## Slot reference
 
@@ -89,7 +89,7 @@ The `ownerState` prop arrives directly on the component because the Material UI
 
 ## Overriding the item content layout
 
-Replace `itemContent` when you want to change the structural layout of the title and preview region — for example to add a participant count or an icon:
+Replace `itemContent` when you want to change the structural layout of the title and preview region—for example to add a participant count or an icon:
 
 {{"demo": "RichItemContent.js", "defaultCodeOpen": false, "bg": "inline"}}
 

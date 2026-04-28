@@ -126,7 +126,7 @@ async markRead({ conversationId, messageId }) {
 },
 ```
 
-The runtime does not call `markRead` automatically — call it from your own UI event handler when the user opens or scrolls through a conversation.
+The runtime does not call `markRead` automatically—call it from your own UI event handler when the user opens or scrolls through a conversation.
 
 ### Triggering `markRead` when a conversation becomes active
 

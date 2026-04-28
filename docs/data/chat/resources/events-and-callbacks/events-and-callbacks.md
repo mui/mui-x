@@ -71,7 +71,7 @@ The `onFinish` callback fires in four scenarios:
 ## Responding to tool invocations
 
 Fires when a tool invocation state changes during streaming.
-Use it for side effects outside the message list — logging, analytics, or triggering external workflows.
+Use it for side effects outside the message list—logging, analytics, or triggering external workflows.
 
 ```ts
 interface ChatOnToolCallPayload {
@@ -86,7 +86,7 @@ interface ChatOnToolCallPayload {
     console.log(`Tool ${toolCall.toolName}: ${toolCall.state}`);
 
     if (toolCall.state === 'output-available') {
-      // Tool execution completed — trigger follow-up
+      // Tool execution completed—trigger follow-up
       analytics.track('tool_executed', { tool: toolCall.toolName });
     }
   }}
@@ -125,7 +125,7 @@ type ChatOnData = (part: ChatDataMessagePart) => void;
 />
 ```
 
-This callback is useful for backend-driven UI updates that are transient — progress bars, status indicators, or notifications that should not be stored as message parts.
+This callback is useful for backend-driven UI updates that are transient—progress bars, status indicators, or notifications that should not be stored as message parts.
 
 ## Handling errors
 
@@ -191,7 +191,7 @@ Errors also surface through hooks, so you can display them in custom UI:
 // Via useChat()
 const { error } = useChat();
 
-// Via useChatStatus() — lighter weight, no message subscriptions
+// Via useChatStatus()—lighter weight, no message subscriptions
 const { error } = useChatStatus();
 ```
 

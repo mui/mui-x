@@ -1,11 +1,11 @@
 ---
-title: Chat - Empty state
+title: Chat - Empty State
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Empty state
+# Chat - Empty State
 
 <p class="description">A ChatBox with an active conversation but no messages yet.</p>
 

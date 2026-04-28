@@ -1,11 +1,11 @@
 ---
-title: Chat - Message feed
+title: Chat - Message Feed
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Message feed
+# Chat - Message Feed
 
 <p class="description">Render only ChatMessageList—no input. Send messages programmatically via useChat for read-only embeds and transcript views.</p>
 
@@ -25,7 +25,7 @@ Common use cases:
 ## How it works
 
 Only `ChatRoot` (the adapter wrapper) and `ChatMessageList` are needed.
-`ChatComposer` is simply not rendered — there is no prop to "hide" it.
+`ChatComposer` is simply not rendered—there is no prop to "hide" it.
 
 To send a message programmatically, call `useChat().sendMessage()` from any component inside `ChatRoot`:
 

@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Loading and empty states
+title: Loading and Empty States
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageSkeleton
 ---
 
-# Chat - Loading and empty states
+# Chat - Loading and Empty States
 
 <p class="description">Display loading skeletons while messages load and empty state content when a conversation has no messages.</p>
 

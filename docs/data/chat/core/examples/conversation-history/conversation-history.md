@@ -27,13 +27,13 @@ Two optional adapter methods enable conversation orchestration:
 ```tsx
 const adapter: ChatAdapter = {
   async listConversations() {
-    // Called on mount — returns the conversation list
+    // Called on mount—returns the conversation list
     const res = await fetch('/api/conversations');
     return { conversations: await res.json() };
   },
 
   async listMessages({ conversationId, cursor }) {
-    // Called when activeConversationId changes — returns thread messages
+    // Called when activeConversationId changes—returns thread messages
     const res = await fetch(`/api/threads/${conversationId}?cursor=${cursor ?? ''}`);
     const { messages, nextCursor, hasMore } = await res.json();
     return { messages, cursor: nextCursor, hasMore };

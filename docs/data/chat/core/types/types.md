@@ -186,7 +186,7 @@ declare module '@mui/x-chat/types' {
   }
 }
 
-// Bad — may cause circular resolution
+// Bad—may cause circular resolution
 declare module '@mui/x-chat/types' {
   import { ChatUser } from '@mui/x-chat/headless'; // avoid this
   interface ChatMessageMetadata {

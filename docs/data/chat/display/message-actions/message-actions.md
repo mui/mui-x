@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Message actions
+title: Message Actions
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageActions
 ---
 
-# Chat - Message actions
+# Chat - Message Actions
 
 <p class="description">Add hover-triggered action buttons to messages for copy, edit, delete, and custom operations.</p>
 

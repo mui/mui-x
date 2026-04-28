@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Custom parts
+title: Custom Parts
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent
 ---
 
-# Chat - Custom parts
+# Chat - Custom Parts
 
 <p class="description">Extend the message part system with app-specific content types using ChatDataMessagePart, the type registry, and custom renderers.</p>
 
@@ -131,7 +131,7 @@ function renderPart(part, message, index) {
 }
 ```
 
-This pattern keeps the override narrow — replace one part type without forking the whole message surface.
+This pattern keeps the override narrow—replace one part type without forking the whole message surface.
 
 ## How types flow through the stack
 

@@ -1,6 +1,6 @@
 ---
 productId: x-chat
-title: Chat - Material UI customization
+title: Chat - Material UI Customization
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatRoot

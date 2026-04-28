@@ -143,7 +143,7 @@ const messengerConversations: ChatConversation[] = [
 // --- Threads -----------------------------------------------------------------
 
 const messengerThreads: Record<string, ChatMessage[]> = {
-  // 1:1 with Alice — casual catch-up
+  // 1:1 with Alice—casual catch-up
   [aliceConvId]: [
     msg(
       aliceConvId,
@@ -211,7 +211,7 @@ const messengerThreads: Record<string, ChatMessage[]> = {
     msg(aliceConvId, 'assistant', alice, 'See you Friday 🎶', '2026-03-31T10:02:00.000Z'),
   ],
 
-  // 1:1 with Marco — book recommendation
+  // 1:1 with Marco—book recommendation
   [marcoConvId]: [
     msg(
       marcoConvId,
@@ -244,14 +244,14 @@ const messengerThreads: Record<string, ChatMessage[]> = {
         mediaType: 'image/jpeg',
         filename: 'children-of-time.jpg',
       },
-      'Check out the cover art — won the Arthur C. Clarke Award',
+      'Check out the cover art—won the Arthur C. Clarke Award',
       '2026-03-30T18:35:00.000Z',
     ),
     msg(
       marcoConvId,
       'assistant',
       marco,
-      "There's also a sequel — Children of Memory",
+      "There's also a sequel—Children of Memory",
       '2026-03-30T18:36:00.000Z',
     ),
     msg(
@@ -273,7 +273,7 @@ const messengerThreads: Record<string, ChatMessage[]> = {
     msg(marcoConvId, 'assistant', marco, 'Let me know when you start!', '2026-03-30T18:43:00.000Z'),
   ],
 
-  // Group chat — planning a weekend hike
+  // Group chat—planning a weekend hike
   [groupConvId]: [
     msg(
       groupConvId,
@@ -293,7 +293,7 @@ const messengerThreads: Record<string, ChatMessage[]> = {
       groupConvId,
       'user',
       you,
-      'Eagle Creek trail — about 2 hours, nice waterfalls along the way.',
+      'Eagle Creek trail—about 2 hours, nice waterfalls along the way.',
       '2026-03-31T10:10:00.000Z',
     ),
     msg(
@@ -328,7 +328,7 @@ const messengerThreads: Record<string, ChatMessage[]> = {
         mediaType: 'image/jpeg',
         filename: 'trail-map.jpg',
       },
-      'Found the trail map — waterfall lookout is about halfway through',
+      'Found the trail map—waterfall lookout is about halfway through',
       '2026-03-31T11:25:00.000Z',
     ),
     msg(
@@ -359,7 +359,7 @@ const messengerThreads: Record<string, ChatMessage[]> = {
       groupConvId,
       'user',
       you,
-      'Yes! I have one — charging it tonight 🔋',
+      'Yes! I have one—charging it tonight 🔋',
       '2026-03-31T12:05:00.000Z',
     ),
   ],

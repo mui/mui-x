@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Code blocks
+title: Code Blocks
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatCodeBlock
 ---
 
-# Chat - Code blocks
+# Chat - Code Blocks
 
 <p class="description">Display code with a language label and copy-to-clipboard button using the ChatCodeBlock component.</p>
 
@@ -52,7 +52,7 @@ Clicking the copy button copies the raw code string to the clipboard and shows a
 
 ## Language label
 
-Set `language` to any string — it is displayed as-is in the header:
+Set `language` to any string—it is displayed as-is in the header:
 
 ```tsx
 <ChatCodeBlock language="bash">{`pnpm add @mui/x-chat`}</ChatCodeBlock>

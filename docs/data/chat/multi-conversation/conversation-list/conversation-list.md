@@ -32,7 +32,7 @@ ChatConversationList              <- scrolling listbox (role="listbox")
     unreadBadge                   <- count badge (primary.main background)
 ```
 
-All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually — instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
+All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually—instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
 
 ## Slot reference
 

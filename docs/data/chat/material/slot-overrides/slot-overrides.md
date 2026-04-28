@@ -12,7 +12,7 @@ components: ChatRoot
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`ChatBox` composes many themed subcomponents internally — message bubbles, the composer, the conversation list, date dividers, and more.
+`ChatBox` composes many themed subcomponents internally—message bubbles, the composer, the conversation list, date dividers, and more.
 The `slots` prop lets you swap any of them with your own component, while `slotProps` passes extra props to those components without replacing them.
 
 ## Basic replacement
@@ -118,7 +118,7 @@ The `autoScroll` feature flag controls scroll behavior rather than slot visibili
 
 ## Feature flags and slot rendering
 
-When a feature flag is set to `false`, the corresponding slot is **not rendered at all** — even if you provide a custom component via `slots`. The feature flag takes precedence:
+When a feature flag is set to `false`, the corresponding slot is **not rendered at all**—even if you provide a custom component via `slots`. The feature flag takes precedence:
 
 ```tsx
 {/* The custom button does not render because the feature is disabled */}

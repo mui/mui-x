@@ -9,7 +9,7 @@ githubLabel: 'scope: chat'
 
 <p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from @mui/x-chat.</p>
 
-`ChatBox` covers most use cases out of the box, but sometimes you need to reach into chat state from components that live outside `ChatBox` — a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
+`ChatBox` covers most use cases out of the box, but sometimes you need to reach into chat state from components that live outside `ChatBox`—a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
 
 Every hook subscribes to a precise slice of the normalized store, so components only re-render when their own data changes.
 
@@ -41,7 +41,7 @@ Calling a hook outside a provider throws an error at development time.
 
 ```tsx
 function MyStatusBadge() {
-  const { isStreaming } = useChatStatus(); // works — inside ChatBox's provider
+  const { isStreaming } = useChatStatus(); // works—inside ChatBox's provider
   return isStreaming ? <Chip label="Responding..." /> : null;
 }
 
@@ -74,7 +74,7 @@ Use it when you want the fastest path to something working, or when a small comp
 ```ts
 const {
   // State
-  messages, // ChatMessage[] — all messages in the active conversation
+  messages, // ChatMessage[]—all messages in the active conversation
   conversations, // ChatConversation[]
   activeConversationId, // string | undefined
   isStreaming, // boolean
@@ -118,21 +118,21 @@ function QuickChat() {
 ### Reading streaming and error status
 
 A lightweight hook for status indicators.
-It subscribes only to `isStreaming`, `hasMoreHistory`, `error`, and `typingUserIds` — making it ideal for status bars, loading spinners, and error banners that sit outside the message list.
+It subscribes only to `isStreaming`, `hasMoreHistory`, `error`, and `typingUserIds`—making it ideal for status bars, loading spinners, and error banners that sit outside the message list.
 
 ```ts
 const {
   isStreaming, // boolean
   hasMoreHistory, // boolean
   error, // ChatError | null
-  typingUserIds, // string[] — users currently typing in the active conversation
+  typingUserIds, // string[]—users currently typing in the active conversation
 } = useChatStatus();
 ```
 
 {{"demo": "StatusFooter.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 Prefer `useChatStatus()` over `useChat()` whenever you only need streaming or error state.
-The component does not re-render when a new message is sent — only when the status fields themselves change.
+The component does not re-render when a new message is sent—only when the status fields themselves change.
 
 ### Reading all conversations
 
@@ -148,7 +148,7 @@ const conversations: ChatConversation[] = useConversations();
 ### Reading a single conversation
 
 Returns a single conversation by ID, or `null` if it is not in the store.
-Use this inside a list item component so that each item only re-renders when its own conversation changes — not when an unrelated conversation is added or renamed.
+Use this inside a list item component so that each item only re-renders when its own conversation changes—not when an unrelated conversation is added or renamed.
 
 ```ts
 const conversation: ChatConversation | null = useConversation(id);
@@ -172,7 +172,7 @@ Pair it with `useMessage(id)` to implement efficient thread rendering where each
 const messageIds: string[] = useMessageIds();
 ```
 
-When a message is being streamed, only the row for that message re-renders — the parent thread component and sibling rows stay untouched.
+When a message is being streamed, only the row for that message re-renders—the parent thread component and sibling rows stay untouched.
 
 ### Reading a single message
 
@@ -198,14 +198,14 @@ Use it when you want to build a custom composer instead of using the one built i
 
 ```ts
 const {
-  value, // string — current draft text
+  value, // string—current draft text
   setValue, // (value: string) => void
   attachments, // ChatDraftAttachment[]
   addAttachment, // (file: File) => void
   removeAttachment, // (localId: string) => void
-  clear, // () => void — clears text and attachments
-  submit, // () => Promise<void> — sends the composed message
-  isSubmitting, // boolean — true while a stream is active
+  clear, // () => void—clears text and attachments
+  submit, // () => Promise<void>—sends the composed message
+  isSubmitting, // boolean—true while a stream is active
 } = useChatComposer();
 ```
 
@@ -225,7 +225,7 @@ They are most useful inside custom message part renderers and custom message com
 ### Accessing the tool call callback
 
 Returns the `onToolCall` callback registered on the provider, or `undefined` if none was registered.
-Use it inside a custom tool message part to invoke the same callback that `ChatBox` uses internally — keeping behavior consistent even when you replace message rendering entirely.
+Use it inside a custom tool message part to invoke the same callback that `ChatBox` uses internally—keeping behavior consistent even when you replace message rendering entirely.
 
 ```ts
 const onToolCall: ChatOnToolCall | undefined = useChatOnToolCall();
@@ -284,7 +284,7 @@ function UnknownPart({ part, message, index }) {
 ## Advanced: accessing the store directly
 
 Returns the underlying `ChatStore<Cursor>` instance directly.
-This is the escape hatch for cases that none of the dedicated hooks cover — writing custom selectors, subscribing to store updates outside React render, or integrating with Redux or Zustand.
+This is the escape hatch for cases that none of the dedicated hooks cover—writing custom selectors, subscribing to store updates outside React render, or integrating with Redux or Zustand.
 
 ```ts
 const store: ChatStore<Cursor> = useChatStore();
@@ -307,7 +307,7 @@ function MessageCounter() {
 `useChatStore()` gives you access to all selectors in `chatSelectors` and the full store mutation API.
 
 :::warning
-Use it sparingly — the dedicated hooks above are simpler, better typed, and remain stable across minor versions.
+Use it sparingly—the dedicated hooks above are simpler, better typed, and remain stable across minor versions.
 Direct store access is considered advanced API and is more likely to require changes during upgrades.
 :::
 

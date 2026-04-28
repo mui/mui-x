@@ -95,7 +95,7 @@ const [activeId, setActiveId] = React.useState<string | undefined>('support');
 </ChatProvider>;
 ```
 
-The runtime still streams, normalizes, and derives selectors — you just own the source of truth.
+The runtime still streams, normalizes, and derives selectors—you just own the source of truth.
 
 You can switch from uncontrolled to controlled at any time without changing the runtime model.
 

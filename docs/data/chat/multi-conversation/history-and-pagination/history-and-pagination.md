@@ -93,10 +93,10 @@ When `hasMoreHistory` is `true`, the message list automatically calls `listMessa
 
 The flow works as follows:
 
-1. User opens a conversation — runtime calls `listMessages({ conversationId })`.
+1. User opens a conversation—runtime calls `listMessages({ conversationId })`.
 2. Adapter returns messages plus `{ cursor: nextCursor, hasMore: true }`.
 3. Runtime stores messages, sets `hasMoreHistory: true` and `historyCursor: nextCursor`.
-4. User scrolls to the top — runtime automatically calls `listMessages({ conversationId, cursor: nextCursor })`.
+4. User scrolls to the top—runtime automatically calls `listMessages({ conversationId, cursor: nextCursor })`.
 5. Adapter returns the next page. If `hasMore: false`, no further automatic loads are triggered.
 
 ## History loading indicator
@@ -105,7 +105,7 @@ While `listMessages` is in flight, the runtime blocks duplicate requests (a debo
 
 ## Error handling
 
-If `listMessages` throws, the runtime records a `ChatError` with `source: 'history'` and surfaces it through the error model. The error is recoverable — the user can retry by triggering the load again.
+If `listMessages` throws, the runtime records a `ChatError` with `source: 'history'` and surfaces it through the error model. The error is recoverable—the user can retry by triggering the load again.
 
 ```tsx
 <ChatBox

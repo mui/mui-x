@@ -1,11 +1,11 @@
 ---
-title: Chat - Multi-conversation
+title: Chat - Multi-Conversation
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Multi-conversation
+# Chat - Multi-Conversation
 
 <p class="description">A two-pane inbox layout with a conversation sidebar and an active thread pane.</p>
 

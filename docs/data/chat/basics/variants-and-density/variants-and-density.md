@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Variants & Density
+title: Variants and Density
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Variants & Density
+# Chat - Variants and Density
 
 <p class="description">Switch between bubble and compact messenger-style layouts, and control vertical spacing between messages.</p>
 

@@ -140,7 +140,7 @@ Register `onToolCall` on `ChatProvider` to observe every tool invocation state c
     console.log(`Tool "${toolCall.toolName}" is now ${toolCall.state}`);
 
     if (toolCall.state === 'output-available') {
-      // Drive side effects — update dashboards, trigger notifications, etc.
+      // Drive side effects—update dashboards, trigger notifications, etc.
     }
   }}
 >

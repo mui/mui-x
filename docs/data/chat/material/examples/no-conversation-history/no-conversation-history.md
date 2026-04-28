@@ -1,11 +1,11 @@
 ---
-title: Chat - No conversation history
+title: Chat - No Conversation History
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - No conversation history
+# Chat - No Conversation History
 
 <p class="description">ChatBox hides the conversation list when neither the adapter nor a prop supplies conversation data.</p>
 
@@ -20,17 +20,17 @@ There are exactly two ways to populate that array:
 1. **Controlled or uncontrolled state**: pass `conversations` or `initialConversations` props to `ChatBox`.
 2. **Adapter**: implement `listConversations?()` on the adapter so `ChatBox` can fetch history from a backend.
 
-When neither is present, the array stays empty and `ChatBox` skips rendering the list panel entirely. The thread fills the full width automatically — no extra configuration needed.
+When neither is present, the array stays empty and `ChatBox` skips rendering the list panel entirely. The thread fills the full width automatically—no extra configuration needed.
 
 ```tsx
-// Adapter with no `listConversations` — history cannot be fetched
+// Adapter with no `listConversations`—history cannot be fetched
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {
     return streamResponse(message);
   },
 };
 
-// No `conversations` or `initialConversations` prop — state stays empty
+// No `conversations` or `initialConversations` prop—state stays empty
 <ChatBox adapter={adapter} />;
 ```
 

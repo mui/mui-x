@@ -1,11 +1,11 @@
 ---
-title: Chat - Basic AI chat
+title: Chat - Basic AI Chat
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Basic AI chat
+# Chat - Basic AI Chat
 
 <p class="description">The smallest working ChatBox setup: an adapter, a conversation, and an initial message.</p>
 

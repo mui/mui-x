@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Message appearance
+title: Message Appearance
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageGroup, ChatMessageAvatar, ChatMessageAuthorLabel, ChatMessageMeta, ChatMessageInlineMeta, ChatDateDivider
 ---
 
-# Chat - Message appearance
+# Chat - Message Appearance
 
 <p class="description">Control the visual presentation of messages—grouping, date dividers, avatars, timestamps, and layout variants.</p>
 
@@ -43,7 +43,7 @@ Customize the date format through `slotProps`:
 The `ChatMessageAvatar` component renders the author's avatar for the first message in each group.
 Avatars are sourced from the `ChatUser.avatarUrl` field on the message's author.
 
-Within a group, subsequent messages omit the avatar entirely — the component returns `null` rather than rendering a placeholder. If no `avatarUrl` is set on the author and no custom `avatar` slot is provided, the avatar is also omitted for the first message in the group.
+Within a group, subsequent messages omit the avatar entirely—the component returns `null` rather than rendering a placeholder. If no `avatarUrl` is set on the author and no custom `avatar` slot is provided, the avatar is also omitted for the first message in the group.
 
 ## Timestamps and metadata
 

@@ -29,7 +29,7 @@ interface ChatAdapter<Cursor = string> {
     input: ChatSendMessageInput,
   ): Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope>>;
 
-  // Optional — implement as your feature set grows
+  // Optional—implement as your feature set grows
   listConversations?(
     input?: ChatListConversationsInput<Cursor>,
   ): Promise<ChatListConversationsResult<Cursor>>;

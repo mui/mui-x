@@ -41,7 +41,7 @@ const CustomMessageContent = React.forwardRef(
 <ChatBox slots={{ messageContent: CustomMessageContent }} />;
 ```
 
-This keeps the default rendering behavior — part iteration, reasoning blocks, source citations, tool invocations — and only changes the visual container.
+This keeps the default rendering behavior—part iteration, reasoning blocks, source citations, tool invocations—and only changes the visual container.
 
 ## Reading owner state in custom slots
 

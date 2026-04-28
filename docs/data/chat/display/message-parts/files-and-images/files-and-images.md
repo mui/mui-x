@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Files and images
+title: Files and Images
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent
 ---
 
-# Chat - Files and images
+# Chat - Files and Images
 
 <p class="description">Display file attachments and inline image previews using the ChatFileMessagePart type.</p>
 
@@ -103,7 +103,7 @@ Override file part rendering through `slotProps.messageContent.partProps.file`:
 
 ## Streaming
 
-File parts arrive as a single `file` chunk in the stream — they are not delivered incrementally like text parts:
+File parts arrive as a single `file` chunk in the stream—they are not delivered incrementally like text parts:
 
 ```ts
 interface ChatFileChunk {

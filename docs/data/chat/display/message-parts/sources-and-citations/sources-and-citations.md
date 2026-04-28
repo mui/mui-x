@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Sources and citations
+title: Sources and Citations
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent, ChatMessageSource, ChatMessageSources
 ---
 
-# Chat - Sources and citations
+# Chat - Sources and Citations
 
 <p class="description">Display reference links and document excerpts for retrieval-augmented generation (RAG) applications using source parts.</p>
 
@@ -71,7 +71,7 @@ The `SourceUrlPart` component exposes three slots:
 
 ## Source document parts
 
-`ChatSourceDocumentMessagePart` represents an inline document excerpt — useful when the AI assistant quotes from a retrieved document:
+`ChatSourceDocumentMessagePart` represents an inline document excerpt—useful when the AI assistant quotes from a retrieved document:
 
 ```ts
 interface ChatSourceDocumentMessagePart {

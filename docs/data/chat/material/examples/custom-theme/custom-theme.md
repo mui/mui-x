@@ -1,11 +1,11 @@
 ---
-title: Chat - Custom theme
+title: Chat - Custom Theme
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Custom theme
+# Chat - Custom Theme
 
 <p class="description">Retheme the entire chat surface by wrapping ChatBox in a ThemeProvider with custom palette and shape values.</p>
 

@@ -124,7 +124,7 @@ const allThreads: Record<string, ChatMessage[]> = {
       parts: [
         {
           type: 'reasoning',
-          text: "The user wants someone truly remarkable yet underrecognized.\n\nRamanujan immediately stands out — a self-taught prodigy from rural India who independently discovered thousands of theorems with no formal training. His partnership with Hardy, the taxicab number story, and results still being verified today make him a perfect answer.\n\nI'll highlight the most striking facts: the sheer volume of his work, the Hardy letter, and the 1729 number.",
+          text: "The user wants someone truly remarkable yet underrecognized.\n\nRamanujan immediately stands out—a self-taught prodigy from rural India who independently discovered thousands of theorems with no formal training. His partnership with Hardy, the taxicab number story, and results still being verified today make him a perfect answer.\n\nI'll highlight the most striking facts: the sheer volume of his work, the Hardy letter, and the 1729 number.",
           state: 'done' as const,
         },
         {
@@ -193,7 +193,7 @@ const allThreads: Record<string, ChatMessage[]> = {
             output: {
               results: [
                 'Hook names must start with "use" followed by a capital letter',
-                'Only call hooks at the top level — not inside loops or conditions',
+                'Only call hooks at the top level—not inside loops or conditions',
                 'Only call hooks from React function components or other custom hooks',
               ],
             },
@@ -310,7 +310,7 @@ function ConversationMenu({
 }
 
 // ---------------------------------------------------------------------------
-// Slot components — Sidebar
+// Slot components—Sidebar
 // ---------------------------------------------------------------------------
 const GptConversationItem = React.forwardRef(function GptConversationItem(
   props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
@@ -513,7 +513,7 @@ const GptConversationUnreadBadge = React.forwardRef(
 );
 
 // ---------------------------------------------------------------------------
-// Slot components — Messages
+// Slot components—Messages
 // ---------------------------------------------------------------------------
 const GptMessageGroup = React.forwardRef(function GptMessageGroup(
   props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
@@ -644,7 +644,7 @@ const GptMeta = React.forwardRef(function GptMeta(
 });
 
 // ---------------------------------------------------------------------------
-// Slot components — Reasoning (thinking block)
+// Slot components—Reasoning (thinking block)
 // ---------------------------------------------------------------------------
 const GptReasoningRoot = React.forwardRef(function GptReasoningRoot(
   props: React.HTMLAttributes<HTMLDetailsElement> & {
@@ -727,7 +727,7 @@ const GptReasoningContent = React.forwardRef(function GptReasoningContent(
 });
 
 // ---------------------------------------------------------------------------
-// Slot components — Tool call block
+// Slot components—Tool call block
 // ---------------------------------------------------------------------------
 const GptToolRoot = React.forwardRef(function GptToolRoot(
   props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: ToolPartOwnerState },
@@ -870,7 +870,7 @@ const GptToolSectionContent = React.forwardRef(function GptToolSectionContent(
 });
 
 // ---------------------------------------------------------------------------
-// Slot components — Composer
+// Slot components—Composer
 // ---------------------------------------------------------------------------
 const GptComposerRoot = React.forwardRef(function GptComposerRoot(
   props: React.PropsWithChildren<React.FormHTMLAttributes<HTMLFormElement>> & {

@@ -12,7 +12,7 @@ components: ChatBox
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Every chat component reads its data — messages, conversations, composer state, streaming status — from a shared store provided by `ChatProvider`.
+Every chat component reads its data—messages, conversations, composer state, streaming status—from a shared store provided by `ChatProvider`.
 `ChatBox` renders a `ChatProvider` internally, so in the simplest case you never interact with the provider directly.
 
 When you need more control—sharing state with components outside `ChatBox`, controlling the message list externally, or mounting multiple independent chat instances—you work with `ChatProvider` explicitly.
@@ -26,10 +26,10 @@ In controlled mode, you own the state and the provider synchronizes it.
 ### Messages
 
 ```tsx
-{/* Uncontrolled — internal store owns the messages */}
+{/* Uncontrolled—internal store owns the messages */}
 <ChatProvider adapter={adapter} initialMessages={initialMessages}>
 
-{/* Controlled — you own the messages array */}
+{/* Controlled—you own the messages array */}
 <ChatProvider
   adapter={adapter}
   messages={messages}
@@ -147,7 +147,7 @@ The runtime still streams, normalizes, and derives selectors—you just own the 
 ## Multiple independent instances
 
 Each `ChatProvider` creates an isolated store.
-To render multiple independent chat surfaces, use separate `ChatBox` instances — each one creates its own provider internally.
+To render multiple independent chat surfaces, use separate `ChatBox` instances—each one creates its own provider internally.
 
 ## Provider props reference
 
