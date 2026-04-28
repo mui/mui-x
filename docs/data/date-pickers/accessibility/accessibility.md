@@ -19,7 +19,7 @@ Common conformance guidelines for accessibility include:
   - [Section 508](https://www.section508.gov/) - US federal agencies
 - Europe: [EAA](https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/european-accessibility-act-eaa_en) (European Accessibility Act)
 
-WCAG 2.1 has three levels of conformance: A, AA, and AAA.
+[WCAG 2.2](https://www.w3.org/TR/WCAG22/) has three levels of conformance: A, AA, and AAA.
 Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
 
 The WAI-ARIA Authoring Practices includes examples on [Date Picker Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) and [Date Picker Spin Button](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/datepicker-spinbuttons/) patterns, which provide valuable information on how to optimize the accessibility of these components.
