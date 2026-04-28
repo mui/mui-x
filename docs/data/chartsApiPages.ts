@@ -118,6 +118,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLocalizationProvider',
   },
   {
+    pathname: '/x/api/charts/charts-radial-axis-highlight',
+    title: 'ChartsRadialAxisHighlight',
+  },
+  {
     pathname: '/x/api/charts/charts-radial-data-provider',
     title: 'ChartsRadialDataProvider',
   },
