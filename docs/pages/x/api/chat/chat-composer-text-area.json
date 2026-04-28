@@ -72,6 +72,5 @@
   "muiName": "MuiChatComposerTextArea",
   "filename": "/packages/x-chat/src/ChatComposer/ChatComposerTextArea.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li></ul>"
 }

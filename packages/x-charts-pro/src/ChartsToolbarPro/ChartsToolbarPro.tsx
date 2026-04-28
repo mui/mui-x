@@ -241,6 +241,7 @@ ChartsToolbarPro.propTypes = {
       fileName: PropTypes.string,
       nonce: PropTypes.string,
       onBeforeExport: PropTypes.func,
+      pixelRatio: PropTypes.number,
       quality: PropTypes.number,
       type: PropTypes.string.isRequired,
     }),

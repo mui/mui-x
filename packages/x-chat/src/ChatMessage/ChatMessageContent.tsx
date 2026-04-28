@@ -199,6 +199,16 @@ function ChatToolPartRoot({
   );
 }
 
+ChatToolPartRoot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  ownerState: PropTypes.shape({
+    state: PropTypes.string,
+  }),
+} as any;
+
 const ChatToolPartHeader = styled('summary', {
   name: 'MuiChatMessage',
   slot: 'ToolHeader',

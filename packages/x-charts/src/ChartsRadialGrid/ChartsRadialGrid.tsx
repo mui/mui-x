@@ -103,6 +103,10 @@ ChartsRadialGrid.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
+  /**
    * Displays radius (concentric) grid.
    */
   radius: PropTypes.bool,

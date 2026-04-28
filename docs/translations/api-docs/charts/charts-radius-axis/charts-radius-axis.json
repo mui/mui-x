@@ -50,5 +50,38 @@
       "description": "The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "centered": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the tick label",
+      "conditions": "centered"
+    },
+    "line": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the main line element"
+    },
+    "radius": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of radius axis"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "rotation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of rotation axis"
+    },
+    "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
+    "tickContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group including the tick and its label"
+    },
+    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tick label" }
+  },
+  "slotDescriptions": {
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis."
+  }
 }
