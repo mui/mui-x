@@ -28,7 +28,7 @@ const series = [
 export default function ClosestPointRadialLine() {
   return (
     <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
-      {['linear', 'point', 'band'].map((scaleType) => {
+      {['linear', 'point', 'band'].map((scaleType, index) => {
         return (
           <div key={scaleType}>
             <p>rotation-scale: {scaleType}</p>
@@ -45,11 +45,8 @@ export default function ClosestPointRadialLine() {
               grid={{ rotation: true, radius: true }}
               series={series.map((s) => ({
                 ...s,
+                curve: ['narural', 'linear', 'step'][index] as 'natural' | 'linear' | 'step',
                 area: true,
-                highlightScope: {
-                  highlight: 'series',
-                  fade: 'global',
-                },
               }))}
             >
               <Dots />
