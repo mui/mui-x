@@ -11,12 +11,11 @@ const FEEDBACK_FORM_URL = 'https://forms.gle/Ksbc91D3PcMiiK5x9';
 const DISMISSED_STORAGE_KEY = 'mui-x-scheduler-feedback-dismissed';
 
 export default function SchedulerFeedbackBanner() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   React.useEffect(() => {
-    const dismissed = window.localStorage.getItem(DISMISSED_STORAGE_KEY) === 'true';
-    if (!dismissed) {
-      setOpen(true);
+    if (window.localStorage.getItem(DISMISSED_STORAGE_KEY) === 'true') {
+      setOpen(false);
     }
   }, []);
 
@@ -83,7 +82,7 @@ export default function SchedulerFeedbackBanner() {
 
   return (
     <React.Fragment>
-      <Box aria-hidden sx={{ ...innerSx, visibility: 'hidden', mb: 3 }}>
+      <Box inert aria-hidden sx={{ ...innerSx, visibility: 'hidden', mb: 3 }}>
         {content}
       </Box>
       <Box
