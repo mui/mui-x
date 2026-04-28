@@ -4,7 +4,7 @@
 
 _Sep 25, 2025_
 
-We'd like to extend a big thank you to the 1 contributor who made this release possible. Here are some highlights ✨:
+A big thanks to the 1 contributor who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 
@@ -27,7 +27,7 @@ Same changes as in `@mui/x-tree-view@7.29.10`.
 
 _Aug 7, 2025_
 
-We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 
@@ -68,7 +68,7 @@ Same changes as in `@mui/x-data-grid-pro@7.29.9`.
 
 _Jul 4, 2025_
 
-We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 
@@ -104,7 +104,7 @@ Same changes as in `@mui/x-data-grid-pro@7.29.8`.
 
 _Jun 26, 2025_
 
-We'd like to extend a big thank you to the 4 contributors who made this release possible.
+A big thanks to the 4 contributors who made this release possible.
 
 Special thanks go out to the community members for their valuable contributions:
 @alisasanib

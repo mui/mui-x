@@ -4,7 +4,7 @@
 
 _Apr 28, 2026_
 
-We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - Fix Pickers previous (v9.0.3) release ensuring the latest `@mui/x-internals` version usage
 
@@ -91,7 +91,7 @@ Internal changes.
 
 _Apr 27, 2026_
 
-We'd like to extend a big thank you to the 16 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
 
 - ⌨️ Keyboard support for creating events in the Scheduler
 
@@ -229,7 +229,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.3`.
 
 _Apr 15, 2026_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Added `valueGetter` to axes and series configurations, which allow for dynamically getting data out of a `dataset`.
 - 🐞 Bugfixes
@@ -350,7 +350,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.2`.
 
 _Apr 8, 2026_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - Docs updates 📚
 - Chat release 🥳
@@ -458,7 +458,7 @@ This major release includes many new features and improvements. Here are some hi
 - Tree View – [Virtualization](https://mui.com/x/react-tree-view/rich-tree-view/virtualization/) [Pro]
 - New [Scheduler](https://mui.com/x/react-scheduler/) packages [Alpha]
 
-We'd like to extend a big thank you to the 5 contributors who made this release possible.
+A big thanks to the 5 contributors who made this release possible.
 The following team members contributed to this release:
 @DanailH, @LukasTy, @MBilalShafi, @oliviertassinari, @siriwatknp
 
@@ -555,7 +555,7 @@ Internal changes.
 
 _Apr 7, 2026_
 
-We'd like to extend a big thank you to the 18 contributors who made this release possible.
+A big thanks to the 18 contributors who made this release possible.
 
 Special thanks go out to these community members for their valuable contributions:
 @mixelburg, @sibananda485, @youjin-hong
@@ -709,7 +709,7 @@ Internal changes.
 
 _Mar 27, 2026_
 
-We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔊 New Charts voiceover component for improved screen reader support
 - ⌨️ Charts keyboard navigation improvements: axis tooltip now shows when navigating with the keyboard
@@ -813,7 +813,7 @@ Internal changes.
 
 _Mar 19, 2026_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes and internal improvements
 
@@ -936,7 +936,7 @@ Internal changes.
 
 _Mar 12, 2026_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes and internal improvements
 
@@ -1058,7 +1058,7 @@ Internal changes.
 
 _Mar 5, 2026_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - ✅ Stabilize Sankey chart
 - 🐞 Bugfixes and internal improvements
@@ -1176,7 +1176,7 @@ Internal changes.
 
 _Feb 26, 2026_
 
-We'd like to extend a big thank you to the 18 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡️ Improved dynamic data support and cache invalidation in lazy loading for Data Grid Pro
 - ⌨️ Keyboard support for selecting day, month, and year in Date Pickers
@@ -1294,7 +1294,7 @@ Internal changes.
 
 _Feb 16, 2026_
 
-We'd like to extend a big thank you to the 21 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 21 contributors who made this release possible. Here are some highlights ✨:
 
 - Add support for virtualized items on `<RichTreeViewPro />`:
 

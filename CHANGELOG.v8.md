@@ -4,7 +4,7 @@
 
 _Feb 13, 2026_
 
-We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 📝 CSS bundler support is no longer needed for the Data Grid
 - 🐞 Bugfixes
@@ -55,7 +55,7 @@ Same changes as in `@mui/x-tree-view@8.27.1`.
 
 _Feb 2, 2026_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 📝 Data Grid supports new `longText` [column type](https://mui.com/x/react-data-grid/column-definition/#column-types)
 
@@ -155,7 +155,7 @@ Release highlight ✨:
 
 _Jan 22, 2026_
 
-We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔄 Data Grid now supports undo and redo actions. See the [Undo and redo](https://mui.com/x/react-data-grid/undo-redo/) page for details about out-of-the-box support and customization options.
 - 🐞 Bugfixes
@@ -241,7 +241,7 @@ Internal changes.
 
 _Jan 14, 2026_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 The Chart legend now has an option that enables [click to toggle visibility](https://mui.com/x/react-charts/legend/#toggle-visibility) of series.
 
@@ -348,7 +348,7 @@ Internal changes.
 
 _Jan 8, 2026_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡️Add bar [batch renderer](https://mui.com/x/react-charts/bars/#performance), result in a significant performance improvement when rendering thousands of bars
 - 📊 Add [range bar chart](https://mui.com/x/react-charts/range-bar/) to render
@@ -458,7 +458,7 @@ Internal changes.
 
 _Dec 24, 2025_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🧮 Support Data Grid `size`, `size(true)`, and `size(false)` [aggregations for `'boolean'` column type](https://mui.com/x/react-data-grid/aggregation/#usage-with-row-grouping)
 - 🔎 Allow zooming a heatmap
@@ -559,7 +559,7 @@ Internal changes.
 
 _Dec 17, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Improve Swedish (sv-SE) locale on the Data Grid
 - 🐞 Bugfixes
@@ -660,7 +660,7 @@ Internal changes.
 
 _Dec 11, 2025_
 
-We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - Each Tree View component now exposes its own hook to initialize the `apiRef` object with accurate typing:
 
@@ -796,7 +796,7 @@ Internal changes.
 
 _Dec 3, 2025_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - ✨ Add [tick spacing property](https://mui.com/x/react-charts/axis/#tick-spacing) to charts axis to control the distance between ticks.
 
@@ -908,7 +908,7 @@ Internal changes.
 
 _Nov 26, 2025_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔃 Data Grid tree data now supports row reordering. See the [Drag-and-drop tree data reordering](https://mui.com/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering) section for more details.
 - 🐞 Bugfixes
@@ -970,7 +970,7 @@ Same changes as in `@mui/x-charts-pro@8.20.0`, plus:
 
 _Nov 20, 2025_
 
-We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔎 Add pan on `wheel` to the charts zoom
 - ⌨️ Allow opt-in to [tab navigation](https://mui.com/x/react-data-grid/accessibility/#tab-navigation) inside the Data Grid.
@@ -1085,7 +1085,7 @@ Internal changes.
 
 _Nov 13, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - Add `barLabelPlacement` property to customize the bar label position in bar charts, enabling labels to be placed above bars.
 
@@ -1183,7 +1183,7 @@ Internal changes.
 
 _Nov 5, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - Add `colorGetter` prop to cartesian charts series
 
@@ -1290,7 +1290,7 @@ Internal changes.
 
 _Oct 29, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 🖌️ Add `brush` zoom interaction to charts
 - 🔁 [Server-side update](https://mui.com/x/react-data-grid/server-side-data/#updating-server-side-data) in a grid with tree data/row grouping and aggregation will trigger re-fetch for all parent levels of that row to update aggregated values. See the [demo](https://mui.com/x/react-data-grid/server-side-data/aggregation/#usage-with-tree-data).
@@ -1390,7 +1390,7 @@ Internal changes.
 
 _Oct 23, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 🖌️ Add new [`brush` charts interaction](https://mui.com/x/react-charts/brush/) for building custom behavior.
   ![brush visualization example](https://github.com/user-attachments/assets/60c382a1-e418-4736-8dcb-1567c4e361e3)
@@ -1497,7 +1497,7 @@ Internal changes.
 
 _Oct 16, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Charts have optimized data structures for closest point calculations — initial render times reduced by ~25% for 1,000+ data points, with greater gains at larger scales (#19790) @bernardobelchior
 - 🐞 Bugfixes
@@ -1592,7 +1592,7 @@ Internal changes.
 
 _Oct 9, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 The [Chart zoom now supports the `pressAndDrag` gesture](https://mui.com/x/react-charts/zoom-and-pan/#zoom-interactions-configuration). Pan by pressing and dragging.
 - 🔄 [Server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pivoting/) support for the Data Grid
@@ -1762,7 +1762,7 @@ Internal changes.
 
 _Oct 1, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 The chart zoom now supports the `tapAndDrag` gesture. Zoom in/out by tapping twice and dragging vertically.
 - 🔎 Charts now allow [fine-grained control for zoom interactions](https://mui.com/x/react-charts/zoom-and-pan/#zoom-interactions-configuration).
@@ -1907,7 +1907,7 @@ Same changes as in `@mui/x-data-grid-pro@8.12.1`, plus:
 
 _Sep 25, 2025_
 
-We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 🤝 Grid-Charts integration
 
@@ -2052,7 +2052,7 @@ Same changes as in `@mui/x-tree-view@8.12.0`.
 
 _Sep 16, 2025_
 
-We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -2138,7 +2138,7 @@ Internal changes.
 
 _Sep 10, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -2233,7 +2233,7 @@ Internal changes.
 
 _Sep 4, 2025_
 
-We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 Special thanks go out to the community members for their valuable contributions:
 @sai6855
@@ -2307,7 +2307,7 @@ Internal changes.
 
 _Aug 29, 2025_
 
-We'd like to extend a big thank you to the 19 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 19 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add new `SankeyChart`
 
@@ -2428,7 +2428,7 @@ Internal changes.
 
 _Aug 20, 2025_
 
-We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Improve Finnish (fi-FI) locale on the Data Grid
 
@@ -2514,7 +2514,7 @@ Internal changes.
 
 _Aug 15, 2025_
 
-We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Y-axes can now be grouped by category when using `band` and `point` scales.
 - 📚 Documentation improvements
@@ -2616,7 +2616,7 @@ Internal changes.
 
 _Aug 8, 2025_
 
-We'd like to extend a big thank you to the 17 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 17 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 [`FunnelChart`](https://mui.com/x/react-charts/funnel/) marked as stable
 - 📈 [Zoom slider](https://mui.com/x/react-charts/zoom-and-pan/#zoom-slider) and [Preview](https://mui.com/x/react-charts/zoom-and-pan/#preview) marked as stable
@@ -2731,7 +2731,7 @@ Internal changes.
 
 _Jul 31, 2025_
 
-We'd like to extend a big thank you to the 23 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 23 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Improve French (fr-FR), Hebrew (he-IL) and Polish (pl-PL) locales on the Data Grid
 - 🌎 Improve Korean (ko-KR) locale on the Date and Time Pickers
@@ -2825,7 +2825,7 @@ Internal changes.
 
 _Jul 21, 2025_
 
-We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
 
 🐞 Fix package publish issue
 
@@ -2855,7 +2855,7 @@ Same changes as in `@mui/x-data-grid-pro@8.9.1`.
 
 _Jul 17, 2025_
 
-We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - ✨ Improve the drag and drop interaction for Data Grid [row reordering](https://mui.com/x/react-data-grid/row-ordering/) feature. It uses a drop indicator to point to the position the row would be moving to.
 
@@ -2950,7 +2950,7 @@ Internal changes.
 
 _Jul 11, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Chart zoom preview can be enabled
 
@@ -3048,7 +3048,7 @@ Internal changes.
 
 _Jul 4, 2025_
 
-We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add `useChartProApiRef` for easier access to the API
 - 📆 Support different start and end `referenceDate` props on range components
@@ -3151,7 +3151,7 @@ Same changes as in `@mui/x-tree-view@8.7.0`, plus:
 
 _Jun 27, 2025_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add export menu to charts toolbar
 - 📅 Add `usePickerAdapter` hook to access the date adapter.
@@ -3259,7 +3259,7 @@ Internal changes.
 
 _Jun 19, 2025_
 
-We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 📚 Documentation improvements
 - 🐞 Bugfixes
@@ -3354,7 +3354,7 @@ Internal changes.
 
 _Jun 12, 2025_
 
-We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Improve Data Grid selectors performance
 - 🐞 Fix `useSyncExternalStore` import error in React 17
@@ -3448,7 +3448,7 @@ Same changes as in `@mui/x-tree-view@8.5.2`.
 
 _Jun 5, 2025_
 
-We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Allow exporting pie charts
 - 📚 Documentation improvements
