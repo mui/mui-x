@@ -509,7 +509,7 @@ async function generateChangelog({
     }
 
     return lines.join('\n\n');
-  }
+  };
 
   const changelog = removeDuplicateEmptyLines(`
 ## ${nextVersion || '__VERSION__'}
