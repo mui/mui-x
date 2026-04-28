@@ -290,11 +290,11 @@ jobs:
               exit 0
             fi
             BASE="${BASE_BRANCH:-master}"
-            git fetch --no-tags --depth=50 origin "$BASE" || true
+            git fetch --no-tags --depth=50 origin "$BASE"
             CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
               'packages/x-charts*' \
               'test/performance-charts' \
-              '.circleci/config.yml' || true)
+              '.circleci/config.yml')
             if [ -n "$CHANGED" ]; then
               echo "Relevant changes detected; running benchmarks:"
               echo "$CHANGED"
