@@ -41,6 +41,7 @@ Same changes as in `@mui/x-date-pickers@9.0.4`.
 
 - [charts] Exclude hidden series and items from keyboard navigation (alt approach) (#22221) @JCQuintas
 - [charts] Fix line interaction with `area` and `conectNulls` (#22227) @alexfauquette
+- [charts] Implement the continuous case of `getAxisIndex` for rotation axis (#22230) @alexfauquette
 
 #### `@mui/x-charts-pro@9.0.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
