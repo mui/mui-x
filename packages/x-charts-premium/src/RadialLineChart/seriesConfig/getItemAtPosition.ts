@@ -232,24 +232,6 @@ export default function getItemAtPosition(
       continue;
     }
 
-    // For ordinal or pointer exactly on a data point, use the data point directly.
-    if (left === right) {
-      const radiusValue = visibleStackedData[left]?.[1];
-      if (radiusValue == null) {
-        continue;
-      }
-      const radiusPosition = radiusAxis.scale(radiusValue);
-      if (radiusPosition == null) {
-        continue;
-      }
-      const distance = Math.abs(pointerRadius - radiusPosition);
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestItem = { type: 'radialLine', seriesId, dataIndex };
-      }
-      continue;
-    }
-
     // Evaluate the actual curve at the pointer's angle for precise distance.
     const rotationData = rotationAxis.data;
     if (!rotationData) {
@@ -311,8 +293,7 @@ export default function getItemAtPosition(
   for (let g = stackingGroups.length - 1; g >= 0; g -= 1) {
     const groupIds = stackingGroups[g].ids;
 
-    // Iterate in reverse so the topmost stacked area is checked first.
-    for (let i = groupIds.length - 1; i >= 0; i -= 1) {
+    for (let i = 0; i <= groupIds.length - 1; i += 1) {
       const seriesId = groupIds[i];
       const seriesItem = series.series[seriesId];
 
@@ -339,14 +320,7 @@ export default function getItemAtPosition(
       const { visibleStackedData, data, connectNulls, baseline, curve } = seriesItem;
 
       // Check for null gaps at bracket points.
-      const leftIsNull = data[left] == null;
-      const rightIsNull = data[right] == null;
-
-      if (leftIsNull && rightIsNull) {
-        continue;
-      }
-
-      if ((leftIsNull || rightIsNull) && !connectNulls) {
+      if ((data[left] == null || data[right] == null) && !connectNulls) {
         continue;
       }
 
