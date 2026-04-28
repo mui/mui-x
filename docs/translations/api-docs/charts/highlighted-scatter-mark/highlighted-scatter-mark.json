@@ -1,5 +1,5 @@
 {
-  "componentDescription": "Draws an SVG ring around the currently highlighted scatter point.\nUsed by the WebGL renderer, where the point itself is rasterized off the SVG tree —\nso the highlight has to be drawn in SVG and positioned via the same axis scales the\nWebGL plot uses.",
+  "componentDescription": "Draws an SVG ring around the currently highlighted scatter point.\nUsed by renderers where the point itself is rasterized off the SVG tree\n(for example WebGL or `svg-batch`), so the highlight has to be drawn in SVG\nand positioned via the same axis scales the underlying renderer uses.",
   "propDescriptions": {},
   "classDescriptions": {}
 }

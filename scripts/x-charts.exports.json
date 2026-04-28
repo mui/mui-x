@@ -240,6 +240,7 @@
   { "name": "greenPalette", "kind": "Variable" },
   { "name": "greenPaletteDark", "kind": "Variable" },
   { "name": "greenPaletteLight", "kind": "Variable" },
+  { "name": "HighlightedScatterMark", "kind": "Function" },
   { "name": "HighlightItemIdentifier", "kind": "TypeAlias" },
   { "name": "HighlightItemIdentifierWithType", "kind": "TypeAlias" },
   { "name": "HighlightOptions", "kind": "TypeAlias" },

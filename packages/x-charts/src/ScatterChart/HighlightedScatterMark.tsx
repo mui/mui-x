@@ -2,12 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
-import {
-  getValueToPositionMapper,
-  useScatterSeriesContext,
-  useXAxes,
-  useYAxes,
-} from '../hooks';
+import { getValueToPositionMapper, useScatterSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { useChartsContext } from '../context/ChartsProvider';
 import { selectorChartsHighlightedItem } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { useStore } from '../internals/store/useStore';
