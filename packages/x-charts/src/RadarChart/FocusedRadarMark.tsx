@@ -13,6 +13,10 @@ export function FocusedRadarMark(props: React.SVGAttributes<SVGRectElement>) {
     return null;
   }
 
+  if (seriesCoordinates[0].hidden) {
+    return null;
+  }
+
   const point = seriesCoordinates[0].points[focusedItem.dataIndex];
 
   return (
