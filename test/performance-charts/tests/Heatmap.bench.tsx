@@ -7,9 +7,7 @@ const xData = Array.from({ length: dataLength }).map((_, i) => `${i + 1}`);
 const yData = Array.from({ length: dataLength }).map((_, i) => `${i + 1}`);
 
 const data = xData.flatMap((_, i) =>
-  yData.map(
-    (__, j) => [i, j, Math.sin(((i + j) * Math.PI) / 16) * 100] satisfies HeatmapValueType,
-  ),
+  yData.map((__, j) => [i, j, Math.sin(((i + j) * Math.PI) / 16) * 100] satisfies HeatmapValueType),
 );
 
 // https://github.com/mui/mui-x/issues/18015#issuecomment-3665782200

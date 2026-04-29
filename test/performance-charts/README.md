@@ -44,7 +44,17 @@ import { benchmark } from '@mui/internal-benchmark';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 benchmark('BarChart - 100 bars', () => (
-  <BarChart series={[{ data: [/* ... */] }]} width={500} height={300} />
+  <BarChart
+    series={[
+      {
+        data: [
+          /* ... */
+        ],
+      },
+    ]}
+    width={500}
+    height={300}
+  />
 ));
 ```
 
