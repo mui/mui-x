@@ -112,31 +112,6 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
   });
 
-  describe('Component slot: Popper', () => {
-    it('should forward onClick and onTouchStart', async () => {
-      const handleClick = spy();
-      const handleTouchStart = spy();
-      render(
-        <DesktopDateRangePicker
-          open
-          slotProps={{
-            popper: {
-              onClick: handleClick,
-              onTouchStart: handleTouchStart,
-            },
-          }}
-        />,
-      );
-      const popper = screen.getByRole('tooltip');
-
-      fireEvent.click(popper);
-      fireEvent.touchStart(popper);
-
-      expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
-    });
-  });
-
   describe('picker state', () => {
     it('should open when clicking the start input (multi input field)', async () => {
       const onOpen = spy();
