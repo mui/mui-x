@@ -2,6 +2,12 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { EventDialogClasses, eventDialogClassKeys } from '@mui/x-scheduler/internals';
 
+// Note: the per-preset header class slots (`timeHeader`, `daysHeader`, `weeksHeader`,
+// `monthsHeader`, `yearsHeader` and their children) are intentionally NOT renamed along
+// with the rest of the views → presets migration. They are replaced by a single set of
+// generic slots (`header`, `headerRow`, `headerCell`, `headerCellLabel`) in #21827 when
+// the bespoke headers are unified into a single generic header component.
+
 export interface EventTimelinePremiumClasses extends EventDialogClasses {
   /** Styles applied to the root element. */
   root: string;

@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/piecewise-color-legend',
+    'docs/translations/api-docs/charts/piecewise-color-legend',
     false,
     /\.\/piecewise-color-legend.*\.json$/,
   );

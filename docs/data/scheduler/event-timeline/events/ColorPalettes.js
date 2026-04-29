@@ -17,7 +17,7 @@ export default function ColorPalettes() {
         resources={resourcesWithoutColors}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="days"
+        defaultPreset="day"
       />
     </div>
   );
