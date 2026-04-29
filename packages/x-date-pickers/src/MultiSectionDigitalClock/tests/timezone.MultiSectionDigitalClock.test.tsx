@@ -17,9 +17,10 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
     MultiSectionDigitalClock,
     ({ adapter, render }) => {
       describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
-        // Regression test for https://github.com/mui/mui-x/issues/22084: 2 AM
-        // does not exist on the spring-forward day, but each hour label must
-        // still render exactly once.
+        // Smoke check across adapters with a DST-day `value`. `describeAdapters`
+        // pins the system clock to June 15 so this does not actually reproduce
+        // https://github.com/mui/mui-x/issues/22084 — the per-adapter blocks
+        // below mock the system clock onto the transition day for that.
         it('should render each 12-hour hour with a unique label on a spring-forward day', () => {
           const value = adapter.date('2026-03-08T04:00:00', 'America/Chicago');
 
@@ -60,9 +61,10 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
     },
   );
 
-  // `describeAdapters` hardcodes a non-DST `clockConfig` (June 15), so its
-  // tests never put `now` on a transition day. Mock the system clock to the
-  // spring-forward day per adapter to actually reproduce the regression.
+  // `describeAdapters` hardcodes a `clockConfig` on a non-transition day
+  // (June 15), so its tests never put `now` on a transition day. Mock the
+  // system clock to the spring-forward day per adapter to actually reproduce
+  // the regression.
   (['dayjs', 'luxon', 'moment'] as const).forEach((adapterName) => {
     describe(`DST spring-forward — ${adapterName} adapter, system clock on DST day`, () => {
       const { render, adapter } = createPickerRenderer({

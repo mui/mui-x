@@ -47,10 +47,10 @@ export const getHourSectionOptions = ({
     return isSelected(hour, adapter.getHours(valueOrReferenceDate));
   };
 
-  // Use January 15 as a DST-free reference so `adapter.setHours(reference, N)`
-  // always yields a date whose local hour is `N`. On a DST spring-forward day
-  // setting a non-existent hour rolls forward, producing duplicate labels —
-  // see https://github.com/mui/mui-x/issues/22084.
+  // Use a fixed reference day (month=0, day=15) when formatting hours to avoid
+  // spring-forward transition gaps. On a DST transition day, setting a
+  // non-existent hour can roll forward and produce duplicate labels — see
+  // https://github.com/mui/mui-x/issues/22084.
   const labelReferenceDate = adapter.setDate(adapter.setMonth(adapter.startOfDay(now), 0), 15);
 
   const endHour = ampm ? 11 : 23;
