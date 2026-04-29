@@ -13,7 +13,7 @@ type SeriesTypeWithLegendFields = {
     : never;
 }[ChartSeriesType];
 
-/** One legend item per series (bar, scatter, rangeBar, radar). */
+/** One legend item per series. */
 export function getSeriesLegendItems<T extends SeriesTypeWithLegendFields>(
   type: T,
   params: SeriesProcessorResult<T>,
@@ -28,11 +28,17 @@ export function getSeriesLegendItems<T extends SeriesTypeWithLegendFields>(
       return acc;
     }
 
+    const s = series[seriesId];
+    let markShape: SeriesLegendItemParams['markShape'];
+    if ('showMark' in s && s.showMark) {
+      markShape = 'shape' in s ? (s.shape ?? 'circle') : 'circle';
+    }
     acc.push({
       type,
-      markType: series[seriesId].labelMarkType ?? defaultMarkType,
+      markType: s.labelMarkType ?? defaultMarkType,
+      markShape,
       seriesId,
-      color: series[seriesId].color,
+      color: s.color,
       label: formattedLabel,
     });
     return acc;

@@ -78,6 +78,8 @@ export * from './findMinMax';
 export * from './commonNextFocusItem';
 export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
 export { getSeriesColorFn } from './getSeriesColorFn';
+export { createLineStyleColorProcessor } from './createLineStyleColorProcessor';
+export { createSimpleGetSeriesWithDefaultValues } from './createSimpleGetSeriesWithDefaultValues';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
 export * from './plugins/utils/defaultSeriesConfig';

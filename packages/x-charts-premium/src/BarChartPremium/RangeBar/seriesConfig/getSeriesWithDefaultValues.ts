@@ -1,13 +1,3 @@
-import { type AllSeriesType } from '@mui/x-charts/models';
+import { createSimpleGetSeriesWithDefaultValues } from '@mui/x-charts/internals';
 
-export function getSeriesWithDefaultValues(
-  seriesData: AllSeriesType<'rangeBar'>,
-  seriesIndex: number,
-  colors: readonly string[],
-) {
-  return {
-    ...seriesData,
-    id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
-    color: seriesData.color ?? colors[seriesIndex % colors.length],
-  };
-}
+export const getSeriesWithDefaultValues = createSimpleGetSeriesWithDefaultValues<'rangeBar'>();
