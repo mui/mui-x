@@ -17,6 +17,7 @@ import MUIListItemText, { listItemTextClasses } from '@mui/material/ListItemText
 import type { MenuProps as MUIMenuProps } from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
+import MUIModal from '@mui/material/Modal';
 import MUITextField from '@mui/material/TextField';
 import MUITextareaAutosize from '@mui/material/TextareaAutosize';
 import MUIFormControl from '@mui/material/FormControl';
@@ -423,6 +424,11 @@ function BaseMenuItem(props: P['baseMenuItem']) {
     <ListItemText key="2">{children}</ListItemText>,
     iconEnd && <MUIListItemIcon key="3">{iconEnd}</MUIListItemIcon>,
   ]);
+}
+
+function BaseModal(props: P['baseModal']) {
+  const { material, ...other } = props;
+  return <MUIModal {...other} {...material} />;
 }
 
 function BaseTextField(props: P['baseTextField']) {
@@ -843,6 +849,7 @@ const baseSlots: GridBaseSlots = {
   baseLinearProgress: BaseLinearProgress,
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
+  baseModal: BaseModal,
   baseTextField: BaseTextField,
   baseButton: BaseButton,
   baseIconButton: BaseIconButton,

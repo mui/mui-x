@@ -16,6 +16,7 @@
   { "name": "BaseLinearProgressPropsOverrides", "kind": "Interface" },
   { "name": "BaseMenuItemPropsOverrides", "kind": "Interface" },
   { "name": "BaseMenuListPropsOverrides", "kind": "Interface" },
+  { "name": "BaseModalPropsOverrides", "kind": "Interface" },
   { "name": "BasePaginationPropsOverrides", "kind": "Interface" },
   { "name": "BasePopperPropsOverrides", "kind": "Interface" },
   { "name": "BaseSelectOptionPropsOverrides", "kind": "Interface" },

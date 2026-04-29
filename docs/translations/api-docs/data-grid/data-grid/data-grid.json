@@ -1074,10 +1074,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the edit multi-select cell root element"
     },
-    "editMultiSelectCellValue": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the edit multi-select cell value display element"
-    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
@@ -1596,6 +1592,7 @@
     "baseLinearProgress": "The custom LinearProgress component used in the grid.",
     "baseMenuItem": "The custom MenuItem component used in the grid.",
     "baseMenuList": "The custom MenuList component used in the grid.",
+    "baseModal": "The custom Modal component used in the grid.",
     "basePagination": "The custom Pagination component used in the grid.",
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",

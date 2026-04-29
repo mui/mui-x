@@ -264,6 +264,16 @@ export type PopperProps = CommonProps & {
   placement?: Placement;
 };
 
+export type ModalProps = CommonProps & {
+  open: boolean;
+  children: React.ReactElement<unknown>;
+  onClose?: (event: object, reason: 'backdropClick' | 'escapeKeyDown') => void;
+  keepMounted?: boolean;
+  disableAutoFocus?: boolean;
+  disableEnforceFocus?: boolean;
+  disableRestoreFocus?: boolean;
+};
+
 export type CircularProgressProps = CommonProps & {
   /**
    * Pixels or CSS value.

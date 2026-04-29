@@ -29,7 +29,6 @@ import {
 import type { AutocompleteProps } from '@mui/x-data-grid/internals';
 import { autocompleteClasses } from '@mui/material/Autocomplete';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import MUIModal from '@mui/material/Modal';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { GridMultiSelectChips } from './GridMultiSelectChips';
@@ -271,13 +270,15 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
           // clicks on the cell focus the autocomplete which opens the editor.
         }}
       />
-      <MUIModal
+      <rootProps.slots.baseModal
         open={showPopup}
         disableAutoFocus
         disableEnforceFocus
         disableRestoreFocus
         onClose={handleModalClose}
-        slotProps={{ root: { style: { zIndex: 'auto' }}, backdrop: { invisible: true } }}
+        material={{
+          slotProps: { root: { style: { zIndex: 'auto' } }, backdrop: { invisible: true } },
+        }}
       >
         <GridEditMultiSelectCellPopper
           as={rootProps.slots.basePopper}
@@ -321,7 +322,7 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
             />
           </GridEditMultiSelectCellPopperContent>
         </GridEditMultiSelectCellPopper>
-      </MUIModal>
+      </rootProps.slots.baseModal>
     </React.Fragment>
   );
 }

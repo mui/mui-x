@@ -862,6 +862,12 @@
       "class": null
     },
     {
+      "name": "baseModal",
+      "description": "The custom Modal component used in the grid.",
+      "default": "Modal",
+      "class": null
+    },
+    {
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
@@ -1815,12 +1821,6 @@
       "key": "editMultiSelectCell",
       "className": "MuiDataGridPro-editMultiSelectCell",
       "description": "Styles applied to the edit multi-select cell root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "editMultiSelectCellValue",
-      "className": "MuiDataGridPro-editMultiSelectCellValue",
-      "description": "Styles applied to the edit multi-select cell value display element.",
       "isGlobal": false
     },
     {
