@@ -28,11 +28,15 @@ export function getSeriesLegendItems<T extends SeriesTypeWithLegendFields>(
       return acc;
     }
 
-    const s = series[seriesId] as any;
+    const s = series[seriesId];
+    let markShape: SeriesLegendItemParams['markShape'];
+    if ('showMark' in s && s.showMark) {
+      markShape = 'shape' in s ? (s.shape ?? 'circle') : 'circle';
+    }
     acc.push({
       type,
       markType: s.labelMarkType ?? defaultMarkType,
-      markShape: s.showMark ? (s.shape ?? 'circle') : undefined,
+      markShape,
       seriesId,
       color: s.color,
       label: formattedLabel,
