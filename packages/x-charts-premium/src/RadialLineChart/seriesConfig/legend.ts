@@ -1,5 +1,6 @@
-import { createLineStyleLegendGetter } from '@mui/x-charts/internals';
+import { getSeriesLegendItems, type LegendGetter } from '@mui/x-charts/internals';
 
-const legendGetter = createLineStyleLegendGetter('radialLine');
+const legendGetter: LegendGetter<'radialLine'> = (series) =>
+  getSeriesLegendItems('radialLine', series);
 
 export default legendGetter;

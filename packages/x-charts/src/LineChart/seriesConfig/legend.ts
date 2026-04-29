@@ -1,5 +1,6 @@
-import { createLineStyleLegendGetter } from '../../internals/createLineStyleLegendGetter';
+import type { LegendGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { getSeriesLegendItems } from '../../internals/legendUtils';
 
-const legendGetter = createLineStyleLegendGetter('line');
+const legendGetter: LegendGetter<'line'> = (series) => getSeriesLegendItems('line', series);
 
 export default legendGetter;

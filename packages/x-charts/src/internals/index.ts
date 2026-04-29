@@ -81,7 +81,6 @@ export { getSeriesColorFn } from './getSeriesColorFn';
 export { createLineStyleColorProcessor } from './createLineStyleColorProcessor';
 export { createLineStyleTooltipGetter } from './createLineStyleTooltipGetter';
 export { createSimpleGetSeriesWithDefaultValues } from './createSimpleGetSeriesWithDefaultValues';
-export { createLineStyleLegendGetter } from './createLineStyleLegendGetter';
 export { createLineStyleSeriesProcessor } from './createLineStyleSeriesProcessor';
 export { createLineStyleDescriptionGetter } from './createLineStyleDescriptionGetter';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
