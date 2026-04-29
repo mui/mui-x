@@ -1030,33 +1030,33 @@
       "isGlobal": false
     },
     {
-      "key": "resourcesLegend",
-      "className": "MuiEventCalendar-resourcesLegend",
-      "description": "Styles applied to the resources legend root element.",
+      "key": "resourcesTree",
+      "className": "MuiEventCalendar-resourcesTree",
+      "description": "Styles applied to the resources tree root element.",
       "isGlobal": false
     },
     {
-      "key": "resourcesLegendItem",
-      "className": "MuiEventCalendar-resourcesLegendItem",
-      "description": "Styles applied to resources legend item elements.",
+      "key": "resourcesTreeItem",
+      "className": "MuiEventCalendar-resourcesTreeItem",
+      "description": "Styles applied to resources tree item elements.",
       "isGlobal": false
     },
     {
-      "key": "resourcesLegendItemCheckbox",
-      "className": "MuiEventCalendar-resourcesLegendItemCheckbox",
-      "description": "Styles applied to resources legend item checkbox elements.",
+      "key": "resourcesTreeItemCheckbox",
+      "className": "MuiEventCalendar-resourcesTreeItemCheckbox",
+      "description": "Styles applied to resources tree item checkbox elements.",
       "isGlobal": false
     },
     {
-      "key": "resourcesLegendItemName",
-      "className": "MuiEventCalendar-resourcesLegendItemName",
-      "description": "Styles applied to resources legend item name elements.",
+      "key": "resourcesTreeItemLabel",
+      "className": "MuiEventCalendar-resourcesTreeItemLabel",
+      "description": "Styles applied to resources tree item label elements.",
       "isGlobal": false
     },
     {
-      "key": "resourcesLegendLabel",
-      "className": "MuiEventCalendar-resourcesLegendLabel",
-      "description": "Styles applied to the resources legend label element.",
+      "key": "resourcesTreeLabel",
+      "className": "MuiEventCalendar-resourcesTreeLabel",
+      "description": "Styles applied to the resources tree section label element.",
       "isGlobal": false
     },
     {

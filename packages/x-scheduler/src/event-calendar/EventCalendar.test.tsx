@@ -1,4 +1,5 @@
 import { screen, waitFor } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import {
   createSchedulerRenderer,
   EventBuilder,
@@ -72,43 +73,76 @@ describe('EventCalendar', () => {
       />,
     );
 
-    // Resources are visible by default, so the checkboxes say "Hide events for ..."
-    // Use findByRole to wait for the component to fully render
-    const workResourceToggleButton = await screen.findByRole('checkbox', {
-      name: /Hide events for Work/i,
-    });
-    const sportResourceToggleButton = await screen.findByRole('checkbox', {
-      name: /Hide events for Sport/i,
-    });
+    const getCheckbox = (resourceName: RegExp) => {
+      const treeItem = screen.getByRole('treeitem', { name: resourceName });
+      return treeItem.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    };
+
+    await screen.findByRole('treeitem', { name: /Work/i });
+    expect(getCheckbox(/Work/i).checked).to.equal(true);
+    expect(getCheckbox(/Sport/i).checked).to.equal(true);
 
     expect(screen.queryByRole('button', { name: /Running/i })).not.to.equal(null);
     expect(screen.queryByRole('button', { name: /Weekly/i })).not.to.equal(null);
 
     // Hide Work resource
-    await user.click(workResourceToggleButton);
-    // Checkbox label changes to "Show events for ..." when hidden
+    await user.click(getCheckbox(/Work/i));
     await waitFor(() => {
-      expect(screen.queryByRole('checkbox', { name: /Show events for Work/i })).not.to.equal(null);
+      expect(getCheckbox(/Work/i).checked).to.equal(false);
     });
     expect(screen.queryByRole('button', { name: /Weekly/i })).to.equal(null);
 
-    // Show Work resource again (checkbox text should now be "Show events for Work")
-    const workResourceToggleButton2 = screen.getByRole('checkbox', {
-      name: /Show events for Work/i,
-    });
-    await user.click(workResourceToggleButton2);
+    // Show Work resource again
+    await user.click(getCheckbox(/Work/i));
     await waitFor(() => {
-      expect(screen.queryByRole('checkbox', { name: /Hide events for Work/i })).not.to.equal(null);
+      expect(getCheckbox(/Work/i).checked).to.equal(true);
     });
     expect(screen.getByRole('button', { name: /Weekly/i })).not.to.equal(null);
 
     // Hide Sport resource
-    await user.click(sportResourceToggleButton);
+    await user.click(getCheckbox(/Sport/i));
     await waitFor(() => {
-      expect(screen.queryByRole('checkbox', { name: /Show events for Sport/i })).not.to.equal(null);
+      expect(getCheckbox(/Sport/i).checked).to.equal(false);
     });
     expect(screen.queryByRole('button', { name: /Running/i })).to.equal(null);
   }, 10_000);
+
+  it.skipIf(isJSDOM)(
+    'should expose tree semantics and support keyboard navigation in the resource sidebar',
+    async () => {
+      const childResource = ResourceBuilder.new().id('running').title('Running').build();
+      const parentResource = ResourceBuilder.new()
+        .id('sport')
+        .title('Sport')
+        .children([childResource])
+        .build();
+
+      const childEvent = EventBuilder.new()
+        .title('Morning Run')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .resource(childResource)
+        .build();
+
+      const { user } = render(<EventCalendar events={[childEvent]} resources={[parentResource]} />);
+
+      const tree = await screen.findByRole('tree');
+      expect(tree).not.to.equal(null);
+      const treeItems = screen.getAllByRole('treeitem');
+      expect(treeItems.length).to.equal(2);
+
+      const runningTreeItem = screen.getByRole('treeitem', { name: /Running/i });
+      const runningCheckbox = runningTreeItem.querySelector(
+        'input[type="checkbox"]',
+      ) as HTMLInputElement;
+      expect(runningCheckbox.checked).to.equal(true);
+      runningCheckbox.focus();
+      await user.keyboard(' ');
+      await waitFor(() => {
+        expect(runningCheckbox.checked).to.equal(false);
+      });
+      expect(screen.queryByRole('button', { name: /Morning Run/i })).to.equal(null);
+    },
+  );
 
   describe('Preferences Menu', () => {
     it('should allow to show / hide the weekends using the UI in the week view', async () => {
