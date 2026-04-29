@@ -57,6 +57,7 @@ const GridEditMultiSelectCellPopper = styled(NotRendered<GridSlotProps['basePopp
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: vars.zIndex.modal,
   background: (theme.vars || theme).palette.background.paper,
+  borderRadius: (theme.vars || theme).shape.borderRadius,
   '&[data-popper-reference-hidden]': {
     opacity: 0,
   },
@@ -67,7 +68,6 @@ const GridEditMultiSelectCellPopperContent = styled('div', {
   slot: 'EditMultiSelectCellPopperContent',
 })(({ theme }) => ({
   width: 'var(--_width)',
-  borderRadius: (theme.vars || theme).shape.borderRadius,
   boxShadow: (theme.vars || theme).shadows[4],
   boxSizing: 'border-box',
 }));
@@ -95,6 +95,13 @@ const GridEditMultiSelectCellAutocompletePopper = styled('div', {
   shouldForwardProp: (prop) =>
     prop !== 'ownerState' && prop !== 'anchorEl' && prop !== 'open' && prop !== 'disablePortal',
 })({});
+
+const GridEditMultiSelectChips = styled(GridMultiSelectChips)({
+  padding: '0 10px',
+  '&:focus-visible': {
+    outline: 'none', // let the grid cell handle the focus ring
+  },
+}) as typeof GridMultiSelectChips;
 
 export interface GridEditMultiSelectCellProps<
   V extends ValueOptions = ValueOptions,
@@ -186,13 +193,29 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
     }
   };
 
-  // Row-mode dismiss: re-focus the chips view so the second Escape lets the grid
-  // exit row edit (via `cellKeyDown` → `useGridRowEditing`), and Enter can re-open.
-  React.useEffect(() => {
-    if (!open && rootProps.editMode === 'row' && anchorEl) {
-      anchorEl.focus({ preventScroll: true });
+  // Row-mode focus / open sync.
+  //   - On focus loss, reset `open` so re-entering the cell auto-opens the popup.
+  //   - On focus, scroll the cell into view — the Modal locks body scroll and the
+  //     autocomplete input is in a body-portaled popper, so browser-default
+  //     scroll-into-view (relied on by text-input cells) doesn't fire here.
+  //   - When the popup is closed (post-ESC), DOM-focus the chips root so the next
+  //     Tab/ESC bubbles to the grid's `cellKeyDown`.
+  useEnhancedEffect(() => {
+    if (rootProps.editMode !== 'row') {
+      return;
     }
-  }, [open, rootProps.editMode, anchorEl]);
+    if (!hasFocus) {
+      setOpen(true);
+      return;
+    }
+    apiRef.current.scrollToIndexes({
+      colIndex: apiRef.current.getColumnIndex(field, true),
+      rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+    });
+    if (!open) {
+      anchorEl?.focus();
+    }
+  }, [hasFocus, open, rootProps.editMode, anchorEl, apiRef, field, id]);
 
   const getOptionValue = (colDef as GridMultiSelectColDef).getOptionValue!;
   const getOptionLabel = (colDef as GridMultiSelectColDef).getOptionLabel!;
@@ -220,7 +243,7 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
 
   return (
     <React.Fragment>
-      <GridMultiSelectChips
+      <GridEditMultiSelectChips
         ref={setAnchorEl as React.Ref<HTMLDivElement>}
         values={currentValue}
         field={field}
@@ -331,9 +354,7 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
 
   useEnhancedEffect(() => {
     if (hasFocus && inputRef.current) {
-      // preventScroll: the popper is portaled into the GridRow, so focusing
-      // without it triggers the browser to scroll the grid container which is undesirable.
-      inputRef.current.focus({ preventScroll: true });
+      inputRef.current.focus();
     }
   }, [hasFocus]);
 

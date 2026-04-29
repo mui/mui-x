@@ -41,7 +41,7 @@ const Chip = styled(NotRendered<GridSlotProps['baseChip']>, {
 const RESIZE_THROTTLE_MS = 32;
 const HYSTERESIS_PX = 4;
 
-export interface GridMultiSelectChipsProps<V extends ValueOptions = ValueOptions> {
+export interface GridMultiSelectChipsProps<V extends ValueOptions = ValueOptions> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   values: any[];
   field: string;
   columnWidth: number;
@@ -78,6 +78,7 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
     autoWrap,
     classes,
     slotProps,
+    ...other
   } = props;
 
   const rootProps = useGridRootProps();
@@ -206,8 +207,9 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
   return (
     <Root
       ref={handleRef}
+      {...other}
       {...slotProps?.root}
-      className={clsx(classes?.root, slotProps?.root?.className)}
+      className={clsx(classes?.root, other?.className, slotProps?.root?.className)}
     >
       {values.map((v, index) => {
         const option = optionByValue.get(v) ?? v;
