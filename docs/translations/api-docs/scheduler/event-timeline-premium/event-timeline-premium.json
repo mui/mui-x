@@ -263,6 +263,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog resource menu color toggle element"
     },
+    "eventDialogResourceMenuColorToggleGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource menu color toggle group element"
+    },
     "eventDialogResourceMenuItem": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog resource menu item element"

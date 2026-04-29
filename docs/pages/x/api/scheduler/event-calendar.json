@@ -610,6 +610,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventDialogResourceMenuColorToggleGroup",
+      "className": "MuiEventCalendar-eventDialogResourceMenuColorToggleGroup",
+      "description": "Styles applied to the event dialog resource menu color toggle group element.",
+      "isGlobal": false
+    },
+    {
       "key": "eventDialogResourceMenuItem",
       "className": "MuiEventCalendar-eventDialogResourceMenuItem",
       "description": "Styles applied to the event dialog resource menu item element.",
