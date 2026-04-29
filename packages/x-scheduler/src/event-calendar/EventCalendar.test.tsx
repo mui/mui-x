@@ -130,7 +130,7 @@ describe('EventCalendar', () => {
       const treeItems = screen.getAllByRole('treeitem');
       expect(treeItems.length).to.equal(2);
 
-      const runningTreeItem = screen.getByRole('treeitem', { name: /Running/i });
+      const runningTreeItem = screen.getByRole('treeitem', { name: 'Running' });
       const runningCheckbox = runningTreeItem.querySelector(
         'input[type="checkbox"]',
       ) as HTMLInputElement;
