@@ -140,7 +140,10 @@ describe('EventCalendar', () => {
         'input[type="checkbox"]',
       ) as HTMLInputElement;
       expect(runningCheckbox.checked).to.equal(true);
-      runningCheckbox.focus();
+
+      // ARIA tree pattern: focus the treeitem (a real user would Tab into the
+      // tree and use Arrow keys to land here) and use Space to toggle selection.
+      runningTreeItem.focus();
       await user.keyboard(' ');
       await waitFor(() => {
         expect(runningCheckbox.checked).to.equal(false);
