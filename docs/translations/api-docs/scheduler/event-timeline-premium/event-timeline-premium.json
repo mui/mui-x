@@ -259,9 +259,9 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog resource menu color dot element"
     },
-    "eventDialogResourceMenuColorRadioButton": {
+    "eventDialogResourceMenuColorToggle": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the event dialog resource menu color radio button element"
+      "nodeName": "the event dialog resource menu color toggle element"
     },
     "eventDialogResourceMenuItem": {
       "description": "Styles applied to {{nodeName}}.",
