@@ -1,13 +1,3 @@
-import { type AllSeriesType } from '../../../models/seriesType';
+import { createSimpleGetSeriesWithDefaultValues } from '../../../internals/createSimpleGetSeriesWithDefaultValues';
 
-export function getSeriesWithDefaultValues(
-  seriesData: AllSeriesType<'bar'>,
-  seriesIndex: number,
-  colors: readonly string[],
-) {
-  return {
-    ...seriesData,
-    id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
-    color: seriesData.color ?? colors[seriesIndex % colors.length],
-  };
-}
+export const getSeriesWithDefaultValues = createSimpleGetSeriesWithDefaultValues<'bar'>();

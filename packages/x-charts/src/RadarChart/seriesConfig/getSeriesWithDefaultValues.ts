@@ -1,15 +1,5 @@
-import type { GetSeriesWithDefaultValues } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { createSimpleGetSeriesWithDefaultValues } from '../../internals/createSimpleGetSeriesWithDefaultValues';
 
-const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'radar'> = (
-  seriesData,
-  seriesIndex,
-  colors,
-) => {
-  return {
-    ...seriesData,
-    id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
-    color: seriesData.color ?? colors[seriesIndex % colors.length],
-  };
-};
+const getSeriesWithDefaultValues = createSimpleGetSeriesWithDefaultValues<'radar'>();
 
 export default getSeriesWithDefaultValues;
