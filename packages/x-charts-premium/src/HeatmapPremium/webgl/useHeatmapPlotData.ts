@@ -42,9 +42,9 @@ export function useHeatmapPlotData(
         continue;
       }
       const rgbColor = parseColor(color);
-      out[dataIndex * 4] = rgbColor[0] * 255;
-      out[dataIndex * 4 + 1] = rgbColor[1] * 255;
-      out[dataIndex * 4 + 2] = rgbColor[2] * 255;
+      out[dataIndex * 4] = rgbColor[0];
+      out[dataIndex * 4 + 1] = rgbColor[1];
+      out[dataIndex * 4 + 2] = rgbColor[2];
       out[dataIndex * 4 + 3] = 255;
     }
     return out;

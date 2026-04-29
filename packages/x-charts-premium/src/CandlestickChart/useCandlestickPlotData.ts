@@ -59,16 +59,13 @@ export function useCandlestickPlotData(
   /* Colors only change when the series, color getter, or highlight state changes.
    * Cache them so zoom-only renders return the same Uint8ClampedArray refs and the
    * GL upload short-circuit can skip re-uploading colors.
-   * `parseColor` returns floats in [0, 1]; we scale to bytes [0, 255]. Uint8Clamped
-   * rounds + clamps automatically, so brightness multiplications can't overflow. */
+   * `parseColor` returns bytes in [0, 255]. Uint8Clamped rounds + clamps automatically,
+   * so brightness multiplications can't overflow. */
   const colors = React.useMemo(() => {
     const candleColors = new Uint8ClampedArray(series.data.length * 4);
     const wickColors = new Uint8ClampedArray(series.data.length * 2 * 4);
 
-    const wickR = wickColor[0] * 255;
-    const wickG = wickColor[1] * 255;
-    const wickB = wickColor[2] * 255;
-    const wickA = wickColor[3] * 255;
+    const [wickR, wickG, wickB, wickA] = wickColor;
 
     for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
       const datum = series.data[dataIndex];
@@ -82,10 +79,10 @@ export function useCandlestickPlotData(
       }
 
       const candleColor = parseColor(colorGetter(dataIndex));
-      candleColors[dataIndex * 4] = candleColor[0] * 255;
-      candleColors[dataIndex * 4 + 1] = candleColor[1] * 255;
-      candleColors[dataIndex * 4 + 2] = candleColor[2] * 255;
-      candleColors[dataIndex * 4 + 3] = candleColor[3] * 255;
+      candleColors[dataIndex * 4] = candleColor[0];
+      candleColors[dataIndex * 4 + 1] = candleColor[1];
+      candleColors[dataIndex * 4 + 2] = candleColor[2];
+      candleColors[dataIndex * 4 + 3] = candleColor[3];
 
       for (let w = 0; w < 2; w += 1) {
         const wickIdx = (dataIndex * 2 + w) * 4;
