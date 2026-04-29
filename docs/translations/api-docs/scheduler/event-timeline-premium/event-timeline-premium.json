@@ -251,6 +251,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog save button element"
     },
+    "eventDialogSectionFieldset": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog section fieldset element"
+    },
     "eventDialogSectionHeaderTitle": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog section header title element"
