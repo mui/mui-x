@@ -234,13 +234,14 @@ describe('<EventTimelinePremiumHeader />', () => {
   });
 
   describe('aria semantics', () => {
-    it('should set role="row" on each inner level row', () => {
+    it('should set role="row" and aria-rowindex on each inner level row', () => {
       renderHeader({ preset: 'dayAndHour' });
 
       const levelRows = document.querySelectorAll<HTMLElement>(`.${classes.headerLevelRow}`);
       expect(levelRows.length).to.equal(2);
-      levelRows.forEach((row) => {
+      levelRows.forEach((row, i) => {
         expect(row.getAttribute('role')).to.equal('row');
+        expect(row.getAttribute('aria-rowindex')).to.equal(String(i + 1));
       });
     });
 
@@ -293,8 +294,8 @@ describe('<EventTimelinePremiumHeader />', () => {
       const grid = screen.getByRole('grid');
       // tickCount (4*24) + 1 title column = 97
       expect(grid.getAttribute('aria-colcount')).to.equal(String(4 * 24 + 1));
-      // 1 header + 1 resource = 2
-      expect(grid.getAttribute('aria-rowcount')).to.equal('2');
+      // 2 header levels + 1 resource = 3
+      expect(grid.getAttribute('aria-rowcount')).to.equal('3');
     });
   });
 });

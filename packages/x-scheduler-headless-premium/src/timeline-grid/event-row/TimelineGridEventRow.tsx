@@ -139,8 +139,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     stateAttributesMapping,
     props: [
       elementProps,
-      // Reserve aria-rowindex=1 for the grid header row.
-      { role: 'row', 'aria-rowindex': index + 2, children },
+      { role: 'row', 'aria-rowindex': index + presetConfig.headers.length + 1, children },
       keyboardProps,
       eventCreationProps,
     ],

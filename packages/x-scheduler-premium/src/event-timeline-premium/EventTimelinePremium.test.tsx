@@ -370,7 +370,7 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('aria semantics', () => {
-    it('should mark the resource title header as columnheader at column 1', () => {
+    it('should mark the resource title header as columnheader at column 1 spanning all header levels', () => {
       renderTimeline({ preset: 'dayAndHour' });
 
       const titleHeader = document.querySelector<HTMLElement>(
@@ -379,6 +379,8 @@ describe('<EventTimelinePremium />', () => {
       expect(titleHeader).not.to.equal(null);
       expect(titleHeader!.getAttribute('role')).to.equal('columnheader');
       expect(titleHeader!.getAttribute('aria-colindex')).to.equal('1');
+      // dayAndHour preset has 2 header levels.
+      expect(titleHeader!.getAttribute('aria-rowspan')).to.equal('2');
     });
 
     it('should mark the events header cell wrapper as presentation so inner level rows carry semantics', () => {
@@ -404,11 +406,33 @@ describe('<EventTimelinePremium />', () => {
       });
     });
 
-    it('should set aria-rowcount to header rows + resource rows on the grid root', () => {
+    it('should set aria-rowcount to header levels + resource rows on the grid root', () => {
       renderTimeline({ preset: 'dayAndHour' });
 
       const grid = screen.getByRole('grid');
-      expect(grid.getAttribute('aria-rowcount')).to.equal(String(1 + baseResources.length));
+      // dayAndHour has 2 header levels.
+      expect(grid.getAttribute('aria-rowcount')).to.equal(String(2 + baseResources.length));
+    });
+
+    it('should shift body row aria-rowindex past all header levels', () => {
+      renderTimeline({ preset: 'dayAndHour' });
+
+      const titleRows = document.querySelectorAll<HTMLElement>(
+        `.${eventTimelinePremiumClasses.titleCellRow}`,
+      );
+      expect(titleRows.length).to.equal(baseResources.length);
+      titleRows.forEach((row, i) => {
+        // dayAndHour has 2 header levels, so body rows start at index 3.
+        expect(row.getAttribute('aria-rowindex')).to.equal(String(i + 3));
+      });
+
+      const eventsRows = document.querySelectorAll<HTMLElement>(
+        `.${eventTimelinePremiumClasses.eventsSubGridRow}`,
+      );
+      expect(eventsRows.length).to.equal(baseResources.length);
+      eventsRows.forEach((row, i) => {
+        expect(row.getAttribute('aria-rowindex')).to.equal(String(i + 3));
+      });
     });
   });
 });

@@ -416,12 +416,13 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           className={classes.grid}
           style={{ '--unit-width': `${presetConfig.tickWidth}px` } as React.CSSProperties}
         >
-          <EventTimelinePremiumHeaderRow className={classes.headerRow} aria-rowindex={1}>
+          <EventTimelinePremiumHeaderRow className={classes.headerRow} role="presentation">
             <EventTimelinePremiumTitleHeaderCell
               ref={titleHeaderRef}
               className={classes.titleHeaderCell}
               role="columnheader"
               aria-colindex={1}
+              aria-rowspan={presetConfig.headers.length}
             >
               {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
             </EventTimelinePremiumTitleHeaderCell>

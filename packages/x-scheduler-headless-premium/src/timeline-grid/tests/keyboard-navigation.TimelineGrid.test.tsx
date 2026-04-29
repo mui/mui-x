@@ -445,15 +445,18 @@ describe('TimelineGrid keyboard navigation', () => {
   });
 
   describe('aria-rowindex', () => {
-    it('should set `aria-rowindex` on the header and shift data rows to reserve row 1', async () => {
+    it('should set `aria-rowindex` on the header and shift data rows past all header levels', async () => {
       render(<Grid />);
+
+      // Default preset (`dayAndHour`) has 2 header levels, so body rows start at index 3.
+      const headerLevels = 2;
 
       expect(screen.getByTestId('header-row')).to.have.attribute('aria-rowindex', '1');
       getTitleRows().forEach((row, i) => {
-        expect(row).to.have.attribute('aria-rowindex', String(i + 2));
+        expect(row).to.have.attribute('aria-rowindex', String(i + headerLevels + 1));
       });
       getEventsRows().forEach((row, i) => {
-        expect(row).to.have.attribute('aria-rowindex', String(i + 2));
+        expect(row).to.have.attribute('aria-rowindex', String(i + headerLevels + 1));
       });
     });
   });
