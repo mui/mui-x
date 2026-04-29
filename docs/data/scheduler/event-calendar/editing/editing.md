@@ -59,7 +59,7 @@ From there you can edit the event details or delete it.
 
 {{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
+:::info
 This demo uses `EventCalendarPremium` to showcase the Recurrence tab.
 All other dialog features (editing title, dates, resources, colors, description, and deleting events) are available in the standard `EventCalendar` component.
 :::
