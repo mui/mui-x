@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { TreeViewItemId, TreeViewSelectionPropagation, TreeViewValidItem } from '../../models';
 import { TreeViewItemMeta } from '../models';
 
@@ -112,14 +113,18 @@ export interface MinimalTreeViewParameters<
    */
   isItemSelectionDisabled?: (item: R) => boolean;
   /**
-   * Used to determine the string label for a given item.
+   * Used to determine the label for a given item.
+   *
+   * Return a string for items that participate in keyboard type-ahead navigation.
+   * Return a `React.ReactNode` (e.g. `<Skeleton />`) for decorative or loading labels —
+   * these are rendered as-is but are excluded from type-ahead search.
    *
    * @template R
    * @param {R} item The item to check.
-   * @returns {string} The label of the item.
+   * @returns {string | React.ReactNode} The label of the item.
    * @default (item) => item.label
    */
-  getItemLabel?: (item: R) => string;
+  getItemLabel?: (item: R) => string | React.ReactNode;
   /**
    * Used to determine the children of a given item.
    *
