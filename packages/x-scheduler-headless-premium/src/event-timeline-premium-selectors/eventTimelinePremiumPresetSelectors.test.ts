@@ -138,6 +138,25 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       expect(config.end).toEqualDateTime('2054-12-31T23:59:59.999Z');
     });
 
+    it('should throw with the MUI X error message when the preset has no registered config', () => {
+      // The state.preset field is typed via the EventTimelinePremiumPreset union, so reaching
+      // this branch requires casting. Locks in the unconditional throw (vs. a destructure
+      // TypeError) for the scenario where a future API allows registering custom presets.
+      const validState = getEventTimelinePremiumStateFromParameters({
+        events: [],
+        preset: 'dayAndHour',
+        visibleDate: VISIBLE_DATE,
+      });
+      const invalidState = {
+        ...validState,
+        preset: 'unknownPreset' as EventTimelinePremiumPreset,
+      };
+
+      expect(() => eventTimelinePremiumPresetSelectors.config(invalidState)).to.throw(
+        /MUI X Scheduler: No configuration registered for preset "unknownPreset"/,
+      );
+    });
+
     it('should return the same reference when the dependencies are unchanged', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
