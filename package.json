@@ -27,7 +27,8 @@
     "eslint:ci": "eslint . --report-unused-disable-directives --max-warnings 0",
     "stylelint": "stylelint --reportInvalidScopeDisables --reportNeedlessDisables \"docs/**/*.?(c|m)[jt]s?(x)\" \"**/*.css\" --ignore-path .lintignore",
     "markdownlint": "markdownlint-cli2 \"**/*.md\"",
-    "valelint": "pnpm vale sync && git ls-files | grep -h \".md$\" | xargs pnpm vale --filter='.Level==\"error\"'",
+    "vale:fix": "pnpm valelint --auto-fix all",
+    "valelint": "pnpm code-infra vale sync --vale-version $npm_package_config_valeVersion && git ls-files | grep -E \"\\.(md|mdx)$\" | xargs pnpm code-infra vale --vale-version $npm_package_config_valeVersion --filter='.Level==\"error\"'",
     "prettier": "pretty-quick --ignore-path .lintignore --branch master",
     "prettier:all": "prettier --write . --ignore-path .lintignore",
     "proptypes": "tsx ./docs/scripts/generateProptypes.ts",
@@ -72,7 +73,7 @@
     "@inquirer/prompts": "8.1.0",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.9",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.60",
-    "@mui/internal-code-infra": "0.0.3-canary.70",
+    "@mui/internal-code-infra": "0.0.4-canary.42",
     "@mui/internal-markdown": "2.0.14",
     "@mui/internal-netlify-cache": "0.0.2-canary.1",
     "@mui/internal-test-utils": "catalog:",
@@ -149,6 +150,9 @@
   },
   "resolutions": {
     "ast-types": "^0.14.2"
+  },
+  "config": {
+    "valeVersion": "3.14.1"
   },
   "packageManager": "pnpm@10.27.0",
   "engines": {
