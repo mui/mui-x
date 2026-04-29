@@ -2,9 +2,7 @@ import type { ChartSeriesType } from '../models/seriesType/config';
 import type { ColorProcessor } from './plugins/corePlugins/useChartSeriesConfig';
 import { getSeriesColorFn } from './getSeriesColorFn';
 
-export function createLineStyleColorProcessor<
-  T extends ChartSeriesType,
->(): ColorProcessor<T> {
+export function createLineStyleColorProcessor<T extends ChartSeriesType>(): ColorProcessor<T> {
   return ((series: any, mainAxis: any, secondaryAxis: any) => {
     const secondaryColorScale = secondaryAxis?.colorScale;
     const mainColorScale = mainAxis?.colorScale;
@@ -16,7 +14,8 @@ export function createLineStyleColorProcessor<
           return series.color;
         }
         const value = series.data[dataIndex];
-        const color = value === null ? getSeriesColor({ value, dataIndex }) : secondaryColorScale(value);
+        const color =
+          value === null ? getSeriesColor({ value, dataIndex }) : secondaryColorScale(value);
         if (color === null) {
           return getSeriesColor({ value, dataIndex });
         }

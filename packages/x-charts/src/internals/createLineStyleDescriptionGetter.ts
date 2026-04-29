@@ -8,9 +8,9 @@ interface AxisLike {
   scale: any;
 }
 
-export function createLineStyleDescriptionGetter<
-  T extends ChartSeriesType,
->(getMainAxis: (params: any) => AxisLike): DescriptionGetter<T> {
+export function createLineStyleDescriptionGetter<T extends ChartSeriesType>(
+  getMainAxis: (params: any) => AxisLike,
+): DescriptionGetter<T> {
   const descriptionGetter: DescriptionGetter<T> = (params) => {
     const { identifier, series, localeText } = params as any;
 

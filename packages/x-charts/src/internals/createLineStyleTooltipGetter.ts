@@ -2,9 +2,7 @@ import { getLabel } from './getLabel';
 import type { ChartSeriesType } from '../models/seriesType/config';
 import type { TooltipGetter } from './plugins/corePlugins/useChartSeriesConfig';
 
-export function createLineStyleTooltipGetter<
-  T extends ChartSeriesType,
->(): TooltipGetter<T> {
+export function createLineStyleTooltipGetter<T extends ChartSeriesType>(): TooltipGetter<T> {
   return ((params: any) => {
     const { series, getColor, identifier } = params;
 

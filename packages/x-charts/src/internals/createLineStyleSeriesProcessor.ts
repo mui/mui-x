@@ -1,16 +1,10 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getStackingGroups } from './stacking';
-import type {
-  DatasetElementType,
-  DatasetType,
-  ChartSeriesType,
-} from '../models/seriesType/config';
+import type { DatasetElementType, DatasetType, ChartSeriesType } from '../models/seriesType/config';
 import type { SeriesId } from '../models/seriesType/common';
 import type { MarkShape } from '../models/seriesType/line';
-import type {
-  SeriesProcessor,
-} from './plugins/corePlugins/useChartSeriesConfig';
+import type { SeriesProcessor } from './plugins/corePlugins/useChartSeriesConfig';
 import type { IsItemVisibleFunction } from './plugins/featurePlugins/useChartVisibilityManager';
 
 const defaultShapes: MarkShape[] = [
@@ -23,17 +17,13 @@ const defaultShapes: MarkShape[] = [
   'wye',
 ];
 
-export function createLineStyleSeriesProcessor<
-  T extends ChartSeriesType,
->(seriesType: T, chartName: string): SeriesProcessor<T> {
-  const lineValueFormatter = (v: number | null) =>
-    v == null ? '' : v.toLocaleString();
+export function createLineStyleSeriesProcessor<T extends ChartSeriesType>(
+  seriesType: T,
+  chartName: string,
+): SeriesProcessor<T> {
+  const lineValueFormatter = (v: number | null) => (v == null ? '' : v.toLocaleString());
 
-  return ((
-    params: any,
-    dataset?: Readonly<DatasetType>,
-    isItemVisible?: IsItemVisibleFunction,
-  ) => {
+  return ((params: any, dataset?: Readonly<DatasetType>, isItemVisible?: IsItemVisibleFunction) => {
     const { seriesOrder, series } = params;
     const stackingGroups = getStackingGroups({
       ...params,
@@ -147,9 +137,7 @@ export function createLineStyleSeriesProcessor<
         completedSeries[id] = {
           labelMarkType: 'line+mark',
           ...series[id],
-          shape:
-            series[id].shape ??
-            defaultShapes[(idToIndex.get(id) ?? 0) % defaultShapes.length],
+          shape: series[id].shape ?? defaultShapes[(idToIndex.get(id) ?? 0) % defaultShapes.length],
           data,
           valueFormatter: series[id].valueFormatter ?? lineValueFormatter,
           hidden,
