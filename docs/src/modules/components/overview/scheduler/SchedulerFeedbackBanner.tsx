@@ -78,7 +78,7 @@ export default function SchedulerFeedbackBanner() {
     </Stack>
   );
 
-  const innerSx = { px: 3, py: 1.25 };
+  const innerSx = { px: 3, py: 0.5 };
 
   return (
     <React.Fragment>
@@ -97,7 +97,7 @@ export default function SchedulerFeedbackBanner() {
           borderBottom: '1px solid',
           borderColor: 'divider',
           ...theme.applyDarkStyles({
-            bgcolor: alpha(theme.palette.primary[900], 0.4),
+            bgcolor: 'primaryDark.800',
           }),
         })}
       >
