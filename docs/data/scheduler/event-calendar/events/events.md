@@ -72,7 +72,7 @@ The available color palettes are shown below:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
+:::info
 Event colors can also be defined on the resources or at the component levels.
 The effective color resolves in the following order:
 
@@ -111,9 +111,7 @@ const event = {
 
 {{"demo": "ClassNameProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
 When defined, the class is applied to the event root DOM element in all views (Week, Month, Day, and Agenda views).
-:::
 
 ### Drag interactions
 

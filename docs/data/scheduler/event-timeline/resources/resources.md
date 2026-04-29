@@ -30,9 +30,7 @@ const resources = [
 <EventTimelinePremium events={events} resources={resources} />;
 ```
 
-:::success
 On the Event Timeline, events without resource are not rendered at all.
-:::
 
 ## Nested resources
 
@@ -66,7 +64,6 @@ A resource is visible if not in the object or if set to `true`.
 
 {{"demo": "DefaultVisibleResources.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
 You can also control the visible resources using `visibleResources` and `onVisibleResourcesChange` props:
 
 ```tsx
@@ -82,8 +79,6 @@ return (
 );
 ```
 
-:::
-
 ## Resource properties
 
 ### Color
@@ -93,7 +88,7 @@ The available color palettes are shown below:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
+:::info
 Event colors can also be defined on the event or at the component levels.
 The effective color resolves in the following order:
 
@@ -164,9 +159,7 @@ Use the `resourceColumnLabel` prop to customize the header of the resource colum
 
 {{"demo": "ResourceColumnLabel.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
 When both are provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
-:::
 
 ## Store data in custom properties
 

@@ -89,6 +89,7 @@ The available color palettes are shown below:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::info
 Event colors can also be defined on the event or at the component levels.
 The effective color resolves in the following order:
 
@@ -111,6 +112,8 @@ The effective color resolves in the following order:
 ```
 
 4. The default color palette, `"teal"`
+
+:::
 
 ### Drag interactions
 
